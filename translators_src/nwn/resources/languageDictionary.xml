@@ -1,0 +1,393 @@
+<!-- LanguageDictionary
+name (attribute)
+author (attribute)
+IndentString
+ReservedWords
+Maps
+Formats
+-->
+<LanguageDictionary name="DefaultNWNLanguageDictionary"
+	author="ScriptEase2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation='../../../scriptease2/scriptease/resources/schema/LanguageDictionarySchema.xsd'>
+	<IndentString>
+	</IndentString>
+	<ReservedWords>
+		<Word>if</Word>
+		<Word>else</Word>
+		<Word>return</Word>
+		<Word>for</Word>
+		<Word>while</Word>
+		<Word>do</Word>
+		<Word>struct</Word>
+		<Word>const</Word>
+		<Word>switch</Word>
+		<Word>case</Word>
+		<Word>break</Word>
+		<Word>action</Word>
+		<Word>command</Word>
+		<Word>const</Word>
+		<Word>effect</Word>
+		<Word>event</Word>
+		<Word>float</Word>
+		<Word>int</Word>
+		<Word>itemproperty</Word>
+		<Word>location</Word>
+		<Word>object</Word>
+		<Word>string</Word>
+		<Word>struct</Word>
+		<Word>talent</Word>
+		<Word>vector</Word>
+		<Word>void</Word>
+		<Word caseSensitive="false">true</Word>
+		<Word caseSensitive="false">false</Word>
+	</ReservedWords>
+	<Maps>
+	</Maps>
+	<Formats>
+		<!-- Format id (attribute) Fragment* -->
+		<!-- Any general "[type] [name]" combo -->
+		<Format id="parameter">
+			<Fragment data="type" default="void" />
+			<Literal> </Literal>
+			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
+		</Format>
+		<Format id="functionSignature">
+			<FormatRef ref="parameter" />
+			<Literal>(</Literal>
+			<Series data="parameters" unique="true" separator=", ">
+				<!-- Parameters are just the type and the name -->
+				<FormatRef ref="parameter" />
+			</Series>
+			<Literal>)</Literal>
+		</Format>
+		<Format id="implicitsDeclaration">
+			<Series data="implicits">
+				<FormatRef ref="variableDeclaration" />
+			</Series>
+		</Format>
+		<Format id="implicitsDefinition">
+			<Series data="implicits">
+				<FormatRef ref="variableDefinition" />
+			</Series>
+		</Format>
+		<Format id="variablesDeclaration">
+			<Series data="variables">
+				<FormatRef ref="variableDeclaration" />
+			</Series>
+		</Format>
+		<Format id="parametersDeclaration">
+			<Series data="parameters">
+				<FormatRef ref="variableDeclaration" />
+			</Series>
+		</Format>
+		<Format id="parametersDefinition">
+			<Series data="parameters">
+				<FormatRef ref="variableDefinition" />
+			</Series>
+		</Format>
+		<Format id="children">
+			<Line>
+				<Literal>//Variables Declaration</Literal>
+			</Line>
+				<FormatRef ref="variablesDeclaration" />
+			<Line><Literal>//Implicits Declaration</Literal></Line>
+			<FormatRef ref="implicitsDeclaration" />
+			<Line><Literal>//Implicits Definition</Literal></Line>
+			<FormatRef ref="implicitsDefinition" />
+			<Line>
+				<Literal>//Children</Literal>
+			</Line>
+			<!-- Actions and description definitions come last -->
+			<Series data="children">
+				<FormatRef data="scriptIt" ref="functionCall" />
+				<FormatRef data="askIt" ref="conditional" />
+				<FormatRef data="knowIt" ref="knowItDefinition" />
+			</Series>
+		</Format>
+		<Format id="childrenWithOutImplicits">
+			<Line>
+				<Literal>//Variables Declaration</Literal>
+			</Line>
+				<FormatRef ref="variablesDeclaration" />
+			<Line>
+				<Literal>//Children</Literal>
+			</Line>
+			<!-- Actions and description definitions come last -->
+			<Series data="children">
+				<FormatRef data="scriptIt" ref="functionCall" />
+				<FormatRef data="askIt" ref="conditional" />
+				<FormatRef data="knowIt" ref="knowItDefinition" />
+			</Series>
+		</Format>
+		<Format id="functionDeclaration">
+			<Line>
+				<FormatRef ref="functionSignature" />
+				<Literal>;</Literal>
+			</Line>
+		</Format>
+		<Format id="functionHeader">
+			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
+			<Literal>(</Literal>
+			<Series data="parameters" separator=", ">
+				<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
+			</Series>
+			<Literal>)</Literal>
+		</Format>
+		<Format id="functionCall">
+			<!-- Code block context -->
+			<Scope data="mainCodeBlock">
+				<Series data="parameters">
+					<FormatRef ref="variableDefinition" />
+				</Series>
+				<Line>
+					<FormatRef ref="functionHeader" />
+					<Literal>;</Literal>
+				</Line>
+			</Scope>
+		</Format>
+		<Format id="returnFunction">
+			<Series data="parameters">
+				<FormatRef ref="variableDefinition" />
+			</Series>
+			<Line>
+				<Literal>return </Literal>
+				<FormatRef ref="functionHeader" />
+				<Literal>;</Literal>
+			</Line>
+		</Format>
+		<Format id="functionDefinition">
+			<Line>
+				<FormatRef ref="functionSignature" />
+				<Literal> {</Literal>
+			</Line>
+			<Indent>
+				<Fragment data="code" />
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+		<Format id="variableDeclaration">
+			<Line>
+				<FormatRef ref="parameter" />
+				<Literal>;</Literal>
+			</Line>
+		</Format>
+		<Format id="knowItDefinition">
+			<Series data="variables">
+				<FormatRef ref="variableDefinition" />
+			</Series>
+		</Format>
+		<Format id="variableDefinition">
+			<Line>
+				<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
+				<Literal> = </Literal>
+				<Fragment data="formattedValue" />
+				<Literal>;</Literal>
+			</Line>
+		</Format>
+		<Format id="conditional">
+			<Line>
+				<Literal>//Condition Variables</Literal>
+			</Line>
+			<Series data="variables">
+				<FormatRef ref="variableDefinition" />
+			</Series>
+			<Line />
+			<Line>
+				<Literal>if(</Literal>
+				<Fragment data="condition" />
+				<Literal>){</Literal>
+			</Line>
+			<Indent>
+				<Scope data="ifChild">
+					<FormatRef ref="childrenWithOutImplicits" />
+				</Scope>
+			</Indent>
+			<Line>
+				<Literal>} else {</Literal>
+			</Line>
+			<Indent>
+				<Scope data="elseChild">
+					<FormatRef ref="childrenWithOutImplicits" />
+				</Scope>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+		<Format id="main">
+			<Line>
+				<Literal>void main() {</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>//Variable Declarations</Literal>
+				</Line>
+				<Series data="causes" unique="true">
+					<Series data="variables" unique="true">
+						<FormatRef ref="variableDeclaration" />
+					</Series>
+				</Series>
+				<Line>
+					<Literal>//Function Calls</Literal>
+				</Line>
+				<Series data="causes" unique="true">
+					<FormatRef ref="functionCall" />
+				</Series>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+
+		<!-- Used in the Active slot on Dialogue Lines -->
+		<Format id="conversation_conditional">
+		<!-- include files first -->
+			<Line>
+				<Literal>//Includes</Literal>
+			</Line>
+			<Line>
+				<Literal>#include "i_se_aux"</Literal>
+			</Line>
+			<Series data="imports" unique="true">
+				<FormatRef ref="import" />
+			</Series>
+			<Line/>
+			<Line>
+				<Literal>//Function Declarations</Literal>
+			</Line>
+			<!-- Function declarations next -->
+			<Series data="codeBlocks" unique="true">
+				<FormatRef ref="functionDeclaration" />
+			</Series>
+			<Line/>
+			<Line>
+				<Literal>//Starting Conditional</Literal>
+			</Line>
+			<Line>
+				<Literal>int StartingConditional() {</Literal>
+			</Line>
+			<Indent>
+				<Series data="codeBlocks" unique="true">
+					<FormatRef ref="returnFunction" />
+				</Series>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+			<Line/>
+			<Line>
+				<Literal>//Function Definitions</Literal>
+			</Line>
+			<!-- Function definitions last -->
+			<Series data="codeBlocks" unique="true">
+				<FormatRef ref="functionDefinition" />
+			</Series>
+			<Line/>
+		</Format>
+		
+		<!-- Used in the EndConversation and EndConverAbort slot on Dialogues -->
+		<Format id="conversation">
+		<!-- include files first -->
+			<Line>
+				<Literal>//Includes</Literal>
+			</Line>
+			<Line>
+				<Literal>#include "i_se_aux"</Literal>
+			</Line>
+			<Series data="imports" unique="true">
+				<FormatRef ref="import" />
+			</Series>
+			<Line/>
+			<Line>
+				<Literal>//Function Declarations</Literal>
+			</Line>
+			<!-- Function declarations next -->
+			<Series data="effects" unique="true">
+				<Series data="codeBlocks" unique="true">
+					<FormatRef ref="functionDeclaration" />
+				</Series>
+			</Series>
+			<Line/>
+			<Line>
+				<Literal>//Main</Literal>
+			</Line>
+			<Line>
+				<Literal>void main() {</Literal>
+			</Line>
+			<Line>
+				<Literal>//Variable Declarations</Literal>
+			</Line>
+			<Indent>
+				<Series data="effects" unique="true">
+					<Series data="variables" unique="true">
+						<FormatRef ref="variableDeclaration" />
+					</Series>
+				</Series>
+
+				<Series data="effects" unique="true">
+					<FormatRef ref="functionCall" />
+				</Series>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+			<Line/>
+			<Line>
+				<Literal>//Function Definitions</Literal>
+			</Line>
+			<!-- Function definitions last -->
+			<Series data="effects" unique="true">
+				<FormatRef ref="functionDefinition" />
+			</Series>
+			<Line/>
+		</Format>
+
+		<Format id="import">
+			<Line>
+				<Literal>#include </Literal>
+				<Fragment data="formattedValue" />
+			</Line>
+		</Format>
+
+		<!-- Default format for most files -->
+		<Format id="file">
+			<!-- include files first -->
+			<Line>
+				<Literal>//Includes</Literal>
+			</Line>
+			<Line>
+				<Literal>#include "i_se_aux"</Literal>
+			</Line>
+			<Line>
+				<Literal>#include "i_se_quest2"</Literal>
+			</Line>
+			<Series data="imports" unique="true">
+				<FormatRef ref="import" />
+			</Series>
+			<Line/>
+			<Line>
+				<Literal>//Function Declarations</Literal>
+			</Line>
+			<!-- Function declarations next -->
+			<Series data="codeBlocks" unique="true">
+				<FormatRef ref="functionDeclaration" />
+			</Series>
+			<Line/>
+			<Line>
+				<Literal>//Main</Literal>
+			</Line>
+			<FormatRef ref="main" />
+			<Line/>
+			<Line>
+				<Literal>//Function Definitions</Literal>
+			</Line>
+			<!-- Function definitions last -->
+			<Series data="codeBlocks" unique="true">
+				<FormatRef ref="functionDefinition" />
+			</Series>
+			<Line/>
+		</Format>
+	</Formats>
+</LanguageDictionary>

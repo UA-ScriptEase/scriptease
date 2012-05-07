@@ -1,0 +1,10 @@
+/**
+** Hitcount.Global defines a map to keep count of the number of times each switch has been hit
+** @author mfchurch
+**/
+#ifndef HITCOUNT.GLOBAL
+#define HITCOUNT.GLOBAL
+#include <map>
+#include <string>
+map<string, int> hitcount;
+#endif

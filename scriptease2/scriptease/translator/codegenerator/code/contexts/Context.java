@@ -1,0 +1,401 @@
+package scriptease.translator.codegenerator.code.contexts;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import scriptease.controller.ComplexStoryComponentDescendantCollector;
+import scriptease.controller.QuestPointNodeGetter;
+import scriptease.controller.apimanagers.EventSlotManager;
+import scriptease.gui.graph.nodes.GraphNode;
+import scriptease.gui.quests.QuestNode;
+import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.QuestPointNode;
+import scriptease.model.CodeBlock;
+import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.complex.AskIt;
+import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryItemSequence;
+import scriptease.translator.Translator;
+import scriptease.translator.TranslatorManager;
+import scriptease.translator.codegenerator.LocationInformation;
+import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
+
+/**
+ * Context represents the object based context used in code generation. It
+ * provides implementation for every possible evaluation or action do-able by
+ * code generation. However these calls must be overridden in order to give true
+<<<<<<< .working
+ * value to the methods. For example getting the parameters of a StartIt and
+ * getting the parameters of a ScriptIt will vary in implementation, thus the
+ * ScriptItContext and StartItContext must implement these methods in a meaningful
+ * manner. Context also provides information such as the current indentation of
+ * the code, the propagation of includes, symbols and used names in code
+ * generation.
+=======
+ * value to the methods. For example getting the parameters ScriptIt will vary
+ * in implementation, thus the ScriptItContext must implement these methods in a
+ * meaningful manner. Context also provides information such as the current
+ * indentation of the code, the propagation of includes, symbols and used names
+ * in code generation.
+>>>>>>> .merge-right.r1807
+ * 
+ * When a method is called in a context which does not make sense, it will
+ * return a default unimplemented value as an indicator that the call was not
+ * appropriate in the current context. For example, asking for the binding of a
+ * slot does not make sense, however we do not limit the translator author from
+ * attempting these calls, thus the translator author must understand the
+ * fundamentals of ScriptEase in order to correctly write a translator.
+ * 
+ * @author mfchurch
+ * 
+ */
+public class Context {
+	private String indent = "";
+	private final QuestNode model;
+	protected final Translator translator;
+	private CodeGenerationNamifier namifier;
+	protected LocationInformation locationInfo;
+
+	public static final String UNIMPLEMENTED = "<unimplemented in context>";
+
+	public Context(QuestNode model, String indent,
+			CodeGenerationNamifier existingNames, Translator translator) {
+
+		this.translator = translator;
+		this.indent = indent;
+
+		this.model = model;
+		this.setNamifier(new CodeGenerationNamifier(existingNames, translator
+				.getLanguageDictionary()));
+	}
+
+	/**
+	 * Sets the Context's location information, which provides useful
+	 * information for determining the Context's subject and slot
+	 * 
+	 * @param slot
+	 */
+	public final void setLocationInfo(LocationInformation locationInfo) {
+		this.locationInfo = locationInfo;
+	}
+
+	public final LocationInformation getLocationInfo() {
+		return this.locationInfo;
+	}
+
+	/**
+	 * @return the translator that is being used to translate ScriptEase
+	 *         patterns into game code.
+	 */
+	public final Translator getTranslator() {
+		return this.translator;
+	}
+
+	/**
+	 * @return the Context's model
+	 */
+	public final QuestNode getModel() {
+		return this.model;
+	}
+
+	public final void setNamifier(CodeGenerationNamifier namifier) {
+		this.namifier = namifier;
+	}
+
+	public final CodeGenerationNamifier getNamifier() {
+		return namifier;
+	}
+
+	public String getUniqueName(Pattern legalFormat) {
+		return unimplemented("getUniqueName(" + legalFormat + ")");
+	}
+
+	public String getNameOf(StoryComponent component) {
+		return unimplemented("getNameOf(" + component + ")");
+	}
+
+	/**
+	 * @return the indent
+	 */
+	public final String getIndent() {
+		return this.indent;
+	}
+
+	public final void indent(String indent) {
+		this.indent += indent;
+	}
+
+	public final void reduceIndent(String indent) {
+		this.indent = this.indent.substring(indent.length());
+	}
+
+	private Collection<StoryComponent> getComponents() {
+		final Collection<StoryComponent> components = new ArrayList<StoryComponent>();
+
+		// Get all the QuestPoints from the model
+		Collection<QuestPoint> questPoints = QuestPointNodeGetter
+				.getQuestPoints(this.model);
+
+		// for each quest point
+		for (QuestPoint questPoint : questPoints) {
+			// Get all the components from each QuestPoint
+			ComplexStoryComponentDescendantCollector getter = new ComplexStoryComponentDescendantCollector();
+			components.addAll(getter.collectDescendants(questPoint));
+		}
+
+		return components;
+	}
+
+	/**
+	 * Returns all of the scriptIts from the Context's symbolTable which match
+	 * the current slot
+	 * 
+	 * @return
+	 */
+	public Iterator<ScriptIt> getScriptIts() {
+		final Collection<ScriptIt> scriptIts = new ArrayList<ScriptIt>();
+
+		for (StoryComponent key : this.getComponents()) {
+			if (key instanceof ScriptIt) {
+				ScriptIt scriptIt = (ScriptIt) key;
+				Collection<CodeBlock> codeBlocksForSlot = scriptIt
+						.getCodeBlocksForLocation(this.locationInfo);
+				if (!codeBlocksForSlot.isEmpty())
+					scriptIts.add(scriptIt);
+			}
+		}
+		return scriptIts.iterator();
+	}
+
+	/**
+	 * Returns all of the codeBlocks associated with the Context's current slot
+	 * 
+	 * @return
+	 */
+	public Iterator<CodeBlock> getCodeBlocks() {
+		final Collection<CodeBlock> codeBlocks = new ArrayList<CodeBlock>();
+
+		for (StoryComponent key : this.getComponents()) {
+			if (key instanceof ScriptIt) {
+				final ScriptIt scriptIt = (ScriptIt) key;
+				Collection<CodeBlock> codeBlocksForSlot = scriptIt
+						.getCodeBlocksForLocation(this.locationInfo);
+				codeBlocks.addAll(codeBlocksForSlot);
+			}
+		}
+		return codeBlocks.iterator();
+	}
+
+	public CodeBlock getMainCodeBlock() {
+		unimplemented("getMainCodeBlock");
+		return null;
+	}
+
+	/**
+	 * Returns only the scriptIts which are not causes from the Context's
+	 * symbolTable
+	 * 
+	 * @return
+	 */
+	public Iterator<ScriptIt> getScriptItEffects() {
+		final Collection<ScriptIt> effectScriptIts = new ArrayList<ScriptIt>();
+		Iterator<ScriptIt> scriptIts = this.getScriptIts();
+		while (scriptIts.hasNext()) {
+			final ScriptIt scriptIt = scriptIts.next();
+			if (!scriptIt.isCause())
+				effectScriptIts.add(scriptIt);
+		}
+		return effectScriptIts.iterator();
+	}
+
+	public Iterator<KnowIt> getArguments() {
+		unimplemented("getArguments");
+		return new ArrayList<KnowIt>().iterator();
+	}
+
+	public Iterator<AskIt> getAskIts() {
+		unimplemented("getAskIts");
+		return new ArrayList<AskIt>().iterator();
+	}
+
+	public KnowItBinding getBinding() {
+		unimplemented("getBinding");
+		return null;
+	}
+
+	public Iterator<StoryComponent> getChildren() {
+		unimplemented("getChildren");
+		return new ArrayList<StoryComponent>().iterator();
+	}
+
+	public StoryItemSequence getIfChild() {
+		unimplemented("getIfChild");
+		return null;
+	}
+
+	public StoryItemSequence getElseChild() {
+		unimplemented("getElseChild");
+		return null;
+	}
+
+	public String getValue() {
+		return unimplemented("getValue");
+	}
+
+	public String getCondition() {
+		return unimplemented("getCondition");
+	}
+
+	public Iterator<KnowIt> getImplicits() {
+		final Collection<KnowIt> used = new ArrayList<KnowIt>();
+		final EventSlotManager slotManager = TranslatorManager.getInstance()
+				.getActiveTranslator().getSlotManager();
+		final Collection<KnowIt> implicits = slotManager
+				.getImplicits(this.locationInfo.getSlot());
+
+		// Only return implicits that are used in this Context
+		for (KnowIt implicit : implicits) {
+			if (this.getComponents().contains(implicit))
+				used.add(implicit);
+		}
+		return used.iterator();
+	}
+
+	public Iterator<String> getIncludes() {
+		final List<String> includes = new ArrayList<String>();
+		Iterator<CodeBlock> codeBlocks = this.getCodeBlocks();
+		while (codeBlocks.hasNext()) {
+			final CodeBlock codeBlock = codeBlocks.next();
+			includes.addAll(codeBlock.getIncludes());
+		}
+		return includes.iterator();
+	}
+
+	public Iterator<KnowIt> getVariables() {
+		unimplemented("getKnowIts");
+		return new ArrayList<KnowIt>().iterator();
+	}
+
+	public String getName() {
+		return unimplemented("getName");
+	}
+
+	public StoryComponent getOwner() {
+		unimplemented("getOwner");
+		return null;
+	}
+
+	public Iterator<KnowIt> getParameters() {
+		unimplemented("getParameters");
+		return new ArrayList<KnowIt>().iterator();
+	}
+
+	public KnowIt getParameter(String keyword) {
+		unimplemented("getParameter (" + keyword + ")");
+		return null;
+	}
+
+	public Iterator<ScriptIt> getCauses() {
+		final Collection<ScriptIt> causes = new ArrayList<ScriptIt>();
+		Iterator<ScriptIt> scriptIts = this.getScriptIts();
+		while (scriptIts.hasNext()) {
+			final ScriptIt scriptIt = scriptIts.next();
+			if (scriptIt.isCause())
+				causes.add(scriptIt);
+		}
+		return causes.iterator();
+	}
+
+	public Iterator<ScriptIt> getEffects() {
+		final Collection<ScriptIt> effects = new ArrayList<ScriptIt>();
+		Iterator<ScriptIt> scriptIts = this.getScriptIts();
+		while (scriptIts.hasNext()) {
+			final ScriptIt scriptIt = scriptIts.next();
+			if (!scriptIt.isCause())
+				effects.add(scriptIt);
+		}
+		return effects.iterator();
+	}
+
+	public KnowIt getSubject() {
+		unimplemented("getSubject");
+		return null;
+	}
+
+	public String getType() {
+		return unimplemented("getType");
+	}
+
+	public String getCode() {
+		return unimplemented("getCode");
+	}
+
+	public ScriptIt getScriptIt(String keyword) {
+		unimplemented("getScriptIt");
+		return null;
+	}
+
+	public AskIt getAskIt() {
+		unimplemented("getAskIt");
+		return null;
+	}
+
+	public String getFormattedValue() {
+		return unimplemented("getFormattedValue");
+	}
+
+	// Used to facilitate aspect-j logging of unimplemented context
+	private String unimplemented(String methodName) {
+		return UNIMPLEMENTED;
+	}
+
+	public Iterator<QuestNode> getQuestNodes() {
+		unimplemented("getQuests");
+		return new ArrayList<QuestNode>().iterator();
+	}
+
+	public Iterator<QuestPointNode> getQuestPointNodes() {
+		return QuestPointNodeGetter.getQuestPointNodes(this.model).iterator();
+	}
+
+	/**
+	 * Default to the first QuestPoint in the model's Quest Graph
+	 * 
+	 * @return
+	 */
+	public GraphNode getStartPoint() {
+		return this.model.getStartPoint();
+	}
+
+	public GraphNode getEndPoint() {
+		unimplemented("getEndPoint");
+		return null;
+	}
+
+	public String getCommitting() {
+		return unimplemented("getComitting");
+	}
+
+	public String getFanIn() {
+		return unimplemented("getFanIn");
+	}
+
+	public Iterator<GraphNode> getParentNodes() {
+		unimplemented("getParentNodes");
+		return new ArrayList<GraphNode>().iterator();
+	}
+
+	public Iterator<GraphNode> getChildrenNodes() {
+		unimplemented("getChildrenNodes");
+		return new ArrayList<GraphNode>().iterator();
+	}
+
+	public String getQuestContainer() {
+		return unimplemented("getQuestContainer");
+	}
+}

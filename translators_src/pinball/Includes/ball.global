@@ -1,0 +1,2 @@
+int ballsInPlay = 0;
+int remainingBalls = 0;

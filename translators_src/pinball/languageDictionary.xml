@@ -1,0 +1,492 @@
+<!-- LanguageDictionary
+name (attribute)
+author (attribute)
+IndentString
+ReservedWords
+Maps
+Formats
+-->
+<LanguageDictionary name="DefaultLOTRPinballLanguageDictionary" author="ScriptEase2">
+  <IndentString>    </IndentString>
+  <ReservedWords>
+    <Word>if</Word>
+    <Word>else</Word>
+    <Word>return</Word>
+    <Word>for</Word>
+    <Word>while</Word>
+    <Word>do</Word>
+    <Word>struct</Word>
+    <Word>const</Word>
+    <Word>switch</Word>
+    <Word>case</Word>
+    <Word>break</Word>
+    <Word>action</Word>
+    <Word>command</Word>
+    <Word>const</Word>
+    <Word>effect</Word>
+    <Word>event</Word>
+    <Word>float</Word>
+    <Word>int</Word>
+    <Word>itemproperty</Word>
+    <Word>location</Word>
+    <Word>object</Word>
+    <Word>string</Word>
+    <Word>struct</Word>
+    <Word>talent</Word>
+    <Word>vector</Word>
+    <Word>void</Word>
+	<Word>hitcount</Word>
+	<Word>elapsed</Word>
+	<Word>remaining</Word>
+	<Word>gameState</Word>
+	<Word>playerid</Word>
+    <Word caseSensitive="false">true</Word>
+    <Word caseSensitive="false">false</Word>
+  </ReservedWords>
+  <Maps>
+	<!-- Map
+	id (attribute)
+	default (attribute)
+	Entry*
+	-->
+    <Map id="eventInstaller" default="installSwitchEventHandler">
+      <Entry key="Left Flipper Button">installDedicatedSwitchEventHandler</Entry>
+      <Entry key="Right Flipper Button">installDedicatedSwitchEventHandler</Entry>
+    </Map>
+  </Maps>
+  <Formats>
+	<!-- Format
+	id (attribute)
+	Fragment*
+	-->
+    <Format id="parameter">
+      <Fragment data="type" default="void" />
+      <Literal> </Literal>
+      <Fragment data="name" legalValues="[a-zA-Z_0-9]*" />
+    </Format>
+    <Format id="functionSignature">
+      <FormatRef ref="parameter" />
+      <Literal>(</Literal>
+      <Series data="parameters" unique="true" separator=", ">
+        <FormatRef ref="parameter" />
+      </Series>
+      <Literal>)</Literal>
+    </Format>
+    <Format id="variablesDeclaration">
+      <Series data="variables">
+        <FormatRef ref="variableDeclaration" />
+      </Series>
+    </Format>
+    <Format id="parametersDeclaration">
+      <Series data="parameters">
+        <FormatRef ref="variableDeclaration" />
+      </Series>
+    </Format>
+    <Format id="parametersDefinition">
+      <Series data="parameters">
+        <FormatRef ref="variableDefinition" />
+      </Series>
+    </Format>
+    <Format id="children">
+      <FormatRef ref="variablesDeclaration" />
+      <Line />
+      <Series data="effects">
+        <FormatRef data="doIt" ref="functionCall" />
+        <FormatRef data="askIt" ref="conditional" />
+        <FormatRef data="knowIt" ref="knowItDefinition" />
+      </Series>
+    </Format>
+    <Format id="functionDeclaration">
+      <Line>
+        <FormatRef ref="functionSignature" />
+        <Literal>;</Literal>
+      </Line>
+    </Format>
+    <Format id="timeFunctionDefinition">
+      <Line>
+        <FormatRef ref="functionSignature" />
+        <Literal>{</Literal>
+      </Line>
+      <Indent>
+        <Line>
+          <Literal>if(elapsed == </Literal>
+          <Scope data="argument" ref="time">
+            <Fragment data="name" />
+          </Scope>
+        </Line>
+        <Line>
+          <Literal>{</Literal>
+        </Line>
+        <Line />
+        <Indent>
+          <FormatRef ref="children" />
+        </Indent>
+      </Indent>
+      <Line>
+        <Literal>}</Literal>
+      </Line>
+      <Line>
+        <Literal>}</Literal>
+      </Line>
+      <Line />
+    </Format>
+	<Format id="guardedFunctionDefinition">
+      <Line>
+        <FormatRef ref="functionSignature" />
+        <Literal>{</Literal>
+      </Line>
+      <Line />
+	  <Indent>
+		  <Scope data ="askIt">
+			<FormatRef ref="variablesDeclaration" />
+			<Series data="variables">
+				<FormatRef ref="variableDefinition" />
+			</Series>
+			<Line>
+				<Literal>if (</Literal>
+				<Fragment data="condition" />
+				<Literal>) {</Literal>
+			</Line>
+		  </Scope>
+		  <Indent>
+			<FormatRef ref="children" />
+		  </Indent>
+		  <Line>
+			<Literal>}</Literal>
+		  </Line>
+	  </Indent>
+      <Line>
+        <Literal>}</Literal>
+      </Line>
+      <Line />
+    </Format>
+    <Format id="functionDefinition">
+      <Line>
+        <FormatRef ref="functionSignature" />
+        <Literal>{</Literal>
+      </Line>
+      <Line />
+      <Indent>
+        <FormatRef ref="children" />
+      </Indent>
+      <Line>
+        <Literal>}</Literal>
+      </Line>
+      <Line />
+    </Format>
+    <Format id="apiFunctionDefinition">
+      <Line>
+        <FormatRef ref="functionSignature" />
+        <Literal>{</Literal>
+      </Line>
+      <Indent>
+        <Line>
+          <Literal>//Increment hitcount of switch</Literal>
+        </Line>
+        <Line>
+          <Literal>if (</Literal>
+          <Scope data="argument" ref="theEvent">
+            <Fragment data="name" />
+          </Scope>
+          <Literal> == kSwitchRising)</Literal>
+        </Line>
+        <Indent>
+          <Line>
+            <Literal>++hitcount[</Literal>
+            <Scope data="subject">
+              <Scope data="binding">
+                <Fragment data="formattedValue" />
+              </Scope>
+            </Scope>
+            <Literal>];</Literal>
+          </Line>
+        </Indent>
+      </Indent>
+      <Line />
+      <Indent>
+        <FormatRef ref="children" />
+      </Indent>
+      <Line>
+        <Literal>}</Literal>
+      </Line>
+      <Line />
+    </Format>
+    <Format id="functionHeader">
+      <Fragment data="name" legalValues="[a-zA-Z_0-9]*" />
+      <Literal>(</Literal>
+      <Series data="parameters" separator=", ">
+        <FormatRef ref="variableCall" />
+      </Series>
+      <Literal>)</Literal>
+    </Format>
+    <Format id="functionCall">
+      <Series data="parameters">
+        <FormatRef ref="variableDefinition" />
+      </Series>
+      <Line />
+      <Line>
+        <FormatRef ref="functionHeader" />
+        <Literal>;</Literal>
+      </Line>
+    </Format>
+    <Format id="actionDefinition">
+      <Line>
+        <FormatRef ref="functionSignature" />
+        <Literal> {</Literal>
+      </Line>
+      <Indent>
+        <Fragment data="code" />
+      </Indent>
+      <Line>
+        <Literal>}</Literal>
+      </Line>
+      <Line />
+    </Format>
+    <Format id="variableDeclaration">
+      <Line>
+        <FormatRef ref="parameter" />
+        <Literal>;</Literal>
+      </Line>
+    </Format>
+    <Format id="knowItDefinition">
+      <Line />
+      <Line>
+        <Literal>//KnowIt Variables</Literal>
+      </Line>
+      <Series data="variables">
+        <FormatRef ref="variableDefinition" />
+      </Series>
+      <FormatRef ref="variableDefinition" />
+    </Format>
+    <Format id="variableDefinition">
+      <Line>
+        <Fragment data="name" legalValues="[a-zA-Z_0-9]*" />
+        <Literal> = </Literal>
+        <Fragment data="formattedValue" />
+        <Literal>;</Literal>
+      </Line>
+    </Format>
+    <Format id="variableCall">
+      <Fragment data="name" legalValues="[a-zA-Z_0-9]*" />
+    </Format>
+    <Format id="conditional">
+      <Line>
+        <Literal>//Condition Variables</Literal>
+      </Line>
+      <Series data="variables">
+        <FormatRef ref="variableDefinition" />
+      </Series>
+      <Line />
+      <Line>
+        <Literal>if(</Literal>
+        <Fragment data="condition" />
+        <Literal>){</Literal>
+      </Line>
+      <Indent>
+        <Scope data="ifChild">
+          <FormatRef ref="children" />
+        </Scope>
+      </Indent>
+      <Line>
+        <Literal>} else {</Literal>
+      </Line>
+      <Indent>
+        <Scope data="elseChild">
+          <FormatRef ref="children" />
+        </Scope>
+      </Indent>
+      <Line>
+        <Literal>}</Literal>
+      </Line>
+    </Format>
+    <Format id="eventHandlerInstall">
+      <Line>
+        <MapRef ref="eventInstaller" data="subject" />
+        <Literal> ( </Literal>
+        <Fragment data="name" legalValues="[a-zA-Z_0-9]*" />
+        <Literal>, </Literal>
+        <Literal>"</Literal>
+        <Scope data="subject">
+          <Scope data="binding">
+            <Fragment data="name" legalValues="[a-zA-Z_0-9]*" />
+          </Scope>
+        </Scope>
+        <Literal>"</Literal>
+        <Literal>, </Literal>
+        <Fragment data="slot" />
+        <Literal>);</Literal>
+      </Line>
+    </Format>
+    <Format id="imports">
+      <Line>
+        <Literal>#include "</Literal>
+        <Fragment data="name" />
+        <Literal>"</Literal>
+      </Line>
+    </Format>
+    <Format id="file">
+      <Line>
+        <Literal>#include "gameSetup.h"</Literal>
+      </Line>
+      <Line>
+        <Literal>#include &lt;sstream&gt;</Literal>
+      </Line>
+      <Line>
+        <Literal>#include "API_Events.h"</Literal>
+      </Line>
+      <Line>
+        <Literal>#include &lt;string&gt;</Literal>
+      </Line>
+      <Line>
+        <Literal>#include "Event.h"</Literal>
+      </Line>
+      <Line>
+        <Literal>#include "hitcount.global"</Literal>
+      </Line>
+      <Line>
+        <Literal>#include "game.global"</Literal>
+      </Line>
+      <Line>
+        <Literal>#include "time.global"</Literal>
+      </Line>
+	  <Line>
+        <Literal>#include "network.global"</Literal>
+      </Line>
+      <Series data="imports" unique="true">
+        <FormatRef ref="imports" />
+      </Series>
+      <Line />
+      <Series data="startIts" unique="true">
+        <FormatRef ref="functionDeclaration" />
+      </Series>
+      <Series data="complexActions" unique="true">
+        <FormatRef ref="functionDeclaration" />
+      </Series>
+      <Line />
+      <Line>
+        <Literal>int onTick(double delta)</Literal>
+      </Line>
+      <Line>
+        <Literal>{</Literal>
+      </Line>
+	  <Indent>
+		  <Line>
+			<Literal>if(inGame) {</Literal>
+		  </Line>
+		  <Indent>
+			<Line>
+			  <Literal>elapsed += delta;</Literal>
+			</Line>
+		    <Line>
+			  <Literal>if (remaining != -1)</Literal>
+		    </Line>
+			<Indent>
+			  <Line>
+				<Literal>remaining -= delta;</Literal>
+			  </Line>
+			</Indent>
+		  	<Literal>}</Literal>
+		  </Indent>
+		  <Series data="startIts" filterBy="slot" filter="onTick.*">
+			<FormatRef ref="functionCall" />
+		  </Series>
+		  <Line>
+			<Literal>return 0;</Literal>
+		  </Line>
+	  </Indent>
+      <Line>
+        <Literal>}</Literal>
+      </Line>
+      <Line />
+	  <!-- main -->
+      <Line>
+        <Literal>int main(int argc, char **argv) {</Literal>
+      </Line>
+      <Indent>
+        <Line>
+          <Literal>if(argc &lt; 2) {</Literal>
+        </Line>
+        <Indent>
+          <Line>
+            <Literal>cout&lt;&lt;"No XML file was specified"&lt;&lt;endl;</Literal>
+          </Line>
+          <Line>
+            <Literal>exit(1);</Literal>
+          </Line>
+        </Indent>
+        <Line>
+          <Literal>}</Literal>
+        </Line>
+        <Line>
+          <Literal>setupGame(argv[1]);</Literal>
+        </Line>
+	<Line>
+		<Literal>if (argc == 3)</Literal>
+	</Line>
+	<Indent>
+		<Line>
+			<Literal>initNetworkPlay(argv[2]);</Literal>
+		</Line>
+	</Indent>
+	<Line>
+		<Literal>else</Literal>
+	</Line>
+	<Indent>
+		<Line>
+			<Literal>initNetworkPlay((char *)"127.0.0.1");</Literal>
+		</Line>
+	</Indent>
+	<Line>
+		<Literal>playerid = NetworkPlay::instance()->getPlayerID();</Literal>
+	</Line>
+	 <Line>
+	 	<Literal>_gameState = new NetworkVar((char*)"gameState", (int) 0);</Literal>
+	 </Line>
+	 <Series data="startIts" filterBy="slot" filter="onNetworkInit">
+		<FormatRef ref="functionCall" />
+	 </Series>
+        <Line>
+          <Literal>runEventHandler();</Literal>
+        </Line>
+        <Line>
+          <Literal>return 0;</Literal>
+        </Line>
+      </Indent>
+      <Line>
+        <Literal>}</Literal>
+      </Line>
+      <Line />
+      <Line>
+        <Literal>void installEventHandlers() {</Literal>
+      </Line>
+      <Indent>
+        <Series data="startIts" filterBy="slot" filter="kSwitchRising|kSwitchFalling">
+          <FormatRef ref="eventHandlerInstall" />
+        </Series>
+      </Indent>
+      <Line>
+        <Literal>}</Literal>
+      </Line>
+      <Line />
+      <Line>
+        <Literal>//StartIts</Literal>
+      </Line>
+      <Series data="startIts" unique="true" filterBy="slot" filter="kSwitchRising|kSwitchFalling">
+        <FormatRef ref="apiFunctionDefinition" />
+      </Series>
+      <Series data="startIts" unique="true" filterBy="slot" filter="onTick.*">
+        <FormatRef ref="guardedFunctionDefinition" />
+      </Series>
+	  <Series data="startIts" unique="true" filterBy="slot" filter="onNetworkInit">
+        <FormatRef ref="functionDefinition" />
+      </Series>
+      <Line>
+        <Literal>//Complex Actions</Literal>
+      </Line>
+      <Series data="complexActions" unique="true">
+        <FormatRef ref="actionDefinition" />
+      </Series>
+      <Line />
+    </Format>
+  </Formats>
+</LanguageDictionary>

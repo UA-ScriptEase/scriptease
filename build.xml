@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!-- 
+    You can get an overview of how this is structured by reading the description tags, 
+    which is easy to do if you run ant -p in the directory that this file is located 
+    to display the project's build descriptions.
+    
+        - remiller
+-->
+<project default="jar" name="ScriptEase2">
+	<description>
+=============================
+SCRIPTEASE II
+This time it's personal
+=============================
+This is the ANT File for building the ScriptEase 2 project. It requires ANT v1.7 to run.
+
+It is intended to run on a linux machine, but it is possible that some or 
+all of the targets could run in windows.
+		
+Before you use any of the targets, read through the short notes below.
+
+Some important targets to read up on are: 
+	Jar, Share, Release, Compile, Clean, and Count.
+
+ === NOTES ===
+
+1. INITIALIZATION
+    Ant variables are initialized in the &quot;init commands&quot; section. Any of 
+    these can be overridden by running ant with the -D&lt;flagname&gt;=&lt;value&gt; 
+    flag, for example:
+    
+        ant -DdebugMode=true
+    
+    Would set the debugMode property to true, despite what it is initialized to in 
+    the  init commands.
+		
+	Some useful properties are:
+		debugMode       - Used in compilation to determine if the java is compiled with debugger info.
+		noMail          - used to prevent mailing the team about new posted private or public jars
+		keepBuildNumber - Prevents incrementing the build number.
+
+2. RELEASES (Jar, Release, and Deploy)
+    We have to send out releases to the the team, the 250 class, other researchers, 
+    companies, and the public.
+		
+	When releasing a jar for any reason, definitely at least test it yourself. If you're
+    doing a CMPUT 250 or public release, give it more testing than you normally do.
+    This will save you from having the students find bugs, especially since they rely 
+    on ScriptEase to work for them to get their project done.
+		
+    If you're doing a public release, it's just as important to make sure it's reasonably 
+    robust. Nobody will use broken software. It's also a good idea to have an internal 
+    release before a public one so that Duane can play with it because he's talented 
+    at finding bugs. 
+		
+    We have enough to do without having to scramble to fix a broken release.
+
+3. VERSION NUMBERS
+	When generating a version number (as seen in Jar), the format used is:
+
+	&lt;major_version&gt;.&lt;minor_version&gt;.&lt;head_revision_number&gt;
+		
+        major_version        - the overall iteration number of ScriptEase as 
+                                a system (ie ScriptEase 2's major_version is
+                                always 2).
+        minor_version        - an arbitrary release number that should be 
+                                incremented once every public release.
+        head_revision_number - is the number returned by svn info.
+
+	For example, the first public release of ScriptEase 2 could something like 2.0.1337
+		
+	If you want to push a public release without incrementing the minor version, 
+	just include -DkeepBuildNumber=true in the arguments passed to ANT.
+
+4. NEW JAVA LIBRARIES AND DEPENDENCIES
+	If you start including a library JAR for ScriptEase, it must live in the 
+	scriptease/resources/lib folder. The 'Jar' target should automagically 
+	include this.
+		
+5. ASPECTS
+	We're compiling with aspects here. It's mostly the same as regular 
+	compilation, but we need to also include the copy of AspectJ's runtime 
+	jar (aspectjrt.jar) in any Jar file we distribute, as well as point
+	ANT to the iajc task definition in the AspectJ installation. 
+		
+	To make this easier, I've set it up to look for the required jar in a local 
+	installation of AspectJ, stored in the property	'aspectj.home'. By default, 
+	this is %HOME%/aspectj1.6, but if you want it to point somewhere else, call 
+	ant with -Daspectj.home="PATH_TO_ASPECTJ_HERE".
+		
+	If we ever upgrade AspectJ versions, then we need to:
+		1. Update AJDT
+		2. Install the new AspectJ separately to your home directory.
+                   2a. Go to the Aspect J official website. At the time of writing, this is:
+                        http://www.eclipse.org/aspectj/downloads.php
+                   2b. Download the latest jar of the appropriate version. This is most likely 
+                       called aspectj-1.6.11.jar 
+                   2c. Unpack the jar to the expected installation folder   
+		3. Update this script to point to the new version.
+		4. Update this documentation to reflect the new version.
+		
+6. EXEC CALLS
+	I used a lot of exec calls, most often to 'sh' to pipe input places. This is 
+	usually to get around the failings of ANT to do what I wanted, though it was 
+	usually possible through some community library. I didn't want to deal with 
+	trying to install even more software and create even further dependencies, 
+	so I decided to not install the ant-contrib library. If you want to change this,
+	go right ahead.
+		
+	</description>
+
+	<import file="./commonBuild.xml" />
+
+	<!-- ==== START INIT COMMANDS ==== -->
+
+	<property file="mailingLists.properties" />
+
+	<exec executable="sh" outputproperty="user.name.full">
+		<arg value="-c" />
+		<arg value="finger remiller | grep &quot;Name&quot; | awk -F&quot;Name: &quot; '{print $2}'" />
+	</exec>
+
+	<!-- This is the java version to compile to -->
+	<property name="javaVersion" value="1.6" />
+	<!-- Whether it should be compiled including debug information, 
+	 (ie can you run a debugger on it). This is independent of 
+	 ScriptEase's "Run in Debug Mode" flag. -->
+	<property name="debugMode" value="false" />
+
+	<property name="buildDirectory" value="build" />
+	<property name="jarDirectory" location="jar" />
+	<property name="seSrcDirectory" location="scriptease2" />
+	<property name="resourcesDirectory" value="${seSrcDirectory}/scriptease/resources/" />
+	<property name="translatorsDirectory" value="${seSrcDirectory}/translators" />
+	<property name="jarFile" value="${ant.project.name}.jar" />
+	<property name="zipFile" value="${ant.project.name}.zip" />
+
+	<!-- Versioning is 'major.minor.head'. See build file documentation for details.
+	     The minor version is defined either on update, or just before use. We can't 
+	     redefine properties. We find out the head revision with linux magic and 
+	     exec. Also, I'd define the seVersion here, but it needs to be defined right 
+	     where we use it, because we can't reassign properties.-->
+	<property name="buildNumberLocation" value="/usr/brule8/misc/script/development/buildNumber.properties" />
+	<property name="majorVersion" value="2" />
+	<exec executable="sh" outputproperty="headVersion">
+		<arg value="-c" />
+		<arg value="svn info | grep &quot;Last Changed Rev&quot; | awk -F&quot;: &quot; '{print $2}'" />
+	</exec>
+
+	<property name="SLOCCountDirectory" value="sloccount-2.26" />
+	<property name="SLOCCountLocation" value="development/Tools/LineCounter/${SLOCCountDirectory}" />
+
+	<available file="${SLOCCountDirectory}/sloccount" property="SLOCCount.present" />
+
+	<!-- This should be updated if we ever change AspectJ versions -->
+	<property name="aspectj.home" value="${user.home}/aspectj1.6" />
+
+	<available file="${aspectj.home}" property="AspectJ.present" />
+
+	<taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties">
+		<classpath>
+			<pathelement location="${aspectj.home}/lib/aspectjtools.jar" />
+		</classpath>
+	</taskdef>
+
+	<path id="buildClasspath">
+		<fileset dir="${resourcesDirectory}/lib/">
+			<include name="**/*.jar" />
+		</fileset>
+		<!-- Include all translator jars too -->
+		<path path="translators/*" />
+		<pathelement path="${aspectj.home}/lib/aspectjrt.jar" />
+	</path>
+	<!-- ==== END INIT COMMANDS ==== -->
+
+	<!-- ==== TARGETS ==== -->
+	<target name="checkAspectJ" unless="AspectJ.present" description="Autofails unless AspectJ is locatable.">
+		<echo>You need to install the AspectJ package separate from Eclipse in your home directory.</echo>
+		<fail />
+	</target>
+
+	<target name="clean" description="Removes the build artifacts that Compile creates.">
+		<delete dir="${buildDirectory}" />
+		<mkdir dir="${buildDirectory}" />
+	</target>
+
+	<target name="compile" depends="checkAspectJ, clean" description="Compiles ScriptEase 2 into a local build directory.">
+		<echo message="Compiling with debug mode: ${debugMode}" />
+
+		<iajc destdir="${buildDirectory}" srcdir="${seSrcDirectory}" source="${javaVersion}" target="${javaVersion}" debug="${debugMode}" Xlintwarnings="true" showWeaveInfo="false">
+			<!-- translators are built separately -->
+			<exclude name="translators/**" />
+
+			<!-- We need to include a base Java package in this bootclasspath. 
+       		  As of writing, it's required for some reason to use 
+		      IdentityArrayList - remiller -->
+			<bootclasspath>
+				<fileset dir="${java.home}/lib">
+					<include name="**/rt.jar" />
+				</fileset>
+			</bootclasspath>
+			<classpath>
+				<path refid="buildClasspath" />
+			</classpath>
+		</iajc>
+	</target>
+
+	<target name="downloadLineCount" unless="SLOCCount.present" description="Downloads the line-counting software if it isn't already present.">
+		<echo message="SLOCCount not present, downloading from script account. Please authenticate:" />
+		<exec executable="scp" failonerror="yes">
+			<arg value="-r" />
+			<arg value="script@${linuxMachine}:&quot;${SLOCCountLocation}&quot;" />
+			<arg value="./" />
+		</exec>
+	</target>
+
+	<!-- 
+		I realize that this isn't "building" anything per se, but it's 
+	    convenient to have as a target anyways. 
+	-->
+	<target name="count" depends="downloadLineCount" description="Uses SLOCCount to count the number of Source Lines of Code (SLOC) in ScriptEase2.">
+		<exec executable="${SLOCCountDirectory}/sloccount">
+			<arg value="${seSrcDirectory}" />
+		</exec>
+		<echo message="Counting complete. See results above." />
+	</target>
+
+	<target name="jar" depends="compile" description="Creates a runnable JAR file (with magically updated version number) in the directory that this ant file is run.">
+		<delete dir="${jarDirectory}" />
+		<mkdir dir="${jarDirectory}" />
+
+		<echo>${jarDirectory}/lib</echo>
+		<copy todir="${jarDirectory}/lib" overwrite="true">
+			<fileset dir="${resourcesDirectory}/lib/">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+		<copy file="${aspectj.home}/lib/aspectjrt.jar" todir="${jarDirectory}/lib" overwrite="true" />
+
+		<!-- the deployed jar has libraries right next to the jar in a lib folder -->
+		<pathconvert property="jarClasspath" refid="buildClasspath" pathsep=" ">
+			<map from="${basedir}/scriptease2/scriptease/resources/lib" to="lib" />
+			<map from="${basedir}/" to="" />
+			<map from="${aspectj.home}/lib" to="lib" />
+		</pathconvert>
+
+		<echo>Building with following classpath in maifest file:</echo>
+		<echo>${jarClasspath}</echo>
+
+		<!-- load the versioning data if it's not already in memory -->
+		<property file="${buildNumberLocation}" />
+		<property name="jarVersion" value="${majorVersion}.${build.number}.${headVersion}" />
+	 	<echo>Jar version is ${jarVersion}</echo>
+
+		<jar destFile="${jarDirectory}/${jarFile}">
+			<fileset dir="${buildDirectory}" />
+
+			<!-- Include all of the non-code resources, too-->
+			<fileset dir="${seSrcDirectory}">
+				<include name="scriptease/resources/*.properties" />
+				<include name="scriptease/resources/*.ini" />
+				<include name="scriptease/resources/schema/*.xsd" />
+				<include name="scriptease/translator/xml/*.dtd" />
+                <include name="**/*.gif" />
+                <include name="**/*.jpg" />
+                <include name="**/*.png" />
+                <include name="**/*.jpeg" />
+				<exclude name="scriptease/resources/lib/**" />
+				<!-- translators are built separately -->
+				<exclude name="translators/**" />
+			</fileset>
+
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Implementation-Vendor" value="University of Alberta" />
+				<attribute name="Implementation-Title" value="ScriptEase" />
+				<attribute name="Implementation-Version" value="${jarVersion}" />
+				<attribute name="Class-Path" value=". ${jarClasspath}" />
+				<attribute name="Main-Class" value="scriptease.ScriptEase" />
+			</manifest>
+		</jar>
+
+		<chmod perm="750" file="${jarDirectory}/${jarFile}" />
+	</target>
+
+	<target name="zip" depends="jar" description="Creates a distributable zip file containing the jar and the libraries required for ScriptEase to run.">
+		<property name="zipDir" value="${jarDirectory}/ScriptEase" />
+
+		<delete file="${zipFile}" />
+
+		<copy todir="${zipDir}">
+			<fileset dir="${jarDirectory}">
+				<exclude name="ScriptEase" />
+			</fileset>
+		</copy>
+
+		<!-- Include a default empty directory so that when it is 
+		     unpacked it exists-->
+		<mkdir dir="${zipDir}/translators" />
+
+		<!-- This is excluding the jar directory contents, 
+		     not the contents of the jar directory's ScriptEase directory.-->
+		<zip destfile="${zipFile}" basedir="${jarDirectory}">
+			<exclude name="${jarFile}" />
+			<exclude name="lib/**" />
+		</zip>
+
+		<delete file="${zipDir}" />
+	</target>
+
+	<target name="share" depends="zip" description="Runs 'post' to be configured to post the zip privately.">
+		<!-- This is where all the internally shared Jars go -->
+		<property name="shareDirectory" value="${webdocs}/internal/" />
+
+		<property name="dest.dir" value="${shareDirectory}" />
+		<property name="src.file" value="${zipFile}" />
+		<property name="link.location" value="${shareDirectory}" />
+		<property name="expected.web.location" value="http://www.cs.ualberta.ca/~script/internal" />
+
+		<property name="mail.body" value="A new ScriptEase 2 Jar has been shared privately with the group by ${user.name.full} (${user.name}).\n\nYou should be able to access it at http://www.cs.ualberta.ca/~script/internal/${src.file}." />
+		<property name="mail.title" value="New Internal ScriptEase Jar Released - Revision ${headVersion}" />
+		<property name="mail.list" value="${internalMail}" />
+
+		<antcall target="post" />
+	</target>
+
+	<target name="incrementBuildNumber" unless="keepBuildNumber" description="Increments the public ('minor') build number stored in the script account. Disable this target by setting 'keepBuildNumber' to true.">
+		<!-- read in the last used build number and increase it -->
+		<exec executable="sh" outputproperty="build.number" failonerror="true">
+			<arg value="-c" />
+			<arg value="cat ${buildNumberLocation} | grep &quot;build.number&quot; | awk -F= '{print $2 + 1}'" />
+		</exec>
+		<!-- Save the new one to file. -->
+		<exec executable="sh" failonerror="true">
+			<arg value="-c" />
+			<arg value="echo &quot;build.number=${build.number}&quot; > ${buildNumberLocation}" />
+		</exec>
+		<echo>Public build number is now ${build.number}. The last number used is stored at ${buildNumberLocation}.</echo>
+	</target>
+
+	<target name="release" depends="incrementBuildNumber, zip" description="Runs 'post', configured to post the zip publically.">
+		<echo>You are generating a PUBLIC release. I sure hope you tested it.</echo>
+
+		<property name="dest.dir" value="${webdocs}/files/releases" />
+		<property name="src.file" value="${zipFile}" />
+		<property name="link.location" value="${webdocs}" />
+		<property name="expected.web.location" value="http://www.cs.ualberta.ca/~script" />
+
+		<!--Drop the head version here because it's irrelevant to the world. -->
+		<property name="seVersion" value="${majorVersion}.${build.number}" />
+
+		<property name="mail.body" value="Version ${seVersion} of ScriptEase has been released to the public website by ${user.name.full}.\n\nYou should be able to access it at http://www.cs.ualberta.ca/~script/downloads." />
+		<property name="mail.title" value="New Public Release of ScriptEase 2 - Version ${seVersion}" />
+		<property name="mail.list" value="${publicMail}" />
+
+		<antcall target="post" />
+	</target>
+</project>
+

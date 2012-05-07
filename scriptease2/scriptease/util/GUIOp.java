@@ -1,0 +1,192 @@
+package scriptease.util;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.RenderingHints;
+
+import javax.swing.JComponent;
+import javax.swing.SwingWorker;
+
+/**
+ * Collection of simple GUI-related routines that don't really belong anywhere.
+ * These exist to facilitate common GUI operations.
+ * 
+ * @author remiller
+ * @author mfchurch
+ */
+public class GUIOp {
+	public static int MAX_COLOUR_VALUE = 255;
+
+	/**
+	 * Scales the given white value (but not alpha) by <code>factor</code>,
+	 * which is normalized to 1.0. So, for example, a <code>factor</code> of 0.5
+	 * will return a colour that is half as white as <code>source</code> on all
+	 * three colour axes, while a <code>factor</code> of 2.0 will return a
+	 * colour that is twice as white. <br>
+	 * <br>
+	 * The standard colour changing methods {@link Color.brighter()} and {@link
+	 * Color.darker()} are essentially equivalent to using a factor of 1.4 and
+	 * 0.7, respectively.
+	 * 
+	 */
+	public static Color scaleWhite(Color source, double factor) {
+		double average = (((double) (source.getRed() + source.getBlue() + source
+				.getGreen())) / (double) (3 * MAX_COLOUR_VALUE))
+				* (double) MAX_COLOUR_VALUE;
+		double amount = factor * average;
+		int red = (int) Math.min(source.getRed() + amount, MAX_COLOUR_VALUE);
+		int green = (int) Math
+				.min(source.getGreen() + amount, MAX_COLOUR_VALUE);
+		int blue = (int) Math.min(source.getBlue() + amount, MAX_COLOUR_VALUE);
+
+		return new Color(red, green, blue);
+	}
+
+	/**
+	 * Scales the given colour's RGB values (but not alpha) by
+	 * <code>factor</code>, which is normalized to 1.0. So, for example, a
+	 * <code>factor</code> of 0.5 will return a colour that is half as bright as
+	 * <code>source</code> on all three colour axes, while a <code>factor</code>
+	 * of 2.0 will return a colour that is twice as bright. <br>
+	 * <br>
+	 * The standard colour changing methods {@link Color.brighter()} and {@link
+	 * Color.darker()} are essentially equivalent to using a factor of 1.4 and
+	 * 0.7, respectively.
+	 * 
+	 */
+	public static Color scaleColour(Color source, double factor) {
+		int red = (int) Math.min(source.getRed() * factor, MAX_COLOUR_VALUE);
+		int green = (int) Math
+				.min(source.getGreen() * factor, MAX_COLOUR_VALUE);
+		int blue = (int) Math.min(source.getBlue() * factor, MAX_COLOUR_VALUE);
+
+		return new Color(red, green, blue);
+	}
+
+	/**
+	 * Combines the two given colours with the given alpha value.
+	 * 
+	 * @param c1
+	 * @param c2
+	 * @param alpha
+	 * @return
+	 */
+	public static Color combine(Color c1, Color c2, double alpha) {
+		int red = (int) (alpha * c1.getRed() + (1 - alpha) * c2.getRed());
+		int green = (int) (alpha * c1.getGreen() + (1 - alpha) * c2.getGreen());
+		int blue = (int) (alpha * c1.getBlue() + (1 - alpha) * c2.getBlue());
+		return new Color(red, green, blue);
+	}
+
+	/**
+	 * Spawns a thread to fades the colour of the given component from c1 to c2
+	 * 
+	 * @param c1
+	 *            the current colour of the component
+	 * @param c2
+	 *            the desired colour of the component
+	 */
+	public static void fadeBackground(final JComponent component,
+			final Color c1, final Color c2) {
+		SwingWorker<Void, Void> fader = new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() throws Exception {
+				final int frames = 100;
+				for (int n = 0; n <= frames; n++) {
+					double alpha = 1.0 * n / frames;
+					component.setBackground(combine(c2, c1, alpha));
+					component.repaint();
+				}
+				return null;
+			}
+		};
+		fader.execute();
+	}
+
+	public static void paintArrow(Graphics g, Point start, Point end) {
+		final double x1 = start.getX();
+		final double y1 = start.getY();
+		final double x2 = end.getX();
+		final double y2 = end.getY();
+
+		float arrowWidth = 4.0f;
+		float theta = 0.423f;
+		int[] xPoints = new int[3];
+		int[] yPoints = new int[3];
+		float[] vecLine = new float[2];
+		float[] vecLeft = new float[2];
+		float fLength;
+		float th;
+		float ta;
+		float baseX, baseY;
+
+		// Create a new graphics context
+		Graphics2D g2 = (Graphics2D) g.create();
+		// Antialiasing
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+
+		xPoints[0] = (int) x2;
+		yPoints[0] = (int) y2;
+
+		// build the line vector
+		vecLine[0] = (float) (xPoints[0] - x1);
+		vecLine[1] = (float) (yPoints[0] - y1);
+
+		// build the arrow base vector - normal to the line
+		vecLeft[0] = -vecLine[1];
+		vecLeft[1] = vecLine[0];
+
+		// setup length parameters
+		fLength = (float) Math.sqrt(vecLine[0] * vecLine[0] + vecLine[1]
+				* vecLine[1]);
+		th = arrowWidth / (1.5f * fLength);
+		ta = arrowWidth / (1.5f * ((float) Math.tan(theta) / 1.5f) * fLength);
+
+		// find the base of the arrow
+		baseX = ((float) xPoints[0] - ta * vecLine[0]);
+		baseY = ((float) yPoints[0] - ta * vecLine[1]);
+
+		// build the points on the sides of the arrow
+		xPoints[1] = (int) (baseX + th * vecLeft[0]);
+		yPoints[1] = (int) (baseY + th * vecLeft[1]);
+		xPoints[2] = (int) (baseX - th * vecLeft[0]);
+		yPoints[2] = (int) (baseY - th * vecLeft[1]);
+
+		g2.drawLine((int) x1, (int) y1, (int) baseX, (int) baseY);
+		g2.fillPolygon(xPoints, yPoints, 3);
+		g2.dispose();
+	}
+
+	/**
+	 * Gets the middle right point of the GraphNode's component
+	 * 
+	 * @return
+	 */
+	public static Point getMidRight(JComponent component) {
+		Point point = new Point();
+		if (component != null) {
+			point.setLocation((int) (component.getX() + component
+					.getPreferredSize().getWidth()),
+					(int) (component.getY() + component.getPreferredSize()
+							.getHeight() / 2));
+		}
+		return point;
+	}
+
+	/**
+	 * Gets the middle left point of the GraphNode's component
+	 * 
+	 * @return
+	 */
+	public static Point getMidLeft(JComponent component) {
+		Point point = new Point();
+		if (component != null) {
+			point.setLocation(component.getX(),
+					component.getY() + component.getHeight() / 2);
+		}
+		return point;
+	}
+}

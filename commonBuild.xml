@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project default="post" name="Common ScriptEase Build">
+	<description>
+Common targets exist in this build file. Some of them are complex to use - see their 
+in-line comments for details on what is expected.  
+	</description>
+
+	<!-- ==== START INIT COMMANDS ==== -->
+	<property file="mailingLists.properties" />
+
+	<exec executable="sh" outputproperty="user.name.full">
+		<arg value="-c" />
+		<arg value="finger remiller | grep &quot;Name&quot; | awk -F&quot;Name: &quot; '{print $2}'" />
+	</exec>
+
+	<!-- Script account's web docs directory. -->
+	<property name="webdocs" value="/compsci/webdocs/script/web_docs" />
+
+	<!--LinuxMachine just needs to be any department machine that we can ssh into-->
+	<property name="linuxMachine" value="peers.cs.ualberta.ca" />
+
+	<property name="buildDirectory" value="build" />
+	<property name="jarDirectory" location="jar" />
+	<property name="seSrcDirectory" location="scriptease2" />
+	<property name="resourcesDirectory" location="${seSrcDirectory}/scriptease/resources/" />
+	<property name="translatorsDirectory" location="${seSrcDirectory}/translators" />
+	<property name="jarFile" value="${ant.project.name}.jar" />
+	<property name="zipFile" value="${ant.project.name}.zip" />
+
+	<!-- Versioning is 'major.minor.head'. See build file documentation for details.
+	     The minor version is defined either on update, or just before use. We can't 
+	     redefine properties. We find out the head revision with linux magic and 
+	     exec. Also, I'd define the seVersion here, but it needs to be defined right 
+	     where we use it, because we can't reassign properties.-->
+	<property name="buildNumberLocation" value="/usr/brule8/misc/script/development/buildNumber.properties" />
+	<property name="majorVersion" value="2" />
+	<exec executable="sh" outputproperty="headVersion">
+		<arg value="-c" />
+		<arg value="svn info | grep &quot;Last Changed Rev&quot; | awk -F&quot;: &quot; '{print $2}'" />
+	</exec>
+
+	<!--LinuxMachine just needs to be any department machine that we can ssh into-->
+	<property name="linuxMachine" value="peers.cs.ualberta.ca" />
+	<!-- ==== END INIT COMMANDS ==== -->
+
+	<!-- ==== TARGETS ==== -->
+
+	<!--Based off of jtduncan's original script, which:
+		1. generated a jar
+		2. copied the fresh jar to the script webspace and appended a timestamp
+		3. creates a UNIX file link that points to the file copied in step 2. -->
+	<!-- Depends on the following properties to be set:
+	dest.dir              - the directory to post to 
+	src.file              - the file to be posting to dest.dir
+	link.location         - the location of the symbolic link to be made
+	expected.web.location - parent web address of the expected download location.
+	-->
+	<target name="post" description="Posts a particular file to the script account's web space. See commenting for this target in build file for detailed list of the required properties.">
+		<!-- Save a timestamp -->
+		<tstamp>
+			<format property="build.time" pattern="yyyy-MMM-dd-HH:mm:ss" />
+		</tstamp>
+
+		<!--
+			 This section of the script requires the user give the script password 
+			 twice, which sucks. It's stupid, but it's the only way I could get it to 
+			 not mysteriously lose the version number in the manifest file of the jar.
+			 That's what happened when I included a 'cp' as part of what is now the 
+			 linking step. Sigh.
+			  - remiller  
+			-->
+		<property name="dest.file.path" value="${dest.dir}/${build.time}_${src.file}" />
+		<echo>Posting Jar built from local code to the web space. Please enter the script account password at the prompt.</echo>
+
+		<exec executable="scp" failonerror="true">
+			<arg value="${src.file}" />
+			<arg value="script@${linuxMachine}:${dest.file.path}" />
+		</exec>
+		<echo>Transmission complete.</echo>
+		<echo>Generating symbolic link...</echo>
+		<exec executable="ssh" failonerror="true">
+			<arg value="script@${linuxMachine}" />
+			<arg value="ln -sf &quot;${dest.file.path}&quot; ${link.location}/${src.file}; chmod 755 &quot;${dest.file.path}&quot;" />
+		</exec>
+		<echo>Linking complete.</echo>
+
+		<echo message="Jar should be accessible at: ${expected.web.location}/${zipFile}" />
+
+		<antcall target="mail" />
+	</target>
+
+	<!-- depends on the following properties to be set:
+	=========
+	mail.body  - the message body
+	mail.title - the message title	
+	mail.list  - the list of email addresses to send to
+	=========
+	and only mails if 'noMail' is NOT set
+	 -->
+	<target name="mail" unless="noMail" description="Mails the team with the message stored in the 'mail.body' property unless the property 'noMail' is set or 'mail.body' is not set.">
+		<!-- Tell the people -->
+		<echo>Mailing the following list about the new release... ${mail.list}</echo>
+		<echo>Mail may take a while to arrive.</echo>
+
+		<!-- It sends a mail status report to the caller of the ant script. 
+			     If you don't want it to do this, remove the 'v' flag from the call to 'mail', 
+			     but keep in mind this is a common file so it would change for everyone on commit. 
+			     - remiller -->
+		<exec executable="sh" failonerror="true">
+			<arg value="-c" />
+			<arg value="echo &quot;This is an important message from the ScriptEase 2 Build Process sent on behalf of ${user.name.full} (${user.name}). ${mail.body} \n\nMuch love, \n\nScriptEase 2 Build Process&quot; | mail -Evs &quot;${mail.title}&quot; ${mail.list}" />
+		</exec>
+		<echo>Done. And there was much rejoicing!</echo>
+	</target>
+</project>
+

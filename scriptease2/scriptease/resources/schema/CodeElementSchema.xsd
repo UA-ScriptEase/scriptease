@@ -1,0 +1,84 @@
+<!-- ========== CODE DEFINITIONS ========== -->
+<!-- Defines the XML format for any Code Specification, either in the API 
+	or Language Dictionary. -->
+<!-- ====================================== -->
+<xsd:schema attributeFormDefault="unqualified"
+	elementFormDefault="qualified" version="1.0"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:group name="AllCodeDirectives">
+		<xsd:choice>
+			<xsd:element name="Line" type="Line_Type" />
+			<xsd:element name="Literal">
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:string">
+							<xsd:attribute name="reference" type="xsd:string" />
+						</xsd:extension>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="Indent" type="Indent_Type" />
+			<xsd:element name="Series" type="Series_Type" />
+			<xsd:element name="Fragment" type="Fragment_Type" />
+			<xsd:element name="Scope" type="Scope_Type" />
+			<xsd:element name="Format" type="Format_Type" />
+			<xsd:element name="FormatRef" type="FormatRef_Type" />
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:complexType name="Code_Type">
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:group ref="AllCodeDirectives" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="Line_Type">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="0">
+			<xsd:group ref="AllCodeDirectives" />
+		</xsd:sequence>
+		<xsd:attribute name="reference" type="xsd:string" />
+	</xsd:complexType>
+
+	<xsd:complexType name="Indent_Type">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="0">
+			<xsd:group ref="AllCodeDirectives" />
+		</xsd:sequence>
+		<xsd:attribute name="reference" type="xsd:string" />
+	</xsd:complexType>
+
+	<xsd:complexType name="Series_Type">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="0">
+			<xsd:group ref="AllCodeDirectives" />
+		</xsd:sequence>
+		<xsd:attribute name="data" type="xsd:string" />
+		<xsd:attribute name="unique" type="xsd:boolean" />
+		<xsd:attribute name="separator" type="xsd:string" />
+	</xsd:complexType>
+
+	<xsd:complexType name="Scope_Type">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="0">
+			<xsd:group ref="AllCodeDirectives" />
+		</xsd:sequence>
+		<xsd:attribute name="data" type="xsd:string" />
+		<xsd:attribute name="ref" type="xsd:string" />
+	</xsd:complexType>
+
+	<xsd:complexType name="Format_Type">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="0">
+			<xsd:group ref="AllCodeDirectives" />
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:string" />
+	</xsd:complexType>
+
+	<xsd:complexType name="FormatRef_Type">
+		<xsd:attribute name="data" type="xsd:string" />
+		<xsd:attribute name="ref" type="xsd:string" />
+		<xsd:attribute name="reference" type="xsd:string" />
+	</xsd:complexType>
+
+	<xsd:complexType name="Fragment_Type">
+		<xsd:attribute name="data" type="xsd:string" />
+		<xsd:attribute name="default" type="xsd:string" />
+		<xsd:attribute name="legalValues" type="xsd:string" />
+	</xsd:complexType>
+</xsd:schema>

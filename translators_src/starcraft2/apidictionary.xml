@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE 
+apidictionary SYSTEM "../../scriptease/translator/xml/apidictionary.dtd">
+<apidictionary name="DefaultStarcraft2APIDictionary"
+author="ScriptEase2">
+  <validgames>
+    <validgame>Starcraft 2</validgame>
+  </validgames>
+  <doIts>
+    <doIt keyword="ai_send_wave">
+    AIAttackWaveSend(&lt;playerNum,1&gt;, &lt;delayTime,2&gt;,
+    &lt;wait,3&gt;);</doIt>
+    <doIt keyword="ai_setTargetRegion_wave">
+    AIAttackWaveSetTargetRegion(&lt;playerNum,1&gt;,
+    &lt;region,2&gt;, &lt;wait,3&gt;);</doIt>
+    <doIt keyword="ai_set_wave">AIWaveSet(&lt;playerNum,1&gt;,
+    &lt;index,2&gt;, &lt;wave,3&gt;);</doIt>
+    <doIt keyword="ai_setType_wave">AIWaveSetType(&lt;wave,1&gt;,
+    &lt;typeID,2&gt;, &lt;waveTarget,3&gt;);</doIt>
+    <doIt keyword="ai_addUnit_wave">AIWaveAddUnit(&lt;wave,1&gt;,
+    &lt;unit,1&gt;);</doIt>
+    <doIt keyword="ai_wave_addUnitGroup">//Adds every unit in
+    unitGroup to the wave UnitGroupLoopBegin(&lt;unitGroup,1&gt;);
+    while (!UnitGroupLoopDone()) { AIWaveAddUnit(&lt;wave,2&gt;,
+    UnitGroupLoopCurrent()); UnitGroupLoopStep(); }
+    UnitGroupLoopEnd();</doIt>
+    <doIt keyword="unitGroup_loopBegin">
+    UnitGroupLoopBegin(&lt;unitGroup,1&gt;);</doIt>
+    <doIt keyword="unitGroup_loopDone">UnitGroupLoopDone();</doIt>
+    <doIt keyword="unitGroup_loopStep">UnitGroupLoopStep();</doIt>
+    <doIt keyword="equals">&lt;arg1,1&gt; == &lt;arg2,2&gt;</doIt>
+  </doIts>
+  <types>
+    <type>
+      <displayName>Boolean</displayName>
+      <validator>
+        <label>boolean</label>
+        <reg>true|false</reg>
+      </validator>
+      <codeSymbol>bool</codeSymbol>
+    </type>
+    <type>
+      <displayName>Wave</displayName>
+      <validator>
+        <label>Wave</label>
+      </validator>
+      <codeSymbol>wave</codeSymbol>
+    </type>
+    <type>
+      <displayName>Wave Target</displayName>
+      <validator>
+        <label>WaveTarget</label>
+      </validator>
+      <codeSymbol>wavetarget</codeSymbol>
+    </type>
+    <type>
+      <displayName>Number</displayName>
+      <validator>
+        <label>int</label>
+        <reg>[-]?[0-9]+</reg>
+      </validator>
+      <codeSymbol>int</codeSymbol>
+    </type>
+    <type>
+      <displayName>Void</displayName>
+      <validator>
+        <label>void</label>
+      </validator>
+      <codeSymbol>void</codeSymbol>
+    </type>
+    <type>
+      <displayName>Unit Group</displayName>
+      <validator>
+        <label>unitgroup</label>
+      </validator>
+      <codeSymbol>unitgroup</codeSymbol>
+    </type>
+    <type>
+      <displayName>Player Group</displayName>
+      <validator>
+        <label>playergroup</label>
+      </validator>
+      <codeSymbol>playergroup</codeSymbol>
+    </type>
+    <type>
+      <displayName>Timer</displayName>
+      <validator>
+        <label>timer</label>
+      </validator>
+      <codeSymbol>timer</codeSymbol>
+    </type>
+    <type>
+      <displayName>Byte</displayName>
+      <validator>
+        <label>byte</label>
+      </validator>
+      <codeSymbol>byte</codeSymbol>
+    </type>
+    <type>
+      <displayName>Camera</displayName>
+      <validator>
+        <label>cameraInfo</label>
+      </validator>
+      <codeSymbol>camerainfo</codeSymbol>
+    </type>
+    <type>
+      <displayName>String</displayName>
+      <validator>
+        <label>string</label>
+      </validator>
+      <codeSymbol>string</codeSymbol>
+    </type>
+    <type>
+      <displayName>Ability Command</displayName>
+      <validator>
+        <label>abilityCommand</label>
+      </validator>
+      <codeSymbol>abilcmd</codeSymbol>
+    </type>
+    <type>
+      <displayName>Actor</displayName>
+      <validator>
+        <label>actor</label>
+      </validator>
+      <codeSymbol>actor</codeSymbol>
+    </type>
+    <type>
+      <displayName>Actor Scope</displayName>
+      <validator>
+        <label>actorScope</label>
+      </validator>
+      <codeSymbol>actorscope</codeSymbol>
+    </type>
+    <type>
+      <displayName>AI Filter</displayName>
+      <validator>
+        <label>aiFilter</label>
+      </validator>
+      <codeSymbol>aifilter</codeSymbol>
+    </type>
+    <type>
+      <displayName>Bank</displayName>
+      <validator>
+        <label>bank</label>
+      </validator>
+      <codeSymbol>bank</codeSymbol>
+    </type>
+    <type>
+      <displayName>Color</displayName>
+      <validator>
+        <label>color</label>
+      </validator>
+      <codeSymbol>color</codeSymbol>
+    </type>
+    <type>
+      <displayName>Doodad</displayName>
+      <validator>
+        <label>doodad</label>
+      </validator>
+      <codeSymbol>doodad</codeSymbol>
+    </type>
+    <type>
+      <displayName>Marker</displayName>
+      <validator>
+        <label>marker</label>
+      </validator>
+      <codeSymbol>marker</codeSymbol>
+    </type>
+    <type>
+      <displayName>Order</displayName>
+      <validator>
+        <label>order</label>
+      </validator>
+      <codeSymbol>order</codeSymbol>
+    </type>
+    <type>
+      <displayName>Point</displayName>
+      <validator>
+        <label>point</label>
+      </validator>
+      <codeSymbol>point</codeSymbol>
+    </type>
+    <type>
+      <displayName>Number</displayName>
+      <validator>
+        <label>fixed</label>
+        <reg>[-]?[0-9]*\.?[0-9]+</reg>
+      </validator>
+      <codeSymbol>fixed</codeSymbol>
+    </type>
+    <type>
+      <displayName>Region</displayName>
+      <validator>
+        <label>region</label>
+      </validator>
+      <codeSymbol>region</codeSymbol>
+    </type>
+    <type>
+      <displayName>Revealer</displayName>
+      <validator>
+        <label>revealer</label>
+      </validator>
+      <codeSymbol>revealer</codeSymbol>
+    </type>
+    <type>
+      <displayName>Sound</displayName>
+      <validator>
+        <label>sound</label>
+      </validator>
+      <codeSymbol>sound</codeSymbol>
+    </type>
+    <type>
+      <displayName>Sound Link</displayName>
+      <validator>
+        <label>soundLink</label>
+      </validator>
+      <codeSymbol>soundlink</codeSymbol>
+    </type>
+    <type>
+      <displayName>Target Filter</displayName>
+      <validator>
+        <label>targetFilter</label>
+      </validator>
+      <codeSymbol>targetfilter</codeSymbol>
+    </type>
+    <type>
+      <displayName>Text</displayName>
+      <validator>
+        <label>text</label>
+      </validator>
+      <codeSymbol>text</codeSymbol>
+    </type>
+    <type>
+      <displayName>Transmission Source</displayName>
+      <validator>
+        <label>transmissionSource</label>
+      </validator>
+      <codeSymbol>transmissionsource</codeSymbol>
+    </type>
+    <type>
+      <displayName>Trigger</displayName>
+      <validator>
+        <label>trigger</label>
+      </validator>
+      <codeSymbol>trigger</codeSymbol>
+    </type>
+    <type>
+      <displayName>Unit</displayName>
+      <validator>
+        <label>unit</label>
+      </validator>
+      <codeSymbol>unit</codeSymbol>
+    </type>
+    <type>
+      <displayName>Unit Filter</displayName>
+      <validator>
+        <label>unitFilter</label>
+      </validator>
+      <codeSymbol>unitfilter</codeSymbol>
+    </type>
+    <type>
+      <displayName>Wave Info</displayName>
+      <validator>
+        <label>waveInfo</label>
+      </validator>
+      <codeSymbol>waveinfo</codeSymbol>
+    </type>
+  </types>
+  <startits>
+    <startit>
+      <gameSlotName>Unit Dies</gameSlotName>
+      <seSlotName>OnDestroy</seSlotName>
+    </startit>
+  </startits>
+</apidictionary>

@@ -1,0 +1,3353 @@
+<!-- APIDictionary
+name (attribute)
+author (attribute)
+Types
+Slots
+Causes
+Effects
+DescribeIts
+TypeConverters
+-->
+<APIDictionary name="DefaultLOTRPinballAPIDictionary" author="ScriptEase2">
+  <Types>
+	  <!-- Type
+	  Name
+	  Keyword
+	  CodeSymbol
+	  Format (optional)
+	  Reg (optional)
+	  Slots (optional)
+	  GUI (optional)
+	  -->
+	<Type>
+	  <Name>Number</Name>
+	  <Keyword>double</Keyword>
+	  <CodeSymbol>double</CodeSymbol>
+	  <Reg>[-]?[0-9]*\.?[0-9]+</Reg>
+	  <GUI>JSpinner</GUI>
+	</Type>
+	<Type>
+	  <Name>Character</Name>
+	  <Keyword>char</Keyword>
+	  <CodeSymbol>char</CodeSymbol>
+	  <Reg>[-]?[0-9]+</Reg>
+	  <GUI>JSpinner</GUI>
+	</Type>
+	<Type>
+	  <Name>Network Variable</Name>
+	  <Keyword>networkVar</Keyword>
+	  <CodeSymbol>NetworkVar*</CodeSymbol>
+	</Type>
+	<Type>
+	  <Name>Quadrant</Name>
+	  <Keyword>quadrant</Keyword>  
+	  <CodeSymbol>std::string</CodeSymbol>
+	  <Format>
+		<Literal>"</Literal>
+		<Fragment data="value" />
+		<Literal>"</Literal>
+	  </Format>
+	  <Enum>TopLeft&lt;Top left&gt;|TopRight&lt;Top right&gt;|BottomLeft&lt;Bottom left&gt;|BottomRight&lt;Bottom right&gt;</Enum>
+	  <GUI>JComboBox</GUI>
+	</Type>
+    <Type>
+      <Name>Number</Name>
+      <Keyword>int</Keyword>
+      <CodeSymbol>int</CodeSymbol>
+      <Reg>[-]?[0-9]+</Reg>
+      <GUI>JSpinner</GUI>
+    </Type>
+    <Type>
+      <Name>Question</Name>
+      <Keyword>question</Keyword>
+      <CodeSymbol>bool</CodeSymbol>
+      <Enum>TRUE&lt;Yes&gt;|FALSE&lt;No&gt;</Enum>
+      <GUI>JComboBox</GUI>
+    </Type>
+    <Type>
+      <Name>Text</Name>
+      <Keyword>string</Keyword>
+      <CodeSymbol>std::string</CodeSymbol>
+      <Format>
+        <Literal>"</Literal>
+        <Fragment data="value" />
+        <Literal>"</Literal>
+      </Format>
+      <Reg>[.\n]*</Reg>
+      <GUI>JTextField</GUI>
+    </Type>
+    <Type>
+      <Name>Void</Name>
+      <Keyword>void</Keyword>
+      <CodeSymbol>void</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>Switch</Name>
+      <Keyword>switch</Keyword>
+      <CodeSymbol>std::string</CodeSymbol>
+      <Format>
+        <Literal>"</Literal>
+        <Fragment data="value" />
+        <Literal>"</Literal>
+      </Format>
+      <Slots>
+        <Slot>kSwitchRising</Slot>
+        <Slot>kSwitchFalling</Slot>
+      </Slots>
+    </Type>
+	<Type>
+      <Name>Dedicated Switch</Name>
+      <Keyword>dedicatedSwitch</Keyword>
+      <CodeSymbol>std::string</CodeSymbol>
+      <Format>
+        <Literal>"</Literal>
+        <Fragment data="value" />
+        <Literal>"</Literal>
+      </Format>
+      <Slots>
+        <Slot>kSwitchRising</Slot>
+        <Slot>kSwitchFalling</Slot>
+      </Slots>
+    </Type>
+    <Type>
+      <Name>Event</Name>
+      <Keyword>event</Keyword>
+      <CodeSymbol>tSwitchEvent</CodeSymbol>
+      <Enum>kSwitchRising&lt;Switch Rising&gt;|kSwitchActive&lt;Switch Active&gt;|kSwitchFalling&lt;Switch Falling&gt;</Enum>
+      <GUI>JComboBox</GUI>
+    </Type>
+	<Type>
+		<Name>Flipper</Name>
+		<Keyword>flipper</Keyword>
+		<CodeSymbol>std::string</CodeSymbol>
+		<Format>
+			<Literal>"</Literal>
+			<Fragment data="value" />
+			<Literal>"</Literal>
+		</Format>
+		<Enum>Left Flipper|Right Flipper</Enum>
+		<Slots>
+			<Slot>kSwitchRising</Slot>
+			<Slot>kSwitchFalling</Slot>
+		</Slots>
+		<GUI>JComboBox</GUI>
+	</Type>
+	<Type>
+		<Name>Lamp</Name>
+		<Keyword>lamp</Keyword>
+		<CodeSymbol>std::string</CodeSymbol>
+		<Format>
+			<Literal>"</Literal>
+			<Fragment data="value" />
+			<Literal>"</Literal>
+		</Format>
+	</Type>
+	<Type>
+		<Name>Switch Event Handler</Name>
+		<Keyword>switchEventHandler</Keyword>
+		<CodeSymbol>tSwitchEventHandler</CodeSymbol>
+	</Type>
+	<Type>
+		<Name>Game</Name>
+		<Keyword>game</Keyword>
+		<CodeSymbol>std::string</CodeSymbol>
+		<Format>
+			<Literal>"</Literal>
+			<Fragment data="value" />
+			<Literal>"</Literal>
+		</Format>
+	</Type>
+  </Types>
+  <Slots>
+	<!-- Slot
+	  Name
+	  Keyword
+	  Parameters (optional)
+	  -->
+    <Slot>
+      <Name>Switch is Hit</Name>
+      <Keyword>kSwitchFalling</Keyword>
+      <Parameters>
+        <KnowIt visible="true">
+          <Name>Switch ID</Name>
+          <Parameters />
+		  <Labels/>
+          <Types>
+            <Type>int</Type>
+          </Types>
+          <Binding flavour="runTime">
+		  <Types>
+            <Type>int</Type>
+			</Types>
+          </Binding>
+        </KnowIt >
+        <KnowIt visible="true">
+          <Name>Description</Name>
+          <Parameters />
+		  <Labels/>
+          <Types>
+            <Type>string</Type>
+          </Types>
+          <Binding flavour="runTime">
+		   <Types>
+            <Type>string</Type>
+			 </Types>
+          </Binding>
+        </KnowIt>
+        <KnowIt visible="true">
+          <Name>The Event</Name>
+          <Parameters />
+		  <Labels/>
+          <Types>
+            <Type>event</Type>
+          </Types>
+          <Binding flavour="runTime">
+		   <Types>
+            <Type>event</Type>
+			 </Types>
+          </Binding>
+        </KnowIt>
+      </Parameters>
+    </Slot>
+    <Slot>
+      <Name>Switch is Released</Name>
+      <Keyword>kSwitchRising</Keyword>
+      <Parameters>
+        <KnowIt visible="true">
+          <Name>Switch ID</Name>
+          <Parameters />
+		  <Labels/>
+          <Types>
+            <Type>int</Type>
+          </Types>
+          <Binding flavour="runTime">
+		   <Types>
+            <Type>int</Type>
+			 </Types>
+          </Binding>
+        </KnowIt>
+        <KnowIt visible="true">
+          <Name>Description</Name>
+          <Parameters />
+		  <Labels/>
+          <Types>
+            <Type>string</Type>
+          </Types>
+          <Binding flavour="runTime">
+		   <Types>
+            <Type>string</Type>
+           </Types>
+		  </Binding>
+        </KnowIt>
+        <KnowIt visible="true">
+          <Name>The Event</Name>
+          <Parameters />
+		  <Labels/>
+          <Types>
+            <Type>event</Type>
+          </Types>
+          <Binding flavour="runTime">
+		   <Types>
+            <Type>event</Type>
+			 </Types>
+          </Binding>
+        </KnowIt>
+      </Parameters>
+    </Slot>
+	<Slot>
+		<Name>Time has elapsed</Name>
+		<Keyword>onTick</Keyword>
+	</Slot>
+	<Slot>
+		<Name>Network has initialized</Name>
+		<Keyword>onNetworkInit</Keyword>
+	</Slot>
+	<Slot>
+		<Name>Network Game is in prestart</Name>
+		<Keyword>onTickPreStart</Keyword>
+	</Slot>
+	<Slot>
+		<Name>Network Game is starting</Name>
+		<Keyword>onTickStarting</Keyword>
+	</Slot>
+	<Slot>
+		<Name>Network Game is running</Name>
+		<Keyword>onTickRunning</Keyword>
+	</Slot>
+	<Slot>
+		<Name>Network Game is finished</Name>
+		<Keyword>onTickFinished</Keyword>
+	</Slot>
+	<Slot>
+		<Name>Game time has expired</Name>
+		<Keyword>onTickRemaining</Keyword>
+	</Slot>
+  </Slots>
+  <Causes>
+	<!-- StartIt
+	  visible = true|false (attribute)
+	  Name
+	  Description
+	  Notes
+	  Parameters
+	  Children
+	  Type
+	  Slot
+	  AdditionalCondition
+	  Subject
+	  -->
+    <StartIt visible="true">
+      <Name>When &lt;Subject&gt; is hit -- &lt;The Event&gt; &lt;Switch ID&gt; &lt;Description&gt;</Name>
+      <Parameters>
+        <KnowIt reference="../../../../Slots/Slot/Parameters/KnowIt" />
+        <KnowIt reference="../../../../Slots/Slot/Parameters/KnowIt[2]" />
+        <KnowIt reference="../../../../Slots/Slot/Parameters/KnowIt[3]" />
+      </Parameters>
+<Labels/>
+      <Children />
+      <Type>void</Type>
+      <Slot>kSwitchRising</Slot>
+      <AdditionalCondition>
+		<KnowIt visible="false">
+			<Name>eventGuard</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>question</Type>
+			</Types>
+			<Binding flavour="constant">
+			  <Type>question</Type>
+			  <Value>true</Value>
+			</Binding>
+		</KnowIt>
+      </AdditionalCondition>
+      <Subject>
+		<KnowIt visible="true">
+			<Name>Subject</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>switch</Type>
+			  <Type>dedicatedSwitch</Type>
+			</Types>
+		</KnowIt>
+      </Subject>
+    </StartIt>
+	<StartIt visible="true">
+      <Name>When &lt;Subject&gt; is released -- &lt;The Event&gt; &lt;Switch ID&gt; &lt;Description&gt;</Name>
+      <Parameters>
+        <KnowIt reference="../../../../Slots/Slot[2]/Parameters/KnowIt" />
+        <KnowIt reference="../../../../Slots/Slot[2]/Parameters/KnowIt[2]" />
+        <KnowIt reference="../../../../Slots/Slot[2]/Parameters/KnowIt[3]" />
+      </Parameters>
+<Labels/>
+      <Children />
+      <Type>void</Type>
+      <Slot>kSwitchFalling</Slot>
+      <AdditionalCondition>
+		<KnowIt visible="false">
+			<Name>eventGuard</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>question</Type>
+			</Types>
+			<Binding flavour="constant">
+			  <Type>question</Type>
+			  <Value>true</Value>
+			</Binding>
+		</KnowIt>
+      </AdditionalCondition>
+      <Subject>
+		<KnowIt visible="true">
+			<Name>Subject</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>switch</Type>
+			  <Type>dedicatedSwitch</Type>
+			</Types>
+		</KnowIt>
+      </Subject>
+    </StartIt>
+	<StartIt visible="true">
+      <Name>When &lt;Subject&gt;'s clock ticks</Name>
+      <Parameters />
+<Labels/>
+      <Children />
+      <Type>void</Type>
+      <Slot>onTick</Slot>
+      <AdditionalCondition>
+		<KnowIt visible="false">
+			<Name>eventGuard</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>question</Type>
+			</Types>
+			<Binding flavour="constant">
+			  <Type>question</Type>
+			  <Value>true</Value>
+			</Binding>
+		</KnowIt>
+      </AdditionalCondition>
+      <Subject>
+		<KnowIt visible="true">
+			<Name>Subject</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>switch</Type>
+			  <Type>game</Type>
+			  <Type>dedicatedSwitch</Type>
+			  <Type>lamp</Type>
+			</Types>
+		</KnowIt>
+      </Subject>
+    </StartIt>
+	<StartIt visible="true">
+      <Name>On network initialization</Name>
+      <Parameters />
+<Labels/>
+      <Children />
+      <Type>void</Type>
+      <Slot>onNetworkInit</Slot>
+      <AdditionalCondition>
+		<KnowIt visible="false">
+			<Name>eventGuard</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>question</Type>
+			</Types>
+			<Binding flavour="constant">
+			  <Type>question</Type>
+			  <Value>true</Value>
+			</Binding>
+		</KnowIt>
+      </AdditionalCondition>
+      <Subject>
+		<KnowIt visible="true">
+			<Name>Subject</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>string</Type>
+			</Types>
+			<Binding flavour="constant">
+			  <Type>string</Type>
+			  <Value>this is why we don't need a subject</Value>
+			</Binding>
+		</KnowIt>
+      </Subject>
+    </StartIt>
+	<StartIt visible="true">
+      <Name>Network game is in pre-start</Name>
+      <Parameters />
+<Labels/>
+      <Children />
+      <Type>void</Type>
+      <Slot>onTickPreStart</Slot>
+      <AdditionalCondition>
+		<KnowIt visible="false">
+			<Name>eventGuard</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>question</Type>
+			</Types>
+			<Binding flavour="function">
+			 <DoIt visible="false">
+			  <Name>if the network game state is pre-start</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>question</Type>
+			  </Types>
+			  <Code>
+				<Line>
+					<Literal>return _gameState->getInt() == 0;</Literal>
+				</Line>
+			  </Code>
+			</DoIt>
+			</Binding>
+		</KnowIt>
+      </AdditionalCondition>
+      <Subject>
+		<KnowIt visible="true">
+			<Name>Subject</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>string</Type>
+			</Types>
+			<Binding flavour="constant">
+			  <Type>string</Type>
+			  <Value>this is why we don't need a subject</Value>
+			</Binding>
+		</KnowIt>
+      </Subject>
+    </StartIt>
+	<StartIt visible="true">
+      <Name>Network game is starting</Name>
+      <Parameters />
+<Labels/>
+      <Children />
+      <Type>void</Type>
+      <Slot>onTickStarting</Slot>
+      <AdditionalCondition>
+		<KnowIt visible="false">
+			<Name>eventGuard</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>question</Type>
+			</Types>
+			<Binding flavour="function">
+			 <DoIt visible="false">
+			  <Name>if the network game state is starting</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>question</Type>
+			  </Types>
+			  <Code>
+				<Line>
+					<Literal>return _gameState->getInt() == 1;</Literal>
+				</Line>
+			  </Code>
+			</DoIt>
+			</Binding>
+		</KnowIt>
+      </AdditionalCondition>
+      <Subject>
+		<KnowIt visible="true">
+			<Name>Subject</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>string</Type>
+			</Types>
+			<Binding flavour="constant">
+			  <Type>string</Type>
+			  <Value>this is why we don't need a subject</Value>
+			</Binding>
+		</KnowIt>
+      </Subject>
+    </StartIt>
+	<StartIt visible="true">
+      <Name>Network game is running</Name>
+      <Parameters />
+<Labels/>
+      <Children />
+      <Type>void</Type>
+      <Slot>onTickRunning</Slot>
+      <AdditionalCondition>
+		<KnowIt visible="false">
+			<Name>eventGuard</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>question</Type>
+			</Types>
+			<Binding flavour="function">
+			 <DoIt visible="false">
+			  <Name>if the network game state is running</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>question</Type>
+			  </Types>
+			  <Code>
+				<Line>
+					<Literal>return _gameState->getInt() == 2;</Literal>
+				</Line>
+			  </Code>
+			</DoIt>
+			</Binding>
+		</KnowIt>
+      </AdditionalCondition>
+      <Subject>
+		<KnowIt visible="true">
+			<Name>Subject</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>string</Type>
+			</Types>
+			<Binding flavour="constant">
+			  <Type>string</Type>
+			  <Value>this is why we don't need a subject</Value>
+			</Binding>
+		</KnowIt>
+      </Subject>
+    </StartIt>
+	<StartIt visible="true">
+      <Name>Network game is finished</Name>
+      <Parameters />
+<Labels/>
+      <Children />
+      <Type>void</Type>
+      <Slot>onTickFinished</Slot>
+      <AdditionalCondition>
+		<KnowIt visible="false">
+			<Name>eventGuard</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>question</Type>
+			</Types>
+			<Binding flavour="function">
+			 <DoIt visible="false">
+			  <Name>if the network game state is finished</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>question</Type>
+			  </Types>
+			  <Code>
+				<Line>
+					<Literal>return _gameState->getInt() == 3;</Literal>
+				</Line>
+			  </Code>
+			</DoIt>
+			</Binding>
+		</KnowIt>
+      </AdditionalCondition>
+      <Subject>
+		<KnowIt visible="true">
+			<Name>Subject</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>string</Type>
+			</Types>
+			<Binding flavour="constant">
+			  <Type>string</Type>
+			  <Value>this is why we don't need a subject</Value>
+			</Binding>
+		</KnowIt>
+      </Subject>
+    </StartIt>
+	<StartIt visible="true">
+      <Name>Remaining time has expired</Name>
+      <Parameters />
+<Labels/>
+      <Children />
+      <Type>void</Type>
+      <Slot>onTickRemaining</Slot>
+      <AdditionalCondition>
+		<KnowIt visible="false">
+			<Name>eventGuard</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>question</Type>
+			</Types>
+			<Binding flavour="function">
+			 <DoIt visible="false">
+			  <Name>Remaining time has expired</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>question</Type>
+			  </Types>
+			  <Code>
+				<Line>
+					<Literal>return remaining &lt;= 0 &amp;&amp; remaining != -1;</Literal>
+				</Line>
+			  </Code>
+			</DoIt>
+			</Binding>
+		</KnowIt>
+      </AdditionalCondition>
+      <Subject>
+		<KnowIt visible="true">
+			<Name>Subject</Name>
+			<Parameters />
+			<Labels/>
+			<Types>
+			  <Type>string</Type>
+			</Types>
+			<Binding flavour="constant">
+			  <Type>string</Type>
+			  <Value>this is why we don't need a subject</Value>
+			</Binding>
+		</KnowIt>
+      </Subject>
+    </StartIt>
+  </Causes>
+  <Effects>
+	<!-- DoIt
+	  visible = true|false (attribute)
+	  Name
+	  Description
+	  Notes
+	  Parameters
+	  Keyword
+	  Types
+	  Includes (optional)
+	  Code|CodeSymbol (optional)
+	  -->
+    <DoIt visible="true">
+      <Name>Clear the game's screen</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+     	 <Line>
+      		<Literal>char text[255];</Literal>
+      	</Line>
+      	<Line>
+      		<Literal>display_TopLeft = "";</Literal>
+      	</Line>
+      	<Line>
+      		<Literal>display_TopRight = "";</Literal>
+      	</Line>
+      	<Line>
+      		<Literal>display_BottomLeft = "";</Literal>
+      	</Line>
+      	<Line>
+      		<Literal>display_BottomRight = "";</Literal>
+      	</Line>
+      	<Line>
+      		<Literal>sprintf(text, "%s", display_TopLeft.c_str());</Literal>
+      	</Line>
+      	<Line>
+      		<Literal>writeText(text,TopLeft);</Literal>
+      	</Line>
+      	<Line>
+      		<Literal>sprintf(text, "%s", display_TopRight.c_str());</Literal>
+      	</Line>
+      	<Line>
+      		<Literal>writeText(text,TopRight);</Literal>
+      	</Line>
+      	<Line>
+      		<Literal>sprintf(text, "%s", display_BottomLeft.c_str());</Literal>
+      	</Line>
+      	<Line>
+      		<Literal>writeText(text,BottomLeft);</Literal>
+      	</Line>
+      	<Line>
+      		<Literal>sprintf(text, "%s", display_BottomRight.c_str());</Literal>
+      	</Line>
+      	<Line>
+      		<Literal>writeText(text,BottomRight);</Literal>
+      	</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Set the number of remaining balls to &lt;Value&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Includes>
+        <Include>ball.global</Include>
+      </Includes>
+      <Code>
+        <Line>
+			<Literal>remainingBalls = </Literal>
+			<Scope data="argument" ref="Value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>;</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Increase the number of remaining balls by &lt;Value&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Includes>
+        <Include>ball.global</Include>
+      </Includes>
+      <Code>
+        <Line>
+			<Literal>remainingBalls += </Literal>
+			<Scope data="argument" ref="Value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>;</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Decrease the number of remaining balls by &lt;Value&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Includes>
+        <Include>ball.global</Include>
+      </Includes>
+      <Code>
+        <Line>
+			<Literal>remainingBalls -= </Literal>
+			<Scope data="argument" ref="Value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>;</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Start the game</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>elapsed = 0;</Literal>
+		</Line>
+		<Line>
+			<Literal>inGame = true;</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>End the game</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>inGame = false;</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="false">
+      <Name>&lt;X&gt; divided by &lt;Y&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>X</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		</KnowIt>
+		<KnowIt>
+		  <Name>Y</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		</KnowIt>
+	   </Parameters>
+	   <Labels/>
+      <Types>
+        <Type>double</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>return </Literal>
+			<Scope data="argument" ref="X">
+				<Fragment data="name" />
+			</Scope>
+			<Literal> / </Literal>
+			<Scope data="argument" ref="Y">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>;</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Set the remaining time to &lt;X&gt; seconds</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>X</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		</KnowIt>
+	   </Parameters>
+	   <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>remaining = </Literal>
+			<Scope data="argument" ref="X">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>;</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Create network variable &lt;Name&gt; with initial int value &lt;Value&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Name</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>dedicatedSwitch</Type>
+			<Type>game</Type>
+			<Type>string</Type>
+		  </Types>
+		</KnowIt>
+		<KnowIt>
+		  <Name>Value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		</KnowIt>
+	   </Parameters>
+	   <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>NetworkVar* networkVariable = new NetworkVar((char*) </Literal>
+			<Scope data="argument" ref="Name">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>.c_str(), (int) </Literal>
+			<Scope data="argument" ref="Value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>);</Literal>
+		</Line>
+		<Line>
+			<Literal>networkVariables[</Literal>
+			<Scope data="argument" ref="Name">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>] = networkVariable;</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Create network variable &lt;Name&gt; with initial char value &lt;Value&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Name</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>dedicatedSwitch</Type>
+			<Type>game</Type>
+			<Type>string</Type>
+		  </Types>
+		</KnowIt>
+		<KnowIt>
+		  <Name>Value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>char</Type>
+		  </Types>
+		</KnowIt>
+	   </Parameters>
+	   <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>NetworkVar* networkVariable = new NetworkVar((char*) </Literal>
+			<Scope data="argument" ref="Name">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>.c_str(), (char) </Literal>
+			<Scope data="argument" ref="Value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>);</Literal>
+		</Line>
+		<Line>
+			<Literal>networkVariables[</Literal>
+			<Scope data="argument" ref="Name">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>] = networkVariable;</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Set network variable &lt;Name&gt;'s int value to &lt;Value&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Name</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>dedicatedSwitch</Type>
+			<Type>game</Type>
+			<Type>string</Type>
+		  </Types>
+		</KnowIt>
+		<KnowIt>
+		  <Name>Value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		</KnowIt>
+	   </Parameters>
+	   <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>networkVariables[</Literal>
+			<Scope data="argument" ref="Name">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>]-&gt;setInt(</Literal>
+			<Scope data="argument" ref="Value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>);</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Set network variable &lt;Name&gt;'s char value to &lt;Value&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Name</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>switch</Type>
+			<Type>lamp</Type>
+			<Type>dedicatedSwitch</Type>
+			<Type>game</Type>
+			<Type>string</Type>
+		  </Types>
+		</KnowIt>
+		<KnowIt>
+		  <Name>Value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>char</Type>
+		  </Types>
+		</KnowIt>
+		</Parameters>
+		<Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>networkVariables[</Literal>
+			<Scope data="argument" ref="Name">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>]-&gt;setChar(</Literal>
+			<Scope data="argument" ref="Value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>);</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Set &lt;Object&gt;'s variable &lt;Variable&gt; to value &lt;Value&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Object</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>string</Type>
+			<Type>dedicatedSwitch</Type>
+			<Type>game</Type>
+		  </Types>
+		</KnowIt>
+		<KnowIt>
+		  <Name>Variable</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>string</Type>
+			<Type>dedicatedSwitch</Type>
+			<Type>game</Type>
+		  </Types>
+		</KnowIt>
+		<KnowIt>
+		  <Name>Value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>string</Type>
+		  </Types>
+		</KnowIt>
+	   </Parameters>
+	   <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>ObjectMap objectMap;</Literal>
+		</Line>
+		<Line>
+			<Literal>objectMap = gameData[</Literal>
+			<Scope data="argument" ref="Object">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>];</Literal>
+		</Line>
+		<Line>
+			<Literal>objectMap[</Literal>
+			<Scope data="argument" ref="Variable">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>] = </Literal>
+			<Scope data="argument" ref="Value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>;</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Wait &lt;delay&gt; seconds then activate &lt;switch&gt; for &lt;span&gt; seconds</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Switch</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>string</Type>
+		  </Types>
+		</KnowIt>
+		<KnowIt>
+		  <Name>Delay</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		</KnowIt>
+		<KnowIt>
+		  <Name>Span</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		</KnowIt>
+	   </Parameters>
+	   <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>queueSolenoid(</Literal>
+			<Scope data="argument" ref="Switch">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>, </Literal>
+			<Scope data="argument" ref="Delay">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>, </Literal>
+			<Scope data="argument" ref="Span">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>, </Literal>
+			<Literal>1</Literal>
+			<Literal>);</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Wait &lt;delay&gt; seconds then disable &lt;switch&gt; for &lt;span&gt; seconds</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Switch</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>string</Type>
+		  </Types>
+		</KnowIt>
+		<KnowIt>
+		  <Name>Delay</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		</KnowIt>
+		<KnowIt>
+		  <Name>Span</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		</KnowIt>
+	   </Parameters>
+	   <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>queueSolenoid(</Literal>
+			<Scope data="argument" ref="Switch">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>, </Literal>
+			<Scope data="argument" ref="Delay">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>, </Literal>
+			<Scope data="argument" ref="Span">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>, </Literal>
+			<Literal>0</Literal>
+			<Literal>);</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Activate switch &lt;switch&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Switch</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>string</Type>
+		  </Types>
+		</KnowIt>
+	   </Parameters>
+	   <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>setSolenoid(</Literal>
+			<Scope data="argument" ref="Switch">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>, </Literal>
+			<Literal>1</Literal>
+			<Literal>);</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Disable switch &lt;switch&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Switch</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>string</Type>
+		  </Types>
+		</KnowIt>
+	   </Parameters>
+	   <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>setSolenoid(</Literal>
+			<Scope data="argument" ref="Switch">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>, </Literal>
+			<Literal>0</Literal>
+			<Literal>);</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Engage &lt;Flipper&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Flipper</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>flipper</Type>
+		  </Types>
+		</KnowIt>
+	   </Parameters>
+	   <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>setSolenoid (</Literal>
+			<Scope data="argument" ref="Flipper">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>, </Literal>
+			<Literal>1</Literal>
+			<Literal>);</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Disengage &lt;Flipper&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Flipper</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>flipper</Type>
+		  </Types>
+		</KnowIt>
+	   </Parameters>
+	   <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+      <Code>
+		<Line>
+			<Literal>setSolenoid (</Literal>
+			<Scope data="argument" ref="Flipper">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>, </Literal>
+			<Literal>0</Literal>
+			<Literal>);</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Release A Ball</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+	  <Includes>
+		<Include>ball.global</Include>
+	  </Includes>
+      <Code>
+		<Line>
+			<Literal>ballsInPlay++;</Literal>
+		</Line>
+		<Line>
+			<Literal>setSolenoid( &quot;Trough Up-Kicker&quot;,1 );</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Display &lt;the value&gt; in the &lt;the screen Quadrant&gt; screen quadrant</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>The Value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>string</Type>
+		  </Types>
+		</KnowIt>
+		<KnowIt>
+		  <Name>The Screen Quadrant</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>quadrant</Type>
+		  </Types>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+	  <Includes>
+		<Include>display.global</Include>
+	  </Includes>
+      <Code>
+		<Line>
+			<Literal>if( </Literal>
+			<Scope data="argument" ref="The Screen Quadrant">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>.compare( "TopLeft" ) == 0){</Literal>
+		</Line>
+		<Indent>
+			<Line>
+				<Literal>display_TopLeft = </Literal>
+				<Scope data="argument" ref="The Value">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>;</Literal>
+			</Line>
+		</Indent>
+		<Line>
+			<Literal>}</Literal>
+		</Line>
+		<Line>
+			<Literal>else if( </Literal>
+			<Scope data="argument" ref="The Screen Quadrant">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>.compare( "TopRight" ) == 0){</Literal>
+		</Line>
+		<Indent>
+			<Line>
+				<Literal>display_TopRight = </Literal>
+				<Scope data="argument" ref="The Value">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>;</Literal>
+			</Line>
+		</Indent>
+		<Line>
+			<Literal>}</Literal>
+		</Line>
+		<Line>
+			<Literal>else if( </Literal>
+			<Scope data="argument" ref="The Screen Quadrant">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>.compare( "BottomLeft" ) == 0){</Literal>
+		</Line>
+		<Indent>
+			<Line>
+				<Literal>display_BottomLeft = </Literal>
+				<Scope data="argument" ref="The Value">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>;</Literal>
+			</Line>
+		</Indent>
+		<Line>
+			<Literal>}</Literal>
+		</Line>
+		<Line>
+			<Literal>else if( </Literal>
+			<Scope data="argument" ref="The Screen Quadrant">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>.compare( "BottomRight" ) == 0){</Literal>
+		</Line>
+		<Indent>
+			<Line>
+				<Literal>display_BottomRight = </Literal>
+				<Scope data="argument" ref="The Value">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>;</Literal>
+			</Line>
+		</Indent>
+		<Line>
+			<Literal>}</Literal>
+		</Line>
+		<Line>
+			<Literal>clearScreen();</Literal>
+		</Line>
+		<Line>
+			<Literal>char text[255];</Literal>
+		</Line>
+		<Line>
+			<Literal>//Update TopLeft Quadrant</Literal>
+		</Line>
+		<Line>
+			<Literal>if( display_TopLeft.size() ) {</Literal>
+		</Line>
+		<Indent>
+			<Line>
+				<Literal>sprintf(text, "%s", display_TopLeft.c_str());</Literal>
+			</Line>
+			<Line>
+				<Literal>writeText(text, TopLeft);</Literal>
+			</Line>
+		</Indent>
+		<Line>
+			<Literal>}</Literal>
+		</Line>
+		<Line>
+			<Literal>//Update TopRight Quadrant</Literal>
+		</Line>
+		<Line>
+			<Literal>if( display_TopRight.size() ) {</Literal>
+		</Line>
+		<Indent>
+			<Line>
+				<Literal>sprintf(text, "%s", display_TopRight.c_str());</Literal>
+			</Line>
+			<Line>
+				<Literal>writeText(text, TopRight);</Literal>
+			</Line>
+		</Indent>
+		<Line>
+			<Literal>}</Literal>
+		</Line>
+		<Line>
+			<Literal>//Update BottomLeft Quadrant</Literal>
+		</Line>
+		<Line>
+			<Literal>if( display_BottomLeft.size() ) {</Literal>
+		</Line>
+		<Indent>
+			<Line>
+				<Literal>sprintf(text, "%s", display_BottomLeft.c_str());</Literal>
+			</Line>
+			<Line>
+				<Literal>writeText(text, BottomLeft);</Literal>
+			</Line>
+		</Indent>
+		<Line>
+			<Literal>}</Literal>
+		</Line>
+		<Line>
+			<Literal>//Update BottomRight Quadrant</Literal>
+		</Line>
+		<Line>
+			<Literal>if( display_BottomRight.size() ) {</Literal>
+		</Line>
+		<Indent>
+			<Line>
+				<Literal>sprintf(text, "%s", display_BottomRight.c_str());</Literal>
+			</Line>
+			<Line>
+				<Literal>writeText(text, BottomRight);</Literal>
+			</Line>
+		</Indent>
+		<Line>
+			<Literal>}</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Add &lt;value&gt; to the list</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>string</Type>
+		  </Types>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+	  <Includes>
+		<Include>queue.global</Include>
+	  </Includes>
+      <Code>
+		<Line>
+			<Literal>global_string_queue.push( </Literal>
+			<Scope data="argument" ref="The Value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal> );</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Remove first list value</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+	  <Includes>
+		<Include>queue.global</Include>
+	  </Includes>
+      <Code>
+		<Line>
+			<Literal>if(global_string_queue.size()&gt;0)</Literal>
+		</Line>
+		<Line>
+			<Literal>global_string_queue.pop();</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Increment Score By &lt;Increment Value&gt; Points</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Increment Value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+	  <Includes>
+		<Include>score.global</Include>
+	  </Includes>
+      <Code>
+		<Line>
+			<Literal>score += </Literal>
+			<Scope data="argument" ref="Increment Value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>;</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Toggle &lt;the Lamp&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>The Lamp</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>lamp</Type>
+		  </Types>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+	  <CodeSymbol>lampToggle</CodeSymbol>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Set the &lt;Lamp&gt; to &lt;Setting&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Lamp</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>string</Type>
+		  </Types>
+		</KnowIt>
+		<KnowIt>
+		<Name>Setting</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+	  <CodeSymbol>setLamp</CodeSymbol>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Turn on &lt;the Lamp&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>The Lamp</Name>
+		  <Parameters />
+		  <Labels/>		 
+		  <Types>
+			<Type>lamp</Type>
+		  </Types>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+	  <CodeSymbol>lampOn</CodeSymbol>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Turn off &lt;the Lamp&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>The Lamp</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>lamp</Type>
+		  </Types>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+	  <CodeSymbol>lampOff</CodeSymbol>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Play sound effect &lt;Sound Effect&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>Sound Effect</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>string</Type>
+		  </Types>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+	  <CodeSymbol>playSoundEffect</CodeSymbol>
+    </DoIt>
+	<DoIt visible="true">
+      <Name>Set game state to &lt;State&gt;</Name>
+      <Parameters>
+		<KnowIt>
+		  <Name>State</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+      <Types>
+        <Type>void</Type>
+      </Types>
+	  <Code>
+		<Line>
+			<Literal>_gameState->setInt(</Literal>
+			<Scope data="argument" ref="State">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>);</Literal>
+		</Line>
+      </Code>
+    </DoIt>
+  </Effects>
+  <DescribeIts>
+	<!-- KnowIt
+	  visible = true|false (attribute)
+	  Name
+	  Description
+	  Notes
+	  Parameters
+	  Keyword
+	  Types
+	  Binding (optional)
+	  -->
+    <KnowIt visible="true">
+      <Name>Score</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>int</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the score</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		  <Includes>
+			<Include>score.global</Include>
+		  </Includes>
+		  <Code>
+			<Line>
+			  <Literal>return score;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Game in play</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>if a game is in play</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return inGame;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Object's variable's value</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>string</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the &lt;Object&gt;'s variable &lt;Variable&gt;'s value</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>Object</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>dedicatedSwitch</Type>
+				<Type>game</Type>
+				<Type>string</Type>
+			  </Types>
+			</KnowIt>
+			<KnowIt>
+			  <Name>Variable</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>string</Type>
+			  </Types>
+			</KnowIt>
+		   </Parameters>
+		   <Labels/>
+		  <Types>
+			<Type>string</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>ObjectMap objectMap;</Literal>
+			</Line>
+			<Line>
+				<Literal>objectMap = gameData[</Literal>
+				<Scope data="argument" ref="Object">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>];</Literal>
+			</Line>
+			<Line>
+				<Literal>return objectMap[</Literal>
+				<Scope data="argument" ref="Variable">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>];</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Elapsed time</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>double</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the elapsed game time in seconds</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return elapsed;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Remaining time</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>double</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the remaining time left in seconds</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return remaining;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Hit count</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>int</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the number of times &lt;a switch&gt; has been hit</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>A Switch</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>switch</Type>
+				<Type>dedicatedSwitch</Type>
+			  </Types>
+			</KnowIt>
+			<KnowIt>
+			  <Name>Setting</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>question</Type>
+			  </Types>
+			</KnowIt>
+		  </Parameters>
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>std::map&lt;std::string,int&gt;::iterator iter;</Literal>
+			</Line>
+			<Line>
+				<Literal>iter = hitcount.find(</Literal>
+				<Scope data="argument" ref="A Switch">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>);</Literal>
+			</Line>
+			<Line>
+				<Literal>if (iter != hitcount.end())</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>return iter->second;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>else</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>return 0;</Literal>
+				</Line>
+			</Indent>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Sum</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>double</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>&lt;X&gt; plus &lt;Y&gt;</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>X</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>double</Type>
+			  </Types>
+			</KnowIt>
+			<KnowIt>
+			  <Name>Y</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>double</Type>
+			  </Types>
+			</KnowIt>
+		   </Parameters>
+		   <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return </Literal>
+				<Scope data="argument" ref="X">
+					<Fragment data="name" />
+				</Scope>
+				<Literal> + </Literal>
+				<Scope data="argument" ref="Y">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Modulus</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>int</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>&lt;X&gt; mod &lt;Y&gt;</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>X</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>int</Type>
+			  </Types>
+			</KnowIt>
+			<KnowIt>
+			  <Name>Y</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>int</Type>
+			  </Types>
+			</KnowIt>
+		   </Parameters>
+		   <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return </Literal>
+				<Scope data="argument" ref="X">
+					<Fragment data="name" />
+				</Scope>
+				<Literal> % </Literal>
+				<Scope data="argument" ref="Y">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Difference</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>double</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>&lt;X&gt; minus &lt;Y&gt;</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>X</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>double</Type>
+			  </Types>
+			</KnowIt>
+			<KnowIt>
+			  <Name>Y</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>double</Type>
+			  </Types>
+			</KnowIt>
+		   </Parameters>
+		   <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return </Literal>
+				<Scope data="argument" ref="X">
+					<Fragment data="name" />
+				</Scope>
+				<Literal> - </Literal>
+				<Scope data="argument" ref="Y">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Product</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>double</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>&lt;X&gt; times &lt;Y&gt;</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>X</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>double</Type>
+			  </Types>
+			</KnowIt>
+			<KnowIt>
+			  <Name>Y</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>double</Type>
+			  </Types>
+			</KnowIt>
+		   </Parameters>
+		   <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return </Literal>
+				<Scope data="argument" ref="X">
+					<Fragment data="name" />
+				</Scope>
+				<Literal> * </Literal>
+				<Scope data="argument" ref="Y">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Number is greater</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>if &lt;X&gt; is greater than &lt;Y&gt;</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>X</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>double</Type>
+			  </Types>
+			</KnowIt>
+			<KnowIt>
+			  <Name>Y</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>double</Type>
+			  </Types>
+			</KnowIt>
+		  </Parameters>
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		  <Code>
+			<Line>
+			  <Literal>return </Literal>
+			  <Scope data="argument" ref="X">
+				<Fragment data="name" />
+			  </Scope>
+			  <Literal>&gt;</Literal>
+			  <Scope data="argument" ref="Y">
+				<Fragment data="name" />
+			  </Scope>
+			  <Literal>;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Lamp on</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>if &lt;The Lamp&gt; is on</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>The Lamp</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>lamp</Type>
+			  </Types>
+			</KnowIt>
+		  </Parameters>
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		  <CodeSymbol>lampOn</CodeSymbol>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Balls in play</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>int</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the number of balls in play</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		  <Includes>
+			<Include>ball.global</Include>
+		  </Includes>
+		  <Code>
+			<Line>
+				<Literal>return ballsInPlay;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Same</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>if &lt;value 1&gt; is the same as &lt;value 2&gt;</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>Value 1</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>string</Type>
+			  </Types>
+			</KnowIt>
+			<KnowIt>
+			  <Name>Value 2</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>string</Type>
+			  </Types>
+			</KnowIt>
+		  </Parameters>
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return </Literal>
+				<Scope data="argument" ref="Value 1">
+					<Fragment data="name" />
+				</Scope>
+				<Literal> == </Literal>
+				<Scope data="argument" ref="Value 2">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Ball in play</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>if a ball is in play</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		  <Includes>
+			<Include>ball.global</Include>
+		  </Includes>
+		  <Code>
+			<Line>
+				<Literal>return ballsInPlay &gt; 0;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Empty list</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>if the list is empty</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		  <Includes>
+			<Include>queue.global</Include>
+		  </Includes>
+		  <Code>
+			<Line>
+				<Literal>return global_string_queue.size()&lt;1;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Front of list</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>string</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the first list value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>string</Type>
+		  </Types>
+		  <Includes>
+			<Include>queue.global</Include>
+		  </Includes>
+		  <Code>
+			<Line>
+				<Literal>if(global_string_queue.size()&gt;0)</Literal>
+			</Line>
+			<Line>
+				<Literal>return global_string_queue.front();</Literal>
+			</Line>
+			<Line>
+				<Literal>else</Literal>
+			</Line>
+			<Line>
+				<Literal>return "";</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+    <KnowIt visible="true">
+      <Name>Switch is active</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>if the switch &lt;switch&gt; is active</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>Switch</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>switch</Type>
+			  </Types>
+			</KnowIt>
+		  </Parameters>
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		  <Includes>
+			<Include>API_Switch.h</Include>
+		  </Includes>
+		  <Code>
+			<Line>
+				<Literal>return UNIMPLEMENTED;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Remaining balls</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>int</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the number of remaining balls</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		  <Includes>
+			<Include>ball.global</Include>
+		  </Includes>
+		  <Code>
+			<Line>
+				<Literal>return remainingBalls;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Available balls</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>int</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the number of avaliable balls</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>/* Returns the number of balls detected in the 4-Trough */</Literal>
+			</Line>
+			<Line>
+				<Literal>int count = 0;</Literal>
+			</Line>
+			<Line>
+				<Literal>if (switchActive("4-Ball Trough 1 (Left)")) count++;</Literal>
+			</Line>
+			<Line>
+				<Literal>if (switchActive("4-Ball Trough 2")) count++;</Literal>
+			</Line>
+			<Line>
+				<Literal>if (switchActive("4-Ball Trough 3")) count++;</Literal>
+			</Line>
+			<Line>
+				<Literal>return count;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<!-- Network -->
+	<KnowIt visible="true">
+      <Name>Game state</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>int</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the current game state</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return _gameState->getInt();</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Player id</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>int</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the player's id</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return playerid;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>First Player</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>if you are player one</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return playerid == 0;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+		<Name>Network game in pre-start</Name>
+		<Parameters />
+		<Labels/>
+		<Types>
+		  <Type>question</Type>
+		</Types>
+		<Binding flavour="function">
+		 <DoIt reference="../../../../Causes/StartIt[5]/AdditionalCondition/KnowIt/Binding/DoIt" />
+		</Binding>
+	</KnowIt>
+	<KnowIt visible="true">
+		<Name>Network game is starting</Name>
+		<Parameters />
+		<Labels/>
+		<Types>
+		  <Type>question</Type>
+		</Types>
+		<Binding flavour="function">
+		 <DoIt reference="../../../../Causes/StartIt[6]/AdditionalCondition/KnowIt/Binding/DoIt" />
+		</Binding>
+	</KnowIt>
+	<KnowIt visible="true">
+		<Name>Network game is running</Name>
+		<Parameters />
+		<Labels/>
+		<Types>
+		  <Type>question</Type>
+		</Types>
+		<Binding flavour="function">
+		 <DoIt reference="../../../../Causes/StartIt[7]/AdditionalCondition/KnowIt/Binding/DoIt" />
+		</Binding>
+	</KnowIt>
+	<KnowIt visible="true">
+		<Name>Network game is finished</Name>
+		<Parameters />
+		<Labels/>
+		<Types>
+		  <Type>question</Type>
+		</Types>
+		<Binding flavour="function">
+		 <DoIt reference="../../../../Causes/StartIt[8]/AdditionalCondition/KnowIt/Binding/DoIt" />
+		</Binding>
+	</KnowIt>
+	<KnowIt visible="true">
+		<Name>Network variable's char value</Name>
+		<Parameters />
+		<Labels/>
+		<Types>
+		  <Type>char</Type>
+		</Types>
+		<Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the char value of the network variable with name &lt;Name&gt;</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>Name</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>string</Type>
+				<Type>lamp</Type>
+				<Type>switch</Type>
+				<Type>dedicatedSwitch</Type>
+			  </Types>
+			</KnowIt>
+		  </Parameters>
+		  <Labels/>
+		  <Types>
+			<Type>char</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>std::map&lt;std::string,NetworkVar*&gt;::iterator iter; </Literal>
+			</Line>
+			<Line>
+				<Literal>iter = networkVariables.find(</Literal>
+				<Scope data="argument" ref="Name">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>);</Literal>
+			</Line>
+			<Line>
+				<Literal>if (iter != networkVariables.end()) {</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>return iter-&gt;second-&gt;getChar();</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+			<Line>
+				<Literal>else {</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>return -1;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+	</KnowIt>
+	<KnowIt visible="true">
+		<Name>Network variable's int value</Name>
+		<Parameters />
+		<Labels/>
+		<Types>
+		  <Type>int</Type>
+		</Types>
+		<Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the int value of the network variable with name &lt;Name&gt;</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>Name</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>string</Type>
+				<Type>lamp</Type>
+				<Type>switch</Type>
+				<Type>dedicatedSwitch</Type>
+			  </Types>
+			</KnowIt>
+		  </Parameters>
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>std::map&lt;std::string,NetworkVar*&gt;::iterator iter; </Literal>
+			</Line>
+			<Line>
+				<Literal>iter = networkVariables.find(</Literal>
+				<Scope data="argument" ref="Name">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>);</Literal>
+			</Line>
+			<Line>
+				<Literal>if (iter != networkVariables.end()) {</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>return iter-&gt;second-&gt;getInt();</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+			<Line>
+				<Literal>else {</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>return -1;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+	</KnowIt>
+	<KnowIt visible="true">
+      <Name>Both</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>if value &lt;Question 1&gt; and value &lt;Question 2&gt;</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>Question 1</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>question</Type>
+			  </Types>
+			</KnowIt>
+			<KnowIt>
+			  <Name>Question 2</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>question</Type>
+			  </Types>
+			</KnowIt>
+		  </Parameters>
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return </Literal>
+				<Scope data="argument" ref="Question 1">
+					<Fragment data="name" />
+				</Scope>
+				<Literal> &amp;&amp; </Literal>
+				<Scope data="argument" ref="Question 2">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Either</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>if value &lt;Question 1&gt; or value &lt;Question 2&gt;</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>Question 1</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>question</Type>
+			  </Types>
+			</KnowIt>
+			<KnowIt>
+			  <Name>Question 2</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>question</Type>
+			  </Types>
+			</KnowIt>
+		  </Parameters>
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return </Literal>
+				<Scope data="argument" ref="Question 1">
+					<Fragment data="name" />
+				</Scope>
+				<Literal> || </Literal>
+				<Scope data="argument" ref="Question 2">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+	<KnowIt visible="true">
+      <Name>Opposite</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the opposite of value &lt;Value&gt;</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>Value</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>question</Type>
+			  </Types>
+			</KnowIt>
+		  </Parameters>
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return !</Literal>
+				<Scope data="argument" ref="Value">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>;</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+    <KnowIt visible="true">
+      <Name>Text appended with value</Name>
+      <Parameters />
+	  <Labels/>
+      <Types>
+        <Type>string</Type>
+      </Types>
+      <Binding flavour="function">
+		<DoIt visible="false">
+		  <Name>the text &lt;text&gt; appended with &lt;value&gt;</Name>
+		  <Parameters>
+			<KnowIt>
+			  <Name>text</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>string</Type>
+			  </Types>
+			</KnowIt>
+			<KnowIt>
+			  <Name>value</Name>
+			  <Parameters />
+			  <Labels/>
+			  <Types>
+				<Type>string</Type>
+			  </Types>
+			</KnowIt>
+		  </Parameters>
+		  <Labels/>
+		  <Types>
+			<Type>string</Type>
+		  </Types>
+		  <Code>
+			<Line>
+				<Literal>return </Literal>
+				<Scope data="argument" ref="text">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>.append(</Literal>
+				<Scope data="argument" ref="value">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>);</Literal>
+			</Line>
+		  </Code>
+		</DoIt>
+      </Binding>
+    </KnowIt>
+  </DescribeIts>
+  <TypeConverters>
+	<DoIt visible="false">
+	  <Name>Convert char &lt;value&gt; to question</Name>
+	  <Parameters>
+		<KnowIt>
+		  <Name>value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>char</Type>
+		  </Types>
+		  <Binding flavour="runTime">
+		   <Types>
+            <Type>char</Type>
+			 </Types>
+          </Binding>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+	  <Types>
+		<Type>question</Type>
+	  </Types>
+	  <Code>
+		<Line>
+		 <Literal>return </Literal>
+		  <Scope data="argument" ref="value">
+			<Fragment data="name" />
+		  </Scope>
+		  <Literal>!= '0';</Literal>
+		</Line>
+	  </Code>
+	</DoIt>
+	<DoIt visible="false">
+	  <Name>Convert int &lt;value&gt; to question</Name>
+	  <Parameters>
+		<KnowIt>
+		  <Name>value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		  <Binding flavour="runTime">
+		   <Types>
+            <Type>int</Type>
+			 </Types>
+          </Binding>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+	  <Types>
+		<Type>question</Type>
+	  </Types>
+	  <Code>
+		<Line>
+		 <Literal>return </Literal>
+		  <Scope data="argument" ref="value">
+			<Fragment data="name" />
+		  </Scope>
+		  <Literal>!= 0;</Literal>
+		</Line>
+	  </Code>
+	</DoIt>
+	<DoIt visible="false">
+	  <Name>Convert int &lt;value&gt; to double</Name>
+	  <Parameters>
+		<KnowIt>
+		  <Name>value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		  <Binding flavour="runTime">
+		   <Types>
+            <Type>int</Type>
+			 </Types>
+          </Binding>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+	  <Types>
+		<Type>double</Type>
+	  </Types>
+	  <Code>
+		<Line>
+		 <Literal>return double(</Literal>
+		  <Scope data="argument" ref="value">
+			<Fragment data="name" />
+		  </Scope>
+		  <Literal>);</Literal>
+		</Line>
+	  </Code>
+	</DoIt>
+	<DoIt visible="false">
+	  <Name>Convert double &lt;value&gt; to int</Name>
+	  <Parameters>
+		<KnowIt>
+		  <Name>value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		  <Binding flavour="runTime">
+		   <Types>
+            <Type>double</Type>
+			 </Types>
+          </Binding>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+	  <Types>
+		<Type>int</Type>
+	  </Types>
+	  <Code>
+		<Line>
+		 <Literal>return int(</Literal>
+		  <Scope data="argument" ref="value">
+			<Fragment data="name" />
+		  </Scope>
+		  <Literal>);</Literal>
+		</Line>
+	  </Code>
+	</DoIt>
+	<DoIt visible="false">
+	  <Name>Convert double &lt;value&gt; to string</Name>
+	  <Parameters>
+		<KnowIt>
+		  <Name>value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>double</Type>
+		  </Types>
+		  <Binding flavour="runTime">
+		   <Types>
+            <Type>double</Type>
+			 </Types>
+          </Binding>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+	  <Types>
+		<Type>string</Type>
+	  </Types>
+	  <Code>
+		 <Line>
+			<Literal>char doubleToString[255];</Literal>
+		</Line>
+		<Line>
+			<Literal>sprintf(doubleToString, "%3.2lf", </Literal>
+			<Scope data="argument" ref="value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>);</Literal>
+		</Line>
+		<Line>
+			<Literal>std::string displayText(doubleToString);</Literal>
+		</Line>
+		<Line>
+			<Literal>return displayText;</Literal>;
+		</Line>
+	  </Code>
+	</DoIt>
+	<DoIt visible="false">
+	  <Name>Convert int &lt;value&gt; to string</Name>
+	  <Parameters>
+		<KnowIt>
+		  <Name>value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>int</Type>
+		  </Types>
+		  <Binding flavour="runTime">
+		   <Types>
+            <Type>int</Type>
+			 </Types>
+          </Binding>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+	  <Types>
+		<Type>string</Type>
+	  </Types>
+	  <Code>
+		 <Line>
+			<Literal>char intToString[255];</Literal>
+		</Line>
+		<Line>
+			<Literal>sprintf(intToString, "%d", </Literal>
+			<Scope data="argument" ref="value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>);</Literal>
+		</Line>
+		<Line>
+			<Literal>std::string displayText(intToString);</Literal>
+		</Line>
+		<Line>
+			<Literal>return displayText;</Literal>;
+		</Line>
+	  </Code>
+	</DoIt>
+	<DoIt visible="false">
+	  <Name>Convert switch/lamp &lt;value&gt; to string</Name>
+	  <Parameters>
+		<KnowIt>
+		  <Name>value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>switch</Type>
+			<Type>lamp</Type>
+		  </Types>
+		  <Binding flavour="runTime">
+		   <Types>
+            <Type>switch</Type>
+			 </Types>
+          </Binding>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+	  <Types>
+		<Type>string</Type>
+	  </Types>
+	  <Code>
+		 <Line>
+			<Literal>return</Literal>
+			<Scope data="argument" ref="value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>;</Literal>
+		</Line>
+	  </Code>
+	</DoIt>
+	<DoIt visible="false">
+	  <Name>Convert event &lt;value&gt; to string</Name>
+	  <Parameters>
+		<KnowIt>
+		  <Name>value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>event</Type>
+		  </Types>
+		  <Binding flavour="runTime">
+		   <Types>
+            <Type>event</Type>
+			 </Types>
+          </Binding>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+	  <Types>
+		<Type>string</Type>
+	  </Types>
+	  <Code>
+		 <Line>
+			<Literal>return std::string("</Literal>
+			<Scope data="argument" ref="value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>");</Literal>
+		</Line>
+	  </Code>
+	</DoIt>
+	<DoIt visible="false">
+	  <Name>Convert char &lt;value&gt; to string</Name>
+	  <Parameters>
+		<KnowIt>
+		  <Name>value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>char</Type>
+		  </Types>
+		  <Binding flavour="runTime">
+		   <Types>
+            <Type>char</Type>
+			 </Types>
+          </Binding>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+	  <Types>
+		<Type>string</Type>
+	  </Types>
+	  <Code>
+		 <Line>
+			<Literal>return std::string(</Literal>
+			<Scope data="argument" ref="value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>);</Literal>
+		</Line>
+	  </Code>
+	</DoIt>
+	<DoIt visible="false">
+	  <Name>Convert char &lt;value&gt; to double</Name>
+	  <Parameters>
+		<KnowIt>
+		  <Name>value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>char</Type>
+		  </Types>
+		  <Binding flavour="runTime">
+		   <Types>
+            <Type>char</Type>
+			 </Types>
+          </Binding>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+	  <Types>
+		<Type>double</Type>
+	  </Types>
+	  <Code>
+		 <Line>
+			<Literal>return atof(&amp;</Literal>
+			<Scope data="argument" ref="value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>);</Literal>
+		</Line>
+	  </Code>
+	</DoIt>
+	<DoIt visible="false">
+	  <Name>Convert question &lt;value&gt; to char</Name>
+	  <Parameters>
+		<KnowIt>
+		  <Name>value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		  <Binding flavour="runTime">
+		   <Types>
+            <Type>question</Type>
+			 </Types>
+          </Binding>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+	  <Types>
+		<Type>char</Type>
+	  </Types>
+	  <Code>
+		<Line>
+			<Literal>if(</Literal>
+			<Scope data="argument" ref="value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>) return '1';</Literal>
+		</Line>
+		 <Line>
+			<Literal>return '0';</Literal>
+		</Line>
+	  </Code>
+	</DoIt>
+	<DoIt visible="false">
+	  <Name>Convert question &lt;value&gt; to string</Name>
+	  <Parameters>
+		<KnowIt>
+		  <Name>value</Name>
+		  <Parameters />
+		  <Labels/>
+		  <Types>
+			<Type>question</Type>
+		  </Types>
+		  <Binding flavour="runTime">
+		   <Types>
+            <Type>question</Type>
+			 </Types>
+          </Binding>
+		</KnowIt>
+	  </Parameters>
+	  <Labels/>
+	  <Types>
+		<Type>string</Type>
+	  </Types>
+	  <Code>
+		<Line>
+			<Literal>std::string aString;</Literal>
+		</Line>
+		<Line>
+			<Literal>if(</Literal>
+			<Scope data="argument" ref="value">
+				<Fragment data="name" />
+			</Scope>
+			<Literal>) return aString = "1";</Literal>
+		</Line>
+		<Line>
+			<Literal>return aString = "0";</Literal>
+		</Line>
+	  </Code>
+	</DoIt>
+  </TypeConverters>
+</APIDictionary>

@@ -1,0 +1,1 @@
+int score = 0;

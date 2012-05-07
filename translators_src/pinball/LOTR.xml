@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--Data file for the Stern Lord of the Rings pinball machine-->
+<PinballBoard desc="Lord of the Rings" scaleCoordsPerInch="NULL">
+	<PlayfieldParts>
+		<Switches>
+			<Switch desc="4th Coin Slot" number="2" row="2" column="1" xCoord="NULL" yCoord="NULL">4thCoinSlot</Switch>
+			<Switch desc="6th Coin Slot" number="3" row="3" column="1" xCoord="NULL" yCoord="NULL">6thCoinSlot</Switch>
+			<Switch desc="Right Coin Slot" number="4" row="4" column="1" xCoord="NULL" yCoord="NULL">RightCoinSlot</Switch>
+			<Switch desc="Center Coin Slot" number="5" row="5" column="1" xCoord="NULL" yCoord="NULL">CenterCoinSlot</Switch>
+			<Switch desc="Left Coin Slot" number="6" row="6" column="1" xCoord="NULL" yCoord="NULL">LeftCoinSlot</Switch>
+			<Switch desc="5th Coin Slot" number="7" row="7" column="1" xCoord="NULL" yCoord="NULL">5thCoinSlot</Switch>
+			<Switch desc="Left VUK" number="9" row="1" column="2" xCoord="15" yCoord="375">LeftVUK</Switch>
+			<Switch desc="Standup" number="10" row="2" column="2" xCoord="25" yCoord="470">Standup</Switch>
+			<Switch desc="4-Ball Trough 1 (Left)" number="11" row="3" column="2" xCoord="245" yCoord="25">4BallTrough1</Switch>
+			<Switch desc="4-Ball Trough 2" number="12" row="4" column="2" xCoord="280" yCoord="49">4BallTrough2</Switch>
+			<Switch desc="4-Ball Trough 3" number="13" row="5" column="2" xCoord="305" yCoord="73">4BallTrough3</Switch>
+			<Switch desc="4-Ball Trough VUK Opto" number="14" row="6" column="2" xCoord="330" yCoord="97">4BallTroughVUK</Switch>
+			<Switch desc="4-Ball Stacking Opto" number="15" row="7" column="2" xCoord="331" yCoord="117">4BallStacking</Switch>
+			<Switch desc="Shooter Lane" number="16" row="8" column="2" xCoord="399" yCoord="80">ShooterLane</Switch>
+			<Switch desc="Sword Lock High" number="17" row="1" column="3" xCoord="356" yCoord="432">SwordLockHigh</Switch>
+			<Switch desc="Sword Lock Mid" number="18" row="2" column="3" xCoord="353" yCoord="411">SwordLockMid</Switch>
+			<Switch desc="Sword Lock Low" number="19" row="3" column="3" xCoord="350" yCoord="390">SwordLockLow</Switch>
+			<Switch desc="Right Orbit Low" number="20" row="4" column="3" xCoord="375" yCoord="628">RightOrbitLow</Switch>
+			<Switch desc="Right Orbit Hi" number="21" row="5" column="3" xCoord="375" yCoord="810">RightOrbitHi</Switch>
+			<Switch desc="Rail Ramp Exit" number="22" row="6" column="3" xCoord="307" yCoord="622">RailRampExit</Switch>
+			<Switch desc="Right Ramp Target" number="23" row="7" column="3" xCoord="410" yCoord="787">RightRampTarget</Switch>
+			<Switch desc="Right Ramp Made" number="24" row="8" column="3" xCoord="337" yCoord="625">RightRampMade</Switch>
+			<Switch desc="Right Ramp Enter" number="25" row="1" column="4" xCoord="321" yCoord="598">RightRampEnter</Switch>
+			<Switch desc="Balrog Hit" number="28" row="4" column="4" xCoord="175" yCoord="700">BalrogHit</Switch>
+			<Switch desc="Palantir" number="29" row="5" column="4" xCoord="228" yCoord="589">Palantir</Switch>
+			<Switch desc="Right VUK" number="30" row="6" column="4" xCoord="268" yCoord="619">RightVUK</Switch>
+			<Switch desc="Balrog Open" number="31" row="7" column="4" xCoord="175" yCoord="700">BalrogOpen</Switch>
+			<Switch desc="Balrog Closed" number="32" row="8" column="4" xCoord="175" yCoord="700">BalrogClosed</Switch>
+			<Switch desc="Mini Playfield Upper Left" number="33" row="1" column="5" xCoord="13" yCoord="827">MiniPFUL</Switch>
+			<Switch desc="Mini Playfield Upper Right" number="34" row="2" column="5" xCoord="45" yCoord="827">MiniPFUR</Switch>
+			<Switch desc="Mini Playfield Lower Left" number="35" row="3" column="5" xCoord="13" yCoord="743">MiniPFLL</Switch>
+			<Switch desc="Mini Playfield Lower Right" number="36" row="4" column="5" xCoord="45" yCoord="743">MiniPFLR</Switch>
+			<Switch desc="Left Orbit Low" number="37" row="5" column="5" xCoord="8" yCoord="745">LeftOrbitLow</Switch>
+			<Switch desc="Left Orbit Hi" number="38" row="6" column="5" xCoord="8" yCoord="854">LeftOrbitHi</Switch>
+			<Switch desc="Left Ramp Enter" number="39" row="7" column="5" xCoord="46" yCoord="822">LeftRampEnter</Switch>
+			<Switch desc="Left Ramp Made" number="40" row="8" column="5" xCoord="77" yCoord="702">LeftRampMade</Switch>
+			<Switch desc="Top VUK" number="41" row="1" column="6" xCoord="108" yCoord="890">TopVUK</Switch>
+			<Switch desc="Inner Loop" number="42" row="2" column="6" xCoord="218" yCoord="857">InnerLoop</Switch>
+			<Switch desc="Left Top Lane" number="43" row="3" column="6" xCoord="259" yCoord="813">LeftTopLane</Switch>
+			<Switch desc="Middle Top Lane" number="44" row="4" column="6" xCoord="296" yCoord="813">MiddleTopLane</Switch>
+			<Switch desc="Right Top Lane" number="45" row="5" column="6" xCoord="333" yCoord="813">RightTopLane</Switch>
+			<Switch desc="Top Saucer" number="46" row="6" column="6" xCoord="319" yCoord="919">TopSaucer</Switch>
+			<Switch desc="Ring Made" number="47" row="7" column="6" xCoord="175" yCoord="940">RingMade</Switch>
+			<Switch desc="Back Trough" number="48" row="8" column="6" xCoord="241" yCoord="977">BackTrough</Switch>
+			<Switch desc="Left Bumper" number="49" row="1" column="7" xCoord="246" yCoord="745">LeftBumper</Switch>
+			<Switch desc="Right Bumper" number="50" row="2" column="7" xCoord="348" yCoord="749">RightBumper</Switch>
+			<Switch desc="Bottom Bumper" number="51" row="3" column="7" xCoord="308" yCoord="681">BottomBumper</Switch>
+			<Switch desc="Spinner" number="52" row="4" column="7" xCoord="175" yCoord="749">Spinner</Switch>
+			<Switch desc="Spot Ring" number="53" row="5" column="7" xCoord="333" yCoord="425">SpotRing</Switch>
+			<Switch desc="Start Button" number="54" row="6" column="7" xCoord="NULL" yCoord="NULL">StartButton</Switch>
+			<Switch desc="Tournament Start" number="55" row="7" column="7" xCoord="NULL" yCoord="NULL">TournamentStart</Switch>
+			<Switch desc="Plumb Bob Tilt" number="56" row="8" column="7" xCoord="NULL" yCoord="NULL">PlumbBobTilt</Switch>
+			<Switch desc="Left Outlane" number="57" row="1" column="8" xCoord="12" yCoord="203">LeftOutlane</Switch>
+			<Switch desc="Left Return Lane" number="58" row="2" column="8" xCoord="49" yCoord="223">LeftReturnLane</Switch>
+			<Switch desc="Left Slingshot" number="59" row="3" column="8" xCoord="92" yCoord="228">LeftSlingshot</Switch>
+			<Switch desc="Right Outlane" number="60" row="4" column="8" xCoord="360" yCoord="206">RightOutlane</Switch>
+			<Switch desc="Right Return Lane" number="61" row="5" column="8" xCoord="330" yCoord="223">RightReturnLane</Switch>
+			<Switch desc="Right Slingshot" number="62" row="6" column="8" xCoord="288" yCoord="228">RightSlingshot</Switch>
+		</Switches>
+		<DedicatedSwitches>
+			<DedicatedSwitch desc="Left Flipper Button" number="1" row="1" column="1" xCoord="NULL" yCoord="NULL">LeftFlipperButton</DedicatedSwitch>
+			<DedicatedSwitch desc="Left Flipper End-Of-Stroke" number="2" row="2" column="1" xCoord="NULL" yCoord="NULL">LeftFlipperEOS</DedicatedSwitch>
+			<DedicatedSwitch desc="Right Flipper Button" number="3" row="3" column="1" xCoord="NULL" yCoord="NULL">RightFlipperButton</DedicatedSwitch>
+			<DedicatedSwitch desc="Right Flipper End-Of-Stroke" number="4" row="4" column="1" xCoord="NULL" yCoord="NULL">RightFlipperEOS</DedicatedSwitch>
+			<DedicatedSwitch desc="Volume (Red Button)" number="6" row="6" column="1" xCoord="NULL" yCoord="NULL">RedButton</DedicatedSwitch>
+			<DedicatedSwitch desc="Serv. Cred (Green Button)" number="7" row="7" column="1" xCoord="NULL" yCoord="NULL">GreenButton</DedicatedSwitch>
+			<DedicatedSwitch desc="Begin Test (Black Button)" number="8" row="8" column="1" xCoord="NULL" yCoord="NULL">BlackButton</DedicatedSwitch>
+		</DedicatedSwitches>
+		<Lamps>
+			<Lamp desc="(K)EEP" number="1" row="1" column="1" xCoord="13" yCoord="263">K</Lamp>
+			<Lamp desc="K(E)EP" number="2" row="1" column="2" xCoord="50" yCoord="288">E1</Lamp>
+			<Lamp desc="KE(E)P" number="3" row="1" column="3" xCoord="328" yCoord="288">E2</Lamp>
+			<Lamp desc="KEE(P)" number="4" row="1" column="4" xCoord="361" yCoord="262">P</Lamp>
+			<Lamp desc="The Fellowship of the Ring" number="5" row="1" column="5" xCoord="138" yCoord="207">TheFellowshipOfTheRing</Lamp>
+			<Lamp desc="The Two Towers" number="6" row="1" column="6" xCoord="190" yCoord="213">TheTwoTowers</Lamp>
+			<Lamp desc="The Return of the King" number="7" row="1" column="7" xCoord="241" yCoord="207">TheReturnOfTheKing</Lamp>
+			<Lamp desc="Shoot Again" number="8" row="1" column="8" xCoord="191" yCoord="114">ShootAgain</Lamp>
+			<Lamp desc="Pippin" number="9" row="2" column="1" xCoord="92" yCoord="319">Pippin</Lamp>
+			<Lamp desc="Merry" number="10" row="2" column="2" xCoord="117" yCoord="333">Merry</Lamp>
+			<Lamp desc="Sam" number="11" row="2" column="3" xCoord="141" yCoord="347">Sam</Lamp>
+			<Lamp desc="Aragorn" number="12" row="2" column="4" xCoord="162" yCoord="354">Aragorn</Lamp>
+			<Lamp desc="Frodo" number="13" row="2" column="5" xCoord="189" yCoord="357">Frodo</Lamp>
+			<Lamp desc="Gandalf" number="14" row="2" column="6" xCoord="215" yCoord="354">Gandalf</Lamp>
+			<Lamp desc="Legoles" number="15" row="2" column="7" xCoord="244" yCoord="347">Legoles</Lamp>
+			<Lamp desc="Gimli" number="16" row="2" column="8" xCoord="265" yCoord="333">Gimli</Lamp>
+			<Lamp desc="Boromir" number="17" row="3" column="1" xCoord="290" yCoord="319">Boromir</Lamp>
+			<Lamp desc="Mystery" number="18" row="3" column="2" xCoord="62" yCoord="397">Mystery</Lamp>
+			<Lamp desc="Frodo Arrow" number="19" row="3" column="3" xCoord="174" yCoord="586">FrodoArrow</Lamp>
+			<Lamp desc="Destroy Ring" number="20" row="3" column="4" xCoord="174" yCoord="511">DestroyRing</Lamp>
+			<Lamp desc="Mode Start" number="21" row="3" column="5" xCoord="174" yCoord="432">ModeStart</Lamp>
+			<Lamp desc="Palantir" number="22" row="3" column="6" xCoord="218" yCoord="562">Palantir</Lamp>
+			<Lamp desc="Palantir Globe" number="23" row="3" column="7" xCoord="279" yCoord="611">PalantirGlobe</Lamp>
+			<Lamp desc="Spot Ring" number="24" row="3" column="8" xCoord="307" yCoord="394">SpotRing</Lamp>
+			<Lamp desc="Pippin Arrow" number="25" row="4" column="1" xCoord="46" yCoord="573">PippinArrow</Lamp>
+			<Lamp desc="Gift of the Elves" number="26" row="4" column="2" xCoord="61" yCoord="528">GiftOfTheElves</Lamp>
+			<Lamp desc="Light Extra Ball" number="27" row="4" column="3" xCoord="94" yCoord="480">LightExtraBall</Lamp>
+			<Lamp desc="Ring Multiball" number="28" row="4" column="4" xCoord="112" yCoord="471">RingMultiball</Lamp>
+			<Lamp desc="Big Points" number="29" row="4" column="5" xCoord="103" yCoord="449">BigPoints</Lamp>
+			<Lamp desc="Light Special" number="30" row="4" column="6" xCoord="85" yCoord="440">LightSpecial</Lamp>
+			<Lamp desc="Super Ring Frenzy" number="31" row="4" column="7" xCoord="69" yCoord="454">SuperRingFrenzy</Lamp>
+			<Lamp desc="2X Scoring" number="32" row="4" column="8" xCoord="72" yCoord="476">2XScoring</Lamp>
+			<Lamp desc="Legoles Arrow" number="33" row="5" column="1" xCoord="74" yCoord="670">LegolesArrow</Lamp>
+			<Lamp desc="L Ramp Man Ring" number="34" row="5" column="2" xCoord="81" yCoord="627">LRampManRing</Lamp>
+			<Lamp desc="L Ramp Dwarf Ring" number="35" row="5" column="3" xCoord="90" yCoord="587">LRampDwarfRing</Lamp>
+			<Lamp desc="L Ramp Elf Ring" number="36" row="5" column="4" xCoord="100" yCoord="555">LRampElfRing</Lamp>
+			<Lamp desc="Gandalf Arrow" number="37" row="5" column="5" xCoord="117" yCoord="721">GandalfArrow</Lamp>
+			<Lamp desc="C Loop Man Ring" number="38" row="5" column="6" xCoord="121" yCoord="681">CLoopManRing</Lamp>
+			<Lamp desc="C Loop Dwarf Ring" number="39" row="5" column="7" xCoord="122" yCoord="648">CLoopDwarfRing</Lamp>
+			<Lamp desc="C Loop Elf Ring" number="40" row="5" column="8" xCoord="123" yCoord="611">CLoopElfRing</Lamp>
+			<Lamp desc="Gimli Arrow" number="41" row="6" column="1" xCoord="254" yCoord="569">GimliArrow</Lamp>
+			<Lamp desc="Extra Ball" number="42" row="6" column="2" xCoord="243" yCoord="521">ExtraBall</Lamp>
+			<Lamp desc="Gollum Multiball" number="43" row="6" column="3" xCoord="230" yCoord="483">GollumMultiball</Lamp>
+			<Lamp desc="Special" number="44" row="6" column="4" xCoord="215" yCoord="449">Special</Lamp>
+			<Lamp desc="Merry Arrow" number="45" row="6" column="5" xCoord="350" yCoord="572">MerryArrow</Lamp>
+			<Lamp desc="R Orbit Man Ring" number="46" row="6" column="6" xCoord="342" yCoord="531">ROrbitManRing</Lamp>
+			<Lamp desc="R Orbit Dwarf Ring" number="47" row="6" column="7" xCoord="331" yCoord="500">ROrbitDwarfRing</Lamp>
+			<Lamp desc="R Orbit Elf Ring" number="48" row="6" column="8" xCoord="319" yCoord="462">ROrbitElfRing</Lamp>
+			<Lamp desc="Aragorn Arrow" number="49" row="7" column="1" xCoord="241" yCoord="523">AragornArrow</Lamp>
+			<Lamp desc="R Ramp Man Ring" number="50" row="7" column="2" xCoord="276" yCoord="490">RRampManRing</Lamp>
+			<Lamp desc="R Ramp Dwarf Ring" number="51" row="7" column="3" xCoord="261" yCoord="453">RRampDwarfRing</Lamp>
+			<Lamp desc="R Ramp Elf Ring" number="52" row="7" column="4" xCoord="252" yCoord="420">RRampElfRing</Lamp>
+			<Lamp desc="Lock" number="53" row="7" column="5" xCoord="243" yCoord="388">Lock</Lamp>
+			<Lamp desc="Lanes" number="54" row="7" column="6" xCoord="400" yCoord="518">Lanes</Lamp>
+			<Lamp desc="Tower" number="55" row="7" column="7" xCoord="400" yCoord="470">Tower</Lamp>
+			<Lamp desc="Flipper" number="56" row="7" column="8" xCoord="400" yCoord="422">Flipper</Lamp>
+			<Lamp desc="(O)RC" number="57" row="8" column="1" xCoord="259" yCoord="854">O</Lamp>
+			<Lamp desc="O(R)C" number="58" row="8" column="2" xCoord="298" yCoord="854">R</Lamp>
+			<Lamp desc="OR(C)" number="59" row="8" column="3" xCoord="334" yCoord="854">C</Lamp>
+			<Lamp desc="Paths of the Dead Upper Left" number="60" row="8" column="4" xCoord="28" yCoord="1147">POTDUL</Lamp>
+			<Lamp desc="Paths of the Dead Upper Right" number="61" row="8" column="5" xCoord="65" yCoord="1147">POTDUR</Lamp>
+			<Lamp desc="Paths of the Dead Lower Left" number="62" row="8" column="6" xCoord="28" yCoord="1126">POTDLL</Lamp>
+			<Lamp desc="Paths of the Dead Lower Right" number="63" row="8" column="7" xCoord="65" yCoord="1126">POTDLR</Lamp>
+			<Lamp desc="Shooter Lane #1 (Bottom)" number="64" row="8" column="8" xCoord="378" yCoord="178">ShooterLane1</Lamp>
+			<Lamp desc="Shooter Lane #2" number="65" row="9" column="1" xCoord="378" yCoord="226">ShooterLane2</Lamp>
+			<Lamp desc="Shooter Lane #3" number="66" row="9" column="2" xCoord="378" yCoord="273">ShooterLane3</Lamp>
+			<Lamp desc="Shooter Lane #4" number="67" row="9" column="3" xCoord="378" yCoord="321">ShooterLane4</Lamp>
+			<Lamp desc="Shooter Lane #5" number="68" row="9" column="4" xCoord="378" yCoord="368">ShooterLane5</Lamp>
+			<Lamp desc="Shooter Lane #6" number="69" row="9" column="5" xCoord="378" yCoord="416">ShooterLane6</Lamp>
+			<Lamp desc="Shooter Lane #7" number="70" row="9" column="6" xCoord="378" yCoord="463">ShooterLane7</Lamp>
+			<Lamp desc="Shooter Lane #8" number="71" row="9" column="7" xCoord="378" yCoord="511">ShooterLane8</Lamp>
+			<Lamp desc="Shooter Lane #9 (Top)" number="72" row="9" column="8" xCoord="378" yCoord="559">ShooterLane9</Lamp>
+			<Lamp desc="Escape the Ringwraiths" number="73" row="10" column="1" xCoord="1128" yCoord="1125">EscapeTheRingwraiths</Lamp>
+			<Lamp desc="Gandalf vs. Saruman" number="74" row="10" column="2" xCoord="142" yCoord="1144">GandalfVsSaruman</Lamp>
+			<Lamp desc="Warg Attack" number="75" row="10" column="3" xCoord="162" yCoord="1152">WargAttack</Lamp>
+			<Lamp desc="War of the Ents" number="76" row="10" column="4" xCoord="182" yCoord="1152">WarOfTheEnts</Lamp>
+			<Lamp desc="Battle with Shelob" number="77" row="10" column="5" xCoord="207" yCoord="1144">BattleWithShelob</Lamp>
+			<Lamp desc="Destroy the Witch-King" number="78" row="10" column="6" xCoord="217" yCoord="1125">DestroyTheWitchKing</Lamp>
+			<Lamp desc="Tournament Button" number="79" row="10" column="7" xCoord="NULL" yCoord="NULL">TournamentButton</Lamp>
+			<Lamp desc="Start Button" number="80" row="10" column="8" xCoord="NULL" yCoord="NULL">StartButton</Lamp>
+		</Lamps>
+		<Solenoids>
+			<!--LEDS (not yet implemented)-->
+			<!--<Solenoid desc="Ring 1 (Elf)" number="1" xCoord="191" yCoord="172" solType="0x10" solGroup="L" solNumber="1" power="NULL" option1="NULL" option2="NULL">Ring1</Solenoid>
+			<Solenoid desc="Ring 2 (Elf)" number="2" xCoord="194" yCoord="167" solType="0x10" solGroup="L" solNumber="2" power="NULL" option1="NULL" option2="NULL">Ring2</Solenoid>
+			<Solenoid desc="Ring 3 (Elf)" number="3" xCoord="188" yCoord="167" solType="0x10" solGroup="L" solNumber="3" power="NULL" option1="NULL" option2="NULL">Ring3</Solenoid>
+			<Solenoid desc="Ring 4 (Dwarf)" number="4" xCoord="191" yCoord="180" solType="0x10" solGroup="L" solNumber="4" power="NULL" option1="NULL" option2="NULL">Ring4</Solenoid>
+			<Solenoid desc="Ring 5 (Dwarf)" number="5" xCoord="204" yCoord="177" solType="0x10" solGroup="L" solNumber="5" power="NULL" option1="NULL" option2="NULL">Ring5</Solenoid>
+			<Solenoid desc="Ring 6 (Dwarf)" number="6" xCoord="206" yCoord="166" solType="0x10" solGroup="L" solNumber="6" power="NULL" option1="NULL" option2="NULL">Ring6</Solenoid>
+			<Solenoid desc="Ring 7 (Dwarf)" number="7" xCoord="199" yCoord="158" solType="0x10" solGroup="L" solNumber="7" power="NULL" option1="NULL" option2="NULL">Ring7</Solenoid>
+			<Solenoid desc="Ring 8 (Dwarf)" number="8" xCoord="183" yCoord="158" solType="0x10" solGroup="L" solNumber="8" power="NULL" option1="NULL" option2="NULL">Ring8</Solenoid>
+			<Solenoid desc="Ring 9 (Dwarf)" number="9" xCoord="176" yCoord="166" solType="0x10" solGroup="L" solNumber="9" power="NULL" option1="NULL" option2="NULL">Ring9</Solenoid>
+			<Solenoid desc="Ring 10 (Dwarf)" number="10" xCoord="178" yCoord="177" solType="0x10" solGroup="L" solNumber="10" power="NULL" option1="NULL" option2="NULL">Ring10</Solenoid>
+			<Solenoid desc="Ring 11 (Man)" number="11" xCoord="191" yCoord="190" solType="0x10" solGroup="L" solNumber="11" power="NULL" option1="NULL" option2="NULL">Ring11</Solenoid>
+			<Solenoid desc="Ring 12 (Man)" number="12" xCoord="208" yCoord="185" solType="0x10" solGroup="L" solNumber="12" power="NULL" option1="NULL" option2="NULL">Ring12</Solenoid>
+			<Solenoid desc="Ring 13 (Man)" number="13" xCoord="213" yCoord="175" solType="0x10" solGroup="L" solNumber="13" power="NULL" option1="NULL" option2="NULL">Ring13</Solenoid>
+			<Solenoid desc="Ring 14 (Man)" number="14" xCoord="211" yCoord="157" solType="0x10" solGroup="L" solNumber="14" power="NULL" option1="NULL" option2="NULL">Ring14</Solenoid>
+			<Solenoid desc="Ring 15 (Man)" number="15" xCoord="201" yCoord="147" solType="0x10" solGroup="L" solNumber="15" power="NULL" option1="NULL" option2="NULL">Ring15</Solenoid>
+			<Solenoid desc="Ring 16 (Man)" number="16" xCoord="181" yCoord="147" solType="0x10" solGroup="L" solNumber="16" power="NULL" option1="NULL" option2="NULL">Ring16</Solenoid>
+			<Solenoid desc="Ring 17 (Man)" number="17" xCoord="171" yCoord="157" solType="0x10" solGroup="L" solNumber="17" power="NULL" option1="NULL" option2="NULL">Ring17</Solenoid>
+			<Solenoid desc="Ring 18 (Man)" number="18" xCoord="169" yCoord="175" solType="0x10" solGroup="L" solNumber="18" power="NULL" option1="NULL" option2="NULL">Ring18</Solenoid>
+			<Solenoid desc="Ring 19 (Man)" number="19" xCoord="174" yCoord="185" solType="0x10" solGroup="L" solNumber="19" power="NULL" option1="NULL" option2="NULL">Ring19</Solenoid>-->
+			<!--Solenoids-->
+			<Solenoid desc="Trough Up-Kicker" number="1" xCoord="360" yCoord="98" solType="0x01" solGroup="B" solNumber="1" power="4" option1="10" option2="NULL">TroughUpKicker</Solenoid>
+			<Solenoid desc="Auto Launch" number="2" xCoord="403" yCoord="113" solType="0x01" solGroup="B" solNumber="2" power="10" option1="NULL" option2="NULL">AutoLaunch</Solenoid>
+			<Solenoid desc="Left VUK" number="3" xCoord="15" yCoord="375" solType="0x01" solGroup="B" solNumber="3" power="7" option1="10" option2="NULL">LeftVUK</Solenoid>
+			<Solenoid desc="Top VUK" number="4" xCoord="108" yCoord="890" solType="0x01" solGroup="B" solNumber="4" power="7" option1="10" option2="NULL">TopVUK</Solenoid>
+			<Solenoid desc="Right VUK" number="5" xCoord="268" yCoord="619" solType="0x01" solGroup="B" solNumber="5" power="7" option1="10" option2="NULL">RightVUK</Solenoid>
+			<Solenoid desc="Ring Magnet" number="6" xCoord="188" yCoord="950" solType="0x13" solGroup="B" solNumber="6" power="3" option1="21" option2="7">RingMagnet</Solenoid>
+			<Solenoid desc="Right Tower" number="7" xCoord="380" yCoord="888" solType="0x01" solGroup="B" solNumber="7" power="5" option1="NULL" option2="NULL">RightTower</Solenoid>
+			<Solenoid desc="Loop Diverter" number="8" xCoord="150" yCoord="850" solType="0x02" solGroup="B" solNumber="8" power="8" option1="NULL" option2="NULL">LoopDiverter</Solenoid>
+			<Solenoid desc="Left Bumper" number="9" xCoord="246" yCoord="745" solType="0x01" solGroup="A" solNumber="1" power="6" option1="10" option2="NULL">LeftBumper</Solenoid>
+			<Solenoid desc="Right Bumper" number="10" xCoord="348" yCoord="749" solType="0x01" solGroup="A" solNumber="2" power="6" option1="10" option2="NULL">RightBumper</Solenoid>
+			<Solenoid desc="Bottom Bumper" number="11" xCoord="308" yCoord="681" solType="0x01" solGroup="A" solNumber="3" power="6" option1="10" option2="NULL">BottomBumper</Solenoid>
+			<Solenoid desc="Orbit Pin" number="13" xCoord="117" yCoord="934" solType="0x03" solGroup="A" solNumber="5" power="5" option1="1" option2="1">OrbitPin</Solenoid>
+			<Solenoid desc="Left Flipper" number="15" xCoord="120" yCoord="120" solType="0x00" solGroup="A" solNumber="7" power="10" option1="NULL" option2="NULL">LeftFlipper</Solenoid>
+			<Solenoid desc="Right Flipper" number="16" xCoord="270" yCoord="120" solType="0x00" solGroup="A" solNumber="8" power="10" option1="NULL" option2="NULL">RightFlipper</Solenoid>
+			<Solenoid desc="Left Slingshot" number="17" xCoord="92" yCoord="228" solType="0x01" solGroup="C" solNumber="1" power="10" option1="10" option2="NULL">LeftSlingshot</Solenoid>
+			<Solenoid desc="Right Slingshot" number="18" xCoord="288" yCoord="228" solType="0x01" solGroup="C" solNumber="2" power="10" option1="10" option2="NULL">RightSlingshot</Solenoid>
+			<Solenoid desc="Top Saucer" number="19" xCoord="319" yCoord="919" solType="0x01" solGroup="C" solNumber="3" power="8" option1="NULL" option2="NULL">TopSaucer</Solenoid>
+			<Solenoid desc="Balrog Motor Relay" number="20" xCoord="118" yCoord="377" solType="0x12" solGroup="C" solNumber="4" power="10" option1="NULL" option2="NULL">BalrogMotorRelay</Solenoid>
+			<Solenoid desc="Sword Lock Release" number="21" xCoord="352" yCoord="376" solType="0x03" solGroup="C" solNumber="5" power="8" option1="1" option2="50">SwordLockRelease</Solenoid>
+			<Solenoid desc="Balrog Motor" number="22" xCoord="197" yCoord="650" solType="0x03" solGroup="C" solNumber="6" power="10" option1="1" option2="70">BalrogMotor</Solenoid>
+			<!--Flash lamps-->
+			<Solenoid desc="Helms Deep Right" number="14" xCoord="350" yCoord="177" solType="0x04" solGroup="A" solNumber="6" power="5" option1="NULL" option2="NULL">HelmsDeepRight</Solenoid>
+			<Solenoid desc="Helms Deep Left" number="23" xCoord="52" yCoord="156" solType="0x04" solGroup="C" solNumber="7" power="5" option1="NULL" option2="NULL">HelmsDeepLeft</Solenoid>
+			<Solenoid desc="Pops x3" number="25" xCoord="306" yCoord="725" solType="0x01" solGroup="F" solNumber="1" power="1" option1="05" option2="NULL">Pops</Solenoid>
+			<Solenoid desc="Ring" number="26" xCoord="177" yCoord="1100" solType="0x04" solGroup="F" solNumber="2" power="5" option1="NULL" option2="NULL">Ring</Solenoid>
+			<Solenoid desc="Back Panel" number="27" xCoord="397" yCoord="1163" solType="0x04" solGroup="F" solNumber="3" power="5" option1="NULL" option2="NULL">BackPanel</Solenoid>
+			<Solenoid desc="Ringwraith" number="29" xCoord="405" yCoord="778" solType="0x04" solGroup="F" solNumber="5" power="5" option1="NULL" option2="NULL">Ringwraith</Solenoid>
+			<Solenoid desc="Sword" number="30" xCoord="370" yCoord="386" solType="0x04" solGroup="F" solNumber="6" power="5" option1="NULL" option2="NULL">Sword</Solenoid>
+			<Solenoid desc="Destroy the Ring" number="31" xCoord="174" yCoord="511" solType="0x04" solGroup="F" solNumber="7" power="5" option1="NULL" option2="NULL">DestroyTheRing</Solenoid>
+			<Solenoid desc="Balrog" number="32" xCoord="175" yCoord="698" solType="0x04" solGroup="F" solNumber="8" power="5" option1="NULL" option2="NULL">Balrog</Solenoid>
+		</Solenoids>
+	</PlayfieldParts>
+	<Groupings>
+		<BallFind balls="4">
+			<Solenoid>Top Saucer</Solenoid>
+			<Solenoid>Top VUK</Solenoid>
+			<Solenoid>Right VUK</Solenoid>
+			<Solenoid>Sword Lock Release</Solenoid>
+			<Solenoid>Left VUK</Solenoid>
+		</BallFind>
+		<LightGroups>
+			<LightGroup name="ORC">
+				<Light>O</Light>
+				<Light>R</Light>
+				<Light>C</Light>
+			</LightGroup>
+			<LightGroup name="KEEP">
+				<Light>K</Light>
+				<Light>E1</Light>
+				<Light>E2</Light>
+				<Light>P</Light>
+			</LightGroup>
+			<LightGroup name="BottomArc">
+				<Light>TheFellowshipOfTheRing</Light>
+				<Light>TheTwoTowers</Light>
+				<Light>TheReturnOfTheKing</Light>
+			</LightGroup>
+			<LightGroup name="CharacterArc">
+				<Light>Pippin</Light>
+				<Light>Merry</Light>
+				<Light>Sam</Light>
+				<Light>Aragorn</Light>
+				<Light>Frodo</Light>
+				<Light>Gandalf</Light>
+				<Light>Legoles</Light>
+				<Light>Gimli</Light>
+				<Light>Boromir</Light>
+			</LightGroup>
+			<LightGroup name="ShooterLane">
+				<Light>ShooterLane1</Light>
+				<Light>ShooterLane2</Light>
+				<Light>ShooterLane3</Light>
+				<Light>ShooterLane4</Light>
+				<Light>ShooterLane5</Light>
+				<Light>ShooterLane6</Light>
+				<Light>ShooterLane7</Light>
+				<Light>ShooterLane8</Light>
+				<Light>ShooterLane9</Light>
+			</LightGroup>
+			<LightGroup name="RightTrio">
+				<Light>Tower</Light>
+				<Light>Lanes</Light>
+				<Light>Flipper</Light>
+			</LightGroup>
+			<LightGroup name="LeftCluster">
+				<Light>LightExtraBall</Light>
+				<Light>RingMultiball</Light>
+				<Light>BigPoints</Light>
+				<Light>LightSpecial</Light>
+				<Light>SuperRingFrenzy</Light>
+				<Light>2XScoring</Light>
+			</LightGroup>
+			<LightGroup name="Palantir">
+				<Light>Palantir</Light>
+				<Light>PalantirGlobe</Light>
+			</LightGroup>
+			<LightGroup name="PathsOfTheDead">
+				<Light>POTDUL</Light>
+				<Light>POTDUR</Light>
+				<Light>POTDLL</Light>
+				<Light>POTDLR</Light>
+			</LightGroup>
+			<LightGroup name="RingArc">
+				<Light>EscapeTheRingwraiths</Light>
+				<Light>GandalfVsSaruman</Light>
+				<Light>WargAttack</Light>
+				<Light>WarOfTheEnts</Light>
+				<Light>BattleWithShelob</Light>
+				<Light>DestroyTheWitchKing</Light>
+			</LightGroup>
+			<LightGroup name="Pippin">
+				<Light>GiftOfTheElves</Light>
+				<Light>PippinArrow</Light>
+			</LightGroup>
+			<LightGroup name="Legoles">
+				<Light>LRampElfRing</Light>
+				<Light>LRampDwarfRing</Light>
+				<Light>LRampManRing</Light>
+				<Light>LegolesArrow</Light>
+			</LightGroup>
+			<LightGroup name="Gandalf">
+				<Light>CLoopElfRing</Light>
+				<Light>CLoopDwarfRing</Light>
+				<Light>CLoopManRing</Light>
+				<Light>GandalfArrow</Light>
+			</LightGroup>
+			<LightGroup name="MainArrow">
+				<Light>ModeStart</Light>
+				<Light>DestroyRing</Light>
+				<Light>FrodoArrow</Light>
+			</LightGroup>
+			<LightGroup name="Gimli">
+				<Light>Special</Light>
+				<Light>GollumMultiball</Light>
+				<Light>ExtraBall</Light>
+				<Light>GimliArrow</Light>
+			</LightGroup>
+			<LightGroup name="Aragorn">
+				<Light>Lock</Light>
+				<Light>RRampElfRing</Light>
+				<Light>RRampDwarfRing</Light>
+				<Light>RRampManRing</Light>
+				<Light>AragornArrow</Light>
+			</LightGroup>
+			<LightGroup name="Merry">
+				<Light>ROrbitElfRing</Light>
+				<Light>ROrbitDwarfRing</Light>
+				<Light>ROrbitManRing</Light>
+				<Light>MerryArrow</Light>
+			</LightGroup>
+		</LightGroups>
+		<BoardZones>
+			<BoardZone xMin="381" xMax="420" yMin="0" yMax="950" desc="Shot Lane">ShotLane</BoardZone>
+			<BoardZone xMin="0" xMax="380" yMin="0" yMax="159" desc="Flippers">Flippers</BoardZone>
+			<BoardZone xMin="0" xMax="380" yMin="160" yMax="294" desc="Slingshots">Slingshots</BoardZone>
+			<BoardZone xMin="0" xMax="380" yMin="295" yMax="549" desc="Lower Main Board">LowerMainBoard</BoardZone>
+			<BoardZone xMin="0" xMax="230" yMin="550" yMax="950" desc="Upper Left">UpperLeft</BoardZone>
+			<BoardZone xMin="231" xMax="380" yMin="550" yMax="950" desc="Upper Right">UpperRight</BoardZone>
+		</BoardZones>
+	</Groupings>
+</PinballBoard>

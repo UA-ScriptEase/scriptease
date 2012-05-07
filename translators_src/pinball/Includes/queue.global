@@ -1,0 +1,2 @@
+#include <queue>
+queue<string> global_string_queue;

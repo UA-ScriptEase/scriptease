@@ -1,0 +1,4 @@
+std::string display_TopLeft = "";
+std::string display_TopRight = "";
+std::string display_BottomLeft = "";
+std::string display_BottomRight = "";

@@ -1,0 +1,302 @@
+<!-- This is the schema for describing API dictionary files. Everything uses 
+	'sequences' because order matters in reading. -->
+<xsd:schema attributeFormDefault="unqualified"
+	elementFormDefault="qualified" version="1.0"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:include schemaLocation="CodeElementSchema.xsd" />
+
+	<!-- Start with the overall file type -->
+	<xsd:element name="APIDictionary" type="APIDictionaryFile_Type" />
+
+	<!-- Defines an api Dictionary file -->
+	<xsd:complexType name="APIDictionaryFile_Type">
+		<xsd:sequence>
+			<xsd:element name="Types" type="TypeList_Type" />
+			<xsd:element name="Slots" type="SlotList_Type" />
+			<xsd:element name="Causes" type="CauseList_Type" />
+			<xsd:element name="Effects" type="EffectList_Type" />
+			<xsd:element name="DescribeIts" type="DescribeItList_Type" />
+			<xsd:element name="TypeConverters" type="TypeConverterList_Type" />
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="required" />
+		<xsd:attribute name="author" type="xsd:string" use="required" />
+	</xsd:complexType>
+
+	<!-- Defines a list of game Type definitions -->
+	<xsd:complexType name="TypeList_Type">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" name="Type" type="Type_Type" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Defines a list of Slot definitions -->
+	<xsd:complexType name="SlotList_Type">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" name="Slot" type="Slot_Type" />
+		</xsd:sequence>
+		<xsd:attribute name="defaultFormat" type="xsd:string"
+			use="required" />
+	</xsd:complexType>
+
+	<!-- Defines a list of Cause definitions -->
+	<xsd:complexType name="CauseList_Type">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" name="ScriptIt" type="ScriptIt_Type" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Defines a list of Effect (ScriptIt) definitions -->
+	<xsd:complexType name="EffectList_Type">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" name="ScriptIt" type="ScriptIt_Type" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Defines a list of DescribeIt definitions -->
+	<xsd:complexType name="DescribeItList_Type">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" name="KnowIt" type="KnowIt_Type" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Defines a list of TypeConverter definitions -->
+	<xsd:complexType name="TypeConverterList_Type">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" name="ScriptIt" type="ScriptIt_Type" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Defines a game Type -->
+	<xsd:complexType name="Type_Type">
+		<xsd:sequence>
+			<xsd:element name="Name" type="xsd:string" />
+			<xsd:element name="Keyword" type="xsd:string" />
+			<xsd:element name="CodeSymbol" type="xsd:string" />
+			<xsd:element name="Format" type="Format_Type" minOccurs="0" />
+			<xsd:choice minOccurs="0">
+				<xsd:element name="LegalValues" type="xsd:string" />
+				<xsd:element name="Enum" type="xsd:string" />
+			</xsd:choice>
+			<xsd:element name="GUI" type="xsd:string" minOccurs="0" />
+			<xsd:element name="Slots" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Slot" type="xsd:string" maxOccurs="unbounded" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Defines a game Slot -->
+	<xsd:complexType name="Slot_Type">
+		<xsd:sequence>
+			<xsd:element name="Name" type="xsd:string" />
+			<xsd:element name="Keyword" type="xsd:string" />
+			<xsd:element name="Parameters" type="ParameterList_Type" />
+			<xsd:element name="Implicits">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="KnowIt" type="KnowIt_Type"
+							minOccurs="0" maxOccurs="unbounded" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="format" type="xsd:string" use="optional" />
+	</xsd:complexType>
+
+	<!-- =============================== -->
+	<!-- STORYCOMPONENT TYPE DEFINITIONS -->
+	<!-- =============================== -->
+
+	<!-- Defines the set of data that all StoryComponents have -->
+	<xsd:group name="StoryComponentDataGroup">
+		<xsd:sequence>
+			<xsd:element name="Name" type="xsd:string" />
+			<xsd:element name="Labels">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Label" type="xsd:string" maxOccurs="unbounded"
+							minOccurs="0" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+
+	<!-- Defines a ScriptIt -->
+	<xsd:complexType name="ScriptIt_Type">
+		<xsd:sequence minOccurs="0">
+			<xsd:group ref="StoryComponentDataGroup" />
+			<xsd:element name="Children" type="xsd:string" />
+			<xsd:element name="CodeBlocks" type="CodeBlockList_Type" />
+		</xsd:sequence>
+		<xsd:attribute name="visible" type="xsd:boolean" use="optional" />
+		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+	</xsd:complexType>
+
+	<!-- Defines a CodeBlock -->
+	<xsd:complexType name="CodeBlock_Type">
+		<xsd:sequence minOccurs="0">
+			<xsd:element name="Types" type="SpecificTypeList_Type" />
+			<xsd:element minOccurs="0" name="Parameters" type="ParameterList_Type" />
+			<xsd:element name="Code" type="Code_Type" />
+		</xsd:sequence>
+		<xsd:attribute name="subject" type="xsd:string" use="optional" />
+		<xsd:attribute name="slot" type="xsd:string" use="optional" />
+		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+	</xsd:complexType>
+
+	<xsd:complexType name="DescribeIt_Type">
+		<xsd:sequence>
+			<xsd:element name="Head">
+				<xsd:complexType>
+					<xsd:group ref="GraphNode_Group" maxOccurs="unbounded" />
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="PathMap" type="PathMap_Type" />
+			<xsd:element name="DefaultPath">
+				<xsd:complexType>
+					<xsd:sequence minOccurs="0">
+						<xsd:group ref="GraphNode_Group" maxOccurs="unbounded" />
+					</xsd:sequence>
+					<xsd:attribute name="reference" type="xsd:string"
+						use="optional" />
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="SelectedPath">
+				<xsd:complexType>
+					<xsd:sequence minOccurs="0">
+						<xsd:group ref="GraphNode_Group" maxOccurs="unbounded" />
+					</xsd:sequence>
+					<xsd:attribute name="reference" type="xsd:string"
+						use="optional" />
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="visible" type="xsd:boolean" use="optional" />
+	</xsd:complexType>
+
+	<xsd:complexType name="KnowIt_Type">
+		<xsd:sequence>
+			<xsd:group ref="StoryComponentDataGroup" />
+			<xsd:element name="Types" type="SpecificTypeList_Type" />
+			<xsd:element name="Binding" type="Binding_Type"
+				minOccurs="0" />
+		</xsd:sequence>
+		<xsd:attribute name="visible" type="xsd:boolean" use="optional" />
+		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+	</xsd:complexType>
+
+	<!-- ================================= -->
+	<!-- STORYCOMPONENT PIECES DEFINITIONS -->
+	<!-- ================================= -->
+
+	<!-- Defines a list of KnowIt parameters -->
+	<xsd:complexType name="ParameterList_Type">
+		<xsd:sequence>
+			<xsd:element name="KnowIt" type="KnowIt_Type" maxOccurs="unbounded"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="ImplicitList_Type">
+		<xsd:sequence>
+			<xsd:element name="KnowIt" type="KnowIt_Type" maxOccurs="unbounded"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Defines a list of CodeBlocks -->
+	<xsd:complexType name="CodeBlockList_Type">
+		<xsd:sequence>
+			<xsd:element name="CodeBlock" type="CodeBlock_Type"
+				maxOccurs="unbounded" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Defines a list of Specific game Type keyword references each of these 
+		keywords must be defined in the TypeList_Type block -->
+	<xsd:complexType name="SpecificTypeList_Type">
+		<xsd:sequence>
+			<xsd:element name="Type" type="xsd:string" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="Binding_Type">
+		<xsd:choice minOccurs="0">
+			<xsd:element name="ScriptIt" type="ScriptIt_Type" />
+			<xsd:element name="KnowIt" type="KnowIt_Type" />
+			<xsd:element name="DescribeIt" type="DescribeIt_Type" />
+			<!-- This is for the run time flavour -->
+			<xsd:element name="Types" type="SpecificTypeList_Type" />
+			<!-- This is for constants + gameobjects -->
+			<xsd:sequence>
+				<xsd:element name="Type" type="xsd:string" />
+				<xsd:element name="Value" type="xsd:string" />
+			</xsd:sequence>
+		</xsd:choice>
+		<xsd:attribute name="flavour" use="required">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern
+						value="constant|gameObject|function|reference|runTime|null|describeIt" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<!-- represents the choice between -->
+	<xsd:group name="GraphNode_Group">
+		<xsd:choice>
+			<xsd:element name="TextNode" type="GraphNode_Type" />
+			<xsd:element name="KnowItNode" type="GraphNode_Type" />
+		</xsd:choice>
+	</xsd:group>
+
+	<!-- Represents a graph node - either full or reference -->
+	<xsd:complexType name="GraphNode_Type">
+		<xsd:sequence minOccurs="0">
+			<xsd:element name="Children" type="GraphNodeChildren_Type" />
+			<xsd:choice maxOccurs="unbounded">
+				<xsd:element name="Text" type="xsd:string" />
+				<xsd:element name="KnowIt" type="KnowIt_Type" />
+			</xsd:choice>
+		</xsd:sequence>
+		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+		<xsd:attribute name="terminal" type="xsd:boolean" use="optional" />
+	</xsd:complexType>
+
+	<!-- Represents a graph node child list -->
+	<xsd:complexType name="GraphNodeChildren_Type">
+		<xsd:choice maxOccurs="unbounded" minOccurs="0">
+			<xsd:element name="TextNode" type="GraphNode_Type" />
+			<xsd:element name="KnowItNode" type="GraphNode_Type" />
+		</xsd:choice>
+	</xsd:complexType>
+
+	<xsd:complexType name="PathMap_Type">
+		<xsd:sequence>
+			<xsd:element name="Entry" type="PathMapEntry_Type"
+				maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="PathMapEntry_Type">
+		<xsd:sequence>
+			<xsd:element name="Path" type="GraphPathNodeList_Type" />
+			<xsd:element name="ScriptIt" type="ScriptIt_Type" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- List of GraphNodes, which are either TextNodes or KnowItNodes -->
+	<xsd:complexType name="GraphPathNodeList_Type">
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:choice>
+				<xsd:element name="TextNode" type="GraphNode_Type" />
+				<xsd:element name="KnowItNode" type="GraphNode_Type" />
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

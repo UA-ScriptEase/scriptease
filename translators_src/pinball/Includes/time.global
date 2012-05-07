@@ -1,0 +1,14 @@
+/**
+** Time.Global defines timers and time variables used in ScriptEase2's pinball API.
+** @author mfchurch
+**/
+#ifndef TIMEGLOBAL
+#define TIMEGLOBAL
+
+//elapsed game time
+double elapsed = 0;
+
+//remaining game time
+double remaining = -1;
+
+#endif

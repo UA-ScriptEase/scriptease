@@ -1,0 +1,14 @@
+#ifndef NETWORKGLOBAL
+#define NETWORKGLOBAL
+#include <map>
+#include "NetworkPlay.h"
+
+// Local player id
+int playerid = -1;
+
+// defines the game state
+NetworkVar *_gameState;
+
+map<string, NetworkVar*> networkVariables;
+
+#endif

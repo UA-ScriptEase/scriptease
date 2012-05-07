@@ -1,0 +1,38 @@
+<xsd:schema attributeFormDefault="unqualified"
+	elementFormDefault="qualified" version="1.0"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:include schemaLocation="CodeElementSchema.xsd" />
+
+	<xsd:element name="LanguageDictionary" type="LanguageDictionary_Type" />
+
+	<xsd:complexType name="LanguageDictionary_Type">
+		<xsd:sequence>
+			<xsd:element name="IndentString" type="xsd:string" />
+			<xsd:element name="ReservedWords" type="ReservedWords_Type" />
+			<xsd:element name="Maps" type="xsd:string" />
+			<xsd:element name="Formats" type="Formats_Type" />
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" />
+		<xsd:attribute name="author" type="xsd:string" />
+	</xsd:complexType>
+
+	<xsd:complexType name="Formats_Type">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" name="Format" type="Format_Type" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="ReservedWords_Type">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" name="Word">
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:string">
+							<xsd:attribute name="caseSensitive" type="xsd:boolean" />
+						</xsd:extension>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>
