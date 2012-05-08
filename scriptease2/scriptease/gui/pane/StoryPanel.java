@@ -29,10 +29,6 @@ import scriptease.model.StoryModel;
 public class StoryPanel extends JPanel {
 	private JScrollPane tree;
 	private final StoryModel model;
-	/**
-	 * keep track so we can look up which QuestPoint the StoryPanel represents
-	 */
-	private final QuestPoint questPoint;
 
 	/**
 	 * Used to do a reverse lookup on models to frames. This is useful for when
@@ -84,32 +80,25 @@ public class StoryPanel extends JPanel {
 	 * @param model
 	 * @param questPoint
 	 */
-	public StoryPanel(StoryModel model, QuestPoint questPoint) {
+	public StoryPanel(StoryModel model) {
 		super(new GridLayout(0, 1));
-
-		// If questPoint is null, don't build the bottom display panel.
-		if (questPoint == null) {
-			throw new IllegalArgumentException(
-					"Cannot create a StoryPanel with a null QuestPoint");
-		}
 
 		this.setOpaque(false);
 		this.model = model;
-		this.questPoint = questPoint;
 
 		// update the models to panes map
 		updateModelsToPanes(model);
 
 		// Build the QuestPanelEditor.
 		QuestPanelEditor questEditor = new QuestPanelEditor(model.getRoot()
-				.getStartPoint(), questPoint);
+				.getStartPoint());
 		this.add(questEditor);
 
 		// Story settings
 		StoryComponentPanelSetting storySettings = new StoryComponentPanelStorySetting();
 
 		// Build the StoryTree
-		this.tree = new StoryComponentPanelTree(questPoint, storySettings);
+		this.tree = new StoryComponentPanelTree(storySettings);
 
 		// Add the StoryTree to the panel.
 		//adds the tree to the pane
@@ -195,9 +184,5 @@ public class StoryPanel extends JPanel {
 	@Override
 	public String toString() {
 		return this.getClass().getSimpleName() + " [" + this.model + "]";
-	}
-
-	public boolean represents(QuestPoint questPoint) {
-		return this.questPoint != null && this.questPoint == questPoint;
 	}
 }

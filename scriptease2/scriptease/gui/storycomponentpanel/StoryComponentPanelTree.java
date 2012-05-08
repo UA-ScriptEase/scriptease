@@ -27,6 +27,16 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	// Default to a VisibilityFilter
 	private Filter filterRule = new VisibilityFilter();
 
+	public StoryComponentPanelTree(StoryComponentPanelSetting settings) {
+		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+		this.selectionManager = new StoryComponentPanelManager();
+		this.settings = settings;
+		// Good unit for scrolling vertically using the mouse wheel
+		this.getVerticalScrollBar().setUnitIncrement(16);
+	}
+	
 	public StoryComponentPanelTree(StoryComponent root,
 			StoryComponentPanelSetting settings) {
 		this(root, settings, null);
