@@ -23,17 +23,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
 
 import scriptease.controller.GraphNodeObserverAdder;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeObserver;
 import scriptease.gui.SEFrame;
+import scriptease.gui.ToolBarFactory;
 import scriptease.gui.control.ComboButtonBox;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.GraphPanel.GraphPanelUI;
+import scriptease.gui.graph.editor.GraphEditorButton.GraphEditorButtonType;
 import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.quests.toolbarButtons.QuestButton;
-import scriptease.gui.quests.toolbarButtons.QuestButton.QuestButtonType;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.util.GUIOp;
 
@@ -51,10 +52,7 @@ import scriptease.util.GUIOp;
 @SuppressWarnings("serial")
 public abstract class GraphEditor extends JSplitPane implements
 GraphNodeObserver, ActionListener {
-	private final String SAVE_TEXT = "<html>Save Changes</html>";
-	private final String DELETE_TOOL_TEXT = "<html>Delete</html>";
-	private final String CONNECT_TOOL_TEXT = "<html>(Dis)Connect</html>";
-
+	
 	// Enum for the possible tools supported in the graph
 	protected enum GraphTool {
 		NEW_TEXTNODE_TOOL, NEW_KNOWITNODE_TOOL, CONNECT_TOOL, DELETE_TOOL, SELECT_NODE_TOOL, SELECT_PATH_TOOL, INSERT_QUESTPOINTNODE_BETWEEN_TOOL, INSERT_QUESTPOINTNODE_ALTERNATE_TOOL, RENAME_QUESTPOINT_TOOL, CREATE_QUEST_TOOL, OPEN_QUESTPOINT_TOOL, QUESTPOINT_PROPERTIES_TOOL
@@ -67,9 +65,7 @@ GraphNodeObserver, ActionListener {
 	protected JSplitPane editingPanel;
 	private AbstractAction saveAction;
 	
-	private ArrayList<QuestButton> questToolButtons = new ArrayList<QuestButton>();
 	////This is a HAck
-	protected JButton propButton = new JButton("Properties");
 	
 	public GraphEditor(AbstractAction saveAction) {
 		super(JSplitPane.VERTICAL_SPLIT, true);
@@ -96,9 +92,6 @@ GraphNodeObserver, ActionListener {
 	 */
 	protected abstract Collection<AbstractButton> getSelectButtons();
 	
-	protected Collection<QuestButton> getQuestToolButtons(){
-		return questToolButtons;
-	}
 
 	/**
 	 * Sets the activeTool to the given tool. Clears the oldSelectedNode.
@@ -122,111 +115,7 @@ GraphNodeObserver, ActionListener {
 	 */
 	protected GraphTool getActiveTool() {
 		return this.activeTool;
-	}
-
-	private JPanel buildButtonPanel() {
-		// Buttons
-		final ButtonGroup toolButtonGroup = new ButtonGroup();
-		final ComboButtonBox newNodeToolButton;
-		final ComboButtonBox selectToolButton;
-		final AbstractButton newLineSegmentToolButton;
-		final AbstractButton deleteNodeToolButton;
-		final AbstractButton saveButton;
-
-		final JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-		
-		//////////////////*******************//////////////////////////
-		/*
-		// Configure buttons.
-		newNodeToolButton = new ComboButtonBox(this.getNodeButtons());
-		selectToolButton = new ComboButtonBox(this.getSelectButtons());
-
-		newLineSegmentToolButton = new JToggleButton(new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setActiveTool(GraphTool.CONNECT_TOOL);
-			}
-		});
-		newLineSegmentToolButton.setText(CONNECT_TOOL_TEXT);
-
-		deleteNodeToolButton = new JToggleButton(new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setActiveTool(GraphTool.DELETE_TOOL);
-			}
-		});
-		deleteNodeToolButton.setText(DELETE_TOOL_TEXT);
-
-		saveButton = new JToggleButton(saveAction);
-		saveButton.setText(SAVE_TEXT);
-
-		// Add each button to the group of buttons.
-		for (AbstractButton button : newNodeToolButton.getButtons()) {
-			toolButtonGroup.add(button);
-		}
-		for (AbstractButton button : selectToolButton.getButtons()) {
-			toolButtonGroup.add(button);
-		}
-		toolButtonGroup.add(newLineSegmentToolButton);
-		toolButtonGroup.add(selectToolButton);
-		toolButtonGroup.add(deleteNodeToolButton);
-
-		// Add the buttons to the buttonPanel.
-		buttonPanel.add(newNodeToolButton);
-		buttonPanel.add(selectToolButton);
-		buttonPanel.add(newLineSegmentToolButton);
-		buttonPanel.add(deleteNodeToolButton);
-		buttonPanel.add(Box.createVerticalStrut(10));
-		buttonPanel.add(saveButton);
-/////////////////////////////***************//////////////////////////
-		buttonPanel.setOpaque(true);
-		buttonPanel.setBackground(StoryComponentPanel.UNSELECTED_COLOUR);
-		
-		
-		
-		QuestButton select = new QuestButton(QuestButtonType.SELECT);
-		//select.addActionListener(this);
-		questToolButtons.add(select);
-		
-		QuestButton insert = new QuestButton(QuestButtonType.INSERT);
-		//insert.addActionListener(this);
-		questToolButtons.add(insert);
-		
-		QuestButton delete = new QuestButton(QuestButtonType.DELETE);
-		//delete.addActionListener(this);
-		questToolButtons.add(delete);
-		
-		QuestButton connect = new QuestButton(QuestButtonType.CONNECT);
-		//connect.addActionListener(this);
-		questToolButtons.add(connect);
-		
-		QuestButton disconnect = new QuestButton(QuestButtonType.DISCONNECT);
-		//disconnect.addActionListener(this);
-		questToolButtons.add(disconnect);
-		
-		toolButtonGroup.add(select);
-		toolButtonGroup.add(insert);
-		toolButtonGroup.add(delete);
-		toolButtonGroup.add(connect);
-		toolButtonGroup.add(disconnect);
-		toolButtonGroup.add(propButton);
-		
-		buttonPanel.add(select);
-		buttonPanel.add(insert);
-		buttonPanel.add(delete);
-		buttonPanel.add(connect);
-		buttonPanel.add(disconnect);
-		
-		//Temporary Hacks
-		buttonPanel.add(propButton);
-		buttonPanel.add(new JButton(SAVE_TEXT));
-		
-		//buttonPanel.add(toolButtonGroup);
-		
-		return buttonPanel;
-	}
-	
+	}	
 	
 	/**
 	 * Sets the given GraphPanel as the TopComponent in the editingPanel, and
@@ -265,11 +154,10 @@ GraphNodeObserver, ActionListener {
 	}
 
 	private void buildPanels() {
-		final JPanel buttonPanel = this.buildButtonPanel();
-		this.setLeftComponent(buttonPanel);
 		
+		final JToolBar buttonToolBar = ToolBarFactory.buildQuestEditorToolBar();
 		
-		
+		this.setLeftComponent(buttonToolBar);
 
 		this.editingPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
 		this.setRightComponent(this.editingPanel);

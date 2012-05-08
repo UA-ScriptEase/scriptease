@@ -19,8 +19,8 @@ import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelStorySettin
 import scriptease.model.StoryModel;
 
 /**
- * Main panel for editing Stories. Provides a tree view of the StoryComponent
- * model.
+ * Main panel for editing Stories, under the toolbar. Provides a tree view of
+ * the StoryComponent model.
  * 
  * @author remiller
  * @author mfchurch

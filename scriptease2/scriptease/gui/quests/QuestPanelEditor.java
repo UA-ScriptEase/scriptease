@@ -8,18 +8,21 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JToolBar;
 
 import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.gui.SEFrame;
+import scriptease.gui.ToolBarFactory;
 import scriptease.gui.WindowManager;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.editor.GraphEditor;
+import scriptease.gui.graph.editor.GraphEditorButton;
+import scriptease.gui.graph.editor.GraphEditorButton.GraphEditorButtonType;
 import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.quests.toolbarButtons.QuestButton;
-import scriptease.gui.quests.toolbarButtons.QuestButton.QuestButtonType;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
 import scriptease.util.GUIOp;
@@ -58,12 +61,12 @@ public class QuestPanelEditor extends GraphEditor {
 		// Highlight the active questPoint.
 		highLightQuestPoint(questPoint);
 		
-		for(QuestButton a: getQuestToolButtons()){
+		for(GraphEditorButton a: ToolBarFactory.getGraphEditorToolButtons()){
 			a.addActionListener(this);
 		}
 		
 		//default active tool
-		propButton.addActionListener(this);
+		ToolBarFactory.propButton.addActionListener(this);
 		setActiveTool(GraphTool.SELECT_NODE_TOOL);
 	}
 
@@ -127,6 +130,8 @@ public class QuestPanelEditor extends GraphEditor {
 	/**
 	 * Returns the collection of buttons that represent the node selection tools
 	 * available in the editor.
+	 * 
+	 * NOTE: This method is not used!
 	 */
 	@Override
 	protected Collection<AbstractButton> getSelectButtons() {
@@ -151,36 +156,28 @@ public class QuestPanelEditor extends GraphEditor {
 				});
 		editQuestPointButton.setText(EDIT_QUESTPOINT_TEXT);
 
-		// Create Quest Button TODO fix up Quest logic
-		/*
-		 * AbstractButton createQuestButton = new JRadioButtonMenuItem( new
-		 * AbstractAction() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) {
-		 * setActiveTool(GraphTool.CREATE_QUEST_TOOL); } });
-		 * createQuestButton.setText(CREATE_QUEST_TEXT);
-		 */
-
 		// add the buttons
 		buttons.add(editQuestPointButton);
 		// buttons.add(createQuestButton);
 		buttons.add(renameQuestPointButton);
 		
-		/*QuestButton select = new QuestButton(QuestButtonType.SELECT);
-		QuestButton insert = new QuestButton(QuestButtonType.INSERT);
-		QuestButton delete = new QuestButton(QuestButtonType.DELETE);
-		QuestButton connect = new QuestButton(QuestButtonType.CONNECT);
-		QuestButton disconnect = new QuestButton(QuestButtonType.DISCONNECT);
-		
-		buttons.add(select);
-		buttons.add(insert);
-		buttons.add(delete);
-		buttons.add(connect);
-		buttons.add(disconnect);*/
-		
-		
 		return buttons;
 	}
+	
+	/**
+	 * Adds a separator and properties functions to the toolbar.
+	 */
+//	protected JToolBar buildToolBar() {
+//		
+//		JToolBar questPanelToolBar = this.buttonToolBar;		
+//		
+////		questPanelToolBar.addSeparator();
+////		
+////		questPanelToolBar.add(propButton);
+////		questPanelToolBar.add(new JButton("Save!"));
+////		
+//		this.buttonToolBar = questPanelToolBar;
+//	}
 
 	/**
 	 * Method to abstract commonalities from the Insert QuestPoint between and
@@ -337,7 +334,7 @@ public class QuestPanelEditor extends GraphEditor {
 				
 				this.setActiveTool(GraphTool.OPEN_QUESTPOINT_TOOL);
 				
-				for(QuestButton a: getQuestToolButtons()){
+				for(GraphEditorButton a: ToolBarFactory.getGraphEditorToolButtons()){
 					a.addActionListener(this);
 				}
 				
@@ -433,8 +430,8 @@ public class QuestPanelEditor extends GraphEditor {
 		super.nodeChanged(node, event);
 	}
 	
-	private void setOtherOff(QuestButton toCheck, boolean togs){
-		for(QuestButton a: getQuestToolButtons()){
+	private void setOtherOff(GraphEditorButton toCheck, boolean togs){
+		for(GraphEditorButton a: ToolBarFactory.getGraphEditorToolButtons()){
 			if(a != toCheck){
 				a.setBoolState(togs);
 			}
@@ -446,21 +443,19 @@ public class QuestPanelEditor extends GraphEditor {
 		// TODO Auto-generated method stub
 		//NEW_TEXTNODE_TOOL, NEW_KNOWITNODE_TOOL, CONNECT_TOOL, DELETE_TOOL, SELECT_NODE_TOOL, SELECT_PATH_TOOL, INSERT_QUESTPOINTNODE_BETWEEN_TOOL, INSERT_QUESTPOINTNODE_ALTERNATE_TOOL, RENAME_QUESTPOINT_TOOL, CREATE_QUEST_TOOL, OPEN_QUESTPOINT_TOOL, QUESTPOINT_PROPERTIES_TOOL
 		
-		
-			
-		if(e.getSource() instanceof QuestButton){
-			switch(((QuestButton)e.getSource()).getQuestButtonType()){
+		if(e.getSource() instanceof GraphEditorButton){
+			switch(((GraphEditorButton)e.getSource()).getQuestButtonType()){
 			case SELECT:
 				System.out.println("Select");
 				//this.setActiveTool(GraphTool.SELECT_NODE_TOOL);
 				this.setActiveTool(GraphTool.OPEN_QUESTPOINT_TOOL);
-				if(((QuestButton)e.getSource()).getState() == true){
-					((QuestButton)e.getSource()).toggleState();
-					setOtherOff(((QuestButton)e.getSource()), true);
+				if(((GraphEditorButton)e.getSource()).getState() == true){
+					((GraphEditorButton)e.getSource()).toggleState();
+					setOtherOff(((GraphEditorButton)e.getSource()), true);
 				}
 				else{
-					((QuestButton)e.getSource()).setBoolState(false);
-					setOtherOff(((QuestButton)e.getSource()), true);
+					((GraphEditorButton)e.getSource()).setBoolState(false);
+					setOtherOff(((GraphEditorButton)e.getSource()), true);
 				}
 				return;
 				
@@ -468,52 +463,52 @@ public class QuestPanelEditor extends GraphEditor {
 				System.out.println("insert");
 				this.setActiveTool(GraphTool.INSERT_QUESTPOINTNODE_BETWEEN_TOOL);
 				//((QuestButton)e.getSource()).toggleState();
-				if(((QuestButton)e.getSource()).getState() == true){
-					((QuestButton)e.getSource()).toggleState();
-					setOtherOff(((QuestButton)e.getSource()), true);
+				if(((GraphEditorButton)e.getSource()).getState() == true){
+					((GraphEditorButton)e.getSource()).toggleState();
+					setOtherOff(((GraphEditorButton)e.getSource()), true);
 				}
 				else{
-					((QuestButton)e.getSource()).setBoolState(false);
-					setOtherOff(((QuestButton)e.getSource()), true);
+					((GraphEditorButton)e.getSource()).setBoolState(false);
+					setOtherOff(((GraphEditorButton)e.getSource()), true);
 				}
 				return;
 			
 			case CONNECT:
 				System.out.println("connect");
 				this.setActiveTool(GraphTool.CONNECT_TOOL);
-				if(((QuestButton)e.getSource()).getState() == true){
-					((QuestButton)e.getSource()).toggleState();
-					setOtherOff(((QuestButton)e.getSource()), true);
+				if(((GraphEditorButton)e.getSource()).getState() == true){
+					((GraphEditorButton)e.getSource()).toggleState();
+					setOtherOff(((GraphEditorButton)e.getSource()), true);
 				}
 				else{
-					((QuestButton)e.getSource()).setBoolState(false);
-					setOtherOff(((QuestButton)e.getSource()), true);
+					((GraphEditorButton)e.getSource()).setBoolState(false);
+					setOtherOff(((GraphEditorButton)e.getSource()), true);
 				}
 				return;
 			
 			case DISCONNECT:
 				System.out.println("disconnect");
 				this.setActiveTool(GraphTool.CONNECT_TOOL);
-				if(((QuestButton)e.getSource()).getState() == true){
-					((QuestButton)e.getSource()).toggleState();
-					setOtherOff(((QuestButton)e.getSource()), true);
+				if(((GraphEditorButton)e.getSource()).getState() == true){
+					((GraphEditorButton)e.getSource()).toggleState();
+					setOtherOff(((GraphEditorButton)e.getSource()), true);
 				}
 				else{
-					((QuestButton)e.getSource()).setBoolState(false);
-					setOtherOff(((QuestButton)e.getSource()), true);
+					((GraphEditorButton)e.getSource()).setBoolState(false);
+					setOtherOff(((GraphEditorButton)e.getSource()), true);
 				}
 				return;
 				
 			case DELETE:
 				System.out.println("delete");
 				this.setActiveTool(GraphTool.DELETE_TOOL);
-				if(((QuestButton)e.getSource()).getState() == true){
-					((QuestButton)e.getSource()).toggleState();
-					setOtherOff(((QuestButton)e.getSource()), true);
+				if(((GraphEditorButton)e.getSource()).getState() == true){
+					((GraphEditorButton)e.getSource()).toggleState();
+					setOtherOff(((GraphEditorButton)e.getSource()), true);
 				}
 				else{
-					((QuestButton)e.getSource()).setBoolState(false);
-					setOtherOff(((QuestButton)e.getSource()), true);
+					((GraphEditorButton)e.getSource()).setBoolState(false);
+					setOtherOff(((GraphEditorButton)e.getSource()), true);
 				}
 				return;
 				
