@@ -4,55 +4,48 @@ import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import scriptease.controller.GraphNodeObserverAdder;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeObserver;
-import scriptease.gui.SEFrame;
 import scriptease.gui.ToolBarFactory;
-import scriptease.gui.control.ComboButtonBox;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.GraphPanel.GraphPanelUI;
-import scriptease.gui.graph.editor.GraphEditorButton.GraphEditorButtonType;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.util.GUIOp;
 
 /**
  * GraphEditor provides a common interface for editing Graphs containing
- * GraphNodes in ScriptEase. Used to back DescribeIts and Quests, and re-use common code.
+ * GraphNodes in ScriptEase. Used to back DescribeIts and Quests, and re-use
+ * common code.
  * 
- * Users select the active tool, which dictates what actions should be taken when a GraphNode is clicked.
+ * Users select the active tool, which dictates what actions should be taken
+ * when a GraphNode is clicked.
  * 
- * Observes all of the GraphNodes in the graph in order to know when nodes are clicked.
+ * Observes all of the GraphNodes in the graph in order to know when nodes are
+ * clicked.
  * 
  * @author mfchurch
  * 
  */
 @SuppressWarnings("serial")
 public abstract class GraphEditor extends JSplitPane implements
-GraphNodeObserver, ActionListener {
-	
+		GraphNodeObserver, ActionListener {
+
 	// Enum for the possible tools supported in the graph
 	protected enum GraphTool {
 		NEW_TEXTNODE_TOOL, NEW_KNOWITNODE_TOOL, CONNECT_TOOL, DELETE_TOOL, SELECT_NODE_TOOL, SELECT_PATH_TOOL, INSERT_QUESTPOINTNODE_BETWEEN_TOOL, INSERT_QUESTPOINTNODE_ALTERNATE_TOOL, RENAME_QUESTPOINT_TOOL, CREATE_QUEST_TOOL, OPEN_QUESTPOINT_TOOL, QUESTPOINT_PROPERTIES_TOOL
@@ -64,9 +57,9 @@ GraphNodeObserver, ActionListener {
 	private GraphTool activeTool;
 	protected JSplitPane editingPanel;
 	private AbstractAction saveAction;
-	
-	////This is a HAck
-	
+
+	// //This is a HAck
+
 	public GraphEditor(AbstractAction saveAction) {
 		super(JSplitPane.VERTICAL_SPLIT, true);
 		this.saveAction = saveAction;
@@ -91,7 +84,6 @@ GraphNodeObserver, ActionListener {
 	 * JButtons which represent the types of selection that can be made
 	 */
 	protected abstract Collection<AbstractButton> getSelectButtons();
-	
 
 	/**
 	 * Sets the activeTool to the given tool. Clears the oldSelectedNode.
@@ -115,8 +107,8 @@ GraphNodeObserver, ActionListener {
 	 */
 	protected GraphTool getActiveTool() {
 		return this.activeTool;
-	}	
-	
+	}
+
 	/**
 	 * Sets the given GraphPanel as the TopComponent in the editingPanel, and
 	 * registers the appropriate listeners
@@ -154,9 +146,9 @@ GraphNodeObserver, ActionListener {
 	}
 
 	private void buildPanels() {
-		
+
 		final JToolBar buttonToolBar = ToolBarFactory.buildQuestEditorToolBar();
-		
+
 		this.setLeftComponent(buttonToolBar);
 
 		this.editingPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
@@ -188,21 +180,29 @@ GraphNodeObserver, ActionListener {
 
 		// only process clicked actions if you are contained in the active tab
 		if (type == GraphNodeEvent.CLICKED
-				&& SEFrame.getInstance().getActiveTab().contains(this)) {
+				) {
 			// Determine what the active tool is
 			switch (this.activeTool) {
 			case CONNECT_TOOL:
 				if (oldSelectedNode != null) {
-					// Determine which node is shallower in the graph, and which is deeper.
-					GraphNode shallowerNode = sourceNode.isDescendant(oldSelectedNode) ? oldSelectedNode : sourceNode;
-					GraphNode deeperNode = sourceNode.isDescendant(oldSelectedNode) ? sourceNode : oldSelectedNode;
+					// Determine which node is shallower in the graph, and which
+					// is deeper.
+					GraphNode shallowerNode = sourceNode
+							.isDescendant(oldSelectedNode) ? oldSelectedNode
+							: sourceNode;
+					GraphNode deeperNode = sourceNode
+							.isDescendant(oldSelectedNode) ? sourceNode
+							: oldSelectedNode;
 
 					// connect the nodes if not connected
 					if (!shallowerNode.addChild(deeperNode)) {
-						// otherwise break the connection, as long as it doesn't break the graph.
+						// otherwise break the connection, as long as it doesn't
+						// break the graph.
 
-						// Check that both nodes will still have at least one parent and one child after the disconnect.
-						if(shallowerNode.getChildren().size() > 1 && deeperNode.getParents().size() > 1){
+						// Check that both nodes will still have at least one
+						// parent and one child after the disconnect.
+						if (shallowerNode.getChildren().size() > 1
+								&& deeperNode.getParents().size() > 1) {
 							shallowerNode.removeChild(deeperNode, false);
 						}
 					}
@@ -224,8 +224,8 @@ GraphNodeObserver, ActionListener {
 				sourceNode.removeChildren();
 
 				// Re-connect each parent with each child.
-				for(GraphNode parent : parents){
-					for(GraphNode child : children){
+				for (GraphNode parent : parents) {
+					for (GraphNode child : children) {
 						parent.addChild(child);
 					}
 				}

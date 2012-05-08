@@ -61,7 +61,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 	protected static final int HORIZONTAL_INDENT = 20;
 	protected static final int NODE_Y_INDENT = 10;
 	protected GraphNode headNode;
-	protected GraphNodeComponentBuilder builder;
+	public GraphNodeComponentBuilder builder;
 	protected Map<GraphNode, Integer> nodeDepthMap;
 
 	public GraphPanel(GraphNode headNode) {

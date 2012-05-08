@@ -34,15 +34,11 @@ import scriptease.controller.FileManager;
 import scriptease.controller.observer.StoryModelPoolEvent;
 import scriptease.controller.observer.StoryModelPoolObserver;
 import scriptease.controller.observer.TranslatorObserver;
-import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.pane.CloseableTab;
 import scriptease.gui.pane.DefaultPatternPaneFactory;
 import scriptease.gui.pane.LibraryPane;
 import scriptease.gui.pane.PaneFactory;
 import scriptease.gui.pane.StoryPanel;
-import scriptease.gui.quests.QuestNode;
-import scriptease.gui.quests.QuestPoint;
-import scriptease.gui.quests.QuestPointNode;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
@@ -379,81 +375,17 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	 * @param model
 	 */
 	public void createTabForModel(StoryModel model) {
-		QuestNode root = model.getRoot();
-		GraphNode startPoint = root.getStartPoint();
-		QuestPoint questPoint = null;
-		// Grab the QuestPoint from the start of the game quest
-		if (startPoint != null && startPoint instanceof QuestPointNode)
-			questPoint = ((QuestPointNode) startPoint).getQuestPoint();
-		this.createTabForQuestPoint(model, questPoint);
-	}
-
-	/**
-	 * 
-	 */
-	public void createTabForQuestPoint(StoryModel model, QuestPoint questPoint) {
 		final Icon icon = model.getTranslator().getIcon();
 
-		final StoryPanel newPanel = new StoryPanel(model, questPoint);
+		final StoryPanel newPanel = new StoryPanel(model);
 		final CloseableTab newTab = new CloseableTab(this.storyTabs, newPanel,
 				icon);
 
-		this.storyTabs.addTab(
-				questPoint.getDisplayText() + " - " + newPanel.getTitle(),
-				icon, newPanel);
+		this.storyTabs.addTab(newPanel.getTitle(), icon, newPanel);
 		this.storyTabs.setTabComponentAt(
 				this.storyTabs.indexOfComponent(newPanel), newTab);
 		this.storyTabs.setSelectedComponent(newPanel);
-	}
 
-	/**
-	 * Returns if there exists a StoryPanel for the given StoryModel and
-	 * QuestPoint
-	 * 
-	 * @param model
-	 * @param questPoint
-	 * @return
-	 */
-	public boolean hasTabForQuestPoint(StoryModel model, QuestPoint questPoint) {
-		return getTabForQuestPoint(model, questPoint) != null;
-	}
-
-	/**
-	 * Finds and returns the StoryPanel for the given QuestPoint from the list
-	 * of Panes for the given model. Returns null if one is not found
-	 * 
-	 * @param model
-	 * @param questPoint
-	 * @return
-	 */
-	private StoryPanel getTabForQuestPoint(StoryModel model,
-			QuestPoint questPoint) {
-		List<StoryPanel> panesForModel = StoryPanel
-				.getStoryPanelsForModel(model);
-		for (StoryPanel panel : panesForModel) {
-			if (panel.represents(questPoint))
-				return panel;
-		}
-		return null;
-	}
-
-	/**
-	 * Activates the StoryPanel tab for the given model and questPoint. If it's
-	 * not found, does nothing.
-	 * 
-	 * @param model
-	 * @param questPoint
-	 */
-	public void activateTabForQuestPoint(StoryModel model, QuestPoint questPoint) {
-		StoryPanel tabForQuestPoint = getTabForQuestPoint(model, questPoint);
-		if (tabForQuestPoint != null) {
-			try {
-				this.storyTabs.setSelectedComponent(tabForQuestPoint);
-			} catch (IllegalArgumentException e) {
-				System.err
-						.println("StoryTab not found in the Tab list. Desync between StoryPanels for a model, and tabs");
-			}
-		}
 	}
 
 	/**
