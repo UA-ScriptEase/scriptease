@@ -144,12 +144,23 @@ public abstract class GraphEditor extends JSplitPane implements
 		// set the graphPanel as the top component
 		this.editingPanel.setTopComponent(new JScrollPane(panel));
 	}
+	
+	/**
+	 * Public method to add a toolbar to the graph editor.
+	 * Use ToolBarFactory class for an appropriate toolbar, or 
+	 * make your own.
+	 * 
+	 * @param toolBar
+	 */
+	public void addToolBar(JToolBar toolBar) {
+		this.setLeftComponent(toolBar);
+	}
 
 	private void buildPanels() {
 
-		final JToolBar buttonToolBar = ToolBarFactory.buildQuestEditorToolBar();
+		//final JToolBar buttonToolBar = ToolBarFactory.buildQuestEditorToolBar();
 
-		this.setLeftComponent(buttonToolBar);
+		//this.setLeftComponent(buttonToolBar);
 
 		this.editingPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
 		this.setRightComponent(this.editingPanel);
