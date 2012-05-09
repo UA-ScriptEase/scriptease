@@ -310,19 +310,10 @@ public class QuestPanelEditor extends GraphEditor {
 								.showQuestPointPropertiesDialog(questPointNode);
 						// Force the graph to rebuild.
 						setHeadNode(headNode);
-
-						// Highlight the active questPoint.
-						// highlightQuestPoint(questPointNode.getQuestPoint());
 					}
 				});
 
 				this.setActiveTool(GraphTool.OPEN_QUESTPOINT_TOOL);
-
-				for (GraphEditorButton a : ToolBarFactory
-						.getGraphEditorToolButtons()) {
-					a.addActionListener(this);
-				}
-
 				break;
 
 			case CREATE_QUEST_TOOL:
@@ -432,13 +423,6 @@ public class QuestPanelEditor extends GraphEditor {
 				
 				// this.setActiveTool(GraphTool.SELECT_NODE_TOOL);
 				this.setActiveTool(GraphTool.OPEN_QUESTPOINT_TOOL);
-//				if (((GraphEditorButton) e.getSource()).getState() == true) {
-//					((GraphEditorButton) e.getSource()).toggleState();
-//					setOtherOff(((GraphEditorButton) e.getSource()), true);
-//				} else {
-//					((GraphEditorButton) e.getSource()).setBoolState(false);
-//					setOtherOff(((GraphEditorButton) e.getSource()), true);
-//				}
 				return;
 
 			case INSERT:
@@ -446,28 +430,13 @@ public class QuestPanelEditor extends GraphEditor {
 				SEFrame.getInstance().changeCursor(SEFrame.ADD_NODE_CURSOR);
 				
 				this.setActiveTool(GraphTool.INSERT_QUESTPOINTNODE_BETWEEN_TOOL);
-				// ((QuestButton)e.getSource()).toggleState();
-//				if (((GraphEditorButton) e.getSource()).getState() == true) {
-//					((GraphEditorButton) e.getSource()).toggleState();
-//					setOtherOff(((GraphEditorButton) e.getSource()), true);
-//				} else {
-//					((GraphEditorButton) e.getSource()).setBoolState(false);
-//					setOtherOff(((GraphEditorButton) e.getSource()), true);
-//				}
 				return;
 
 			case CONNECT:
 				System.out.println("connect");
 				SEFrame.getInstance().changeCursor(SEFrame.DRAW_PATH_CURSOR);
 
-//				this.setActiveTool(GraphTool.CONNECT_TOOL);
-//				if (((GraphEditorButton) e.getSource()).getState() == true) {
-//					((GraphEditorButton) e.getSource()).toggleState();
-//					setOtherOff(((GraphEditorButton) e.getSource()), true);
-//				} else {
-//					((GraphEditorButton) e.getSource()).setBoolState(false);
-//					setOtherOff(((GraphEditorButton) e.getSource()), true);
-//				}
+				this.setActiveTool(GraphTool.CONNECT_TOOL);
 				return;
 
 			case DISCONNECT:
@@ -475,13 +444,6 @@ public class QuestPanelEditor extends GraphEditor {
 				SEFrame.getInstance().changeCursor(SEFrame.ERASE_PATH_CURSOR);
 				
 				this.setActiveTool(GraphTool.CONNECT_TOOL);
-//				if (((GraphEditorButton) e.getSource()).getState() == true) {
-//					((GraphEditorButton) e.getSource()).toggleState();
-//					setOtherOff(((GraphEditorButton) e.getSource()), true);
-//				} else {
-//					((GraphEditorButton) e.getSource()).setBoolState(false);
-//					setOtherOff(((GraphEditorButton) e.getSource()), true);
-//				}
 				return;
 
 			case DELETE:
@@ -489,13 +451,6 @@ public class QuestPanelEditor extends GraphEditor {
 				SEFrame.getInstance().changeCursor(SEFrame.DELETE_NODE_CURSOR);
 
 				this.setActiveTool(GraphTool.DELETE_TOOL);
-//				if (((GraphEditorButton) e.getSource()).getState() == true) {
-//					((GraphEditorButton) e.getSource()).toggleState();
-//					setOtherOff(((GraphEditorButton) e.getSource()), true);
-//				} else {
-//					((GraphEditorButton) e.getSource()).setBoolState(false);
-//					setOtherOff(((GraphEditorButton) e.getSource()), true);
-//				}
 				return;
 
 			default:
