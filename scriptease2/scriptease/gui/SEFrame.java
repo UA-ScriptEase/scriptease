@@ -1,9 +1,13 @@
 package scriptease.gui;
 
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.KeyboardFocusManager;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -57,6 +61,12 @@ import scriptease.translator.TranslatorManager;
  */
 @SuppressWarnings("serial")
 public final class SEFrame extends JFrame implements StoryModelPoolObserver {
+	public static final int DRAW_PATH_CURSOR = 1;
+	public static final int ERASE_PATH_CURSOR = 2;
+	public static final int ADD_NODE_CURSOR = 3;
+	public static final int DELETE_NODE_CURSOR = 4;
+	public static final int SYSTEM_CURSOR = 5;
+	
 	private static final int MIN_HEIGHT = 480;
 	private static final int MIN_WIDTH = 640;
 	private static final int PREFERRED_PROPERTIES_THICKNESS = 250;
@@ -526,5 +536,49 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 					"Active tab is not representing active model");
 
 		return storyPanel;
+	}
+
+	/**
+	 * Changes the cursor for the application based on the cursor name given in
+	 * the parameter. These are predefined cursors.
+	 * 
+	 * @param cursorName
+	 */
+	public void changeCursor(int cursorName) {
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		
+		String cursorPath = "scriptease/resources/icons/cursors/";
+		Point cursorHotSpot = null;
+		
+		switch (cursorName) {
+
+		case DRAW_PATH_CURSOR:
+			cursorPath += "path_draw.png";
+			cursorHotSpot = new Point(0,31);
+			break;
+		case ERASE_PATH_CURSOR:
+			cursorPath += "path_erase.png";
+			cursorHotSpot = new Point(0,31);
+			break;
+		case ADD_NODE_CURSOR:
+			cursorPath += "node_add.png";
+			cursorHotSpot = new Point(0,0);
+			break;
+		case DELETE_NODE_CURSOR:
+			cursorPath += "node_delete.png";
+			cursorHotSpot = new Point(0,0);
+			break;
+		case SYSTEM_CURSOR:
+		default:
+			setCursor(null);
+			break;
+		}
+		
+		if(cursorHotSpot != null) {
+			Image cursorImage = toolkit.getImage(cursorPath);
+			Cursor customCursor = toolkit.createCustomCursor(cursorImage, cursorHotSpot, "Addition");
+			SEFrame.getInstance().setCursor(customCursor);
+		}
+
 	}
 }

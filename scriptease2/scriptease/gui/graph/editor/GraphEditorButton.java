@@ -16,10 +16,10 @@ public class GraphEditorButton extends SEIconButton {
 		INSERT, SELECT, CONNECT, DISCONNECT, DELETE
 	}
 
-	private final static String CONNECT_TAG = "con";
-	private final static String DISCONNECT_TAG = "dc";
-	private final static String DELETE_TAG = "del";
-	private final static String INSERT_TAG = "insertBet";
+	private final static String CONNECT_TAG = "path_draw";
+	private final static String DISCONNECT_TAG = "path_erase";
+	private final static String DELETE_TAG = "node_delete";
+	private final static String INSERT_TAG = "node_add";
 	private final static String SELECT_TAG = "selection";
 
 	private GraphEditorButtonType buttonType;
@@ -27,10 +27,10 @@ public class GraphEditorButton extends SEIconButton {
 	private String getStringTag() {
 		switch (buttonType) {
 
-		case INSERT:
-			return INSERT_TAG;
 		case SELECT:
 			return SELECT_TAG;
+		case INSERT:
+			return INSERT_TAG;
 		case CONNECT:
 			return CONNECT_TAG;
 
@@ -54,10 +54,8 @@ public class GraphEditorButton extends SEIconButton {
 		isUp = true;
 
 		if (this.loadImages()) {
-			setStatic();
-
-			setRolloverIcon(new ImageIcon(onHoverButtonImage));
-			setPressedIcon(new ImageIcon(depressedButtonImage));
+			this.setIcon(new ImageIcon(staticButtonImage));
+			this.reDraw();
 		}
 		// Add a better error checking later...or a backup
 		else {
@@ -75,24 +73,8 @@ public class GraphEditorButton extends SEIconButton {
 
 		try {
 			staticButtonImage = ImageIO.read(FileOp
-					.getFileResource("scriptease/resources/icons/questIcons/"
-							+ typeString + "_static.png"));
-		} catch (IOException e) {
-			return false;
-		}
-
-		try {
-			onHoverButtonImage = ImageIO.read(FileOp
-					.getFileResource("scriptease/resources/icons/questIcons/"
-							+ typeString + "_hover.png"));
-		} catch (IOException e) {
-			return false;
-		}
-
-		try {
-			depressedButtonImage = ImageIO.read(FileOp
-					.getFileResource("scriptease/resources/icons/questIcons/"
-							+ typeString + "_dep.png"));
+					.getFileResource("scriptease/resources/icons/buttonicons/"
+							+ typeString + ".png"));
 		} catch (IOException e) {
 			return false;
 		}
@@ -104,82 +86,5 @@ public class GraphEditorButton extends SEIconButton {
 	@Override
 	protected boolean setButtonImage(JLabel img) {
 		return false;
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		isUp = !isUp;
-		if (isUp) {
-			this.setOnHover();
-		}
-		if (!isUp) {
-			this.setDepressed();
-		}
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		if (isUp) {
-			this.setOnHover();
-		}
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		this.setDepressed();
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		if (isUp) {
-			this.setOnHover();
-		} else
-			this.setDepressed();
-	}
-
-	@Override
-	protected void setDepressed() {
-		this.setIcon(new ImageIcon(depressedButtonImage));
-		this.reDraw();
-	}
-
-	@Override
-	protected void setOnHover() {
-		this.setIcon(new ImageIcon(onHoverButtonImage));
-		this.reDraw();
-	}
-
-	@Override
-	protected void setStatic() {
-		this.setIcon(new ImageIcon(staticButtonImage));
-		this.reDraw();
-	}
-
-	public void toggleState() {
-		isUp = !isUp;
-		if (isUp) {
-			this.setIcon(new ImageIcon(staticButtonImage));
-			this.reDraw();
-		} else {
-			this.setIcon(new ImageIcon(depressedButtonImage));
-			this.reDraw();
-		}
-	}
-
-	public void setBoolState(boolean state) {
-		isUp = state;
-		if (isUp) {
-			this.setIcon(new ImageIcon(staticButtonImage));
-			this.reDraw();
-		} else {
-			this.setIcon(new ImageIcon(depressedButtonImage));
-			this.reDraw();
-		}
 	}
 }
