@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
@@ -33,6 +34,8 @@ public class ToolBarFactory {
 
 	public static JToolBar buildGraphEditorToolBar() {
 		final JToolBar graphEditorToolBar = new JToolBar();
+		
+		final ButtonGroup graphEditorButtonGroup = new ButtonGroup();
 
 		graphEditorToolBar.setLayout(new BoxLayout(graphEditorToolBar,
 				BoxLayout.LINE_AXIS));
@@ -59,11 +62,19 @@ public class ToolBarFactory {
 				GraphEditorButtonType.DISCONNECT);
 		graphEditorToolButtons.add(disconnect);
 
+		graphEditorButtonGroup.add(select);
+		graphEditorButtonGroup.add(insert);
+		graphEditorButtonGroup.add(delete);
+		graphEditorButtonGroup.add(connect);
+		graphEditorButtonGroup.add(disconnect);
+		
 		graphEditorToolBar.add(select);
 		graphEditorToolBar.add(insert);
 		graphEditorToolBar.add(delete);
 		graphEditorToolBar.add(connect);
 		graphEditorToolBar.add(disconnect);
+		
+	
 
 		return graphEditorToolBar;
 	}

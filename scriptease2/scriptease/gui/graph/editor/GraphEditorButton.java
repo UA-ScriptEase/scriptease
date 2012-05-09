@@ -49,18 +49,13 @@ public class GraphEditorButton extends SEIconButton {
 	}
 
 	public GraphEditorButton(GraphEditorButtonType type) {
-		setContentAreaFilled(false);
+	//	setContentAreaFilled(false);
 		buttonType = type;
 		isUp = true;
 
-		if (this.loadImages()) {
-			this.setIcon(new ImageIcon(staticButtonImage));
-			this.reDraw();
-		}
-		// Add a better error checking later...or a backup
-		else {
-			System.out.println("Fatal image loading error");
-		}
+		this.loadImages();
+		this.setIcon(new ImageIcon(staticButtonImage));
+		this.reDraw();
 	}
 
 	public GraphEditorButtonType getQuestButtonType() {
@@ -68,7 +63,7 @@ public class GraphEditorButton extends SEIconButton {
 	}
 
 	@Override
-	protected boolean loadImages() {
+	protected void loadImages() {
 		String typeString = getStringTag();
 
 		try {
@@ -76,11 +71,8 @@ public class GraphEditorButton extends SEIconButton {
 					.getFileResource("scriptease/resources/icons/buttonicons/"
 							+ typeString + ".png"));
 		} catch (IOException e) {
-			return false;
+		
 		}
-
-		return true;
-
 	}
 
 	@Override

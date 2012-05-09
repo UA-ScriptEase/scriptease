@@ -18,7 +18,7 @@ public abstract class SEIconButton extends JToggleButton {
 
 	protected boolean isUp;
 
-	protected abstract boolean loadImages();
+	protected abstract void loadImages();
 
 	protected abstract boolean setButtonImage(JLabel img);
 
