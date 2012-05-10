@@ -16,10 +16,10 @@ import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.gui.SEFrame;
 import scriptease.gui.ToolBarFactory;
-import scriptease.gui.WindowManager;
+import scriptease.gui.action.ToolBarAction;
+import scriptease.gui.action.ToolBarAction.ToolBarButtonMode;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.editor.GraphEditor;
-import scriptease.gui.graph.editor.GraphEditorButton;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
@@ -40,8 +40,6 @@ public class QuestPanelEditor extends GraphEditor {
 	private final String INSERT_QUESTPOINT_ALTERNATE_TEXT = "<html>Insert Alternate</html>";
 	private final String QUESTPOINT_PROPERTIES = "<html>Properties</html>";
 	private final String EDIT_QUESTPOINT_TEXT = "<html>Open</html>";
-	private final String CREATE_QUEST_TEXT = "<html>Start Quest</html>";
-
 	private int questPointCounter = 0;
 
 	private final JToolBar buttonToolBar = ToolBarFactory
@@ -61,13 +59,7 @@ public class QuestPanelEditor extends GraphEditor {
 		// Set the headNode to be the start node of the graph.
 		this.setHeadNode(start);
 
-		for (GraphEditorButton a : ToolBarFactory.getGraphEditorToolButtons()) {
-			a.addActionListener(this);
-		}
-
-		// default active tool
-		ToolBarFactory.propButton.addActionListener(this);
-		setActiveTool(GraphTool.SELECT_NODE_TOOL);
+		ToolBarAction.setMode(ToolBarButtonMode.SELECT_QUEST_POINT);
 	}
 
 	/**
@@ -95,80 +87,6 @@ public class QuestPanelEditor extends GraphEditor {
 	}
 
 	/**
-	 * Returns the collection of buttons that represent the node creation tools
-	 * available in the editor. The buttons only set the active tool; the tool
-	 * logic is centralized in the nodeChanged method.
-	 * 
-	 * 
-	 * TODO Fix this.. Doesn't seem to do anything.
-	 */
-	@Override
-	protected Collection<AbstractButton> getNodeButtons() {
-		Collection<AbstractButton> buttons = new ArrayList<AbstractButton>();
-
-		AbstractButton insertQuestPointNodeBetweenButton = new JRadioButtonMenuItem(
-				new AbstractAction() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						setActiveTool(GraphTool.INSERT_QUESTPOINTNODE_BETWEEN_TOOL);
-					}
-				});
-		insertQuestPointNodeBetweenButton
-				.setText(INSERT_QUESTPOINT_BETWEEN_TEXT);
-		buttons.add(insertQuestPointNodeBetweenButton);
-
-		AbstractButton insertQuestPointNodeAlternateButton = new JRadioButtonMenuItem(
-				new AbstractAction() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						setActiveTool(GraphTool.INSERT_QUESTPOINTNODE_ALTERNATE_TOOL);
-					}
-				});
-		insertQuestPointNodeAlternateButton
-				.setText(INSERT_QUESTPOINT_ALTERNATE_TEXT);
-		buttons.add(insertQuestPointNodeAlternateButton);
-
-		return buttons;
-	}
-
-	/**
-	 * Returns the collection of buttons that represent the node selection tools
-	 * available in the editor.
-	 * 
-	 * NOTE: This method is not used!
-	 */
-	@Override
-	protected Collection<AbstractButton> getSelectButtons() {
-		Collection<AbstractButton> buttons = new ArrayList<AbstractButton>();
-		// Rename QuestPoint Button
-		AbstractButton renameQuestPointButton = new JRadioButtonMenuItem(
-				new AbstractAction() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						setActiveTool(GraphTool.QUESTPOINT_PROPERTIES_TOOL);
-					}
-				});
-		renameQuestPointButton.setText(QUESTPOINT_PROPERTIES);
-
-		// Edit QuestPoint Button
-		AbstractButton editQuestPointButton = new JRadioButtonMenuItem(
-				new AbstractAction() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						setActiveTool(GraphTool.OPEN_QUESTPOINT_TOOL);
-					}
-				});
-		editQuestPointButton.setText(EDIT_QUESTPOINT_TEXT);
-
-		// add the buttons
-		buttons.add(editQuestPointButton);
-		// buttons.add(createQuestButton);
-		buttons.add(renameQuestPointButton);
-
-		return buttons;
-	}
-
-	/**
 	 * Method to abstract commonalities from the Insert QuestPoint between and
 	 * alternate tools.
 	 * 
@@ -177,7 +95,7 @@ public class QuestPanelEditor extends GraphEditor {
 	 * 
 	 * @author graves
 	 */
-	private void insertQuestPoint(GraphNode node, boolean removeConnection) {
+	private void insertQuestPoint(GraphNode node) {
 		// if this is the second click,
 		if (oldSelectedNode != null) {
 
@@ -235,10 +153,8 @@ public class QuestPanelEditor extends GraphEditor {
 				GraphNode furtherFromStartNode = node
 						.isDescendant(oldSelectedNode) ? node : oldSelectedNode;
 
-				if (removeConnection) {
-					// Remove the old connection between the parent and child:
-					closerToStartNode.removeChild(furtherFromStartNode, false);
-				}
+				// Remove the old connection between the parent and child:
+				closerToStartNode.removeChild(furtherFromStartNode, false);
 
 				// Add the new node to the shallower node as a child (addChild
 				// automatically adds shallower as parent):
@@ -268,24 +184,19 @@ public class QuestPanelEditor extends GraphEditor {
 		// only process clicked actions if you are contained in the active tab
 		if (type == GraphNodeEvent.CLICKED
 				&& SEFrame.getInstance().getActiveTab().contains(this)) {
+
 			// Determine the active tool
-			switch (this.getActiveTool()) {
-			case INSERT_QUESTPOINTNODE_BETWEEN_TOOL:
-				// Insert a new QuestPoint between two nodes.
-				insertQuestPoint(sourceNode, true);
+			switch (ToolBarAction.getMode()) {
+			case INSERT_QUEST_POINT:
+				insertQuestPoint(sourceNode);
 				break;
-			case INSERT_QUESTPOINTNODE_ALTERNATE_TOOL:
-				// Insert a new QuestPoint on an alternate path between two
-				// nodes.
-				insertQuestPoint(sourceNode, false);
-				break;
-			case OPEN_QUESTPOINT_TOOL:
-				// Open the QuestPoint for editing in a new tab. The arrow tool.
+
+			case SELECT_QUEST_POINT:
 				highlightQuestPointAtGraphNode(node);
 
 				final StoryModel model = StoryModelPool.getInstance()
 						.getActiveModel();
-				
+
 				if (model != null) {
 					node.process(new AbstractNoOpGraphNodeVisitor() {
 						@Override
@@ -294,10 +205,10 @@ public class QuestPanelEditor extends GraphEditor {
 
 							QuestPoint questPoint = questPointNode
 									.getQuestPoint();
-							
+
 							SEFrame.getInstance().activatePanelForQuestPoint(
 									model, questPoint);
-							
+
 							ToolBarFactory.updateQuestPointNameField(questPoint
 									.getDisplayText());
 							ToolBarFactory.updateCommittingCheckBox(questPoint
@@ -305,72 +216,34 @@ public class QuestPanelEditor extends GraphEditor {
 
 							// Force the graph to rebuild.
 							// setHeadNode(headNode);
-
-							// HER DER COMMENT LOL
 						}
 					});
 
 					break;
 				}
-			case QUESTPOINT_PROPERTIES_TOOL:
-				// Show a modal properties dialog that includes options to
-				// change fanIn, committing status, and name textbox.
-				node.process(new AbstractNoOpGraphNodeVisitor() {
-					@Override
-					public void processQuestPointNode(
-							QuestPointNode questPointNode) {
 
-						WindowManager.getInstance()
-								.showQuestPointPropertiesDialog(questPointNode);
+				/*
+				 * Properties Tool. This code is still being used as
+				 * functionality is transferred to other parts of toolbar.
+				 * 
+				 * 
+				 * case QUESTPOINT_PROPERTIES_TOOL: // Show a modal properties
+				 * dialog that includes options to // change fanIn, committing
+				 * status, and name textbox. node.process(new
+				 * AbstractNoOpGraphNodeVisitor() {
+				 * 
+				 * @Override public void processQuestPointNode( QuestPointNode
+				 * questPointNode) {
+				 * 
+				 * WindowManager.getInstance()
+				 * .showQuestPointPropertiesDialog(questPointNode);
+				 * 
+				 * // Force the graph to rebuild. setHeadNode(headNode); } });
+				 * 
+				 * this.setActiveTool(GraphTool.OPEN_QUESTPOINT_TOOL); break;
+				 */
 
-						// Force the graph to rebuild.
-						setHeadNode(headNode);
-					}
-				});
-
-				this.setActiveTool(GraphTool.OPEN_QUESTPOINT_TOOL);
-				break;
-
-			case CREATE_QUEST_TOOL:
-				List<GraphNode> sourceNodeParents = sourceNode.getParents();
-				List<GraphNode> sourceNodeChildren = sourceNode.getChildren();
-
-				if (!sourceNodeParents.isEmpty()
-						&& !sourceNodeChildren.isEmpty()) {
-					try {
-						final QuestNode questNode = new QuestNode("New Quest",
-								sourceNode, false);
-						final GraphNode startPoint = questNode.getStartPoint();
-						final GraphNode endPoint = questNode.getEndPoint();
-
-						// Add this Quest to the parents of the START
-						Collection<GraphNode> parents = startPoint.getParents();
-						for (GraphNode parent : parents) {
-							parent.addChild(questNode);
-						}
-						// remove the START as a child of it's parents,
-						// essentially
-						// replacing the START with this questNode
-						startPoint.removeParents();
-
-						// Add this Quest to the children of the END
-						Collection<GraphNode> children = endPoint.getChildren();
-						for (GraphNode child : children) {
-							child.addParent(questNode);
-						}
-						// remove the END as a parent of it's children,
-						// essentially
-						// replacing the END with this questNode
-						endPoint.removeChildren();
-					} catch (IllegalArgumentException e) {
-						// cannot make a Quest out of the given sourceNode, so
-						// don't
-						System.err.println("Cannot make a Quest start at "
-								+ sourceNode);
-					}
-				}
-				break;
-			case DELETE_TOOL:
+			case DELETE_QUEST_POINT:
 				sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
 					@Override
 					public void processQuestNode(QuestNode questNode) {
@@ -416,64 +289,7 @@ public class QuestPanelEditor extends GraphEditor {
 				return;
 			}
 		}
-		// Note: the (dis)connect tool is in GraphEditor because it is common to
-		// both DescribeItGraphEditor and QuestPanelEditor.
+		// Note: the (dis)connect tool is in GraphEditor due to commonalities
 		super.nodeChanged(node, event);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// NEW_TEXTNODE_TOOL, NEW_KNOWITNODE_TOOL, CONNECT_TOOL, DELETE_TOOL,
-		// SELECT_NODE_TOOL, SELECT_PATH_TOOL,
-		// INSERT_QUESTPOINTNODE_BETWEEN_TOOL,
-		// INSERT_QUESTPOINTNODE_ALTERNATE_TOOL, RENAME_QUESTPOINT_TOOL,
-		// CREATE_QUEST_TOOL, OPEN_QUESTPOINT_TOOL, QUESTPOINT_PROPERTIES_TOOL
-
-		if (e.getSource() instanceof GraphEditorButton) {
-			switch (((GraphEditorButton) e.getSource()).getQuestButtonType()) {
-			case SELECT:
-				System.out.println("Select");
-				SEFrame.getInstance().changeCursor(SEFrame.SYSTEM_CURSOR);
-
-				// this.setActiveTool(GraphTool.SELECT_NODE_TOOL);
-				this.setActiveTool(GraphTool.OPEN_QUESTPOINT_TOOL);
-				return;
-
-			case INSERT:
-				System.out.println("insert");
-				SEFrame.getInstance().changeCursor(SEFrame.ADD_NODE_CURSOR);
-
-				this.setActiveTool(GraphTool.INSERT_QUESTPOINTNODE_BETWEEN_TOOL);
-				return;
-
-			case CONNECT:
-				System.out.println("connect");
-				SEFrame.getInstance().changeCursor(SEFrame.DRAW_PATH_CURSOR);
-
-				this.setActiveTool(GraphTool.CONNECT_TOOL);
-				return;
-
-			case DISCONNECT:
-				System.out.println("disconnect");
-				SEFrame.getInstance().changeCursor(SEFrame.ERASE_PATH_CURSOR);
-
-				this.setActiveTool(GraphTool.CONNECT_TOOL);
-				return;
-
-			case DELETE:
-				System.out.println("delete");
-				SEFrame.getInstance().changeCursor(SEFrame.DELETE_NODE_CURSOR);
-
-				this.setActiveTool(GraphTool.DELETE_TOOL);
-				return;
-
-			default:
-				break;
-			}
-		}
-
-		if (e.getActionCommand().equals("Properties")) {
-			this.setActiveTool(GraphTool.QUESTPOINT_PROPERTIES_TOOL);
-		}
 	}
 }

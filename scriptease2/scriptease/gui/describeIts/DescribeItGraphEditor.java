@@ -67,7 +67,6 @@ public class DescribeItGraphEditor extends GraphEditor {
 	/**
 	 * Supports TextNodes and KnowItNodes for DescribeIts
 	 */
-	@Override
 	protected Collection<AbstractButton> getNodeButtons() {
 		Collection<AbstractButton> buttons = new ArrayList<AbstractButton>();
 		AbstractButton textNodeButton = new JRadioButtonMenuItem(
@@ -96,7 +95,6 @@ public class DescribeItGraphEditor extends GraphEditor {
 	/**
 	 * Supports Node and Path selection
 	 */
-	@Override
 	protected Collection<AbstractButton> getSelectButtons() {
 		Collection<AbstractButton> buttons = new ArrayList<AbstractButton>();
 		AbstractButton selectNodeButton = new JRadioButtonMenuItem(
@@ -170,11 +168,5 @@ public class DescribeItGraphEditor extends GraphEditor {
 				break;
 			}
 		}
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 }

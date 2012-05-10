@@ -1,8 +1,6 @@
 package scriptease.gui;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -11,10 +9,14 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
-import scriptease.gui.graph.editor.GraphEditorButton;
-import scriptease.gui.graph.editor.GraphEditorButton.GraphEditorButtonType;
+import scriptease.gui.action.story.quests.ConnectQuestPointAction;
+import scriptease.gui.action.story.quests.DeleteQuestPointAction;
+import scriptease.gui.action.story.quests.DisconnectQuestPointAction;
+import scriptease.gui.action.story.quests.InsertQuestPointAction;
+import scriptease.gui.action.story.quests.SelectQuestPointAction;
 
 /**
  * ToolBarFactory is responsible for creating JToolBars, most importantly the
@@ -24,17 +26,14 @@ import scriptease.gui.graph.editor.GraphEditorButton.GraphEditorButtonType;
  * 
  */
 public class ToolBarFactory {
-	
-	private static JTextField nameField = new JTextField();
 
-	private static ArrayList<GraphEditorButton> graphEditorToolButtons = 
-			new ArrayList<GraphEditorButton>();
+	private static JTextField nameField = new JTextField();
 
 	public static JButton propButton = new JButton("Properties");
 
 	public static JToolBar buildGraphEditorToolBar() {
 		final JToolBar graphEditorToolBar = new JToolBar();
-		
+
 		final ButtonGroup graphEditorButtonGroup = new ButtonGroup();
 
 		graphEditorToolBar.setLayout(new BoxLayout(graphEditorToolBar,
@@ -42,47 +41,48 @@ public class ToolBarFactory {
 		graphEditorToolBar.setRollover(true);
 		graphEditorToolBar.setFloatable(false);
 
-		GraphEditorButton select = new GraphEditorButton(
-				GraphEditorButtonType.SELECT);
-		graphEditorToolButtons.add(select);
+		JToggleButton selectQuestButton = new JToggleButton();
+		selectQuestButton.setAction(SelectQuestPointAction.getInstance());
+		selectQuestButton.setText(null);
 
-		GraphEditorButton insert = new GraphEditorButton(
-				GraphEditorButtonType.INSERT);
-		graphEditorToolButtons.add(insert);
+		JToggleButton insertQuestButton = new JToggleButton();
+		insertQuestButton.setAction(InsertQuestPointAction.getInstance());
+		insertQuestButton.setText(null);
 
-		GraphEditorButton delete = new GraphEditorButton(
-				GraphEditorButtonType.DELETE);
-		graphEditorToolButtons.add(delete);
+		JToggleButton deleteQuestButton = new JToggleButton();
+		deleteQuestButton.setAction(DeleteQuestPointAction.getInstance());
+		deleteQuestButton.setText(null);
 
-		GraphEditorButton connect = new GraphEditorButton(
-				GraphEditorButtonType.CONNECT);
-		graphEditorToolButtons.add(connect);
+		JToggleButton connectQuestButton = new JToggleButton();
+		connectQuestButton.setAction(ConnectQuestPointAction.getInstance());
+		connectQuestButton.setText(null);
 
-		GraphEditorButton disconnect = new GraphEditorButton(
-				GraphEditorButtonType.DISCONNECT);
-		graphEditorToolButtons.add(disconnect);
+		JToggleButton disconnectQuestButton = new JToggleButton();
+		disconnectQuestButton.setAction(DisconnectQuestPointAction
+				.getInstance());
+		disconnectQuestButton.setText(null);
 
-		graphEditorButtonGroup.add(select);
-		graphEditorButtonGroup.add(insert);
-		graphEditorButtonGroup.add(delete);
-		graphEditorButtonGroup.add(connect);
-		graphEditorButtonGroup.add(disconnect);
-		
-		graphEditorToolBar.add(select);
-		graphEditorToolBar.add(insert);
-		graphEditorToolBar.add(delete);
-		graphEditorToolBar.add(connect);
-		graphEditorToolBar.add(disconnect);
-		
-	
+		selectQuestButton.setSelected(true);
+
+		graphEditorButtonGroup.add(selectQuestButton);
+		graphEditorButtonGroup.add(insertQuestButton);
+		graphEditorButtonGroup.add(deleteQuestButton);
+		graphEditorButtonGroup.add(connectQuestButton);
+		graphEditorButtonGroup.add(disconnectQuestButton);
+
+		graphEditorToolBar.add(selectQuestButton);
+		graphEditorToolBar.add(insertQuestButton);
+		graphEditorToolBar.add(deleteQuestButton);
+		graphEditorToolBar.add(connectQuestButton);
+		graphEditorToolBar.add(disconnectQuestButton);
 
 		return graphEditorToolBar;
 	}
 
 	/**
 	 * Creates a JToolBar for the quest editor. It adds all of the graph editor
-	 * buttons from the GraphEditorToolbar, and then adds Quest specific 
-	 * options for the user after a separator.
+	 * buttons from the GraphEditorToolbar, and then adds Quest specific options
+	 * for the user after a separator.
 	 * 
 	 * @return
 	 */
@@ -112,21 +112,14 @@ public class ToolBarFactory {
 	}
 
 	public static void updateCommittingCheckBox(Boolean committing) {
-		if(committing){
-			
+		if (committing) {
+
+		} else {
+
 		}
-		else{
-			
-		}		
 	}
 
 	public void updateQuestEditorToolBar(JToolBar questEditorToolBar) {
 		// questEditorToolBar.
 	}
-
-	public static Collection<GraphEditorButton> getGraphEditorToolButtons() {
-		return graphEditorToolButtons;
-	}
-
-
 }

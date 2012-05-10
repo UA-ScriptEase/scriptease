@@ -421,7 +421,8 @@ public final class WindowManager {
 	}
 
 	public void showStoryComponentBuilder() {
-		JFrame scFrame = StoryComponentFrame.getInstance();
+		JFrame scFrame = new JFrame();
+		scFrame = StoryComponentFrame.getInstance();
 		scFrame.setJMenuBar(MenuFactory.buildBuilderMenuBar());
 
 		scFrame.setVisible(true);

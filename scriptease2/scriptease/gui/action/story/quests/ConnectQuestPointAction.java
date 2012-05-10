@@ -6,23 +6,23 @@ import scriptease.gui.SEFrame;
 import scriptease.gui.action.ToolBarAction;
 
 /**
- * Represents and performs the Insert Quest Point command, as well as
+ * Reperesents and performs the Connect Quest Point command, as well as
  * encapsulating its enabled and name display state.
  * 
  * @author kschenk
  * 
  */
 @SuppressWarnings("serial")
-public final class InsertQuestPointAction extends ToolBarAction {
-	private static final String INSERT_TEXT = "node_add";
+public final class ConnectQuestPointAction extends ToolBarAction {
+	private static final String INSERT_TEXT = "path_draw";
 
-	private static final InsertQuestPointAction instance = new InsertQuestPointAction();
+	private static final ConnectQuestPointAction instance = new ConnectQuestPointAction();
 
 	/**
 	 * Defines a <code>InsertQuestPointAction</code> object with an icon.
 	 */
-	protected InsertQuestPointAction() {
-		super(InsertQuestPointAction.INSERT_TEXT);
+	protected ConnectQuestPointAction() {
+		super(ConnectQuestPointAction.INSERT_TEXT);
 	}
 
 	/**
@@ -30,13 +30,13 @@ public final class InsertQuestPointAction extends ToolBarAction {
 	 * 
 	 * @return The sole instance of this particular type of Action
 	 */
-	public static InsertQuestPointAction getInstance() {
-		return InsertQuestPointAction.instance;
+	public static ConnectQuestPointAction getInstance() {
+		return ConnectQuestPointAction.instance;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		SEFrame.getInstance().changeCursor(SEFrame.ADD_NODE_CURSOR);
-		setMode(ToolBarButtonMode.INSERT_QUEST_POINT);
+		SEFrame.getInstance().changeCursor(SEFrame.DRAW_PATH_CURSOR);
+		setMode(ToolBarButtonMode.CONNECT_QUEST_POINT);
 	}
 }
