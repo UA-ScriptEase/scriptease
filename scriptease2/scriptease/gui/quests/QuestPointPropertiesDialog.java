@@ -22,29 +22,32 @@ import scriptease.gui.internationalization.Il8nResources;
 
 /**
  * A dialog for setting the properties of a QuestPoint.
+ * 
  * @author graves
  */
 @SuppressWarnings("serial")
 public class QuestPointPropertiesDialog extends JDialog {
 
-	public QuestPointPropertiesDialog(final Frame owner, final QuestPointNode questPointNode){
+	public QuestPointPropertiesDialog(final Frame owner,
+			final QuestPointNode questPointNode) {
 		super(owner, Il8nResources.getString("Properties"), true);
 		final QuestPoint questPoint = questPointNode.getQuestPoint();
-		
-		this.getContentPane().setLayout(new GridLayout(0,1));
-		
+
+		this.getContentPane().setLayout(new GridLayout(0, 1));
+
 		// Create the general properties panel.
 		JPanel propertiesPanel = new JPanel();
-		propertiesPanel.setLayout(new GridLayout(0,1));
+		propertiesPanel.setLayout(new GridLayout(0, 1));
 		this.add(propertiesPanel);
-		
+
 		// Create the name textfield.
 		JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		namePanel.add(new JLabel(Il8nResources.getString("Name")));
-		final JTextField nameTextField = new JTextField(questPoint.getDisplayText(), 10);
+		final JTextField nameTextField = new JTextField(
+				questPoint.getDisplayText(), 10);
 		namePanel.add(nameTextField);
 		propertiesPanel.add(namePanel);
-		
+
 		// Create the Committing checkbox.
 		JPanel committingPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		committingPanel.add(new JLabel(Il8nResources.getString("Committing")));
@@ -52,16 +55,18 @@ public class QuestPointPropertiesDialog extends JDialog {
 		committingCheckBox.setSelected(questPoint.getCommitting());
 		committingPanel.add(committingCheckBox);
 		propertiesPanel.add(committingPanel);
-		
+
 		// Create the FanIn spinner.
 		JPanel fanInPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		fanInPanel.add(new JLabel(Il8nResources.getString("Fan_In")));
 		int maxFanIn = questPointNode.getParents().size();
-		maxFanIn = maxFanIn>1 ? maxFanIn : 1;
-		final SpinnerModel fanInSpinnerModel = new SpinnerNumberModel(questPoint.getFanIn(), new Integer(1), new Integer(maxFanIn), new Integer(1));
+		maxFanIn = maxFanIn > 1 ? maxFanIn : 1;
+		final SpinnerModel fanInSpinnerModel = new SpinnerNumberModel(
+				questPoint.getFanIn(), new Integer(1), new Integer(maxFanIn),
+				new Integer(1));
 		fanInPanel.add(new JSpinner(fanInSpinnerModel));
 		propertiesPanel.add(fanInPanel);
-		
+
 		// Build the Ok and Cancel buttons.
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		JButton okButton = new JButton(Il8nResources.getString("Okay"));
@@ -72,9 +77,10 @@ public class QuestPointPropertiesDialog extends JDialog {
 				questPoint.setDisplayText(nameTextField.getText());
 				questPoint.setCommiting(committingCheckBox.isSelected());
 				questPoint.setFanIn((Integer) fanInSpinnerModel.getValue());
-				
-				questPoint.notifyObservers(new StoryComponentEvent(questPoint, StoryComponentChangeEnum.CHANGE_TEXT_NAME));
-				
+
+				questPoint.notifyObservers(new StoryComponentEvent(questPoint,
+						StoryComponentChangeEnum.CHANGE_TEXT_NAME));
+
 				// Close the dialog.
 				QuestPointPropertiesDialog.this.setVisible(false);
 				QuestPointPropertiesDialog.this.dispose();
@@ -91,9 +97,9 @@ public class QuestPointPropertiesDialog extends JDialog {
 		});
 		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
-		
+
 		propertiesPanel.add(buttonPanel);
 		this.add(propertiesPanel);
 	}
-	
+
 }

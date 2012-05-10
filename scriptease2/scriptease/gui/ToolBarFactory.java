@@ -111,6 +111,15 @@ public class ToolBarFactory {
 		nameField.setText(textChange);
 	}
 
+	public static void updateCommittingCheckBox(Boolean committing) {
+		if(committing){
+			
+		}
+		else{
+			
+		}		
+	}
+
 	public void updateQuestEditorToolBar(JToolBar questEditorToolBar) {
 		// questEditorToolBar.
 	}
@@ -118,5 +127,6 @@ public class ToolBarFactory {
 	public static Collection<GraphEditorButton> getGraphEditorToolButtons() {
 		return graphEditorToolButtons;
 	}
+
 
 }

@@ -1,17 +1,15 @@
 package scriptease.gui.graph.editor;
 
-import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-
-import scriptease.gui.SEIconButton;
+import javax.swing.JToggleButton;
 import scriptease.util.FileOp;
 
 @SuppressWarnings("serial")
-public class GraphEditorButton extends SEIconButton {
+public class GraphEditorButton extends JToggleButton {
 	public enum GraphEditorButtonType {
 		INSERT, SELECT, CONNECT, DISCONNECT, DELETE
 	}
@@ -22,9 +20,10 @@ public class GraphEditorButton extends SEIconButton {
 	private final static String INSERT_TAG = "node_add";
 	private final static String SELECT_TAG = "selection";
 
-	private GraphEditorButtonType buttonType;
+	protected GraphEditorButtonType buttonType;
+	protected BufferedImage staticButtonImage;
 
-	private String getStringTag() {
+	protected String getStringTag() {
 		switch (buttonType) {
 
 		case SELECT:
@@ -33,10 +32,8 @@ public class GraphEditorButton extends SEIconButton {
 			return INSERT_TAG;
 		case CONNECT:
 			return CONNECT_TAG;
-
 		case DISCONNECT:
 			return DISCONNECT_TAG;
-
 		case DELETE:
 			return DELETE_TAG;
 		default:
@@ -44,14 +41,8 @@ public class GraphEditorButton extends SEIconButton {
 		}
 	}
 
-	public boolean getState() {
-		return isUp;
-	}
-
 	public GraphEditorButton(GraphEditorButtonType type) {
-	//	setContentAreaFilled(false);
 		buttonType = type;
-		isUp = true;
 
 		this.loadImages();
 		this.setIcon(new ImageIcon(staticButtonImage));
@@ -61,8 +52,8 @@ public class GraphEditorButton extends SEIconButton {
 	public GraphEditorButtonType getQuestButtonType() {
 		return buttonType;
 	}
-
-	@Override
+	
+	// *** Added to AbstractToolBarAction. ***
 	protected void loadImages() {
 		String typeString = getStringTag();
 
@@ -71,12 +62,12 @@ public class GraphEditorButton extends SEIconButton {
 					.getFileResource("scriptease/resources/icons/buttonicons/"
 							+ typeString + ".png"));
 		} catch (IOException e) {
-		
+			//TODO Catch the exception!
 		}
 	}
-
-	@Override
-	protected boolean setButtonImage(JLabel img) {
-		return false;
+	
+	protected void reDraw() {
+		this.validate();
+		this.repaint();
 	}
 }
