@@ -34,6 +34,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import scriptease.ScriptEase;
+import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.FileManager;
 import scriptease.controller.observer.StoryModelPoolEvent;
 import scriptease.controller.observer.StoryModelPoolObserver;
@@ -43,6 +44,8 @@ import scriptease.gui.pane.DefaultPatternPaneFactory;
 import scriptease.gui.pane.LibraryPane;
 import scriptease.gui.pane.PaneFactory;
 import scriptease.gui.pane.StoryPanel;
+import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.QuestPointNode;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
@@ -66,7 +69,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	public static final int ADD_NODE_CURSOR = 3;
 	public static final int DELETE_NODE_CURSOR = 4;
 	public static final int SYSTEM_CURSOR = 5;
-	
+
 	private static final int MIN_HEIGHT = 480;
 	private static final int MIN_WIDTH = 640;
 	private static final int PREFERRED_PROPERTIES_THICKNESS = 250;
@@ -377,6 +380,8 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 
 		return propertyPane;
 	}
+	
+	private QuestPoint startQuestPoint;
 
 	/**
 	 * Creates a tab for the given StoryModel defaulting to the starting
@@ -386,8 +391,20 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	 */
 	public void createTabForModel(StoryModel model) {
 		final Icon icon = model.getTranslator().getIcon();
+		
+		
+		model.getStartNode().process(new AbstractNoOpGraphNodeVisitor() {
+			@Override
+			public void processQuestPointNode(
+					QuestPointNode questPointNode) {
 
-		final StoryPanel newPanel = new StoryPanel(model);
+				startQuestPoint = questPointNode.getQuestPoint();
+			}
+		});
+		//QuestPoint questPoint = model.getRoot();
+
+		if(startQuestPoint != null){
+			final StoryPanel newPanel = new StoryPanel(model, startQuestPoint);
 		final CloseableTab newTab = new CloseableTab(this.storyTabs, newPanel,
 				icon);
 
@@ -395,6 +412,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		this.storyTabs.setTabComponentAt(
 				this.storyTabs.indexOfComponent(newPanel), newTab);
 		this.storyTabs.setSelectedComponent(newPanel);
+		}
 
 	}
 
@@ -538,6 +556,35 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		return storyPanel;
 	}
 
+	private StoryPanel getTabForQuestPoint(StoryModel model,
+			QuestPoint questPoint) {
+		List<StoryPanel> panesForModel = StoryPanel
+				.getStoryPanelsForModel(model);
+		for (StoryPanel panel : panesForModel) {
+			if (panel.represents(questPoint))
+				return panel;
+		}
+		return null;
+	}
+
+	/**
+	 * Activates the StoryPanel for the given model and questPoint. If it's
+	 * not found, does nothing.
+	 * 
+	 * @param model
+	 * @param questPoint
+	 */
+	public void activatePanelForQuestPoint(StoryModel model, QuestPoint questPoint) {
+    StoryPanel tabForQuestPoint = getTabForQuestPoint(model, questPoint);
+    if (tabForQuestPoint != null) {
+            try {
+                    this.storyTabs.setSelectedComponent(tabForQuestPoint);
+            } catch (IllegalArgumentException e) {
+                    System.err.println("Error");
+            }
+    	}
+	}
+
 	/**
 	 * Changes the cursor for the application based on the cursor name given in
 	 * the parameter. These are predefined cursors.
@@ -546,37 +593,38 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	 */
 	public void changeCursor(int cursorName) {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		
+
 		String cursorPath = "scriptease/resources/icons/cursors/";
 		Point cursorHotSpot = null;
-		
+
 		switch (cursorName) {
 
 		case DRAW_PATH_CURSOR:
 			cursorPath += "path_draw.png";
-			cursorHotSpot = new Point(0,31);
+			cursorHotSpot = new Point(0, 31);
 			break;
 		case ERASE_PATH_CURSOR:
 			cursorPath += "path_erase.png";
-			cursorHotSpot = new Point(0,31);
+			cursorHotSpot = new Point(0, 31);
 			break;
 		case ADD_NODE_CURSOR:
 			cursorPath += "node_add.png";
-			cursorHotSpot = new Point(0,0);
+			cursorHotSpot = new Point(0, 0);
 			break;
 		case DELETE_NODE_CURSOR:
 			cursorPath += "node_delete.png";
-			cursorHotSpot = new Point(0,0);
+			cursorHotSpot = new Point(0, 0);
 			break;
 		case SYSTEM_CURSOR:
 		default:
 			setCursor(null);
 			break;
 		}
-		
-		if(cursorHotSpot != null) {
+
+		if (cursorHotSpot != null) {
 			Image cursorImage = toolkit.getImage(cursorPath);
-			Cursor customCursor = toolkit.createCustomCursor(cursorImage, cursorHotSpot, "Addition");
+			Cursor customCursor = toolkit.createCustomCursor(cursorImage,
+					cursorHotSpot, "Addition");
 			SEFrame.getInstance().setCursor(customCursor);
 		}
 
