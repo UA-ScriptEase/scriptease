@@ -25,7 +25,6 @@ public class QuestPoint extends StoryComponentContainer {
 	public static String QUEST_POINT_TYPE = "questPoint";
 	private boolean commiting;
 	private int fanIn;
-	private QuestNode questContainer;
 
 	public QuestPoint(String name, int fanIn, boolean commiting) {
 		super(name);
@@ -71,7 +70,6 @@ public class QuestPoint extends StoryComponentContainer {
 	}
 
 	public void setQuestContainer(QuestNode quest) {
-		this.questContainer = quest;
 	}
 
 	public QuestNode getQuestContainer() {

@@ -1,10 +1,6 @@
 package scriptease.gui.quests;
 
 import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,9 +41,9 @@ public class QuestPanelEditor extends GraphEditor {
 	private final String CREATE_QUEST_TEXT = "<html>Start Quest</html>";
 
 	private int questPointCounter = 0;
-	
-	private final JToolBar buttonToolBar = ToolBarFactory.buildQuestEditorToolBar();
 
+	private final JToolBar buttonToolBar = ToolBarFactory
+			.buildQuestEditorToolBar();
 
 	public QuestPanelEditor(final GraphNode start) {
 		super(new AbstractAction() {
@@ -57,7 +53,7 @@ public class QuestPanelEditor extends GraphEditor {
 				// since it doesn't make sense in QuestPanelEditor.
 			}
 		});
-		
+
 		addToolBar(buttonToolBar);
 
 		// Set the headNode to be the start node of the graph.
@@ -100,6 +96,9 @@ public class QuestPanelEditor extends GraphEditor {
 	 * Returns the collection of buttons that represent the node creation tools
 	 * available in the editor. The buttons only set the active tool; the tool
 	 * logic is centralized in the nodeChanged method.
+	 * 
+	 * 
+	 * TODO Fix this.. Doesn't seem to do anything.
 	 */
 	@Override
 	protected Collection<AbstractButton> getNodeButtons() {
@@ -281,22 +280,25 @@ public class QuestPanelEditor extends GraphEditor {
 			case OPEN_QUESTPOINT_TOOL:
 				// Open the QuestPoint for editing in a new tab. The arrow tool.
 				highlightQuestPointAtGraphNode(node);
-				
+
 				node.process(new AbstractNoOpGraphNodeVisitor() {
 					@Override
 					public void processQuestPointNode(
 							QuestPointNode questPointNode) {
-						
+
 						QuestPoint questPoint = questPointNode.getQuestPoint();
+
+						ToolBarFactory.updateQuestPointNameField(questPoint
+								.getDisplayText());
 						
-						ToolBarFactory.updateQuestPointNameField(questPoint.getDisplayText());
-						//ToolBarFactory.questPointNameField().setText(questPoint.getDisplayText());
+						ToolBarFactory.updateCommittingCheckBox(questPoint.getCommitting());
+						
+						// ToolBarFactory.questPointNameField().setText(questPoint.getDisplayText());
 						// Force the graph to rebuild.
 						//setHeadNode(headNode);
 					}
 				});
-				
-				
+
 				break;
 			case QUESTPOINT_PROPERTIES_TOOL:
 				// Show a modal properties dialog that includes options to
@@ -420,7 +422,7 @@ public class QuestPanelEditor extends GraphEditor {
 			case SELECT:
 				System.out.println("Select");
 				SEFrame.getInstance().changeCursor(SEFrame.SYSTEM_CURSOR);
-				
+
 				// this.setActiveTool(GraphTool.SELECT_NODE_TOOL);
 				this.setActiveTool(GraphTool.OPEN_QUESTPOINT_TOOL);
 				return;
@@ -428,7 +430,7 @@ public class QuestPanelEditor extends GraphEditor {
 			case INSERT:
 				System.out.println("insert");
 				SEFrame.getInstance().changeCursor(SEFrame.ADD_NODE_CURSOR);
-				
+
 				this.setActiveTool(GraphTool.INSERT_QUESTPOINTNODE_BETWEEN_TOOL);
 				return;
 
@@ -442,7 +444,7 @@ public class QuestPanelEditor extends GraphEditor {
 			case DISCONNECT:
 				System.out.println("disconnect");
 				SEFrame.getInstance().changeCursor(SEFrame.ERASE_PATH_CURSOR);
-				
+
 				this.setActiveTool(GraphTool.CONNECT_TOOL);
 				return;
 

@@ -46,7 +46,6 @@ import scriptease.util.GUIOp;
 public abstract class GraphEditor extends JSplitPane implements
 		GraphNodeObserver, ActionListener {
 
-	// Enum for the possible tools supported in the graph
 	protected enum GraphTool {
 		NEW_TEXTNODE_TOOL, NEW_KNOWITNODE_TOOL, CONNECT_TOOL, DELETE_TOOL, SELECT_NODE_TOOL, SELECT_PATH_TOOL, INSERT_QUESTPOINTNODE_BETWEEN_TOOL, INSERT_QUESTPOINTNODE_ALTERNATE_TOOL, RENAME_QUESTPOINT_TOOL, CREATE_QUEST_TOOL, OPEN_QUESTPOINT_TOOL, QUESTPOINT_PROPERTIES_TOOL
 	}
@@ -57,8 +56,6 @@ public abstract class GraphEditor extends JSplitPane implements
 	private GraphTool activeTool;
 	protected JSplitPane editingPanel;
 	private AbstractAction saveAction;
-
-	// //This is a HAck
 
 	public GraphEditor(AbstractAction saveAction) {
 		super(JSplitPane.VERTICAL_SPLIT, true);
@@ -144,11 +141,10 @@ public abstract class GraphEditor extends JSplitPane implements
 		// set the graphPanel as the top component
 		this.editingPanel.setTopComponent(new JScrollPane(panel));
 	}
-	
+
 	/**
-	 * Public method to add a toolbar to the graph editor.
-	 * Use ToolBarFactory class for an appropriate toolbar, or 
-	 * make your own.
+	 * Public method to add a toolbar to the graph editor. Use ToolBarFactory
+	 * class for an appropriate toolbar, or make your own.
 	 * 
 	 * @param toolBar
 	 */
@@ -158,9 +154,10 @@ public abstract class GraphEditor extends JSplitPane implements
 
 	private void buildPanels() {
 
-		//final JToolBar buttonToolBar = ToolBarFactory.buildQuestEditorToolBar();
+		// final JToolBar buttonToolBar =
+		// ToolBarFactory.buildQuestEditorToolBar();
 
-		//this.setLeftComponent(buttonToolBar);
+		// this.setLeftComponent(buttonToolBar);
 
 		this.editingPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
 		this.setRightComponent(this.editingPanel);
@@ -190,9 +187,7 @@ public abstract class GraphEditor extends JSplitPane implements
 		final short type = event.getEventType();
 
 		// only process clicked actions if you are contained in the active tab
-		if (type == GraphNodeEvent.CLICKED
-				) {
-			// Determine what the active tool is
+		if (type == GraphNodeEvent.CLICKED) {
 			switch (this.activeTool) {
 			case CONNECT_TOOL:
 				if (oldSelectedNode != null) {
