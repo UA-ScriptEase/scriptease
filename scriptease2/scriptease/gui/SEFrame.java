@@ -392,7 +392,11 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	public void createTabForModel(StoryModel model) {
 		final Icon icon = model.getTranslator().getIcon();
 		
-		
+		/*
+		 * TODO This stuff should not be here anymore after SelectQuestPointAction is 
+		 * properly implemented, as that should open the specific StoryComponentPanelTree
+		 * for the selected node!
+		 */
 		model.getStartNode().process(new AbstractNoOpGraphNodeVisitor() {
 			@Override
 			public void processQuestPointNode(
@@ -401,10 +405,13 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 				startQuestPoint = questPointNode.getQuestPoint();
 			}
 		});
-		//QuestPoint questPoint = model.getRoot();
 
 		if(startQuestPoint != null){
 			final StoryPanel newPanel = new StoryPanel(model, startQuestPoint);
+			/*
+			 * Up to here. The StoryPanel will no longer require the startQuestPoint
+			 * parameter. TODO
+			 */
 		final CloseableTab newTab = new CloseableTab(this.storyTabs, newPanel,
 				icon);
 

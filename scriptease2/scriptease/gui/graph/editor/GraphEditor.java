@@ -4,7 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
@@ -21,7 +20,7 @@ import javax.swing.JToolBar;
 import scriptease.controller.GraphNodeObserverAdder;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeObserver;
-import scriptease.gui.ToolBarFactory;
+import scriptease.gui.action.ToolBarAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.GraphPanel.GraphPanelUI;
 import scriptease.gui.graph.nodes.GraphNode;
@@ -44,10 +43,13 @@ import scriptease.util.GUIOp;
  */
 @SuppressWarnings("serial")
 public abstract class GraphEditor extends JSplitPane implements
-		GraphNodeObserver, ActionListener {
+		GraphNodeObserver{
 
+	// Enum for the possible tools supported in the graph
 	protected enum GraphTool {
-		NEW_TEXTNODE_TOOL, NEW_KNOWITNODE_TOOL, CONNECT_TOOL, DELETE_TOOL, SELECT_NODE_TOOL, SELECT_PATH_TOOL, INSERT_QUESTPOINTNODE_BETWEEN_TOOL, INSERT_QUESTPOINTNODE_ALTERNATE_TOOL, RENAME_QUESTPOINT_TOOL, CREATE_QUEST_TOOL, OPEN_QUESTPOINT_TOOL, QUESTPOINT_PROPERTIES_TOOL
+		NEW_TEXTNODE_TOOL, NEW_KNOWITNODE_TOOL, CONNECT_TOOL, 
+		DELETE_TOOL, SELECT_NODE_TOOL, SELECT_PATH_TOOL, 
+		QUESTPOINT_PROPERTIES_TOOL
 	}
 
 	private Point mousePosition = new Point();
@@ -55,11 +57,9 @@ public abstract class GraphEditor extends JSplitPane implements
 	protected GraphNode oldSelectedNode;
 	private GraphTool activeTool;
 	protected JSplitPane editingPanel;
-	private AbstractAction saveAction;
 
 	public GraphEditor(AbstractAction saveAction) {
 		super(JSplitPane.VERTICAL_SPLIT, true);
-		this.saveAction = saveAction;
 		this.setOpaque(true);
 		this.setBackground(StoryComponentPanel.UNSELECTED_COLOUR);
 	}
@@ -71,16 +71,6 @@ public abstract class GraphEditor extends JSplitPane implements
 
 		this.buildPanels();
 	}
-
-	/**
-	 * JButtons which represent the types of nodes that can be created
-	 */
-	protected abstract Collection<AbstractButton> getNodeButtons();
-
-	/**
-	 * JButtons which represent the types of selection that can be made
-	 */
-	protected abstract Collection<AbstractButton> getSelectButtons();
 
 	/**
 	 * Sets the activeTool to the given tool. Clears the oldSelectedNode.
@@ -141,10 +131,11 @@ public abstract class GraphEditor extends JSplitPane implements
 		// set the graphPanel as the top component
 		this.editingPanel.setTopComponent(new JScrollPane(panel));
 	}
-
+	
 	/**
-	 * Public method to add a toolbar to the graph editor. Use ToolBarFactory
-	 * class for an appropriate toolbar, or make your own.
+	 * Public method to add a toolbar to the graph editor.
+	 * Use ToolBarFactory class for an appropriate toolbar, or 
+	 * make your own.
 	 * 
 	 * @param toolBar
 	 */
@@ -154,10 +145,9 @@ public abstract class GraphEditor extends JSplitPane implements
 
 	private void buildPanels() {
 
-		// final JToolBar buttonToolBar =
-		// ToolBarFactory.buildQuestEditorToolBar();
+		//final JToolBar buttonToolBar = ToolBarFactory.buildQuestEditorToolBar();
 
-		// this.setLeftComponent(buttonToolBar);
+		//this.setLeftComponent(buttonToolBar);
 
 		this.editingPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
 		this.setRightComponent(this.editingPanel);
@@ -187,9 +177,11 @@ public abstract class GraphEditor extends JSplitPane implements
 		final short type = event.getEventType();
 
 		// only process clicked actions if you are contained in the active tab
-		if (type == GraphNodeEvent.CLICKED) {
-			switch (this.activeTool) {
-			case CONNECT_TOOL:
+		if (type == GraphNodeEvent.CLICKED
+				) {
+			// Determine what the active tool is
+			switch (ToolBarAction.getMode()) {
+			case CONNECT_QUEST_POINT:
 				if (oldSelectedNode != null) {
 					// Determine which node is shallower in the graph, and which
 					// is deeper.
@@ -219,7 +211,7 @@ public abstract class GraphEditor extends JSplitPane implements
 				else
 					oldSelectedNode = sourceNode;
 				break;
-			case DELETE_TOOL:
+			case DELETE_QUEST_POINT:
 				List<GraphNode> parents = sourceNode.getParents();
 				List<GraphNode> children = sourceNode.getChildren();
 
