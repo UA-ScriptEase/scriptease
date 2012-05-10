@@ -18,6 +18,7 @@ public final class StoryModel extends PatternModel {
 	private final Translator translator;
 //	private final ModelVerifier modelVerifier;
 	private QuestNode modelRoot;
+	private QuestPointNode startNode;
 
 	/**
 	 * Builds a StoryModel with the supplied module and translator, and defaults
@@ -56,7 +57,7 @@ public final class StoryModel extends PatternModel {
 		super(title, author);
 
 		// Temporary code to make a new quest model with a start and end node.
-		QuestPointNode startNode = new QuestPointNode(new QuestPoint(
+		this.startNode = new QuestPointNode(new QuestPoint(
 				"Start", 1, false));
 		QuestPointNode endNode = new QuestPointNode(new QuestPoint(
 				"End", 1, true));
@@ -77,6 +78,10 @@ public final class StoryModel extends PatternModel {
 	
 	public QuestNode getRoot(){
 		return this.modelRoot;
+	}
+	
+	public QuestPointNode getStartNode(){
+		return this.startNode;
 	}
 
 	/**

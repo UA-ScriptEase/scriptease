@@ -36,7 +36,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		// Good unit for scrolling vertically using the mouse wheel
 		this.getVerticalScrollBar().setUnitIncrement(16);
 	}
-	
+
 	public StoryComponentPanelTree(StoryComponent root,
 			StoryComponentPanelSetting settings) {
 		this(root, settings, null);
@@ -55,7 +55,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 
 		// Good unit for scrolling vertically using the mouse wheel
 		this.getVerticalScrollBar().setUnitIncrement(16);
-		
+
 	}
 
 	private void setRoot(StoryComponent root) {
@@ -92,7 +92,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 			this.filterRule.addRule(newFilterRule);
 
 		this.filterTree(this.rootPanel);
-		
+
 	}
 
 	/**
@@ -106,27 +106,22 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	/**
 	 * Recursively filters the tree that starts at the given root.
 	 * 
-	 * @param root, -> The root to start filtering from.
-	 *     
+	 * @param root
+	 *            , -> The root to start filtering from.
+	 * 
 	 */
 	private void filterTree(StoryComponentPanel root) {
-
-		
-	
 
 		if (this.filterRule == null || root == null)
 			return;
 
-		
-	
-		
-		for(int i=0; i < root.getChildrenPanels().size(); i++){
-			boolean accepted = this.filterRule.isAcceptable(root.getChildrenPanels().get(i).getStoryComponent());
+		for (int i = 0; i < root.getChildrenPanels().size(); i++) {
+			boolean accepted = this.filterRule.isAcceptable(root
+					.getChildrenPanels().get(i).getStoryComponent());
 			root.getChildrenPanels().get(i).setVisible(accepted);
 			this.filterTree(root.getChildrenPanels().get(i));
 		}
 	}
-	
 
 	public StoryComponentPanelManager getSelectionManager() {
 		return this.selectionManager;

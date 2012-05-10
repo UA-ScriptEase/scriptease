@@ -21,6 +21,8 @@ import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.editor.GraphEditor;
 import scriptease.gui.graph.editor.GraphEditorButton;
 import scriptease.gui.graph.nodes.GraphNode;
+import scriptease.model.StoryModel;
+import scriptease.model.StoryModelPool;
 import scriptease.util.GUIOp;
 
 /**
@@ -281,25 +283,35 @@ public class QuestPanelEditor extends GraphEditor {
 				// Open the QuestPoint for editing in a new tab. The arrow tool.
 				highlightQuestPointAtGraphNode(node);
 
-				node.process(new AbstractNoOpGraphNodeVisitor() {
-					@Override
-					public void processQuestPointNode(
-							QuestPointNode questPointNode) {
+				final StoryModel model = StoryModelPool.getInstance()
+						.getActiveModel();
+				
+				if (model != null) {
+					node.process(new AbstractNoOpGraphNodeVisitor() {
+						@Override
+						public void processQuestPointNode(
+								QuestPointNode questPointNode) {
 
-						QuestPoint questPoint = questPointNode.getQuestPoint();
+							QuestPoint questPoint = questPointNode
+									.getQuestPoint();
+							
+							SEFrame.getInstance().activatePanelForQuestPoint(
+									model, questPoint);
+							
+							ToolBarFactory.updateQuestPointNameField(questPoint
+									.getDisplayText());
+							ToolBarFactory.updateCommittingCheckBox(questPoint
+									.getCommitting());
 
-						ToolBarFactory.updateQuestPointNameField(questPoint
-								.getDisplayText());
-						
-						ToolBarFactory.updateCommittingCheckBox(questPoint.getCommitting());
-						
-						// ToolBarFactory.questPointNameField().setText(questPoint.getDisplayText());
-						// Force the graph to rebuild.
-						//setHeadNode(headNode);
-					}
-				});
+							// Force the graph to rebuild.
+							// setHeadNode(headNode);
 
-				break;
+							// HER DER COMMENT LOL
+						}
+					});
+
+					break;
+				}
 			case QUESTPOINT_PROPERTIES_TOOL:
 				// Show a modal properties dialog that includes options to
 				// change fanIn, committing status, and name textbox.
@@ -310,6 +322,7 @@ public class QuestPanelEditor extends GraphEditor {
 
 						WindowManager.getInstance()
 								.showQuestPointPropertiesDialog(questPointNode);
+
 						// Force the graph to rebuild.
 						setHeadNode(headNode);
 					}
@@ -410,7 +423,6 @@ public class QuestPanelEditor extends GraphEditor {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		// NEW_TEXTNODE_TOOL, NEW_KNOWITNODE_TOOL, CONNECT_TOOL, DELETE_TOOL,
 		// SELECT_NODE_TOOL, SELECT_PATH_TOOL,
 		// INSERT_QUESTPOINTNODE_BETWEEN_TOOL,
