@@ -3,7 +3,7 @@ package scriptease.gui.action.story.quests;
 import java.awt.event.ActionEvent;
 
 import scriptease.gui.SEFrame;
-import scriptease.gui.action.ToolBarAction;
+import scriptease.gui.action.ToolBarButtonAction;
 
 /**
  * Represents and performs the Select Quest Point command, as well as
@@ -13,7 +13,7 @@ import scriptease.gui.action.ToolBarAction;
  * 
  */
 @SuppressWarnings("serial")
-public final class SelectQuestPointAction extends ToolBarAction {
+public final class SelectQuestPointAction extends ToolBarButtonAction {
 	private static final String INSERT_TEXT = "selection";
 
 	private static final SelectQuestPointAction instance = new SelectQuestPointAction();

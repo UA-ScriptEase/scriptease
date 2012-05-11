@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -27,7 +28,7 @@ import scriptease.model.StoryModel;
  */
 @SuppressWarnings("serial")
 public class StoryPanel extends JPanel {
-	private JScrollPane storyComponentTree;
+	private StoryComponentPanelTree storyComponentTree;
 	private final StoryModel model;
 	
     /**
@@ -101,15 +102,10 @@ public class StoryPanel extends JPanel {
 		QuestPanelEditor questEditor = new QuestPanelEditor(model.getRoot()
 				.getStartPoint());
 		this.add(questEditor);
-
-		// Story settings
+		
 		StoryComponentPanelSetting storySettings = new StoryComponentPanelStorySetting();
-
-		// Build the StoryTree
 		this.storyComponentTree = new StoryComponentPanelTree(questPoint, storySettings);
-
-		// Add the StoryTree to the panel.
-		//adds the tree to the pane
+		
 		this.add(this.storyComponentTree);
 	}
 
@@ -127,6 +123,17 @@ public class StoryPanel extends JPanel {
 		}
 
 		panes.add(this);
+	}
+	
+	/**
+	 * Sets the tree to the QuestPoint passed.
+	 * 
+	 * @param The QuestPoint to set the tree to.
+	 */
+	public void setTree(QuestPoint questPoint){
+		this.storyComponentTree.setRoot(questPoint);
+		
+		System.out.println("Setting Tree to :" + questPoint.toString());
 	}
 
 	/**

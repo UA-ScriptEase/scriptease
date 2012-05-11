@@ -3,7 +3,7 @@ package scriptease.gui.action.story.quests;
 import java.awt.event.ActionEvent;
 
 import scriptease.gui.SEFrame;
-import scriptease.gui.action.ToolBarAction;
+import scriptease.gui.action.ToolBarButtonAction;
 
 /**
  * Represents and performs the Delete Quest Point command, as well as 
@@ -13,7 +13,7 @@ import scriptease.gui.action.ToolBarAction;
  *
  */
 @SuppressWarnings("serial")
-public final class DeleteQuestPointAction extends ToolBarAction{
+public final class DeleteQuestPointAction extends ToolBarButtonAction{
 	private static final String INSERT_TEXT = "node_delete";
 	
 	private static final DeleteQuestPointAction instance = new DeleteQuestPointAction();

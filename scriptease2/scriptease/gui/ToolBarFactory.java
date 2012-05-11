@@ -1,8 +1,5 @@
 package scriptease.gui;
 
-import java.awt.Dimension;
-
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -11,12 +8,16 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.SpinnerModel;
 
 import scriptease.gui.action.story.quests.ConnectQuestPointAction;
 import scriptease.gui.action.story.quests.DeleteQuestPointAction;
 import scriptease.gui.action.story.quests.DisconnectQuestPointAction;
+import scriptease.gui.action.story.quests.FanInSpinnerAction;
 import scriptease.gui.action.story.quests.InsertQuestPointAction;
 import scriptease.gui.action.story.quests.SelectQuestPointAction;
+import scriptease.gui.action.story.quests.ToggleCommittingAction;
+import scriptease.gui.internationalization.Il8nResources;
 
 /**
  * ToolBarFactory is responsible for creating JToolBars, most importantly the
@@ -27,7 +28,7 @@ import scriptease.gui.action.story.quests.SelectQuestPointAction;
  */
 public class ToolBarFactory {
 
-	private static JTextField nameField = new JTextField();
+	private static JTextField nameField = new JTextField("", 10);
 
 	public static JButton propButton = new JButton("Properties");
 
@@ -90,18 +91,33 @@ public class ToolBarFactory {
 		final JToolBar questEditorToolBar = buildGraphEditorToolBar();
 
 		questEditorToolBar.addSeparator();
+		//
+		// Dimension minSize = new Dimension(30, 50);
+		// Dimension prefSize = new Dimension(30, 50);
+		// Dimension maxSize = new Dimension(Short.MAX_VALUE, 50);
+		// questEditorToolBar.add(new Box.Filler(minSize, prefSize, maxSize));
 
-		Dimension minSize = new Dimension(30, 50);
-		Dimension prefSize = new Dimension(30, 50);
-		Dimension maxSize = new Dimension(Short.MAX_VALUE, 50);
-		questEditorToolBar.add(new Box.Filler(minSize, prefSize, maxSize));
-
-		// Temporary Hacks
-		questEditorToolBar.add(new JLabel("Name: "));
+		questEditorToolBar.add(new JLabel(Il8nResources.getString("Name")));
 		questEditorToolBar.add(nameField);
-		questEditorToolBar.add(new JButton("><"));
-		questEditorToolBar.add(new JSpinner());
-		// questEditorToolBar.add(propButton);
+
+		JButton toggleCommittingButton = new JButton();
+		toggleCommittingButton.setAction(ToggleCommittingAction.getInstance());
+		toggleCommittingButton.setText(null);
+		toggleCommittingButton.setOpaque(false);
+		toggleCommittingButton.setContentAreaFilled(false);
+		toggleCommittingButton.setBorderPainted(false);
+
+		questEditorToolBar
+				.add(new JLabel(Il8nResources.getString("Committing")));
+		questEditorToolBar.add(toggleCommittingButton);
+
+		SpinnerModel fanInSpinnerModel = FanInSpinnerAction.getInstance().getFanInSpinnerModel();
+		
+		JSpinner fanInSpinner = new JSpinner(fanInSpinnerModel);
+		
+		//fanInSpinner.
+		//questEditorToolBar.add(new JSpinner());
+		questEditorToolBar.add(fanInSpinner);
 		// questEditorToolBar.add(new JButton("Save Changes"));
 
 		return questEditorToolBar;

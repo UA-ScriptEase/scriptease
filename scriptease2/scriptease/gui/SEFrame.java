@@ -391,12 +391,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	 */
 	public void createTabForModel(StoryModel model) {
 		final Icon icon = model.getTranslator().getIcon();
-		
-		/*
-		 * TODO This stuff should not be here anymore after SelectQuestPointAction is 
-		 * properly implemented, as that should open the specific StoryComponentPanelTree
-		 * for the selected node!
-		 */
+	
 		model.getStartNode().process(new AbstractNoOpGraphNodeVisitor() {
 			@Override
 			public void processQuestPointNode(
@@ -405,22 +400,19 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 				startQuestPoint = questPointNode.getQuestPoint();
 			}
 		});
+		
+		System.out.println("Start Quest Point is: "+startQuestPoint.toString());
 
-		if(startQuestPoint != null){
+		if (startQuestPoint != null) {
 			final StoryPanel newPanel = new StoryPanel(model, startQuestPoint);
-			/*
-			 * Up to here. The StoryPanel will no longer require the startQuestPoint
-			 * parameter. TODO
-			 */
-		final CloseableTab newTab = new CloseableTab(this.storyTabs, newPanel,
-				icon);
+			final CloseableTab newTab = new CloseableTab(this.storyTabs,
+					newPanel, icon);
 
-		this.storyTabs.addTab(newPanel.getTitle(), icon, newPanel);
-		this.storyTabs.setTabComponentAt(
-				this.storyTabs.indexOfComponent(newPanel), newTab);
-		this.storyTabs.setSelectedComponent(newPanel);
+			this.storyTabs.addTab(newPanel.getTitle(), icon, newPanel);
+			this.storyTabs.setTabComponentAt(
+					this.storyTabs.indexOfComponent(newPanel), newTab);
+			this.storyTabs.setSelectedComponent(newPanel);
 		}
-
 	}
 
 	/**
@@ -582,14 +574,17 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	 * @param questPoint
 	 */
 	public void activatePanelForQuestPoint(StoryModel model, QuestPoint questPoint) {
-    StoryPanel tabForQuestPoint = getTabForQuestPoint(model, questPoint);
+		
+		getActiveTab().setTree(questPoint);
+		
+	/*StoryPanel tabForQuestPoint = getTabForQuestPoint(model, questPoint);
     if (tabForQuestPoint != null) {
             try {
                     this.storyTabs.setSelectedComponent(tabForQuestPoint);
             } catch (IllegalArgumentException e) {
                     System.err.println("Error");
             }
-    	}
+    	}*/
 	}
 
 	/**
