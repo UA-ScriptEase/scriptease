@@ -3,7 +3,7 @@ package scriptease.gui.action.story.quests;
 import java.awt.event.ActionEvent;
 
 import scriptease.gui.SEFrame;
-import scriptease.gui.action.ToolBarAction;
+import scriptease.gui.action.ToolBarButtonAction;
 
 /**
  * Represents and performs the Disconnect Quest Point command, as well as
@@ -14,7 +14,7 @@ import scriptease.gui.action.ToolBarAction;
  */
 @SuppressWarnings("serial")
 public final class DisconnectQuestPointAction extends
-		ToolBarAction {
+		ToolBarButtonAction {
 	private static final String INSERT_TEXT = "path_erase";
 
 	private static final DisconnectQuestPointAction instance = new DisconnectQuestPointAction();

@@ -3,7 +3,7 @@ package scriptease.gui.action.story.quests;
 import java.awt.event.ActionEvent;
 
 import scriptease.gui.SEFrame;
-import scriptease.gui.action.ToolBarAction;
+import scriptease.gui.action.ToolBarButtonAction;
 
 /**
  * Reperesents and performs the Connect Quest Point command, as well as
@@ -13,7 +13,7 @@ import scriptease.gui.action.ToolBarAction;
  * 
  */
 @SuppressWarnings("serial")
-public final class ConnectQuestPointAction extends ToolBarAction {
+public final class ConnectQuestPointAction extends ToolBarButtonAction {
 	private static final String INSERT_TEXT = "path_draw";
 
 	private static final ConnectQuestPointAction instance = new ConnectQuestPointAction();

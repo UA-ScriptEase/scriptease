@@ -16,8 +16,11 @@ import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.gui.SEFrame;
 import scriptease.gui.ToolBarFactory;
-import scriptease.gui.action.ToolBarAction;
-import scriptease.gui.action.ToolBarAction.ToolBarButtonMode;
+import scriptease.gui.WindowManager;
+import scriptease.gui.action.ToolBarButtonAction;
+import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
+import scriptease.gui.action.story.quests.FanInSpinnerAction;
+import scriptease.gui.action.story.quests.ToggleCommittingAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.editor.GraphEditor;
 import scriptease.gui.graph.nodes.GraphNode;
@@ -36,10 +39,6 @@ import scriptease.util.GUIOp;
 @SuppressWarnings("serial")
 public class QuestPanelEditor extends GraphEditor {
 	private final String NEW_QUEST_POINT = "New Quest Point";
-	private final String INSERT_QUESTPOINT_BETWEEN_TEXT = "<html>Insert Between</html>";
-	private final String INSERT_QUESTPOINT_ALTERNATE_TEXT = "<html>Insert Alternate</html>";
-	private final String QUESTPOINT_PROPERTIES = "<html>Properties</html>";
-	private final String EDIT_QUESTPOINT_TEXT = "<html>Open</html>";
 	private int questPointCounter = 0;
 
 	private final JToolBar buttonToolBar = ToolBarFactory
@@ -59,7 +58,7 @@ public class QuestPanelEditor extends GraphEditor {
 		// Set the headNode to be the start node of the graph.
 		this.setHeadNode(start);
 
-		ToolBarAction.setMode(ToolBarButtonMode.SELECT_QUEST_POINT);
+		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_QUEST_POINT);
 	}
 
 	/**
@@ -186,7 +185,7 @@ public class QuestPanelEditor extends GraphEditor {
 				&& SEFrame.getInstance().getActiveTab().contains(this)) {
 
 			// Determine the active tool
-			switch (ToolBarAction.getMode()) {
+			switch (ToolBarButtonAction.getMode()) {
 			case INSERT_QUEST_POINT:
 				insertQuestPoint(sourceNode);
 				break;
@@ -208,6 +207,10 @@ public class QuestPanelEditor extends GraphEditor {
 
 							SEFrame.getInstance().activatePanelForQuestPoint(
 									model, questPoint);
+							
+							ToggleCommittingAction.getInstance().setQuestPoint(questPoint);
+							FanInSpinnerAction.getInstance().setQuestPointNode(questPointNode);
+							
 
 							ToolBarFactory.updateQuestPointNameField(questPoint
 									.getDisplayText());
@@ -225,24 +228,28 @@ public class QuestPanelEditor extends GraphEditor {
 				/*
 				 * Properties Tool. This code is still being used as
 				 * functionality is transferred to other parts of toolbar.
-				 * 
-				 * 
-				 * case QUESTPOINT_PROPERTIES_TOOL: // Show a modal properties
-				 * dialog that includes options to // change fanIn, committing
-				 * status, and name textbox. node.process(new
-				 * AbstractNoOpGraphNodeVisitor() {
-				 * 
-				 * @Override public void processQuestPointNode( QuestPointNode
-				 * questPointNode) {
-				 * 
-				 * WindowManager.getInstance()
-				 * .showQuestPointPropertiesDialog(questPointNode);
-				 * 
-				 * // Force the graph to rebuild. setHeadNode(headNode); } });
-				 * 
-				 * this.setActiveTool(GraphTool.OPEN_QUESTPOINT_TOOL); break;
 				 */
+				/* TODO Once properties are integrated into toolbar, remove this code.
+			case PROPERTIES:
+				// Show a modal properties dialog that includes
+				// options to change fanIn, committing status,
+				// and name textbox.
+				node.process(new AbstractNoOpGraphNodeVisitor() {
+					@Override
+					public void processQuestPointNode(
+							QuestPointNode questPointNode) {
+						
+						//This is the important part of the code.
+						
+						WindowManager.getInstance()
+								.showQuestPointPropertiesDialog(questPointNode);
 
+						// Force the graph to rebuild.
+						setHeadNode(headNode);
+					}
+				});
+				break;
+			*/
 			case DELETE_QUEST_POINT:
 				sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
 					@Override

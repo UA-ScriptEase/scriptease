@@ -20,7 +20,7 @@ import javax.swing.JToolBar;
 import scriptease.controller.GraphNodeObserverAdder;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeObserver;
-import scriptease.gui.action.ToolBarAction;
+import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.GraphPanel.GraphPanelUI;
 import scriptease.gui.graph.nodes.GraphNode;
@@ -180,7 +180,7 @@ public abstract class GraphEditor extends JSplitPane implements
 		if (type == GraphNodeEvent.CLICKED
 				) {
 			// Determine what the active tool is
-			switch (ToolBarAction.getMode()) {
+			switch (ToolBarButtonAction.getMode()) {
 			case CONNECT_QUEST_POINT:
 				if (oldSelectedNode != null) {
 					// Determine which node is shallower in the graph, and which
