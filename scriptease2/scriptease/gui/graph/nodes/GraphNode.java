@@ -218,6 +218,10 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 		for (GraphNode parent : this.parents) {
 			parentsCopy.add(parent);
 		}
+		
+		
+		System.out.println("\nParents size:"+parentsCopy.size());
+		
 		return parentsCopy;
 	}
 

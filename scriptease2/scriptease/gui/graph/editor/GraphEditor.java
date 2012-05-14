@@ -17,13 +17,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 
+import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.GraphNodeObserverAdder;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeObserver;
+import scriptease.gui.ToolBarFactory;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.GraphPanel.GraphPanelUI;
 import scriptease.gui.graph.nodes.GraphNode;
+import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.QuestPointNode;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.util.GUIOp;
 
@@ -193,17 +197,10 @@ public abstract class GraphEditor extends JSplitPane implements
 							: oldSelectedNode;
 
 					// connect the nodes if not connected
-					if (!shallowerNode.addChild(deeperNode)) {
-						// otherwise break the connection, as long as it doesn't
-						// break the graph.
-
-						// Check that both nodes will still have at least one
-						// parent and one child after the disconnect.
-						if (shallowerNode.getChildren().size() > 1
-								&& deeperNode.getParents().size() > 1) {
-							shallowerNode.removeChild(deeperNode, false);
-						}
-					}
+					shallowerNode.addChild(deeperNode);
+					
+					ToolBarFactory.updateFanInSpinner();
+					
 					// Reset the tool.
 					oldSelectedNode = null;
 				}
@@ -211,6 +208,48 @@ public abstract class GraphEditor extends JSplitPane implements
 				else
 					oldSelectedNode = sourceNode;
 				break;
+
+			case DISCONNECT_QUEST_POINT:
+				if (oldSelectedNode != null) {
+					// Determine which node is shallower in the graph, and which
+					// is deeper.
+					GraphNode shallowerNode = sourceNode
+							.isDescendant(oldSelectedNode) ? oldSelectedNode
+							: sourceNode;
+					GraphNode deeperNode = sourceNode
+							.isDescendant(oldSelectedNode) ? sourceNode
+							: oldSelectedNode;
+
+					// Check that both nodes will still have at least one
+					// parent and one child after the disconnect.
+					if (shallowerNode.getChildren().size() > 1
+							&& deeperNode.getParents().size() > 1) {
+						shallowerNode.removeChild(deeperNode, false);
+					}
+					
+					deeperNode.process(new AbstractNoOpGraphNodeVisitor() {
+						public void processQuestPointNode(
+								QuestPointNode questPointNode) {
+							
+							QuestPoint questPoint = questPointNode.getQuestPoint();
+							int fanIn = questPoint.getFanIn();
+							
+							if(fanIn > 1)
+								questPoint.setFanIn(fanIn - 1);
+							
+						}
+					});
+					
+					ToolBarFactory.updateFanInSpinner();
+
+					// Reset the tool.
+					oldSelectedNode = null;
+				}
+				// update the last selected node
+				else
+					oldSelectedNode = sourceNode;
+				break;
+				
 			case DELETE_QUEST_POINT:
 				List<GraphNode> parents = sourceNode.getParents();
 				List<GraphNode> children = sourceNode.getChildren();
