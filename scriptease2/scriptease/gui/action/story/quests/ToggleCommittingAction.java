@@ -2,11 +2,7 @@ package scriptease.gui.action.story.quests;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.Action;
-
-import scriptease.gui.SEFrame;
 import scriptease.gui.action.ToolBarButtonAction;
-import scriptease.gui.action.story.DeleteStoryComponentAction;
 import scriptease.gui.quests.QuestPoint;
 
 /**
@@ -65,7 +61,6 @@ public final class ToggleCommittingAction extends ToolBarButtonAction {
 		this.setCommitting(questPointCommitting);
 		if (!ToggleCommittingAction.getInstance().isEnabled()) {
 			ToggleCommittingAction.getInstance().setEnabled(true);
-
 		}
 
 		if (!questPointCommitting) {

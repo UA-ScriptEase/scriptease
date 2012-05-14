@@ -2,25 +2,18 @@ package scriptease.gui.quests;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
 import javax.swing.JComponent;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToolBar;
 
 import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.gui.SEFrame;
 import scriptease.gui.ToolBarFactory;
-import scriptease.gui.WindowManager;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
-import scriptease.gui.action.story.quests.FanInSpinnerAction;
-import scriptease.gui.action.story.quests.ToggleCommittingAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.editor.GraphEditor;
 import scriptease.gui.graph.nodes.GraphNode;
@@ -40,7 +33,7 @@ import scriptease.util.GUIOp;
 public class QuestPanelEditor extends GraphEditor {
 	private final String NEW_QUEST_POINT = "New Quest Point";
 	private int questPointCounter = 0;
-
+	
 	private final JToolBar buttonToolBar = ToolBarFactory
 			.buildQuestEditorToolBar();
 
@@ -60,7 +53,7 @@ public class QuestPanelEditor extends GraphEditor {
 
 		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_QUEST_POINT);
 	}
-
+		
 	/**
 	 * Highlights the quest point that is represented by the given GraphNode in
 	 * the graph.
@@ -183,11 +176,14 @@ public class QuestPanelEditor extends GraphEditor {
 		// only process clicked actions if you are contained in the active tab
 		if (type == GraphNodeEvent.CLICKED
 				&& SEFrame.getInstance().getActiveTab().contains(this)) {
-
+			
 			// Determine the active tool
 			switch (ToolBarButtonAction.getMode()) {
 			case INSERT_QUEST_POINT:
 				insertQuestPoint(sourceNode);
+				
+				ToolBarFactory.updateFanInSpinner();
+				
 				break;
 
 			case SELECT_QUEST_POINT:
@@ -208,14 +204,7 @@ public class QuestPanelEditor extends GraphEditor {
 							SEFrame.getInstance().activatePanelForQuestPoint(
 									model, questPoint);
 							
-							ToggleCommittingAction.getInstance().setQuestPoint(questPoint);
-							FanInSpinnerAction.getInstance().setQuestPointNode(questPointNode);
-							
-
-							ToolBarFactory.updateQuestPointNameField(questPoint
-									.getDisplayText());
-							ToolBarFactory.updateCommittingCheckBox(questPoint
-									.getCommitting());
+							ToolBarFactory.setCurrentQuestPointNode(questPointNode);							
 
 							// Force the graph to rebuild.
 							// setHeadNode(headNode);
@@ -225,31 +214,6 @@ public class QuestPanelEditor extends GraphEditor {
 					break;
 				}
 
-				/*
-				 * Properties Tool. This code is still being used as
-				 * functionality is transferred to other parts of toolbar.
-				 */
-				/* TODO Once properties are integrated into toolbar, remove this code.
-			case PROPERTIES:
-				// Show a modal properties dialog that includes
-				// options to change fanIn, committing status,
-				// and name textbox.
-				node.process(new AbstractNoOpGraphNodeVisitor() {
-					@Override
-					public void processQuestPointNode(
-							QuestPointNode questPointNode) {
-						
-						//This is the important part of the code.
-						
-						WindowManager.getInstance()
-								.showQuestPointPropertiesDialog(questPointNode);
-
-						// Force the graph to rebuild.
-						setHeadNode(headNode);
-					}
-				});
-				break;
-			*/
 			case DELETE_QUEST_POINT:
 				sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
 					@Override
@@ -267,6 +231,7 @@ public class QuestPanelEditor extends GraphEditor {
 						// Add children of QuestNode to endPoint
 						GraphNode endPoint = questNode.getEndPoint();
 						endPoint.addChildren(questNode.getChildren());
+
 					}
 
 					@Override
@@ -278,6 +243,7 @@ public class QuestPanelEditor extends GraphEditor {
 						// Only delete the node if there are parents and
 						// children to repair the graph with.
 						if (!parents.isEmpty() && !children.isEmpty()) {
+
 							// Remove the node from its parents.
 							questPointNode.removeParents();
 
@@ -288,14 +254,31 @@ public class QuestPanelEditor extends GraphEditor {
 							for (GraphNode parent : parents) {
 								for (GraphNode child : children) {
 									parent.addChild(child);
+									child.process(new AbstractNoOpGraphNodeVisitor() {
+										public void processQuestPointNode(
+												QuestPointNode questPointNode) {
+
+											QuestPoint questPoint = questPointNode
+													.getQuestPoint();
+											int fanIn = questPoint.getFanIn();
+
+											if (fanIn > 1)
+												questPoint.setFanIn(fanIn - 1);
+
+										}
+									});
 								}
 							}
 						}
+
+						ToolBarFactory.updateFanInSpinner();
 					}
 				});
+
 				return;
 			}
 		}
+	
 		// Note: the (dis)connect tool is in GraphEditor due to commonalities
 		super.nodeChanged(node, event);
 	}

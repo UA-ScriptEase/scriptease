@@ -41,12 +41,7 @@ public class QuestPointPropertiesManager {
 		// Create the FanIn spinner.
 		
 		int maxFanIn = questPointNode.getParents().size();
-		maxFanIn = maxFanIn > 1 ? maxFanIn : 1;
-		final SpinnerModel fanInSpinnerModel = new SpinnerNumberModel(
-				questPoint.getFanIn(), new Integer(1), new Integer(maxFanIn),
-				new Integer(1));
 		
-		//**JPANEL**.add(new JSpinner(fanInSpinnerModel));
 
 		// Build the Ok and Cancel buttons.
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -54,9 +49,8 @@ public class QuestPointPropertiesManager {
 		okButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Set the QuestPoint properties.
+			
 				questPoint.setDisplayText(nameTextField.getText());
-				questPoint.setFanIn((Integer) fanInSpinnerModel.getValue());
 
 				questPoint.notifyObservers(new StoryComponentEvent(questPoint,
 						StoryComponentChangeEnum.CHANGE_TEXT_NAME));
