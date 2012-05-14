@@ -1,11 +1,13 @@
 package scriptease.gui.quests;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
 import scriptease.controller.AbstractNoOpGraphNodeVisitor;
@@ -62,7 +64,10 @@ public class QuestPanelEditor extends GraphEditor {
 	 */
 	private void highlightQuestPointAtGraphNode(GraphNode graphNode) {
 		final GraphNode questPointNode = graphNode;
-
+		
+		JScrollPane currentPanel = (JScrollPane) this.editingPanel.getTopComponent();
+		Point position = currentPanel.getViewport().getViewPosition();
+	
 		final GraphPanel graphPanel = new GraphPanel(this.headNode) {
 			@Override
 			public void configureAppearance(GraphNode node, JComponent component) {
@@ -75,7 +80,7 @@ public class QuestPanelEditor extends GraphEditor {
 				}
 			}
 		};
-		this.setGraphPanel(graphPanel);
+		this.setGraphPanel(graphPanel, position);
 	}
 
 	/**

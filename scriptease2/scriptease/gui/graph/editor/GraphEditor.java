@@ -98,13 +98,14 @@ public abstract class GraphEditor extends JSplitPane implements
 		return this.activeTool;
 	}
 
+
 	/**
 	 * Sets the given GraphPanel as the TopComponent in the editingPanel, and
 	 * registers the appropriate listeners
 	 * 
 	 * @param panel
 	 */
-	protected void setGraphPanel(GraphPanel panel) {
+	protected void setGraphPanel(GraphPanel panel, Point position) {
 		// Listener for the connect arrow
 		MouseAdapter connectArrowListener = new MouseAdapter() {
 			@Override
@@ -131,6 +132,8 @@ public abstract class GraphEditor extends JSplitPane implements
 		panel.setUI(new GraphEditorUI(panel));
 
 		// set the graphPanel as the top component
+		JScrollPane graphPanel = new JScrollPane(panel);
+		graphPanel.getViewport().setViewPosition(position);
 		this.editingPanel.setTopComponent(new JScrollPane(panel));
 	}
 	
@@ -159,7 +162,8 @@ public abstract class GraphEditor extends JSplitPane implements
 		 * setGraphPanel in the constructor of subclasses
 		 */
 		GraphPanel graphPanel = new GraphPanel(this.headNode);
-		setGraphPanel(graphPanel);
+		Point position = new Point(0,0);
+		setGraphPanel(graphPanel, position);
 	}
 
 	public void setHeadNode(GraphNode graphNode) {
