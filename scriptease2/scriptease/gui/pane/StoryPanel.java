@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 

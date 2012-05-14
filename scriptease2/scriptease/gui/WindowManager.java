@@ -26,8 +26,6 @@ import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.quests.QuestPointNode;
-import scriptease.gui.quests.QuestPointPropertiesManager;
 import scriptease.gui.storycomponentbuilder.StoryComponentFrame;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
@@ -586,17 +584,4 @@ public final class WindowManager {
 				SEFrame.getInstance());
 		preferencesDialog.display();
 	}
-	
-	/* TODO Once properties are integrated into toolbar, remove this code.
-	public void showQuestPointPropertiesDialog(QuestPointNode questPointNode){
-		// Create the dialog to show.
-		QuestPointPropertiesDialog dialog = new QuestPointPropertiesDialog(SEFrame.getInstance(), questPointNode);
-		
-		// Show the dialog.
-		dialog.setResizable(false);
-		dialog.pack();
-		dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
-	}
-	*/
 }

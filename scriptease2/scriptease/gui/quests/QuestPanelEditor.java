@@ -45,7 +45,7 @@ public class QuestPanelEditor extends GraphEditor {
 				// since it doesn't make sense in QuestPanelEditor.
 			}
 		});
-
+		
 		addToolBar(buttonToolBar);
 
 		// Set the headNode to be the start node of the graph.

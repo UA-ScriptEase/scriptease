@@ -6,11 +6,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
