@@ -20,8 +20,8 @@ import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
 import scriptease.translator.io.model.GameObject;
 
+@SuppressWarnings("serial")
 public class GameObjectPanelTree extends JPanel implements Observer{
-	private GameObject selected;
 	private GameObjectTree treeModel;
 	private ArrayList<GameObjectPanel> gameObjectPanel;
 	private ArrayList<GameObjectLabel> gameObjectLabels;

@@ -380,7 +380,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 
 		return propertyPane;
 	}
-	
+
 	private QuestPoint startQuestPoint;
 
 	/**
@@ -391,17 +391,17 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	 */
 	public void createTabForModel(StoryModel model) {
 		final Icon icon = model.getTranslator().getIcon();
-	
+
 		model.getStartNode().process(new AbstractNoOpGraphNodeVisitor() {
 			@Override
-			public void processQuestPointNode(
-					QuestPointNode questPointNode) {
+			public void processQuestPointNode(QuestPointNode questPointNode) {
 
 				startQuestPoint = questPointNode.getQuestPoint();
 			}
 		});
-		
-		System.out.println("Start Quest Point is: "+startQuestPoint.toString());
+
+		System.out.println("Start Quest Point is: "
+				+ startQuestPoint.toString());
 
 		if (startQuestPoint != null) {
 			final StoryPanel newPanel = new StoryPanel(model, startQuestPoint);
@@ -555,36 +555,17 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		return storyPanel;
 	}
 
-	private StoryPanel getTabForQuestPoint(StoryModel model,
-			QuestPoint questPoint) {
-		List<StoryPanel> panesForModel = StoryPanel
-				.getStoryPanelsForModel(model);
-		for (StoryPanel panel : panesForModel) {
-			if (panel.represents(questPoint))
-				return panel;
-		}
-		return null;
-	}
-
 	/**
-	 * Activates the StoryPanel for the given model and questPoint. If it's
-	 * not found, does nothing.
+	 * Activates the StoryPanel for the given model and questPoint. If it's not
+	 * found, does nothing.
 	 * 
 	 * @param model
 	 * @param questPoint
 	 */
-	public void activatePanelForQuestPoint(StoryModel model, QuestPoint questPoint) {
-		
+	public void activatePanelForQuestPoint(StoryModel model,
+			QuestPoint questPoint) {
+
 		getActiveTab().setTree(questPoint);
-		
-	/*StoryPanel tabForQuestPoint = getTabForQuestPoint(model, questPoint);
-    if (tabForQuestPoint != null) {
-            try {
-                    this.storyTabs.setSelectedComponent(tabForQuestPoint);
-            } catch (IllegalArgumentException e) {
-                    System.err.println("Error");
-            }
-    	}*/
 	}
 
 	/**

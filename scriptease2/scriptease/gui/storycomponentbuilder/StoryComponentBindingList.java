@@ -26,7 +26,6 @@ public class StoryComponentBindingList extends JPanel implements ActionListener 
 	private ArrayList<StoryComponentPropertyPanel> bindings;
 	// TODO
 	// /lets deal with you tommrow....
-	private ArrayList<StoryComponentPropertyPanel> emptyBindings;
 	private ArrayList<StoryComponentPropertyPanel> knowItBindings;
 	private ActionListener splitpaneActionListner;
 
@@ -50,7 +49,6 @@ public class StoryComponentBindingList extends JPanel implements ActionListener 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		bindings = new ArrayList<StoryComponentPropertyPanel>();
-		emptyBindings = new ArrayList<StoryComponentPropertyPanel>();
 
 		add(new JLabel(getLabelTag()));
 		add(addButton);
@@ -89,16 +87,6 @@ public class StoryComponentBindingList extends JPanel implements ActionListener 
 		parameterBindingPane.add(addBinding);
 		parameterBindingPane.repaint();
 		parameterBindingPane.revalidate();
-	}
-
-	private void addKnowItBinding(StoryComponentPropertyPanel addBinding) {
-		parameterBindingPane.add(addBinding);
-		parameterBindingPane.repaint();
-		parameterBindingPane.revalidate();
-	}
-
-	private void addEmptyBindings() {
-
 	}
 
 	public void removeBindingParam(StoryComponentPropertyPanel removeBinding) {

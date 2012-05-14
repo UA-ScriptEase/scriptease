@@ -1,5 +1,8 @@
 package scriptease.gui;
 
+import java.awt.Dimension;
+
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -15,8 +18,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import scriptease.controller.observer.StoryComponentEvent;
-import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.gui.action.story.quests.ConnectQuestPointAction;
 import scriptease.gui.action.story.quests.DeleteQuestPointAction;
 import scriptease.gui.action.story.quests.DisconnectQuestPointAction;
@@ -36,19 +37,23 @@ import scriptease.gui.quests.QuestPointNode;
  */
 public class ToolBarFactory {
 
-	private static JTextField nameField; 
-	
+	private static JTextField nameField;
+
 	private static QuestPointNode currentQuestPointNode;
 	private static QuestPoint currentQuestPoint;
-	
-	//private static SpinnerModel fanInSpinnerModel;
+
 	private static JSpinner fanInSpinner;
+
+	private static JLabel nameLabel;
+	private static JLabel commitLabel;
+	private static JLabel fanInLabel;
 
 	public static JButton propButton = new JButton("Properties");
 
 	/**
 	 * Builds a toolbar to edit graphs with. Includes buttons for selecting
 	 * nodes, adding and deleting nodes, and adding and deleting paths.
+	 * 
 	 * @return
 	 */
 	public static JToolBar buildGraphEditorToolBar() {
@@ -109,62 +114,87 @@ public class ToolBarFactory {
 	public static JToolBar buildQuestEditorToolBar() {
 		final JToolBar questEditorToolBar = buildGraphEditorToolBar();
 
-		questEditorToolBar.addSeparator();
-		
-		// Dimension minSize = new Dimension(30, 50);
-		// Dimension prefSize = new Dimension(30, 50);
-		// Dimension maxSize = new Dimension(Short.MAX_VALUE, 50);
-		// questEditorToolBar.add(new Box.Filler(minSize, prefSize, maxSize));
+		Dimension minSize = new Dimension(15, 32);
+		Dimension prefSize = new Dimension(15, 32);
+		Dimension maxSize = new Dimension(15, 32);
 
-		questEditorToolBar.add(new JLabel(Il8nResources.getString("Name")));
-		
-		ToolBarFactory.nameField = new JTextField("", 10);
+		ToolBarFactory.nameField = new JTextField(10);
 		DocumentListener nameFieldListener = nameFieldListener();
-		nameField.getDocument().addDocumentListener(nameFieldListener);
-		
-		questEditorToolBar.add(ToolBarFactory.nameField);
+		ToolBarFactory.nameField.getDocument().addDocumentListener(
+				nameFieldListener);
+
+		ToolBarFactory.nameField.setMaximumSize(new Dimension(150, 32));
+		ToolBarFactory.nameField.setEnabled(false);
 
 		JButton toggleCommittingButton = new JButton();
 
-		
 		toggleCommittingButton.setAction(ToggleCommittingAction.getInstance());
 		toggleCommittingButton.setText(null);
 		toggleCommittingButton.setOpaque(false);
 		toggleCommittingButton.setContentAreaFilled(false);
 		toggleCommittingButton.setBorderPainted(false);
 
-		questEditorToolBar
-				.add(new JLabel(Il8nResources.getString("Committing")));
+		ToolBarFactory.fanInSpinner = new JSpinner();
+		ToolBarFactory.fanInSpinner.setMaximumSize(new Dimension(50, 32));
+
+		updateFanInSpinner();
+
+		ToolBarFactory.nameLabel = new JLabel(Il8nResources.getString("Name")
+				+ ": ");
+		ToolBarFactory.commitLabel = new JLabel(
+				Il8nResources.getString("Committing") + ": ");
+		ToolBarFactory.fanInLabel = new JLabel("Fan In: ");
+
+		ToolBarFactory.nameLabel.setEnabled(false);
+		ToolBarFactory.commitLabel.setEnabled(false);
+		ToolBarFactory.fanInLabel.setEnabled(false);
+
+		questEditorToolBar.add(new Box.Filler(minSize, prefSize, maxSize));
+
+		questEditorToolBar.addSeparator();
+
+		questEditorToolBar.add(new Box.Filler(minSize, prefSize, maxSize));
+
+		questEditorToolBar.add(ToolBarFactory.nameLabel);
+
+		questEditorToolBar.add(ToolBarFactory.nameField);
+
+		questEditorToolBar.add(ToolBarFactory.commitLabel);
+
 		questEditorToolBar.add(toggleCommittingButton);
 
-		ToolBarFactory.fanInSpinner = new JSpinner();
-		updateFanInSpinner();
-		
-		questEditorToolBar
-		.add(new JLabel("FanIn"));
+		questEditorToolBar.add(ToolBarFactory.fanInLabel);
+
 		questEditorToolBar.add(ToolBarFactory.fanInSpinner);
 
 		return questEditorToolBar;
 	}
 
 	/**
-	 * Sets the current quest point node to the specified node and updates the Quest Point
-	 * Toolbar.
+	 * Sets the current quest point node to the specified node and updates the
+	 * Quest Point Toolbar.
 	 * 
 	 * @param currentQuestPointNode
 	 */
-	public static void setCurrentQuestPointNode(QuestPointNode currentQuestPointNode) {
+	public static void setCurrentQuestPointNode(
+			QuestPointNode currentQuestPointNode) {
 		ToolBarFactory.currentQuestPointNode = currentQuestPointNode;
-		ToolBarFactory.currentQuestPoint = ToolBarFactory.currentQuestPointNode.getQuestPoint();
-		
-		ToggleCommittingAction.getInstance().setQuestPoint(ToolBarFactory.currentQuestPoint);
-		
+		ToolBarFactory.currentQuestPoint = ToolBarFactory.currentQuestPointNode
+				.getQuestPoint();
+
+		ToggleCommittingAction.getInstance().setQuestPoint(
+				ToolBarFactory.currentQuestPoint);
+
 		String displayText = ToolBarFactory.currentQuestPoint.getDisplayText();
-		
+
 		ToolBarFactory.nameField.setText(displayText);
-		
+		ToolBarFactory.nameField.setEnabled(true);
+		ToolBarFactory.nameLabel.setEnabled(true);
+		ToolBarFactory.commitLabel.setEnabled(true);
+		ToolBarFactory.fanInLabel.setEnabled(true);
+
 		updateFanInSpinner();
-		
+
 	}
 
 	/**
@@ -172,7 +202,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return The ChangeListener
 	 */
-	private static ChangeListener fanInSpinnerListener(){
+	private static ChangeListener fanInSpinnerListener() {
 		ChangeListener fanInSpinnerListener = new ChangeListener() {
 
 			@Override
@@ -185,12 +215,13 @@ public class ToolBarFactory {
 			}
 
 		};
-		
+
 		return fanInSpinnerListener;
 	}
-	
+
 	/**
 	 * Creates an DocumentListener for the TextField.
+	 * 
 	 * @return
 	 */
 	private static DocumentListener nameFieldListener() {
@@ -217,28 +248,29 @@ public class ToolBarFactory {
 	}
 
 	/**
-	 * Creates a SpinnerModel for the FanIn function based on the current quest point,
-	 * then sets the FanIn Spinner Model to it.
+	 * Creates a SpinnerModel for the FanIn function based on the current quest
+	 * point, then sets the FanIn Spinner Model to it.
 	 * 
-	 * If there is no Quest Point selected, the SpinnerModel is a spinner set to 1.
+	 * If there is no Quest Point selected, the SpinnerModel is a spinner set to
+	 * 1.
 	 * 
-	 * @return	The SpinnerModel
+	 * @return The SpinnerModel
 	 */
 	public static void updateFanInSpinner() {
 		if (ToolBarFactory.currentQuestPointNode != null) {
 			int maxFanIn = ToolBarFactory.currentQuestPointNode.getParents()
 					.size();
-			
-			//If maxFanIn >1, maxFanIn. Otherwise, 1.
+
+			// If maxFanIn >1, maxFanIn. Otherwise, 1.
 			maxFanIn = maxFanIn > 1 ? maxFanIn : 1;
 
 			final SpinnerModel fanInSpinnerModel = new SpinnerNumberModel(
 					ToolBarFactory.currentQuestPoint.getFanIn(),
 					new Integer(1), new Integer(maxFanIn), new Integer(1));
-			
-			System.out.println("Value FanIn: "+ToolBarFactory.currentQuestPoint.getFanIn());
-			System.out.println("Max FanIn: "+maxFanIn);
 
+			System.out.println("Value FanIn: "
+					+ ToolBarFactory.currentQuestPoint.getFanIn());
+			System.out.println("Max FanIn: " + maxFanIn);
 
 			ToolBarFactory.fanInSpinner.setModel(fanInSpinnerModel);
 			ChangeListener fanInSpinnerListener = fanInSpinnerListener();
