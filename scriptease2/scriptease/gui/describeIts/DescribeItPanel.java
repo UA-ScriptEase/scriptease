@@ -38,7 +38,7 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 
 	@Override
 	public void nodeChanged(GraphNode node, GraphNodeEvent event) {
-		if (event.getEventType() == GraphNodeEvent.CLICKED) {
+		if (event.getEventType() == GraphNodeEvent.SELECTED) {
 			this.describeIt.selectFromHeadToNode(event.getSource());
 		}
 	}

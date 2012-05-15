@@ -6,23 +6,25 @@ import scriptease.gui.SEFrame;
 import scriptease.gui.action.ToolBarButtonAction;
 
 /**
- * Reperesents and performs the Connect Quest Point command, as well as
+ * Represents and performs the Connect Quest Point command, as well as
  * encapsulating its enabled and name display state.
  * 
  * @author kschenk
  * 
  */
 @SuppressWarnings("serial")
-public final class ConnectQuestPointAction extends ToolBarButtonAction {
-	private static final String INSERT_TEXT = "path_draw";
-
-	private static final ConnectQuestPointAction instance = new ConnectQuestPointAction();
+public final class ConnectGraphPointAction extends ToolBarButtonAction {
+	private static final String CONNECT_TEXT = "Draw Path";
+	private final static String ICON_TEXT = "path_draw";
+	
+	private static final ConnectGraphPointAction instance = new ConnectGraphPointAction();
 
 	/**
 	 * Defines a <code>InsertQuestPointAction</code> object with an icon.
 	 */
-	protected ConnectQuestPointAction() {
-		super(ConnectQuestPointAction.INSERT_TEXT);
+	protected ConnectGraphPointAction() {
+		super(ConnectGraphPointAction.CONNECT_TEXT,
+				ConnectGraphPointAction.ICON_TEXT);
 	}
 
 	/**
@@ -30,13 +32,13 @@ public final class ConnectQuestPointAction extends ToolBarButtonAction {
 	 * 
 	 * @return The sole instance of this particular type of Action
 	 */
-	public static ConnectQuestPointAction getInstance() {
-		return ConnectQuestPointAction.instance;
+	public static ConnectGraphPointAction getInstance() {
+		return ConnectGraphPointAction.instance;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		SEFrame.getInstance().changeCursor(SEFrame.DRAW_PATH_CURSOR);
-		setMode(ToolBarButtonMode.CONNECT_QUEST_POINT);
+		setMode(ToolBarButtonMode.CONNECT_GRAPH_NODE);
 	}
 }

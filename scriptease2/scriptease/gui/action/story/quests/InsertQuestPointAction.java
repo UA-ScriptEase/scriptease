@@ -14,7 +14,8 @@ import scriptease.gui.action.ToolBarButtonAction;
  */
 @SuppressWarnings("serial")
 public final class InsertQuestPointAction extends ToolBarButtonAction {
-	private static final String INSERT_TEXT = "node_add";
+	private final static String INSERT_TEXT = "Insert Point";
+	private final static String ICON_TEXT = "node_add";
 
 	private static final InsertQuestPointAction instance = new InsertQuestPointAction();
 
@@ -22,7 +23,8 @@ public final class InsertQuestPointAction extends ToolBarButtonAction {
 	 * Defines a <code>InsertQuestPointAction</code> object with an icon.
 	 */
 	protected InsertQuestPointAction() {
-		super(InsertQuestPointAction.INSERT_TEXT);
+		super(InsertQuestPointAction.INSERT_TEXT,
+				InsertQuestPointAction.ICON_TEXT);
 	}
 
 	/**

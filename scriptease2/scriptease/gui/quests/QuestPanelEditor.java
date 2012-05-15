@@ -175,11 +175,12 @@ public class QuestPanelEditor extends GraphEditor {
 	 */
 	@Override
 	public void nodeChanged(GraphNode node, GraphNodeEvent event) {
+		super.nodeChanged(node, event);
 		final GraphNode sourceNode = event.getSource();
 		final short type = event.getEventType();
 
 		// only process clicked actions if you are contained in the active tab
-		if (type == GraphNodeEvent.CLICKED
+		if (type == GraphNodeEvent.SELECTED
 				&& SEFrame.getInstance().getActiveTab().contains(this)) {
 			
 			// Determine the active tool
@@ -279,12 +280,12 @@ public class QuestPanelEditor extends GraphEditor {
 						ToolBarFactory.updateFanInSpinner();
 					}
 				});
+			case CONNECT_GRAPH_NODE:
+			case DISCONNECT_GRAPH_NODE:
+				ToolBarFactory.updateFanInSpinner();
+			break;
 
-				return;
 			}
 		}
-	
-		// Note: the (dis)connect tool is in GraphEditor due to commonalities
-		super.nodeChanged(node, event);
 	}
 }

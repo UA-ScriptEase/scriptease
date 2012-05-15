@@ -21,13 +21,13 @@ import scriptease.util.FileOp;
 public abstract class ToolBarButtonAction extends
 		ActiveModelSensitiveAction {
 	
-	public static enum ToolBarButtonMode{
+	public static enum ToolBarButtonMode {
 		INSERT_QUEST_POINT,
 		SELECT_QUEST_POINT,
 		DELETE_QUEST_POINT,
-		CONNECT_QUEST_POINT,
-		DISCONNECT_QUEST_POINT,
-		}
+		CONNECT_GRAPH_NODE,
+		DISCONNECT_GRAPH_NODE,
+	}
 	
 	private static ToolBarButtonMode selectedMode;
 	
@@ -39,10 +39,10 @@ public abstract class ToolBarButtonAction extends
 	 * @param name
 	 *            The file name for the icon and name of the action.
 	 */
-	protected ToolBarButtonAction(String name) {
+	protected ToolBarButtonAction(String name, String iconName) {
 		super(name);
 		this.actionName = name;
-		this.putValue(Action.LARGE_ICON_KEY, new ImageIcon(loadImages(name)));
+		this.putValue(Action.LARGE_ICON_KEY, new ImageIcon(loadImages(iconName)));
 	}
 
 	/**
@@ -87,7 +87,7 @@ public abstract class ToolBarButtonAction extends
 		BufferedImage newIcon = loadImages(newIconName);
 		this.putValue(Action.LARGE_ICON_KEY, new ImageIcon(newIcon));
 	}
-	
+
 	/**
 	 * Changes the current mode of the ToolBar tools.
 	 * 

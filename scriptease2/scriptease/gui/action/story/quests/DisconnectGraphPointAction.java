@@ -13,17 +13,18 @@ import scriptease.gui.action.ToolBarButtonAction;
  * 
  */
 @SuppressWarnings("serial")
-public final class DisconnectQuestPointAction extends
-		ToolBarButtonAction {
-	private static final String INSERT_TEXT = "path_erase";
+public final class DisconnectGraphPointAction extends ToolBarButtonAction {
+	private static final String DISCONNECT_TEXT = "Erase Path";
+	private final static String ICON_TEXT = "path_erase";
 
-	private static final DisconnectQuestPointAction instance = new DisconnectQuestPointAction();
+	private static final DisconnectGraphPointAction instance = new DisconnectGraphPointAction();
 
 	/**
 	 * Defines a <code>InsertQuestPointAction</code> object with an icon.
 	 */
-	protected DisconnectQuestPointAction() {
-		super(DisconnectQuestPointAction.INSERT_TEXT);
+	protected DisconnectGraphPointAction() {
+		super(DisconnectGraphPointAction.DISCONNECT_TEXT,
+				DisconnectGraphPointAction.ICON_TEXT);
 	}
 
 	/**
@@ -31,13 +32,13 @@ public final class DisconnectQuestPointAction extends
 	 * 
 	 * @return The sole instance of this particular type of Action
 	 */
-	public static DisconnectQuestPointAction getInstance() {
-		return DisconnectQuestPointAction.instance;
+	public static DisconnectGraphPointAction getInstance() {
+		return DisconnectGraphPointAction.instance;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		SEFrame.getInstance().changeCursor(SEFrame.ERASE_PATH_CURSOR);
-		setMode(ToolBarButtonMode.DISCONNECT_QUEST_POINT);
+		setMode(ToolBarButtonMode.DISCONNECT_GRAPH_NODE);
 	}
 }

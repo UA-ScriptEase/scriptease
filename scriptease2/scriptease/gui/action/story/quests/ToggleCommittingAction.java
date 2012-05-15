@@ -6,7 +6,7 @@ import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.quests.QuestPoint;
 
 /**
- * Reperesents and performs the Toggle Committing command, as well as
+ * Represents and performs the Toggle Committing command, as well as
  * encapsulating its enabled and name display state.
  * 
  * @author kschenk
@@ -18,6 +18,9 @@ public final class ToggleCommittingAction extends ToolBarButtonAction {
 	private Boolean currentState;
 	private QuestPoint questPoint;
 
+	private static final String COMMIT_TEXT = "Committing";
+	private static final String ICON_TEXT = "commit_false";
+	
 	private static final String COMMIT_FALSE_TEXT = "commit_false";
 	private static final String COMMIT_TRUE_TEXT = "commit_true";
 
@@ -27,7 +30,8 @@ public final class ToggleCommittingAction extends ToolBarButtonAction {
 	 * Defines a <code>InsertQuestPointAction</code> object with an icon.
 	 */
 	protected ToggleCommittingAction() {
-		super(ToggleCommittingAction.COMMIT_FALSE_TEXT);
+		super(ToggleCommittingAction.COMMIT_TEXT,
+				ToggleCommittingAction.ICON_TEXT);
 		this.setCommitting(false);
 		setEnabled(false);
 	}

@@ -14,7 +14,8 @@ import scriptease.gui.action.ToolBarButtonAction;
  */
 @SuppressWarnings("serial")
 public final class SelectQuestPointAction extends ToolBarButtonAction {
-	private static final String INSERT_TEXT = "selection";
+	private final static String SELECT_TEXT = "Select";
+	private final static String ICON_TEXT = "selection";
 
 	private static final SelectQuestPointAction instance = new SelectQuestPointAction();
 
@@ -22,7 +23,8 @@ public final class SelectQuestPointAction extends ToolBarButtonAction {
 	 * Defines a <code>InsertQuestPointAction</code> object with an icon.
 	 */
 	protected SelectQuestPointAction() {
-		super(SelectQuestPointAction.INSERT_TEXT);
+		super(SelectQuestPointAction.SELECT_TEXT,
+				SelectQuestPointAction.ICON_TEXT);
 	}
 
 	/**

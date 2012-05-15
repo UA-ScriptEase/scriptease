@@ -19,7 +19,6 @@ import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.GraphNodeObserverAdder;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeObserver;
-import scriptease.gui.ToolBarFactory;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.GraphPanel.GraphPanelUI;
@@ -183,11 +182,11 @@ public abstract class GraphEditor extends JSplitPane implements
 		final short type = event.getEventType();
 
 		// only process clicked actions if you are contained in the active tab
-		if (type == GraphNodeEvent.CLICKED
+		if (type == GraphNodeEvent.SELECTED
 				) {
 			// Determine what the active tool is
 			switch (ToolBarButtonAction.getMode()) {
-			case CONNECT_QUEST_POINT:
+			case CONNECT_GRAPH_NODE:
 				if (oldSelectedNode != null) {
 					// Determine which node is shallower in the graph, and which
 					// is deeper.
@@ -201,8 +200,6 @@ public abstract class GraphEditor extends JSplitPane implements
 					// connect the nodes if not connected
 					shallowerNode.addChild(deeperNode);
 					
-					ToolBarFactory.updateFanInSpinner();
-					
 					// Reset the tool.
 					oldSelectedNode = null;
 				}
@@ -211,7 +208,7 @@ public abstract class GraphEditor extends JSplitPane implements
 					oldSelectedNode = sourceNode;
 				break;
 
-			case DISCONNECT_QUEST_POINT:
+			case DISCONNECT_GRAPH_NODE:
 				if (oldSelectedNode != null) {
 					// Determine which node is shallower in the graph, and which
 					// is deeper.
@@ -242,8 +239,6 @@ public abstract class GraphEditor extends JSplitPane implements
 						}
 					});
 					
-					ToolBarFactory.updateFanInSpinner();
-
 					// Reset the tool.
 					oldSelectedNode = null;
 				}
