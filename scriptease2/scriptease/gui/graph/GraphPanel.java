@@ -191,39 +191,20 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		private void configureListeners(final GraphNode node,
 				final JComponent component) {
 			if (component != null) {
-				/**
+				/*
 				 * When a component is clicked, forward the click to the
 				 * GraphNode, and its observers.
 				 */
 				final MouseAdapter mouseAdapter = new MouseAdapter() {
-					/**
+					/*
 					 * If the component is dragged, only handle the initial drag
 					 * and don't spam events
 					 */
-					boolean dragBlock = true;
 
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						node.notifyObservers(new GraphNodeEvent(node,
-								GraphNodeEvent.CLICKED));
-					}
-
-					@Override
-					public void mouseDragged(MouseEvent e) {
-						if (dragBlock) {
-							this.mouseClicked(e);
-							dragBlock = false;
-						}
-					}
-
-					@Override
-					public void mouseReleased(MouseEvent e) {
-						dragBlock = true;
-					}
-
-					@Override
-					public void mouseExited(MouseEvent e) {
-						dragBlock = true;
+								GraphNodeEvent.SELECTED));
 					}
 				};
 

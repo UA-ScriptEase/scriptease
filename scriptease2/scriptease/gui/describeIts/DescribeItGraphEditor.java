@@ -126,7 +126,7 @@ public class DescribeItGraphEditor extends GraphEditor {
 		final GraphNode sourceNode = event.getSource();
 		final short type = event.getEventType();
 
-		if (type == GraphNodeEvent.CLICKED) {
+		if (type == GraphNodeEvent.SELECTED) {
 			// Determine what the active tool is.
 			switch (this.getActiveTool()) {
 			case NEW_TEXTNODE_TOOL:

@@ -14,7 +14,8 @@ import scriptease.gui.action.ToolBarButtonAction;
  */
 @SuppressWarnings("serial")
 public final class DeleteQuestPointAction extends ToolBarButtonAction{
-	private static final String INSERT_TEXT = "node_delete";
+	private static final String DELETE_TEXT = "Delete Point";
+	private final static String ICON_TEXT = "node_delete";
 	
 	private static final DeleteQuestPointAction instance = new DeleteQuestPointAction();
 	
@@ -22,7 +23,8 @@ public final class DeleteQuestPointAction extends ToolBarButtonAction{
 	 * Defines a <code>InsertQuestPointAction</code> object with an icon.
 	 */
 	protected DeleteQuestPointAction() {
-		super(DeleteQuestPointAction.INSERT_TEXT);
+		super(DeleteQuestPointAction.DELETE_TEXT,
+				DeleteQuestPointAction.ICON_TEXT);
 	}
 
 	/**
@@ -36,8 +38,6 @@ public final class DeleteQuestPointAction extends ToolBarButtonAction{
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		// set mode to insertqp
 		SEFrame.getInstance().changeCursor(SEFrame.DELETE_NODE_CURSOR);
 		setMode(ToolBarButtonMode.DELETE_QUEST_POINT);
 	}

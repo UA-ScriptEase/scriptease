@@ -1,6 +1,7 @@
 package scriptease.gui;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -18,9 +19,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import scriptease.gui.action.story.quests.ConnectQuestPointAction;
+import scriptease.gui.action.story.quests.ConnectGraphPointAction;
 import scriptease.gui.action.story.quests.DeleteQuestPointAction;
-import scriptease.gui.action.story.quests.DisconnectQuestPointAction;
+import scriptease.gui.action.story.quests.DisconnectGraphPointAction;
 import scriptease.gui.action.story.quests.InsertQuestPointAction;
 import scriptease.gui.action.story.quests.SelectQuestPointAction;
 import scriptease.gui.action.story.quests.ToggleCommittingAction;
@@ -30,7 +31,8 @@ import scriptease.gui.quests.QuestPointNode;
 
 /**
  * ToolBarFactory is responsible for creating JToolBars, most importantly the
- * toolbars for editing graphs.
+ * toolbars for editing graphs. A specialized Quest Editor Toolbar can also be
+ * created.
  * 
  * @author kschenk
  * 
@@ -38,17 +40,14 @@ import scriptease.gui.quests.QuestPointNode;
 public class ToolBarFactory {
 
 	private static JTextField nameField;
+	private static JSpinner fanInSpinner;
 
 	private static QuestPointNode currentQuestPointNode;
 	private static QuestPoint currentQuestPoint;
 
-	private static JSpinner fanInSpinner;
-
 	private static JLabel nameLabel;
 	private static JLabel commitLabel;
 	private static JLabel fanInLabel;
-
-	public static JButton propButton = new JButton("Properties");
 
 	/**
 	 * Builds a toolbar to edit graphs with. Includes buttons for selecting
@@ -61,45 +60,41 @@ public class ToolBarFactory {
 
 		final ButtonGroup graphEditorButtonGroup = new ButtonGroup();
 
+		final ArrayList<JToggleButton> buttonList = new ArrayList<JToggleButton>();
+
+		final JToggleButton selectQuestButton = new JToggleButton(
+				SelectQuestPointAction.getInstance());
+
+		final JToggleButton insertQuestButton = new JToggleButton(
+				InsertQuestPointAction.getInstance());
+
+		final JToggleButton deleteQuestButton = new JToggleButton(
+				DeleteQuestPointAction.getInstance());
+
+		final JToggleButton connectQuestButton = new JToggleButton(
+				ConnectGraphPointAction.getInstance());
+
+		final JToggleButton disconnectQuestButton = new JToggleButton(
+				DisconnectGraphPointAction.getInstance());
+
 		graphEditorToolBar.setLayout(new BoxLayout(graphEditorToolBar,
 				BoxLayout.LINE_AXIS));
 		graphEditorToolBar.setRollover(true);
 		graphEditorToolBar.setFloatable(false);
 
-		JToggleButton selectQuestButton = new JToggleButton();
-		selectQuestButton.setAction(SelectQuestPointAction.getInstance());
-		selectQuestButton.setText(null);
+		buttonList.add(selectQuestButton);
+		buttonList.add(insertQuestButton);
+		buttonList.add(deleteQuestButton);
+		buttonList.add(connectQuestButton);
+		buttonList.add(disconnectQuestButton);
 
-		JToggleButton insertQuestButton = new JToggleButton();
-		insertQuestButton.setAction(InsertQuestPointAction.getInstance());
-		insertQuestButton.setText(null);
-
-		JToggleButton deleteQuestButton = new JToggleButton();
-		deleteQuestButton.setAction(DeleteQuestPointAction.getInstance());
-		deleteQuestButton.setText(null);
-
-		JToggleButton connectQuestButton = new JToggleButton();
-		connectQuestButton.setAction(ConnectQuestPointAction.getInstance());
-		connectQuestButton.setText(null);
-
-		JToggleButton disconnectQuestButton = new JToggleButton();
-		disconnectQuestButton.setAction(DisconnectQuestPointAction
-				.getInstance());
-		disconnectQuestButton.setText(null);
+		for (JToggleButton toolBarButton : buttonList) {
+			toolBarButton.setHideActionText(true);
+			graphEditorButtonGroup.add(toolBarButton);
+			graphEditorToolBar.add(toolBarButton);
+		}
 
 		selectQuestButton.setSelected(true);
-
-		graphEditorButtonGroup.add(selectQuestButton);
-		graphEditorButtonGroup.add(insertQuestButton);
-		graphEditorButtonGroup.add(deleteQuestButton);
-		graphEditorButtonGroup.add(connectQuestButton);
-		graphEditorButtonGroup.add(disconnectQuestButton);
-
-		graphEditorToolBar.add(selectQuestButton);
-		graphEditorToolBar.add(insertQuestButton);
-		graphEditorToolBar.add(deleteQuestButton);
-		graphEditorToolBar.add(connectQuestButton);
-		graphEditorToolBar.add(disconnectQuestButton);
 
 		return graphEditorToolBar;
 	}
@@ -114,16 +109,17 @@ public class ToolBarFactory {
 	public static JToolBar buildQuestEditorToolBar() {
 		final JToolBar questEditorToolBar = buildGraphEditorToolBar();
 
-		Dimension minSize = new Dimension(15, 32);
-		Dimension prefSize = new Dimension(15, 32);
-		Dimension maxSize = new Dimension(15, 32);
+		final int TOOL_BAR_HEIGHT = 32;
+		final int NAME_FIELD_LENGTH = 150;
+		final int FAN_IN_SPINNER_LENGTH = 50;
 
 		ToolBarFactory.nameField = new JTextField(10);
 		DocumentListener nameFieldListener = nameFieldListener();
 		ToolBarFactory.nameField.getDocument().addDocumentListener(
 				nameFieldListener);
 
-		ToolBarFactory.nameField.setMaximumSize(new Dimension(150, 32));
+		ToolBarFactory.nameField.setMaximumSize(new Dimension(
+				NAME_FIELD_LENGTH, TOOL_BAR_HEIGHT));
 		ToolBarFactory.nameField.setEnabled(false);
 
 		JButton toggleCommittingButton = new JButton();
@@ -135,7 +131,8 @@ public class ToolBarFactory {
 		toggleCommittingButton.setBorderPainted(false);
 
 		ToolBarFactory.fanInSpinner = new JSpinner();
-		ToolBarFactory.fanInSpinner.setMaximumSize(new Dimension(50, 32));
+		ToolBarFactory.fanInSpinner.setMaximumSize(new Dimension(
+				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT));
 
 		updateFanInSpinner();
 
@@ -148,6 +145,10 @@ public class ToolBarFactory {
 		ToolBarFactory.nameLabel.setEnabled(false);
 		ToolBarFactory.commitLabel.setEnabled(false);
 		ToolBarFactory.fanInLabel.setEnabled(false);
+
+		Dimension minSize = new Dimension(15, TOOL_BAR_HEIGHT);
+		Dimension prefSize = new Dimension(15, TOOL_BAR_HEIGHT);
+		Dimension maxSize = new Dimension(15, TOOL_BAR_HEIGHT);
 
 		questEditorToolBar.add(new Box.Filler(minSize, prefSize, maxSize));
 
@@ -213,9 +214,7 @@ public class ToolBarFactory {
 
 				ToolBarFactory.currentQuestPoint.setFanIn(spinnerValue);
 			}
-
 		};
-
 		return fanInSpinnerListener;
 	}
 
@@ -243,8 +242,22 @@ public class ToolBarFactory {
 				insertUpdate(e);
 			}
 		};
-
 		return nameFieldListener;
+	}
+	
+	/**
+	 * Returns a fanInSpinner, which has an attached listener that updates the
+	 * model if its value is changed. This is used for quest fan in, i.e. how
+	 * many preceding tests need to be finished before starting the selected 
+	 * one.
+	 * 
+	 * @return
+	 */
+	private JSpinner fanInSpinner() {
+		JSpinner fanInSpinner = new JSpinner();
+		
+		
+		return fanInSpinner;
 	}
 
 	/**
@@ -256,21 +269,19 @@ public class ToolBarFactory {
 	 * 
 	 * @return The SpinnerModel
 	 */
+	
+	//TODO Make parameter based
 	public static void updateFanInSpinner() {
 		if (ToolBarFactory.currentQuestPointNode != null) {
 			int maxFanIn = ToolBarFactory.currentQuestPointNode.getParents()
 					.size();
 
-			// If maxFanIn >1, maxFanIn. Otherwise, 1.
+			// If maxFanIn >1, maxFanIn. Otherwise, 1. 
 			maxFanIn = maxFanIn > 1 ? maxFanIn : 1;
 
 			final SpinnerModel fanInSpinnerModel = new SpinnerNumberModel(
 					ToolBarFactory.currentQuestPoint.getFanIn(),
 					new Integer(1), new Integer(maxFanIn), new Integer(1));
-
-			System.out.println("Value FanIn: "
-					+ ToolBarFactory.currentQuestPoint.getFanIn());
-			System.out.println("Max FanIn: " + maxFanIn);
 
 			ToolBarFactory.fanInSpinner.setModel(fanInSpinnerModel);
 			ChangeListener fanInSpinnerListener = fanInSpinnerListener();

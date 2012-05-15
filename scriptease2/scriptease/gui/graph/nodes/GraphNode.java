@@ -1,7 +1,6 @@
 package scriptease.gui.graph.nodes;
 
 import java.awt.Color;
-import java.awt.event.MouseAdapter;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +24,7 @@ import sun.awt.util.IdentityArrayList;
  * @author mfchurch
  * @author graves (refactored)
  */
-public abstract class GraphNode extends MouseAdapter implements Cloneable {
+public abstract class GraphNode implements Cloneable {
 	protected IdentityArrayList<GraphNode> parents;
 	protected IdentityArrayList<GraphNode> children;
 	protected Collection<WeakReference<GraphNodeObserver>> observers;
@@ -218,10 +217,7 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 		for (GraphNode parent : this.parents) {
 			parentsCopy.add(parent);
 		}
-		
-		
-		System.out.println("\nParents size:"+parentsCopy.size());
-		
+
 		return parentsCopy;
 	}
 
@@ -450,6 +446,7 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 
 	/**
 	 * Returns whether this GraphNode is terminal or not.
+	 * 
 	 * @return
 	 */
 	public boolean isTerminalNode() {
@@ -459,8 +456,8 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 	}
 
 	/**
-	 * Finds the best path from this node, to the given end node. Criteria
-	 * being the most selected nodes (from previous selection), otherwise if no
+	 * Finds the best path from this node, to the given end node. Criteria being
+	 * the most selected nodes (from previous selection), otherwise if no
 	 * selection, take the shortest path.
 	 * 
 	 * @param end
@@ -505,6 +502,7 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 
 	/**
 	 * Get all paths from this GraphNode to the given GraphNode.
+	 * 
 	 * @param end
 	 * @return
 	 */
@@ -540,8 +538,8 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 	 * Checks if the given child node is a descendant or equal to the graphNode.
 	 * Maintains the directed acyclic state of the GraphNode. Example usage:
 	 * 
-	 * descendant.isDescendant(node) == true
-	 * node.isDescendant(descendant) == false
+	 * descendant.isDescendant(node) == true node.isDescendant(descendant) ==
+	 * false
 	 * 
 	 * @param child
 	 * @return
