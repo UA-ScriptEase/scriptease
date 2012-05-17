@@ -12,6 +12,7 @@ import javax.swing.JToolBar;
 
 import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
+import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.gui.SEFrame;
 import scriptease.gui.ToolBarFactory;
 import scriptease.gui.action.ToolBarButtonAction;
@@ -32,28 +33,24 @@ import scriptease.util.GUIOp;
  * @author graves (refactored)
  */
 @SuppressWarnings("serial")
-public class QuestPanelEditor extends GraphEditor {
-	private final String NEW_QUEST_POINT = "New Quest Point";
-	private int questPointCounter = 0;
+public class QuestEditor extends GraphEditor {
+	private QuestPointNode currentQuestPointNode;
 	
-	private final JToolBar buttonToolBar = ToolBarFactory
-			.buildQuestEditorToolBar();
+	private final JToolBar buttonToolBar;
 
-	public QuestPanelEditor(final GraphNode start) {
-		super(new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO move save action from GraphEditor to DescribeItEditor
-				// since it doesn't make sense in QuestPanelEditor.
-			}
-		});
+	public QuestEditor(final GraphNode start) {
+		super();
 		
-		addToolBar(buttonToolBar);
+		
 
 		// Set the headNode to be the start node of the graph.
 		this.setHeadNode(start);
+		buttonToolBar = ToolBarFactory.buildQuestEditorToolBar(this);
 
-		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_QUEST_POINT);
+		addToolBar(buttonToolBar);
+
+
+		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
 	}
 		
 	/**
@@ -88,7 +85,6 @@ public class QuestPanelEditor extends GraphEditor {
 	 * alternate tools.
 	 * 
 	 * @param node
-	 * @param removeConnection
 	 * 
 	 * @author graves
 	 */
@@ -97,9 +93,7 @@ public class QuestPanelEditor extends GraphEditor {
 		if (oldSelectedNode != null) {
 
 			// create a new node to insert:
-			questPointCounter++;
-			QuestPoint newQuestPoint = new QuestPoint(NEW_QUEST_POINT + " "
-					+ questPointCounter, 1, false);
+			QuestPoint newQuestPoint = new QuestPoint("", 1, false);
 			QuestPointNode newQuestPointNode = new QuestPointNode(newQuestPoint);
 
 			// Cases for clicking the same node.
@@ -168,38 +162,56 @@ public class QuestPanelEditor extends GraphEditor {
 			oldSelectedNode = node;
 		}
 	}
+	
+	/**
+	 * Sets the current QuestPointNode to the passed parameter.
+	 * 
+	 * @param questPointNode
+	 */
+	private void setCurrentQuestPointNode(QuestPointNode questPointNode) {
+		this.currentQuestPointNode = questPointNode;
+	}
+	
+	/**
+	 * Returns the current QuestPointNode.
+	 * 
+	 * @return The current QuestPoitNode.
+	 */
+	public QuestPointNode getCurrentQuestPointNode() {
+		return this.currentQuestPointNode;
+	}
 
 	/**
 	 * This method handles all of the logic for the quest tools. It is called
 	 * whenever an observed GraphNode is clicked.
 	 */
 	@Override
-	public void nodeChanged(GraphNode node, GraphNodeEvent event) {
-		super.nodeChanged(node, event);
-		final GraphNode sourceNode = event.getSource();
-		final short type = event.getEventType();
+	public void nodeChanged(GraphNodeEvent event) {
+		super.nodeChanged(event);
+
+		System.out.println("Event: "+event.toString());
+		final GraphNode sourceNode = event.getSource(); //Can probably get rid of this...
+		
+		final GraphNodeEventType type = event.getEventType();
 
 		// only process clicked actions if you are contained in the active tab
-		if (type == GraphNodeEvent.SELECTED
+		if (type == GraphNodeEventType.SELECTED
 				&& SEFrame.getInstance().getActiveTab().contains(this)) {
 			
 			// Determine the active tool
 			switch (ToolBarButtonAction.getMode()) {
-			case INSERT_QUEST_POINT:
+			case INSERT_GRAPH_NODE:
 				insertQuestPoint(sourceNode);
-				
-				ToolBarFactory.updateFanInSpinner();
-				
 				break;
 
-			case SELECT_QUEST_POINT:
-				highlightQuestPointAtGraphNode(node);
+			case SELECT_GRAPH_NODE:
+				highlightQuestPointAtGraphNode(sourceNode);
 
 				final StoryModel model = StoryModelPool.getInstance()
 						.getActiveModel();
 
 				if (model != null) {
-					node.process(new AbstractNoOpGraphNodeVisitor() {
+					sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
 						@Override
 						public void processQuestPointNode(
 								QuestPointNode questPointNode) {
@@ -210,7 +222,7 @@ public class QuestPanelEditor extends GraphEditor {
 							SEFrame.getInstance().activatePanelForQuestPoint(
 									model, questPoint);
 							
-							ToolBarFactory.setCurrentQuestPointNode(questPointNode);							
+							setCurrentQuestPointNode(questPointNode);
 
 							// Force the graph to rebuild.
 							// setHeadNode(headNode);
@@ -220,24 +232,30 @@ public class QuestPanelEditor extends GraphEditor {
 					break;
 				}
 
-			case DELETE_QUEST_POINT:
+			case DELETE_GRAPH_NODE:
 				sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
 					@Override
 					public void processQuestNode(QuestNode questNode) {
 						// Remove the Quest
-						questNode.removeParents();
+						
+						List<GraphNode> parents = questNode.getParents();
+						List<GraphNode> children = questNode.getChildren();
+						
+						if (!parents.isEmpty() && !children.isEmpty()) {
 
-						// Add startPoint to parents of QuestNode
-						GraphNode startPoint = questNode.getStartPoint();
-						List<GraphNode> parents = sourceNode.getParents();
-						for (GraphNode parent : parents) {
-							parent.addChild(startPoint);
+							questNode.removeParents();
+
+							// Add startPoint to parents of QuestNode
+							GraphNode startPoint = questNode.getStartPoint();
+							List<GraphNode> parentsx = sourceNode.getParents();
+							for (GraphNode parent : parentsx) {
+								parent.addChild(startPoint);
+							}
+
+							// Add children of QuestNode to endPoint
+							GraphNode endPoint = questNode.getEndPoint();
+							endPoint.addChildren(questNode.getChildren());
 						}
-
-						// Add children of QuestNode to endPoint
-						GraphNode endPoint = questNode.getEndPoint();
-						endPoint.addChildren(questNode.getChildren());
-
 					}
 
 					@Override
@@ -276,15 +294,8 @@ public class QuestPanelEditor extends GraphEditor {
 								}
 							}
 						}
-
-						ToolBarFactory.updateFanInSpinner();
 					}
 				});
-			case CONNECT_GRAPH_NODE:
-			case DISCONNECT_GRAPH_NODE:
-				ToolBarFactory.updateFanInSpinner();
-			break;
-
 			}
 		}
 	}

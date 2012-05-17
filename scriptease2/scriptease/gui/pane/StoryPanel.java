@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import scriptease.gui.graph.editor.GraphEditor;
-import scriptease.gui.quests.QuestPanelEditor;
+import scriptease.gui.quests.QuestEditor;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelSetting;
@@ -98,7 +98,7 @@ public class StoryPanel extends JPanel {
 		updateModelsToPanes(model);
 
 		// Build the QuestPanelEditor.
-		QuestPanelEditor questEditor = new QuestPanelEditor(model.getRoot()
+		QuestEditor questEditor = new QuestEditor(model.getRoot()
 				.getStartPoint());
 		this.add(questEditor);
 		

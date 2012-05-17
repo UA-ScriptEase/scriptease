@@ -9,7 +9,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -517,15 +516,7 @@ public class MenuFactory {
 												KnowItBindingDescribeIt described) {
 											JFrame frame = new JFrame();
 											frame.add(new DescribeItGraphEditor(
-													described.getValue(),
-													new AbstractAction() {
-
-														@Override
-														public void actionPerformed(
-																ActionEvent e) {
-
-														}
-													}));
+													described.getValue()));
 											frame.setMinimumSize(new Dimension(
 													800, 300));
 											frame.setVisible(true);

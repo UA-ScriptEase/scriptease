@@ -1,4 +1,4 @@
-package scriptease.gui.action.story.quests;
+package scriptease.gui.action.story.graphs;
 
 import java.awt.event.ActionEvent;
 
@@ -14,7 +14,7 @@ import scriptease.gui.action.ToolBarButtonAction;
  */
 @SuppressWarnings("serial")
 public final class DisconnectGraphPointAction extends ToolBarButtonAction {
-	private static final String DISCONNECT_TEXT = "Erase Path";
+	private static final String DISCONNECT_TEXT = "Disconnect";
 	private final static String ICON_TEXT = "path_erase";
 
 	private static final DisconnectGraphPointAction instance = new DisconnectGraphPointAction();

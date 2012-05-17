@@ -30,9 +30,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.plaf.PanelUI;
 
-import scriptease.controller.GraphNodeObserverAdder;
 import scriptease.controller.GraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
+import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.GraphNodeObserver;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.SETree.cell.TypeWidget;
@@ -77,8 +77,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		this.setUI(new GraphPanelUI());
 
 		// observe the graph nodes
-		GraphNodeObserverAdder adder = new GraphNodeObserverAdder();
-		adder.observeDepthMap(this, this.headNode);
+		GraphNode.observeDepthMap(this, this.headNode);
 
 		this.setOpaque(true);
 		this.setBackground(StoryComponentPanel.UNSELECTED_COLOUR);
@@ -97,17 +96,16 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 	}
 
 	@Override
-	public void nodeChanged(GraphNode node, GraphNodeEvent event) {
+	public void nodeChanged(GraphNodeEvent event) {
 		final GraphNode sourceNode = event.getSource();
-		final short eventType = event.getEventType();
+		final GraphNodeEventType eventType = event.getEventType();
 
-		if (eventType == GraphNodeEvent.CONNECTION_ADDED) {
+		if (eventType == GraphNodeEventType.CONNECTION_ADDED) {
 			// observer the graph nodes
-			GraphNodeObserverAdder adder = new GraphNodeObserverAdder();
-			adder.observeDepthMap(this, sourceNode);
+			GraphNode.observeDepthMap(this, sourceNode);
 		}
-		if (eventType == GraphNodeEvent.CONNECTION_ADDED
-				|| eventType == GraphNodeEvent.CONNECTION_REMOVED) {
+		if (eventType == GraphNodeEventType.CONNECTION_ADDED
+				|| eventType == GraphNodeEventType.CONNECTION_REMOVED) {
 			this.nodeDepthMap = null;
 		}
 		this.repaint();
@@ -204,7 +202,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						node.notifyObservers(new GraphNodeEvent(node,
-								GraphNodeEvent.SELECTED));
+								GraphNodeEventType.SELECTED));
 					}
 				};
 

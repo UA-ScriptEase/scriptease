@@ -1,4 +1,4 @@
-package scriptease.gui.action.story.quests;
+package scriptease.gui.action.story.graphs;
 
 import java.awt.event.ActionEvent;
 
@@ -13,18 +13,18 @@ import scriptease.gui.action.ToolBarButtonAction;
  * 
  */
 @SuppressWarnings("serial")
-public final class SelectQuestPointAction extends ToolBarButtonAction {
+public final class SelectGraphNodeAction extends ToolBarButtonAction {
 	private final static String SELECT_TEXT = "Select";
 	private final static String ICON_TEXT = "selection";
 
-	private static final SelectQuestPointAction instance = new SelectQuestPointAction();
+	private static final SelectGraphNodeAction instance = new SelectGraphNodeAction();
 
 	/**
 	 * Defines a <code>InsertQuestPointAction</code> object with an icon.
 	 */
-	protected SelectQuestPointAction() {
-		super(SelectQuestPointAction.SELECT_TEXT,
-				SelectQuestPointAction.ICON_TEXT);
+	protected SelectGraphNodeAction() {
+		super(SelectGraphNodeAction.SELECT_TEXT,
+				SelectGraphNodeAction.ICON_TEXT);
 	}
 
 	/**
@@ -32,13 +32,13 @@ public final class SelectQuestPointAction extends ToolBarButtonAction {
 	 * 
 	 * @return The sole instance of this particular type of Action
 	 */
-	public static SelectQuestPointAction getInstance() {
-		return SelectQuestPointAction.instance;
+	public static SelectGraphNodeAction getInstance() {
+		return SelectGraphNodeAction.instance;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		SEFrame.getInstance().changeCursor(SEFrame.SYSTEM_CURSOR);
-		setMode(ToolBarButtonMode.SELECT_QUEST_POINT);
+		setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
 	}
 }

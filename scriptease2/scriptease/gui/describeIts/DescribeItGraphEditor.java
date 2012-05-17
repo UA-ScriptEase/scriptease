@@ -10,6 +10,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
+import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.graph.editor.GraphEditor;
 import scriptease.gui.graph.editor.KnowItNodeEditor;
@@ -34,8 +35,8 @@ public class DescribeItGraphEditor extends GraphEditor {
  
 	private final DescribeIt editedDescribeIt;
 
-	public DescribeItGraphEditor(DescribeIt original, AbstractAction saveAction) {
-		super(saveAction);
+	public DescribeItGraphEditor(DescribeIt original) {
+		super();
 		// Clone the original
 		this.editedDescribeIt = original.clone();
 
@@ -121,12 +122,12 @@ public class DescribeItGraphEditor extends GraphEditor {
 	}
 
 	@Override
-	public void nodeChanged(GraphNode node, GraphNodeEvent event) {
-		super.nodeChanged(node, event);
+	public void nodeChanged(GraphNodeEvent event) {
+		super.nodeChanged(event);
 		final GraphNode sourceNode = event.getSource();
-		final short type = event.getEventType();
+		final GraphNodeEventType type = event.getEventType();
 
-		if (type == GraphNodeEvent.SELECTED) {
+		if (type == GraphNodeEventType.SELECTED) {
 			// Determine what the active tool is.
 			switch (this.getActiveTool()) {
 			case NEW_TEXTNODE_TOOL:
@@ -142,7 +143,7 @@ public class DescribeItGraphEditor extends GraphEditor {
 				this.editedDescribeIt.clearSelection();
 				sourceNode.setSelectedColour(ScriptEaseUI.COLOUR_GAME_OBJECT);
 				sourceNode.setSelected(true);
-				node.process(new AbstractNoOpGraphNodeVisitor() {
+				sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
 
 					@Override
 					public void processTextNode(TextNode textNode) {
@@ -161,7 +162,7 @@ public class DescribeItGraphEditor extends GraphEditor {
 				 * only allow for path assigning on complete paths (finish with
 				 * a terminal)
 				 */
-				if (node.isTerminalNode())
+				if (sourceNode.isTerminalNode())
 					setEditingPanel(new PathAssigner(this.editedDescribeIt));
 				else
 					setEditingPanel(null);

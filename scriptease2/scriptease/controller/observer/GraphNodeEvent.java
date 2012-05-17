@@ -4,14 +4,13 @@ import scriptease.gui.graph.nodes.GraphNode;
 
 public final class GraphNodeEvent {
 	private final GraphNode source;
-	private final short eventType;
+	private final GraphNodeEventType eventType;
 
-	public static final short CLICKED = 0;
-	public static final short CONNECTION_ADDED = 1;
-	public static final short CONNECTION_REMOVED = 2;
-	public static final short APPEARANCE_CHANGED = 3;
+	public static enum GraphNodeEventType {
+		SELECTED, CONNECTION_ADDED, CONNECTION_REMOVED
+	}
 
-	public GraphNodeEvent(GraphNode source, short type) {
+	public GraphNodeEvent(GraphNode source, GraphNodeEventType type) {
 		this.source = source;
 		this.eventType = type;
 	}
@@ -24,7 +23,7 @@ public final class GraphNodeEvent {
 		return this.source;
 	}
 
-	public short getEventType() {
+	public GraphNodeEventType getEventType() {
 		return this.eventType;
 	}
 

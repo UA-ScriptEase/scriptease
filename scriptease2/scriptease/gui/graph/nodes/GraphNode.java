@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import scriptease.controller.GraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
+import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.GraphNodeObserver;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import sun.awt.util.IdentityArrayList;
@@ -92,7 +93,7 @@ public abstract class GraphNode implements Cloneable {
 	/**
 	 * When cloning GraphNodes, it is possible to break the graph when nodes fan
 	 * in because more than one clone of the child can be created by the cloning
-	 * process. Thus you _must_ use GraphNodeReference resolver after cloning is
+	 * process. Thus you _must_ use GraphNodeReference resolver after cloning in
 	 * order to repair these duplications in the graph.
 	 */
 	@Override
@@ -151,7 +152,7 @@ public abstract class GraphNode implements Cloneable {
 		for (WeakReference<GraphNodeObserver> observerRef : observersCopy) {
 			GraphNodeObserver graphNodeObserver = observerRef.get();
 			if (graphNodeObserver != null)
-				graphNodeObserver.nodeChanged(this, event);
+				graphNodeObserver.nodeChanged(event);
 		}
 	}
 
@@ -232,7 +233,7 @@ public abstract class GraphNode implements Cloneable {
 		if (!this.children.contains(child) && !isDescendant(child)
 				&& this.children.add(child)) {
 			this.notifyObservers(new GraphNodeEvent(child,
-					GraphNodeEvent.CONNECTION_ADDED));
+					GraphNodeEventType.CONNECTION_ADDED));
 
 			// add yourself as a parent of the child
 			child.addParent(this);
@@ -252,7 +253,7 @@ public abstract class GraphNode implements Cloneable {
 		if (!this.parents.contains(parent) && !parent.isDescendant(this)
 				&& this.parents.add(parent)) {
 			this.notifyObservers(new GraphNodeEvent(parent,
-					GraphNodeEvent.CONNECTION_ADDED));
+					GraphNodeEventType.CONNECTION_ADDED));
 
 			// add yourself as a child of that parent
 			parent.addChild(this);
@@ -304,7 +305,7 @@ public abstract class GraphNode implements Cloneable {
 		// remove the child
 		if (this.children.remove(child)) {
 			this.notifyObservers(new GraphNodeEvent(child,
-					GraphNodeEvent.CONNECTION_REMOVED));
+					GraphNodeEventType.CONNECTION_REMOVED));
 
 			// remove yourself as the parent of the child.
 			child.removeFromParent(this, false);
@@ -336,7 +337,7 @@ public abstract class GraphNode implements Cloneable {
 	public boolean removeFromParent(GraphNode parent, boolean reparentChildren) {
 		if (this.parents.remove(parent)) {
 			this.notifyObservers(new GraphNodeEvent(parent,
-					GraphNodeEvent.CONNECTION_REMOVED));
+					GraphNodeEventType.CONNECTION_REMOVED));
 
 			// remove yourself as a child of the parent.
 			parent.removeChild(this, false);
@@ -580,5 +581,18 @@ public abstract class GraphNode implements Cloneable {
 		if (!nodes.containsKey(this))
 			nodes.put(this, 0);
 		return nodes;
+	}
+	
+	/**
+	 * 
+	 * @param observer
+	 * @param observable
+	 */
+	public static void observeDepthMap(GraphNodeObserver observer,
+			GraphNode observable) {
+		Collection<GraphNode> nodes = observable.getNodeDepthMap().keySet();
+		for (GraphNode childNode : nodes) {
+			childNode.addGraphNodeObserver(observer);
+		}
 	}
 }

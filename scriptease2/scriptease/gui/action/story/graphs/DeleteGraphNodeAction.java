@@ -1,4 +1,4 @@
-package scriptease.gui.action.story.quests;
+package scriptease.gui.action.story.graphs;
 
 import java.awt.event.ActionEvent;
 
@@ -13,18 +13,18 @@ import scriptease.gui.action.ToolBarButtonAction;
  *
  */
 @SuppressWarnings("serial")
-public final class DeleteQuestPointAction extends ToolBarButtonAction{
-	private static final String DELETE_TEXT = "Delete Point";
+public final class DeleteGraphNodeAction extends ToolBarButtonAction{
+	private static final String DELETE_TEXT = "Delete";
 	private final static String ICON_TEXT = "node_delete";
 	
-	private static final DeleteQuestPointAction instance = new DeleteQuestPointAction();
+	private static final DeleteGraphNodeAction instance = new DeleteGraphNodeAction();
 	
 	/**
 	 * Defines a <code>InsertQuestPointAction</code> object with an icon.
 	 */
-	protected DeleteQuestPointAction() {
-		super(DeleteQuestPointAction.DELETE_TEXT,
-				DeleteQuestPointAction.ICON_TEXT);
+	protected DeleteGraphNodeAction() {
+		super(DeleteGraphNodeAction.DELETE_TEXT,
+				DeleteGraphNodeAction.ICON_TEXT);
 	}
 
 	/**
@@ -32,13 +32,13 @@ public final class DeleteQuestPointAction extends ToolBarButtonAction{
 	 * 
 	 * @return	The sole instance of this particular type of Action
 	 */
-	public static DeleteQuestPointAction getInstance() {
-		return DeleteQuestPointAction.instance;
+	public static DeleteGraphNodeAction getInstance() {
+		return DeleteGraphNodeAction.instance;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		SEFrame.getInstance().changeCursor(SEFrame.DELETE_NODE_CURSOR);
-		setMode(ToolBarButtonMode.DELETE_QUEST_POINT);
+		setMode(ToolBarButtonMode.DELETE_GRAPH_NODE);
 	}
 }

@@ -1,4 +1,4 @@
-package scriptease.gui.action.story.quests;
+package scriptease.gui.action.story.graphs;
 
 import java.awt.event.ActionEvent;
 
@@ -14,7 +14,7 @@ import scriptease.gui.action.ToolBarButtonAction;
  */
 @SuppressWarnings("serial")
 public final class ConnectGraphPointAction extends ToolBarButtonAction {
-	private static final String CONNECT_TEXT = "Draw Path";
+	private static final String CONNECT_TEXT = "Connect";
 	private final static String ICON_TEXT = "path_draw";
 	
 	private static final ConnectGraphPointAction instance = new ConnectGraphPointAction();
