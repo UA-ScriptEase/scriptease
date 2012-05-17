@@ -71,7 +71,8 @@ in-line comments for details on what is expected.
 			  - remiller  
 			-->
 		<property name="dest.file.path" value="${dest.dir}/${build.time}_${src.file}" />
-		<echo>Posting Jar built from local code to the web space. Please enter the script account password at the prompt.</echo>
+		<echo>Posting Jar built from local code to the web space (${dest.file.path}). </echo>
+			<echo>Please enter the script account password at the prompt.</echo>
 
 		<exec executable="scp" failonerror="true">
 			<arg value="${src.file}" />
