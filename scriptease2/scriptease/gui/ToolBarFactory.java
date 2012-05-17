@@ -1,12 +1,18 @@
 package scriptease.gui;
 
 import java.awt.Dimension;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -18,6 +24,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.PlainDocument;
 
 import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
@@ -27,11 +34,11 @@ import scriptease.gui.action.story.graphs.DeleteGraphNodeAction;
 import scriptease.gui.action.story.graphs.DisconnectGraphPointAction;
 import scriptease.gui.action.story.graphs.InsertGraphNodeAction;
 import scriptease.gui.action.story.graphs.SelectGraphNodeAction;
-import scriptease.gui.action.story.graphs.quests.ToggleCommittingAction;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.quests.QuestEditor;
 import scriptease.gui.quests.QuestPointNode;
+import scriptease.util.FileOp;
 
 /**
  * ToolBarFactory is responsible for creating JToolBars, most importantly the
@@ -42,8 +49,6 @@ import scriptease.gui.quests.QuestPointNode;
  * 
  */
 public class ToolBarFactory {
-
-	private static JTextField nameField;
 
 	/**
 	 * Builds a toolbar to edit graphs with. Includes buttons for selecting
@@ -106,31 +111,19 @@ public class ToolBarFactory {
 		final JToolBar questEditorToolBar = buildGraphEditorToolBar();
 
 		final int TOOL_BAR_HEIGHT = 32;
-		final int NAME_FIELD_LENGTH = 150;
 		final int FAN_IN_SPINNER_LENGTH = 50;
+		final int NAME_FIELD_LENGTH = 150;
 
-		ToolBarFactory.nameField = new JTextField(10);
-		DocumentListener nameFieldListener = nameFieldListener();
-		ToolBarFactory.nameField.getDocument().addDocumentListener(
-				nameFieldListener);
+		final JTextField nameField = nameField(new Dimension(NAME_FIELD_LENGTH,
+				TOOL_BAR_HEIGHT));
 
-		ToolBarFactory.nameField.setMaximumSize(new Dimension(
-				NAME_FIELD_LENGTH, TOOL_BAR_HEIGHT));
-		ToolBarFactory.nameField.setEnabled(false);
-
-		JButton toggleCommittingButton = new JButton();
-
-		toggleCommittingButton.setAction(ToggleCommittingAction.getInstance());
-		toggleCommittingButton.setText(null);
-		toggleCommittingButton.setOpaque(false);
-		toggleCommittingButton.setContentAreaFilled(false);
-		toggleCommittingButton.setBorderPainted(false);
+		final JToggleButton commitButton = committingButton();
 
 		final JSpinner fanInSpinner = buildFanInSpinner(new Dimension(
 				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT));
 
-		updateFanInSpinner(fanInSpinner, null);
-
+		updateQuestToolBar(nameField, commitButton, fanInSpinner, null);
+		
 		final JLabel nameLabel = new JLabel(Il8nResources.getString("Name")
 				+ ": ");
 		final JLabel commitLabel = new JLabel(
@@ -153,11 +146,11 @@ public class ToolBarFactory {
 
 		questEditorToolBar.add(nameLabel);
 
-		questEditorToolBar.add(ToolBarFactory.nameField);
+		questEditorToolBar.add(nameField);
 
 		questEditorToolBar.add(commitLabel);
 
-		questEditorToolBar.add(toggleCommittingButton);
+		questEditorToolBar.add(commitButton);
 
 		questEditorToolBar.add(fanInLabel);
 
@@ -170,32 +163,230 @@ public class ToolBarFactory {
 				nameLabel.setEnabled(true);
 				commitLabel.setEnabled(true);
 				fanInLabel.setEnabled(true);
-				
+
 				GraphNode node = event.getSource();
-				
+
 				node.process(new AbstractNoOpGraphNodeVisitor() {
 					@Override
 					public void processQuestPointNode(
 							QuestPointNode questPointNode) {
 
-						updateFanInSpinner(fanInSpinner, questPointNode);
+						updateQuestToolBar(nameField, commitButton,
+								fanInSpinner, questPointNode);
 
 						// If it's selected, each of the three items updated.
 						// If path removed, fanInSpinner is updated
-						// If path added ""
-
-						System.out.println("Hai thar"
-								+ questPointNode.toString());
+						// If path added, fanInSpinner is updated
+						// Need to make sure this stuff happens later!
 					}
 				});
-				// GraphNode.observeDepthMap(this, editor.getHeadNode());
-
+				GraphNode.observeDepthMap(this, editor.getHeadNode());
+				// TODO May need to change the "depthmap" once more nodes are
+				// added. Check if it works without it!.
 			}
 		};
 
 		GraphNode.observeDepthMap(nodeObserver, editor.getHeadNode());
 
 		return questEditorToolBar;
+	}
+
+	/**
+	 * Updates the entire quest tool bar, including the namefiled, the
+	 * committing button, the fan in spinner, and all of the labels.
+	 * 
+	 * 
+	 * @param nameField
+	 * @param commitButton
+	 * @param fanInSpinner
+	 * @param questNode
+	 */
+	private static void updateQuestToolBar(JTextField nameField,
+			JToggleButton commitButton, JSpinner fanInSpinner,
+			QuestPointNode questNode) {
+
+		updateFanInSpinner(fanInSpinner, questNode);
+		updateCommittingButton(commitButton, questNode);
+		updateNameField(nameField, questNode);
+
+	}
+
+	/**
+	 * Returns a name field JTextField with the proper appearance.
+	 * 
+	 * @param maxSize
+	 * @return
+	 */
+	private static JTextField nameField(final Dimension maxSize) {
+		JTextField nameField = new JTextField(10);
+
+		nameField.setMaximumSize(maxSize);
+
+		return nameField;
+	}
+
+	/**
+	 * Creates an DocumentListener for the TextField.
+	 * 
+	 * @return
+	 */
+	private static DocumentListener nameFieldListener(JTextField nameField,
+			QuestPointNode questNode) {
+		final JTextField nField = nameField;
+		final QuestPointNode qNode = questNode;
+
+		DocumentListener nameFieldListener = new DocumentListener() {
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				String text = nField.getText();
+				// System.out.println("Text!$!$@!!%@!%()$~)!$*)! ! WQETEWTXT !"
+				// + text);
+				qNode.getQuestPoint().setDisplayText(text);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				insertUpdate(e);
+			}
+
+		};
+
+		return nameFieldListener;
+	}
+
+	/**
+	 * Updates the name field for the quest node passed in.
+	 * 
+	 * @param nameField
+	 * @param questNode
+	 */
+	private static void updateNameField(JTextField nameField,
+			QuestPointNode questNode) {
+		if (questNode != null) {
+			String displayText = questNode.getQuestPoint().getDisplayText();
+
+			/*
+			 * if (nameField.getActionListeners().length > 0)
+			 * nameField.removeActionListener
+			 * (nameField.getActionListeners()[0]);
+			 * 
+			 * nameField .addActionListener(nameFieldListener(nameField,
+			 * questNode));
+			 */
+			nameField.setDocument(new PlainDocument());
+			nameField.getDocument().addDocumentListener(
+					nameFieldListener(nameField, questNode));
+
+			nameField.setText(displayText);
+			nameField.setEnabled(true);
+		} else {
+			nameField.setText("");
+			nameField.setEnabled(false);
+		}
+	}
+
+	/**
+	 * Returns a committing button with the proper appearance.
+	 * 
+	 * @return
+	 */
+	private static JToggleButton committingButton() {
+		final JToggleButton committingButton = new JToggleButton();
+		final String COMMIT_FALSE_ICON = "commit_false";
+		final String COMMIT_TRUE_ICON = "commit_true";
+
+		committingButton.setOpaque(false);
+		committingButton.setContentAreaFilled(false);
+		committingButton.setBorderPainted(false);
+		committingButton.setRolloverEnabled(false);
+
+		try {
+			BufferedImage falseIconImage = ImageIO.read(FileOp
+					.getFileResource("scriptease/resources/icons/buttonicons/"
+							+ COMMIT_FALSE_ICON + ".png"));
+
+			BufferedImage trueIconImage = ImageIO.read(FileOp
+					.getFileResource("scriptease/resources/icons/buttonicons/"
+							+ COMMIT_TRUE_ICON + ".png"));
+
+			committingButton.setIcon(new ImageIcon(falseIconImage));
+			committingButton.setSelectedIcon(new ImageIcon(trueIconImage));
+			committingButton.setDisabledIcon(new ImageIcon(falseIconImage));
+			// committingButton.setPressedIcon(new ImageIcon(trueIconImage));
+
+		} catch (IOException e) {
+			UncaughtExceptionHandler handler = Thread
+					.getDefaultUncaughtExceptionHandler();
+			handler.uncaughtException(Thread.currentThread(),
+					new IllegalStateException("Exception " + e
+							+ "while adding icon for CommitButton"));
+
+			committingButton.setText("><");
+		}
+
+		return committingButton;
+	}
+
+	/**
+	 * Creates an ItemListener for the CommitButton. Listens if the CommitButton
+	 * is selected or deselected, and sets the model appropriately.
+	 * 
+	 * @param questNode
+	 * @return
+	 */
+	private static ItemListener commitButtonListener(QuestPointNode questNode) {
+		final QuestPointNode questN = questNode;
+
+		ItemListener commitButtonListener = new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					questN.getQuestPoint().setCommitting(true);
+
+					System.out.println("SSSSSSSSSEEEEEEEEEEEELLLECTED!");
+
+				} else {
+					questN.getQuestPoint().setCommitting(false);
+
+					System.out.println("DEEEEEEEEESELECTED!");
+				}
+			}
+		};
+
+		return commitButtonListener;
+	}
+
+	/**
+	 * Updates the committing button for the quest node passed in.
+	 * 
+	 * @param cButton
+	 *            The commmitting button to update.
+	 * @param questNode
+	 *            The QuestPointNode to update the committing button to.
+	 */
+	private static void updateCommittingButton(JToggleButton cButton,
+			QuestPointNode questNode) {
+		if (questNode != null) {
+			Boolean committing = questNode.getQuestPoint().getCommitting();
+
+			if (cButton.getItemListeners().length > 0)
+				cButton.removeItemListener(cButton.getItemListeners()[0]);
+
+			cButton.setSelected(committing);
+
+			cButton.addItemListener(commitButtonListener(questNode));
+
+			cButton.setEnabled(true);
+		} else {
+			cButton.setEnabled(false);
+		}
 	}
 
 	/**
@@ -216,9 +407,9 @@ public class ToolBarFactory {
 	}
 
 	/**
-	 * Creates a ChangeListener for a JSpinner. Returns listener.
-	 * When the Spinner value changes, the listener updates the model and 
-	 * updates the fan in spinner itself to show the change.
+	 * Creates a ChangeListener for a JSpinner. Returns listener. When the
+	 * Spinner value changes, the listener updates the model and updates the fan
+	 * in spinner itself to show the change.
 	 * 
 	 * @param fanInSpinner
 	 * @param questPoint
@@ -275,8 +466,9 @@ public class ToolBarFactory {
 
 			fanInSpinner.setModel(fanInSpinnerModel);
 
-			fanInSpinner.removeChangeListener(fanInSpinner.getChangeListeners()[1]);
-			
+			fanInSpinner
+					.removeChangeListener(fanInSpinner.getChangeListeners()[1]);
+
 			fanInSpinner.addChangeListener(fanInSpinnerListener(fanInSpinner,
 					questNode));
 			fanInSpinner.setEnabled(true);
@@ -289,48 +481,4 @@ public class ToolBarFactory {
 			fanInSpinner.setEnabled(false);
 		}
 	}
-
-	/**
-	 * Sets the current quest point node to the specified node and updates the
-	 * Quest Point Toolbar.
-	 * 
-	 * @param currentQuestPointNode
-	 */
-	public static void setCurrentQuestPointNode(QuestPointNode questNode) {
-		String displayText = questNode.getQuestPoint().getDisplayText();
-
-		ToolBarFactory.nameField.setText(displayText);
-		ToolBarFactory.nameField.setEnabled(true);
-		// updateFanInSpinner();
-	}
-
-	/**
-	 * Creates an DocumentListener for the TextField.
-	 * 
-	 * @return
-	 */
-	private static DocumentListener nameFieldListener() {
-		DocumentListener nameFieldListener = new DocumentListener() {
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				String text = nameField.getText();
-
-				// TODO Implement this so it works.
-				// ToolBarFactory.currentQuestPoint.setDisplayText(text);
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				insertUpdate(e);
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				insertUpdate(e);
-			}
-		};
-		return nameFieldListener;
-	}
-
 }

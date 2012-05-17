@@ -77,7 +77,7 @@ public class QuestPoint extends StoryComponentContainer {
 		this.fanIn = fanIn;
 	}
 
-	public void setCommiting(boolean commiting) {
+	public void setCommitting(boolean commiting) {
 		this.commiting = commiting;
 	}
 
