@@ -78,17 +78,6 @@ public abstract class ToolBarButtonAction extends
 	}
 
 	/**
-	 * Updates the icon for the ToolBarAction.
-	 * 
-	 * @param newIconName
-	 *            Name of the new icon, as pertaining to the load images method.
-	 */
-	public void updateIcon(String newIconName) {
-		BufferedImage newIcon = loadImages(newIconName);
-		this.putValue(Action.LARGE_ICON_KEY, new ImageIcon(newIcon));
-	}
-
-	/**
 	 * Changes the current mode of the ToolBar tools.
 	 * 
 	 * @param newMode
