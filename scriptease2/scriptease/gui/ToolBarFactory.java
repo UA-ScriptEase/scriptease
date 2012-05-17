@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -29,6 +30,7 @@ import javax.swing.text.PlainDocument;
 import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeObserver;
+import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.story.graphs.ConnectGraphPointAction;
 import scriptease.gui.action.story.graphs.DeleteGraphNodeAction;
 import scriptease.gui.action.story.graphs.DisconnectGraphPointAction;
@@ -37,6 +39,7 @@ import scriptease.gui.action.story.graphs.SelectGraphNodeAction;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.quests.QuestEditor;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
 import scriptease.util.FileOp;
 
@@ -123,7 +126,7 @@ public class ToolBarFactory {
 				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT));
 
 		updateQuestToolBar(nameField, commitButton, fanInSpinner, null);
-		
+
 		final JLabel nameLabel = new JLabel(Il8nResources.getString("Name")
 				+ ": ");
 		final JLabel commitLabel = new JLabel(
@@ -160,29 +163,86 @@ public class ToolBarFactory {
 
 			@Override
 			public void nodeChanged(GraphNodeEvent event) {
+
 				nameLabel.setEnabled(true);
 				commitLabel.setEnabled(true);
 				fanInLabel.setEnabled(true);
 
-				GraphNode node = event.getSource();
+				final GraphNode node = event.getSource();
+
+				// TODO
+				//
+				// Maybe this is not getting called if the node gets
+				// deleted before it has a chance to be called.
+				// What also seems likely is that it thinks a different node
+				// is the headNode, which should not be happening.
+				GraphNode.observeDepthMap(this, editor.getHeadNode());
 
 				node.process(new AbstractNoOpGraphNodeVisitor() {
 					@Override
 					public void processQuestPointNode(
 							QuestPointNode questPointNode) {
 
+						// If it's selected, update.
+						// If path removed, update.
+						// If path added, update
+						// Need to make sure this stuff happens later!
+
+						switch (ToolBarButtonAction.getMode()) {
+
+						// case INSERT_GRAPH_NODE:
+
+						case DELETE_GRAPH_NODE:
+
+							List<GraphNode> children = questPointNode
+									.getChildren();
+
+							System.out.println("# OF CHILD ==="
+									+ children.size());
+
+							for (GraphNode child : children) {
+								child.process(new AbstractNoOpGraphNodeVisitor() {
+									public void processQuestPointNode(
+											QuestPointNode questPointNode) {
+
+										QuestPoint questPoint = questPointNode
+												.getQuestPoint();
+										int fanIn = questPoint.getFanIn();
+
+										if (fanIn > 1)
+											questPoint.setFanIn(fanIn - 1);
+
+									}
+								});
+							}
+
+							break;
+
+						case DISCONNECT_GRAPH_NODE:
+
+							node.process(new AbstractNoOpGraphNodeVisitor() {
+								public void processQuestPointNode(
+										QuestPointNode questPointNode) {
+
+									QuestPoint questPoint = questPointNode
+											.getQuestPoint();
+									int fanIn = questPoint.getFanIn();
+
+									if (fanIn > 1)
+										questPoint.setFanIn(fanIn - 1);
+
+								}
+							});
+
+							break;
+						}
+
 						updateQuestToolBar(nameField, commitButton,
 								fanInSpinner, questPointNode);
 
-						// If it's selected, each of the three items updated.
-						// If path removed, fanInSpinner is updated
-						// If path added, fanInSpinner is updated
-						// Need to make sure this stuff happens later!
 					}
 				});
-				GraphNode.observeDepthMap(this, editor.getHeadNode());
-				// TODO May need to change the "depthmap" once more nodes are
-				// added. Check if it works without it!.
+				// GraphNode.observeDepthMap(this, event.getSource());
 			}
 		};
 
@@ -271,14 +331,6 @@ public class ToolBarFactory {
 		if (questNode != null) {
 			String displayText = questNode.getQuestPoint().getDisplayText();
 
-			/*
-			 * if (nameField.getActionListeners().length > 0)
-			 * nameField.removeActionListener
-			 * (nameField.getActionListeners()[0]);
-			 * 
-			 * nameField .addActionListener(nameFieldListener(nameField,
-			 * questNode));
-			 */
 			nameField.setDocument(new PlainDocument());
 			nameField.getDocument().addDocumentListener(
 					nameFieldListener(nameField, questNode));
@@ -318,7 +370,6 @@ public class ToolBarFactory {
 			committingButton.setIcon(new ImageIcon(falseIconImage));
 			committingButton.setSelectedIcon(new ImageIcon(trueIconImage));
 			committingButton.setDisabledIcon(new ImageIcon(falseIconImage));
-			// committingButton.setPressedIcon(new ImageIcon(trueIconImage));
 
 		} catch (IOException e) {
 			UncaughtExceptionHandler handler = Thread
@@ -429,7 +480,7 @@ public class ToolBarFactory {
 
 				questN.getQuestPoint().setFanIn(spinnerValue);
 
-				updateFanInSpinner(fanInSpin, questN);
+				// updateFanInSpinner(fanInSpin, questN);
 			}
 		};
 
@@ -460,6 +511,10 @@ public class ToolBarFactory {
 			// If maxFanIn >1, maxFanIn. Otherwise, 1.
 			maxFanIn = maxFanIn > 1 ? maxFanIn : 1;
 
+			if (questNode.getQuestPoint().getFanIn() > maxFanIn) {
+				questNode.getQuestPoint().setFanIn(1);
+			}
+
 			final SpinnerModel fanInSpinnerModel = new SpinnerNumberModel(
 					questNode.getQuestPoint().getFanIn(), new Integer(1),
 					new Integer(maxFanIn), new Integer(1));
@@ -471,7 +526,9 @@ public class ToolBarFactory {
 
 			fanInSpinner.addChangeListener(fanInSpinnerListener(fanInSpinner,
 					questNode));
+
 			fanInSpinner.setEnabled(true);
+
 		} else {
 			final SpinnerModel fanInSpinnerModel = new SpinnerNumberModel(
 					new Integer(1), new Integer(1), new Integer(1),

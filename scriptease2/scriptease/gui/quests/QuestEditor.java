@@ -2,10 +2,8 @@ package scriptease.gui.quests;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.util.List;
 
-import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
@@ -18,6 +16,7 @@ import scriptease.gui.ToolBarFactory;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.GraphPanel;
+import scriptease.gui.graph.GraphPanel.GraphNodeComponentBuilder;
 import scriptease.gui.graph.editor.GraphEditor;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.model.StoryModel;
@@ -31,28 +30,25 @@ import scriptease.util.GUIOp;
  * 
  * @author mfchurch
  * @author graves (refactored)
+ * @author kschenk (refactored further)
  */
 @SuppressWarnings("serial")
 public class QuestEditor extends GraphEditor {
-	private QuestPointNode currentQuestPointNode;
-	
 	private final JToolBar buttonToolBar;
 
 	public QuestEditor(final GraphNode start) {
 		super();
-		
-		
 
 		// Set the headNode to be the start node of the graph.
 		this.setHeadNode(start);
+		
 		buttonToolBar = ToolBarFactory.buildQuestEditorToolBar(this);
 
 		addToolBar(buttonToolBar);
 
-
 		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
 	}
-		
+
 	/**
 	 * Highlights the quest point that is represented by the given GraphNode in
 	 * the graph.
@@ -60,11 +56,14 @@ public class QuestEditor extends GraphEditor {
 	 * @param graphNode
 	 */
 	private void highlightQuestPointAtGraphNode(GraphNode graphNode) {
-		final GraphNode questPointNode = graphNode;
+		//TODO: Fix highlighting quest points. Ties into mouse listeners and stuff.
 		
-		JScrollPane currentPanel = (JScrollPane) this.editingPanel.getTopComponent();
+		/*final GraphNode questPointNode = graphNode;
+
+		JScrollPane currentPanel = (JScrollPane) this.editingPanel
+				.getTopComponent();
 		Point position = currentPanel.getViewport().getViewPosition();
-	
+
 		final GraphPanel graphPanel = new GraphPanel(this.headNode) {
 			@Override
 			public void configureAppearance(GraphNode node, JComponent component) {
@@ -77,7 +76,7 @@ public class QuestEditor extends GraphEditor {
 				}
 			}
 		};
-		this.setGraphPanel(graphPanel, position);
+		this.setGraphPanel(graphPanel, position);*/
 	}
 
 	/**
@@ -162,24 +161,6 @@ public class QuestEditor extends GraphEditor {
 			oldSelectedNode = node;
 		}
 	}
-	
-	/**
-	 * Sets the current QuestPointNode to the passed parameter.
-	 * 
-	 * @param questPointNode
-	 */
-	private void setCurrentQuestPointNode(QuestPointNode questPointNode) {
-		this.currentQuestPointNode = questPointNode;
-	}
-	
-	/**
-	 * Returns the current QuestPointNode.
-	 * 
-	 * @return The current QuestPoitNode.
-	 */
-	public QuestPointNode getCurrentQuestPointNode() {
-		return this.currentQuestPointNode;
-	}
 
 	/**
 	 * This method handles all of the logic for the quest tools. It is called
@@ -189,15 +170,16 @@ public class QuestEditor extends GraphEditor {
 	public void nodeChanged(GraphNodeEvent event) {
 		super.nodeChanged(event);
 
-		System.out.println("Event: "+event.toString());
-		final GraphNode sourceNode = event.getSource(); //Can probably get rid of this...
-		
+		System.out.println("Event: " + event.toString());
+		final GraphNode sourceNode = event.getSource(); // Can probably get rid
+														// of this...
+
 		final GraphNodeEventType type = event.getEventType();
 
 		// only process clicked actions if you are contained in the active tab
 		if (type == GraphNodeEventType.SELECTED
 				&& SEFrame.getInstance().getActiveTab().contains(this)) {
-			
+
 			// Determine the active tool
 			switch (ToolBarButtonAction.getMode()) {
 			case INSERT_GRAPH_NODE:
@@ -221,8 +203,6 @@ public class QuestEditor extends GraphEditor {
 
 							SEFrame.getInstance().activatePanelForQuestPoint(
 									model, questPoint);
-							
-							setCurrentQuestPointNode(questPointNode);
 
 							// Force the graph to rebuild.
 							// setHeadNode(headNode);
@@ -237,10 +217,10 @@ public class QuestEditor extends GraphEditor {
 					@Override
 					public void processQuestNode(QuestNode questNode) {
 						// Remove the Quest
-						
+
 						List<GraphNode> parents = questNode.getParents();
 						List<GraphNode> children = questNode.getChildren();
-						
+
 						if (!parents.isEmpty() && !children.isEmpty()) {
 
 							questNode.removeParents();
@@ -278,24 +258,12 @@ public class QuestEditor extends GraphEditor {
 							for (GraphNode parent : parents) {
 								for (GraphNode child : children) {
 									parent.addChild(child);
-									child.process(new AbstractNoOpGraphNodeVisitor() {
-										public void processQuestPointNode(
-												QuestPointNode questPointNode) {
-
-											QuestPoint questPoint = questPointNode
-													.getQuestPoint();
-											int fanIn = questPoint.getFanIn();
-
-											if (fanIn > 1)
-												questPoint.setFanIn(fanIn - 1);
-
-										}
-									});
 								}
 							}
 						}
 					}
 				});
+				break;
 			}
 		}
 	}

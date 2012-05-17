@@ -14,7 +14,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 
-import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.GraphNodeObserver;
@@ -22,8 +21,6 @@ import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.GraphPanel.GraphPanelUI;
 import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.quests.QuestPoint;
-import scriptease.gui.quests.QuestPointNode;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.util.GUIOp;
 
@@ -228,24 +225,6 @@ public abstract class GraphEditor extends JSplitPane implements
 							&& deeperNode.getParents().size() > 1) {
 						shallowerNode.removeChild(deeperNode, false);
 					}
-					
-					
-					
-					//TODO : This does not belong here!
-					
-					deeperNode.process(new AbstractNoOpGraphNodeVisitor() {
-						public void processQuestPointNode(
-								QuestPointNode questPointNode) {
-							
-							QuestPoint questPoint = questPointNode.getQuestPoint();
-							int fanIn = questPoint.getFanIn();
-							
-							if(fanIn > 1)
-								questPoint.setFanIn(fanIn - 1);
-							
-						}
-					});
-					
 					
 					// Reset the tool.
 					oldSelectedNode = null;
