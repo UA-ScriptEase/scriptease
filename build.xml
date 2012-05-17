@@ -5,6 +5,8 @@
     which is easy to do if you run ant -p in the directory that this file is located 
     to display the project's build descriptions.
     
+    A part of it is also documented in the wiki under Distribution and Releases.
+    
         - remiller
 -->
 <project default="jar" name="ScriptEase2">
@@ -141,12 +143,12 @@ Some important targets to read up on are:
 	     redefine properties. We find out the head revision with linux magic and 
 	     exec. Also, I'd define the seVersion here, but it needs to be defined right 
 	     where we use it, because we can't reassign properties.-->
-	<property name="buildNumberLocation" value="/usr/brule8/misc/script/development/buildNumber.properties" />
+	<!--<property name="buildNumberLocation" value="/usr/brule8/misc/script/development/buildNumber.properties" />
 	<property name="majorVersion" value="2" />
-	<exec executable="sh" outputproperty="headVersion">
+	<exec executable="sh" outputproperty="gitHash">
 		<arg value="-c" />
 		<arg value="svn info | grep &quot;Last Changed Rev&quot; | awk -F&quot;: &quot; '{print $2}'" />
-	</exec>
+	</exec>-->
 
 	<property name="SLOCCountDirectory" value="sloccount-2.26" />
 	<property name="SLOCCountLocation" value="development/Tools/LineCounter/${SLOCCountDirectory}" />
@@ -250,8 +252,8 @@ Some important targets to read up on are:
 
 		<!-- load the versioning data if it's not already in memory -->
 		<property file="${buildNumberLocation}" />
-		<property name="jarVersion" value="${majorVersion}.${build.number}.${headVersion}" />
-	 	<echo>Jar version is ${jarVersion}</echo>
+		<property name="jarVersion" value="${majorVersion}.${build.number}" />
+		<echo>Jar version is ${jarVersion}</echo>
 
 		<jar destFile="${jarDirectory}/${jarFile}">
 			<fileset dir="${buildDirectory}" />
@@ -262,10 +264,10 @@ Some important targets to read up on are:
 				<include name="scriptease/resources/*.ini" />
 				<include name="scriptease/resources/schema/*.xsd" />
 				<include name="scriptease/translator/xml/*.dtd" />
-                <include name="**/*.gif" />
-                <include name="**/*.jpg" />
-                <include name="**/*.png" />
-                <include name="**/*.jpeg" />
+				<include name="**/*.gif" />
+				<include name="**/*.jpg" />
+				<include name="**/*.png" />
+				<include name="**/*.jpeg" />
 				<exclude name="scriptease/resources/lib/**" />
 				<!-- translators are built separately -->
 				<exclude name="translators/**" />
@@ -276,6 +278,7 @@ Some important targets to read up on are:
 				<attribute name="Implementation-Vendor" value="University of Alberta" />
 				<attribute name="Implementation-Title" value="ScriptEase" />
 				<attribute name="Implementation-Version" value="${jarVersion}" />
+				<attribute name="Implementation-Hash" value="${gitHash}" />
 				<attribute name="Class-Path" value=". ${jarClasspath}" />
 				<attribute name="Main-Class" value="scriptease.ScriptEase" />
 			</manifest>
@@ -319,7 +322,7 @@ Some important targets to read up on are:
 		<property name="expected.web.location" value="http://www.cs.ualberta.ca/~script/internal" />
 
 		<property name="mail.body" value="A new ScriptEase 2 Jar has been shared privately with the group by ${user.name.full} (${user.name}).\n\nYou should be able to access it at http://www.cs.ualberta.ca/~script/internal/${src.file}." />
-		<property name="mail.title" value="New Internal ScriptEase Jar Released - Revision ${headVersion}" />
+		<property name="mail.title" value="New Internal ScriptEase Jar Released" />
 		<property name="mail.list" value="${internalMail}" />
 
 		<antcall target="post" />

@@ -8,10 +8,10 @@ in-line comments for details on what is expected.
 
 	<!-- ==== START INIT COMMANDS ==== -->
 	<property file="mailingLists.properties" />
-
+	
 	<exec executable="sh" outputproperty="user.name.full">
 		<arg value="-c" />
-		<arg value="finger remiller | grep &quot;Name&quot; | awk -F&quot;Name: &quot; '{print $2}'" />
+		<arg value="finger ${user.name} | grep &quot;Name&quot; | awk -F&quot;Name: &quot; '{print $2}'" />
 	</exec>
 
 	<!-- Script account's web docs directory. -->
@@ -33,11 +33,11 @@ in-line comments for details on what is expected.
 	     redefine properties. We find out the head revision with linux magic and 
 	     exec. Also, I'd define the seVersion here, but it needs to be defined right 
 	     where we use it, because we can't reassign properties.-->
-	<property name="buildNumberLocation" value="/usr/brule8/misc/script/development/buildNumber.properties" />
 	<property name="majorVersion" value="2" />
-	<exec executable="sh" outputproperty="headVersion">
+	<property name="buildNumberLocation" value="/cshome/script/development/buildNumber.properties" />
+	<exec executable="sh" outputproperty="gitHash">
 		<arg value="-c" />
-		<arg value="svn info | grep &quot;Last Changed Rev&quot; | awk -F&quot;: &quot; '{print $2}'" />
+		<arg value="git log -1 | grep &quot;commit&quot; | awk -F &quot; &quot; '{print $2}'" />
 	</exec>
 
 	<!--LinuxMachine just needs to be any department machine that we can ssh into-->

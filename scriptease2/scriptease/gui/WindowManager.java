@@ -58,8 +58,9 @@ public final class WindowManager {
 	private static final String CODE_GENERATION_PROBLEM = "Code Generation Problem";
 	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase 2";
 	private static final String ABOUT_SCRIPTEASE_MESSAGE = "ScriptEase 2\n"
-			+ "Version: " + ScriptEase.getInstance().getVersion() + "\n\n"
-			+ "Game Scripting and Code Generation for any game!\n"
+			+ "Version: " + ScriptEase.getInstance().getVersion() + "\n"
+			+ "Revision: " + ScriptEase.getInstance().getSpecificVersion()
+			+ "\n\n" + "Game Scripting and Code Generation for any game!\n"
 			+ "Visit us online at http://www.cs.ualberta.ca/~script/\n";
 	private static final String LAST_DIRECTORY_KEY = "LastDirectory_FilterType";
 	// private static final String CONFIRM_EXIT_TITLE = "Confirm Exit";
@@ -75,7 +76,8 @@ public final class WindowManager {
 	private static final String RETRY_TITLE_START = "Problem with";
 	private static final String SAVE_AND_TEST = "Save and Test";
 	private static final String CANCEL = "Cancel";
-	private static final String TEST_STORY = Il8nResources.getString("Test_Story");
+	private static final String TEST_STORY = Il8nResources
+			.getString("Test_Story");
 
 	private JFileChooser chooser;
 
@@ -187,13 +189,15 @@ public final class WindowManager {
 	 * can be shown at a time. NOTE: The provided task should start executing
 	 * before the progressBar is shown (Swing will block otherwise).
 	 * 
-	 * @param task The task to run while displaying the progress bar.
-	 * @param taskName The name of the task to be displayed in the progress bar.
+	 * @param task
+	 *            The task to run while displaying the progress bar.
+	 * @param taskName
+	 *            The name of the task to be displayed in the progress bar.
 	 */
 	public void showProgressBar(final SwingWorker<Void, Void> task) {
 		if (WindowManager.progressShowing)
 			return;
-		
+
 		// TODO: The "Loading..." string here should be pulled out to a
 		// parameter. - remiller
 		final JDialog progressBar = DialogBuilder.getInstance()
@@ -384,11 +388,12 @@ public final class WindowManager {
 
 		return choice;
 	}
-	
+
 	/**
 	 * Shows a confirm dialog for testing a story.
 	 * 
-	 * @return <code>true</code>if the user confirmed, <code>false</code> otherwise.
+	 * @return <code>true</code>if the user confirmed, <code>false</code>
+	 *         otherwise.
 	 */
 	public boolean showConfirmTestStory() {
 		String[] options = { SAVE_AND_TEST, CANCEL };
@@ -426,7 +431,7 @@ public final class WindowManager {
 
 		scFrame.setVisible(true);
 	}
-	
+
 	/**
 	 * Shows a dialog that will let the user either try to retry an action or
 	 * cancel.
@@ -585,11 +590,12 @@ public final class WindowManager {
 				SEFrame.getInstance());
 		preferencesDialog.display();
 	}
-	
-	public void showQuestPointPropertiesDialog(QuestPointNode questPointNode){
+
+	public void showQuestPointPropertiesDialog(QuestPointNode questPointNode) {
 		// Create the dialog to show.
-		QuestPointPropertiesDialog dialog = new QuestPointPropertiesDialog(SEFrame.getInstance(), questPointNode);
-		
+		QuestPointPropertiesDialog dialog = new QuestPointPropertiesDialog(
+				SEFrame.getInstance(), questPointNode);
+
 		// Show the dialog.
 		dialog.setResizable(false);
 		dialog.pack();
