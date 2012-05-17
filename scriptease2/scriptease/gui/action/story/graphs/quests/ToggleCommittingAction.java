@@ -1,4 +1,4 @@
-package scriptease.gui.action.story.quests;
+package scriptease.gui.action.story.graphs.quests;
 
 import java.awt.event.ActionEvent;
 
@@ -56,6 +56,8 @@ public final class ToggleCommittingAction extends ToolBarButtonAction {
 	/**
 	 * Sets the Quest Point to be operated on and enables the action. Also
 	 * sets the icon whether the quest point is committing or not.
+	 * 
+	 * TODO Add this to the QuestToolBarListener
 	 * 
 	 * @param questPoint
 	 */

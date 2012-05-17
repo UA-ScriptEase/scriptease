@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import scriptease.controller.GraphNodeObserverAdder;
 import scriptease.controller.GraphNodeReferenceResolver;
 import scriptease.controller.observer.GraphNodeEvent;
+import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.GraphNodeObserver;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.graph.nodes.GraphNode;
@@ -74,8 +74,7 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 		this.commitSelection();
 
 		// Observe nodes
-		GraphNodeObserverAdder adder = new GraphNodeObserverAdder();
-		adder.observeDepthMap(this, this.headNode);
+		GraphNode.observeDepthMap(this, this.headNode);
 	}
 
 	/**
@@ -496,22 +495,21 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 		}
 
 		// Observe nodes
-		GraphNodeObserverAdder adder = new GraphNodeObserverAdder();
-		adder.observeDepthMap(clone, clone.headNode);
+		GraphNode.observeDepthMap(clone, clone.headNode);
 
 		return clone;
 	}
 
 	@Override
-	public void nodeChanged(GraphNode node, GraphNodeEvent event) {
+	public void nodeChanged(GraphNodeEvent event) {
 		final GraphNode sourceNode = event.getSource();
-		final short type = event.getEventType();
+		final GraphNodeEventType type = event.getEventType();
 		// TODO: optimize so it doesn't recalculate all paths, only those
 		// affected by the node changes
-		if (type == GraphNodeEvent.CONNECTION_ADDED) {
+		if (type == GraphNodeEventType.CONNECTION_ADDED) {
 			sourceNode.addGraphNodeObserver(this);
 			this.calculatePaths();
-		} else if (type == GraphNodeEvent.CONNECTION_REMOVED) {
+		} else if (type == GraphNodeEventType.CONNECTION_REMOVED) {
 			sourceNode.removeGraphNodeObserver(this);
 			this.calculatePaths();
 		}

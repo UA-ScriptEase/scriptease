@@ -8,23 +8,19 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 
-import scriptease.controller.AbstractNoOpGraphNodeVisitor;
-import scriptease.controller.GraphNodeObserverAdder;
 import scriptease.controller.observer.GraphNodeEvent;
+import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.GraphNodeObserver;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.GraphPanel.GraphPanelUI;
 import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.quests.QuestPoint;
-import scriptease.gui.quests.QuestPointNode;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.util.GUIOp;
 
@@ -59,7 +55,12 @@ public abstract class GraphEditor extends JSplitPane implements
 	private GraphTool activeTool;
 	protected JSplitPane editingPanel;
 
-	public GraphEditor(AbstractAction saveAction) {
+	/**
+	 * Constructor.
+	 * 
+	 * @param saveAction
+	 */
+	public GraphEditor() {
 		super(JSplitPane.VERTICAL_SPLIT, true);
 		this.setOpaque(true);
 		this.setBackground(StoryComponentPanel.UNSELECTED_COLOUR);
@@ -67,8 +68,7 @@ public abstract class GraphEditor extends JSplitPane implements
 
 	private void initialize() {
 		// Observe nodes
-		GraphNodeObserverAdder adder = new GraphNodeObserverAdder();
-		adder.observeDepthMap(this, this.headNode);
+		GraphNode.observeDepthMap(this, this.headNode);
 
 		this.buildPanels();
 	}
@@ -177,12 +177,12 @@ public abstract class GraphEditor extends JSplitPane implements
 	}
 
 	@Override
-	public void nodeChanged(GraphNode node, GraphNodeEvent event) {
+	public void nodeChanged(GraphNodeEvent event) {
 		final GraphNode sourceNode = event.getSource();
-		final short type = event.getEventType();
+		final GraphNodeEventType type = event.getEventType();
 
 		// only process clicked actions if you are contained in the active tab
-		if (type == GraphNodeEvent.SELECTED
+		if (type == GraphNodeEventType.SELECTED
 				) {
 			// Determine what the active tool is
 			switch (ToolBarButtonAction.getMode()) {
@@ -226,18 +226,19 @@ public abstract class GraphEditor extends JSplitPane implements
 						shallowerNode.removeChild(deeperNode, false);
 					}
 					
+					/*
 					deeperNode.process(new AbstractNoOpGraphNodeVisitor() {
 						public void processQuestPointNode(
 								QuestPointNode questPointNode) {
 							
 							QuestPoint questPoint = questPointNode.getQuestPoint();
 							int fanIn = questPoint.getFanIn();
-							
+							TODO
 							if(fanIn > 1)
 								questPoint.setFanIn(fanIn - 1);
 							
 						}
-					});
+					});*/
 					
 					// Reset the tool.
 					oldSelectedNode = null;
@@ -247,7 +248,7 @@ public abstract class GraphEditor extends JSplitPane implements
 					oldSelectedNode = sourceNode;
 				break;
 				
-			case DELETE_QUEST_POINT:
+			case DELETE_GRAPH_NODE:
 				List<GraphNode> parents = sourceNode.getParents();
 				List<GraphNode> children = sourceNode.getChildren();
 
@@ -265,10 +266,9 @@ public abstract class GraphEditor extends JSplitPane implements
 				}
 				break;
 			}
-		} else if (type == GraphNodeEvent.CONNECTION_ADDED) {
+		} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
 			// Observe nodes
-			GraphNodeObserverAdder adder = new GraphNodeObserverAdder();
-			adder.observeDepthMap(this, sourceNode);
+			GraphNode.observeDepthMap(this, sourceNode);
 		}
 	}
 

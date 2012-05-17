@@ -22,9 +22,9 @@ public abstract class ToolBarButtonAction extends
 		ActiveModelSensitiveAction {
 	
 	public static enum ToolBarButtonMode {
-		INSERT_QUEST_POINT,
-		SELECT_QUEST_POINT,
-		DELETE_QUEST_POINT,
+		INSERT_GRAPH_NODE,
+		SELECT_GRAPH_NODE,
+		DELETE_GRAPH_NODE,
 		CONNECT_GRAPH_NODE,
 		DISCONNECT_GRAPH_NODE,
 	}

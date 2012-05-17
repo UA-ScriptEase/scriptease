@@ -1,4 +1,4 @@
-package scriptease.gui.action.story.quests;
+package scriptease.gui.action.story.graphs;
 
 import java.awt.event.ActionEvent;
 
@@ -13,18 +13,18 @@ import scriptease.gui.action.ToolBarButtonAction;
  * 
  */
 @SuppressWarnings("serial")
-public final class InsertQuestPointAction extends ToolBarButtonAction {
-	private final static String INSERT_TEXT = "Insert Point";
+public final class InsertGraphNodeAction extends ToolBarButtonAction {
+	private final static String INSERT_TEXT = "Insert";
 	private final static String ICON_TEXT = "node_add";
 
-	private static final InsertQuestPointAction instance = new InsertQuestPointAction();
+	private static final InsertGraphNodeAction instance = new InsertGraphNodeAction();
 
 	/**
 	 * Defines a <code>InsertQuestPointAction</code> object with an icon.
 	 */
-	protected InsertQuestPointAction() {
-		super(InsertQuestPointAction.INSERT_TEXT,
-				InsertQuestPointAction.ICON_TEXT);
+	protected InsertGraphNodeAction() {
+		super(InsertGraphNodeAction.INSERT_TEXT,
+				InsertGraphNodeAction.ICON_TEXT);
 	}
 
 	/**
@@ -32,13 +32,13 @@ public final class InsertQuestPointAction extends ToolBarButtonAction {
 	 * 
 	 * @return The sole instance of this particular type of Action
 	 */
-	public static InsertQuestPointAction getInstance() {
-		return InsertQuestPointAction.instance;
+	public static InsertGraphNodeAction getInstance() {
+		return InsertGraphNodeAction.instance;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		SEFrame.getInstance().changeCursor(SEFrame.ADD_NODE_CURSOR);
-		setMode(ToolBarButtonMode.INSERT_QUEST_POINT);
+		setMode(ToolBarButtonMode.INSERT_GRAPH_NODE);
 	}
 }
