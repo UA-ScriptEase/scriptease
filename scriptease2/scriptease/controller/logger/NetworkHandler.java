@@ -88,7 +88,7 @@ public class NetworkHandler extends Handler {
 					response.getEntity().getContent()));
 			String readLine;
 			String innhold = "";
-			while (((readLine = br.readLine()) != null)) {  
+			while (((readLine = br.readLine()) != null)) {
 				innhold += readLine;
 			}
 			// tell the user if the report was sucessfully sent and clear
@@ -119,6 +119,7 @@ public class NetworkHandler extends Handler {
 		report = "ScriptEase2\n";
 		report += ("<version>\n");
 		report += ScriptEase.getInstance().getVersion();
+		report += " (" + ScriptEase.getInstance().getSpecificVersion() + ")";
 		report += ("</version>\n<log>\n");
 		if (buffered != null)
 			report += (formatter.format(buffered).trim() + "\n");

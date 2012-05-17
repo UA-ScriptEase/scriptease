@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.jar.Attributes;
+import java.util.jar.Attributes.Name;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -42,12 +43,13 @@ import scriptease.util.FileOp;
  * @author remiller
  * @author mfchurch
  */
-public final class ScriptEase implements Runnable { 
+public final class ScriptEase implements Runnable {
 	// property and configuration keys
 	public static final String LOOK_AND_FEEL_KEY = "UseJavaUI";
 	public static final String TITLE = "ScriptEase";
 
 	private final String version;
+	private final String specificVersion;
 
 	/**
 	 * This is an enumeration of all of the possible keys to use to get
@@ -158,9 +160,14 @@ public final class ScriptEase implements Runnable {
 
 		mf = FileOp.getScriptEaseManifest();
 
-		this.version = (mf != null) ? mf.getMainAttributes().getValue(
-				Attributes.Name.IMPLEMENTATION_VERSION)
-				: "(No version information available)";
+		if (mf != null) {
+			this.version = mf.getMainAttributes().getValue(
+					Attributes.Name.IMPLEMENTATION_VERSION);
+			this.specificVersion = mf.getMainAttributes().getValue(
+					new Name("Implementation-Hash"));
+		} else {
+			this.specificVersion = this.version = "(No version information available)";
+		}
 
 		// now we set up ScriptEase as per the config files.
 		this.configure();
@@ -562,9 +569,19 @@ public final class ScriptEase implements Runnable {
 	 * Gets the ScriptEase version as determined by the Jar's Manifest file. If
 	 * not running from the jar, this may not be useful data.
 	 * 
-	 * @return The version of SCriptEase.
+	 * @return The version of ScriptEase.
 	 */
 	public String getVersion() {
 		return this.version;
+	}
+
+	/**
+	 * Gets the ScriptEase version control revision as determined by the Jar's
+	 * Manifest file. If not running from the jar, this may not be useful data.
+	 * 
+	 * @return The specific revision of ScriptEase.
+	 */
+	public String getSpecificVersion() {
+		return this.specificVersion;
 	}
 }
