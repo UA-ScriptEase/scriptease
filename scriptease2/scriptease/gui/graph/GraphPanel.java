@@ -58,11 +58,11 @@ import sun.awt.util.IdentityArrayList;
  */
 @SuppressWarnings("serial")
 public class GraphPanel extends JPanel implements GraphNodeObserver {
-	protected static final int HORIZONTAL_INDENT = 20;
-	protected static final int NODE_Y_INDENT = 10;
-	protected GraphNode headNode;
-	public GraphNodeComponentBuilder builder;
-	protected Map<GraphNode, Integer> nodeDepthMap;
+	private static final int HORIZONTAL_INDENT = 20;
+	private static final int NODE_Y_INDENT = 10;
+	private GraphNode headNode;
+	private GraphNodeComponentBuilder builder;
+	private Map<GraphNode, Integer> nodeDepthMap;
 
 	public GraphPanel(GraphNode headNode) {
 		this.headNode = headNode;
@@ -194,16 +194,25 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 				 * GraphNode, and its observers.
 				 */
 				final MouseAdapter mouseAdapter = new MouseAdapter() {
-					/*
-					 * If the component is dragged, only handle the initial drag
-					 * and don't spam events
-					 */
-
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						node.notifyObservers(new GraphNodeEvent(node,
 								GraphNodeEventType.SELECTED));
 					}
+					
+					//TODO Hover functionality goes here! Refactor this stuff tomorrow.
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						JComponent nodeComponent = getComponentForNode(node);
+						nodeComponent.setBackground(Color.ORANGE);
+					}
+					
+					@Override
+					public void mouseExited(MouseEvent e) {
+						JComponent nodeComponent = getComponentForNode(node);
+						nodeComponent.setBackground(Color.WHITE);
+					}
+
 				};
 
 				component.addMouseListener(mouseAdapter);
