@@ -46,6 +46,7 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 	protected GraphNode headNode;
 	protected GraphNode oldSelectedNode;
 	protected JPanel editingPanel;
+	protected GraphNode previousNode;
 
 	/**
 	 * Constructor.
@@ -57,22 +58,23 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 		this.setOpaque(true);
 		this.setBackground(StoryComponentPanel.UNSELECTED_COLOUR);
 	}
-
-	private void initialize() {
-		// Observe nodes
-		GraphNode.observeDepthMap(this, this.headNode);
-
-		this.buildPanels();
+	
+	/**
+	 * Public method to add a toolbar to the graph editor. Use ToolBarFactory
+	 * class for an appropriate toolbar, or make your own.
+	 * 
+	 * @param toolBar
+	 */
+	public void addToolBar(JToolBar toolBar) {
+		this.add(toolBar, BorderLayout.PAGE_START);
 	}
 
-	/**
-	 * Sets the given GraphPanel as the TopComponent in the editingPanel, and
-	 * registers the appropriate listeners
-	 * 
-	 * @param panel
-	 */
-	protected void setGraphPanel(GraphPanel panel, Point position) {
-		// Listener for the connect arrow
+	private void buildPanels() {
+		this.editingPanel = new JPanel(new BorderLayout(), true);
+		this.add(editingPanel, BorderLayout.CENTER);
+
+		GraphPanel graphPanel = new GraphPanel(this.headNode);
+
 		MouseAdapter connectArrowListener = new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -92,58 +94,32 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 				repaint();
 			}
 		};
-		panel.addMouseListener(connectArrowListener);
-		panel.addMouseMotionListener(connectArrowListener);
+		graphPanel.addMouseListener(connectArrowListener);
+		graphPanel.addMouseMotionListener(connectArrowListener);
 		// override the UI with the GraphEditors UI
-		panel.setUI(new GraphEditorUI(panel));
+		graphPanel.setUI(new GraphEditorUI(graphPanel));
 
-		// set the graphPanel as the top component
-		JScrollPane graphPanel = new JScrollPane(panel);
-		graphPanel.getViewport().setViewPosition(position);
-		this.editingPanel.add(new JScrollPane(panel), BorderLayout.CENTER);
-	}
-
-	/**
-	 * Public method to add a toolbar to the graph editor. Use ToolBarFactory
-	 * class for an appropriate toolbar, or make your own.
-	 * 
-	 * @param toolBar
-	 */
-	public void addToolBar(JToolBar toolBar) {
-		this.add(toolBar, BorderLayout.PAGE_START);
-	}
-
-	private void buildPanels() {
-
-		// final JToolBar buttonToolBar =
-		// ToolBarFactory.buildQuestEditorToolBar();
-
-		// this.setLeftComponent(buttonToolBar);
-
-		this.editingPanel = new JPanel(new BorderLayout(), true);
-		this.add(editingPanel, BorderLayout.CENTER);
-
-		/**
-		 * builds the default GraphPanel, can be override by calling
-		 * setGraphPanel in the constructor of subclasses
-		 */
-		GraphPanel graphPanel = new GraphPanel(this.headNode);
-		Point position = new Point(0, 0);
-		setGraphPanel(graphPanel, position);
+		this.editingPanel.add(new JScrollPane(graphPanel), BorderLayout.CENTER);
+		
 	}
 
 	public void setHeadNode(GraphNode graphNode) {
 		if (graphNode == null)
 			throw new IllegalArgumentException("Cannot set head node to null");
 		this.headNode = graphNode;
-		initialize();
+		
+		GraphNode.observeDepthMap(this, this.headNode);
+
+		this.buildPanels();
+
+		this.getHeadNode().setSelected(true);
+		previousNode = this.getHeadNode();
 	}
 
 	public GraphNode getHeadNode() {
 		return this.headNode;
 	}
 
-	protected GraphNode previousNode;
 
 	/**
 	 * Sets the previous node's selected status to false, and the current node's

@@ -30,6 +30,7 @@ import javax.swing.text.PlainDocument;
 import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeObserver;
+import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.story.graphs.ConnectGraphPointAction;
 import scriptease.gui.action.story.graphs.DeleteGraphNodeAction;
@@ -120,16 +121,6 @@ public class ToolBarFactory {
 		final int FAN_IN_SPINNER_LENGTH = 50;
 		final int NAME_FIELD_LENGTH = 150;
 
-		final JTextField nameField = nameField(new Dimension(NAME_FIELD_LENGTH,
-				TOOL_BAR_HEIGHT));
-
-		final JToggleButton commitButton = committingButton();
-
-		final JSpinner fanInSpinner = buildFanInSpinner(new Dimension(
-				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT));
-
-		updateQuestToolBar(nameField, commitButton, fanInSpinner, null);
-
 		final JLabel nameLabel = new JLabel(Il8nResources.getString("Name")
 				+ ": ");
 		final JLabel commitLabel = new JLabel(
@@ -139,6 +130,27 @@ public class ToolBarFactory {
 		nameLabel.setEnabled(false);
 		commitLabel.setEnabled(false);
 		fanInLabel.setEnabled(false);
+
+		final JTextField nameField = nameField(new Dimension(NAME_FIELD_LENGTH,
+				TOOL_BAR_HEIGHT));
+
+		final JToggleButton commitButton = committingButton();
+
+		final JSpinner fanInSpinner = buildFanInSpinner(new Dimension(
+				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT));
+
+		editor.getHeadNode().process(new AbstractNoOpGraphNodeVisitor() {
+			public void processQuestPointNode(QuestPointNode questPointNode) {
+				updateQuestToolBar(nameField, commitButton, fanInSpinner,
+						questPointNode);
+
+				if (questPointNode != null) {
+					nameLabel.setEnabled(true);
+					commitLabel.setEnabled(true);
+					fanInLabel.setEnabled(true);
+				}
+			}
+		});
 
 		Dimension minSize = new Dimension(15, TOOL_BAR_HEIGHT);
 		Dimension prefSize = new Dimension(15, TOOL_BAR_HEIGHT);
@@ -171,7 +183,8 @@ public class ToolBarFactory {
 				commitLabel.setEnabled(true);
 				fanInLabel.setEnabled(true);
 
-				final GraphNode node = event.getSource();
+				final GraphNode sourceNode = event.getSource();
+				final GraphNodeEventType type = event.getEventType();
 
 				// TODO: A bug persists here where the QuestToolBar side will
 				// stop updating for node selected. Everything else keeps
@@ -183,71 +196,72 @@ public class ToolBarFactory {
 				// What also seems likely is that it thinks a different node
 				// is the headNode, which should not be happening.
 
-				GraphNode.observeDepthMap(this, editor.getHeadNode());
+				if (type == GraphNodeEventType.SELECTED) {
 
-				node.process(new AbstractNoOpGraphNodeVisitor() {
-					@Override
-					public void processQuestPointNode(
-							QuestPointNode questPointNode) {
+					sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
+						@Override
+						public void processQuestPointNode(
+								QuestPointNode questPointNode) {
 
-						// If it's selected, update.
-						// If path removed, update.
-						// If path added, update
-						// Need to make sure this stuff happens later!
+							// If it's selected, update.
+							// If path removed, update.
+							// If path added, update
+							// Need to make sure this stuff happens later!
 
-						switch (ToolBarButtonAction.getMode()) {
+							switch (ToolBarButtonAction.getMode()) {
 
-						case DISCONNECT_GRAPH_NODE:
+							case DISCONNECT_GRAPH_NODE:
 
-							node.process(new AbstractNoOpGraphNodeVisitor() {
-								public void processQuestPointNode(
-										QuestPointNode questPointNode) {
+								QuestPoint questPoint = questPointNode
+										.getQuestPoint();
+								int fanIn = questPoint.getFanIn();
 
-									QuestPoint questPoint = questPointNode
-											.getQuestPoint();
-									int fanIn = questPoint.getFanIn();
+								if (fanIn > 1)
+									questPoint.setFanIn(fanIn - 1);
 
-									if (fanIn > 1)
-										questPoint.setFanIn(fanIn - 1);
+							case SELECT_GRAPH_NODE:
+							case INSERT_GRAPH_NODE:
+							case CONNECT_GRAPH_NODE:
 
+								updateQuestToolBar(nameField, commitButton,
+										fanInSpinner, questPointNode);
+								break;
+
+							case DELETE_GRAPH_NODE:
+
+								// Only delete the node if there are parents and
+								// children to repair the graph with.
+								if (sourceNode.isDeletable()
+										&& !sourceNode.isSelected()) {
+									List<GraphNode> children = questPointNode
+											.getChildren();
+
+									for (GraphNode child : children) {
+										child.process(new AbstractNoOpGraphNodeVisitor() {
+											public void processQuestPointNode(
+													QuestPointNode questPointNode) {
+
+												QuestPoint questPoint = questPointNode
+														.getQuestPoint();
+												int fanIn = questPoint
+														.getFanIn();
+
+												if (fanIn > 1)
+													questPoint
+															.setFanIn(fanIn - 1);
+											}
+										});
+									}
 								}
-							});
-						case SELECT_GRAPH_NODE:
-						case INSERT_GRAPH_NODE:
-						case CONNECT_GRAPH_NODE:
-
-							updateQuestToolBar(nameField, commitButton,
-									fanInSpinner, questPointNode);
-							break;
-
-						case DELETE_GRAPH_NODE:
-
-							// Only delete the node if there are parents and
-							// children to repair the graph with.
-							if (node.isDeletable() && !node.isSelected()) {
-								List<GraphNode> children = questPointNode
-										.getChildren();
-
-								for (GraphNode child : children) {
-									child.process(new AbstractNoOpGraphNodeVisitor() {
-										public void processQuestPointNode(
-												QuestPointNode questPointNode) {
-
-											QuestPoint questPoint = questPointNode
-													.getQuestPoint();
-											int fanIn = questPoint.getFanIn();
-
-											if (fanIn > 1)
-												questPoint.setFanIn(fanIn - 1);
-										}
-									});
-								}
+								break;
 							}
-							break;
 						}
-					}
-				});
-				// GraphNode.observeDepthMap(this, event.getSource());
+					});
+
+				} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
+					GraphNode.observeDepthMap(this, editor.getHeadNode());
+
+				}
 			}
 		};
 
