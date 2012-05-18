@@ -110,7 +110,9 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
+	//public static JToolBar buildQuestEditorToolBar(final QuestEditor editor) {
 	public static JToolBar buildQuestEditorToolBar(final QuestEditor editor) {
+
 		final JToolBar questEditorToolBar = buildGraphEditorToolBar();
 
 		final int TOOL_BAR_HEIGHT = 32;
@@ -170,7 +172,9 @@ public class ToolBarFactory {
 
 				final GraphNode node = event.getSource();
 
-				// TODO
+				// TODO: A bug persists here where the QuestToolBar side will
+				// stop updating for node selected. Everything else keeps updating,
+				// though.
 				//
 				// Maybe this is not getting called if the node gets
 				// deleted before it has a chance to be called.
@@ -197,9 +201,6 @@ public class ToolBarFactory {
 							List<GraphNode> children = questPointNode
 									.getChildren();
 
-							System.out.println("# OF CHILD ==="
-									+ children.size());
-
 							for (GraphNode child : children) {
 								child.process(new AbstractNoOpGraphNodeVisitor() {
 									public void processQuestPointNode(
@@ -211,11 +212,9 @@ public class ToolBarFactory {
 
 										if (fanIn > 1)
 											questPoint.setFanIn(fanIn - 1);
-
 									}
 								});
 							}
-
 							break;
 
 						case DISCONNECT_GRAPH_NODE:
@@ -520,9 +519,11 @@ public class ToolBarFactory {
 					new Integer(maxFanIn), new Integer(1));
 
 			fanInSpinner.setModel(fanInSpinnerModel);
-
-			fanInSpinner
-					.removeChangeListener(fanInSpinner.getChangeListeners()[1]);
+			
+			if (fanInSpinner.getChangeListeners().length > 1) {
+				fanInSpinner.removeChangeListener(fanInSpinner
+						.getChangeListeners()[1]);
+			}
 
 			fanInSpinner.addChangeListener(fanInSpinnerListener(fanInSpinner,
 					questNode));

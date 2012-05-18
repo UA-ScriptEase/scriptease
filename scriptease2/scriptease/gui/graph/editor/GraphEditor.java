@@ -1,6 +1,7 @@
 package scriptease.gui.graph.editor;
 
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -11,7 +12,6 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 
 import scriptease.controller.observer.GraphNodeEvent;
@@ -39,7 +39,7 @@ import scriptease.util.GUIOp;
  * 
  */
 @SuppressWarnings("serial")
-public abstract class GraphEditor extends JSplitPane implements
+public abstract class GraphEditor extends JPanel implements
 		GraphNodeObserver{
 
 	// Enum for the possible tools supported in the graph
@@ -53,7 +53,7 @@ public abstract class GraphEditor extends JSplitPane implements
 	protected GraphNode headNode;
 	protected GraphNode oldSelectedNode;
 	private GraphTool activeTool;
-	protected JSplitPane editingPanel;
+	protected JPanel editingPanel;
 
 	/**
 	 * Constructor.
@@ -61,7 +61,7 @@ public abstract class GraphEditor extends JSplitPane implements
 	 * @param saveAction
 	 */
 	public GraphEditor() {
-		super(JSplitPane.VERTICAL_SPLIT, true);
+		super(new BorderLayout(), true);
 		this.setOpaque(true);
 		this.setBackground(StoryComponentPanel.UNSELECTED_COLOUR);
 	}
@@ -85,7 +85,7 @@ public abstract class GraphEditor extends JSplitPane implements
 
 	protected void setEditingPanel(JPanel panel) {
 		if (this.editingPanel != null)
-			this.editingPanel.setBottomComponent(panel);
+			this.editingPanel.add(panel, BorderLayout.SOUTH);
 	}
 
 	/**
@@ -133,7 +133,7 @@ public abstract class GraphEditor extends JSplitPane implements
 		// set the graphPanel as the top component
 		JScrollPane graphPanel = new JScrollPane(panel);
 		graphPanel.getViewport().setViewPosition(position);
-		this.editingPanel.setTopComponent(new JScrollPane(panel));
+		this.editingPanel.add(new JScrollPane(panel), BorderLayout.CENTER);
 	}
 	
 	/**
@@ -144,7 +144,7 @@ public abstract class GraphEditor extends JSplitPane implements
 	 * @param toolBar
 	 */
 	public void addToolBar(JToolBar toolBar) {
-		this.setLeftComponent(toolBar);
+		this.add(toolBar, BorderLayout.PAGE_START);
 	}
 
 	private void buildPanels() {
@@ -153,8 +153,8 @@ public abstract class GraphEditor extends JSplitPane implements
 
 		//this.setLeftComponent(buttonToolBar);
 
-		this.editingPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
-		this.setRightComponent(this.editingPanel);
+		this.editingPanel = new JPanel(new BorderLayout(), true);
+		this.add(editingPanel, BorderLayout.CENTER);
 
 		/**
 		 * builds the default GraphPanel, can be override by calling

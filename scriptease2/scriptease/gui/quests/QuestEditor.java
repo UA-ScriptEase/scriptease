@@ -58,10 +58,9 @@ public class QuestEditor extends GraphEditor {
 	private void highlightQuestPointAtGraphNode(GraphNode graphNode) {
 		//TODO: Fix highlighting quest points. Ties into mouse listeners and stuff.
 		
-		/*final GraphNode questPointNode = graphNode;
+	/*	final GraphNode questPointNode = graphNode;
 
-		JScrollPane currentPanel = (JScrollPane) this.editingPanel
-				.getTopComponent();
+		JScrollPane currentPanel = (JScrollPane) this.editingPanel.get;
 		Point position = currentPanel.getViewport().getViewPosition();
 
 		final GraphPanel graphPanel = new GraphPanel(this.headNode) {

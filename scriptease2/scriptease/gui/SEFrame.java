@@ -4,18 +4,21 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.GroupLayout;
@@ -51,6 +54,7 @@ import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.util.FileOp;
 
 /**
  * The main application frame. Contains menu bar, dynamic Property Pane and a
@@ -142,8 +146,6 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		final JComponent libraryPane = new LibraryPane();
 		final JComponent objectPane = PaneFactory.buildGameObjectPane(null);
 		final JComponent statusBar = this.buildStatusBar();
-
-		// this.updatePropertiesPane();
 
 		final GroupLayout layout = new GroupLayout(content);
 		content.setLayout(layout);
@@ -605,9 +607,23 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		}
 
 		if (cursorHotSpot != null) {
-			Image cursorImage = toolkit.getImage(cursorPath);
+			BufferedImage cursorImage;
+
+			try {
+				cursorImage = ImageIO.read(FileOp
+						.getFileResource(cursorPath));
+			} catch (IOException e) {
+				UncaughtExceptionHandler handler = Thread
+						.getDefaultUncaughtExceptionHandler();
+				handler.uncaughtException(Thread.currentThread(),
+						new IllegalStateException("Exception " + e
+								+ "while adding the icon for " + "Cursor: "
+								+ cursorPath));
+				cursorImage = null;
+			}
+
 			Cursor customCursor = toolkit.createCustomCursor(cursorImage,
-					cursorHotSpot, "Addition");
+					cursorHotSpot, cursorPath);
 			SEFrame.getInstance().setCursor(customCursor);
 		}
 

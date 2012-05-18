@@ -75,7 +75,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 		// ui manager
 		this.setUI(new GraphPanelUI());
-
+		
 		// observe the graph nodes
 		GraphNode.observeDepthMap(this, this.headNode);
 
@@ -201,7 +201,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 					}
 					
 					//TODO Hover functionality goes here! Refactor this stuff tomorrow.
-					@Override
+					/*@Override
 					public void mouseEntered(MouseEvent e) {
 						JComponent nodeComponent = getComponentForNode(node);
 						nodeComponent.setBackground(Color.ORANGE);
@@ -211,7 +211,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 					public void mouseExited(MouseEvent e) {
 						JComponent nodeComponent = getComponentForNode(node);
 						nodeComponent.setBackground(Color.WHITE);
-					}
+					}*/
 
 				};
 
