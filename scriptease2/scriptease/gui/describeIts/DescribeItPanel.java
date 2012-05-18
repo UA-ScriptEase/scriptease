@@ -23,7 +23,9 @@ import scriptease.model.atomic.DescribeIt;
 import scriptease.model.complex.ScriptIt;
 
 @SuppressWarnings("serial")
-public class DescribeItPanel extends JPanel implements GraphNodeObserver {
+public class DescribeItPanel{
+/*public class DescribeItPanel extends JPanel implements GraphNodeObserver {
+
 	private DescribeIt describeIt;
 
 	public DescribeItPanel(DescribeIt describeIt, boolean collapsed) {
@@ -44,13 +46,13 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 	}
 
 	// TODO abstract a common layoutManager between this and ParameterPanel
-	/**
+	*//**
 	 * DescribeItPanelLayoutManager handles laying out the describeItPanel in
 	 * either it's text form, or graph form
 	 * 
 	 * @author mfchurch
 	 * 
-	 */
+	 *//*
 	private class DescribeItPanelLayoutManager implements LayoutManager {
 		private static final int BUTTON_X_INDENT = 5;
 
@@ -134,12 +136,12 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 						insets.top + insets.bottom);
 		}
 
-		/**
+		*//**
 		 * Calculates the minimum layout size when the panel is collapsed (text)
 		 * 
 		 * @param parent
 		 * @return
-		 */
+		 *//*
 		private Dimension minimumCollapsedLayoutSize(int xSize, int ySize) {
 			int buttonHeight = 0;
 			int buttonWidth = 0;
@@ -170,11 +172,11 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			return new Dimension(xSize, ySize);
 		}
 
-		/**
+		*//**
 		 * Layout the graph panel in it's collapsed form (text)
 		 * 
 		 * @param parent
-		 */
+		 *//*
 		private void layoutCollapsed(int xLocation, int yLocation) {
 			int buttonHeight = 0;
 			int buttonWidth = 0;
@@ -205,12 +207,12 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			}
 		}
 
-		/**
+		*//**
 		 * Calculates the minimum layout size when the panel is expanded (graph)
 		 * 
 		 * @param parent
 		 * @return
-		 */
+		 *//*
 		protected Dimension minimumExpandedLayoutSize(int xSize, int ySize) {
 			int buttonHeight = 0;
 			int buttonWidth = 0;
@@ -234,12 +236,12 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			return minimumSize;
 		}
 
-		/**
+		*//**
 		 * Layout the graph panel in it's expanded form (graph)
 		 * 
 		 * @param xLocation
 		 * @param yLocation
-		 */
+		 *//*
 		protected void layoutExpanded(int xLocation, int yLocation) {
 			int buttonHeight = 0;
 			int buttonWidth = 0;
@@ -280,5 +282,5 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 	@Override
 	public String toString() {
 		return "DescribeItPanel [" + this.describeIt + "]";
-	}
+	}*/
 }

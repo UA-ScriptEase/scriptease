@@ -394,7 +394,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	public void createTabForModel(StoryModel model) {
 		final Icon icon = model.getTranslator().getIcon();
 
-		model.getStartNode().process(new AbstractNoOpGraphNodeVisitor() {
+		model.getRoot().getStartPoint().process(new AbstractNoOpGraphNodeVisitor() {
 			@Override
 			public void processQuestPointNode(QuestPointNode questPointNode) {
 
@@ -566,7 +566,6 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	 */
 	public void activatePanelForQuestPoint(StoryModel model,
 			QuestPoint questPoint) {
-
 		getActiveTab().setTree(questPoint);
 	}
 

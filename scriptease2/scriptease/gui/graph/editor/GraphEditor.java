@@ -2,6 +2,7 @@ package scriptease.gui.graph.editor;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -39,20 +40,11 @@ import scriptease.util.GUIOp;
  * 
  */
 @SuppressWarnings("serial")
-public abstract class GraphEditor extends JPanel implements
-		GraphNodeObserver{
-
-	// Enum for the possible tools supported in the graph
-	protected enum GraphTool {
-		NEW_TEXTNODE_TOOL, NEW_KNOWITNODE_TOOL, CONNECT_TOOL, 
-		DELETE_TOOL, SELECT_NODE_TOOL, SELECT_PATH_TOOL, 
-		QUESTPOINT_PROPERTIES_TOOL
-	}
+public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 
 	private Point mousePosition = new Point();
 	protected GraphNode headNode;
 	protected GraphNode oldSelectedNode;
-	private GraphTool activeTool;
 	protected JPanel editingPanel;
 
 	/**
@@ -72,31 +64,6 @@ public abstract class GraphEditor extends JPanel implements
 
 		this.buildPanels();
 	}
-
-	/**
-	 * Sets the activeTool to the given tool. Clears the oldSelectedNode.
-	 * 
-	 * @param tool
-	 */
-	protected void setActiveTool(GraphTool tool) {
-		this.activeTool = tool;
-		this.oldSelectedNode = null;
-	}
-
-	protected void setEditingPanel(JPanel panel) {
-		if (this.editingPanel != null)
-			this.editingPanel.add(panel, BorderLayout.SOUTH);
-	}
-
-	/**
-	 * Gets the current active tool
-	 * 
-	 * @return
-	 */
-	protected GraphTool getActiveTool() {
-		return this.activeTool;
-	}
-
 
 	/**
 	 * Sets the given GraphPanel as the TopComponent in the editingPanel, and
@@ -135,11 +102,10 @@ public abstract class GraphEditor extends JPanel implements
 		graphPanel.getViewport().setViewPosition(position);
 		this.editingPanel.add(new JScrollPane(panel), BorderLayout.CENTER);
 	}
-	
+
 	/**
-	 * Public method to add a toolbar to the graph editor.
-	 * Use ToolBarFactory class for an appropriate toolbar, or 
-	 * make your own.
+	 * Public method to add a toolbar to the graph editor. Use ToolBarFactory
+	 * class for an appropriate toolbar, or make your own.
 	 * 
 	 * @param toolBar
 	 */
@@ -149,9 +115,10 @@ public abstract class GraphEditor extends JPanel implements
 
 	private void buildPanels() {
 
-		//final JToolBar buttonToolBar = ToolBarFactory.buildQuestEditorToolBar();
+		// final JToolBar buttonToolBar =
+		// ToolBarFactory.buildQuestEditorToolBar();
 
-		//this.setLeftComponent(buttonToolBar);
+		// this.setLeftComponent(buttonToolBar);
 
 		this.editingPanel = new JPanel(new BorderLayout(), true);
 		this.add(editingPanel, BorderLayout.CENTER);
@@ -161,7 +128,7 @@ public abstract class GraphEditor extends JPanel implements
 		 * setGraphPanel in the constructor of subclasses
 		 */
 		GraphPanel graphPanel = new GraphPanel(this.headNode);
-		Point position = new Point(0,0);
+		Point position = new Point(0, 0);
 		setGraphPanel(graphPanel, position);
 	}
 
@@ -176,17 +143,33 @@ public abstract class GraphEditor extends JPanel implements
 		return this.headNode;
 	}
 
+	protected GraphNode previousNode;
+
+	/**
+	 * Sets the previous node's selected status to false, and the current node's
+	 * to true. Checks if previous node was null first.
+	 * 
+	 * @param currentNode
+	 * @param previousNode
+	 */
+	protected void swapSelected(GraphNode previousNode, GraphNode currentNode) {
+		if (previousNode != null)
+			previousNode.setSelected(false);
+		currentNode.setSelected(true);
+	}
+
 	@Override
 	public void nodeChanged(GraphNodeEvent event) {
 		final GraphNode sourceNode = event.getSource();
 		final GraphNodeEventType type = event.getEventType();
 
 		// only process clicked actions if you are contained in the active tab
-		if (type == GraphNodeEventType.SELECTED
-				) {
+		if (type == GraphNodeEventType.SELECTED) {
+
 			// Determine what the active tool is
 			switch (ToolBarButtonAction.getMode()) {
 			case CONNECT_GRAPH_NODE:
+				swapSelected(previousNode, sourceNode);
 				if (oldSelectedNode != null) {
 					// Determine which node is shallower in the graph, and which
 					// is deeper.
@@ -199,16 +182,21 @@ public abstract class GraphEditor extends JPanel implements
 
 					// connect the nodes if not connected
 					shallowerNode.addChild(deeperNode);
-					
+
 					// Reset the tool.
 					oldSelectedNode = null;
+
 				}
 				// update the last selected node
 				else
 					oldSelectedNode = sourceNode;
+
+				previousNode = sourceNode;
+
 				break;
 
 			case DISCONNECT_GRAPH_NODE:
+				swapSelected(previousNode, sourceNode);
 				if (oldSelectedNode != null) {
 					// Determine which node is shallower in the graph, and which
 					// is deeper.
@@ -225,29 +213,34 @@ public abstract class GraphEditor extends JPanel implements
 							&& deeperNode.getParents().size() > 1) {
 						shallowerNode.removeChild(deeperNode, false);
 					}
-					
+
 					// Reset the tool.
 					oldSelectedNode = null;
 				}
 				// update the last selected node
 				else
 					oldSelectedNode = sourceNode;
+
+				previousNode = sourceNode;
+
 				break;
-				
+
 			case DELETE_GRAPH_NODE:
-				List<GraphNode> parents = sourceNode.getParents();
-				List<GraphNode> children = sourceNode.getChildren();
+				if (sourceNode.isDeletable() && !sourceNode.isSelected()) {
+					List<GraphNode> parents = sourceNode.getParents();
+					List<GraphNode> children = sourceNode.getChildren();
 
-				// Remove the node from its parents.
-				sourceNode.removeParents();
+					// Remove the node from its parents.
+					sourceNode.removeParents();
 
-				// Remove the node from its children.
-				sourceNode.removeChildren();
+					// Remove the node from its children.
+					sourceNode.removeChildren();
 
-				// Re-connect each parent with each child.
-				for (GraphNode parent : parents) {
-					for (GraphNode child : children) {
-						parent.addChild(child);
+					// Re-connect each parent with each child.
+					for (GraphNode parent : parents) {
+						for (GraphNode child : children) {
+							parent.addChild(child);
+						}
 					}
 				}
 				break;
@@ -256,6 +249,7 @@ public abstract class GraphEditor extends JPanel implements
 			// Observe nodes
 			GraphNode.observeDepthMap(this, sourceNode);
 		}
+
 	}
 
 	/**
@@ -276,7 +270,7 @@ public abstract class GraphEditor extends JPanel implements
 			final Graphics2D g2 = (Graphics2D) g.create();
 
 			if (oldSelectedNode != null && mousePosition != null) {
-				g2.setColor(oldSelectedNode.getUnselectedColour());
+				g2.setColor(Color.GRAY);
 				g2.setStroke(new BasicStroke(1.5f));
 				GUIOp.paintArrow(g2, GUIOp.getMidRight(componentBuilder
 						.getComponentForNode(oldSelectedNode)), mousePosition);

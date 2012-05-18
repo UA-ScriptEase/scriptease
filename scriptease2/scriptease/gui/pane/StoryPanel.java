@@ -130,9 +130,9 @@ public class StoryPanel extends JPanel {
 	 * @param The QuestPoint to set the tree to.
 	 */
 	public void setTree(QuestPoint questPoint){
+
 		this.storyComponentTree.setRoot(questPoint);
 		
-		System.out.println("Setting Tree to :" + questPoint.toString());
 	}
 
 	/**

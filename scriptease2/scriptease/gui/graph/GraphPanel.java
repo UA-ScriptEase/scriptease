@@ -37,6 +37,8 @@ import scriptease.controller.observer.GraphNodeObserver;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.SETree.cell.TypeWidget;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
+import scriptease.gui.action.ToolBarButtonAction;
+import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.gui.graph.nodes.TextNode;
@@ -75,7 +77,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 		// ui manager
 		this.setUI(new GraphPanelUI());
-		
+
 		// observe the graph nodes
 		GraphNode.observeDepthMap(this, this.headNode);
 
@@ -108,6 +110,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 				|| eventType == GraphNodeEventType.CONNECTION_REMOVED) {
 			this.nodeDepthMap = null;
 		}
+
 		this.repaint();
 		this.revalidate();
 	}
@@ -182,7 +185,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		}
 
 		/**
-		 * A convenience method to re-use code.
+		 * Sets up the listeners.
 		 * 
 		 * @param node
 		 */
@@ -199,20 +202,32 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 						node.notifyObservers(new GraphNodeEvent(node,
 								GraphNodeEventType.SELECTED));
 					}
-					
-					//TODO Hover functionality goes here! Refactor this stuff tomorrow.
-					/*@Override
+
+					@Override
 					public void mouseEntered(MouseEvent e) {
-						JComponent nodeComponent = getComponentForNode(node);
-						nodeComponent.setBackground(Color.ORANGE);
+						if (!node.isSelected()) {
+							JComponent nodeComponent = getComponentForNode(node);
+
+							if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DELETE_GRAPH_NODE) {
+								if (node.isDeletable()) {
+									nodeComponent.setBackground(GUIOp
+											.scaleWhite(Color.RED, 2.4));
+								}
+							} else {
+								Color selectionColour = ScriptEaseUI.SELECTED_GAME_OBJECT;
+								nodeComponent.setBackground(GUIOp.scaleWhite(
+										selectionColour, 3.1));
+							}
+						}
 					}
-					
+
 					@Override
 					public void mouseExited(MouseEvent e) {
-						JComponent nodeComponent = getComponentForNode(node);
-						nodeComponent.setBackground(Color.WHITE);
-					}*/
-
+						if (!node.isSelected()) {
+							JComponent nodeComponent = getComponentForNode(node);
+							nodeComponent.setBackground(Color.WHITE);
+						}
+					}
 				};
 
 				component.addMouseListener(mouseAdapter);
@@ -254,11 +269,12 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		if (component != null) {
 			final Color selectionColour;
 			final Color backgroundColour;
+
 			if (node.isSelected()) {
-				selectionColour = node.getSelectedColour();
+				selectionColour = ScriptEaseUI.SELECTED_GAME_OBJECT;
 				backgroundColour = GUIOp.scaleWhite(selectionColour, 2.1);
 			} else {
-				selectionColour = node.getUnselectedColour();
+				selectionColour = Color.GRAY;
 				backgroundColour = Color.white;
 			}
 
@@ -579,9 +595,9 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 						// Set color of line based on selection
 						Color lineColour;
 						if (isLineSelected)
-							lineColour = child.getSelectedColour();
+							lineColour = ScriptEaseUI.SELECTED_GAME_OBJECT;
 						else
-							lineColour = child.getUnselectedColour();
+							lineColour = Color.GRAY;
 						g2.setColor(lineColour);
 
 						// Draw an arrow pointing towards the child.

@@ -1,18 +1,9 @@
 package scriptease.gui.graph.nodes;
 
-import java.awt.FlowLayout;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.GraphNodeVisitor;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentObserver;
-import scriptease.gui.SETree.cell.ScriptWidgetFactory;
-import scriptease.gui.SETree.cell.TypeWidget;
-import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 
@@ -61,41 +52,6 @@ public class KnowItNode extends GraphNode implements StoryComponentObserver {
 	@Override
 	public void process(GraphNodeVisitor processController) {
 		processController.processKnowItNode(this);
-	}
-
-	@SuppressWarnings("serial")
-	private class KnowItNodePanel extends JPanel {
-		public KnowItNodePanel() {
-			super(new FlowLayout(FlowLayout.CENTER, 2, 0));
-			this.setOpaque(true);
-			this.setBackground(backgroundColour);
-			buildPanel();
-		}
-
-		private void buildPanel() {
-			if (knowIt != null) {
-				JPanel typePanel = new JPanel(new FlowLayout(FlowLayout.CENTER,
-						0, 0));
-				typePanel.setOpaque(false);
-				
-				for (String type : knowIt.getAcceptableTypes()) {
-					TypeWidget typeWidget = ScriptWidgetFactory
-							.buildTypeWidget(type);
-					typeWidget.setSelected(true);
-					typeWidget.setBackground(ScriptEaseUI.COLOUR_BOUND);
-					typePanel.add(typeWidget);
-				}
-
-				this.add(typePanel);
-				this.add(new JLabel(knowIt.getDisplayText()));
-			}
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					validate();
-				}
-			});
-		}
 	}
 
 	@Override
