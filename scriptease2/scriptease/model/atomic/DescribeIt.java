@@ -173,7 +173,7 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 		this.clearSelection();
 		// Select the found path
 		for (GraphNode node : path) {
-			node.setSelectedColour(getSelectionColourForPath(path));
+			//node.setSelectedColour(getSelectionColourForPath(path));
 			node.setSelected(true);
 		}
 	}

@@ -29,7 +29,8 @@ import scriptease.model.atomic.KnowIt;
  *
  */
 @SuppressWarnings("serial")
-public class DescribeItGraphEditor extends GraphEditor {
+public class DescribeItGraphEditor {
+/*public class DescribeItGraphEditor extends GraphEditor {
 	private final String NEW_OPTIONNODE_TEXT = "<html>New Option Node</html>";
 	private final String NEW_TEXTNODE_TEXT = "<html>New Text Node</html>";
  
@@ -47,12 +48,12 @@ public class DescribeItGraphEditor extends GraphEditor {
 		this.setHeadNode(this.editedDescribeIt.getHeadNode());
 	}
 
-	/**
+	*//**
 	 * Gets the changes to the original describeIt in the form of a new
 	 * describeIt
 	 * 
 	 * @return
-	 */
+	 *//*
 	public DescribeIt getChanges() {
 		return this.editedDescribeIt;
 	}
@@ -65,9 +66,9 @@ public class DescribeItGraphEditor extends GraphEditor {
 		setEditingPanel(null);
 	}
 
-	/**
+	*//**
 	 * Supports TextNodes and KnowItNodes for DescribeIts
-	 */
+	 *//*
 	protected Collection<AbstractButton> getNodeButtons() {
 		Collection<AbstractButton> buttons = new ArrayList<AbstractButton>();
 		AbstractButton textNodeButton = new JRadioButtonMenuItem(
@@ -93,9 +94,9 @@ public class DescribeItGraphEditor extends GraphEditor {
 		return buttons;
 	}
 
-	/**
+	*//**
 	 * Supports Node and Path selection
-	 */
+	 *//*
 	protected Collection<AbstractButton> getSelectButtons() {
 		Collection<AbstractButton> buttons = new ArrayList<AbstractButton>();
 		AbstractButton selectNodeButton = new JRadioButtonMenuItem(
@@ -158,10 +159,10 @@ public class DescribeItGraphEditor extends GraphEditor {
 				break;
 			case SELECT_PATH_TOOL:
 				this.editedDescribeIt.selectFromHeadToNode(sourceNode);
-				/*
+				
 				 * only allow for path assigning on complete paths (finish with
 				 * a terminal)
-				 */
+				 
 				if (sourceNode.isTerminalNode())
 					setEditingPanel(new PathAssigner(this.editedDescribeIt));
 				else
@@ -169,5 +170,5 @@ public class DescribeItGraphEditor extends GraphEditor {
 				break;
 			}
 		}
-	}
+	}*/
 }

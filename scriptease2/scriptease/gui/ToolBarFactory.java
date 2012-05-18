@@ -110,7 +110,8 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	//public static JToolBar buildQuestEditorToolBar(final QuestEditor editor) {
+	// public static JToolBar buildQuestEditorToolBar(final QuestEditor editor)
+	// {
 	public static JToolBar buildQuestEditorToolBar(final QuestEditor editor) {
 
 		final JToolBar questEditorToolBar = buildGraphEditorToolBar();
@@ -173,13 +174,15 @@ public class ToolBarFactory {
 				final GraphNode node = event.getSource();
 
 				// TODO: A bug persists here where the QuestToolBar side will
-				// stop updating for node selected. Everything else keeps updating,
+				// stop updating for node selected. Everything else keeps
+				// updating,
 				// though.
 				//
 				// Maybe this is not getting called if the node gets
 				// deleted before it has a chance to be called.
 				// What also seems likely is that it thinks a different node
 				// is the headNode, which should not be happening.
+
 				GraphNode.observeDepthMap(this, editor.getHeadNode());
 
 				node.process(new AbstractNoOpGraphNodeVisitor() {
@@ -193,29 +196,6 @@ public class ToolBarFactory {
 						// Need to make sure this stuff happens later!
 
 						switch (ToolBarButtonAction.getMode()) {
-
-						// case INSERT_GRAPH_NODE:
-
-						case DELETE_GRAPH_NODE:
-
-							List<GraphNode> children = questPointNode
-									.getChildren();
-
-							for (GraphNode child : children) {
-								child.process(new AbstractNoOpGraphNodeVisitor() {
-									public void processQuestPointNode(
-											QuestPointNode questPointNode) {
-
-										QuestPoint questPoint = questPointNode
-												.getQuestPoint();
-										int fanIn = questPoint.getFanIn();
-
-										if (fanIn > 1)
-											questPoint.setFanIn(fanIn - 1);
-									}
-								});
-							}
-							break;
 
 						case DISCONNECT_GRAPH_NODE:
 
@@ -232,13 +212,39 @@ public class ToolBarFactory {
 
 								}
 							});
+						case SELECT_GRAPH_NODE:
+						case INSERT_GRAPH_NODE:
+						case CONNECT_GRAPH_NODE:
 
+							updateQuestToolBar(nameField, commitButton,
+									fanInSpinner, questPointNode);
+							break;
+
+						case DELETE_GRAPH_NODE:
+
+							// Only delete the node if there are parents and
+							// children to repair the graph with.
+							if (node.isDeletable() && !node.isSelected()) {
+								List<GraphNode> children = questPointNode
+										.getChildren();
+
+								for (GraphNode child : children) {
+									child.process(new AbstractNoOpGraphNodeVisitor() {
+										public void processQuestPointNode(
+												QuestPointNode questPointNode) {
+
+											QuestPoint questPoint = questPointNode
+													.getQuestPoint();
+											int fanIn = questPoint.getFanIn();
+
+											if (fanIn > 1)
+												questPoint.setFanIn(fanIn - 1);
+										}
+									});
+								}
+							}
 							break;
 						}
-
-						updateQuestToolBar(nameField, commitButton,
-								fanInSpinner, questPointNode);
-
 					}
 				});
 				// GraphNode.observeDepthMap(this, event.getSource());
@@ -519,7 +525,7 @@ public class ToolBarFactory {
 					new Integer(maxFanIn), new Integer(1));
 
 			fanInSpinner.setModel(fanInSpinnerModel);
-			
+
 			if (fanInSpinner.getChangeListeners().length > 1) {
 				fanInSpinner.removeChangeListener(fanInSpinner
 						.getChangeListeners()[1]);

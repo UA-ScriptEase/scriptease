@@ -1,6 +1,5 @@
 package scriptease.gui.graph.nodes;
 
-import java.awt.Color;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +12,6 @@ import scriptease.controller.GraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.GraphNodeObserver;
-import scriptease.gui.SETree.ui.ScriptEaseUI;
 import sun.awt.util.IdentityArrayList;
 
 /**
@@ -33,9 +31,6 @@ public abstract class GraphNode implements Cloneable {
 	protected boolean selected;
 	protected boolean terminal;
 
-	protected Color selectedColour = ScriptEaseUI.COLOUR_GAME_OBJECT;
-	protected Color unselectedColour = Color.GRAY;
-	protected Color backgroundColour = Color.WHITE;
 	// Upper bound on longest path
 	private final int INF_PATH_LENGTH = 100;
 	// default size for number of parents and children
@@ -109,9 +104,9 @@ public abstract class GraphNode implements Cloneable {
 		// reset the clone
 		clone.init();
 
-		clone.setSelectedColour(this.selectedColour);
-		clone.setUnselectedColour(this.unselectedColour);
-		clone.setBackgroundColour(this.backgroundColour);
+		// clone.setSelectedColour(this.selectedColour);
+		// clone.setUnselectedColour(this.unselectedColour);
+		// clone.setBackgroundColour(this.backgroundColour);
 
 		clone.setSelected(this.selected);
 		clone.setTerminal(this.terminal);
@@ -171,9 +166,7 @@ public abstract class GraphNode implements Cloneable {
 	 * @param isSelected
 	 */
 	public void setSelected(Boolean isSelected) {
-		if (this.selected != isSelected) {
-			this.selected = isSelected;
-		}
+		this.selected = isSelected;
 	}
 
 	/**
@@ -183,6 +176,24 @@ public abstract class GraphNode implements Cloneable {
 	 */
 	public boolean isSelected() {
 		return this.selected;
+	}
+
+	/**
+	 * Returns whether the GraphNode is deletable or not. Determined by if the
+	 * GraphNode has parents and children. Does not need to be called in order
+	 * to delete the node, but it is useful if you need to check if the node is
+	 * the start or end node.
+	 * 
+	 * @return
+	 */
+	public boolean isDeletable() {
+		List<GraphNode> parents = this.getParents();
+		List<GraphNode> children = this.getChildren();
+
+		if (parents.size() > 0 && children.size() > 0)
+			return true;
+		else
+			return false;
 	}
 
 	/**
@@ -415,30 +426,6 @@ public abstract class GraphNode implements Cloneable {
 
 	public abstract void process(GraphNodeVisitor processController);
 
-	public void setSelectedColour(Color colour) {
-		this.selectedColour = colour;
-	}
-
-	public Color getSelectedColour() {
-		return this.selectedColour;
-	}
-
-	public void setUnselectedColour(Color colour) {
-		this.unselectedColour = colour;
-	}
-
-	public Color getUnselectedColour() {
-		return this.unselectedColour;
-	}
-
-	public void setBackgroundColour(Color colour) {
-		this.backgroundColour = colour;
-	}
-
-	public Color getBackgroundColour() {
-		return this.backgroundColour;
-	}
-
 	public void addChildren(Collection<GraphNode> children) {
 		for (GraphNode child : children) {
 			this.addChild(child);
@@ -582,7 +569,7 @@ public abstract class GraphNode implements Cloneable {
 			nodes.put(this, 0);
 		return nodes;
 	}
-	
+
 	/**
 	 * 
 	 * @param observer

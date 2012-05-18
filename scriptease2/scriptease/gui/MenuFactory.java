@@ -515,8 +515,10 @@ public class MenuFactory {
 										public void processDescribeIt(
 												KnowItBindingDescribeIt described) {
 											JFrame frame = new JFrame();
-											frame.add(new DescribeItGraphEditor(
-													described.getValue()));
+											
+											//TODO DescribeIt stuff!
+											/*frame.add(new DescribeItGraphEditor(
+													described.getValue()));*/
 											frame.setMinimumSize(new Dimension(
 													800, 300));
 											frame.setVisible(true);
