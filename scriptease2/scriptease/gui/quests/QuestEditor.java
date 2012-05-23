@@ -28,12 +28,11 @@ import scriptease.model.StoryModelPool;
 @SuppressWarnings("serial")
 public class QuestEditor extends GraphEditor {
 	private final JToolBar buttonToolBar;
-
+	
 	public QuestEditor(final GraphNode start) {
 		super();
-
-		// Set the headNode to be the start node of the graph.
 		this.setHeadNode(start);
+		this.buildPanels();
 
 		buttonToolBar = ToolBarFactory.buildQuestEditorToolBar(this);
 
@@ -53,7 +52,6 @@ public class QuestEditor extends GraphEditor {
 	 */
 	private void insertQuestPoint(GraphNode node) {
 		// if this is the second click,
-		swapSelected(previousNode, node);
 
 		if (oldSelectedNode != null) {
 
@@ -63,8 +61,7 @@ public class QuestEditor extends GraphEditor {
 
 			// Cases for clicking the same node.
 			if (oldSelectedNode == node) {
-				// Special case: double-clicking the start node adds a new node
-				// after the start node.
+
 				if (oldSelectedNode == headNode) {
 					// Get the children of the start node.
 					List<GraphNode> startNodeChildren = oldSelectedNode
@@ -79,8 +76,7 @@ public class QuestEditor extends GraphEditor {
 					// Add the old children to the new node.
 					newQuestPointNode.addChildren(startNodeChildren);
 				}
-				// Special case: double-clicking a terminal node adds a new node
-				// before the terminal node.
+				
 				else if (oldSelectedNode.isTerminalNode()) {
 					// Get the parents of the end node.
 					List<GraphNode> endNodeParents = oldSelectedNode
@@ -148,8 +144,6 @@ public class QuestEditor extends GraphEditor {
 			switch (ToolBarButtonAction.getMode()) {
 			case INSERT_GRAPH_NODE:
 				insertQuestPoint(sourceNode);
-				previousNode = sourceNode;
-
 				break;
 
 			case SELECT_GRAPH_NODE:
@@ -158,7 +152,6 @@ public class QuestEditor extends GraphEditor {
 						.getActiveModel();
 
 				if (model != null) {
-					swapSelected(previousNode, sourceNode);
 					sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
 						@Override
 						public void processQuestPointNode(
@@ -174,8 +167,6 @@ public class QuestEditor extends GraphEditor {
 							// setHeadNode(headNode);
 						}
 					});
-					previousNode = sourceNode;
-
 				}
 				break;
 

@@ -1,24 +1,17 @@
 package scriptease.gui;
 
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.KeyboardFocusManager;
-import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.GroupLayout;
@@ -54,7 +47,6 @@ import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
-import scriptease.util.FileOp;
 
 /**
  * The main application frame. Contains menu bar, dynamic Property Pane and a
@@ -68,12 +60,6 @@ import scriptease.util.FileOp;
  */
 @SuppressWarnings("serial")
 public final class SEFrame extends JFrame implements StoryModelPoolObserver {
-	public static final int DRAW_PATH_CURSOR = 1;
-	public static final int ERASE_PATH_CURSOR = 2;
-	public static final int ADD_NODE_CURSOR = 3;
-	public static final int DELETE_NODE_CURSOR = 4;
-	public static final int SYSTEM_CURSOR = 5;
-
 	private static final int MIN_HEIGHT = 480;
 	private static final int MIN_WIDTH = 640;
 	private static final int PREFERRED_PROPERTIES_THICKNESS = 250;
@@ -108,11 +94,6 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 			}
 		});
 
-		// if (ScriptEase.DEBUG_MODE) {
-		// this.middlePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
-		// ((JSplitPane) this.middlePane).setTopComponent(this.storyPane);
-		// ((JSplitPane) this.middlePane).setResizeWeight(1.0);
-		// } else {
 		this.middlePane = new JPanel();
 		this.middlePane.setLayout(new GridLayout(1, 1));
 		this.middlePane.add(storyTabs);
@@ -567,64 +548,5 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	public void activatePanelForQuestPoint(StoryModel model,
 			QuestPoint questPoint) {
 		getActiveTab().setTree(questPoint);
-	}
-
-	/**
-	 * Changes the cursor for the application based on the cursor name given in
-	 * the parameter. These are predefined cursors.
-	 * 
-	 * @param cursorName
-	 */
-	public void changeCursor(int cursorName) {
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-
-		String cursorPath = "scriptease/resources/icons/cursors/";
-		Point cursorHotSpot = null;
-
-		switch (cursorName) {
-
-		case DRAW_PATH_CURSOR:
-			cursorPath += "path_draw.png";
-			cursorHotSpot = new Point(0, 31);
-			break;
-		case ERASE_PATH_CURSOR:
-			cursorPath += "path_erase.png";
-			cursorHotSpot = new Point(0, 31);
-			break;
-		case ADD_NODE_CURSOR:
-			cursorPath += "node_add.png";
-			cursorHotSpot = new Point(0, 0);
-			break;
-		case DELETE_NODE_CURSOR:
-			cursorPath += "node_delete.png";
-			cursorHotSpot = new Point(0, 0);
-			break;
-		case SYSTEM_CURSOR:
-		default:
-			setCursor(null);
-			break;
-		}
-
-		if (cursorHotSpot != null) {
-			BufferedImage cursorImage;
-
-			try {
-				cursorImage = ImageIO.read(FileOp
-						.getFileResource(cursorPath));
-			} catch (IOException e) {
-				UncaughtExceptionHandler handler = Thread
-						.getDefaultUncaughtExceptionHandler();
-				handler.uncaughtException(Thread.currentThread(),
-						new IllegalStateException("Exception " + e
-								+ "while adding the icon for " + "Cursor: "
-								+ cursorPath));
-				cursorImage = null;
-			}
-
-			Cursor customCursor = toolkit.createCustomCursor(cursorImage,
-					cursorHotSpot, cursorPath);
-			SEFrame.getInstance().setCursor(customCursor);
-		}
-
 	}
 }

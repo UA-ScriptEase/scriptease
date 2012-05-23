@@ -49,10 +49,21 @@ import scriptease.util.FileOp;
  * toolbars for editing graphs. A specialized Quest Editor Toolbar can also be
  * created.
  * 
+ * The class also determines toolbar functionality. These toolbars are used to
+ * act upon the GraphEditor, QuestEditor, and in the future, DescribeItEditor.
+ * 
  * @author kschenk
  * 
  */
 public class ToolBarFactory {
+
+	/**
+	 * Do not delete this. Ever. Otherwise Java will Garbage Collect all
+	 * references to the observer, and break the quest editor in ScriptEase2.
+	 * 
+	 * This makes sure the observer always exists.
+	 */
+	private static GraphNodeObserver questBarObserver;
 
 	/**
 	 * Builds a toolbar to edit graphs with. Includes buttons for selecting
@@ -111,8 +122,6 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	// public static JToolBar buildQuestEditorToolBar(final QuestEditor editor)
-	// {
 	public static JToolBar buildQuestEditorToolBar(final QuestEditor editor) {
 
 		final JToolBar questEditorToolBar = buildGraphEditorToolBar();
@@ -127,10 +136,6 @@ public class ToolBarFactory {
 				Il8nResources.getString("Committing") + ": ");
 		final JLabel fanInLabel = new JLabel("Fan In: ");
 
-		nameLabel.setEnabled(false);
-		commitLabel.setEnabled(false);
-		fanInLabel.setEnabled(false);
-
 		final JTextField nameField = nameField(new Dimension(NAME_FIELD_LENGTH,
 				TOOL_BAR_HEIGHT));
 
@@ -143,12 +148,6 @@ public class ToolBarFactory {
 			public void processQuestPointNode(QuestPointNode questPointNode) {
 				updateQuestToolBar(nameField, commitButton, fanInSpinner,
 						questPointNode);
-
-				if (questPointNode != null) {
-					nameLabel.setEnabled(true);
-					commitLabel.setEnabled(true);
-					fanInLabel.setEnabled(true);
-				}
 			}
 		});
 
@@ -174,98 +173,10 @@ public class ToolBarFactory {
 
 		questEditorToolBar.add(fanInSpinner);
 
-		GraphNodeObserver nodeObserver = new GraphNodeObserver() {
+		questBarObserver = new QuestToolBarObserver(nameField, commitButton,
+				fanInSpinner, editor);
 
-			@Override
-			public void nodeChanged(GraphNodeEvent event) {
-
-				nameLabel.setEnabled(true);
-				commitLabel.setEnabled(true);
-				fanInLabel.setEnabled(true);
-
-				final GraphNode sourceNode = event.getSource();
-				final GraphNodeEventType type = event.getEventType();
-
-				// TODO: A bug persists here where the QuestToolBar side will
-				// stop updating for node selected. Everything else keeps
-				// updating,
-				// though.
-				//
-				// Maybe this is not getting called if the node gets
-				// deleted before it has a chance to be called.
-				// What also seems likely is that it thinks a different node
-				// is the headNode, which should not be happening.
-
-				if (type == GraphNodeEventType.SELECTED) {
-
-					sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
-						@Override
-						public void processQuestPointNode(
-								QuestPointNode questPointNode) {
-
-							// If it's selected, update.
-							// If path removed, update.
-							// If path added, update
-							// Need to make sure this stuff happens later!
-
-							switch (ToolBarButtonAction.getMode()) {
-
-							case DISCONNECT_GRAPH_NODE:
-
-								QuestPoint questPoint = questPointNode
-										.getQuestPoint();
-								int fanIn = questPoint.getFanIn();
-
-								if (fanIn > 1)
-									questPoint.setFanIn(fanIn - 1);
-
-							case SELECT_GRAPH_NODE:
-							case INSERT_GRAPH_NODE:
-							case CONNECT_GRAPH_NODE:
-
-								updateQuestToolBar(nameField, commitButton,
-										fanInSpinner, questPointNode);
-								break;
-
-							case DELETE_GRAPH_NODE:
-
-								// Only delete the node if there are parents and
-								// children to repair the graph with.
-								if (sourceNode.isDeletable()
-										&& !sourceNode.isSelected()) {
-									List<GraphNode> children = questPointNode
-											.getChildren();
-
-									for (GraphNode child : children) {
-										child.process(new AbstractNoOpGraphNodeVisitor() {
-											public void processQuestPointNode(
-													QuestPointNode questPointNode) {
-
-												QuestPoint questPoint = questPointNode
-														.getQuestPoint();
-												int fanIn = questPoint
-														.getFanIn();
-
-												if (fanIn > 1)
-													questPoint
-															.setFanIn(fanIn - 1);
-											}
-										});
-									}
-								}
-								break;
-							}
-						}
-					});
-
-				} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
-					GraphNode.observeDepthMap(this, editor.getHeadNode());
-
-				}
-			}
-		};
-
-		GraphNode.observeDepthMap(nodeObserver, editor.getHeadNode());
+		GraphNode.observeDepthMap(questBarObserver, editor.getHeadNode());
 
 		return questEditorToolBar;
 	}
@@ -298,7 +209,6 @@ public class ToolBarFactory {
 	 */
 	private static JTextField nameField(final Dimension maxSize) {
 		JTextField nameField = new JTextField(10);
-
 		nameField.setMaximumSize(maxSize);
 
 		return nameField;
@@ -319,8 +229,6 @@ public class ToolBarFactory {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				String text = nField.getText();
-				// System.out.println("Text!$!$@!!%@!%()$~)!$*)! ! WQETEWTXT !"
-				// + text);
 				qNode.getQuestPoint().setDisplayText(text);
 			}
 
@@ -333,7 +241,6 @@ public class ToolBarFactory {
 			public void changedUpdate(DocumentEvent e) {
 				insertUpdate(e);
 			}
-
 		};
 
 		return nameFieldListener;
@@ -372,11 +279,6 @@ public class ToolBarFactory {
 		final String COMMIT_FALSE_ICON = "commit_false";
 		final String COMMIT_TRUE_ICON = "commit_true";
 
-		committingButton.setOpaque(false);
-		committingButton.setContentAreaFilled(false);
-		committingButton.setBorderPainted(false);
-		committingButton.setRolloverEnabled(false);
-
 		try {
 			BufferedImage falseIconImage = ImageIO.read(FileOp
 					.getFileResource("scriptease/resources/icons/buttonicons/"
@@ -390,6 +292,10 @@ public class ToolBarFactory {
 			committingButton.setSelectedIcon(new ImageIcon(trueIconImage));
 			committingButton.setDisabledIcon(new ImageIcon(falseIconImage));
 
+			committingButton.setOpaque(false);
+			committingButton.setContentAreaFilled(false);
+			committingButton.setBorderPainted(false);
+			committingButton.setRolloverEnabled(false);
 		} catch (IOException e) {
 			UncaughtExceptionHandler handler = Thread
 					.getDefaultUncaughtExceptionHandler();
@@ -397,7 +303,7 @@ public class ToolBarFactory {
 					new IllegalStateException("Exception " + e
 							+ "while adding icon for CommitButton"));
 
-			committingButton.setText("><");
+			committingButton.setText("<C>");
 		}
 
 		return committingButton;
@@ -419,13 +325,8 @@ public class ToolBarFactory {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					questN.getQuestPoint().setCommitting(true);
-
-					System.out.println("SSSSSSSSSEEEEEEEEEEEELLLECTED!");
-
 				} else {
 					questN.getQuestPoint().setCommitting(false);
-
-					System.out.println("DEEEEEEEEESELECTED!");
 				}
 			}
 		};
@@ -557,6 +458,105 @@ public class ToolBarFactory {
 
 			fanInSpinner.setModel(fanInSpinnerModel);
 			fanInSpinner.setEnabled(false);
+		}
+	}
+
+	/**
+	 * Private observer for the QuestToolBar.
+	 * 
+	 * @author kschenk
+	 */
+	private static class QuestToolBarObserver implements GraphNodeObserver {
+		private JTextField nameField;
+		private JToggleButton commitButton;
+		private JSpinner fanInSpinner;
+		
+		private GraphNode previousNode;
+
+		public QuestToolBarObserver(JTextField nameField,
+				JToggleButton commitButton, JSpinner fanInSpinner, QuestEditor editor) {
+			this.nameField = nameField;
+			this.commitButton = commitButton;
+			this.fanInSpinner = fanInSpinner;
+			
+			this.previousNode = editor.getHeadNode();
+		}
+		
+		protected void swapSelected(GraphNode previousNode, GraphNode currentNode) {
+			if (previousNode != null)
+				previousNode.setSelected(false);
+			currentNode.setSelected(true);
+		}
+
+		private void deleteGraphNode(GraphNode sourceNode,
+				QuestPointNode questPointNode) {
+			if (sourceNode.isDeletable() && !sourceNode.isSelected()) {
+				List<GraphNode> children = questPointNode.getChildren();
+
+				for (GraphNode child : children) {
+					child.process(new AbstractNoOpGraphNodeVisitor() {
+						public void processQuestPointNode(
+								QuestPointNode questPointNode) {
+
+							QuestPoint questPoint = questPointNode
+									.getQuestPoint();
+							int fanIn = questPoint.getFanIn();
+
+							if (fanIn > 1)
+								questPoint.setFanIn(fanIn - 1);
+						}
+					});
+				}
+			}
+
+			previousNode.process(new AbstractNoOpGraphNodeVisitor() {
+				public void processQuestPointNode(QuestPointNode questPointNode) {
+					updateQuestToolBar(nameField, commitButton, fanInSpinner,
+							questPointNode);
+				}
+			});
+		}
+
+		@Override
+		public void nodeChanged(GraphNodeEvent event) {
+
+			final GraphNode sourceNode = event.getSource();
+			final GraphNodeEventType type = event.getEventType();
+
+			if (type == GraphNodeEventType.SELECTED) {
+				sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
+					@Override
+					public void processQuestPointNode(
+							QuestPointNode questPointNode) {
+						switch (ToolBarButtonAction.getMode()) {
+
+						case DISCONNECT_GRAPH_NODE:
+							QuestPoint questPoint = questPointNode
+									.getQuestPoint();
+							int fanIn = questPoint.getFanIn();
+
+							if (fanIn > 1)
+								questPoint.setFanIn(fanIn - 1);
+
+						case SELECT_GRAPH_NODE:
+						case INSERT_GRAPH_NODE:
+						case CONNECT_GRAPH_NODE:
+							updateQuestToolBar(nameField, commitButton,
+									fanInSpinner, questPointNode);
+							swapSelected(previousNode, sourceNode);
+							previousNode = sourceNode;
+							break;
+
+						case DELETE_GRAPH_NODE:
+							deleteGraphNode(sourceNode, questPointNode);
+							break;
+						}
+					}
+				});
+
+			} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
+				GraphNode.observeDepthMap(questBarObserver, sourceNode);
+			}
 		}
 	}
 }

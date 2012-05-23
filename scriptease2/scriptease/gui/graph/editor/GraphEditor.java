@@ -45,8 +45,6 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 	private Point mousePosition = new Point();
 	protected GraphNode headNode;
 	protected GraphNode oldSelectedNode;
-	protected JPanel editingPanel;
-	protected GraphNode previousNode;
 
 	/**
 	 * Constructor.
@@ -69,11 +67,13 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 		this.add(toolBar, BorderLayout.PAGE_START);
 	}
 
-	private void buildPanels() {
-		this.editingPanel = new JPanel(new BorderLayout(), true);
-		this.add(editingPanel, BorderLayout.CENTER);
-
-		GraphPanel graphPanel = new GraphPanel(this.headNode);
+	/**
+	 * Builds the panels for the GraphEditor.
+	 */
+	protected void buildPanels() {
+		GraphPanel graphPanel = new GraphPanel(this.getHeadNode());
+	
+		ToolBarButtonAction.setJComponent(graphPanel);
 
 		MouseAdapter connectArrowListener = new MouseAdapter() {
 			@Override
@@ -99,7 +99,7 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 		// override the UI with the GraphEditors UI
 		graphPanel.setUI(new GraphEditorUI(graphPanel));
 
-		this.editingPanel.add(new JScrollPane(graphPanel), BorderLayout.CENTER);
+		this.add(new JScrollPane(graphPanel), BorderLayout.CENTER);
 		
 	}
 
@@ -110,28 +110,13 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 		
 		GraphNode.observeDepthMap(this, this.headNode);
 
-		this.buildPanels();
-
 		this.getHeadNode().setSelected(true);
-		previousNode = this.getHeadNode();
 	}
+	
+	
 
 	public GraphNode getHeadNode() {
 		return this.headNode;
-	}
-
-
-	/**
-	 * Sets the previous node's selected status to false, and the current node's
-	 * to true. Checks if previous node was null first.
-	 * 
-	 * @param currentNode
-	 * @param previousNode
-	 */
-	protected void swapSelected(GraphNode previousNode, GraphNode currentNode) {
-		if (previousNode != null)
-			previousNode.setSelected(false);
-		currentNode.setSelected(true);
 	}
 
 	@Override
@@ -145,7 +130,6 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 			// Determine what the active tool is
 			switch (ToolBarButtonAction.getMode()) {
 			case CONNECT_GRAPH_NODE:
-				swapSelected(previousNode, sourceNode);
 				if (oldSelectedNode != null) {
 					// Determine which node is shallower in the graph, and which
 					// is deeper.
@@ -167,12 +151,9 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 				else
 					oldSelectedNode = sourceNode;
 
-				previousNode = sourceNode;
-
 				break;
 
 			case DISCONNECT_GRAPH_NODE:
-				swapSelected(previousNode, sourceNode);
 				if (oldSelectedNode != null) {
 					// Determine which node is shallower in the graph, and which
 					// is deeper.
@@ -197,8 +178,6 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 				else
 					oldSelectedNode = sourceNode;
 
-				previousNode = sourceNode;
-
 				break;
 
 			case DELETE_GRAPH_NODE:
@@ -206,10 +185,8 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 					List<GraphNode> parents = sourceNode.getParents();
 					List<GraphNode> children = sourceNode.getChildren();
 
-					// Remove the node from its parents.
 					sourceNode.removeParents();
 
-					// Remove the node from its children.
 					sourceNode.removeChildren();
 
 					// Re-connect each parent with each child.
@@ -222,10 +199,8 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 				break;
 			}
 		} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
-			// Observe nodes
 			GraphNode.observeDepthMap(this, sourceNode);
 		}
-
 	}
 
 	/**
@@ -242,7 +217,7 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 
 		@Override
 		public void paint(Graphics g, JComponent c) {
-			// Clone the graphics context.
+
 			final Graphics2D g2 = (Graphics2D) g.create();
 
 			if (oldSelectedNode != null && mousePosition != null) {
