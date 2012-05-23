@@ -27,16 +27,13 @@ import scriptease.model.StoryModelPool;
  */
 @SuppressWarnings("serial")
 public class QuestEditor extends GraphEditor {
-	private final JToolBar buttonToolBar;
-	
+
 	public QuestEditor(final GraphNode start) {
 		super();
 		this.setHeadNode(start);
 		this.buildPanels();
 
-		buttonToolBar = ToolBarFactory.buildQuestEditorToolBar(this);
-
-		addToolBar(buttonToolBar);
+		addToolBar(ToolBarFactory.buildQuestEditorToolBar(this));
 
 		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
 
@@ -138,7 +135,7 @@ public class QuestEditor extends GraphEditor {
 
 		// only process clicked actions if you are contained in the active tab
 		if (type == GraphNodeEventType.SELECTED
-				&& SEFrame.getInstance().getActiveTab().contains(this)) {
+				&& SEFrame.getInstance().getActiveStory().contains(this)) {
 
 			// Determine the active tool
 			switch (ToolBarButtonAction.getMode()) {

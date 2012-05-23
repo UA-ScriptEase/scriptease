@@ -180,20 +180,46 @@ public abstract class GraphNode implements Cloneable {
 
 	/**
 	 * Returns whether the GraphNode is deletable or not. Determined by if the
-	 * GraphNode has parents and children. Does not need to be called in order
-	 * to delete the node, but it is useful if you need to check if the node is
-	 * the start or end node.
+	 * GraphNode is a start or end node. Does not need to be called in order
+	 * to delete the node, but it is useful if you need to check both.
 	 * 
 	 * @return
 	 */
 	public boolean isDeletable() {
+		if (this.isEndNode() || this.isStartNode())
+			return false;
+		else
+			return true;
+	}
+	
+	/**
+	 * Returns true if the current node is the start node. Otherwise, returns
+	 * false.
+	 * 
+	 * @return
+	 */
+		public boolean isStartNode() {
 		List<GraphNode> parents = this.getParents();
+
+		if (parents.size() > 0)
+			return false;
+		else
+			return true;
+	}
+	/**
+	 * Returns true if the current node is the end node. Otherwise, returns
+	 * false.
+	 * 
+	 * @return
+	 */
+
+	public boolean isEndNode() {
 		List<GraphNode> children = this.getChildren();
 
-		if (parents.size() > 0 && children.size() > 0)
-			return true;
-		else
+		if (children.size() > 0)
 			return false;
+		else
+			return true;
 	}
 
 	/**
