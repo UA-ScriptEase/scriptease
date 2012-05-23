@@ -216,6 +216,10 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		}
 	}
 
+	/**
+	 * Creates a status bar.
+	 * @return
+	 */
 	private JComponent buildStatusBar() {
 		final Box statusBar = Box.createHorizontalBox();
 		final JLabel currentTranslatorLabel;
@@ -271,37 +275,6 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 			this.rightSplit.setRightComponent(newGameObjectPane);
 			this.rightSplit.revalidate();
 		}
-	}
-
-	/**
-	 * Determines the selected StoryComponent in the internal frame with focus
-	 * and configures the properties pane to display its properties. If there is
-	 * no selection or no frames with focus, then an empty properties pane is
-	 * displayed.
-	 */
-	public void updatePropertiesPane() {
-		if (!ScriptEase.DEBUG_MODE)
-			return;
-		final List<StoryComponent> selection = this.getSelection();
-		final StoryModel activeModel = StoryModelPool.getInstance()
-				.getActiveModel();
-
-		final JPanel newProps;
-		final DefaultPatternPaneFactory factory;
-		final StoryComponent firstSelection;
-
-		if ((selection.size() != 1) || (activeModel == null)
-				|| ((firstSelection = selection.get(0)) == null)) {
-			newProps = this.buildEmptyPropertiesPanel();
-		} else {
-			factory = new DefaultPatternPaneFactory();
-			newProps = factory.buildPane(firstSelection);
-		}
-
-		newProps.setPreferredSize(new Dimension(PREFERRED_PROPERTIES_THICKNESS,
-				PREFERRED_PROPERTIES_THICKNESS));
-		((JSplitPane) this.middlePane).setBottomComponent(newProps);
-		this.validate();
 	}
 
 	/**
@@ -375,13 +348,15 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	public void createTabForModel(StoryModel model) {
 		final Icon icon = model.getTranslator().getIcon();
 
-		model.getRoot().getStartPoint().process(new AbstractNoOpGraphNodeVisitor() {
-			@Override
-			public void processQuestPointNode(QuestPointNode questPointNode) {
+		model.getRoot().getStartPoint()
+				.process(new AbstractNoOpGraphNodeVisitor() {
+					@Override
+					public void processQuestPointNode(
+							QuestPointNode questPointNode) {
 
-				startQuestPoint = questPointNode.getQuestPoint();
-			}
-		});
+						startQuestPoint = questPointNode.getQuestPoint();
+					}
+				});
 
 		System.out.println("Start Quest Point is: "
 				+ startQuestPoint.toString());
@@ -521,7 +496,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		}
 	}
 
-	public StoryPanel getActiveTab() {
+	public StoryPanel getActiveStory() {
 		final int selectedIndex = this.storyTabs.getSelectedIndex();
 		final StoryModel activeModel;
 
@@ -547,6 +522,6 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	 */
 	public void activatePanelForQuestPoint(StoryModel model,
 			QuestPoint questPoint) {
-		getActiveTab().setTree(questPoint);
+		getActiveStory().setTree(questPoint);
 	}
 }

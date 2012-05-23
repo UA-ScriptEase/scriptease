@@ -3,17 +3,13 @@ package scriptease.gui;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -21,6 +17,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -29,8 +26,10 @@ import javax.swing.text.PlainDocument;
 
 import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
-import scriptease.controller.observer.GraphNodeObserver;
 import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
+import scriptease.controller.observer.GraphNodeObserver;
+import scriptease.controller.observer.StoryModelPoolEvent;
+import scriptease.controller.observer.StoryModelPoolObserver;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.story.graphs.ConnectGraphPointAction;
 import scriptease.gui.action.story.graphs.DeleteGraphNodeAction;
@@ -42,7 +41,6 @@ import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.quests.QuestEditor;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
-import scriptease.util.FileOp;
 
 /**
  * ToolBarFactory is responsible for creating JToolBars, most importantly the
@@ -56,6 +54,10 @@ import scriptease.util.FileOp;
  * 
  */
 public class ToolBarFactory {
+
+	private static final JLabel nameLabel = new JLabel(
+			Il8nResources.getString("Name") + ":");
+	private static final JLabel fanInLabel = new JLabel("Fan In:");
 
 	/**
 	 * Do not delete this. Ever. Otherwise Java will Garbage Collect all
@@ -115,6 +117,25 @@ public class ToolBarFactory {
 		return graphEditorToolBar;
 	}
 
+	/*
+	 * TODO QuestEditorToolbar needs to be an "instance".One needs to be able to
+	 * set its editor, not wait for it to be made. Could be done by...
+	 * 
+	 * private static QEToolbar = build**GraphEditor**toolbar()
+	 * 
+	 * then can call it like...
+	 * 
+	 * QEToolbar = buildQEToolBar()
+	 * 
+	 * This might not work.
+	 * 
+	 * Otherwise, you can make a "setQuestEditor" method that does most of
+	 * what's inside of buildquesteditortoolbar.
+	 * 
+	 * Option 3 is to approximate the deltas with the proxy coefficients, but
+	 * that shouldn't be necessary.
+	 */
+
 	/**
 	 * Creates a JToolBar for the quest editor. It adds all of the graph editor
 	 * buttons from the GraphEditorToolbar, and then adds Quest specific options
@@ -130,16 +151,10 @@ public class ToolBarFactory {
 		final int FAN_IN_SPINNER_LENGTH = 50;
 		final int NAME_FIELD_LENGTH = 150;
 
-		final JLabel nameLabel = new JLabel(Il8nResources.getString("Name")
-				+ ": ");
-		final JLabel commitLabel = new JLabel(
-				Il8nResources.getString("Committing") + ": ");
-		final JLabel fanInLabel = new JLabel("Fan In: ");
-
 		final JTextField nameField = nameField(new Dimension(NAME_FIELD_LENGTH,
 				TOOL_BAR_HEIGHT));
 
-		final JToggleButton commitButton = committingButton();
+		final JToggleButton commitButton = committingBox();
 
 		final JSpinner fanInSpinner = buildFanInSpinner(new Dimension(
 				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT));
@@ -163,13 +178,15 @@ public class ToolBarFactory {
 
 		questEditorToolBar.add(nameLabel);
 
-		questEditorToolBar.add(nameField);
+		nameLabel.setLabelFor(nameField);
 
-		questEditorToolBar.add(commitLabel);
+		questEditorToolBar.add(nameField);
 
 		questEditorToolBar.add(commitButton);
 
 		questEditorToolBar.add(fanInLabel);
+
+		fanInLabel.setLabelFor(fanInSpinner);
 
 		questEditorToolBar.add(fanInSpinner);
 
@@ -254,7 +271,9 @@ public class ToolBarFactory {
 	 */
 	private static void updateNameField(JTextField nameField,
 			QuestPointNode questNode) {
+
 		if (questNode != null) {
+
 			String displayText = questNode.getQuestPoint().getDisplayText();
 
 			nameField.setDocument(new PlainDocument());
@@ -262,9 +281,19 @@ public class ToolBarFactory {
 					nameFieldListener(nameField, questNode));
 
 			nameField.setText(displayText);
-			nameField.setEnabled(true);
+
+			if (questNode.isDeletable()) {
+				nameLabel.setEnabled(true);
+				nameField.setEnabled(true);
+
+			} else {
+				nameLabel.setEnabled(false);
+				nameField.setEnabled(false);
+			}
+
 		} else {
 			nameField.setText("");
+			nameLabel.setEnabled(false);
 			nameField.setEnabled(false);
 		}
 	}
@@ -274,39 +303,11 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	private static JToggleButton committingButton() {
-		final JToggleButton committingButton = new JToggleButton();
-		final String COMMIT_FALSE_ICON = "commit_false";
-		final String COMMIT_TRUE_ICON = "commit_true";
-
-		try {
-			BufferedImage falseIconImage = ImageIO.read(FileOp
-					.getFileResource("scriptease/resources/icons/buttonicons/"
-							+ COMMIT_FALSE_ICON + ".png"));
-
-			BufferedImage trueIconImage = ImageIO.read(FileOp
-					.getFileResource("scriptease/resources/icons/buttonicons/"
-							+ COMMIT_TRUE_ICON + ".png"));
-
-			committingButton.setIcon(new ImageIcon(falseIconImage));
-			committingButton.setSelectedIcon(new ImageIcon(trueIconImage));
-			committingButton.setDisabledIcon(new ImageIcon(falseIconImage));
-
-			committingButton.setOpaque(false);
-			committingButton.setContentAreaFilled(false);
-			committingButton.setBorderPainted(false);
-			committingButton.setRolloverEnabled(false);
-		} catch (IOException e) {
-			UncaughtExceptionHandler handler = Thread
-					.getDefaultUncaughtExceptionHandler();
-			handler.uncaughtException(Thread.currentThread(),
-					new IllegalStateException("Exception " + e
-							+ "while adding icon for CommitButton"));
-
-			committingButton.setText("<C>");
-		}
-
-		return committingButton;
+	private static JCheckBox committingBox() {
+		final JCheckBox committingBox = new JCheckBox();
+		committingBox.setText(Il8nResources.getString("Committing") + ":");
+		committingBox.setHorizontalTextPosition(SwingConstants.LEFT);
+		return committingBox;
 	}
 
 	/**
@@ -350,11 +351,17 @@ public class ToolBarFactory {
 			if (cButton.getItemListeners().length > 0)
 				cButton.removeItemListener(cButton.getItemListeners()[0]);
 
-			cButton.setSelected(committing);
-
 			cButton.addItemListener(commitButtonListener(questNode));
 
-			cButton.setEnabled(true);
+			// Checks if it's an end or start node
+
+			cButton.setSelected(committing);
+
+			if (questNode.isDeletable()) {
+				cButton.setEnabled(true);
+			} else {
+				cButton.setEnabled(false);
+			}
 		} else {
 			cButton.setEnabled(false);
 		}
@@ -373,6 +380,7 @@ public class ToolBarFactory {
 		fanInSpinner.setMaximumSize(maxSize);
 
 		fanInSpinner.setEnabled(false);
+		fanInLabel.setEnabled(false);
 
 		return fanInSpinner;
 	}
@@ -449,7 +457,13 @@ public class ToolBarFactory {
 			fanInSpinner.addChangeListener(fanInSpinnerListener(fanInSpinner,
 					questNode));
 
-			fanInSpinner.setEnabled(true);
+			if (!questNode.isStartNode()) {
+				fanInLabel.setEnabled(true);
+				fanInSpinner.setEnabled(true);
+			} else {
+				fanInLabel.setEnabled(false);
+				fanInSpinner.setEnabled(false);
+			}
 
 		} else {
 			final SpinnerModel fanInSpinnerModel = new SpinnerNumberModel(
@@ -457,6 +471,7 @@ public class ToolBarFactory {
 					new Integer(1));
 
 			fanInSpinner.setModel(fanInSpinnerModel);
+			fanInLabel.setEnabled(false);
 			fanInSpinner.setEnabled(false);
 		}
 	}
@@ -466,23 +481,26 @@ public class ToolBarFactory {
 	 * 
 	 * @author kschenk
 	 */
-	private static class QuestToolBarObserver implements GraphNodeObserver {
+	private static class QuestToolBarObserver implements GraphNodeObserver,
+			StoryModelPoolObserver {
 		private JTextField nameField;
 		private JToggleButton commitButton;
 		private JSpinner fanInSpinner;
-		
+
 		private GraphNode previousNode;
 
 		public QuestToolBarObserver(JTextField nameField,
-				JToggleButton commitButton, JSpinner fanInSpinner, QuestEditor editor) {
+				JToggleButton commitButton, JSpinner fanInSpinner,
+				QuestEditor editor) {
 			this.nameField = nameField;
 			this.commitButton = commitButton;
 			this.fanInSpinner = fanInSpinner;
-			
+
 			this.previousNode = editor.getHeadNode();
 		}
-		
-		protected void swapSelected(GraphNode previousNode, GraphNode currentNode) {
+
+		protected void swapSelected(GraphNode previousNode,
+				GraphNode currentNode) {
 			if (previousNode != null)
 				previousNode.setSelected(false);
 			currentNode.setSelected(true);
@@ -556,7 +574,14 @@ public class ToolBarFactory {
 
 			} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
 				GraphNode.observeDepthMap(questBarObserver, sourceNode);
+
 			}
+
+		}
+
+		@Override
+		public void modelChanged(StoryModelPoolEvent event) {
+
 		}
 	}
 }
