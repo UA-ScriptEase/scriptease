@@ -1,5 +1,8 @@
 package scriptease.gui.action;
 
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -7,6 +10,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import javax.imageio.ImageIO;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 
 import scriptease.util.FileOp;
 
@@ -18,20 +22,18 @@ import scriptease.util.FileOp;
  * 
  */
 @SuppressWarnings("serial")
-public abstract class ToolBarButtonAction extends
-		ActiveModelSensitiveAction {
-	
+public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
+
 	public static enum ToolBarButtonMode {
-		INSERT_GRAPH_NODE,
-		SELECT_GRAPH_NODE,
-		DELETE_GRAPH_NODE,
-		CONNECT_GRAPH_NODE,
-		DISCONNECT_GRAPH_NODE,
+		INSERT_GRAPH_NODE, SELECT_GRAPH_NODE, DELETE_GRAPH_NODE, 
+		CONNECT_GRAPH_NODE, DISCONNECT_GRAPH_NODE
 	}
-	
+
 	private static ToolBarButtonMode selectedMode;
-	
+
 	private String actionName;
+
+	private static JComponent activeComponent;
 
 	/**
 	 * Constructor. Creates the icon for the ToolBar button.
@@ -42,7 +44,8 @@ public abstract class ToolBarButtonAction extends
 	protected ToolBarButtonAction(String name, String iconName) {
 		super(name);
 		this.actionName = name;
-		this.putValue(Action.LARGE_ICON_KEY, new ImageIcon(loadImages(iconName)));
+		this.putValue(Action.LARGE_ICON_KEY,
+				new ImageIcon(loadImages(iconName)));
 	}
 
 	/**
@@ -83,10 +86,18 @@ public abstract class ToolBarButtonAction extends
 	 * @param newMode
 	 *            The ToolBarButtonMode associated with the tool.
 	 */
-	public static void setMode(ToolBarButtonMode newMode){
+	public static void setMode(ToolBarButtonMode newMode) {
 		ToolBarButtonAction.selectedMode = newMode;
 	}
-	
+
+	public static void setJComponent(JComponent component) {
+		ToolBarButtonAction.activeComponent = component;
+	}
+
+	public static JComponent getJComponent() {
+		return ToolBarButtonAction.activeComponent;
+	}
+
 	/**
 	 * Returns the current mode selected for ToolBar Buttons..
 	 * 
@@ -94,5 +105,40 @@ public abstract class ToolBarButtonAction extends
 	 */
 	public static ToolBarButtonMode getMode() {
 		return ToolBarButtonAction.selectedMode;
+	}
+
+	/**
+	 * Sets the cursor to the image from "scriptease/resources/icons/cursors/" +
+	 * cursorPath.
+	 * 
+	 * @param cursorPath
+	 */
+	public void setCursorToImageFromPath(JComponent component, String cursorPath) {
+
+		String resultingCursorPath = "scriptease/resources/icons/cursors/"
+				+ cursorPath + ".png";
+
+		System.out.println(cursorPath);
+
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+		final Point CURSOR_HOTSPOT = new Point(0, 0);
+
+		BufferedImage cursorImage;
+		Cursor customCursor = null;
+		try {
+			cursorImage = ImageIO.read(FileOp
+					.getFileResource(resultingCursorPath));
+
+			customCursor = toolkit.createCustomCursor(cursorImage,
+					CURSOR_HOTSPOT, resultingCursorPath);
+
+		} catch (IOException e) {
+			customCursor = null;
+		} catch (IllegalArgumentException e) {
+			customCursor = null;
+		}
+
+		component.setCursor(customCursor);
 	}
 }

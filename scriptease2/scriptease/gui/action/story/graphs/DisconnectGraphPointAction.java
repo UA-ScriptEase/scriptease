@@ -2,7 +2,6 @@ package scriptease.gui.action.story.graphs;
 
 import java.awt.event.ActionEvent;
 
-import scriptease.gui.SEFrame;
 import scriptease.gui.action.ToolBarButtonAction;
 
 /**
@@ -38,7 +37,7 @@ public final class DisconnectGraphPointAction extends ToolBarButtonAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		SEFrame.getInstance().changeCursor(SEFrame.ERASE_PATH_CURSOR);
+		setCursorToImageFromPath(getJComponent(), ICON_TEXT);
 		setMode(ToolBarButtonMode.DISCONNECT_GRAPH_NODE);
 	}
 }
