@@ -35,10 +35,9 @@ import scriptease.gui.action.story.graphs.DeleteGraphNodeAction;
 import scriptease.gui.action.story.graphs.DisconnectGraphPointAction;
 import scriptease.gui.action.story.graphs.InsertGraphNodeAction;
 import scriptease.gui.action.story.graphs.SelectGraphNodeAction;
-import scriptease.gui.graph.editor.GraphEditor;
+import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.quests.QuestEditor;
 import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
@@ -78,7 +77,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	public static JToolBar buildGraphEditorToolBar(final GraphEditor editor) {
+	public static JToolBar buildGraphEditorToolBar(GraphPanel gPanel) {
 		final JToolBar graphEditorToolBar = new JToolBar();
 
 		final ButtonGroup graphEditorButtonGroup = new ButtonGroup();
@@ -151,9 +150,9 @@ public class ToolBarFactory {
 		SEFrame.getInstance().getStoryTabPane()
 				.addChangeListener(graphEditorListener);
 
-		graphBarObserver = new GraphToolBarObserver();
+		graphBarObserver = new GraphToolBarObserver(gPanel);
 
-		GraphNode.observeDepthMap(graphBarObserver, editor.getHeadNode());
+		GraphNode.observeDepthMap(graphBarObserver, gPanel.getHeadNode());
 
 		return graphEditorToolBar;
 	}
@@ -165,9 +164,9 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	public JToolBar buildQuestEditorToolBar(final QuestEditor editor) {
+	public JToolBar buildQuestEditorToolBar(GraphPanel gPanel) {
 
-		final JToolBar questEditorToolBar = buildGraphEditorToolBar(editor);
+		final JToolBar questEditorToolBar = buildGraphEditorToolBar(gPanel);
 
 		final int TOOL_BAR_HEIGHT = 32;
 		final int FAN_IN_SPINNER_LENGTH = 50;
@@ -181,7 +180,7 @@ public class ToolBarFactory {
 		final JSpinner fanInSpinner = buildFanInSpinner(new Dimension(
 				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT));
 
-		editor.getHeadNode().process(new AbstractNoOpGraphNodeVisitor() {
+		gPanel.getHeadNode().process(new AbstractNoOpGraphNodeVisitor() {
 			public void processQuestPointNode(QuestPointNode questPointNode) {
 				updateQuestToolBar(nameField, commitBox, fanInSpinner,
 						questPointNode);
@@ -213,9 +212,9 @@ public class ToolBarFactory {
 		questEditorToolBar.add(fanInSpinner);
 
 		questBarObserver = new QuestToolBarObserver(nameField, commitBox,
-				fanInSpinner, editor);
+				fanInSpinner, gPanel);
 
-		GraphNode.observeDepthMap(questBarObserver, editor.getHeadNode());
+		GraphNode.observeDepthMap(questBarObserver, gPanel.getHeadNode());
 
 		return questEditorToolBar;
 	}
@@ -505,12 +504,18 @@ public class ToolBarFactory {
 		/**
 		 * Adds the node to the graph bar observer if a new one is added.
 		 */
+		GraphPanel gPanel;
+		
+		public GraphToolBarObserver(GraphPanel gPanel){
+			this.gPanel = gPanel;
+		}
+		
 		@Override
 		public void nodeChanged(GraphNodeEvent event) {
 			final GraphNode sourceNode = event.getSource();
 			final GraphNodeEventType type = event.getEventType();
 
-			GraphNode oldSelectedNode = GraphEditor.getOldSelectedNode();
+			GraphNode oldSelectedNode = gPanel.getOldSelectedNode();
 
 			if (type == GraphNodeEventType.SELECTED) {
 				switch (ToolBarButtonAction.getMode()) {
@@ -548,11 +553,11 @@ public class ToolBarFactory {
 						shallowerNode.addChild(deeperNode);
 
 						// Reset the tool.
-						GraphEditor.setOldSelectedNode(null);
+						gPanel.setOldSelectedNode(null);
 					}
 					// update the last selected node
 					else
-						GraphEditor.setOldSelectedNode(sourceNode);
+						gPanel.setOldSelectedNode(sourceNode);
 					break;
 					
 				case DISCONNECT_GRAPH_NODE:
@@ -575,11 +580,11 @@ public class ToolBarFactory {
 						}
 
 						// Reset the tool.
-						GraphEditor.setOldSelectedNode(null);
+						gPanel.setOldSelectedNode(null);
 					}
 					// update the last selected node
 					else
-						GraphEditor.setOldSelectedNode(sourceNode);
+						gPanel.setOldSelectedNode(sourceNode);
 					break;
 				}
 
@@ -601,7 +606,8 @@ public class ToolBarFactory {
 		private JSpinner fanInSpinner;
 
 		private GraphNode previousNode;
-		private GraphNode headNode;
+		
+		private GraphPanel gPanel;
 
 		// private GraphEditor editor;
 
@@ -615,12 +621,12 @@ public class ToolBarFactory {
 		 * @param editor
 		 */
 		public QuestToolBarObserver(JTextField nameField, JCheckBox commitbox,
-				JSpinner fanInSpinner, QuestEditor editor) {
+				JSpinner fanInSpinner, GraphPanel gPanel) {
 			this.nameField = nameField;
 			this.commitButton = commitbox;
 			this.fanInSpinner = fanInSpinner;
-			this.previousNode = editor.getHeadNode();
-			this.headNode = editor.getHeadNode();
+			this.previousNode = gPanel.getHeadNode();
+			this.gPanel = gPanel;
 		}
 
 		/**
@@ -733,7 +739,7 @@ public class ToolBarFactory {
 		private void insertQuestPoint(GraphNode node) {
 			// if this is the second click,
 
-			GraphNode oldSelectedNode = GraphEditor.getOldSelectedNode();
+			GraphNode oldSelectedNode = gPanel.getOldSelectedNode();
 
 			if (oldSelectedNode != null) {
 
@@ -745,7 +751,7 @@ public class ToolBarFactory {
 				// Cases for clicking the same node.
 				if (oldSelectedNode == node) {
 
-					if (oldSelectedNode == headNode) {
+					if (oldSelectedNode == gPanel.getHeadNode()) {
 						// Get the children of the start node.
 						List<GraphNode> startNodeChildren = oldSelectedNode
 								.getChildren();
@@ -803,12 +809,12 @@ public class ToolBarFactory {
 					newQuestPointNode.addChild(furtherFromStartNode);
 				}
 				// Reset the tool:
-				GraphEditor.setOldSelectedNode(null);
+				gPanel.setOldSelectedNode(null);
 
 			} else {
 				// otherwise this is the first click, so store the node for
 				// later:
-				GraphEditor.setOldSelectedNode(node);
+				gPanel.setOldSelectedNode(node);
 			}
 
 		}

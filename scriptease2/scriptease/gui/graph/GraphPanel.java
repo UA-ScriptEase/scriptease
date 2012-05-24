@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.LayoutManager;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -64,10 +65,37 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 	private GraphNode headNode;
 	private GraphNodeComponentBuilder builder;
 	private Map<GraphNode, Integer> nodeDepthMap;
+	private Point mousePosition = new Point();
+
+	private GraphNode oldSelectedNode;
 
 	public GraphPanel(GraphNode headNode) {
-		this.headNode = headNode;
+		this.setHeadNode(headNode);
+		
+		MouseAdapter connectArrowListener = new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				oldSelectedNode = null;
+				repaint();
+			}
 
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				mousePosition.setLocation(e.getPoint());
+				repaint();
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				mousePosition.setLocation(e.getPoint());
+				repaint();
+			}
+		};
+		this.addMouseListener(connectArrowListener);
+		this.addMouseMotionListener(connectArrowListener);
+		
+		
+		
 		// Initialize the builder.
 		this.builder = new GraphNodeComponentBuilder();
 
@@ -77,16 +105,13 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		// ui manager
 		this.setUI(new GraphPanelUI());
 
-		// observe the graph nodes
-		GraphNode.observeDepthMap(this, this.headNode);
-
 		this.setOpaque(true);
 		this.setBackground(StoryComponentPanel.UNSELECTED_COLOUR);
 	}
 
 	/**
-	 * Store the node depth map until a change has occured, so we don't have to
-	 * recalculate it unneccessarily
+	 * Store the node depth map until a change has occurred, so we don't have to
+	 * recalculate it unnecessarily
 	 * 
 	 * @return
 	 */
@@ -113,7 +138,45 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		this.repaint();
 		this.revalidate();
 	}
+	
+	/**
+	 * Sets the head node for the graph panel.
+	 * @param graphNode
+	 */
+	public void setHeadNode(GraphNode graphNode) {
+		if (graphNode == null)
+			throw new IllegalArgumentException("Cannot set head node to null");
+		this.headNode = graphNode;
+		
+		GraphNode.observeDepthMap(this, this.headNode);
 
+		this.getHeadNode().setSelected(true);
+	}
+	
+	/**
+	 * Returns the head node of the graph.
+	 * @return
+	 */
+	public GraphNode getHeadNode() {
+		return this.headNode;
+	}
+	
+	/**
+	 * Returns the old selected node, which is used to draw paths between nodes.
+	 * @return
+	 */
+	public GraphNode getOldSelectedNode(){
+		return this.oldSelectedNode;
+	}
+	
+	/**
+	 * Sets the old selected node, which is used to draw paths between nodes.
+	 * @param oldNode
+	 */
+	public void setOldSelectedNode(GraphNode oldNode) {
+		this.oldSelectedNode = oldNode;
+	}
+	
 	/**
 	 * A class that creates and configures a JComponent to represent a GraphNode
 	 * in the GraphEditor. Private to GraphPanel, since all drawing code should
@@ -556,6 +619,16 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 		@Override
 		public void paint(Graphics g, JComponent c) {
+
+			final Graphics2D g2 = (Graphics2D) g.create();
+
+			if (oldSelectedNode != null && mousePosition != null) {
+				g2.setColor(Color.GRAY);
+				g2.setStroke(new BasicStroke(1.5f));
+				GUIOp.paintArrow(g2, GUIOp.getMidRight(componentBuilder
+						.getComponentForNode(oldSelectedNode)), mousePosition);
+			}
+			
 			super.paint(g, c);
 
 			if (paintLines)
