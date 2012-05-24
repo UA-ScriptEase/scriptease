@@ -13,7 +13,6 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
 
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
@@ -57,15 +56,6 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 		this.setBackground(StoryComponentPanel.UNSELECTED_COLOUR);
 	}
 	
-	/**
-	 * Public method to add a toolbar to the graph editor. Use ToolBarFactory
-	 * class for an appropriate toolbar, or make your own.
-	 * 
-	 * @param toolBar
-	 */
-	public void addToolBar(JToolBar toolBar) {
-		this.add(toolBar, BorderLayout.PAGE_START);
-	}
 
 	/**
 	 * Builds the panels for the GraphEditor.
@@ -73,7 +63,7 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 	protected void buildPanels() {
 		GraphPanel graphPanel = new GraphPanel(this.getHeadNode());
 	
-		ToolBarButtonAction.setJComponent(graphPanel);
+		ToolBarButtonAction.addJComponent(graphPanel);
 
 		MouseAdapter connectArrowListener = new MouseAdapter() {
 			@Override
@@ -113,8 +103,6 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 		this.getHeadNode().setSelected(true);
 	}
 	
-	
-
 	public GraphNode getHeadNode() {
 		return this.headNode;
 	}
@@ -178,24 +166,6 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 				else
 					oldSelectedNode = sourceNode;
 
-				break;
-
-			case DELETE_GRAPH_NODE:
-				if (sourceNode.isDeletable() && !sourceNode.isSelected()) {
-					List<GraphNode> parents = sourceNode.getParents();
-					List<GraphNode> children = sourceNode.getChildren();
-
-					sourceNode.removeParents();
-
-					sourceNode.removeChildren();
-
-					// Re-connect each parent with each child.
-					for (GraphNode parent : parents) {
-						for (GraphNode child : children) {
-							parent.addChild(child);
-						}
-					}
-				}
 				break;
 			}
 		} else if (type == GraphNodeEventType.CONNECTION_ADDED) {

@@ -37,7 +37,7 @@ public final class DisconnectGraphPointAction extends ToolBarButtonAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		setCursorToImageFromPath(getJComponent(), ICON_TEXT);
+		setCursorToImageFromPath(ICON_TEXT);
 		setMode(ToolBarButtonMode.DISCONNECT_GRAPH_NODE);
 	}
 }

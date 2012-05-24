@@ -37,7 +37,7 @@ public final class InsertGraphNodeAction extends ToolBarButtonAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		setCursorToImageFromPath(getJComponent(), ICON_TEXT);
+		setCursorToImageFromPath(ICON_TEXT);
 		setMode(ToolBarButtonMode.INSERT_GRAPH_NODE);
 	}
 }

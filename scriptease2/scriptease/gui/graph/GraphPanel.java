@@ -205,27 +205,40 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 					@Override
 					public void mouseEntered(MouseEvent e) {
-						if (!node.isSelected()) {
-							JComponent nodeComponent = getComponentForNode(node);
 
-							if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DELETE_GRAPH_NODE) {
-								if (node.isDeletable()) {
-									nodeComponent.setBackground(GUIOp
-											.scaleWhite(Color.RED, 2.4));
-								}
-							} else {
+						JComponent nodeComponent = getComponentForNode(node);
+
+						if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DELETE_GRAPH_NODE) {
+							if (node.isDeletable()) {
+								nodeComponent.setBackground(GUIOp.scaleWhite(
+										Color.RED, 2.4));
+							}
+						} else if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DISCONNECT_GRAPH_NODE) {
+							nodeComponent.setBackground(GUIOp.scaleWhite(
+									Color.RED, 2.4));
+						} else if (!node.isSelected()) {
+							if (ToolBarButtonAction.getMode() != ToolBarButtonMode.SELECT_GRAPH_NODE) {
 								Color selectionColour = ScriptEaseUI.SELECTED_GAME_OBJECT;
 								nodeComponent.setBackground(GUIOp.scaleWhite(
 										selectionColour, 3.1));
+							} else {
+								nodeComponent.setBackground(GUIOp.scaleWhite(
+										Color.yellow, 1.2));
 							}
 						}
+
 					}
 
 					@Override
 					public void mouseExited(MouseEvent e) {
+						JComponent nodeComponent = getComponentForNode(node);
+
 						if (!node.isSelected()) {
-							JComponent nodeComponent = getComponentForNode(node);
 							nodeComponent.setBackground(Color.WHITE);
+						} else {
+							Color selectionColour = ScriptEaseUI.SELECTED_GAME_OBJECT;
+							nodeComponent.setBackground(GUIOp.scaleWhite(
+									selectionColour, 2.1));
 						}
 					}
 				};

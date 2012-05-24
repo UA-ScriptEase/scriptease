@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.Action;
@@ -25,15 +26,14 @@ import scriptease.util.FileOp;
 public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 
 	public static enum ToolBarButtonMode {
-		INSERT_GRAPH_NODE, SELECT_GRAPH_NODE, DELETE_GRAPH_NODE, 
-		CONNECT_GRAPH_NODE, DISCONNECT_GRAPH_NODE
+		INSERT_GRAPH_NODE, SELECT_GRAPH_NODE, DELETE_GRAPH_NODE, CONNECT_GRAPH_NODE, DISCONNECT_GRAPH_NODE
 	}
 
 	private static ToolBarButtonMode selectedMode;
 
 	private String actionName;
 
-	private static JComponent activeComponent;
+	private static ArrayList<JComponent> activeComponent = new ArrayList<JComponent>();
 
 	/**
 	 * Constructor. Creates the icon for the ToolBar button.
@@ -90,13 +90,14 @@ public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 		ToolBarButtonAction.selectedMode = newMode;
 	}
 
-	public static void setJComponent(JComponent component) {
-		ToolBarButtonAction.activeComponent = component;
+	public static void addJComponent(JComponent component) {
+		ToolBarButtonAction.activeComponent.add(component);
 	}
 
-	public static JComponent getJComponent() {
-		return ToolBarButtonAction.activeComponent;
-	}
+	/*
+	 * public static JComponent getJComponent() { return
+	 * ToolBarButtonAction.activeComponent; }
+	 */
 
 	/**
 	 * Returns the current mode selected for ToolBar Buttons..
@@ -113,7 +114,7 @@ public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @param cursorPath
 	 */
-	public void setCursorToImageFromPath(JComponent component, String cursorPath) {
+	public void setCursorToImageFromPath(String cursorPath) {
 
 		String resultingCursorPath = "scriptease/resources/icons/cursors/"
 				+ cursorPath + ".png";
@@ -139,6 +140,7 @@ public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 			customCursor = null;
 		}
 
-		component.setCursor(customCursor);
+		for (JComponent component : activeComponent)
+			component.setCursor(customCursor);
 	}
 }
