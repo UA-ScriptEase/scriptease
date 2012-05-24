@@ -8,11 +8,6 @@ in-line comments for details on what is expected.
 
 	<!-- ==== START INIT COMMANDS ==== -->
 	<property file="mailingLists.properties" />
-	
-	<exec executable="sh" outputproperty="user.name.full">
-		<arg value="-c" />
-		<arg value="finger ${user.name} | grep &quot;Name&quot; | awk -F&quot;Name: &quot; '{print $2}'" />
-	</exec>
 
 	<!-- Script account's web docs directory. -->
 	<property name="webdocs" value="/compsci/webdocs/script/web_docs" />
@@ -39,9 +34,6 @@ in-line comments for details on what is expected.
 		<arg value="-c" />
 		<arg value="git log -1 | grep &quot;commit&quot; | awk -F &quot; &quot; '{print $2}'" />
 	</exec>
-
-	<!--LinuxMachine just needs to be any department machine that we can ssh into-->
-	<property name="linuxMachine" value="peers.cs.ualberta.ca" />
 	<!-- ==== END INIT COMMANDS ==== -->
 
 	<!-- ==== TARGETS ==== -->
@@ -72,7 +64,7 @@ in-line comments for details on what is expected.
 			-->
 		<property name="dest.file.path" value="${dest.dir}/${build.time}_${src.file}" />
 		<echo>Posting Jar built from local code to the web space (${dest.file.path}). </echo>
-			<echo>Please enter the script account password at the prompt.</echo>
+		<echo>Please enter the script account password at the prompt.</echo>
 
 		<exec executable="scp" failonerror="true">
 			<arg value="${src.file}" />
@@ -91,6 +83,13 @@ in-line comments for details on what is expected.
 		<antcall target="mail" />
 	</target>
 
+	<target name="defineUserName">
+		<exec executable="sh" outputproperty="user.name.full">
+			<arg value="-c" />
+			<arg value="finger ${user.name} | grep &quot;Name&quot; | awk -F&quot;Name: &quot; '{print $2}'" />
+		</exec>
+	</target>
+
 	<!-- depends on the following properties to be set:
 	=========
 	mail.body  - the message body
@@ -99,7 +98,7 @@ in-line comments for details on what is expected.
 	=========
 	and only mails if 'noMail' is NOT set
 	 -->
-	<target name="mail" unless="noMail" description="Mails the team with the message stored in the 'mail.body' property unless the property 'noMail' is set or 'mail.body' is not set.">
+	<target name="mail" unless="noMail" depends="defineUserName" description="Mails the team with the message stored in the 'mail.body' property unless the property 'noMail' is set or 'mail.body' is not set.">
 		<!-- Tell the people -->
 		<echo>Mailing the following list about the new release... ${mail.list}</echo>
 		<echo>Mail may take a while to arrive.</echo>

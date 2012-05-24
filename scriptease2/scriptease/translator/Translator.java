@@ -286,12 +286,28 @@ public class Translator {
 		 * are optional and will not be checked. See javadoc and/or wiki for
 		 * details.
 		 */
-		if (this.getName() == null || apiDictPath == null
-				|| languageDictPath == null || gameModulePath == null
-				|| !apiDictPath.exists() || !languageDictPath.exists()
-				|| !gameModulePath.exists()) {
-			System.err.println("A required component of the translator at "
-					+ this.getLocation() + " is missing.");
+		if (this.getName() == null) {
+			System.err.println("The translator at " + this.getLocation()
+					+ " is missing its name definition in translator.ini.");
+			return false;
+		} else if (apiDictPath == null || !apiDictPath.exists()) {
+			System.err
+					.println("The API Dictionary Path definition in translator.ini for translator "
+							+ this.getLocation()
+							+ " is missing or the dictionary file does not exist there.");
+			return false;
+		} else if (languageDictPath == null || !languageDictPath.exists()) {
+			System.err
+					.println("The Language Dictionary Path definition in translator.ini for translator "
+							+ this.getLocation()
+							+ " is missing or the dictionary file does not exist there.");
+			return false;
+		} else if (gameModulePath == null || !gameModulePath.exists()) {
+			System.err
+					.println("The translator at "
+							+ this.getLocation()
+							+ " is missing its Game Module Path definition in translator.ini "
+							+ "or the Game Module implementation does not exist there.");
 			return false;
 		}
 
@@ -312,19 +328,23 @@ public class Translator {
 		FileOp.getFileResource(CODE_ELEMENT_SCHEMA_LOCATION);
 		System.out.println("Done");
 
-		if (!FileOp.validateXML(apiDictPath,
-				FileOp.getFileResource(API_DICT_SCHEMA_LOCATION))) {
-			System.err.println("The " + this.getName()
-					+ " translator's API dictionary does not pass validation.");
-			return false;
-		}
-
-		if (!FileOp.validateXML(languageDictPath,
-				FileOp.getFileResource(LANGUAGE_DICT_SCHEMA_LOCATION))) {
-			System.err
-					.println("The "
-							+ this.getName()
-							+ " translator's language dictionary does not pass validation.");
+		try {
+			if (!FileOp.validateXML(apiDictPath,
+					FileOp.getFileResource(API_DICT_SCHEMA_LOCATION))) {
+				System.err
+						.println("The "
+								+ this.getName()
+								+ " translator's API dictionary does not pass validation.");
+				return false;
+			} else if (!FileOp.validateXML(languageDictPath,
+					FileOp.getFileResource(LANGUAGE_DICT_SCHEMA_LOCATION))) {
+				System.err
+						.println("The "
+								+ this.getName()
+								+ " translator's language dictionary does not pass validation.");
+				return false;
+			}
+		} catch (FileNotFoundException e) {
 			return false;
 		}
 
@@ -342,7 +362,7 @@ public class Translator {
 	}
 
 	/**
-	 * Gets the file location where this translator is defined.
+	 * Gets the location of this translator's translator.ini definition file.
 	 * 
 	 * @return the location of the translator definition
 	 */
@@ -560,7 +580,7 @@ public class Translator {
 		// If the module could not be found, ask the user for its location
 		if (module == null) {
 			File newLocation = this.requestNewLocation();
-			
+
 			if (newLocation == null)
 				module = null;
 			else
@@ -569,18 +589,18 @@ public class Translator {
 
 		return module;
 	}
-	
-	private File requestNewLocation(){
+
+	private File requestNewLocation() {
 		final File newLocation;
-		
+
 		FileNameExtensionFilter filter = null;
 		// Build the filter based on the translator selected
-		filter = new FileNameExtensionFilter(
-				this.getName() + " Game Files", this.getLegalExtensions());
+		filter = new FileNameExtensionFilter(this.getName() + " Game Files",
+				this.getLegalExtensions());
 		// Otherwise pass in a null filter (defaults to accept all)
-		newLocation = WindowManager.getInstance().showFileChooser(
-				"Select", filter, this.getLocation());
-		
+		newLocation = WindowManager.getInstance().showFileChooser("Select",
+				filter, this.getLocation());
+
 		return newLocation;
 	}
 

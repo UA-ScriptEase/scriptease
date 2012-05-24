@@ -3,6 +3,7 @@ package scriptease.util;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -328,8 +329,13 @@ public class FileOp {
 	 * Validates the XML document found at <code>sourcePath</code> against the
 	 * schema located at <code>schemaPath</code>. This is a ridiculously
 	 * over-complicated process, thus the specialized method for it.
+	 * 
+	 * @throws FileNotFoundException
+	 *             if the <code>sourcePath</code> or <code>schemaPath</code> do
+	 *             not exist.
 	 */
-	public static boolean validateXML(File sourcePath, File schemaPath) {
+	public static boolean validateXML(File sourcePath, File schemaPath)
+			throws FileNotFoundException {
 		final SchemaFactory schemaFactory = SchemaFactory
 				.newInstance("http://www.w3.org/2001/XMLSchema");
 		final Schema schema;
@@ -337,8 +343,8 @@ public class FileOp {
 		final Validator validator;
 
 		if (!sourcePath.exists() || !schemaPath.exists())
-			throw new IllegalArgumentException(
-					"One of source XML file or schema could not be located.");
+			throw new FileNotFoundException(
+					"Either source XML file or schema could not be located.");
 
 		try {
 			schema = schemaFactory.newSchema(schemaPath);
@@ -348,10 +354,10 @@ public class FileOp {
 			source = new StreamSource(sourcePath);
 			validator.validate(source);
 		} catch (SAXException e) {
-			System.err.println(e.getMessage());
+			System.err.println("Validation failure: " + e.getMessage());
 			return false;
 		} catch (IOException e) {
-			System.err.println(e.getMessage());
+			System.err.println("Validation I/O failure: " + e.getMessage());
 			return false;
 		}
 

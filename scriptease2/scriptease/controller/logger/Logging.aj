@@ -51,11 +51,12 @@ public aspect Logging {
 		Handler networkHandler = null;
 		try {
 			fileHandler = new FileHandler(FILE_LOG);
-			networkHandler = NetworkHandler.getInstance();
-		} catch (Exception e) {
+		} catch (IOException e) {
 			// how to handle?
 			System.out.println("Handler Error");
 		}
+		networkHandler = NetworkHandler.getInstance();
+		
 		// set handlers level
 		consoleHandler.setLevel(CONSOLE_LEVEL);
 		fileHandler.setLevel(OUTPUT_LEVEL);
@@ -82,26 +83,49 @@ public aspect Logging {
 	}
 
 	/**************************************** POINT CUTS *************************************/
-	// pointcut for system print method calls
+	/**
+	 * Pointcut for system print method calls.
+	 */
 	pointcut system(PrintStream ps, String txt, Object caller):
 		call(void print*(String)) && target(ps) && args(txt) && this(caller);
+	
+	/**
+	 * Pointcut for static system print method calls
+	 */
+	pointcut systemStatic(PrintStream ps, String txt):
+		call(void print*(String)) && target(ps) && args(txt);
 
-	// pointcut for unimplemented context
+	/**
+	 * Pointcut for unimplemented context
+	 * @param methodName
+	 * @param caller
+	 */
 	pointcut unimplemented(String methodName, Object caller) :
 		within(Context) && (execution(* unimplemented(String))) && args (methodName) && this(caller);
 
-	// pointcut for actionPerformed method calls
+	/**
+	 *  pointcut for actionPerformed method calls
+	 * @param owner
+	 */
 	pointcut actions(Action owner):
 		within(Action+) && execution(* actionPerformed(ActionEvent))
 		&& this(owner)
 		;
 
-	// pointcut for context creation calls
+	/**
+	 * Pointcut for context creation calls
+	 * @param pastContext
+	 * @param source
+	 */
 	pointcut context(Context pastContext, Object source) :
 		within(ContextFactory) && execution(* createContext(Context ,Object)) && args (pastContext, source)
 		;
 
-	// pointcut for ScriptEaseExceptionHandler uncaughtException calls
+	/**
+	 * Pointcut for ScriptEaseExceptionHandler uncaughtException calls
+	 * @param thread
+	 * @param exception
+	 */
 	pointcut exception(Thread thread, Throwable exception):
 		within(ScriptEaseExceptionHandler) && execution(* uncaughtException(Thread ,Throwable)) && args(thread, exception)
 		;
@@ -132,13 +156,17 @@ public aspect Logging {
 
 	// advice for system pointcut
 	void around(PrintStream ps, String txt, Object caller): system(ps,txt,caller)	{
-		// String stream;
-		// if (ps.equals(System.out))
-		// stream = "System.out";
-		// else
-		// stream = "System.err";
-		outputLog.log(Level.INFO, /* stream* + " - " + */txt + " FROM "
-				+ GetSimpleName(caller));
+		final Level lvl = (ps == System.out)? Level.INFO : Level.WARNING;
+		final String msg = "\t" + txt + "\t(" + GetSimpleName(caller) + " class)";
+		
+		outputLog.log(lvl, msg);
+	}
+	
+	// advice for system pointcut
+	void around(PrintStream ps, String txt): systemStatic(ps,txt)	{
+		final Level lvl = (ps == System.out)? Level.INFO : Level.WARNING;
+		
+		outputLog.log(lvl, "\t" + txt + "\t(Unknown class)");
 	}
 
 	/**************************************** HELPERS *************************************/
