@@ -1,3 +1,4 @@
+package io;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,14 +14,7 @@ import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.GameObject;
 
 
-public final class SceneFile implements GameModule {
-	// key for the game directory path property in the translator definition
-	private static final String GAME_DIRECTORY_KEY = "GAME_DIRECTORY";
-
-	// Translator name to be used with the TranslatorManager lookup
-	public static final String UNITY_3D = "Unity";
-	
-	
+public final class UnityProject implements GameModule {
 	@Override
 	public void addGameObject(GameObject object) {
 		// TODO Auto-generated method stub

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project name="Unity Translator" default="install">
+	<description>
+==============================================
+UNITY TRANSLATOR for SCRIPTEASE 2
+Together we are stronger.
+==============================================
+		
+This is the build file for the ScriptEase 2 Unity translator. It depends on the 
+ScriptEase2 base jar to compile.
+		
+Use 'ant zip' to create a distributable zip package. Use flag -Ddebug.mode=true to include debugger information. 
+	</description>
+
+	<property name="se.base.dir" value="../.." />
+	<property name="se.base.jar" value="${se.base.dir}/jar/ScriptEase2.jar" />
+
+	<property file="${se.base.dir}/mailingLists.properties" />
+	<import file="${se.base.dir}/commonBuild.xml" />
+
+	<property name="build.dir" value="build" />
+	<property name="translator.zip.file" value="Unity-Translator.zip" />
+	<property name="resources.dir" value="resources" />
+	<property name="src.dir" value="io" />
+
+	<property name="debug.mode" value="false" />
+
+	<property name="java.compile.version" value="1.6" />
+
+	<property name="translator.dir.name" value="unity" />
+
+	<available file="${se.base.jar}" property="seJar.present" />
+
+	<target name="clean" description="Removes all build artifacts.">
+		<delete dir="${build.dir}" verbose="false" />
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<target name="ensureSeJar" unless="seJar.present">
+		<!-- This would be better to build the SE jar for us, 
+		     but ant gets confused about the running directory, so I gave up. -->
+		<echo>ScriptEase jar not found. Please build it first.</echo>
+		<fail />
+	</target>
+
+	<target name="compile" depends="clean, ensureSeJar" description="Compiles the translator's Java code.">
+		<echo>Compiling with Java version ${java.version}</echo>
+
+		<copy todir="${build.dir}" verbose="false">
+			<fileset dir=".">
+				<include name="${resources.dir}/includes/**" />
+				<include name="${resources.dir}/apiDictionary.xml" />
+				<include name="${resources.dir}/languageDictionary.xml" />
+				<include name="${resources.dir}/*.gif" />
+				<include name="${resources.dir}/*.png" />
+				<include name="${resources.dir}/*.jpg" />
+				<include name="${resources.dir}/*.jpeg" />
+				<include name="translator.ini" />
+			</fileset>
+		</copy>
+
+		<echo>Compiling with debug mode ${debug.mode}</echo>
+		<javac srcdir="${src.dir}" debug="${debug.mode}" destdir="${build.dir}" source="${java.compile.version}" target="${java.compile.version}" includeantruntime="false">
+			<classpath location="${se.base.jar}" />
+			<exclude name="${build.dir}" />
+			<exclude name="bin/**" />
+		</javac>
+	</target>
+
+	<target name="zip" depends="compile" description="Generates a distributable zip file that can be unpacked into the translators directory.">
+		<property name="zip.dir" value="zip" />
+		
+		<echo>Cleaning up the old stuff first...</echo>
+		<delete file="${translator.zip.file}" />
+		<delete dir="${zip.dir}" />
+		
+		<echo>Zipping...</echo>
+		<mkdir dir="${zip.dir}" />
+
+		<copy todir="zip/${translator.dir.name}">
+			<fileset dir="${build.dir}" />
+		</copy>
+
+		<zip file="zip/${translator.dir.name}" destfile="${translator.zip.file}">
+			<fileset dir="zip">
+				<filename name="${translator.dir.name}/**" />
+			</fileset>
+			<exclude name=".svn/**" />
+		</zip>
+
+		<echo>Zip file built and located at ${basedir}/${translator.zip.file}</echo>
+	</target>
+
+	<target name="install" depends="zip" description="Copies this translator into the local copy of ScriptEase. ">
+		<echo>Installing ${ant.project.name} to the local copy of ScriptEase</echo>
+		<unzip src="${translator.zip.file}" dest="${se.base.dir}/scriptease2/translators/" overwrite="true" />
+		<echo>${ant.project.name} installed.</echo>
+	</target>
+
+	<!--TARGETS-->
+	<target name="share" depends="zip" description="Runs 'post' to be configured to post the zip privately.">
+		<!-- This is where all the internally shared Jars go -->
+		<property name="shareDirectory" value="${webdocs}/internal/translators" />
+
+		<property name="dest.dir" value="${shareDirectory}" />
+		<property name="src.file" value="${translator.zip.file}" />
+		<property name="link.location" value="${shareDirectory}" />
+		<property name="expected.web.location" value="http://www.cs.ualberta.ca/~script/internal/translators" />
+
+		<property name="mail.body" value="A new version of ScriptEase's ${ant.project.name} has been shared privately with the group by ${user.name.full} (${user.name}).\n\nYou should be able to access it at ${expected.web.location}/${src.file}." />
+		<property name="mail.title" value="New ${ant.project.name} available" />
+		<property name="mail.list" value="${internalMail}" />
+
+		<antcall target="post" />
+	</target>
+
+	<target name="release" depends="zip" description="Runs 'post', configured to post the zip publically.">
+		<echo>You are generating a PUBLIC release. I sure hope you tested it.</echo>
+
+		<property name="dest.dir" value="${webdocs}/files/releases/translators" />
+		<property name="src.file" value="${translator.zip.file}" />
+		<property name="link.location" value="${webdocs}" />
+		<property name="expected.web.location" value="http://www.cs.ualberta.ca/~script" />
+
+		<property name="mail.body" value="A new version of ScriptEase's ${ant.project.name} has been released to the public website by ${user.name.full}.\n\nYou should be able to access it at ${expected.web.location}/downloads." />
+		<property name="mail.title" value="New Public Release of ScriptEase's ${ant.project.name} is Available" />
+		<property name="mail.list" value="${publicMail}" />
+
+		<antcall target="post" />
+	</target>
+</project>

@@ -1,17 +1,13 @@
+package io;
 import java.util.Collection;
 import scriptease.translator.io.model.GameObject;
 
-
-public final class UnityObject implements GameObject{
-	//:( why no enums
-	public enum ReferenceType{
-		FIND_BY_TAG, FIND_BY_NAME, FIND_;
-	}
-	
-	public static int FIND_BY_TAG =0;
-	public static int FIND_BY_NAME =1;
-	
-	//Unity has the idea of a hiarchy of objects, enter the prefab, not needed for objects though
+/**
+ * 
+ * @author lari
+ */
+public final class UnityGameObject implements GameObject{
+	// Unity has the idea of a hierarchy of objects, enter the prefab, not needed for objects though
 	private GameObject prefabParentObject;
 	private int fileID;
 	private String name;
@@ -21,7 +17,7 @@ public final class UnityObject implements GameObject{
 	private Collection<String> types;
 	
 	
-	//wonder what an m_component does....
+	// wonder what an m_component does....
 	private Collection<GameObject> childrenComponents;
 	
 	private int resolutionMethod;
