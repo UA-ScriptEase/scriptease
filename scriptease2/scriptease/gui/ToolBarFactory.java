@@ -510,6 +510,8 @@ public class ToolBarFactory {
 			final GraphNode sourceNode = event.getSource();
 			final GraphNodeEventType type = event.getEventType();
 
+			GraphNode oldSelectedNode = GraphEditor.getOldSelectedNode();
+
 			if (type == GraphNodeEventType.SELECTED) {
 				switch (ToolBarButtonAction.getMode()) {
 				case DELETE_GRAPH_NODE:
@@ -529,7 +531,58 @@ public class ToolBarFactory {
 						}
 					}
 					break;
+					
+				case CONNECT_GRAPH_NODE:
+					if (oldSelectedNode != null) {
+						// Determine which node is shallower in the graph, and
+						// which
+						// is deeper.
+						GraphNode shallowerNode = sourceNode
+								.isDescendant(oldSelectedNode) ? oldSelectedNode
+								: sourceNode;
+						GraphNode deeperNode = sourceNode
+								.isDescendant(oldSelectedNode) ? sourceNode
+								: oldSelectedNode;
+
+						// connect the nodes if not connected
+						shallowerNode.addChild(deeperNode);
+
+						// Reset the tool.
+						GraphEditor.setOldSelectedNode(null);
+					}
+					// update the last selected node
+					else
+						GraphEditor.setOldSelectedNode(sourceNode);
+					break;
+					
+				case DISCONNECT_GRAPH_NODE:
+					if (oldSelectedNode != null) {
+						// Determine which node is shallower in the graph, and
+						// which
+						// is deeper.
+						GraphNode shallowerNode = sourceNode
+								.isDescendant(oldSelectedNode) ? oldSelectedNode
+								: sourceNode;
+						GraphNode deeperNode = sourceNode
+								.isDescendant(oldSelectedNode) ? sourceNode
+								: oldSelectedNode;
+
+						// Check that both nodes will still have at least one
+						// parent and one child after the disconnect.
+						if (shallowerNode.getChildren().size() > 1
+								&& deeperNode.getParents().size() > 1) {
+							shallowerNode.removeChild(deeperNode, false);
+						}
+
+						// Reset the tool.
+						GraphEditor.setOldSelectedNode(null);
+					}
+					// update the last selected node
+					else
+						GraphEditor.setOldSelectedNode(sourceNode);
+					break;
 				}
+
 			} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
 				GraphNode.observeDepthMap(graphBarObserver, sourceNode);
 			}
@@ -548,6 +601,9 @@ public class ToolBarFactory {
 		private JSpinner fanInSpinner;
 
 		private GraphNode previousNode;
+		private GraphNode headNode;
+
+		// private GraphEditor editor;
 
 		/**
 		 * Creates the observer for the quest toolbar. It requires the name
@@ -564,6 +620,7 @@ public class ToolBarFactory {
 			this.commitButton = commitbox;
 			this.fanInSpinner = fanInSpinner;
 			this.previousNode = editor.getHeadNode();
+			this.headNode = editor.getHeadNode();
 		}
 
 		/**
@@ -665,6 +722,97 @@ public class ToolBarFactory {
 			});
 		}
 
+		/**
+		 * Method to abstract commonalities from the Insert QuestPoint between
+		 * and alternate tools.
+		 * 
+		 * @param node
+		 * 
+		 * @author graves
+		 */
+		private void insertQuestPoint(GraphNode node) {
+			// if this is the second click,
+
+			GraphNode oldSelectedNode = GraphEditor.getOldSelectedNode();
+
+			if (oldSelectedNode != null) {
+
+				// create a new node to insert:
+				QuestPoint newQuestPoint = new QuestPoint("", 1, false);
+				QuestPointNode newQuestPointNode = new QuestPointNode(
+						newQuestPoint);
+
+				// Cases for clicking the same node.
+				if (oldSelectedNode == node) {
+
+					if (oldSelectedNode == headNode) {
+						// Get the children of the start node.
+						List<GraphNode> startNodeChildren = oldSelectedNode
+								.getChildren();
+
+						// Remove them all.
+						oldSelectedNode.removeChildren();
+
+						// Add the new node to the start node as a child.
+						oldSelectedNode.addChild(newQuestPointNode);
+
+						// Add the old children to the new node.
+						newQuestPointNode.addChildren(startNodeChildren);
+					}
+
+					else if (oldSelectedNode.isTerminalNode()) {
+						// Get the parents of the end node.
+						List<GraphNode> endNodeParents = oldSelectedNode
+								.getParents();
+
+						// Remove them all.
+						oldSelectedNode.removeParents();
+
+						// Add the end node to the new node as a child.
+						newQuestPointNode.addChild(oldSelectedNode);
+
+						// Add the old parents to the new node.
+						for (GraphNode parent : endNodeParents) {
+							parent.addChild(newQuestPointNode);
+						}
+					}
+					// double clicking any other node does nothing.
+
+					// Cases for clicking a new node
+				} else {
+					// determine which node is closer to the startNode in the
+					// graph
+					// (the parent) and which is further from the startNode (the
+					// child).
+					GraphNode closerToStartNode = node
+							.isDescendant(oldSelectedNode) ? oldSelectedNode
+							: node;
+					GraphNode furtherFromStartNode = node
+							.isDescendant(oldSelectedNode) ? node
+							: oldSelectedNode;
+
+					// Remove the old connection between the parent and child:
+					closerToStartNode.removeChild(furtherFromStartNode, false);
+
+					// Add the new node to the shallower node as a child
+					// (addChild
+					// automatically adds shallower as parent):
+					closerToStartNode.addChild(newQuestPointNode);
+
+					// Add the deeper node to the new node as a child.
+					newQuestPointNode.addChild(furtherFromStartNode);
+				}
+				// Reset the tool:
+				GraphEditor.setOldSelectedNode(null);
+
+			} else {
+				// otherwise this is the first click, so store the node for
+				// later:
+				GraphEditor.setOldSelectedNode(node);
+			}
+
+		}
+
 		@Override
 		public void nodeChanged(GraphNodeEvent event) {
 
@@ -712,7 +860,14 @@ public class ToolBarFactory {
 											}
 										});
 							}
+							updateQuestToolBar(nameField, commitButton,
+									fanInSpinner, questPointNode);
+							break;
 						case INSERT_GRAPH_NODE:
+							insertQuestPoint(sourceNode);
+							updateQuestToolBar(nameField, commitButton,
+									fanInSpinner, questPointNode);
+							break;
 						case CONNECT_GRAPH_NODE:
 							updateQuestToolBar(nameField, commitButton,
 									fanInSpinner, questPointNode);

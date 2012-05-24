@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -39,12 +38,20 @@ import scriptease.util.GUIOp;
  * 
  */
 @SuppressWarnings("serial")
-public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
+public abstract class GraphEditor extends JPanel {
 
 	private Point mousePosition = new Point();
 	protected GraphNode headNode;
-	protected GraphNode oldSelectedNode;
+	protected static GraphNode oldSelectedNode;
 
+	public static GraphNode getOldSelectedNode(){
+		return GraphEditor.oldSelectedNode;
+	}
+	
+	public static void setOldSelectedNode(GraphNode oldNode) {
+		GraphEditor.oldSelectedNode = oldNode;
+	}
+	
 	/**
 	 * Constructor.
 	 * 
@@ -68,7 +75,7 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 		MouseAdapter connectArrowListener = new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				oldSelectedNode = null;
+				GraphEditor.oldSelectedNode = null;
 				repaint();
 			}
 
@@ -98,79 +105,13 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 			throw new IllegalArgumentException("Cannot set head node to null");
 		this.headNode = graphNode;
 		
-		GraphNode.observeDepthMap(this, this.headNode);
+	//	GraphNode.observeDepthMap(this, this.headNode);
 
 		this.getHeadNode().setSelected(true);
 	}
 	
 	public GraphNode getHeadNode() {
 		return this.headNode;
-	}
-
-	@Override
-	public void nodeChanged(GraphNodeEvent event) {
-		final GraphNode sourceNode = event.getSource();
-		final GraphNodeEventType type = event.getEventType();
-
-		// only process clicked actions if you are contained in the active tab
-		if (type == GraphNodeEventType.SELECTED) {
-
-			// Determine what the active tool is
-			switch (ToolBarButtonAction.getMode()) {
-			case CONNECT_GRAPH_NODE:
-				if (oldSelectedNode != null) {
-					// Determine which node is shallower in the graph, and which
-					// is deeper.
-					GraphNode shallowerNode = sourceNode
-							.isDescendant(oldSelectedNode) ? oldSelectedNode
-							: sourceNode;
-					GraphNode deeperNode = sourceNode
-							.isDescendant(oldSelectedNode) ? sourceNode
-							: oldSelectedNode;
-
-					// connect the nodes if not connected
-					shallowerNode.addChild(deeperNode);
-
-					// Reset the tool.
-					oldSelectedNode = null;
-
-				}
-				// update the last selected node
-				else
-					oldSelectedNode = sourceNode;
-
-				break;
-
-			case DISCONNECT_GRAPH_NODE:
-				if (oldSelectedNode != null) {
-					// Determine which node is shallower in the graph, and which
-					// is deeper.
-					GraphNode shallowerNode = sourceNode
-							.isDescendant(oldSelectedNode) ? oldSelectedNode
-							: sourceNode;
-					GraphNode deeperNode = sourceNode
-							.isDescendant(oldSelectedNode) ? sourceNode
-							: oldSelectedNode;
-
-					// Check that both nodes will still have at least one
-					// parent and one child after the disconnect.
-					if (shallowerNode.getChildren().size() > 1
-							&& deeperNode.getParents().size() > 1) {
-						shallowerNode.removeChild(deeperNode, false);
-					}
-
-					// Reset the tool.
-					oldSelectedNode = null;
-				}
-				// update the last selected node
-				else
-					oldSelectedNode = sourceNode;
-
-				break;
-			}
-		} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
-			GraphNode.observeDepthMap(this, sourceNode);
-		}
 	}
 
 	/**
@@ -190,11 +131,11 @@ public abstract class GraphEditor extends JPanel implements GraphNodeObserver {
 
 			final Graphics2D g2 = (Graphics2D) g.create();
 
-			if (oldSelectedNode != null && mousePosition != null) {
+			if (GraphEditor.oldSelectedNode != null && mousePosition != null) {
 				g2.setColor(Color.GRAY);
 				g2.setStroke(new BasicStroke(1.5f));
 				GUIOp.paintArrow(g2, GUIOp.getMidRight(componentBuilder
-						.getComponentForNode(oldSelectedNode)), mousePosition);
+						.getComponentForNode(GraphEditor.oldSelectedNode)), mousePosition);
 			}
 			super.paint(g, c);
 		}
