@@ -537,7 +537,8 @@ public class ToolBarFactory {
 	}
 
 	/**
-	 * Private observer for the QuestToolBar.
+	 * Private observer for the QuestToolBar. Also provides quest specific
+	 * actions for the graph editor toolbar buttons.
 	 * 
 	 * @author kschenk
 	 */
