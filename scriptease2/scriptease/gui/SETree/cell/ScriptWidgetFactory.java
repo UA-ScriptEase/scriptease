@@ -306,7 +306,6 @@ public class ScriptWidgetFactory {
 		} catch (NumberFormatException e) {
 			initVal = 0;
 		}
-		System.out.println("WELL FUCK YOU");
 		/*
 		 * extremly naive regex parsing since I'm unsure of a better way to
 		 * determine the max, min value the spinner should have

@@ -114,7 +114,6 @@ public class GameObjectPane implements GameObjectPicker {
 		categoryFilter.add(new JLabel("Category Filter: "));
 		
 		//rootCategoryTypes = tree.getStringTypes();
-		/////fuckkkkkkk
 		//GameObjectMultiSelector multiSelector = new GameObjectMultiSelector(rootCategories);
 		//multiSelector.addObserver(tree);
 		categoryFilter.add(multiSelector.getRootButton());		
