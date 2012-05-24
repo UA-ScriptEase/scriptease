@@ -100,6 +100,7 @@ public class StoryPanel extends JPanel {
 		// Build the QuestPanelEditor.
 		QuestEditor questEditor = new QuestEditor(model.getRoot()
 				.getStartPoint());
+		
 		this.add(questEditor);
 		
 		StoryComponentPanelSetting storySettings = new StoryComponentPanelStorySetting();

@@ -28,19 +28,22 @@ import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.GraphNodeObserver;
-import scriptease.controller.observer.StoryModelPoolEvent;
-import scriptease.controller.observer.StoryModelPoolObserver;
 import scriptease.gui.action.ToolBarButtonAction;
+import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.action.story.graphs.ConnectGraphPointAction;
 import scriptease.gui.action.story.graphs.DeleteGraphNodeAction;
 import scriptease.gui.action.story.graphs.DisconnectGraphPointAction;
 import scriptease.gui.action.story.graphs.InsertGraphNodeAction;
 import scriptease.gui.action.story.graphs.SelectGraphNodeAction;
+import scriptease.gui.graph.editor.GraphEditor;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.quests.QuestEditor;
+import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
+import scriptease.model.StoryModel;
+import scriptease.model.StoryModelPool;
 
 /**
  * ToolBarFactory is responsible for creating JToolBars, most importantly the
@@ -55,9 +58,9 @@ import scriptease.gui.quests.QuestPointNode;
  */
 public class ToolBarFactory {
 
-	private static final JLabel nameLabel = new JLabel(
-			Il8nResources.getString("Name") + ":");
-	private static final JLabel fanInLabel = new JLabel("Fan In:");
+	private final JLabel nameLabel = new JLabel(Il8nResources.getString("Name")
+			+ ":");
+	private final JLabel fanInLabel = new JLabel("Fan In:");
 
 	/**
 	 * Do not delete this. Ever. Otherwise Java will Garbage Collect all
@@ -65,7 +68,9 @@ public class ToolBarFactory {
 	 * 
 	 * This makes sure the observer always exists.
 	 */
-	private static GraphNodeObserver questBarObserver;
+	private static GraphNodeObserver graphBarObserver;
+
+	private GraphNodeObserver questBarObserver;
 
 	/**
 	 * Builds a toolbar to edit graphs with. Includes buttons for selecting
@@ -73,7 +78,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	public static JToolBar buildGraphEditorToolBar() {
+	public static JToolBar buildGraphEditorToolBar(final GraphEditor editor) {
 		final JToolBar graphEditorToolBar = new JToolBar();
 
 		final ButtonGroup graphEditorButtonGroup = new ButtonGroup();
@@ -108,33 +113,50 @@ public class ToolBarFactory {
 
 		for (JToggleButton toolBarButton : buttonList) {
 			toolBarButton.setHideActionText(true);
+			toolBarButton.setFocusable(false);
 			graphEditorButtonGroup.add(toolBarButton);
 			graphEditorToolBar.add(toolBarButton);
 		}
 
-		selectNodeButton.setSelected(true);
+		ChangeListener graphEditorListener = new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				switch (ToolBarButtonAction.getMode()) {
+
+				case SELECT_GRAPH_NODE:
+					graphEditorButtonGroup.setSelected(
+							selectNodeButton.getModel(), true);
+					break;
+				case DELETE_GRAPH_NODE:
+					graphEditorButtonGroup.setSelected(
+							deleteNodeButton.getModel(), true);
+					break;
+				case INSERT_GRAPH_NODE:
+					graphEditorButtonGroup.setSelected(
+							insertNodeButton.getModel(), true);
+					break;
+				case CONNECT_GRAPH_NODE:
+					graphEditorButtonGroup.setSelected(
+							connectNodeButton.getModel(), true);
+					break;
+				case DISCONNECT_GRAPH_NODE:
+					graphEditorButtonGroup.setSelected(
+							disconnectNodeButton.getModel(), true);
+					break;
+				}
+			}
+		};
+
+		SEFrame.getInstance().getStoryTabPane()
+				.addChangeListener(graphEditorListener);
+
+		graphBarObserver = new GraphToolBarObserver();
+
+		GraphNode.observeDepthMap(graphBarObserver, editor.getHeadNode());
 
 		return graphEditorToolBar;
 	}
-
-	/*
-	 * TODO QuestEditorToolbar needs to be an "instance".One needs to be able to
-	 * set its editor, not wait for it to be made. Could be done by...
-	 * 
-	 * private static QEToolbar = build**GraphEditor**toolbar()
-	 * 
-	 * then can call it like...
-	 * 
-	 * QEToolbar = buildQEToolBar()
-	 * 
-	 * This might not work.
-	 * 
-	 * Otherwise, you can make a "setQuestEditor" method that does most of
-	 * what's inside of buildquesteditortoolbar.
-	 * 
-	 * Option 3 is to approximate the deltas with the proxy coefficients, but
-	 * that shouldn't be necessary.
-	 */
 
 	/**
 	 * Creates a JToolBar for the quest editor. It adds all of the graph editor
@@ -143,9 +165,9 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	public static JToolBar buildQuestEditorToolBar(final QuestEditor editor) {
+	public JToolBar buildQuestEditorToolBar(final QuestEditor editor) {
 
-		final JToolBar questEditorToolBar = buildGraphEditorToolBar();
+		final JToolBar questEditorToolBar = buildGraphEditorToolBar(editor);
 
 		final int TOOL_BAR_HEIGHT = 32;
 		final int FAN_IN_SPINNER_LENGTH = 50;
@@ -154,14 +176,14 @@ public class ToolBarFactory {
 		final JTextField nameField = nameField(new Dimension(NAME_FIELD_LENGTH,
 				TOOL_BAR_HEIGHT));
 
-		final JToggleButton commitButton = committingBox();
+		final JCheckBox commitBox = committingBox();
 
 		final JSpinner fanInSpinner = buildFanInSpinner(new Dimension(
 				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT));
 
 		editor.getHeadNode().process(new AbstractNoOpGraphNodeVisitor() {
 			public void processQuestPointNode(QuestPointNode questPointNode) {
-				updateQuestToolBar(nameField, commitButton, fanInSpinner,
+				updateQuestToolBar(nameField, commitBox, fanInSpinner,
 						questPointNode);
 			}
 		});
@@ -182,7 +204,7 @@ public class ToolBarFactory {
 
 		questEditorToolBar.add(nameField);
 
-		questEditorToolBar.add(commitButton);
+		questEditorToolBar.add(commitBox);
 
 		questEditorToolBar.add(fanInLabel);
 
@@ -190,7 +212,7 @@ public class ToolBarFactory {
 
 		questEditorToolBar.add(fanInSpinner);
 
-		questBarObserver = new QuestToolBarObserver(nameField, commitButton,
+		questBarObserver = new QuestToolBarObserver(nameField, commitBox,
 				fanInSpinner, editor);
 
 		GraphNode.observeDepthMap(questBarObserver, editor.getHeadNode());
@@ -204,16 +226,15 @@ public class ToolBarFactory {
 	 * 
 	 * 
 	 * @param nameField
-	 * @param commitButton
+	 * @param commitBox
 	 * @param fanInSpinner
 	 * @param questNode
 	 */
-	private static void updateQuestToolBar(JTextField nameField,
-			JToggleButton commitButton, JSpinner fanInSpinner,
-			QuestPointNode questNode) {
+	private void updateQuestToolBar(JTextField nameField, JCheckBox commitBox,
+			JSpinner fanInSpinner, QuestPointNode questNode) {
 
 		updateFanInSpinner(fanInSpinner, questNode);
-		updateCommittingButton(commitButton, questNode);
+		updateCommittingBox(commitBox, questNode);
 		updateNameField(nameField, questNode);
 
 	}
@@ -224,7 +245,7 @@ public class ToolBarFactory {
 	 * @param maxSize
 	 * @return
 	 */
-	private static JTextField nameField(final Dimension maxSize) {
+	private JTextField nameField(final Dimension maxSize) {
 		JTextField nameField = new JTextField(10);
 		nameField.setMaximumSize(maxSize);
 
@@ -236,7 +257,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	private static DocumentListener nameFieldListener(JTextField nameField,
+	private DocumentListener nameFieldListener(JTextField nameField,
 			QuestPointNode questNode) {
 		final JTextField nField = nameField;
 		final QuestPointNode qNode = questNode;
@@ -269,8 +290,7 @@ public class ToolBarFactory {
 	 * @param nameField
 	 * @param questNode
 	 */
-	private static void updateNameField(JTextField nameField,
-			QuestPointNode questNode) {
+	private void updateNameField(JTextField nameField, QuestPointNode questNode) {
 
 		if (questNode != null) {
 
@@ -303,7 +323,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	private static JCheckBox committingBox() {
+	private JCheckBox committingBox() {
 		final JCheckBox committingBox = new JCheckBox();
 		committingBox.setText(Il8nResources.getString("Committing") + ":");
 		committingBox.setHorizontalTextPosition(SwingConstants.LEFT);
@@ -317,7 +337,7 @@ public class ToolBarFactory {
 	 * @param questNode
 	 * @return
 	 */
-	private static ItemListener commitButtonListener(QuestPointNode questNode) {
+	private ItemListener commitBoxListener(QuestPointNode questNode) {
 		final QuestPointNode questN = questNode;
 
 		ItemListener commitButtonListener = new ItemListener() {
@@ -338,32 +358,31 @@ public class ToolBarFactory {
 	/**
 	 * Updates the committing button for the quest node passed in.
 	 * 
-	 * @param cButton
+	 * @param cBox
 	 *            The commmitting button to update.
 	 * @param questNode
 	 *            The QuestPointNode to update the committing button to.
 	 */
-	private static void updateCommittingButton(JToggleButton cButton,
-			QuestPointNode questNode) {
+	private void updateCommittingBox(JCheckBox cBox, QuestPointNode questNode) {
 		if (questNode != null) {
 			Boolean committing = questNode.getQuestPoint().getCommitting();
 
-			if (cButton.getItemListeners().length > 0)
-				cButton.removeItemListener(cButton.getItemListeners()[0]);
+			if (cBox.getItemListeners().length > 0)
+				cBox.removeItemListener(cBox.getItemListeners()[0]);
 
-			cButton.addItemListener(commitButtonListener(questNode));
+			cBox.addItemListener(commitBoxListener(questNode));
 
 			// Checks if it's an end or start node
 
-			cButton.setSelected(committing);
+			cBox.setSelected(committing);
 
 			if (questNode.isDeletable()) {
-				cButton.setEnabled(true);
+				cBox.setEnabled(true);
 			} else {
-				cButton.setEnabled(false);
+				cBox.setEnabled(false);
 			}
 		} else {
-			cButton.setEnabled(false);
+			cBox.setEnabled(false);
 		}
 	}
 
@@ -375,7 +394,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	private static JSpinner buildFanInSpinner(final Dimension maxSize) {
+	private JSpinner buildFanInSpinner(final Dimension maxSize) {
 		final JSpinner fanInSpinner = new JSpinner();
 		fanInSpinner.setMaximumSize(maxSize);
 
@@ -394,7 +413,7 @@ public class ToolBarFactory {
 	 * @param questPoint
 	 * @return
 	 */
-	private static ChangeListener fanInSpinnerListener(JSpinner fanInSpinner,
+	private ChangeListener fanInSpinnerListener(JSpinner fanInSpinner,
 			QuestPointNode questNode) {
 		final JSpinner fanInSpin = fanInSpinner;
 		final QuestPointNode questN = questNode;
@@ -430,7 +449,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return The SpinnerModel
 	 */
-	private static void updateFanInSpinner(JSpinner fanInSpinner,
+	private void updateFanInSpinner(JSpinner fanInSpinner,
 			QuestPointNode questNode) {
 
 		if (questNode != null) {
@@ -477,28 +496,81 @@ public class ToolBarFactory {
 	}
 
 	/**
+	 * Private observer for the Graph ToolBar
+	 * 
+	 * @author kschenk
+	 * 
+	 */
+	private static class GraphToolBarObserver implements GraphNodeObserver {
+		/**
+		 * Adds the node to the graph bar observer if a new one is added.
+		 */
+		@Override
+		public void nodeChanged(GraphNodeEvent event) {
+			final GraphNode sourceNode = event.getSource();
+			final GraphNodeEventType type = event.getEventType();
+
+			if (type == GraphNodeEventType.SELECTED) {
+				switch (ToolBarButtonAction.getMode()) {
+				case DELETE_GRAPH_NODE:
+					if (sourceNode.isDeletable()) {
+						List<GraphNode> parents = sourceNode.getParents();
+						List<GraphNode> children = sourceNode.getChildren();
+
+						sourceNode.removeParents();
+
+						sourceNode.removeChildren();
+
+						// Re-connect each parent with each child.
+						for (GraphNode parent : parents) {
+							for (GraphNode child : children) {
+								parent.addChild(child);
+							}
+						}
+					}
+					break;
+				}
+			} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
+				GraphNode.observeDepthMap(graphBarObserver, sourceNode);
+			}
+		}
+	}
+
+	/**
 	 * Private observer for the QuestToolBar.
 	 * 
 	 * @author kschenk
 	 */
-	private static class QuestToolBarObserver implements GraphNodeObserver,
-			StoryModelPoolObserver {
+	private class QuestToolBarObserver implements GraphNodeObserver {
 		private JTextField nameField;
-		private JToggleButton commitButton;
+		private JCheckBox commitButton;
 		private JSpinner fanInSpinner;
 
 		private GraphNode previousNode;
 
-		public QuestToolBarObserver(JTextField nameField,
-				JToggleButton commitButton, JSpinner fanInSpinner,
-				QuestEditor editor) {
+		/**
+		 * Creates the observer for the quest toolbar. It requires the name
+		 * textfield, a commit button, a fan in spinner, and a quest editor.
+		 * 
+		 * @param nameField
+		 * @param commitbox
+		 * @param fanInSpinner
+		 * @param editor
+		 */
+		public QuestToolBarObserver(JTextField nameField, JCheckBox commitbox,
+				JSpinner fanInSpinner, QuestEditor editor) {
 			this.nameField = nameField;
-			this.commitButton = commitButton;
+			this.commitButton = commitbox;
 			this.fanInSpinner = fanInSpinner;
-
 			this.previousNode = editor.getHeadNode();
 		}
 
+		/**
+		 * Swaps the selected state of the newly selected node.
+		 * 
+		 * @param previousNode
+		 * @param currentNode
+		 */
 		protected void swapSelected(GraphNode previousNode,
 				GraphNode currentNode) {
 			if (previousNode != null)
@@ -506,11 +578,68 @@ public class ToolBarFactory {
 			currentNode.setSelected(true);
 		}
 
-		private void deleteGraphNode(GraphNode sourceNode,
+		/**
+		 * Specialty method for deleting the quest node, rather than just a
+		 * graph node.
+		 * 
+		 * @param sourceNode
+		 * @param questPointNode
+		 */
+		private void deleteQuestNode(final GraphNode sourceNode,
 				QuestPointNode questPointNode) {
-			if (sourceNode.isDeletable() && !sourceNode.isSelected()) {
+			if (sourceNode.isDeletable()) {
 				List<GraphNode> children = questPointNode.getChildren();
+				sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
+					@Override
+					public void processQuestNode(QuestNode questNode) {
+						// Remove the Quest
 
+						List<GraphNode> parents = questNode.getParents();
+						List<GraphNode> children = questNode.getChildren();
+
+						if (!parents.isEmpty() && !children.isEmpty()) {
+
+							questNode.removeParents();
+
+							// Add startPoint to parents of QuestNode
+							GraphNode startPoint = questNode.getStartPoint();
+							List<GraphNode> parentsx = sourceNode.getParents();
+							for (GraphNode parent : parentsx) {
+								parent.addChild(startPoint);
+							}
+
+							// Add children of QuestNode to endPoint
+							GraphNode endPoint = questNode.getEndPoint();
+							endPoint.addChildren(questNode.getChildren());
+						}
+					}
+
+					@Override
+					public void processQuestPointNode(
+							QuestPointNode questPointNode) {
+						List<GraphNode> parents = questPointNode.getParents();
+						List<GraphNode> children = questPointNode.getChildren();
+
+						// Only delete the node if there are parents and
+						// children to repair the graph with.
+						if (!parents.isEmpty() && !children.isEmpty()) {
+
+							// Remove the node from its parents.
+							questPointNode.removeParents();
+
+							// Remove the node from its children.
+							questPointNode.removeChildren();
+
+							// Re-connect each parent with each child.
+							for (GraphNode parent : parents) {
+								for (GraphNode child : children) {
+									parent.addChild(child);
+								}
+							}
+						}
+					}
+				});
+				// Subtracts 1 from fan in of all children.
 				for (GraphNode child : children) {
 					child.process(new AbstractNoOpGraphNodeVisitor() {
 						public void processQuestPointNode(
@@ -542,6 +671,11 @@ public class ToolBarFactory {
 			final GraphNodeEventType type = event.getEventType();
 
 			if (type == GraphNodeEventType.SELECTED) {
+				if (ToolBarButtonAction.getMode() != ToolBarButtonMode.DELETE_GRAPH_NODE) {
+					swapSelected(previousNode, sourceNode);
+					previousNode = sourceNode;
+				}
+
 				sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
 					@Override
 					public void processQuestPointNode(
@@ -557,16 +691,35 @@ public class ToolBarFactory {
 								questPoint.setFanIn(fanIn - 1);
 
 						case SELECT_GRAPH_NODE:
+							final StoryModel model = StoryModelPool
+									.getInstance().getActiveModel();
+
+							if (model != null) {
+								sourceNode
+										.process(new AbstractNoOpGraphNodeVisitor() {
+											@Override
+											public void processQuestPointNode(
+													QuestPointNode questPointNode) {
+
+												QuestPoint questPoint = questPointNode
+														.getQuestPoint();
+
+												SEFrame.getInstance()
+														.activatePanelForQuestPoint(
+																model,
+																questPoint);
+											}
+										});
+							}
 						case INSERT_GRAPH_NODE:
 						case CONNECT_GRAPH_NODE:
 							updateQuestToolBar(nameField, commitButton,
 									fanInSpinner, questPointNode);
-							swapSelected(previousNode, sourceNode);
 							previousNode = sourceNode;
 							break;
 
 						case DELETE_GRAPH_NODE:
-							deleteGraphNode(sourceNode, questPointNode);
+							deleteQuestNode(sourceNode, questPointNode);
 							break;
 						}
 					}
@@ -574,14 +727,7 @@ public class ToolBarFactory {
 
 			} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
 				GraphNode.observeDepthMap(questBarObserver, sourceNode);
-
 			}
-
-		}
-
-		@Override
-		public void modelChanged(StoryModelPoolEvent event) {
-
 		}
 	}
 }

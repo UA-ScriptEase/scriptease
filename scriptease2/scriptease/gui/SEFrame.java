@@ -36,7 +36,6 @@ import scriptease.controller.observer.StoryModelPoolEvent;
 import scriptease.controller.observer.StoryModelPoolObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.pane.CloseableTab;
-import scriptease.gui.pane.DefaultPatternPaneFactory;
 import scriptease.gui.pane.LibraryPane;
 import scriptease.gui.pane.PaneFactory;
 import scriptease.gui.pane.StoryPanel;
@@ -62,7 +61,6 @@ import scriptease.translator.TranslatorManager;
 public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	private static final int MIN_HEIGHT = 480;
 	private static final int MIN_WIDTH = 640;
-	private static final int PREFERRED_PROPERTIES_THICKNESS = 250;
 
 	private final JTabbedPane storyTabs;
 	private final JComponent middlePane;

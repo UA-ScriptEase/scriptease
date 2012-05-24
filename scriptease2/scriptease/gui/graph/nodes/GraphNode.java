@@ -28,6 +28,7 @@ public abstract class GraphNode implements Cloneable {
 	protected IdentityArrayList<GraphNode> children;
 	protected Collection<WeakReference<GraphNodeObserver>> observers;
 
+	protected boolean isBeingUsed;
 	protected boolean selected;
 	protected boolean terminal;
 
@@ -104,10 +105,6 @@ public abstract class GraphNode implements Cloneable {
 		// reset the clone
 		clone.init();
 
-		// clone.setSelectedColour(this.selectedColour);
-		// clone.setUnselectedColour(this.unselectedColour);
-		// clone.setBackgroundColour(this.backgroundColour);
-
 		clone.setSelected(this.selected);
 		clone.setTerminal(this.terminal);
 
@@ -180,8 +177,8 @@ public abstract class GraphNode implements Cloneable {
 
 	/**
 	 * Returns whether the GraphNode is deletable or not. Determined by if the
-	 * GraphNode is a start or end node. Does not need to be called in order
-	 * to delete the node, but it is useful if you need to check both.
+	 * GraphNode is a start or end node. Does not need to be called in order to
+	 * delete the node, but it is useful if you need to check both.
 	 * 
 	 * @return
 	 */
@@ -191,21 +188,22 @@ public abstract class GraphNode implements Cloneable {
 		else
 			return true;
 	}
-	
+
 	/**
 	 * Returns true if the current node is the start node. Otherwise, returns
 	 * false.
 	 * 
 	 * @return
 	 */
-		public boolean isStartNode() {
+	public boolean isStartNode() {
 		List<GraphNode> parents = this.getParents();
 
 		if (parents.size() > 0)
 			return false;
 		else
 			return true;
-	}
+	}
+
 	/**
 	 * Returns true if the current node is the end node. Otherwise, returns
 	 * false.

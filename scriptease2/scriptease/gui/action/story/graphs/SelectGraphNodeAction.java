@@ -37,7 +37,7 @@ public final class SelectGraphNodeAction extends ToolBarButtonAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		setCursorToImageFromPath(getJComponent(), ICON_TEXT);
+		setCursorToImageFromPath(ICON_TEXT);
 		setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
 	}
 }

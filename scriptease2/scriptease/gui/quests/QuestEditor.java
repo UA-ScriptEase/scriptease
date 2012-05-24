@@ -1,10 +1,10 @@
 package scriptease.gui.quests;
 
+import java.awt.BorderLayout;
 import java.util.List;
 
 import javax.swing.JToolBar;
 
-import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.gui.SEFrame;
@@ -13,8 +13,6 @@ import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.editor.GraphEditor;
 import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
 
 /**
  * Editor used for building Quests. Users select the active tool, which dictates
@@ -28,12 +26,19 @@ import scriptease.model.StoryModelPool;
 @SuppressWarnings("serial")
 public class QuestEditor extends GraphEditor {
 
+	private JToolBar questToolBar; 
+
 	public QuestEditor(final GraphNode start) {
 		super();
 		this.setHeadNode(start);
 		this.buildPanels();
 
-		addToolBar(ToolBarFactory.buildQuestEditorToolBar(this));
+		ToolBarFactory factory = new ToolBarFactory();
+		
+		questToolBar = factory.buildQuestEditorToolBar(this);
+
+		this.add((ToolBarFactory.buildGraphEditorToolBar(this).add(
+				questToolBar)), BorderLayout.PAGE_START);
 
 		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
 
@@ -73,7 +78,7 @@ public class QuestEditor extends GraphEditor {
 					// Add the old children to the new node.
 					newQuestPointNode.addChildren(startNodeChildren);
 				}
-				
+
 				else if (oldSelectedNode.isTerminalNode()) {
 					// Get the parents of the end node.
 					List<GraphNode> endNodeParents = oldSelectedNode
@@ -128,7 +133,6 @@ public class QuestEditor extends GraphEditor {
 	 */
 	@Override
 	public void nodeChanged(GraphNodeEvent event) {
-		System.out.println("Event: " + event.toString());
 		final GraphNode sourceNode = event.getSource();
 
 		final GraphNodeEventType type = event.getEventType();
@@ -142,95 +146,8 @@ public class QuestEditor extends GraphEditor {
 			case INSERT_GRAPH_NODE:
 				insertQuestPoint(sourceNode);
 				break;
-
-			case SELECT_GRAPH_NODE:
-
-				final StoryModel model = StoryModelPool.getInstance()
-						.getActiveModel();
-
-				if (model != null) {
-					sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
-						@Override
-						public void processQuestPointNode(
-								QuestPointNode questPointNode) {
-
-							QuestPoint questPoint = questPointNode
-									.getQuestPoint();
-
-							SEFrame.getInstance().activatePanelForQuestPoint(
-									model, questPoint);
-
-							// Force the graph to rebuild.
-							// setHeadNode(headNode);
-						}
-					});
-				}
-				break;
-
-			case DELETE_GRAPH_NODE:
-
-				if (sourceNode.isDeletable() && !sourceNode.isSelected()) {
-
-					sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
-						@Override
-						public void processQuestNode(QuestNode questNode) {
-							// Remove the Quest
-
-							List<GraphNode> parents = questNode.getParents();
-							List<GraphNode> children = questNode.getChildren();
-
-							if (!parents.isEmpty() && !children.isEmpty()) {
-
-								questNode.removeParents();
-
-								// Add startPoint to parents of QuestNode
-								GraphNode startPoint = questNode
-										.getStartPoint();
-								List<GraphNode> parentsx = sourceNode
-										.getParents();
-								for (GraphNode parent : parentsx) {
-									parent.addChild(startPoint);
-								}
-
-								// Add children of QuestNode to endPoint
-								GraphNode endPoint = questNode.getEndPoint();
-								endPoint.addChildren(questNode.getChildren());
-							}
-						}
-
-						@Override
-						public void processQuestPointNode(
-								QuestPointNode questPointNode) {
-							List<GraphNode> parents = questPointNode
-									.getParents();
-							List<GraphNode> children = questPointNode
-									.getChildren();
-
-							// Only delete the node if there are parents and
-							// children to repair the graph with.
-							if (!parents.isEmpty() && !children.isEmpty()) {
-
-								// Remove the node from its parents.
-								questPointNode.removeParents();
-
-								// Remove the node from its children.
-								questPointNode.removeChildren();
-
-								// Re-connect each parent with each child.
-								for (GraphNode parent : parents) {
-									for (GraphNode child : children) {
-										parent.addChild(child);
-									}
-								}
-							}
-						}
-					});
-				}
-				break;
-
 			}
 		}
 		super.nodeChanged(event);
-
 	}
 }
