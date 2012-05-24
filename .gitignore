@@ -1,0 +1,37 @@
+# --------------- READ ME -----------------------------------
+# This file declares what files will be ignored by git. Comments are after hash (#) characters. 
+# 
+# You may need to alter this file if you change the file structure or get a new library or 
+#  something that unfortunately collides with one of these filters. 
+# Some of the filters are there for a good reason, but others are broad to avoid over-specification. 
+# Use your best judgement on what will be allowed into git by changes to this file.
+#
+# Google .gitignore to learn more about this type of file.
+# - remiller
+# ----------------------------------------------------------
+
+# Don't save the user prefs in git. Logs aren't necessary in the repo, either.
+# Nor are classpath and project files. They all contain person-specific paths.
+*/user_preferences.ini
+*.log
+*.log.lck
+.classpath
+.project
+translators_src/*/.externalToolBuilders
+
+# Don't store distributables or distro temp directories. 
+# They should be made as needed, not remembered by git.
+scriptease2/bin
+build/
+jar/
+ScriptEase2.zip
+
+# same goes for translators
+translators_src/*/bin
+translators_src/*/build
+translators_src/*/zip
+translators_src/*/*.zip
+
+# and while we're at it, don't allow anything in the installed translators directory into the repo. 
+# Translator development stuff should go into translators_src
+scriptease2/translators/
