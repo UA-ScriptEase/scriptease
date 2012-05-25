@@ -79,8 +79,6 @@ public final class WindowManager {
 	private static final String TEST_STORY = Il8nResources
 			.getString("Test_Story");
 
-	private JFileChooser chooser;
-
 	/**
 	 * The sole instance of this class as per the singleton pattern.
 	 */
@@ -94,10 +92,6 @@ public final class WindowManager {
 	public static boolean progressShowing = false;
 
 	private WindowManager() {
-		this.chooser = new JFileChooser();
-
-		// disable "All Files" option
-		this.chooser.setAcceptAllFileFilterUsed(false);
 	}
 
 	/**
@@ -530,10 +524,12 @@ public final class WindowManager {
 	 * be short, like "Save Story".
 	 * 
 	 * @param operation
-	 *            The name of the operation to be performed.
-	 * @param extensions
-	 *            The file extensions to accept in the filter
-	 * 
+	 *            The name of the operation to be performed. This will become
+	 *            the dialog title.
+	 * @param filter
+	 *            The FileFilter to use to filter results.
+	 * @param directoryPath
+	 *            The location to start the file chooser showing.
 	 * 
 	 * @return The file selected. This <b>can</b> be null if the chooser window
 	 *         is dismissed without accepting (closed or cancelled).
@@ -541,39 +537,45 @@ public final class WindowManager {
 	public File showFileChooser(String operation, FileFilter filter,
 			File directoryPath) {
 		final ScriptEase se = ScriptEase.getInstance();
+		final JFileChooser chooser = new JFileChooser();
 		final int buttonChoice;
 		final File choice;
 		File lastChoicePath = null;
-		final boolean isNullFilter = (filter == null);
 		String lastDirectory = null;
 		String lastDirectoryKey = null;
 
-		this.chooser.resetChoosableFileFilters();
-		this.chooser.setAcceptAllFileFilterUsed(true);
-		if (!isNullFilter) {
-			lastDirectoryKey = WindowManager.LAST_DIRECTORY_KEY
-					+ StringOp.makeAlphaNumeric(filter.getDescription());
-			lastDirectory = se.getPreference(lastDirectoryKey);
-			this.chooser.setFileFilter(filter);
+		chooser.resetChoosableFileFilters();
+		chooser.setAcceptAllFileFilterUsed(true);
+		
+		if (filter != null) {
+			chooser.setFileFilter(filter);
+		} else{
+			// we don't know what they need, so directories may also be a legitimate option.
+			chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			filter = chooser.getAcceptAllFileFilter();
 		}
+		
+		lastDirectoryKey = WindowManager.LAST_DIRECTORY_KEY
+				+ StringOp.makeAlphaNumeric(filter.getDescription());
+		lastDirectory = se.getPreference(lastDirectoryKey);
 
 		if (lastDirectory != null)
 			lastChoicePath = new File(lastDirectory);
 		if (directoryPath != null)
-			this.chooser.setCurrentDirectory(directoryPath);
+			chooser.setCurrentDirectory(directoryPath);
 		else
-			this.chooser.setCurrentDirectory(lastChoicePath);
+			chooser.setCurrentDirectory(lastChoicePath);
 
 		// clear the selected file (since it shows up by default and isn't
 		// usually the correct extension)
-		this.chooser.setSelectedFile(new File(""));
+		chooser.setSelectedFile(new File(""));
 
-		buttonChoice = this.chooser
+		buttonChoice = chooser
 				.showDialog(SEFrame.getInstance(), operation);
 
 		if (buttonChoice == JFileChooser.APPROVE_OPTION) {
-			choice = this.chooser.getSelectedFile();
-			lastChoicePath = this.chooser.getCurrentDirectory();
+			choice = chooser.getSelectedFile();
+			lastChoicePath = chooser.getCurrentDirectory();
 
 			se.setPreference(lastDirectoryKey, lastChoicePath.getAbsolutePath());
 		} else
