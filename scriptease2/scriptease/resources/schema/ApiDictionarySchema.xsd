@@ -25,14 +25,14 @@
 	<!-- Defines a list of game Type definitions -->
 	<xsd:complexType name="TypeList_Type">
 		<xsd:sequence>
-			<xsd:element maxOccurs="unbounded" name="Type" type="Type_Type" />
+			<xsd:element name="Type" type="Type_Type" maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 
 	<!-- Defines a list of Slot definitions -->
 	<xsd:complexType name="SlotList_Type">
 		<xsd:sequence>
-			<xsd:element maxOccurs="unbounded" name="Slot" type="Slot_Type" />
+			<xsd:element name="Slot" type="Slot_Type"  maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
 		<xsd:attribute name="defaultFormat" type="xsd:string"
 			use="required" />
@@ -41,28 +41,28 @@
 	<!-- Defines a list of Cause definitions -->
 	<xsd:complexType name="CauseList_Type">
 		<xsd:sequence>
-			<xsd:element maxOccurs="unbounded" name="ScriptIt" type="ScriptIt_Type" />
+			<xsd:element name="ScriptIt" type="ScriptIt_Type" maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 
 	<!-- Defines a list of Effect (ScriptIt) definitions -->
 	<xsd:complexType name="EffectList_Type">
 		<xsd:sequence>
-			<xsd:element maxOccurs="unbounded" name="ScriptIt" type="ScriptIt_Type" />
+			<xsd:element name="ScriptIt" type="ScriptIt_Type"  maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 
 	<!-- Defines a list of DescribeIt definitions -->
 	<xsd:complexType name="DescribeItList_Type">
 		<xsd:sequence>
-			<xsd:element maxOccurs="unbounded" name="KnowIt" type="KnowIt_Type" />
+			<xsd:element name="KnowIt" type="KnowIt_Type" maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 
 	<!-- Defines a list of TypeConverter definitions -->
 	<xsd:complexType name="TypeConverterList_Type">
 		<xsd:sequence>
-			<xsd:element maxOccurs="unbounded" name="ScriptIt" type="ScriptIt_Type" />
+			<xsd:element name="ScriptIt" type="ScriptIt_Type" maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 
