@@ -15,6 +15,8 @@
 */user_preferences.ini
 *.log
 *.log.lck
+*.log.*
+*.log.*.lck
 .classpath
 .project
 translators_src/*/.externalToolBuilders
