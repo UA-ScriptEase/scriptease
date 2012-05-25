@@ -354,7 +354,7 @@ public class FileOp {
 			source = new StreamSource(sourcePath);
 			validator.validate(source);
 		} catch (SAXException e) {
-			System.err.println("Validation failure: " + e.getMessage());
+			System.err.println("XML validation failure: \"" + e.getMessage() + "\" for file " + sourcePath.getPath());
 			return false;
 		} catch (IOException e) {
 			System.err.println("Validation I/O failure: " + e.getMessage());
