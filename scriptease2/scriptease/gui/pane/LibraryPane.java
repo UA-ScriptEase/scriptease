@@ -1,5 +1,6 @@
 package scriptease.gui.pane;
 
+import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -40,7 +41,8 @@ import scriptease.util.StringOp;
 
 @SuppressWarnings("serial")
 /**
- * LibraryPane represents the JPanel used for managing, filtering and choosing Patterns from the loaded Libraries
+ * LibraryPane represents the JPanel used for managing, filtering and choosing
+ * Patterns from the loaded Libraries
  * 
  * @author mfchurch
  */
@@ -67,8 +69,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 
 		// Create the Tree with the root and the default filter
 		this.tree = new StoryComponentPanelTree(root, librarySettings, filter);
-		
-	
+
 		// Configure the displaying of the pane
 		this.configurePane();
 
@@ -182,7 +183,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		this.setLayout(pickerPaneLayout);
 
 		// --- listeners ---
-		// Changes in Category Filter combo:
+		// Changes in Category Filter combobox:
 		categoryFilterCombo.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {

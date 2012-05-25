@@ -1,6 +1,7 @@
 package scriptease.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -10,15 +11,11 @@ import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 
 public class PanelFactory {
 
 	public static JPanel buildQuestPanel(final GraphNode start) {
 		JPanel questPanel = new JPanel(new BorderLayout(), true);
-		questPanel.setOpaque(true);
-		questPanel.setBackground(StoryComponentPanel.UNSELECTED_COLOUR);
-
 		GraphPanel graphPanel = new GraphPanel(start);
 
 		ToolBarButtonAction.addJComponent(graphPanel);
