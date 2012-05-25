@@ -348,7 +348,7 @@ public class FileOp {
 
 		try {
 			schema = schemaFactory.newSchema(schemaPath);
-
+			
 			validator = schema.newValidator();
 
 			source = new StreamSource(sourcePath);
