@@ -3,8 +3,6 @@ package scriptease.gui.pane;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -19,25 +17,27 @@ import javax.swing.SpringLayout;
 import javax.swing.ToolTipManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeSelectionModel;
 
 import scriptease.gui.SETree.GameObjectMultiSelector;
 import scriptease.gui.SETree.GameObjectPanelTree;
-import scriptease.gui.SETree.GameObjectTreeModel;
 import scriptease.gui.SETree.GameObjectTree;
 import scriptease.gui.SETree.cell.BindingWidget;
-import scriptease.gui.SETree.transfer.DefaultPickerTransferHandlerExportOnly;
 import scriptease.gui.control.FilterableSearchField;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.translator.codegenerator.GameObjectPicker;
 
+/**
+ * The pane containing game objects, such as objects, sounds, etc. that are used
+ * in stories.
+ * 
+ */
 public class GameObjectPane implements GameObjectPicker {
 	// Although the default picker will be used, a customPicker can define
 	// certain behavior of the default one.
 	GameObjectPicker customPicker;
 	private GameObjectPanelTree tree = new GameObjectPanelTree();
 	private GameObjectMultiSelector multiSelector;
-	
+
 	public GameObjectPane() {
 		this(null);
 		multiSelector = new GameObjectMultiSelector(tree.getStringTypes());
@@ -48,7 +48,7 @@ public class GameObjectPane implements GameObjectPicker {
 		this.customPicker = customPicker;
 	}
 
-	//private JPanel buildFilterPane(GameObjectTreeModel model) {
+	// private JPanel buildFilterPane(GameObjectTreeModel model) {
 	private JPanel buildFilterPane(GameObjectTree model) {
 		final JPanel filterPane;
 
@@ -71,8 +71,8 @@ public class GameObjectPane implements GameObjectPicker {
 		filterPane.setLayout(filterPaneLayout);
 		filterPane.add(searchFilterPane);
 		filterPane.setMinimumSize(searchFilterPane.getPreferredSize());
-		
-		//filterPane.add(new JLabel(""))
+
+		// filterPane.add(new JLabel(""))
 
 		return filterPane;
 	}
@@ -81,51 +81,52 @@ public class GameObjectPane implements GameObjectPicker {
 		// Configure the panel.
 		final JPanel objectPickerPane = new JPanel();
 
-		//final JTree tree = buildGameObjectTree();
-		//GameObjectPanelTree tree = new GameObjectPanelTree();
-		
-		//JScrollPane tree = new JScrollPane();
-		//tree.add(gameObjectTree);
-		
+		// final JTree tree = buildGameObjectTree();
+		// GameObjectPanelTree tree = new GameObjectPanelTree();
+
+		// JScrollPane tree = new JScrollPane();
+		// tree.add(gameObjectTree);
+
 		// Register for tool tips
 		ToolTipManager.sharedInstance().registerComponent(tree);
 
 		tree.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		tree.setBackground(Color.WHITE);
-		
+
 		// Add the tree to the pane.
 		JScrollPane treeScrollPane = new JScrollPane(tree,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		treeScrollPane.setBackground(Color.WHITE);
 
-		
 		// build the filter
-		//---OLD BALLS
-		//JComponent filterPane = this.buildFilterPane((GameObjectTreeModel) tree.getModel());
+		// ---OLD BALLS
+		// JComponent filterPane = this.buildFilterPane((GameObjectTreeModel)
+		// tree.getModel());
 		JComponent filterPane = this.buildFilterPane(tree.getTreeModel());
-		//filterPane.setLayout(new L)
+		// filterPane.setLayout(new L)
 		JPanel categoryFilter = new JPanel();
-		
+
 		BoxLayout typeFilterPaneLayout = new BoxLayout(categoryFilter,
 				BoxLayout.LINE_AXIS);
-		
+
 		categoryFilter.setLayout(typeFilterPaneLayout);
 		categoryFilter.add(new JLabel("Category Filter: "));
-		
-		//rootCategoryTypes = tree.getStringTypes();
-		//GameObjectMultiSelector multiSelector = new GameObjectMultiSelector(rootCategories);
-		//multiSelector.addObserver(tree);
-		categoryFilter.add(multiSelector.getRootButton());		
+
+		// rootCategoryTypes = tree.getStringTypes();
+		// GameObjectMultiSelector multiSelector = new
+		// GameObjectMultiSelector(rootCategories);
+		// multiSelector.addObserver(tree);
+		categoryFilter.add(multiSelector.getRootButton());
 		categoryFilter.add(Box.createHorizontalGlue());
-		
+
 		filterPane.add(categoryFilter);
-		
+
 		objectPickerPane.setPreferredSize(new Dimension(
 				tree.getPreferredSize().width, 0));
 
 		SpringLayout pickerPaneLayout = new SpringLayout();
-		
+
 		// Spring filterPane
 		pickerPaneLayout.putConstraint(SpringLayout.WEST, filterPane, 5,
 				SpringLayout.WEST, objectPickerPane);
@@ -147,77 +148,7 @@ public class GameObjectPane implements GameObjectPicker {
 		objectPickerPane.add(filterPane);
 		objectPickerPane.add(treeScrollPane);
 		
-		objectPickerPane.setBackground(Color.WHITE);
-
 		return objectPickerPane;
-	}
-
-	private JTree buildGameObjectTree() {
-		final GameObjectTreeModel treeModel;
-
-		treeModel = new GameObjectTreeModel();
-		
-		//My Fail Injections, blarg blarg blarg
-		//SETreeModelGameObject a = new SETreeModelGameObject();
-		//a.getTree();
-		//GameObjectPanelTree a = new GameObjectPanelTree();
-		
-		//System.out.println("TREE" + a.getTree().toString());
-		//How do you error....
-
-		// Create a JTree to hold the GameObjects.
-		final JTree tree = new JTree(treeModel);
-
-		// Set the model's tree so that it can expand rows.. damnit SWING
-		treeModel.setTree(tree);
-
-		tree.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.out.println(e.getSource());				
-				
-				if(e.getClickCount() > 1){
-					return;
-					//TreePath path = tree.getPathForLocation(e.getX(), e.getY());
-					//System.out.println(path.toString());
-				}
-				//Why do we need double clicking enabled?
-				
-				/*if (e.getClickCount() > 1) {
-					TreePath path = tree.getPathForLocation(e.getX(), e.getY());
-					if (path != null) {
-						DefaultMutableTreeNode comp = ((DefaultMutableTreeNode) path
-								.getLastPathComponent());
-						KnowItBindingConstant binding = (KnowItBindingConstant) ((BindingWidget) comp
-								.getUserObject()).getBinding();
-						if (customPicker != null) {
-							customPicker.onWidgetClicked(binding);
-						}
-					}
-				}*/
-			}
-		});
-
-		// Configure behavior/appearance of the tree.
-		tree.setRowHeight(0); 
-		tree.getSelectionModel().setSelectionMode(
-				TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.setDragEnabled(true);
-		
-		/*******************************************************************************************/
-		tree.setTransferHandler(DefaultPickerTransferHandlerExportOnly
-				.getInstance());
-		/*******************************************************************************************/
-		
-		tree.setCellRenderer(new GameObjectTreeCellRenderer());
-
-		// Expand all rows.
-		// TODO bug where this will cause an infinite loop when trying to expand dialogues
-		// int rowCount = tree.getRowCount();
-		// for (int i = 0; i < rowCount; i++) {
-		// tree.expandRow(i);
-		// }
-		return tree;
 	}
 
 	public void onWidgetClicked(KnowItBindingConstant object) {

@@ -59,6 +59,7 @@ public class StoryComponentPanel extends JPanel implements
 	private boolean editable;
 	private boolean selectable;
 	private boolean removable;
+	private boolean isVisible;
 
 	public StoryComponentPanel(StoryComponent component) {
 		// State of Panel
@@ -123,12 +124,22 @@ public class StoryComponentPanel extends JPanel implements
 		return this.selectable;
 	}
 
+
+	/**
+	 * Returns the visible state of the component.
+	 * @return
+	 */
+	public Boolean getVisible() {
+		return isVisible;
+	}
+	
+	
 	@Override
 	public void setVisible(boolean isVisible) {
 		final StoryComponentPanel parent = this.getParentStoryComponentPanel();
-
+		this.isVisible = isVisible;
 		super.setVisible(isVisible);
-
+		
 		// also show all parents so that I can be shown
 		if (isVisible && parent != null) {
 			parent.setVisible(isVisible);

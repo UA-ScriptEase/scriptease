@@ -1,5 +1,6 @@
 package scriptease.gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -77,6 +78,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		this.storyTabs = new JTabbedPane();
+		
 		// Register a change listener
 		this.storyTabs.addChangeListener(new ChangeListener() {
 			// This method is called whenever the selected tab changes
@@ -95,7 +97,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		this.middlePane = new JPanel();
 		this.middlePane.setLayout(new GridLayout(1, 1));
 		this.middlePane.add(storyTabs);
-
+		
 		this.populate();
 
 		StoryModelPool.getInstance().addPoolChangeObserver(this);

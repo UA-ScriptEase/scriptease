@@ -12,7 +12,6 @@ import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
-import scriptease.gui.graph.editor.GraphEditor;
 import scriptease.gui.graph.editor.KnowItNodeEditor;
 import scriptease.gui.graph.editor.PathAssigner;
 import scriptease.gui.graph.editor.TextNodeEditor;

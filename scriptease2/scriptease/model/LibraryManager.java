@@ -58,6 +58,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 		this.libraries = new CopyOnWriteArraySet<LibraryModel>();
 		this.loadedTranslators = new HashMap<Translator, LibraryModel>();
 		this.masterRoot = new StoryComponentContainer("Library");
+
 		this.observers = new CopyOnWriteArraySet<WeakReference<LibraryManagerObserver>>();
 
 		this.masterRoot.registerChildType(ScriptIt.class,
