@@ -1,0 +1,17 @@
+<APIDictionary name="DefaultUnityAPIDictionary" author="ScriptEase Team" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation='../../../scriptease2/scriptease/resources/schema/ApiDictionarySchema.xsd'>
+	
+	<Types>
+	</Types>
+	<Slots defaultFormat="file">
+	</Slots>
+	<Causes>
+	</Causes>
+	<Effects>
+	</Effects>
+	<DescribeIts>
+	</DescribeIts>
+	<TypeConverters>
+	</TypeConverters>
+</APIDictionary>
