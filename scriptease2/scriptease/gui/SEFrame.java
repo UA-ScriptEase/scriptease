@@ -324,17 +324,6 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		return selection;
 	}
 
-	private JPanel buildEmptyPropertiesPanel() {
-		final JLabel emptyPropertiesLabel = new JLabel(
-				" - Select a single pattern to see its properties - ");
-		final JPanel propertyPane = new JPanel();
-
-		emptyPropertiesLabel.setEnabled(false);
-		propertyPane.add(emptyPropertiesLabel);
-
-		return propertyPane;
-	}
-
 	private QuestPoint startQuestPoint;
 
 	/**
