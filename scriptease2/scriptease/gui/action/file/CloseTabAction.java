@@ -13,6 +13,8 @@ import scriptease.gui.SEFrame;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.pane.StoryPanel;
+import scriptease.model.StoryModel;
+import scriptease.model.StoryModelPool;
 
 /**
  * Represents and performs the Close Tab command, as well as encapsulates its
@@ -35,10 +37,6 @@ public class CloseTabAction extends ActiveModelSensitiveAction {
 	public CloseTabAction(StoryPanel panel) {
 		super(CloseTabAction.CLOSE_MODULE);
 		this.panel = panel;
-
-		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
-		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-				KeyEvent.VK_W, ActionEvent.CTRL_MASK));
 	}
 
 	@Override

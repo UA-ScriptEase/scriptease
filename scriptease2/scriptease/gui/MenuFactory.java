@@ -27,6 +27,7 @@ import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.FileManager;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
+import scriptease.gui.action.file.CloseModelAction;
 import scriptease.gui.action.file.NewModelAction;
 import scriptease.gui.action.file.OpenModelAction;
 import scriptease.gui.action.file.OpenRecentFileAction;
@@ -261,6 +262,9 @@ public class MenuFactory {
 
 		menu.add(SaveModelAction.getInstance());
 		menu.add(SaveModelExplicitlyAction.getInstance());
+		menu.addSeparator();
+		
+		menu.add(CloseModelAction.getInstance());
 		menu.addSeparator();
 
 		// add the recent files list

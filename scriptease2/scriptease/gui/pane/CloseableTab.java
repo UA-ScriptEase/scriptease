@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicButtonUI;
 
+import scriptease.gui.action.file.CloseModelAction;
 import scriptease.gui.action.file.CloseTabAction;
 
 /**
@@ -77,8 +78,11 @@ public class CloseableTab extends JPanel {
 
 		// add more space between the label and the button
 		label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+		
 		closeButton = new TabButton(new CloseTabAction(panel));
 
+	//	closeButton = new TabButton(CloseModelAction.getInstance());
+		
 		this.add(closeButton);
 
 		// add more space to the top of the component
