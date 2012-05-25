@@ -269,19 +269,24 @@ public class DialogBuilder {
 			public void actionPerformed(ActionEvent e) {
 				final Translator selectedTranslator = ((Translator) gameComboBox
 						.getSelectedItem());
+				final String[] legalExtensions;
 				FileNameExtensionFilter filter = null;
 				File defaultLocation = null;
 				File location;
 
 				// Build the filter based on the translator selected
 				if (selectedTranslator != null) {
-					filter = new FileNameExtensionFilter(selectedTranslator
-							.getName() + " Game Files", selectedTranslator
-							.getLegalExtensions());
+					legalExtensions = selectedTranslator.getLegalExtensions();
+					
+					if(legalExtensions.length != 0){
+						filter = new FileNameExtensionFilter(selectedTranslator
+							.getName() + " Game Files", legalExtensions);
+					}
+					
 					defaultLocation = selectedTranslator
 							.getPathProperty("GAME_DIRECTORY");
 
-					if (!defaultLocation.exists())
+					if (defaultLocation == null || !defaultLocation.exists())
 						defaultLocation = selectedTranslator.getLocation()
 								.getParentFile();
 				}
