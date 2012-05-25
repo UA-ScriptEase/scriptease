@@ -62,13 +62,12 @@ public class ToolBarFactory {
 	private final JLabel fanInLabel = new JLabel("Fan In:");
 
 	/**
-	 * Do not delete this. Ever. Otherwise Java will Garbage Collect all
+	 * Do not delete these. Ever. Otherwise Java will Garbage Collect all
 	 * references to the observer, and break the quest editor in ScriptEase2.
 	 * 
 	 * This makes sure the observer always exists.
 	 */
-	private static GraphNodeObserver graphBarObserver;
-
+	private GraphNodeObserver graphBarObserver;
 	private GraphNodeObserver questBarObserver;
 
 	/**
@@ -77,7 +76,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	public static JToolBar buildGraphEditorToolBar(GraphPanel gPanel) {
+	public JToolBar buildGraphEditorToolBar(GraphPanel gPanel) {
 		final JToolBar graphEditorToolBar = new JToolBar();
 
 		final ButtonGroup graphEditorButtonGroup = new ButtonGroup();
@@ -151,7 +150,7 @@ public class ToolBarFactory {
 				.addChangeListener(graphEditorListener);
 
 		graphBarObserver = new GraphToolBarObserver(gPanel);
-
+		
 		GraphNode.observeDepthMap(graphBarObserver, gPanel.getHeadNode());
 
 		return graphEditorToolBar;
@@ -500,7 +499,7 @@ public class ToolBarFactory {
 	 * @author kschenk
 	 * 
 	 */
-	private static class GraphToolBarObserver implements GraphNodeObserver {
+	private class GraphToolBarObserver implements GraphNodeObserver {
 		/**
 		 * Adds the node to the graph bar observer if a new one is added.
 		 */

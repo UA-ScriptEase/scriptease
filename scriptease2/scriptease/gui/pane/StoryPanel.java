@@ -93,10 +93,6 @@ public class StoryPanel extends JPanel {
 		// update the models to panes map
 		updateModelsToPanes(model);
 
-		// Build the QuestPanelEditor.
-		// QuestEditor questEditor = new QuestEditor(model.getRoot()
-		// .getStartPoint());
-
 		JPanel questPanel = PanelFactory.buildQuestPanel(model.getRoot()
 				.getStartPoint());
 

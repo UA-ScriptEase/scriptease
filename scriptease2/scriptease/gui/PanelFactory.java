@@ -24,9 +24,10 @@ public class PanelFactory {
 		ToolBarButtonAction.addJComponent(graphPanel);
 
 		ToolBarFactory factory = new ToolBarFactory();
+		JToolBar graphToolBar = factory.buildGraphEditorToolBar(graphPanel);
 		JToolBar questToolBar = factory.buildQuestEditorToolBar(graphPanel);
-		questPanel.add((ToolBarFactory.buildGraphEditorToolBar(graphPanel)
-				.add(questToolBar)), BorderLayout.PAGE_START);
+		
+		questPanel.add(graphToolBar.add(questToolBar), BorderLayout.PAGE_START);
 
 		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
 
