@@ -83,8 +83,7 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 				frame.setStatus("Testing " + activeModel.getTitle());
 				try {
 					procBuilder = new ProcessBuilder();
-					procBuilder.command(activeModel.getModule().getTestCommand(
-							procBuilder));
+					activeModel.getModule().configureTester(procBuilder);
 
 					// I think merging error and regular output is probably a
 					// good thing
@@ -100,7 +99,7 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 					 * since we don't care what the game does, we won't hold up
 					 * ourselves for it. - remiller
 					 */
-					
+
 					// dump the process output, just in case it's important.
 					String line;
 					while ((line = input.readLine()) != null) {
@@ -113,6 +112,10 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 				} catch (IOException ioEx) {
 					winMan.showProblemDialog("Game Died",
 							"There was a problem starting the game engine. Sorry about that.");
+				} catch (UnsupportedOperationException nopeEx) {
+					winMan.showProblemDialog(
+							"I can't do that, Dave.",
+							"This translator doesn't actually support testing, sorry.\n\nThe translator author was supposed to tell me that in the translator.ini file.");
 				}
 				frame.setStatus("Finished testing " + activeModel.getTitle());
 			}

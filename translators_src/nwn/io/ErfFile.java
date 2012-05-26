@@ -1261,8 +1261,8 @@ public final class ErfFile implements GameModule {
 	}
 
 	@Override
-	public List<String> getTestCommand(ProcessBuilder builder)
-			throws FileNotFoundException {
+	public void configureTester(ProcessBuilder builder)
+			throws FileNotFoundException, UnsupportedOperationException {
 		final File nwnRoot = TranslatorManager.getInstance()
 				.getTranslator(NEVERWINTER_NIGHTS)
 				.getPathProperty(GAME_DIRECTORY_KEY);
@@ -1279,7 +1279,7 @@ public final class ErfFile implements GameModule {
 		argsList.add(nwnExec.getAbsolutePath());
 		argsList.add("+TestNewModule");
 		argsList.add(FileOp.removeExtension(this.location).getName());
-
-		return argsList;
+		
+		builder.command(argsList);
 	}
 }

@@ -30,7 +30,8 @@ public interface GameModule {
 	 * For a GameModule implementer to honour the interface contract, it must
 	 * perform its file access exclusively in the <code>load</code> and
 	 * <code>{@link #save(boolean)}</code> methods.<br>
-	 * <br> {@link #setLocation(File)} must be called before <code>load</code> is
+	 * <br>
+	 * {@link #setLocation(File)} must be called before <code>load</code> is
 	 * invoked.
 	 * 
 	 * @param readOnly
@@ -190,24 +191,32 @@ public interface GameModule {
 	public Collection<StoryRule> getCodeGenerationRules();
 
 	/**
-	 * Creates a list of String arguments for running a process that executes
-	 * this GameModule in the game. The list is as would be given to a
-	 * ProcessBuilder. For example:
-	 * 
-	 * <code>[ "C:\\Program Files\\NWN\\nwmain.exe", "+TestNewModule", "C:\\Program Files\\NWN\\modules\\Story"]</code>
-	 * 
-	 * Implementations may expect that the translator.ini knows where the
+	 * Configures the given ProcessBuilder such that when
+	 * {@link ProcessBuilder#start()} is called, the created process runs the
+	 * module in game. Creates a list of String arguments for running a process
+	 * that executes this GameModule in the game. This method may throw an
+	 * {@link UnsupportedOperationException} if the Translator does not support
+	 * testing in this fashion. <br>
+	 * <br>
+	 * For example it could do this:
+	 * <code>builder.command([ "C:\\Program Files\\NWN\\nwmain.exe", "+TestNewModule", "C:\\Program Files\\NWN\\modules\\Story"]);</code>
+	 * <br>
+	 * <br>
+	 * Implementations may expect that the translator.ini knows where the game
 	 * executable resides.
 	 * 
 	 * @param builder
 	 *            is the process builder that will be used to spawn the game
-	 *            executable. Implementations will not spawn the process
-	 *            themselves, but will instead configure the ProcessBuilder as
+	 *            executable. Implementations do not spawn the process
+	 *            themselves, but instead configure the ProcessBuilder as
 	 *            needed.
 	 * @throws FileNotfoundException
 	 *             if one or more of the required file for game execution could
 	 *             not be located.
+	 * @throws UnsupportedOperationException
+	 *             if the translator does not support testing. Testing support
+	 *             should be declared in translator.ini under SUPPORTS_TESTING.
 	 */
-	public List<String> getTestCommand(ProcessBuilder builder)
-			throws FileNotFoundException;
+	public void configureTester(ProcessBuilder builder)
+			throws FileNotFoundException, UnsupportedOperationException;
 }
