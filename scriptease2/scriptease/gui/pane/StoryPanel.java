@@ -2,6 +2,7 @@ package scriptease.gui.pane;
 
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -148,15 +149,14 @@ public class StoryPanel extends JPanel {
 	 * @param model
 	 */
 	public String getTitle() {
-		final StoryModel model = this.model;
-
 		final String title;
-		String modelTitle = /* "\"" + */model.getTitle() /* + "\"" */;
+		final File moduleLocation = this.model.getModule().getLocation();
+
+		String modelTitle = this.model.getTitle();
 		if (modelTitle == null || modelTitle.equals(""))
 			modelTitle = "<Untitled>";
 
-		title = modelTitle + "(" + model.getModule().getLocation().getName()
-				+ ")";
+		title = modelTitle + "(" + moduleLocation.getName() + ")";
 
 		return title;
 	}

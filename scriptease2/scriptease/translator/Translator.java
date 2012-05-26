@@ -509,7 +509,13 @@ public class Translator {
 	 *         file.
 	 */
 	public boolean supportsModuleFile(File location) {
-		return this.legalExtensions.contains(FileOp.getExtension(location));
+		if (!this.legalExtensions.isEmpty()) {
+			return this.legalExtensions.contains(FileOp.getExtension(location));
+		} else {
+			// at the moment, we don't have any better information, so we just
+			// have to blindly accept.
+			return true;
+		}
 	}
 
 	private GameModule createGameModuleInstance() {
