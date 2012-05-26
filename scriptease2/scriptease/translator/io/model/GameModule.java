@@ -100,9 +100,11 @@ public interface GameModule {
 	public GameConstant getInstanceForObjectIdentifier(String id);
 
 	/**
-	 * Gets the location of the GameModule
+	 * Gets the location of the GameModule.
 	 * 
-	 * @return The file path that points to this GameModule
+	 * @return The file path that points to this GameModule. Must never be
+	 *         <code>null</code>. If there is no location, this method returns a
+	 *         <code>File("")</code>.
 	 */
 	public File getLocation();
 

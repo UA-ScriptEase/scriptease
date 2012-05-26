@@ -15,6 +15,8 @@ import scriptease.translator.io.model.GameObject;
 
 
 public final class UnityProject implements GameModule {
+	private File location;
+
 	@Override
 	public void addGameObject(GameObject object) {
 		// TODO Auto-generated method stub
@@ -66,8 +68,7 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public File getLocation() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.location;
 	}
 
 	@Override
@@ -98,8 +99,7 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public void setLocation(File location) {
-		// TODO Auto-generated method stub
-		
+		this.location = location;
 	}
 	
 	public static final class FileIDKey{

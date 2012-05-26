@@ -188,8 +188,10 @@ public class DialogBuilder {
 				final Translator selectedTranslator;
 				final StoryModel model;
 
-				// do everything in a try because otherwise the run will swallow
-				// any exceptions.
+				/*
+				 * Do everything inside a try block because otherwise the fact
+				 * that this is in a runnable will hide any exceptions.
+				 */
 				try {
 					seFrame.setStatus("Creating New Story ...");
 					selectedTranslator = (Translator) gameComboBox
