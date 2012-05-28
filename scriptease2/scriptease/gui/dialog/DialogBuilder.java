@@ -10,6 +10,9 @@ import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Vector;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
@@ -123,6 +126,17 @@ public class DialogBuilder {
 		final JLabel gameLabel;
 		final JComboBox gameComboBox;
 		final GroupLayout layout;
+		final Vector<Translator> translators;
+		
+		// Sort it like a boss.
+		translators = new Vector<Translator>(
+				TranslatorManager.getInstance().getTranslators());
+		Collections.sort(translators, new Comparator<Translator>() {
+			@Override
+			public int compare(Translator t1, Translator t2) {
+				return t1.getName().compareTo(t2.getName());
+			}
+		});
 
 		// Construct the New Story JPanel
 		newStoryPanel = new JPanel();
@@ -147,8 +161,7 @@ public class DialogBuilder {
 		modulePanel.add(moduleButton);
 
 		gameLabel = new JLabel("Game: ");
-		gameComboBox = new JComboBox(TranslatorManager.getInstance()
-				.getTranslators().toArray());
+		gameComboBox = new JComboBox(translators);
 
 		gameComboBox.setRenderer(new TranslatorListRenderer());
 		gameComboBox.setSelectedIndex(-1);
