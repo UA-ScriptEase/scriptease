@@ -3,10 +3,10 @@ package io;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.channels.UnsupportedAddressTypeException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
 import scriptease.controller.modelverifier.rule.StoryRule;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;

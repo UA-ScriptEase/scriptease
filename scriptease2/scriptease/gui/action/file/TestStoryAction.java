@@ -121,8 +121,8 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 			}
 		};
 
-		// run this on a separate thread to still at least draw, if not receive
-		// input events.
+		// run this on a separate thread to be able to at least still draw
+		// correctly, if not receive input events.
 		testThread = new Thread(testTask, "TestStory-"
 				+ StringOp.removeWhiteSpace(activeModel.getName()));
 		testThread.start();
