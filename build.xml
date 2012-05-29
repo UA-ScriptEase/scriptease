@@ -158,8 +158,8 @@ Some important targets to read up on are:
 		<fileset dir="${resourcesDirectory}/lib/">
 			<include name="**/*.jar" />
 		</fileset>
-		<!-- Include all translator jars too -->
-		<path path="translators/*" />
+		<!-- Include all translators' jars too. Note that this will dynamically search for jars. -->
+		<path path="translators/**/*.jar" />
 		<pathelement path="${aspectj.home}/lib/aspectjrt.jar" />
 	</path>
 	<!-- ==== END INIT COMMANDS ==== -->
