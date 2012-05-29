@@ -19,6 +19,7 @@
 *.log.*.lck
 .classpath
 .project
+scriptease2/.externalToolBuilders
 translators_src/*/.externalToolBuilders
 
 # Don't store distributables or distro temp directories. 
