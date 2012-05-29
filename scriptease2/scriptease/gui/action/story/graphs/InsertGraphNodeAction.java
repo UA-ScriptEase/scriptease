@@ -24,6 +24,7 @@ public final class InsertGraphNodeAction extends ToolBarButtonAction {
 	protected InsertGraphNodeAction() {
 		super(InsertGraphNodeAction.INSERT_TEXT,
 				InsertGraphNodeAction.ICON_TEXT);
+		
 	}
 
 	/**

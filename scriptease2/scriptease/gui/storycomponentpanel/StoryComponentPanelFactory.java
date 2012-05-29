@@ -348,10 +348,10 @@ public class StoryComponentPanelFactory {
 			@Override
 			public void processDescribeIt(KnowItBindingDescribeIt described) {
 				processDefault();
-				/*DescribeIt describeIt = described.getValue();
+				DescribeIt describeIt = described.getValue();
 				DescribeItPanel describeItPanel = new DescribeItPanel(
 						describeIt, true);
-				mainPanel.add(describeItPanel);*/
+				mainPanel.add(describeItPanel);
 			}
 
 			@Override

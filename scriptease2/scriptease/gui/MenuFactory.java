@@ -38,7 +38,6 @@ import scriptease.gui.action.story.DeleteStoryComponentAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
-import scriptease.gui.describeIts.DescribeItGraphEditor;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentbuilder.StoryComponentDescriptorTemplate.ComponentContext;
 import scriptease.gui.storycomponentbuilder.StoryComponentFrame;
@@ -263,7 +262,7 @@ public class MenuFactory {
 		menu.add(SaveModelAction.getInstance());
 		menu.add(SaveModelExplicitlyAction.getInstance());
 		menu.addSeparator();
-		
+
 		menu.add(CloseModelAction.getInstance());
 		menu.addSeparator();
 
@@ -519,10 +518,14 @@ public class MenuFactory {
 										public void processDescribeIt(
 												KnowItBindingDescribeIt described) {
 											JFrame frame = new JFrame();
-											
-											//TODO DescribeIt stuff!
-											/*frame.add(new DescribeItGraphEditor(
-													described.getValue()));*/
+
+											frame.add(PanelFactory
+													.buildDescribeItPanel(
+															described
+																	.getValue()
+																	.getHeadNode(),
+															described
+																	.getValue()));
 											frame.setMinimumSize(new Dimension(
 													800, 300));
 											frame.setVisible(true);

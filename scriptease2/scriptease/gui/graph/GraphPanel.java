@@ -57,6 +57,7 @@ import sun.awt.util.IdentityArrayList;
  * 
  * @author mfchurch
  * @author graves (refactored)
+ * @author kschenk
  */
 @SuppressWarnings("serial")
 public class GraphPanel extends JPanel implements GraphNodeObserver {
@@ -71,7 +72,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 	public GraphPanel(GraphNode headNode) {
 		this.setHeadNode(headNode);
-		
+
 		MouseAdapter connectArrowListener = new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -91,17 +92,18 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 				repaint();
 			}
 		};
+		
+
+		
 		this.addMouseListener(connectArrowListener);
 		this.addMouseMotionListener(connectArrowListener);
-		
-		
-		
+
 		// Initialize the builder.
 		this.builder = new GraphNodeComponentBuilder();
 
 		// layout manager
 		this.setLayout(new GraphPanelLayoutManager());
-
+		
 		// ui manager
 		this.setUI(new GraphPanelUI());
 
@@ -138,45 +140,49 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		this.repaint();
 		this.revalidate();
 	}
-	
+
 	/**
 	 * Sets the head node for the graph panel.
+	 * 
 	 * @param graphNode
 	 */
 	public void setHeadNode(GraphNode graphNode) {
 		if (graphNode == null)
 			throw new IllegalArgumentException("Cannot set head node to null");
 		this.headNode = graphNode;
-		
+
 		GraphNode.observeDepthMap(this, this.headNode);
 
 		this.getHeadNode().setSelected(true);
 	}
-	
+
 	/**
 	 * Returns the head node of the graph.
+	 * 
 	 * @return
 	 */
 	public GraphNode getHeadNode() {
 		return this.headNode;
 	}
-	
+
 	/**
 	 * Returns the old selected node, which is used to draw paths between nodes.
+	 * 
 	 * @return
 	 */
-	public GraphNode getOldSelectedNode(){
+	public GraphNode getOldSelectedNode() {
 		return this.oldSelectedNode;
 	}
-	
+
 	/**
 	 * Sets the old selected node, which is used to draw paths between nodes.
+	 * 
 	 * @param oldNode
 	 */
 	public void setOldSelectedNode(GraphNode oldNode) {
 		this.oldSelectedNode = oldNode;
 	}
-	
+
 	/**
 	 * A class that creates and configures a JComponent to represent a GraphNode
 	 * in the GraphEditor. Private to GraphPanel, since all drawing code should
@@ -242,7 +248,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 		@Override
 		public void processQuestNode(QuestNode questNode) {
-		
+
 		}
 
 		/**
@@ -260,8 +266,10 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 				final MouseAdapter mouseAdapter = new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						node.notifyObservers(new GraphNodeEvent(node,
-								GraphNodeEventType.SELECTED));
+						GraphNodeEvent event = new GraphNodeEvent(node,
+								GraphNodeEventType.SELECTED);
+						event.setShiftDown(e.isShiftDown());
+						node.notifyObservers(event);
 					}
 
 					@Override
@@ -303,7 +311,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 						}
 					}
 				};
-
+				
 				component.addMouseListener(mouseAdapter);
 				component.addMouseMotionListener(mouseAdapter);
 			}
@@ -628,7 +636,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 				GUIOp.paintArrow(g2, GUIOp.getMidRight(componentBuilder
 						.getComponentForNode(oldSelectedNode)), mousePosition);
 			}
-			
+
 			super.paint(g, c);
 
 			if (paintLines)

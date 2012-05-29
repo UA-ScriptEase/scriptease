@@ -1,16 +1,21 @@
 package scriptease.gui;
 
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -36,13 +41,20 @@ import scriptease.gui.action.story.graphs.DisconnectGraphPointAction;
 import scriptease.gui.action.story.graphs.InsertGraphNodeAction;
 import scriptease.gui.action.story.graphs.SelectGraphNodeAction;
 import scriptease.gui.graph.GraphPanel;
+import scriptease.gui.graph.editor.KnowItNodeEditor;
+import scriptease.gui.graph.editor.PathAssigner;
+import scriptease.gui.graph.editor.TextNodeEditor;
 import scriptease.gui.graph.nodes.GraphNode;
+import scriptease.gui.graph.nodes.KnowItNode;
+import scriptease.gui.graph.nodes.TextNode;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
+import scriptease.model.atomic.DescribeIt;
+import scriptease.model.atomic.KnowIt;
 
 /**
  * ToolBarFactory is responsible for creating JToolBars, most importantly the
@@ -50,25 +62,28 @@ import scriptease.model.StoryModelPool;
  * created.
  * 
  * The class also determines toolbar functionality. These toolbars are used to
- * act upon the GraphEditor, QuestEditor, and in the future, DescribeItEditor.
+ * act upon Graph Panels, whether they be general Graph functions, Quest
+ * functions, or DescribeIts.
  * 
  * @author kschenk
  * 
  */
 public class ToolBarFactory {
 
-	private final JLabel nameLabel = new JLabel(Il8nResources.getString("Name")
-			+ ":");
-	private final JLabel fanInLabel = new JLabel("Fan In:");
+	private static final JLabel nameLabel = new JLabel(
+			Il8nResources.getString("Name") + ":");
+	private static final JLabel fanInLabel = new JLabel("Fan In:");
+	private static final String KNOW_IT_EDITOR = "Know It Node Editing Bar";
+	private static final String TEXT_NODE_EDITOR = "Text Node Editing Bar";
+	private static final String PATH_EDITOR = "Path Editing Bar";
+	private static final String NO_EDITOR = "No Editor";
 
 	/**
-	 * Do not delete these. Ever. Otherwise Java will Garbage Collect all
-	 * references to the observer, and break the quest editor in ScriptEase2.
-	 * 
-	 * This makes sure the observer always exists.
+	 * By "putting" each observer to its respective JToolBar when it is created,
+	 * the Map prevents Java from garbage collecting all of the weak references
+	 * we create to observer graph nodes.
 	 */
-	private GraphNodeObserver graphBarObserver;
-	private GraphNodeObserver questBarObserver;
+	private static Map<JToolBar, GraphNodeObserver> observerMap = new LinkedHashMap<JToolBar, GraphNodeObserver>();
 
 	/**
 	 * Builds a toolbar to edit graphs with. Includes buttons for selecting
@@ -76,7 +91,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	public JToolBar buildGraphEditorToolBar(GraphPanel gPanel) {
+	public static JToolBar buildGraphEditorToolBar(GraphPanel gPanel) {
 		final JToolBar graphEditorToolBar = new JToolBar();
 
 		final ButtonGroup graphEditorButtonGroup = new ButtonGroup();
@@ -149,9 +164,11 @@ public class ToolBarFactory {
 		SEFrame.getInstance().getStoryTabPane()
 				.addChangeListener(graphEditorListener);
 
-		graphBarObserver = new GraphToolBarObserver(gPanel);
-		
+		GraphNodeObserver graphBarObserver = new GraphToolBarObserver(gPanel);
+
 		GraphNode.observeDepthMap(graphBarObserver, gPanel.getHeadNode());
+
+		observerMap.put(graphEditorToolBar, graphBarObserver);
 
 		return graphEditorToolBar;
 	}
@@ -163,7 +180,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	public JToolBar buildQuestEditorToolBar(GraphPanel gPanel) {
+	public static JToolBar buildQuestEditorToolBar(GraphPanel gPanel) {
 
 		final JToolBar questEditorToolBar = buildGraphEditorToolBar(gPanel);
 
@@ -186,36 +203,83 @@ public class ToolBarFactory {
 			}
 		});
 
-		Dimension minSize = new Dimension(15, TOOL_BAR_HEIGHT);
-		Dimension prefSize = new Dimension(15, TOOL_BAR_HEIGHT);
-		Dimension maxSize = new Dimension(15, TOOL_BAR_HEIGHT);
+		final Dimension minSize = new Dimension(15, TOOL_BAR_HEIGHT);
+		final Dimension prefSize = new Dimension(15, TOOL_BAR_HEIGHT);
+		final Dimension maxSize = new Dimension(15, TOOL_BAR_HEIGHT);
 
 		questEditorToolBar.add(new Box.Filler(minSize, prefSize, maxSize));
-
 		questEditorToolBar.addSeparator();
-
 		questEditorToolBar.add(new Box.Filler(minSize, prefSize, maxSize));
 
 		questEditorToolBar.add(nameLabel);
-
 		nameLabel.setLabelFor(nameField);
-
 		questEditorToolBar.add(nameField);
-
 		questEditorToolBar.add(commitBox);
-
 		questEditorToolBar.add(fanInLabel);
-
 		fanInLabel.setLabelFor(fanInSpinner);
-
 		questEditorToolBar.add(fanInSpinner);
 
-		questBarObserver = new QuestToolBarObserver(nameField, commitBox,
-				fanInSpinner, gPanel);
+		GraphNodeObserver questBarObserver = new QuestToolBarObserver(
+				nameField, commitBox, fanInSpinner, gPanel);
 
 		GraphNode.observeDepthMap(questBarObserver, gPanel.getHeadNode());
 
+		observerMap.put(questEditorToolBar, questBarObserver);
+
 		return questEditorToolBar;
+	}
+
+	/**
+	 * Creates a JToolBar for editing DescribeIts. Uses the same buttons as
+	 * graph editor toolbar.
+	 * 
+	 * @param gPanel
+	 * @return
+	 */
+	public static JToolBar buildDescribeItToolBar(DescribeIt editedDescribeIt,
+			GraphPanel gPanel) {
+		final JToolBar describeItToolBar = buildGraphEditorToolBar(gPanel);
+	//	final GraphNode headNode = gPanel.getHeadNode();
+
+		final int TOOL_BAR_HEIGHT = 32;
+
+		final Dimension minSize = new Dimension(15, TOOL_BAR_HEIGHT);
+		final Dimension prefSize = new Dimension(15, TOOL_BAR_HEIGHT);
+		final Dimension maxSize = new Dimension(15, TOOL_BAR_HEIGHT);
+
+		describeItToolBar.add(new Box.Filler(minSize, prefSize, maxSize));
+		describeItToolBar.addSeparator();
+		describeItToolBar.add(new Box.Filler(minSize, prefSize, maxSize));
+
+		JComponent describeItEditBar = new JPanel();
+
+		describeItEditBar.setLayout(new CardLayout());
+
+		KnowItNodeEditor knowItEditor = new KnowItNodeEditor();
+		TextNodeEditor textNodeEditor = new TextNodeEditor();
+		PathAssigner pathEditor = new PathAssigner();
+
+		describeItEditBar.add(knowItEditor, KNOW_IT_EDITOR);
+		describeItEditBar.add(textNodeEditor, TEXT_NODE_EDITOR);
+		describeItEditBar.add(pathEditor, PATH_EDITOR);
+		
+		JPanel noEditorPanel = new JPanel();
+		noEditorPanel.add(new JLabel("Path does not have an end point."));
+		describeItEditBar.add(noEditorPanel, NO_EDITOR);
+
+		describeItToolBar.add(describeItEditBar);
+
+		CardLayout cl = (CardLayout) describeItEditBar.getLayout();
+		cl.show(describeItEditBar, TEXT_NODE_EDITOR);
+
+		GraphNodeObserver describeItBarObserver = new DescribeItToolBarObserver(
+				editedDescribeIt, cl, describeItEditBar, knowItEditor, textNodeEditor, pathEditor);
+
+		GraphNode.observeDepthMap(describeItBarObserver, gPanel.getHeadNode());
+
+		observerMap.put(describeItToolBar, describeItBarObserver);
+
+		return describeItToolBar;
 	}
 
 	/**
@@ -228,8 +292,8 @@ public class ToolBarFactory {
 	 * @param fanInSpinner
 	 * @param questNode
 	 */
-	private void updateQuestToolBar(JTextField nameField, JCheckBox commitBox,
-			JSpinner fanInSpinner, QuestPointNode questNode) {
+	private static void updateQuestToolBar(JTextField nameField,
+			JCheckBox commitBox, JSpinner fanInSpinner, QuestPointNode questNode) {
 
 		updateFanInSpinner(fanInSpinner, questNode);
 		updateCommittingBox(commitBox, questNode);
@@ -243,7 +307,7 @@ public class ToolBarFactory {
 	 * @param maxSize
 	 * @return
 	 */
-	private JTextField nameField(final Dimension maxSize) {
+	private static JTextField nameField(final Dimension maxSize) {
 		JTextField nameField = new JTextField(10);
 		nameField.setMaximumSize(maxSize);
 
@@ -255,7 +319,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	private DocumentListener nameFieldListener(JTextField nameField,
+	private static DocumentListener nameFieldListener(JTextField nameField,
 			QuestPointNode questNode) {
 		final JTextField nField = nameField;
 		final QuestPointNode qNode = questNode;
@@ -288,7 +352,8 @@ public class ToolBarFactory {
 	 * @param nameField
 	 * @param questNode
 	 */
-	private void updateNameField(JTextField nameField, QuestPointNode questNode) {
+	private static void updateNameField(JTextField nameField,
+			QuestPointNode questNode) {
 
 		if (questNode != null) {
 
@@ -321,7 +386,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	private JCheckBox committingBox() {
+	private static JCheckBox committingBox() {
 		final JCheckBox committingBox = new JCheckBox();
 		committingBox.setText(Il8nResources.getString("Committing") + ":");
 		committingBox.setHorizontalTextPosition(SwingConstants.LEFT);
@@ -335,7 +400,7 @@ public class ToolBarFactory {
 	 * @param questNode
 	 * @return
 	 */
-	private ItemListener commitBoxListener(QuestPointNode questNode) {
+	private static ItemListener commitBoxListener(QuestPointNode questNode) {
 		final QuestPointNode questN = questNode;
 
 		ItemListener commitButtonListener = new ItemListener() {
@@ -361,7 +426,8 @@ public class ToolBarFactory {
 	 * @param questNode
 	 *            The QuestPointNode to update the committing button to.
 	 */
-	private void updateCommittingBox(JCheckBox cBox, QuestPointNode questNode) {
+	private static void updateCommittingBox(JCheckBox cBox,
+			QuestPointNode questNode) {
 		if (questNode != null) {
 			Boolean committing = questNode.getQuestPoint().getCommitting();
 
@@ -392,7 +458,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	private JSpinner buildFanInSpinner(final Dimension maxSize) {
+	private static JSpinner buildFanInSpinner(final Dimension maxSize) {
 		final JSpinner fanInSpinner = new JSpinner();
 		fanInSpinner.setMaximumSize(maxSize);
 
@@ -411,7 +477,7 @@ public class ToolBarFactory {
 	 * @param questPoint
 	 * @return
 	 */
-	private ChangeListener fanInSpinnerListener(JSpinner fanInSpinner,
+	private static ChangeListener fanInSpinnerListener(JSpinner fanInSpinner,
 			QuestPointNode questNode) {
 		final JSpinner fanInSpin = fanInSpinner;
 		final QuestPointNode questN = questNode;
@@ -447,7 +513,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return The SpinnerModel
 	 */
-	private void updateFanInSpinner(JSpinner fanInSpinner,
+	private static void updateFanInSpinner(JSpinner fanInSpinner,
 			QuestPointNode questNode) {
 
 		if (questNode != null) {
@@ -499,16 +565,16 @@ public class ToolBarFactory {
 	 * @author kschenk
 	 * 
 	 */
-	private class GraphToolBarObserver implements GraphNodeObserver {
+	private static class GraphToolBarObserver implements GraphNodeObserver {
 		/**
 		 * Adds the node to the graph bar observer if a new one is added.
 		 */
 		GraphPanel gPanel;
-		
-		public GraphToolBarObserver(GraphPanel gPanel){
+
+		public GraphToolBarObserver(GraphPanel gPanel) {
 			this.gPanel = gPanel;
 		}
-		
+
 		@Override
 		public void nodeChanged(GraphNodeEvent event) {
 			final GraphNode sourceNode = event.getSource();
@@ -535,7 +601,7 @@ public class ToolBarFactory {
 						}
 					}
 					break;
-					
+
 				case CONNECT_GRAPH_NODE:
 					if (oldSelectedNode != null) {
 						// Determine which node is shallower in the graph, and
@@ -558,7 +624,7 @@ public class ToolBarFactory {
 					else
 						gPanel.setOldSelectedNode(sourceNode);
 					break;
-					
+
 				case DISCONNECT_GRAPH_NODE:
 					if (oldSelectedNode != null) {
 						// Determine which node is shallower in the graph, and
@@ -588,7 +654,7 @@ public class ToolBarFactory {
 				}
 
 			} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
-				GraphNode.observeDepthMap(graphBarObserver, sourceNode);
+				GraphNode.observeDepthMap(this, sourceNode);
 			}
 		}
 	}
@@ -599,13 +665,12 @@ public class ToolBarFactory {
 	 * 
 	 * @author kschenk
 	 */
-	private class QuestToolBarObserver implements GraphNodeObserver {
+	private static class QuestToolBarObserver implements GraphNodeObserver {
 		private JTextField nameField;
 		private JCheckBox commitButton;
 		private JSpinner fanInSpinner;
 
 		private GraphNode previousNode;
-		
 		private GraphPanel gPanel;
 
 		// private GraphEditor editor;
@@ -887,8 +952,98 @@ public class ToolBarFactory {
 				});
 
 			} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
-				GraphNode.observeDepthMap(questBarObserver, sourceNode);
+				GraphNode.observeDepthMap(this, sourceNode);
 			}
 		}
 	}
+
+	/**
+	 * Private observer for the DescribeIt ToolBar
+	 * 
+	 * @author kschenk
+	 * 
+	 */
+	private static class DescribeItToolBarObserver implements GraphNodeObserver {
+		/**
+		 * Adds the node to the describe it observer if a new one is added.
+		 */
+		DescribeIt editedDescribeIt;
+		CardLayout cardLayout;
+		KnowItNodeEditor knowItEditor;
+		TextNodeEditor textNodeEditor;
+		JComponent describeItEditBar;
+		PathAssigner pathEditor;
+
+		public DescribeItToolBarObserver(DescribeIt editedDescribeIt,
+				CardLayout cardLayout, JComponent describeItEditBar, KnowItNodeEditor knowItBar,
+				TextNodeEditor textNodeEditor, PathAssigner pathEditor) {
+			this.editedDescribeIt = editedDescribeIt;
+			this.cardLayout = cardLayout;
+			this.knowItEditor = knowItBar;
+			this.textNodeEditor = textNodeEditor;
+			this.describeItEditBar = describeItEditBar;
+			this.pathEditor = pathEditor;
+		}
+
+		@Override
+		public void nodeChanged(GraphNodeEvent event) {
+			final GraphNode sourceNode = event.getSource();
+			final GraphNodeEventType type = event.getEventType();
+
+			if (type == GraphNodeEventType.SELECTED) {
+				switch (ToolBarButtonAction.getMode()) {
+				case INSERT_GRAPH_NODE:
+					if (event.isShiftDown()) {
+						TextNode textNode = new TextNode("New Text Node");
+						sourceNode.addChild(textNode);
+					} else {
+						KnowItNode knowItNode = new KnowItNode(new KnowIt(
+								"New Option Node"));
+						sourceNode.addChild(knowItNode);
+						break;
+					}
+					break;
+				case SELECT_GRAPH_NODE:
+
+					if (event.isShiftDown()) {
+						this.editedDescribeIt.selectFromHeadToNode(sourceNode);
+						/*
+						 * only allow for path assigning on complete paths
+						 * (finish with a terminal)
+						 */
+						if (sourceNode.isTerminalNode()) {
+							
+							System.out.println("Path Editor");
+							pathEditor.setNode(this.editedDescribeIt);
+							cardLayout.show(describeItEditBar, PATH_EDITOR);
+						} else {							
+							cardLayout.show(describeItEditBar, NO_EDITOR);
+						}
+					} else {
+						editedDescribeIt.clearSelection();
+						sourceNode.setSelected(true);
+						sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
+
+							@Override
+							public void processTextNode(TextNode textNode) {
+								textNodeEditor.setNode(textNode);
+								cardLayout.show(describeItEditBar, TEXT_NODE_EDITOR);
+
+							}
+
+							@Override
+							public void processKnowItNode(KnowItNode knowItNode) {
+								knowItEditor.setNode(knowItNode);
+								cardLayout.show(describeItEditBar, KNOW_IT_EDITOR);
+							}
+						});
+					}
+					break;
+				}
+			} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
+				GraphNode.observeDepthMap(this, sourceNode);
+			}
+		}
+	}
+
 }
