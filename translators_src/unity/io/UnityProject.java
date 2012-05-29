@@ -1,11 +1,17 @@
 package io;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import org.yaml.snakeyaml.Yaml;
 
 import scriptease.controller.modelverifier.rule.StoryRule;
 import scriptease.model.CodeBlock;
@@ -16,6 +22,8 @@ import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.GameObject;
 
 public final class UnityProject implements GameModule {
+	private static final String SCENE_FILE_EXTENSION = ".unity";
+
 	public static final class FileIDKey {
 		public final int SCENE = 29;
 		public final int GAME_OBJECT = 1;
@@ -76,7 +84,7 @@ public final class UnityProject implements GameModule {
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
 
 	@Override
@@ -89,15 +97,31 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public void load(boolean readOnly) throws IOException {
-		// TODO Auto-generated method stub
-
+		final Yaml parser;
+		final BufferedReader reader;
+		final Collection<File> unityFiles = new ArrayList<File>();
+		File searchLocation;
+		
+		parser = new Yaml();
+		
+		searchLocation = this.location;
+		final FilenameFilter sceneFileFilter = new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith(SCENE_FILE_EXTENSION);
+			}
+		};
+		// sniff out .unity files and read them all into memory
+		searchLocation.listFiles(sceneFileFilter);
+		
+		reader = new BufferedReader(new FileReader(this.location));;
+		
+		//parser.load(reader);
 	}
 
 	@Override
 	public void save(boolean compile) throws IOException {
 		// TODO Auto-generated method stub
-		// TODO: LOL DUNNO HOW TO DO THIS
-
 	}
 
 	@Override

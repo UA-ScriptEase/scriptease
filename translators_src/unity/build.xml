@@ -15,6 +15,10 @@ Use 'ant zip' to create a distributable zip package. Use flag -Ddebug.mode=true 
 
 	<property name="se.base.dir" value="../.." />
 	<property name="se.base.jar" value="${se.base.dir}/jar/ScriptEase2.jar" />
+	
+	<!-- All code library dependencies should be here. -->
+	<property name="lib.dir" value="lib"/>
+	<property name="yaml.lib" value ="snakeyaml-1.10.jar"/>
 
 	<property file="${se.base.dir}/mailingLists.properties" />
 	<import file="${se.base.dir}/commonBuild.xml" />
@@ -56,13 +60,19 @@ Use 'ant zip' to create a distributable zip package. Use flag -Ddebug.mode=true 
 				<include name="${resources.dir}/*.png" />
 				<include name="${resources.dir}/*.jpg" />
 				<include name="${resources.dir}/*.jpeg" />
+				<include name="${lib.dir}/*.jar" />
 				<include name="translator.ini" />
 			</fileset>
 		</copy>
 
 		<echo>Compiling with debug mode ${debug.mode}</echo>
 		<javac srcdir="${src.dir}" debug="${debug.mode}" destdir="${build.dir}" source="${java.compile.version}" target="${java.compile.version}" includeantruntime="false">
-			<classpath location="${se.base.jar}" />
+			<classpath>
+				<filelist>
+					<file name="${se.base.jar}" />
+					<file name="${lib.dir}/${yaml.lib}" />
+				</filelist>
+			</classpath>
 			<exclude name="${build.dir}" />
 			<exclude name="bin/**" />
 		</javac>
