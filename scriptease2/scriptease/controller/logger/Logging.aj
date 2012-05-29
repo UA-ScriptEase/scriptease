@@ -157,7 +157,7 @@ public aspect Logging {
 	// advice for system pointcut
 	void around(PrintStream ps, String txt, Object caller): system(ps,txt,caller)	{
 		final Level lvl = (ps == System.out)? Level.INFO : Level.WARNING;
-		final String msg = "\t" + txt + "\t(reported by" + GetSimpleName(caller) + " class)";
+		final String msg = "\t" + txt + "\t(reported by " + GetSimpleName(caller) + " class)";
 		
 		outputLog.log(lvl, msg);
 	}
