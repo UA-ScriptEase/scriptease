@@ -1,6 +1,5 @@
 package scriptease.model.atomic;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,7 +12,6 @@ import scriptease.controller.GraphNodeReferenceResolver;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.GraphNodeObserver;
-import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.TextNode;
 import scriptease.model.complex.ScriptIt;
@@ -22,7 +20,7 @@ import sun.awt.util.IdentityArrayList;
 
 /**
  * This class represents a <code>DescribeIt</code>. <code>DescribeIt</code>s
- * provide an selection interface for a collection of <code>ScriptIt</code>s.
+ * provide a selection interface for a collection of <code>ScriptIt</code>s.
  * They can only resolve to a single <code>ScriptIt</code> at one time, but
  * provide a graphical mechanism for selecting which <code>ScriptIt</code> it
  * represents.
@@ -141,12 +139,15 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 		return false;
 	}
 
-	private Color getSelectionColourForPath(List<GraphNode> path) {
+/*	TODO: Selection colour should be done in GraphPanel
+ * 
+ * 
+ * private Color getSelectionColourForPath(List<GraphNode> path) {
 		if (this.containsPath(path))
 			return ScriptEaseUI.COLOUR_GAME_OBJECT;
 		else
 			return ScriptEaseUI.COLOUR_UNBOUND;
-	}
+	}*/
 
 	/**
 	 * Selects the nodes from the head to the provided end node using the best
@@ -173,6 +174,7 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 		this.clearSelection();
 		// Select the found path
 		for (GraphNode node : path) {
+	//TODO: Set selection Colour
 			//node.setSelectedColour(getSelectionColourForPath(path));
 			node.setSelected(true);
 		}

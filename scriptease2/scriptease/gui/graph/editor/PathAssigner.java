@@ -14,41 +14,58 @@ import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelStorySettin
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 
 /**
- * JPanel used for assigning a ScriptIt to a selected DescribeIt path
+ * JPanel used for assigning a ScriptIt to a selected DescribeIt path. Displays
+ * the ScriptIt in the JPanel.
  * 
  * @author mfchurch
+ * @author kschenk
  * 
  */
 @SuppressWarnings("serial")
 public class PathAssigner extends JPanel implements StoryComponentObserver {
-	private final DescribeIt describeIt;
-	private final List<GraphNode> path;
+	private DescribeIt describeIt;
+	private List<GraphNode> path;
+	private StoryComponentPanelTree tree;
 
-	public PathAssigner(DescribeIt describeIt) {
+	/**
+	 * Creates a PathAssigner with nothing shown, and null settings. Call
+	 * <code>setNode(DescribeIt describeIt)</code> to set up the PathAssigner.
+	 */
+	public PathAssigner() {
+		this.describeIt = null;
+		this.path = null;
+		this.tree = new StoryComponentPanelTree(
+				new StoryComponentPanelStorySetting());
+
+		this.add(tree);
+	}
+
+	/**
+	 * Sets up the PathAssigner for the DescribeIt node passed. Creates a
+	 * ScriptIt for the DescribeIt, adds it to a StoryComponentPanelTree, and
+	 * then displays it in the JPanel.
+	 * 
+	 * @param describeIt
+	 */
+	public void setNode(DescribeIt describeIt) {
 		this.describeIt = describeIt;
 		this.path = describeIt.buildPathFromSelectedNodes();
 
-		// create a StoryComponentContainer as a drop target
-		StoryComponentContainer container = new StoryComponentContainer(
-				"Assigned DoIt");
-		container.clearAllowableChildren();
-		container.registerChildType(ScriptIt.class, 1);
-
 		final ScriptIt scriptIt = describeIt.getScriptItForPath(this.path);
-		// if a scriptIt is already assigned to the path, display it
-		if (scriptIt != null)
-			container.addStoryChild(scriptIt);
 
-		StoryComponentPanelTree tree = new StoryComponentPanelTree(container,
+		this.remove(tree);
+		tree = new StoryComponentPanelTree(scriptIt,
 				new StoryComponentPanelStorySetting());
 		this.add(tree);
 		this.setOpaque(true);
 
 		// listen for changes to the container
-		container.addStoryComponentObserver(this);
+		scriptIt.addStoryComponentObserver(this);
+
+		this.repaint();
+		this.revalidate();
 	}
 
 	@Override

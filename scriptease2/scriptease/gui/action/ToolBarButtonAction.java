@@ -46,6 +46,8 @@ public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 		this.actionName = name;
 		this.putValue(Action.LARGE_ICON_KEY,
 				new ImageIcon(loadImages(iconName)));
+		
+		
 	}
 
 	/**
@@ -93,11 +95,6 @@ public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 	public static void addJComponent(JComponent component) {
 		ToolBarButtonAction.activeComponent.add(component);
 	}
-
-	/*
-	 * public static JComponent getJComponent() { return
-	 * ToolBarButtonAction.activeComponent; }
-	 */
 
 	/**
 	 * Returns the current mode selected for ToolBar Buttons..
