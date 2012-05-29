@@ -2,6 +2,7 @@ package scriptease.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -12,6 +13,8 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.jar.Manifest;
 
 import javax.xml.transform.Source;
@@ -348,13 +351,14 @@ public class FileOp {
 
 		try {
 			schema = schemaFactory.newSchema(schemaPath);
-			
+
 			validator = schema.newValidator();
 
 			source = new StreamSource(sourcePath);
 			validator.validate(source);
 		} catch (SAXException e) {
-			System.err.println("XML validation failure: \"" + e.getMessage() + "\" for file " + sourcePath.getPath());
+			System.err.println("XML validation failure: \"" + e.getMessage()
+					+ "\" for file " + sourcePath.getPath());
 			return false;
 		} catch (IOException e) {
 			System.err.println("Validation I/O failure: " + e.getMessage());
@@ -395,5 +399,33 @@ public class FileOp {
 		}
 
 		return manifest;
+	}
+
+	/**
+	 * Recursively finds all files that match the FileFilter in the given
+	 * directory and all subdirectories.
+	 * 
+	 * @param directory
+	 *            The directory to search in.
+	 * @param filter
+	 *            The file filter to use. If <code>null</code>, then all files
+	 *            will be returned.
+	 * @return A collection of all files that match the filter.
+	 */
+	public static Collection<File> findFiles(File directory, FileFilter filter) {
+		final Collection<File> sceneFiles = new ArrayList<File>();
+		
+		// add the files
+		for (File sceneFile : directory.listFiles(filter)) {
+			sceneFiles.add(sceneFile);
+		}
+		
+		// search subdirectories
+		for (File subdir : directory.listFiles()) {
+			if(subdir.isDirectory())
+				sceneFiles.addAll(findFiles(subdir, filter));
+		}
+		
+		return sceneFiles;
 	}
 }
