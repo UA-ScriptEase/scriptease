@@ -26,6 +26,11 @@ public class FilterableSearchField extends JTextField {
 		KeyAdapter timedSearcher = new TimedSearcher(this, filterable);
 		this.addKeyListener(timedSearcher);
 	}
+	
+	public void addFilter(Filterable filterable) {
+		KeyAdapter timedSearcher = new TimedSearcher(this, filterable);
+		this.addKeyListener(timedSearcher);
+	}
 
 	private final class TimedSearcher extends KeyAdapter {
 		private int TIME_BUFFER = 200;
@@ -36,7 +41,6 @@ public class FilterableSearchField extends JTextField {
 
 			timer = new Timer(TIME_BUFFER, new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					// Room for improvement...mabey baby. whats the story morning glory
 					if (filterable instanceof GameObjectTreeModel)
 						filterable.updateFilter(new GameConstantSearchFilter(
 								searchField.getText()));
