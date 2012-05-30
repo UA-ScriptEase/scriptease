@@ -3,7 +3,6 @@ package scriptease.gui.storycomponentpanel;
 import java.awt.Color;
 import java.awt.Font;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -13,7 +12,6 @@ import scriptease.gui.SETree.filters.Filter;
 import scriptease.gui.SETree.filters.Filterable;
 import scriptease.gui.SETree.filters.StoryComponentFilter;
 import scriptease.gui.SETree.filters.VisibilityFilter;
-import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelSetting;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -34,8 +32,6 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	// Default to a VisibilityFilter
 	private Filter filterRule = new VisibilityFilter();
 	
-	private JLabel noResultsLabel = new JLabel("Nothing Found");
-
 	public StoryComponentPanelTree(StoryComponentPanelSetting settings) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

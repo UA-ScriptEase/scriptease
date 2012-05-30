@@ -1,6 +1,5 @@
 package scriptease.gui.pane;
 
-import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -48,6 +47,7 @@ import scriptease.util.StringOp;
  */
 public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		TranslatorObserver {
+	
 	private final String TYPE_FILTER_LABEL = Il8nResources
 			.getString("Type_Filter_");
 	private final StoryComponentPanelTree tree;
