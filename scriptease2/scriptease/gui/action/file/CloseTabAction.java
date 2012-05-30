@@ -4,17 +4,11 @@
 package scriptease.gui.action.file;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.Action;
-import javax.swing.KeyStroke;
 
 import scriptease.gui.SEFrame;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.pane.StoryPanel;
-import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
 
 /**
  * Represents and performs the Close Tab command, as well as encapsulates its

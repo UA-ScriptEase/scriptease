@@ -11,7 +11,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 
 /**
- * Filters out all StroyComponents that do not contain some type of reference to
+ * Filters out all StoryComponents that do not contain some type of reference to
  * the list of types given in the constructor.
  * 
  * @author remiller
