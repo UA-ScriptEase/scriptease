@@ -677,11 +677,12 @@ public class Translator {
 
 	private File requestNewLocation() {
 		final File newLocation;
-
+		final String[] extensions = this.getLegalExtensions();
 		FileNameExtensionFilter filter = null;
-		// Build the filter based on the translator selected
-		filter = new FileNameExtensionFilter(this.getName() + " Game Files",
-				this.getLegalExtensions());
+
+		if (extensions != null && extensions.length != 0)
+			filter = new FileNameExtensionFilter(
+					this.getName() + " Game Files", extensions);
 		// Otherwise pass in a null filter (defaults to accept all)
 		newLocation = WindowManager.getInstance().showFileChooser("Select",
 				filter, this.getLocation());
