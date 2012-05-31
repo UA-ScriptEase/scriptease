@@ -6,14 +6,15 @@ import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.reader.ReaderException;
 
 import scriptease.controller.modelverifier.rule.StoryRule;
+import scriptease.gui.WindowManager;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.translator.codegenerator.ScriptInfo;
@@ -35,6 +36,7 @@ public final class UnityProject implements GameModule {
 	}
 
 	private File location;
+	private Collection<Object> sceneFiles;
 
 	@Override
 	public void addGameObject(GameObject object) {
@@ -84,8 +86,7 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return "";
+		return this.location.getName();
 	}
 
 	@Override
@@ -99,26 +100,48 @@ public final class UnityProject implements GameModule {
 	@Override
 	public void load(boolean readOnly) throws IOException {
 		final Yaml parser;
-		final BufferedReader reader;
-		final Collection<File> unityFiles = new ArrayList<File>();
-		final Collection <File> sceneFiles;
+		BufferedReader reader;
+		final Collection<File> sceneFiles;
 		final FileFilter sceneFileFilter = new FileFilter() {
 			@Override
 			public boolean accept(File pathname) {
 				return pathname.getName().endsWith(SCENE_FILE_EXTENSION);
 			}
 		};
-		
+
 		// sniff out .unity files and read them all into memory
 		sceneFiles = FileOp.findFiles(this.location, sceneFileFilter);
-		
-		System.out.println(sceneFiles);
-		
+
 		parser = new Yaml();
-		
-		reader = new BufferedReader(new FileReader(this.location));
-		
-		//parser.load(reader);
+		parser.setName("Unity Scene YAML Parser");
+
+		for (File sceneFile : sceneFiles) {
+			if (!sceneFile.exists())
+				throw new FileNotFoundException("Scene file "
+						+ sceneFile.getAbsolutePath() + " went missing!");
+
+			reader = new BufferedReader(new FileReader(sceneFile));
+
+			try {
+				this.sceneFiles.add(parser.load(reader));
+			} catch (ReaderException e) {
+				WindowManager
+						.getInstance()
+						.showProblemDialog(
+								"Bad Scene File",
+								"I can't load "
+										+ this.getName()
+										+ ".\n\nThe file "
+										+ sceneFile.getPath()
+										+ " isn't in the YAML format.\nThe Unity translator can't handle it.");
+				
+				throw new IOException("Incorrect format.");
+			} finally {
+				reader.close();
+			}
+		}
+
+		System.out.println(this.sceneFiles);
 	}
 
 	@Override

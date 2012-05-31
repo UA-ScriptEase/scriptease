@@ -228,10 +228,10 @@ public class DialogBuilder {
 				} catch (Throwable e) {
 					UncaughtExceptionHandler handler = Thread
 							.getDefaultUncaughtExceptionHandler();
-					handler.uncaughtException(Thread.currentThread(),
+					handler.uncaughtException(
+							Thread.currentThread(),
 							new IllegalStateException(
-									"Exception while creating a new Story. "
-											+ e));
+									"Exception while creating a new Story. ", e));
 				}
 			}
 		};

@@ -527,7 +527,8 @@ public final class WindowManager {
 	 *            The name of the operation to be performed. This will become
 	 *            the dialog title.
 	 * @param filter
-	 *            The FileFilter to use to filter results.
+	 *            The FileFilter to use to filter results. If <code>null</code>,
+	 *            then the chooser will not be filtered.
 	 * @param directoryPath
 	 *            The location to start the file chooser showing.
 	 * 
@@ -546,15 +547,16 @@ public final class WindowManager {
 
 		chooser.resetChoosableFileFilters();
 		chooser.setAcceptAllFileFilterUsed(true);
-		
+
 		if (filter != null) {
 			chooser.setFileFilter(filter);
-		} else{
-			// we don't know what they need, so directories may also be a legitimate option.
+		} else {
+			// we don't know what they need, so directories may also be a
+			// legitimate option.
 			chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 			filter = chooser.getAcceptAllFileFilter();
 		}
-		
+
 		lastDirectoryKey = WindowManager.LAST_DIRECTORY_KEY
 				+ StringOp.makeAlphaNumeric(filter.getDescription());
 		lastDirectory = se.getPreference(lastDirectoryKey);
@@ -570,8 +572,7 @@ public final class WindowManager {
 		// usually the correct extension)
 		chooser.setSelectedFile(new File(""));
 
-		buttonChoice = chooser
-				.showDialog(SEFrame.getInstance(), operation);
+		buttonChoice = chooser.showDialog(SEFrame.getInstance(), operation);
 
 		if (buttonChoice == JFileChooser.APPROVE_OPTION) {
 			choice = chooser.getSelectedFile();
