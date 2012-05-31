@@ -403,7 +403,9 @@ public class FileOp {
 
 	/**
 	 * Recursively finds all files that match the FileFilter in the given
-	 * directory and all subdirectories.
+	 * directory and all subdirectories. This may includes the directory that is
+	 * given, if it passes the filter. Order is not guaranteed, but each entry
+	 * will be unique.
 	 * 
 	 * @param directory
 	 *            The directory to search in.
@@ -413,19 +415,25 @@ public class FileOp {
 	 * @return A collection of all files that match the filter.
 	 */
 	public static Collection<File> findFiles(File directory, FileFilter filter) {
-		final Collection<File> sceneFiles = new ArrayList<File>();
-		
-		// add the files
-		for (File sceneFile : directory.listFiles(filter)) {
-			sceneFiles.add(sceneFile);
-		}
-		
-		// search subdirectories
+		final Collection<File> matchingFiles = new ArrayList<File>();
+
+		// search subdirectories first
 		for (File subdir : directory.listFiles()) {
-			if(subdir.isDirectory())
-				sceneFiles.addAll(findFiles(subdir, filter));
+			if (subdir.isDirectory())
+				matchingFiles.addAll(findFiles(subdir, filter));
 		}
-		
-		return sceneFiles;
+
+		// add the files we haven't already gotten
+		for (File file : directory.listFiles(filter)) {
+			if(!matchingFiles.contains(file))
+				matchingFiles.add(file);
+		}
+
+		// we need to check the directory specifically so that we don't miss the
+		// root directory on the first recursion. - remiller
+		if (filter.accept(directory) && !matchingFiles.contains(directory))
+			matchingFiles.add(directory);
+
+		return matchingFiles;
 	}
 }

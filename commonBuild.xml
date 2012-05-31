@@ -30,7 +30,7 @@ in-line comments for details on what is expected.
 	     where we use it, because we can't reassign properties.-->
 	<property name="majorVersion" value="2" />
 	<property name="buildNumberLocation" value="/cshome/script/development/buildNumber.properties" />
-	<exec executable="sh" outputproperty="gitHash">
+	<exec executable="sh" outputproperty="git.hash">
 		<arg value="-c" />
 		<arg value="git log -1 | grep &quot;commit&quot; | awk -F &quot; &quot; '{print $2}'" />
 	</exec>
