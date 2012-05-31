@@ -2,9 +2,9 @@ package io;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +20,7 @@ import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.GameObject;
+import scriptease.util.FileOp;
 
 public final class UnityProject implements GameModule {
 	private static final String SCENE_FILE_EXTENSION = ".unity";
@@ -100,21 +101,22 @@ public final class UnityProject implements GameModule {
 		final Yaml parser;
 		final BufferedReader reader;
 		final Collection<File> unityFiles = new ArrayList<File>();
-		File searchLocation;
+		final Collection <File> sceneFiles;
+		final FileFilter sceneFileFilter = new FileFilter() {
+			@Override
+			public boolean accept(File pathname) {
+				return pathname.getName().endsWith(SCENE_FILE_EXTENSION);
+			}
+		};
+		
+		// sniff out .unity files and read them all into memory
+		sceneFiles = FileOp.findFiles(this.location, sceneFileFilter);
+		
+		System.out.println(sceneFiles);
 		
 		parser = new Yaml();
 		
-		searchLocation = this.location;
-		final FilenameFilter sceneFileFilter = new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.endsWith(SCENE_FILE_EXTENSION);
-			}
-		};
-		// sniff out .unity files and read them all into memory
-		searchLocation.listFiles(sceneFileFilter);
-		
-		reader = new BufferedReader(new FileReader(this.location));;
+		reader = new BufferedReader(new FileReader(this.location));
 		
 		//parser.load(reader);
 	}
