@@ -1,6 +1,7 @@
 package io;
 
 import io.GenericFileFormat.GffField;
+import io.GenericFileFormat.GffStruct;
 import io.GenericFileFormat.NWNConversation;
 import io.GenericFileFormat.NWNConversation.DialogueLine;
 
@@ -322,8 +323,7 @@ public final class ErfFile implements GameModule {
 		// resRefs must be lower case
 		scriptResRef = scriptResRef.toLowerCase();
 
-		// TODO: Richard wants more meaningful resRef names for scripts see
-		// ticket #240
+		// TODO: Richard wants more meaningful resRef names for scripts 
 
 		NWNResource scriptResource;
 		scriptResource = new NWNResource(scriptResRef,
@@ -350,15 +350,14 @@ public final class ErfFile implements GameModule {
 
 				// Manage the script slot references
 				final IdentifiableGameConstant object = scriptInfo.getSubject();
-				
+
 				final String receiverResRef;
 				final NWNResource receiverResource;
 
 				// Hardcoded for conversations. Deal with it.
 				if (object instanceof DialogueLine) {
 					final DialogueLine dialogueLine = (DialogueLine) object;
-					receiverResRef = dialogueLine
-							.getConversationResRef();
+					receiverResRef = dialogueLine.getConversationResRef();
 
 					// Get the parent conversation file resource
 					receiverResource = this.getResourceByResRef(receiverResRef);
@@ -387,19 +386,110 @@ public final class ErfFile implements GameModule {
 								"Script slot update failed. Cannot find resource for ResRef \""
 										+ receiverResRef + "\"");
 					} else if (receiverResource.isGFF()) {
-						receiverResource.getGFF().setField(scriptInfo.getSlot(), scriptResRef);
+						updateAllInstances(receiverResource, scriptInfo, scriptResRef);
 					}
 				}
-
-				// TODO: update all instances of blueprints
 			}
 		}
 
 		this.updateHeader(scriptCounter);
 	}
+	
+	/**
+	 * Updates all instances for the script and resource passed.
+	 * 
+	 * @param receiverResource
+	 * @param scriptInfo
+	 * @param scriptResRef
+	 */
+	private void updateAllInstances(NWNResource receiverResource,
+			ScriptInfo scriptInfo, String scriptResRef) {
+		
+		GenericFileFormat receiverResourceGFF = receiverResource.getGFF();
+		receiverResourceGFF.setField(scriptInfo.getSlot(), scriptResRef);
+
+		for (NWNResource resource : this.resources) {
+			if (resource.isGFF()) {
+				GenericFileFormat gitFileGFF = resource.getGFF();
+				String fileType = gitFileGFF.getFileType().trim();
+				if (fileType
+						.equalsIgnoreCase(GenericFileFormat.TYPE_GAME_INSTANCE_FILE)) {
+
+					GffStruct gitFileStruct = gitFileGFF.getTopLevelStruct();
+
+					List<GffField> gitFileFields;
+
+					try {
+						//The list of lists in a Git File. e.g. Creature List
+						gitFileFields = gitFileStruct.readGffFields(this.fileAccess);
+
+						// Go through the lists of lists in a GIT File.
+						for (GffField gitFileField : gitFileFields) {
+
+							String gitFileFieldLabel = gitFileGFF.getLabelArray().get(
+									(int) gitFileField.getLabelIndex());
+
+							// Find the correct list. The rest of the comments will use the creature list as an example.
+							if (gitFileFieldLabel.equals(receiverResourceGFF
+									.getGITListLabel())) {
+							
+								// List of all (e.g.) creature structs in creature list.
+								List<GffStruct> gitIndividualFieldStructList = gitFileField
+										.readList(this.fileAccess);
+								
+								// Parses the individual creatures from the list.
+								for(GffStruct individualFieldStruct : gitIndividualFieldStructList) {
+									
+									List<GffField> individualFieldStructFields = individualFieldStruct.readGffFields(this.fileAccess);
+									
+									//The individual creature fields, such as the resref we will use.
+									for(GffField individualFieldStructField : individualFieldStructFields) {
+										//Checks if the field equals TemplateResRef. This means the individualFieldStruct creature is the same as the individualFieldStructField creature.
+										if(individualFieldStructField.getGFF().getLabelArray().get((int) individualFieldStructField
+												.getLabelIndex()).equals("TemplateResRef")) {
+											if(individualFieldStructField.readString(this.fileAccess).equals(receiverResourceGFF.getResRef())) {
+												System.out.println("Comparing "+ individualFieldStructField.readString(this.fileAccess) + " + " + receiverResourceGFF.getResRef());
+
+											//Look for the field to place the script into
+
+												for (GffField individualFieldStructField2 : individualFieldStructFields) {
+													if(individualFieldStructField2.getGFF().getLabelArray().get((int) individualFieldStructField2
+												.getLabelIndex()).equals(scriptInfo.getSlot())) {
+														System.out.println("Comparing "+ individualFieldStructField2.getGFF().getLabelArray().get((int) individualFieldStructField2
+																.getLabelIndex()) + " + " + scriptInfo.getSlot());
+													
+														System.out.println("Setting field: <"+scriptResRef+"> to: <"+ individualFieldStructField2 +
+																"> in: <" + individualFieldStructField2.getGFF().getResRef()+ ">. The proper location is <" + scriptInfo.getSlot()+">.");
+														
+														individualFieldStructField2.getGFF().setField(individualFieldStructField2, scriptResRef);
+														
+														break;
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					} catch (IOException e) {
+						Thread.currentThread()
+								.getUncaughtExceptionHandler()
+								.uncaughtException(
+										Thread.currentThread(),
+										new IOException(
+												"Exception when accessing GFFFields:"
+														+ e));
+					}
+				}
+			}
+		}
+	}
+	
+	
 
 	/**
-	 * Finds the resource matching the given ResRef. 
+	 * Finds the resource matching the given ResRef.
 	 * 
 	 * @param receiverResRef
 	 *            The ResRef (resource reference string ID) for the resource
@@ -418,16 +508,16 @@ public final class ErfFile implements GameModule {
 	}
 
 	/**
-	 * Updates the in-memory header data. It is vitally important this this
-	 * method is called every time resources are added or removed. <br>
+	 * Updates the in-memory header data. It is vitally important this method is
+	 * called every time resources are added or removed. <br>
 	 * <br>
 	 * <code>updateHeader(int)</code> does not touch the file. To write out
 	 * header data to disk, use {@link #writeHeader()}.
 	 * 
 	 * @param addOrRemoveCount
-	 *            The number of resources added or removed. Positive integers
-	 *            are interpreted as resource being added, negatives as removed.
-	 *            If
+	 *            Because there is one key per resource, this is the number of
+	 *            resources added or removed. Positive integers are interpreted
+	 *            as resource being added, negatives as removed. If
 	 *            <code>addOrRemoveCount<code> is zero, this method has no effect.
 	 * @see #writeHeader()
 	 */
@@ -444,9 +534,9 @@ public final class ErfFile implements GameModule {
 	@Override
 	public void save(boolean compile) throws IOException {
 		if (compile) {
-			try{
+			try {
 				this.compile();
-			} catch(FileNotFoundException e){
+			} catch (FileNotFoundException e) {
 				System.err.println("Compilation failed due to missing file.");
 				throw new IOException("Compilation failed.", e);
 			}
@@ -472,9 +562,10 @@ public final class ErfFile implements GameModule {
 		final Map<String, File> resrefsToFiles = new HashMap<String, File>();
 		final Process compilation;
 		final ProcessBuilder procBuilder;
-		
-		if(!compilerLocation.exists())
-			throw new GameCompilerException(new FileNotFoundException("Compiler does not exist where expected."));
+
+		if (!compilerLocation.exists())
+			throw new GameCompilerException(new FileNotFoundException(
+					"Compiler does not exist where expected."));
 
 		// write out all of the uncompiled source code to a temp directory for
 		// the compiler to grab.
@@ -503,13 +594,14 @@ public final class ErfFile implements GameModule {
 				continue;
 			}
 		}
-		
-		procBuilder = new ProcessBuilder( compilerLocation.getAbsolutePath());
-		
+
+		procBuilder = new ProcessBuilder(compilerLocation.getAbsolutePath());
+
 		procBuilder.redirectErrorStream(true);
-		procBuilder.command(compilerLocation.getAbsolutePath(), nssRegex.getAbsolutePath(), compilationDir.getAbsolutePath());
+		procBuilder.command(compilerLocation.getAbsolutePath(),
+				nssRegex.getAbsolutePath(), compilationDir.getAbsolutePath());
 		procBuilder.directory(compilationDir.getAbsoluteFile());
-		
+
 		compilation = procBuilder.start();
 
 		// TODO: Need to properly handle errors printed out by the compiler
@@ -540,6 +632,9 @@ public final class ErfFile implements GameModule {
 		// TODO: check out include files.
 
 		// get all of the compiler's compiled byte code output into resources
+		
+		int compiledScriptsCount = 0;
+		
 		for (String resRef : resrefsToFiles.keySet()) {
 			final String fileName = FileOp.removeExtension(
 					resrefsToFiles.get(resRef)).getAbsolutePath();
@@ -558,9 +653,11 @@ public final class ErfFile implements GameModule {
 
 			this.resources.add(new NWNResource(resRef,
 					ErfKey.SCRIPT_COMPILED_TYPE, byteCode));
+
+			compiledScriptsCount++;
 		}
 
-		this.updateHeader(resrefsToFiles.keySet().size());
+		this.updateHeader(compiledScriptsCount);
 
 		this.uncompiledScripts.clear();
 
@@ -597,13 +694,21 @@ public final class ErfFile implements GameModule {
 		this.fileAccess.skipBytes(116);
 	}
 
+	/**
+	 * Writes all of the resources to appropriate files in Neverwinter Nights.
+	 * 
+	 * @throws IOException
+	 */
 	private void writeResources() throws IOException {
 		int resourceDataLocation = (int) this.OffsetToResourceList
 				+ (this.entryCount * ResourceListElement.BYTE_LENGTH);
 
 		// first, we need to cache all of the data before we start
 		// clobbering the file's contents.
-		// this.fileAccess.seek(this.OriginalOffsetToResourceData);
+		
+		//this.fileAccess.seek(this.OriginalOffsetToResourceData);
+		
+		
 		ScriptEaseFileAccess oldFile = this.fileAccess;
 		if (this.previousLocation != null)
 			this.fileAccess = new ScriptEaseFileAccess(this.location,
@@ -668,6 +773,9 @@ public final class ErfFile implements GameModule {
 
 		// at most one of these two will be null depending on the type of this
 		// resource
+		/**
+		 * byteData is the contents of the file as bytes.
+		 */
 		private byte[] byteData;
 		private final GenericFileFormat gff;
 
@@ -706,6 +814,13 @@ public final class ErfFile implements GameModule {
 			return this.byteData;
 		}
 
+		/**
+		 * Calls write methods that are appropriate to the type of resource. For
+		 * example, if it has a GFF, writer writes to the GFF.
+		 * 
+		 * @param writer
+		 * @throws IOException
+		 */
 		public void write(ScriptEaseFileAccess writer) throws IOException {
 			if (this.byteData != null) {
 				writer.seek(this.getOffsetToResource());
@@ -1270,8 +1385,8 @@ public final class ErfFile implements GameModule {
 		builder.directory(nwnRoot);
 
 		if (!nwnRoot.exists())
-			throw new FileNotFoundException(
-					"Could not locate game directory " + nwnRoot.getAbsolutePath());
+			throw new FileNotFoundException("Could not locate game directory "
+					+ nwnRoot.getAbsolutePath());
 		else if (!nwnExec.exists())
 			throw new FileNotFoundException("Missing nwmain.exe");
 
