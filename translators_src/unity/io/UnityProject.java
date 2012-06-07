@@ -1,17 +1,22 @@
 package io;
 
+import io.yaml.UnityConstructor;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.reader.ReaderException;
+import org.yaml.snakeyaml.representer.Representer;
 
 import scriptease.controller.modelverifier.rule.StoryRule;
 import scriptease.gui.WindowManager;
@@ -36,7 +41,6 @@ public final class UnityProject implements GameModule {
 	}
 
 	private File location;
-	private Collection<Object> sceneFiles;
 
 	@Override
 	public void addGameObject(GameObject object) {
@@ -92,7 +96,6 @@ public final class UnityProject implements GameModule {
 	@Override
 	public void configureTester(ProcessBuilder builder)
 			throws FileNotFoundException, UnsupportedOperationException {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException(
 				"The unity translator can't externally test.");
 	}
@@ -112,8 +115,12 @@ public final class UnityProject implements GameModule {
 		// sniff out .unity files and read them all into memory
 		sceneFiles = FileOp.findFiles(this.location, sceneFileFilter);
 
-		parser = new Yaml();
+		parser = new Yaml(new UnityConstructor());
 		parser.setName("Unity Scene YAML Parser");
+
+		Representer r = new Representer();
+
+		List<List<Object>> sceneFilesObjects = new ArrayList<List<Object>>();
 
 		for (File sceneFile : sceneFiles) {
 			if (!sceneFile.exists())
@@ -122,26 +129,96 @@ public final class UnityProject implements GameModule {
 
 			reader = new BufferedReader(new FileReader(sceneFile));
 
+			List<Object> objectList = new ArrayList<Object>();
+
 			try {
-				this.sceneFiles.add(parser.load(reader));
-			} catch (ReaderException e) {
-				WindowManager
-						.getInstance()
-						.showProblemDialog(
-								"Bad Scene File",
-								"I can't load "
-										+ this.getName()
-										+ ".\n\nThe file "
-										+ sceneFile.getPath()
-										+ " isn't in the YAML format.\nThe Unity translator can't handle it.");
+				/*
+				 * TODO: We can't do this while SnakeYAML can't handle
+				 * directives spread across multiple documents. See Issue 149
+				 * (http://code.google.com/p/snakeyaml/issues/detail?id=149)
+				 * Once that bug is fixed, we should be able to use loadAll()
+				 * without problem. - remiller
+				 */
+				// for (Object object : parser.loadAll(reader)) {
+				// objectList.add(object);
+				// }
+
+				// hack around the above
+				Collection<String> componentYamls = this
+						.applyDirectivesToDocuments(sceneFile);
+
+				for (String doc : componentYamls) {
+					objectList.add(parser.load(doc));
+				}
+				// end hack
 				
+			} catch (ReaderException e) {
+				final String message;
+
+				message = "I can't load "
+						+ this.getName()
+						+ ".\n\nThe file "
+						+ sceneFile.getPath()
+						+ " isn't in the YAML format.\nThe Unity translator can't handle it.";
+
+				WindowManager.getInstance().showProblemDialog("Bad Scene File",
+						message);
+
 				throw new IOException("Incorrect format.");
 			} finally {
 				reader.close();
 			}
+
+			sceneFilesObjects.add(objectList);
 		}
 
-		System.out.println(this.sceneFiles);
+		System.out.println(sceneFilesObjects);
+	}
+
+	/**
+	 * This is an awful hack to get around the bug in SnakeYAML in <a
+	 * href="http://code.google.com/p/snakeyaml/issues/detail?id=149"/>issue
+	 * #149</a>.<br>
+	 * <BR>
+	 * It splits the given source file into chunks and prepends the directives
+	 * from the start of the source file to each internal YAML document.
+	 * 
+	 * @param source
+	 *            The source file to split and fix
+	 * @return The YAML documents as strings.
+	 * @throws IOException
+	 *             If things go south, in a major way bro. Major. Way.
+	 */
+	private Collection<String> applyDirectivesToDocuments(File source)
+			throws IOException {
+		final String documentDelimiter = "---";
+		final List<String> documents;// = new ArrayList<String>();
+
+		String yamlStr = FileOp.readFileAsString(source);
+
+		// int docStartIndex = yamlStr.indexOf(documentDelimiter);
+
+		// String directives = yamlStr.substring(0, docStartIndex);
+
+		documents = new ArrayList<String>(Arrays.asList(yamlStr
+				.split(documentDelimiter)));
+		String directives = documents.remove(0);
+
+		// while (!yamlStr.trim().equals("")) {
+		//
+		//
+		// actually get the thing chunked correctly
+		//
+		// docStartIndex = yamlStr.indexOf("---");
+		//
+		// yamlStr = yamlStr.substring(docStartIndex);
+		// }
+
+		for (int i = 0; i < documents.size(); i++) {
+			documents.set(i, directives + documentDelimiter + documents.get(i));
+		}
+
+		return documents;
 	}
 
 	@Override
