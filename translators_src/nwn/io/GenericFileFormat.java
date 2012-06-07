@@ -1396,7 +1396,7 @@ public class GenericFileFormat {
 		private final long typeNumber;
 		private final long labelIndex;
 		private long dataOrDataOffset; // this can increase if its an offset
-
+		
 		// this isn't part of the original struct. Added so that field knows
 		// where it lives within the Field Array. - remiller
 		private long fieldIndex;
