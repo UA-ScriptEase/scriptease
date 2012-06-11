@@ -9,7 +9,7 @@ public class TranslatorKeywordManager {
 	 * referencing code.
 	 */
 	public static final String FUNCTION_HEADER = "functionHeader";
-	public static final String IMPORT_CALL = "imports";
+	public static final String IMPORT_CALL = "includes";
 	public static final String CONDITONAL_FORMAT = "conditional";
 	public static final String FILE_FORMAT = "file";
 	public static final String SINGLE_COMMENT_FORMAT = "singleComment";
@@ -19,7 +19,7 @@ public class TranslatorKeywordManager {
 	public static final String XML_CODE_FORMAT = "code";
 	public static final String XML_COMMENT_FORMAT = "comment";
 	public static final String XML_CONDITION_FORMAT = "condition";
-	public static final String XML_IMPORT_FORMAT = "import";
+	public static final String XML_IMPORT_FORMAT = "include";
 	public static final String XML_NAME_FORMAT = "name";
 	public static final String XML_TYPE_FORMAT = "type";
 

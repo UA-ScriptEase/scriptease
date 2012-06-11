@@ -69,6 +69,18 @@ public class CodeBlockContext extends Context {
 				.createContext(this, this.codeBlock.getOwner());
 		return scriptItContext.getParameter(keyword);
 	}
+/*	
+	@Override
+	public String getInclude() {
+		final Iterator<String> includeFragment;
+
+		includeFragment = this.getIncludes();
+		
+		if(includeFragment.hasNext())
+			return includeFragment.next();
+		else
+			return "";
+	}*/
 
 	@Override
 	public Iterator<KnowIt> getVariables() {
