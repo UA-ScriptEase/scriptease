@@ -166,7 +166,8 @@ public interface GameModule {
 	 * @param root
 	 *            The root of the tree to aggregate from.
 	 * @return The collection of StartItOwner objects that should all be
-	 *         generating into the same file.
+	 *         generating into the same file. This must <b>never</b> be
+	 *         <code>null</code>, but may be empty.
 	 */
 	public Collection<Set<CodeBlock>> aggregateScripts(
 			Collection<StoryComponent> root);
