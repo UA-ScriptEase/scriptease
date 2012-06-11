@@ -29,20 +29,11 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  * Context represents the object based context used in code generation. It
  * provides implementation for every possible evaluation or action do-able by
  * code generation. However these calls must be overridden in order to give true
-<<<<<<< .working
- * value to the methods. For example getting the parameters of a StartIt and
- * getting the parameters of a ScriptIt will vary in implementation, thus the
- * ScriptItContext and StartItContext must implement these methods in a meaningful
- * manner. Context also provides information such as the current indentation of
- * the code, the propagation of includes, symbols and used names in code
- * generation.
-=======
  * value to the methods. For example getting the parameters ScriptIt will vary
  * in implementation, thus the ScriptItContext must implement these methods in a
  * meaningful manner. Context also provides information such as the current
  * indentation of the code, the propagation of includes, symbols and used names
  * in code generation.
->>>>>>> .merge-right.r1807
  * 
  * When a method is called in a context which does not make sense, it will
  * return a default unimplemented value as an indicator that the call was not
@@ -346,12 +337,13 @@ public class Context {
 	}
 
 	public String getFormattedValue() {
-		return unimplemented("getFormattedValue");
+		unimplemented("getFormattedValue");
+		return null;
 	}
 
 	// Used to facilitate aspect-j logging of unimplemented context
 	private String unimplemented(String methodName) {
-		return UNIMPLEMENTED;
+		return UNIMPLEMENTED+": "+methodName+" unimplemented in "+ this.getClass().getName();
 	}
 
 	public Iterator<QuestNode> getQuestNodes() {
@@ -397,5 +389,9 @@ public class Context {
 
 	public String getQuestContainer() {
 		return unimplemented("getQuestContainer");
+	}
+
+	public String getInclude() {
+		return unimplemented("getInclude");
 	}
 }

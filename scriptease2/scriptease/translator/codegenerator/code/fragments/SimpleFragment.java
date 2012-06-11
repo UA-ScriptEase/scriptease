@@ -65,7 +65,7 @@ public class SimpleFragment extends FormatFragment {
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_TYPE_FORMAT)) {
 			String type = context.getType();
-			if (type.equalsIgnoreCase(Context.UNIMPLEMENTED)
+			if (type.equalsIgnoreCase(Context.UNIMPLEMENTED+": getType")
 					&& !defaultText.isEmpty())
 				return defaultText;
 			else
@@ -82,6 +82,8 @@ public class SimpleFragment extends FormatFragment {
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_FORMATTED_VALUE))
 			return context.getFormattedValue();
+		else if (dataLabel.equalsIgnoreCase(TranslatorKeywordManager.XML_INCLUDE))
+				return context.getInclude();
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_SUBJECT))
 			return context.getSubject().getBinding().getScriptValue();
