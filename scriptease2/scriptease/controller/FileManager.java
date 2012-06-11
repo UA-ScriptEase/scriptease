@@ -330,6 +330,7 @@ public final class FileManager {
 		compile &= problems.isEmpty()
 				&& translator.getCompiler() != null
 				&& translator.getCompiler().exists();
+		
 		try {
 			if (compile)
 				SEFrame.getInstance().setStatus(

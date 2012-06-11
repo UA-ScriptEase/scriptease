@@ -52,7 +52,7 @@ public class TranslatorKeywordManager {
 	public static final String XML_ENCOUNTER_SERIES = "encounters";
 	public static final String XML_FUNCTION_SERIES = "functions";
 	public static final String XML_IMPLICIT_SERIES = "implicits";
-	public static final String XML_INCLUDES_SERIES = "imports";
+	public static final String XML_INCLUDES_SERIES = "includes";
 	public static final String XML_VARIABLE_SERIES = "variables";
 	public static final String XML_SCRIPTIT_SERIES = "scriptIts";
 	public static final String XML_SCRIPTIT_EFFECT_SERIES = "scriptItEffects";
