@@ -247,9 +247,6 @@ Formats
 			<Line>
 				<Literal>//Includes</Literal>
 			</Line>
-			<Line>
-				<Literal>#include "i_se_aux"</Literal>
-			</Line>
 			<Series data="imports" unique="true">
 				<FormatRef ref="import" />
 			</Series>
@@ -292,9 +289,6 @@ Formats
 		<!-- include files first -->
 			<Line>
 				<Literal>//Includes</Literal>
-			</Line>
-			<Line>
-				<Literal>#include "i_se_aux"</Literal>
 			</Line>
 			<Series data="imports" unique="true">
 				<FormatRef ref="import" />
@@ -356,12 +350,6 @@ Formats
 			<!-- include files first -->
 			<Line>
 				<Literal>//Includes</Literal>
-			</Line>
-			<Line>
-				<Literal>#include "i_se_aux"</Literal>
-			</Line>
-			<Line>
-				<Literal>#include "i_se_quest2"</Literal>
 			</Line>
 			<Series data="imports" unique="true">
 				<FormatRef ref="import" />

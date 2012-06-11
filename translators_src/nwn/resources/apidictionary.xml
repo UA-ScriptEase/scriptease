@@ -566,6 +566,7 @@
 			              	<Literal>return GetLastDisturbed();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -593,6 +594,7 @@
 			              	<Literal>return GetInventoryDisturbType();</Literal>
 			              </Line>
 		              </Code>
+					<Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -620,6 +622,7 @@
 			              	<Literal>return GetInventoryDisturbItem();</Literal>
 			              </Line>
 		              </Code>
+		         	  <Includes />     
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -654,6 +657,7 @@
 			              	<Literal>return GetEnteringObject();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -688,6 +692,7 @@
 			              	<Literal>return GetLastUnlocked();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -723,6 +728,7 @@
 			              	<Literal>return GetClickingObject();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />		              
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -771,6 +777,7 @@
 							<Literal>);</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -808,6 +815,7 @@
 			              	<Literal>return GetBlockingDoor();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -843,6 +851,7 @@
 			              	<Literal>return OBJECT_SELF;</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -877,6 +886,7 @@
 			              	<Literal>return GetLastPlayerDying();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -911,6 +921,7 @@
 			              	<Literal>return GetLastSpell();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -942,6 +953,7 @@
 			              	<Literal>return GetLastSpellCaster();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -969,6 +981,7 @@
 			              	<Literal>return GetLastSpellHarmful();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1009,6 +1022,7 @@
 			              	<Literal>return GetClickingObject();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1043,6 +1057,7 @@
 			              	<Literal>return GetPCItemLastUnequipped();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1070,6 +1085,7 @@
 			              	<Literal>return GetPCItemLastUnequippedBy();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1115,6 +1131,7 @@
 			              	<Literal>);</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1149,6 +1166,7 @@
 			              	<Literal>return GetEnteringObject();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1205,6 +1223,7 @@
 			              	<Literal>return GetEnteringObject();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1251,6 +1270,7 @@
 			             	 <Literal>return GetModuleItemAcquired();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1282,6 +1302,7 @@
 			             	 <Literal>return GetModuleItemAcquiredFrom();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1311,6 +1332,7 @@
 			             	 <Literal>return GetModuleItemAcquiredBy();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1338,6 +1360,7 @@
 			             	 <Literal>return GetModuleItemAcquiredStackSize();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1372,6 +1395,7 @@
 			             	 <Literal>return GetLastKiller();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1410,6 +1434,7 @@
 			             	 <Literal>return GetLastDamager();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1437,6 +1462,7 @@
 			             	 <Literal>return GetTotalDamageDealt();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1464,6 +1490,7 @@
 			             	 <Literal>return GetCurrentHitPoints(OBJECT_SELF);</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1512,6 +1539,7 @@
 			              	<Literal>);</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1546,6 +1574,7 @@
 			             	 <Literal>return GetLastSpeaker();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1602,6 +1631,7 @@
 			              	<Literal>return GetExitingObject();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1642,6 +1672,7 @@
 			              	<Literal>return GetExitingObject();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1676,6 +1707,7 @@
 			              	<Literal>return GetClickingObject();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1710,6 +1742,7 @@
 			              	<Literal>return GetLastDisarmed();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1744,6 +1777,7 @@
 			              	<Literal>return GetEnteringObject();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1778,6 +1812,7 @@
 			              	<Literal>return GetLastPCToCancelCutscene();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1812,6 +1847,7 @@
 			              	<Literal>return GetLastSpell();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1843,6 +1879,7 @@
 			              	<Literal>return GetLastSpellCaster();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1870,6 +1907,7 @@
 			              	<Literal>return GetLastSpellHarmful();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1904,6 +1942,7 @@
 			              	<Literal>return GetLastPerceived();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1931,6 +1970,7 @@
 			              	<Literal>return GetLastPerceptionHeard();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1958,6 +1998,7 @@
 			              	<Literal>return GetLastPerceptionInaudible();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -1985,6 +2026,7 @@
 			              	<Literal>return GetLastPerceptionSeen();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2012,6 +2054,7 @@
 			              	<Literal>return GetLastPerceptionVanished();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2056,6 +2099,7 @@
 			             	 <Literal>return GetLastOpenedBy();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2090,6 +2134,7 @@
 			             	 <Literal>return GetLastRespawnButtonPresser();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2124,6 +2169,7 @@
 			             	 <Literal>return GetPCItemLastEquipped();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2151,6 +2197,7 @@
 			             	 <Literal>return GetPCItemLastEquippedBy();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2185,6 +2232,7 @@
 			             	 <Literal>return GetUserDefinedEventNumber();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2219,6 +2267,7 @@
 			             	 <Literal>return GetPCLevellingUp();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2253,6 +2302,7 @@
 			             	 <Literal>return GetLastPCRested();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2280,6 +2330,7 @@
 			             	 <Literal>return GetLastRestEventType();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2314,6 +2365,7 @@
 			             	 <Literal>return GetItemActivated();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2344,6 +2396,7 @@
 			             	 <Literal>return GetItemActivatedTarget();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2371,6 +2424,7 @@
 			             	 <Literal>return GetItemActivatedTargetLocation();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2398,6 +2452,7 @@
 			             	 <Literal>return GetItemActivator();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2432,6 +2487,7 @@
 			             	 <Literal>return GetLastDisturbed();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2459,6 +2515,7 @@
 			             	 <Literal>return GetInventoryDisturbType();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2486,6 +2543,7 @@
 			             	 <Literal>return GetInventoryDisturbItem();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2526,6 +2584,7 @@
 			             	 <Literal>return GetLastLocked();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2553,6 +2612,7 @@
 			             	 <Literal>return GetLockLockDC();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2587,6 +2647,7 @@
 			             	 <Literal>return GetLastClosedBy();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2621,6 +2682,7 @@
 			             	 <Literal>return GetLastUsedBy();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2658,6 +2720,7 @@
 			             	 <Literal>return GetLastDamager();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2685,6 +2748,7 @@
 			             	 <Literal>return GetTotalDamageDealt();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2729,6 +2793,7 @@
 			              	<Literal>);</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2769,6 +2834,7 @@
 			             	 <Literal>return GetEnteringObject();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2803,6 +2869,7 @@
 			             	 <Literal>return GetLastClosedBy();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2858,6 +2925,7 @@
 			              	<Literal>);</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2888,6 +2956,7 @@
 			             	 <Literal>return GetLastDamager();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2930,6 +2999,7 @@
 							</Scope><Literal>);</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -2972,6 +3042,7 @@
 							</Scope><Literal>);</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3014,6 +3085,7 @@
 							</Scope><Literal>);</Literal>
 			              </Line>
 		              </Code>
+					  <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3047,7 +3119,8 @@
 			              <Line>
 			             	 <Literal>return GetModuleItemLost();</Literal>
 			              </Line>
-		              </Code>
+		               </Code>
+					  <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3076,6 +3149,7 @@
 			             	 <Literal>return GetModuleItemLostBy();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3110,6 +3184,7 @@
 			             	 <Literal>return GetLastPlayerDied();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3154,6 +3229,7 @@
 							<Literal>);</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3231,6 +3307,7 @@
 			              	<Literal>);</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3261,6 +3338,7 @@
 			             	 <Literal>return GetLastDamager();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3303,6 +3381,7 @@
 							</Scope><Literal>);</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3345,6 +3424,7 @@
 							</Scope><Literal>);</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3387,6 +3467,7 @@
 							</Scope><Literal>);</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3425,6 +3506,7 @@
 			             	 <Literal>return GetLastKiller();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3459,6 +3541,7 @@
 			             	 <Literal>return GetUserDefinedEventNumber();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3493,6 +3576,7 @@
 			             	 <Literal>return GetExitingObject();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3527,6 +3611,7 @@
 			             	 <Literal>return GetUserDefinedEventNumber();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3561,6 +3646,7 @@
 			             	 <Literal>return GetLastOpenedBy();</Literal>
 			              </Line>
 		              </Code>
+		              <Includes />
 	              </CodeBlock>
               </CodeBlocks>
             </ScriptIt>
@@ -3622,6 +3708,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3646,6 +3733,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3670,6 +3758,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3694,6 +3783,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3718,6 +3808,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3742,6 +3833,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3766,6 +3858,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3790,6 +3883,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3814,6 +3908,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3838,6 +3933,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3862,6 +3958,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3886,6 +3983,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3910,6 +4008,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3935,6 +4034,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3961,6 +4061,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3986,6 +4087,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4011,6 +4113,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4038,6 +4141,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4065,6 +4169,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4090,6 +4195,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4115,6 +4221,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4140,6 +4247,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4165,6 +4273,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4191,6 +4300,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4216,6 +4326,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4243,6 +4354,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4267,6 +4379,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4291,6 +4404,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4316,6 +4430,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4340,6 +4455,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4365,6 +4481,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4389,6 +4506,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4414,6 +4532,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4439,6 +4558,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4463,6 +4583,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4487,6 +4608,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4511,6 +4633,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4536,6 +4659,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4560,6 +4684,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4584,6 +4709,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4608,6 +4734,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4632,6 +4759,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4656,6 +4784,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4680,6 +4809,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4704,6 +4834,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4728,6 +4859,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4752,6 +4884,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4776,6 +4909,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4800,6 +4934,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4824,6 +4959,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4848,6 +4984,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4872,6 +5009,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4896,6 +5034,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4920,6 +5059,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4944,6 +5084,7 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -4978,6 +5119,7 @@
 						<Literal>);</Literal>
 					</Line>
 				</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5019,6 +5161,7 @@
 			          <Literal>));</Literal>
 			        </Line>
 				</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5060,6 +5203,7 @@
 			          <Literal>);</Literal>
 			        </Line> 
 				</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5090,6 +5234,7 @@
 			          <Literal>, GetFirstPC(), FALSE);</Literal>
 			        </Line>
 				</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5120,6 +5265,7 @@
 			          <Literal>, GetFirstPC(), FALSE);</Literal>
 			        </Line>
 				</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5161,6 +5307,7 @@
 			          <Literal>);</Literal>
 			        </Line>
 				</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5192,6 +5339,7 @@
 			          <Literal>);</Literal>
 			        </Line>
 				</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5236,6 +5384,7 @@
 			          <Literal>, SetFacingPoint(vFacing));</Literal>
 			        </Line>
 				</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5283,6 +5432,7 @@
 			        <Literal>);</Literal>
 		        </Line>
 		      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5324,9 +5474,10 @@
 			        <Literal>);</Literal>
 		        </Line>
 		      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
-    </ScriptIt>
+    </ScriptIt><!--10 ScriptIts-->
     <ScriptIt visible="true">
       <Name>&lt;Creature&gt; jumps &lt;Distance&gt; meters towards &lt;Location&gt;</Name>
       <Labels/>
@@ -5426,6 +5577,7 @@
 			          <Literal>, JumpToLocation(jumperLocation));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5469,6 +5621,7 @@
 			          <Literal>));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5514,6 +5667,7 @@
 			          <Literal>));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5568,6 +5722,7 @@
 			          <Literal>));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5622,6 +5777,7 @@
 				          <Literal>));</Literal>
 				        </Line>
 			      	</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5665,6 +5821,7 @@
 		          <Literal>));</Literal>
 		        </Line>
 		      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5698,6 +5855,7 @@
                 <Code>
 	       		 <Line reference="/APIDictionary/Effects/ScriptIt[16]/CodeBlocks/CodeBlock/Code/Line"/>
 	      		</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5746,6 +5904,7 @@
 			          <Literal>));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5783,6 +5942,7 @@
 			          <Literal>, PlayOldTheme());</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5815,10 +5975,11 @@
 			          <Literal>);</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
-    <ScriptIt visible="true">
+    <!--20 ScriptIts--><ScriptIt visible="true">
       <Name>Set &lt;Area&gt;&apos;s day background music to &lt;Daytime Track&gt;</Name>
       <Labels>
         <Label>NOW</Label>
@@ -5865,6 +6026,7 @@
 			          <Literal>k);</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5922,6 +6084,7 @@
 			          <Literal>);</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5965,6 +6128,7 @@
 			          <Literal>);</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -5997,6 +6161,7 @@
 			          <Literal>);</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6029,6 +6194,7 @@
 			          <Literal>);</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6065,6 +6231,7 @@
 			          <Literal></Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6124,6 +6291,7 @@
 			          <Literal>);</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6199,6 +6367,7 @@
 			          <Literal>));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6263,6 +6432,7 @@
 			          <Literal>));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6322,9 +6492,10 @@
 			          <Literal>));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
-    </ScriptIt>
+    </ScriptIt><!--30 ScriptIts-->
     <ScriptIt visible="true">
       <Name>&lt;Caster&gt; casts a known &lt;Spell&gt; on &lt;Target&gt;</Name>
       <Labels>
@@ -6386,6 +6557,7 @@
 			          <Literal>));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6445,6 +6617,7 @@
 		          <Literal>));</Literal>
 		        </Line>
 		      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6509,6 +6682,7 @@
 			          <Literal>, METAMAGIC_ANY, TRUE));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6568,6 +6742,7 @@
 			          <Literal>, METAMAGIC_ANY, TRUE));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6611,6 +6786,7 @@
 			          <Literal>);</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6665,6 +6841,7 @@
 			          <Literal>);</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6710,6 +6887,7 @@
 			          <Literal>);</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6764,6 +6942,7 @@
 			          <Literal>)));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6823,6 +7002,7 @@
 			          <Literal>));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6882,9 +7062,10 @@
 			          <Literal>));</Literal>
 			        </Line>
 			      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
-    </ScriptIt>
+    </ScriptIt><!--40 ScriptIts-->
     <ScriptIt visible="true">
       <Name>Show &lt;Caption&gt; above the PC</Name>
       <Labels/> 
@@ -6906,6 +7087,7 @@
 		      <Code>
 		        <Line reference="/APIDictionary/Effects/ScriptIt[5]/CodeBlocks/CodeBlock/Code/Line"/>
 		      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -6949,6 +7131,7 @@
 		          <Literal>);</Literal>
 		        </Line>
 		      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7008,6 +7191,7 @@
 		          <Literal>));</Literal>
 		        </Line>
 		      </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7053,6 +7237,7 @@
 		            <Code>
         <Line reference="/APIDictionary/Effects/ScriptIt[43]/CodeBlocks/CodeBlock/Code/Line"/>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7112,6 +7297,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7182,6 +7368,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7252,6 +7439,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7307,6 +7495,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7361,6 +7550,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7414,9 +7604,10 @@
           <Literal>, ActionDoCommand(SetTime(nHour, nMinute, nSecond, nMillisecond)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
-    </ScriptIt>
+    </ScriptIt><!--50 ScriptIts-->
     <ScriptIt visible="true">
       <Name>Advance the game&apos;s time by &lt;The Hours&gt; hours</Name>
       <Labels>
@@ -7462,6 +7653,7 @@
           <Literal>SetTime(nHour, nMinute, nSecond, nMillisecond);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7527,6 +7719,7 @@
           <Literal>, ActionDoCommand(SetTime(nHour, nMinute, nSecond, nMillisecond)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7616,6 +7809,7 @@
           <Literal>SetTime(nHour, nMinute, nSecond, nMillisecond);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7721,6 +7915,7 @@
           <Literal>, ActionDoCommand(SetTime(nHour, nMinute, nSecond, nMillisecond)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7775,6 +7970,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7818,6 +8014,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7877,6 +8074,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7920,6 +8118,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -7979,6 +8178,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8022,9 +8222,10 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
-    </ScriptIt>
+    </ScriptIt><!--60 ScriptIts-->
     <ScriptIt visible="true">
       <Name>Assign &lt;Binary Value&gt; to &lt;Target&gt;&apos;s variable labelled &lt;Label&gt;</Name>
       <Labels>
@@ -8081,6 +8282,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8124,6 +8326,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8183,6 +8386,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8247,6 +8451,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8297,6 +8502,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8348,6 +8554,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8394,6 +8601,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8440,6 +8648,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8491,6 +8700,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8537,9 +8747,10 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
-    </ScriptIt>
+    </ScriptIt><!--70 ScriptIts-->
     <ScriptIt visible="true">
       <Name>Show the &lt;Fired Effect&gt; fired visual effect at &lt;Location&gt;</Name>
       <Labels>
@@ -8583,6 +8794,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8653,6 +8865,7 @@
           <Literal>, ActionDoCommand(ApplyEffectAtLocation(DURATION_TYPE_INSTANT, veffect, loc)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8715,6 +8928,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8766,6 +8980,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8812,6 +9027,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8858,6 +9074,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8925,6 +9142,7 @@
           <Literal>))));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -8987,6 +9205,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9054,6 +9273,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9116,9 +9336,10 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
-    </ScriptIt>
+    </ScriptIt><!--80 ScriptIts-->
     <ScriptIt visible="true">
       <Name>Show the &lt;Beam Effect&gt; beam visual effect between &lt;Source&gt; and &lt;Target&gt; for &lt;Duration&gt; seconds</Name>
       <Labels>
@@ -9194,6 +9415,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9267,6 +9489,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9326,6 +9549,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9382,6 +9606,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9449,6 +9674,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9495,6 +9721,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9541,6 +9768,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9603,6 +9831,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9660,6 +9889,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9717,9 +9947,10 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
-    </ScriptIt>
+    </ScriptIt><!--90 ScriptIts-->
     <ScriptIt visible="true">
       <Name>Show the &lt;Area of Effect&gt; area of effect on &lt;Target&gt; for &lt;Duration&gt; seconds</Name>
       <Labels>
@@ -9765,6 +9996,7 @@
           <Literal></Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9797,6 +10029,7 @@
           <Literal>, ShoutDisturbed());</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9840,6 +10073,7 @@
           <Literal>, PLACEABLE_ACTION_BASH)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9883,6 +10117,7 @@
           <Literal>, PLACEABLE_ACTION_KNOCK)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9926,6 +10161,7 @@
           <Literal>, PLACEABLE_ACTION_UNLOCK)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -9969,6 +10205,7 @@
           <Literal>, PLACEABLE_ACTION_USE)));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -10008,6 +10245,9 @@
           <Literal>, &quot;SE_AUX_ORIGINAL_FACING&quot;, originalFacing);</Literal>
         </Line>
       </Code>
+					<Includes>
+						<Include>"i_se_aux"</Include>
+					</Includes>
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -10035,6 +10275,7 @@
         <Line reference="/APIDictionary/Effects/ScriptIt[97]/CodeBlocks/CodeBlock/Code/Line"/>
         <Line reference="/APIDictionary/Effects/ScriptIt[97]/CodeBlocks/CodeBlock/Code/Line[2]"/>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -10083,6 +10324,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -10121,9 +10363,10 @@
       <Code>
         <Line reference="/APIDictionary/Effects/ScriptIt[99]/CodeBlocks/CodeBlock/Code/Line"/>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
-    </ScriptIt>
+    </ScriptIt><!--100 ScriptIts-->
     <ScriptIt visible="true">
       <Name>&lt;Facing Creature&gt; faces &lt;Object To Face&gt;</Name>
       <Labels>
@@ -10172,6 +10415,7 @@
           <Literal>, SetFacingPoint(vFacing));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -10211,6 +10455,7 @@
         <Line reference="/APIDictionary/Effects/ScriptIt[101]/CodeBlocks/CodeBlock/Code/Line"/>
         <Line reference="/APIDictionary/Effects/ScriptIt[101]/CodeBlocks/CodeBlock/Code/Line[2]"/>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -10293,6 +10538,7 @@
           <Literal>, JumpToLocation(targetLocation));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -10343,6 +10589,7 @@
         <Line reference="/APIDictionary/Effects/ScriptIt[103]/CodeBlocks/CodeBlock/Code/Line[5]"/>
         <Line reference="/APIDictionary/Effects/ScriptIt[103]/CodeBlocks/CodeBlock/Code/Line[6]"/>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -10396,6 +10643,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -10439,6 +10687,7 @@
       <Code>
         <Line reference="/APIDictionary/Effects/ScriptIt[105]/CodeBlocks/CodeBlock/Code/Line"/>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -10487,6 +10736,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -10525,6 +10775,7 @@
 	 <Code>
         <Line reference="/APIDictionary/Effects/ScriptIt[107]/CodeBlocks/CodeBlock/Code/Line"/>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -10633,6 +10884,7 @@
           <Literal>, JumpToLocation(jumperLocation));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks></ScriptIt>
     <ScriptIt visible="true">
@@ -10692,9 +10944,10 @@
         <Line reference="/APIDictionary/Effects/ScriptIt[109]/CodeBlocks/CodeBlock/Code/Line[15]"/>
         <Line reference="/APIDictionary/Effects/ScriptIt[109]/CodeBlocks/CodeBlock/Code/Line[16]"/>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
-    </ScriptIt>
+    </ScriptIt><!--110 ScriptIts-->
     <ScriptIt visible="true">
       <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; meters towards &lt;Target&gt;</Name>
       <Labels>
@@ -10805,6 +11058,7 @@
           <Literal>, JumpToLocation(jumperLocation));</Literal>
         </Line>
       </Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
@@ -10873,6 +11127,7 @@
         <Line reference="/APIDictionary/Effects/ScriptIt[111]/CodeBlocks/CodeBlock/Code/Line[15]"/>
         <Line reference="/APIDictionary/Effects/ScriptIt[111]/CodeBlocks/CodeBlock/Code/Line[16]"/>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks></ScriptIt>
     <ScriptIt>
@@ -10905,6 +11160,7 @@
           <Literal>, ActionRandomWalk());</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks></ScriptIt>
     <ScriptIt>
@@ -10937,6 +11193,7 @@
           <Literal>, ActionDoCommand(WalkWayPoints()));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks></ScriptIt>
     <ScriptIt>
@@ -10976,6 +11233,7 @@
 <Code>
         <Line reference="/APIDictionary/Effects/ScriptIt[65]/CodeBlocks/CodeBlock/Code/Line"/>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -11045,6 +11303,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -11119,6 +11378,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -11188,6 +11448,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -11245,6 +11506,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -11331,9 +11593,10 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--120 ScriptIts-->
     <ScriptIt>
 <Name>&lt;Mover&gt; &lt;walk&gt;s within &lt;Distance&gt; meters of &lt;Target&gt;</Name>
 <Labels>
@@ -11411,6 +11674,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -11479,6 +11743,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -11586,6 +11851,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -11698,6 +11964,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -11822,6 +12089,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -11951,6 +12219,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12008,6 +12277,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12082,6 +12352,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12115,6 +12386,9 @@
           <Literal>, SCEZ_Behaviour_CancelTaskOnTopQueue());</Literal>
         </Line>
       </Code>
+					<Includes>
+						<Include>"i_se_behav"</Include>
+					</Includes>
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12153,9 +12427,10 @@
           <Literal>, ClearAllActions(TRUE));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--130 ScriptIts-->
     <ScriptIt>
 <Name>&lt;Interactor&gt; interacts with &lt;Target&gt;</Name>
 <Labels>
@@ -12208,6 +12483,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12253,6 +12529,7 @@
 <Code>
         <Literal></Literal>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12301,6 +12578,7 @@
         <Literal></Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12406,6 +12684,7 @@
           <Literal>ApplyEffectToObject(DURATION_TYPE_INSTANT, eVisual, oPlayer);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12467,6 +12746,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12500,6 +12780,7 @@
           <Literal>, ActionRest());</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12545,6 +12826,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12607,6 +12889,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12657,6 +12940,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12697,9 +12981,10 @@
 <Code>
         <Line reference="/APIDictionary/Effects/ScriptIt[139]/CodeBlocks/CodeBlock/Code/Line"/>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--140 ScriptIts-->
     <ScriptIt>
 <Name>&lt;Creature&gt; sits on &lt;Target&gt; (Note: No (TODO) actions can follow)</Name>
 <Labels>
@@ -12747,6 +13032,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12797,6 +13083,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12835,6 +13122,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12890,6 +13178,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12931,6 +13220,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -12989,6 +13279,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13039,6 +13330,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13084,6 +13376,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13146,6 +13439,9 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes>
+						<Include>"i_se_aux"</Include>
+					</Includes>
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13193,9 +13489,10 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--150 ScriptIts-->
     <ScriptIt>
 <Name>&lt;Creator&gt; creates an item from &lt;Item Blueprint&gt; and places it in &lt;Container&gt;</Name>
 <Labels>
@@ -13256,6 +13553,9 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes>
+						<Include>"i_se_aux"</Include>
+					</Includes>
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13309,6 +13609,7 @@
           <Literal>), loc);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13379,6 +13680,9 @@
           <Literal>), loc)));</Literal>
         </Line>
       </Code>
+					<Includes>
+						<Include>"i_se_aux"</Include>
+					</Includes>
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13424,6 +13728,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13486,6 +13791,9 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes>
+						<Include>"i_se_aux"</Include>
+					</Includes>
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13539,6 +13847,7 @@
           <Literal>), loc);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13609,6 +13918,9 @@
           <Literal>), loc)));</Literal>
         </Line>
       </Code>
+					<Includes>
+						<Include>"i_se_aux"</Include>
+					</Includes>
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13642,6 +13954,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13690,6 +14003,7 @@
           <Literal>, loc);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13755,9 +14069,12 @@
           <Literal>, loc)));</Literal>
         </Line>
       </Code>
+					<Includes>
+						<Include>"i_se_aux"</Include>
+					</Includes>
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--160 ScriptIts-->
     <ScriptIt>
 <Name>Spawn &apos;label&apos; from &lt;Creature Blueprint&gt; near &lt;Target&gt;</Name>
 <Labels>
@@ -13808,6 +14125,7 @@
           <Literal>, loc);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13861,6 +14179,7 @@
 <Code>
         <Literal></Literal>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13906,6 +14225,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -13973,6 +14293,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14023,6 +14344,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14090,6 +14412,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14135,6 +14458,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14197,6 +14521,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14271,6 +14596,7 @@
           <Literal>))));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14345,9 +14671,10 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--170 ScriptIts-->
     <ScriptIt>
 <Name>&lt;Unlock&gt; &lt;Placeable&gt;</Name>
 <Labels>
@@ -14390,6 +14717,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14452,6 +14780,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14526,6 +14855,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14605,6 +14935,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14696,6 +15027,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14729,6 +15061,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14779,6 +15112,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14812,6 +15146,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14853,6 +15188,7 @@
 <Code>
         <Line reference="/APIDictionary/Effects/ScriptIt[177]/CodeBlocks/CodeBlock/Code/Line"/>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14910,9 +15246,10 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--180 ScriptIts-->
     <ScriptIt>
 <Name>Attack &lt;Target&gt;</Name>
 <Labels>
@@ -14948,6 +15285,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -14998,6 +15336,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15063,6 +15402,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15145,6 +15485,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15178,6 +15519,7 @@
           <Literal>, ActionDoCommand(DetermineCombatRound()));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15231,6 +15573,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15301,6 +15644,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15358,6 +15702,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15427,6 +15772,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15460,9 +15806,10 @@
           <Literal>, SurrenderToEnemies());</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--190 ScriptIts-->
     <ScriptIt>
 <Name>&lt;Surrenderer&gt; surrenders to its enemies</Name>
 <Labels>
@@ -15487,6 +15834,7 @@
 <Code>
         <Line reference="/APIDictionary/Effects/ScriptIt[190]/CodeBlocks/CodeBlock/Code/Line"/>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15537,6 +15885,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15587,6 +15936,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15637,6 +15987,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15676,6 +16027,9 @@
           <Literal>SetLocalInt(aCreature, &quot;SE_AUX_APPEARANCE_TYPE_SET&quot;, 1);</Literal>
         </Line>
       </Code>
+					<Includes>
+						<Include>"i_se_aux"</Include>
+					</Includes>
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15721,6 +16075,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15778,6 +16133,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15823,6 +16179,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15880,6 +16237,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -15913,9 +16271,10 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--200 ScriptIts-->
     <ScriptIt>
 <Name>Apply cutscene ghost effect to &lt;The Target&gt; for &lt;The Duration&gt; seconds</Name>
 <Labels>
@@ -15958,6 +16317,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16008,6 +16368,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16070,6 +16431,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16103,6 +16465,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16153,6 +16516,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16215,6 +16579,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16248,6 +16613,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16293,6 +16659,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16343,6 +16710,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16405,9 +16773,10 @@
           <Literal>)))</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--210 ScriptIts-->
     <ScriptIt>
 <Name>&lt;The Activator&gt; triggers a store the PC&apos;s camera facing</Name>
 <Labels>
@@ -16443,6 +16812,7 @@
           <Literal>, ActionDoCommand(StoreCameraFacing()));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16481,6 +16851,7 @@
           <Literal>, ActionDoCommand(RestoreCameraFacing()));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16543,6 +16914,7 @@
           <Literal>)))</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16605,6 +16977,7 @@
           <Literal>)))</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16655,6 +17028,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16717,6 +17091,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16762,6 +17137,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16819,6 +17195,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16877,6 +17254,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -16935,9 +17313,10 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--220 ScriptIts-->
     <ScriptIt>
 <Name>&lt;The Activator&gt; triggers a stop all fade effects on &lt;The Target&gt;</Name>
 <Labels>
@@ -16985,6 +17364,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17024,6 +17404,7 @@
           <Literal>}</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17080,6 +17461,7 @@
           <Literal>}</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17119,6 +17501,7 @@
           <Literal>  }</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17169,6 +17552,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17214,6 +17598,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17259,6 +17644,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17340,6 +17726,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17397,6 +17784,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17454,9 +17842,10 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--230 ScriptIts-->
     <ScriptIt>
 <Name>End the module with movie &lt;End Movie&gt; after &lt;Delay Time&gt; seconds</Name>
 <Labels>
@@ -17499,6 +17888,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17552,6 +17942,7 @@
 <Code>
         <Line reference="/APIDictionary/Effects/ScriptIt[64]/CodeBlocks/CodeBlock/Code/Line"/>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17610,6 +18001,7 @@
           <Literal>  }</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17680,6 +18072,7 @@
           <Literal>  }</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17757,6 +18150,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17822,6 +18216,7 @@
           <Literal>) );</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17891,6 +18286,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -17977,6 +18373,7 @@
           <Literal>)));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18010,6 +18407,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18060,9 +18458,10 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--240 ScriptIts-->
     <ScriptIt>
 <Name>Assign &lt;Amount&gt; XP to &lt;Recipient&gt;</Name>
 <Labels>
@@ -18105,6 +18504,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18162,6 +18562,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18207,6 +18608,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18256,6 +18658,7 @@
           <Literal>, TRUE));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18297,6 +18700,7 @@
           <Literal>, TRUE));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18346,6 +18750,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18391,6 +18796,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18453,6 +18859,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18498,6 +18905,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18531,9 +18939,10 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--250 ScriptIts-->
     <ScriptIt>
 <Name>Destroy &lt;The Number&gt; items of type &lt;The Item Blueprint&gt; in the inventory of &lt;The Container&gt;, &lt;not including its equipped items&gt;</Name>
 <Labels>
@@ -18726,6 +19135,7 @@
           <Literal>    }</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18783,6 +19193,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18828,6 +19239,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18860,6 +19272,7 @@
           <Literal>, ActionEquipMostEffectiveArmor());</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
     </ScriptIt>
@@ -18905,6 +19318,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -18950,6 +19364,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19009,6 +19424,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19054,6 +19470,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19099,6 +19516,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19144,9 +19562,10 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--260 ScriptIts-->
     <ScriptIt>
 <Name>Set the stack size of &lt;The Item&gt; to &lt;The Stack Size&gt;</Name>
 <Labels>
@@ -19189,6 +19608,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19234,6 +19654,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19296,6 +19717,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19355,6 +19777,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19405,6 +19828,7 @@
           <Literal>));</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19474,6 +19898,7 @@
           <Literal>}</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19522,6 +19947,7 @@
           <Literal>  }</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19587,6 +20013,7 @@
           <Literal>  }</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19644,6 +20071,7 @@
           <Literal>  }</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19671,9 +20099,10 @@
 <Code>
         <Literal></Literal>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-</ScriptIt>
+</ScriptIt><!--270 ScriptIts-->
     <ScriptIt>
 <Name>Apply the death effect to all objects with the same tag as &lt;The Object&gt;</Name>
 <Labels>
@@ -19739,6 +20168,7 @@
           <Literal>  }</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19810,6 +20240,7 @@
           <Literal>  }</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19871,6 +20302,7 @@
           <Literal>}</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -19955,6 +20387,7 @@
           <Literal>}</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -20027,6 +20460,7 @@
           <Literal>}</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -20077,6 +20511,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -20110,6 +20545,7 @@
           <Literal>, OBJECT_SELF);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
@@ -20142,6 +20578,7 @@
 							<Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
     </ScriptIt>
@@ -20174,6 +20611,7 @@
 							<Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
     </ScriptIt>
@@ -20215,9 +20653,10 @@
           <Literal>;</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
-    </ScriptIt>
+    </ScriptIt><!--280 ScriptIts-->
     <ScriptIt visible="false">
       <Name>Random Creature &lt;with Object Tag&gt;</Name>
       <Labels/>
@@ -20245,6 +20684,9 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes>
+						<Include>"i_se_aux"</Include>
+					</Includes>
 </CodeBlock>
 </CodeBlocks>
     </ScriptIt>
@@ -20263,6 +20705,7 @@
           <Literal>return GetLastPerceived();</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
     </ScriptIt>
@@ -20281,6 +20724,7 @@
           <Literal>return GetLastPerceptionHeard();</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
     </ScriptIt>
@@ -20299,6 +20743,7 @@
           <Literal>return GetLastPerceptionInaudible();</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
     </ScriptIt>
@@ -20317,6 +20762,7 @@
           <Literal>return GetLastPerceptionSeen();</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
     </ScriptIt>
@@ -20335,6 +20781,7 @@
           <Literal>return GetLastPerceptionVanished();</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
     </ScriptIt>
@@ -20376,6 +20823,9 @@
 			<Literal>));</Literal>
         </Line>
       </Code>
+      <Includes>
+      	<Include>"nw_i0_plot"</Include>
+      </Includes>
 </CodeBlock>
 </CodeBlocks>
     </ScriptIt>
@@ -20406,11 +20856,12 @@
           <Literal>;</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
     </ScriptIt>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[12]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[12]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[12]"/><!--290 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[278]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[279]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[280]"/>
@@ -20420,7 +20871,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[284]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[285]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[286]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[287]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[287]"/><!--300 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[288]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[12]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[278]"/>
@@ -20430,7 +20881,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[282]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[283]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[284]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[285]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[285]"/><!--310 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[286]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[287]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[288]"/>
@@ -20440,7 +20891,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[280]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[281]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[282]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[283]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[283]"/><!--320 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[284]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[285]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[286]"/>
@@ -20450,7 +20901,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[278]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[279]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[280]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[281]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[281]"/><!--330 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[282]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[283]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[284]"/>
@@ -20460,7 +20911,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[288]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[12]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[13]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[14]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[14]"/><!--340 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[15]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[16]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[278]"/>
@@ -20470,7 +20921,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[282]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[283]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[284]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[285]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[285]"/><!--350 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[286]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[287]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[288]"/>
@@ -20480,7 +20931,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[280]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[281]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[282]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[283]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[283]"/><!--360 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[284]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[285]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[286]"/>
@@ -20490,7 +20941,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[20]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[23]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[24]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[25]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[25]"/><!--370 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[27]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[28]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[29]"/>
@@ -20500,7 +20951,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[33]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[34]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[35]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[36]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[36]"/><!--380 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[37]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[38]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[39]"/>
@@ -20510,7 +20961,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[45]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[46]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[47]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[48]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[48]"/><!--390 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[49]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[55]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[56]"/>
@@ -20520,7 +20971,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[60]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[61]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[62]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[63]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[63]"/><!--400 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[64]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[65]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[92]"/>
@@ -20530,7 +20981,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[96]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[105]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[107]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[113]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[113]"/><!--410 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[114]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[116]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[117]"/>
@@ -20540,7 +20991,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[121]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[122]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[128]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[127]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[127]"/><!--420 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[129]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[130]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[131]"/>
@@ -20550,7 +21001,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[139]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[141]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[142]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[143]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[143]"/><!--430 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[144]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[147]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[148]"/>
@@ -20560,7 +21011,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[155]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[158]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[159]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[160]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[160]"/><!--440 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[163]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[164]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[165]"/>
@@ -20570,7 +21021,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[169]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[171]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[172]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[176]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[176]"/><!--450 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[177]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[178]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[177]"/>
@@ -20580,8 +21031,8 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[185]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[188]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[189]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[190]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[192]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[190]"/><!--460 ScriptIts-->
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[192]"></ScriptIt>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[193]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[194]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[196]"/>
@@ -20590,18 +21041,18 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[199]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[200]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[201]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[202]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[202]"/><!--470 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[203]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[204]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[205]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[205]"></ScriptIt>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[206]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[207]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[208]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[209]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[209]"></ScriptIt>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[210]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[211]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[212]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[213]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[212]"/><!--480 ScriptIts-->
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[213]"></ScriptIt>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[214]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[215]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[216]"/>
@@ -20610,7 +21061,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[219]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[220]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[221]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[226]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[226]"/><!--490 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[227]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[229]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[230]"/>
@@ -20620,7 +21071,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[241]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[242]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[243]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[244]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[244]"/><!--500 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[245]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[246]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[247]"/>
@@ -20630,7 +21081,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[253]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[254]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[255]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[256]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[256]"/><!--510 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[257]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[258]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[259]"/>
@@ -20640,7 +21091,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[263]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[264]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[265]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[266]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[266]"/><!--520 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[276]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[277]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[278]"/>
@@ -20650,7 +21101,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[282]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[283]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[284]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[285]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[285]"/><!--530 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[286]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[287]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[288]"/>
@@ -20660,7 +21111,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[279]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[280]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[281]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[282]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[282]"/><!--540 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[283]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[284]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[285]"/>
@@ -20670,7 +21121,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[5]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[50]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[51]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[52]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[52]"/><!--550 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[53]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[54]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[66]"/>
@@ -20680,7 +21131,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[70]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[71]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[72]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[73]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[73]"/><!--560 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[74]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[75]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[76]"/>
@@ -20690,7 +21141,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[80]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[81]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[82]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[83]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[83]"/><!--570 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[84]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[85]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[86]"/>
@@ -20700,7 +21151,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[90]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[97]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[99]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[101]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[101]"/><!--580 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[103]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[109]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[111]"/>
@@ -20710,7 +21161,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[126]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[134]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[135]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[145]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[145]"/><!--590 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[233]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[146]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[149]"/>
@@ -20720,7 +21171,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[159]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[160]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[157]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[153]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[153]"/><!--600 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[161]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[173]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[170]"/>
@@ -20730,7 +21181,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[184]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[186]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[187]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[195]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[195]"/><!--610 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[222]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[223]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[224]"/>
@@ -20740,7 +21191,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[235]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[236]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[237]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[238]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[238]"/><!--620 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[250]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[251]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[266]"/>
@@ -20750,8 +21201,8 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[271]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[272]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[273]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[274]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[275]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[274]"/><!--630 ScriptIts-->
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[275]"></ScriptIt>
 	<ScriptIt visible="true">
 			<Name>&lt;Enable&gt; the &lt;dialogue line&gt;</Name>
 			<Labels/>
@@ -20791,6 +21242,7 @@
 							<Literal>);</Literal>
 						</Line>
 					</Code>
+					<Includes />
 				</CodeBlock>
 				<!-- Check for the conversation node Enable -->
 				<CodeBlock subject="dialogue line" slot="Active">
@@ -20809,6 +21261,7 @@
 							<Literal>);</Literal>
 						</Line>
 					</Code>
+					<Includes />
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -20841,6 +21294,9 @@
 							<Literal>);</Literal>
 						</Line>
 					</Code>
+					<Includes>
+						<Include>i_se_quest2</Include>
+					</Includes>
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -20871,6 +21327,9 @@
 							<Literal>);</Literal>
 						</Line>
 					</Code>
+					<Includes>
+						<Include>i_se_quest2</Include>
+					</Includes>
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -20935,6 +21394,9 @@
 							<Literal> + QUEST_POINT_ACTIVE, 1);</Literal></Line>
 						</Scope>
 					</Code>
+					<Includes>
+						<Include>i_se_quest2</Include>
+					</Includes>
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -20991,6 +21453,7 @@
 					  <Literal>));</Literal>
 			        </Line>
 				</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
 	</ScriptIt>
@@ -21045,6 +21508,7 @@
 					  <Literal>));</Literal>
 			        </Line>
 				</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
 	</ScriptIt>
@@ -21099,6 +21563,7 @@
 					  <Literal>));</Literal>
 			        </Line>
 				</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
 	</ScriptIt>
@@ -21150,10 +21615,31 @@
 					  <Literal>)));</Literal>
 			        </Line>
 				</Code>
+					<Includes />
 			</CodeBlock>
 		</CodeBlocks>
 	</ScriptIt>
-	
+	<ScriptIt visible="false">
+      <Name>The Player Character</Name>
+      <Labels/>
+                            <Children/>
+<CodeBlocks>
+<CodeBlock>
+<Types>
+        <Type>creature</Type>
+      </Types>
+      <Parameters/>
+      <Code>
+        <Line>
+          <Literal>return GetFirstPC();</Literal>
+        </Line>
+      </Code>
+					<Includes />
+</CodeBlock>
+</CodeBlocks>
+    </ScriptIt>
+    <!--640 ScriptIts-->
+
   </Effects>
   <DescribeIts>
     <KnowIt visible="true">
@@ -21403,6 +21889,7 @@
                     <Literal>);</Literal>
                   </Line>
                 </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
               </ScriptIt>
@@ -21459,6 +21946,7 @@
                     <Literal>return obj;</Literal>
                   </Line>
                 </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
               </ScriptIt>
@@ -21510,6 +21998,7 @@
                     <Literal>);</Literal>
                   </Line>
                 </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
               </ScriptIt>
@@ -21550,6 +22039,7 @@
                     <Literal>);</Literal>
                   </Line>
                 </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
               </ScriptIt>
@@ -21602,6 +22092,7 @@
                     <Literal>);</Literal>
                   </Line>
                 </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
               </ScriptIt>
@@ -21674,6 +22165,7 @@
                     <Literal>return obj;</Literal>
                   </Line>
                 </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
               </ScriptIt>
@@ -21727,6 +22219,9 @@
 								<Literal>);</Literal>
 							</Line>
 						</Code>
+					<Includes>
+						<Include>i_se_quest2</Include>
+					</Includes>
 					</CodeBlock>
 				</CodeBlocks>
 			</ScriptIt>
@@ -21766,6 +22261,9 @@
 								<Literal>);</Literal>
 							</Line>
 						</Code>
+					<Includes>
+						<Include>i_se_quest2</Include>
+					</Includes>
 					</CodeBlock>
 				</CodeBlocks>
 			</ScriptIt>
@@ -21818,12 +22316,23 @@
 							<Literal>);</Literal>
 						</Line>
 						</Code>
+					<Includes />
 						</CodeBlock>
 				</CodeBlocks>
 		</ScriptIt>
 		</Binding>
 	</KnowIt>
 	<!-- QUEST POINTS-->
+	<KnowIt visible="true">
+      <Name>The Player Character</Name>
+      <Labels/>
+      <Types>
+        <Type>creature</Type>
+      </Types>
+      <Binding flavour="function">
+        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[640]"></ScriptIt>
+      </Binding>
+    </KnowIt>
   </DescribeIts>
   <TypeConverters>
     <ScriptIt visible="false">
@@ -21858,6 +22367,7 @@
           <Literal>);</Literal>
         </Line>
       </Code>
+					<Includes />
 </CodeBlock>
 </CodeBlocks>
     </ScriptIt>
