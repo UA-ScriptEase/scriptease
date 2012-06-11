@@ -145,17 +145,12 @@ public final class ErfFile implements GameModule {
 		List<ResourceListElement> elementIndexes = this.readResourceIndexList();
 
 		// create NWNResources for each ErfKey/ResourceListElement pair
-		for (int index = 0; index < this.entryCount - 1; index++) {
+		for (int index = 0; index < this.entryCount; index++) {
 			NWNResource resource = new NWNResource(keys.get(index),
 					elementIndexes.get(index));
 
-			//if (!resource.isScriptEaseGenerated()) {
 				this.resources.add(resource);
-			//	this.ungeneratedResources.add(resource);
-			//}
 		}
-		
-//		System.out.println("Ungenerated Resources: " + this.ungeneratedResources.size());
 	}
 
 	/**
@@ -489,7 +484,6 @@ public final class ErfFile implements GameModule {
 													if(fieldLabels2.get(labelIndex2).equals(scriptInfo.getSlot())) {
 														System.out.println("Adding script " + scriptResRef + " to " + scriptInfo.getSlot());
 														individualFieldStructField2.getGFF().setField(individualFieldStructField2, scriptResRef);
-														
 														break;
 													}
 												}
@@ -580,6 +574,7 @@ public final class ErfFile implements GameModule {
 		
 		System.out.println("Parsing sources..");
 		for(NWNResource resource: this.resources) {
+			System.out.println("this.resources: " + resource.getResRef());
 			if(resource.isScriptEaseGenerated()) {
 				generatedResources.add(resource);
 			}
@@ -920,44 +915,26 @@ public final class ErfFile implements GameModule {
 			@Override
 			public int compare(NWNResource nwnResource1,
 					NWNResource nwnResource2) {
-				
-				String nwnResourceString1 = nwnResource1.getResRef().toUpperCase();
-				nwnResourceString1 += ErfKey.extensionMap.get(nwnResource1.getResType());
 
-				String nwnResourceString2 = nwnResource2.getResRef().toUpperCase();
-				nwnResourceString2 += ErfKey.extensionMap.get(nwnResource2.getResType());
+				String nwnResourceString1 = nwnResource1.getResRef()
+						.toUpperCase();
+
+				String nwnResourceString2 = nwnResource2.getResRef()
+						.toUpperCase();
 				
-				return nwnResourceString1.trim().compareTo(nwnResourceString2.trim());
+				int resRefComparison = nwnResourceString1
+						.compareTo(nwnResourceString2);
+				
+				if (resRefComparison == 0) {
+					String extension1 = ErfKey.extensionMap.get(new Integer(nwnResource1.getResType()));
+					String extension2 = ErfKey.extensionMap.get(new Integer(nwnResource2.getResType()));
+
+					return extension1.trim().compareTo(extension2.trim());
+				} else {
+					return resRefComparison;
+				}
 			}
 		};
-		
-		/*TODO: Come back to this. The above submethod won't sort files correctly as it adds
-		 * filenames first. The files should be sorted first by name, and only by filename if 
-		 * they share a name. E.g. SE_0.abc will come after SE_01.abc in the current 
-		 * implementation.
-		 * 
-		 * public int compare(NWNResource nwnResource1,
-				NWNResource nwnResource2) {
-
-			final String nwnResourceString1 = nwnResource1.getResRef()
-					.toUpperCase();
-
-			final String nwnResourceString2 = nwnResource2.getResRef()
-					.toUpperCase();
-
-			final int resRefComparison = nwnResourceString1.compareTo(
-					nwnResourceString2);
-			
-			if (resRefComparison == 0) {
-				
-				final String extension1 = ErfKey.extensionMap.get(nwnResource1.getResType()).trim();
-				final String extension2 = ErfKey.extensionMap.get(nwnResource2.getResType()).trim();
-				
-				return extension1.compareTo(extension2);
-			} else
-				return resRefComparison;
-		}*/
-		
 		Collections.sort(this.resources, nwnResourceComparator);
 		
 		for (NWNResource resource : this.resources) {
@@ -968,7 +945,7 @@ public final class ErfFile implements GameModule {
 			resource.cacheData(oldFile);
 		}
 
-		// now write out the ErfKey segment
+		// Writes out the ErfKey segment (i.e. palcuses, se_* file names etc)
 		this.fileAccess.seek(this.OffsetToKeyList);
 		for (NWNResource resource : this.resources) {
 			resource.writeErfKey(this.fileAccess);
@@ -977,10 +954,21 @@ public final class ErfFile implements GameModule {
 		// calculate changes if the resource is a GFF
 		// and if the GFF has been modified.
 		for (NWNResource resource : this.resources) {
-			if (resource.isGFF() && resource.getGFF().hasChanges())
+			if (resource.isGFF() && resource.getGFF().hasChanges()) {
+				System.out.println("###### Updating for Changes... ");
 				resource.updateForChanges(this.fileAccess);
+			}
 		}
+		
+		// Write null bytes at end of erf key segment until resourcelist.
 
+		System.out.println("Offset is at: " +this.OffsetToResourceList +"Offset To Key List at " + this.OffsetToKeyList);
+		long erfKeySize = this.OffsetToKeyList + this.resources.size()*24;
+		long nullCount = this.OffsetToResourceList - erfKeySize;
+		System.out.println("Nullcount = " +nullCount+" Erf Key size: "+erfKeySize);
+		this.fileAccess.seek(erfKeySize);
+		this.fileAccess.writeNullBytes((int) (nullCount));
+		
 		// then, write out the ResourceListElements
 		this.fileAccess.seek(this.OffsetToResourceList);
 		for (NWNResource resource : this.resources) {
@@ -1131,63 +1119,6 @@ public final class ErfFile implements GameModule {
 		}
 
 		/**
-		 * Builds a new NWNResource that contains the two bits of indexing
-		 * information required by the file format as well as the
-		 * GenenericFileFormat it represents. Use this constructor for
-		 * ScriptEase-generated data that is a GFF. For anything else, use
-		 * {@link #NWNResource(String resRef, short fileType, byte[] data)}.
-		 * 
-		 * @param resRef
-		 *            The unique ResRef that represents this resource. The
-		 *            constructor does not enforce the uniqueness; that
-		 *            responsibility is left up to the caller.
-		 * @param fileType
-		 *            The type of this resource as per the ErfKey file type
-		 *            constants.
-		 * @param object
-		 *            The NWNObject that contains the data represented by this
-		 *            NWNResource.
-		 * @throws IOException
-		 */
-		// while unsued, it still may be of use later. - remiller
-		@SuppressWarnings("unused")
-		public NWNResource(String resRef, NWNObject object) {
-			final ResourceListElement newEntry;
-			final ErfKey newKey;
-			final GenericFileFormat gff;
-
-			gff = new GenericFileFormat(object);
-
-			// the next resourceID is the same as the number of entries (IDs go
-			// up to entryCount-1)
-			newKey = new ErfKey(resRef, ErfFile.this.entryCount,
-					ErfKey.getTypeConstant(gff.getScriptEaseType()));
-
-			// this resourceOffset isn't the final one. It's replaced by a real
-			// offset on save. The value I'm initialising it to here is just a
-			// defensive placeholder that should point to a location past the
-			// end of the original file, so we don't accidentally clobber
-			// something
-			int resourceOffset;
-			long fileSize = 0;
-			try {
-				fileSize = ErfFile.this.fileAccess.length();
-			} catch (IOException e) {
-				// somehow failed to read the file length. Just use zero.
-				fileSize = 0;
-			}
-			resourceOffset = (int) (fileSize - ErfFile.this.OriginalOffsetToResourceData);
-
-			newEntry = new ResourceListElement(resourceOffset,
-					gff.getByteLength());
-
-			this.key = newKey;
-			this.resourceListEntry = newEntry;
-			this.gff = gff;
-			this.byteData = null;
-		}
-
-		/**
 		 * Reads this NWNResource's data as a byte array. If the data is already
 		 * in memory, then that is returned and no reading is performed. <br>
 		 * <br>
@@ -1261,9 +1192,11 @@ public final class ErfFile implements GameModule {
 		 */
 		public void updateForChanges(ScriptEaseFileAccess reader) {
 			final int sizeDifference = this.gff.calculateSizeDifference(reader);
+			
+			//System.out.println("######## Size Difference: " +sizeDifference);
 
-			// don't shrink
 			if (sizeDifference > 0) {
+				//System.out.println("$$$$$$: ResourceListEntrySize: "+this.resourceListEntry.getResourceSize());
 				this.resourceListEntry.setResourceSize(this.resourceListEntry
 						.getResourceSize() + sizeDifference);
 
@@ -1525,13 +1458,6 @@ public final class ErfFile implements GameModule {
 					|| (this.resType == JOURNAL_FILE_TYPE)
 					|| (this.resType == WAYPOINT_BLUEPRINT_TYPE)
 					|| (this.resType == PLOT_INSTANCE_TYPE);
-		}
-
-		public static short getTypeConstant(String scriptEaseType) {
-			System.err
-					.println("Can't convert a GameType to a ErfKey type constant yet!");
-			// TODO Auto-generated method stub
-			return 0;
 		}
 	}
 

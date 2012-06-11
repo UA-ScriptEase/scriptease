@@ -135,41 +135,6 @@ public class GenericFileFormat {
 		this.buildObject(reader);
 	}
 
-	/**
-	 * Creates a new GFF that represents the given blueprint.
-	 * 
-	 * Does not actually do anything yet, and is not used yet either.
-	 * 
-	 * @param blueprint
-	 *            The blueprint to represent as a GFF.
-	 */
-	public GenericFileFormat(NWNObject object) {
-		this.resRef = object.getTemplateID();
-		// TODO: fill out this constructor to be useful
-		System.err
-				.println("GFF from blueprint constructor doesn't do anything yet!");
-
-		this.fileType = null;
-		this.version = "V3.2 ";
-		this.structOffset = 0L;
-		this.structCount = 0L;
-		this.fieldOffset = 0L;
-		this.fieldCount = 0L;
-		this.labelOffset = 0L;
-		this.labelCount = 0L;
-		this.fieldDataOffset = 0L;
-		this.fieldDataCount = 0L;
-		this.fieldIndicesOffset = 0L;
-		this.fieldIndicesCount = 0L;
-		this.listIndicesOffset = 0L;
-		this.listIndicesCount = 0L;
-
-		this.structArray = null;
-		this.labelArray = null;
-		this.fieldArray = null;
-		this.changedFieldMap = null;
-	}
-
 	public long getFieldIndicesOffset() {
 		return this.fieldIndicesOffset;
 	}
@@ -1634,7 +1599,7 @@ public class GenericFileFormat {
 					newData = newData.toLowerCase();
 
 					writer.writeByte(newData.length());
-
+					
 					writer.writeString(newData, newData.length());
 
 					break;
