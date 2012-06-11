@@ -3783,7 +3783,9 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
-					<Includes />
+					<Includes>
+						<Include>"i_se_aux"</Include>
+					</Includes>
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -20662,32 +20664,32 @@
       <Labels/>
                        <Children/>
 <CodeBlocks>
-<CodeBlock>
-<Types>
-        <Type>creature</Type>
-      </Types>
-      <Parameters>
-        <KnowIt visible="true">
-          <Name>with Object Tag</Name>
-          <Labels/>
-          <Types>
-            <Type>string</Type>
-          </Types>
-        </KnowIt>
-      </Parameters>
-      <Code>
-        <Line>
-          <Literal>return SE_AUX_GetRandomObjectWithoutSelf(</Literal>
-          <Scope data="argument" ref="with Object Tag">
-            <Fragment data="name"/>
-          </Scope>
-          <Literal>);</Literal>
-        </Line>
-      </Code>
-					<Includes>
-						<Include>"i_se_aux"</Include>
-					</Includes>
-</CodeBlock>
+	<CodeBlock>
+		<Types>
+			<Type>creature</Type>
+		</Types>
+		<Parameters>
+			<KnowIt visible="true">
+		   		<Name>with Object Tag</Name>
+		    	<Labels/>
+		    	<Types>
+		    		<Type>string</Type>
+		    	</Types>
+		   	</KnowIt>
+		</Parameters>
+		<Code>
+			<Line>
+				<Literal>return SE_AUX_GetRandomObjectWithoutSelf(</Literal>
+				<Scope data="argument" ref="with Object Tag">
+		    		<Fragment data="name"/>
+		      	</Scope>
+			    <Literal>);</Literal>
+		    </Line>
+		</Code>
+		<Includes>
+			<Include>"i_se_aux"</Include>
+		</Includes>
+	</CodeBlock>
 </CodeBlocks>
     </ScriptIt>
     <ScriptIt visible="false">

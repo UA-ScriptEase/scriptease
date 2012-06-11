@@ -125,6 +125,12 @@ Formats
 				<Literal>;</Literal>
 			</Line>
 		</Format>
+		<Format id="includeHeader">
+			<Line>
+				<Literal>#include </Literal>
+				<Fragment data="include" />
+			</Line>
+		</Format>
 		<Format id="functionHeader">
 			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			<Literal>(</Literal>
@@ -247,8 +253,8 @@ Formats
 			<Line>
 				<Literal>//Includes</Literal>
 			</Line>
-			<Series data="imports" unique="true">
-				<FormatRef ref="import" />
+			<Series data="includes" unique="true">
+				<FormatRef ref="includeHeader" />
 			</Series>
 			<Line/>
 			<Line>
@@ -290,8 +296,8 @@ Formats
 			<Line>
 				<Literal>//Includes</Literal>
 			</Line>
-			<Series data="imports" unique="true">
-				<FormatRef ref="import" />
+			<Series data="includes" unique="true">
+				<FormatRef ref="includeHeader" />
 			</Series>
 			<Line/>
 			<Line>
@@ -338,21 +344,14 @@ Formats
 			<Line/>
 		</Format>
 
-		<Format id="import">
-			<Line>
-				<Literal>#include </Literal>
-				<Fragment data="formattedValue" />
-			</Line>
-		</Format>
-
 		<!-- Default format for most files -->
 		<Format id="file">
 			<!-- include files first -->
 			<Line>
 				<Literal>//Includes</Literal>
 			</Line>
-			<Series data="imports" unique="true">
-				<FormatRef ref="import" />
+			<Series data="includes" unique="true">
+				<FormatRef ref="includeHeader" />
 			</Series>
 			<Line/>
 			<Line>
