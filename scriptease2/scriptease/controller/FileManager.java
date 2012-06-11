@@ -395,6 +395,9 @@ public final class FileManager {
 			final Collection<Set<CodeBlock>> scriptBuckets = module
 					.aggregateScripts(new ArrayList<StoryComponent>(
 							QuestPointNodeGetter.getQuestPoints(root)));
+			
+			if(scriptBuckets.isEmpty())
+				return scriptInfos;
 
 			// Multithreaded
 			final ExecutorService executor = Executors
