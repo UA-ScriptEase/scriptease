@@ -18,52 +18,52 @@ import scriptease.model.StoryModelPool;
  * <br>
  * Save Model entails calling the FileManager's method for saving a particular
  * model with the currently selected model as argument.
- *
+ * 
  * @author remiller
  */
 @SuppressWarnings("serial")
 public final class CloseModelAction extends ActiveModelSensitiveAction {
-    private static final String CLOSE = Il8nResources.getString("Close_Model");
+	private static final String CLOSE = Il8nResources.getString("Close_Model");
 
-    private static final Action instance = new CloseModelAction();
+	private static final Action instance = new CloseModelAction();
 
-    /**
-     * Gets the sole instance of this particular type of Action
-     *
-     * @return The sole instance of this particular type of Action
-     */
-    public static Action getInstance() {
-        return CloseModelAction.instance;
-    }
+	/**
+	 * Gets the sole instance of this particular type of Action
+	 * 
+	 * @return The sole instance of this particular type of Action
+	 */
+	public static Action getInstance() {
+		return CloseModelAction.instance;
+	}
 
-    /**
-     * Defines a <code>SaveModelAction</code> object with a mnemonic and
-     * accelerator.
-     */
-    private CloseModelAction() {
-        super(CloseModelAction.CLOSE);
+	/**
+	 * Defines a <code>SaveModelAction</code> object with a mnemonic and
+	 * accelerator.
+	 */
+	private CloseModelAction() {
+		super(CloseModelAction.CLOSE);
 
-        this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_W);
-        this.putValue(Action.ACCELERATOR_KEY,
-                KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
-    }
+		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_W);
+		this.putValue(Action.ACCELERATOR_KEY,
+				KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+	}
 
-    @Override
-    protected boolean isLegal() {
-        return super.isLegal()
-        // removed until we actually implement undoable commands - remiller
-        /*
-         * && !UndoManager.getInstance().isSaved(
-         * StoryModelPool.getInstance().getActiveModel())
-         */;
-    }
+	@Override
+	protected boolean isLegal() {
+		return super.isLegal()
+		// removed until we actually implement undoable commands - remiller
+		/*
+		 * && !UndoManager.getInstance().isSaved(
+		 * StoryModelPool.getInstance().getActiveModel())
+		 */;
+	}
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+	@Override
+	public void actionPerformed(ActionEvent e) {
 
-        if (StoryModelPool.getInstance().getActiveModel() != null) {
-            StoryPanel panel = SEFrame.getInstance().getActiveStory();
-            SEFrame.getInstance().removeStoryPanelTab(panel);
-        }
-    }
+		if (StoryModelPool.getInstance().getActiveModel() != null) {
+			StoryPanel panel = SEFrame.getInstance().getActiveStory();
+			SEFrame.getInstance().removeStoryPanelTab(panel);
+		}
+	}
 }

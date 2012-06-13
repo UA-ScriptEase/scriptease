@@ -59,8 +59,8 @@ import scriptease.model.atomic.KnowIt;
 /**
  * ToolBarFactory is responsible for creating JToolBars, most importantly the
  * toolbars for editing graphs. A specialized Quest Editor Toolbar can also be
- * created.
- * 
+ * created.<br>
+ * <br>
  * The class also determines toolbar functionality. These toolbars are used to
  * act upon Graph Panels, whether they be general Graph functions, Quest
  * functions, or DescribeIts.
@@ -239,7 +239,7 @@ public class ToolBarFactory {
 	public static JToolBar buildDescribeItToolBar(DescribeIt editedDescribeIt,
 			GraphPanel gPanel) {
 		final JToolBar describeItToolBar = buildGraphEditorToolBar(gPanel);
-	//	final GraphNode headNode = gPanel.getHeadNode();
+		// final GraphNode headNode = gPanel.getHeadNode();
 
 		final int TOOL_BAR_HEIGHT = 32;
 
@@ -262,7 +262,7 @@ public class ToolBarFactory {
 		describeItEditBar.add(knowItEditor, KNOW_IT_EDITOR);
 		describeItEditBar.add(textNodeEditor, TEXT_NODE_EDITOR);
 		describeItEditBar.add(pathEditor, PATH_EDITOR);
-		
+
 		JPanel noEditorPanel = new JPanel();
 		noEditorPanel.add(new JLabel("Path does not have an end point."));
 		describeItEditBar.add(noEditorPanel, NO_EDITOR);
@@ -273,7 +273,8 @@ public class ToolBarFactory {
 		cl.show(describeItEditBar, TEXT_NODE_EDITOR);
 
 		GraphNodeObserver describeItBarObserver = new DescribeItToolBarObserver(
-				editedDescribeIt, cl, describeItEditBar, knowItEditor, textNodeEditor, pathEditor);
+				editedDescribeIt, cl, describeItEditBar, knowItEditor,
+				textNodeEditor, pathEditor);
 
 		GraphNode.observeDepthMap(describeItBarObserver, gPanel.getHeadNode());
 
@@ -975,8 +976,9 @@ public class ToolBarFactory {
 		PathAssigner pathEditor;
 
 		public DescribeItToolBarObserver(DescribeIt editedDescribeIt,
-				CardLayout cardLayout, JComponent describeItEditBar, KnowItNodeEditor knowItBar,
-				TextNodeEditor textNodeEditor, PathAssigner pathEditor) {
+				CardLayout cardLayout, JComponent describeItEditBar,
+				KnowItNodeEditor knowItBar, TextNodeEditor textNodeEditor,
+				PathAssigner pathEditor) {
 			this.editedDescribeIt = editedDescribeIt;
 			this.cardLayout = cardLayout;
 			this.knowItEditor = knowItBar;
@@ -1012,11 +1014,11 @@ public class ToolBarFactory {
 						 * (finish with a terminal)
 						 */
 						if (sourceNode.isTerminalNode()) {
-							
+
 							System.out.println("Path Editor");
 							pathEditor.setNode(this.editedDescribeIt);
 							cardLayout.show(describeItEditBar, PATH_EDITOR);
-						} else {							
+						} else {
 							cardLayout.show(describeItEditBar, NO_EDITOR);
 						}
 					} else {
@@ -1027,14 +1029,16 @@ public class ToolBarFactory {
 							@Override
 							public void processTextNode(TextNode textNode) {
 								textNodeEditor.setNode(textNode);
-								cardLayout.show(describeItEditBar, TEXT_NODE_EDITOR);
+								cardLayout.show(describeItEditBar,
+										TEXT_NODE_EDITOR);
 
 							}
 
 							@Override
 							public void processKnowItNode(KnowItNode knowItNode) {
 								knowItEditor.setNode(knowItNode);
-								cardLayout.show(describeItEditBar, KNOW_IT_EDITOR);
+								cardLayout.show(describeItEditBar,
+										KNOW_IT_EDITOR);
 							}
 						});
 					}
