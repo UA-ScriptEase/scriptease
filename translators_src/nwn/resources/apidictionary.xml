@@ -3708,7 +3708,8 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
-					<Includes />
+				<Includes />
+					
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3733,7 +3734,8 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
-					<Includes />
+										<Includes />
+					
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -3783,9 +3785,8 @@
 					<Code>
 						<FormatRef ref="children"/>
 					</Code>
-					<Includes>
-						<Include>"i_se_aux"</Include>
-					</Includes>
+				<Includes />
+					
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
@@ -5126,7 +5127,7 @@
 		</CodeBlocks>
     </ScriptIt>
     <ScriptIt visible="true">
-      <Name>&lt;Modify Lock&gt; on the door &lt;Door&gt;</Name>
+      <Name>&lt;Modify Lock&gt; on &lt;Door&gt;</Name>
       <Labels/>
       <Children/>
 		<CodeBlocks>
@@ -21571,8 +21572,8 @@
 	</ScriptIt>
 	<ScriptIt visible="true">
 		<Name>Reverse attribute &lt;Named&gt; in &lt;Object&gt;</Name>
-		<Labels/>
-		<Children/>
+		<Labels />
+		<Children />
 		<CodeBlocks>
 			<CodeBlock>
 				<Types>
@@ -21580,68 +21581,94 @@
 				</Types>
 				<Parameters>
 					<KnowIt visible="true">
-			          <Name>Named</Name>
-			          <Labels/>
-			          <Types>
-			            <Type>string</Type>
-			          </Types>
-			        </KnowIt>
+						<Name>Named</Name>
+						<Labels />
+						<Types>
+							<Type>string</Type>
+						</Types>
+					</KnowIt>
 					<KnowIt visible="true">
-			          <Name>Object</Name>
-			          <Labels/>
-			          <Types>
-			            <Type>creature</Type>
-			            <Type>placeable</Type>
-			            <Type>door</Type>
-			         </Types>
-			        </KnowIt>
+						<Name>Object</Name>
+						<Labels />
+						<Types>
+							<Type>creature</Type>
+							<Type>placeable</Type>
+							<Type>door</Type>
+						</Types>
+					</KnowIt>
 				</Parameters>
 				<Code>
 					<Line>
-			          <Literal>ActionDoCommand(SetLocalInt(</Literal>
-			          <Scope data="argument" ref="Object">
-			            <Fragment data="name"/>
-			          </Scope>
-					  <Literal>,</Literal>
-					  <Scope data="argument" ref="Named">
-			            <Fragment data="name"/>
-			          </Scope>
-			          <Literal>, !getLocalInt(</Literal>
-					    <Scope data="argument" ref="Object">
-			            <Fragment data="name"/>
-			          </Scope>
-					  <Literal>,</Literal>
-					  <Scope data="argument" ref="Named">
-			            <Fragment data="name"/>
-			          </Scope>
-					  <Literal>)));</Literal>
-			        </Line>
+						<Literal>ActionDoCommand(SetLocalInt(</Literal>
+						<Scope data="argument" ref="Object">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>,</Literal>
+						<Scope data="argument" ref="Named">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>, !getLocalInt(</Literal>
+						<Scope data="argument" ref="Object">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>,</Literal>
+						<Scope data="argument" ref="Named">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>)));</Literal>
+					</Line>
 				</Code>
-					<Includes />
+				<Includes />
 			</CodeBlock>
 		</CodeBlocks>
 	</ScriptIt>
 	<ScriptIt visible="false">
-      <Name>The Player Character</Name>
-      <Labels/>
-                            <Children/>
-<CodeBlocks>
-<CodeBlock>
-<Types>
-        <Type>creature</Type>
-      </Types>
-      <Parameters/>
-      <Code>
-        <Line>
-          <Literal>return GetFirstPC();</Literal>
-        </Line>
-      </Code>
-					<Includes />
-</CodeBlock>
-</CodeBlocks>
-    </ScriptIt>
+		<Name>The Player Character</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>creature</Type>
+				</Types>
+				<Parameters />
+				<Code>
+					<Line>
+						<Literal>return GetFirstPC();</Literal>
+					</Line>
+				</Code>
+				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
     <!--640 ScriptIts-->
-
+	<ScriptIt visible="false">
+		<Name>Get Nearest Object Without Self</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>creature</Type>
+					<Type>placeable</Type>
+					<Type>door</Type>
+				</Types>
+				<Parameters />
+				<Code>
+					<Line>
+						<Literal>SE_AUX_GetGetNearestObjectWithoutSelf(</Literal>
+						<Scope data="argument" ref="Named">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>);</Literal>
+					</Line>
+				</Code>
+				<Includes>
+					<Include>"i_se_aux"</Include>
+				</Includes>
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
   </Effects>
   <DescribeIts>
     <KnowIt visible="true">
