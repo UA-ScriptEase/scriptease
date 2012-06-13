@@ -1,5 +1,6 @@
 package scriptease.translator.codegenerator.code.contexts;
 
+import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import scriptease.gui.quests.QuestNode;
@@ -14,13 +15,15 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  * @author mfchurch
  * 
  */
-public class StringContext extends Context {
+public class StringContext {/*extends Context {
 	private String value = "";
+	private static Iterator<String> includeFragment;
 
 	public StringContext(QuestNode model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInfo) {
 		super(model, indent, existingNames, translator);
+
 		this.setLocationInfo(locationInfo);
 	}
 
@@ -34,8 +37,22 @@ public class StringContext extends Context {
 		value = source;
 	}
 
+	
+	@Override
+	public String getInclude() {	
+		
+		
+		if(includeFragment == null)
+			includeFragment = this.getIncludes();
+
+		if(includeFragment.hasNext())
+			return includeFragment.next();
+		else
+			return "<include not found>";
+	}
+	
 	@Override
 	public String getUniqueName(Pattern legalRange) {
 		return this.value;
-	}
+	}*/
 }

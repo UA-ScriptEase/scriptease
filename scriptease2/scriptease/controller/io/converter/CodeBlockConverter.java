@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
-import scriptease.controller.io.FileIO.IoMode;
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
@@ -15,6 +14,12 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+/**
+ * Converts Codeblocks for File I/O.
+ * 
+ * @author mfchurch
+ * 
+ */
 public class CodeBlockConverter implements Converter {
 	private static final String TAG_SUBJECT = "subject";
 	private static final String TAG_SLOT = "slot";
@@ -48,6 +53,8 @@ public class CodeBlockConverter implements Converter {
 		final Collection<String> types = codeBlock.getTypes();
 		final Collection<String> includes = codeBlock.getIncludes();
 		final Collection<KnowIt> parameters = codeBlock.getParameters();
+		
+		//TODO This doesn't do anything. Should it? Could it? Would it?
 		final Collection<FormatFragment> code = codeBlock.getCode();
 
 		// Subject
@@ -75,8 +82,8 @@ public class CodeBlockConverter implements Converter {
 		}
 
 		// No need to write code and includes to Stories since they are already
-		// stored in the ApiDictionary
-		if (FileIO.getInstance().getMode() == IoMode.API_DICTIONARY) {
+		// stored in the ApiDictionary <-- This is wrong. 
+		//if (FileIO.getInstance().getMode() == IoMode.API_DICTIONARY) {
 			// Includes
 			if (!includes.isEmpty()) {
 				writer.startNode(TAG_INCLUDES);
@@ -87,11 +94,11 @@ public class CodeBlockConverter implements Converter {
 				}
 				writer.endNode();
 			}
-
+/*
 			writer.startNode(TAG_CODE);
 			context.convertAnother(code);
-			writer.endNode();
-		}
+			writer.endNode();*/
+	//	}
 	}
 
 	@SuppressWarnings("unchecked")

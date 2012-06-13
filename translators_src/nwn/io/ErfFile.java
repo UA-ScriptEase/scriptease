@@ -1,6 +1,7 @@
 package io;
 
 import io.GenericFileFormat.GffField;
+import io.GenericFileFormat.GffStruct;
 import io.GenericFileFormat.NWNConversation;
 import io.GenericFileFormat.NWNConversation.DialogueLine;
 
@@ -12,7 +13,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -62,19 +67,23 @@ public final class ErfFile implements GameModule {
 	public static final String NEVERWINTER_NIGHTS = "Neverwinter Nights";
 
 	/**
-	 * Stores <code>NWNResource</code>s that each represent one piece of Erf
-	 * data.
+	 * Stores <code>NWNResource</code>s that are not script ease generated.
+	 */
+	//private final List<NWNResource> ungeneratedResources;
+
+	/**
+	 * Stores <code>NWNResource</code>s that are script ease generated.
 	 */
 	private final List<NWNResource> resources;
-
+	
 	/**
 	 * Stores <code>NWNResource</code>s, each of which is an uncompiled script.
 	 * Once a script is compiled, is should be removed from this list.
 	 */
 	private final List<NWNResource> uncompiledScripts;
-
+	
 	/**
-	 * OriginalOffsetToResourceData sotres the location of the Data segment upon
+	 * OriginalOffsetToResourceData stores the location of the Data segment upon
 	 * loading. It should never, ever change. It really should be final, but
 	 * java won't let me. - remiller
 	 */
@@ -92,6 +101,9 @@ public final class ErfFile implements GameModule {
 
 	private ScriptEaseFileAccess fileAccess;
 
+	/**
+	 * Header data
+	 */
 	private String fileType;
 	private String version;
 	private int entryCount;
@@ -100,16 +112,21 @@ public final class ErfFile implements GameModule {
 
 	// CONSTANTS
 	private static final String SCRIPT_FILE_PREFIX = "se_";
+	private static final String INCLUDE_FILE_PREFIX = "i_se_";
 	private static final int RESREF_MAX_LENGTH = 16;
 	private static final int HEADER_RESERVED_BYTES = 116;
 
 	public ErfFile() {
+	//	this.ungeneratedResources = new ArrayList<NWNResource>();
 		this.resources = new ArrayList<NWNResource>();
 		this.uncompiledScripts = new ArrayList<NWNResource>();
 	}
 
 	@Override
 	public void load(boolean readOnly) throws IOException {
+	//	this.ungeneratedResources.clear();
+		this.resources.clear();
+		
 		String readOnlyTag;
 
 		// "r" = read-only, "rw" = read-write
@@ -127,22 +144,13 @@ public final class ErfFile implements GameModule {
 		List<ErfKey> keys = this.readErfKeys();
 		List<ResourceListElement> elementIndexes = this.readResourceIndexList();
 
-		int removedCount = 0;
 		// create NWNResources for each ErfKey/ResourceListElement pair
-		for (int index = 0; index < this.entryCount - 1; index++) {
+		for (int index = 0; index < this.entryCount; index++) {
 			NWNResource resource = new NWNResource(keys.get(index),
 					elementIndexes.get(index));
 
-			// only keep non-ScriptEase generated resources.
-			if (!resource.isScriptEaseGenerated())
 				this.resources.add(resource);
-			else
-				// I don't decrement here because I make it negative at the end.
-				// It hurts my brain less that way. - remiller
-				removedCount++;
 		}
-
-		this.updateHeader(-removedCount);
 	}
 
 	/**
@@ -233,7 +241,8 @@ public final class ErfFile implements GameModule {
 		// TODO: Determine this based on a saved resref list in the the
 		// module's associated story file. That way
 		// we're not guessing: we know exactly which are generated.
-		return resRef.startsWith(ErfFile.SCRIPT_FILE_PREFIX);
+		return resRef.startsWith(ErfFile.SCRIPT_FILE_PREFIX) || 
+				resRef.startsWith(ErfFile.INCLUDE_FILE_PREFIX) ;
 	}
 
 	/**
@@ -242,6 +251,7 @@ public final class ErfFile implements GameModule {
 	@Override
 	public List<GameConstant> getInstancesOfType(String type) {
 		List<GameConstant> filteredObjects = new ArrayList<GameConstant>();
+		
 		for (NWNResource resource : this.resources) {
 			if (resource != null && resource.isGFF()) {
 				GameConstant object = resource.getGFF()
@@ -322,20 +332,33 @@ public final class ErfFile implements GameModule {
 		// resRefs must be lower case
 		scriptResRef = scriptResRef.toLowerCase();
 
-		// TODO: Richard wants more meaningful resRef names for scripts see
-		// ticket #240
+		// TODO: Richard wants more meaningful resRef names for scripts 
 
 		NWNResource scriptResource;
 		scriptResource = new NWNResource(scriptResRef,
 				ErfKey.SCRIPT_SOURCE_TYPE, code.getBytes());
+
 		this.resources.add(scriptResource);
+
 		return scriptResource;
 	}
-
+	
 	@Override
 	public void addScripts(Collection<ScriptInfo> scriptList) {
-		int scriptCounter = 0;
+		List<NWNResource> generatedResources = new ArrayList<NWNResource>();
 
+		for(NWNResource resource: this.resources) {
+			if(resource.isScriptEaseGenerated()) {
+				generatedResources.add(resource);
+			}
+		}
+		// Remove everything ScriptEase related that exists
+		this.removeScriptEaseReferences(generatedResources);
+		
+		int scriptCounter = 0;
+		
+		this.uncompiledScripts.clear();
+		
 		for (ScriptInfo scriptInfo : scriptList) {
 			if (scriptInfo != null) {
 				String code = scriptInfo.getCode();
@@ -350,15 +373,14 @@ public final class ErfFile implements GameModule {
 
 				// Manage the script slot references
 				final IdentifiableGameConstant object = scriptInfo.getSubject();
-				
+
 				final String receiverResRef;
 				final NWNResource receiverResource;
-
+				
 				// Hardcoded for conversations. Deal with it.
 				if (object instanceof DialogueLine) {
 					final DialogueLine dialogueLine = (DialogueLine) object;
-					receiverResRef = dialogueLine
-							.getConversationResRef();
+					receiverResRef = dialogueLine.getConversationResRef();
 
 					// Get the parent conversation file resource
 					receiverResource = this.getResourceByResRef(receiverResRef);
@@ -387,19 +409,101 @@ public final class ErfFile implements GameModule {
 								"Script slot update failed. Cannot find resource for ResRef \""
 										+ receiverResRef + "\"");
 					} else if (receiverResource.isGFF()) {
-						receiverResource.getGFF().setField(scriptInfo.getSlot(), scriptResRef);
+						updateAllInstances(receiverResource, scriptInfo, scriptResRef);
 					}
 				}
-
-				// TODO: update all instances of blueprints
 			}
 		}
 
 		this.updateHeader(scriptCounter);
 	}
+	
+	/**
+	 * Updates all instances for the script and resource passed.
+	 * 
+	 * @param receiverResource
+	 * @param scriptInfo
+	 * @param scriptResRef
+	 */
+	private void updateAllInstances(NWNResource receiverResource,
+			ScriptInfo scriptInfo, String scriptResRef) {
+		
+		GenericFileFormat receiverResourceGFF = receiverResource.getGFF();
+		receiverResourceGFF.setField(scriptInfo.getSlot(), scriptResRef);
+
+		for (NWNResource resource : this.resources) {
+			if (resource.isGFF()) {
+				GenericFileFormat gitFileGFF = resource.getGFF();
+				String fileType = gitFileGFF.getFileType().trim();
+				if (fileType
+						.equalsIgnoreCase(GenericFileFormat.TYPE_GAME_INSTANCE_FILE)) {
+
+					GffStruct gitFileStruct = gitFileGFF.getTopLevelStruct();
+
+					List<GffField> gitFileFields;
+
+					try {
+						//The list of lists in a Git File. e.g. Creature List
+						gitFileFields = gitFileStruct.readGffFields(this.fileAccess);
+
+						// Go through the lists of lists in a GIT File.
+						for (GffField gitFileField : gitFileFields) {
+
+							String gitFileFieldLabel = gitFileGFF.getLabelArray().get(
+									(int) gitFileField.getLabelIndex());
+
+							// Find the correct list. The rest of the comments will use the creature list as an example.
+							if (gitFileFieldLabel.equals(receiverResourceGFF
+									.getGITListLabel())) {
+							
+								// List of all (e.g.) creature structs in creature list.
+								List<GffStruct> gitIndividualFieldStructList = gitFileField
+										.readList(this.fileAccess);
+								
+								// Parses the individual creatures from the list.
+								for(GffStruct individualFieldStruct : gitIndividualFieldStructList) {
+									
+									List<GffField> individualFieldStructFields = individualFieldStruct.readGffFields(this.fileAccess);
+									
+									//The individual creature fields, such as the resref we will use.
+									for(GffField individualFieldStructField : individualFieldStructFields) {
+										//Checks if the field equals TemplateResRef. This means the individualFieldStruct creature is the same as the individualFieldStructField creature.
+										final List<String> fieldLabels = individualFieldStructField.getGFF().getLabelArray();
+										final int labelIndex = (int) individualFieldStructField.getLabelIndex();
+										if(fieldLabels.get(labelIndex).equals("TemplateResRef")) {
+											if(individualFieldStructField.readString(this.fileAccess).equals(receiverResourceGFF.getResRef())) {
+											//Look for the field to place the script into
+												
+												for (GffField individualFieldStructField2 : individualFieldStructFields) {
+													final List<String> fieldLabels2 = individualFieldStructField2.getGFF().getLabelArray();
+													final int labelIndex2 = (int) individualFieldStructField2.getLabelIndex();
+													if(fieldLabels2.get(labelIndex2).equals(scriptInfo.getSlot())) {
+														individualFieldStructField2.getGFF().setField(individualFieldStructField2, scriptResRef);
+														break;
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					} catch (IOException e) {
+						Thread.currentThread()
+								.getUncaughtExceptionHandler()
+								.uncaughtException(
+										Thread.currentThread(),
+										new IOException(
+												"Exception when accessing GFFFields:"
+														+ e));
+					}
+				}
+			}
+		}
+	}
 
 	/**
-	 * Finds the resource matching the given ResRef. 
+	 * Finds the resource matching the given ResRef.
 	 * 
 	 * @param receiverResRef
 	 *            The ResRef (resource reference string ID) for the resource
@@ -418,16 +522,16 @@ public final class ErfFile implements GameModule {
 	}
 
 	/**
-	 * Updates the in-memory header data. It is vitally important this this
-	 * method is called every time resources are added or removed. <br>
+	 * Updates the in-memory header data. It is vitally important this method is
+	 * called every time resources are added or removed. <br>
 	 * <br>
 	 * <code>updateHeader(int)</code> does not touch the file. To write out
 	 * header data to disk, use {@link #writeHeader()}.
 	 * 
 	 * @param addOrRemoveCount
-	 *            The number of resources added or removed. Positive integers
-	 *            are interpreted as resource being added, negatives as removed.
-	 *            If
+	 *            Because there is one key per resource, this is the number of
+	 *            resources added or removed. Positive integers are interpreted
+	 *            as resource being added, negatives as removed. If
 	 *            <code>addOrRemoveCount<code> is zero, this method has no effect.
 	 * @see #writeHeader()
 	 */
@@ -435,32 +539,164 @@ public final class ErfFile implements GameModule {
 		this.entryCount += addOrRemoveCount;
 		this.OffsetToResourceList += (ErfKey.ERF_KEY_BYTE_LENGTH * addOrRemoveCount);
 	}
-
+	
 	@Override
 	public void close() throws IOException {
 		this.fileAccess.close();
 	}
-
+	
+	
 	@Override
 	public void save(boolean compile) throws IOException {
 		if (compile) {
-			try{
+			try {
 				this.compile();
-			} catch(FileNotFoundException e){
+			} catch (FileNotFoundException e) {
 				System.err.println("Compilation failed due to missing file.");
 				throw new IOException("Compilation failed.", e);
 			}
 		}
+		List<NWNResource> generatedResources = new ArrayList<NWNResource>();
 
 		this.writeHeader();
 		this.writeResources();
-
-		// TODO: remove all of the ScriptEase-generated resources so that the
-		// next time we call save, it will not necessarily save with generated
-		// resources.
-		// this should be a common method to what load() uses
+		
+		for(NWNResource resource: this.resources) {
+			if(resource.isScriptEaseGenerated()) {
+				generatedResources.add(resource);
+			}
+		}
+		/*
+		 * This traverses the list again because if you start removing things
+		 * from a list while it's being traversed, the save method breaks.
+		 */
+		for(NWNResource resource : generatedResources) {
+			this.resources.remove(resource);
+		}
+		
+		this.updateHeader(-generatedResources.size());
+		
+		System.out.println("Size after saving Generated: "+ resources.size());// + " Ungenerated: " + ungeneratedResources.size());
 	}
 
+	/**
+	 * Removes all ScriptEase files that are not on the whitelist.
+	 * Should be called as often as necessary so no garbage is left behind.
+	 * 
+	 * @param whiteList
+	 */
+	private void removeScriptEaseReferences(List<NWNResource> whiteList) {
+		//TODO: This list may not be necessary. Check if it is used.
+		List<NWNResource> scriptEaseResources = new ArrayList<NWNResource>();
+		List<NWNResource> blackList = new ArrayList<NWNResource>();
+		
+		for (NWNResource resource : this.resources) {
+			if (!whiteList.contains(resource)) {
+				blackList.add(resource);
+				
+				if (resource.isScriptEaseGenerated()) {
+					scriptEaseResources.add(resource);
+					System.out.println("SE Resources Item: " + resource.getResRef());
+				}
+			}
+		}
+		
+		Map<String, String> customObjectResRefFieldMap = new HashMap<String, String>();
+		/*
+		 * Remove the scriptease code form all instances.
+		 */
+		for (NWNResource resource : blackList) {
+			if (resource.isGFF()) {
+				GenericFileFormat gitFileGFF = resource.getGFF();
+				String fileType = gitFileGFF.getFileType().trim();
+				
+				//Check if it's a GIT file
+				if (fileType
+						.equalsIgnoreCase(GenericFileFormat.TYPE_GAME_INSTANCE_FILE)) {
+
+					GffStruct gitFileStruct = gitFileGFF.getTopLevelStruct();
+
+					List<GffField> gitFileFields;
+
+					try {
+						//The list of lists in a Git File. e.g. Creature List
+						gitFileFields = gitFileStruct.readGffFields(this.fileAccess);
+
+						// Go through the lists of lists in a GIT File.
+						for (GffField gitFileField : gitFileFields) {
+							String gitFileFieldLabel = gitFileGFF.getLabelArray().get(
+									(int) gitFileField.getLabelIndex());
+							
+							//Ignore AreaProperties field.
+							if (!gitFileFieldLabel.equals("AreaProperties")) {
+								List<GffStruct> individualFieldStructList = gitFileField.readList(this.fileAccess);
+								//Individual structs (e.g. Creatures)
+								for(GffStruct individualFieldStruct : individualFieldStructList) {
+									List<GffField> individualFieldStructFields = individualFieldStruct.readGffFields(this.fileAccess);
+									//Individual fields (e.g. resref, onUsed, etc.)
+									
+									String templateName = "";
+
+									for(GffField individualFieldStructField : individualFieldStructFields) {
+										String fieldStructFieldLabel = gitFileGFF.getLabelArray().get(
+												(int) individualFieldStructField.getLabelIndex());
+										
+										if(fieldStructFieldLabel.equals("TemplateResRef")) {
+											templateName = individualFieldStructField.readString(this.fileAccess);
+										}
+										//Only go through "Script" fields. This updates the instances:
+										else if(fieldStructFieldLabel.startsWith("Script")){
+											String scriptName = individualFieldStructField.readString(this.fileAccess);
+											
+											if(scriptName.startsWith("se_")) {
+												customObjectResRefFieldMap.put(templateName,  fieldStructFieldLabel);
+												individualFieldStructField.getGFF().setField(individualFieldStructField, "");
+											}
+										}
+									}
+								}
+							}
+						}
+					} catch (IOException e) {
+						Thread.currentThread()
+								.getUncaughtExceptionHandler()
+								.uncaughtException(
+										Thread.currentThread(),
+										new IOException(
+												"Exception when accessing GFFFields:"
+														+ e));
+					}
+				}
+			}
+		}
+		
+		/*Set the creature templates to blank strings as well if they are SE */
+		for(String resRef : customObjectResRefFieldMap.keySet()) {
+			NWNResource resource = this.getResourceByResRef(resRef);
+			resource.getGFF().setField(customObjectResRefFieldMap.get(resRef), "");
+		}
+	}
+	
+	/**
+	 * Checks a list of resources for the passed resref.
+	 * 
+	 * @param resourceList
+	 * @param resRef
+	 * @return
+	 */
+	public boolean containsResourceByResRef(List<NWNResource> resourceList, String resRef) {
+		for(NWNResource resource : resourceList) {
+			if(resource.getResRef().equals(resRef))
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Compiles the scripts and include files with the NWN compiler.
+	 * 
+	 * @throws IOException
+	 */
 	private void compile() throws IOException {
 		final File compilerLocation = TranslatorManager.getInstance()
 				.getActiveTranslator().getCompiler();
@@ -472,9 +708,10 @@ public final class ErfFile implements GameModule {
 		final Map<String, File> resrefsToFiles = new HashMap<String, File>();
 		final Process compilation;
 		final ProcessBuilder procBuilder;
-		
-		if(!compilerLocation.exists())
-			throw new GameCompilerException(new FileNotFoundException("Compiler does not exist where expected."));
+
+		if (!compilerLocation.exists())
+			throw new GameCompilerException(new FileNotFoundException(
+					"Compiler does not exist where expected."));
 
 		// write out all of the uncompiled source code to a temp directory for
 		// the compiler to grab.
@@ -503,13 +740,14 @@ public final class ErfFile implements GameModule {
 				continue;
 			}
 		}
-		
-		procBuilder = new ProcessBuilder( compilerLocation.getAbsolutePath());
-		
+
+		procBuilder = new ProcessBuilder(compilerLocation.getAbsolutePath());
+
 		procBuilder.redirectErrorStream(true);
-		procBuilder.command(compilerLocation.getAbsolutePath(), nssRegex.getAbsolutePath(), compilationDir.getAbsolutePath());
+		procBuilder.command(compilerLocation.getAbsolutePath(),
+				nssRegex.getAbsolutePath(), compilationDir.getAbsolutePath());
 		procBuilder.directory(compilationDir.getAbsoluteFile());
-		
+
 		compilation = procBuilder.start();
 
 		// TODO: Need to properly handle errors printed out by the compiler
@@ -540,6 +778,9 @@ public final class ErfFile implements GameModule {
 		// TODO: check out include files.
 
 		// get all of the compiler's compiled byte code output into resources
+		
+		int compiledScriptsCount = 0;
+		
 		for (String resRef : resrefsToFiles.keySet()) {
 			final String fileName = FileOp.removeExtension(
 					resrefsToFiles.get(resRef)).getAbsolutePath();
@@ -555,14 +796,18 @@ public final class ErfFile implements GameModule {
 				SEFrame.getInstance().setStatus("Compilation Succeeded!");
 
 			final byte[] byteCode = FileOp.readFileAsBytes(byteCodeFile);
+			
+			NWNResource compiledResource = new NWNResource(resRef,
+					ErfKey.SCRIPT_COMPILED_TYPE, byteCode);
+			
+			this.resources.add(compiledResource);
 
-			this.resources.add(new NWNResource(resRef,
-					ErfKey.SCRIPT_COMPILED_TYPE, byteCode));
+			compiledScriptsCount++;
 		}
 
-		this.updateHeader(resrefsToFiles.keySet().size());
-
-		this.uncompiledScripts.clear();
+		this.updateHeader(compiledScriptsCount);
+		
+		System.out.println("Compiled Update Header: " + this.OffsetToResourceList);
 
 		FileManager.getInstance().deleteTempFile(compilationDir);
 	}
@@ -587,33 +832,86 @@ public final class ErfFile implements GameModule {
 		this.fileAccess.writeInt((int) (this.OffsetToKeyList), true);
 		this.fileAccess.writeInt((int) (this.OffsetToResourceList), true);
 		// ignore Build Year
-		this.fileAccess.skipBytes(ScriptEaseFileAccess.INT_BYTE_LENGTH);
+		GregorianCalendar cal = new GregorianCalendar();
+
+		
+		int year = cal.get(Calendar.YEAR)-1900;
+
+		this.fileAccess.writeInt((int) year, true);
+
+		//this.fileAccess.skipBytes(ScriptEaseFileAccess.INT_BYTE_LENGTH);
 		// ignore Build Day
-		this.fileAccess.skipBytes(ScriptEaseFileAccess.INT_BYTE_LENGTH);
+		
+		int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
+		if(cal.isLeapYear(year))
+			dayOfYear--;
+		
+		//TODO: Change the date. 1 = Jan 1. 2 = Jan 2. 158 = Jun 7. 
+		this.fileAccess.writeInt((int) (dayOfYear), true);
+	//	this.fileAccess.skipBytes(ScriptEaseFileAccess.INT_BYTE_LENGTH);
+		
 		// ignore DescriptionStrRef
 		this.fileAccess.skipBytes(ScriptEaseFileAccess.INT_BYTE_LENGTH);
-
 		// Last 116 bytes are supposedly reserved. Skip them.
 		this.fileAccess.skipBytes(116);
 	}
 
+	/**
+	 * Writes all of the resources to appropriate files in Neverwinter Nights.
+	 * 
+	 * @throws IOException
+	 */
 	private void writeResources() throws IOException {
 		int resourceDataLocation = (int) this.OffsetToResourceList
 				+ (this.entryCount * ResourceListElement.BYTE_LENGTH);
 
 		// first, we need to cache all of the data before we start
 		// clobbering the file's contents.
-		// this.fileAccess.seek(this.OriginalOffsetToResourceData);
+		
+		//this.fileAccess.seek(this.OriginalOffsetToResourceData);
+		
 		ScriptEaseFileAccess oldFile = this.fileAccess;
 		if (this.previousLocation != null)
 			this.fileAccess = new ScriptEaseFileAccess(this.location,
 					oldFile.isReadOnly() ? "r" : "rw");
 
+		// Sort the NWNresources by resref.
+		Comparator<NWNResource> nwnResourceComparator = new Comparator<NWNResource>(){
+
+			@Override
+			public int compare(NWNResource nwnResource1,
+					NWNResource nwnResource2) {
+
+				String nwnResourceString1 = nwnResource1.getResRef()
+						.toUpperCase();
+
+				String nwnResourceString2 = nwnResource2.getResRef()
+						.toUpperCase();
+				
+				int resRefComparison = nwnResourceString1
+						.compareTo(nwnResourceString2);
+				
+				if (resRefComparison == 0) {
+					String extension1 = ErfKey.extensionMap.get(new Integer(nwnResource1.getResType()));
+					String extension2 = ErfKey.extensionMap.get(new Integer(nwnResource2.getResType()));
+
+					return extension1.trim().compareTo(extension2.trim());
+				} else {
+					return resRefComparison;
+				}
+			}
+		};
+		Collections.sort(this.resources, nwnResourceComparator);
+		
+		for (NWNResource resource : this.resources) {
+			resource.setResID(this.resources.indexOf(resource));
+		}
+		
 		for (NWNResource resource : this.resources) {
 			resource.cacheData(oldFile);
 		}
 
-		// now write out the ErfKey segment
+		// Writes out the ErfKey segment (i.e. palcuses, se_* file names etc)
 		this.fileAccess.seek(this.OffsetToKeyList);
 		for (NWNResource resource : this.resources) {
 			resource.writeErfKey(this.fileAccess);
@@ -622,10 +920,18 @@ public final class ErfFile implements GameModule {
 		// calculate changes if the resource is a GFF
 		// and if the GFF has been modified.
 		for (NWNResource resource : this.resources) {
-			if (resource.isGFF() && resource.getGFF().hasChanges())
+			if (resource.isGFF() && resource.getGFF().hasChanges()) {
 				resource.updateForChanges(this.fileAccess);
+			}
 		}
+		
+		// Write null bytes at end of erf key segment until resourcelist.
 
+		long erfKeySize = this.OffsetToKeyList + this.resources.size()*24;
+		long nullCount = this.OffsetToResourceList - erfKeySize;
+		this.fileAccess.seek(erfKeySize);
+		this.fileAccess.writeNullBytes((int) (nullCount));
+		
 		// then, write out the ResourceListElements
 		this.fileAccess.seek(this.OffsetToResourceList);
 		for (NWNResource resource : this.resources) {
@@ -639,7 +945,6 @@ public final class ErfFile implements GameModule {
 				+ (this.entryCount * ResourceListElement.BYTE_LENGTH));
 		for (NWNResource resource : this.resources) {
 			resource.write(this.fileAccess);
-			// this.fileAccess.writeBytes(resourceData, false);
 		}
 	}
 
@@ -668,6 +973,9 @@ public final class ErfFile implements GameModule {
 
 		// at most one of these two will be null depending on the type of this
 		// resource
+		/**
+		 * byteData is the contents of the file as bytes.
+		 */
 		private byte[] byteData;
 		private final GenericFileFormat gff;
 
@@ -706,6 +1014,13 @@ public final class ErfFile implements GameModule {
 			return this.byteData;
 		}
 
+		/**
+		 * Calls write methods that are appropriate to the type of resource. For
+		 * example, if it has a GFF, writer writes to the GFF.
+		 * 
+		 * @param writer
+		 * @throws IOException
+		 */
 		public void write(ScriptEaseFileAccess writer) throws IOException {
 			if (this.byteData != null) {
 				writer.seek(this.getOffsetToResource());
@@ -764,63 +1079,6 @@ public final class ErfFile implements GameModule {
 			this.resourceListEntry = newEntry;
 			this.byteData = data;
 			this.gff = null;
-		}
-
-		/**
-		 * Builds a new NWNResource that contains the two bits of indexing
-		 * information required by the file format as well as the
-		 * GenenericFileFormat it represents. Use this constructor for
-		 * ScriptEase-generated data that is a GFF. For anything else, use
-		 * {@link #NWNResource(String resRef, short fileType, byte[] data)}.
-		 * 
-		 * @param resRef
-		 *            The unique ResRef that represents this resource. The
-		 *            constructor does not enforce the uniqueness; that
-		 *            responsibility is left up to the caller.
-		 * @param fileType
-		 *            The type of this resource as per the ErfKey file type
-		 *            constants.
-		 * @param object
-		 *            The NWNObject that contains the data represented by this
-		 *            NWNResource.
-		 * @throws IOException
-		 */
-		// while unsued, it still may be of use later. - remiller
-		@SuppressWarnings("unused")
-		public NWNResource(String resRef, NWNObject object) {
-			final ResourceListElement newEntry;
-			final ErfKey newKey;
-			final GenericFileFormat gff;
-
-			gff = new GenericFileFormat(object);
-
-			// the next resourceID is the same as the number of entries (IDs go
-			// up to entryCount-1)
-			newKey = new ErfKey(resRef, ErfFile.this.entryCount,
-					ErfKey.getTypeConstant(gff.getScriptEaseType()));
-
-			// this resourceOffset isn't the final one. It's replaced by a real
-			// offset on save. The value I'm initialising it to here is just a
-			// defensive placeholder that should point to a location past the
-			// end of the original file, so we don't accidentally clobber
-			// something
-			int resourceOffset;
-			long fileSize = 0;
-			try {
-				fileSize = ErfFile.this.fileAccess.length();
-			} catch (IOException e) {
-				// somehow failed to read the file length. Just use zero.
-				fileSize = 0;
-			}
-			resourceOffset = (int) (fileSize - ErfFile.this.OriginalOffsetToResourceData);
-
-			newEntry = new ResourceListElement(resourceOffset,
-					gff.getByteLength());
-
-			this.key = newKey;
-			this.resourceListEntry = newEntry;
-			this.gff = gff;
-			this.byteData = null;
 		}
 
 		/**
@@ -898,7 +1156,6 @@ public final class ErfFile implements GameModule {
 		public void updateForChanges(ScriptEaseFileAccess reader) {
 			final int sizeDifference = this.gff.calculateSizeDifference(reader);
 
-			// don't shrink
 			if (sizeDifference > 0) {
 				this.resourceListEntry.setResourceSize(this.resourceListEntry
 						.getResourceSize() + sizeDifference);
@@ -915,7 +1172,11 @@ public final class ErfFile implements GameModule {
 						+ sizeDifference);
 			}
 		}
-
+		
+		public void setResID(int resID) {
+			this.key.setResId(resID);
+		}
+		
 		// forwarded methods
 		/**
 		 * @return Whether this resource is a GFF or not.
@@ -925,7 +1186,6 @@ public final class ErfFile implements GameModule {
 			return this.key.isGFF();
 		}
 
-		@SuppressWarnings("unused")
 		public short getResType() {
 			return this.key.getResType();
 		}
@@ -946,6 +1206,7 @@ public final class ErfFile implements GameModule {
 		public int getResourceSize() {
 			return this.resourceListEntry.getResourceSize();
 		}
+		
 	}
 
 	/**
@@ -963,7 +1224,7 @@ public final class ErfFile implements GameModule {
 		/**
 		 * The size of any ErfKey in bytes
 		 */
-		public static final short ERF_KEY_BYTE_LENGTH = 24;
+		public static final short ERF_KEY_BYTE_LENGTH = 32; //TODO Changing to 32 makes the 1 guy work. Original = 24
 
 		// These types come from the Key/BIF documentation, table 1.3.1
 		public static final short SCRIPT_COMPILED_TYPE = 2010;
@@ -988,15 +1249,90 @@ public final class ErfFile implements GameModule {
 		public static final short JOURNAL_FILE_TYPE = 2056;
 		public static final short WAYPOINT_BLUEPRINT_TYPE = 2058;
 		public static final short PLOT_INSTANCE_TYPE = 2065;
-
+        
+		public static final Map<Integer, String> extensionMap = new HashMap<Integer, String>();
+		
+		static {
+			extensionMap.put(0xFFFF, "N/A");
+			extensionMap.put(1, "bmp");
+			extensionMap.put(3, "tga");
+			extensionMap.put(4, "wav");
+			extensionMap.put(6, "plt");
+			extensionMap.put(7, "ini");
+			extensionMap.put(10, "txt");
+			extensionMap.put(2002, "mdl");
+			extensionMap.put(2009, "nss");
+			extensionMap.put(2010, "ncs");
+			extensionMap.put(2012, "are");
+			extensionMap.put(2013, "set");
+			extensionMap.put(2014, "ifo");
+			extensionMap.put(2015, "bic");
+			extensionMap.put(2016, "wok");
+			extensionMap.put(2017, "2da");
+			extensionMap.put(2022, "txi");
+			extensionMap.put(2023, "git");
+			extensionMap.put(2025, "uti");
+			extensionMap.put(2027, "utc");
+			extensionMap.put(2029, "dlg");
+			extensionMap.put(2030, "itp");
+			extensionMap.put(2032, "utt");
+			extensionMap.put(2033, "dds");
+			extensionMap.put(2035, "uts");
+			extensionMap.put(2036, "ltr");
+			extensionMap.put(2037, "gff");
+			extensionMap.put(2038, "fac");
+			extensionMap.put(2040, "ute");
+			extensionMap.put(2042, "utd");
+			extensionMap.put(2044, "utp");
+			extensionMap.put(2045, "dft");
+			extensionMap.put(2046, "gic");
+			extensionMap.put(2047, "gui");
+			extensionMap.put(2051, "utm");
+			extensionMap.put(2052, "dwk");
+			extensionMap.put(2053, "pwk");
+			extensionMap.put(2056, "jrl");
+			extensionMap.put(2058, "utw");
+			extensionMap.put(2060, "ssf");
+			extensionMap.put(2064, "ndb");
+			extensionMap.put(2065, "ptm");
+			extensionMap.put(2066, "ptt");
+			extensionMap.put(2023, "git");
+			extensionMap.put(2025, "uti");
+			extensionMap.put(2027, "utc");
+			extensionMap.put(2029, "dlg");
+			extensionMap.put(2030, "itp");
+			extensionMap.put(2032, "utt");
+			extensionMap.put(2033, "dds");
+			extensionMap.put(2035, "uts");
+			extensionMap.put(2036, "ltr");
+			extensionMap.put(2037, "gff");
+			extensionMap.put(2038, "fac");
+			extensionMap.put(2040, "ute");
+			extensionMap.put(2042, "utd");
+			extensionMap.put(2044, "utp");
+			extensionMap.put(2045, "dft");
+			extensionMap.put(2046, "gic");
+			extensionMap.put(2047, "gui");
+			extensionMap.put(2051, "utm");
+			extensionMap.put(2052, "dwk");
+			extensionMap.put(2053, "pwk");
+			extensionMap.put(2056, "jrl");
+			extensionMap.put(2058, "utw");
+			extensionMap.put(2060, "ssf");
+			extensionMap.put(2064, "ndb");
+			extensionMap.put(2065, "ptm");
+			extensionMap.put(2066, "ptt");
+		}
+		
 		private final String resRef;
-		private final int resId;
+		private int resId;
 		private final short resType;
 
 		@Override
 		public String toString() {
 			return "ErfKey [" + resRef + ", " + resId + ", " + resType + "]";
 		}
+		
 
 		/**
 		 * Reads an ErfKey from the file.
@@ -1042,7 +1378,11 @@ public final class ErfFile implements GameModule {
 			stream.writeShort(this.resType, true);
 			stream.writeNullBytes(ErfKey.UNUSED_BYTES);// Unused space
 		}
-
+		
+		public void setResId(int resID) {
+			this.resId = resID;
+		}
+		
 		public short getResType() {
 			return this.resType;
 		}
@@ -1078,13 +1418,6 @@ public final class ErfFile implements GameModule {
 					|| (this.resType == JOURNAL_FILE_TYPE)
 					|| (this.resType == WAYPOINT_BLUEPRINT_TYPE)
 					|| (this.resType == PLOT_INSTANCE_TYPE);
-		}
-
-		public static short getTypeConstant(String scriptEaseType) {
-			System.err
-					.println("Can't convert a GameType to a ErfKey type constant yet!");
-			// TODO Auto-generated method stub
-			return 0;
 		}
 	}
 
@@ -1270,8 +1603,8 @@ public final class ErfFile implements GameModule {
 		builder.directory(nwnRoot);
 
 		if (!nwnRoot.exists())
-			throw new FileNotFoundException(
-					"Could not locate game directory " + nwnRoot.getAbsolutePath());
+			throw new FileNotFoundException("Could not locate game directory "
+					+ nwnRoot.getAbsolutePath());
 		else if (!nwnExec.exists())
 			throw new FileNotFoundException("Missing nwmain.exe");
 

@@ -111,8 +111,9 @@ public abstract class AbstractSeriesFragment extends FormatFragment {
 			return this.seriesFilter.applyFilter(handle(context
 					.getScriptItEffects()));
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_INCLUDES_SERIES))
-			return this.seriesFilter.applyFilter(handle(context.getIncludes()));
+				.equalsIgnoreCase(TranslatorKeywordManager.XML_INCLUDES_SERIES)) {
+			return this.seriesFilter.applyFilter(handle(context.getIncludeFiles().iterator()));
+		}
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_SCRIPTIT_SERIES))
 			return this.seriesFilter

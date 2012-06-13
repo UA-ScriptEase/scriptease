@@ -41,7 +41,7 @@ public class ContextFactory {
 	private static ContextFactory instance;
 	private Context activeContext;
 
-	static public ContextFactory getInstance() {
+	 public static ContextFactory getInstance() {
 		if (instance == null)
 			instance = new ContextFactory();
 		return instance;
@@ -57,7 +57,7 @@ public class ContextFactory {
 	 */
 	public Context createContext(final Context pastContext, final Object source) {
 		if (source instanceof String) {
-			activeContext = new StringContext(pastContext, (String) source);
+			activeContext = pastContext;//= new StringContext(pastContext, (String) source);
 		} else if (source instanceof KnowItBinding) {
 			((KnowItBinding) source).process(new BindingVisitor() {
 				@Override

@@ -1,6 +1,5 @@
 package scriptease.gui.quests;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import scriptease.controller.GraphNodeVisitor;
@@ -58,110 +57,6 @@ public class QuestNode extends GraphNode {
 	 */
 	public boolean isCollapsed() {
 		return this.collapsed;
-	}
-
-	/**
-	 * Swaps the current endPoint for the given newEnd
-	 * 
-	 * @param newEnd
-	 */
-	private void swapEndPoint(GraphNode newEnd) {
-		if (newEnd != null) {
-			// store children
-			List<GraphNode> oldChildren = new ArrayList<GraphNode>(
-					this.children);
-			List<GraphNode> newChildren = new ArrayList<GraphNode>(
-					newEnd.getChildren());
-			// remove old children
-			this.removeChildren();
-			// clear parents of new children
-			for (GraphNode child : newChildren) {
-				child.removeParents();
-			}
-			// add old children to old endPoint
-			this.endPoint.addChildren(oldChildren);
-			// add new children to this node
-			this.addChildren(newChildren);
-			// change to the new endPoint
-			this.endPoint = newEnd;
-		}
-	}
-
-	/**
-	 * Checks if the Quest can shrink it's end point
-	 * 
-	 * @return
-	 */
-	public boolean canShrink() {
-		List<GraphNode> parents = this.getEndPoint().getParents();
-		GraphNode previousEnd = findPreviousEnd(parents, parents.size());
-		return previousEnd != null && previousEnd != startPoint;
-	}
-
-	/**
-	 * Shifts the Quest's endPoint to the previously avaliable endPoint.
-	 * Opposite effect of grow()
-	 */
-	public void shrink() {
-		List<GraphNode> parents = this.getEndPoint().getParents();
-		GraphNode newEnd = findPreviousEnd(parents, parents.size());
-		this.swapEndPoint(newEnd);
-	}
-
-	/**
-	 * Finds the previous node that matches the desiredFanOut with the same
-	 * depth as the source of the given parents. Opposite algorithm of
-	 * findNextEnd
-	 * 
-	 * @param parents
-	 * @param desiredFanOut
-	 * @return
-	 */
-	private GraphNode findPreviousEnd(final List<GraphNode> parents,
-			final int desiredFanOut) {
-		// for each of the parents
-		for (GraphNode parent : parents) {
-			// Get the parent's fan in
-			final int fanOut = parent.getChildren().size();
-			// If the parent's fan in is the desired we've found it!
-			if (fanOut == desiredFanOut)
-				return parent;
-
-			// Get the parent's fan out
-			final int fanIn = parent.getParents().size();
-			// If it is greater than one, skip the sub group
-			if (fanIn > 1) {
-				GraphNode startOfSubGroup = findPreviousEnd(
-						parent.getParents(), fanOut);
-				if (startOfSubGroup == null)
-					throw new IllegalStateException(
-							"Cannot process invalid graphs");
-				parent = startOfSubGroup;
-			}
-			// Continue looking for the desiredFanOut
-			return findPreviousEnd(parent.getParents(), desiredFanOut);
-		}
-		return null;
-	}
-
-	/**
-	 * Checks if the Quest can grow it's end point
-	 * 
-	 * @return
-	 */
-	public boolean canGrow() {
-		List<GraphNode> children = this.getChildren();
-		return findNextEnd(children, children.size()) != null;
-	}
-
-	/**
-	 * Shifts the Quest's endPoint to the next avaliable endPoint. Opposite
-	 * effect of shrink()
-	 */
-	public void grow() {
-		GraphNode newEnd = findNextEnd(this.getChildren(), this.getChildren()
-				.size());
-		this.swapEndPoint(newEnd);
 	}
 
 	/**

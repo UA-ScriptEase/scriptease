@@ -42,6 +42,7 @@ public class GenericFileFormat {
 	private static final String TYPE_DIALOGUE_BP = "DLG";
 	private static final String TYPE_JOURNAL_BP = "JRL";
 	private static final String TYPE_MODULE_BP = "IFO";
+	public static final String TYPE_GAME_INSTANCE_FILE = "GIT";
 	private final String resRef;
 	private final String fileType;
 	private final String version;
@@ -57,6 +58,9 @@ public class GenericFileFormat {
 	private final long fieldIndicesCount;
 	private long listIndicesOffset;
 	private final long listIndicesCount;
+	
+	private GenericFileFormat genericFileFormat = this;
+
 
 	/**
 	 * location of this GFF from the start of the parent ERF file. This is reset
@@ -82,8 +86,8 @@ public class GenericFileFormat {
 	private byte[] beforeFieldIndicesArray;
 	private byte[] afterFieldIndicesArray;
 
-	//Ill want to move you somewhere else
-	
+	// Ill want to move you somewhere else
+
 	private GameConstant objectRepresentation;
 
 	/**
@@ -121,46 +125,14 @@ public class GenericFileFormat {
 		this.changedFieldMap = new HashMap<GffField, String>();
 
 		if (!this.version.equals("V3.2"))
-			throw new IOException("NWN GFF: Cannot read a GFF whose version is not V3.2.");
+			throw new IOException(
+					"NWN GFF: Cannot read a GFF whose version is not V3.2.");
 
 		this.readStructs(reader);
 		this.readFields(reader);
 		this.readLabels(reader);
 
 		this.buildObject(reader);
-	}
-
-	/**
-	 * Creates a new GFF that represents the given blueprint.
-	 * 
-	 * @param blueprint
-	 *            The blueprint to represent as a GFF.
-	 */
-	public GenericFileFormat(NWNObject object) {
-		this.resRef = object.getTemplateID();
-		// TODO: fill out this constructor to be useful
-		System.err
-				.println("GFF from blueprint constructor doesn't do anything yet!");
-
-		this.fileType = null;
-		this.version = "V3.2 ";
-		this.structOffset = 0L;
-		this.structCount = 0L;
-		this.fieldOffset = 0L;
-		this.fieldCount = 0L;
-		this.labelOffset = 0L;
-		this.labelCount = 0L;
-		this.fieldDataOffset = 0L;
-		this.fieldDataCount = 0L;
-		this.fieldIndicesOffset = 0L;
-		this.fieldIndicesCount = 0L;
-		this.listIndicesOffset = 0L;
-		this.listIndicesCount = 0L;
-
-		this.structArray = null;
-		this.labelArray = null;
-		this.fieldArray = null;
-		this.changedFieldMap = null;
 	}
 
 	public long getFieldIndicesOffset() {
@@ -182,9 +154,57 @@ public class GenericFileFormat {
 	public long getFieldDataCount() {
 		return this.fieldDataCount;
 	}
+	
+	public String getFileType() {
+		return this.fileType;
+	}
 
 	public void setListIndicesOffset(long listIndicesOffset) {
 		this.listIndicesOffset = listIndicesOffset;
+	}
+	
+	public List<GffField> getFieldArray() {
+		return this.fieldArray;
+	}
+	
+	public List<String> getLabelArray() {
+		return this.labelArray;
+	}
+	
+	public String getResRef() {
+		return this.resRef;
+	}
+	
+	/**
+	 * Returns the git list label that corresponds to the filetype.
+	 * @return
+	 */
+	public String getGITListLabel() {
+		String gitLabel;
+		String fileType = this.fileType.trim();
+		
+		if(fileType.equals(TYPE_SOUND_BP)) {
+			gitLabel = "SoundList";
+		} else if (fileType.equals(TYPE_WAYPOINT_BP)) {
+			gitLabel = "WaypointList";
+		} else if (fileType.equals(TYPE_TRIGGER_BP)) {
+			gitLabel = "TriggerList";
+		} else if (fileType.equals(TYPE_CREATURE_BP)) {
+			gitLabel = "Creature List";
+		} else if (fileType.equals(TYPE_ENCOUNTER_BP)) {
+			gitLabel = "Encounter List";
+		} else if (fileType.equals(TYPE_MERCHANT_BP)) {
+			gitLabel = "StoreList";
+		} else if (fileType.equals(TYPE_PLACEABLE_BP)) {
+			gitLabel = "Placeable List";
+		} else if (fileType.equals(TYPE_ITEM_BP)) {
+			gitLabel = "List";
+		} else if (fileType.equals(TYPE_DOOR_BP)) {
+			gitLabel = "Door List";
+		} else
+			gitLabel = "nothing";
+		
+		return gitLabel;
 	}
 
 	/**
@@ -198,7 +218,8 @@ public class GenericFileFormat {
 
 	/**
 	 * Calculates the size difference in bytes of the changed gff compared to
-	 * the original
+	 * the original. Used to make sure the GFF file is not made smaller by
+	 * ScriptEase 2.
 	 * 
 	 * @param reader
 	 * @return
@@ -274,7 +295,7 @@ public class GenericFileFormat {
 	 * 
 	 * @return
 	 */
-	private GffStruct getTopLevelStruct() {
+	public GffStruct getTopLevelStruct() {
 		for (GffStruct struct : this.structArray)
 			if (struct.isTopLevelStruct())
 				return struct;
@@ -512,6 +533,10 @@ public class GenericFileFormat {
 		importantTypes.add(GenericFileFormat.TYPE_WAYPOINT_BP); // waypoint
 		// blueprint
 
+		// file
+		importantTypes.add(GenericFileFormat.TYPE_GAME_INSTANCE_FILE);
+		// GIT File for instances
+
 		return importantTypes.contains(typeString);
 	}
 
@@ -611,7 +636,7 @@ public class GenericFileFormat {
 		// write up to the FieldIndicesArray
 		writer.seek(this.gffOffset);
 		writer.writeBytes(this.beforeFieldIndicesArray, false);
-		
+
 		// now we update the file's data.
 		// write the updated header
 		writer.seek(this.gffOffset);
@@ -620,9 +645,9 @@ public class GenericFileFormat {
 		for (GffField changedField : this.changedFieldMap.keySet()) {
 			// write out the field data again because it may have updated
 			// TODO: This changedField.getFieldOffset may be blatantly wrong.
-			//writer.seek(this.fieldOffset + changedField.getFieldOffset());
-			//changedField.write(writer);
-			
+			// writer.seek(this.fieldOffset + changedField.getFieldOffset());
+			// changedField.write(writer);
+
 			// right now I'm only concerned with updating the script slots
 			// - remiller
 			if (!changedField.isResRefType())
@@ -670,6 +695,18 @@ public class GenericFileFormat {
 	 * Simple class for reading and representing GFF Structs. Based off table
 	 * 3.3 in GFF documentation.
 	 * 
+	 * All of the values in a GFF Struct are DWORDs.
+	 * 
+	 * Struct.Type - Programmer-defined integer ID
+	 * 
+	 * Struct.DataOrDataOffset - If Struct.FieldCount = 1, this is an index into
+	 * the Field Array. If Struct.FieldCount > 1, this is a byte offset into the
+	 * Field Indices array, where there is an array of DWORDs having a number of
+	 * elements equal to Struct.FieldCount. Each one of these DWORDs is an index
+	 * into the Field Array.
+	 * 
+	 * Struct.FieldCount - Number of fields in this Struct
+	 * 
 	 * @author remiller
 	 * @author mfchurch
 	 * 
@@ -689,6 +726,10 @@ public class GenericFileFormat {
 		public String toString() {
 			return "GffStruct [" + typeNumber + ", " + dataOrDataOffset + ", "
 					+ fieldCount + "]";
+		}
+
+		public GenericFileFormat getGFF() {
+			return genericFileFormat;
 		}
 
 		/**
@@ -866,7 +907,7 @@ public class GenericFileFormat {
 					&& index < this.replyList.size()) {
 				return this.replyList.get(index);
 			}
-			throw new IllegalStateException("Invalid Reply Refernce");
+			throw new IllegalStateException("Invalid Reply Reference");
 		}
 
 		@Override
@@ -940,7 +981,7 @@ public class GenericFileFormat {
 					// Index into the Top-Level Struct EntryList
 					else if (label.equals("Index")) {
 						this.index = new Integer(field.readString(reader));
-					} 
+					}
 					// Field 'IsChild' is 1 when it is a link. Because that
 					// totally makes sense, BioWare.
 					else if (label.equals("IsChild")) {
@@ -952,8 +993,8 @@ public class GenericFileFormat {
 			protected abstract void updateReference();
 
 			public abstract DialogueLine getReference();
-			
-			public boolean isLink(){
+
+			public boolean isLink() {
 				return this.isLink;
 			}
 		}
@@ -1042,7 +1083,7 @@ public class GenericFileFormat {
 			protected String text;
 			// Index representing the location of the Dialog in the conversation
 			protected int index;
-			
+
 			protected boolean isLink;
 
 			public DialogueLine(ScriptEaseFileAccess reader, GffStruct struct)
@@ -1071,7 +1112,7 @@ public class GenericFileFormat {
 					// Dialog Fields
 					if (label.equals("Text")) {
 						text = field.readString(reader);
-					} 
+					}
 					// 'script' = when dialogue line is reached
 					else if (label.equals("Script")) {
 						script = field;
@@ -1101,21 +1142,21 @@ public class GenericFileFormat {
 				if (field.equalsIgnoreCase("Active")) {
 					return this.active;
 				}
-				// 'script' = When dialogue line is displayed 
+				// 'script' = When dialogue line is displayed
 				else if (field.equalsIgnoreCase("Script")) {
 					return this.script;
 				} else
 					throw new IllegalArgumentException(
 							"Dialog does not have the field " + field);
 			}
-			
+
 			@Override
-			public boolean isLink(){
+			public boolean isLink() {
 				return false;
 			}
-			
+
 			@Override
-			public boolean isTerminal(){
+			public boolean isTerminal() {
 				return this.getChildren().size() == 0;
 			}
 		}
@@ -1224,8 +1265,8 @@ public class GenericFileFormat {
 
 			public final static String NPC_ENTRY_LIST = "entrylist";
 
-			public NPCEntryDialogue(ScriptEaseFileAccess reader, GffStruct struct)
-					throws IOException {
+			public NPCEntryDialogue(ScriptEaseFileAccess reader,
+					GffStruct struct) throws IOException {
 				super(reader, struct);
 			}
 
@@ -1325,7 +1366,8 @@ public class GenericFileFormat {
 		// where it lives within the Field Array. - remiller
 		private long fieldIndex;
 
-		private GffField(ScriptEaseFileAccess reader, long index) throws IOException {
+		private GffField(ScriptEaseFileAccess reader, long index)
+				throws IOException {
 			this.typeNumber = reader.readUnsignedInt(true);
 			this.labelIndex = reader.readUnsignedInt(true);
 			this.dataOrDataOffset = reader.readUnsignedInt(true);
@@ -1341,6 +1383,10 @@ public class GenericFileFormat {
 			writer.writeUnsignedInt(this.typeNumber, true);
 			writer.writeUnsignedInt(this.labelIndex, true);
 			writer.writeUnsignedInt(this.dataOrDataOffset, true);
+		}
+		
+		public GenericFileFormat getGFF(){
+			return genericFileFormat;
 		}
 
 		/**
@@ -1363,16 +1409,16 @@ public class GenericFileFormat {
 		private long getDataOrDataOffset() {
 			return dataOrDataOffset;
 		}
-		
+
 		/**
 		 * Sums the data offset with the given delta.
 		 * 
 		 * @param delta
 		 */
-		protected void increaseOffset(int delta){
+		protected void increaseOffset(int delta) {
 			this.dataOrDataOffset += delta;
 		}
-		
+
 		/**
 		 * Gets the offset of this field within the Field Array.
 		 * 
@@ -1383,7 +1429,7 @@ public class GenericFileFormat {
 			int size = (4 * 3);
 			return this.fieldIndex * size;
 		}
-		
+
 		public GffStruct readGffStruct(ScriptEaseFileAccess reader)
 				throws IOException {
 			// Normally, a Field's DataOrDataOffset value would be a byte offset
@@ -1433,9 +1479,11 @@ public class GenericFileFormat {
 		/**
 		 * Reads this field's data and converts it to a string.
 		 * 
-		 * @param reader The reader to read from.
+		 * @param reader
+		 *            The reader to read from.
 		 * @return The field data as a string.
-		 * @throws IOException If everything goes to hell.
+		 * @throws IOException
+		 *             If everything goes to hell.
 		 */
 		public String readString(ScriptEaseFileAccess reader)
 				throws IOException {
@@ -1551,7 +1599,7 @@ public class GenericFileFormat {
 					newData = newData.toLowerCase();
 
 					writer.writeByte(newData.length());
-
+					
 					writer.writeString(newData, newData.length());
 
 					break;
@@ -1619,24 +1667,11 @@ public class GenericFileFormat {
 	public void setField(GffField field, String newData) {
 		if (field == null)
 			throw new IllegalStateException("Invalid GffField");
-		
-		if(field.isComplexType() && field.isListType()  && field.isStructType() && field.getDataOrDataOffset() > 0)
+
+		if (field.isComplexType() && field.isListType() && field.isStructType()
+				&& field.getDataOrDataOffset() > 0)
 			System.out.println();
-	
-		/*
-		 * TODO: This may need to be only on resrefs or something. Maybe the
-		 * problem is coming from us pushing forward too many things.
-		 */
-		// push forward all subsequent fields.
-//		if (this.fileType.equals("DLG ") && newData.length() > 0) {
-//			for (GffField otherField : this.fieldArray) {
-//				if (otherField.isComplexType()
-//						&& otherField.dataOrDataOffset > field.dataOrDataOffset) {
-//					otherField.increaseOffset(newData.length());
-//				}
-//			}
-//		}
-		
+
 		this.changedFieldMap.put(field, newData);
 	}
 

@@ -49,7 +49,7 @@ public class IndentedFragment extends FormatFragment {
 		// Get the indent size from the loaded LanguageDictionary
 		String indent = TranslatorManager.getInstance().getActiveTranslator()
 				.getLanguageDictionary().getIndent();
-		context.indent(indent);
+		context.increaseIndent(indent);
 
 		for (FormatFragment fragment : this.subFragments) {
 			generated += fragment.resolve(context);

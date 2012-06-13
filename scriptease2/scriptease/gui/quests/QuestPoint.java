@@ -25,6 +25,7 @@ public class QuestPoint extends StoryComponentContainer {
 	public static String QUEST_POINT_TYPE = "questPoint";
 	private boolean commiting;
 	private int fanIn;
+	private QuestNode questContainer;
 
 	private static int questPointCounter = 1;
 	private final String NEW_QUEST_POINT = "New Quest Point";
@@ -53,11 +54,11 @@ public class QuestPoint extends StoryComponentContainer {
 	}
 
 	/**
-	 * Only accepts Causes as children.
+	 * Only accepts Causes, not effects, as children.
 	 */
 	@Override
 	public boolean canAcceptChild(StoryComponent potentialChild) {
-		// Only accept causes
+		// Only accept causes, not effects
 		if (potentialChild instanceof ScriptIt) {
 			if (((ScriptIt) potentialChild).isCause())
 				return super.canAcceptChild(potentialChild);
@@ -87,6 +88,7 @@ public class QuestPoint extends StoryComponentContainer {
 	}
 
 	public void setQuestContainer(QuestNode quest) {
+		this.questContainer = quest;
 	}
 
 	public QuestNode getQuestContainer() {
