@@ -10,11 +10,14 @@
 # - remiller
 # ----------------------------------------------------------
 
+# ignore eclipse garbage
+*/.externalToolBuilders
+
 # Don't save the user prefs in git. Logs aren't necessary in the repo, either.
 # Nor are classpath and project files. They all contain person-specific paths.
 */user_preferences.ini
 *.log
-*.log.lck
+*.log.*
 .classpath
 .project
 translators_src/*/.externalToolBuilders
@@ -25,6 +28,7 @@ scriptease2/bin
 build/
 jar/
 ScriptEase2.zip
+scriptease2/output
 
 # same goes for translators
 translators_src/*/bin
