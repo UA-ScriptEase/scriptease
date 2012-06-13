@@ -45,20 +45,21 @@ public class SimpleFragmentConverter implements Converter {
 
 		// Data Tag
 		data = reader.getAttribute(DATA_TAG);
-
+		
 		// Legal Format Tag
 		pattern = reader.getAttribute(LEGAL_FORMAT_TAG);
 		if (pattern == null)
 			pattern = "";
-
+		
 		// Default Text Tag
 		defaultText = reader.getAttribute(DEFAULT_TAG);
 
 		simple = new SimpleFragment(data, Pattern.compile(pattern));
 
-		if (defaultText != null && !defaultText.isEmpty())
+		if (defaultText != null && !defaultText.isEmpty()) {
 			simple.setDefaultText(defaultText);
-
+		}
+		
 		return simple;
 	}
 

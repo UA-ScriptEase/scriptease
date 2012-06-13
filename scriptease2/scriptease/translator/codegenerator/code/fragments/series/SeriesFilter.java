@@ -14,8 +14,8 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 
 /**
- * A Series Filter is used to filter the context sensetive results of a series
- * fragment based on FilterBy and a regex. This can be used in codegeneration to
+ * A Series Filter is used to filter the context sensitive results of a series
+ * fragment based on FilterBy and a regex. This can be used in code generation to
  * specify a more limited series by filtering them on a specific regex. Example:
  * A series of StartIts which have a specified slot.
  * 

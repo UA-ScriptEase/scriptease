@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import scriptease.controller.ComplexStoryComponentDescendantCollector;
@@ -22,6 +23,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 
@@ -34,7 +36,7 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  * meaningful manner. Context also provides information such as the current
  * indentation of the code, the propagation of includes, symbols and used names
  * in code generation.
- * 
+ * <br><br>
  * When a method is called in a context which does not make sense, it will
  * return a default unimplemented value as an indicator that the call was not
  * appropriate in the current context. For example, asking for the binding of a
@@ -52,7 +54,7 @@ public class Context {
 	private CodeGenerationNamifier namifier;
 	protected LocationInformation locationInfo;
 
-	public static final String UNIMPLEMENTED = "<unimplemented in context>";
+	private static final String UNIMPLEMENTED = "<unimplemented in context>";
 
 	public Context(QuestNode model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator) {
@@ -94,7 +96,7 @@ public class Context {
 		return this.model;
 	}
 
-	public final void setNamifier(CodeGenerationNamifier namifier) {
+	protected final void setNamifier(CodeGenerationNamifier namifier) {
 		this.namifier = namifier;
 	}
 
@@ -103,24 +105,38 @@ public class Context {
 	}
 
 	public String getUniqueName(Pattern legalFormat) {
-		return unimplemented("getUniqueName(" + legalFormat + ")");
+		unimplemented("getUniqueName(" + legalFormat + ")");
+		return null;
 	}
 
-	public String getNameOf(StoryComponent component) {
-		return unimplemented("getNameOf(" + component + ")");
+	protected String getNameOf(StoryComponent component) {
+		unimplemented("getNameOf(" + component + ")");
+		return null;
 	}
 
 	/**
+	 * Returns the indent.
+	 * 
 	 * @return the indent
 	 */
 	public final String getIndent() {
 		return this.indent;
 	}
 
-	public final void indent(String indent) {
+	/**
+	 * Increases the indent by adding the passed string to the existing string.
+	 * 
+	 * @param indent
+	 */
+	public final void increaseIndent(String indent) {
 		this.indent += indent;
 	}
 
+	/**
+	 * Reduces the indent by the number of characters in the passed string.
+	 * 
+	 * @param indent
+	 */
 	public final void reduceIndent(String indent) {
 		this.indent = this.indent.substring(indent.length());
 	}
@@ -235,11 +251,13 @@ public class Context {
 	}
 
 	public String getValue() {
-		return unimplemented("getValue");
+		unimplemented("getValue");
+		return null;
 	}
 
 	public String getCondition() {
-		return unimplemented("getCondition");
+		unimplemented("getCondition");
+		return null;
 	}
 
 	public Iterator<KnowIt> getImplicits() {
@@ -273,7 +291,8 @@ public class Context {
 	}
 
 	public String getName() {
-		return unimplemented("getName");
+		unimplemented("getName");
+		return null;
 	}
 
 	public StoryComponent getOwner() {
@@ -319,11 +338,13 @@ public class Context {
 	}
 
 	public String getType() {
-		return unimplemented("getType");
+		unimplemented("getType");
+		return null;
 	}
 
 	public String getCode() {
-		return unimplemented("getCode");
+		unimplemented("getCode");
+		return null;
 	}
 
 	public ScriptIt getScriptIt(String keyword) {
@@ -339,11 +360,6 @@ public class Context {
 	public String getFormattedValue() {
 		unimplemented("getFormattedValue");
 		return null;
-	}
-
-	// Used to facilitate aspect-j logging of unimplemented context
-	private String unimplemented(String methodName) {
-		return UNIMPLEMENTED+": "+methodName+" unimplemented in "+ this.getClass().getName();
 	}
 
 	public Iterator<QuestNode> getQuestNodes() {
@@ -370,28 +386,48 @@ public class Context {
 	}
 
 	public String getCommitting() {
-		return unimplemented("getComitting");
+		unimplemented("getComitting");
+		return null;
 	}
 
 	public String getFanIn() {
-		return unimplemented("getFanIn");
+		unimplemented("getFanIn");
+		return null;
 	}
 
 	public Iterator<GraphNode> getParentNodes() {
 		unimplemented("getParentNodes");
-		return new ArrayList<GraphNode>().iterator();
+		return null;
 	}
 
 	public Iterator<GraphNode> getChildrenNodes() {
 		unimplemented("getChildrenNodes");
-		return new ArrayList<GraphNode>().iterator();
+		return null;
 	}
 
 	public String getQuestContainer() {
-		return unimplemented("getQuestContainer");
+		unimplemented("getQuestContainer");
+		return null;
 	}
 
 	public String getInclude() {
-		return unimplemented("getInclude");
+		unimplemented("getInclude");
+		return null;
+	}
+
+	public Set<String> getIncludeFiles() {
+		unimplemented("getIncludeFiles");
+		return null;
+	}
+
+	/**
+	 * Throws a CodeGenerationException if the called method is not implemented
+	 * in a subclass, or the implementation is not correctly called.
+	 * 
+	 * @param methodName
+	 */
+	private void unimplemented(String methodName) {
+		throw (new CodeGenerationException(UNIMPLEMENTED + ": " + methodName
+				+ " unimplemented in " + this.getClass().getName()));
 	}
 }

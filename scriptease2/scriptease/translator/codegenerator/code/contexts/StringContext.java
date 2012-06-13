@@ -15,7 +15,7 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  * @author mfchurch
  * 
  */
-public class StringContext extends Context {
+public class StringContext {/*extends Context {
 	private String value = "";
 	private static Iterator<String> includeFragment;
 
@@ -40,9 +40,11 @@ public class StringContext extends Context {
 	
 	@Override
 	public String getInclude() {	
+		
+		
 		if(includeFragment == null)
 			includeFragment = this.getIncludes();
-		
+
 		if(includeFragment.hasNext())
 			return includeFragment.next();
 		else
@@ -52,5 +54,5 @@ public class StringContext extends Context {
 	@Override
 	public String getUniqueName(Pattern legalRange) {
 		return this.value;
-	}
+	}*/
 }

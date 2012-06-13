@@ -19,7 +19,7 @@ public class TranslatorKeywordManager {
 	public static final String XML_CODE_FORMAT = "code";
 	public static final String XML_COMMENT_FORMAT = "comment";
 	public static final String XML_CONDITION_FORMAT = "condition";
-	public static final String XML_IMPORT_FORMAT = "include";
+	public static final String XML_INCLUDE_FORMAT = "include";
 	public static final String XML_NAME_FORMAT = "name";
 	public static final String XML_TYPE_FORMAT = "type";
 
@@ -92,7 +92,6 @@ public class TranslatorKeywordManager {
 
 	public static final String XML_CODESYMBOL = "codeSymbol";
 	public static final String XML_IMPLICIT = "implicit";
-	public static final String XML_INCLUDE = "include";
 	public static final String XML_VISIBLE = "visible";
 
 	public static final String XML_FILTERBY = "filterBy";
