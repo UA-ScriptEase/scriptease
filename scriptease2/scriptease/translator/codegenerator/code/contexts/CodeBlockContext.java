@@ -69,8 +69,8 @@ public class CodeBlockContext extends Context {
 				.createContext(this, this.codeBlock.getOwner());
 		return scriptItContext.getParameter(keyword);
 	}
-/*	
-	@Override
+	
+/*	@Override
 	public String getInclude() {
 		final Iterator<String> includeFragment;
 
@@ -98,11 +98,15 @@ public class CodeBlockContext extends Context {
 		return codeBlock.getParameters().iterator();
 	}
 
-	@Override
+	/*@Override
 	public Iterator<String> getIncludes() {
+		for(String include : codeBlock.getIncludes()) {
+			FileContext.addIncludeFile(include);
+		}
 		return codeBlock.getIncludes().iterator();
 	}
-
+	*/
+	
 	/**
 	 * Get the Collection of FormatFragments which represent the method body
 	 */

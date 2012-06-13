@@ -52,6 +52,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.codegenerator.CodeGenerator;
 import scriptease.translator.codegenerator.ScriptInfo;
 
 /**
@@ -473,8 +474,7 @@ public class MenuFactory {
 								.getActiveModel();
 						if (activeModel != null) {
 							final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
-							final Collection<ScriptInfo> scriptInfos = FileManager
-									.getInstance().generateCode(activeModel,
+							final Collection<ScriptInfo> scriptInfos = CodeGenerator.generateCode(activeModel,
 											problems);
 
 							String code = "";
