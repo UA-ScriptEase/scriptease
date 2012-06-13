@@ -1,7 +1,5 @@
 package scriptease.gui.graph.nodes;
 
-import java.awt.Color;
-import java.awt.event.MouseAdapter;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,8 +10,8 @@ import java.util.Map.Entry;
 
 import scriptease.controller.GraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
+import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.GraphNodeObserver;
-import scriptease.gui.SETree.ui.ScriptEaseUI;
 import sun.awt.util.IdentityArrayList;
 
 /**
@@ -25,17 +23,15 @@ import sun.awt.util.IdentityArrayList;
  * @author mfchurch
  * @author graves (refactored)
  */
-public abstract class GraphNode extends MouseAdapter implements Cloneable {
+public abstract class GraphNode implements Cloneable {
 	protected IdentityArrayList<GraphNode> parents;
 	protected IdentityArrayList<GraphNode> children;
 	protected Collection<WeakReference<GraphNodeObserver>> observers;
 
+	protected boolean isBeingUsed;
 	protected boolean selected;
 	protected boolean terminal;
 
-	protected Color selectedColour = ScriptEaseUI.COLOUR_GAME_OBJECT;
-	protected Color unselectedColour = Color.GRAY;
-	protected Color backgroundColour = Color.WHITE;
 	// Upper bound on longest path
 	private final int INF_PATH_LENGTH = 100;
 	// default size for number of parents and children
@@ -93,7 +89,7 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 	/**
 	 * When cloning GraphNodes, it is possible to break the graph when nodes fan
 	 * in because more than one clone of the child can be created by the cloning
-	 * process. Thus you _must_ use GraphNodeReference resolver after cloning is
+	 * process. Thus you _must_ use GraphNodeReference resolver after cloning in
 	 * order to repair these duplications in the graph.
 	 */
 	@Override
@@ -108,10 +104,6 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 		}
 		// reset the clone
 		clone.init();
-
-		clone.setSelectedColour(this.selectedColour);
-		clone.setUnselectedColour(this.unselectedColour);
-		clone.setBackgroundColour(this.backgroundColour);
 
 		clone.setSelected(this.selected);
 		clone.setTerminal(this.terminal);
@@ -152,7 +144,7 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 		for (WeakReference<GraphNodeObserver> observerRef : observersCopy) {
 			GraphNodeObserver graphNodeObserver = observerRef.get();
 			if (graphNodeObserver != null)
-				graphNodeObserver.nodeChanged(this, event);
+				graphNodeObserver.nodeChanged(event);
 		}
 	}
 
@@ -171,9 +163,7 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 	 * @param isSelected
 	 */
 	public void setSelected(Boolean isSelected) {
-		if (this.selected != isSelected) {
-			this.selected = isSelected;
-		}
+		this.selected = isSelected;
 	}
 
 	/**
@@ -183,6 +173,51 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 	 */
 	public boolean isSelected() {
 		return this.selected;
+	}
+
+	/**
+	 * Returns whether the GraphNode is deletable or not. Determined by if the
+	 * GraphNode is a start or end node. Does not need to be called in order to
+	 * delete the node, but it is useful if you need to check both.
+	 * 
+	 * @return
+	 */
+	public boolean isDeletable() {
+		if (this.isEndNode() || this.isStartNode())
+			return false;
+		else
+			return true;
+	}
+
+	/**
+	 * Returns true if the current node is the start node. Otherwise, returns
+	 * false.
+	 * 
+	 * @return
+	 */
+	public boolean isStartNode() {
+		List<GraphNode> parents = this.getParents();
+
+		if (parents.size() > 0)
+			return false;
+		else
+			return true;
+	}
+
+	/**
+	 * Returns true if the current node is the end node. Otherwise, returns
+	 * false.
+	 * 
+	 * @return
+	 */
+
+	public boolean isEndNode() {
+		List<GraphNode> children = this.getChildren();
+
+		if (children.size() > 0)
+			return false;
+		else
+			return true;
 	}
 
 	/**
@@ -218,6 +253,7 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 		for (GraphNode parent : this.parents) {
 			parentsCopy.add(parent);
 		}
+
 		return parentsCopy;
 	}
 
@@ -232,7 +268,7 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 		if (!this.children.contains(child) && !isDescendant(child)
 				&& this.children.add(child)) {
 			this.notifyObservers(new GraphNodeEvent(child,
-					GraphNodeEvent.CONNECTION_ADDED));
+					GraphNodeEventType.CONNECTION_ADDED));
 
 			// add yourself as a parent of the child
 			child.addParent(this);
@@ -252,7 +288,7 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 		if (!this.parents.contains(parent) && !parent.isDescendant(this)
 				&& this.parents.add(parent)) {
 			this.notifyObservers(new GraphNodeEvent(parent,
-					GraphNodeEvent.CONNECTION_ADDED));
+					GraphNodeEventType.CONNECTION_ADDED));
 
 			// add yourself as a child of that parent
 			parent.addChild(this);
@@ -304,7 +340,7 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 		// remove the child
 		if (this.children.remove(child)) {
 			this.notifyObservers(new GraphNodeEvent(child,
-					GraphNodeEvent.CONNECTION_REMOVED));
+					GraphNodeEventType.CONNECTION_REMOVED));
 
 			// remove yourself as the parent of the child.
 			child.removeFromParent(this, false);
@@ -336,7 +372,7 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 	public boolean removeFromParent(GraphNode parent, boolean reparentChildren) {
 		if (this.parents.remove(parent)) {
 			this.notifyObservers(new GraphNodeEvent(parent,
-					GraphNodeEvent.CONNECTION_REMOVED));
+					GraphNodeEventType.CONNECTION_REMOVED));
 
 			// remove yourself as a child of the parent.
 			parent.removeChild(this, false);
@@ -414,30 +450,6 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 
 	public abstract void process(GraphNodeVisitor processController);
 
-	public void setSelectedColour(Color colour) {
-		this.selectedColour = colour;
-	}
-
-	public Color getSelectedColour() {
-		return this.selectedColour;
-	}
-
-	public void setUnselectedColour(Color colour) {
-		this.unselectedColour = colour;
-	}
-
-	public Color getUnselectedColour() {
-		return this.unselectedColour;
-	}
-
-	public void setBackgroundColour(Color colour) {
-		this.backgroundColour = colour;
-	}
-
-	public Color getBackgroundColour() {
-		return this.backgroundColour;
-	}
-
 	public void addChildren(Collection<GraphNode> children) {
 		for (GraphNode child : children) {
 			this.addChild(child);
@@ -446,6 +458,7 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 
 	/**
 	 * Returns whether this GraphNode is terminal or not.
+	 * 
 	 * @return
 	 */
 	public boolean isTerminalNode() {
@@ -455,8 +468,8 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 	}
 
 	/**
-	 * Finds the best path from this node, to the given end node. Criteria
-	 * being the most selected nodes (from previous selection), otherwise if no
+	 * Finds the best path from this node, to the given end node. Criteria being
+	 * the most selected nodes (from previous selection), otherwise if no
 	 * selection, take the shortest path.
 	 * 
 	 * @param end
@@ -501,6 +514,7 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 
 	/**
 	 * Get all paths from this GraphNode to the given GraphNode.
+	 * 
 	 * @param end
 	 * @return
 	 */
@@ -536,8 +550,8 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 	 * Checks if the given child node is a descendant or equal to the graphNode.
 	 * Maintains the directed acyclic state of the GraphNode. Example usage:
 	 * 
-	 * descendant.isDescendant(node) == true
-	 * node.isDescendant(descendant) == false
+	 * descendant.isDescendant(node) == true node.isDescendant(descendant) ==
+	 * false
 	 * 
 	 * @param child
 	 * @return
@@ -578,5 +592,18 @@ public abstract class GraphNode extends MouseAdapter implements Cloneable {
 		if (!nodes.containsKey(this))
 			nodes.put(this, 0);
 		return nodes;
+	}
+
+	/**
+	 * 
+	 * @param observer
+	 * @param observable
+	 */
+	public static void observeDepthMap(GraphNodeObserver observer,
+			GraphNode observable) {
+		Collection<GraphNode> nodes = observable.getNodeDepthMap().keySet();
+		for (GraphNode childNode : nodes) {
+			childNode.addGraphNodeObserver(observer);
+		}
 	}
 }

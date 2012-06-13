@@ -25,13 +25,29 @@ public class QuestPoint extends StoryComponentContainer {
 	public static String QUEST_POINT_TYPE = "questPoint";
 	private boolean commiting;
 	private int fanIn;
-	private QuestNode questContainer;
 
+	private static int questPointCounter = 1;
+	private final String NEW_QUEST_POINT = "New Quest Point";
+
+	/**
+	 * Creates a new QuestPoint.
+	 * 
+	 * @param name
+	 *            If name is null or empty string, it gives a default name of
+	 *            NEW_QUEST_POINT and the current quest point count.
+	 * @param fanIn
+	 * @param commiting
+	 */
 	public QuestPoint(String name, int fanIn, boolean commiting) {
-		super(name);
+		super();
 		this.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
+		if ((name.equals("")) || (name == null)) {
+			name = NEW_QUEST_POINT + " " + questPointCounter++;
+		}
+
+		this.setDisplayText(name);
 		this.fanIn = fanIn;
 		this.commiting = commiting;
 	}
@@ -61,7 +77,7 @@ public class QuestPoint extends StoryComponentContainer {
 		this.fanIn = fanIn;
 	}
 
-	public void setCommiting(boolean commiting) {
+	public void setCommitting(boolean commiting) {
 		this.commiting = commiting;
 	}
 
@@ -71,7 +87,6 @@ public class QuestPoint extends StoryComponentContainer {
 	}
 
 	public void setQuestContainer(QuestNode quest) {
-		this.questContainer = quest;
 	}
 
 	public QuestNode getQuestContainer() {

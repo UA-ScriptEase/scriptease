@@ -77,8 +77,9 @@ public class CloseableTab extends JPanel {
 
 		// add more space between the label and the button
 		label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+		
 		closeButton = new TabButton(new CloseTabAction(panel));
-
+		closeButton.setHideActionText(true);
 		this.add(closeButton);
 
 		// add more space to the top of the component

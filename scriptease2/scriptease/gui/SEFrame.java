@@ -30,17 +30,15 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import scriptease.ScriptEase;
+import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.FileManager;
 import scriptease.controller.observer.StoryModelPoolEvent;
 import scriptease.controller.observer.StoryModelPoolObserver;
 import scriptease.controller.observer.TranslatorObserver;
-import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.pane.CloseableTab;
-import scriptease.gui.pane.DefaultPatternPaneFactory;
 import scriptease.gui.pane.LibraryPane;
 import scriptease.gui.pane.PaneFactory;
 import scriptease.gui.pane.StoryPanel;
-import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
 import scriptease.model.StoryComponent;
@@ -63,7 +61,6 @@ import scriptease.translator.TranslatorManager;
 public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	private static final int MIN_HEIGHT = 480;
 	private static final int MIN_WIDTH = 640;
-	private static final int PREFERRED_PROPERTIES_THICKNESS = 250;
 
 	private final JTabbedPane storyTabs;
 	private final JComponent middlePane;
@@ -80,6 +77,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		this.storyTabs = new JTabbedPane();
+		
 		// Register a change listener
 		this.storyTabs.addChangeListener(new ChangeListener() {
 			// This method is called whenever the selected tab changes
@@ -95,15 +93,10 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 			}
 		});
 
-		// if (ScriptEase.DEBUG_MODE) {
-		// this.middlePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
-		// ((JSplitPane) this.middlePane).setTopComponent(this.storyPane);
-		// ((JSplitPane) this.middlePane).setResizeWeight(1.0);
-		// } else {
 		this.middlePane = new JPanel();
 		this.middlePane.setLayout(new GridLayout(1, 1));
 		this.middlePane.add(storyTabs);
-
+		
 		this.populate();
 
 		StoryModelPool.getInstance().addPoolChangeObserver(this);
@@ -133,8 +126,6 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		final JComponent libraryPane = new LibraryPane();
 		final JComponent objectPane = PaneFactory.buildGameObjectPane(null);
 		final JComponent statusBar = this.buildStatusBar();
-
-		// this.updatePropertiesPane();
 
 		final GroupLayout layout = new GroupLayout(content);
 		content.setLayout(layout);
@@ -224,6 +215,10 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		}
 	}
 
+	/**
+	 * Creates a status bar.
+	 * @return
+	 */
 	private JComponent buildStatusBar() {
 		final Box statusBar = Box.createHorizontalBox();
 		final JLabel currentTranslatorLabel;
@@ -282,37 +277,6 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	}
 
 	/**
-	 * Determines the selected StoryComponent in the internal frame with focus
-	 * and configures the properties pane to display its properties. If there is
-	 * no selection or no frames with focus, then an empty properties pane is
-	 * displayed.
-	 */
-	public void updatePropertiesPane() {
-		if (!ScriptEase.DEBUG_MODE)
-			return;
-		final List<StoryComponent> selection = this.getSelection();
-		final StoryModel activeModel = StoryModelPool.getInstance()
-				.getActiveModel();
-
-		final JPanel newProps;
-		final DefaultPatternPaneFactory factory;
-		final StoryComponent firstSelection;
-
-		if ((selection.size() != 1) || (activeModel == null)
-				|| ((firstSelection = selection.get(0)) == null)) {
-			newProps = this.buildEmptyPropertiesPanel();
-		} else {
-			factory = new DefaultPatternPaneFactory();
-			newProps = factory.buildPane(firstSelection);
-		}
-
-		newProps.setPreferredSize(new Dimension(PREFERRED_PROPERTIES_THICKNESS,
-				PREFERRED_PROPERTIES_THICKNESS));
-		((JSplitPane) this.middlePane).setBottomComponent(newProps);
-		this.validate();
-	}
-
-	/**
 	 * Get the component in focus from the KeyboardFocusManager, can return null
 	 * 
 	 * @return
@@ -361,16 +325,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		return selection;
 	}
 
-	private JPanel buildEmptyPropertiesPanel() {
-		final JLabel emptyPropertiesLabel = new JLabel(
-				" - Select a single pattern to see its properties - ");
-		final JPanel propertyPane = new JPanel();
-
-		emptyPropertiesLabel.setEnabled(false);
-		propertyPane.add(emptyPropertiesLabel);
-
-		return propertyPane;
-	}
+	private QuestPoint startQuestPoint;
 
 	/**
 	 * Creates a tab for the given StoryModel defaulting to the starting
@@ -379,80 +334,30 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	 * @param model
 	 */
 	public void createTabForModel(StoryModel model) {
-		QuestNode root = model.getRoot();
-		GraphNode startPoint = root.getStartPoint();
-		QuestPoint questPoint = null;
-		// Grab the QuestPoint from the start of the game quest
-		if (startPoint != null && startPoint instanceof QuestPointNode)
-			questPoint = ((QuestPointNode) startPoint).getQuestPoint();
-		this.createTabForQuestPoint(model, questPoint);
-	}
-
-	/**
-	 * 
-	 */
-	public void createTabForQuestPoint(StoryModel model, QuestPoint questPoint) {
 		final Icon icon = model.getTranslator().getIcon();
 
-		final StoryPanel newPanel = new StoryPanel(model, questPoint);
-		final CloseableTab newTab = new CloseableTab(this.storyTabs, newPanel,
-				icon);
+		model.getRoot().getStartPoint()
+				.process(new AbstractNoOpGraphNodeVisitor() {
+					@Override
+					public void processQuestPointNode(
+							QuestPointNode questPointNode) {
 
-		this.storyTabs.addTab(
-				questPoint.getDisplayText() + " - " + newPanel.getTitle(),
-				icon, newPanel);
-		this.storyTabs.setTabComponentAt(
-				this.storyTabs.indexOfComponent(newPanel), newTab);
-		this.storyTabs.setSelectedComponent(newPanel);
-	}
+						startQuestPoint = questPointNode.getQuestPoint();
+					}
+				});
 
-	/**
-	 * Returns if there exists a StoryPanel for the given StoryModel and
-	 * QuestPoint
-	 * 
-	 * @param model
-	 * @param questPoint
-	 * @return
-	 */
-	public boolean hasTabForQuestPoint(StoryModel model, QuestPoint questPoint) {
-		return getTabForQuestPoint(model, questPoint) != null;
-	}
+		System.out.println("Start Quest Point is: "
+				+ startQuestPoint.toString());
 
-	/**
-	 * Finds and returns the StoryPanel for the given QuestPoint from the list
-	 * of Panes for the given model. Returns null if one is not found
-	 * 
-	 * @param model
-	 * @param questPoint
-	 * @return
-	 */
-	private StoryPanel getTabForQuestPoint(StoryModel model,
-			QuestPoint questPoint) {
-		List<StoryPanel> panesForModel = StoryPanel
-				.getStoryPanelsForModel(model);
-		for (StoryPanel panel : panesForModel) {
-			if (panel.represents(questPoint))
-				return panel;
-		}
-		return null;
-	}
+		if (startQuestPoint != null) {
+			final StoryPanel newPanel = new StoryPanel(model, startQuestPoint);
+			final CloseableTab newTab = new CloseableTab(this.storyTabs,
+					newPanel, icon);
 
-	/**
-	 * Activates the StoryPanel tab for the given model and questPoint. If it's
-	 * not found, does nothing.
-	 * 
-	 * @param model
-	 * @param questPoint
-	 */
-	public void activateTabForQuestPoint(StoryModel model, QuestPoint questPoint) {
-		StoryPanel tabForQuestPoint = getTabForQuestPoint(model, questPoint);
-		if (tabForQuestPoint != null) {
-			try {
-				this.storyTabs.setSelectedComponent(tabForQuestPoint);
-			} catch (IllegalArgumentException e) {
-				System.err
-						.println("StoryTab not found in the Tab list. Desync between StoryPanels for a model, and tabs");
-			}
+			this.storyTabs.addTab(newPanel.getTitle(), icon, newPanel);
+			this.storyTabs.setTabComponentAt(
+					this.storyTabs.indexOfComponent(newPanel), newTab);
+			this.storyTabs.setSelectedComponent(newPanel);
 		}
 	}
 
@@ -579,7 +484,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		}
 	}
 
-	public StoryPanel getActiveTab() {
+	public StoryPanel getActiveStory() {
 		final int selectedIndex = this.storyTabs.getSelectedIndex();
 		final StoryModel activeModel;
 
@@ -594,5 +499,17 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 					"Active tab is not representing active model");
 
 		return storyPanel;
+	}
+
+	/**
+	 * Activates the StoryPanel for the given model and questPoint. If it's not
+	 * found, does nothing.
+	 * 
+	 * @param model
+	 * @param questPoint
+	 */
+	public void activatePanelForQuestPoint(StoryModel model,
+			QuestPoint questPoint) {
+		getActiveStory().setTree(questPoint);
 	}
 }

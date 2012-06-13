@@ -24,11 +24,7 @@ public class StoryComponentTextField extends Observable implements KeyListener, 
 		textField.addKeyListener(this);
 		textField.getDocument().addDocumentListener(this);
 		textField.setMaximumSize(new Dimension(350,60));
-		
 	}
-	
-	//Copy, and deletion is problematic....FUCK ME, wtf is up wid this noise....
-	//Y u so annyoing to fix, i should be getting you for free!
 	
 	public void setText(String text){
 		textField.setText(text);

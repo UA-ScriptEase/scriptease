@@ -38,6 +38,16 @@ public interface ScriptEaseUI {
 	public static final Color COLOUR_BOUND = Color.LIGHT_GRAY;
 
 	/**
+	 * The colour (green) used for selected objects
+	 */
+	public static final Color SELECTED_GAME_OBJECT = new Color(20, 175, 0);
+	
+	/**
+	 * The colour (warning red ) used for deleting objects
+	 */
+	public static final Color DELETING_GAME_OBJECT = new Color(20, 175, 0);
+
+	/**
 	 * Icon used to indicate a collapse will occur
 	 */
 	public static final Icon COLLAPSE_ICON = (Icon) UIManager

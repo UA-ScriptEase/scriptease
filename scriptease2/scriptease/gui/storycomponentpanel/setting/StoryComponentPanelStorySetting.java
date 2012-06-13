@@ -22,7 +22,7 @@ public class StoryComponentPanelStorySetting extends AbstractNoOpStoryVisitor
 		this.panel = panel;
 		panel.getStoryComponent().process(this);
 		this.panel.setEditable(true);
-		this.panel = null;
+		this.panel = null; //Hack used to pass in some information, then reset the variable.
 	}
 
 	@Override

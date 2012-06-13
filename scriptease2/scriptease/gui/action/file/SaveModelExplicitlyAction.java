@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
+import javax.swing.KeyStroke;
 
 import scriptease.controller.FileManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
@@ -44,6 +45,8 @@ public final class SaveModelExplicitlyAction extends ActiveModelSensitiveAction 
 		super(SaveModelExplicitlyAction.SAVE_AS + "...");
 
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
+		this.putValue(Action.ACCELERATOR_KEY,
+				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
 	}
 
 	@Override

@@ -26,8 +26,6 @@ import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.quests.QuestPointNode;
-import scriptease.gui.quests.QuestPointPropertiesDialog;
 import scriptease.gui.storycomponentbuilder.StoryComponentFrame;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
@@ -426,7 +424,8 @@ public final class WindowManager {
 	}
 
 	public void showStoryComponentBuilder() {
-		JFrame scFrame = StoryComponentFrame.getInstance();
+		JFrame scFrame = new JFrame();
+		scFrame = StoryComponentFrame.getInstance();
 		scFrame.setJMenuBar(MenuFactory.buildBuilderMenuBar());
 
 		scFrame.setVisible(true);
@@ -589,17 +588,5 @@ public final class WindowManager {
 		PreferencesDialog preferencesDialog = new PreferencesDialog(
 				SEFrame.getInstance());
 		preferencesDialog.display();
-	}
-
-	public void showQuestPointPropertiesDialog(QuestPointNode questPointNode) {
-		// Create the dialog to show.
-		QuestPointPropertiesDialog dialog = new QuestPointPropertiesDialog(
-				SEFrame.getInstance(), questPointNode);
-
-		// Show the dialog.
-		dialog.setResizable(false);
-		dialog.pack();
-		dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
 	}
 }

@@ -10,8 +10,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
-import scriptease.controller.GraphNodeObserverAdder;
 import scriptease.controller.observer.GraphNodeEvent;
+import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.GraphNodeObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
@@ -24,6 +24,7 @@ import scriptease.model.complex.ScriptIt;
 
 @SuppressWarnings("serial")
 public class DescribeItPanel extends JPanel implements GraphNodeObserver {
+
 	private DescribeIt describeIt;
 
 	public DescribeItPanel(DescribeIt describeIt, boolean collapsed) {
@@ -32,13 +33,13 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 		this.setOpaque(false);
 		this.setLayout(new DescribeItPanelLayoutManager(headNode, collapsed));
 		// observer the graph nodes
-		GraphNodeObserverAdder adder = new GraphNodeObserverAdder();
-		adder.observeDepthMap(this, headNode);
+	
+		GraphNode.observeDepthMap(this, headNode);
 	}
 
 	@Override
-	public void nodeChanged(GraphNode node, GraphNodeEvent event) {
-		if (event.getEventType() == GraphNodeEvent.CLICKED) {
+	public void nodeChanged(GraphNodeEvent event) {
+		if (event.getEventType() == GraphNodeEventType.SELECTED) {
 			this.describeIt.selectFromHeadToNode(event.getSource());
 		}
 	}
@@ -159,7 +160,7 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			ScriptIt resolvedDoIt = describeIt.getResolvedScriptIt();
 
 			if (resolvedDoIt != null) {
-				StoryComponentPanelFactory.getInstance().parseDisplayText(
+				StoryComponentPanelFactory.parseDisplayText(
 						collapsedPanel, resolvedDoIt);
 
 				xSize += collapsedPanel.getPreferredSize().getWidth();
@@ -196,7 +197,7 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			final ScriptIt resolvedDoIt = describeIt.getResolvedScriptIt();
 
 			if (resolvedDoIt != null) {
-				StoryComponentPanelFactory.getInstance().parseDisplayText(
+				StoryComponentPanelFactory.parseDisplayText(
 						collapsedPanel, resolvedDoIt);
 
 				collapsedPanel.setBounds(xLocation, yLocation,

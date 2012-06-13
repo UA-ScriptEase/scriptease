@@ -4,6 +4,7 @@ import java.awt.Component;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -11,32 +12,63 @@ import javax.swing.JTextField;
 import scriptease.gui.graph.nodes.GraphNode;
 
 /**
- * JPanel made for editing the fields of a GraphNode
+ * Abstract JComponent made for editing the fields of a GraphNode. As of right
+ * now, it is used for TextNodes and KnowItNodes.
  * 
  * @author mfchurch
+ * @author kschenk
  * 
  */
 @SuppressWarnings("serial")
-public abstract class GraphNodeEditor extends JPanel {
+public abstract class GraphNodeEditor extends JComponent {
 	protected static int FIELD_SIZE = 30;
 	protected GraphNode node;
+	private JComponent field;
 
-	public GraphNodeEditor(GraphNode node) {
-		this.node = node;
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-		// add a name editor
-		this.add(buildField("Name", getNameField()));
+	/**
+	 * Constructor. Creates a new GraphNodeEditor.
+	 */
+	public GraphNodeEditor() {
+		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+		this.field = buildField("Name", getNameField());
+		this.add(this.field);
 	}
 
+	/**
+	 * Sets the node for the passed GraphNode. Builds the name field for the
+	 * node, which will represent the name of it.
+	 * 
+	 * @param node
+	 */
+	public void setNode(GraphNode node) {
+		System.out.println("Setting the node" + node.toString());
+		this.node = node;
+		this.remove(field);
+		this.field = buildField("Name", getNameField());
+		this.add(field);
+
+		this.repaint();
+		this.revalidate();
+	}
+
+	/**
+	 * Abstract method. Subclasses must return the JTextField that will be used
+	 * to edit the name of the node.
+	 * 
+	 * @return
+	 */
 	protected abstract JTextField getNameField();
 
-	protected JPanel buildField(String label, Component field) {
-		JPanel panel = new JPanel();
+	/**
+	 * Builds the field for the passed label and field.
+	 * 
+	 * @param label
+	 * @param field
+	 * @return
+	 */
+	protected JComponent buildField(String label, Component field) {
+		JComponent panel = new JPanel();
 		panel.setOpaque(false);
-
-		BoxLayout layout = new BoxLayout(panel, BoxLayout.X_AXIS);
-		panel.setLayout(layout);
 
 		panel.add(new JLabel(label));
 		panel.add(Box.createHorizontalStrut(10));

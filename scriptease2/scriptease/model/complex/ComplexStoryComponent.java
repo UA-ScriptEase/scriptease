@@ -44,12 +44,11 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 	}
 
 	/************* IMPORTANT CODE ******************/
-
 	/**
 	 * This method is crucial to implement the Composite design pattern that
 	 * we're using in the StoryComponent hierarchy. <BR>
 	 * <BR>
-	 * To Use: Pass a StoryComponent to via this method The first StoryComponent
+	 * To Use: Pass a StoryComponent to this method The first StoryComponent
 	 * will handle the addition of the second, except in the case where the
 	 * first is an atomic element, where an Unsupported Operation will be
 	 * thrown.
@@ -77,10 +76,10 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 	 * This method is crucial to implement the Composite design pattern that
 	 * we're using in the StoryComponent hierarchy. <BR>
 	 * <BR>
-	 * To Use: Pass a StoryComponent to via this method The receiver
-	 * StoryComponent will handle the addition of the second at the supplied
-	 * index, except in the case where the first is an atomic element, where an
-	 * Unsupported Operation will be thrown. <BR>
+	 * To Use: Pass a StoryComponent to this method. The receiver StoryComponent
+	 * will handle the addition of the second at the supplied index, except in
+	 * the case where the first is an atomic element, where an Unsupported
+	 * Operation will be thrown. <BR>
 	 * <BR>
 	 * It is <b>critical</b> that implementations of this method also handle
 	 * re-parenting <code>newChild</code> correctly to avoid any incorrect data
