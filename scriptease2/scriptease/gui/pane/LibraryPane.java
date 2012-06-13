@@ -1,22 +1,18 @@
 package scriptease.gui.pane;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JTabbedPane;
 import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
+import javax.swing.border.TitledBorder;
 
 import scriptease.controller.observer.LibraryManagerEvent;
 import scriptease.controller.observer.LibraryManagerObserver;
@@ -36,19 +32,22 @@ import scriptease.model.LibraryManager;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
-import scriptease.util.StringOp;
 
 @SuppressWarnings("serial")
 /**
- * LibraryPane represents the JPanel used for managing, filtering and choosing Patterns from the loaded Libraries
+ * LibraryPane represents the JPanel used for managing, filtering and choosing
+ * Patterns from the loaded Libraries
  * 
  * @author mfchurch
  */
 public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		TranslatorObserver {
-	private final String TYPE_FILTER_LABEL = Il8nResources
-			.getString("Type_Filter_");
-	private final StoryComponentPanelTree tree;
+
+	private final JTabbedPane treeTabs;
+	private final StoryComponentPanelTree causesTree;
+	private final StoryComponentPanelTree effectsTree;
+	private final StoryComponentPanelTree descriptionsTree;
+	private final StoryComponentPanelTree foldersTree;
 
 	public LibraryPane() {
 		this(new StoryComponentPanelLibrarySetting());
@@ -57,18 +56,36 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	public LibraryPane(StoryComponentPanelSetting librarySettings) {
 		final LibraryManager libManager = LibraryManager.getInstance();
 		final StoryComponentContainer root;
-		final StoryComponentFilter filter;
+		final StoryComponentFilter causesFilter;
+		final StoryComponentFilter effectsFilter;
+		final StoryComponentFilter descriptionsFilter;
+		final StoryComponentFilter foldersFilter;
 
 		// Construct the Root for the Pane to display
 		root = libManager.getLibraryMasterRoot();
 
 		// Create the default filter.
-		filter = this.buildLibraryFilter();
+		causesFilter = this.buildLibraryFilter(new CategoryFilter(
+				Category.CAUSES));
+		effectsFilter = this.buildLibraryFilter(new CategoryFilter(
+				Category.EFFECTS));
+		descriptionsFilter = this.buildLibraryFilter(new CategoryFilter(
+				Category.DESCRIPTIONS));
+		foldersFilter = this.buildLibraryFilter(new CategoryFilter(
+				Category.FOLDERS));
+
+		this.treeTabs = new JTabbedPane();
 
 		// Create the Tree with the root and the default filter
-		this.tree = new StoryComponentPanelTree(root, librarySettings, filter);
-		
-	
+		this.causesTree = new StoryComponentPanelTree(root, librarySettings,
+				causesFilter);
+		this.effectsTree = new StoryComponentPanelTree(root, librarySettings,
+				effectsFilter);
+		this.descriptionsTree = new StoryComponentPanelTree(root,
+				librarySettings, descriptionsFilter);
+		this.foldersTree = new StoryComponentPanelTree(root, librarySettings,
+				foldersFilter);
+
 		// Configure the displaying of the pane
 		this.configurePane();
 
@@ -78,7 +95,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	}
 
 	public StoryComponentPanelTree getSCPTree() {
-		return tree;
+		return (StoryComponentPanelTree) treeTabs.getSelectedComponent();
 	}
 
 	/**
@@ -86,16 +103,14 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 * 
 	 * @return
 	 */
-	private StoryComponentFilter buildLibraryFilter() {
-		// Filter by category
-		CategoryFilter filter = new CategoryFilter(Category.CAUSES);
+	private StoryComponentFilter buildLibraryFilter(CategoryFilter filter) {
 		// Filter by translator
 		filter.addRule(new TranslatorFilter(TranslatorManager.getInstance()
 				.getActiveTranslator()));
 
 		return filter;
 	}
-
+	private FilterableSearchField searchField;
 	/**
 	 * Builds a pane that allows users to drag across any pattern (including
 	 * atoms) from any library into their Story.
@@ -104,48 +119,43 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 */
 	private void configurePane() {
 		final JComponent filterPane;
-		final JComboBox categoryFilterCombo;
 
-		// Build the Category Filter Combo Box
-		categoryFilterCombo = buildCategoryFilterComboBox();
-
-		final JTextField searchField = new FilterableSearchField(this.tree, 20);
+		searchField = new FilterableSearchField(
+				this.causesTree, 20);
+		
+		searchField.addFilter(this.effectsTree);
+		searchField.addFilter(this.descriptionsTree);
+		searchField.addFilter(this.foldersTree);
 
 		filterPane = new JPanel();
-		filterPane.setBorder(BorderFactory.createTitledBorder("Filter"));
-
-		JComponent typeFilterPane = new JPanel();
+		filterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
+				.createLineBorder(Color.gray), Il8nResources
+				.getString("Search_Filter_"),
+				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
+						"SansSerif", Font.PLAIN, 12), Color.black));
+		
 		JComponent searchFilterPane = new JPanel();
-
-		// TypeFilterPane Layout
-		BoxLayout typeFilterPaneLayout = new BoxLayout(typeFilterPane,
-				BoxLayout.LINE_AXIS);
-		typeFilterPane.setLayout(typeFilterPaneLayout);
-		typeFilterPane.add(Box.createHorizontalGlue());
-		typeFilterPane.add(Box.createHorizontalStrut(8));
-		typeFilterPane.add(new JLabel("Category:"));
-		typeFilterPane.add(categoryFilterCombo);
-		categoryFilterCombo.setMaximumSize(categoryFilterCombo
-				.getPreferredSize());
-		typeFilterPane.add(Box.createHorizontalStrut(10));
-		typeFilterPane.add(new JLabel(TYPE_FILTER_LABEL));
 
 		final ShowFilterMenuAction typeFilter = new ShowFilterMenuAction();
 		typeFilter.setSelectionChangedAction(new Runnable() {
 			@Override
 			public void run() {
-				tree.updateFilter(new TypeFilter(typeFilter.getAcceptedTypes()));
+				causesTree.updateFilter(new TypeFilter(typeFilter
+						.getAcceptedTypes()));
+				effectsTree.updateFilter(new TypeFilter(typeFilter
+						.getAcceptedTypes()));
+				descriptionsTree.updateFilter(new TypeFilter(typeFilter
+						.getAcceptedTypes()));
+				foldersTree.updateFilter(new TypeFilter(typeFilter
+						.getAcceptedTypes()));
 			}
 		});
 
-		typeFilterPane.add(new JButton(typeFilter));
-		typeFilterPane.add(Box.createHorizontalStrut(8));
-		typeFilterPane.add(Box.createHorizontalGlue());
-
 		// SearchFilterPane
-		searchFilterPane.add(new JLabel(
-				FilterableSearchField.SEARCH_FILTER_LABEL));
+		// searchFilterPane.add(new JLabel(
+		// FilterableSearchField.SEARCH_FILTER_LABEL));
 		searchFilterPane.add(searchField);
+		searchFilterPane.add(new JButton(typeFilter));
 		BoxLayout searchFilterPaneLayout = new BoxLayout(searchFilterPane,
 				BoxLayout.X_AXIS);
 		searchFilterPane.setLayout(searchFilterPaneLayout);
@@ -153,13 +163,15 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		// FilterPane Layout
 		BoxLayout filterPaneLayout = new BoxLayout(filterPane, BoxLayout.Y_AXIS);
 		filterPane.setLayout(filterPaneLayout);
-		filterPane.add(typeFilterPane);
-		typeFilterPane.add(Box.createHorizontalStrut(8));
 		filterPane.add(searchFilterPane);
-		filterPane.setMinimumSize(typeFilterPane.getPreferredSize());
 
 		this.add(filterPane);
-		this.add(tree);
+		treeTabs.add("Causes", causesTree);
+		treeTabs.add("Effects", effectsTree);
+		treeTabs.add("Descriptions", descriptionsTree);
+		treeTabs.add("Folders", foldersTree);
+
+		this.add(treeTabs);
 		this.setPreferredSize(filterPane.getPreferredSize());
 		SpringLayout pickerPaneLayout = new SpringLayout();
 
@@ -171,46 +183,16 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		pickerPaneLayout.putConstraint(SpringLayout.EAST, filterPane, -5,
 				SpringLayout.EAST, this);
 		// Spring pickerTree
-		pickerPaneLayout.putConstraint(SpringLayout.WEST, tree, 5,
+		pickerPaneLayout.putConstraint(SpringLayout.WEST, treeTabs, 5,
 				SpringLayout.WEST, this);
-		pickerPaneLayout.putConstraint(SpringLayout.EAST, tree, -5,
+		pickerPaneLayout.putConstraint(SpringLayout.EAST, treeTabs, -5,
 				SpringLayout.EAST, this);
-		pickerPaneLayout.putConstraint(SpringLayout.SOUTH, tree, -5,
+		pickerPaneLayout.putConstraint(SpringLayout.SOUTH, treeTabs, -5,
 				SpringLayout.SOUTH, this);
-		pickerPaneLayout.putConstraint(SpringLayout.NORTH, tree, 5,
+		pickerPaneLayout.putConstraint(SpringLayout.NORTH, treeTabs, 5,
 				SpringLayout.SOUTH, filterPane);
 		this.setLayout(pickerPaneLayout);
-
-		// --- listeners ---
-		// Changes in Category Filter combo:
-		categoryFilterCombo.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					final String selectedCategory = (String) e.getItem();
-
-					tree.updateFilter(new CategoryFilter(Category
-							.valueOf(selectedCategory.toUpperCase())));
-				}
-			}
-		});
-	}
-
-	/**
-	 * Builds the Category Filter with the possible Library Categories. These
-	 * are built from the Proper Case names of the values in {@link Category}
-	 * 
-	 * @return The combobox for choosing the category.
-	 */
-	private JComboBox buildCategoryFilterComboBox() {
-		final List<String> labels = new ArrayList<String>();
-
-		for (Category c : Category.values()) {
-			labels.add(StringOp.toProperCase(c.toString()));
-		}
-
-		Collections.sort(labels);
-		return new JComboBox(labels.toArray());
+		
 	}
 
 	/**
@@ -222,7 +204,10 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 			@Override
 			public void run() {
 				// invoke later after the translator has finished loading
-				tree.filterTree();
+				causesTree.filterTree();
+				effectsTree.filterTree();
+				descriptionsTree.filterTree();
+				foldersTree.filterTree();
 			}
 		});
 	}
@@ -232,7 +217,10 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 */
 	@Override
 	public void translatorLoaded(Translator newTranslator) {
-		this.tree.updateFilter(new TranslatorFilter(newTranslator));
-		this.tree.filterTree();
+		for (Component tree : treeTabs.getComponents()) {
+			((StoryComponentPanelTree) tree).updateFilter(new TranslatorFilter(
+					newTranslator));
+			((StoryComponentPanelTree) tree).filterTree();
+		}
 	}
 }

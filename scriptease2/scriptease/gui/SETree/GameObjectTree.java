@@ -14,7 +14,6 @@ import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
-import scriptease.translator.io.model.GameObject;
 
 public class GameObjectTree extends SETreeModel {
 	private final String DIALOGUE_TAG = "dialogue";

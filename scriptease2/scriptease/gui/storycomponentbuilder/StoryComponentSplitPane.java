@@ -15,11 +15,9 @@ import javax.swing.JSplitPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
-import scriptease.gui.describeIts.DescribeItGraphEditor;
 import scriptease.gui.storycomponentbuilder.StoryComponentDescriptorTemplate.ComponentContext;
 import scriptease.gui.storycomponentbuilder.propertypanel.ExpansionButtonSCB;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
-import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 
@@ -164,17 +162,6 @@ public class StoryComponentSplitPane extends JPanel implements ActionListener,
 			shiftLeft();
 
 		panelStack.remove(removee);
-	}
-
-	private int getFurtherSlectionOptionPane() {
-		String[] m = { "Option", "Effect", "Describer", "Constant", "Runtime",
-				"Cancel" };
-		int n = JOptionPane.showOptionDialog(this,
-				"Select new binding to create", "Binding Slection",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-				m, m[0]);
-
-		return n;
 	}
 
 	@Override
@@ -347,44 +334,6 @@ public class StoryComponentSplitPane extends JPanel implements ActionListener,
 		if (a instanceof StoryComponentDescriptorTemplate)
 			return ((ScriptIt)((StoryComponentDescriptorTemplate) a).getStoryComponent()).getParameters().size();
 		return 0;
-	}
-
-	private JComponent selectNewBindingPanel() {
-		switch (getFurtherSlectionOptionPane()) {
-		case 0:
-			// StoryComponentDoItEditor a = (StoryComponentDoItEditor)b;
-			StoryComponentKnowItEditor b = new StoryComponentKnowItEditor(
-					new KnowIt(), ComponentContext.EXTENSION);
-			return b;
-			// break;
-		case 1:
-			StoryComponentScriptItEditor c = new StoryComponentScriptItEditor(
-					new ScriptIt(""), ComponentContext.EXTENSION);
-			c.setActionButtonForParameters(this);
-			return c;
-			// break;
-		case 2:
-			DescribeItGraphEditor d = new DescribeItGraphEditor(new DescribeIt(
-					null), null);
-			return d;
-			// break;
-		case 3:
-			StoryComponentConstantEditor e = new StoryComponentConstantEditor(
-					null);
-			return e;
-			// break;
-		case 4:
-			StoryComponentRuntimeEditor f = new StoryComponentRuntimeEditor(
-					null);
-			return f;
-			// break;
-			// cancel case
-		case 5:
-			break;
-		default:
-			break;
-		}
-		return null;
 	}
 
 	private boolean saveToTranslator() {

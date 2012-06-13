@@ -74,8 +74,6 @@ public class SlotPanel extends JPanel {
 		 */
 		
 		// 1. add and maintain the types list
-		TypeWidgetCircleContainer a = new TypeWidgetCircleContainer(knowIt);
-		//this.add(a);
 		this.add(
 			ScriptWidgetFactory.populateLegalTypesPanel(typesPanel, knowIt),
 				0);

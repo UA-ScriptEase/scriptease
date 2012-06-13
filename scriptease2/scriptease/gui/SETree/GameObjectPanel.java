@@ -42,8 +42,6 @@ public class GameObjectPanel extends Observable implements MouseMotionListener, 
 	protected String shortViewText;
 	protected String regularText;
 
-	//but what do you really do?
-	private boolean selected;
 	
 	public GameObjectPanel(GameConstant gameObject, int horStrut){
 		regularText = gameObject.getName();
@@ -61,7 +59,6 @@ public class GameObjectPanel extends Observable implements MouseMotionListener, 
 		backgroundPanel = new JPanel();
 		backgroundPanel.setOpaque(true);
 		
-		selected = false;
 		
 		this.backgroundPanel.addMouseListener(this);
 		this.backgroundPanel.addMouseMotionListener(this);
@@ -119,18 +116,6 @@ public class GameObjectPanel extends Observable implements MouseMotionListener, 
 		gameObjectPanel3.setLayout(layout2);
 		gameObjectPanel3.add(Box.createVerticalStrut(5));
 		gameObjectPanel3.add(gameObjectPanel2);
-	}
-	
-	public void toggleSelectionStatus(boolean selected){
-		this.selected = selected;
-		if(selected){
-			this.backgroundPanel.setBorder(SELECTED_BORDER);
-			this.backgroundPanel.setBackground(SELECTED_COLOUR);
-		}
-		else{
-			this.backgroundPanel.setBorder(UNSELECTED_BORDER);
-			this.backgroundPanel.setBackground(UNSELECTED_COLOUR);
-		}
 	}
 	
 	private String createShortHandViewofText(){

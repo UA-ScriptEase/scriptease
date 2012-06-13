@@ -3,7 +3,6 @@ package scriptease.util;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
-import java.util.Vector;
 
 import javax.swing.JComponent;
 

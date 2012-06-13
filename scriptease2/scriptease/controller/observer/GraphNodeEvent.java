@@ -4,14 +4,14 @@ import scriptease.gui.graph.nodes.GraphNode;
 
 public final class GraphNodeEvent {
 	private final GraphNode source;
-	private final short eventType;
+	private final GraphNodeEventType eventType;
+	private boolean isShiftDown;
 
-	public static final short CLICKED = 0;
-	public static final short CONNECTION_ADDED = 1;
-	public static final short CONNECTION_REMOVED = 2;
-	public static final short APPEARANCE_CHANGED = 3;
+	public static enum GraphNodeEventType {
+		SELECTED, CONNECTION_ADDED, CONNECTION_REMOVED
+	}
 
-	public GraphNodeEvent(GraphNode source, short type) {
+	public GraphNodeEvent(GraphNode source, GraphNodeEventType type) {
 		this.source = source;
 		this.eventType = type;
 	}
@@ -24,10 +24,17 @@ public final class GraphNodeEvent {
 		return this.source;
 	}
 
-	public short getEventType() {
+	public GraphNodeEventType getEventType() {
 		return this.eventType;
 	}
-
+	
+	public Boolean isShiftDown() {
+		return isShiftDown;
+	}
+	
+	public void setShiftDown(boolean isShiftDown) {
+		this.isShiftDown = isShiftDown;
+	}
 	@Override
 	public String toString() {
 		return "GraphNodeEvent [" + this.source + ", " + this.eventType;

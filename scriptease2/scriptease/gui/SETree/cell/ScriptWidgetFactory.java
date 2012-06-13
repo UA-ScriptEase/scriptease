@@ -222,8 +222,6 @@ public class ScriptWidgetFactory {
 			}
 		}
 		/*************************************************************************/
-		TypeWidgetCircleContainer a = new TypeWidgetCircleContainer(knowIt);
-		//return a;
 		return typePanel;
 	}
 

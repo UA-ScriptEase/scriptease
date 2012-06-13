@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.LayoutManager;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -30,18 +31,19 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.plaf.PanelUI;
 
-import scriptease.controller.GraphNodeObserverAdder;
 import scriptease.controller.GraphNodeVisitor;
 import scriptease.controller.observer.GraphNodeEvent;
+import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.GraphNodeObserver;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.SETree.cell.TypeWidget;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
+import scriptease.gui.action.ToolBarButtonAction;
+import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.gui.graph.nodes.TextNode;
 import scriptease.gui.quests.QuestNode;
-import scriptease.gui.quests.QuestNodePanel;
 import scriptease.gui.quests.QuestPointNode;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.atomic.KnowIt;
@@ -55,38 +57,63 @@ import sun.awt.util.IdentityArrayList;
  * 
  * @author mfchurch
  * @author graves (refactored)
+ * @author kschenk
  */
 @SuppressWarnings("serial")
 public class GraphPanel extends JPanel implements GraphNodeObserver {
-	protected static final int HORIZONTAL_INDENT = 20;
-	protected static final int NODE_Y_INDENT = 10;
-	protected GraphNode headNode;
-	protected GraphNodeComponentBuilder builder;
-	protected Map<GraphNode, Integer> nodeDepthMap;
+	private static final int HORIZONTAL_INDENT = 20;
+	private static final int NODE_Y_INDENT = 10;
+	private GraphNode headNode;
+	private GraphNodeComponentBuilder builder;
+	private Map<GraphNode, Integer> nodeDepthMap;
+	private Point mousePosition = new Point();
+
+	private GraphNode oldSelectedNode;
 
 	public GraphPanel(GraphNode headNode) {
-		this.headNode = headNode;
+		this.setHeadNode(headNode);
+
+		MouseAdapter connectArrowListener = new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				oldSelectedNode = null;
+				repaint();
+			}
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				mousePosition.setLocation(e.getPoint());
+				repaint();
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				mousePosition.setLocation(e.getPoint());
+				repaint();
+			}
+		};
+		
+
+		
+		this.addMouseListener(connectArrowListener);
+		this.addMouseMotionListener(connectArrowListener);
 
 		// Initialize the builder.
 		this.builder = new GraphNodeComponentBuilder();
 
 		// layout manager
 		this.setLayout(new GraphPanelLayoutManager());
-
+		
 		// ui manager
 		this.setUI(new GraphPanelUI());
-
-		// observe the graph nodes
-		GraphNodeObserverAdder adder = new GraphNodeObserverAdder();
-		adder.observeDepthMap(this, this.headNode);
 
 		this.setOpaque(true);
 		this.setBackground(StoryComponentPanel.UNSELECTED_COLOUR);
 	}
 
 	/**
-	 * Store the node depth map until a change has occured, so we don't have to
-	 * recalculate it unneccessarily
+	 * Store the node depth map until a change has occurred, so we don't have to
+	 * recalculate it unnecessarily
 	 * 
 	 * @return
 	 */
@@ -97,21 +124,63 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 	}
 
 	@Override
-	public void nodeChanged(GraphNode node, GraphNodeEvent event) {
+	public void nodeChanged(GraphNodeEvent event) {
 		final GraphNode sourceNode = event.getSource();
-		final short eventType = event.getEventType();
+		final GraphNodeEventType eventType = event.getEventType();
 
-		if (eventType == GraphNodeEvent.CONNECTION_ADDED) {
+		if (eventType == GraphNodeEventType.CONNECTION_ADDED) {
 			// observer the graph nodes
-			GraphNodeObserverAdder adder = new GraphNodeObserverAdder();
-			adder.observeDepthMap(this, sourceNode);
+			GraphNode.observeDepthMap(this, sourceNode);
 		}
-		if (eventType == GraphNodeEvent.CONNECTION_ADDED
-				|| eventType == GraphNodeEvent.CONNECTION_REMOVED) {
+		if (eventType == GraphNodeEventType.CONNECTION_ADDED
+				|| eventType == GraphNodeEventType.CONNECTION_REMOVED) {
 			this.nodeDepthMap = null;
 		}
+
 		this.repaint();
 		this.revalidate();
+	}
+
+	/**
+	 * Sets the head node for the graph panel.
+	 * 
+	 * @param graphNode
+	 */
+	public void setHeadNode(GraphNode graphNode) {
+		if (graphNode == null)
+			throw new IllegalArgumentException("Cannot set head node to null");
+		this.headNode = graphNode;
+
+		GraphNode.observeDepthMap(this, this.headNode);
+
+		this.getHeadNode().setSelected(true);
+	}
+
+	/**
+	 * Returns the head node of the graph.
+	 * 
+	 * @return
+	 */
+	public GraphNode getHeadNode() {
+		return this.headNode;
+	}
+
+	/**
+	 * Returns the old selected node, which is used to draw paths between nodes.
+	 * 
+	 * @return
+	 */
+	public GraphNode getOldSelectedNode() {
+		return this.oldSelectedNode;
+	}
+
+	/**
+	 * Sets the old selected node, which is used to draw paths between nodes.
+	 * 
+	 * @param oldNode
+	 */
+	public void setOldSelectedNode(GraphNode oldNode) {
+		this.oldSelectedNode = oldNode;
 	}
 
 	/**
@@ -179,54 +248,70 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 		@Override
 		public void processQuestNode(QuestNode questNode) {
-			component = new QuestNodePanel(questNode);
-			configureAppearance(questNode, component);
+
 		}
 
 		/**
-		 * A convenience method to re-use code.
+		 * Sets up the listeners.
 		 * 
 		 * @param node
 		 */
 		private void configureListeners(final GraphNode node,
 				final JComponent component) {
 			if (component != null) {
-				/**
+				/*
 				 * When a component is clicked, forward the click to the
 				 * GraphNode, and its observers.
 				 */
 				final MouseAdapter mouseAdapter = new MouseAdapter() {
-					/**
-					 * If the component is dragged, only handle the initial drag
-					 * and don't spam events
-					 */
-					boolean dragBlock = true;
-
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						node.notifyObservers(new GraphNodeEvent(node,
-								GraphNodeEvent.CLICKED));
+						GraphNodeEvent event = new GraphNodeEvent(node,
+								GraphNodeEventType.SELECTED);
+						event.setShiftDown(e.isShiftDown());
+						node.notifyObservers(event);
 					}
 
 					@Override
-					public void mouseDragged(MouseEvent e) {
-						if (dragBlock) {
-							this.mouseClicked(e);
-							dragBlock = false;
+					public void mouseEntered(MouseEvent e) {
+
+						JComponent nodeComponent = getComponentForNode(node);
+
+						if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DELETE_GRAPH_NODE) {
+							if (node.isDeletable()) {
+								nodeComponent.setBackground(GUIOp.scaleWhite(
+										Color.RED, 2.4));
+							}
+						} else if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DISCONNECT_GRAPH_NODE) {
+							nodeComponent.setBackground(GUIOp.scaleWhite(
+									Color.RED, 2.4));
+						} else if (!node.isSelected()) {
+							if (ToolBarButtonAction.getMode() != ToolBarButtonMode.SELECT_GRAPH_NODE) {
+								Color selectionColour = ScriptEaseUI.SELECTED_GAME_OBJECT;
+								nodeComponent.setBackground(GUIOp.scaleWhite(
+										selectionColour, 3.1));
+							} else {
+								nodeComponent.setBackground(GUIOp.scaleWhite(
+										Color.yellow, 1.2));
+							}
 						}
-					}
 
-					@Override
-					public void mouseReleased(MouseEvent e) {
-						dragBlock = true;
 					}
 
 					@Override
 					public void mouseExited(MouseEvent e) {
-						dragBlock = true;
+						JComponent nodeComponent = getComponentForNode(node);
+
+						if (!node.isSelected()) {
+							nodeComponent.setBackground(Color.WHITE);
+						} else {
+							Color selectionColour = ScriptEaseUI.SELECTED_GAME_OBJECT;
+							nodeComponent.setBackground(GUIOp.scaleWhite(
+									selectionColour, 2.1));
+						}
 					}
 				};
-
+				
 				component.addMouseListener(mouseAdapter);
 				component.addMouseMotionListener(mouseAdapter);
 			}
@@ -266,11 +351,12 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		if (component != null) {
 			final Color selectionColour;
 			final Color backgroundColour;
+
 			if (node.isSelected()) {
-				selectionColour = node.getSelectedColour();
+				selectionColour = ScriptEaseUI.SELECTED_GAME_OBJECT;
 				backgroundColour = GUIOp.scaleWhite(selectionColour, 2.1);
 			} else {
-				selectionColour = node.getUnselectedColour();
+				selectionColour = Color.GRAY;
 				backgroundColour = Color.white;
 			}
 
@@ -541,6 +627,16 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 		@Override
 		public void paint(Graphics g, JComponent c) {
+
+			final Graphics2D g2 = (Graphics2D) g.create();
+
+			if (oldSelectedNode != null && mousePosition != null) {
+				g2.setColor(Color.GRAY);
+				g2.setStroke(new BasicStroke(1.5f));
+				GUIOp.paintArrow(g2, GUIOp.getMidRight(componentBuilder
+						.getComponentForNode(oldSelectedNode)), mousePosition);
+			}
+
 			super.paint(g, c);
 
 			if (paintLines)
@@ -591,9 +687,9 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 						// Set color of line based on selection
 						Color lineColour;
 						if (isLineSelected)
-							lineColour = child.getSelectedColour();
+							lineColour = ScriptEaseUI.SELECTED_GAME_OBJECT;
 						else
-							lineColour = child.getUnselectedColour();
+							lineColour = Color.GRAY;
 						g2.setColor(lineColour);
 
 						// Draw an arrow pointing towards the child.

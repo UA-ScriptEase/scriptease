@@ -4,10 +4,6 @@
 package scriptease.gui.action.file;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.Action;
-import javax.swing.KeyStroke;
 
 import scriptease.gui.SEFrame;
 import scriptease.gui.action.ActiveModelSensitiveAction;
@@ -35,10 +31,6 @@ public class CloseTabAction extends ActiveModelSensitiveAction {
 	public CloseTabAction(StoryPanel panel) {
 		super(CloseTabAction.CLOSE_MODULE);
 		this.panel = panel;
-
-		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
-		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-				KeyEvent.VK_W, ActionEvent.CTRL_MASK));
 	}
 
 	@Override

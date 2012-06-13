@@ -136,7 +136,6 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 			searchData.addAll(scriptIt.getTypes());
 		}
 		
-		//This method is so fucking bunk...
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
 			defaultProcess(knowIt);

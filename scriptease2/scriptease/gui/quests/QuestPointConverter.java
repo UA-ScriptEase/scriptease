@@ -55,7 +55,7 @@ public class QuestPointConverter extends ComplexStoryComponentConverter {
 		}
 		
 		questPoint.setFanIn(new Integer(fanIn)); 
-		questPoint.setCommiting(commiting.equalsIgnoreCase("true"));
+		questPoint.setCommitting(commiting.equalsIgnoreCase("true"));
 		return questPoint;
 	}
 

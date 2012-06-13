@@ -1,8 +1,9 @@
 package scriptease.controller.observer;
 
-import scriptease.gui.graph.nodes.GraphNode;
 
 /**
+ * Gets the event and determines what to do.
+ * 
  * 
  * @author mfchurch
  *
@@ -13,5 +14,5 @@ public interface GraphNodeObserver {
 	 * @param node
 	 * @param event
 	 */
-	public void nodeChanged(GraphNode node, GraphNodeEvent event);
+	public void nodeChanged(GraphNodeEvent event);
 }

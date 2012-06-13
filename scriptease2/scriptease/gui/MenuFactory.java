@@ -9,7 +9,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -28,6 +27,7 @@ import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.FileManager;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
+import scriptease.gui.action.file.CloseModelAction;
 import scriptease.gui.action.file.NewModelAction;
 import scriptease.gui.action.file.OpenModelAction;
 import scriptease.gui.action.file.OpenRecentFileAction;
@@ -38,7 +38,6 @@ import scriptease.gui.action.story.DeleteStoryComponentAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
-import scriptease.gui.describeIts.DescribeItGraphEditor;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentbuilder.StoryComponentDescriptorTemplate.ComponentContext;
 import scriptease.gui.storycomponentbuilder.StoryComponentFrame;
@@ -86,7 +85,6 @@ import scriptease.translator.codegenerator.ScriptInfo;
 public class MenuFactory {
 	private static final String FILE = Il8nResources.getString("File");
 	private static final String ADD = Il8nResources.getString("Add");
-	private static final String VIEW = Il8nResources.getString("View");
 	private static final String TOOLS = Il8nResources.getString("Tools");
 	private static final String HELP = Il8nResources.getString("Help");
 	private static final String CREATE = Il8nResources.getString("Create");
@@ -104,11 +102,8 @@ public class MenuFactory {
 
 		bar.add(MenuFactory.buildFileMenu());
 		bar.add(MenuFactory.buildEditMenu());
-		// bar.add(MenuFactory.buildViewMenu());
-		
-		//Uncomment later for the tools section
-		//bar.add(MenuFactory.buildToolsMenu());
-		
+		bar.add(MenuFactory.buildToolsMenu());
+
 		bar.add(MenuFactory.buildHelpMenu());
 		if (ScriptEase.DEBUG_MODE)
 			bar.add(MenuFactory.buildDebugMenu());
@@ -116,6 +111,11 @@ public class MenuFactory {
 		return bar;
 	}
 
+	/**
+	 * Used in the StoryComponentBuilder.
+	 * 
+	 * @return
+	 */
 	public static JMenuBar buildBuilderMenuBar() {
 		final JMenuBar builderMenuBar;
 		final JMenu createMenu;
@@ -255,12 +255,15 @@ public class MenuFactory {
 		menu.add(NewModelAction.getInstance());
 		menu.add(OpenModelAction.getInstance());
 		menu.addSeparator();
-		
+
 		menu.add(TestStoryAction.getInstance());
 		menu.addSeparator();
-		
+
 		menu.add(SaveModelAction.getInstance());
 		menu.add(SaveModelExplicitlyAction.getInstance());
+		menu.addSeparator();
+
+		menu.add(CloseModelAction.getInstance());
 		menu.addSeparator();
 
 		// add the recent files list
@@ -395,11 +398,9 @@ public class MenuFactory {
 		};
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B,
 				ActionEvent.CTRL_MASK));
-		
-		// Disabled until later. For some reason.
-		//menu.add(item);
-	
-		
+
+		menu.add(item);
+
 		return menu;
 	}
 
@@ -421,13 +422,6 @@ public class MenuFactory {
 		menu.setMnemonic(KeyEvent.VK_A);
 
 		return menu;
-	}
-
-	public static JMenu buildViewMenu() {
-		final JMenu viewMenu = new JMenu(MenuFactory.VIEW);
-		viewMenu.setMnemonic(KeyEvent.VK_V);
-
-		return viewMenu;
 	}
 
 	@SuppressWarnings("serial")
@@ -524,16 +518,14 @@ public class MenuFactory {
 										public void processDescribeIt(
 												KnowItBindingDescribeIt described) {
 											JFrame frame = new JFrame();
-											frame.add(new DescribeItGraphEditor(
-													described.getValue(),
-													new AbstractAction() {
 
-														@Override
-														public void actionPerformed(
-																ActionEvent e) {
-
-														}
-													}));
+											frame.add(PanelFactory
+													.buildDescribeItPanel(
+															described
+																	.getValue()
+																	.getHeadNode(),
+															described
+																	.getValue()));
 											frame.setMinimumSize(new Dimension(
 													800, 300));
 											frame.setVisible(true);

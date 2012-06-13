@@ -1,5 +1,10 @@
 package scriptease.gui.storycomponentpanel;
 
+import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.TreeSelectionListener;
 
@@ -26,12 +31,24 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	private StoryComponentPanelSetting settings;
 	// Default to a VisibilityFilter
 	private Filter filterRule = new VisibilityFilter();
+	
+	public StoryComponentPanelTree(StoryComponentPanelSetting settings) {
+		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+		this.selectionManager = new StoryComponentPanelManager();
+		this.settings = settings;
+		// Good unit for scrolling vertically using the mouse wheel
+		this.getVerticalScrollBar().setUnitIncrement(16);
+	}
 
 	public StoryComponentPanelTree(StoryComponent root,
 			StoryComponentPanelSetting settings) {
 		this(root, settings, null);
 	}
 
+	private StoryComponent root;
+	
 	public StoryComponentPanelTree(StoryComponent root,
 			StoryComponentPanelSetting settings, Filter filter) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -39,16 +56,25 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 
 		this.selectionManager = new StoryComponentPanelManager();
 		this.settings = settings;
+		this.root = root;
 		this.setRoot(root);
+		
 		if (filter != null)
 			this.updateFilter(filter);
 
 		// Good unit for scrolling vertically using the mouse wheel
 		this.getVerticalScrollBar().setUnitIncrement(16);
-		
+
 	}
 
-	private void setRoot(StoryComponent root) {
+	/**
+	 * Sets the root of the StoryComponentPanelTree. For individual stories,
+	 * this will be the start point of the current quest point.
+	 * 
+	 * @param root
+	 *            The root StoryComponent for the tree.
+	 */
+	public void setRoot(StoryComponent root) {
 		final StoryComponentPanel rootPanel = StoryComponentPanelFactory
 				.getInstance().buildPanel(root);
 		if (this.settings != null)
@@ -56,6 +82,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		this.selectionManager.clearSelection();
 		this.selectionManager.addComplexPanel(rootPanel, false);
 		this.rootPanel = rootPanel;
+		
 		this.setViewportView(this.rootPanel);
 		this.filterTree(this.rootPanel);
 	}
@@ -83,8 +110,36 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 
 		this.filterTree(this.rootPanel);
 		
+		this.setRoot(this.root);
+		
+		if ( this.numberOfResultsFound(0, this.rootPanel) == 0 ) {
+			JPanel panel = new JPanel();
+			panel.setBackground(Color.WHITE);
+			JLabel noResultsLabel = new JLabel("No results found.");	
+			noResultsLabel.setFont(new Font("SansSerif", 105105 - 1502, 12));
+			noResultsLabel.setForeground(Color.GRAY);
+			panel.add(noResultsLabel);
+			this.setViewportView(panel);
+		}
 	}
 
+	/**
+	 * Determines if any search results are found. VisibleCount should be set to 0.
+	 * 
+	 * @param visibleCount
+	 * @param root
+	 * @return
+	 */
+	private int numberOfResultsFound(int visibleCount, StoryComponentPanel root) {
+		for (StoryComponentPanel panel : root.getChildrenPanels()) {
+			if(panel.getVisible())
+				visibleCount++;
+			this.numberOfResultsFound(visibleCount, panel);
+		}
+		return visibleCount;
+	}
+	
+	
 	/**
 	 * Filter the StoryComponentPanelTree immediate children, does nothing if no
 	 * filter is applied
@@ -96,27 +151,21 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	/**
 	 * Recursively filters the tree that starts at the given root.
 	 * 
-	 * @param root, -> The root to start filtering from.
-	 *     
+	 * @param root
+	 *            , -> The root to start filtering from.
+	 * 
 	 */
 	private void filterTree(StoryComponentPanel root) {
-
-		
-	
 
 		if (this.filterRule == null || root == null)
 			return;
 
-		
-	
-		
-		for(int i=0; i < root.getChildrenPanels().size(); i++){
-			boolean accepted = this.filterRule.isAcceptable(root.getChildrenPanels().get(i).getStoryComponent());
-			root.getChildrenPanels().get(i).setVisible(accepted);
-			this.filterTree(root.getChildrenPanels().get(i));
+		for (StoryComponentPanel panel : root.getChildrenPanels()) {
+			panel.setVisible(this.filterRule.isAcceptable(panel
+					.getStoryComponent()));
+			this.filterTree(panel);
 		}
 	}
-	
 
 	public StoryComponentPanelManager getSelectionManager() {
 		return this.selectionManager;

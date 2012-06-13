@@ -1,6 +1,5 @@
 package scriptease.gui.pane;
 
-import java.awt.Component;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,8 +9,7 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import scriptease.gui.graph.editor.GraphEditor;
-import scriptease.gui.quests.QuestPanelEditor;
+import scriptease.gui.PanelFactory;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelSetting;
@@ -19,16 +17,17 @@ import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelStorySettin
 import scriptease.model.StoryModel;
 
 /**
- * Main panel for editing Stories. Provides a tree view of the StoryComponent
- * model.
+ * Main panel for editing Stories, under the toolbar. Provides a tree view of
+ * the StoryComponent model.
  * 
  * @author remiller
  * @author mfchurch
  */
 @SuppressWarnings("serial")
 public class StoryPanel extends JPanel {
-	private JScrollPane tree;
+	private StoryComponentPanelTree storyComponentTree;
 	private final StoryModel model;
+
 	/**
 	 * keep track so we can look up which QuestPoint the StoryPanel represents
 	 */
@@ -87,12 +86,6 @@ public class StoryPanel extends JPanel {
 	public StoryPanel(StoryModel model, QuestPoint questPoint) {
 		super(new GridLayout(0, 1));
 
-		// If questPoint is null, don't build the bottom display panel.
-		if (questPoint == null) {
-			throw new IllegalArgumentException(
-					"Cannot create a StoryPanel with a null QuestPoint");
-		}
-
 		this.setOpaque(false);
 		this.model = model;
 		this.questPoint = questPoint;
@@ -100,20 +93,16 @@ public class StoryPanel extends JPanel {
 		// update the models to panes map
 		updateModelsToPanes(model);
 
-		// Build the QuestPanelEditor.
-		QuestPanelEditor questEditor = new QuestPanelEditor(model.getRoot()
-				.getStartPoint(), questPoint);
-		this.add(questEditor);
+		JPanel questPanel = PanelFactory.buildQuestPanel(model.getRoot()
+				.getStartPoint());
 
-		// Story settings
+		this.add(questPanel);
+
 		StoryComponentPanelSetting storySettings = new StoryComponentPanelStorySetting();
+		this.storyComponentTree = new StoryComponentPanelTree(questPoint,
+				storySettings);
 
-		// Build the StoryTree
-		this.tree = new StoryComponentPanelTree(questPoint, storySettings);
-
-		// Add the StoryTree to the panel.
-		//adds the tree to the pane
-		this.add(this.tree);
+		this.add(this.storyComponentTree);
 	}
 
 	/**
@@ -125,11 +114,23 @@ public class StoryPanel extends JPanel {
 		List<StoryPanel> panes = StoryPanel.modelsToPanes.get(model);
 
 		if (panes == null) {
-			panes = new ArrayList<StoryPanel>(); 
+			panes = new ArrayList<StoryPanel>();
 			StoryPanel.modelsToPanes.put(model, panes);
 		}
 
 		panes.add(this);
+	}
+
+	/**
+	 * Sets the tree to the QuestPoint passed.
+	 * 
+	 * @param The
+	 *            QuestPoint to set the tree to.
+	 */
+	public void setTree(QuestPoint questPoint) {
+
+		this.storyComponentTree.setRoot(questPoint);
+
 	}
 
 	/**
@@ -138,7 +139,7 @@ public class StoryPanel extends JPanel {
 	 * @return the current tree .
 	 */
 	public JScrollPane getTree() {
-		return this.tree;
+		return this.storyComponentTree;
 	}
 
 	/**
@@ -166,22 +167,6 @@ public class StoryPanel extends JPanel {
 	}
 
 	/**
-	 * Checks if this StoryPanel contains the given GraphEditor
-	 * 
-	 * @param editor
-	 * @return
-	 */
-	public boolean contains(GraphEditor editor) {
-		final Component[] components = this.getComponents();
-		for (int i = 0; i < components.length; i++) {
-			final Component component = components[i];
-			if (component == editor)
-				return true;
-		}
-		return false;
-	}
-
-	/**
 	 * Determines if this StoryFrame represents the given model.
 	 * 
 	 * @param model
@@ -200,4 +185,5 @@ public class StoryPanel extends JPanel {
 	public boolean represents(QuestPoint questPoint) {
 		return this.questPoint != null && this.questPoint == questPoint;
 	}
+
 }
