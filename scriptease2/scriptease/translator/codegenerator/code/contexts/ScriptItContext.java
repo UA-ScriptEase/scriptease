@@ -55,6 +55,8 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 		return createContext.getType();
 
 	}
+	
+	
 
 	/**
 	 * Namification needs to be done at a CodeBlock level instead of a

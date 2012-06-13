@@ -142,6 +142,7 @@
 			<xsd:element name="Types" type="SpecificTypeList_Type" />
 			<xsd:element minOccurs="0" name="Parameters" type="ParameterList_Type" />
 			<xsd:element name="Code" type="Code_Type" />
+			<xsd:element name="Includes" type="IncludesList_Type" />			
 		</xsd:sequence>
 		<xsd:attribute name="subject" type="xsd:string" use="optional" />
 		<xsd:attribute name="slot" type="xsd:string" use="optional" />
@@ -221,6 +222,12 @@
 	<xsd:complexType name="SpecificTypeList_Type">
 		<xsd:sequence>
 			<xsd:element name="Type" type="xsd:string" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="IncludesList_Type">
+		<xsd:sequence>
+			<xsd:element name="Include" type="xsd:string" maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 
