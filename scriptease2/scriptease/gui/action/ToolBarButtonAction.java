@@ -4,6 +4,7 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 
 	private String actionName;
 
-	private static ArrayList<JComponent> activeComponent = new ArrayList<JComponent>();
+	private static ArrayList<JComponent> activeComponents = new ArrayList<JComponent>();
 
 	/**
 	 * Constructor. Creates the icon for the ToolBar button.
@@ -46,8 +47,7 @@ public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 		this.actionName = name;
 		this.putValue(Action.LARGE_ICON_KEY,
 				new ImageIcon(loadImages(iconName)));
-		
-		
+
 	}
 
 	/**
@@ -93,7 +93,7 @@ public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 	}
 
 	public static void addJComponent(JComponent component) {
-		ToolBarButtonAction.activeComponent.add(component);
+		ToolBarButtonAction.activeComponents.add(component);
 	}
 
 	/**
@@ -112,32 +112,32 @@ public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 	 * @param cursorPath
 	 */
 	public void setCursorToImageFromPath(String cursorPath) {
-
-		String resultingCursorPath = "scriptease/resources/icons/cursors/"
-				+ cursorPath + ".png";
-
-		System.out.println(cursorPath);
-
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-
+		final File file;
+		final String resultingCursorPath;
+		final Toolkit toolkit = Toolkit.getDefaultToolkit();
 		final Point CURSOR_HOTSPOT = new Point(0, 0);
-
 		BufferedImage cursorImage;
 		Cursor customCursor = null;
-		try {
-			cursorImage = ImageIO.read(FileOp
-					.getFileResource(resultingCursorPath));
 
-			customCursor = toolkit.createCustomCursor(cursorImage,
-					CURSOR_HOTSPOT, resultingCursorPath);
+		resultingCursorPath = "scriptease/resources/icons/cursors/"
+				+ cursorPath + ".png";
 
-		} catch (IOException e) {
+		file = FileOp.getFileResource(resultingCursorPath);
+
+		if (file == null)
 			customCursor = null;
-		} catch (IllegalArgumentException e) {
-			customCursor = null;
+		else {
+			try {
+				cursorImage = ImageIO.read(file);
+
+				customCursor = toolkit.createCustomCursor(cursorImage,
+						CURSOR_HOTSPOT, resultingCursorPath);
+			} catch (IOException e) {
+				customCursor = null;
+			}
 		}
 
-		for (JComponent component : activeComponent)
+		for (JComponent component : activeComponents)
 			component.setCursor(customCursor);
 	}
 }
