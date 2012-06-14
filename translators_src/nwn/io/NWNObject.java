@@ -2,6 +2,7 @@ package io;
 
 import java.util.Collection;
 
+import scriptease.model.CodeBlock;
 import scriptease.translator.io.model.GameObject;
 
 public final class NWNObject implements GameObject {
@@ -55,6 +56,7 @@ public final class NWNObject implements GameObject {
 			code = "";
 		}
 
+		
 		return code;
 	}
 
