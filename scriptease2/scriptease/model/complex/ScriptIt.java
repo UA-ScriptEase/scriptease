@@ -35,7 +35,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
 		this.codeBlocks = new ArrayList<CodeBlock>();
-		//this.codeBlocks = new ArrayList<CodeBlock>(1);
 	}
 
 	public Collection<CodeBlock> getCodeBlocks() {
@@ -43,7 +42,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	}
 
 	/**
-	 * Retreives only the code blocks which apply to the given location
+	 * Retrieves only the code blocks which apply to the given location
 	 * (subject, slot)
 	 * 
 	 * @param locationInfo

@@ -3,6 +3,7 @@ package scriptease.model.atomic.knowitbindings;
 import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
+import scriptease.model.CodeBlock;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.IdentifiableGameConstant;
 
@@ -22,9 +23,16 @@ public class KnowItBindingConstant extends KnowItBinding {
 		this.constantValue = value;
 	}
 
+
+	
 	@Override
 	public String getScriptValue() {
 		return this.constantValue.getResolutionText();
+	}
+	
+	
+	public String getTag() {
+		return this.constantValue.getTag();
 	}
 
 	@Override

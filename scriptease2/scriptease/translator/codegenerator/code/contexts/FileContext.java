@@ -1,6 +1,5 @@
 package scriptease.translator.codegenerator.code.contexts;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -36,20 +35,22 @@ public class FileContext extends Context {
 		includeFiles = new HashSet<String>();
 	
 		includeFilesIterator = includeFiles.iterator();
-
-		//for(String include : this.codeBlockIncludes(codeBlocks))
-		//	this.addIncludeFile(include);
 	}
 
 	@Override
 	public Set<String> getIncludeFiles() {
 		Iterator<CodeBlock> codeBlocks = this.getCodeBlocks();
 				
-		System.out.println("Including things!");
-		
 		while(codeBlocks.hasNext()) {
 			this.includeFiles.addAll(codeBlocks.next().getIncludes());
 		}
+		
+		List<CodeBlock> bindingCodeBlocks = this.getBindingCodeBlocks();
+		
+		for(CodeBlock bindingCodeBlock : bindingCodeBlocks) {
+			this.includeFiles.addAll(bindingCodeBlock.getIncludes());
+		}
+		
 		this.includeFilesIterator = includeFiles.iterator();
 
 		return this.includeFiles;
