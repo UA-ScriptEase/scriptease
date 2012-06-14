@@ -61,16 +61,15 @@ public class CodeBlock implements TypedComponent, Cloneable {
 
 	@Override
 	public CodeBlock clone() {
-		//private ScriptIt owner;
-		//private String subject;
-		//private String slot;
-		//private Collection<String> returnTypes;
-		//private List<KnowIt> parameters;
-		//private Collection<KnowIt> implicits;
-		//private Collection<String> includes;
-		//private Collection<FormatFragment> code;
-			
-		
+		// private ScriptIt owner;
+		// private String subject;
+		// private String slot;
+		// private Collection<String> returnTypes;
+		// private List<KnowIt> parameters;
+		// private Collection<KnowIt> implicits;
+		// private Collection<String> includes;
+		// private Collection<FormatFragment> code;
+
 		CodeBlock clone = null;
 		try {
 			clone = (CodeBlock) super.clone();
@@ -80,7 +79,7 @@ public class CodeBlock implements TypedComponent, Cloneable {
 					Thread.currentThread(), e);
 		}
 		clone.init();
-						
+
 		// subject
 		if (!this.subject.isEmpty())
 			clone.setSubject(new String(this.subject));
@@ -109,10 +108,11 @@ public class CodeBlock implements TypedComponent, Cloneable {
 		}
 		clone.setIncludes(clonedIncludes);
 		// code
-		Collection<FormatFragment> clonedCode = new ArrayList<FormatFragment>(this.getCode().size());
+		Collection<FormatFragment> clonedCode = new ArrayList<FormatFragment>(
+				this.getCode().size());
 		for (FormatFragment fragment : this.getCode()) {
 			clonedCode.add(fragment);
-		} 
+		}
 		clone.setCode(clonedCode);
 
 		// No need to worry about code and includes since that is handled by
@@ -144,7 +144,8 @@ public class CodeBlock implements TypedComponent, Cloneable {
 	 * 
 	 * @param code
 	 */
-	// TODO: apply flyweight SEE THE TICKET IN PIVOTAL TRACKER REGARDING FLYWEIGHT
+	// TODO: apply flyweight SEE THE TICKET IN PIVOTAL TRACKER REGARDING
+	// FLYWEIGHT
 	public void setCode(Collection<FormatFragment> code) {
 		this.code = new ArrayList<FormatFragment>(code);
 	}
@@ -163,7 +164,7 @@ public class CodeBlock implements TypedComponent, Cloneable {
 	public List<KnowIt> getParameters() {
 		return this.parameters;
 	}
-	
+
 	public boolean hasSubject() {
 		return !this.subject.isEmpty();
 	}
@@ -235,6 +236,15 @@ public class CodeBlock implements TypedComponent, Cloneable {
 		return hashCode;
 	}
 
+	/**
+	 * Returns a collection of this CodeBlock's implicit KnowIts. Implicit
+	 * KnowIts are things that are knwon due to the event. A trigger enter even,
+	 * for example, must have a trigger and an enterer.
+	 * 
+	 * @return The collection of implicit KnowIts for this code block. It may be
+	 *         empty if there are no implicits, or if there is no loaded
+	 *         translator to check from.
+	 */
 	public Collection<KnowIt> getImplicits() {
 		if (implicits == null) {
 			final Translator active = TranslatorManager.getInstance()
@@ -247,14 +257,15 @@ public class CodeBlock implements TypedComponent, Cloneable {
 				for (KnowIt implicit : implicits) {
 					implicit.setOwner(owner);
 				}
-			}
+			} else
+				this.implicits = new ArrayList<KnowIt>();
 		}
 		return implicits;
 	}
 
 	public Collection<String> getIncludes() {
-		for(String include : this.includes){
-	//		FileContext.addIncludeFile(include);
+		for (String include : this.includes) {
+			// FileContext.addIncludeFile(include);
 			System.out.println("Codeblock includes: " + include);
 		}
 		return this.includes;
