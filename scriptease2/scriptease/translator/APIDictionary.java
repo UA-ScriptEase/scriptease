@@ -1,8 +1,21 @@
 package scriptease.translator;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
+import scriptease.controller.QuestPointNodeGetter;
 import scriptease.controller.apimanagers.EventSlotManager;
 import scriptease.controller.apimanagers.GameTypeManager;
+import scriptease.gui.quests.QuestNode;
+import scriptease.model.CodeBlock;
 import scriptease.model.LibraryModel;
+import scriptease.model.StoryComponent;
+import scriptease.model.StoryModel;
+import scriptease.model.StoryModelPool;
+import scriptease.model.complex.ScriptIt;
+import scriptease.translator.io.model.GameModule;
 
 /**
  * APIDictionary represents the apidictionary used by a Translator to represent
@@ -60,5 +73,21 @@ public class APIDictionary {
 	@Override
 	public String toString() {
 		return "APIDictionary [" + this.getName() + "]";
+	}
+
+	public List<CodeBlock> getCodeBlocksByID(String scriptValue) {
+
+		List<StoryComponent> componentList = this.library.getEffectsCategory().getChildren();
+		List<CodeBlock> codeBlockList = new ArrayList<CodeBlock>();
+		for(StoryComponent component : componentList) {
+			if(component instanceof ScriptIt) {
+				if(component.getDisplayText().equals(scriptValue)) {
+					codeBlockList.addAll(((ScriptIt) component).getCodeBlocks());
+					return codeBlockList;
+				}
+			}
+		}
+		
+		return null;
 	}
 }

@@ -18,6 +18,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
@@ -26,6 +27,7 @@ import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
+import scriptease.translator.io.model.GameObject;
 
 /**
  * Context represents the object based context used in code generation. It
@@ -196,6 +198,40 @@ public class Context {
 			}
 		}
 		return codeBlocks.iterator();
+	}
+
+	/**
+	 * This finds the CodeBlocks for special circumstances as described in the
+	 * class that implements GameObject in the translator. In Neverwinter
+	 * Nights, this includes code blocks in i_se_aux.
+	 * 
+	 * @return
+	 */
+	public List<CodeBlock> getBindingCodeBlocks() {
+		final List<CodeBlock> codeBlocks = new ArrayList<CodeBlock>();
+
+		for (StoryComponent key : this.getComponents()) {
+			if (key instanceof KnowIt) {
+				KnowItBinding binding = ((KnowIt) key).getBinding();
+
+				if (binding instanceof KnowItBindingConstant) {
+					KnowItBindingConstant kibConstant = (KnowItBindingConstant) binding;
+
+					if (kibConstant.getValue() instanceof GameObject) {
+
+						String referenceValue = kibConstant.getScriptValue();
+
+						List<CodeBlock> specialCodeBlocks = this.translator
+								.getApiDictionary().getCodeBlocksByID(
+										referenceValue);
+
+						if (specialCodeBlocks != null)
+							codeBlocks.addAll(specialCodeBlocks);
+					}
+				}
+			}
+		}
+		return codeBlocks;
 	}
 
 	public CodeBlock getMainCodeBlock() {

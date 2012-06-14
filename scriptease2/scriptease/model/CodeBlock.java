@@ -253,10 +253,6 @@ public class CodeBlock implements TypedComponent, Cloneable {
 	}
 
 	public Collection<String> getIncludes() {
-		for(String include : this.includes){
-	//		FileContext.addIncludeFile(include);
-			System.out.println("Codeblock includes: " + include);
-		}
 		return this.includes;
 	}
 
