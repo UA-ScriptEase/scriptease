@@ -474,8 +474,8 @@ public class MenuFactory {
 								.getActiveModel();
 						if (activeModel != null) {
 							final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
-							final Collection<ScriptInfo> scriptInfos = CodeGenerator.generateCode(activeModel,
-											problems);
+							final Collection<ScriptInfo> scriptInfos = CodeGenerator
+									.generateCode(activeModel, problems);
 
 							String code = "";
 							for (ScriptInfo script : scriptInfos) {
@@ -502,7 +502,7 @@ public class MenuFactory {
 		menu.add(item);
 
 		menu.addSeparator();
-		item = new AutofiringMenuItem("View Graph Editor") {
+		item = new AutofiringMenuItem("View Graph Editor (NWN Only)") {
 
 			@Override
 			protected void action() {
@@ -517,7 +517,8 @@ public class MenuFactory {
 									new AbstractNoOpBindingVisitor() {
 										public void processDescribeIt(
 												KnowItBindingDescribeIt described) {
-											JFrame frame = new JFrame();
+											JFrame frame = new JFrame(
+													"Graph Editor");
 
 											frame.add(PanelFactory
 													.buildDescribeItPanel(
