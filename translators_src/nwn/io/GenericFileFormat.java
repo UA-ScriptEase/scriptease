@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import scriptease.controller.apimanagers.GameTypeManager;
+import scriptease.model.CodeBlock;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
@@ -914,7 +915,7 @@ public class GenericFileFormat {
 		public String getResolutionText() {
 			return this.resRef;
 		}
-
+		
 		@Override
 		public String getName() {
 			return this.resRef;
@@ -1243,6 +1244,11 @@ public class GenericFileFormat {
 			public String getTemplateID() {
 				return resRef + "_" + PLAYER_REPLY_LIST + "_" + index;
 			}
+
+			@Override
+			public String getTag() {
+				return resRef;
+			}
 		}
 
 		/**
@@ -1340,6 +1346,16 @@ public class GenericFileFormat {
 			public String getTemplateID() {
 				return resRef + "_" + NPC_ENTRY_LIST + "_" + index;
 			}
+
+			@Override
+			public String getTag() {
+				return resRef;
+			}
+		}
+
+		@Override
+		public String getTag() {
+			return resRef;
 		}
 	}
 
@@ -1687,7 +1703,6 @@ public class GenericFileFormat {
 	 */
 	public int getByteLength() {
 		System.err.println("Not calculating GFF size yet!");
-		// TODO Auto-generated method stub
 		return 0;
 	}
 }

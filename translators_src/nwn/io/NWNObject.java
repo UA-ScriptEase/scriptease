@@ -2,7 +2,6 @@ package io;
 
 import java.util.Collection;
 
-import scriptease.model.CodeBlock;
 import scriptease.translator.io.model.GameObject;
 
 public final class NWNObject implements GameObject {
@@ -33,29 +32,32 @@ public final class NWNObject implements GameObject {
 	public int getObjectID() {
 		return this.objectID;
 	}
-
+	
 	@Override
 	public String getResolutionText() {
 		String code;
 
 		switch (this.resolutionMethod) {
 		case SEARCH_TYPE_NEAREST:
-			code = "SE_AUX_GetNearestObjectWithoutSelf(\"" + this.tag + "\")";
+			code = "Get Nearest Object Without Self";
+			//code = "SE_AUX_GetNearestObjectWithoutSelf(\"" + this.tag + "\")";
 			break;
 		case SEARCH_TYPE_RANDOM:
-			code = "SE_AUX_GetRandomObjectWithoutSelf(\"" + this.tag + "\")";
+			code = "Get Random Object Without Self";
+			//code = "SE_AUX_GetRandomObjectWithoutSelf(\"" + this.tag + "\")";
 			break;
 		case SEARCH_TYPE_NEAREST_INCLUDE_SELF:
-			code = "SE_AUX_GetNearestObjectByTagIncludeSelf(\"" + this.tag
-					+ "\")";
+			code = "Get Nearest Object By Tag Include Self";
+			//code = "SE_AUX_GetNearestObjectByTagIncludeSelf(\"" + this.tag
+				//	+ "\")";
 			break;
 		case SEARCH_TYPE_RANDOM_INCLUDE_SELF:
-			code = "SE_AUX_GetRandomObjectWithSelf(\"" + this.tag + "\")";
+			code = "Get Random Object With Self";
+			//code = "SE_AUX_GetRandomObjectWithSelf(\"" + this.tag + "\")";
 			break;
 		default:
 			code = "";
 		}
-
 		
 		return code;
 	}
@@ -85,7 +87,8 @@ public final class NWNObject implements GameObject {
 			return this.resRef + "*";
 		return this.name;
 	}
-
+	
+	@Override
 	public String getTag() {
 		return this.tag;
 	}
