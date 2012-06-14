@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.LayoutManager;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -92,9 +93,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 				repaint();
 			}
 		};
-		
 
-		
 		this.addMouseListener(connectArrowListener);
 		this.addMouseMotionListener(connectArrowListener);
 
@@ -103,7 +102,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 		// layout manager
 		this.setLayout(new GraphPanelLayoutManager());
-		
+
 		// ui manager
 		this.setUI(new GraphPanelUI());
 
@@ -255,6 +254,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		 * Sets up the listeners.
 		 * 
 		 * @param node
+		 * @param component
 		 */
 		private void configureListeners(final GraphNode node,
 				final JComponent component) {
@@ -265,9 +265,26 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 				 */
 				final MouseAdapter mouseAdapter = new MouseAdapter() {
 					@Override
-					public void mouseClicked(MouseEvent e) {
+					public void mouseReleased(MouseEvent e) {
+						final JComponent src = (JComponent) e.getSource();
+						final Point mouseLoc = MouseInfo.getPointerInfo()
+								.getLocation();
+
+						/*
+						 * Only respond to releases that happen over this
+						 * component. The default is to respond to releases if
+						 * the press occurred in this component. This seems to
+						 * be a Java bug, but I can't find any kind of complaint
+						 * for it. Either way, we want this behaviour, not the
+						 * default. - remiller
+						 */
+						if (!src.contains(mouseLoc.x - src.getLocationOnScreen().x, mouseLoc.y
+								- src.getLocationOnScreen().y))
+							return;
+
 						GraphNodeEvent event = new GraphNodeEvent(node,
 								GraphNodeEventType.SELECTED);
+
 						event.setShiftDown(e.isShiftDown());
 						node.notifyObservers(event);
 					}
@@ -311,7 +328,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 						}
 					}
 				};
-				
+
 				component.addMouseListener(mouseAdapter);
 				component.addMouseMotionListener(mouseAdapter);
 			}
