@@ -291,8 +291,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 					@Override
 					public void mouseEntered(MouseEvent e) {
-
-						JComponent nodeComponent = getComponentForNode(node);
+						final JComponent nodeComponent = (JComponent) e.getSource();
 
 						if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DELETE_GRAPH_NODE) {
 							if (node.isDeletable()) {
@@ -317,7 +316,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 					@Override
 					public void mouseExited(MouseEvent e) {
-						JComponent nodeComponent = getComponentForNode(node);
+						final JComponent nodeComponent = (JComponent) e.getSource();
 
 						if (!node.isSelected()) {
 							nodeComponent.setBackground(Color.WHITE);
