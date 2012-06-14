@@ -21653,15 +21653,120 @@
 					<Type>placeable</Type>
 					<Type>door</Type>
 				</Types>
-				<Parameters />
+				<Parameters>
+					<KnowIt visible="false">
+						<Name>Tag</Name>
+						<Labels />
+						<Types>
+							<Type>string</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
 				<Code>
-					<Line>
-						<Literal>SE_AUX_GetGetNearestObjectWithoutSelf(</Literal>
-						<Scope data="argument" ref="Named">
+						<Literal>SE_AUX_GetNearestObjectWithoutSelf("</Literal>
+						<Scope data="argument" ref="Tag">
 							<Fragment data="name" />
 						</Scope>
-						<Literal>);</Literal>
-					</Line>
+						<Literal>")</Literal>
+				</Code>
+				<Includes>
+					<Include>"i_se_aux"</Include>
+				</Includes>
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt visible="false">
+		<Name>Get Random Object Without Self</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>creature</Type>
+					<Type>placeable</Type>
+					<Type>door</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="false">
+						<Name>Tag</Name>
+						<Labels />
+						<Types>
+							<Type>string</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+						<Literal>SE_AUX_GetRandomObjectWithoutSelf("</Literal>
+						<Scope data="argument" ref="Tag">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>")</Literal>
+				</Code>
+				<Includes>
+					<Include>"i_se_aux"</Include>
+				</Includes>
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt visible="false">
+		<Name>Get Nearest Object By Tag Include Self</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>creature</Type>
+					<Type>placeable</Type>
+					<Type>door</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="false">
+						<Name>Tag</Name>
+						<Labels />
+						<Types>
+							<Type>string</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+						<Literal>SE_AUX_GetNearestObjectByTagIncludeSelf("</Literal>
+						<Scope data="argument" ref="Tag">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>")</Literal>
+				</Code>
+				<Includes>
+					<Include>"i_se_aux"</Include>
+				</Includes>
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt visible="false">
+		<Name>Get Random Object With Self</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>creature</Type>
+					<Type>placeable</Type>
+					<Type>door</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="false">
+						<Name>Tag</Name>
+						<Labels />
+						<Types>
+							<Type>string</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+						<Literal>SE_AUX_GetRandomObjectWithSelf("</Literal>
+						<Scope data="argument" ref="Tag">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>")</Literal>
 				</Code>
 				<Includes>
 					<Include>"i_se_aux"</Include>
