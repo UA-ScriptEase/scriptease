@@ -53,10 +53,7 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 		typeFormat = this.translator.getGameTypeManager().getFormat(
 				((KnowItBindingConstant) binding).getFirstType());
 		
-		//TODO: Separate this.
 		if (typeFormat == null || typeFormat.isEmpty()) {
-		//	List<CodeBlock> blocks = this.translator.getApiDictionary()
-		//			.getCodeBlocksByID(this.getValue());
 			if (this.binding instanceof KnowItBindingConstant) 
 				if(((KnowItBindingConstant)this.binding).getValue() instanceof GameObject){
 					List<CodeBlock> codeBlocks = this.getBindingCodeBlocks();

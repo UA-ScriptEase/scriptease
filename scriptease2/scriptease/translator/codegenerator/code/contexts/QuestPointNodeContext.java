@@ -53,9 +53,6 @@ public class QuestPointNodeContext extends GraphNodeContext {
 		return this.getNamifier().getUniqueName(questPoint, legalFormat);
 	}
 
-	/**
-	 * TODO decide if this logic should be moved to a game dependant area
-	 */
 	@Override
 	public String getCommitting() {
 		QuestPoint questPoint = ((QuestPointNode) node).getQuestPoint();
