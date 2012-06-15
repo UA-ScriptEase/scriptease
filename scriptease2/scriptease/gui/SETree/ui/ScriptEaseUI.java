@@ -12,20 +12,19 @@ import javax.swing.UIManager;
  */
 public interface ScriptEaseUI {
 	/**
-	 * The colour (green) used to display game object bindings.
+	 * The colour (green) used to display known object bindings.
 	 */
-	public static final Color COLOUR_GAME_OBJECT = new Color(20, 175, 0);
+	public static final Color COLOUR_KNOWN_OBJECT = new Color(20, 175, 0);
 
 	/**
-	 * The colour (sort of a light blue) used to display known object bindings.
+	 * The colour (sort of a light blue) used to display game object bindings.
 	 */
-	public static final Color COLOUR_KNOWN_OBJECT = new Color(0.40f, 0.55f,
-			1.0f);
+	public static final Color COLOUR_GAME_OBJECT = new Color(102, 140, 255);
 
 	/**
 	 * The colour (Warning Red) used to display unbound bindings.
 	 */
-	public static final Color COLOUR_UNBOUND = new Color(0.95f, 0.00f, 0.0f);
+	public static final Color COLOUR_UNBOUND = new Color(242, 0, 0);
 
 	/**
 	 * The colour (Simple Brown) used to display simple bindings.
@@ -38,14 +37,9 @@ public interface ScriptEaseUI {
 	public static final Color COLOUR_BOUND = Color.LIGHT_GRAY;
 
 	/**
-	 * The colour (green) used for selected objects
+	 * The colour (gold) used for selected graph nodes
 	 */
-	public static final Color SELECTED_GAME_OBJECT = new Color(20, 175, 0);
-	
-	/**
-	 * The colour (warning red ) used for deleting objects
-	 */
-	public static final Color DELETING_GAME_OBJECT = new Color(20, 175, 0);
+	public static final Color SELECTED_GRAPH_NODE = new Color(255, 234, 67);
 
 	/**
 	 * Icon used to indicate a collapse will occur

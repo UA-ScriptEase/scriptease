@@ -24,6 +24,8 @@ public final class DisconnectGraphPointAction extends ToolBarButtonAction {
 	protected DisconnectGraphPointAction() {
 		super(DisconnectGraphPointAction.DISCONNECT_TEXT,
 				DisconnectGraphPointAction.ICON_TEXT);
+		
+		this.putValue(SHORT_DESCRIPTION, DISCONNECT_TEXT);
 	}
 
 	/**

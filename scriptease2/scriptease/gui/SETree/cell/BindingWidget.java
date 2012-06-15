@@ -115,7 +115,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 			@Override
 			public void processConstant(KnowItBindingConstant constant) {
 				if (constant.getValue() instanceof IdentifiableGameConstant)
-					updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
+					updateBackground(ScriptEaseUI.COLOUR_GAME_OBJECT);
 				else
 					updateBackground(ScriptEaseUI.COLOUR_SIMPLE);
 			}
@@ -130,17 +130,17 @@ public class BindingWidget extends JPanel implements Cloneable {
 
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				updateBackground(ScriptEaseUI.COLOUR_GAME_OBJECT);
+				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
 			}
 
 			@Override
 			public void processDescribeIt(KnowItBindingDescribeIt described) {
-				updateBackground(ScriptEaseUI.COLOUR_GAME_OBJECT);
+				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
 			}
 
 			@Override
 			public void processRunTime(KnowItBindingRunTime runTime) {
-				updateBackground(ScriptEaseUI.COLOUR_GAME_OBJECT);
+				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
 			}
 
 			@Override

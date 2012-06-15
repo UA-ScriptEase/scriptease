@@ -881,12 +881,10 @@ public class ToolBarFactory {
 				// later:
 				gPanel.setOldSelectedNode(node);
 			}
-
 		}
 
 		@Override
 		public void nodeChanged(GraphNodeEvent event) {
-
 			final GraphNode sourceNode = event.getSource();
 			final GraphNodeEventType type = event.getEventType();
 

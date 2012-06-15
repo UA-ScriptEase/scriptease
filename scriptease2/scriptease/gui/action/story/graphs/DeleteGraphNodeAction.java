@@ -24,6 +24,8 @@ public final class DeleteGraphNodeAction extends ToolBarButtonAction{
 	protected DeleteGraphNodeAction() {
 		super(DeleteGraphNodeAction.DELETE_TEXT,
 				DeleteGraphNodeAction.ICON_TEXT);
+		
+		this.putValue(SHORT_DESCRIPTION, DELETE_TEXT);
 	}
 
 	/**

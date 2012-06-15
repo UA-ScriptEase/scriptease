@@ -24,6 +24,8 @@ public final class SelectGraphNodeAction extends ToolBarButtonAction {
 	protected SelectGraphNodeAction() {
 		super(SelectGraphNodeAction.SELECT_TEXT,
 				SelectGraphNodeAction.ICON_TEXT);
+		
+		this.putValue(SHORT_DESCRIPTION, SELECT_TEXT);
 	}
 
 	/**

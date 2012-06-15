@@ -24,6 +24,8 @@ public final class ConnectGraphPointAction extends ToolBarButtonAction {
 	protected ConnectGraphPointAction() {
 		super(ConnectGraphPointAction.CONNECT_TEXT,
 				ConnectGraphPointAction.ICON_TEXT);
+		
+		this.putValue(SHORT_DESCRIPTION, CONNECT_TEXT);
 	}
 
 	/**
