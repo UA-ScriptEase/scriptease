@@ -1564,10 +1564,11 @@ public final class ErfFile implements GameModule {
 		// check to see if it is a dialog line
 		if (resource == null) {
 			if (id.matches(DialogueLine.DIALOG_LINE_REF_REGEX)) {
-				final String[] split = id.split("_", 2);
+				final String[] split = id.split("#", 2);
 				final String conversationResRef = split[0];
 				final String dialogResRef = split[1];
 
+				
 				final NWNResource convoResource = this
 						.getResourceByResRef(conversationResRef);
 				if (convoResource != null) {

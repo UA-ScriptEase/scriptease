@@ -2898,31 +2898,10 @@
 		              <Types>
 		                <Type>creature</Type>
 		              </Types>
-		              <Parameters>
-		                <KnowIt visible="true">
-		                  <Name>Attackee</Name>
-		                  <Labels/>
-		                  <Types>
-		                    <Type>creature</Type>
-		                    <Type>door</Type>
-		                    <Type>placeable</Type>
-		                  </Types>
-		                  <Binding flavour="runTime">
-		                    <Types>
-		                      <Type>creature</Type>
-		                      <Type>door</Type>
-		                      <Type>placeable</Type>
-		                    </Types>
-		                  </Binding>
-		                </KnowIt>
-		              </Parameters>
+		              <Parameters />
 		              <Code>
 			              <Line>
-			             	 <Literal>return GetLastAttacker(</Literal>
-			              	<Scope data="argument" ref="Attackee">
-								<Fragment data="name"/>
-							</Scope>
-			              	<Literal>);</Literal>
+			             	 <Literal>return GetLastAttacker();</Literal>
 			              </Line>
 		              </Code>
 		              <Includes />
@@ -5421,18 +5400,11 @@
 			      </Parameters>
 				<Code>
 				<Line>
-			         <Literal>ApplyEffectAtLocation(DURATION_TYPE_INSTANT, veffect, GetLocation(</Literal>
+			         <Literal>ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VisualEffect), GetLocation(</Literal>
 			        <Scope data="argument" ref="Target Object">
 			          <Fragment data="name"/>
 			        </Scope>
 			        <Literal>));</Literal>
-		        </Line>
-		        <Line>
-			        <Literal>ApplyEffectonTargetObject(veffect, </Literal>
-			        <Scope data="argument" ref="Target Object">
-			          <Fragment data="name"/>
-			        </Scope>
-			        <Literal>);</Literal>
 		        </Line>
 		      </Code>
 					<Includes />
