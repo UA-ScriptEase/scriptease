@@ -829,7 +829,7 @@ public class GenericFileFormat {
 		 * @return
 		 */
 		public DialogueLine getDialogLine(String resRef) {
-			final String[] split = resRef.split("_");
+			final String[] split = resRef.split("#");
 			final String list = split[0];
 			final Integer index = new Integer(split[1]);
 			if (list.equalsIgnoreCase(PlayerReplyDialogue.PLAYER_REPLY_LIST)) {
@@ -1073,7 +1073,7 @@ public class GenericFileFormat {
 		 */
 		public abstract class DialogueLine implements GameConversationNode {
 			// Dialog line resref format: dialogResRef_list_index
-			public static final String DIALOG_LINE_REF_REGEX = "[a-zA-Z0-9]+_[a-zA-Z]+_[0-9]";
+			public static final String DIALOG_LINE_REF_REGEX = "[a-zA-Z0-9_]+#[a-zA-Z]+#[0-9]";
 			private static final String DIALOG_LINE = "dialogue_line";
 			// ResRef of conditional script to run to determine if this line of
 			// conversation appears to the player.
@@ -1242,7 +1242,7 @@ public class GenericFileFormat {
 			 */
 			@Override
 			public String getTemplateID() {
-				return resRef + "_" + PLAYER_REPLY_LIST + "_" + index;
+				return resRef + "#" + PLAYER_REPLY_LIST + "#" + index;
 			}
 
 			@Override
@@ -1344,7 +1344,7 @@ public class GenericFileFormat {
 			 */
 			@Override
 			public String getTemplateID() {
-				return resRef + "_" + NPC_ENTRY_LIST + "_" + index;
+				return resRef + "#" + NPC_ENTRY_LIST + "#" + index;
 			}
 
 			@Override
