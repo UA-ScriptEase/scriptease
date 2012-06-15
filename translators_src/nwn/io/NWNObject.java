@@ -11,7 +11,9 @@ public final class NWNObject implements GameObject {
 	private Collection<String> types;
 	private final String name; // name and tag are for display purposes
 	private final String tag;
-	private Collection<GameObject> attributes;
+	private Collection<GameObject> attributes; // I haven't removed this, since
+												// attributes sound important,
+												// so we might need them later.
 
 	public static final int SEARCH_TYPE_NEAREST = 0;
 	public static final int SEARCH_TYPE_RANDOM = 1;
@@ -32,7 +34,7 @@ public final class NWNObject implements GameObject {
 	public int getObjectID() {
 		return this.objectID;
 	}
-	
+
 	@Override
 	public String getResolutionText() {
 		String code;
@@ -40,25 +42,20 @@ public final class NWNObject implements GameObject {
 		switch (this.resolutionMethod) {
 		case SEARCH_TYPE_NEAREST:
 			code = "Get Nearest Object Without Self";
-			//code = "SE_AUX_GetNearestObjectWithoutSelf(\"" + this.tag + "\")";
 			break;
 		case SEARCH_TYPE_RANDOM:
 			code = "Get Random Object Without Self";
-			//code = "SE_AUX_GetRandomObjectWithoutSelf(\"" + this.tag + "\")";
 			break;
 		case SEARCH_TYPE_NEAREST_INCLUDE_SELF:
 			code = "Get Nearest Object By Tag Include Self";
-			//code = "SE_AUX_GetNearestObjectByTagIncludeSelf(\"" + this.tag
-				//	+ "\")";
 			break;
 		case SEARCH_TYPE_RANDOM_INCLUDE_SELF:
 			code = "Get Random Object With Self";
-			//code = "SE_AUX_GetRandomObjectWithSelf(\"" + this.tag + "\")";
 			break;
 		default:
 			code = "";
 		}
-		
+
 		return code;
 	}
 
@@ -87,12 +84,12 @@ public final class NWNObject implements GameObject {
 			return this.resRef + "*";
 		return this.name;
 	}
-	
+
 	@Override
 	public String getTag() {
 		return this.tag;
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.resRef;
