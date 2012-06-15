@@ -21238,11 +21238,11 @@
 							<Scope data="argument" ref="dialogue line">
 								<Fragment data="name"/>
 							</Scope>
-							<Literal>, </Literal> 
+							<Literal>, abs(1-</Literal> 
 							<Scope data="argument" ref="Enable">
 								<Fragment data="name"/>
 							</Scope>
-							<Literal>);</Literal>
+							<Literal>));</Literal>
 						</Line>
 					</Code>
 					<Includes />
@@ -21255,13 +21255,13 @@
 					<Parameters />
 					<Code>
 						<Line>
-							<Literal>return GetLocalInt(GetModule(), </Literal>
+							<Literal>return abs(1-GetLocalInt(GetModule(), </Literal>
 							<Scope data="argument" ref="dialogue line">
 								<Scope data="binding">
 									<Fragment data="formattedValue"/>
 								</Scope>
 							</Scope>
-							<Literal>);</Literal>
+							<Literal>));</Literal>
 						</Line>
 					</Code>
 					<Includes />
