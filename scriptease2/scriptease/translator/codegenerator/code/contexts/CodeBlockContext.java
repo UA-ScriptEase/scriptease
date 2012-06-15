@@ -16,6 +16,11 @@ import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
+/**
+ * Context that is created for all CodeBlocks. Enables all relevant information
+ * to be read from CodeBlocks.
+ * 
+ */
 public class CodeBlockContext extends Context {
 	private CodeBlock codeBlock;
 
@@ -60,32 +65,18 @@ public class CodeBlockContext extends Context {
 	public KnowIt getParameter(String keyword) {
 		for (KnowIt parameter : codeBlock.getParameters()) {
 			if (parameter.getDisplayText().equalsIgnoreCase(keyword)) {
-				System.out.println("Parameter found in CodeBlock: " +parameter.getDisplayText());
+				System.out.println("Parameter found in CodeBlock: "
+						+ parameter.getDisplayText());
 				return parameter;
 			}
 		}
-
 		// if we have not found it locally, check the ScriptIt context. It could
 		// be a parameter of a sibling CodeBlock
 		final Context scriptItContext = ContextFactory.getInstance()
 				.createContext(this, this.codeBlock.getOwner());
-		
-		KnowIt parameter = scriptItContext.getParameter(keyword);
-		System.out.println("Parameter found in scriptitcontext: "+parameter.getDisplayText());
+
 		return scriptItContext.getParameter(keyword);
 	}
-	
-/*	@Override
-	public String getInclude() {
-		final Iterator<String> includeFragment;
-
-		includeFragment = this.getIncludes();
-		
-		if(includeFragment.hasNext())
-			return includeFragment.next();
-		else
-			return "";
-	}*/
 
 	@Override
 	public Iterator<KnowIt> getVariables() {
@@ -95,11 +86,6 @@ public class CodeBlockContext extends Context {
 		for (StoryComponent child : children) {
 			child.process(knowItGetter);
 		}
-		
-		Iterator<KnowIt> knowIterator= knowItGetter.getObjects().iterator();
-		while(knowIterator.hasNext()) {
-			System.out.println("KNOWITERATOR TEXT: "+knowIterator.next().getDisplayText());
-		}
 		return knowItGetter.getObjects().iterator();
 	}
 
@@ -108,15 +94,6 @@ public class CodeBlockContext extends Context {
 		return codeBlock.getParameters().iterator();
 	}
 
-	/*@Override
-	public Iterator<String> getIncludes() {
-		for(String include : codeBlock.getIncludes()) {
-			FileContext.addIncludeFile(include);
-		}
-		return codeBlock.getIncludes().iterator();
-	}
-	*/
-	
 	/**
 	 * Get the Collection of FormatFragments which represent the method body
 	 */
