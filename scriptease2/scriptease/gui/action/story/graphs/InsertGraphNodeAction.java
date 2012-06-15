@@ -25,6 +25,7 @@ public final class InsertGraphNodeAction extends ToolBarButtonAction {
 		super(InsertGraphNodeAction.INSERT_TEXT,
 				InsertGraphNodeAction.ICON_TEXT);
 		
+		this.putValue(SHORT_DESCRIPTION, INSERT_TEXT);
 	}
 
 	/**

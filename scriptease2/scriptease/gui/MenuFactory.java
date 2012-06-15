@@ -506,9 +506,11 @@ public class MenuFactory {
 
 			@Override
 			protected void action() {
-
-				Translator nwn = TranslatorManager.getInstance().getTranslator(
+				final TranslatorManager manager = TranslatorManager.getInstance();
+				Translator nwn = manager.getTranslator(
 						"Neverwinter Nights");
+//				manager.setActiveTranslator(nwn);
+				
 				LibraryModel model = nwn.getApiDictionary().getLibrary();
 				for (StoryComponent component : model.getAllStoryComponents()) {
 					component.process(new AbstractNoOpStoryVisitor() {
