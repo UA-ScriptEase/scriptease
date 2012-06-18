@@ -19,7 +19,7 @@ public abstract class KnowItBinding implements Cloneable {
 
 	public abstract Object getValue();
 
-	public abstract Collection<String> getTypes(); 
+	public abstract Collection<String> getTypes();
 
 	@Override
 	public abstract boolean equals(Object other);
@@ -49,10 +49,10 @@ public abstract class KnowItBinding implements Cloneable {
 	}
 
 	/**
-	 * Substitutes the instanceof KnowItBindingNull checks Returns true, unless
-	 * the binding is an instance of KnowItBindingNull
+	 * Substitutes the instanceof KnowItBindingNull checks.
 	 * 
-	 * @return
+	 * @return <code>true</code>, unless the binding is an instance of
+	 *         KnowItBindingNull
 	 */
 	public boolean isBound() {
 		return true;

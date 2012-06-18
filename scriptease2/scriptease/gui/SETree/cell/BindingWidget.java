@@ -24,6 +24,15 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.translator.io.model.IdentifiableGameConstant;
 
+/**
+ * Represents a binding or binding slot that can be dropped onto slots via drag
+ * and drop. BindingWidgets display their type(s). They do a sort of double-duty
+ * to be the binding as well as the empty binding slot, depending on if the binding it
+ * is representing is null or not.
+ * 
+ * @author remiller
+ * @see BindingWidgetUI
+ */
 @SuppressWarnings("serial")
 public class BindingWidget extends JPanel implements Cloneable {
 	private KnowItBinding binding;
@@ -31,6 +40,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 
 	public BindingWidget(KnowItBinding binding) {
 		this.binding = binding;
+		// we don't want horizontal/vertical gaps, so make FlowLayout do this
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		this.updateToolTip(binding);
 		this.updateBackgroundColour(binding);
@@ -51,8 +61,8 @@ public class BindingWidget extends JPanel implements Cloneable {
 			@Override
 			public void processConstant(KnowItBindingConstant constant) {
 				if (constant.isIdentifiableGameConstant()) {
-					String blueprint = ((IdentifiableGameConstant) constant.getValue())
-							.getTemplateID();
+					String blueprint = ((IdentifiableGameConstant) constant
+							.getValue()).getTemplateID();
 					if (blueprint != null && !blueprint.isEmpty())
 						BindingWidget.this.setToolTipText(blueprint);
 				}
@@ -72,6 +82,11 @@ public class BindingWidget extends JPanel implements Cloneable {
 		return clone;
 	}
 
+	/**
+	 * Gets the binding that this widget currently represents.
+	 * 
+	 * @return the KnowItBinding backing this widget.
+	 */
 	public KnowItBinding getBinding() {
 		return this.binding;
 	}

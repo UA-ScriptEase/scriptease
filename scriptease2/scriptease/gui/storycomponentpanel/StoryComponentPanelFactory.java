@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
-import scriptease.gui.SETree.cell.ScriptWidgetFactory.BindingWidgetBuilder;
 import scriptease.gui.SETree.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.describeIts.DescribeItPanel;
@@ -302,20 +301,20 @@ public class StoryComponentPanelFactory {
 		binding.process(new AbstractNoOpBindingVisitor() {
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				displayNamePanel.add(BindingWidgetBuilder.getInstance()
-						.buildBindingWidget(knowIt, editable));
+				displayNamePanel.add(ScriptWidgetFactory.buildBindingWidget(
+						knowIt, editable));
 			}
 
 			@Override
 			public void processRunTime(KnowItBindingRunTime runTime) {
-				displayNamePanel.add(BindingWidgetBuilder.getInstance()
-						.buildBindingWidget(knowIt, editable));
+				displayNamePanel.add(ScriptWidgetFactory.buildBindingWidget(
+						knowIt, editable));
 			}
 
 			@Override
 			public void processDescribeIt(KnowItBindingDescribeIt described) {
-				displayNamePanel.add(BindingWidgetBuilder.getInstance()
-						.buildBindingWidget(knowIt, editable));
+				displayNamePanel.add(ScriptWidgetFactory.buildBindingWidget(
+						knowIt, editable));
 			}
 
 			@Override
@@ -337,7 +336,9 @@ public class StoryComponentPanelFactory {
 		binding.process(new AbstractNoOpBindingVisitor() {
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
-				// do nothing for KnowItBindingNull
+				// do nothing for KnowItBindingNull. Not even the default.
+				// That's right. We hate empty bindings so much that we won't
+				// even talk to them.
 			}
 
 			private void processDefault() {
@@ -486,8 +487,8 @@ public class StoryComponentPanelFactory {
 		private void buildMainQuestPointPanel(QuestPoint questPoint,
 				JPanel mainPanel) {
 			// Add a BindingWidget for the QuestPoint
-			mainPanel.add(BindingWidgetBuilder.getInstance()
-					.buildBindingWidget(questPoint, false));
+			mainPanel.add(ScriptWidgetFactory.buildBindingWidget(questPoint,
+					false));
 			mainPanel.setOpaque(false);
 		}
 

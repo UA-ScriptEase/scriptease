@@ -240,16 +240,15 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		}
 
 		@Override
-		public void processQuestPointNode(QuestPointNode questPointNode) {
+		public void processQuestPointNode(QuestPointNode node) {
 			this.component = new JPanel();
-			this.configureListeners(questPointNode, this.component);
-			this.configureAppearance(this.component, questPointNode);
+			this.configureListeners(node, this.component);
+			this.configureAppearance(this.component, node);
 			this.component.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
 			this.component
-					.add(ScriptWidgetFactory.buildFanInPanel(questPointNode
+					.add(ScriptWidgetFactory.buildFanInPanel(node
 							.getQuestPoint().getFanIn()));
-			this.component.add(new JLabel(questPointNode.getQuestPoint()
-					.getDisplayText()));
+			this.component.add(ScriptWidgetFactory.buildBindingWidget(node.getQuestPoint(), false));
 		}
 
 		@Override
