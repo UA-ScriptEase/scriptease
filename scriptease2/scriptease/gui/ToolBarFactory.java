@@ -188,7 +188,7 @@ public class ToolBarFactory {
 		final int FAN_IN_SPINNER_LENGTH = 50;
 		final int NAME_FIELD_LENGTH = 150;
 
-		final JTextField nameField = nameField(new Dimension(NAME_FIELD_LENGTH,
+		final JTextField nameField = buildNameField(new Dimension(NAME_FIELD_LENGTH,
 				TOOL_BAR_HEIGHT));
 
 		final JCheckBox commitBox = committingBox();
@@ -308,7 +308,7 @@ public class ToolBarFactory {
 	 * @param maxSize
 	 * @return
 	 */
-	private static JTextField nameField(final Dimension maxSize) {
+	private static JTextField buildNameField(final Dimension maxSize) {
 		JTextField nameField = new JTextField(10);
 		nameField.setMaximumSize(maxSize);
 

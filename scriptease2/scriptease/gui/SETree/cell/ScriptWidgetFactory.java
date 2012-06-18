@@ -125,23 +125,51 @@ public class ScriptWidgetFactory {
 	}
 
 	/**
-	 * Singleton factory class for constructing BindingWidgets
+	 * Builds a BindingWidget from the given QuestPoint.
+	 * 
+	 * @param component
+	 *            The quest to build a binding widget for.
+	 * @param editable
+	 *            <code>true</code> means that the name is editable
+	 *            <code>false</code> otherwise.
+	 * @return The binding widget for displaying the given StoryComponent
+	 */
+	public static BindingWidget buildBindingWidget(QuestPoint component,
+			boolean editable) {
+		BindingWidgetBuilder builder = new BindingWidgetBuilder();
+
+		return builder.buildBindingWidget(component, editable);
+	}
+
+	/**
+	 * Builds a BindingWidget from the given QuestPoint.
+	 * 
+	 * @param component
+	 *            The quest to build a binding widget for.
+	 * @param editable
+	 *            <code>true</code> means that the name is editable
+	 *            <code>false</code> otherwise.
+	 * @return The binding widget for displaying the given StoryComponent
+	 */
+	public static BindingWidget buildBindingWidget(KnowIt component, boolean editable) {
+		BindingWidgetBuilder builder = new BindingWidgetBuilder();
+
+		return builder.buildBindingWidget(component, editable);
+	}
+
+	/**
+	 * Visitor class that constructs {@link BindingWidget}s. <br>
+	 * <br>
+	 * The related methods in ScriptWidgetFactory are facades that forwarding to
+	 * this class. They exist to be able to restrict the acceptable types, while
+	 * this class can technically handle multiple types, those are the only ones
+	 * that make sense.
 	 * 
 	 * @author mfchurch
-	 * 
+	 * @author remiller
 	 */
-	public static class BindingWidgetBuilder extends AbstractNoOpStoryVisitor {
-		private static BindingWidgetBuilder instance;
+	private static class BindingWidgetBuilder extends AbstractNoOpStoryVisitor {
 		private BindingWidget bindingWidget;
-
-		private BindingWidgetBuilder() {
-		}
-
-		public static BindingWidgetBuilder getInstance() {
-			if (instance == null)
-				instance = new BindingWidgetBuilder();
-			return instance;
-		}
 
 		/**
 		 * Builds a BindingWidget from the given StoryComponent, and whether
@@ -154,32 +182,33 @@ public class ScriptWidgetFactory {
 				boolean editable) {
 			storyComponent.process(this);
 			if (editable) {
-				bindingWidget.add(ScriptWidgetFactory
+				this.bindingWidget.add(ScriptWidgetFactory
 						.buildNameEditor(storyComponent));
 			} else {
-				bindingWidget.add(ScriptWidgetFactory.buildLabel(
+				this.bindingWidget.add(ScriptWidgetFactory.buildLabel(
 						storyComponent.getDisplayText(), Color.WHITE));
 			}
-			bindingWidget.setTransferHandler(BindingTransferHandlerExportOnly
-					.getInstance());
+			this.bindingWidget
+					.setTransferHandler(BindingTransferHandlerExportOnly
+							.getInstance());
 			// Set an empty border to prevent line crowding.
-			bindingWidget.setBorder(BorderFactory.createEmptyBorder(
+			this.bindingWidget.setBorder(BorderFactory.createEmptyBorder(
 					TOTAL_ROW_BORDER_SIZE, TOTAL_ROW_BORDER_SIZE,
 					TOTAL_ROW_BORDER_SIZE, TOTAL_ROW_BORDER_SIZE));
-			bindingWidget.setVisible(true);
-			bindingWidget.setOpaque(false);
-			return bindingWidget;
+			this.bindingWidget.setVisible(true);
+			this.bindingWidget.setOpaque(false);
+			return this.bindingWidget;
 		}
 
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
-			bindingWidget = new BindingWidget(
-					new KnowItBindingReference(knowIt));
+			this.bindingWidget = new BindingWidget(new KnowItBindingReference(
+					knowIt));
 		}
 
 		@Override
 		public void processQuestPoint(QuestPoint questPoint) {
-			bindingWidget = new BindingWidget(new KnowItBindingConstant(
+			this.bindingWidget = new BindingWidget(new KnowItBindingConstant(
 					GameConstantFactory.getInstance().getConstant(
 							QuestPoint.QUEST_POINT_TYPE,
 							questPoint.getDisplayText())));
@@ -204,7 +233,7 @@ public class ScriptWidgetFactory {
 		final Collection<String> types = knowIt.getAcceptableTypes();
 
 		// for each type the KnowIt can accept
-		//This is types for the other thing
+		// This is types for the other thing
 		/*************************************************************************/
 		for (String type : types) {
 			slotTypeWidget = ScriptWidgetFactory.buildTypeWidget(type);
@@ -248,8 +277,8 @@ public class ScriptWidgetFactory {
 	}
 
 	/**
-	 * Builds a label for displaying text in the ScriptEase pattern Constructor
-	 * GUI.
+	 * Builds a label for displaying plain text in the ScriptEase pattern
+	 * Constructor GUI.
 	 * 
 	 * @param text
 	 *            the text to display
@@ -257,7 +286,7 @@ public class ScriptWidgetFactory {
 	 *            the colour to use for the text. If <code>null</code>, then the
 	 *            default colour for JLabels will be used.
 	 * 
-	 * @return a preconfigured JLabel
+	 * @return An otherwise normal JLabel configured for display in the tree
 	 */
 	public static JLabel buildLabel(String text, Color textColor) {
 		final JLabel label;
@@ -276,6 +305,20 @@ public class ScriptWidgetFactory {
 		return label;
 	}
 
+	/**
+	 * Builds a label for displaying plain text in the ScriptEase pattern
+	 * Constructor GUI.
+	 * 
+	 * @param text
+	 *            the text to display
+	 * @param textColor
+	 *            the colour to use for the text. If <code>null</code>, then the
+	 *            default colour for JLabels will be used.
+	 * @param background
+	 *            the background colour to use
+	 * 
+	 * @return An otherwise normal JLabel configured for display in the tree
+	 */
 	public static JLabel buildLabel(String text, Color textColor,
 			Color background) {
 		JLabel label = buildLabel(text, textColor);
@@ -306,7 +349,7 @@ public class ScriptWidgetFactory {
 		} catch (NumberFormatException e) {
 			initVal = 0;
 		}
-		
+
 		/*
 		 * extremly naive regex parsing since I'm unsure of a better way to
 		 * determine the max, min value the spinner should have

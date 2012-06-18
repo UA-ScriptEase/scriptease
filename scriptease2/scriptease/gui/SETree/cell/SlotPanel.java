@@ -34,7 +34,8 @@ import scriptease.translator.io.model.IdentifiableGameConstant;
 import scriptease.util.GUIOp;
 
 /**
- * SlotPanel is a GUI slot which accepts KnowIt Bindings (binding slot)
+ * SlotPanel is a GUI slot which accepts KnowIt Bindings (binding slot). It
+ * displays all of its acceptable types as well as a hint that the user can drop
  * 
  * @author mfchurch
  * 
@@ -72,10 +73,10 @@ public class SlotPanel extends JPanel {
 		 * the slot, 2 is to display the current binding, and 3 to provide an
 		 * interface for rebinding/unbinding knowIts
 		 */
-		
+
 		// 1. add and maintain the types list
 		this.add(
-			ScriptWidgetFactory.populateLegalTypesPanel(typesPanel, knowIt),
+				ScriptWidgetFactory.populateLegalTypesPanel(typesPanel, knowIt),
 				0);
 
 		slotBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED);
