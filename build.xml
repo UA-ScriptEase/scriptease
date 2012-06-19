@@ -128,7 +128,7 @@ Some important targets to read up on are:
 	<!-- Whether it should be compiled including debug information, 
 	 (ie can you run a debugger on it). This is independent of 
 	 ScriptEase's "Run in Debug Mode" flag. -->
-	<property name="debugMode" value="false" />
+	<property name="debug.mode" value="false" />
 
 	<property name="buildDirectory" value="build" />
 	<property name="jarDirectory" location="jar" />
