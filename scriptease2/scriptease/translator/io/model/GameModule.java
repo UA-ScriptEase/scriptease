@@ -60,7 +60,7 @@ public interface GameModule {
 	 * then it is simply overwritten without question.
 	 * 
 	 * @param compile
-	 *            TODO
+	 *         
 	 * @see #getLocation()
 	 * @see #setLocation(File)
 	 */
