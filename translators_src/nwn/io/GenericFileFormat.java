@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import scriptease.controller.apimanagers.GameTypeManager;
-import scriptease.model.CodeBlock;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
@@ -40,7 +39,7 @@ public class GenericFileFormat {
 	private static final String TYPE_PLACEABLE_BP = "UTP";
 	private static final String TYPE_ITEM_BP = "UTI";
 	private static final String TYPE_DOOR_BP = "UTD";
-	private static final String TYPE_DIALOGUE_BP = "DLG";
+	public static final String TYPE_DIALOGUE_BP = "DLG";
 	private static final String TYPE_JOURNAL_BP = "JRL";
 	private static final String TYPE_MODULE_BP = "IFO";
 	public static final String TYPE_GAME_INSTANCE_FILE = "GIT";
