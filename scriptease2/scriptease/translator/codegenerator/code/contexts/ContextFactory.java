@@ -1,9 +1,7 @@
 package scriptease.translator.codegenerator.code.contexts;
 
-import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.BindingVisitor;
-import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.quests.QuestPointNode;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
@@ -13,6 +11,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.AskIt;
@@ -23,6 +22,7 @@ import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingConstantContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingFunctionContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingNullContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingQuestPointContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingReferenceContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingRunTimeContext;
 
@@ -57,7 +57,7 @@ public class ContextFactory {
 	 */
 	public Context createContext(final Context pastContext, final Object source) {
 		if (source instanceof String) {
-			activeContext = pastContext;//= new StringContext(pastContext, (String) source);
+			this.activeContext = pastContext;
 		} else if (source instanceof KnowItBinding) {
 			((KnowItBinding) source).process(new BindingVisitor() {
 				@Override
@@ -99,32 +99,28 @@ public class ContextFactory {
 								pastContext, new KnowItBindingFunction(
 										resolvedDoIt));
 				}
+
+				@Override
+				public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+					activeContext = new KnowItBindingQuestPointContext(
+							pastContext, questPoint);
+					
+				}
 			});
 		} else if (source instanceof StoryComponent) {
 			((StoryComponent) source).process(new AbstractNoOpStoryVisitor() {
-				/** COMPLEX TYPES **/
-				@Override
-				public void processScriptIt(ScriptIt scriptIt) {
-					activeContext = new ScriptItContext(pastContext, scriptIt);
-				}
-
 				protected void defaultProcessComplex(
 						ComplexStoryComponent complex) {
 					activeContext = new ComplexStoryComponentContext(
 							pastContext, complex);
 				}
-
-				/** ATOMIC TYPES **/
+				
+				/* COMPLEX TYPES */
 				@Override
-				public void processAskIt(AskIt questionIt) {
-					activeContext = new AskItContext(pastContext, questionIt);
+				public void processScriptIt(ScriptIt scriptIt) {
+					activeContext = new ScriptItContext(pastContext, scriptIt);
 				}
-
-				@Override
-				public void processKnowIt(KnowIt knowIt) {
-					activeContext = new KnowItContext(pastContext, knowIt);
-				}
-
+				
 				@Override
 				public void processStoryItemSequence(StoryItemSequence sequence) {
 					activeContext = new StoryItemSequenceContext(pastContext,
@@ -134,25 +130,26 @@ public class ContextFactory {
 				@Override
 				public void processStoryComponentContainer(
 						StoryComponentContainer container) {
-					defaultProcessComplex(container);
+					this.defaultProcessComplex(container);
+				}
+
+				/* ATOMIC TYPES */
+				@Override
+				public void processAskIt(AskIt questionIt) {
+					activeContext = new AskItContext(pastContext, questionIt);
+				}
+
+				@Override
+				public void processKnowIt(KnowIt knowIt) {
+					activeContext = new KnowItContext(pastContext, knowIt);
 				}
 			});
 		} else if (source instanceof CodeBlock) {
 			activeContext = new CodeBlockContext(pastContext,
 					(CodeBlock) source);
-		} else if (source instanceof GraphNode) {
-			((GraphNode) source).process(new AbstractNoOpGraphNodeVisitor() {
-				@Override
-				public void processQuestPointNode(QuestPointNode questPointNode) {
-					activeContext = new QuestPointNodeContext(pastContext,
-							questPointNode);
-				}
-
-				@Override
-				protected void defaultProcess(GraphNode node) {
-					activeContext = new GraphNodeContext(pastContext, node);
-				}
-			});
+		} else if (source instanceof QuestPointNode) {
+			activeContext = new QuestPointNodeContext(pastContext,
+					(QuestPointNode) source);
 		} else
 			throw new IllegalStateException(
 					"Cannot Generate Context for Object: " + source);

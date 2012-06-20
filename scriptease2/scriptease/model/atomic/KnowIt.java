@@ -12,6 +12,7 @@ import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
@@ -21,6 +22,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
@@ -161,6 +163,22 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	}
 
 	/**
+	 * Change the <code>KnowIt</code>'s binding to the given
+	 * <code>QuestPoint</code>.
+	 * 
+	 * @param value
+	 *            The QuestPoint to be known by this KnowIt
+	 */
+	public void setBinding(QuestPoint value) {
+		if (value == null)
+			throw new IllegalArgumentException(
+					"KnowIt cannot be bound to ScriptIt null");
+		KnowItBindingQuestPoint bindingValue = new KnowItBindingQuestPoint(
+				value);
+		this.setBinding(bindingValue);
+	}
+
+	/**
 	 * Shortcut for setting the KnowIt's binding to KnowItBindingNull
 	 */
 	public void clearBinding() {
@@ -178,7 +196,8 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	}
 
 	/**
-	 * Sets the binding to the given KnowItBinding
+	 * Sets the binding to the given KnowItBinding. Clients should prefer to use
+	 * the other setBinding(...) methods that are of the specific binding type.
 	 * 
 	 * @param value
 	 *            The binding that the KnowIt will point to.
@@ -186,140 +205,142 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	public void setBinding(KnowItBinding value) {
 		if (value == null)
 			value = new KnowItBindingNull();
+
 		// Ignore compatibility during undoing or redoing as the model may be
 		// invalid for the duration of the undo/redo
-		if (UndoManager.getInstance().isUndoingOrRedoing()
-				|| value.compatibleWith(this)) {
-			value.process(new AbstractNoOpBindingVisitor() {
-				@Override
-				public void processNull(KnowItBindingNull nullBinding) {
-					// Find an appropriate Default binding for the type.
-					final StoryModel activeModel = StoryModelPool.getInstance()
-							.getActiveModel();
-					if (activeModel != null) {
-						final Translator translator = activeModel
-								.getTranslator();
-						if (translator != null
-								&& translator.loadedAPIDictionary()) {
-							GameTypeManager typeManager = translator
-									.getApiDictionary().getGameTypeManager();
-							for (String type : types) {
-								if (typeManager.hasGUI(type)) {
-									KnowItBindingConstant bindingValue = new KnowItBindingConstant(
-											GameConstantFactory
-													.getInstance()
-													.getTypedBlankConstant(type));
-									this.defaultProcess(bindingValue);
-									return;
-								}
+		if (!UndoManager.getInstance().isUndoingOrRedoing()
+				&& !value.compatibleWith(this)) {
+			System.err.println(this + " is not compatible with " + value);
+			return;
+		}
+
+		value.process(new AbstractNoOpBindingVisitor() {
+			@Override
+			public void processNull(KnowItBindingNull nullBinding) {
+				// Find an appropriate Default binding for the type.
+				final StoryModel activeModel = StoryModelPool.getInstance()
+						.getActiveModel();
+				if (activeModel != null) {
+					final Translator translator = activeModel.getTranslator();
+					if (translator != null && translator.loadedAPIDictionary()) {
+						GameTypeManager typeManager = translator
+								.getApiDictionary().getGameTypeManager();
+						for (String type : types) {
+							if (typeManager.hasGUI(type)) {
+								KnowItBindingConstant bindingValue = new KnowItBindingConstant(
+										GameConstantFactory.getInstance()
+												.getTypedBlankConstant(type));
+								this.defaultProcess(bindingValue);
+								return;
 							}
 						}
 					}
-					this.defaultProcess(nullBinding);
 				}
+				this.defaultProcess(nullBinding);
+			}
 
-				/**
-				 * Add observers from the given component and it's parameters
-				 * 
-				 * @param component
+			@Override
+			public void processFunction(KnowItBindingFunction function) {
+				defaultProcess(function);
+				// Observer the reference
+				final ScriptIt doIt = function.getValue();
+				doIt.setOwner(KnowIt.this);
+				addObservers(doIt);
+				addParameterObservers(doIt);
+			}
+
+			@Override
+			public void processDescribeIt(KnowItBindingDescribeIt described) {
+				defaultProcess(described);
+				// Observer the reference
+				final DescribeIt describeIt = described.getValue();
+				for (ScriptIt scriptIt : describeIt.getScriptIts()) {
+					scriptIt.setOwner(KnowIt.this);
+					addObservers(scriptIt);
+					addParameterObservers(scriptIt);
+				}
+			}
+
+			@Override
+			public void processReference(KnowItBindingReference reference) {
+				defaultProcess(reference);
+				// Observer the reference
+				final KnowIt knowIt = reference.getValue();
+				if (knowIt.getOwner() == null)
+					knowIt.setOwner(KnowIt.this);
+				addObservers(knowIt);
+			}
+
+			@Override
+			protected void defaultProcess(KnowItBinding newBinding) {
+				/*
+				 * if the KnowIt was previously referencing another
+				 * StoryComponent, unregister it so we don't receive updates
+				 * from it anymore
 				 */
-				private void addObservers(StoryComponent component) {
-					component.addStoryComponentObserver(KnowIt.this);
-					if (component instanceof ScriptIt) {
-						addParameterObservers((ScriptIt) component);
+				knowItBinding.process(new AbstractNoOpBindingVisitor() {
+					@Override
+					public void processFunction(KnowItBindingFunction function) {
+						removeObservers(function.getValue());
 					}
-				}
 
-				private void addParameterObservers(ScriptIt component) {
-					for (KnowIt param : component.getParameters())
-						param.addStoryComponentObserver(KnowIt.this);
-				}
-
-				private void removeParameterObservers(ScriptIt component) {
-					for (KnowIt param : component.getParameters())
-						param.removeStoryComponentObserver(KnowIt.this);
-				}
-
-				/**
-				 * Removes observers from the given component and it's
-				 * parameters
-				 * 
-				 * @param component
-				 */
-				private void removeObservers(StoryComponent component) {
-					component.removeStoryComponentObserver(KnowIt.this);
-					if (component instanceof ScriptIt) {
-						removeParameterObservers((ScriptIt) component);
+					@Override
+					public void processReference(
+							KnowItBindingReference reference) {
+						removeObservers(reference.getValue());
 					}
-				}
 
-				@Override
-				public void processFunction(KnowItBindingFunction function) {
-					defaultProcess(function);
-					// Observer the reference
-					final ScriptIt doIt = function.getValue();
-					doIt.setOwner(KnowIt.this);
-					addObservers(doIt);
-				}
-
-				@Override
-				public void processDescribeIt(KnowItBindingDescribeIt described) {
-					defaultProcess(described);
-					// Observer the reference
-					final DescribeIt describeIt = described.getValue();
-					for (ScriptIt scriptIt : describeIt.getScriptIts()) {
-						scriptIt.setOwner(KnowIt.this);
-						addObservers(scriptIt);
+					@Override
+					public void processDescribeIt(
+							KnowItBindingDescribeIt described) {
+						final DescribeIt describeIt = described.getValue();
+						for (ScriptIt doIt : describeIt.getScriptIts())
+							removeObservers(doIt);
 					}
+
+					@Override
+					public void processQuestPoint(
+							KnowItBindingQuestPoint questPoint) {
+						removeObservers(questPoint.getValue());
+					}
+				});
+				knowItBinding = newBinding;
+				notifyObservers(new StoryComponentEvent(KnowIt.this,
+						StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND));
+			}
+
+			/**
+			 * Add observers from the given component and its parameters
+			 * 
+			 * @param component
+			 */
+			private void addObservers(StoryComponent component) {
+				component.addStoryComponentObserver(KnowIt.this);
+			}
+
+			private void addParameterObservers(ScriptIt component) {
+				for (KnowIt param : component.getParameters())
+					param.addStoryComponentObserver(KnowIt.this);
+			}
+
+			private void removeParameterObservers(ScriptIt component) {
+				for (KnowIt param : component.getParameters())
+					param.removeStoryComponentObserver(KnowIt.this);
+			}
+
+			/**
+			 * Removes observers from the given component and it's parameters
+			 * 
+			 * @param component
+			 */
+			private void removeObservers(StoryComponent component) {
+				component.removeStoryComponentObserver(KnowIt.this);
+				if (component instanceof ScriptIt) {
+					removeParameterObservers((ScriptIt) component);
 				}
+			}
+		});
 
-				@Override
-				public void processReference(KnowItBindingReference reference) {
-					defaultProcess(reference);
-					// Observer the reference
-					final KnowIt knowIt = reference.getValue();
-					if (knowIt.getOwner() == null)
-						// TODO fix problem with owner and script it code
-						// generation 
-						knowIt.setOwner(KnowIt.this);
-					addObservers(knowIt);
-				}
-
-				@Override
-				protected void defaultProcess(KnowItBinding newBinding) {
-					/*
-					 * if the KnowIt was previously referencing another
-					 * StoryComponent, unregister it so we don't receive updates
-					 * from it anymore
-					 */
-					knowItBinding.process(new AbstractNoOpBindingVisitor() {
-						@Override
-						public void processFunction(
-								KnowItBindingFunction function) {
-							removeObservers(function.getValue());
-						}
-
-						@Override
-						public void processReference(
-								KnowItBindingReference reference) {
-							removeObservers(reference.getValue());
-						}
-
-						@Override
-						public void processDescribeIt(
-								KnowItBindingDescribeIt described) {
-							final DescribeIt describeIt = described.getValue();
-							for (ScriptIt doIt : describeIt.getScriptIts())
-								removeObservers(doIt);
-						}
-					});
-					knowItBinding = newBinding;
-					notifyObservers(new StoryComponentEvent(KnowIt.this,
-							StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND));
-				}
-			});
-		} else
-			System.err.println(this + " is not compatible with " + value);
 	}
 
 	public String getScriptValue() {
@@ -458,6 +479,11 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 				@Override
 				public void processFunction(KnowItBindingFunction function) {
+					KnowIt.this.notifyObservers(event);
+				}
+
+				@Override
+				public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
 					KnowIt.this.notifyObservers(event);
 				}
 			});

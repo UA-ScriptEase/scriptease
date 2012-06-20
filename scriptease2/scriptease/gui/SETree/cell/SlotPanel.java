@@ -25,6 +25,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -142,6 +143,18 @@ public class SlotPanel extends JPanel {
 				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
 						reference.getValue().getDisplayText(), Color.WHITE);
 			}
+			
+			@Override
+			public void processFunction(KnowItBindingFunction function) {
+				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
+						function.getValue().getDisplayText(), Color.WHITE);
+			}
+			
+			@Override
+			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
+						questPoint.getValue().getDisplayText(), Color.WHITE);
+			}
 
 			@Override
 			public void processConstant(KnowItBindingConstant constant) {
@@ -174,12 +187,6 @@ public class SlotPanel extends JPanel {
 			}
 
 			@Override
-			public void processFunction(KnowItBindingFunction function) {
-				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
-						function.getValue().getDisplayText(), Color.WHITE);
-			}
-
-			@Override
 			protected void defaultProcess(KnowItBinding binding) {
 				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
 						knowIt.getDisplayText(), Color.WHITE);
@@ -208,7 +215,7 @@ public class SlotPanel extends JPanel {
 				knowIt.getBinding().process(new AbstractNoOpBindingVisitor() {
 					@Override
 					public void processNull(KnowItBindingNull nullBinding) {
-						// do nothing
+						// do nothing for null, not even default
 					}
 
 					@Override

@@ -26,6 +26,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -318,9 +319,16 @@ public class StoryComponentPanelFactory {
 			}
 
 			@Override
+			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+				displayNamePanel.add(ScriptWidgetFactory.buildBindingWidget(
+						knowIt, editable));
+			}
+			
+			@Override
 			protected void defaultProcess(KnowItBinding binding) {
 				displayNamePanel.add(ScriptWidgetFactory.buildSlotPanel(knowIt));
 			}
+
 		});
 	}
 
@@ -367,16 +375,12 @@ public class StoryComponentPanelFactory {
 	}
 
 	/**
-	 * Builder used to populate the contents of a StoryComponentPanel. Singleton
+	 * Builder used to populate the contents of a StoryComponentPanel.
 	 * 
 	 * @author mfchurch
-	 * 
 	 */
 	private class StoryComponentPanelBuilder extends AbstractNoOpStoryVisitor {
 		private StoryComponentPanel panel;
-
-		public StoryComponentPanelBuilder() {
-		}
 
 		/**
 		 * Builds and returns a StoryComponentPanel which represents the given

@@ -5,11 +5,13 @@ import java.util.List;
 
 import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
@@ -79,11 +81,19 @@ public abstract class GroupVisitor extends AbstractNoOpStoryVisitor {
 
 			@Override
 			public void processDescribeIt(KnowItBindingDescribeIt described) {
-				ScriptIt resolvedDoIt = described.getValue()
+				ScriptIt resolved = described.getValue()
 						.getResolvedScriptIt();
-				if (resolvedDoIt != null)
-					resolvedDoIt.process(GroupVisitor.this);
+				if (resolved != null)
+					resolved.process(GroupVisitor.this);
 			}
+
+			@Override
+			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+				QuestPoint qp = questPoint.getValue();
+				
+				qp.process(GroupVisitor.this);
+			}
+			
 		});
 	}
 
