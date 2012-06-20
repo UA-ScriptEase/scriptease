@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
+import scriptease.controller.BindingVisitor;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.QuestPointConverter;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
@@ -15,6 +16,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.ScriptIt;
@@ -47,6 +49,7 @@ public class KnowItBindingConverter implements Converter {
 	private static final String ATTRIBUTE_VALUE_RUNTIME_FLAVOUR = "runTime";
 	private static final String ATTRIBUTE_VALUE_NULL_FLAVOUR = "null";
 	private static final String ATTRIBUTE_VALUE_DESCRIBEIT_FLAVOUR = "describeIt";
+	private static final String ATTRIBUTE_VALUE_QUEST_POINT_FLAVOUR = "questPoint";
 
 	/**
 	 * Can convert any subclass of KnowItBinding
@@ -78,15 +81,13 @@ public class KnowItBindingConverter implements Converter {
 		final KnowItBinding binding = (KnowItBinding) source;
 
 		// redirect to the appropriate writing method.
-		binding.process(new AbstractNoOpBindingVisitor() {
+		binding.process(new BindingVisitor() {
 			public void processConstant(KnowItBindingConstant constant) {
 				if (constant.getFirstType().equals(QuestPoint.QUEST_POINT_TYPE)) {
 					// deal with it B-->:)
-					KnowItBindingConverter.this.marshallConstantBinding( 
-							constant, writer); 
-				} else 
-				if (constant
-						.isIdentifiableGameConstant())
+					KnowItBindingConverter.this.marshallConstantBinding(
+							constant, writer);
+				} else if (constant.isIdentifiableGameConstant())
 					KnowItBindingConverter.this
 							.marshallIdentifiableGameConstantBinding(constant,
 									writer);
@@ -126,12 +127,10 @@ public class KnowItBindingConverter implements Converter {
 			}
 
 			@Override
-			protected void defaultProcess(KnowItBinding binding) {
-				// Vizzini would be proud. - remiller  
-				throw new ConversionException("Inconceivable binding type: "
-						+ binding.getClass());
+			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+				KnowItBindingConverter.this.marshallQuestPointBinding(
+						questPoint, writer, context);
 			}
-
 		});
 	}
 
@@ -218,6 +217,19 @@ public class KnowItBindingConverter implements Converter {
 		writer.endNode();
 	}
 
+	/*
+	 * Converts a Quest Point reference to XML
+	 */
+	private void marshallQuestPointBinding(KnowItBindingQuestPoint binding,
+			HierarchicalStreamWriter writer, MarshallingContext context) {
+		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
+				ATTRIBUTE_VALUE_QUEST_POINT_FLAVOUR);
+
+		writer.startNode(QuestPointConverter.TAG_QUESTPOINT);
+		context.convertAnother(binding.getValue());
+		writer.endNode();
+	}
+
 	// ====================== IN ======================
 
 	/**
@@ -254,7 +266,11 @@ public class KnowItBindingConverter implements Converter {
 			else if (flavour
 					.equalsIgnoreCase(ATTRIBUTE_VALUE_DESCRIBEIT_FLAVOUR))
 				binding = this.unmarshallDescribeItBinding(reader, context);
+			else if (flavour
+					.equalsIgnoreCase(ATTRIBUTE_VALUE_QUEST_POINT_FLAVOUR))
+				binding = this.unmarshallQuestPointBinding(reader, context);
 			else
+				// VizziniAmazementException - remiller
 				throw new ConversionException("Inconceivable binding type: "
 						+ flavour);
 		}
@@ -355,5 +371,19 @@ public class KnowItBindingConverter implements Converter {
 				(DescribeIt) context.convertAnother(binding, DescribeIt.class));
 		reader.moveUp();
 		return knowItBindingDescribeIt;
+	}
+
+	private KnowItBindingQuestPoint unmarshallQuestPointBinding(
+			HierarchicalStreamReader reader, UnmarshallingContext context) {
+		QuestPoint questPoint = null;
+		final KnowItBindingQuestPoint binding = new KnowItBindingQuestPoint(questPoint);
+
+		// move down and read as a describeIt
+		reader.moveDown();
+		questPoint = (QuestPoint) context.convertAnother(binding,
+				QuestPoint.class);
+		reader.moveUp();
+
+		return new KnowItBindingQuestPoint(questPoint);
 	}
 }

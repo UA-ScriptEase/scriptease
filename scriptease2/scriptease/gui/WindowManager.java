@@ -311,7 +311,7 @@ public final class WindowManager {
 			problemPanel.setBorder(BorderFactory.createLineBorder(Color.black,
 					2));
 
-			// if avaliable, show the panel being changed, otherwise use the
+			// if available, show the panel being changed, otherwise use the
 			// display text
 			component.process(new AbstractNoOpStoryVisitor() {
 				@Override

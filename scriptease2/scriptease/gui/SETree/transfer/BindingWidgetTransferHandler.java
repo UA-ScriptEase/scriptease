@@ -241,10 +241,10 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 	private void setGroupBindings(final KnowItBinding sourceBinding,
 			final KnowIt destinationKnowIt, KnowItBinding binding) {
 		destinationKnowIt.getBinding().process(
-				new AbstractNoOpBindingVisitor() {
+				new AbstractNoOpBindingVisitor(){
 					@Override
 					public void processNull(KnowItBindingNull nullBinding) {
-						// do nothing
+						// do nothing for nulls, not even the default.
 					}
 
 					@Override

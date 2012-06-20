@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.AbstractNoOpBindingVisitor;
+import scriptease.controller.BindingVisitor;
 import scriptease.controller.MouseForwardingAdapter;
 import scriptease.gui.SETree.transfer.BindingWidgetTransferHandler;
 import scriptease.gui.SETree.ui.BindingWidgetUI;
@@ -20,6 +21,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.translator.io.model.IdentifiableGameConstant;
@@ -35,7 +37,7 @@ import scriptease.translator.io.model.IdentifiableGameConstant;
  */
 @SuppressWarnings("serial")
 public class BindingWidget extends JPanel implements Cloneable {
-	private KnowItBinding binding;
+	private final KnowItBinding binding;
 	private TransferHandler transferHandler;
 
 	public BindingWidget(KnowItBinding binding) {
@@ -49,6 +51,43 @@ public class BindingWidget extends JPanel implements Cloneable {
 		// Default transferHandler
 		this.transferHandler = BindingWidgetTransferHandler.getInstance();
 		this.setTransferHandler(transferHandler);
+		
+		this.binding.process(new BindingVisitor() {//AbstractNoOp
+			@Override
+			public void processConstant(KnowItBindingConstant constant) {
+				System.out.println("const binding");
+			}
+
+			@Override
+			public void processFunction(KnowItBindingFunction function) {
+				System.out.println("func binding");
+			}
+
+			@Override
+			public void processReference(KnowItBindingReference reference) {
+				System.out.println("ref binding");
+			}
+
+			@Override
+			public void processRunTime(KnowItBindingRunTime runTime) {
+				System.out.println("run binding");
+			}
+
+			@Override
+			public void processNull(KnowItBindingNull nullBinding) {
+				System.out.println("null binding");
+			}
+
+			@Override
+			public void processDescribeIt(KnowItBindingDescribeIt described) {
+				System.out.println("desc binding");
+			}
+
+			@Override
+			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+				System.out.println("quest binding");				
+			}
+		});
 	}
 
 	/**
@@ -126,7 +165,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 	 *         regardless of whether the colour actually changed or not.
 	 */
 	private void updateBackgroundColour(KnowItBinding binding) {
-		binding.process(new AbstractNoOpBindingVisitor() {
+		binding.process(new BindingVisitor() {
 			@Override
 			public void processConstant(KnowItBindingConstant constant) {
 				if (constant.getValue() instanceof IdentifiableGameConstant)
@@ -161,6 +200,11 @@ public class BindingWidget extends JPanel implements Cloneable {
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
 				updateBackground(ScriptEaseUI.COLOUR_UNBOUND);
+			}
+			
+			@Override
+			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);				
 			}
 
 			private void updateBackground(Color color) {

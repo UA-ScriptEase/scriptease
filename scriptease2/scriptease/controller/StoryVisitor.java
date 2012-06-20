@@ -41,5 +41,4 @@ public interface StoryVisitor {
 	public void processKnowIt(KnowIt knowIt);
 
 	public void processAskIt(AskIt askIt);
-
 }

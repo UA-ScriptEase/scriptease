@@ -39,7 +39,7 @@ import scriptease.gui.quests.QuestPoint;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
+import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.tools.GameConstantFactory;
@@ -208,10 +208,7 @@ public class ScriptWidgetFactory {
 
 		@Override
 		public void processQuestPoint(QuestPoint questPoint) {
-			this.bindingWidget = new BindingWidget(new KnowItBindingConstant(
-					GameConstantFactory.getInstance().getConstant(
-							QuestPoint.QUEST_POINT_TYPE,
-							questPoint.getDisplayText())));
+			this.bindingWidget = new BindingWidget(new KnowItBindingQuestPoint(questPoint));
 		}
 	}
 
