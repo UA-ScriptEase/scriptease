@@ -30,12 +30,15 @@ public class VariableGetter extends TypeGetterVisitor<KnowIt> {
 
 				for (KnowIt parameter : referenced.getParameters()) {
 					parameter.getBinding().process(this);
-					if (!objects.contains(parameter))
+				//	if (!objects.contains(parameter))
+					//NOTE: These if statements were removed because not all
+					//parameters/knowits were getting declared. If there is
+					//ever an issue with parameters/knowits, check here.
 						objects.add(parameter);
 				}
 			}
 		});
-		if (!objects.contains(knowIt))
+		//if (!objects.contains(knowIt))
 			objects.add(knowIt);
 	}
 

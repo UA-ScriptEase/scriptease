@@ -1,9 +1,12 @@
 package scriptease.translator.codegenerator.code.contexts.knowitbindingcontext;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import scriptease.gui.quests.QuestNode;
+import scriptease.model.CodeBlock;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.translator.Translator;
@@ -11,6 +14,7 @@ import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.io.model.GameObject;
 
 /**
  * KnowItBindingConstantContext is Context for a KnowItBindingConstant object.
@@ -48,10 +52,24 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 
 		typeFormat = this.translator.getGameTypeManager().getFormat(
 				((KnowItBindingConstant) binding).getFirstType());
-		if (typeFormat == null || typeFormat.isEmpty())
-			return this.getValue();
-
+		
+		if (typeFormat == null || typeFormat.isEmpty()) {
+			if (this.binding instanceof KnowItBindingConstant) 
+				if(((KnowItBindingConstant)this.binding).getValue() instanceof GameObject){
+					List<CodeBlock> codeBlocks = this.getBindingCodeBlocks();
+			
+				String bindingCode = FormatFragment.resolveFormat(codeBlocks.get(0).getCode(), this);
+				return bindingCode;
+			}
+			else
+				return this.getValue();
+		}
 		return FormatFragment.resolveFormat(typeFormat, this);
+	}
+	
+	@Override
+	public KnowIt getParameter(String parameter) {
+		return new KnowIt(((KnowItBindingConstant) binding).getTag());
 	}
 
 	/**

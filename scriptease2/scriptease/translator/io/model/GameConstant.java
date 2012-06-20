@@ -16,4 +16,10 @@ public interface GameConstant extends TypedComponent {
 	 * @return
 	 */
 	public String getName();
+
+	/**
+	 * Gets a tag for the object.
+	 * @return
+	 */
+	public String getTag();
 }

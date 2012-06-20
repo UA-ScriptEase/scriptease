@@ -2898,31 +2898,10 @@
 		              <Types>
 		                <Type>creature</Type>
 		              </Types>
-		              <Parameters>
-		                <KnowIt visible="true">
-		                  <Name>Attackee</Name>
-		                  <Labels/>
-		                  <Types>
-		                    <Type>creature</Type>
-		                    <Type>door</Type>
-		                    <Type>placeable</Type>
-		                  </Types>
-		                  <Binding flavour="runTime">
-		                    <Types>
-		                      <Type>creature</Type>
-		                      <Type>door</Type>
-		                      <Type>placeable</Type>
-		                    </Types>
-		                  </Binding>
-		                </KnowIt>
-		              </Parameters>
+		              <Parameters />
 		              <Code>
 			              <Line>
-			             	 <Literal>return GetLastAttacker(</Literal>
-			              	<Scope data="argument" ref="Attackee">
-								<Fragment data="name"/>
-							</Scope>
-			              	<Literal>);</Literal>
+			             	 <Literal>return GetLastAttacker();</Literal>
 			              </Line>
 		              </Code>
 		              <Includes />
@@ -5421,18 +5400,11 @@
 			      </Parameters>
 				<Code>
 				<Line>
-			         <Literal>ApplyEffectAtLocation(DURATION_TYPE_INSTANT, veffect, GetLocation(</Literal>
+			         <Literal>ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VisualEffect), GetLocation(</Literal>
 			        <Scope data="argument" ref="Target Object">
 			          <Fragment data="name"/>
 			        </Scope>
 			        <Literal>));</Literal>
-		        </Line>
-		        <Line>
-			        <Literal>ApplyEffectonTargetObject(veffect, </Literal>
-			        <Scope data="argument" ref="Target Object">
-			          <Fragment data="name"/>
-			        </Scope>
-			        <Literal>);</Literal>
 		        </Line>
 		      </Code>
 					<Includes />
@@ -21238,11 +21210,11 @@
 							<Scope data="argument" ref="dialogue line">
 								<Fragment data="name"/>
 							</Scope>
-							<Literal>, </Literal> 
+							<Literal>, abs(1-</Literal> 
 							<Scope data="argument" ref="Enable">
 								<Fragment data="name"/>
 							</Scope>
-							<Literal>);</Literal>
+							<Literal>));</Literal>
 						</Line>
 					</Code>
 					<Includes />
@@ -21255,13 +21227,13 @@
 					<Parameters />
 					<Code>
 						<Line>
-							<Literal>return GetLocalInt(GetModule(), </Literal>
+							<Literal>return abs(1-GetLocalInt(GetModule(), </Literal>
 							<Scope data="argument" ref="dialogue line">
 								<Scope data="binding">
 									<Fragment data="formattedValue"/>
 								</Scope>
 							</Scope>
-							<Literal>);</Literal>
+							<Literal>));</Literal>
 						</Line>
 					</Code>
 					<Includes />
@@ -21653,15 +21625,120 @@
 					<Type>placeable</Type>
 					<Type>door</Type>
 				</Types>
-				<Parameters />
+				<Parameters>
+					<KnowIt visible="false">
+						<Name>Tag</Name>
+						<Labels />
+						<Types>
+							<Type>string</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
 				<Code>
-					<Line>
-						<Literal>SE_AUX_GetGetNearestObjectWithoutSelf(</Literal>
-						<Scope data="argument" ref="Named">
+						<Literal>SE_AUX_GetNearestObjectWithoutSelf("</Literal>
+						<Scope data="argument" ref="Tag">
 							<Fragment data="name" />
 						</Scope>
-						<Literal>);</Literal>
-					</Line>
+						<Literal>")</Literal>
+				</Code>
+				<Includes>
+					<Include>"i_se_aux"</Include>
+				</Includes>
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt visible="false">
+		<Name>Get Random Object Without Self</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>creature</Type>
+					<Type>placeable</Type>
+					<Type>door</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="false">
+						<Name>Tag</Name>
+						<Labels />
+						<Types>
+							<Type>string</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+						<Literal>SE_AUX_GetRandomObjectWithoutSelf("</Literal>
+						<Scope data="argument" ref="Tag">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>")</Literal>
+				</Code>
+				<Includes>
+					<Include>"i_se_aux"</Include>
+				</Includes>
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt visible="false">
+		<Name>Get Nearest Object By Tag Include Self</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>creature</Type>
+					<Type>placeable</Type>
+					<Type>door</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="false">
+						<Name>Tag</Name>
+						<Labels />
+						<Types>
+							<Type>string</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+						<Literal>SE_AUX_GetNearestObjectByTagIncludeSelf("</Literal>
+						<Scope data="argument" ref="Tag">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>")</Literal>
+				</Code>
+				<Includes>
+					<Include>"i_se_aux"</Include>
+				</Includes>
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt visible="false">
+		<Name>Get Random Object With Self</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>creature</Type>
+					<Type>placeable</Type>
+					<Type>door</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="false">
+						<Name>Tag</Name>
+						<Labels />
+						<Types>
+							<Type>string</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+						<Literal>SE_AUX_GetRandomObjectWithSelf("</Literal>
+						<Scope data="argument" ref="Tag">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>")</Literal>
 				</Code>
 				<Includes>
 					<Include>"i_se_aux"</Include>
