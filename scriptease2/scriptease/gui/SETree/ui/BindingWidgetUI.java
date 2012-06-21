@@ -172,7 +172,9 @@ public class BindingWidgetUI extends ComponentUI {
 	 * This is an instance variable only so that we instantiate this once. It's
 	 * a performance boost trick that I grabbed from the Sun's UI delegates.
 	 * It's faster because configuring an old shape is faster than creating a
-	 * new one. - remiller
+	 * new one, and we've got a bunch of these all over the screen at a time.
+	 * 
+	 * - remiller
 	 */
 	private RoundRectangle2D shape = new RoundRectangle2D.Float();
 
@@ -266,7 +268,7 @@ public class BindingWidgetUI extends ComponentUI {
 		Dimension preferredTypeSize;
 
 		int i = 0;
-		//This is for BindingWidgets....
+		// This is for BindingWidgets....
 		for (String type : comp.getBinding().getTypes()) {
 
 			this.typeRenderer = ScriptWidgetFactory.buildTypeWidget(type);

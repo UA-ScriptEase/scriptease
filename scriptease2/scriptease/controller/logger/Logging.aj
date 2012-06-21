@@ -82,7 +82,7 @@ public aspect Logging {
 		outputLog.addHandler(memoryHandler);
 	}
 
-	/**************************************** POINT CUTS *************************************/
+	// ==================================== POINT CUTS ====================================
 	/**
 	 * Pointcut for system print method calls.
 	 */
@@ -130,7 +130,7 @@ public aspect Logging {
 		within(ScriptEaseExceptionHandler) && execution(* uncaughtException(Thread ,Throwable)) && args(thread, exception)
 		;
 
-	/**************************************** ADVICE *************************************/
+	// ==================================== ADVICE ====================================
 	// advice for context pointcut
 	after(Context pastContext, Object source) : context(pastContext, source) {
 		outputLog.log(Level.FINEST,
@@ -169,10 +169,15 @@ public aspect Logging {
 		outputLog.log(lvl, "\t" + txt + "\t(Unknown class)");
 	}
 
-	/**************************************** HELPERS *************************************/
+	// ==================================== HELPERS ====================================
 	// helper method which returns the simple name of the given object
 	private String GetSimpleName(Object object) {
-		return object == null ? null : object.getClass().getSimpleName();
+		String className = object.getClass().getSimpleName();
+		
+		if(className == null || className.equals(""))
+			className = object.getClass().getName();
+		
+		return object == null ? null : className;
 	}
 
 	/**

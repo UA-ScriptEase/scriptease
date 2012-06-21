@@ -25,6 +25,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -34,7 +35,8 @@ import scriptease.translator.io.model.IdentifiableGameConstant;
 import scriptease.util.GUIOp;
 
 /**
- * SlotPanel is a GUI slot which accepts KnowIt Bindings (binding slot)
+ * SlotPanel is a GUI slot which accepts KnowIt Bindings (binding slot). It
+ * displays all of its acceptable types as well as a hint that the user can drop
  * 
  * @author mfchurch
  * 
@@ -72,10 +74,10 @@ public class SlotPanel extends JPanel {
 		 * the slot, 2 is to display the current binding, and 3 to provide an
 		 * interface for rebinding/unbinding knowIts
 		 */
-		
+
 		// 1. add and maintain the types list
 		this.add(
-			ScriptWidgetFactory.populateLegalTypesPanel(typesPanel, knowIt),
+				ScriptWidgetFactory.populateLegalTypesPanel(typesPanel, knowIt),
 				0);
 
 		slotBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED);
@@ -141,6 +143,18 @@ public class SlotPanel extends JPanel {
 				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
 						reference.getValue().getDisplayText(), Color.WHITE);
 			}
+			
+			@Override
+			public void processFunction(KnowItBindingFunction function) {
+				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
+						function.getValue().getDisplayText(), Color.WHITE);
+			}
+			
+			@Override
+			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
+						questPoint.getValue().getDisplayText(), Color.WHITE);
+			}
 
 			@Override
 			public void processConstant(KnowItBindingConstant constant) {
@@ -173,12 +187,6 @@ public class SlotPanel extends JPanel {
 			}
 
 			@Override
-			public void processFunction(KnowItBindingFunction function) {
-				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
-						function.getValue().getDisplayText(), Color.WHITE);
-			}
-
-			@Override
 			protected void defaultProcess(KnowItBinding binding) {
 				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
 						knowIt.getDisplayText(), Color.WHITE);
@@ -207,7 +215,7 @@ public class SlotPanel extends JPanel {
 				knowIt.getBinding().process(new AbstractNoOpBindingVisitor() {
 					@Override
 					public void processNull(KnowItBindingNull nullBinding) {
-						// do nothing
+						// do nothing for null, not even default
 					}
 
 					@Override

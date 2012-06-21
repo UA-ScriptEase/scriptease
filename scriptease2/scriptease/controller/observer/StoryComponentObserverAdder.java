@@ -108,7 +108,6 @@ public class StoryComponentObserverAdder {
 			sequence.addStoryComponentObserver(this.observer);
 			processComplexStoryComponent(sequence);
 		}
-
 	}
 
 	private class RelatedObserver extends AbstractNoOpStoryVisitor {

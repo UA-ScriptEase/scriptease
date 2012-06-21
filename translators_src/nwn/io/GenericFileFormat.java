@@ -58,9 +58,8 @@ public class GenericFileFormat {
 	private final long fieldIndicesCount;
 	private long listIndicesOffset;
 	private final long listIndicesCount;
-	
-	private GenericFileFormat genericFileFormat = this;
 
+	private GenericFileFormat genericFileFormat = this;
 
 	/**
 	 * location of this GFF from the start of the parent ERF file. This is reset
@@ -154,7 +153,7 @@ public class GenericFileFormat {
 	public long getFieldDataCount() {
 		return this.fieldDataCount;
 	}
-	
+
 	public String getFileType() {
 		return this.fileType;
 	}
@@ -162,28 +161,29 @@ public class GenericFileFormat {
 	public void setListIndicesOffset(long listIndicesOffset) {
 		this.listIndicesOffset = listIndicesOffset;
 	}
-	
+
 	public List<GffField> getFieldArray() {
 		return this.fieldArray;
 	}
-	
+
 	public List<String> getLabelArray() {
 		return this.labelArray;
 	}
-	
+
 	public String getResRef() {
 		return this.resRef;
 	}
-	
+
 	/**
 	 * Returns the git list label that corresponds to the filetype.
+	 * 
 	 * @return
 	 */
 	public String getGITListLabel() {
 		String gitLabel;
 		String fileType = this.fileType.trim();
-		
-		if(fileType.equals(TYPE_SOUND_BP)) {
+
+		if (fileType.equals(TYPE_SOUND_BP)) {
 			gitLabel = "SoundList";
 		} else if (fileType.equals(TYPE_WAYPOINT_BP)) {
 			gitLabel = "WaypointList";
@@ -203,7 +203,7 @@ public class GenericFileFormat {
 			gitLabel = "Door List";
 		} else
 			gitLabel = "nothing";
-		
+
 		return gitLabel;
 	}
 
@@ -456,7 +456,9 @@ public class GenericFileFormat {
 		}
 		if (type == null) {
 			System.err
-					.println("Could not convert NWN type to ScriptEase type. Defaulting type to first available");
+					.println("NWN GFF: Could not convert NWN type \""
+							+ type
+							+ "\" to ScriptEase type. Defaulting type to first available");
 			type = GameTypeManager.DEFAULT_VOID_TYPE;
 		}
 		return type;
@@ -1376,7 +1378,7 @@ public class GenericFileFormat {
 		private final long typeNumber;
 		private final long labelIndex;
 		private long dataOrDataOffset; // this can increase if its an offset
-		
+
 		// this isn't part of the original struct. Added so that field knows
 		// where it lives within the Field Array. - remiller
 		private long fieldIndex;
@@ -1399,8 +1401,8 @@ public class GenericFileFormat {
 			writer.writeUnsignedInt(this.labelIndex, true);
 			writer.writeUnsignedInt(this.dataOrDataOffset, true);
 		}
-		
-		public GenericFileFormat getGFF(){
+
+		public GenericFileFormat getGFF() {
 			return genericFileFormat;
 		}
 
@@ -1614,7 +1616,7 @@ public class GenericFileFormat {
 					newData = newData.toLowerCase();
 
 					writer.writeByte(newData.length());
-					
+
 					writer.writeString(newData, newData.length());
 
 					break;

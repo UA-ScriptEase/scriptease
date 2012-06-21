@@ -2,7 +2,7 @@ package scriptease.gui.storycomponentbuilder.propertypanel;
 
 import javax.swing.JPanel;
 
-import scriptease.gui.SETree.cell.ScriptWidgetFactory.BindingWidgetBuilder;
+import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.model.atomic.KnowIt;
 
 @SuppressWarnings("serial")
@@ -14,7 +14,7 @@ public class BindingPanel extends StoryComponentPropertyPanel {
 
 	@Override
 	protected JPanel buildDisplayPanel() {
-		return BindingWidgetBuilder.getInstance().buildBindingWidget(
+		return ScriptWidgetFactory.buildBindingWidget(
 				((KnowIt) this.component), false);
 	}
 

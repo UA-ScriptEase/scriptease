@@ -5,6 +5,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 
@@ -26,35 +27,45 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
  * 
  */
 public abstract class AbstractNoOpBindingVisitor implements BindingVisitor {
-
+	@Override
 	public void processConstant(KnowItBindingConstant constant) {
 		this.defaultProcess(constant);
 	}
 
+	@Override
 	public void processFunction(KnowItBindingFunction function) {
 		this.defaultProcess(function);
 	}
 
+	@Override
 	public void processReference(KnowItBindingReference reference) {
 		this.defaultProcess(reference);
 	}
 
+	@Override
 	public void processRunTime(KnowItBindingRunTime runTime) {
 		this.defaultProcess(runTime);
 	}
 
+	@Override
 	public void processNull(KnowItBindingNull nullBinding) {
 		this.defaultProcess(nullBinding);
 	}
 
+	@Override
 	public void processDescribeIt(KnowItBindingDescribeIt described) {
 		this.defaultProcess(described);
 	}
 
+	@Override
+	public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+		this.defaultProcess(questPoint);
+	}
+
 	/**
 	 * The default process method that is called by every
-	 * process<i>Z</i>(<i>Z</i> <i>z</i>) method in this class' standard
-	 * methods. <br>
+	 * process<i>X</i>(<i>X</i> <i>x</i>) method in this class' standard
+	 * methods, where X is one of the types it can process. <br>
 	 * <br>
 	 * Override this method if you want to provide a non-null default behaviour
 	 * for every non-overridden process<i>Z</i> method. Unless it is overridden,

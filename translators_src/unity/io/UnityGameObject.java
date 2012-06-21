@@ -84,6 +84,11 @@ public final class UnityGameObject implements GameObject{
 	public Collection<String> getTypes() {
 		return types;
 	}
+
+	@Override
+	public String getTag() {
+		return "notagforunity";
+	}
 	
 
 }
