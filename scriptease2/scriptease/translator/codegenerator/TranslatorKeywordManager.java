@@ -1,13 +1,14 @@
 package scriptease.translator.codegenerator;
 
+/**
+ * A class that defines various constant names for keywords. All other classes
+ * should reference these constants rather than referencing the values directly.
+ * This way, the values can be changed without tracking down all the referencing
+ * code.
+ * 
+ */
 public class TranslatorKeywordManager {
 
-	/*
-	 * This is were all the keywords are mapped. All other classes should
-	 * reference these constants, rather than referencing the values directly.
-	 * That way, the values can be changed without tracking down all the
-	 * referencing code.
-	 */
 	public static final String FUNCTION_HEADER = "functionHeader";
 	public static final String IMPORT_CALL = "includes";
 	public static final String CONDITONAL_FORMAT = "conditional";

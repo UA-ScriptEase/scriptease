@@ -74,6 +74,11 @@ public class GameConstantFactory {
 				public String getTemplateID() {
 					return resref;
 				}
+
+				@Override
+				public String getTag() {
+					return resref;
+				}
 			};
 		} else {
 			newConstant = new GameConstant() {
@@ -95,6 +100,12 @@ public class GameConstantFactory {
 				@Override
 				public String toString() {
 					return getName();
+				}
+
+				@Override
+				public String getTag() {
+					// TODO Auto-generated method stub
+					return resolutionCode;
 				}
 			};
 		}
