@@ -113,4 +113,5 @@ public abstract class KnowItBinding implements Cloneable {
 	 *            KnowItBinding.
 	 */
 	public abstract void process(BindingVisitor processController);
+
 }
