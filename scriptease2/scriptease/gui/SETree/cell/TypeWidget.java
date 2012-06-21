@@ -50,7 +50,7 @@ public class TypeWidget extends JToggleButton implements TranslatorObserver {
 				* baseFontSize);
 		this.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, fontSize));
 
-		this.setBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
+		this.setBackground(ScriptEaseUI.COLOUR_GAME_OBJECT);
 
 		this.type = type;
 

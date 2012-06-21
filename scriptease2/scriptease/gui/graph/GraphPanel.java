@@ -18,10 +18,12 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -194,21 +196,25 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		private Map<GraphNode, JComponent> componentMap = new IdentityHashMap<GraphNode, JComponent>();
 		private JComponent component;
 
+		private Set<JComponent> hoverComponents = new HashSet<JComponent>();
+		private Set<JComponent> pressComponents = new HashSet<JComponent>();
+
 		@Override
 		public void processTextNode(TextNode textNode) {
-			component = new JLabel(textNode.getText());
-			configureListeners(textNode, component);
-			configureAppearance(textNode, component);
-			component.setFont(new Font(component.getFont().getName(), textNode
-					.getBoldStatus(), component.getFont().getSize()));
+			this.component = new JLabel(textNode.getText());
+			this.configureListeners(textNode, this.component);
+			this.configureAppearance(this.component, textNode);
+			this.component.setFont(new Font(this.component.getFont().getName(),
+					textNode.getBoldStatus(), this.component.getFont()
+							.getSize()));
 		}
 
 		@Override
 		public void processKnowItNode(KnowItNode knowItNode) {
-			component = new JPanel(new FlowLayout(FlowLayout.CENTER, 2, 0));
+			this.component = new JPanel(new FlowLayout(FlowLayout.CENTER, 2, 0));
 
-			configureListeners(knowItNode, component);
-			configureAppearance(knowItNode, component);
+			this.configureListeners(knowItNode, this.component);
+			this.configureAppearance(this.component, knowItNode);
 
 			KnowIt knowIt = knowItNode.getKnowIt();
 			if (knowIt != null) {
@@ -222,8 +228,8 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 					typeWidget.setBackground(ScriptEaseUI.COLOUR_BOUND);
 					typePanel.add(typeWidget);
 				}
-				component.add(typePanel);
-				component.add(new JLabel(knowIt.getDisplayText()));
+				this.component.add(typePanel);
+				this.component.add(new JLabel(knowIt.getDisplayText()));
 			}
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
@@ -234,20 +240,19 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		}
 
 		@Override
-		public void processQuestPointNode(QuestPointNode questPointNode) {
-			component = new JPanel();
-			configureListeners(questPointNode, component);
-			configureAppearance(questPointNode, component);
-			component.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
-			component.add(ScriptWidgetFactory.buildFanInPanel(questPointNode
-					.getQuestPoint().getFanIn()));
-			component.add(new JLabel(questPointNode.getQuestPoint()
-					.getDisplayText()));
+		public void processQuestPointNode(QuestPointNode node) {
+			this.component = new JPanel();
+			this.configureListeners(node, this.component);
+			this.configureAppearance(this.component, node);
+			this.component.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
+			this.component
+					.add(ScriptWidgetFactory.buildFanInPanel(node
+							.getQuestPoint().getFanIn()));
+			this.component.add(ScriptWidgetFactory.buildBindingWidget(node.getQuestPoint(), false));
 		}
 
 		@Override
 		public void processQuestNode(QuestNode questNode) {
-
 		}
 
 		/**
@@ -278,8 +283,9 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 						 * for it. Either way, we want this behaviour, not the
 						 * default. - remiller
 						 */
-						if (!src.contains(mouseLoc.x - src.getLocationOnScreen().x, mouseLoc.y
-								- src.getLocationOnScreen().y))
+						if (!src.contains(
+								mouseLoc.x - src.getLocationOnScreen().x,
+								mouseLoc.y - src.getLocationOnScreen().y))
 							return;
 
 						GraphNodeEvent event = new GraphNodeEvent(node,
@@ -287,44 +293,37 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 						event.setShiftDown(e.isShiftDown());
 						node.notifyObservers(event);
+
+						pressComponents.remove(src);
+						configureAppearance(src, node);
+					}
+
+					@Override
+					public void mousePressed(MouseEvent e) {
+						final JComponent src = (JComponent) e.getSource();
+
+						pressComponents.add(src);
+						configureAppearance(src, node);
 					}
 
 					@Override
 					public void mouseEntered(MouseEvent e) {
-						final JComponent nodeComponent = (JComponent) e.getSource();
+						final JComponent nodeComponent = (JComponent) e
+								.getSource();
 
-						if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DELETE_GRAPH_NODE) {
-							if (node.isDeletable()) {
-								nodeComponent.setBackground(GUIOp.scaleWhite(
-										Color.RED, 2.4));
-							}
-						} else if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DISCONNECT_GRAPH_NODE) {
-							nodeComponent.setBackground(GUIOp.scaleWhite(
-									Color.RED, 2.4));
-						} else if (!node.isSelected()) {
-							if (ToolBarButtonAction.getMode() != ToolBarButtonMode.SELECT_GRAPH_NODE) {
-								Color selectionColour = ScriptEaseUI.SELECTED_GAME_OBJECT;
-								nodeComponent.setBackground(GUIOp.scaleWhite(
-										selectionColour, 3.1));
-							} else {
-								nodeComponent.setBackground(GUIOp.scaleWhite(
-										Color.yellow, 1.2));
-							}
-						}
-
+						hoverComponents.add(nodeComponent);
+						configureAppearance(nodeComponent, node);
 					}
 
 					@Override
 					public void mouseExited(MouseEvent e) {
-						final JComponent nodeComponent = (JComponent) e.getSource();
+						final JComponent nodeComponent = (JComponent) e
+								.getSource();
 
-						if (!node.isSelected()) {
-							nodeComponent.setBackground(Color.WHITE);
-						} else {
-							Color selectionColour = ScriptEaseUI.SELECTED_GAME_OBJECT;
-							nodeComponent.setBackground(GUIOp.scaleWhite(
-									selectionColour, 2.1));
-						}
+						hoverComponents.remove(nodeComponent);
+						pressComponents.remove(nodeComponent);
+
+						configureAppearance(nodeComponent, node);
 					}
 				};
 
@@ -354,43 +353,90 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 			// return the component for the node
 			return this.component;
 		}
-	}
 
-	/**
-	 * Method to configure the component's appearance. Based on code from
-	 * mfchurch.
-	 * 
-	 * @param node
-	 */
-	public void configureAppearance(final GraphNode node,
-			final JComponent component) {
-		if (component != null) {
-			final Color selectionColour;
-			final Color backgroundColour;
+		/**
+		 * Method to configure the component's appearance.
+		 * 
+		 * @param component
+		 *            The display component to configure.
+		 * @param node
+		 *            The graph node to configure based on.
+		 */
+		public void configureAppearance(final JComponent component,
+				GraphNode node) {
+			if (component == null)
+				return;
 
-			if (node.isSelected()) {
-				selectionColour = ScriptEaseUI.SELECTED_GAME_OBJECT;
-				backgroundColour = GUIOp.scaleWhite(selectionColour, 2.1);
+			final boolean isHover = hoverComponents.contains(component);
+			final boolean isPressed = pressComponents.contains(component);
+
+			final Color toolColour;
+			final Color toolHighlight;
+			final Color toolPress;
+
+			Color borderColour;
+			Color backgroundColour;
+
+			// first, determine the tool colour and highlight.
+			/*
+			 * These are using the game object colours because they're
+			 * convenient and close enough. Feel free to add colours to
+			 * ScriptEaseUI if you want other colours. - remiller
+			 */
+			if (ToolBarButtonAction.getMode() == ToolBarButtonMode.INSERT_GRAPH_NODE) {
+				toolColour = ScriptEaseUI.COLOUR_KNOWN_OBJECT;
+				toolHighlight = GUIOp.scaleWhite(toolColour, 1.6);
+				toolPress = GUIOp.scaleWhite(toolHighlight, 1.8);
+			} else if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DELETE_GRAPH_NODE) {
+				toolColour = ScriptEaseUI.COLOUR_UNBOUND;
+				toolHighlight = GUIOp.scaleWhite(toolColour, 1.3);
+				toolPress = GUIOp.scaleWhite(toolHighlight, 1.8);
 			} else {
-				selectionColour = Color.GRAY;
+				toolColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
+				toolHighlight = GUIOp.scaleColour(
+						ScriptEaseUI.SELECTED_GRAPH_NODE, 1.05);
+				toolPress = GUIOp.scaleColour(toolHighlight, 1.6);
+			}
+
+			/*
+			 * Use a bright tool colour if its pressed, use the tool colour if
+			 * it's hovered over, use gold if its selected and not hovered,
+			 * white/gray otherwise.
+			 */
+			if (isHover) {
+				if (isPressed) {
+					backgroundColour = toolPress;
+				} else {
+					backgroundColour = toolHighlight;
+				}
+				borderColour = GUIOp.scaleColour(toolColour, 0.7);
+			} else if (node.isSelected()) {
+				backgroundColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
+				borderColour = GUIOp.scaleColour(
+						ScriptEaseUI.SELECTED_GRAPH_NODE, 0.6);
+			} else {
 				backgroundColour = Color.white;
+				borderColour = Color.GRAY;
 			}
 
 			// Double lined border on terminal nodes
+			Border border;
 			Border lineBorder = BorderFactory.createBevelBorder(
-					BevelBorder.RAISED, selectionColour,
-					selectionColour.darker());
+					BevelBorder.RAISED, borderColour, borderColour.darker());
+			Border lineSpaceBorder = BorderFactory.createCompoundBorder(
+					lineBorder, BorderFactory.createEmptyBorder(3, 3, 3, 3));
+
 			if (node.isTerminalNode()) {
 				Border inner = BorderFactory.createCompoundBorder(lineBorder,
 						BorderFactory.createEmptyBorder(1, 1, 1, 1));
-				Border outer = BorderFactory.createCompoundBorder(inner, inner);
-				component.setBorder(outer);
+				border = BorderFactory.createCompoundBorder(inner,
+						lineSpaceBorder);
 			} else {
-				component
-						.setBorder(BorderFactory.createCompoundBorder(
-								lineBorder,
-								BorderFactory.createEmptyBorder(3, 3, 3, 3)));
+				border = lineSpaceBorder;
 			}
+
+			component.setBorder(border);
+
 			component.setBackground(backgroundColour);
 			component.setOpaque(true);
 		}
@@ -512,7 +558,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 							.getComponentForNode(node);
 
 					// update the component appearence to the state of the node
-					configureAppearance(node, component);
+					builder.configureAppearance(component, node);
 
 					// Get the JComponent preferred width
 					final int nodeWidth = (int) component.getPreferredSize()
@@ -703,7 +749,8 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 						// Set color of line based on selection
 						Color lineColour;
 						if (isLineSelected)
-							lineColour = ScriptEaseUI.SELECTED_GAME_OBJECT;
+							lineColour = GUIOp.scaleColour(
+									ScriptEaseUI.SELECTED_GRAPH_NODE, 0.7);
 						else
 							lineColour = Color.GRAY;
 						g2.setColor(lineColour);

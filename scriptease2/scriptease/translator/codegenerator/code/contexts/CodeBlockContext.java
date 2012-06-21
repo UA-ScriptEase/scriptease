@@ -65,8 +65,6 @@ public class CodeBlockContext extends Context {
 	public KnowIt getParameter(String keyword) {
 		for (KnowIt parameter : codeBlock.getParameters()) {
 			if (parameter.getDisplayText().equalsIgnoreCase(keyword)) {
-				System.out.println("Parameter found in CodeBlock: "
-						+ parameter.getDisplayText());
 				return parameter;
 			}
 		}

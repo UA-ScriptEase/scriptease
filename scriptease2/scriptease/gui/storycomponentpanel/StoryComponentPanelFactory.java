@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
-import scriptease.gui.SETree.cell.ScriptWidgetFactory.BindingWidgetBuilder;
 import scriptease.gui.SETree.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.describeIts.DescribeItPanel;
@@ -27,6 +26,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -300,24 +300,27 @@ public class StoryComponentPanelFactory {
 			final KnowIt knowIt, final boolean editable) {
 		final KnowItBinding binding = knowIt.getBinding();
 		binding.process(new AbstractNoOpBindingVisitor() {
+			// functions, descriptions and runTimes all get a draggable bubble
+			// with no slot
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				displayNamePanel.add(BindingWidgetBuilder.getInstance()
-						.buildBindingWidget(knowIt, editable));
+				displayNamePanel.add(ScriptWidgetFactory.buildBindingWidget(
+						knowIt, editable));
 			}
 
 			@Override
 			public void processRunTime(KnowItBindingRunTime runTime) {
-				displayNamePanel.add(BindingWidgetBuilder.getInstance()
-						.buildBindingWidget(knowIt, editable));
+				displayNamePanel.add(ScriptWidgetFactory.buildBindingWidget(
+						knowIt, editable));
 			}
 
 			@Override
 			public void processDescribeIt(KnowItBindingDescribeIt described) {
-				displayNamePanel.add(BindingWidgetBuilder.getInstance()
-						.buildBindingWidget(knowIt, editable));
+				displayNamePanel.add(ScriptWidgetFactory.buildBindingWidget(
+						knowIt, editable));
 			}
 
+			// everything else gets a regular slot
 			@Override
 			protected void defaultProcess(KnowItBinding binding) {
 				displayNamePanel.add(ScriptWidgetFactory.buildSlotPanel(knowIt));
@@ -337,7 +340,9 @@ public class StoryComponentPanelFactory {
 		binding.process(new AbstractNoOpBindingVisitor() {
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
-				// do nothing for KnowItBindingNull
+				// do nothing for KnowItBindingNull. Not even the default.
+				// That's right. We hate empty bindings so much that we won't
+				// even talk to them.
 			}
 
 			private void processDefault() {
@@ -366,16 +371,12 @@ public class StoryComponentPanelFactory {
 	}
 
 	/**
-	 * Builder used to populate the contents of a StoryComponentPanel. Singleton
+	 * Builder used to populate the contents of a StoryComponentPanel.
 	 * 
 	 * @author mfchurch
-	 * 
 	 */
 	private class StoryComponentPanelBuilder extends AbstractNoOpStoryVisitor {
 		private StoryComponentPanel panel;
-
-		public StoryComponentPanelBuilder() {
-		}
 
 		/**
 		 * Builds and returns a StoryComponentPanel which represents the given
@@ -486,8 +487,8 @@ public class StoryComponentPanelFactory {
 		private void buildMainQuestPointPanel(QuestPoint questPoint,
 				JPanel mainPanel) {
 			// Add a BindingWidget for the QuestPoint
-			mainPanel.add(BindingWidgetBuilder.getInstance()
-					.buildBindingWidget(questPoint, false));
+			mainPanel.add(ScriptWidgetFactory.buildBindingWidget(questPoint,
+					false));
 			mainPanel.setOpaque(false);
 		}
 

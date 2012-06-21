@@ -18,28 +18,39 @@ import javax.swing.SwingWorker;
  */
 public class GUIOp {
 	public static int MAX_COLOUR_VALUE = 255;
+	public static int MIN_COLOUR_VALUE = 0;
 
 	/**
 	 * Scales the given white value (but not alpha) by <code>factor</code>,
 	 * which is normalized to 1.0. So, for example, a <code>factor</code> of 0.5
 	 * will return a colour that is half as white as <code>source</code> on all
 	 * three colour axes, while a <code>factor</code> of 2.0 will return a
-	 * colour that is twice as white. <br>
-	 * <br>
-	 * The standard colour changing methods {@link Color.brighter()} and {@link
-	 * Color.darker()} are essentially equivalent to using a factor of 1.4 and
-	 * 0.7, respectively.
+	 * colour that is twice as white.
 	 * 
+	 * @param source
+	 *            The original colour to base the new colour from.
+	 * @param factor
+	 *            The factor to differ by.
+	 * @returns A new colour that is different in whiteness from the source
+	 *          colour by the given factor.
 	 */
 	public static Color scaleWhite(Color source, double factor) {
 		double average = (((double) (source.getRed() + source.getBlue() + source
 				.getGreen())) / (double) (3 * MAX_COLOUR_VALUE))
 				* (double) MAX_COLOUR_VALUE;
-		double amount = factor * average;
-		int red = (int) Math.min(source.getRed() + amount, MAX_COLOUR_VALUE);
-		int green = (int) Math
-				.min(source.getGreen() + amount, MAX_COLOUR_VALUE);
-		int blue = (int) Math.min(source.getBlue() + amount, MAX_COLOUR_VALUE);
+		double amount = average * (factor - 1.0);
+		int red = (int) (source.getRed() + amount);
+		int green = (int) (source.getGreen() + amount);
+		int blue = (int) (source.getBlue() + amount);
+
+		// keep it within the extreme values allowed by colours.
+		red = Math.min(red, MAX_COLOUR_VALUE);
+		green = Math.min(green, MAX_COLOUR_VALUE);
+		blue = Math.min(blue, MAX_COLOUR_VALUE);
+
+		red = Math.max(red, MIN_COLOUR_VALUE);
+		green = Math.max(green, MIN_COLOUR_VALUE);
+		blue = Math.max(blue, MIN_COLOUR_VALUE);
 
 		return new Color(red, green, blue);
 	}
@@ -51,16 +62,37 @@ public class GUIOp {
 	 * <code>source</code> on all three colour axes, while a <code>factor</code>
 	 * of 2.0 will return a colour that is twice as bright. <br>
 	 * <br>
+	 * If the colour contains a value that is 0, then the colour is increased to
+	 * 1 before the factor is applied.<br>
+	 * <br>
 	 * The standard colour changing methods {@link Color.brighter()} and {@link
 	 * Color.darker()} are essentially equivalent to using a factor of 1.4 and
 	 * 0.7, respectively.
 	 * 
+	 * @param source
+	 *            The original colour to base the new colour from.
+	 * @param factor
+	 *            The factor to differ by.
+	 * @returns A new colour that is different on all three axes from the source
+	 *          colour by the given factor.
 	 */
 	public static Color scaleColour(Color source, double factor) {
-		int red = (int) Math.min(source.getRed() * factor, MAX_COLOUR_VALUE);
-		int green = (int) Math
-				.min(source.getGreen() * factor, MAX_COLOUR_VALUE);
-		int blue = (int) Math.min(source.getBlue() * factor, MAX_COLOUR_VALUE);
+		int red = Math.max(source.getRed(), 1);
+		int green = Math.max(source.getGreen(), 1);
+		int blue = Math.max(source.getBlue(), 1);
+
+		red = (int) (red * factor);
+		green = (int) (green * factor);
+		blue = (int) (blue * factor);
+
+		// keep it within the extreme values allowed by colours.
+		red = Math.min(red, MAX_COLOUR_VALUE);
+		green = Math.min(green, MAX_COLOUR_VALUE);
+		blue = Math.min(blue, MAX_COLOUR_VALUE);
+
+		red = Math.max(red, MIN_COLOUR_VALUE);
+		green = Math.max(green, MIN_COLOUR_VALUE);
+		blue = Math.max(blue, MIN_COLOUR_VALUE);
 
 		return new Color(red, green, blue);
 	}

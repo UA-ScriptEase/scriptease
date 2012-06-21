@@ -12,6 +12,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 
@@ -63,8 +64,13 @@ public class KnowItContext extends StoryComponentContext {
 		final Collection<String> types = knowIt.getTypes();
 		final Context bindingContext = ContextFactory.getInstance()
 				.createContext(this, knowIt.getBinding());
-		// If the binding type isn't a native KnowIt type, convert it
-		if (!binding.explicitlyCompatibleWith((KnowIt) component)) {
+		final String formattedValue = bindingContext.getFormattedValue();
+
+		if (binding.explicitlyCompatibleWith((KnowIt) component)) {
+			return formattedValue;
+		} else {
+			// the binding type isn't a listed type for this KnowIt, so try to
+			// convert it
 			final TypeConverter converter = TranslatorManager.getInstance()
 					.getActiveTranslator().getGameTypeManager()
 					.getTypeConverter();
@@ -73,13 +79,11 @@ public class KnowItContext extends StoryComponentContext {
 				final Context converterContext = ContextFactory.getInstance()
 						.createContext(this, doIt);
 				// TODO: Not have this format hardcoded
-				return converterContext.getName() + "("
-						+ bindingContext.getFormattedValue() + ")";
+				return converterContext.getName() + "(" + formattedValue + ")";
 			} else
-				return "<Cannot convert binding(" + binding
-						+ ") to expected types(" + types + ")>";
-		} else
-			return bindingContext.getFormattedValue();
+				throw new CodeGenerationException("<Cannot convert binding("
+						+ binding + ") to expected types(" + types + ")>");
+		}
 	}
 
 	/**
