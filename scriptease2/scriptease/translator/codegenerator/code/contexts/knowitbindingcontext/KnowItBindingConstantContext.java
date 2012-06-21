@@ -10,6 +10,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.translator.Translator;
+import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -28,8 +29,7 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 	public KnowItBindingConstantContext(QuestNode model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInformation) {
-		super(model, indent, existingNames, translator,
-				locationInformation);
+		super(model, indent, existingNames, translator, locationInformation);
 	}
 
 	public KnowItBindingConstantContext(Context other) {
@@ -52,21 +52,27 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 
 		typeFormat = this.translator.getGameTypeManager().getFormat(
 				((KnowItBindingConstant) binding).getFirstType());
-		
+
 		if (typeFormat == null || typeFormat.isEmpty()) {
-			if (this.binding instanceof KnowItBindingConstant) 
-				if(((KnowItBindingConstant)this.binding).getValue() instanceof GameObject){
+			if (this.binding instanceof KnowItBindingConstant)
+				if (((KnowItBindingConstant) this.binding).getValue() instanceof GameObject) {
 					List<CodeBlock> codeBlocks = this.getBindingCodeBlocks();
-			
-				String bindingCode = FormatFragment.resolveFormat(codeBlocks.get(0).getCode(), this);
-				return bindingCode;
-			}
-			else
-				return this.getValue();
+
+					if (codeBlocks.size() <= 0)
+						throw new CodeGenerationException(
+								"Couldn't find code block for "
+										+ this.binding
+										+ ". Maybe it's missing from the API library?");
+
+					String bindingCode = FormatFragment.resolveFormat(
+							codeBlocks.get(0).getCode(), this);
+					return bindingCode;
+				} else
+					return this.getValue();
 		}
 		return FormatFragment.resolveFormat(typeFormat, this);
 	}
-	
+
 	@Override
 	public KnowIt getParameter(String parameter) {
 		return new KnowIt(((KnowItBindingConstant) binding).getTag());

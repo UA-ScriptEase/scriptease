@@ -127,8 +127,9 @@ Formats
 		</Format>
 		<Format id="includeHeader">
 			<Line>
-				<Literal>#include </Literal>
+				<Literal>#include "</Literal>
 				<Fragment data="include" />
+				<Literal>"</Literal>
 			</Line>
 		</Format>
 		<Format id="functionHeader">
