@@ -51,43 +51,6 @@ public class BindingWidget extends JPanel implements Cloneable {
 		// Default transferHandler
 		this.transferHandler = BindingWidgetTransferHandler.getInstance();
 		this.setTransferHandler(transferHandler);
-		
-		this.binding.process(new BindingVisitor() {//AbstractNoOp
-			@Override
-			public void processConstant(KnowItBindingConstant constant) {
-				System.out.println("const binding");
-			}
-
-			@Override
-			public void processFunction(KnowItBindingFunction function) {
-				System.out.println("func binding");
-			}
-
-			@Override
-			public void processReference(KnowItBindingReference reference) {
-				System.out.println("ref binding");
-			}
-
-			@Override
-			public void processRunTime(KnowItBindingRunTime runTime) {
-				System.out.println("run binding");
-			}
-
-			@Override
-			public void processNull(KnowItBindingNull nullBinding) {
-				System.out.println("null binding");
-			}
-
-			@Override
-			public void processDescribeIt(KnowItBindingDescribeIt described) {
-				System.out.println("desc binding");
-			}
-
-			@Override
-			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
-				System.out.println("quest binding");				
-			}
-		});
 	}
 
 	/**

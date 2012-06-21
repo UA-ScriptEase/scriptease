@@ -32,13 +32,13 @@ Some important targets to read up on are:
     these can be overridden by running ant with the -D&lt;flagname&gt;=&lt;value&gt; 
     flag, for example:
     
-        ant -DdebugMode=true
+        ant -Ddebug.mode=true
     
-    Would set the debugMode property to true, despite what it is initialized to in 
+    Would set the debug.mode property to true, despite what it is initialized to in 
     the  init commands.
 		
 	Some useful properties are:
-		debugMode       - Used in compilation to determine if the java is compiled with debugger info.
+		debug.mode       - Used in compilation to determine if the java is compiled with debugger info.
 		noMail          - used to prevent mailing the team about new posted private or public jars
 		keepBuildNumber - Prevents incrementing the build number.
 
@@ -176,9 +176,9 @@ Some important targets to read up on are:
 	</target>
 
 	<target name="compile" depends="checkAspectJ, clean" description="Compiles ScriptEase 2 into a local build directory.">
-		<echo message="Compiling with debug mode: ${debugMode}" />
+		<echo message="Compiling with debug mode: ${debug.mode}" />
 
-		<iajc destdir="${buildDirectory}" srcdir="${seSrcDirectory}" source="${javaVersion}" target="${javaVersion}" debug="${debugMode}" Xlintwarnings="true" showWeaveInfo="false">
+		<iajc destdir="${buildDirectory}" srcdir="${seSrcDirectory}" source="${javaVersion}" target="${javaVersion}" debug="${debug.mode}" Xlintwarnings="true" showWeaveInfo="false">
 			<!-- translators are built separately -->
 			<exclude name="translators/**" />
 
