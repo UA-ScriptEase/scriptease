@@ -300,6 +300,8 @@ public class StoryComponentPanelFactory {
 			final KnowIt knowIt, final boolean editable) {
 		final KnowItBinding binding = knowIt.getBinding();
 		binding.process(new AbstractNoOpBindingVisitor() {
+			// functions, descriptions and runTimes all get a draggable bubble
+			// with no slot
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
 				displayNamePanel.add(ScriptWidgetFactory.buildBindingWidget(
@@ -318,17 +320,11 @@ public class StoryComponentPanelFactory {
 						knowIt, editable));
 			}
 
-			@Override
-			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
-				displayNamePanel.add(ScriptWidgetFactory.buildBindingWidget(
-						knowIt, editable));
-			}
-			
+			// everything else gets a regular slot
 			@Override
 			protected void defaultProcess(KnowItBinding binding) {
 				displayNamePanel.add(ScriptWidgetFactory.buildSlotPanel(knowIt));
 			}
-
 		});
 	}
 
