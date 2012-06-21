@@ -41,8 +41,6 @@ public class KnowItBindingQuestPointContext extends KnowItBindingContext {
 	public String getFormattedValue() {
 		final Collection<FormatFragment> typeFormat;
 		
-		System.out.println("derp");
-		
 		typeFormat = this.translator.getGameTypeManager().getFormat(
 				QuestPoint.QUEST_POINT_TYPE);
 		if (typeFormat == null || typeFormat.isEmpty())
