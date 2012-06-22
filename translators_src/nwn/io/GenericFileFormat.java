@@ -647,8 +647,11 @@ public class GenericFileFormat {
 		for (GffField changedField : this.changedFieldMap.keySet()) {
 			// write out the field data again because it may have updated
 			// TODO: This changedField.getFieldOffset may be blatantly wrong.
-			// writer.seek(this.fieldOffset + changedField.getFieldOffset());
-			// changedField.write(writer);
+			writer.seek(this.gffOffset + this.fieldOffset + changedField.getFieldOffset());
+			
+								//changedField.increaseOffset(4);
+							//	 Find where things get added to changedfieldmap and do it there.
+			changedField.write(writer);
 
 			// right now I'm only concerned with updating the script slots
 			// - remiller
@@ -1396,6 +1399,12 @@ public class GenericFileFormat {
 			return "GffField [" + labelArray.get((int) labelIndex) + "]";
 		}
 
+		/**
+		 * Writes out the GffField data to the writer.
+		 * 
+		 * @param writer
+		 * @throws IOException
+		 */
 		public void write(ScriptEaseFileAccess writer) throws IOException {
 			writer.writeUnsignedInt(this.typeNumber, true);
 			writer.writeUnsignedInt(this.labelIndex, true);
@@ -1688,6 +1697,21 @@ public class GenericFileFormat {
 		if (field.isComplexType() && field.isListType() && field.isStructType()
 				&& field.getDataOrDataOffset() > 0)
 			System.out.println();
+		
+		
+		System.out.println("GFF Type: " + field.getGFF().getFileType());
+
+		if(field.getGFF().getFileType().trim().equals(GenericFileFormat.TYPE_DIALOGUE_BP)) {
+			System.out.println("GFF Type = DLG");
+			String fieldLabel = field.getGFF().getLabelArray().get(
+					(int) field.getLabelIndex());
+			
+			System.out.println("Field label: " +fieldLabel);
+			if(fieldLabel.trim().equals("Active")) {
+				field.increaseOffset(newData.length()+1);
+				System.out.println("Field label = Active || with value:<<" +newData+">>");
+			}
+		}
 
 		this.changedFieldMap.put(field, newData);
 	}

@@ -757,9 +757,6 @@ public final class ErfFile implements GameModule {
 											final String scriptName = listField
 													.readString(this.fileAccess);
 
-											System.out
-													.println("ListFieldLabel: "
-															+ listFieldLabel);
 											if (scriptName
 													.startsWith(ErfFile.SCRIPT_FILE_PREFIX))
 												resourceGFF.setField(listField,
