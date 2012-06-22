@@ -65,7 +65,7 @@ public class FileContext extends Context {
 		if (this.includeFilesIterator.hasNext())
 			return this.includeFilesIterator.next();
 		else
-			return "";
+			return "ERROR while getting Include File in FileContext.java";
 	}
 
 	public FileContext(Context other) {
