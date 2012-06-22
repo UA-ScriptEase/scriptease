@@ -1694,11 +1694,9 @@ public class GenericFileFormat {
 		if (field == null)
 			throw new IllegalStateException("Invalid GffField");
 
-		if (field.isComplexType() && field.isListType() && field.isStructType()
-				&& field.getDataOrDataOffset() > 0)
-			System.out.println();
-		
-		
+	/*	TODO This is possibly where dialogue stuff needs to be fixed. 
+	 * Unless dialogues need to be redone on Monday. 
+	 * 
 		System.out.println("GFF Type: " + field.getGFF().getFileType());
 
 		if(field.getGFF().getFileType().trim().equals(GenericFileFormat.TYPE_DIALOGUE_BP)) {
@@ -1708,11 +1706,11 @@ public class GenericFileFormat {
 			
 			System.out.println("Field label: " +fieldLabel);
 			if(fieldLabel.trim().equals("Active")) {
-				field.increaseOffset(newData.length()+1);
+				field.increaseOffset(4);
 				System.out.println("Field label = Active || with value:<<" +newData+">>");
 			}
 		}
-
+*/
 		this.changedFieldMap.put(field, newData);
 	}
 
