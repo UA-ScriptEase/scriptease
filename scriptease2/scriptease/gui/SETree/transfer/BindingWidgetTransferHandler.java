@@ -92,8 +92,9 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			KnowIt toRemove = (KnowIt) ScriptWidgetFactory
 					.getEditedStoryComponent(component.getParent());
 			
+			if(toRemove == null)
+				return;
 			
-			//this be causing errors on the game objects...
 			if (!UndoManager.getInstance().hasOpenUndoableAction())
 				UndoManager.getInstance().startUndoableAction(
 						"Remove " + toRemove.getBinding() + " Binding");
