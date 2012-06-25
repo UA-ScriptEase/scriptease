@@ -239,9 +239,9 @@ public class FileIO {
 		boolean retry;
 
 		try {
-			System.err.println("Creating input stream for file: " + location);
+			System.out.println("Creating input stream for file: " + location);
 			fileIn = new FileInputStream(location);
-			System.err.println("Input Stream: " + fileIn
+			System.out.println("Input Stream: " + fileIn
 					+ " created for file: " + location);
 
 			dataModel = stream.fromXML(fileIn);
