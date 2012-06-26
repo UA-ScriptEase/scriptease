@@ -528,7 +528,7 @@
       <GUI>JComboBox</GUI>
     </Type>
 	<Type>
-		<Name>QuestPoint</Name>
+		<Name>Quest Point</Name>
 		<Keyword>questPoint</Keyword>
 		<CodeSymbol>string</CodeSymbol>
 		<Format>
@@ -5067,6 +5067,48 @@
 						<FormatRef ref="children"/>
 					</Code>
 					<Includes />
+				</CodeBlock>
+			</CodeBlocks>
+		</ScriptIt>
+		<ScriptIt>
+			<Name>When &lt;quest point&gt; is enabled in &lt;module&gt;</Name>
+			<Labels />
+			<Children/>
+			<CodeBlocks>
+				<CodeBlock subject="module" slot="Mod_OnUsrDefined">
+					<Types>
+						<Type>void</Type>
+					</Types>
+					<Parameters>
+						<KnowIt visible="false">
+							<Name>quest point</Name>
+							<Labels/>
+							<Types>
+								<Type>questPoint</Type>
+							</Types>
+						</KnowIt>
+						<KnowIt visible="false">
+							<Name>module</Name>
+							<Labels/>
+							<Types>
+								<Type>module</Type>
+							</Types>
+						</KnowIt>
+					</Parameters>
+					<Code>
+						<Line>
+							<Literal>if(GetUserDefinedEventNumber() == QUEST_EVENT) {</Literal>
+						</Line>
+						<Indent>
+							<FormatRef ref="children"/>
+						</Indent>
+						<Line>
+							<Literal>}</Literal>
+						</Line>
+					</Code>
+					<Includes>
+						<Include>i_se_quest2</Include>
+					</Includes>
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>

@@ -1,4 +1,9 @@
-// ScriptEase2 Quest pattern include file @author mfchurch
+// ============================ Quest constants ============================
+// ScriptEase2 Quest pattern include file
+//
+// Author: ScriptEase Team
+// =========================================================================
+
 // appends the given element to the end of the given list
 string SE2_AppendListElement(string list, string element);
 // Gets the first element from the given array (array stays unmodified)
@@ -38,7 +43,8 @@ void SE2_Quest_StartQuest(string name);
 // returns a string containing all of the ancestors of the given quest point
 string SE2_Quest_GetAllAncestors(string name);
 
-// Quest constants
+// ============================ Quest constants ============================
+// Separates list elements
 const string SEPARATOR = "_";
 // Track if a QuestPoint is currently active
 const string QUEST_POINT_ACTIVE = "_QuestPointActive";
@@ -62,6 +68,8 @@ const string QUEST_START = "_QuestStart";
 const string QUEST_END = "_QuestEnd";
 // Track if a Quest is currently active
 const string QUEST_ACTIVE = "_QuestActive";
+// The event number for quests.
+const int QUEST_EVENT = 2012;
 
 // appends the given element to the end of the given list and returns the list
 string SE2_AppendListElement(string list, string element) {
@@ -199,6 +207,7 @@ void SE2_Quest_SucceedQuestPoint(string name) {
             //SendMessageToPC(GetFirstPC(), "Child Activated");
             // set the child to active
             SetLocalInt(player, child + QUEST_POINT_ACTIVE, 1);
+			SignalEvent(GetModule(), EventUserDefined(QUEST_EVENT));
         }
     }
 
