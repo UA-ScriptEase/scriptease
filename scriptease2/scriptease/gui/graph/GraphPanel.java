@@ -196,6 +196,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		private Map<GraphNode, JComponent> componentMap = new IdentityHashMap<GraphNode, JComponent>();
 		private JComponent component;
 
+		// This is such a weird hack. I apologize. - remiller
 		private Set<JComponent> hoverComponents = new HashSet<JComponent>();
 		private Set<JComponent> pressComponents = new HashSet<JComponent>();
 

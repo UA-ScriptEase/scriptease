@@ -215,8 +215,9 @@ public class GameObjectTreeModel extends DefaultTreeModel implements Filterable 
 		BindingWidget gameObjectBindingWidget = new BindingWidget(
 				new KnowItBindingConstant(gameObject));
 		String name = gameObject.getName();
-		gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(name,
-				Color.WHITE));
+		final JLabel nameLabel = ScriptWidgetFactory.buildLabel(name,
+				Color.WHITE);
+		gameObjectBindingWidget.add(nameLabel);
 		// Set an empty border to prevent line crowding.
 		gameObjectBindingWidget.setBorder(BorderFactory.createEmptyBorder(
 				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
