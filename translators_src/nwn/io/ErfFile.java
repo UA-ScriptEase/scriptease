@@ -4,6 +4,8 @@ import io.GenericFileFormat.GffField;
 import io.GenericFileFormat.GffStruct;
 import io.GenericFileFormat.NWNConversation;
 import io.GenericFileFormat.NWNConversation.DialogueLine;
+import io.GenericFileFormat.NWNConversation.NPCEntryDialogue;
+import io.GenericFileFormat.NWNConversation.PlayerReplyDialogue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -377,13 +379,15 @@ public final class ErfFile implements GameModule {
 				final String receiverResRef;
 				final NWNResource receiverResource;
 
-				// Hardcoded for conversations. Deal with it.
+				// Hardcoded for conversations.
 				if (object instanceof DialogueLine) {
 					final DialogueLine dialogueLine = (DialogueLine) object;
 					receiverResRef = dialogueLine.getConversationResRef();
 
 					// Get the parent conversation file resource
 					receiverResource = this.getResourceByResRef(receiverResRef);
+
+					GffStruct lineStruct = dialogueLine.getStruct();
 
 					/*
 					 * Get the appropriate field from the dialogue line, since
@@ -393,6 +397,16 @@ public final class ErfFile implements GameModule {
 					final GffField field = dialogueLine.getField(scriptInfo
 							.getSlot());
 
+					
+					//TODO Either remove this or implement offsets here
+					
+					if(dialogueLine instanceof PlayerReplyDialogue) {
+						
+					} else if (dialogueLine instanceof NPCEntryDialogue) {
+						
+					}
+					
+					
 					if (receiverResource == null) {
 						throw new NoSuchElementException(
 								"Script slot update failed. Cannot find resource for ResRef \""
@@ -1155,10 +1169,14 @@ public final class ErfFile implements GameModule {
 		 * @throws IOException
 		 */
 		public void write(ScriptEaseFileAccess writer) throws IOException {
+			// ByteData != null for scripts and area. May need to switch this check
+			// with the gff check, since the area might have a gff.
 			if (this.byteData != null) {
 				writer.seek(this.getOffsetToResource());
 				writer.write(this.byteData);
+			//GFF is used for everything else.
 			} else if (this.gff != null) {
+				//NOTE: Remember that this is for individual resources
 				this.gff.write(writer, this.getOffsetToResource());
 			} else
 				throw new IllegalStateException("NWNResource has no data!");

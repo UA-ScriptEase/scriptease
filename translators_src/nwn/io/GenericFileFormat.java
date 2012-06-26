@@ -75,17 +75,8 @@ public class GenericFileFormat {
 	 */
 	private final Map<GffField, String> changedFieldMap;
 
-	/**
-	 * This is a bit of a hack. The dataCache is the byte data from the file. It
-	 * should be cached immediately prior to writing, to avoid caching the file
-	 * unnecessarily during runtime. I then go about writing this dataCache to
-	 * the disk and <i>then</i> write the changes over that. - remiller
-	 */
-	// private byte[] dataCache;
 	private byte[] beforeFieldIndicesArray;
 	private byte[] afterFieldIndicesArray;
-
-	// Ill want to move you somewhere else
 
 	private GameConstant objectRepresentation;
 
@@ -337,6 +328,9 @@ public class GenericFileFormat {
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)) {
 			name = this.readField(reader, "LocalizedName");
 		}
+		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_BP)) {
+			name = this.readField(reader, "Mod_Name");
+		}
 		// sound, conversation and other blueprints
 		else {
 			name = this.resRef;
@@ -369,6 +363,8 @@ public class GenericFileFormat {
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_TRIGGER_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)) {
 			tag = this.readField(reader, "Tag");
+		} else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_BP)) {
+			tag = this.readField(reader, "Mod_Tag");
 		} else
 			tag = "";
 		return tag;
@@ -631,34 +627,71 @@ public class GenericFileFormat {
 		// update the filePosition for future writes
 		this.gffOffset = filePosition;
 
-		// first, write out the cached version of this GFF so we can update it
-		// writer.seek(this.gffOffset);
-		// writer.writeBytes(this.dataCache, false);
-
 		// write up to the FieldIndicesArray
 		writer.seek(this.gffOffset);
 		writer.writeBytes(this.beforeFieldIndicesArray, false);
 
-		// now we update the file's data.
-		// write the updated header
-		writer.seek(this.gffOffset);
+		// now we update the file's data.                                                                            
+		// write the updated header                                                                                               
+		writer.seek(this.gffOffset);                                                                                              
 		this.writeHeader(writer);
 
-		for (GffField changedField : this.changedFieldMap.keySet()) {
-			// write out the field data again because it may have updated
-			// TODO: This changedField.getFieldOffset may be blatantly wrong.
-			writer.seek(this.gffOffset + this.fieldOffset + changedField.getFieldOffset());
+		
+		//Required Variables for DLG File Specific Code
+		int startingListCount = 0;
+		long firstOffset = 0;
+		
+		// TODO Clean up the unused code after finishing with DLG files.
+		// TODO Separate DLG specific code into its own method.
+		
+		for (Entry<GffField, String> entry : this.changedFieldMap.entrySet()) {
+			final GffField changedField = entry.getKey();
+			// Code to get the old value. No longer used. TODO Cleanup after working with convos
+			 /* try {
+				oldValue = changedField.readString(writer);                                                                              
+			} catch (IOException e) {                                                                                                    
+				oldValue = "";                                                                                                           
+			}    */                              
 			
-								//changedField.increaseOffset(4);
-							//	 Find where things get added to changedfieldmap and do it there.
-			changedField.write(writer);
+			//GameConstant gameConstant = this.getObjectRepresentation(); //This would get the NWNConversation. May be useful.
 
-			// right now I'm only concerned with updating the script slots
-			// - remiller
+			//DLG File Specific Code:
+			if (this.getFileType().trim().equals(TYPE_DIALOGUE_BP)) {
+				// write out the field data again because it may have updated                                                                
+				writer.seek(this.gffOffset + this.fieldOffset + changedField.getFieldOffset());        
+				
+				final String newValue = entry.getValue(); // Don't delete this. Will need when other things are implemented.
+				
+				System.out.println("Old Offset Value: " + changedField.dataOrDataOffset);
+				if (startingListCount == 0) {
+					//Once sorted, the next line should be: firstOffset = changedField.getDataOrDataOffset();
+					firstOffset = 466;
+					changedField.setDataOrDataOffset(466);
+					changedField.write(writer);
+					
+					startingListCount++;
+				} else if (startingListCount == 1) {
+					//changedField.increaseOffset(8);
+					firstOffset += 5; //Change to: firstOffset += newValue.length+1
+										// May need to use newValue.getBytes().length+1 instead.
+					changedField.setDataOrDataOffset(firstOffset);
+					changedField.write(writer);
+
+					startingListCount++;
+				} else if (startingListCount == 2) {
+					changedField.setDataOrDataOffset(firstOffset + 5);
+					changedField.write(writer);
+
+					startingListCount++;
+				}
+				System.out.println("New Offset Value: " + changedField.dataOrDataOffset);
+			} 
+
+			// Only updates script slots
 			if (!changedField.isResRefType())
 				throw new RuntimeException(
 						"Can't write anything but slot refs. The module is probably corrupted now. Oops.");
-
+			
 			changedField.writeFieldData(writer, this.gffOffset
 					+ this.fieldDataOffset,
 					this.changedFieldMap.get(changedField));
@@ -668,8 +701,6 @@ public class GenericFileFormat {
 		writer.seek(this.gffOffset + this.fieldIndicesOffset);
 		writer.writeBytes(this.afterFieldIndicesArray, false);
 
-		// clear the data cache since we don't need it any more.
-		// this.dataCache = null;
 		this.beforeFieldIndicesArray = null;
 		this.afterFieldIndicesArray = null;
 	}
@@ -845,7 +876,7 @@ public class GenericFileFormat {
 		}
 
 		/**
-		 * Parse the conversation fields we care about from the stored fields
+		 * Parse the conversation fields we care about from the stored fields.
 		 * 
 		 * @param reader
 		 */
@@ -879,9 +910,8 @@ public class GenericFileFormat {
 					startingList = new ArrayList<EntriesSyncStruct>();
 					List<GffStruct> readList = field.readList(reader);
 					for (GffStruct aStruct : readList) {
-						EntriesSyncStruct sync = new EntriesSyncStruct(reader,
-								aStruct);
-						startingList.add(sync);
+						startingList
+								.add(new EntriesSyncStruct(reader, aStruct));
 					}
 				}
 
@@ -1089,12 +1119,20 @@ public class GenericFileFormat {
 			// Index representing the location of the Dialog in the conversation
 			protected int index;
 
+			protected GffStruct struct;
+			
 			protected boolean isLink;
 
 			public DialogueLine(ScriptEaseFileAccess reader, GffStruct struct)
 					throws IOException {
+				
+				this.struct = struct;
 				// parse the important dialog fields
 				this.build(reader, struct);
+			}
+			
+			public GffStruct getStruct() {
+				return struct;
 			}
 
 			public String getConversationResRef() {
@@ -1256,21 +1294,20 @@ public class GenericFileFormat {
 		}
 
 		/**
-		 * A Dialog Struct contained in the NPC EntryList contains all the
-		 * Fields found in a Dialog Struct as detailed in Table 2.2.1, plus
-		 * those Fields listed in Table 2.2.3 of the Conversation documentation
+		 * An NPC Entry Dialog Struct contained in the NPC EntryList. It
+		 * contains all of the Fields found in a Dialog Struct as detailed in
+		 * Table 2.2.1, plus those Fields listed in Table 2.2.3 of the
+		 * Conversation documentation.
 		 * 
 		 * @author mfchurch
 		 * 
 		 */
 		public class NPCEntryDialogue extends DialogueLine {
 			// List of Sync Structs describing the list of possible Player
-			// replies
-			// to this line of NPC dialog. Struct ID = list index.
+			// replies to this line of NPC dialog. 
+			// Struct ID = list index.
 			private List<RepliesSyncStruct> replyPointers;
 
-			// Tag of the speaker. Blank if the speaker is the conversation
-			// owner.
 			private String speaker;
 
 			public final static String NPC_ENTRY_LIST = "entrylist";
@@ -1432,8 +1469,16 @@ public class GenericFileFormat {
 		/**
 		 * @return the dataOrDataOffset
 		 */
-		private long getDataOrDataOffset() {
+		protected long getDataOrDataOffset() {
 			return dataOrDataOffset;
+		}
+		
+		/**
+		 * Sets the DataOrDataOffset to the passed long.
+		 * @param offset
+		 */
+		protected void setDataOrDataOffset(long offset) {
+			this.dataOrDataOffset = offset;
 		}
 
 		/**
@@ -1690,27 +1735,36 @@ public class GenericFileFormat {
 		}
 	}
 
+	//private static int changedDLGActiveFieldCount = 0;
+	
 	public void setField(GffField field, String newData) {
 		if (field == null)
 			throw new IllegalStateException("Invalid GffField");
 
 	/*	TODO This is possibly where dialogue stuff needs to be fixed. 
-	 * Unless dialogues need to be redone on Monday. 
-	 * 
-		System.out.println("GFF Type: " + field.getGFF().getFileType());
+	 */
+		//System.out.println("GFF Type: " + field.getGFF().getFileType());
 
-		if(field.getGFF().getFileType().trim().equals(GenericFileFormat.TYPE_DIALOGUE_BP)) {
-			System.out.println("GFF Type = DLG");
-			String fieldLabel = field.getGFF().getLabelArray().get(
-					(int) field.getLabelIndex());
-			
-			System.out.println("Field label: " +fieldLabel);
-			if(fieldLabel.trim().equals("Active")) {
-				field.increaseOffset(4);
-				System.out.println("Field label = Active || with value:<<" +newData+">>");
+/*		if (!changedFieldMap.containsKey(field)) {
+			if (field.getGFF().getFileType().trim()
+					.equals(GenericFileFormat.TYPE_DIALOGUE_BP)) {
+
+				if (changedDLGActiveFieldCount != 0) {
+					System.out.println("GFF Type = DLG");
+
+					String fieldLabel = field.getGFF().getLabelArray()
+							.get((int) field.getLabelIndex());
+
+					System.out.println("Field label: " + fieldLabel);
+					// if(fieldLabel.trim().equals("Active")) {
+					field.increaseOffset(4);
+
+					System.out.println("New Offest: " + field.dataOrDataOffset);
+				}
+				changedDLGActiveFieldCount++;
+				System.out.println("ChangedDLGACtiveFieldCount = " +changedDLGActiveFieldCount);
 			}
-		}
-*/
+		}*/
 		this.changedFieldMap.put(field, newData);
 	}
 

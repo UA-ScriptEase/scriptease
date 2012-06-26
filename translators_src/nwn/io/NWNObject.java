@@ -37,7 +37,7 @@ public final class NWNObject implements GameObject {
 
 	@Override
 	public String getResolutionText() {
-		String code;
+		String code = "DefaultResolutionText";
 
 		switch (this.resolutionMethod) {
 		case SEARCH_TYPE_NEAREST:
@@ -52,8 +52,6 @@ public final class NWNObject implements GameObject {
 		case SEARCH_TYPE_RANDOM_INCLUDE_SELF:
 			code = "Get Random Object With Self";
 			break;
-		default:
-			code = "";
 		}
 
 		return code;

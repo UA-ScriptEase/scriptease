@@ -228,12 +228,12 @@ public class LibraryModel extends PatternModel implements
 	@Override
 	public void componentChanged(StoryComponentEvent event) {
 		if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED) {
-			System.out.println("Removed '" + event.getSource() + "' from "
-					+ toString());
+			/*System.out.println("Removed '" + event.getSource() + "' from "
+					+ toString());*/ //Debug Code
 			notifyChange(LibraryEvent.STORYCOMPONENT_REMOVED, event);
 		} else if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
-			System.out.println("Added '" + event.getSource() + "' to "
-					+ toString());
+			/*System.out.println("Added '" + event.getSource() + "' to "
+					+ toString());*/ //Debug Code
 			notifyChange(LibraryEvent.STORYCOMPONENT_ADDED, event);
 		} else {
 			notifyChange(LibraryEvent.STORYCOMPONENT_CHANGED, event);
