@@ -111,9 +111,9 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 
 		// don't allow double adds.
 		if (previousOwner == this && this.hasChild(newChild)) {
-			System.err.println("ComplexStoryComponent '"
+			/*System.err.println("ComplexStoryComponent '"
 					+ this.getDisplayText() + "' did not add '" + newChild
-					+ "' because it is already a child.");
+					+ "' because it is already a child.");*/ //Debug Code
 			return false;
 		}
 
