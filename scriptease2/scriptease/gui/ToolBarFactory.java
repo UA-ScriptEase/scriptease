@@ -81,8 +81,12 @@ public class ToolBarFactory {
 	/**
 	 * By "putting" each observer to its respective JToolBar when it is created,
 	 * the Map prevents Java from garbage collecting all of the weak references
-	 * we create to observer graph nodes.
+	 * we create to observer graph nodes. - kschenk
+	 * 
+	 * Also, this is an ugly hack while we figure out a better way to keep
+	 * strong references. - remiller
 	 */
+	@Deprecated
 	private static Map<JToolBar, GraphNodeObserver> observerMap = new LinkedHashMap<JToolBar, GraphNodeObserver>();
 
 	/**
@@ -188,8 +192,8 @@ public class ToolBarFactory {
 		final int FAN_IN_SPINNER_LENGTH = 50;
 		final int NAME_FIELD_LENGTH = 150;
 
-		final JTextField nameField = buildNameField(new Dimension(NAME_FIELD_LENGTH,
-				TOOL_BAR_HEIGHT));
+		final JTextField nameField = buildNameField(new Dimension(
+				NAME_FIELD_LENGTH, TOOL_BAR_HEIGHT));
 
 		final JCheckBox commitBox = committingBox();
 
