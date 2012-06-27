@@ -359,6 +359,11 @@ public final class ScriptEase implements Runnable {
 			if (userFile.exists())
 				System.err.println("User preferences file created!");
 		}
+		
+		//TODO Eventually this property will get removed. We need to fix up all
+		//of our comparison methods. Google information about "timsort" and 
+		//"java 1.7" issues.
+		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
 
 		this.loadConfiguration(this.userPreferences, userFile);
 	}

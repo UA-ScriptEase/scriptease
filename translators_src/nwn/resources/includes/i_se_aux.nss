@@ -4,7 +4,10 @@
 object SE_AUX_GetNearestObjectByTagIncludeSelf(string tag, object target=OBJECT_SELF){
   object oFound = OBJECT_INVALID;
   
-  if(GetTag(target) == tag){
+  if(GetTag(GetModule()) == tag) {
+  	oFound = GetModule();
+  }
+  else if(GetTag(target) == tag){
       oFound = target;
   }
   else {
