@@ -641,10 +641,12 @@ public class GenericFileFormat {
 		// TODO Clean up the unused code after finishing with DLG files.
 		// TODO Separate DLG specific code into its own method.
 		List<Entry<GffField, String>> activeList = new ArrayList<Entry<GffField, String>>();
+		List<Long> dataOffsetList = new ArrayList<Long>();
 		for(Entry<GffField, String> entry : this.changedFieldMap.entrySet()) {
 			GffField key = entry.getKey();
 			if(key.getGFF().getLabelArray().get((int) key.getLabelIndex()).equals("Active")) {
 				activeList.add(entry);
+				dataOffsetList.add(Long.valueOf(key.getDataOrDataOffset()));
 			}
 		}
 		
@@ -666,11 +668,11 @@ public class GenericFileFormat {
 		Collections.sort(activeList, entryComparator);
 		
 		//Required Variables for DLG File Specific Code
-		int startingListCount = 0;
-		long firstOffset = 0;
+		if(dataOffsetList.size() > 0) {
+			long firstOffset = Collections.min(dataOffsetList).longValue();
 		// Write out the fields in the "Active" list
-		for(Entry<GffField, String> entry : activeList) {
-			final GffField changedField = entry.getKey();
+			for(Entry<GffField, String> entry : activeList) {
+				final GffField changedField = entry.getKey();
 				// Code to get the old value. No longer used. TODO Cleanup after working with convos
 				 /* try {
 					oldValue = changedField.readString(writer);                                                                              
@@ -681,37 +683,29 @@ public class GenericFileFormat {
 				//GameConstant gameConstant = this.getObjectRepresentation(); //This would get the NWNConversation. May be useful.
 	
 				//DLG File Specific Code:
-					// write out the field data again because it may have updated                                                                
-			writer.seek(this.gffOffset + this.fieldOffset
-					+ changedField.getFieldOffset());
+				// write out the field data again because it may have updated
+				writer.seek(this.gffOffset + this.fieldOffset
+						+ changedField.getFieldOffset());
 
-			final String newValue = entry.getValue();
-			System.out.println("Old Offset Value: "
-					+ changedField.dataOrDataOffset);
-
-			if (startingListCount == 0) {
-				firstOffset = changedField.getDataOrDataOffset();
-				startingListCount++;
-			} else if (startingListCount > 0) {
-						//changedField.increaseOffset(8);
-				firstOffset += newValue.getBytes().length +1;
-						//newValue.length() + 1;
-				// May need to use newValue.getBytes().length+1 instead.
+				final String newValue = entry.getValue();
+				System.out.println("Old Offset Value: "
+						+ changedField.dataOrDataOffset);
 				changedField.setDataOrDataOffset(firstOffset);
 				changedField.write(writer);
-			}
+				firstOffset += newValue.getBytes().length + 1;
 
-			System.out.println("New Offset Value: "
-					+ changedField.dataOrDataOffset);
+				System.out.println("New Offset Value: "
+						+ changedField.dataOrDataOffset);
 
 			// Only updates script slots
-			if (!changedField.isResRefType())
-				throw new RuntimeException(
-						"Can't write anything but slot refs. The module is probably corrupted now. Oops.");
+				if (!changedField.isResRefType())
+					throw new RuntimeException(
+							"Can't write anything but slot refs. The module is probably corrupted now. Oops.");
 
-			changedField.writeFieldData(writer, this.gffOffset
-					+ this.fieldDataOffset,
-					this.changedFieldMap.get(changedField));
+				changedField.writeFieldData(writer, this.gffOffset
+						+ this.fieldDataOffset,
+						this.changedFieldMap.get(changedField));
+			}
 		}
 
 		for (Entry<GffField, String> entry : this.changedFieldMap.entrySet()) {
