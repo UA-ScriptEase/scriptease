@@ -111,13 +111,6 @@
 				<Literal>;</Literal>
 			</Line>
 		</Format>
-		<Format id="includeHeader">
-			<Line>
-				<Literal>#include "</Literal>
-				<Fragment data="include" />
-				<Literal>"</Literal>
-			</Line>
-		</Format>
 		<Format id="functionHeader">
 			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			<Literal>(</Literal>
@@ -233,16 +226,11 @@
 				<Literal>}</Literal>
 			</Line>
 		</Format>
-
+		
 		<!-- Used in the Active slot on Dialogue Lines -->
 		<Format id="conversation_conditional">
 			<!-- include files first -->
-			<Line>
-				<Literal>//Includes</Literal>
-			</Line>
-			<Series data="includes" unique="true">
-				<FormatRef ref="includeHeader" />
-			</Series>
+			<FormatRef ref="includes" />
 			<Line />
 			<Line>
 				<Literal>//Function Declarations</Literal>
@@ -280,15 +268,10 @@
 		<!-- Used in the EndConversation and EndConverAbort slot on Dialogues -->
 		<Format id="conversation">
 			<!-- include files first -->
-			<Line>
-				<Literal>//Includes</Literal>
-			</Line>
-			<Series data="includes" unique="true">
-				<FormatRef ref="includeHeader" />
-			</Series>
+			<FormatRef ref="includes" />
 			<Line />
 			<Line>
-				<Literal>//Function Declarations</Literal>
+				<Literal>// Function Declarations</Literal>
 			</Line>
 			<!-- Function declarations next -->
 			<Series data="effects" unique="true">
@@ -298,13 +281,13 @@
 			</Series>
 			<Line />
 			<Line>
-				<Literal>//Main</Literal>
+				<Literal>// Main</Literal>
 			</Line>
 			<Line>
 				<Literal>void main() {</Literal>
 			</Line>
 			<Line>
-				<Literal>//Variable Declarations</Literal>
+				<Literal>// Variable Declarations</Literal>
 			</Line>
 			<Indent>
 				<Series data="effects" unique="true">
@@ -322,7 +305,7 @@
 			</Line>
 			<Line />
 			<Line>
-				<Literal>//Function Definitions</Literal>
+				<Literal>// Function Definitions</Literal>
 			</Line>
 			<!-- Function definitions last -->
 			<Series data="effects" unique="true">
@@ -334,15 +317,10 @@
 		<!-- Default format for most files -->
 		<Format id="file">
 			<!-- include files first -->
-			<Line>
-				<Literal>//Includes</Literal>
-			</Line>
-			<Series data="includes" unique="true">
-				<FormatRef ref="includeHeader" />
-			</Series>
+			<FormatRef ref="includes" />
 			<Line />
 			<Line>
-				<Literal>//Function Declarations</Literal>
+				<Literal>// Function Declarations</Literal>
 			</Line>
 			<!-- Function declarations next -->
 			<Series data="codeBlocks" unique="true">
@@ -350,18 +328,35 @@
 			</Series>
 			<Line />
 			<Line>
-				<Literal>//Main</Literal>
+				<Literal>// Main</Literal>
 			</Line>
 			<FormatRef ref="main" />
 			<Line />
 			<Line>
-				<Literal>//Function Definitions</Literal>
+				<Literal>// Function Definitions</Literal>
 			</Line>
 			<!-- Function definitions last -->
 			<Series data="codeBlocks" unique="true">
 				<FormatRef ref="functionDefinition" />
 			</Series>
 			<Line />
+		</Format>
+		
+		<Format id="include">
+			<Line>
+				<Literal>#include "</Literal>
+				<Fragment data="include" />
+				<Literal>"</Literal>
+			</Line>
+		</Format>
+		
+		<Format id="includes">
+			<Line>
+				<Literal>// Includes</Literal>
+			</Line>
+			<Series data="includes" unique="true">
+				<FormatRef ref="include" />
+			</Series>
 		</Format>
 	</Formats>
 </LanguageDictionary>
