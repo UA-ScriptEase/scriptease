@@ -5097,7 +5097,7 @@
 					</Parameters>
 					<Code>
 						<Line>
-							<Literal>if(GetUserDefinedEventNumber() == QUEST_EVENT) {</Literal>
+							<Literal>if(GetUserDefinedEventNumber() == SE2_QUEST_ENABLED_EVENT) {</Literal>
 						</Line>
 						<Indent>
 							<FormatRef ref="children"/>
