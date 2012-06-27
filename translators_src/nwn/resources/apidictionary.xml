@@ -21732,6 +21732,8 @@
 					<Type>creature</Type>
 					<Type>placeable</Type>
 					<Type>door</Type>
+					<Type>item</Type>
+					<Type>module</Type>
 				</Types>
 				<Parameters>
 					<KnowIt visible="false">
@@ -21785,6 +21787,71 @@
 				<Includes>
 					<Include>i_se_aux</Include>
 				</Includes>
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+ 	<ScriptIt visible="false">
+		<Name>Get Module</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>module</Type>
+				</Types>
+				<Parameters />
+				<Code>
+						<Literal>GetModule()</Literal>
+				</Code>
+				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt visible="false">
+		<Name>if &lt;First Object&gt; equals &lt;Second Object&gt;</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>question</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="true">
+						<Name>First Object</Name>
+						<Labels />
+						<Types>
+						    <Type>creature</Type>
+							<Type>placeable</Type>
+							<Type>door</Type>
+							<Type>item</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>Second Object</Name>
+						<Labels />
+						<Types>
+						    <Type>creature</Type>
+							<Type>placeable</Type>
+							<Type>door</Type>
+							<Type>item</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>return GetTag(</Literal>
+						<Scope data="argument" ref="First Object">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>) == GetTag(</Literal>
+						<Scope data="argument" ref="Second Object">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>);</Literal>
+					</Line>
+				</Code>
+				<Includes />
 			</CodeBlock>
 		</CodeBlocks>
 	</ScriptIt>
@@ -22481,7 +22548,18 @@
         <ScriptIt reference="/APIDictionary/Effects/ScriptIt[640]"></ScriptIt>
       </Binding>
     </KnowIt>
-  </DescribeIts>
+      <KnowIt visible="true">
+       <Name>Objects are Equal</Name>
+       <Labels/>
+       <Types>
+         <Type>question</Type>
+       </Types>
+       <Binding flavour="function">
+         <ScriptIt reference="/APIDictionary/Effects/ScriptIt[646]"></ScriptIt>
+       </Binding>
+     </KnowIt>
+   
+ </DescribeIts>
   <TypeConverters>
     <ScriptIt visible="false">
       <Name>Convert item &lt;value&gt; to string</Name>
