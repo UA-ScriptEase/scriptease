@@ -108,8 +108,17 @@ void SE2_Quest_RegisterQuestPointParent(string name, string parent, object playe
 // registers the given child for the given questpoint
 void SE2_Quest_RegisterQuestPointChild(string name, string child, object player);
 
-// returns a string containing all of the ancestors of the given quest point
-string SE2_Quest_GetAllAncestors(string name);
+// Returns an array (string representation) containing the 
+// names of all of the quest points that lead to the quest 
+// point with the given name.
+//   name: The name of the quest point whose precursors are to be found
+string SE2_Quest_GetAllPreceding(string name);
+
+// Returns an array (string representation) containing the 
+// names of all of the quest points that follow from the 
+// quest point with the given name.
+//   name: The name of the quest point whose followers are to be found
+string SE2_Quest_GetAllFollowing(string name);
 
 // registers the given quest in the quest system
 //void SE2_Quest_RegisterQuest(string name, string start, string end);
@@ -249,7 +258,7 @@ void SE2_Quest_DeactivateAncestors(string name) {
     // set up data on the player
     object player = GetFirstPC();
     // get ancestors and deactivate them
-    string ancestors = SE2_Quest_GetAllAncestors(name);
+    string ancestors = SE2_Quest_GetAllPreceding(name);
     string ancestor;
 	
     // for each ancestor
@@ -261,24 +270,42 @@ void SE2_Quest_DeactivateAncestors(string name) {
     }
 }
 
-// returns a string containing all of the ancestors (all parents, recursive) of the given quest point
-string SE2_Quest_GetAllAncestors(string name) {
+string SE2_Quest_GetAllPreceding(string name) {
     string ancestors = "";
-    // set up data on the player
     object player = GetFirstPC();
-    // get parents
     string parents = GetLocalString(player, name + QUEST_POINT_PARENTS);
 
     // for each parent
     while (SE2_ArraySize(parents) > 0) {
         string parent = SE2_GetFirstArrayElement(parents);
         parents = SE2_RemoveFirstArrayElement(parents);
+		
         // append the parent as an ancestor
         ancestors = SE2_AppendListElement(ancestors, parent);
+		
         // check the parents for ancestors
-        ancestors = SE2_AppendListElement(ancestors, SE2_Quest_GetAllAncestors(parent));
+        ancestors = SE2_AppendListElement(ancestors, SE2_Quest_GetAllPreceding(parent));
     }
     return ancestors;
+}
+
+string SE2_Quest_GetAllFollowing(string name) {
+    string followers = "";
+    object player = GetFirstPC();
+    string children = GetLocalString(player, name + QUEST_POINT_CHILDREN);
+
+    // for each child
+    while (SE2_ArraySize(children) > 0) {
+        string child = SE2_GetFirstArrayElement(children);
+        children = SE2_RemoveFirstArrayElement(children);
+		
+        // append the child as a follower
+        followers = SE2_AppendListElement(followers, child);
+		
+        // add the recursive result
+        followers = SE2_AppendListElement(followers, SE2_Quest_GetAllFollowing(child));
+    }
+    return followers;
 }
 
 // sets the questpoint and ancestor nodes to inactive. sets the questpoint to failed. checks if the Quest can now not be succeeded.
