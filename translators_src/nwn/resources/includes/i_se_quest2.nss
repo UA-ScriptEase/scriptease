@@ -70,31 +70,6 @@ string SE2_RemoveFirstArrayElement(string array) {
 
 // ============================ Function Declarations ============================
 
-// Determines if the questpoint with the given name has had its 
-// fan-in count condition satisfied
-//   name: The name of the quest point to test.
-int SE2_Quest_FanInAchieved(string name);
-
-// sets the questpoint and ancestor nodes to inactive, sets the questpoint to succeeded and activates the children points if they are able to be activated.
-void SE2_Quest_SucceedQuestPoint(string name);
-
-// sets the questpoint and ancestor nodes to inactive. sets the questpoint to failed. checks if the Quest can now not be succeeded.
-void SE2_Quest_FailQuestPoint(string name);
-
-// deactivates all of the ancestors of the given questpoint
-void SE2_Quest_DeactivateAncestors(string name);
-
-// Gets the given quest point's activation status as a boolean
-//   oPlayer:   The owner of the quest point
-//   name:      The name of the quest point to get active status for
-int SE2_Quest_getState(object oPlayer, string name);
-
-// Sets the given quest point's activation status as a boolean
-//   oPlayer:   The owner of the quest point
-//   name:      The name of the quest point to set active status for
-//   bActive:   The new activation status 
-int SE2_Quest_setState(object oPlayer, string name, int state);
-
 // Registers the Quest Point with the given name in the quest system.
 //   name:      The name of the quest point.
 //   commiting: Boolean of whether the quest point elimitates other quest points or not.
@@ -108,14 +83,51 @@ void SE2_Quest_RegisterQuestPointParent(string name, string parent, object playe
 // registers the given child for the given questpoint
 void SE2_Quest_RegisterQuestPointChild(string name, string child, object player);
 
+// Determines if the questpoint with the given name has had its 
+// fan-in count condition satisfied
+//   name: The name of the quest point to test.
+int SE2_Quest_FanInAchieved(string name);
+
+// sets the questpoint and ancestor nodes to inactive, sets the questpoint to succeeded and activates the children points if they are able to be activated.
+void SE2_Quest_SucceedQuestPoint(string name);
+
+// sets the questpoint and ancestor nodes to inactive. sets the questpoint to failed. checks if the Quest can now not be succeeded.
+void SE2_Quest_FailQuestPoint(string name);
+
+// Gets the given quest point's activation status as one of
+// QUEST_POINT_STATE_*.
+//   oPlayer:   The owner of the quest point
+//   name:      The name of the quest point to get active status for
+int SE2_Quest_getState(object oPlayer, string name);
+
+// Sets the given quest point's activation status as a boolean
+//   oPlayer:   The owner of the quest point
+//   name:      The name of the quest point to set active status for
+//   state:     The new status as one of QUEST_POINT_STATE_*.
+int SE2_Quest_setState(object oPlayer, string name, int state);
+
+// Sets the state of all quest point relatives for the quest point with 
+// the given name. NOTE: This does NOT set the state of the given root
+// node.
+//   name:   The name of the quest point to start from.
+//   state:  The new state for the relatives. One of QUEST_POINT_STATE_*.
+//   list:   The list to search through. One of QUEST_POINT_CHILDREN or 
+//           QUEST_POINT_PARENTS
+void SE2_Quest_SetStateForRelatives(string name, int state, string list);
+
 // Returns an array (string representation) containing the 
 // names of all of the quest points that lead to or follow 
 // from the quest point with the given name. Use 
 // QUEST_POINT_CHILDREN for all following, and QUEST_POINT_PARENTS 
 // for all preceding.
-//   name: The name of the quest point whose precursors are to be found
-//   list: One of QUEST_POINT_PARENTS or QUEST_POINT_CHILDREN
+//   name:  The name of the quest point whose precursors are to be found
+//   list:  One of QUEST_POINT_PARENTS or QUEST_POINT_CHILDREN
 string SE2_Quest_GetAllRelatives(string name, string list);
+
+// Resets the quest point with the given name to enabled and 
+// all following quest points to disabled.
+//   name: The name of the quest point to reset from.
+void SE2_Quest_ResetAtQuestPoint(string name);
 
 // registers the given quest in the quest system
 //void SE2_Quest_RegisterQuest(string name, string start, string end);
@@ -135,13 +147,13 @@ string SE2_Quest_GetAllRelatives(string name, string list);
 const int SE2_QUEST_ENABLED_EVENT = 2012;
 
 // State for a disabled Quest Point
-const int QUEST_POINT_DISABLED = 0;
+const int QUEST_POINT_STATE_DISABLED = 0;
 // State for an enabled Quest Point
-const int QUEST_POINT_ENABLED = 1;
+const int QUEST_POINT_STATE_ENABLED = 1;
 // State for a succeeded Quest Point
-const int QUEST_POINT_SUCCESS = 2;
+const int QUEST_POINT_STATE_SUCCESS = 2;
 // State for a failed Quest Point
-const int QUEST_POINT_FAIL = 3;
+const int QUEST_POINT_STATE_FAIL = 3;
 
 // suffix for variable to track quest point's current state.
 const string QUEST_POINT_STATE = "_QuestPointState";
@@ -179,7 +191,7 @@ int SE2_Quest_FanInAchieved(string name) {
         string parent = SE2_GetFirstArrayElement(parents);
         parents = SE2_RemoveFirstArrayElement(parents);
         // has the parent succeeded?
-        if (SE2_Quest_getState(player, parent) == QUEST_POINT_SUCCESS) {
+        if (SE2_Quest_getState(player, parent) == QUEST_POINT_STATE_SUCCESS) {
             fanIn--;
         }
     }
@@ -194,7 +206,7 @@ int SE2_Quest_FanInAchieved(string name) {
 //   fanIn:     The number of preceding quest points that must be completed prior.
 //   player:    The player who owns the quest.
 void SE2_Quest_RegisterQuestPoint(string name, int commiting, int fanIn, object player) {
-    SE2_Quest_setState(player, name, QUEST_POINT_DISABLED);
+    SE2_Quest_setState(player, name, QUEST_POINT_STATE_DISABLED);
     SetLocalInt(player, name + QUEST_POINT_COMMITING, commiting);
     SetLocalInt(player, name + QUEST_POINT_FANIN, fanIn);
 	
@@ -226,7 +238,7 @@ void SE2_Quest_RegisterQuestPointChild(string name, string child, object player)
 void SE2_Quest_SucceedQuestPoint(string name) {
     object player = GetFirstPC();
 	
-	SE2_Quest_setState(player, name, QUEST_POINT_SUCCESS);
+	SE2_Quest_setState(player, name, QUEST_POINT_STATE_SUCCESS);
 	
     // get children and activate them
     string children = GetLocalString(player, name + QUEST_POINT_CHILDREN);
@@ -242,27 +254,32 @@ void SE2_Quest_SucceedQuestPoint(string name) {
 		
         if (SE2_Quest_FanInAchieved(child)) {
             //SendMessageToPC(GetFirstPC(), "Child Activated");
-			SE2_Quest_setState(player, name, QUEST_POINT_ENABLED);
+			SE2_Quest_setState(player, name, QUEST_POINT_STATE_ENABLED);
 			SignalEvent(GetModule(), EventUserDefined(SE2_QUEST_ENABLED_EVENT));
         }
     }
 
-    SE2_Quest_DeactivateAncestors(name);
+    SE2_Quest_SetStateForRelatives(name, QUEST_POINT_STATE_DISABLED, QUEST_POINT_PARENTS);
 }
 
-// deactivates all of the ancestors of the given questpoint
-void SE2_Quest_DeactivateAncestors(string name) {
+void SE2_Quest_ResetAtQuestPoint(string name) {
     object player = GetFirstPC();
-    // get ancestors and deactivate them
-    string ancestors = SE2_Quest_GetAllRelatives(name, QUEST_POINT_PARENTS);
-    string ancestor;
+    SE2_Quest_setState(player, name, QUEST_POINT_STATE_ENABLED);
+    SE2_Quest_SetStateForRelatives(name, QUEST_POINT_STATE_DISABLED, QUEST_POINT_PARENTS);
+}
+
+void SE2_Quest_SetStateForRelatives(string name, int state, string list) {
+    object player = GetFirstPC();
+    // get relatives and deactivate them
+    string relatives = SE2_Quest_GetAllRelatives(name, list);
+    string relative;
 	
-    // for each ancestor
-    while (SE2_ArraySize(ancestors) > 0) {
-        string ancestor = SE2_GetFirstArrayElement(ancestors);
-        ancestors = SE2_RemoveFirstArrayElement(ancestors);
+    // for each relative
+    while (SE2_ArraySize(relatives) > 0) {
+        string relative = SE2_GetFirstArrayElement(relatives);
+        relatives = SE2_RemoveFirstArrayElement(relatives);
 		
-		SE2_Quest_setState(player, name, QUEST_POINT_DISABLED);
+		SE2_Quest_setState(player, name, state);
     }
 }
 
@@ -288,10 +305,10 @@ string SE2_Quest_GetAllRelatives(string name, string list) {
 void SE2_Quest_FailQuestPoint(string name) {
     object player = GetFirstPC();
 	
-	SE2_Quest_setState(player, name, QUEST_POINT_FAIL);
+	SE2_Quest_setState(player, name, QUEST_POINT_STATE_FAIL);
 
     // deactivate all of the ancestors
-    SE2_Quest_DeactivateAncestors(name);
+    SE2_Quest_SetStateForRelatives(name, QUEST_POINT_STATE_DISABLED, QUEST_POINT_PARENTS);
 
     // validate the quest
     //SE2_Quest_ValidateQuest();

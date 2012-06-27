@@ -21855,6 +21855,39 @@
 			</CodeBlock>
 		</CodeBlocks>
 	</ScriptIt>
+	<ScriptIt visible="true">
+		<Name>Continue quest at &lt;Quest Point&gt;</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>void</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="false">
+						<Name>Quest Point</Name>
+						<Labels/>
+						<Types>
+							<Type>questPoint</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>SE2_Quest_ResetAtQuestPoint(</Literal>
+						<Scope data="argument" ref="Quest Point">
+							<Fragment data="name"/>
+						</Scope>
+						<Literal>);</Literal>
+					</Line>
+				</Code>
+				<Includes>
+					<Include>i_se_quest2</Include>
+				</Includes>
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
   </Effects>
   <DescribeIts>
     <KnowIt visible="true">
