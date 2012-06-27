@@ -1,16 +1,10 @@
-<!-- LanguageDictionary
-name (attribute)
-author (attribute)
-IndentString
-ReservedWords
-Maps
-Formats
--->
+<!-- LanguageDictionary name (attribute) author (attribute) IndentString 
+	ReservedWords Maps Formats -->
 <LanguageDictionary name="DefaultNWNLanguageDictionary"
 	author="ScriptEase2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation='../../../scriptease2/scriptease/resources/schema/LanguageDictionarySchema.xsd'>
-	<IndentString>
-	</IndentString>
+	<!-- Four space characters. Space = ASCII 32 -->
+	<IndentString>&#32;&#32;&#32;&#32;</IndentString>
 	<ReservedWords>
 		<Word>if</Word>
 		<Word>else</Word>
@@ -61,16 +55,25 @@ Formats
 			<Literal>)</Literal>
 		</Format>
 		<Format id="implicitsDeclaration">
+			<Line>
+				<Literal>// Implicits Declaration</Literal>
+			</Line>
 			<Series data="implicits">
 				<FormatRef ref="variableDeclaration" />
 			</Series>
 		</Format>
 		<Format id="implicitsDefinition">
+			<Line>
+				<Literal>// Implicits Definition</Literal>
+			</Line>
 			<Series data="implicits">
 				<FormatRef ref="variableDefinition" />
 			</Series>
 		</Format>
 		<Format id="variablesDeclaration">
+			<Line>
+				<Literal>// Variables Declaration</Literal>
+			</Line>
 			<Series data="variables">
 				<FormatRef ref="variableDeclaration" />
 			</Series>
@@ -86,31 +89,14 @@ Formats
 			</Series>
 		</Format>
 		<Format id="children">
-			<Line>
-				<Literal>//Variables Declaration</Literal>
-			</Line>
-				<FormatRef ref="variablesDeclaration" />
-			<Line><Literal>//Implicits Declaration</Literal></Line>
 			<FormatRef ref="implicitsDeclaration" />
-			<Line><Literal>//Implicits Definition</Literal></Line>
 			<FormatRef ref="implicitsDefinition" />
-			<Line>
-				<Literal>//Children</Literal>
-			</Line>
-			<!-- Actions and description definitions come last -->
-			<Series data="children">
-				<FormatRef data="scriptIt" ref="functionCall" />
-				<FormatRef data="askIt" ref="conditional" />
-				<FormatRef data="knowIt" ref="knowItDefinition" />
-			</Series>
+			<FormatRef ref="childrenWithOutImplicits" />
 		</Format>
 		<Format id="childrenWithOutImplicits">
+			<FormatRef ref="variablesDeclaration" />
 			<Line>
-				<Literal>//Variables Declaration</Literal>
-			</Line>
-				<FormatRef ref="variablesDeclaration" />
-			<Line>
-				<Literal>//Children</Literal>
+				<Literal>// Children</Literal>
 			</Line>
 			<!-- Actions and description definitions come last -->
 			<Series data="children">
@@ -250,14 +236,14 @@ Formats
 
 		<!-- Used in the Active slot on Dialogue Lines -->
 		<Format id="conversation_conditional">
-		<!-- include files first -->
+			<!-- include files first -->
 			<Line>
 				<Literal>//Includes</Literal>
 			</Line>
 			<Series data="includes" unique="true">
 				<FormatRef ref="includeHeader" />
 			</Series>
-			<Line/>
+			<Line />
 			<Line>
 				<Literal>//Function Declarations</Literal>
 			</Line>
@@ -265,7 +251,7 @@ Formats
 			<Series data="codeBlocks" unique="true">
 				<FormatRef ref="functionDeclaration" />
 			</Series>
-			<Line/>
+			<Line />
 			<Line>
 				<Literal>//Starting Conditional</Literal>
 			</Line>
@@ -280,7 +266,7 @@ Formats
 			<Line>
 				<Literal>}</Literal>
 			</Line>
-			<Line/>
+			<Line />
 			<Line>
 				<Literal>//Function Definitions</Literal>
 			</Line>
@@ -288,19 +274,19 @@ Formats
 			<Series data="codeBlocks" unique="true">
 				<FormatRef ref="functionDefinition" />
 			</Series>
-			<Line/>
+			<Line />
 		</Format>
-		
+
 		<!-- Used in the EndConversation and EndConverAbort slot on Dialogues -->
 		<Format id="conversation">
-		<!-- include files first -->
+			<!-- include files first -->
 			<Line>
 				<Literal>//Includes</Literal>
 			</Line>
 			<Series data="includes" unique="true">
 				<FormatRef ref="includeHeader" />
 			</Series>
-			<Line/>
+			<Line />
 			<Line>
 				<Literal>//Function Declarations</Literal>
 			</Line>
@@ -310,7 +296,7 @@ Formats
 					<FormatRef ref="functionDeclaration" />
 				</Series>
 			</Series>
-			<Line/>
+			<Line />
 			<Line>
 				<Literal>//Main</Literal>
 			</Line>
@@ -334,7 +320,7 @@ Formats
 			<Line>
 				<Literal>}</Literal>
 			</Line>
-			<Line/>
+			<Line />
 			<Line>
 				<Literal>//Function Definitions</Literal>
 			</Line>
@@ -342,7 +328,7 @@ Formats
 			<Series data="effects" unique="true">
 				<FormatRef ref="functionDefinition" />
 			</Series>
-			<Line/>
+			<Line />
 		</Format>
 
 		<!-- Default format for most files -->
@@ -354,7 +340,7 @@ Formats
 			<Series data="includes" unique="true">
 				<FormatRef ref="includeHeader" />
 			</Series>
-			<Line/>
+			<Line />
 			<Line>
 				<Literal>//Function Declarations</Literal>
 			</Line>
@@ -362,12 +348,12 @@ Formats
 			<Series data="codeBlocks" unique="true">
 				<FormatRef ref="functionDeclaration" />
 			</Series>
-			<Line/>
+			<Line />
 			<Line>
 				<Literal>//Main</Literal>
 			</Line>
 			<FormatRef ref="main" />
-			<Line/>
+			<Line />
 			<Line>
 				<Literal>//Function Definitions</Literal>
 			</Line>
@@ -375,7 +361,7 @@ Formats
 			<Series data="codeBlocks" unique="true">
 				<FormatRef ref="functionDefinition" />
 			</Series>
-			<Line/>
+			<Line />
 		</Format>
 	</Formats>
 </LanguageDictionary>
