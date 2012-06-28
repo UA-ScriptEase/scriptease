@@ -330,10 +330,15 @@ public class GenericFileFormat {
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)) {
 			name = this.readField(reader, "LocalizedName");
 		}
+		// module blueprints
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_BP)) {
 			name = this.readField(reader, "Mod_Name");
 		}
-		// sound, conversation and other blueprints
+		// journal blueprints
+		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+			name = this.readField(reader, "Name");
+		}
+		// sound, conversation and other blueprints //TODO These should have their specific names.
 		else {
 			name = this.resRef;
 		}
@@ -363,7 +368,8 @@ public class GenericFileFormat {
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_PLACEABLE_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_SOUND_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_TRIGGER_BP)
-				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)) {
+				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)
+				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
 			tag = this.readField(reader, "Tag");
 		} else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_BP)) {
 			tag = this.readField(reader, "Mod_Tag");
@@ -668,6 +674,23 @@ public class GenericFileFormat {
 		Collections.sort(activeList, entryComparator);
 		
 		//Required Variables for DLG File Specific Code
+		/*
+		 * TODO This is horribly broken and only works for the StartingList
+		 * Active fields. If any other "Enable/Disable Dialogue Line" causes are
+		 * created, especially on EntriesList or RepiesList, then this could
+		 * cause major issues. This works for the tutorial, but needs to be
+		 * fixed for the others for final release.
+		 * 
+		 * There may also be other issues with offsets in DLG files. For example,
+		 * I once added some scripts to be called when conversation line is reached,
+		 * and the sound to be played was changed to something different, too.
+		 * 
+		 * There is also an issue where too many linked dialogue lines cause the
+		 * module to infiniloop on load then crash with an exception. This will need
+		 * to be fixed elsewhere, though.
+		 * 
+		 * -kschenk
+		 */
 		if(dataOffsetList.size() > 0) {
 			long firstOffset = Collections.min(dataOffsetList).longValue();
 		// Write out the fields in the "Active" list
@@ -1005,6 +1028,7 @@ public class GenericFileFormat {
 			List<GameConversationNode> list = new ArrayList<GameConversationNode>(
 					startingList.size());
 			for (EntriesSyncStruct entry : this.startingList) {
+				System.out.println(entry.toString());
 				list.add(entry.getReference());
 			}
 			return list;

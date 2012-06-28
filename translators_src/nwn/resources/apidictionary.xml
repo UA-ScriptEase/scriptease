@@ -1260,7 +1260,7 @@
               <Labels/>
               <Children/>
               <CodeBlocks>
-	              <CodeBlock slot="Mod_OnAcquirItem">
+	              <CodeBlock>
 		              <Types>
 		                <Type>item</Type>
 		              </Types>
@@ -2820,11 +2820,11 @@
           </Types>
           <Binding flavour="function">
             <ScriptIt visible="false">
-              <Name>Entering Object</Name>
+              <Name>Entering Creature</Name>
               <Labels/>
               <Children/>
               <CodeBlocks>
-	              <!--<CodeBlock slot="ScriptOnEnter">-->  <CodeBlock>
+	              <CodeBlock>
 		              <Types>
 		                <Type>creature</Type>
 		              </Types>
@@ -21179,7 +21179,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[274]"/><!--630 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[275]"></ScriptIt>
 	<ScriptIt visible="true">
-			<Name>&lt;Enable&gt; the &lt;dialogue line&gt;</Name>
+			<Name>&lt;Enable&gt; &lt;dialogue line&gt;</Name>
 			<Labels/>
 			<Children/>
 			<CodeBlocks>
@@ -21804,6 +21804,86 @@
 						</Scope>
 						<Literal>) == GetTag(</Literal>
 						<Scope data="argument" ref="Second Object">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>);</Literal>
+					</Line>
+				</Code>
+				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt visible="false">
+		<Name>the location of &lt;Object&gt;</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>location</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="true">
+						<Name>Object</Name>
+						<Labels />
+						<Types>
+						    <Type>creature</Type>
+							<Type>placeable</Type>
+							<Type>waypoint</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>return GetLocation(</Literal>
+						<Scope data="argument" ref="Object">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>);</Literal>
+					</Line>
+				</Code>
+				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt visible="true">
+		<Name>Create &lt;Object&gt; at &lt;Location&gt;</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>void</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="true">
+						<Name>Object</Name>
+						<Labels />
+						<Types>
+						    <Type>creature</Type>
+							<Type>placeable</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>Location</Name>
+						<Labels />
+						<Types>
+						    <Type>location</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>CreateObject(GetObjectType(</Literal>
+						<Scope data="argument" ref="Object">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>), GetResRef(</Literal>
+						<Scope data="argument" ref="Object">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>), </Literal>
+						<Scope data="argument" ref="Location">
 							<Fragment data="name" />
 						</Scope>
 						<Literal>);</Literal>
@@ -22497,26 +22577,35 @@
 	</KnowIt>
 	<!-- QUEST POINTS-->
 	<KnowIt visible="true">
-      <Name>The Player Character</Name>
-      <Labels/>
-      <Types>
-        <Type>creature</Type>
-      </Types>
-      <Binding flavour="function">
-        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[640]"></ScriptIt>
-      </Binding>
-    </KnowIt>
-      <KnowIt visible="true">
-       <Name>Objects are Equal</Name>
-       <Labels/>
-       <Types>
-         <Type>question</Type>
-       </Types>
-       <Binding flavour="function">
-         <ScriptIt reference="/APIDictionary/Effects/ScriptIt[646]"></ScriptIt>
-       </Binding>
-     </KnowIt>
-   
+	<Name>The Player Character</Name>
+	<Labels />
+	<Types>
+		<Type>creature</Type>
+	</Types>
+	<Binding flavour="function">
+		<ScriptIt reference="/APIDictionary/Effects/ScriptIt[640]"></ScriptIt>
+	</Binding>
+</KnowIt>
+	<KnowIt visible="true">
+		<Name>Objects are Equal</Name>
+		<Labels />
+		<Types>
+			<Type>question</Type>
+		</Types>
+		<Binding flavour="function">
+			<ScriptIt reference="/APIDictionary/Effects/ScriptIt[646]"></ScriptIt>
+		</Binding>
+	</KnowIt>
+	<KnowIt visible="true">
+		<Name>Object Location</Name>
+		<Labels />
+		<Types>
+			<Type>location</Type>
+		</Types>
+		<Binding flavour="function">
+			<ScriptIt reference="/APIDictionary/Effects/ScriptIt[647]"></ScriptIt>
+		</Binding>
+	</KnowIt>
  </DescribeIts>
   <TypeConverters>
     <ScriptIt visible="false">
