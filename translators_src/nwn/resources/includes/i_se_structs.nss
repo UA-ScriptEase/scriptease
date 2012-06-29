@@ -15,7 +15,7 @@ int SCEZ_Struct_ArrayGetSize(object owner, string arrayName) {
 
 // Completely removes the array from the object
 void SCEZ_Struct_ArrayClear(object owner, string arrayName) {
-  int n = SCEZ_Struct_ArrayGetSize( owner, arrayName ); //GetLocalInt(OBJECT_SELF, "scez_can");
+  int n = SCEZ_Struct_ArrayGetSize( owner, arrayName ); 
   int i = 0;
   while(i < n) {
     DeleteLocalString(owner, arrayName+IntToString(i));
@@ -71,7 +71,7 @@ string SCEZ_Struct_ArrayRemoveElement(object owner, string arrayName, string ele
   int i = SCEZ_Struct_ArrayFindElement(owner, arrayName, element);
   
   if(i < 0) {
-	return ""
+	return "";
   } else {
     return SCEZ_Struct_ArrayRemoveElementAtIndex(owner, arrayName, i);
   }
