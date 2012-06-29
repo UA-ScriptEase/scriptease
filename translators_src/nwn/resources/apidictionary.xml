@@ -5097,7 +5097,7 @@
 					</Parameters>
 					<Code>
 						<Line>
-							<Literal>if(GetUserDefinedEventNumber() == SE2_QUEST_ENABLED_EVENT) {</Literal>
+							<Literal>if(GetUserDefinedEventNumber() != SE2_QUEST_ENABLED_EVENT) {</Literal>
 						</Line>
 						<Indent>
 							<Line>
@@ -5110,7 +5110,7 @@
 						<Line />
 						<Line>
 							<Literal>if(SCEZ_Struct_ArrayRemoveElement(GetModule(), QUEST_POINTS_ENABLED_LIST, </Literal>
-							<Scope data="argument" ref="Tag">
+							<Scope data="argument" ref="quest point">
 								<Fragment data="name" />
 							</Scope>
 							<Literal>)!= "") {</Literal>
@@ -7154,11 +7154,11 @@
 		      <Code>
 		        <Line>
 		          <Literal>SendMessageToPC(</Literal>
-		          <Scope data="argument" ref="The Text">
+		          <Scope data="argument" ref="The PC">
 		            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
 		          </Scope>
 		          <Literal>, </Literal>
-		          <Scope data="argument" ref="The PC">
+		          <Scope data="argument" ref="The Text">
 		            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
 		          </Scope>
 		          <Literal>);</Literal>
@@ -21400,14 +21400,14 @@
 								<Literal>, </Literal>
 								<Fragment data="fanIn" />
 								<!-- TODO <Fragment data="questContainer" /> -->
-								<Literal>, GetEnteringObject());</Literal>
+								<Literal>, GetFirstPC());</Literal>
 							</Line>
 							<Series data="childrenNodes" unique="true">
 								<Line>
 									<Literal>SE2_Quest_RegisterQuestPointChild(</Literal>
 									<Literal>name, </Literal>
 									<Fragment data="formattedValue" />
-									<Literal>, GetEnteringObject());</Literal>
+									<Literal>, GetFirstPC());</Literal>
 								</Line>
 							</Series>
 							<Series data="parentNodes" unique="true">
@@ -21415,16 +21415,16 @@
 									<Literal>SE2_Quest_RegisterQuestPointParent(</Literal>
 									<Literal>name, </Literal>
 									<Fragment data="formattedValue" />
-									<Literal>, GetEnteringObject());</Literal>
+									<Literal>, GetFirstPC());</Literal>
 								</Line>
 							</Series>
 							<!-- TODO register quests -->
 						</Series>
 						<Scope data="start">
 							<Line><Literal>//enable the starting quest point</Literal></Line>
-							<Line><Literal>SetLocalInt(GetFirstPC(),</Literal>
+							<Line><Literal>SE2_Quest_setState(GetFirstPC(), </Literal>
 							<Fragment data="formattedValue" />
-							<Literal> + QUEST_POINT_ACTIVE, 1);</Literal></Line>
+							<Literal>, QUEST_POINT_STATE_ENABLED);</Literal></Line>
 						</Scope>
 					</Code>
 					<Includes>
