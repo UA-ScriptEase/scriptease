@@ -208,12 +208,13 @@ public class ToolBarFactory {
 		questEditorToolBar.addSeparator();
 		questEditorToolBar.add(new Box.Filler(minSize, prefSize, maxSize));
 
-		questEditorToolBar.add(nameLabel);
-		nameLabel.setLabelFor(nameField);
-		questEditorToolBar.add(nameField);
 		questEditorToolBar.add(fanInLabel);
 		fanInLabel.setLabelFor(fanInSpinner);
 		questEditorToolBar.add(fanInSpinner);
+		
+		questEditorToolBar.add(nameLabel);
+		nameLabel.setLabelFor(nameField);
+		questEditorToolBar.add(nameField);
 
 		GraphNodeObserver questBarObserver = new QuestToolBarObserver(
 				nameField, fanInSpinner, gPanel);
@@ -292,7 +293,7 @@ public class ToolBarFactory {
 	 */
 	private static void updateQuestToolBar(JTextField nameField,
 			JSpinner fanInSpinner, QuestPointNode questNode) {
-
+		
 		updateFanInSpinner(fanInSpinner, questNode);
 		updateNameField(nameField, questNode);
 
@@ -351,7 +352,6 @@ public class ToolBarFactory {
 	 */
 	private static void updateNameField(JTextField nameField,
 			QuestPointNode questNode) {
-
 		if (questNode != null) {
 
 			String displayText = questNode.getQuestPoint().getDisplayText();
