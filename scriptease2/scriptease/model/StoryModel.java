@@ -58,9 +58,9 @@ public final class StoryModel extends PatternModel {
 
 		// Temporary code to make a new quest model with a start and end node.
 		this.startNode = new QuestPointNode(new QuestPoint(
-				"Start", 1, false));
+				"Start"));
 		QuestPointNode endNode = new QuestPointNode(new QuestPoint(
-				"End", 1, true));
+				"End", 1));
 		startNode.addChild(endNode);
 		
 		this.modelRoot = new QuestNode(title, startNode, endNode, false);

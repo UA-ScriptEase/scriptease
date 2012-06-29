@@ -98,9 +98,6 @@ public class SimpleFragment extends FormatFragment {
 				resolveString = context.getSubject().getBinding()
 						.getScriptValue();
 			else if (dataLabel
-					.equalsIgnoreCase(TranslatorKeywordManager.XML_COMMITTING))
-				resolveString = context.getCommitting();
-			else if (dataLabel
 					.equalsIgnoreCase(TranslatorKeywordManager.XML_FANIN))
 				resolveString = context.getFanIn();
 			else if (dataLabel

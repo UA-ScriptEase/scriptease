@@ -54,14 +54,6 @@ public class QuestPointNodeContext extends GraphNodeContext {
 	}
 
 	@Override
-	public String getCommitting() {
-		QuestPoint questPoint = ((QuestPointNode) node).getQuestPoint();
-		Boolean committing = questPoint.getCommitting();
-		// why the hell is this hardcoded? - remiller
-		return committing ? "1" : "0";
-	}
-
-	@Override
 	public String getFormattedValue() {
 		final Collection<FormatFragment> typeFormat;
 		
