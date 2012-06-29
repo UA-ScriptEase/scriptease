@@ -5100,6 +5100,22 @@
 							<Literal>if(GetUserDefinedEventNumber() == SE2_QUEST_ENABLED_EVENT) {</Literal>
 						</Line>
 						<Indent>
+							<Line>
+								<Literal>return;</Literal>
+							</Line>
+						</Indent>
+						<Line>
+							<Literal>}</Literal>
+						</Line>
+						<Line />
+						<Line>
+							<Literal>if(SCEZ_Struct_ArrayRemoveElement(GetModule(), QUEST_POINTS_ENABLED_LIST, </Literal>
+							<Scope data="argument" ref="Tag">
+								<Fragment data="name" />
+							</Scope>
+							<Literal>)!= "") {</Literal>
+						</Line>
+						<Indent>
 							<FormatRef ref="children"/>
 						</Indent>
 						<Line>
