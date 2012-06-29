@@ -11,7 +11,7 @@
 // Separates list elements
 const string SEPARATOR = "_";
 // appends the given element to the end of the given list
-string SE2_AppendListElement(string list, string element);
+//string SE2_AppendListElement(string list, string element);
 // Gets the first element from the given array (array stays unmodified)
 string SE2_GetFirstArrayElement(string array);
 // removes first element from the given string array and returns the new array
@@ -19,6 +19,7 @@ string SE2_RemoveFirstArrayElement(string array);
 // returns the number of elements in the given array
 int SE2_ArraySize(string array);
 
+/*
 // appends the given element to the end of the given list and returns the list
 string SE2_AppendListElement(string list, string element) {
     if (list == "") {
@@ -28,6 +29,7 @@ string SE2_AppendListElement(string list, string element) {
     }
     return list;
 }
+*/
 
 // Gets the first element from the given array (array stays unmodified)
 string SE2_GetFirstArrayElement(string array) {
@@ -48,9 +50,12 @@ int SE2_ArraySize(string array) {
         return 0;
 
     int count = 1;
-    int index = 0;
-    while ((index = FindSubString(array, SEPARATOR, index)) != -1)
+    int index = FindSubString(array, SEPARATOR, 0);
+    while ((index = ) != -1){
         count++;
+        index = FindSubString(array, SEPARATOR, index+1);
+    }
+    
     return count;
 }
 
@@ -174,6 +179,8 @@ const string QUEST_END = "_QuestEnd";
 // Track if a Quest is currently active
 const string QUEST_ACTIVE = "_QuestActive";
 
+const string QUEST_POINTS_ENABLED_LIST = "QuestPointsRecentlyEnabled";
+
 
 // ============================ Function Definitions ============================
 
@@ -195,7 +202,7 @@ int SE2_Quest_FanInAchieved(string name) {
             fanIn--;
         }
     }
-	
+    
     // return whether the fanIn condition has been satisfied
     return fanIn <= 0;
 }
@@ -209,37 +216,27 @@ void SE2_Quest_RegisterQuestPoint(string name, int commiting, int fanIn, object 
     SE2_Quest_setState(player, name, QUEST_POINT_STATE_DISABLED);
     SetLocalInt(player, name + QUEST_POINT_COMMITING, commiting);
     SetLocalInt(player, name + QUEST_POINT_FANIN, fanIn);
-	
+    
     // set up QUEST_POINT_CONTAINER
     //setLocalString(player, name + QUEST_POINT_CONTAINER, containerQuest);
 }
 
 // registers the given parent for the given questpoint
 void SE2_Quest_RegisterQuestPointParent(string name, string parent, object player) {
-    string parents = GetLocalString(player, name + QUEST_POINT_PARENTS);
-	
-    parents = SE2_AppendListElement(parents, parent);
-	
-	// push to variable
-    SetLocalString(player, name + QUEST_POINT_PARENTS, parents);
+    SCEZ_Struct_QueueAdd(player, name + QUEST_POINT_PARENTS, parent) {
 }
 
 // registers the given child for the given questpoint
 void SE2_Quest_RegisterQuestPointChild(string name, string child, object player) {
-    // get the current list of children
-    string children = GetLocalString(player, name + QUEST_POINT_CHILDREN);
-    // append the child to it
-    children = SE2_AppendListElement(children, child);
-    // set up QUEST_POINT_CHILDREN
-    SetLocalString(player, name + QUEST_POINT_CHILDREN, children);
+    SCEZ_Struct_QueueAdd(player, name + QUEST_POINT_CHILDREN, child) {
 }
 
 //sets the questpoint and ancestor nodes to inactive, sets the questpoint to succeeded and activates the children points if they are able to be activated.
 void SE2_Quest_SucceedQuestPoint(string name) {
     object player = GetFirstPC();
-	
-	SE2_Quest_setState(player, name, QUEST_POINT_STATE_SUCCESS);
-	
+    
+    SE2_Quest_setState(player, name, QUEST_POINT_STATE_SUCCESS);
+    
     // get children and activate them
     string children = GetLocalString(player, name + QUEST_POINT_CHILDREN);
     //SendMessageToPC(GetFirstPC(), "Activating children: " + children);
@@ -251,11 +248,10 @@ void SE2_Quest_SucceedQuestPoint(string name) {
         children = SE2_RemoveFirstArrayElement(children);
         //SendMessageToPC(GetFirstPC(), "Children: " + children);
         //SendMessageToPC(GetFirstPC(), "Trying to Activate : " + child);
-		
+        
         if (SE2_Quest_FanInAchieved(child)) {
             //SendMessageToPC(GetFirstPC(), "Child Activated");
-			SE2_Quest_setState(player, name, QUEST_POINT_STATE_ENABLED);
-			SignalEvent(GetModule(), EventUserDefined(SE2_QUEST_ENABLED_EVENT));
+            SE2_Quest_setState(player, name, QUEST_POINT_STATE_ENABLED);
         }
     }
 
@@ -273,30 +269,31 @@ void SE2_Quest_SetStateForRelatives(string name, int state, string list) {
     // get relatives and deactivate them
     string relatives = SE2_Quest_GetAllRelatives(name, list);
     string relative;
-	
+    
     // for each relative
     while (SE2_ArraySize(relatives) > 0) {
         string relative = SE2_GetFirstArrayElement(relatives);
         relatives = SE2_RemoveFirstArrayElement(relatives);
-		
-		SE2_Quest_setState(player, name, state);
+        
+        SE2_Quest_setState(player, name, state);
     }
 }
 
-string SE2_Quest_GetAllRelatives(string name, string list) {
+string SE2_Quest_GetAllRelatives(string name, string relativeList, string tempList) {
+    string ancestors = "";
     object player = GetFirstPC();
-    string relatives = GetLocalString(player, name + list);
+    string relatives = GetLocalString(player, name + relativeList);
 
     // for each relative
     while (SE2_ArraySize(relatives) > 0) {
         string relative = SE2_GetFirstArrayElement(relatives);
         relatives = SE2_RemoveFirstArrayElement(relatives);
-		
+        
         // append the relative
-        relatives = SE2_AppendListElement(relatives, relative);
-		
+        ancestors = SE2_AppendListElement(ancestors, relative);
+        
         // check the relative for more relatives
-        relatives = SE2_AppendListElement(relatives, SE2_Quest_GetAllRelatives(relative, list));
+        ancestors = SE2_AppendListElement(ancestors, SE2_Quest_GetAllRelatives(relative, relativeList, tempList));
     }
     return relatives;
 }
@@ -304,8 +301,8 @@ string SE2_Quest_GetAllRelatives(string name, string list) {
 // sets the questpoint and ancestor nodes to inactive. sets the questpoint to failed. checks if the Quest can now not be succeeded.
 void SE2_Quest_FailQuestPoint(string name) {
     object player = GetFirstPC();
-	
-	SE2_Quest_setState(player, name, QUEST_POINT_STATE_FAIL);
+    
+    SE2_Quest_setState(player, name, QUEST_POINT_STATE_FAIL);
 
     // deactivate all of the ancestors
     SE2_Quest_SetStateForRelatives(name, QUEST_POINT_STATE_DISABLED, QUEST_POINT_PARENTS);
@@ -319,10 +316,17 @@ int SE2_Quest_getState(object oPlayer, string name) {
 }
 
 void SE2_Quest_setState(object oPlayer, string name, int state) {
+    object module = GetModule();
+	
     SetLocalInt(oPlayer, name + QUEST_POINT_STATE, state);
+    
+    if(state == QUEST_POINT_STATE_ENABLED){
+        SCEZ_Struct_ArrayAppendElement(module, QUEST_POINTS_ENABLED_LIST, name);
+        SignalEvent(module, EventUserDefined(SE2_QUEST_ENABLED_EVENT));
+    else{
+        SCEZ_Struct_ArrayRemoveElement(module, QUEST_POINTS_ENABLED_LIST, name);
+    }
 }
-
-
 
 // registers the given quest in the quest system
 //void SE2_Quest_RegisterQuest(string name, string start, string end) {

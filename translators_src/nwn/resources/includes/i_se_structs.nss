@@ -52,15 +52,29 @@ string SCEZ_Struct_ArrayRemoveElementAtIndex (object owner, string arrayName, in
   return removedString;
 }
 
-string SCEZ_Struct_ArrayRemoveElement( object owner, string arrayName, string element ) {
+// Locates the given element in the array with the given name. Returns the index of that element, or -1 if it is not found.
+//   owner:     The owner of the array.
+//   arrayName: The name of the array to search.
+//   element:   The element to search for.
+int SCEZ_Struct_ArrayFindElement(object owner, string arrayName, string element) {
   int i;
-  for( i=0; i<SCEZ_Struct_ArrayGetSize(owner, arrayName); i++ ) {
-    if( GetLocalString(owner, arrayName+IntToString(i)) == element ) {
-      SCEZ_Struct_ArrayRemoveElementAtIndex( owner, arrayName, i );
+  for(i = 0; i < SCEZ_Struct_ArrayGetSize(owner, arrayName); i++) {
+    if(SCEZ_Struct_ArrayGetElementAtIndex(owner, arrayName, i) == element) {
+      return i;
     }
   }
   // No Such Element
-  return "";
+  return -1;
+}
+
+string SCEZ_Struct_ArrayRemoveElement(object owner, string arrayName, string element) {
+  int i = SCEZ_Struct_ArrayFindElement(owner, arrayName, element);
+  
+  if(i < 0) {
+	return ""
+  } else {
+    return SCEZ_Struct_ArrayRemoveElementAtIndex(owner, arrayName, i);
+  }
 }
 
 int SCEZ_Struct_ArrayAppendElement(object owner, string arrayName, string element) { 
