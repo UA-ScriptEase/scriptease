@@ -2,8 +2,6 @@ package scriptease.gui;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,7 +10,6 @@ import java.util.Map;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,7 +19,6 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -195,15 +191,12 @@ public class ToolBarFactory {
 		final JTextField nameField = buildNameField(new Dimension(
 				NAME_FIELD_LENGTH, TOOL_BAR_HEIGHT));
 
-		final JCheckBox commitBox = committingBox();
-
 		final JSpinner fanInSpinner = buildFanInSpinner(new Dimension(
 				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT));
 
 		gPanel.getHeadNode().process(new AbstractNoOpGraphNodeVisitor() {
 			public void processQuestPointNode(QuestPointNode questPointNode) {
-				updateQuestToolBar(nameField, commitBox, fanInSpinner,
-						questPointNode);
+				updateQuestToolBar(nameField, fanInSpinner, questPointNode);
 			}
 		});
 
@@ -218,13 +211,12 @@ public class ToolBarFactory {
 		questEditorToolBar.add(nameLabel);
 		nameLabel.setLabelFor(nameField);
 		questEditorToolBar.add(nameField);
-		questEditorToolBar.add(commitBox);
 		questEditorToolBar.add(fanInLabel);
 		fanInLabel.setLabelFor(fanInSpinner);
 		questEditorToolBar.add(fanInSpinner);
 
 		GraphNodeObserver questBarObserver = new QuestToolBarObserver(
-				nameField, commitBox, fanInSpinner, gPanel);
+				nameField, fanInSpinner, gPanel);
 
 		GraphNode.observeDepthMap(questBarObserver, gPanel.getHeadNode());
 
@@ -288,20 +280,20 @@ public class ToolBarFactory {
 	}
 
 	/**
-	 * Updates the entire quest tool bar, including the namefiled, the
-	 * committing button, the fan in spinner, and all of the labels.
-	 * 
+	 * Updates the entire quest tool bar, including the name field, the fan in
+	 * spinner, and both of the labels.
 	 * 
 	 * @param nameField
-	 * @param commitBox
+	 *            The field for editing the quest point name.
 	 * @param fanInSpinner
+	 *            The spinner for editing the fan in value.
 	 * @param questNode
+	 *            The quest node to edit.
 	 */
 	private static void updateQuestToolBar(JTextField nameField,
-			JCheckBox commitBox, JSpinner fanInSpinner, QuestPointNode questNode) {
+			JSpinner fanInSpinner, QuestPointNode questNode) {
 
 		updateFanInSpinner(fanInSpinner, questNode);
-		updateCommittingBox(commitBox, questNode);
 		updateNameField(nameField, questNode);
 
 	}
@@ -383,75 +375,6 @@ public class ToolBarFactory {
 			nameField.setText("");
 			nameLabel.setEnabled(false);
 			nameField.setEnabled(false);
-		}
-	}
-
-	/**
-	 * Returns a committing button with the proper appearance.
-	 * 
-	 * @return
-	 */
-	private static JCheckBox committingBox() {
-		final JCheckBox committingBox = new JCheckBox();
-		committingBox.setText(Il8nResources.getString("Committing") + ":");
-		committingBox.setHorizontalTextPosition(SwingConstants.LEFT);
-		return committingBox;
-	}
-
-	/**
-	 * Creates an ItemListener for the CommitButton. Listens if the CommitButton
-	 * is selected or deselected, and sets the model appropriately.
-	 * 
-	 * @param questNode
-	 * @return
-	 */
-	private static ItemListener commitBoxListener(QuestPointNode questNode) {
-		final QuestPointNode questN = questNode;
-
-		ItemListener commitButtonListener = new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					questN.getQuestPoint().setCommitting(true);
-				} else {
-					questN.getQuestPoint().setCommitting(false);
-				}
-			}
-		};
-
-		return commitButtonListener;
-	}
-
-	/**
-	 * Updates the committing button for the quest node passed in.
-	 * 
-	 * @param cBox
-	 *            The commmitting button to update.
-	 * @param questNode
-	 *            The QuestPointNode to update the committing button to.
-	 */
-	private static void updateCommittingBox(JCheckBox cBox,
-			QuestPointNode questNode) {
-		if (questNode != null) {
-			Boolean committing = questNode.getQuestPoint().getCommitting();
-
-			if (cBox.getItemListeners().length > 0)
-				cBox.removeItemListener(cBox.getItemListeners()[0]);
-
-			cBox.addItemListener(commitBoxListener(questNode));
-
-			// Checks if it's an end or start node
-
-			cBox.setSelected(committing);
-
-			if (questNode.isDeletable()) {
-				cBox.setEnabled(true);
-			} else {
-				cBox.setEnabled(false);
-			}
-		} else {
-			cBox.setEnabled(false);
 		}
 	}
 
@@ -672,27 +595,24 @@ public class ToolBarFactory {
 	 */
 	private static class QuestToolBarObserver implements GraphNodeObserver {
 		private JTextField nameField;
-		private JCheckBox commitButton;
 		private JSpinner fanInSpinner;
 
 		private GraphNode previousNode;
 		private GraphPanel gPanel;
 
-		// private GraphEditor editor;
-
 		/**
 		 * Creates the observer for the quest toolbar. It requires the name
-		 * textfield, a commit button, a fan in spinner, and a quest editor.
+		 * textfield, a fan in spinner, and a quest editor.
 		 * 
 		 * @param nameField
-		 * @param commitbox
+		 *            The text field that edits the quest point's name.
 		 * @param fanInSpinner
+		 *            The spinner to edit the fan-in value.
 		 * @param editor
 		 */
-		public QuestToolBarObserver(JTextField nameField, JCheckBox commitbox,
+		public QuestToolBarObserver(JTextField nameField,
 				JSpinner fanInSpinner, GraphPanel gPanel) {
 			this.nameField = nameField;
-			this.commitButton = commitbox;
 			this.fanInSpinner = fanInSpinner;
 			this.previousNode = gPanel.getHeadNode();
 			this.gPanel = gPanel;
@@ -791,8 +711,7 @@ public class ToolBarFactory {
 
 			previousNode.process(new AbstractNoOpGraphNodeVisitor() {
 				public void processQuestPointNode(QuestPointNode questPointNode) {
-					updateQuestToolBar(nameField, commitButton, fanInSpinner,
-							questPointNode);
+					updateQuestToolBar(nameField, fanInSpinner, questPointNode);
 				}
 			});
 		}
@@ -813,7 +732,7 @@ public class ToolBarFactory {
 			if (oldSelectedNode != null) {
 
 				// create a new node to insert:
-				QuestPoint newQuestPoint = new QuestPoint("", 1, false);
+				QuestPoint newQuestPoint = new QuestPoint("");
 				QuestPointNode newQuestPointNode = new QuestPointNode(
 						newQuestPoint);
 
@@ -933,17 +852,17 @@ public class ToolBarFactory {
 											}
 										});
 							}
-							updateQuestToolBar(nameField, commitButton,
-									fanInSpinner, questPointNode);
+							updateQuestToolBar(nameField, fanInSpinner,
+									questPointNode);
 							break;
 						case INSERT_GRAPH_NODE:
 							insertQuestPoint(sourceNode);
-							updateQuestToolBar(nameField, commitButton,
-									fanInSpinner, questPointNode);
+							updateQuestToolBar(nameField, fanInSpinner,
+									questPointNode);
 							break;
 						case CONNECT_GRAPH_NODE:
-							updateQuestToolBar(nameField, commitButton,
-									fanInSpinner, questPointNode);
+							updateQuestToolBar(nameField, fanInSpinner,
+									questPointNode);
 							previousNode = sourceNode;
 							break;
 

@@ -11,10 +11,9 @@
 
 // Registers the Quest Point with the given name in the quest system.
 //   name:      The name of the quest point.
-//   commiting: Boolean of whether the quest point elimitates other quest points or not.
 //   fanIn:     The number of preceding quest points that must be completed prior.
 //   player:    The player who owns the quest.
-void SE2_Quest_RegisterQuestPoint(string name, int commiting, int fanIn, object player);
+void SE2_Quest_RegisterQuestPoint(string name, int fanIn, object player);
 
 // registers the given parent for the given questpoint
 void SE2_Quest_RegisterQuestPointParent(string name, string parent, object player);
@@ -95,8 +94,6 @@ const int QUEST_POINT_STATE_FAIL = 3;
 
 // suffix for variable to track quest point's current state.
 const string QUEST_POINT_STATE = "_QuestPointState";
-// Track if a Quest Point is committing
-const string QUEST_POINT_COMMITING = "_QuestPointCommiting";
 // Track the fanIn for a QuestPoint
 const string QUEST_POINT_FANIN = "_QuestPointFanIn";
 // Track the children for a QuestPoint
@@ -141,14 +138,8 @@ int SE2_Quest_FanInAchieved(string name) {
     return fanIn <= 0;
 }
 
-// Registers the Quest Point with the given name in the quest system.
-//   name:      The name of the quest point.
-//   commiting: boolean of whether the quest point elimitates other quest points or not.
-//   fanIn:     The number of preceding quest points that must be completed prior.
-//   player:    The player who owns the quest.
-void SE2_Quest_RegisterQuestPoint(string name, int commiting, int fanIn, object player) {
+void SE2_Quest_RegisterQuestPoint(string name, int fanIn, object player) {
     SE2_Quest_setState(player, name, QUEST_POINT_STATE_DISABLED);
-    SetLocalInt(player, name + QUEST_POINT_COMMITING, commiting);
     SetLocalInt(player, name + QUEST_POINT_FANIN, fanIn);
 
     // set up QUEST_POINT_CONTAINER

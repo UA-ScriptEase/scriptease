@@ -21396,8 +21396,6 @@
 							<Line>
 								<Literal>SE2_Quest_RegisterQuestPoint(</Literal>
 								<Literal>name, </Literal>
-								<Fragment data="committing" />
-								<Literal>, </Literal>
 								<Fragment data="fanIn" />
 								<!-- TODO <Fragment data="questContainer" /> -->
 								<Literal>, GetFirstPC());</Literal>
