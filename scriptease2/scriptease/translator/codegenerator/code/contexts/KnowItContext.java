@@ -64,6 +64,7 @@ public class KnowItContext extends StoryComponentContext {
 		final Collection<String> types = knowIt.getTypes();
 		final Context bindingContext = ContextFactory.getInstance()
 				.createContext(this, knowIt.getBinding());
+
 		final String formattedValue = bindingContext.getFormattedValue();
 
 		if (binding.explicitlyCompatibleWith((KnowIt) component)) {
@@ -79,7 +80,9 @@ public class KnowItContext extends StoryComponentContext {
 				final Context converterContext = ContextFactory.getInstance()
 						.createContext(this, doIt);
 				// TODO: Not have this format hardcoded
-				return converterContext.getName() + "(" + formattedValue + ")";
+				String converterContextName = converterContext.getName() + "("
+						+ formattedValue + ")";
+				return converterContextName;
 			} else
 				throw new CodeGenerationException("<Cannot convert binding("
 						+ binding + ") to expected types(" + types + ")>");
