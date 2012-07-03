@@ -26,6 +26,7 @@
 		<Word>int</Word>
 		<Word>itemproperty</Word>
 		<Word>location</Word>
+		<Word>Location</Word>
 		<Word>object</Word>
 		<Word>string</Word>
 		<Word>struct</Word>

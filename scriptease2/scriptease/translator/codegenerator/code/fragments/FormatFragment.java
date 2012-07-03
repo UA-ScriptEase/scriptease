@@ -86,6 +86,7 @@ public abstract class FormatFragment {
 		StringBuilder code = new StringBuilder();
 
 		for (FormatFragment token : format) {
+			// This is where it gets set to "PlayerCharacter".
 			code.append(token.resolve(context));
 		}
 

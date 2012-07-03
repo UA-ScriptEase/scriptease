@@ -28,6 +28,7 @@ import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.io.model.GameObject;
+import sun.awt.util.IdentityArrayList;
 
 /**
  * Context represents the object based context used in code generation. It
@@ -303,9 +304,10 @@ public class Context {
 		final Collection<KnowIt> implicits = slotManager
 				.getImplicits(this.locationInfo.getSlot());
 
+	//	List<StoryComponent> components = new ArrayList<StoryComponent>(this.getComponents());
 		// Only return implicits that are used in this Context
 		for (KnowIt implicit : implicits) {
-			if (this.getComponents().contains(implicit))
+			if (getComponents().contains(implicit))
 				used.add(implicit);
 		}
 		return used.iterator();
