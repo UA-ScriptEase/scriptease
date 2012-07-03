@@ -27,14 +27,22 @@ public class UniqueSeriesFragment extends AbstractSeriesFragment {
 		super(data, separator, subFragments, filter, filterType);
 	}
 
+	/**
+	 * Returns an iterator that only contains one of each item from the passed
+	 * in iterator. It "Uniquifies" the passed iterator.
+	 * 
+	 * @param iterator
+	 *            The iterator to be uniquified.
+	 * @return The unique iterator.
+	 */
 	public <T> Iterator<T> handle(Iterator<T> iterator) {
 		Collection<T> unique = new ArrayList<T>();
 		while (iterator.hasNext()) {
 			T object = iterator.next();
-			
+
 			if (!unique.contains(object)) {
 				unique.add(object);
-			} 
+			}
 		}
 		return unique.iterator();
 	}
