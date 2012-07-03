@@ -40,10 +40,8 @@ public class CodeGenerationNamifier {
 	public CodeGenerationNamifier(CodeGenerationNamifier existingNames,
 			LanguageDictionary languageDictionary) {
 		this.parentNamifier = existingNames;
-		
-		this.componentsToNames = new IdentityHashMap<StoryComponent, String>();
 		// This is an identity hash map to use == instead of .equals to compare
-		// codeblocks.
+		this.componentsToNames = new IdentityHashMap<StoryComponent, String>();
 		this.codeBlocksToNames = new HashMap<CodeBlock, String>();
 		this.languageDictionary = languageDictionary;
 	}
