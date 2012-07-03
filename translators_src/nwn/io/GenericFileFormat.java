@@ -334,10 +334,10 @@ public class GenericFileFormat {
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_BP)) {
 			name = this.readField(reader, "Mod_Name");
 		}
-		// journal blueprints
-		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
-			name = this.readField(reader, "Name");
-		}
+//		// journal blueprints
+//		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+//			name = this.readField(reader, "Name");
+//		}
 		// sound, conversation and other blueprints //TODO These should have their specific names.
 		else {
 			name = this.resRef;
@@ -369,7 +369,8 @@ public class GenericFileFormat {
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_SOUND_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_TRIGGER_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)
-				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+//				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)
+				) {
 			tag = this.readField(reader, "Tag");
 		} else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_BP)) {
 			tag = this.readField(reader, "Mod_Tag");
@@ -500,8 +501,8 @@ public class GenericFileFormat {
 		}
 
 		throw new IllegalStateException(
-				"Tried to read a field from a GFF type that does not include the field "
-						+ label);
+				"Tried to read a field from a GFF type (" + this.getFileType()
+						+ ") that does not include the field " + label);
 	}
 
 	/**
