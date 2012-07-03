@@ -79,7 +79,6 @@ public class KnowItContext extends StoryComponentContext {
 			if (doIt != null) {
 				final Context converterContext = ContextFactory.getInstance()
 						.createContext(this, doIt);
-				// TODO: Not have this format hardcoded
 				String converterContextName = converterContext.getName() + "("
 						+ formattedValue + ")";
 				return converterContextName;
