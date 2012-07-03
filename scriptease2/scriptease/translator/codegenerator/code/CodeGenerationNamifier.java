@@ -1,6 +1,9 @@
 package scriptease.translator.codegenerator.code;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,7 +32,6 @@ public class CodeGenerationNamifier {
 	private final Map<StoryComponent, String> componentsToNames;
 	// Keeps names of CodeBlocks
 	private final Map<CodeBlock, String> codeBlocksToNames;
-	private String currentName;
 
 	public CodeGenerationNamifier(LanguageDictionary languageDictionary) {
 		this(null, languageDictionary);
@@ -38,9 +40,11 @@ public class CodeGenerationNamifier {
 	public CodeGenerationNamifier(CodeGenerationNamifier existingNames,
 			LanguageDictionary languageDictionary) {
 		this.parentNamifier = existingNames;
-		this.componentsToNames = new HashMap<StoryComponent, String>();
+		
+		this.componentsToNames = new IdentityHashMap<StoryComponent, String>();
+		// This is an identity hash map to use == instead of .equals to compare
+		// codeblocks.
 		this.codeBlocksToNames = new HashMap<CodeBlock, String>();
-		this.currentName = "";
 		this.languageDictionary = languageDictionary;
 	}
 
@@ -52,17 +56,16 @@ public class CodeGenerationNamifier {
 	 * @return true if name is unique in scope
 	 */
 	protected boolean isNameUnique(String name) {
-		boolean isUnique = isNameUniqueInScope(name)
-				&& !this.languageDictionary.isReservedWord(name);
+		Collection<String> componentNameList = new ArrayList<String>(this.componentsToNames.values());
+		Collection<String> codeBlockNameList = new ArrayList<String>(this.codeBlocksToNames.values());
+		
+		boolean isUniqueInScope =  !(componentNameList.contains(name)) &&
+				 !(codeBlockNameList.contains(name));
+		
+		boolean isUnique = isUniqueInScope && !this.languageDictionary.isReservedWord(name);
 		if (isUnique && this.parentNamifier != null)
 			isUnique = this.parentNamifier.isNameUnique(name);
 		return isUnique;
-	}
-
-	// helper method used by isNameUnique
-	private boolean isNameUniqueInScope(String name) {
-		return !(this.componentsToNames.values().contains(name))
-				&& !(this.codeBlocksToNames.values().contains(name));
 	}
 
 	/**
@@ -76,30 +79,33 @@ public class CodeGenerationNamifier {
 	 * @return a code-safe, unique string for the given StoryComponent
 	 */
 	public String getUniqueName(StoryComponent component, Pattern legalFormat) {
+		String currentName = "";
+		
 		if (legalFormat == null || legalFormat.pattern().isEmpty())
 			legalFormat = Pattern.compile("[a-zA-Z_0-9]+");
 
-		this.currentName = getGeneratedNameFor(component);
-		if (this.currentName == null || this.currentName.isEmpty()) {
-			this.currentName = buildLegalName(component, legalFormat);
-			propogateComponentName(component, this.currentName);
+		currentName = getGeneratedNameFor(component);
+		if (currentName == null || currentName.isEmpty()) {
+			currentName = buildLegalName(component, legalFormat);
+			propogateComponentName(component, currentName);
 		}
 
-		return this.currentName;
+		return currentName;
 	}
 
 	public String getUniqueName(CodeBlock codeBlock, Pattern legalFormat) {
+		String currentName = "";
+
 		if (legalFormat == null || legalFormat.pattern().isEmpty())
 			legalFormat = Pattern.compile("[a-zA-Z_0-9]+");
 
-		this.currentName = getGeneratedNameFor(codeBlock);
-		if (this.currentName == null || this.currentName.isEmpty()) {
-			this.currentName = buildLegalName(codeBlock.getOwner(), legalFormat);
-			propogateCodeBlockName(codeBlock, this.currentName);
+		currentName = getGeneratedNameFor(codeBlock);
+		if (currentName == null || currentName.isEmpty()) {
+			currentName = buildLegalName(codeBlock.getOwner(), legalFormat);
+			propogateCodeBlockName(codeBlock, currentName);
 		}
 
-		return this.currentName;
-
+		return currentName;
 	}
 
 	/**

@@ -212,19 +212,24 @@ public class CodeBlock implements TypedComponent, Cloneable {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof CodeBlock)
-			return this.hashCode() == other.hashCode();
+		if (other instanceof CodeBlock) {
+			int thisHashCode = this.hashCode();// + this.owner.hashCode();
+			int otherHashCode = other.hashCode();
+					//+ ((CodeBlock) other).owner.hashCode();
+			return thisHashCode == otherHashCode;
+		}
 		return false;
 	}
+	
 
 	/**
-	 * Note: CodeBlock's are not guaranteed to be unique just based on these
+	 * Note: CodeBlocks are not guaranteed to be unique just based on these
 	 * criteria. Other important factors in determining if CodeBlocks are
 	 * "equal" are their owner ScriptIt.
 	 */
 	@Override
 	public int hashCode() {
-		int hashCode = 0;
+		int hashCode = this.code.hashCode();
 		if (this.hasSubject())
 			hashCode += this.getSubjectName().hashCode();
 		if (this.hasSlot())
