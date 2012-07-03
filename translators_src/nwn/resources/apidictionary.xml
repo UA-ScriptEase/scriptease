@@ -232,8 +232,8 @@
       <GUI>JComboBox</GUI>
     </Type>
 	<Type>
-      <Name>Allignment</Name>
-      <Keyword>allignment</Keyword>
+      <Name>Alignment</Name>
+      <Keyword>alignment</Keyword>
       <CodeSymbol>int</CodeSymbol>
       <Enum>ALIGNMENT_ALL&lt;Alignment All&gt;|ALIGNMENT_CHAOTIC&lt;Alignment Chaotic&gt;|ALIGNMENT_EVIL&lt;Alignment Evil&gt;|ALIGNMENT_GOOD&lt;Alignment Good&gt;|ALIGNMENT_LAWFUL&lt;Alignment Lawful&gt;|ALIGNMENT_NEUTRAL&lt;Alignment Neutral&gt;</Enum>
       <GUI>JComboBox</GUI>
@@ -384,6 +384,13 @@
       <CodeSymbol>int</CodeSymbol>
 	  <Enum>WEATHER_CLEAR&lt;Weather Clear&gt;|WEATHER_RAIN&lt;Weather Rain&gt;|WEATHER_SNOW&lt;Weather Snow&gt;|WEATHER_USE_AREA_SETTINGS&lt;Weather Use Area Settings&gt;</Enum>
 	  <GUI>JComboBox</GUI>
+    </Type>
+     <Type>
+      <Name>WalkSpeed</Name>
+      <Keyword>walk_speed</Keyword>
+      <CodeSymbol>int</CodeSymbol>
+      <Enum>FALSE&lt;Walk&gt;|TRUE&lt;Run&gt;</Enum>
+      <GUI>JComboBox</GUI>
     </Type>
 	<!-- END OF ENUMS -->
     <Type>
@@ -2820,11 +2827,11 @@
           </Types>
           <Binding flavour="function">
             <ScriptIt visible="false">
-              <Name>Entering Object</Name>
+              <Name>Entering Creature</Name>
               <Labels/>
               <Children/>
               <CodeBlocks>
-	              <!--<CodeBlock slot="ScriptOnEnter">-->  <CodeBlock>
+	              <CodeBlock>
 		              <Types>
 		                <Type>creature</Type>
 		              </Types>
@@ -11440,7 +11447,7 @@
           
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>walk_speed</Type>
           </Types>
         </KnowIt>
         <KnowIt visible="true">
@@ -11467,11 +11474,11 @@
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>, ActionForceMoveToLocation(</Literal>
-          <Scope data="argument" ref="walk">
+          <Scope data="argument" ref="Location">
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>, </Literal>
-          <Scope data="argument" ref="Location">
+          <Scope data="argument" ref="walk">
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>, </Literal>
@@ -11510,7 +11517,7 @@
           
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>walk_speed</Type>
           </Types>
         </KnowIt>
         <KnowIt visible="true">
@@ -11529,11 +11536,11 @@
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>, ActionMoveToLocation(</Literal>
-          <Scope data="argument" ref="walk">
+          <Scope data="argument" ref="Location">
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>, </Literal>
-          <Scope data="argument" ref="Location">
+          <Scope data="argument" ref="walk">
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>));</Literal>
@@ -11568,7 +11575,7 @@
           
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>walk_speed</Type>
           </Types>
         </KnowIt>
         <KnowIt visible="true">
@@ -11608,15 +11615,15 @@
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>, ActionForceMoveToObject(</Literal>
+          <Scope data="argument" ref="Target">
+            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+          </Scope>
+          <Literal>, </Literal>
           <Scope data="argument" ref="walk">
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
+          </Scope> 
           <Literal>, </Literal>
           <Scope data="argument" ref="Distance">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, </Literal>
-          <Scope data="argument" ref="Target">
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>, </Literal>
@@ -11661,7 +11668,7 @@
           
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>walk_speed</Type>
           </Types>
         </KnowIt>
         <KnowIt visible="true">
@@ -11693,15 +11700,15 @@
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>, ActionMoveToObject(</Literal>
+          <Scope data="argument" ref="Target">
+            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+          </Scope>
+          <Literal>, </Literal>
           <Scope data="argument" ref="walk">
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>, </Literal>
           <Scope data="argument" ref="Distance">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, </Literal>
-          <Scope data="argument" ref="Target">
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>));</Literal>
@@ -11742,7 +11749,7 @@
           
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>walk_speed</Type>
           </Types>
         </KnowIt>
         <KnowIt visible="true">
@@ -11766,11 +11773,11 @@
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>, ActionMoveToObject(</Literal>
-          <Scope data="argument" ref="walk">
+          <Scope data="argument" ref="Target">
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>, </Literal>
-          <Scope data="argument" ref="Target">
+          <Scope data="argument" ref="walk">
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>));</Literal>
@@ -11810,7 +11817,7 @@
           
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>walk_speed</Type>
           </Types>
         </KnowIt>
         <KnowIt visible="true">
@@ -11918,7 +11925,7 @@
           
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>walk_speed</Type>
           </Types>
         </KnowIt>
         <KnowIt visible="true">
@@ -12032,7 +12039,7 @@
           
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>walk_speed</Type>
           </Types>
         </KnowIt>
         <KnowIt visible="true">
@@ -12153,7 +12160,7 @@
           </Types>
         </KnowIt>
         <KnowIt visible="true">
-          <Name>walk</Name>
+          <Name>walk_speed</Name>
           
           <Labels/>
           <Types>
@@ -12281,7 +12288,7 @@
           
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>alignment</Type>
           </Types>
         </KnowIt>
         <KnowIt visible="true">
@@ -12304,7 +12311,7 @@
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>, </Literal>
-          <Scope data="argument" ref="Alignmnet Shift">
+          <Scope data="argument" ref="Alignment Shift">
             <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
           </Scope>
           <Literal>);</Literal>
@@ -12352,7 +12359,7 @@
           
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>alignment</Type>
           </Types>
         </KnowIt>
         <KnowIt visible="true">
@@ -21237,7 +21244,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[274]"/><!--630 ScriptIts-->
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[275]"></ScriptIt>
 	<ScriptIt visible="true">
-			<Name>&lt;Enable&gt; the &lt;dialogue line&gt;</Name>
+			<Name>&lt;Enable&gt; &lt;dialogue line&gt;</Name>
 			<Labels/>
 			<Children/>
 			<CodeBlocks>
@@ -21860,6 +21867,86 @@
 						</Scope>
 						<Literal>) == GetTag(</Literal>
 						<Scope data="argument" ref="Second Object">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>);</Literal>
+					</Line>
+				</Code>
+				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt visible="false">
+		<Name>the location of &lt;Object&gt;</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>location</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="true">
+						<Name>Object</Name>
+						<Labels />
+						<Types>
+						    <Type>creature</Type>
+							<Type>placeable</Type>
+							<Type>waypoint</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>return GetLocation(</Literal>
+						<Scope data="argument" ref="Object">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>);</Literal>
+					</Line>
+				</Code>
+				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt visible="true">
+		<Name>Create &lt;Object&gt; at &lt;Location&gt;</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>void</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="true">
+						<Name>Object</Name>
+						<Labels />
+						<Types>
+						    <Type>creature</Type>
+							<Type>placeable</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>Location</Name>
+						<Labels />
+						<Types>
+						    <Type>location</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>CreateObject(GetObjectType(</Literal>
+						<Scope data="argument" ref="Object">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>), GetResRef(</Literal>
+						<Scope data="argument" ref="Object">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>), </Literal>
+						<Scope data="argument" ref="Location">
 							<Fragment data="name" />
 						</Scope>
 						<Literal>);</Literal>
@@ -22584,28 +22671,36 @@
 		</ScriptIt>
 		</Binding>
 	</KnowIt>
-	<!-- QUEST POINTS-->
 	<KnowIt visible="true">
-      <Name>The Player Character</Name>
-      <Labels/>
-      <Types>
-        <Type>creature</Type>
-      </Types>
-      <Binding flavour="function">
-        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[640]"></ScriptIt>
-      </Binding>
-    </KnowIt>
-      <KnowIt visible="true">
-       <Name>Objects are Equal</Name>
-       <Labels/>
-       <Types>
-         <Type>question</Type>
-       </Types>
-       <Binding flavour="function">
-         <ScriptIt reference="/APIDictionary/Effects/ScriptIt[646]"></ScriptIt>
-       </Binding>
-     </KnowIt>
-   
+		<Name>The Player Character</Name>
+		<Labels />
+		<Types>
+			<Type>creature</Type>
+		</Types>
+		<Binding flavour="function">
+			<ScriptIt reference="/APIDictionary/Effects/ScriptIt[640]"></ScriptIt>
+		</Binding>
+	</KnowIt>
+	<KnowIt visible="true">
+		<Name>Objects are Equal</Name>
+		<Labels />
+		<Types>
+			<Type>question</Type>
+		</Types>
+		<Binding flavour="function">
+			<ScriptIt reference="/APIDictionary/Effects/ScriptIt[646]"></ScriptIt>
+		</Binding>
+	</KnowIt>
+	<KnowIt visible="true">
+		<Name>Object Location</Name>
+		<Labels />
+		<Types>
+			<Type>location</Type>
+		</Types>
+		<Binding flavour="function">
+			<ScriptIt reference="/APIDictionary/Effects/ScriptIt[647]"></ScriptIt>
+		</Binding>
+	</KnowIt>
  </DescribeIts>
   <TypeConverters>
     <ScriptIt visible="false">

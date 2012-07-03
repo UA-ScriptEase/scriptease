@@ -30,26 +30,31 @@ public class GameObjectTree extends SETreeModel {
 		filter = addFilter;
 	}
 
+	/**
+	 * Recursively adds all nodes from a conversation tree as types.
+	 * 
+	 * @param parent
+	 */
 	@SuppressWarnings("unchecked")
-	private void addRecusivleyAllNodes(GameConversationNode parent){
-		if(parent.isTerminal() == true){
+	private void addRecusivleyAllNodes(GameConversationNode parent) {
+		if (parent.isTerminal() == true) {
 			return;
 		}
 
 		List<GameConversationNode> getChildren;
 		getChildren = (List<GameConversationNode>) parent.getChildren();
-		if(getChildren.size() == 0){
+		if (getChildren.size() == 0) {
 			return;
 		}
 
-		for(GameConversationNode a:getChildren){
-			treeModel.addLeaf(parent, a);
+		for (GameConversationNode a : getChildren) {
+			if(!a.isLink())
+				treeModel.addLeaf(parent, a);
 		}
-
-		for(GameConversationNode a:getChildren){
-			addRecusivleyAllNodes(a);
+		for (GameConversationNode a : getChildren) {
+			if(!a.isLink())
+				addRecusivleyAllNodes(a);
 		}
-
 	}
 
 	private void addAllChildren(GameConversation parent){
@@ -97,19 +102,13 @@ public class GameObjectTree extends SETreeModel {
 			if (gameObjs.size() <= 0)
 				continue;
 
-
-
-
-			if(typeName.equals(DIALOGUE_TAG)){
+			if (typeName.equals(DIALOGUE_TAG)) {
 				for (GameConstant convo : gameObjs) {
 					GameConversation dialogue = (GameConversation) convo;
 					treeModel.addLeaf(typeName, dialogue);
 					addAllChildren(dialogue);
 				}
-
-			}
-
-			else{
+			} else {
 				treeModel.addLeaf(treeModel.getHead(), typeName);
 				for (GameConstant obj : gameObjs) {
 					treeModel.addLeaf(typeName, obj);

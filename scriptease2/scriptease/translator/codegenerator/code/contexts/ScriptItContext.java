@@ -55,8 +55,6 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 		return createContext.getType();
 
 	}
-	
-	
 
 	/**
 	 * Namification needs to be done at a CodeBlock level instead of a
@@ -66,8 +64,8 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	public String getUniqueName(Pattern legalFormat) {
 		final CodeBlock mainCodeBlock = ((ScriptIt) this.component)
 				.getMainCodeBlock();
-		final Context createContext = ContextFactory.getInstance()
-				.createContext(this, mainCodeBlock);
+		final ContextFactory factory = ContextFactory.getInstance();
+		final Context createContext = factory.createContext(this, mainCodeBlock);
 		return createContext.getUniqueName(legalFormat);
 	}
 
