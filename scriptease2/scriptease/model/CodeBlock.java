@@ -134,7 +134,7 @@ public class CodeBlock implements TypedComponent, Cloneable {
 		this.parameters = new ArrayList<KnowIt>(parameters);
 	}
 
-	// TODO: apply flyweight
+	// TODO Flyweight. See: https://www.pivotaltracker.com/story/show/17597817
 	public void setIncludes(Collection<String> includes) {
 		this.includes = new ArrayList<String>(includes);
 	}
@@ -144,8 +144,7 @@ public class CodeBlock implements TypedComponent, Cloneable {
 	 * 
 	 * @param code
 	 */
-	// TODO: apply flyweight SEE THE TICKET IN PIVOTAL TRACKER REGARDING
-	// FLYWEIGHT
+	// TODO Flyweight. See: https://www.pivotaltracker.com/story/show/17597817
 	public void setCode(Collection<FormatFragment> code) {
 		this.code = new ArrayList<FormatFragment>(code);
 	}
@@ -213,23 +212,16 @@ public class CodeBlock implements TypedComponent, Cloneable {
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof CodeBlock) {
-			int thisHashCode = this.hashCode();// + this.owner.hashCode();
+			int thisHashCode = this.hashCode();
 			int otherHashCode = other.hashCode();
-					//+ ((CodeBlock) other).owner.hashCode();
 			return thisHashCode == otherHashCode;
 		}
 		return false;
 	}
-	
 
-	/**
-	 * Note: CodeBlocks are not guaranteed to be unique just based on these
-	 * criteria. Other important factors in determining if CodeBlocks are
-	 * "equal" are their owner ScriptIt.
-	 */
 	@Override
 	public int hashCode() {
-		int hashCode = this.code.hashCode();
+		int hashCode = 0;
 		if (this.hasSubject())
 			hashCode += this.getSubjectName().hashCode();
 		if (this.hasSlot())
@@ -238,6 +230,15 @@ public class CodeBlock implements TypedComponent, Cloneable {
 			hashCode += returnType.hashCode();
 		for (KnowIt parameter : this.getParameters())
 			hashCode += parameter.getDisplayText().hashCode();
+		for (String include : this.getIncludes()) {
+			hashCode += include.hashCode();
+		}
+		for (KnowIt implicit : this.getImplicits()) {
+			hashCode += implicit.getDisplayText().hashCode();
+		}
+		// Note: if the problem occurs again where code generation gets
+		// confused as to which CodeBlock is which, then try adding
+		// this.owner.getDisplayText().hashCode to the hash code.
 		return hashCode;
 	}
 
@@ -274,10 +275,10 @@ public class CodeBlock implements TypedComponent, Cloneable {
 
 	/**
 	 * Gets the code associated with the CodeBlock
-	 * 
+	 *
 	 * @return
 	 */
-	// TODO: apply flyweight
+	// TODO Flyweight. See: https://www.pivotaltracker.com/story/show/17597817
 	public Collection<FormatFragment> getCode() {
 		return this.code;
 	}
