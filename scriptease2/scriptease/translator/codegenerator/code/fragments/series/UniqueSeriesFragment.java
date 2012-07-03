@@ -1,11 +1,11 @@
 package scriptease.translator.codegenerator.code.fragments.series;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
-import sun.awt.util.IdentityArrayList;
 
 /**
  * UniqueSeriesFragment is a template subclass of AbstractSeriesFragment,
@@ -27,15 +27,22 @@ public class UniqueSeriesFragment extends AbstractSeriesFragment {
 		super(data, separator, subFragments, filter, filterType);
 	}
 
+	/**
+	 * Returns an iterator that only contains one of each item from the passed
+	 * in iterator. It "Uniquifies" the passed iterator.
+	 * 
+	 * @param iterator
+	 *            The iterator to be uniquified.
+	 * @return The unique iterator.
+	 */
 	public <T> Iterator<T> handle(Iterator<T> iterator) {
-		Collection<T> unique = new IdentityArrayList<T>();
+		Collection<T> unique = new ArrayList<T>();
 		while (iterator.hasNext()) {
 			T object = iterator.next();
-			
-			// RIGHT HERE!!!! W00T W00T W00T
+
 			if (!unique.contains(object)) {
 				unique.add(object);
-			} 
+			}
 		}
 		return unique.iterator();
 	}

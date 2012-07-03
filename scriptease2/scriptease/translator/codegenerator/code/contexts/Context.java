@@ -28,7 +28,6 @@ import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.io.model.GameObject;
-import sun.awt.util.IdentityArrayList;
 
 /**
  * Context represents the object based context used in code generation. It

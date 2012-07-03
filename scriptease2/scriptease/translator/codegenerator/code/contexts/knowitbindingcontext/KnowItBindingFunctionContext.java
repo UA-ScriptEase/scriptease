@@ -47,10 +47,8 @@ public class KnowItBindingFunctionContext extends KnowItBindingContext {
 						((KnowItBindingFunction) binding).getValue());
 		final LanguageDictionary languageDictionary = this.getTranslator()
 				.getLanguageDictionary();
-
-		// Umm, why is 'functionHeader' hardcoded here? Do we require that
-		// translator authors implement a 'functionHeader' format? -jtduncan
-		// TODO: LOOK INTO THIS
+		// TODO 'functionHeader' should not be hardcoded here. Figure out
+		// why it is, and get it out of here.
 		return FormatFragment.resolveFormat(languageDictionary
 				.getFormat(TranslatorKeywordManager.FUNCTION_HEADER),
 				scriptItContext);
