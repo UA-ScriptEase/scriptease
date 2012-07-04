@@ -29,8 +29,9 @@ import scriptease.translator.io.model.IdentifiableGameConstant;
 /**
  * Represents a binding or binding slot that can be dropped onto slots via drag
  * and drop. BindingWidgets display their type(s). They do a sort of double-duty
- * to be the binding as well as the empty binding slot, depending on if the binding it
- * is representing is null or not.
+ * to be the binding as well as the empty binding slot, depending on if the
+ * binding it is representing is null or not. This is just the bubble part of a
+ * binding. Labels are added separately.
  * 
  * @author remiller
  * @see BindingWidgetUI
@@ -38,9 +39,13 @@ import scriptease.translator.io.model.IdentifiableGameConstant;
 @SuppressWarnings("serial")
 public class BindingWidget extends JPanel implements Cloneable {
 	private final KnowItBinding binding;
+	/*
+	 * this transfer handler isn't redundantly stored: we remove the super
+	 * version in setEnable(false) - remiller
+	 */
 	private TransferHandler transferHandler;
 
-	public BindingWidget(KnowItBinding binding) {
+	public BindingWidget(final KnowItBinding binding) {
 		this.binding = binding;
 		// we don't want horizontal/vertical gaps, so make FlowLayout do this
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -48,8 +53,10 @@ public class BindingWidget extends JPanel implements Cloneable {
 		this.updateBackgroundColour(binding);
 		this.setOpaque(false);
 		this.setUI(new BindingWidgetUI());
+
 		// Default transferHandler
-		this.transferHandler = BindingWidgetTransferHandler.getInstance();
+		TransferHandler transferHandler = BindingWidgetTransferHandler
+				.getInstance();
 		this.setTransferHandler(transferHandler);
 	}
 
@@ -164,10 +171,10 @@ public class BindingWidget extends JPanel implements Cloneable {
 			public void processNull(KnowItBindingNull nullBinding) {
 				updateBackground(ScriptEaseUI.COLOUR_UNBOUND);
 			}
-			
+
 			@Override
 			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
-				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);				
+				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
 			}
 
 			private void updateBackground(Color color) {

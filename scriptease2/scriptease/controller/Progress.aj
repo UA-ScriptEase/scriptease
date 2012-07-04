@@ -2,6 +2,7 @@ package scriptease.controller;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.lang.Thread.UncaughtExceptionHandler;
 
 import javax.swing.SwingWorker;
 
@@ -37,10 +38,21 @@ public aspect Progress {
 		loadTranslator();
 
 	void around(): showProgress() {
+		// this is being marked as unused even though it appears below.
+		// Java/AspectJ compiler bug, I guess. - remiller
+		@SuppressWarnings("unused")
+		final Thread mainThread = Thread.currentThread();
 		SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				proceed();
+				try {
+					proceed();
+				} catch (Throwable t) {
+					final UncaughtExceptionHandler handler = Thread
+							.getDefaultUncaughtExceptionHandler();
+					
+					handler.uncaughtException(mainThread, t);
+				}
 				return null;
 			}
 		};

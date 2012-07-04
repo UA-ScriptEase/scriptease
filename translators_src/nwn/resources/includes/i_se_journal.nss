@@ -1,5 +1,20 @@
-// Journal entry interface include file
+/*
+ * Journal entry interface include file. Intended for use with ScriptEase Quests. 
+ * Provides handy dandy functions for modifying the stored journal entries. 
+ * Journal entries and their history are stored as local strings, which are 
+ * then applied to a custom token which the only contents of a journal entry text.
+ *
+ * Author: ScriptEase team, University of Alberta
+ *         http://www.cs.ualberta.ca/~script
+ */
+
+// Pushes the locally stored quest description with full history to 
+// the custom token to be displayed in the journal entry.
+//   quest: The quest ID string for the quest to update
+//   target: The target who should own the quest history.
 void SCEZ_Journal_UpdateQuest(string quest, object target);
+
+// 
 void SCEZ_Journal_SetQuestFinished(string quest, object target, int finished);
 void SCEZ_Journal_AddToQuestHistory(string quest, object target, string entry);
 void SCEZ_Journal_ClearQuestHistory(string quest, object target);
@@ -33,6 +48,7 @@ void SCEZ_Journal_UpdateQuest(string quest, object target) {
 
   AddJournalQuestEntry(quest, 2 * questFinished + questOffset + 1, target, TRUE, FALSE, TRUE);
 }
+
 
 void SCEZ_Journal_SetQuestFinished(string quest, object target, int finished)
 {

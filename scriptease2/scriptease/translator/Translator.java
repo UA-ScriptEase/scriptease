@@ -561,7 +561,7 @@ public class Translator {
 		} catch (FileNotFoundException e) {
 			System.err.println("Module not found at [" + location + "]");
 			WindowManager.getInstance().showProblemDialog(
-					"Problem loading GameModule",
+					"Problem loading Game Module",
 					"I couldn't find a Game Module at \"" + location
 							+ "\". \n\nPlease tell me a new location to use.");
 			module = null;
