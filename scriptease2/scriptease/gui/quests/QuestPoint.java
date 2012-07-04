@@ -14,21 +14,27 @@ import scriptease.model.complex.StoryComponentContainer;
  * QuestPoints also have a fanIn property, which is the number of parent
  * QuestPoints which must have succeeded before this point can become active.
  * 
- * QuestPoints can be committing or not, depending on whether they shut off
- * alternative pathways through the quest.
- * 
  * @author mfchurch
  * @author graves
- * 
  */
 public class QuestPoint extends StoryComponentContainer {
 	public static String QUEST_POINT_TYPE = "questPoint";
-	private boolean commiting;
 	private int fanIn;
 	private QuestNode questContainer;
 
+	private static final int DEFAULT_FAN_IN = 1;
+	private static final String NEW_QUEST_POINT = "New Quest Point";
 	private static int questPointCounter = 1;
-	private final String NEW_QUEST_POINT = "New Quest Point";
+
+	/**
+	 * Creates a new Quest Point with the given name and a default fan-in value.
+	 * 
+	 * @param name
+	 *            The name for this quest point.
+	 */
+	public QuestPoint(String name) {
+		this(name, QuestPoint.DEFAULT_FAN_IN);
+	}
 
 	/**
 	 * Creates a new QuestPoint.
@@ -37,9 +43,9 @@ public class QuestPoint extends StoryComponentContainer {
 	 *            If name is null or empty string, it gives a default name of
 	 *            NEW_QUEST_POINT and the current quest point count.
 	 * @param fanIn
-	 * @param commiting
+	 *            The fan-in value to use.
 	 */
-	public QuestPoint(String name, int fanIn, boolean commiting) {
+	public QuestPoint(String name, int fanIn) {
 		super();
 		this.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
@@ -50,7 +56,6 @@ public class QuestPoint extends StoryComponentContainer {
 
 		this.setDisplayText(name);
 		this.fanIn = fanIn;
-		this.commiting = commiting;
 	}
 
 	/**
@@ -66,20 +71,12 @@ public class QuestPoint extends StoryComponentContainer {
 		return false;
 	}
 
-	public Boolean getCommitting() {
-		return this.commiting;
-	}
-
 	public Integer getFanIn() {
 		return this.fanIn;
 	}
 
 	public void setFanIn(Integer fanIn) {
 		this.fanIn = fanIn;
-	}
-
-	public void setCommitting(boolean commiting) {
-		this.commiting = commiting;
 	}
 
 	@Override

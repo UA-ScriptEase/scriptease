@@ -105,7 +105,6 @@ public class TranslatorKeywordManager {
 	public static final String XML_QUESTPOINTNODES_SERIES = "questPointNodes";
 	public static final String XML_START = "start";
 	public static final String XML_END = "end";
-	public static final String XML_COMMITTING = "committing";
 	public static final String XML_FANIN = "fanIn";
 	public static final String XML_PARENT_NODES_SERIES = "parentNodes";
 	public static final String XML_CHILDREN_NODES_SERIES = "childrenNodes";

@@ -86,14 +86,6 @@ public abstract class GroupVisitor extends AbstractNoOpStoryVisitor {
 				if (resolved != null)
 					resolved.process(GroupVisitor.this);
 			}
-
-			@Override
-			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
-				QuestPoint qp = questPoint.getValue();
-				
-				qp.process(GroupVisitor.this);
-			}
-			
 		});
 	}
 

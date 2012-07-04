@@ -542,7 +542,7 @@
       <GUI>JComboBox</GUI>
     </Type>
 	<Type>
-		<Name>QuestPoint</Name>
+		<Name>Quest Point</Name>
 		<Keyword>questPoint</Keyword>
 		<CodeSymbol>string</CodeSymbol>
 		<Format>
@@ -1274,7 +1274,7 @@
               <Labels/>
               <Children/>
               <CodeBlocks>
-	              <CodeBlock>
+	              <CodeBlock slot="Mod_OnAcquirItem">
 		              <Types>
 		                <Type>item</Type>
 		              </Types>
@@ -5084,6 +5084,64 @@
 				</CodeBlock>
 			</CodeBlocks>
 		</ScriptIt>
+		<ScriptIt>
+			<Name>When &lt;quest point&gt; is enabled in &lt;module&gt;</Name>
+			<Labels />
+			<Children/>
+			<CodeBlocks>
+				<CodeBlock subject="module" slot="Mod_OnUsrDefined">
+					<Types>
+						<Type>void</Type>
+					</Types>
+					<Parameters>
+						<KnowIt visible="false">
+							<Name>quest point</Name>
+							<Labels/>
+							<Types>
+								<Type>questPoint</Type>
+							</Types>
+						</KnowIt>
+						<KnowIt visible="false">
+							<Name>module</Name>
+							<Labels/>
+							<Types>
+								<Type>module</Type>
+							</Types>
+						</KnowIt>
+					</Parameters>
+					<Code>
+						<Line>
+							<Literal>if(GetUserDefinedEventNumber() != SE2_QUEST_ENABLED_EVENT) {</Literal>
+						</Line>
+						<Indent>
+							<Line>
+								<Literal>return;</Literal>
+							</Line>
+						</Indent>
+						<Line>
+							<Literal>}</Literal>
+						</Line>
+						<Line />
+						<Line>
+							<Literal>if(SCEZ_Struct_ArrayRemoveElement(GetModule(), QUEST_POINTS_ENABLED_LIST, </Literal>
+							<Scope data="argument" ref="quest point">
+								<Fragment data="name" />
+							</Scope>
+							<Literal>)!= "") {</Literal>
+						</Line>
+						<Indent>
+							<FormatRef ref="children"/>
+						</Indent>
+						<Line>
+							<Literal>}</Literal>
+						</Line>
+					</Code>
+					<Includes>
+						<Include>i_se_quest2</Include>
+					</Includes>
+				</CodeBlock>
+			</CodeBlocks>
+		</ScriptIt>
 	</Causes>
   <Effects>
     <ScriptIt visible="true">
@@ -7110,11 +7168,11 @@
 		      <Code>
 		        <Line>
 		          <Literal>SendMessageToPC(</Literal>
-		          <Scope data="argument" ref="The Text">
+		          <Scope data="argument" ref="The PC">
 		            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
 		          </Scope>
 		          <Literal>, </Literal>
-		          <Scope data="argument" ref="The PC">
+		          <Scope data="argument" ref="The Text">
 		            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
 		          </Scope>
 		          <Literal>);</Literal>
@@ -21352,35 +21410,33 @@
 							<Line>
 								<Literal>SE2_Quest_RegisterQuestPoint(</Literal>
 								<Literal>name, </Literal>
-								<Fragment data="committing" />
-								<Literal>, </Literal>
 								<Fragment data="fanIn" />
 								<!-- TODO <Fragment data="questContainer" /> -->
-								<Literal>, GetEnteringObject());</Literal>
+								<Literal>, GetFirstPC());</Literal>
 							</Line>
-							<Series data="childrenNodes" unique="true">
-								<Line>
-									<Literal>SE2_Quest_RegisterQuestPointChild(</Literal>
-									<Literal>name, </Literal>
-									<Fragment data="formattedValue" />
-									<Literal>, GetEnteringObject());</Literal>
-								</Line>
-							</Series>
 							<Series data="parentNodes" unique="true">
 								<Line>
 									<Literal>SE2_Quest_RegisterQuestPointParent(</Literal>
 									<Literal>name, </Literal>
 									<Fragment data="formattedValue" />
-									<Literal>, GetEnteringObject());</Literal>
+									<Literal>, GetFirstPC());</Literal>
+								</Line>
+							</Series>
+							<Series data="childrenNodes" unique="true">
+								<Line>
+									<Literal>SE2_Quest_RegisterQuestPointChild(</Literal>
+									<Literal>name, </Literal>
+									<Fragment data="formattedValue" />
+									<Literal>, GetFirstPC());</Literal>
 								</Line>
 							</Series>
 							<!-- TODO register quests -->
 						</Series>
 						<Scope data="start">
 							<Line><Literal>//enable the starting quest point</Literal></Line>
-							<Line><Literal>SetLocalInt(GetFirstPC(),</Literal>
+							<Line><Literal>SE2_Quest_setState(GetFirstPC(), </Literal>
 							<Fragment data="formattedValue" />
-							<Literal> + QUEST_POINT_ACTIVE, 1);</Literal></Line>
+							<Literal>, QUEST_POINT_STATE_ENABLED);</Literal></Line>
 						</Scope>
 					</Code>
 					<Includes>
@@ -21911,6 +21967,39 @@
 					</Line>
 				</Code>
 				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt visible="true">
+		<Name>Continue quest at &lt;Quest Point&gt;</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>void</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="false">
+						<Name>Quest Point</Name>
+						<Labels/>
+						<Types>
+							<Type>questPoint</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>SE2_Quest_ResetAtQuestPoint(</Literal>
+						<Scope data="argument" ref="Quest Point">
+							<Fragment data="name"/>
+						</Scope>
+						<Literal>);</Literal>
+					</Line>
+				</Code>
+				<Includes>
+					<Include>i_se_quest2</Include>
+				</Includes>
 			</CodeBlock>
 		</CodeBlocks>
 	</ScriptIt>
@@ -22486,11 +22575,11 @@
 					    </Parameters>
 						<Code>
 							<Line>
-								<Literal>return SE2_Quest_isActiveQuestPoint(</Literal>
+								<Literal>return SE2_Quest_getState(GetFirstPC(), </Literal>
 								<Scope data="argument" ref="QuestPoint">
 									<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
 								</Scope>
-								<Literal>);</Literal>
+								<Literal>) == QUEST_POINT_STATE_ENABLED;</Literal>
 							</Line>
 						</Code>
 					<Includes>
@@ -22528,11 +22617,11 @@
 					    </Parameters>
 						<Code>
 							<Line>
-								<Literal>return SE2_Quest_hasSuceededQuestPoint(</Literal>
+								<Literal>return SE2_Quest_getState(GetFirstPC(), </Literal>
 								<Scope data="argument" ref="QuestPoint">
 									<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
 								</Scope>
-								<Literal>);</Literal>
+								<Literal>) == QUEST_POINT_STATE_SUCCESS;</Literal>
 							</Line>
 						</Code>
 					<Includes>
@@ -22596,7 +22685,6 @@
 		</ScriptIt>
 		</Binding>
 	</KnowIt>
-	<!-- QUEST POINTS-->
 	<KnowIt visible="true">
 		<Name>The Player Character</Name>
 		<Labels />

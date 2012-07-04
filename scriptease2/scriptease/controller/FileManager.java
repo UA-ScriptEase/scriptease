@@ -345,7 +345,7 @@ public final class FileManager {
 		} catch (GameCompilerException e) {
 			if (compile) {
 				SEFrame.getInstance().setStatus(
-						"Compilation Failed. Game module was not touched.");
+						"Compilation Failed.");
 				if (WindowManager
 						.getInstance()
 						.showRetryProblemDialog(
