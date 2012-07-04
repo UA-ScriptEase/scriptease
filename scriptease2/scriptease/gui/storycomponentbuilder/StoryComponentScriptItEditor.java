@@ -156,7 +156,7 @@ public class StoryComponentScriptItEditor extends
 			final Collection<FormatFragment> codeFragments = codeBlockEditor
 					.getCodeFragments();
 
-			codeBlock.setCode(codeFragments);
+			//codeBlock.setCode(codeFragments);
 		}
 	}
 
@@ -249,8 +249,8 @@ public class StoryComponentScriptItEditor extends
 		 * codeBlock
 		 */
 		public void updateDisplay() {
-			final Collection<FormatFragment> codeFragments = codeBlock
-					.getCode();
+			final Collection<FormatFragment> codeFragments = new ArrayList<FormatFragment>(); 
+					//codeBlock.getCode();
 			if (codeFragments.size() > 0)
 				codePane.setCodeFragments(codeFragments);
 			parameterList.updateBindingList(codeBlock.getParameters());

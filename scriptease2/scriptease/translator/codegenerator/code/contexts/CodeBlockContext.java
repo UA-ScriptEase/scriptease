@@ -97,7 +97,11 @@ public class CodeBlockContext extends Context {
 	 */
 	@Override
 	public String getCode() {
-		return FormatFragment.resolveFormat(codeBlock.getCode(), this);
+		final Collection<FormatFragment> codeFragments;
+		
+		codeFragments = this.getTranslator().getCode(this.codeBlock);
+		
+		return FormatFragment.resolveFormat(codeFragments, this);
 	}
 
 	@Override

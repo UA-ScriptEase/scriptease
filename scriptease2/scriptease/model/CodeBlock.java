@@ -33,18 +33,15 @@ public class CodeBlock implements TypedComponent, Cloneable {
 	private List<KnowIt> parameters;
 	private Collection<KnowIt> implicits;
 	private Collection<String> includes;
-	private Collection<FormatFragment> code;
 
 	public CodeBlock(String subject, String slot, Collection<String> types,
-			Collection<String> includes, Collection<KnowIt> parameters,
-			Collection<FormatFragment> code) {
+			Collection<KnowIt> parameters, Collection<String> includes) {
 		this.init();
 		this.setSubject(subject);
 		this.setSlot(slot);
 		this.setTypes(types);
 		this.setParameters(parameters);
 		this.setIncludes(includes);
-		this.setCode(code);
 	}
 
 	public void setTypes(Collection<String> types) {
@@ -107,13 +104,6 @@ public class CodeBlock implements TypedComponent, Cloneable {
 			clonedIncludes.add(new String(include));
 		}
 		clone.setIncludes(clonedIncludes);
-		// code
-		Collection<FormatFragment> clonedCode = new ArrayList<FormatFragment>(
-				this.getCode().size());
-		for (FormatFragment fragment : this.getCode()) {
-			clonedCode.add(fragment);
-		}
-		clone.setCode(clonedCode);
 
 		// No need to worry about code and includes since that is handled by
 		// codemanager, and the clone _should_ resolve to the same code based on
@@ -137,16 +127,6 @@ public class CodeBlock implements TypedComponent, Cloneable {
 	// TODO Flyweight. See: https://www.pivotaltracker.com/story/show/17597817
 	public void setIncludes(Collection<String> includes) {
 		this.includes = new ArrayList<String>(includes);
-	}
-
-	/**
-	 * Sets the code associated with the CodeBlock
-	 * 
-	 * @param code
-	 */
-	// TODO Flyweight. See: https://www.pivotaltracker.com/story/show/17597817
-	public void setCode(Collection<FormatFragment> code) {
-		this.code = new ArrayList<FormatFragment>(code);
 	}
 
 	public void setOwner(ScriptIt owner) {
@@ -228,8 +208,10 @@ public class CodeBlock implements TypedComponent, Cloneable {
 			hashCode += this.getSlot().hashCode();
 		for (String returnType : this.returnTypes)
 			hashCode += returnType.hashCode();
-		for (KnowIt parameter : this.getParameters())
+		for (KnowIt parameter : this.getParameters()){
 			hashCode += parameter.getDisplayText().hashCode();
+			hashCode += parameter.getBinding().hashCode();
+		}
 		for (String include : this.getIncludes()) {
 			hashCode += include.hashCode();
 		}
@@ -271,16 +253,6 @@ public class CodeBlock implements TypedComponent, Cloneable {
 
 	public Collection<String> getIncludes() {
 		return this.includes;
-	}
-
-	/**
-	 * Gets the code associated with the CodeBlock
-	 *
-	 * @return
-	 */
-	// TODO Flyweight. See: https://www.pivotaltracker.com/story/show/17597817
-	public Collection<FormatFragment> getCode() {
-		return this.code;
 	}
 
 	@Override

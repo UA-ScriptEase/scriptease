@@ -1,11 +1,13 @@
 package scriptease.controller.io.converter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
+import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -53,9 +55,6 @@ public class CodeBlockConverter implements Converter {
 		final Collection<String> types = codeBlock.getTypes();
 		final Collection<String> includes = codeBlock.getIncludes();
 		final Collection<KnowIt> parameters = codeBlock.getParameters();
-		
-		//TODO This doesn't do anything. Should it? Could it? Would it?
-		final Collection<FormatFragment> code = codeBlock.getCode();
 
 		// Subject
 		if (subject != null)
@@ -82,23 +81,23 @@ public class CodeBlockConverter implements Converter {
 		}
 
 		// No need to write code and includes to Stories since they are already
-		// stored in the ApiDictionary <-- This is wrong. 
-		//if (FileIO.getInstance().getMode() == IoMode.API_DICTIONARY) {
-			// Includes
-			if (!includes.isEmpty()) {
-				writer.startNode(TAG_INCLUDES);
-				for (String include : includes) {
-					writer.startNode(TAG_INCLUDE);
-					writer.setValue(include);
-					writer.endNode();
-				}
+		// stored in the ApiDictionary <-- This is wrong.
+		// if (FileIO.getInstance().getMode() == IoMode.API_DICTIONARY) {
+		// Includes
+		if (!includes.isEmpty()) {
+			writer.startNode(TAG_INCLUDES);
+			for (String include : includes) {
+				writer.startNode(TAG_INCLUDE);
+				writer.setValue(include);
 				writer.endNode();
 			}
-/*
-			writer.startNode(TAG_CODE);
-			context.convertAnother(code);
-			writer.endNode();*/
-	//	}
+			writer.endNode();
+		}
+		/*
+		 * writer.startNode(TAG_CODE); context.convertAnother(code);
+		 * writer.endNode();
+		 */
+		// }
 	}
 
 	@SuppressWarnings("unchecked")
@@ -127,29 +126,45 @@ public class CodeBlockConverter implements Converter {
 				while (reader.hasMoreChildren()) {
 					types.add(FileIO.readValue(reader, TAG_TYPE));
 				}
-			} else
+			}
 			// Parameters
-			if (nodeName.equals(TAG_PARAMETERS)) {
+			else if (nodeName.equals(TAG_PARAMETERS)) {
 				parameters = ((Collection<KnowIt>) context.convertAnother(
 						codeBlock, ArrayList.class));
-			} else
+			}
+			/*
+			 * Includes. This should not appear for stories, since they do not
+			 * store includes (includes are game-specific, and therefore
+			 * translator stuff)
+			 */
+			else if (nodeName.equals(TAG_INCLUDES)) {
+				if (FileIO.getInstance().getMode() == FileIO.IoMode.STORY)
+					throw new IOException(
+							"Story file contains includes! Aaaaaaaauuuugh!");
 
-			// Includes (optional since stories don't need to store includes)
-			if (nodeName.equals(TAG_INCLUDES)) {
 				while (reader.hasMoreChildren()) {
 					includes.add(FileIO.readValue(reader, TAG_INCLUDE));
 				}
-			} else
-			// Code (optional since stories don't need to store code)
-			if (nodeName.equals(TAG_CODE)) {
+			}
+			/*
+			 * Code. This should not appear for stories, since they do not store
+			 * code (code is translator stuff)
+			 */
+			else if (nodeName.equals(TAG_CODE)) {
+				if (FileIO.getInstance().getMode() == FileIO.IoMode.STORY)
+					throw new IOException(
+							"Story file contains code! Aaaaaaaauuuugh!");
+
 				code = ((Collection<FormatFragment>) context.convertAnother(
 						codeBlock, ArrayList.class));
+				
 			}
 			reader.moveUp();
 		}
 
-		codeBlock = new CodeBlock(subject, slot, types, includes, parameters,
-				code);
+		codeBlock = new CodeBlock(subject, slot, types, parameters, includes);
+		
+		TranslatorManager.getInstance().getActiveTranslator().setCode(codeBlock, code);
 
 		return codeBlock;
 	}
