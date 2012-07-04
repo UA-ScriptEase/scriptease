@@ -82,6 +82,9 @@ public class SimpleFragment extends FormatFragment {
 					.equalsIgnoreCase(TranslatorKeywordManager.XML_CODE_FORMAT))
 				resolveString = context.getCode();
 			else if (dataLabel
+				.equalsIgnoreCase(TranslatorKeywordManager.XML_TEMPLATEID_FORMAT))
+				resolveString = context.getTemplateID();
+			else if (dataLabel
 					.equalsIgnoreCase(TranslatorKeywordManager.XML_VALUE_FORMAT))
 				resolveString = context.getValue();
 			else if (dataLabel

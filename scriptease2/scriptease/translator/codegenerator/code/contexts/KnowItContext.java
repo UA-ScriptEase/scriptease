@@ -8,6 +8,7 @@ import scriptease.controller.apimanagers.TypeConverter;
 import scriptease.gui.quests.QuestNode;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
@@ -55,6 +56,18 @@ public class KnowItContext extends StoryComponentContext {
 		Context binding = ContextFactory.getInstance().createContext(this,
 				((KnowIt) component).getBinding());
 		return binding.getValue();
+	}
+	
+	@Override
+	public String getTemplateID() {
+		String templateID = "Error when generating Template ID in "
+				+ this.getClass().toString();
+		final KnowIt knowIt = (KnowIt) component;
+		final KnowItBinding binding = knowIt.getBinding();
+		if(binding instanceof KnowItBindingConstant) {
+			templateID = ((KnowItBindingConstant) binding).getTemplateID();
+		}
+		return templateID;
 	}
 
 	@Override

@@ -104,8 +104,12 @@ public class GameConstantFactory {
 
 				@Override
 				public String getTag() {
-					// TODO Auto-generated method stub
 					return resolutionCode;
+				}
+
+				@Override
+				public String getTemplateID() {
+					return resref;
 				}
 			};
 		}

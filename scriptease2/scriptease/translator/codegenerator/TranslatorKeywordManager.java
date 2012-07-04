@@ -23,6 +23,7 @@ public class TranslatorKeywordManager {
 	public static final String XML_INCLUDE_FORMAT = "include";
 	public static final String XML_NAME_FORMAT = "name";
 	public static final String XML_TYPE_FORMAT = "type";
+	public static final String XML_TEMPLATEID_FORMAT = "templateID";
 
 	public static final String XML_FORMATS = "formats";
 	public static final String XML_FORMAT = "format";

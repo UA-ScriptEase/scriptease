@@ -67,6 +67,9 @@ public final class NWNObject implements GameObject {
 		return this.resolutionMethod;
 	}
 
+	/**
+	 * Returns the ResRef of the NWNObject.
+	 */
 	@Override
 	public String getTemplateID() {
 		return this.resRef;

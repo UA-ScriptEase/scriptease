@@ -19,7 +19,7 @@ import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
 import scriptease.translator.io.model.GameObject;
 
-//TODO This class looks awful and needs a heavy refactoring.
+//TODO This class looks awful and needs a heavy refactoring. -kschenk
 @SuppressWarnings("serial")
 public class GameObjectPanelTree extends JPanel implements Observer {
 	private GameObjectTree treeModel;
