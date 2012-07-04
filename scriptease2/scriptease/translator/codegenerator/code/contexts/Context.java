@@ -37,8 +37,8 @@ import scriptease.translator.io.model.GameObject;
  * in implementation, thus the ScriptItContext must implement these methods in a
  * meaningful manner. Context also provides information such as the current
  * indentation of the code, the propagation of includes, symbols and used names
- * in code generation.
- * <br><br>
+ * in code generation. <br>
+ * <br>
  * When a method is called in a context which does not make sense, it will
  * return a default unimplemented value as an indicator that the call was not
  * appropriate in the current context. For example, asking for the binding of a
@@ -47,6 +47,7 @@ import scriptease.translator.io.model.GameObject;
  * fundamentals of ScriptEase in order to correctly write a translator.
  * 
  * @author mfchurch
+ * @author kschenk
  * 
  */
 public class Context {
@@ -104,16 +105,6 @@ public class Context {
 
 	public final CodeGenerationNamifier getNamifier() {
 		return namifier;
-	}
-
-	public String getUniqueName(Pattern legalFormat) {
-		unimplemented("getUniqueName(" + legalFormat + ")");
-		return null;
-	}
-
-	protected String getNameOf(StoryComponent component) {
-		unimplemented("getNameOf(" + component + ")");
-		return null;
 	}
 
 	/**
@@ -211,20 +202,23 @@ public class Context {
 		final List<CodeBlock> codeBlocks = new ArrayList<CodeBlock>();
 
 		for (StoryComponent key : this.getComponents()) {
+			// The method first checks if there is a GameObject for the
+			// StoryComponent.
 			if (key instanceof KnowIt) {
 				KnowItBinding binding = ((KnowIt) key).getBinding();
-
 				if (binding instanceof KnowItBindingConstant) {
 					KnowItBindingConstant kibConstant = (KnowItBindingConstant) binding;
-
 					if (kibConstant.getValue() instanceof GameObject) {
-
+						// Then gets a string representing the name of the code
+						// block.
 						String referenceValue = kibConstant.getScriptValue();
 
+						// Gets the code block from the API Dictionary using the
+						// reference string.
 						List<CodeBlock> specialCodeBlocks = this.translator
 								.getApiDictionary().getCodeBlocksByID(
 										referenceValue);
-
+						
 						if (specialCodeBlocks != null)
 							codeBlocks.addAll(specialCodeBlocks);
 					}
@@ -286,16 +280,6 @@ public class Context {
 		return null;
 	}
 
-	public String getValue() {
-		unimplemented("getValue");
-		return null;
-	}
-
-	public String getCondition() {
-		unimplemented("getCondition");
-		return null;
-	}
-
 	public Iterator<KnowIt> getImplicits() {
 		final Collection<KnowIt> used = new ArrayList<KnowIt>();
 		final EventSlotManager slotManager = TranslatorManager.getInstance()
@@ -303,7 +287,6 @@ public class Context {
 		final Collection<KnowIt> implicits = slotManager
 				.getImplicits(this.locationInfo.getSlot());
 
-	//	List<StoryComponent> components = new ArrayList<StoryComponent>(this.getComponents());
 		// Only return implicits that are used in this Context
 		for (KnowIt implicit : implicits) {
 			if (getComponents().contains(implicit))
@@ -325,11 +308,6 @@ public class Context {
 	public Iterator<KnowIt> getVariables() {
 		unimplemented("getKnowIts");
 		return new ArrayList<KnowIt>().iterator();
-	}
-
-	public String getName() {
-		unimplemented("getName");
-		return null;
 	}
 
 	public StoryComponent getOwner() {
@@ -374,16 +352,6 @@ public class Context {
 		return null;
 	}
 
-	public String getType() {
-		unimplemented("getType");
-		return null;
-	}
-
-	public String getCode() {
-		unimplemented("getCode");
-		return null;
-	}
-
 	public ScriptIt getScriptIt(String keyword) {
 		unimplemented("getScriptIt");
 		return null;
@@ -391,11 +359,6 @@ public class Context {
 
 	public AskIt getAskIt() {
 		unimplemented("getAskIt");
-		return null;
-	}
-
-	public String getFormattedValue() {
-		unimplemented("getFormattedValue");
 		return null;
 	}
 
@@ -408,6 +371,11 @@ public class Context {
 		return QuestPointNodeGetter.getQuestPointNodes(this.model).iterator();
 	}
 
+	public GraphNode getEndPoint() {
+		unimplemented("getEndPoint");
+		return null;
+	}
+
 	/**
 	 * Default to the first QuestPoint in the model's Quest Graph
 	 * 
@@ -417,18 +385,8 @@ public class Context {
 		return this.model.getStartPoint();
 	}
 
-	public GraphNode getEndPoint() {
-		unimplemented("getEndPoint");
-		return null;
-	}
-
-	public String getCommitting() {
-		unimplemented("getComitting");
-		return null;
-	}
-
-	public String getFanIn() {
-		unimplemented("getFanIn");
+	public Iterator<GraphNode> getChildrenNodes() {
+		unimplemented("getChildrenNodes");
 		return null;
 	}
 
@@ -437,8 +395,43 @@ public class Context {
 		return null;
 	}
 
-	public Iterator<GraphNode> getChildrenNodes() {
-		unimplemented("getChildrenNodes");
+	public String getCode() {
+		unimplemented("getCode");
+		return null;
+	}
+
+	public String getCommitting() {
+		unimplemented("getComitting");
+		return null;
+	}
+
+	public String getCondition() {
+		unimplemented("getCondition");
+		return null;
+	}
+
+	public String getFanIn() {
+		unimplemented("getFanIn");
+		return null;
+	}
+
+	public String getFormattedValue() {
+		unimplemented("getFormattedValue");
+		return null;
+	}
+
+	public String getInclude() {
+		unimplemented("getInclude");
+		return null;
+	}
+
+	public String getName() {
+		unimplemented("getName");
+		return null;
+	}
+
+	protected String getNameOf(StoryComponent component) {
+		unimplemented("getNameOf(" + component + ")");
 		return null;
 	}
 
@@ -446,9 +439,24 @@ public class Context {
 		unimplemented("getQuestContainer");
 		return null;
 	}
+	
+	public String getTemplateID() {
+		unimplemented("getTemplateID");
+		return null;
+	}
 
-	public String getInclude() {
-		unimplemented("getInclude");
+	public String getType() {
+		unimplemented("getType");
+		return null;
+	}
+
+	public String getUniqueName(Pattern legalFormat) {
+		unimplemented("getUniqueName(" + legalFormat + ")");
+		return null;
+	}
+
+	public String getValue() {
+		unimplemented("getValue");
 		return null;
 	}
 

@@ -22,4 +22,12 @@ public interface GameConstant extends TypedComponent {
 	 * @return
 	 */
 	public String getTag();
+	
+	/**
+	 * Gets the template ID for the object. This is usually a stronger version
+	 * of a tag, although some games may not have both types. 
+	 * 
+	 * @return
+	 */
+	public String getTemplateID();
 }

@@ -392,6 +392,13 @@
       <Enum>FALSE&lt;Walk&gt;|TRUE&lt;Run&gt;</Enum>
       <GUI>JComboBox</GUI>
     </Type>
+    <Type>
+    	<Name>CreateObjectType</Name>
+    	<Keyword>create_object_type</Keyword>
+    	<CodeSymbol>int</CodeSymbol>
+    	<Enum>OBJECT_TYPE_CREATURE&lt;Creature&gt;|OBJECT_TYPE_PLACEABLE&lt;Placeable&gt;|OBJECT_TYPE_ITEM&lt;Item&gt;|OBJECT_TYPE_STORE&lt;Store&gt;|OBJECT_TYPE_WAYPOINT&lt;Waypoint&gt;</Enum>
+		<GUI>JComboBox</GUI>
+    </Type>
 	<!-- END OF ENUMS -->
     <Type>
       <Name>Trigger</Name>
@@ -21854,7 +21861,7 @@
 		</CodeBlocks>
 	</ScriptIt>
 	<ScriptIt visible="true">
-		<Name>Create &lt;Object&gt; at &lt;Location&gt;</Name>
+		<Name>Create a &lt;Object Type&gt; &lt;Object&gt; at &lt;Location&gt;</Name>
 		<Labels />
 		<Children />
 		<CodeBlocks>
@@ -21863,6 +21870,13 @@
 					<Type>void</Type>
 				</Types>
 				<Parameters>
+					<KnowIt visible="true">
+						<Name>Object Type</Name>
+						<Labels />
+						<Types>
+							<Type>create_object_type</Type>
+						</Types>
+					</KnowIt>
 					<KnowIt visible="true">
 						<Name>Object</Name>
 						<Labels />
@@ -21881,15 +21895,15 @@
 				</Parameters>
 				<Code>
 					<Line>
-						<Literal>CreateObject(GetObjectType(</Literal>
-						<Scope data="argument" ref="Object">
+						<Literal>CreateObject(</Literal>
+						<Scope data="argument" ref="Object Type">
 							<Fragment data="name" />
 						</Scope>
-						<Literal>), GetResRef(</Literal>
+						<Literal>, "</Literal>
 						<Scope data="argument" ref="Object">
-							<Fragment data="name" />
+							<Fragment data="templateID" />
 						</Scope>
-						<Literal>), </Literal>
+						<Literal>", </Literal>
 						<Scope data="argument" ref="Location">
 							<Fragment data="name" />
 						</Scope>

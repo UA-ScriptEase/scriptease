@@ -34,6 +34,10 @@ public class KnowItBindingConstant extends KnowItBinding {
 	public String getTag() {
 		return this.constantValue.getTag();
 	}
+	
+	public String getTemplateID() {
+		return this.constantValue.getTemplateID();
+	}
 
 	@Override
 	public GameConstant getValue() {
@@ -44,7 +48,7 @@ public class KnowItBindingConstant extends KnowItBinding {
 	public Collection<String> getTypes() {
 		return this.constantValue.getTypes();
 	}
-
+	
 	@Override
 	public String toString() {
 		if (this.isIdentifiableGameConstant())

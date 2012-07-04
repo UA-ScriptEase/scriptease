@@ -338,7 +338,8 @@ public class GenericFileFormat {
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
 			name = this.readField(reader, "Name");
 		}
-		// sound, conversation and other blueprints //TODO These should have their specific names.
+		// sound, conversation and other blueprints 
+		//TODO These should have their specific names.
 		else {
 			name = this.resRef;
 		}
@@ -400,7 +401,6 @@ public class GenericFileFormat {
 
 			// don't keep references to ScriptEase-generated files
 			if (ErfFile.isScriptEaseGenerated(reference)) {
-
 				// TODO: get the default script for the patterns file
 				final String originalScript = "";
 
@@ -517,31 +517,19 @@ public class GenericFileFormat {
 		String typeString = this.fileType.trim();
 
 		ArrayList<String> importantTypes = new ArrayList<String>();
-
-		importantTypes.add(GenericFileFormat.TYPE_DIALOGUE_BP); // conversation
-		// file
-		importantTypes.add(GenericFileFormat.TYPE_MODULE_BP); // module
-		// TODO: determine if journal files are important
-		importantTypes.add(GenericFileFormat.TYPE_JOURNAL_BP); // journal file
-		importantTypes.add(GenericFileFormat.TYPE_CREATURE_BP); // creature
-		// blueprint
-		importantTypes.add(GenericFileFormat.TYPE_DOOR_BP); // door blueprint
-		importantTypes.add(GenericFileFormat.TYPE_ENCOUNTER_BP); // encounter
-		// blueprint
-		importantTypes.add(GenericFileFormat.TYPE_ITEM_BP); // item blueprint
-		importantTypes.add(GenericFileFormat.TYPE_MERCHANT_BP); // merchant/store
-		// blueprint
-		importantTypes.add(GenericFileFormat.TYPE_PLACEABLE_BP); // placeable
-		// blueprint
-		importantTypes.add(GenericFileFormat.TYPE_SOUND_BP); // sound blueprint
-		importantTypes.add(GenericFileFormat.TYPE_TRIGGER_BP); // trigger
-		// blueprint
-		importantTypes.add(GenericFileFormat.TYPE_WAYPOINT_BP); // waypoint
-		// blueprint
-
-		// file
+		importantTypes.add(GenericFileFormat.TYPE_DIALOGUE_BP); 
+		importantTypes.add(GenericFileFormat.TYPE_MODULE_BP);
+		importantTypes.add(GenericFileFormat.TYPE_JOURNAL_BP); 
+		importantTypes.add(GenericFileFormat.TYPE_CREATURE_BP);
+		importantTypes.add(GenericFileFormat.TYPE_DOOR_BP);  
+		importantTypes.add(GenericFileFormat.TYPE_ENCOUNTER_BP);
+		importantTypes.add(GenericFileFormat.TYPE_ITEM_BP);    
+		importantTypes.add(GenericFileFormat.TYPE_MERCHANT_BP);
+		importantTypes.add(GenericFileFormat.TYPE_PLACEABLE_BP);
+		importantTypes.add(GenericFileFormat.TYPE_SOUND_BP); 
+		importantTypes.add(GenericFileFormat.TYPE_TRIGGER_BP); 
+		importantTypes.add(GenericFileFormat.TYPE_WAYPOINT_BP);
 		importantTypes.add(GenericFileFormat.TYPE_GAME_INSTANCE_FILE);
-		// GIT File for instances
 
 		return importantTypes.contains(typeString);
 	}
@@ -639,27 +627,62 @@ public class GenericFileFormat {
 		writer.seek(this.gffOffset);
 		writer.writeBytes(this.beforeFieldIndicesArray, false);
 
-		// now we update the file's data.                                                                            
-		// write the updated header                                                                                               
-		writer.seek(this.gffOffset);                                                                                              
+		// now we update the file's data.
+		// write the updated header
+		writer.seek(this.gffOffset);
 		this.writeHeader(writer);
 
-		// TODO Clean up the unused code after finishing with DLG files.
-		// TODO Separate DLG specific code into its own method.
+		List<Entry<GffField, String>> activeList = writeDLGFile(writer);
+
+		for (Entry<GffField, String> entry : this.changedFieldMap.entrySet()) {
+			if (activeList.contains(entry)) {
+				continue;
+			}
+			final GffField changedField = entry.getKey();
+			// Only updates script slots
+			if (!changedField.isResRefType())
+				throw new RuntimeException(
+						"Can't write anything but slot refs. The module is probably corrupted now. Oops.");
+
+			changedField.writeFieldData(writer, this.gffOffset
+					+ this.fieldDataOffset,
+					this.changedFieldMap.get(changedField));
+		}
+
+		// write the FieldIndiciesArray and whatever is below it
+		writer.seek(this.gffOffset + this.fieldIndicesOffset);
+		writer.writeBytes(this.afterFieldIndicesArray, false);
+
+		this.beforeFieldIndicesArray = null;
+		this.afterFieldIndicesArray = null;
+	}
+	
+	/**
+	 * DLG file specific writing code. Called in
+	 * {@link #write(ScriptEaseFileAccess, long)}.
+	 * 
+	 * @param writer
+	 * @return List of all entries that were written to the DLG file.
+	 * @throws IOException
+	 */
+	private List<Entry<GffField, String>> writeDLGFile(
+			ScriptEaseFileAccess writer) throws IOException {
 		List<Entry<GffField, String>> activeList = new ArrayList<Entry<GffField, String>>();
 		List<Long> dataOffsetList = new ArrayList<Long>();
-		for(Entry<GffField, String> entry : this.changedFieldMap.entrySet()) {
+		for (Entry<GffField, String> entry : this.changedFieldMap.entrySet()) {
 			GffField key = entry.getKey();
-			if(key.getGFF().getLabelArray().get((int) key.getLabelIndex()).equals("Active")) {
+			if (key.getGFF().getLabelArray().get((int) key.getLabelIndex())
+					.equals("Active")) {
 				activeList.add(entry);
 				dataOffsetList.add(Long.valueOf(key.getDataOrDataOffset()));
 			}
 		}
-		
+
 		Comparator<Entry<GffField, String>> entryComparator = new Comparator<Entry<GffField, String>>() {
 
 			@Override
-			public int compare(Entry<GffField, String> entry1, Entry<GffField, String> entry2) {
+			public int compare(Entry<GffField, String> entry1,
+					Entry<GffField, String> entry2) {
 
 				String entryString1 = entry1.getValue();
 
@@ -668,44 +691,18 @@ public class GenericFileFormat {
 				int resRefComparison = entryString1.compareTo(entryString2);
 				// BioWare reverses the order of these, so we need to, too.
 				return -resRefComparison;
-				
+
 			}
 		};
 		Collections.sort(activeList, entryComparator);
-		
-		//Required Variables for DLG File Specific Code
-		/*
-		 * TODO This is horribly broken and only works for the StartingList
-		 * Active fields. If any other "Enable/Disable Dialogue Line" causes are
-		 * created, especially on EntriesList or RepiesList, then this could
-		 * cause major issues. This works for the tutorial, but needs to be
-		 * fixed for the others for final release.
-		 * 
-		 * There may also be other issues with offsets in DLG files. For example,
-		 * I once added some scripts to be called when conversation line is reached,
-		 * and the sound to be played was changed to something different, too.
-		 * 
-		 * There is also an issue where too many linked dialogue lines cause the
-		 * module to infiniloop on load then crash with an exception. This will need
-		 * to be fixed elsewhere, though.
-		 * 
-		 * -kschenk
-		 */
-		if(dataOffsetList.size() > 0) {
+
+		// Required Variables for DLG File Specific Code
+		if (dataOffsetList.size() > 0) {
 			long firstOffset = Collections.min(dataOffsetList).longValue();
-		// Write out the fields in the "Active" list
-			for(Entry<GffField, String> entry : activeList) {
+			// Write out the fields in the "Active" list
+			for (Entry<GffField, String> entry : activeList) {
 				final GffField changedField = entry.getKey();
-				// Code to get the old value. No longer used. TODO Cleanup after working with convos
-				 /* try {
-					oldValue = changedField.readString(writer);                                                                              
-				} catch (IOException e) {                                                                                                    
-					oldValue = "";                                                                                                           
-				}    */                              
-				
-				//GameConstant gameConstant = this.getObjectRepresentation(); //This would get the NWNConversation. May be useful.
-	
-				//DLG File Specific Code:
+				// DLG File Specific Code:
 				// write out the field data again because it may have updated
 				writer.seek(this.gffOffset + this.fieldOffset
 						+ changedField.getFieldOffset());
@@ -720,45 +717,17 @@ public class GenericFileFormat {
 				System.out.println("New Offset Value: "
 						+ changedField.dataOrDataOffset);
 
-			// Only updates script slots
-				if (!changedField.isResRefType())
-					throw new RuntimeException(
-							"Can't write anything but slot refs. The module is probably corrupted now. Oops.");
-
-				changedField.writeFieldData(writer, this.gffOffset
-						+ this.fieldDataOffset,
-						this.changedFieldMap.get(changedField));
-			}
-		}
-
-		for (Entry<GffField, String> entry : this.changedFieldMap.entrySet()) {
-			if(activeList.contains(entry)) {
-				continue;
-			}
-				final GffField changedField = entry.getKey();
-				// Code to get the old value. No longer used. TODO Cleanup after working with convos
-				 /* try {
-					oldValue = changedField.readString(writer);                                                                              
-				} catch (IOException e) {                                                                                                    
-					oldValue = "";                                                                                                           
-				}    */                              
-	
 				// Only updates script slots
 				if (!changedField.isResRefType())
 					throw new RuntimeException(
 							"Can't write anything but slot refs. The module is probably corrupted now. Oops.");
-				
+
 				changedField.writeFieldData(writer, this.gffOffset
 						+ this.fieldDataOffset,
 						this.changedFieldMap.get(changedField));
+			}
 		}
-
-		// write the FieldIndiciesArray and whatever is below it
-		writer.seek(this.gffOffset + this.fieldIndicesOffset);
-		writer.writeBytes(this.afterFieldIndicesArray, false);
-
-		this.beforeFieldIndicesArray = null;
-		this.afterFieldIndicesArray = null;
+		return activeList;
 	}
 
 	/**
@@ -1364,9 +1333,7 @@ public class GenericFileFormat {
 			// replies to this line of NPC dialog. 
 			// Struct ID = list index.
 			private List<RepliesSyncStruct> replyPointers;
-
-			private String speaker;
-
+			
 			public final static String NPC_ENTRY_LIST = "entrylist";
 
 			public NPCEntryDialogue(ScriptEaseFileAccess reader,
@@ -1411,9 +1378,8 @@ public class GenericFileFormat {
 									reader, aStruct);
 							replyPointers.add(sync);
 						}
-					} else if (label.equals("Speaker")) {
-						speaker = field.readString(reader);
-					}
+					} 
+					//lable could also equal "Speaker", which may be important.
 				}
 			}
 
@@ -1792,36 +1758,10 @@ public class GenericFileFormat {
 		}
 	}
 
-	//private static int changedDLGActiveFieldCount = 0;
-	
 	public void setField(GffField field, String newData) {
 		if (field == null)
 			throw new IllegalStateException("Invalid GffField");
 
-	/*	TODO This is possibly where dialogue stuff needs to be fixed. 
-	 */
-		//System.out.println("GFF Type: " + field.getGFF().getFileType());
-
-/*		if (!changedFieldMap.containsKey(field)) {
-			if (field.getGFF().getFileType().trim()
-					.equals(GenericFileFormat.TYPE_DIALOGUE_BP)) {
-
-				if (changedDLGActiveFieldCount != 0) {
-					System.out.println("GFF Type = DLG");
-
-					String fieldLabel = field.getGFF().getLabelArray()
-							.get((int) field.getLabelIndex());
-
-					System.out.println("Field label: " + fieldLabel);
-					// if(fieldLabel.trim().equals("Active")) {
-					field.increaseOffset(4);
-
-					System.out.println("New Offest: " + field.dataOrDataOffset);
-				}
-				changedDLGActiveFieldCount++;
-				System.out.println("ChangedDLGACtiveFieldCount = " +changedDLGActiveFieldCount);
-			}
-		}*/
 		this.changedFieldMap.put(field, newData);
 	}
 
