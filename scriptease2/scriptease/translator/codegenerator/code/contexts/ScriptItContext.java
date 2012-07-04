@@ -94,7 +94,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 
 		// Combine codeBlocks with the same slot
 		for (CodeBlock codeBlock : codeBlocks) {
-			code.addAll(codeBlock.getCode());
+			code.addAll(this.getTranslator().getCode(codeBlock));
 		}
 
 		return FormatFragment.resolveFormat(code, this);
