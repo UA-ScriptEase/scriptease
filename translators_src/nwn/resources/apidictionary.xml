@@ -21407,17 +21407,17 @@
 								<!-- TODO <Fragment data="questContainer" /> -->
 								<Literal>, GetFirstPC());</Literal>
 							</Line>
-							<Series data="childrenNodes" unique="true">
+							<Series data="parentNodes" unique="true">
 								<Line>
-									<Literal>SE2_Quest_RegisterQuestPointChild(</Literal>
+									<Literal>SE2_Quest_RegisterQuestPointParent(</Literal>
 									<Literal>name, </Literal>
 									<Fragment data="formattedValue" />
 									<Literal>, GetFirstPC());</Literal>
 								</Line>
 							</Series>
-							<Series data="parentNodes" unique="true">
+							<Series data="childrenNodes" unique="true">
 								<Line>
-									<Literal>SE2_Quest_RegisterQuestPointParent(</Literal>
+									<Literal>SE2_Quest_RegisterQuestPointChild(</Literal>
 									<Literal>name, </Literal>
 									<Fragment data="formattedValue" />
 									<Literal>, GetFirstPC());</Literal>
@@ -22561,11 +22561,11 @@
 					    </Parameters>
 						<Code>
 							<Line>
-								<Literal>return SE2_Quest_isActiveQuestPoint(</Literal>
+								<Literal>return SE2_Quest_getState(GetFirstPC(), </Literal>
 								<Scope data="argument" ref="QuestPoint">
 									<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
 								</Scope>
-								<Literal>);</Literal>
+								<Literal>) == QUEST_POINT_STATE_ENABLED;</Literal>
 							</Line>
 						</Code>
 					<Includes>
@@ -22603,11 +22603,11 @@
 					    </Parameters>
 						<Code>
 							<Line>
-								<Literal>return SE2_Quest_hasSuceededQuestPoint(</Literal>
+								<Literal>return SE2_Quest_getState(GetFirstPC(), </Literal>
 								<Scope data="argument" ref="QuestPoint">
 									<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
 								</Scope>
-								<Literal>);</Literal>
+								<Literal>) == QUEST_POINT_STATE_SUCCESS;</Literal>
 							</Line>
 						</Code>
 					<Includes>

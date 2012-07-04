@@ -181,9 +181,11 @@ void SE2_Quest_SucceedQuestPoint(string name) {
 }
 
 void SE2_Quest_ResetAtQuestPoint(string name) {
+    debug("Resetting at " + name);
+
     object player = GetFirstPC();
     SE2_Quest_setState(player, name, QUEST_POINT_STATE_ENABLED);
-    SE2_Quest_SetStateForRelatives(name, QUEST_POINT_STATE_DISABLED, QUEST_POINT_PARENTS);
+    SE2_Quest_SetStateForRelatives(name, QUEST_POINT_STATE_DISABLED, QUEST_POINT_CHILDREN);
 }
 
 void SE2_Quest_SetStateForRelatives(string name, int state, string relativeList) {
@@ -193,6 +195,8 @@ void SE2_Quest_SetStateForRelatives(string name, int state, string relativeList)
     int i;
 
     SE2_Quest_GetAllRelatives(name, relativeList, tempArray);
+	
+	debug("Setting relatives of " + name + " to " + IntToString(state));
 
     // for each relative
     for(i = 0; i < SCEZ_Struct_ArrayGetSize(player, tempArray); i++) {
@@ -240,7 +244,7 @@ int SE2_Quest_getState(object oPlayer, string name) {
 void SE2_Quest_setState(object oPlayer, string name, int state) {
     object module = GetModule();
 
-    //debug("setting " + name + "'s state to " + IntToString(state));
+    debug("setting " + name + "'s state to " + IntToString(state));
 
     SetLocalInt(oPlayer, name + QUEST_POINT_STATE, state);
 
