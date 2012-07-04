@@ -29,6 +29,9 @@ import javax.swing.SwingUtilities;
 import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.apimanagers.GameTypeManager;
+import scriptease.controller.observer.StoryComponentEvent;
+import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.transfer.BindingTransferHandlerExportOnly;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
@@ -65,9 +68,6 @@ public class ScriptWidgetFactory {
 	 * rectangles can be drawn.
 	 */
 	public static final int TOTAL_ROW_BORDER_SIZE = 4;
-	/**
-	 * The scaling factor to use for scaling fonts
-	 */
 
 	/**
 	 * Map for storing which JComponent edits which StoryComponent. Whenever a
@@ -75,6 +75,14 @@ public class ScriptWidgetFactory {
 	 * be updated.
 	 */
 	private static Map<Component, StoryComponent> widgetsToStoryComponents = new WeakHashMap<Component, StoryComponent>();
+
+	/**
+	 * This is an awful hack and should be used as little as possible. It must
+	 * be removed when we complete the refactor as outlined in
+	 * https://www.pivotaltracker.com/story/show/31828709
+	 */
+	@Deprecated
+	private static List<StoryComponentObserver> storyComponentListeners = new ArrayList<StoryComponentObserver>();
 
 	/**
 	 * Retrieves the StoryComponent that the given JComponent edits. This can
@@ -136,9 +144,7 @@ public class ScriptWidgetFactory {
 	 */
 	public static BindingWidget buildBindingWidget(QuestPoint component,
 			boolean editable) {
-		BindingWidgetBuilder builder = new BindingWidgetBuilder();
-
-		return builder.buildBindingWidget(component, editable);
+		return BindingWidgetBuilder.buildBindingWidget(component, editable);
 	}
 
 	/**
@@ -151,19 +157,19 @@ public class ScriptWidgetFactory {
 	 *            <code>false</code> otherwise.
 	 * @return The binding widget for displaying the given StoryComponent
 	 */
-	public static BindingWidget buildBindingWidget(KnowIt component, boolean editable) {
-		BindingWidgetBuilder builder = new BindingWidgetBuilder();
-
-		return builder.buildBindingWidget(component, editable);
+	public static BindingWidget buildBindingWidget(KnowIt component,
+			boolean editable) {
+		return BindingWidgetBuilder.buildBindingWidget(component, editable);
 	}
 
 	/**
 	 * Visitor class that constructs {@link BindingWidget}s. <br>
 	 * <br>
 	 * The related methods in ScriptWidgetFactory are facades that forwarding to
-	 * this class. They exist to be able to restrict the acceptable types, while
-	 * this class can technically handle multiple types, those are the only ones
-	 * that make sense.
+	 * this class. They exist to be able to specify the acceptable types, and to
+	 * act as a Facade pattern for building this stuff. Yes,
+	 * BindingWidgetBuilder could handle multiple types but those are the only
+	 * ones that make sense.
 	 * 
 	 * @author mfchurch
 	 * @author remiller
@@ -178,26 +184,49 @@ public class ScriptWidgetFactory {
 		 * @param storyComponent
 		 * @return
 		 */
-		public BindingWidget buildBindingWidget(StoryComponent storyComponent,
-				boolean editable) {
-			storyComponent.process(this);
+		public static BindingWidget buildBindingWidget(
+				final StoryComponent storyComponent, boolean editable) {
+			final BindingWidgetBuilder builder = new BindingWidgetBuilder();
+			final BindingWidget widget;
+
+			storyComponent.process(builder);
+			widget = builder.bindingWidget;
+
 			if (editable) {
-				this.bindingWidget.add(ScriptWidgetFactory
-						.buildNameEditor(storyComponent));
+				widget.add(ScriptWidgetFactory.buildNameEditor(storyComponent));
 			} else {
-				this.bindingWidget.add(ScriptWidgetFactory.buildLabel(
-						storyComponent.getDisplayText(), Color.WHITE));
+				final JLabel nameLabel = ScriptWidgetFactory.buildLabel(
+						storyComponent.getDisplayText(), Color.WHITE);
+
+				StoryComponentObserver scListener = new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						// only update the name for now, but if anything else is
+						// needed later, it should be added here. - remiller
+						if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+							nameLabel.setText(event.getSource()
+									.getDisplayText());
+						}
+					}
+				};
+
+				storyComponentListeners.add(scListener);
+
+				storyComponent.addStoryComponentObserver(scListener);
+
+				widget.add(nameLabel);
 			}
-			this.bindingWidget
-					.setTransferHandler(BindingTransferHandlerExportOnly
-							.getInstance());
+
+			widget.setTransferHandler(BindingTransferHandlerExportOnly
+					.getInstance());
 			// Set an empty border to prevent line crowding.
-			this.bindingWidget.setBorder(BorderFactory.createEmptyBorder(
+			widget.setBorder(BorderFactory.createEmptyBorder(
 					TOTAL_ROW_BORDER_SIZE, TOTAL_ROW_BORDER_SIZE,
 					TOTAL_ROW_BORDER_SIZE, TOTAL_ROW_BORDER_SIZE));
-			this.bindingWidget.setVisible(true);
-			this.bindingWidget.setOpaque(false);
-			return this.bindingWidget;
+
+			widgetsToStoryComponents.put(widget, storyComponent);
+
+			return widget;
 		}
 
 		@Override
@@ -208,7 +237,8 @@ public class ScriptWidgetFactory {
 
 		@Override
 		public void processQuestPoint(QuestPoint questPoint) {
-			this.bindingWidget = new BindingWidget(new KnowItBindingQuestPoint(questPoint));
+			this.bindingWidget = new BindingWidget(new KnowItBindingQuestPoint(
+					questPoint));
 		}
 	}
 
