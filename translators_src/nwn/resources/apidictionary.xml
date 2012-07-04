@@ -5177,9 +5177,12 @@
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
-    <ScriptIt visible="true">
-      <Name>&lt;Modify Lock&gt; on &lt;Door&gt;</Name>
-      <Labels/>
+    <!-- Unused -->
+    <ScriptIt visible="false">
+      <Name>&lt;Lock or Unlock&gt; the &lt;Door&gt;</Name>
+      <Labels>
+      	<Label>TODO</Label>
+      </Labels>
       <Children/>
 		<CodeBlocks>
 			<CodeBlock>
@@ -5188,7 +5191,7 @@
 				</Types>
 			      <Parameters>
 			        <KnowIt visible="true">
-			          <Name>Modify Lock</Name>
+			          <Name>Lock or Unlock</Name>
 			          <Labels/>
 			          <Types>
 			            <Type>lock_modify</Type>
@@ -5209,7 +5212,7 @@
 			            <Fragment data="name"/>
 			          </Scope>
 			          <Literal>,</Literal>
-			          <Scope data="argument" ref="Modify Lock">
+			          <Scope data="argument" ref="Lock or Unlock">
 			            <Fragment data="name"/>
 			          </Scope>
 			          <Literal>));</Literal>
@@ -5292,7 +5295,8 @@
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
-    <ScriptIt visible="true">
+    <!-- Unused -->
+    <ScriptIt visible="false">
       <Name>Show &lt;Caption&gt; above the PC</Name>
       <Labels/>
       <Children/>
@@ -5929,12 +5933,12 @@
 				          <Name>Character</Name>
 				          <Labels/>
 				          <Types>
-				            <Type>Creature</Type>
-							<Type>Journal</Type>
-							<Type>Placeable</Type>
-							<Type>Door</Type>
-							<Type>Item</Type>
-							<Type>Trigger</Type>
+				            <Type>creature</Type>
+							<Type>journal</Type>
+							<Type>placeable</Type>
+							<Type>door</Type>
+							<Type>item</Type>
+							<Type>trigger</Type>
 				          </Types>
 				        </KnowIt>
 				      </Parameters>
@@ -7113,7 +7117,8 @@
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt><!--40 ScriptIts-->
-    <ScriptIt visible="true">
+    <!-- Unused -->
+    <ScriptIt visible="false">
       <Name>Show &lt;Caption&gt; above the PC</Name>
       <Labels/> 
       <Children/>
@@ -10298,7 +10303,8 @@
 			</CodeBlock>
 		</CodeBlocks>
     </ScriptIt>
-    <ScriptIt visible="true">
+    <!-- Unused -->
+    <ScriptIt visible="false">
       <Name>Assign original facing of &lt;Actor&gt; to itself</Name>
       <Labels>
         <Label>NOW</Label>
@@ -14463,449 +14469,455 @@
 </CodeBlock>
 </CodeBlocks>
 </ScriptIt>
-    <ScriptIt>
-<Name>&lt;Unlock&gt; &lt;Door&gt;</Name>
-<Labels>
-        <Label>NOW</Label>
-      </Labels>
-<Children/>
-<CodeBlocks>
-<CodeBlock>
-<Types>
-        <Type>void</Type>
-      </Types>
-<Parameters>
-        <KnowIt visible="true">
-          <Name>Unlock</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>int</Type>
-          </Types>
-        </KnowIt>
-        <KnowIt visible="true">
-          <Name>Door</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>door</Type>
-          </Types>
-        </KnowIt>
-      </Parameters>
-<Code>
-        <Line>
-          <Literal>SetLocked(</Literal>
-          <Scope data="argument" ref="Unlock">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, </Literal>
-          <Scope data="argument" ref="Door">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>);</Literal>
-        </Line>
-      </Code>
-					<Includes />
-</CodeBlock>
-</CodeBlocks>
-</ScriptIt>
-    <ScriptIt>
-<Name>&lt;User&gt; &lt;unlock&gt;s &lt;Door&gt;</Name>
-<Labels>
-        <Label>TODO</Label>
-      </Labels>
-<Children/>
-<CodeBlocks>
-<CodeBlock>
-<Types>
-        <Type>void</Type>
-      </Types>
-<Parameters>
-        <KnowIt visible="true">
-          <Name>User</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>creature</Type>
+	<ScriptIt>
+		<Name>&lt;Lock or Unlock&gt; the &lt;Object&gt;</Name>
+		<Labels>
+			<Label>NOW</Label>
+		</Labels>
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>void</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="true">
+						<Name>Lock or Unlock</Name>
+
+						<Labels />
+						<Types>
+							<Type>lock_modify</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>Object</Name>
+
+						<Labels />
+						<Types>
+							<Type>door</Type>
+							<Type>placeable</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>SetLocked(</Literal>
+						<Scope data="argument" ref="Object">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>, </Literal>
+						<Scope data="argument" ref="Lock or Unlock">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>);</Literal>
+					</Line>
+				</Code>
+				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt>
+		<Name>&lt;User&gt; &lt;locks or unlock&gt;s &lt;Object&gt;</Name>
+		<Labels>
+			<Label>TODO</Label>
+		</Labels>
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>void</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="true">
+						<Name>User</Name>
+
+						<Labels />
+						<Types>
+							<Type>creature</Type>
+							<Type>journal</Type>
+							<Type>placeable</Type>
+							<Type>door</Type>
+							<Type>item</Type>
+							<Type>trigger</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>locks or unlock</Name>
+
+						<Labels />
+						<Types>
+							<Type>lock_modify</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>Object</Name>
+						<Labels />
+						<Types>
+							<Type>door</Type>
+							<Type>placeable</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>AssignCommand(</Literal>
+						<Scope data="argument" ref="User">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>, ActionDoCommand(SetLocked(</Literal>
+						<Scope data="argument" ref="Object">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>, </Literal>
+						<Scope data="argument" ref="locks or unlock">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>)));</Literal>
+					</Line>
+				</Code>
+				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt>
+		<Name>&lt;User&gt; &lt;locks or unlock&gt;s &lt;Object&gt; after a delay of &lt;Delay&gt; seconds</Name>
+		<Labels>
+			<Label>TODO</Label>
+		</Labels>
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>void</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="true">
+						<Name>User</Name>
+
+						<Labels />
+						<Types>
+							<Type>creature</Type>
+							<Type>journal</Type>
+							<Type>placeable</Type>
+							<Type>door</Type>
+							<Type>item</Type>
+							<Type>trigger</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>locks or unlock</Name>
+
+						<Labels />
+						<Types>
+							<Type>lock_modify</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>Object</Name>
+
+						<Labels />
+						<Types>
+							<Type>door</Type>
+							<Type>placeable</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>Delay</Name>
+
+						<Labels />
+						<Types>
+							<Type>int</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>DelayCommand(</Literal>
+						<Scope data="argument" ref="Delay">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>, AssignCommand(</Literal>
+						<Scope data="argument" ref="User">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>, ActionDoCommand(SetLocked(</Literal>
+						<Scope data="argument" ref="Object">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>, </Literal>
+						<Scope data="argument" ref="locks or unlock">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>))));</Literal>
+					</Line>
+				</Code>
+				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt>
+		<Name>&lt;User&gt; &lt;locks or unlock&gt;s &lt;Object&gt; using the Open Locks skill</Name>
+		<Labels>
+			<Label>TODO</Label>
+		</Labels>
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>void</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="true">
+						<Name>User</Name>
+
+						<Labels />
+						<Types>
+							<Type>creature</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>locks or unlock</Name>
+
+						<Labels />
+						<Types>
+							<Type>lock_modify</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>Object</Name>
+
+						<Labels />
+						<Types>
+							<Type>door</Type>
+							<Type>placeable</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>if (</Literal>
+						<Scope data="argument" ref="locks or unlock">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>)</Literal>
+					</Line>
+					<Line>
+						<Literal>	AssignCommand(</Literal>
+						<Scope data="argument" ref="User">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>, ActionLockObject(</Literal>
+						<Scope data="argument" ref="Object">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>));</Literal>
+					</Line>
+					<Line>
+						<Literal>  else</Literal>
+					</Line>
+					<Line>
+						<Literal>	AssignCommand(</Literal>
+						<Scope data="argument" ref="User">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>, ActionUnlockObject(</Literal>
+						<Scope data="argument" ref="Object">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>));</Literal>
+					</Line>
+				</Code>
+				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt><!--170 ScriptIts-->
+<!-- Unused -->
+	<ScriptIt visible="false">
+		<Name>&lt;Unlock&gt; &lt;Placeable&gt;</Name>
+		<Labels>
+			<Label>NOW</Label>
+		</Labels>
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>void</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="true">
+						<Name>Unlock</Name>
+
+						<Labels />
+						<Types>
+							<Type>int</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>Placeable</Name>
+
+						<Labels />
+						<Types>
+							<Type>placeable</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>SetLocked(</Literal>
+						<Scope data="argument" ref="Unlock">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>, </Literal>
+						<Scope data="argument" ref="Placeable">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>);</Literal>
+					</Line>
+				</Code>
+				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+	<!-- Unused -->
+    <ScriptIt visible="false">
+	<Name>&lt;User&gt; &lt;unlock&gt;s &lt;Placeable&gt;</Name>
+	<Labels>
+		<Label>TODO</Label>
+	</Labels>
+	<Children />
+	<CodeBlocks>
+		<CodeBlock>
+			<Types>
+				<Type>void</Type>
+			</Types>
+			<Parameters>
+				<KnowIt visible="true">
+					<Name>User</Name>
+
+					<Labels />
+					<Types>
+						<Type>creature</Type>
 						<Type>journal</Type>
 						<Type>placeable</Type>
 						<Type>door</Type>
 						<Type>item</Type>
 						<Type>trigger</Type>
-          </Types>
-        </KnowIt>
-        <KnowIt visible="true">
-          <Name>unlock</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>int</Type>
-          </Types>
-        </KnowIt>
-        <KnowIt visible="true">
-          <Name>Door</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>door</Type>
-          </Types>
-        </KnowIt>
-      </Parameters>
-<Code>
-        <Line>
-          <Literal>AssignCommand(</Literal>
-          <Scope data="argument" ref="User">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, ActionDoCommand(SetLocked(</Literal>
-          <Scope data="argument" ref="unlock">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, </Literal>
-          <Scope data="argument" ref="Door">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>)));</Literal>
-        </Line>
-      </Code>
-					<Includes />
-</CodeBlock>
-</CodeBlocks>
-</ScriptIt>
-    <ScriptIt>
-<Name>&lt;User&gt; &lt;unlock&gt;s &lt;Door&gt; after a delay of &lt;Delay&gt; seconds</Name>
-<Labels>
-        <Label>TODO</Label>
-      </Labels>
-<Children/>
-<CodeBlocks>
-<CodeBlock>
-<Types>
-        <Type>void</Type>
-      </Types>
-<Parameters>
-        <KnowIt visible="true">
-          <Name>User</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>creature</Type>
-						<Type>journal</Type>
+					</Types>
+				</KnowIt>
+				<KnowIt visible="true">
+					<Name>unlock</Name>
+
+					<Labels />
+					<Types>
+						<Type>int</Type>
+					</Types>
+				</KnowIt>
+				<KnowIt visible="true">
+					<Name>Placeable</Name>
+
+					<Labels />
+					<Types>
 						<Type>placeable</Type>
-						<Type>door</Type>
-						<Type>item</Type>
-						<Type>trigger</Type>
-          </Types>
-        </KnowIt>
-        <KnowIt visible="true">
-          <Name>unlock</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>int</Type>
-          </Types>
-        </KnowIt>
-        <KnowIt visible="true">
-          <Name>Door</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>door</Type>
-          </Types>
-        </KnowIt>
-        <KnowIt visible="true">
-          <Name>Delay</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>int</Type>
-          </Types>
-        </KnowIt>
-      </Parameters>
-<Code>
-        <Line>
-          <Literal>DelayCommand(</Literal>
-          <Scope data="argument" ref="Delay">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, AssignCommand(</Literal>
-          <Scope data="argument" ref="User">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, ActionDoCommand(SetLocked(</Literal>
-          <Scope data="argument" ref="unlock">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, </Literal>
-          <Scope data="argument" ref="Door">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>))));</Literal>
-        </Line>
-      </Code>
-					<Includes />
-</CodeBlock>
-</CodeBlocks>
+					</Types>
+				</KnowIt>
+			</Parameters>
+			<Code>
+				<Line>
+					<Literal>AssignCommand(</Literal>
+					<Scope data="argument" ref="User">
+						<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+					</Scope>
+					<Literal>, ActionDoCommand(</Literal>
+					<Scope data="argument" ref="unlock">
+						<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+					</Scope>
+					<Literal>, </Literal>
+					<Scope data="argument" ref="Placeable">
+						<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+					</Scope>
+					<Literal>)));</Literal>
+				</Line>
+			</Code>
+			<Includes />
+		</CodeBlock>
+	</CodeBlocks>
 </ScriptIt>
-    <ScriptIt>
-<Name>&lt;User&gt; &lt;unlock&gt;s &lt;Door&gt; using the Open Locks skill</Name>
-<Labels>
-        <Label>TODO</Label>
-      </Labels>
-<Children/>
-<CodeBlocks>
-<CodeBlock>
-<Types>
-        <Type>void</Type>
-      </Types>
-<Parameters>
-        <KnowIt visible="true">
-          <Name>User</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>creature</Type>
-          </Types>
-        </KnowIt>
-        <KnowIt visible="true">
-          <Name>unlock</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>int</Type>
-          </Types>
-        </KnowIt>
-        <KnowIt visible="true">
-          <Name>Door</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>door</Type>
-          </Types>
-        </KnowIt>
-      </Parameters>
-<Code>
-        <Line>
-          <Literal>if (</Literal>
-          <Scope data="argument" ref="Door">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>)</Literal>
-        </Line>
-        <Line>
-          <Literal>	AssignCommand(</Literal>
-          <Scope data="argument" ref="User">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, ActionLockObject(</Literal>
-          <Scope data="argument" ref="Door">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>));</Literal>
-        </Line>
-        <Line>
-          <Literal>  else</Literal>
-        </Line>
-        <Line>
-          <Literal>	AssignCommand(</Literal>
-          <Scope data="argument" ref="User">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, ActionUnlockObject(</Literal>
-          <Scope data="argument" ref="Door">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>));</Literal>
-        </Line>
-      </Code>
-					<Includes />
-</CodeBlock>
-</CodeBlocks>
-</ScriptIt><!--170 ScriptIts-->
-    <ScriptIt>
-<Name>&lt;Unlock&gt; &lt;Placeable&gt;</Name>
-<Labels>
-        <Label>NOW</Label>
-      </Labels>
-<Children/>
-<CodeBlocks>
-<CodeBlock>
-<Types>
-        <Type>void</Type>
-      </Types>
-<Parameters>
-        <KnowIt visible="true">
-          <Name>Unlock</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>int</Type>
-          </Types>
-        </KnowIt>
-        <KnowIt visible="true">
-          <Name>Placeable</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>placeable</Type>
-          </Types>
-        </KnowIt>
-      </Parameters>
-<Code>
-        <Line>
-          <Literal>SetLocked(</Literal>
-          <Scope data="argument" ref="Unlock">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, </Literal>
-          <Scope data="argument" ref="Placeable">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>);</Literal>
-        </Line>
-      </Code>
-					<Includes />
-</CodeBlock>
-</CodeBlocks>
-</ScriptIt>
-    <ScriptIt>
-<Name>&lt;User&gt; &lt;unlock&gt;s &lt;Placeable&gt;</Name>
-<Labels>
-        <Label>TODO</Label>
-      </Labels>
-<Children/>
-<CodeBlocks>
-<CodeBlock>
-<Types>
-        <Type>void</Type>
-      </Types>
-<Parameters>
-        <KnowIt visible="true">
-          <Name>User</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>creature</Type>
-						<Type>journal</Type>
-						<Type>placeable</Type>
-						<Type>door</Type>
-						<Type>item</Type>
-						<Type>trigger</Type>
-          </Types>
-        </KnowIt>
-        <KnowIt visible="true">
-          <Name>unlock</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>int</Type>
-          </Types>
-        </KnowIt>
-        <KnowIt visible="true">
-          <Name>Placeable</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>placeable</Type>
-          </Types>
-        </KnowIt>
-      </Parameters>
-<Code>
-        <Line>
-          <Literal>AssignCommand(</Literal>
-          <Scope data="argument" ref="User">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, ActionDoCommand(</Literal>
-          <Scope data="argument" ref="unlock">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, </Literal>
-          <Scope data="argument" ref="Placeable">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>)));</Literal>
-        </Line>
-      </Code>
-					<Includes />
-</CodeBlock>
-</CodeBlocks>
-</ScriptIt>
-    <ScriptIt>
-<Name>&lt;User&gt; &lt;unlock&gt;s &lt;Placeable&gt; using the Open Locks skill</Name>
-<Labels>
-        <Label>TODO</Label>
-      </Labels>
-<Children/>
-<CodeBlocks>
-<CodeBlock>
-<Types>
-        <Type>void</Type>
-      </Types>
-<Parameters>
-        <KnowIt visible="true">
-          <Name>User</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>creature</Type>
-          </Types>
-        </KnowIt>
-        <KnowIt visible="true">
-          <Name>unlock</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>int</Type>
-          </Types>
-        </KnowIt>
-        <KnowIt visible="true">
-          <Name>Placeable</Name>
-          
-          <Labels/>
-          <Types>
-            <Type>placeable</Type>
-          </Types>
-        </KnowIt>
-      </Parameters>
-<Code>
-        <Line>
-          <Literal>if (</Literal>
-          <Scope data="argument" ref="Placeable">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>)</Literal>
-        </Line>
-        <Line>
-          <Literal>	AssignCommand(</Literal>
-          <Scope data="argument" ref="User">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, ActionLockObject(</Literal>
-          <Scope data="argument" ref="unlock">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>));</Literal>
-        </Line>
-        <Line>
-          <Literal>else</Literal>
-        </Line>
-        <Line>
-          <Literal>	AssignCommand(</Literal>
-          <Scope data="argument" ref="User">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>, ActionUnlockObject(</Literal>
-          <Scope data="argument" ref="unlock">
-            <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-          </Scope>
-          <Literal>));</Literal>
-        </Line>
-      </Code>
-					<Includes />
-</CodeBlock>
-</CodeBlocks>
-</ScriptIt>
+<!-- Unused -->
+	<ScriptIt visible="false">
+		<Name>&lt;User&gt; &lt;unlock&gt;s &lt;Placeable&gt; using the Open Locks skill</Name>
+		<Labels>
+			<Label>TODO</Label>
+		</Labels>
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>void</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="true">
+						<Name>User</Name>
+
+						<Labels />
+						<Types>
+							<Type>creature</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>unlock</Name>
+
+						<Labels />
+						<Types>
+							<Type>int</Type>
+						</Types>
+					</KnowIt>
+					<KnowIt visible="true">
+						<Name>Placeable</Name>
+
+						<Labels />
+						<Types>
+							<Type>placeable</Type>
+						</Types>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>if (</Literal>
+						<Scope data="argument" ref="Placeable">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>)</Literal>
+					</Line>
+					<Line>
+						<Literal>	AssignCommand(</Literal>
+						<Scope data="argument" ref="User">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>, ActionLockObject(</Literal>
+						<Scope data="argument" ref="unlock">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>));</Literal>
+					</Line>
+					<Line>
+						<Literal>else</Literal>
+					</Line>
+					<Line>
+						<Literal>	AssignCommand(</Literal>
+						<Scope data="argument" ref="User">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>, ActionUnlockObject(</Literal>
+						<Scope data="argument" ref="unlock">
+							<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+						</Scope>
+						<Literal>));</Literal>
+					</Line>
+				</Code>
+				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
     <ScriptIt>
 <Name>&lt;User&gt; &lt;close&gt;s &lt;Door&gt;</Name>
 <Labels>
@@ -22636,7 +22648,7 @@
 	<Name>Recall value</Name>
 		<Labels/>
 		<Types>
-			<Type>question</Type>
+			<Type>int</Type>
 		</Types>
 		<Binding flavour="function">
 		<ScriptIt>
@@ -22646,7 +22658,7 @@
 				<CodeBlocks>
 					<CodeBlock>
 						<Types>
-							<Type>question</Type>
+							<Type>int</Type>
 						</Types>
 						 <Parameters> 
 							<KnowIt visible="true">
@@ -22668,7 +22680,7 @@
 					    </Parameters>
 						<Code>
 						<Line>
-						 <Literal>getLocalInt(</Literal>
+						 <Literal>return GetLocalInt(</Literal>
 							<Scope data="argument" ref="Object">
 								<Fragment data="name"/>
 							</Scope>
