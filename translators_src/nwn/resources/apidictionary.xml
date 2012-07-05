@@ -1274,7 +1274,7 @@
               <Labels/>
               <Children/>
               <CodeBlocks>
-	              <CodeBlock slot="Mod_OnAcquirItem">
+	              <CodeBlock>
 		              <Types>
 		                <Type>item</Type>
 		              </Types>

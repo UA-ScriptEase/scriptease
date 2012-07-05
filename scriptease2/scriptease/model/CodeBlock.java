@@ -194,7 +194,8 @@ public class CodeBlock implements TypedComponent, Cloneable {
 			}
 			if (parent == null)
 				throw new IllegalStateException(
-						"CodeBlock does not have a cause.");
+						"Tried to get cause for CodeBlock that is not owned by a cause. It is owned by "
+								+ this.getOwner().getDisplayText());
 			return (ScriptIt) parent;
 		}
 	}
