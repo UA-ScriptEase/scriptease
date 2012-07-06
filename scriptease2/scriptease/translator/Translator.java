@@ -22,7 +22,9 @@ import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.SEFrame;
 import scriptease.gui.WindowManager;
+import scriptease.model.CodeBlock;
 import scriptease.translator.codegenerator.GameObjectPicker;
+import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 import scriptease.translator.io.model.GameModule;
 import scriptease.util.FileOp;
 
@@ -249,7 +251,7 @@ public class Translator {
 	public EventSlotManager getSlotManager() {
 		return this.getApiDictionary().getEventSlotManager();
 	}
-
+	
 	/**
 	 * Validates a translator by checking that the given translator has a value
 	 * for all the required paths, that each path exists, and, if possible, that
@@ -389,6 +391,27 @@ public class Translator {
 			this.loadAPIDictionary();
 
 		return this.apiDictionary;
+	}
+	
+	/**
+	 * Sets the stored code for the given CodeBlock to the given code.
+	 * 
+	 * @param codeBlock
+	 *            The codeblock whose code is to be set.
+	 * @param code
+	 *            The format fragments to be used as code.
+	 */
+	public void setCode(CodeBlock codeBlock, Collection<FormatFragment> code) {
+		this.getApiDictionary().setCode(codeBlock, code);
+	}
+	
+	/**
+	 * Gets the code for the specified code block. 
+	 * 
+	 * @param codeBlock The code block whose associated code is to be retrieved.
+	 */
+	public Collection<FormatFragment> getCode(CodeBlock codeBlock) {
+		return this.getApiDictionary().getCode(codeBlock);
 	}
 
 	private void loadAPIDictionary() {

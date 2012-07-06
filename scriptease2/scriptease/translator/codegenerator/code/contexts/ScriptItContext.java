@@ -65,7 +65,8 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 		final CodeBlock mainCodeBlock = ((ScriptIt) this.component)
 				.getMainCodeBlock();
 		final ContextFactory factory = ContextFactory.getInstance();
-		final Context createContext = factory.createContext(this, mainCodeBlock);
+		final Context createContext = factory
+				.createContext(this, mainCodeBlock);
 		return createContext.getUniqueName(legalFormat);
 	}
 

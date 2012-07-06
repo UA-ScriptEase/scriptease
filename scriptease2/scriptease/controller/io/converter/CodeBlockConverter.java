@@ -1,6 +1,5 @@
 package scriptease.controller.io.converter;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -10,6 +9,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
+import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -109,6 +109,7 @@ public class CodeBlockConverter implements Converter {
 		Collection<KnowIt> parameters = new ArrayList<KnowIt>(0);
 		Collection<FormatFragment> code = new ArrayList<FormatFragment>(0);
 		Collection<String> types = new ArrayList<String>(0);
+		final boolean isReadingStory = FileIO.getInstance().getMode() == FileIO.IoMode.STORY;
 
 		String subject = reader.getAttribute(TAG_SUBJECT);
 		if (subject == null)
@@ -133,28 +134,29 @@ public class CodeBlockConverter implements Converter {
 						codeBlock, ArrayList.class));
 			}
 			/*
-			 * Includes. This should not appear for stories, since they do not
-			 * store includes (includes are game-specific, and therefore
-			 * translator stuff)
+			 * Includes. Cannot appear in Stories; includes are game-specific
+			 and
+			 must be in the translator only.
 			 */
 			else if (nodeName.equals(TAG_INCLUDES)) {
-				if (FileIO.getInstance().getMode() == FileIO.IoMode.STORY)
-					throw new IOException(
-							"Story file contains includes! Aaaaaaaauuuugh!");
+				if (isReadingStory)
+					throw new XStreamException(
+							"Stories must never contain includes! Aaaaaaaauuuugh!");
 
 				while (reader.hasMoreChildren()) {
 					includes.add(FileIO.readValue(reader, TAG_INCLUDE));
 				}
 			}
 			/*
-			 * Code. This should not appear for stories, since they do not store
-			 * code (code is translator stuff)
+			 * Code. Cannot appear in Stories; code is game-specific and
+			 must be in the translator only.
 			 */
 			else if (nodeName.equals(TAG_CODE)) {
-				if (FileIO.getInstance().getMode() == FileIO.IoMode.STORY)
-					throw new IOException(
-							"Story file contains code! Aaaaaaaauuuugh!");
+				if (isReadingStory)
+					throw new XStreamException(
+							"Stories must never contain code! Aaaaaaaauuuugh!");
 
+				
 				code = ((Collection<FormatFragment>) context.convertAnother(
 						codeBlock, ArrayList.class));
 				
@@ -163,8 +165,10 @@ public class CodeBlockConverter implements Converter {
 		}
 
 		codeBlock = new CodeBlock(subject, slot, types, parameters, includes);
-		
-		TranslatorManager.getInstance().getActiveTranslator().setCode(codeBlock, code);
+
+		if (!isReadingStory)
+			TranslatorManager.getInstance().getActiveTranslator()
+					.setCode(codeBlock, code);
 
 		return codeBlock;
 	}

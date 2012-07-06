@@ -20,7 +20,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * Converter for the two types of Pattern Model converters.
  * 
  * @author mfchurch
- * @author mfchurch
  */
 public class APIDictionaryConverter implements Converter {
 	private static final String TAG_NAME = "name";

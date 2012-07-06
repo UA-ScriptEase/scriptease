@@ -149,14 +149,17 @@ public class StoryComponentScriptItEditor extends
 		}
 	}
 
-	private void addCodeToComponent() { 
+	private void addCodeToComponent() {
 		// Add all of the CodeBlocks' code
 		for (CodeBlockEditor codeBlockEditor : codeBlockEditors) {
 			final CodeBlock codeBlock = codeBlockEditor.getCodeBlock();
 			final Collection<FormatFragment> codeFragments = codeBlockEditor
 					.getCodeFragments();
 
-			//codeBlock.setCode(codeFragments);
+			final Translator activeTranslator = TranslatorManager.getInstance()
+					.getActiveTranslator();
+
+			activeTranslator.setCode(codeBlock, codeFragments);
 		}
 	}
 
@@ -249,8 +252,10 @@ public class StoryComponentScriptItEditor extends
 		 * codeBlock
 		 */
 		public void updateDisplay() {
-			final Collection<FormatFragment> codeFragments = new ArrayList<FormatFragment>(); 
-					//codeBlock.getCode();
+			final Translator activeTranslator = TranslatorManager.getInstance()
+					.getActiveTranslator();
+			final Collection<FormatFragment> codeFragments = activeTranslator
+					.getCode(codeBlock);
 			if (codeFragments.size() > 0)
 				codePane.setCodeFragments(codeFragments);
 			parameterList.updateBindingList(codeBlock.getParameters());
