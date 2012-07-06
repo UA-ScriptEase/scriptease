@@ -192,7 +192,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 	 * @author Graves
 	 * @author mfchurch
 	 */
-	public class GraphNodeComponentBuilder implements GraphNodeVisitor {
+	private class GraphNodeComponentBuilder implements GraphNodeVisitor {
 		private Map<GraphNode, JComponent> componentMap = new IdentityHashMap<GraphNode, JComponent>();
 		private JComponent component;
 
@@ -225,6 +225,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 				for (String type : knowIt.getAcceptableTypes()) {
 					TypeWidget typeWidget = ScriptWidgetFactory
 							.buildTypeWidget(type);
+					
 					typeWidget.setSelected(true);
 					typeWidget.setBackground(ScriptEaseUI.COLOUR_BOUND);
 					typePanel.add(typeWidget);
@@ -646,6 +647,10 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 			// clear the display panel
 			clearDisplayPanel();
 
+			//TODO REMOVE THIS CODE! DEBUGGING PRINTLN
+			System.out.println("################### GraphPanel was redrawn!");
+
+			
 			// layout the graph
 			layoutGraph(HORIZONTAL_INDENT, 0);
 		}

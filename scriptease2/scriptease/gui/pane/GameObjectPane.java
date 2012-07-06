@@ -37,7 +37,9 @@ import scriptease.translator.codegenerator.GameObjectPicker;
 public class GameObjectPane implements GameObjectPicker {
 	// Although the default picker will be used, a customPicker can define
 	// certain behavior of the default one.
-	GameObjectPicker customPicker;
+	private FilterableSearchField searchField;
+
+	private GameObjectPicker customPicker;
 	private GameObjectPanelTree tree = new GameObjectPanelTree();
 	private GameObjectMultiSelector multiSelector;
 
@@ -51,25 +53,24 @@ public class GameObjectPane implements GameObjectPicker {
 		this.customPicker = customPicker;
 	}
 
+	//TODO Combine this somehow with configurePane() in LibraryPane.java.
 	private JPanel buildFilterPane(GameObjectTree model) {
 		final JPanel filterPane;
 
-		//TODO SearchField does not actually search anything. Figure out why this is.
-		final JTextField searchField = new FilterableSearchField(model, 20);
+		searchField = new FilterableSearchField(model, 20);
+		
 		filterPane = new JPanel();
-		filterPane.setBorder(BorderFactory.createTitledBorder("Filter"));
-
-		JComponent searchFilterPane = new JPanel();
-
-		// SearchFilterPane
-		searchFilterPane.add(searchField);
-		searchFilterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
+		filterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
 				.createLineBorder(Color.gray), Il8nResources
 				.getString("Search_Filter_"),
 				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
 						"SansSerif", Font.PLAIN, 12), Color.black));
 		
-		//TODO Set this up to look like it does in LibraryPane, which is much more minimalistic.
+		JComponent searchFilterPane = new JPanel();
+
+		// Sets up the type filter.
+		searchFilterPane.add(searchField);
+		searchFilterPane.add(multiSelector.getRootButton());
 		BoxLayout searchFilterPaneLayout = new BoxLayout(searchFilterPane,
 				BoxLayout.X_AXIS);
 		searchFilterPane.setLayout(searchFilterPaneLayout);
@@ -80,20 +81,12 @@ public class GameObjectPane implements GameObjectPicker {
 		filterPane.add(searchFilterPane);
 		filterPane.setMinimumSize(searchFilterPane.getPreferredSize());
 
-		// filterPane.add(new JLabel(""))
-
 		return filterPane;
 	}
 
 	public JPanel getPickerPanel() {
 		// Configure the panel.
 		final JPanel objectPickerPane = new JPanel();
-
-		// final JTree tree = buildGameObjectTree();
-		// GameObjectPanelTree tree = new GameObjectPanelTree();
-
-		// JScrollPane tree = new JScrollPane();
-		// tree.add(gameObjectTree);
 
 		// Register for tool tips
 		ToolTipManager.sharedInstance().registerComponent(tree);
@@ -108,27 +101,7 @@ public class GameObjectPane implements GameObjectPicker {
 		treeScrollPane.setBackground(Color.WHITE);
 
 		// build the filter
-		// ---OLD BALLS
-		// JComponent filterPane = this.buildFilterPane((GameObjectTreeModel)
-		// tree.getModel());
 		JComponent filterPane = this.buildFilterPane(tree.getTreeModel());
-		// filterPane.setLayout(new L)
-		JPanel categoryFilter = new JPanel();
-
-		BoxLayout typeFilterPaneLayout = new BoxLayout(categoryFilter,
-				BoxLayout.LINE_AXIS);
-
-		categoryFilter.setLayout(typeFilterPaneLayout);
-		categoryFilter.add(new JLabel("Category Filter: "));
-
-		// rootCategoryTypes = tree.getStringTypes();
-		// GameObjectMultiSelector multiSelector = new
-		// GameObjectMultiSelector(rootCategories);
-		// multiSelector.addObserver(tree);
-		categoryFilter.add(multiSelector.getRootButton());
-		categoryFilter.add(Box.createHorizontalGlue());
-
-		filterPane.add(categoryFilter);
 
 		objectPickerPane.setPreferredSize(new Dimension(
 				tree.getPreferredSize().width, 0));

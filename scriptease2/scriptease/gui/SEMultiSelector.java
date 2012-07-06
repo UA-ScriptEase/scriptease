@@ -8,20 +8,15 @@ import java.util.Observable;
 import javax.swing.JButton;
 import javax.swing.JPopupMenu;
 
-
-
 public abstract class SEMultiSelector extends Observable implements ActionListener {
 	protected String TYPES_LABELS;
-	//protected MultiSelectorContext selectorContext;
 	protected JButton rootTypeLabelMenu;
 	protected ArrayList<String> rootData;
 	protected ArrayList<String> data;
 	
 	public SEMultiSelector(ArrayList<String> rootData){
-		//selectorContext = context;
 		rootTypeLabelMenu = new JButton(setLabel());
 		rootTypeLabelMenu.addActionListener(this);
-		//data = new ArrayList<String>();
 		
 		this.rootData = new ArrayList<String>();
 		this.rootData = rootData;
@@ -38,25 +33,10 @@ public abstract class SEMultiSelector extends Observable implements ActionListen
 		return rootTypeLabelMenu;
 	}
 	
-	protected JPopupMenu popMeUp(){
+	protected JPopupMenu popUpMenu(){
 		final JPopupMenu a = new JPopupMenu(setLabel());
 		populateMenu(a);
 		return a;
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		/*if(e.getSource() instanceof JButton)
-			popMeUp().show((JComponent)e.getSource(), ((JComponent)e.getSource()).getWidth(), 0);
-		
-		if(e.getSource() instanceof JCheckBoxMenuItem){
-			if(((JCheckBoxMenuItem)e.getSource()).isSelected())
-				data.add(((JCheckBoxMenuItem)e.getSource()).getText());
-			else
-				data.remove(((JCheckBoxMenuItem)e.getSource()).getText());
-			setChanged();
-			notifyObservers(data);
-		}*/
 	}
 	
 	protected final class MenuVisibilityHandler implements ActionListener {
@@ -71,6 +51,4 @@ public abstract class SEMultiSelector extends Observable implements ActionListen
 			this.menu.setVisible(true);
 		}
 	}
-	
-	
 }

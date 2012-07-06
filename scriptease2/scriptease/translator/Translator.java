@@ -22,6 +22,7 @@ import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.SEFrame;
 import scriptease.gui.WindowManager;
+import scriptease.translator.codegenerator.CauseEffectPicker;
 import scriptease.translator.codegenerator.GameObjectPicker;
 import scriptease.translator.io.model.GameModule;
 import scriptease.util.FileOp;
@@ -91,7 +92,7 @@ public class Translator {
 	private LanguageDictionary languageDictionary;
 
 	private final Collection<String> legalExtensions;
-	private GameObjectPicker customPicker;
+	private GameObjectPicker customGameObjectPicker;
 
 	final GameModuleClassLoader loader;
 
@@ -612,7 +613,7 @@ public class Translator {
 	 * @return The java-based picker described by the translator author
 	 */
 	@SuppressWarnings("unchecked")
-	private GameObjectPicker loadCustomPicker(File location) {
+	private GameObjectPicker loadCustomGameObjectPicker(File location) {
 		// Get the name of the .class file that implements the objPicker
 		// interface, and load it.
 		GameObjectPicker objPicker = null;
@@ -642,17 +643,17 @@ public class Translator {
 		return objPicker;
 	}
 
-	public GameObjectPicker getCustomPicker() {
+	public GameObjectPicker getCustomGameObjectPicker() {
 		final File customPickerPath;
 
 		customPickerPath = this
 				.getPathProperty(DescriptionKeys.CUSTOM_PICKER_PATH.toString());
 
 		// Look for a custom picker class.
-		if (this.customPicker == null && customPickerPath != null)
-			this.customPicker = loadCustomPicker(customPickerPath);
+		if (this.customGameObjectPicker == null && customPickerPath != null)
+			this.customGameObjectPicker = loadCustomGameObjectPicker(customPickerPath);
 
-		return this.customPicker;
+		return this.customGameObjectPicker;
 	}
 
 	/**
@@ -846,5 +847,10 @@ public class Translator {
 	@Override
 	public String toString() {
 		return "Translator [" + this.getName() + "]";
+	}
+
+	public CauseEffectPicker getCustomCauseEffectPicker() {
+		// TODO Implement this in the same way it is for custom game object picker.
+		return null;
 	}
 }

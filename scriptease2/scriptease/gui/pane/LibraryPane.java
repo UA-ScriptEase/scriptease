@@ -36,14 +36,19 @@ import scriptease.translator.TranslatorManager;
 @SuppressWarnings("serial")
 /**
  * LibraryPane represents the JPanel used for managing, filtering and choosing
- * Patterns from the loaded Libraries
+ * Patterns from the loaded Libraries. It appears in the top left corner of
+ * the main ScriptEase window.
  * 
  * @author mfchurch
+ * @author kschenk
  */
 public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		TranslatorObserver {
 
+	private FilterableSearchField searchField;
+	
 	private final JTabbedPane treeTabs;
+	
 	private final StoryComponentPanelTree causesTree;
 	private final StoryComponentPanelTree effectsTree;
 	private final StoryComponentPanelTree descriptionsTree;
@@ -110,7 +115,6 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 
 		return filter;
 	}
-	private FilterableSearchField searchField;
 	/**
 	 * Builds a pane that allows users to drag across any pattern (including
 	 * atoms) from any library into their Story.
@@ -136,6 +140,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		
 		JComponent searchFilterPane = new JPanel();
 
+		// Sets up the type filter.
 		final ShowFilterMenuAction typeFilter = new ShowFilterMenuAction();
 		typeFilter.setSelectionChangedAction(new Runnable() {
 			@Override
@@ -152,8 +157,6 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		});
 
 		// SearchFilterPane
-		// searchFilterPane.add(new JLabel(
-		// FilterableSearchField.SEARCH_FILTER_LABEL));
 		searchFilterPane.add(searchField);
 		searchFilterPane.add(new JButton(typeFilter));
 		BoxLayout searchFilterPaneLayout = new BoxLayout(searchFilterPane,
