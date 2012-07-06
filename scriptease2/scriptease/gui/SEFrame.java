@@ -123,7 +123,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	public void populate() {
 		final JPanel content = new JPanel();
 
-		final JComponent libraryPane = PaneFactory.buildCauseEffectPane(null);
+		final JComponent libraryPane = new LibraryPane();
 		final JComponent objectPane = PaneFactory.buildGameObjectPane(null);
 		final JComponent statusBar = this.buildStatusBar();
 

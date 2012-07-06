@@ -9,16 +9,21 @@ import javax.swing.JLabel;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.translator.io.model.GameConstant;
 
+/**
+ * It looks like this class is specifically for making conversation game objects
+ * shorter, so that when you click on them, the longer view appears. We might be
+ * able to add the functionality of indenting conversations into this class
+ * instead of wherever it is now.
+ * 
+ */
 public class GameObjectPanelConversation extends GameObjectPanel implements MouseListener {
 	private boolean isViewShortText;
 	
 	public GameObjectPanelConversation(GameConstant gameObject, int horStrut) {
 		super(gameObject, horStrut);
-		
 		isViewShortText = true;
 	}
 	
-			
 	private void setText(){
 		String set;
 		if(isViewShortText)
@@ -26,14 +31,11 @@ public class GameObjectPanelConversation extends GameObjectPanel implements Mous
 		else
 			set = regularText;
 		
-		//gameObjectBindingWidget.removeAll();
 		for(Object jcomponent : gameObjectBindingWidget.getComponents()){
 			if (jcomponent instanceof JLabel){
 				gameObjectBindingWidget.remove((JComponent)jcomponent);
 			}
 		}
-		
-		
 		gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(set,
 				Color.WHITE));
 		
@@ -45,8 +47,6 @@ public class GameObjectPanelConversation extends GameObjectPanel implements Mous
 		
 		gameObjectBindingWidget.revalidate();
 	}
-	
-	
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {

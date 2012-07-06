@@ -55,7 +55,6 @@ public class TranslatorFilter extends StoryComponentFilter {
 			final KnowItBinding binding = knowIt.getBinding();
 			// If the describeIt is bound to a DoIt, we can rely on the DoIt to
 			// check if the describeIt is acceptable for this Translator.
-
 			binding.process(new AbstractNoOpBindingVisitor() {
 				@Override
 				public void processFunction(KnowItBindingFunction function) {

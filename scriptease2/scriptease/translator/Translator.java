@@ -22,7 +22,6 @@ import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.SEFrame;
 import scriptease.gui.WindowManager;
-import scriptease.translator.codegenerator.CauseEffectPicker;
 import scriptease.translator.codegenerator.GameObjectPicker;
 import scriptease.translator.io.model.GameModule;
 import scriptease.util.FileOp;
@@ -847,10 +846,5 @@ public class Translator {
 	@Override
 	public String toString() {
 		return "Translator [" + this.getName() + "]";
-	}
-
-	public CauseEffectPicker getCustomCauseEffectPicker() {
-		// TODO Implement this in the same way it is for custom game object picker.
-		return null;
 	}
 }

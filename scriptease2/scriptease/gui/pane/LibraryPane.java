@@ -58,6 +58,12 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		this(new StoryComponentPanelLibrarySetting());
 	}
 
+	/**
+	 * Creates a new LibraryPane with default filters, and configures its
+	 * display.
+	 * 
+	 * @param librarySettings
+	 */
 	public LibraryPane(StoryComponentPanelSetting librarySettings) {
 		final LibraryManager libManager = LibraryManager.getInstance();
 		final StoryComponentContainer root;
@@ -123,7 +129,21 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 */
 	private void configurePane() {
 		final JComponent filterPane;
+		final JComponent searchFilterPane;
+		final ShowFilterMenuAction typeFilter;
+		final BoxLayout filterPaneLayout;
+		final BoxLayout searchFilterPaneLayout;
+		final SpringLayout pickerPaneLayout;
 
+	
+		filterPane = new JPanel();
+		searchFilterPane = new JPanel();
+		typeFilter = new ShowFilterMenuAction();
+		filterPaneLayout = new BoxLayout(filterPane, BoxLayout.Y_AXIS);
+		searchFilterPaneLayout = new BoxLayout(searchFilterPane,
+				BoxLayout.X_AXIS);
+		pickerPaneLayout =  new SpringLayout();
+		
 		searchField = new FilterableSearchField(
 				this.causesTree, 20);
 		
@@ -131,17 +151,13 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		searchField.addFilter(this.descriptionsTree);
 		searchField.addFilter(this.foldersTree);
 
-		filterPane = new JPanel();
 		filterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
 				.createLineBorder(Color.gray), Il8nResources
 				.getString("Search_Filter_"),
 				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
 						"SansSerif", Font.PLAIN, 12), Color.black));
-		
-		JComponent searchFilterPane = new JPanel();
 
 		// Sets up the type filter.
-		final ShowFilterMenuAction typeFilter = new ShowFilterMenuAction();
 		typeFilter.setSelectionChangedAction(new Runnable() {
 			@Override
 			public void run() {
@@ -159,24 +175,19 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		// SearchFilterPane
 		searchFilterPane.add(searchField);
 		searchFilterPane.add(new JButton(typeFilter));
-		BoxLayout searchFilterPaneLayout = new BoxLayout(searchFilterPane,
-				BoxLayout.X_AXIS);
 		searchFilterPane.setLayout(searchFilterPaneLayout);
 
 		// FilterPane Layout
-		BoxLayout filterPaneLayout = new BoxLayout(filterPane, BoxLayout.Y_AXIS);
 		filterPane.setLayout(filterPaneLayout);
 		filterPane.add(searchFilterPane);
-
 		this.add(filterPane);
+		
 		treeTabs.add("Causes", causesTree);
 		treeTabs.add("Effects", effectsTree);
 		treeTabs.add("Descriptions", descriptionsTree);
 		treeTabs.add("Folders", foldersTree);
-
 		this.add(treeTabs);
 		this.setPreferredSize(filterPane.getPreferredSize());
-		SpringLayout pickerPaneLayout = new SpringLayout();
 
 		// Spring filterPane
 		pickerPaneLayout.putConstraint(SpringLayout.WEST, filterPane, 5,
@@ -195,11 +206,12 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		pickerPaneLayout.putConstraint(SpringLayout.NORTH, treeTabs, 5,
 				SpringLayout.SOUTH, filterPane);
 		this.setLayout(pickerPaneLayout);
-		
 	}
 
 	/**
 	 * Keep the display of the library up to date with the changes to Libraries
+	 * 
+	 * TODO This seems to be broken when two modules are loaded. Figure out why!
 	 */
 	@Override
 	public void modelChanged(final LibraryManagerEvent managerEvent) {
@@ -216,7 +228,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	}
 
 	/**
-	 * Update the translator filter and redraw the tree
+	 * Update the translator filter and redraw the tree.
 	 */
 	@Override
 	public void translatorLoaded(Translator newTranslator) {
