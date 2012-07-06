@@ -1,3 +1,4 @@
+
 package scriptease.controller;
 
 import java.io.File;
@@ -323,6 +324,17 @@ public final class FileManager {
 				&& translator.getCompiler() != null
 				&& translator.getCompiler().exists();
 		
+		if (translator.getCompiler() == null
+				|| !translator.getCompiler().exists())
+			WindowManager
+					.getInstance().showWarningDialog(
+							"Compiler not found",
+							"I couldn't find the compiler for "+translator.getName()+
+							".\n\nCheck that the compiler path in the \"translator.ini\" file" +
+							" in the translator directory is correct." +
+							"\nRestart ScriptEase after saving." +
+							"\n\nI saved the story without compiling.");
+
 		try {
 			if (compile)
 				SEFrame.getInstance().setStatus(

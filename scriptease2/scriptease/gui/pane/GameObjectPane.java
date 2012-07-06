@@ -3,6 +3,7 @@ package scriptease.gui.pane;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -15,6 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.SpringLayout;
 import javax.swing.ToolTipManager;
+import javax.swing.border.TitledBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
@@ -23,6 +25,7 @@ import scriptease.gui.SETree.GameObjectPanelTree;
 import scriptease.gui.SETree.GameObjectTree;
 import scriptease.gui.SETree.cell.BindingWidget;
 import scriptease.gui.control.FilterableSearchField;
+import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.translator.codegenerator.GameObjectPicker;
 
@@ -48,10 +51,10 @@ public class GameObjectPane implements GameObjectPicker {
 		this.customPicker = customPicker;
 	}
 
-	// private JPanel buildFilterPane(GameObjectTreeModel model) {
 	private JPanel buildFilterPane(GameObjectTree model) {
 		final JPanel filterPane;
 
+		//TODO SearchField does not actually search anything. Figure out why this is.
 		final JTextField searchField = new FilterableSearchField(model, 20);
 		filterPane = new JPanel();
 		filterPane.setBorder(BorderFactory.createTitledBorder("Filter"));
@@ -59,9 +62,14 @@ public class GameObjectPane implements GameObjectPicker {
 		JComponent searchFilterPane = new JPanel();
 
 		// SearchFilterPane
-		searchFilterPane.add(new JLabel(
-				FilterableSearchField.SEARCH_FILTER_LABEL));
 		searchFilterPane.add(searchField);
+		searchFilterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
+				.createLineBorder(Color.gray), Il8nResources
+				.getString("Search_Filter_"),
+				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
+						"SansSerif", Font.PLAIN, 12), Color.black));
+		
+		//TODO Set this up to look like it does in LibraryPane, which is much more minimalistic.
 		BoxLayout searchFilterPaneLayout = new BoxLayout(searchFilterPane,
 				BoxLayout.X_AXIS);
 		searchFilterPane.setLayout(searchFilterPaneLayout);

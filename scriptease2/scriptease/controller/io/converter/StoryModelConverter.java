@@ -3,7 +3,6 @@
 import java.io.File;
 
 import scriptease.controller.io.FileIO;
-import scriptease.gui.SEFrame;
 import scriptease.gui.quests.QuestNode;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;

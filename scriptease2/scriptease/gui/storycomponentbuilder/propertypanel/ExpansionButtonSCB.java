@@ -5,6 +5,7 @@ import javax.swing.JButton;
 
 import scriptease.model.StoryComponent;
 
+@SuppressWarnings("serial")
 public class ExpansionButtonSCB extends JButton{
 	private StoryComponent component;
 	private StoryComponent parent;

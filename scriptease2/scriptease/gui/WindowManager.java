@@ -497,6 +497,30 @@ public final class WindowManager {
 			}
 		});
 	}
+	
+	/**
+	 * Shows a message dialog dressed as a warning that is anchored to the main
+	 * window.
+	 * 
+	 * @param title
+	 *            The frame title of the problem dialog box. The title is
+	 *            prepended with "ScriptEase: "
+	 * @param message
+	 *            The message to display to the user. Try to keep it friendly.
+	 *            Remember, this dialog tells them bad news - it's a good idea
+	 *            to not be uncaring and robotic.
+	 */
+	public void showWarningDialog(final String title, final String message) {
+		// do this on the swing queue so that we can be assured that it isn't
+		// being called as a result of a problem in the SEFrame constructor.
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				JOptionPane.showMessageDialog(SEFrame.getInstance(), message,
+						"ScriptEase: " + title, JOptionPane.WARNING_MESSAGE);
+			}
+		});
+	}
 
 	/**
 	 * Shows a message dialog that is anchored to the main window.
