@@ -95,6 +95,9 @@ public class TlkLookup {
 	public String lookup(long stringRef) throws IOException {
 		String result = null;
 
+		if(customTLK == null || defaultTLK == null) {
+			return "";
+		}
 		// first, check if it is a valid String Ref, as per documentation
 		// section 2.2
 		if ((stringRef == 0xFFFFFFFF)) {

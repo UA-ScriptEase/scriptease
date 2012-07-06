@@ -149,7 +149,6 @@ public class DialogBuilder {
 		gameLabel = new JLabel("Game: ");
 		gameComboBox = new JComboBox(TranslatorManager.getInstance()
 				.getTranslators().toArray());
-
 		gameComboBox.setRenderer(new TranslatorListRenderer());
 		gameComboBox.setSelectedIndex(-1);
 
@@ -215,8 +214,7 @@ public class DialogBuilder {
 							.getDefaultUncaughtExceptionHandler();
 					handler.uncaughtException(Thread.currentThread(),
 							new IllegalStateException(
-									"Exception while creating a new Story. "
-											+ e));
+									"Exception while creating a new Story. ", e));
 				}
 			}
 		};

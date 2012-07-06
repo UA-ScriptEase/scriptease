@@ -162,55 +162,6 @@ public class DefaultPatternPaneFactory {
 		return pane;
 	}
 
-	// private JComponent buildStartItPane() {
-	// final JScrollPane scrollPane = new JScrollPane(
-	// JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-	// JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-	//
-	// final JPanel pane = new JPanel();
-	// pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
-	// scrollPane.setViewportView(pane);
-	// final EventSlotSelector slotEditor;
-	// final MultipleTypeSelector typeSelector;
-	// final StartIt startIt = (StartIt) this.represented;
-	// final KnowIt subject = startIt.getSubject();
-	// final KnowIt condition = startIt.getEventGuard()
-	// .getCondition();
-	// final JPanel subjectBinder = this.buildParameterBinder(subject);
-	// final KeywordEditor startItNameEditor;
-	//
-	// startItNameEditor = new KeywordEditor();
-	// startItNameEditor.setEditedComponent(startIt);
-	//
-	// pane.add(new JLabel("StartIt Name: "));
-	// pane.add(startItNameEditor);
-	//
-	// typeSelector = new MultipleTypeSelector();
-	// typeSelector.setEditedComponent(subject);
-	// typeSelector.setBorder(BorderFactory.createTitledBorder("Slot Type"));
-	// pane.add(typeSelector);
-	//
-	// slotEditor = new EventSlotSelector(subject);
-	// slotEditor.setEditedComponent(startIt);
-	// pane.add(new JLabel("Slot Name: "));
-	// pane.add(slotEditor);
-	//
-	// subjectBinder.setBorder(BorderFactory.createTitledBorder("Slot Owner"));
-	// pane.add(subjectBinder);
-	//
-	// TypeSelector conditionSelector = new TypeSelector();
-	// conditionSelector.setEditedComponent(condition);
-	// pane.add(new JLabel("Condition Type: "));
-	// pane.add(conditionSelector);
-	//
-	// ConditionEditor conditionEditor = new ConditionEditor(condition);
-	//
-	// pane.add(new JLabel("Condition Value: "));
-	// pane.add(conditionEditor);
-	//
-	// return scrollPane;
-	// }
-
 	/**
 	 * Extremely simple container class that just pairs together data for the
 	 * pane to be added as a tab, and the tab name for that pane.

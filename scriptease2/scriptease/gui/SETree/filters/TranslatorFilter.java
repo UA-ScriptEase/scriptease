@@ -87,4 +87,12 @@ public class TranslatorFilter extends StoryComponentFilter {
 			this.acceptable = true;
 		}
 	}
+	
+	@Override
+	public String toString(){ 
+		if(translator == null)
+			return "TranslatorFilter for null Translator";
+		else
+			return "TranslatorFilter ["+translator.getName()+"]";
+	}
 }

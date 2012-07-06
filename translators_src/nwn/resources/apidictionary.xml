@@ -22646,57 +22646,57 @@
 	</KnowIt>
 	<KnowIt>
 	<Name>Recall value</Name>
-		<Labels/>
-		<Types>
-			<Type>int</Type>
-		</Types>
-		<Binding flavour="function">
+	<Labels />
+	<Types>
+		<Type>int</Type>
+	</Types>
+	<Binding flavour="function">
 		<ScriptIt>
-				<Name>attribute &lt;Text&gt; in &lt;Object&gt;</Name>
-				<Labels/>
-				<Children/>
-				<CodeBlocks>
-					<CodeBlock>
-						<Types>
-							<Type>int</Type>
-						</Types>
-						 <Parameters> 
-							<KnowIt visible="true">
-							  <Name>Object</Name>
-							  <Labels/>
-							  <Types>
+			<Name>attribute &lt;Text&gt; in &lt;Object&gt;</Name>
+			<Labels />
+			<Children />
+			<CodeBlocks>
+				<CodeBlock>
+					<Types>
+						<Type>int</Type>
+					</Types>
+					<Parameters>
+						<KnowIt visible="true">
+							<Name>Object</Name>
+							<Labels />
+							<Types>
 								<Type>creature</Type>
 								<Type>placeable</Type>
 								<Type>door</Type>
-							  </Types>
-							</KnowIt>
-							<KnowIt visible="true">
-							  <Name>Text</Name>
-							  <Labels/>
-							  <Types>
+							</Types>
+						</KnowIt>
+						<KnowIt visible="true">
+							<Name>Text</Name>
+							<Labels />
+							<Types>
 								<Type>string</Type>
-							  </Types>
-							</KnowIt>
-					    </Parameters>
-						<Code>
+							</Types>
+						</KnowIt>
+					</Parameters>
+					<Code>
 						<Line>
-						 <Literal>return GetLocalInt(</Literal>
+							<Literal>return GetLocalInt(</Literal>
 							<Scope data="argument" ref="Object">
-								<Fragment data="name"/>
+								<Fragment data="name" />
 							</Scope>
 							<Literal>,</Literal>
 							<Scope data="argument" ref="Text">
-								<Fragment data="name"/>
+								<Fragment data="name" />
 							</Scope>
 							<Literal>);</Literal>
 						</Line>
-						</Code>
+					</Code>
 					<Includes />
-						</CodeBlock>
-				</CodeBlocks>
+				</CodeBlock>
+			</CodeBlocks>
 		</ScriptIt>
-		</Binding>
-	</KnowIt>
+	</Binding>
+</KnowIt>
 	<KnowIt visible="true">
 		<Name>The Player Character</Name>
 		<Labels />
@@ -22729,41 +22729,41 @@
 	</KnowIt>
  </DescribeIts>
   <TypeConverters>
-    <ScriptIt visible="false">
-      <Name>Convert item &lt;value&gt; to string</Name>
-      <Labels/>
-      <Children/>
-<CodeBlocks>
-<CodeBlock>
-<Types>
-        <Type>string</Type>
-      </Types>
-      <Parameters>
-        <KnowIt visible="true">
-          <Name>value</Name>
-          <Labels/>
-          <Types>
-            <Type>item</Type>
-          </Types>
-          <Binding flavour="runTime">
-            <Types>
-              <Type>item</Type>
-            </Types>
-          </Binding>
-        </KnowIt> 
-      </Parameters>
-      <Code>
-        <Line>
-          <Literal>return getTag(</Literal>
-          <Scope data="argument" ref="value"> 
-            <Fragment data="name"/>
-          </Scope>
-          <Literal>);</Literal>
-        </Line>
-      </Code>
-					<Includes />
-</CodeBlock>
-</CodeBlocks>
-    </ScriptIt>
-  </TypeConverters>
+	<ScriptIt visible="false">
+		<Name>Convert item &lt;value&gt; to string</Name>
+		<Labels />
+		<Children />
+		<CodeBlocks>
+			<CodeBlock>
+				<Types>
+					<Type>string</Type>
+				</Types>
+				<Parameters>
+					<KnowIt visible="true">
+						<Name>value</Name>
+						<Labels />
+						<Types>
+							<Type>item</Type>
+						</Types>
+						<Binding flavour="runTime">
+							<Types>
+								<Type>item</Type>
+							</Types>
+						</Binding>
+					</KnowIt>
+				</Parameters>
+				<Code>
+					<Line>
+						<Literal>return GetTag(</Literal>
+						<Scope data="argument" ref="value">
+							<Fragment data="name" />
+						</Scope>
+						<Literal>);</Literal>
+					</Line>
+				</Code>
+				<Includes />
+			</CodeBlock>
+		</CodeBlocks>
+	</ScriptIt>
+</TypeConverters>
 </APIDictionary>

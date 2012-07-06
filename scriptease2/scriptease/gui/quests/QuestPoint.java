@@ -20,7 +20,6 @@ import scriptease.model.complex.StoryComponentContainer;
 public class QuestPoint extends StoryComponentContainer {
 	public static String QUEST_POINT_TYPE = "questPoint";
 	private int fanIn;
-	private QuestNode questContainer;
 
 	private static final int DEFAULT_FAN_IN = 1;
 	private static final String NEW_QUEST_POINT = "New Quest Point";
@@ -82,10 +81,6 @@ public class QuestPoint extends StoryComponentContainer {
 	@Override
 	public void process(StoryVisitor visitor) {
 		visitor.processQuestPoint(this);
-	}
-
-	public void setQuestContainer(QuestNode quest) {
-		this.questContainer = quest;
 	}
 
 	public QuestNode getQuestContainer() {

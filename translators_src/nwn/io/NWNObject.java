@@ -11,9 +11,6 @@ public final class NWNObject implements GameObject {
 	private Collection<String> types;
 	private final String name; // name and tag are for display purposes
 	private final String tag;
-	private Collection<GameObject> attributes; // I haven't removed this, since
-												// attributes sound important,
-												// so we might need them later.
 
 	public static final int SEARCH_TYPE_NEAREST = 0;
 	public static final int SEARCH_TYPE_RANDOM = 1;

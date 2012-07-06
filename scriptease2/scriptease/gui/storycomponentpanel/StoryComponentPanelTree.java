@@ -100,8 +100,9 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	@Override
 	public void updateFilter(Filter newFilterRule) {
 		if (newFilterRule == null
-				|| !(newFilterRule instanceof StoryComponentFilter))
+				|| !(newFilterRule instanceof StoryComponentFilter)) {
 			return;
+		}
 
 		if (this.filterRule == null)
 			this.filterRule = newFilterRule;
@@ -111,8 +112,8 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		this.filterTree(this.rootPanel);
 		
 		this.setRoot(this.root);
-		
-		if ( this.numberOfResultsFound(0, this.rootPanel) == 0 ) {
+	
+		if ( this.numberOfResultsFound(this.rootPanel) == 0 ) {
 			JPanel panel = new JPanel();
 			panel.setBackground(Color.WHITE);
 			JLabel noResultsLabel = new JLabel("No results found.");	
@@ -124,17 +125,18 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	}
 
 	/**
-	 * Determines if any search results are found. VisibleCount should be set to 0.
+	 * Determines the number of search results are found.
 	 * 
 	 * @param visibleCount
 	 * @param root
 	 * @return
 	 */
-	private int numberOfResultsFound(int visibleCount, StoryComponentPanel root) {
+	private int numberOfResultsFound(StoryComponentPanel root) {
+		int visibleCount = 0;
 		for (StoryComponentPanel panel : root.getChildrenPanels()) {
 			if(panel.getVisible())
 				visibleCount++;
-			this.numberOfResultsFound(visibleCount, panel);
+			visibleCount += this.numberOfResultsFound(panel);
 		}
 		return visibleCount;
 	}
@@ -152,7 +154,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * Recursively filters the tree that starts at the given root.
 	 * 
 	 * @param root
-	 *            , -> The root to start filtering from.
+	 *            The root to start filtering from.
 	 * 
 	 */
 	private void filterTree(StoryComponentPanel root) {
@@ -163,6 +165,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		for (StoryComponentPanel panel : root.getChildrenPanels()) {
 			panel.setVisible(this.filterRule.isAcceptable(panel
 					.getStoryComponent()));
+			System.out.println(panel.toString());
 			this.filterTree(panel);
 		}
 	}

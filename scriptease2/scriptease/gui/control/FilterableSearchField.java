@@ -2,11 +2,11 @@ package scriptease.gui.control;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 import javax.swing.JTextField;
 import javax.swing.Timer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import scriptease.gui.SETree.GameObjectTreeModel;
 import scriptease.gui.SETree.filters.Filterable;
@@ -17,45 +17,108 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 
 @SuppressWarnings("serial")
 public class FilterableSearchField extends JTextField {
-
+	
 	public final static String SEARCH_FILTER_LABEL = Il8nResources
 			.getString("Search_Filter_");
+	
+	private Filterable filterable;
 
 	public FilterableSearchField(Filterable filterable, int size) {
 		super(size);
-		KeyAdapter timedSearcher = new TimedSearcher(this, filterable);
-		this.addKeyListener(timedSearcher);
+		this.filterable = filterable;
+		DocumentListener listener = new SearchListener(this, filterable);
+		this.getDocument().addDocumentListener(listener);
 	}
 	
 	public void addFilter(Filterable filterable) {
-		KeyAdapter timedSearcher = new TimedSearcher(this, filterable);
-		this.addKeyListener(timedSearcher);
+		this.filterable = filterable;
+		DocumentListener listener = new SearchListener(this, filterable);
+		this.getDocument().addDocumentListener(listener);
 	}
-
-	private final class TimedSearcher extends KeyAdapter {
-		private int TIME_BUFFER = 200;
-		Timer timer;
-
-		private TimedSearcher(final JTextField searchField,
+	
+	/*
+	 * Without a timer
+	 */
+/*	private final class SearchListener implements DocumentListener {
+		private final JTextField searchField;
+		private final Filterable filterable;
+		
+		public SearchListener(final JTextField searchField,
 				final Filterable filterable) {
+			this.searchField = searchField;
+			this.filterable = filterable;
+		}
+		
+		private void executeSearch() {
+			if (filterable instanceof GameObjectTreeModel)
+				filterable.updateFilter(new GameConstantSearchFilter(
+						searchField.getText()));
+			else if (filterable instanceof StoryComponentPanelTree)
+				filterable.updateFilter(new StoryComponentSearchFilter(
+						searchField.getText()));		}
+		
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			this.executeSearch();
+		}
 
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			this.executeSearch();
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			this.executeSearch();
+		}
+	}*/
+
+	/*
+	 * This is with a timer.
+	 */
+	private final class SearchListener implements DocumentListener {
+		private final int TIME_BUFFER = 800;
+		private final Timer timer;
+		
+		public SearchListener(final JTextField searchField,
+				final Filterable filterable) {
 			timer = new Timer(TIME_BUFFER, new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
+				@Override
+				public void actionPerformed(ActionEvent e) {
 					if (filterable instanceof GameObjectTreeModel)
 						filterable.updateFilter(new GameConstantSearchFilter(
 								searchField.getText()));
 					else if (filterable instanceof StoryComponentPanelTree)
 						filterable.updateFilter(new StoryComponentSearchFilter(
 								searchField.getText()));
-				};
+					timer.stop();
+				}
 			});
 			timer.setRepeats(false);
 		}
-
-		@Override
-		// Change in Search Field
-		public void keyReleased(KeyEvent arg0) {
+		
+		private void executeSearch() {
 			timer.restart();
 		}
+		
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			this.executeSearch();
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			this.executeSearch();
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			this.executeSearch();
+		}
+	}
+	
+	@Override
+	public String toString(){ 
+		return "FilterableSearchField ["+filterable.getClass().getName()+"]";
 	}
 }
