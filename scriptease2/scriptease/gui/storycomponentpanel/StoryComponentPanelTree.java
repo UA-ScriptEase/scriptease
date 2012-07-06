@@ -165,7 +165,6 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		for (StoryComponentPanel panel : root.getChildrenPanels()) {
 			panel.setVisible(this.filterRule.isAcceptable(panel
 					.getStoryComponent()));
-			System.out.println(panel.toString());
 			this.filterTree(panel);
 		}
 	}

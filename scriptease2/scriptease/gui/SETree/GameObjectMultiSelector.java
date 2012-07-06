@@ -11,77 +11,61 @@ import javax.swing.JPopupMenu;
 
 import scriptease.gui.SEMultiSelector;
 
-
-
 public class GameObjectMultiSelector extends SEMultiSelector {
 
-	public GameObjectMultiSelector(ArrayList<String> rootDataTypes){
+	public GameObjectMultiSelector(ArrayList<String> rootDataTypes) {
 		super(rootDataTypes);
-		//data = rootDataTypes;
 		this.data = new ArrayList<String>();
-		for(String type: rootData){
+		for (String type : rootData) {
 			data.add(type);
 		}
 	}
 
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() instanceof JButton)
-			popMeUp().show((JComponent)e.getSource(), ((JComponent)e.getSource()).getWidth(), 0);
-		
-		if(e.getSource() instanceof JCheckBoxMenuItem){
-			if(((JCheckBoxMenuItem)e.getSource()).isSelected())
-				data.add(((JCheckBoxMenuItem)e.getSource()).getText());
-				//data.remove(((JCheckBoxMenuItem)e.getSource()).getText());
+		if (e.getSource() instanceof JButton)
+			popUpMenu().show((JComponent) e.getSource(),
+					((JComponent) e.getSource()).getWidth(), 0);
+
+		if (e.getSource() instanceof JCheckBoxMenuItem) {
+			if (((JCheckBoxMenuItem) e.getSource()).isSelected())
+				data.add(((JCheckBoxMenuItem) e.getSource()).getText());
 			else
-				data.remove(((JCheckBoxMenuItem)e.getSource()).getText());
-				//data.add(((JCheckBoxMenuItem)e.getSource()).getText());
+				data.remove(((JCheckBoxMenuItem) e.getSource()).getText());
 			setChanged();
 			notifyObservers(data);
 		}
-		
-		
 	}
 
 	@Override
 	protected String setLabel() {
-		return "Game Objects Types";
+		return "Types";
 	}
 
 	@Override
 	protected void populateMenu(JPopupMenu a) {
-		//AlpabetizeArrayList();
-		System.out.println("ROOT DATRA" + rootData.toString());
 		final List<JCheckBoxMenuItem> buttons;
 		JCheckBoxMenuItem item;
 		final MenuVisibilityHandler menuVisHandler;
 		buttons = new ArrayList<JCheckBoxMenuItem>();
 		menuVisHandler = new MenuVisibilityHandler(a);
-		
-		//if (rootData != null){
-			///GameTypeManager typeManager = activeTranslator.getGameTypeManager();
-			for (String type : this.rootData) {
-					item = new JCheckBoxMenuItem(type);
-					
-					if(data.contains(type))
-						item.setSelected(true);
-					else
-						item.setSelected(false);
-					
-					item.setIcon(null);
-					item.addActionListener(menuVisHandler);
-					item.addActionListener(this);
-					buttons.add(item);
-			}
-		//}
+
+		for (String type : this.rootData) {
+			item = new JCheckBoxMenuItem(type);
+
+			if (data.contains(type))
+				item.setSelected(true);
+			else
+				item.setSelected(false);
+
+			item.setIcon(null);
+			item.addActionListener(menuVisHandler);
+			item.addActionListener(this);
+			buttons.add(item);
+		}
 		a.addSeparator();
-		for (JCheckBoxMenuItem newItem : buttons){
-			//newItem.setSelected(true);
+		for (JCheckBoxMenuItem newItem : buttons) {
 			a.add(newItem);
 		}
-		
 	}
-	
-
 }
