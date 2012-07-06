@@ -53,25 +53,27 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 		typeFormat = this.translator.getGameTypeManager().getFormat(
 				((KnowItBindingConstant) binding).getFirstType());
 
-		if (typeFormat == null || typeFormat.isEmpty()) {
-			if (this.binding instanceof KnowItBindingConstant)
-				if (((KnowItBindingConstant) this.binding).getValue() instanceof GameObject) {
-					List<CodeBlock> codeBlocks = this.getBindingCodeBlocks();
+		if (typeFormat == null || typeFormat.isEmpty()
+				&& this.binding instanceof KnowItBindingConstant) {
+			if (((KnowItBindingConstant) this.binding).getValue() instanceof GameObject) {
+				List<CodeBlock> codeBlocks = this.getBindingCodeBlocks();
 
-					if (codeBlocks.size() <= 0)
-						throw new CodeGenerationException(
-								"Couldn't find code block for "
-										+ this.binding
-										+ ". Maybe it's missing from the API library?");
-					
-					final Collection<FormatFragment> codeFragments;
-					
-					codeFragments = this.getTranslator().getCode(codeBlocks.get(0));
-					
-					String bindingCode = FormatFragment.resolveFormat(codeFragments, this);
-					return bindingCode;
-				} else
-					return this.getValue();
+				if (codeBlocks.size() <= 0)
+					throw new CodeGenerationException(
+							"Couldn't find code block for "
+									+ this.binding
+									+ ". Maybe it's missing from the API library?");
+
+				final Collection<FormatFragment> codeFragments;
+				
+				codeFragments = this.getTranslator().getCode(codeBlocks.get(0));
+
+				String bindingCode = FormatFragment.resolveFormat(codeFragments, this);
+				
+				return bindingCode;
+			} else {
+				return this.getValue();
+			}
 		}
 		return FormatFragment.resolveFormat(typeFormat, this);
 	}

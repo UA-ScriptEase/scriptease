@@ -10,7 +10,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
 /**
  * A CodeBlock represents a block of code which is generated in script.
@@ -104,7 +103,7 @@ public class CodeBlock implements TypedComponent, Cloneable {
 			clonedIncludes.add(new String(include));
 		}
 		clone.setIncludes(clonedIncludes);
-
+		
 		// No need to worry about code and includes since that is handled by
 		// codemanager, and the clone _should_ resolve to the same code based on
 		// an identical hash
