@@ -4,7 +4,6 @@ import javax.swing.JPanel;
 
 import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
-import scriptease.translator.codegenerator.CauseEffectPicker;
 import scriptease.translator.codegenerator.GameObjectPicker;
 
 /**
@@ -44,6 +43,9 @@ public class PaneFactory {
 	}
 
 	/**
+	 * TODO Actually implement this.
+	 * 
+	 * 
 	 * Builds a pane containing all causes, effects, descriptions, and folders,
 	 * allowing the user to drag them into the story.
 	 * 
@@ -51,16 +53,13 @@ public class PaneFactory {
 	 * @return
 	 */
 	public static JPanel buildCauseEffectPane(StoryModel model) {
-		CauseEffectPicker picker;
-
 		if (model != null) {
 			Translator translator = model.getTranslator();
 			if (translator != null) {
 				// Get the picker
-				if ((picker = translator.getCustomCauseEffectPicker()) == null) {
-					picker = new CauseEffectPane();
-				}
-				return picker.getCauseEffectPanel();
+				
+				
+				//TODO Add the librarypane here.
 			}
 		}
 

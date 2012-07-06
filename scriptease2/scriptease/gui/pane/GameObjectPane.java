@@ -6,13 +6,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.SpringLayout;
 import javax.swing.ToolTipManager;
@@ -39,21 +36,15 @@ public class GameObjectPane implements GameObjectPicker {
 	// certain behavior of the default one.
 	private FilterableSearchField searchField;
 
-	private GameObjectPicker customPicker;
 	private GameObjectPanelTree tree = new GameObjectPanelTree();
 	private GameObjectMultiSelector multiSelector;
 
 	public GameObjectPane() {
-		this(null);
 		multiSelector = new GameObjectMultiSelector(tree.getStringTypes());
 		multiSelector.addObserver(tree);
 	}
 
-	public GameObjectPane(GameObjectPicker customPicker) {
-		this.customPicker = customPicker;
-	}
-
-	//TODO Combine this somehow with configurePane() in LibraryPane.java.
+	// TODO Combine parts of this with configurePane() in LibraryPane.java.
 	private JPanel buildFilterPane(GameObjectTree model) {
 		final JPanel filterPane;
 
