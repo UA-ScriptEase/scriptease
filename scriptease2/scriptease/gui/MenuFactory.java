@@ -39,8 +39,8 @@ import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.gui.storycomponentbuilder.StoryComponentBuilder;
 import scriptease.gui.storycomponentbuilder.StoryComponentDescriptorTemplate.ComponentContext;
-import scriptease.gui.storycomponentbuilder.StoryComponentFrame;
 import scriptease.gui.storycomponentbuilder.StoryComponentKnowItEditor;
 import scriptease.gui.storycomponentbuilder.StoryComponentScriptItEditor;
 import scriptease.model.LibraryModel;
@@ -132,7 +132,7 @@ public class MenuFactory {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Need to add listners same for describers
-				StoryComponentFrame
+				StoryComponentBuilder
 						.getInstance()
 						.getStackedBuilder()
 						.setInitialPane(
@@ -143,7 +143,7 @@ public class MenuFactory {
 		newKnowIt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				StoryComponentFrame
+				StoryComponentBuilder
 						.getInstance()
 						.getStackedBuilder()
 						.setInitialPane(
@@ -509,7 +509,6 @@ public class MenuFactory {
 				final TranslatorManager manager = TranslatorManager.getInstance();
 				Translator nwn = manager.getTranslator(
 						"Neverwinter Nights");
-//				manager.setActiveTranslator(nwn);
 				
 				LibraryModel model = nwn.getApiDictionary().getLibrary();
 				for (StoryComponent component : model.getAllStoryComponents()) {

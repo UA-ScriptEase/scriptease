@@ -22,6 +22,12 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.complex.ScriptIt;
 
+/**
+ * This view is used to allow the user to select various pathways from
+ * DescribeIts to determine what effect they should have.
+ * 
+ * @author mfchurch
+ */
 @SuppressWarnings("serial")
 public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 
@@ -33,7 +39,7 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 		this.setOpaque(false);
 		this.setLayout(new DescribeItPanelLayoutManager(headNode, collapsed));
 		// observer the graph nodes
-	
+
 		GraphNode.observeDepthMap(this, headNode);
 	}
 
@@ -160,8 +166,8 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			ScriptIt resolvedDoIt = describeIt.getResolvedScriptIt();
 
 			if (resolvedDoIt != null) {
-				StoryComponentPanelFactory.parseDisplayText(
-						collapsedPanel, resolvedDoIt);
+				StoryComponentPanelFactory.parseDisplayText(collapsedPanel,
+						resolvedDoIt);
 
 				xSize += collapsedPanel.getPreferredSize().getWidth();
 				ySize = Math.max(ySize, (int) collapsedPanel.getPreferredSize()
@@ -197,8 +203,8 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			final ScriptIt resolvedDoIt = describeIt.getResolvedScriptIt();
 
 			if (resolvedDoIt != null) {
-				StoryComponentPanelFactory.parseDisplayText(
-						collapsedPanel, resolvedDoIt);
+				StoryComponentPanelFactory.parseDisplayText(collapsedPanel,
+						resolvedDoIt);
 
 				collapsedPanel.setBounds(xLocation, yLocation,
 						(int) collapsedPanel.getPreferredSize().getWidth(),
