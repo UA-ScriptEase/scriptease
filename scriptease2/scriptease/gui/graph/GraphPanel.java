@@ -647,10 +647,6 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 			// clear the display panel
 			clearDisplayPanel();
 
-			//TODO REMOVE THIS CODE! DEBUGGING PRINTLN
-			System.out.println("################### GraphPanel was redrawn!");
-
-			
 			// layout the graph
 			layoutGraph(HORIZONTAL_INDENT, 0);
 		}

@@ -90,6 +90,8 @@ public class GameObjectPane implements GameObjectPicker {
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		treeScrollPane.setBackground(Color.WHITE);
+		treeScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
 
 		// build the filter
 		JComponent filterPane = this.buildFilterPane(tree.getTreeModel());
