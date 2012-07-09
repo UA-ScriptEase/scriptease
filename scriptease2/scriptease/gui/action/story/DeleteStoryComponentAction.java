@@ -17,7 +17,7 @@ import javax.swing.event.TreeSelectionListener;
 import scriptease.gui.SEFrame;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.StoryPanel;
-import scriptease.gui.storycomponentbuilder.StoryComponentFrame;
+import scriptease.gui.storycomponentbuilder.StoryComponentBuilder;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.StoryModelPool;
@@ -68,9 +68,9 @@ public final class DeleteStoryComponentAction extends
 		StoryModelPool.getInstance().addPoolChangeObserver(this);
 
 		SEFrame.getInstance().getStoryTabPane().addContainerListener(this);
-		StoryComponentFrame.getInstance().getLibraryTree()
+		StoryComponentBuilder.getInstance().getLibraryTree()
 				.addTreeSelectionListener(this);
-		StoryComponentFrame.getInstance().addWindowFocusListener(this);
+		StoryComponentBuilder.getInstance().getFrame().addWindowFocusListener(this);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public final class DeleteStoryComponentAction extends
 	private StoryComponentPanelManager getActiveSelectionManager() {
 		final StoryPanel activeStory;
 		final SEFrame mainFrame = SEFrame.getInstance();
-		final StoryComponentFrame builderFrame = StoryComponentFrame
+		final StoryComponentBuilder builder = StoryComponentBuilder
 				.getInstance();
 
 		if (mainFrame != null && mainFrame.isFocused()) {
@@ -99,8 +99,8 @@ public final class DeleteStoryComponentAction extends
 				
 			}
 			return null;
-		} else if (builderFrame != null && builderFrame.isFocused()) {
-			return builderFrame.getLibraryTree().getSelectionManager();
+		} else if (builder != null && builder.getFrame().isFocused()) {
+			return builder.getLibraryTree().getSelectionManager();
 		} else
 			return null;
 	}

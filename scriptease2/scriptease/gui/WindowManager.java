@@ -26,7 +26,7 @@ import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.storycomponentbuilder.StoryComponentFrame;
+import scriptease.gui.storycomponentbuilder.StoryComponentBuilder;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.LibraryManager;
@@ -425,7 +425,7 @@ public final class WindowManager {
 
 	public void showStoryComponentBuilder() {
 		JFrame scFrame = new JFrame();
-		scFrame = StoryComponentFrame.getInstance();
+		scFrame = StoryComponentBuilder.getInstance().getFrame();
 		scFrame.setJMenuBar(MenuFactory.buildBuilderMenuBar());
 
 		scFrame.setVisible(true);

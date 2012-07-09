@@ -17,14 +17,27 @@ import scriptease.gui.storycomponentbuilder.propertypanel.ParameterPanel;
 import scriptease.gui.storycomponentbuilder.propertypanel.StoryComponentPropertyPanel;
 import scriptease.model.atomic.KnowIt;
 
+/**
+ * This class appears to get the various bindings for a story component. In the
+ * SCB, this is the list of "+" buttons that appears when you press "add". They
+ * don't actually do anything, which shouldn't be suprising if you've looked at
+ * this class.
+ * 
+ * @author kschenk - Don't blame me for the code right now, though. I'm editing
+ *         it.
+ * 
+ */
 @SuppressWarnings("serial")
 public class StoryComponentBindingList extends JPanel implements ActionListener {
+	/*
+	 * TODO Fix this class so it actually does something, and change the
+	 * description to be less snarky.
+	 */
 	private final String ADD_BUTT = "+";
 	private BindingContext contextOfParams;
 	private JPanel parameterBindingPane;
 
 	private ArrayList<StoryComponentPropertyPanel> bindings;
-	// TODO
 	// /lets deal with you tommrow....
 	private ArrayList<StoryComponentPropertyPanel> knowItBindings;
 	private ActionListener splitpaneActionListner;

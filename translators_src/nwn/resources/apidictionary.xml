@@ -4009,7 +4009,7 @@
 			</CodeBlocks>
 		</ScriptIt>
 		<ScriptIt>
-			<Name>When a user-defined event occurs</Name>
+			<Name>When a user-defined event occurs in &lt;subject&gt;</Name>
 			<Labels/>
 			<Children/>
 			<CodeBlocks>
@@ -4018,7 +4018,7 @@
 						<Type>void</Type>
 					</Types>
 					<Parameters>
-						<KnowIt visible="false">
+						<KnowIt visible="true">
 							<Name>subject</Name>
 							<Labels />
 							<Types>
