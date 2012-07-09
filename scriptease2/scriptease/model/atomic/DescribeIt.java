@@ -523,7 +523,7 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 	}
 
 	/**
-	 * Returns a copy of the currently commited selectedPath
+	 * Returns a copy of the currently committed selectedPath
 	 * 
 	 * @return
 	 */

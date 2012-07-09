@@ -7,8 +7,11 @@ import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 
@@ -117,7 +120,6 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 					searchData.add(binding.getScriptValue());
 				this.compile(parameter);
 			}
-			/*************************************************/
 			// searchable by implicit
 			//int i = 0;
 			//System.out.println("Size of Implicits" + scriptIt.getImplicits().size());
@@ -139,9 +141,9 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
 			defaultProcess(knowIt);
-			// searchData.addAll(knowIt.getTypes());
-			final KnowItBinding binding = knowIt.getBinding();
-			/*binding.process(new AbstractNoOpBindingVisitor() {
+			searchData.addAll(knowIt.getTypes());
+	//		final KnowItBinding binding = knowIt.getBinding();
+		/*	binding.process(new AbstractNoOpBindingVisitor() {
 				@Override
 				public void processFunction(KnowItBindingFunction function) {
 					final ScriptIt doIt = function.getValue();
@@ -158,9 +160,9 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 					}
 				}
 			});*/
-			binding.process(new AbstractNoOpBindingVisitor() {
+//			binding.process(new AbstractNoOpBindingVisitor() {
 				//Inner methods need alot ofwork...
-			});
+	//		});
 		}
 	}
 }
