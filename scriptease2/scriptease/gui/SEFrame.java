@@ -6,7 +6,6 @@ import java.awt.GridLayout;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +36,6 @@ import scriptease.controller.observer.StoryModelPoolObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.pane.CloseableTab;
 import scriptease.gui.pane.LibraryPane;
-import scriptease.gui.pane.PaneFactory;
 import scriptease.gui.pane.StoryPanel;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
@@ -58,7 +56,7 @@ import scriptease.translator.TranslatorManager;
  * @author mfchurch
  */
 @SuppressWarnings("serial")
-public final class SEFrame extends JFrame implements StoryModelPoolObserver {
+public final class SEFrame implements StoryModelPoolObserver {
 	private static final int MIN_HEIGHT = 480;
 	private static final int MIN_WIDTH = 640;
 
@@ -68,13 +66,15 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 	private JSplitPane leftSplit;
 	private TimedLabel statusLabel;
 
+	private final JFrame seFrame;
+	
 	public static String preferredLayout;
 
 	private SEFrame() {
-		super(ScriptEase.TITLE);
-
-		this.setMinimumSize(new Dimension(SEFrame.MIN_WIDTH, SEFrame.MIN_HEIGHT));
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		seFrame = WindowManager.getInstance().buildScriptEaseFrame(ScriptEase.TITLE);
+		
+		seFrame.setMinimumSize(new Dimension(SEFrame.MIN_WIDTH, SEFrame.MIN_HEIGHT));
+		seFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		this.storyTabs = new JTabbedPane();
 		
@@ -101,6 +101,14 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 
 		StoryModelPool.getInstance().addPoolChangeObserver(this);
 	}
+	
+	/**
+	 * Returns the JFrame representing ScriptEase.
+	 * @return
+	 */
+	public JFrame getFrame() {
+		return seFrame;
+	}
 
 	/**
 	 * Sets the Status Label to the given message
@@ -124,7 +132,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		final JPanel content = new JPanel();
 
 		final JComponent libraryPane = new LibraryPane();
-		final JComponent objectPane = PaneFactory.buildGameObjectPane(null);
+		final JComponent objectPane = PanelFactory.getInstance().buildGameObjectPane(null);
 		final JComponent statusBar = this.buildStatusBar();
 
 		final GroupLayout layout = new GroupLayout(content);
@@ -182,8 +190,8 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 
 		}
 
-		this.getContentPane().removeAll();
-		this.getContentPane().add(content);
+		seFrame.getContentPane().removeAll();
+		seFrame.getContentPane().add(content);
 	}
 
 	/**
@@ -254,17 +262,8 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 		return SEFrame.instance;
 	}
 
-	// Overridden to provide custom exiting behavior.
-	@Override
-	protected void processWindowEvent(WindowEvent e) {
-		if (e.getID() == WindowEvent.WINDOW_CLOSING)
-			ScriptEase.getInstance().exit();
-		else
-			super.processWindowEvent(e);
-	}
-
 	private void updateGameObjectPane(StoryModel model) {
-		final JPanel newGameObjectPane = PaneFactory.buildGameObjectPane(model);
+		final JPanel newGameObjectPane = PanelFactory.getInstance().buildGameObjectPane(model);
 
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
 			this.leftSplit.setBottomComponent(newGameObjectPane);
@@ -440,7 +439,7 @@ public final class SEFrame extends JFrame implements StoryModelPoolObserver {
 
 			newTitle += ScriptEase.TITLE;
 
-			this.setTitle(newTitle);
+			seFrame.setTitle(newTitle);
 		}
 	}
 

@@ -1,8 +1,10 @@
 package scriptease.gui;
 
 import java.awt.Color;
-import java.awt.Frame;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -16,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.SwingWorker.StateValue;
@@ -26,7 +29,6 @@ import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.storycomponentbuilder.StoryComponentBuilder;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.LibraryManager;
@@ -52,7 +54,7 @@ import scriptease.util.StringOp;
  * @author remiller
  * @author lari
  */
-public final class WindowManager {
+public final class WindowManager implements WindowFocusListener {
 	private static final String CODE_GENERATION_PROBLEM = "Code Generation Problem";
 	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase 2";
 	private static final String ABOUT_SCRIPTEASE_MESSAGE = "ScriptEase 2\n"
@@ -78,6 +80,8 @@ public final class WindowManager {
 			.getString("Test_Story");
 
 	private JFileChooser chooser;
+
+	private JFrame currentFrame;
 
 	/**
 	 * The sole instance of this class as per the singleton pattern.
@@ -109,7 +113,7 @@ public final class WindowManager {
 	 * Shows the main ScriptEase frame.
 	 */
 	public void showMainFrame() {
-		SEFrame frame = SEFrame.getInstance();
+		JFrame frame = SEFrame.getInstance().getFrame();
 
 		frame.setJMenuBar(MenuFactory.createStoryMenuBar());
 
@@ -129,7 +133,7 @@ public final class WindowManager {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(SEFrame.getInstance(),
+				JOptionPane.showMessageDialog(currentFrame,
 						WindowManager.ERROR_MESSAGE,
 						WindowManager.CRITICAL_ERROR_TITLE,
 						JOptionPane.ERROR_MESSAGE);
@@ -154,9 +158,9 @@ public final class WindowManager {
 	 *         {@link JOptionPane#CLOSED_OPTION} if the user closed the dialog
 	 */
 	public int showOptionsDialog(String message, String title, Object[] options) {
-		return JOptionPane.showOptionDialog(SEFrame.getInstance(), message,
-				title, JOptionPane.DEFAULT_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, options, null);
+		return JOptionPane.showOptionDialog(this.currentFrame, message, title,
+				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				options, null);
 	}
 
 	/**
@@ -169,7 +173,7 @@ public final class WindowManager {
 			return;
 
 		JDialog dialog = DialogBuilder.getInstance().createExceptionDialog(
-				SEFrame.getInstance());
+				this.currentFrame);
 		WindowManager.exceptionShowing = true;
 
 		dialog.setLocationRelativeTo(dialog.getParent());
@@ -179,7 +183,7 @@ public final class WindowManager {
 	}
 
 	public void showNewStoryWizardDialog() {
-		DialogBuilder.getInstance().showNewStoryWizard(SEFrame.getInstance());
+		DialogBuilder.getInstance().showNewStoryWizard(this.currentFrame);
 	}
 
 	/**
@@ -199,7 +203,7 @@ public final class WindowManager {
 		// TODO: The "Loading..." string here should be pulled out to a
 		// parameter. - remiller
 		final JDialog progressBar = DialogBuilder.getInstance()
-				.createProgressBar(SEFrame.getInstance(), "Loading...");
+				.createProgressBar(this.currentFrame, "Loading...");
 		task.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent change) {
@@ -220,7 +224,7 @@ public final class WindowManager {
 
 	public LibraryModel buildNewLibraryWizardDialog() {
 		return DialogBuilder.getInstance().showNewLibaryWizard(
-				SEFrame.getInstance());
+				this.currentFrame);
 	}
 
 	/**
@@ -239,7 +243,7 @@ public final class WindowManager {
 		}
 		options[libraries.size()] = "New Library...";
 		// libraries.add("test");
-		return (Object) JOptionPane.showInputDialog(SEFrame.getInstance(),
+		return (Object) JOptionPane.showInputDialog(this.currentFrame,
 				"Select a Library: ", "Library Selector",
 				JOptionPane.PLAIN_MESSAGE, null, options, null);
 	}
@@ -277,7 +281,7 @@ public final class WindowManager {
 			panel.add(problemPanel);
 		}
 
-		JOptionPane.showMessageDialog(SEFrame.getInstance(), panel,
+		JOptionPane.showMessageDialog(this.currentFrame, panel,
 				CODE_GENERATION_PROBLEM, JOptionPane.WARNING_MESSAGE);
 	}
 
@@ -349,9 +353,8 @@ public final class WindowManager {
 
 		panel.add(new JLabel("Do you wish to continue?"));
 
-		int choice = JOptionPane.showConfirmDialog(SEFrame.getInstance(),
-				panel, WindowManager.CONFIRM_MODEL_TITLE,
-				JOptionPane.YES_NO_OPTION);
+		int choice = JOptionPane.showConfirmDialog(this.currentFrame, panel,
+				WindowManager.CONFIRM_MODEL_TITLE, JOptionPane.YES_NO_OPTION);
 		return choice == JOptionPane.OK_OPTION;
 	}
 
@@ -361,7 +364,7 @@ public final class WindowManager {
 	 * @return True if the user confirmed the overwrite, false otherwise.
 	 */
 	public boolean showConfirmOverwrite(File location) {
-		int choice = JOptionPane.showConfirmDialog(SEFrame.getInstance(),
+		int choice = JOptionPane.showConfirmDialog(this.currentFrame,
 				"The file: \"" + location.getAbsolutePath()
 						+ "\" already exists.\n"
 						+ WindowManager.CONFIRM_OVERWRITE_TEXT,
@@ -378,7 +381,7 @@ public final class WindowManager {
 	 *         <code>JOptionPane.CANCEL_OPTION</code>
 	 */
 	public int showConfirmClose(StoryModel model) {
-		int choice = JOptionPane.showConfirmDialog(SEFrame.getInstance(),
+		int choice = JOptionPane.showConfirmDialog(this.currentFrame,
 				"The story \"" + model + "\" has been modified. "
 						+ WindowManager.CONFIRM_CLOSE_TEXT,
 				WindowManager.CONFIRM_CLOSE_TITLE,
@@ -395,7 +398,7 @@ public final class WindowManager {
 	 */
 	public boolean showConfirmTestStory() {
 		String[] options = { SAVE_AND_TEST, CANCEL };
-		int n = JOptionPane.showOptionDialog(SEFrame.getInstance(),
+		int n = JOptionPane.showOptionDialog(this.currentFrame,
 				"Save and test story?", TEST_STORY,
 				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, options, options[1]);
@@ -418,14 +421,17 @@ public final class WindowManager {
 	 * (version, authors, etc.)
 	 */
 	public void showAboutScreen() {
-		JOptionPane.showMessageDialog(SEFrame.getInstance(),
+		JOptionPane.showMessageDialog(this.currentFrame,
 				ABOUT_SCRIPTEASE_MESSAGE, ABOUT_SCRIPTEASE_TITLE,
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
+	/*
+	 * TODO Why is this here? Does it actually belong here..? Is it even necessary?
+	 */
 	public void showStoryComponentBuilder() {
 		JFrame scFrame = new JFrame();
-		scFrame = StoryComponentBuilder.getInstance().getFrame();
+		scFrame = WindowManager.getInstance().buildStoryComponentBuilderFrame();
 		scFrame.setJMenuBar(MenuFactory.buildBuilderMenuBar());
 
 		scFrame.setVisible(true);
@@ -457,21 +463,11 @@ public final class WindowManager {
 
 		String[] values = { acceptText, WindowManager.CANCEL };
 
-		int choice = JOptionPane.showOptionDialog(SEFrame.getInstance(),
-				message, WindowManager.RETRY_TITLE_START + " " + operationName,
+		int choice = JOptionPane.showOptionDialog(this.currentFrame, message,
+				WindowManager.RETRY_TITLE_START + " " + operationName,
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
 				null, values, values[0]);
 		return choice == JOptionPane.OK_OPTION;
-	}
-
-	/**
-	 * Returns the main frame of ScriptEase for use in Custom GUI's such as a
-	 * custom picker.
-	 * 
-	 * @return
-	 */
-	public Frame getMainFrame() {
-		return SEFrame.getInstance();
 	}
 
 	/**
@@ -492,12 +488,12 @@ public final class WindowManager {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(SEFrame.getInstance(), message,
+				JOptionPane.showMessageDialog(currentFrame, message,
 						"ScriptEase: " + title, JOptionPane.ERROR_MESSAGE);
 			}
 		});
 	}
-	
+
 	/**
 	 * Shows a message dialog dressed as a warning that is anchored to the main
 	 * window.
@@ -516,7 +512,7 @@ public final class WindowManager {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(SEFrame.getInstance(), message,
+				JOptionPane.showMessageDialog(currentFrame, message,
 						"ScriptEase: " + title, JOptionPane.WARNING_MESSAGE);
 			}
 		});
@@ -536,8 +532,10 @@ public final class WindowManager {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(SEFrame.getInstance(), message,
-						"ScriptEase: " + title, JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane
+						.showMessageDialog(currentFrame, message,
+								"ScriptEase: " + title,
+								JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 	}
@@ -591,8 +589,7 @@ public final class WindowManager {
 		// usually the correct extension)
 		this.chooser.setSelectedFile(new File(""));
 
-		buttonChoice = this.chooser
-				.showDialog(SEFrame.getInstance(), operation);
+		buttonChoice = this.chooser.showDialog(this.currentFrame, operation);
 
 		if (buttonChoice == JFileChooser.APPROVE_OPTION) {
 			choice = this.chooser.getSelectedFile();
@@ -610,7 +607,71 @@ public final class WindowManager {
 	 */
 	public void showPreferencesDialog() {
 		PreferencesDialog preferencesDialog = new PreferencesDialog(
-				SEFrame.getInstance());
+				this.currentFrame);
 		preferencesDialog.display();
 	}
+
+	/**
+	 * Creates a new SEFrame.
+	 * 
+	 * TODO Add everything in SEFrame to this class.
+	 * 
+	 * @return
+	 */
+	public JFrame buildScriptEaseFrame(String title) {
+		@SuppressWarnings("serial")
+		JFrame frame = new JFrame(title) {
+			@Override
+			protected void processWindowEvent(WindowEvent e) {
+				if (e.getID() == WindowEvent.WINDOW_CLOSING)
+					ScriptEase.getInstance().exit();
+				else
+					super.processWindowEvent(e);
+			}
+		};
+		frame.addWindowFocusListener(this);
+		return frame;
+	}
+
+	/**
+	 * Creates a new JFrame whose focus will be listened to. 
+	 * 
+	 * @return
+	 */
+	public JFrame buildStoryComponentBuilderFrame() {
+		final JFrame scbFrame;
+		final JPanel editingPane;
+		final JPanel libraryPane;
+		
+		scbFrame = new JFrame("Story Component Builder");
+		editingPane = PanelFactory.getInstance().buildStoryComponentEditorPanel();
+		libraryPane = PanelFactory.getInstance().buildStoryComponentLibraryPanel();
+		
+		// TODO Move to UIListenerFactory 
+		// Note that this is how listeners get added to the LibraryPane at the moment.
+		/*libraryPane.getLibPane().getSCPTree()
+				.addTreeSelectionListener(editingPane);*/
+		
+		//TODO Move to UIListenerFactory
+		scbFrame.addWindowFocusListener(this);
+
+		scbFrame.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+				libraryPane, editingPane));
+		scbFrame.setSize(new Dimension(1200, 600));
+		
+		return scbFrame;
+	}
+
+	/*
+	 * TODO Move to UIListenerFactory
+	 */
+	@Override
+	public void windowGainedFocus(WindowEvent e) {
+		this.currentFrame = (JFrame) e.getComponent();
+	}
+
+	@Override
+	public void windowLostFocus(WindowEvent e) {
+	}
+
 }

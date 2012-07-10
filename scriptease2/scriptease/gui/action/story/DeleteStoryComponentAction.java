@@ -17,7 +17,6 @@ import javax.swing.event.TreeSelectionListener;
 import scriptease.gui.SEFrame;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.StoryPanel;
-import scriptease.gui.storycomponentbuilder.StoryComponentBuilder;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.StoryModelPool;
@@ -68,9 +67,9 @@ public final class DeleteStoryComponentAction extends
 		StoryModelPool.getInstance().addPoolChangeObserver(this);
 
 		SEFrame.getInstance().getStoryTabPane().addContainerListener(this);
-		StoryComponentBuilder.getInstance().getLibraryTree()
-				.addTreeSelectionListener(this);
-		StoryComponentBuilder.getInstance().getFrame().addWindowFocusListener(this);
+	//	StoryComponentBuilder.getInstance().getLibraryTree()
+		//				.addTreeSelectionListener(this);
+		//StoryComponentBuilder.getInstance().getFrame().addWindowFocusListener(this);
 	}
 
 	@Override
@@ -87,10 +86,10 @@ public final class DeleteStoryComponentAction extends
 	private StoryComponentPanelManager getActiveSelectionManager() {
 		final StoryPanel activeStory;
 		final SEFrame mainFrame = SEFrame.getInstance();
-		final StoryComponentBuilder builder = StoryComponentBuilder
-				.getInstance();
+	//	final StoryComponentEditor builder = StoryComponentEditor
+	//			.getInstance();
 
-		if (mainFrame != null && mainFrame.isFocused()) {
+		if (mainFrame != null && mainFrame.getFrame().isFocused()) {
 			activeStory = (StoryPanel) mainFrame.getStoryTabPane()
 					.getSelectedComponent();
 			
@@ -99,8 +98,8 @@ public final class DeleteStoryComponentAction extends
 				
 			}
 			return null;
-		} else if (builder != null && builder.getFrame().isFocused()) {
-			return builder.getLibraryTree().getSelectionManager();
+	//	} else if (builder != null && builder.getFrame().isFocused()) {
+	//		return builder.getLibraryTree().getSelectionManager();
 		} else
 			return null;
 	}
@@ -113,7 +112,6 @@ public final class DeleteStoryComponentAction extends
 			JScrollPane treePane = ((StoryPanel) child).getTree();
 			if(treePane != null && treePane instanceof StoryComponentPanelTree)
 				((StoryComponentPanelTree) treePane).addTreeSelectionListener(this);
-			// ((StoryPanel) child).getTree().addFocusListener(this);
 
 			this.updateEnabledState();
 		}

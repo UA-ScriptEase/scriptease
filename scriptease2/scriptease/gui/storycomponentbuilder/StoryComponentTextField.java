@@ -34,10 +34,6 @@ public class StoryComponentTextField extends Observable implements KeyListener, 
 		return textField;
 	}
 	
-	public String getNameComp(){
-		return textField.getText();
-	}
-	
 	private boolean editingNCake(int offset, int len) {
 		if (offset == 0 && len == 0 || offset == len )
 			return false;
@@ -137,9 +133,4 @@ public class StoryComponentTextField extends Observable implements KeyListener, 
 			genParamList(indexOfBeginners);
 		}
 	}
-	
 }
-	
-	
-
-

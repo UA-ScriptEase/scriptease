@@ -16,17 +16,11 @@ import scriptease.translator.TranslatorManager;
 
 public class StoryComponentMultiSelector extends Observable implements ActionListener{
 	private String TYPES_LABELS;
-	private MultiSelectorContext selectorContext;
 	private JButton rootTypeLabelMenu;
 	private ArrayList<String> data;
 	
-	public enum MultiSelectorContext{
-		TYPES, LABELS, GAME_OBJECT
-	}
-		
-	public StoryComponentMultiSelector(MultiSelectorContext context){
-		selectorContext = context;
-		rootTypeLabelMenu = new JButton(setLabel());
+	public StoryComponentMultiSelector(){
+		rootTypeLabelMenu = new JButton("Types");
 		rootTypeLabelMenu.addActionListener(this);
 		data = new ArrayList<String>();
 	}
@@ -35,22 +29,12 @@ public class StoryComponentMultiSelector extends Observable implements ActionLis
 		data = typesOrLabels;
 	}
 	
-	public MultiSelectorContext getSelectorContext(){
-		return selectorContext;
-	}
-	
 	public JButton getRootButton(){
 		return rootTypeLabelMenu;
 	}
 	
 	public ArrayList<String> getAllSelected(){
 		return null;
-	}
-	
-	private String setLabel(){
-		if(selectorContext == MultiSelectorContext.TYPES)
-			return "Types";
-		return "Labels";
 	}
 	
 	private void populateMenu(final JPopupMenu a){
