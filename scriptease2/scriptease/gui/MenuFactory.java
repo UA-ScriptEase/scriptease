@@ -39,17 +39,12 @@ import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.storycomponentbuilder.StoryComponentBuilder;
-import scriptease.gui.storycomponentbuilder.StoryComponentDescriptorTemplate.ComponentContext;
-import scriptease.gui.storycomponentbuilder.StoryComponentKnowItEditor;
-import scriptease.gui.storycomponentbuilder.StoryComponentScriptItEditor;
 import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
-import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerator;
@@ -89,8 +84,10 @@ public class MenuFactory {
 	private static final String TOOLS = Il8nResources.getString("Tools");
 	private static final String HELP = Il8nResources.getString("Help");
 	private static final String CREATE = Il8nResources.getString("Create");
-	private static final String NEW_DOIT = Il8nResources.getString("DoIt");
-	private static final String NEW_KNOWIT = Il8nResources.getString("KnowIt");
+	private static final String NEW_CAUSE = "Cause";
+	private static final String NEW_EFFECT = Il8nResources.getString("DoIt");
+	private static final String NEW_DESCRIPTION = Il8nResources
+			.getString("KnowIt");
 	private static final String DEBUG = "Debug";
 
 	/**
@@ -120,40 +117,46 @@ public class MenuFactory {
 	public static JMenuBar buildBuilderMenuBar() {
 		final JMenuBar builderMenuBar;
 		final JMenu createMenu;
-		final JMenuItem newScriptIt;
-		final JMenuItem newKnowIt;
+		final JMenuItem newCause;
+		final JMenuItem newEffect;
+		final JMenuItem newDescription;
 
 		builderMenuBar = new JMenuBar();
 		createMenu = new JMenu(MenuFactory.CREATE);
-		newScriptIt = new JMenuItem(MenuFactory.NEW_DOIT);
-		newKnowIt = new JMenuItem(MenuFactory.NEW_KNOWIT);
+		newCause = new JMenuItem(MenuFactory.NEW_CAUSE);
+		newEffect = new JMenuItem(MenuFactory.NEW_EFFECT);
+		newDescription = new JMenuItem(MenuFactory.NEW_DESCRIPTION);
 
-		newScriptIt.addActionListener(new ActionListener() {
+		/*
+		 * TODO Add these listeners to UIListenerFactory
+		 * 
+		 * The "newCause actionlistener is an example of a listener, but there
+		 * will be different ones eventually.
+		 */
+
+		newCause.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Need to add listners same for describers
-				StoryComponentBuilder
-						.getInstance()
-						.getStackedBuilder()
-						.setInitialPane(
-								new StoryComponentScriptItEditor(new ScriptIt(
-										""), ComponentContext.BASE));
-			}
-		});
-		newKnowIt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				StoryComponentBuilder
-						.getInstance()
-						.getStackedBuilder()
-						.setInitialPane(
-								new StoryComponentKnowItEditor(new KnowIt(""),
-										ComponentContext.BASE));
+				// TODO buildCauseEditorPane();
 			}
 		});
 
-		createMenu.add(newScriptIt);
-		createMenu.add(newKnowIt);
+		
+		/*
+		 * TODO Change "Create" menu to a "File" menu with the following structure:
+		 * 
+		 * File 
+		 * 	-> New
+		 * 		-> Cause
+		 * 		-> Effect
+		 * 		-> Description
+		 * -> Save
+		 * -> Close
+		 * 
+		 */
+		createMenu.add(newCause);
+		createMenu.add(newEffect);
+		createMenu.add(newDescription);
 
 		builderMenuBar.add(createMenu);
 		builderMenuBar.add(MenuFactory.buildEditMenu());
@@ -488,8 +491,8 @@ public class MenuFactory {
 
 							JTextArea textArea = new JTextArea(code);
 							JScrollPane scrollPane = new JScrollPane(textArea);
-							JDialog dialog = new JDialog(SEFrame.getInstance(),
-									"Code Generation Results");
+							JDialog dialog = new JDialog(SEFrame.getInstance()
+									.getFrame(), "Code Generation Results");
 							dialog.add(scrollPane);
 
 							dialog.pack();
@@ -506,10 +509,10 @@ public class MenuFactory {
 
 			@Override
 			protected void action() {
-				final TranslatorManager manager = TranslatorManager.getInstance();
-				Translator nwn = manager.getTranslator(
-						"Neverwinter Nights");
-				
+				final TranslatorManager manager = TranslatorManager
+						.getInstance();
+				Translator nwn = manager.getTranslator("Neverwinter Nights");
+
 				LibraryModel model = nwn.getApiDictionary().getLibrary();
 				for (StoryComponent component : model.getAllStoryComponents()) {
 					component.process(new AbstractNoOpStoryVisitor() {
@@ -521,7 +524,7 @@ public class MenuFactory {
 											JFrame frame = new JFrame(
 													"Graph Editor");
 
-											frame.add(PanelFactory
+											frame.add(PanelFactory.getInstance()
 													.buildDescribeItPanel(
 															described
 																	.getValue()

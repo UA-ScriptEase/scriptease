@@ -93,7 +93,7 @@ public class StoryPanel extends JPanel {
 		// update the models to panes map
 		updateModelsToPanes(model);
 
-		JPanel questPanel = PanelFactory.buildQuestPanel(model.getRoot()
+		JPanel questPanel = PanelFactory.getInstance().buildQuestPanel(model.getRoot()
 				.getStartPoint());
 
 		this.add(questPanel);

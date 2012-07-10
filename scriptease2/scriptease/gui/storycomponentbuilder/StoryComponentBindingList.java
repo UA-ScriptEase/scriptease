@@ -165,7 +165,6 @@ public class StoryComponentBindingList extends JPanel implements ActionListener 
 			// System.out.println("HUH2?");
 			// addBindingParam(a);
 			// }
-			// for()
 
 			break;
 
