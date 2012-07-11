@@ -25,6 +25,7 @@ import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.FileManager;
+import scriptease.controller.io.FileIO;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
 import scriptease.gui.action.file.CloseModelAction;
@@ -50,6 +51,7 @@ import scriptease.model.StoryModelPool;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerator;
@@ -157,6 +159,22 @@ public class MenuFactory {
 
 		builderMenuBar.add(createMenu);
 		builderMenuBar.add(MenuFactory.buildEditMenu());
+		
+		// Save button is temporary while StoryComponent Builder is being re-written. Can be removed once that's sorted. - remiller
+		JMenuItem save = new JMenuItem("Save Library");
+		save.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final Translator activeTranslator = TranslatorManager.getInstance().getActiveTranslator();
+				APIDictionary dict = 
+						activeTranslator.getApiDictionary();
+				
+				File location = activeTranslator.getPathProperty(Translator.DescriptionKeys.API_DICTIONARY_PATH);
+				
+				FileIO.getInstance().writeAPIDictionary(dict, location);
+			}
+		});
+		builderMenuBar.add(save);
 
 		return builderMenuBar;
 	}
@@ -506,11 +524,11 @@ public class MenuFactory {
 
 			@Override
 			protected void action() {
-				final TranslatorManager manager = TranslatorManager.getInstance();
-				Translator nwn = manager.getTranslator(
-						"Neverwinter Nights");
-//				manager.setActiveTranslator(nwn);
-				
+				final TranslatorManager manager = TranslatorManager
+						.getInstance();
+				Translator nwn = manager.getTranslator("Neverwinter Nights");
+				// manager.setActiveTranslator(nwn);
+
 				LibraryModel model = nwn.getApiDictionary().getLibrary();
 				for (StoryComponent component : model.getAllStoryComponents()) {
 					component.process(new AbstractNoOpStoryVisitor() {

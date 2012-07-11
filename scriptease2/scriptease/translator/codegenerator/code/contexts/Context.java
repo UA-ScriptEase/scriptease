@@ -73,7 +73,7 @@ public class Context {
 	 * Sets the Context's location information, which provides useful
 	 * information for determining the Context's subject and slot
 	 * 
-	 * @param slot
+	 * @param data.getSlot()
 	 */
 	public final void setLocationInfo(LocationInformation locationInfo) {
 		this.locationInfo = locationInfo;
@@ -203,7 +203,7 @@ public class Context {
 	/**
 	 * This finds the CodeBlocks for special circumstances as described in the
 	 * class that implements GameObject in the translator. In Neverwinter
-	 * Nights, this includes code blocks in i_se_aux.
+	 * Nights, this includes code blocks in i_se_aux. 
 	 * 
 	 * @return
 	 */
@@ -222,7 +222,7 @@ public class Context {
 						String referenceValue = kibConstant.getScriptValue();
 
 						List<CodeBlock> specialCodeBlocks = this.translator
-								.getApiDictionary().getCodeBlocksByID(
+								.getApiDictionary().getCodeBlocksByValRef(
 										referenceValue);
 
 						if (specialCodeBlocks != null)

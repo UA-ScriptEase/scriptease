@@ -30,6 +30,13 @@ public class EventSlotManager {
 		return this.defaultFormatKeyword;
 	}
 
+	/**
+	 * Returns a collection of implicit KnowIts cloned from the original set for
+	 * the slot.
+	 * 
+	 * @param keyword
+	 * @return
+	 */
 	public Collection<KnowIt> getImplicits(String keyword) {
 		final Slot slot = this.slots.get(keyword);
 		if (slot != null) {

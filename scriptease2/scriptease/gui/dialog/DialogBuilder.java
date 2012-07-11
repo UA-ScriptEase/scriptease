@@ -37,6 +37,7 @@ import scriptease.model.LibraryModel;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
 import scriptease.translator.Translator;
+import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameModule;
 
@@ -279,7 +280,7 @@ public class DialogBuilder {
 							.getName() + " Game Files", selectedTranslator
 							.getLegalExtensions());
 					defaultLocation = selectedTranslator
-							.getPathProperty("GAME_DIRECTORY");
+							.getPathProperty(DescriptionKeys.GAME_DIRECTORY);
 
 					if (!defaultLocation.exists())
 						defaultLocation = selectedTranslator.getLocation()

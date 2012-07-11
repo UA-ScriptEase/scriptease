@@ -156,10 +156,7 @@ public class StoryComponentScriptItEditor extends
 			final Collection<FormatFragment> codeFragments = codeBlockEditor
 					.getCodeFragments();
 
-			final Translator activeTranslator = TranslatorManager.getInstance()
-					.getActiveTranslator();
-
-			activeTranslator.setCode(codeBlock, codeFragments);
+			codeBlock.setCode(codeFragments);
 		}
 	}
 
@@ -252,10 +249,8 @@ public class StoryComponentScriptItEditor extends
 		 * codeBlock
 		 */
 		public void updateDisplay() {
-			final Translator activeTranslator = TranslatorManager.getInstance()
-					.getActiveTranslator();
-			final Collection<FormatFragment> codeFragments = activeTranslator
-					.getCode(codeBlock);
+			final Collection<FormatFragment> codeFragments = codeBlock
+					.getCode();
 			if (codeFragments.size() > 0)
 				codePane.setCodeFragments(codeFragments);
 			parameterList.updateBindingList(codeBlock.getParameters());

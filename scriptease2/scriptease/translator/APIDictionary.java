@@ -2,39 +2,62 @@ package scriptease.translator;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.apimanagers.EventSlotManager;
 import scriptease.controller.apimanagers.GameTypeManager;
+import scriptease.controller.observer.LibraryEvent;
+import scriptease.controller.observer.LibraryObserver;
 import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
 /**
  * APIDictionary represents the API dictionary used by a Translator to represent
  * vital game information, such as causes, definitions, effects, types and slots
- * available in the game. It uses a LibraryModel to manage the StoryComponents,
+ * available in the game. It uses a LibraryModel to store the StoryComponents,
  * GameTypeManager to manage the types, and EventSlotManager to manage the
  * slots.
  * 
  * @author mfchurch
  */
-public class APIDictionary {
+public class APIDictionary implements LibraryObserver {
 	private final LibraryModel library;
 	private final GameTypeManager typeManager;
 	private final EventSlotManager slotManager;
-	private final Map<CodeBlock, Collection<FormatFragment>> codeBlocksToCodes;
+	private int nextID;
 
+	/**
+	 * Builds a new API Dictionary with the given next ID.
+	 * 
+	 * @param nextId
+	 *            the next id available to be assigned to a CodeBlockSource.
+	 */
 	public APIDictionary() {
 		this.library = new LibraryModel();
 		this.typeManager = new GameTypeManager();
 		this.slotManager = new EventSlotManager();
-		this.codeBlocksToCodes = new HashMap<CodeBlock, Collection<FormatFragment>>();
+
+		this.library.addLibraryChangeListener(this);
 	}
+
+	@Override
+	public void modelChanged(LibraryModel model, LibraryEvent event) {
+		final StoryComponent source = event.getEvent().getSource();
+		CodeBlockSource block;
+
+		if (event.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED) {
+			if (source instanceof CodeBlockSource) {
+				block = (CodeBlockSource) source;
+				this.nextID = Math.max(block.getId() + 1, this.nextID);
+			}
+		}
+	};
 
 	// //////////////////////
 	// Getters and Setters //
@@ -73,7 +96,7 @@ public class APIDictionary {
 		return "APIDictionary [" + this.getName() + "]";
 	}
 
-	public List<CodeBlock> getCodeBlocksByID(String scriptValue) {
+	public List<CodeBlock> getCodeBlocksByValRef(String scriptValue) {
 		List<StoryComponent> componentList = this.library.getEffectsCategory()
 				.getChildren();
 		List<CodeBlock> codeBlockList = new ArrayList<CodeBlock>();
@@ -91,25 +114,106 @@ public class APIDictionary {
 	}
 
 	/**
-	 * Gets the code for the given codeblock.
+	 * Retrieves the next code block unique ID for this translator.
 	 * 
-	 * @param codeBlock
-	 *            The code block whose code is to be set.
-	 * @param code
-	 *            The code to be used for the given code block.
+	 * @return The next available unique id for a code block.
 	 */
-	protected void setCode(CodeBlock codeBlock, Collection<FormatFragment> code) {
-		this.codeBlocksToCodes.put(codeBlock, code);
+	public int getNextCodeBlockID() {
+		return this.nextID++;
 	}
 
 	/**
-	 * Gets the game-specific code for the given codeblock.
+	 * Finds the CodeBlockSource that matches the given data fields.
 	 * 
-	 * @param codeBlock
-	 *            The codeblock whose code is to be retrieved.
-	 * @return The code for the given codeblock.
+	 * @param subject
+	 *            The subject of the desired code block.
+	 * @param slot
+	 *            The slot of the desired code block.
+	 * @param returnTypes
+	 *            The return types of the desired code block.
+	 * @param parameters
+	 *            The parameters of the desired code block.
+	 * @param includes
+	 *            The includes of the desired code block.
+	 * @param code
+	 *            The code of the desired code block. This is the only optional
+	 *            segment. If missing, it will be ignored.
+	 * 
+	 * @return The matching code block.
 	 */
-	protected Collection<FormatFragment> getCode(CodeBlock codeBlock) {
-		return this.codeBlocksToCodes.get(codeBlock);
+	public CodeBlockSource getCodeBlockByData(String subject, String slot,
+			Collection<String> returnTypes, Collection<KnowIt> parameters,
+			Collection<String> includes, Collection<FormatFragment> code) {
+		final CodeBlockFinder finder = new CodeBlockFinder();
+
+		return finder.findByData(subject, slot, returnTypes, parameters, includes, code);
+	}
+
+	/**
+	 * Finds a CodeBlockSource by its ID number.
+	 * 
+	 * @param targetId
+	 *            The ID number of the CodeBlockSource to locate.
+	 * 
+	 * @return The CodeBlockSource that has the given id.
+	 */
+	public CodeBlockSource getCodeBlockByID(int targetId) {
+		final CodeBlockFinder finder = new CodeBlockFinder();
+
+		return finder.findByID(targetId, this.library);
+	}
+
+	private class CodeBlockFinder extends AbstractNoOpStoryVisitor {
+		private CodeBlockSource found = null;
+		private int targetId;
+
+		/**
+		 * Finds a CodeBlockSource by ID.
+		 * 
+		 * @param targetId
+		 *            The ID to search by.
+		 * @param library
+		 *            The library to search in.
+		 * 
+		 * @return The source with the given id.
+		 */
+		public CodeBlockSource findByID(int targetId, LibraryModel library) {
+			this.targetId = targetId;
+
+			// let's start snooping about. Quick, someone play Pink Panther or
+			// Mission Impossible! - remiller
+			library.getRoot().process(this);
+
+			return this.found;
+		}
+		
+		/**
+		 * Finds a CodeBlockSource by data matching.
+		 * 
+		 * @param targetId
+		 *            The ID to search by.
+		 * @param library
+		 *            The library to search in.
+		 * 
+		 * @return The source with the given id.
+		 */
+		public CodeBlockSource findByData(String subject, String slot,
+				Collection<String> returnTypes, Collection<KnowIt> parameters,
+				Collection<String> includes, Collection<FormatFragment> code) {
+			return this.found;
+		}
+
+		@Override
+		public void processScriptIt(ScriptIt scriptIt) {
+			super.processScriptIt(scriptIt);
+
+			for (CodeBlock block : scriptIt.getCodeBlocks()) {
+				if (block.getId() == targetId
+						&& block instanceof CodeBlockSource) {
+					this.found = (CodeBlockSource) block;
+					return;
+				}
+			}
+		}
 	}
 }

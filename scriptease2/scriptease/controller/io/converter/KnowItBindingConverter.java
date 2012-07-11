@@ -322,11 +322,13 @@ public class KnowItBindingConverter implements Converter {
 
 		// Ew. Gross. - remiller
 		final GameModule currentModule = StoryModelConverter.currentModule;
-		if (currentModule != null) {
-			gameObject = currentModule.getInstanceForObjectIdentifier(id);
-		} else
+
+		if (currentModule == null) {
 			throw new IllegalStateException(
 					"Cannot unmarshall a GameObject binding without a module loaded");
+		}
+
+		gameObject = currentModule.getInstanceForObjectIdentifier(id);
 
 		if (gameObject != null)
 			return new KnowItBindingConstant(gameObject);
@@ -376,7 +378,8 @@ public class KnowItBindingConverter implements Converter {
 	private KnowItBindingQuestPoint unmarshallQuestPointBinding(
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
 		QuestPoint questPoint = null;
-		final KnowItBindingQuestPoint binding = new KnowItBindingQuestPoint(questPoint);
+		final KnowItBindingQuestPoint binding = new KnowItBindingQuestPoint(
+				questPoint);
 
 		// move down and read as a describeIt
 		reader.moveDown();

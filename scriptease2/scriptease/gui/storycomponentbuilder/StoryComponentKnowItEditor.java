@@ -73,8 +73,7 @@ public class StoryComponentKnowItEditor extends StoryComponentDescriptorTemplate
 		Translator activeTranslator = TranslatorManager.getInstance().getActiveTranslator();
 		if (component != null && activeTranslator != null) {
 			activeTranslator.getApiDictionary().getLibrary().add(component);
-			File filePath = activeTranslator.getPathProperty(Translator.DescriptionKeys.API_DICTIONARY_PATH
-					.toString());
+			File filePath = activeTranslator.getPathProperty(Translator.DescriptionKeys.API_DICTIONARY_PATH);
 
 			FileIO.getInstance().writeAPIDictionary(
 			activeTranslator.getApiDictionary(), filePath);

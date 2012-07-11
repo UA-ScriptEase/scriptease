@@ -1,6 +1,8 @@
 package scriptease.controller;
 
 import scriptease.gui.quests.QuestPoint;
+import scriptease.model.CodeBlockReference;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
@@ -35,7 +37,7 @@ public abstract class AbstractNoOpStoryVisitor implements StoryVisitor {
 	 */
 	@Override
 	public void processQuestPoint(QuestPoint questPoint) {
-		this.processStoryComponentContainer(questPoint); 
+		this.processStoryComponentContainer(questPoint);
 	}
 
 	@Override
@@ -53,18 +55,28 @@ public abstract class AbstractNoOpStoryVisitor implements StoryVisitor {
 		this.defaultProcessComplex(scriptIt);
 	}
 
-	/*
-	 * ============ ATOMIC TYPES ============
-	 */
-
 	@Override
 	public void processAskIt(AskIt questionIt) {
 		this.defaultProcessComplex(questionIt);
 	}
 
+	/*
+	 * ============ ATOMIC TYPES ============
+	 */
+
 	@Override
 	public void processKnowIt(KnowIt knowIt) {
 		this.defaultProcessAtomic(knowIt);
+	}
+
+	@Override
+	public void processCodeBlockSource(CodeBlockSource codeBlockSource) {
+		this.defaultProcessAtomic(codeBlockSource);
+	}
+
+	@Override
+	public void processCodeBlockReference(CodeBlockReference codeBlockReference) {
+		this.defaultProcessAtomic(codeBlockReference);
 	}
 
 	/*

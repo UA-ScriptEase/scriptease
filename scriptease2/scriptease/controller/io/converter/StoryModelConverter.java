@@ -3,7 +3,6 @@
 import java.io.File;
 
 import scriptease.controller.io.FileIO;
-import scriptease.gui.SEFrame;
 import scriptease.gui.quests.QuestNode;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
@@ -78,7 +77,7 @@ public class StoryModelConverter implements Converter{
 				FileIO.readValue(reader, TAG_TRANSLATOR));
 		if (translator == null)
 			throw new IllegalStateException(
-					"Translator could not be loaded.");
+					"Translator could not be found.");
 
 		// Try to open the Pattern Model
 		try {
