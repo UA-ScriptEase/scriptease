@@ -153,7 +153,7 @@ public final class AskIt extends ComplexStoryComponent {
 	}
 
 	/**
-	 * Handles these stupid If/ElseBlock pointers.. we need to fix this TODO:
+	 * TODO Handles these stupid If/ElseBlock pointers.. we need to fix this
 	 * NOT THIS
 	 */
 	@Override

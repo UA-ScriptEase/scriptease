@@ -18,11 +18,15 @@ import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
 
 public class SETreeModelGameObject extends SETreeModel {
+	/*
+	 * TODO Refactor and comment, or merge it with something else. Not sure what
+	 * this class is even doing.
+	 */
+
 	private final String DIALOGUE_TAG = "dialogue";
-	//private final String AVA
-	
+	// private final String AVA
+
 	private StoryModel activeModel;
-	
 
 	public SETreeModelGameObject() {
 		activeModel = StoryModelPool.getInstance().getActiveModel();
@@ -32,44 +36,45 @@ public class SETreeModelGameObject extends SETreeModel {
 	public void setFilter(Filter addFilter) {
 		filter = addFilter;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private void addRecusivleyAllNodes(GameConversationNode parent){
-		//TODO: Look at this sextion, and the problem with infinitley looping
-		//convos and such
-		//if(parent.isTerminal() == true){
-			//return;
-		//}
-		
+	private void addRecusivleyAllNodes(GameConversationNode parent) {
+		// TODO: Look at this section, and the problem with infinitely looping
+		// convos and such
+
+		// if(parent.isTerminal() == true){
+		// return;
+		// }
+
 		List<GameConversationNode> getChildren;
 		getChildren = (List<GameConversationNode>) parent.getChildren();
-		if(getChildren.size() == 0){
+		if (getChildren.size() == 0) {
 			return;
 		}
-		
-		for(GameConversationNode a:getChildren){
+
+		for (GameConversationNode a : getChildren) {
 			treeModel.addLeaf(parent, a);
 		}
-		
-		for(GameConversationNode a:getChildren){
+
+		for (GameConversationNode a : getChildren) {
 			addRecusivleyAllNodes(a);
 		}
-		
+
 	}
-	
-	private void addAllChildren(GameConversation parent){
+
+	private void addAllChildren(GameConversation parent) {
 		List<GameConversationNode> conversationRoots;
 		conversationRoots = parent.getConversationRoots();
-		
-		for(GameConversationNode root : conversationRoots){
-			treeModel.addLeaf(parent,root);
+
+		for (GameConversationNode root : conversationRoots) {
+			treeModel.addLeaf(parent, root);
 		}
-		
-		for(GameConversationNode childrenRoots : conversationRoots){
+
+		for (GameConversationNode childrenRoots : conversationRoots) {
 			addRecusivleyAllNodes(childrenRoots);
-					
+
 		}
-	
+
 	}
 
 	@Override
@@ -101,28 +106,26 @@ public class SETreeModelGameObject extends SETreeModel {
 
 			if (gameObjs.size() <= 0)
 				continue;
-		
-			
-			
-			//List<GameConversationNode> conversationRoots;
-			if(typeName.equals(DIALOGUE_TAG)){
+
+			// List<GameConversationNode> conversationRoots;
+			if (typeName.equals(DIALOGUE_TAG)) {
 				for (GameConstant convo : gameObjs) {
 					GameConversation dialogue = (GameConversation) convo;
 					treeModel.addLeaf(typeName, dialogue);
 					addAllChildren(dialogue);
 				}
-			
+
 			}
-			//NWN TEXT
-		//	NWNObject pc = new NWNObject();
-			
-			else{
+			// NWN TEXT
+			// NWNObject pc = new NWNObject();
+
+			else {
 				treeModel.addLeaf(treeModel.getHead(), typeName);
-					for (GameConstant obj : gameObjs) {
-						treeModel.addLeaf(typeName, obj);
-					}
+				for (GameConstant obj : gameObjs) {
+					treeModel.addLeaf(typeName, obj);
+				}
 			}
-			
+
 		}
 	}
 
@@ -146,7 +149,6 @@ public class SETreeModelGameObject extends SETreeModel {
 		return allGameObjects;
 	}
 
-	
 	/**
 	 * Filter the StoryComponentPanelTree immediate children, does nothing if no
 	 * filter is applied
@@ -171,5 +173,4 @@ public class SETreeModelGameObject extends SETreeModel {
 		return filteredObjects;
 	}
 
-	
 }

@@ -30,7 +30,6 @@ import scriptease.gui.internationalization.Il8nResources;
 
 /**
  * Builds the SE2 preferences dialog and displays it.
- * TODO: refactor this class to extend JDialog.
  * @author graves
  */
 public class PreferencesDialog {

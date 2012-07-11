@@ -6,9 +6,9 @@ import java.lang.Thread.UncaughtExceptionHandler;
 
 import javax.swing.SwingWorker;
 
+import scriptease.gui.PanelFactory;
 import scriptease.gui.WindowManager;
 import scriptease.gui.dialog.WizardDialog;
-import scriptease.gui.storycomponentbuilder.StoryComponentLibraryPanel;
 import scriptease.model.StoryModel;
 
 /**
@@ -29,8 +29,8 @@ public aspect Progress {
 		within(FileManager) && execution(* openStoryModel(File));
 
 	public pointcut loadTranslator():
-		within(StoryComponentLibraryPanel) && execution(* setTranslator(..));
-
+		within(PanelFactory) && execution(* setTranslator(..));
+	
 	private pointcut showProgress():
 		writeStory() || 
 		finishWizard() ||

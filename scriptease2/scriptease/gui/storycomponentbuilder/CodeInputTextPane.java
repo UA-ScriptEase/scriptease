@@ -26,7 +26,7 @@ import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
 import scriptease.translator.codegenerator.code.fragments.ScopeFragment;
 
 @SuppressWarnings("serial")
-public class CodeInputTextPane extends JTextPane implements DocumentListener,
+public class CodeInputTextPane implements DocumentListener,
 		KeyListener, UndoableEditListener {
 	private boolean hotKeyStatus;
 	private final int ctrlDown = KeyEvent.CTRL_DOWN_MASK;
@@ -34,42 +34,41 @@ public class CodeInputTextPane extends JTextPane implements DocumentListener,
 	private Style paramStyle;
 	private StyledDocument doc;
 	private UndoManager undoMang = new UndoManager();
+	
+	private JTextPane codeInputTextPane;
 
 	public CodeInputTextPane() {
-		setSize(new Dimension(250, 300));
-		setMinimumSize(new Dimension(250, 400));
-		setMaximumSize(getMinimumSize());
+		codeInputTextPane = new JTextPane();
+		codeInputTextPane.setSize(new Dimension(250, 300));
+		codeInputTextPane.setMinimumSize(new Dimension(250, 400));
+		codeInputTextPane.setPreferredSize(codeInputTextPane.getMinimumSize());
+		codeInputTextPane.setMaximumSize(codeInputTextPane.getMinimumSize());
 
 		hotKeyStatus = false;
-		this.setBackground(Color.WHITE);
-		doc = this.getStyledDocument();
+		codeInputTextPane.setBackground(Color.WHITE);
+		doc = codeInputTextPane.getStyledDocument();
 		doc.addDocumentListener(this);
 		doc.addUndoableEditListener(this);
-		this.addKeyListener(this);
+		codeInputTextPane.addKeyListener(this);
 
-		defaultStyle = this.addStyle("BASE", null);
+		defaultStyle = codeInputTextPane.addStyle("BASE", null);
 		StyleConstants.setFontSize(defaultStyle, 16);
 		StyleConstants.setFontFamily(defaultStyle, "Courier");
 		StyleConstants.setForeground(defaultStyle, Color.BLUE);
 
-		paramStyle = this.addStyle("BASEPARAM", null);
+		paramStyle = codeInputTextPane.addStyle("BASEPARAM", null);
 		StyleConstants.setFontSize(paramStyle, 16);
 		StyleConstants.setFontFamily(paramStyle, "Courier");
 		StyleConstants.setForeground(paramStyle, Color.RED);
 		StyleConstants.setBold(paramStyle, true);
 
-		this.setLogicalStyle(defaultStyle);
+		codeInputTextPane.setLogicalStyle(defaultStyle);
 
 		regTextMode();
 	}
-
-	private void changeTextFormat() {
-		if (!hotKeyStatus) {
-			regTextMode();
-			return;
-		}
-		this.setCharacterAttributes(paramStyle, true);
-		this.setCaretColor(Color.RED);
+	
+	public JTextPane getTextPane(){
+		return codeInputTextPane;
 	}
 
 	public void setCodeFragments(Collection<FormatFragment> fFrag) {
@@ -94,13 +93,13 @@ public class CodeInputTextPane extends JTextPane implements DocumentListener,
 				setMe += '\n';
 			}
 		}
-		this.setText(setMe);
+		codeInputTextPane.setText(setMe);
 
 		for (StringIndx a : scopeIndicies) {
 			doc.setCharacterAttributes(a.begin, a.end, paramStyle, true);
 			String s = "";
 			try {
-				s = doc.getText(0, getText().length());
+				s = doc.getText(0, codeInputTextPane.getText().length());
 				doc.setCharacterAttributes(a.end, s.length(),
 						defaultStyle, true);
 			} catch (BadLocationException e) {
@@ -110,8 +109,8 @@ public class CodeInputTextPane extends JTextPane implements DocumentListener,
 	}
 
 	private void regTextMode() {
-		this.setCharacterAttributes(defaultStyle, true);
-		this.setCaretColor(Color.BLUE);
+		codeInputTextPane.setCharacterAttributes(defaultStyle, true);
+		codeInputTextPane.setCaretColor(Color.BLUE);
 	}
 
 	@Override
@@ -134,7 +133,12 @@ public class CodeInputTextPane extends JTextPane implements DocumentListener,
 	public void keyPressed(KeyEvent e) {
 		if (e.getModifiersEx() == ctrlDown && e.getKeyCode() == KeyEvent.VK_X) {
 			hotKeyStatus = !hotKeyStatus;
-			changeTextFormat();
+			if (!hotKeyStatus) {
+				regTextMode();
+				return;
+			}
+			codeInputTextPane.setCharacterAttributes(paramStyle, true);
+			codeInputTextPane.setCaretColor(Color.RED);
 		}
 
 		if (e.getModifiersEx() == ctrlDown && e.getKeyCode() == KeyEvent.VK_Z) {

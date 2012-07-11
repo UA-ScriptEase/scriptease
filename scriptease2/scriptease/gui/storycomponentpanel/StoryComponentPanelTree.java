@@ -135,7 +135,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	private int numberOfResultsFound(StoryComponentPanel root) {
 		int visibleCount = 0;
 		for (StoryComponentPanel panel : root.getChildrenPanels()) {
-			if(panel.getVisible())
+			if(panel.isVisible())
 				visibleCount++;
 			visibleCount += this.numberOfResultsFound(panel);
 		}

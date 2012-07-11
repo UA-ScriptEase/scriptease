@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Box;
@@ -23,9 +24,12 @@ import javax.swing.JToolBar;
 import javax.swing.SpringLayout;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.TreeSelectionListener;
 
 import scriptease.ScriptEase;
-import scriptease.gui.SETree.filters.TranslatorFilter;
+import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryVisitor;
+import scriptease.controller.VisibilityManager;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.GraphPanel;
@@ -36,12 +40,14 @@ import scriptease.gui.storycomponentbuilder.CodeInputTextPane;
 import scriptease.gui.storycomponentbuilder.StoryComponentBindingList;
 import scriptease.gui.storycomponentbuilder.StoryComponentBindingList.BindingContext;
 import scriptease.gui.storycomponentbuilder.StoryComponentMultiSelector;
-import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelStorySetting;
 import scriptease.model.CodeBlock;
+import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.GameObjectPicker;
@@ -56,11 +62,11 @@ import scriptease.util.SpringUtilities;
  */
 public class PanelFactory {
 	private static PanelFactory instance = new PanelFactory();
-	
+
 	public static PanelFactory getInstance() {
 		return instance;
 	}
-	
+
 	/**
 	 * Creates a panel for editing Quests.
 	 * 
@@ -87,12 +93,12 @@ public class PanelFactory {
 
 		return questPanel;
 	}
-	
+
 	/**
 	 * Creates a panel for editing DescribeIts.
 	 * 
 	 * @param start
-	 * 	Start Point of the graph
+	 *            Start Point of the graph
 	 * @return
 	 */
 	public JPanel buildDescribeItPanel(final GraphNode start,
@@ -102,7 +108,8 @@ public class PanelFactory {
 
 		DescribeIt editedDescribeIt = describeIt.clone();
 		editedDescribeIt.clearSelection();
-		graphPanel.setHeadNode(editedDescribeIt.getHeadNode());
+
+		graphPanel.setHeadNode(editedDescribeIt.getHeadNode());
 
 		ToolBarButtonAction.addJComponent(graphPanel);
 
@@ -112,7 +119,8 @@ public class PanelFactory {
 		final JToolBar describeItToolBar = ToolBarFactory
 				.buildDescribeItToolBar(editedDescribeIt, graphPanel);
 
-		describeItPanel.add(graphToolBar.add(describeItToolBar), BorderLayout.PAGE_START);
+		describeItPanel.add(graphToolBar.add(describeItToolBar),
+				BorderLayout.PAGE_START);
 
 		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
 
@@ -120,7 +128,7 @@ public class PanelFactory {
 
 		return describeItPanel;
 	}
-	
+
 	/**
 	 * Builds a pane containing all game objects in the active module, organized
 	 * by category, allowing the user to drag them onto bindings in a Story.
@@ -149,47 +157,59 @@ public class PanelFactory {
 	}
 
 	/**
-	 * TODO Actually implement this.
+	 * Creates a new JPanel with nothing inside except a JLabel of the passed
+	 * text.
 	 * 
-	 * 
-	 * Builds a pane containing all causes, effects, descriptions, and folders,
-	 * allowing the user to drag them into the story.
-	 * 
-	 * @param model
+	 * @param text
 	 * @return
 	 */
-	public JPanel buildLibraryPane(StoryModel model) {
-		if (model != null) {
-			Translator translator = model.getTranslator();
-			if (translator != null) {
-				// Get the picker
-				
-				
-				//TODO Add the librarypane here.
-			}
-		}
+	private JPanel buildEmptyPanelWithText(String text) {
+		final JPanel nullPanel;
+		final JLabel nullLabel;
 
-		// otherwise return an empty hidden JPanel
-		JPanel jPanel = new JPanel();
-		jPanel.setVisible(false);
-		return jPanel;
+		nullPanel = new JPanel();
+		nullLabel = new JLabel(text);
+
+		nullPanel.add(nullLabel);
+
+		return nullPanel;
 	}
-	
-	
-	
-	
+
+	/**
+	 * Builds an empty StoryComponentEditorPanel.
+	 * 
+	 * @return
+	 */
+	public JPanel buildStoryComponentEditorPanel() {
+		final JPanel editorPanel;
+
+		editorPanel = new JPanel();
+
+		editorPanel.setLayout(new BorderLayout());
+		editorPanel.add(buildStoryComponentEditorPanelContents(null),
+				BorderLayout.CENTER);
+
+		return editorPanel;
+	}
+
 	/**
 	 * Creates a JPanel with fields for Name, Types, Labels, and a check box for
 	 * Visibility. This JPanel is common to all story component editor panes.
 	 * 
 	 * @return
 	 */
-	public JPanel buildStoryComponentEditorPanel() {
-		
+	private JPanel buildStoryComponentEditorPanelContents(
+			StoryComponent storyComponent) {
+
 		// TODO Add in the Save and Cancel buttons here, too.
 		// I'm not sure what SpringLayout looks like, so I'll hold off
 		// on those buttons until I get SE running again.
-		
+
+		if (storyComponent == null) {
+			return buildEmptyPanelWithText("Select a Story Component to begin editing it.");
+		}
+
+		final JPanel editorPanel;
 		final JPanel descriptorPanel;
 
 		final JLabel nameLabel;
@@ -206,6 +226,7 @@ public class PanelFactory {
 
 		final Font labelFont;
 
+		editorPanel = new JPanel();
 		descriptorPanel = new JPanel();
 
 		nameLabel = new JLabel("Name: ");
@@ -223,7 +244,17 @@ public class PanelFactory {
 				Integer.parseInt(ScriptEase.getInstance().getPreference(
 						ScriptEase.FONT_SIZE_KEY)));
 
+		editorPanel.setLayout(new BoxLayout(editorPanel, BoxLayout.PAGE_AXIS));
+
+		// Set up the descriptorPanel
+
+		// TODO Change to GroupLayout instead of SpringLayout!
+		
 		descriptorPanel.setLayout(new SpringLayout());
+		descriptorPanel.setBorder(new LineBorder(Color.DARK_GRAY));
+		descriptorPanel.setBorder(new TitledBorder("Component Descriptors"));
+
+		// Set up the labels
 
 		nameLabel.setFont(labelFont);
 		nameLabel.setLabelFor(nameField);
@@ -236,47 +267,110 @@ public class PanelFactory {
 
 		visibleLabel.setFont(labelFont);
 		visibleLabel.setLabelFor(visibleBox);
-		
-		visibleBox.setMaximumSize(new Dimension(250, 100));
 
-		descriptorPanel.setBorder(new LineBorder(Color.DARK_GRAY));
-		descriptorPanel.setBorder(new TitledBorder("Component Descriptors"));
+		// Set up the default field values
+
+		nameField.setText(storyComponent.getDisplayText());
+
+		String label = "";
+		for (String storyComponentLabel : storyComponent.getLabels()) {
+			label += storyComponentLabel + ", ";
+		}
+		int labelLength = label.length();
+		if (labelLength > 0) {
+			String shortenedLabel = label.substring(0, labelLength - 2);
+			labelField.setText(shortenedLabel);
+		}
+		
+		visibleBox.setSelected(VisibilityManager.getInstance().isVisible(
+				storyComponent));
+
+		// Set up the field listeners
 
 		// Add JComponents to DescriptorPanel
+
+		descriptorPanel.add(visibleLabel);
+		descriptorPanel.add(visibleBox);
+
 		descriptorPanel.add(nameLabel);
 		descriptorPanel.add(nameField);
-
-		descriptorPanel.add(typeLabel);
-		descriptorPanel.add(typeButton);
 
 		descriptorPanel.add(labelLabel);
 		descriptorPanel.add(labelField);
 
-		descriptorPanel.add(visibleLabel);
-		descriptorPanel.add(visibleBox);
-		
-		SpringUtilities.makeCompactGrid(descriptorPanel, 3, 2, 6, 6,
-				6, 6);
-		
-		descriptorPanel.add(Box.createHorizontalGlue());
-		
-		// TODO Then we add in another JPanel, and a listener on this panel or something, and
-		// panels get added to this paenl.
-		
-		return descriptorPanel;
+		descriptorPanel.add(typeLabel);
+		descriptorPanel.add(typeButton);
+
+		descriptorPanel.setMaximumSize(new Dimension(2000, 150));
+
+		SpringUtilities.makeCompactGrid(descriptorPanel, 4, 2, 6, 6, 6, 6);
+
+		editorPanel.add(descriptorPanel);
+		editorPanel.add(Box.createHorizontalGlue());
+
+		StoryVisitor storyComponentVisitor = new AbstractNoOpStoryVisitor() {
+
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				ArrayList<String> types = new ArrayList<String>();
+				types.addAll(scriptIt.getTypes());
+				typeSelector.setData(types);
+
+				editorPanel.add(PanelFactory.getInstance()
+						.buildEffectEditorPanel(scriptIt));
+			}
+
+			@Override
+			public void processKnowIt(KnowIt knowIt) {
+				ArrayList<String> types = new ArrayList<String>();
+				types.addAll(knowIt.getTypes());
+				typeSelector.setData(types);
+				
+				editorPanel.add(PanelFactory.getInstance()
+						.buildDescriptionEditorPanel(knowIt));
+			}
+
+			@Override
+			public void defaultProcess(StoryComponent component) {
+				editorPanel.removeAll();
+				editorPanel
+						.add(buildEmptyPanelWithText("Select a Story Component to begin editing it."));
+			}
+
+			// We may want to implement these later, so their default methods
+			// are here in case.
+			@Override
+			public void processAskIt(AskIt questionIt) {
+				// Unimplemented
+				this.defaultProcess(questionIt);
+			}
+
+			@Override
+			public void processStoryComponentContainer(
+					StoryComponentContainer container) {
+				// Unimplemented
+				this.defaultProcess(container);
+			}
+		};
+
+		storyComponent.process(storyComponentVisitor);
+
+		// TODO Add save/cancel buttons down here, centered.
+
+		return editorPanel;
+
 	}
-	
+
 	private JPanel buildEffectEditorPanel(ScriptIt scriptIt) {
 		final JPanel effectEditorPanel;
 		final Collection<CodeBlock> codeBlocks;
 		final Collection<JPanel> codeBlockEditors;
-		
+
 		effectEditorPanel = new JPanel();
 		codeBlocks = scriptIt.getCodeBlocks();
 
-		codeBlockEditors = new ArrayList<JPanel>(
-				codeBlocks.size());
-		
+		codeBlockEditors = new ArrayList<JPanel>(codeBlocks.size());
+
 		for (CodeBlock codeBlock : codeBlocks) {
 			JPanel codeBlockEditor = buildCodeBlockPanel(codeBlock);
 			codeBlockEditors.add(codeBlockEditor);
@@ -284,35 +378,44 @@ public class PanelFactory {
 		}
 
 		// TODO Set the text, type, and labels like in DescriptionEditor.
-//		for (JPanel codeBlockEditor : codeBlockEditors) {
-	//		codeBlockEditor.updateDisplay();
-		//}
-		
+
+		// Also make code block editors:
+		// for (JPanel codeBlockEditor : codeBlockEditors) {
+		// codeBlockEditor.updateDisplay();
+		// }
+		effectEditorPanel.setLayout(new BoxLayout(effectEditorPanel,
+				BoxLayout.PAGE_AXIS));
 		effectEditorPanel.add(Box.createVerticalGlue());
-		
+
 		return effectEditorPanel;
 	}
-	
-	/* TODO Will need to implement DescribeItGraphPanel here or just combine them*/
+
+	/*
+	 * TODO Will need to implement DescribeItGraphPanel here or just combine
+	 * them
+	 */
 	public JPanel buildDescriptionEditorPanel(KnowIt knowIt) {
 		final JPanel descriptionEditorPanel;
 		final StoryComponentBindingList bindingList;
-		
+
 		descriptionEditorPanel = new JPanel();
 		bindingList = new StoryComponentBindingList(BindingContext.BINDING);
+
+		descriptionEditorPanel.setLayout(new BoxLayout(descriptionEditorPanel,
+				BoxLayout.PAGE_AXIS));
 		descriptionEditorPanel.add(bindingList);
 		descriptionEditorPanel.add(Box.createVerticalGlue());
-		
-		//Set text of NameField to knowIt.getDisplayText();
+
+		// Set text of NameField to knowIt.getDisplayText();
 		String labelList = "";
 		for (String label : knowIt.getLabels())
-			label+= label + ", ";
-		//Set the Label list to labelList
-		//Set the types to knowIt.getTypes()
-		
+			label += label + ", ";
+		// Set the Label list to labelList
+		// Set the types to knowIt.getTypes()
+
 		return descriptionEditorPanel;
 	}
-	
+
 	private JPanel buildCodeBlockPanel(CodeBlock codeBlock) {
 		final String CODE_BLOCK = "CodeBlock";
 		final String CODE = "Code";
@@ -323,13 +426,13 @@ public class PanelFactory {
 		final JScrollPane codeScrollPane;
 		final JLabel label;
 		final Font labelFont;
-		
+
 		codePane = new CodeInputTextPane();
 		parameterList = new StoryComponentBindingList(
 				(BindingContext.PARAMETER));
 		codeBlockPanel = new JPanel();
 		codePanel = new JPanel();
-		codeScrollPane = new JScrollPane(codePane);
+		codeScrollPane = new JScrollPane(codePane.getTextPane());
 		label = new JLabel(CODE);
 		labelFont = new Font("Helvetica", Font.BOLD,
 				Integer.parseInt(ScriptEase.getInstance().getPreference(
@@ -344,56 +447,64 @@ public class PanelFactory {
 		codePanel.add(label);
 		codePanel.add(codeScrollPane);
 
-		codeBlockPanel.setLayout(new BoxLayout(codeBlockPanel, BoxLayout.Y_AXIS));
+		codeBlockPanel
+				.setLayout(new BoxLayout(codeBlockPanel, BoxLayout.Y_AXIS));
 		codeBlockPanel.setBorder(new TitledBorder(CODE_BLOCK));
 		int preferredWidth = Math.max(parameterList.getPreferredSize().width,
 				codePanel.getPreferredSize().width);
 		int preferredHeight = Math.max(parameterList.getPreferredSize().height,
 				codePanel.getPreferredSize().height);
-		codeBlockPanel.setPreferredSize(new Dimension(preferredWidth, preferredHeight));
-		
+		codeBlockPanel.setPreferredSize(new Dimension(preferredWidth,
+				preferredHeight));
+
 		codeBlockPanel.add(parameterList);
 		codeBlockPanel.add(codePanel);
 
-		
-		//TODO Add a listener that updates this panel.
-		/* Old Code:
-		 * 	final Collection<FormatFragment> codeFragments = codeBlock.getCode();
-		 *	if (codeFragments.size() > 0)
-		 *		codePane.setCodeFragments(codeFragments);
-		 *	parameterList.updateBindingList(codeBlock.getParameters());
+		// TODO Add a listener that updates this panel.
+		/*
+		 * Old Code: final Collection<FormatFragment> codeFragments =
+		 * codeBlock.getCode(); if (codeFragments.size() > 0)
+		 * codePane.setCodeFragments(codeFragments);
+		 * parameterList.updateBindingList(codeBlock.getParameters());
 		 */
 		return codeBlockPanel;
 	}
-	
-	public JPanel buildStoryComponentLibraryPanel() {
-		final Collection<Translator> translators;
+
+	/**
+	 * Builds the library pane for the Story Component Editor. This pane allows
+	 * loading of different translators through a ComboBox.
+	 * 
+	 * @param editorPanel
+	 * @return
+	 */
+	public JPanel buildStoryComponentLibraryPanel(JPanel editorPanel) {
+		final List<Translator> translators;
 		final JComboBox<Translator> libSelector;
 		final JPanel libraryPanel;
 		final JPanel translatorPanel;
 		final LibraryPane libraryPane;
 		final Translator activeTranslator;
-		
+		final TreeSelectionListener librarySelectionListener;
+		final StoryVisitor storyVisitor;
+
 		libraryPanel = new JPanel();
 		translatorPanel = new JPanel();
-
 		translators = new ArrayList<Translator>();
-		libraryPane = new LibraryPane(
-				new StoryComponentPanelStorySetting());
+		libraryPane = new LibraryPane();
 		activeTranslator = TranslatorManager.getInstance()
 				.getActiveTranslator();
-		
+		storyVisitor = editorPanelUpdater(editorPanel);
+
 		libraryPanel.setLayout(new BoxLayout(libraryPanel, BoxLayout.Y_AXIS));
 
 		translators.add(null);
 		translators.addAll(TranslatorManager.getInstance().getTranslators());
 
-		libSelector = new JComboBox<Translator>(new Vector<Translator>(translators));
+		libSelector = new JComboBox<Translator>(new Vector<Translator>(
+				translators));
+		libSelector.setSelectedItem(activeTranslator);
 
-		if (activeTranslator != null)
-			libSelector.setSelectedItem(activeTranslator.getApiDictionary()
-					.getLibrary());
-
+		// TODO This should update the editorpanel, too!
 		libSelector.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -403,21 +514,55 @@ public class PanelFactory {
 
 		translatorPanel.add(new JLabel("Currently loaded translator: "));
 		translatorPanel.add(libSelector);
-		
-		
+
 		libraryPanel.add(translatorPanel);
 
-		libraryPane.getSCPTree().updateFilter(
-				new TranslatorFilter(activeTranslator));
+		librarySelectionListener = UIListenerFactory.getInstance()
+				.buildStoryComponentLibraryListener(storyVisitor);
+
+		// Add the tree listener
+		libraryPane.addTreeSelectionListener(librarySelectionListener);
 
 		libraryPanel.add(libraryPane);
-		
+
 		return libraryPanel;
 	}
 
-	// This method is separated to allow for the loading bar aspect to have
-	// something convenient to latch on to. Yes, I know it's one line. That's on
-	// purpose. - remiller
+	/**
+	 * Creates an AbstractNoOpStoryVisitor which calls an update on the
+	 * editorPanel. This is used as a sort of Command Pattern with
+	 * UIListenerFactory.
+	 * 
+	 * @param editorPanel
+	 *            The editorPanel to update.
+	 * 
+	 * @return
+	 */
+	public StoryVisitor editorPanelUpdater(final JPanel editorPanel) {
+		StoryVisitor storyVisitor = new AbstractNoOpStoryVisitor() {
+			@Override
+			public void defaultProcess(StoryComponent component) {
+				editorPanel.removeAll();
+				editorPanel.add(
+						buildStoryComponentEditorPanelContents(component),
+						BorderLayout.CENTER);
+
+				editorPanel.repaint();
+				editorPanel.revalidate();
+			}
+		};
+		return storyVisitor;
+	}
+
+	/**
+	 * Method to set the translator. This is separate so that Progress.aj can
+	 * show the loading bar when a new Translator is loading.
+	 * 
+	 * @author remiller
+	 * 
+	 * @param t
+	 *            The Translator to load
+	 */
 	private void setTranslator(Translator t) {
 		TranslatorManager.getInstance().setActiveTranslator(t);
 	}
