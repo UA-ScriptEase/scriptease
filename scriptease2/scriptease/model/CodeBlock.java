@@ -40,6 +40,12 @@ public abstract class CodeBlock extends StoryComponent implements
 	}
 
 	@Override
+	public String getDisplayText() {
+		final ScriptIt owner = this.getOwner();
+		return owner != null ? owner.getDisplayText() : "";
+	}
+
+	@Override
 	public CodeBlock clone() {
 		final CodeBlock clone = (CodeBlock) super.clone();
 
