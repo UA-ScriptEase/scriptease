@@ -65,11 +65,12 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 									+ ". Maybe it's missing from the API library?");
 
 				final Collection<FormatFragment> codeFragments;
-				
-				codeFragments = this.getTranslator().getCode(codeBlocks.get(0));
 
-				String bindingCode = FormatFragment.resolveFormat(codeFragments, this);
-				
+				codeFragments = codeBlocks.get(0).getCode();
+
+				String bindingCode = FormatFragment.resolveFormat(
+						codeFragments, this);
+
 				return bindingCode;
 			} else {
 				return this.getValue();

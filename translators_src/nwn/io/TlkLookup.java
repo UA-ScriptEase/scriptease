@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
 
 /**
@@ -21,7 +22,6 @@ import scriptease.translator.io.tools.ScriptEaseFileAccess;
  */
 public class TlkLookup {
 
-	private static final String TRANSLATOR_GAME_DIRECTORY = "GAME_DIRECTORY";
 
 	private static final TlkLookup instance = new TlkLookup();
 
@@ -45,7 +45,7 @@ public class TlkLookup {
 
 		nwnRoot = new File(TranslatorManager.getInstance()
 				.getTranslator(ErfFile.NEVERWINTER_NIGHTS)
-				.getProperty(TRANSLATOR_GAME_DIRECTORY).trim());
+				.getProperty(DescriptionKeys.GAME_DIRECTORY).trim());
 
 		// Open dialog.tlk in NWN install directory.
 		File defaultTlkFile = new File(nwnRoot, TlkLookup.DEFAULT_TLK_FILENAME

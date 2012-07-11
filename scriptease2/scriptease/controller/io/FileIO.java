@@ -142,6 +142,13 @@ public class FileIO {
 	 * @return The API dictionary as read from disk.
 	 */
 	public APIDictionary readAPIDictionary(File location) {
+		/*
+		 * Check against inifiniloops. This is usually caused by trying to get
+		 * something from the API dictionary while the API dictionary isn't done
+		 * loading yet.
+		 * 
+		 * - remiller
+		 */
 		if (this.mode == IoMode.API_DICTIONARY)
 			throw new IllegalStateException(
 					"Loop detected in APIDictionary Loading");
@@ -325,7 +332,6 @@ public class FileIO {
 		stream.alias("QuestNode", QuestNode.class);
 		stream.alias("QuestPoint", QuestPoint.class);
 		stream.alias("QuestPointNode", QuestPointNode.class);
-		
 
 		// the below are aliased for backwards compatibility
 
@@ -359,8 +365,8 @@ public class FileIO {
 		stream.registerConverter(new CodeBlockConverter());
 		stream.registerConverter(new ScriptItConverter());
 		stream.registerConverter(new QuestPointConverter());
-		stream.registerConverter(new QuestNodeConverter()); 
-		stream.registerConverter(new QuestPointNodeConverter()); 
+		stream.registerConverter(new QuestNodeConverter());
+		stream.registerConverter(new QuestPointNodeConverter());
 
 		return stream;
 	}

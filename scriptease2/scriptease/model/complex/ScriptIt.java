@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.StoryVisitor;
+import scriptease.controller.observer.StoryComponentEvent;
+import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
@@ -173,7 +175,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	public Collection<KnowIt> getImplicits() {
 		final Collection<KnowIt> implicits = new CopyOnWriteArraySet<KnowIt>();
 		for (CodeBlock codeBlock : this.codeBlocks) {
-			implicits.addAll(codeBlock.getImplicits());
+			implicits.addAll(codeBlock.getImplicits(this));
 		}
 		return implicits;
 	}
@@ -189,17 +191,25 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	}
 
 	public void removeCodeBlock(CodeBlock codeBlock) {
-		if (this.codeBlocks.remove(codeBlock))
+		if (this.codeBlocks.remove(codeBlock)) {
 			codeBlock.setOwner(null);
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_CODEBLOCK_REMOVED));
+		}
 	}
 
 	public void addCodeBlock(CodeBlock codeBlock) {
-		if (this.codeBlocks.add(codeBlock))
+		if (this.codeBlocks.add(codeBlock)) {
 			codeBlock.setOwner(this);
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_CODEBLOCK_ADDED));
+		}
 	}
 
 	public void setCodeBlocks(Collection<CodeBlock> codeBlocks) {
-		this.codeBlocks.clear();
+		for (CodeBlock codeBlock : this.codeBlocks) {
+			this.removeCodeBlock(codeBlock);
+		}
 		for (CodeBlock codeBlock : codeBlocks) {
 			this.addCodeBlock(codeBlock);
 		}

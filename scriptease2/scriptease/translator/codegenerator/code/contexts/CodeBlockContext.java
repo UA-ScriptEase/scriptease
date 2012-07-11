@@ -99,7 +99,7 @@ public class CodeBlockContext extends Context {
 	public String getCode() {
 		final Collection<FormatFragment> codeFragments;
 		
-		codeFragments = this.getTranslator().getCode(this.codeBlock);
+		codeFragments = this.codeBlock.getCode();
 		
 		return FormatFragment.resolveFormat(codeFragments, this);
 	}
