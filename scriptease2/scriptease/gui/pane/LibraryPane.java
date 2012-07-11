@@ -13,6 +13,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.TreeSelectionListener;
 
 import scriptease.controller.observer.LibraryManagerEvent;
 import scriptease.controller.observer.LibraryManagerObserver;
@@ -105,8 +106,25 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		TranslatorManager.getInstance().addTranslatorObserver(this);
 	}
 
-	public StoryComponentPanelTree getSCPTree() {
-		return (StoryComponentPanelTree) treeTabs.getSelectedComponent();
+	/**
+	 * Adds a tree selection listener to each of the tabs.
+	 * 
+	 * @param listener
+	 */
+	public void addTreeSelectionListener(TreeSelectionListener listener) {
+		
+		/*
+		 * TODO This works well enough, but what if we want to add more tabs
+		 * later? This should instead iterate over all StoryComponentTrees in
+		 * TreeTabs. We might want to make a helper method that returns a list
+		 * of StoryComponentTrees, since we would do it in multiple methods.
+		 * 
+		 * -kschenk
+		 */
+		this.causesTree.addTreeSelectionListener(listener);
+		this.effectsTree.addTreeSelectionListener(listener);
+		this.descriptionsTree.addTreeSelectionListener(listener);
+		this.foldersTree.addTreeSelectionListener(listener);
 	}
 
 	/**
@@ -125,7 +143,6 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 * Builds a pane that allows users to drag across any pattern (including
 	 * atoms) from any library into their Story.
 	 * 
-	 * @return A Pattern Picker
 	 */
 	private void configurePane() {
 		final JComponent filterPane;

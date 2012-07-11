@@ -232,10 +232,10 @@ public class MenuFactory {
 				if (startIndex == -1) {
 					startIndex = i;
 				}
-				// TODO: remove current entry from menu
+				// remove current entry from menu
 				menu.remove(menuItems[i]);
 
-				// TODO: add new entry to menu
+				// add new entry to menu
 				menu.add(new JMenuItem(new OpenRecentFileAction(
 						(short) (i - startIndex))), i);
 			}
@@ -252,9 +252,6 @@ public class MenuFactory {
 		// clear the menu to make sure we *only* have File Menu relevant stuff
 		// in the menu. - remiller
 		menu.removeAll();
-
-		// final JMenu newMenu = new JMenu("New");
-		// newMenu.setMnemonic(KeyEvent.VK_N);
 
 		menu.add(NewModelAction.getInstance());
 		menu.add(OpenModelAction.getInstance());

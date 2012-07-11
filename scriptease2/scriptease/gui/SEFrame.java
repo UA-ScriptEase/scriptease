@@ -3,12 +3,9 @@ package scriptease.gui;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import javax.swing.BorderFactory;
@@ -21,12 +18,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTree;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 
 import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpGraphNodeVisitor;
@@ -39,7 +33,6 @@ import scriptease.gui.pane.LibraryPane;
 import scriptease.gui.pane.StoryPanel;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
-import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
 import scriptease.translator.Translator;
@@ -65,6 +58,8 @@ public final class SEFrame implements StoryModelPoolObserver {
 	private JSplitPane rightSplit;
 	private JSplitPane leftSplit;
 	private TimedLabel statusLabel;
+	private QuestPoint startQuestPoint;
+
 
 	private final JFrame seFrame;
 	
@@ -131,6 +126,7 @@ public final class SEFrame implements StoryModelPoolObserver {
 	public void populate() {
 		final JPanel content = new JPanel();
 
+		// TODO this should build the LibraryPane using PanelFactory.
 		final JComponent libraryPane = new LibraryPane();
 		final JComponent objectPane = PanelFactory.getInstance().buildGameObjectPane(null);
 		final JComponent statusBar = this.buildStatusBar();
@@ -275,56 +271,6 @@ public final class SEFrame implements StoryModelPoolObserver {
 		}
 	}
 
-	/**
-	 * Get the component in focus from the KeyboardFocusManager, can return null
-	 * 
-	 * @return
-	 */
-	public Component getSelectedComponent() {
-		KeyboardFocusManager focusManager = KeyboardFocusManager
-				.getCurrentKeyboardFocusManager();
-		Component focusedComp = focusManager.getFocusOwner();
-		return focusedComp;
-	}
-
-	/**
-	 * Determines the current StoryComponent that is selected. If there are no
-	 * model frames open or there isn't a selected <code>StoryComponent</code>
-	 * in the currently active frame, then an empty list is returned.
-	 * 
-	 * @return A list of the currently selected StoryComponents. The list is
-	 *         empty if there is nothing selected.
-	 */
-	public List<StoryComponent> getSelection() {
-		List<StoryComponent> selection = new ArrayList<StoryComponent>();
-		Component focusOwner = getSelectedComponent();
-
-		if (focusOwner != null && focusOwner instanceof JTree) {
-			JTree tree = (JTree) focusOwner;
-			selection = getTreeSelection(tree);
-		}
-
-		return selection;
-	}
-
-	public List<StoryComponent> getTreeSelection(JTree tree) {
-		final List<StoryComponent> selection = new ArrayList<StoryComponent>();
-		final TreePath[] selectionPaths = tree.getSelectionPaths();
-
-		if (selectionPaths != null)
-			for (TreePath selectionPath : selectionPaths) {
-				// Added instanceof check since this has/may throw a class cast
-				// exception
-				Object userObject = ((DefaultMutableTreeNode) selectionPath
-						.getLastPathComponent()).getUserObject();
-				if (userObject instanceof StoryComponent)
-					selection.add((StoryComponent) userObject);
-			}
-
-		return selection;
-	}
-
-	private QuestPoint startQuestPoint;
 
 	/**
 	 * Creates a tab for the given StoryModel defaulting to the starting

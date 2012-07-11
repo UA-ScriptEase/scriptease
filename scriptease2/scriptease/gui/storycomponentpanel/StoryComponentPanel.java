@@ -129,8 +129,8 @@ public class StoryComponentPanel extends JPanel implements
 	 * Returns the visible state of the component.
 	 * @return
 	 */
-	public Boolean getVisible() {
-		return isVisible;
+	public boolean isVisible() {
+		return this.isVisible;
 	}
 	
 	

@@ -645,7 +645,9 @@ public final class WindowManager implements WindowFocusListener {
 		
 		scbFrame = new JFrame("Story Component Builder");
 		editingPane = PanelFactory.getInstance().buildStoryComponentEditorPanel();
-		libraryPane = PanelFactory.getInstance().buildStoryComponentLibraryPanel();
+		
+		libraryPane = PanelFactory.getInstance().buildStoryComponentLibraryPanel(editingPane);
+
 		
 		// TODO Move to UIListenerFactory 
 		// Note that this is how listeners get added to the LibraryPane at the moment.
