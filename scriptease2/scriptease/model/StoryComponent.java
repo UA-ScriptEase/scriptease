@@ -135,7 +135,6 @@ public abstract class StoryComponent implements Cloneable {
 	 * 
 	 * @return The parameterised display text string.
 	 */
-
 	public String getDisplayText() {
 		return this.displayText;
 	}

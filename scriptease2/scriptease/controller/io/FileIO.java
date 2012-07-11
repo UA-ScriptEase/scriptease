@@ -43,6 +43,8 @@ import scriptease.gui.quests.QuestPointConverter;
 import scriptease.gui.quests.QuestPointNode;
 import scriptease.gui.quests.QuestPointNodeConverter;
 import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockReference;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.StoryModel;
@@ -327,7 +329,8 @@ public class FileIO {
 		stream.alias("GraphNode", GraphNode.class);
 		stream.alias("TextNode", TextNode.class);
 		stream.alias("KnowItNode", KnowItNode.class);
-		stream.alias("CodeBlock", CodeBlock.class);
+		stream.alias("CodeBlockSource", CodeBlockSource.class);
+		stream.alias("CodeBlockReference", CodeBlockReference.class);
 		stream.alias("ScriptIt", ScriptIt.class);
 		stream.alias("QuestNode", QuestNode.class);
 		stream.alias("QuestPoint", QuestPoint.class);
