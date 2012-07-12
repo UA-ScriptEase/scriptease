@@ -77,8 +77,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		targetId = Integer.parseInt(reader.getValue());
 		reader.moveUp();
 
-		// the parameter list doesn't show if there aren't any, so look out for
-		// that.
+		// the parameter list doesn't show if there aren't any, so look out for that.
 		if (reader.hasMoreChildren()) {
 			reader.moveDown();
 			final String nodeName = reader.getNodeName();
