@@ -6,6 +6,7 @@ import java.util.Collection;
 import scriptease.controller.io.FileIO;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
+import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
@@ -23,7 +24,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  * @author remiller
  */
-public class CodeBlockSourceConverter implements Converter {
+public class CodeBlockSourceConverter extends StoryComponentConverter implements Converter {
 	private static final String TAG_SUBJECT = "subject";
 	private static final String TAG_SLOT = "slot";
 	private static final String TAG_CODE = "Code";
@@ -53,6 +54,8 @@ public class CodeBlockSourceConverter implements Converter {
 		if (FileIO.getInstance().getMode() != FileIO.IoMode.API_DICTIONARY)
 			throw new XStreamException(
 					"CodeBlockSources can only live in the Translator! Aaaaaaaaugh!");
+		
+		super.marshal(source, writer, context);
 
 		// Subject
 		if (block.hasSubject())
@@ -106,7 +109,7 @@ public class CodeBlockSourceConverter implements Converter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		CodeBlock block = null;
+		final CodeBlockSource block = (CodeBlockSource) super.unmarshal(reader, context);
 		String subject;
 		String slot;
 		int id = -1;
@@ -176,9 +179,20 @@ public class CodeBlockSourceConverter implements Converter {
 			reader.moveUp();
 		}
 
-		block = new CodeBlockSource(slot, slot, types, parameters, types, code,
-				id);
-
+		block.setId(id);
+		block.setSubject(subject);
+		block.setSlot(slot);
+		block.setTypes(types);
+		block.setParameters(parameters);
+		block.setIncludes(includes);
+		block.setCode(code);
+		
 		return block;
+	}
+
+	@Override
+	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
+			UnmarshallingContext context) {
+		return new CodeBlockSource();
 	}
 }

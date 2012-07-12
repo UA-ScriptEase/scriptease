@@ -136,7 +136,32 @@
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
 	</xsd:complexType>
 
-	<!-- Defines a CodeBlock -->
+	<!-- Defines a Code Block Reference -->
+	<xsd:complexType name="CodeBlockSource_Type">
+		<xsd:sequence minOccurs="1" maxOccurs="1">
+			<xsd:element name="Id" type="xsd:integer" />
+			<xsd:element name="Types" type="SpecificTypeList_Type" />
+			<xsd:element minOccurs="0" name="Parameters" type="ParameterList_Type" />
+			<xsd:element name="Includes" type="IncludesList_Type" />			
+			<xsd:element name="Code" type="Code_Type" />
+		</xsd:sequence>
+		<xsd:attribute name="subject" type="xsd:string" use="optional" />
+		<xsd:attribute name="slot" type="xsd:string" use="optional" />
+		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+	</xsd:complexType>
+	
+		<!-- Defines a Code Block Source -->
+	<xsd:complexType name="CodeBlockReference_Type">
+		<xsd:sequence minOccurs="1" maxOccurs="1">
+			<xsd:element name="Target" type="xsd:integer" />
+			<xsd:element minOccurs="0" name="Parameters" type="ParameterList_Type" />
+		</xsd:sequence>
+		<xsd:attribute name="subject" type="xsd:string" use="optional" />
+		<xsd:attribute name="slot" type="xsd:string" use="optional" />
+		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+	</xsd:complexType>
+	
+	<!-- REMOVE -->
 	<xsd:complexType name="CodeBlock_Type">
 		<xsd:sequence minOccurs="0">
 			<xsd:element name="Types" type="SpecificTypeList_Type" />
@@ -211,16 +236,25 @@
 
 	<!-- Defines a list of CodeBlocks -->
 	<xsd:complexType name="CodeBlockList_Type">
+	<!-- 
+	 -->
+		<xsd:sequence>
+			<xsd:element name="CodeBlock" type="CodeBlock_Type"
+				maxOccurs="unbounded" minOccurs="0" />
+		</xsd:sequence>
+	
+	<!-- 
 		<xsd:choice>
 			<xsd:sequence>
-				<xsd:element name="CodeBlockReference" type="CodeBlock_Type"
+				<xsd:element name="CodeBlockReference" type="CodeBlockReference_Type"
 					maxOccurs="unbounded" minOccurs="0" />
 			</xsd:sequence>
 			<xsd:sequence>
-				<xsd:element name="CodeBlockReference" type="CodeBlock_Type"
+				<xsd:element name="CodeBlockSource" type="CodeBlockSource_Type"
 					maxOccurs="unbounded" minOccurs="0" />
 			</xsd:sequence>
 		</xsd:choice>
+	 -->
 	</xsd:complexType>
 
 	<!-- Defines a list of Specific game Type keyword references each of these 

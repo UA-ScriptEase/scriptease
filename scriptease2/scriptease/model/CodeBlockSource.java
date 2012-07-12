@@ -44,6 +44,7 @@ import scriptease.translator.codegenerator.code.fragments.FormatFragment;
  * @author remiller
  */
 public class CodeBlockSource extends CodeBlock {
+	private static final int DEFAULT_ID = -1;
 	private String subjectName;
 	private String slot;
 	private Collection<String> returnTypes;
@@ -52,6 +53,15 @@ public class CodeBlockSource extends CodeBlock {
 	private Collection<FormatFragment> code;
 	private Set<WeakReference<CodeBlockReference>> references;
 	private int id;
+
+	/**
+	 * Creates a new CodeBlockSource with default properties.
+	 */
+	public CodeBlockSource() {
+		this("", "", new ArrayList<String>(), new ArrayList<KnowIt>(),
+				new ArrayList<String>(), new ArrayList<FormatFragment>(),
+				CodeBlockSource.DEFAULT_ID);
+	}
 
 	/**
 	 * Creates a new CodeBlockSource with the given properties.
@@ -283,6 +293,25 @@ public class CodeBlockSource extends CodeBlock {
 		return this.id;
 	}
 
+	/**
+	 * IDs are unique, so this must only be called on loading from the API
+	 * dictionary. They may not be reset or changed or modified. Ever.
+	 * 
+	 * @param id
+	 *            the id for this CodeBlock.
+	 */
+	public void setId(int id) {
+		if (this.getId() == CodeBlockSource.DEFAULT_ID) {
+			this.id = id;
+		} else {
+			// if you get here, Very Bad Things have happened and you need to
+			// fix them. These IDs must never change once set; they must be
+			// unique and this si an excellent way to enforce that. - remiller
+			throw new IllegalStateException(
+					"Cannot change a CodeBlockSource's ID.");
+		}
+	}
+
 	@Override
 	public void setCode(Collection<FormatFragment> code) {
 		this.code = new ArrayList<FormatFragment>(code);
@@ -293,6 +322,11 @@ public class CodeBlockSource extends CodeBlock {
 		return new ArrayList<FormatFragment>(this.code);
 	}
 
+	/**
+	 * Registers a reference with the
+	 * 
+	 * @param added
+	 */
 	protected void addReference(CodeBlockReference added) {
 		this.references.add(new WeakReference<CodeBlockReference>(added));
 	}

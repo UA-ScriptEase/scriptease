@@ -7,7 +7,6 @@ import java.util.List;
 import scriptease.controller.StoryVisitor;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
 /**
@@ -32,6 +31,13 @@ public class CodeBlockReference extends CodeBlock {
 	private CodeBlockSource target;
 
 	/**
+	 * Creates a CodeBlockReference that points nowhere.
+	 */
+	public CodeBlockReference() {
+		this(null);
+	}
+
+	/**
 	 * Creates a new CodeBlockReference that points to the given target.
 	 * 
 	 * @param target
@@ -40,19 +46,6 @@ public class CodeBlockReference extends CodeBlock {
 	public CodeBlockReference(CodeBlockSource target) {
 		this.setTarget(target);
 		// don't set parameters here because setTarget does that for us.
-	}
-
-	/**
-	 * Creates a new CodeBlockReference that points to the CodeBlockSource with
-	 * the given id number.
-	 * 
-	 * @param targetId
-	 *            The ID number of the target to point to.
-	 * @param dictionary
-	 *            The API dictionary to look in.
-	 */
-	public CodeBlockReference(APIDictionary dictionary, int targetId) {
-		this(dictionary.getCodeBlockByID(targetId));
 	}
 
 	@Override
@@ -86,26 +79,31 @@ public class CodeBlockReference extends CodeBlock {
 	 * parameters from the target using {@link #setParameters(Collection)};
 	 * 
 	 * @param newTarget
+	 *            The new target to point to. May be null.
 	 */
-	private void setTarget(CodeBlockSource newTarget) {
+	public void setTarget(CodeBlockSource newTarget) {
 		final CodeBlockSource oldTarget = this.getTarget();
 
 		if (oldTarget == newTarget)
 			return;
 
-		oldTarget.removeReference(this);
+		if (oldTarget != null)
+			oldTarget.removeReference(this);
 
 		this.target = newTarget;
 
-		this.target.addReference(this);
+		if (this.target != null) {
+			this.target.addReference(this);
 
-		this.setParameters(this.target.getParameters());
+			this.setParameters(this.target.getParameters());
+		}
 	}
 
 	/**
 	 * Override of {@link CodeBlock#setParameters(Collection)} that re-clones
 	 * parameters from the target and then tries to match bindings to the given
-	 * list of parameters.
+	 * list of parameters. If the current target is <code>null</code>, then this
+	 * will have no effect.
 	 * 
 	 * @param newBindings
 	 *            The list of parameters whose bindings should be used for
@@ -115,6 +113,7 @@ public class CodeBlockReference extends CodeBlock {
 	public void setParameters(Collection<KnowIt> newBindings) {
 		final List<KnowIt> targetParameters;
 		final List<KnowIt> newParameters;
+		final CodeBlockSource target = this.getTarget();
 
 		/*
 		 * Update our parameters from our target before doing anything. They
@@ -122,7 +121,8 @@ public class CodeBlockReference extends CodeBlock {
 		 * values. Plus, they're shared, so we don't want others to change their
 		 * value.
 		 */
-		targetParameters = this.getTarget().getParameters();
+		targetParameters = target != null ? target.getParameters()
+				: new ArrayList<KnowIt>();
 		newParameters = new ArrayList<KnowIt>(targetParameters.size());
 
 		for (KnowIt param : targetParameters) {
@@ -235,7 +235,12 @@ public class CodeBlockReference extends CodeBlock {
 
 	@Override
 	public int getId() {
-		return this.getTarget().getId();
+		final CodeBlockSource target = this.getTarget();
+
+		if (target == null)
+			throw new IllegalStateException("No target to get ID from.");
+		else
+			return target.getId();
 	}
 
 	public void setBindings(Collection<KnowIt> newBindings) {

@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
 import scriptease.model.CodeBlockReference;
+import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -22,7 +23,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  * @author remiller
  */
-public class CodeBlockReferenceConverter implements Converter {
+public class CodeBlockReferenceConverter extends StoryComponentConverter
+		implements Converter {
 	private static final String TAG_PARAMETERS = "Parameters";
 	private static final String TAG_TARGET = "Target";
 
@@ -54,7 +56,8 @@ public class CodeBlockReferenceConverter implements Converter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final CodeBlockReference block;
+		final CodeBlockReference block = (CodeBlockReference) super.unmarshal(
+				reader, context);
 		final Collection<KnowIt> parameters;
 		int targetId = -1;
 		final Translator translator;
@@ -74,9 +77,8 @@ public class CodeBlockReferenceConverter implements Converter {
 		targetId = Integer.parseInt(reader.getValue());
 		reader.moveUp();
 
-		block = new CodeBlockReference(translator.getApiDictionary(),
-				targetId);
-
+		// the parameter list doesn't show if there aren't any, so look out for
+		// that.
 		if (reader.hasMoreChildren()) {
 			reader.moveDown();
 			final String nodeName = reader.getNodeName();
@@ -88,9 +90,17 @@ public class CodeBlockReferenceConverter implements Converter {
 			}
 			reader.moveUp();
 		}
-		
+
+		block.setTarget(translator.getApiDictionary()
+				.getCodeBlockByID(targetId));
 		block.setBindings(parameters);
 
 		return block;
+	}
+
+	@Override
+	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
+			UnmarshallingContext context) {
+		return new CodeBlockReference();
 	}
 }
