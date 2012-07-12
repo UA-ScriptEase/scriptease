@@ -2,27 +2,29 @@ package scriptease.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
-import javax.swing.SpringLayout;
-import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.TreeSelectionListener;
 
@@ -30,6 +32,9 @@ import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.VisibilityManager;
+import scriptease.controller.apimanagers.GameTypeManager;
+import scriptease.gui.SETree.cell.BindingWidget;
+import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.GraphPanel;
@@ -37,8 +42,6 @@ import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.pane.GameObjectPane;
 import scriptease.gui.pane.LibraryPane;
 import scriptease.gui.storycomponentbuilder.CodeInputTextPane;
-import scriptease.gui.storycomponentbuilder.StoryComponentBindingList;
-import scriptease.gui.storycomponentbuilder.StoryComponentBindingList.BindingContext;
 import scriptease.gui.storycomponentbuilder.StoryComponentMultiSelector;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
@@ -51,11 +54,11 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.GameObjectPicker;
-import scriptease.util.SpringUtilities;
+import scriptease.translator.io.model.GameType.TypeValueWidgets;
 
 /**
- * A class for creating different panels. Right now, the commonality between
- * these panels is that they have a ToolBar and a GraphPanel.
+ * A factory class for different panels. All major panel construction should go
+ * in here.
  * 
  * @author kschenk
  * 
@@ -198,7 +201,7 @@ public class PanelFactory {
 	 * 
 	 * @return
 	 */
-	private JPanel buildStoryComponentEditorPanelContents(
+	private JComponent buildStoryComponentEditorPanelContents(
 			StoryComponent storyComponent) {
 
 		// TODO Add in the Save and Cancel buttons here, too.
@@ -210,6 +213,7 @@ public class PanelFactory {
 		}
 
 		final JPanel editorPanel;
+		final JScrollPane editorScrollPane;
 		final JPanel descriptorPanel;
 
 		final JLabel nameLabel;
@@ -218,7 +222,8 @@ public class PanelFactory {
 		final JLabel visibleLabel;
 
 		final JTextField nameField;
-		// TODO Refactor the StoryComponentMultiSelector
+		// TODO Refactor the StoryComponentMultiSelector. Make it work like the
+		// librarypane one, or just use that one if it's possible.
 		final StoryComponentMultiSelector typeSelector;
 		final JButton typeButton;
 		final JTextField labelField;
@@ -226,7 +231,10 @@ public class PanelFactory {
 
 		final Font labelFont;
 
+		final GroupLayout descriptorPanelLayout;
+
 		editorPanel = new JPanel();
+		editorScrollPane = new JScrollPane(editorPanel);
 		descriptorPanel = new JPanel();
 
 		nameLabel = new JLabel("Name: ");
@@ -240,19 +248,22 @@ public class PanelFactory {
 		labelField = new JTextField();
 		visibleBox = new JCheckBox();
 
-		labelFont = new Font("Helvetica", Font.BOLD,
+		labelFont = new Font("SansSerif", Font.BOLD,
 				Integer.parseInt(ScriptEase.getInstance().getPreference(
-						ScriptEase.FONT_SIZE_KEY)));
+						ScriptEase.FONT_SIZE_KEY)) + 1);
+		descriptorPanelLayout = new GroupLayout(descriptorPanel);
 
 		editorPanel.setLayout(new BoxLayout(editorPanel, BoxLayout.PAGE_AXIS));
 
+		editorScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
 		// Set up the descriptorPanel
 
-		// TODO Change to GroupLayout instead of SpringLayout!
-		
-		descriptorPanel.setLayout(new SpringLayout());
-		descriptorPanel.setBorder(new LineBorder(Color.DARK_GRAY));
+		descriptorPanel.setLayout(descriptorPanelLayout);
 		descriptorPanel.setBorder(new TitledBorder("Component Descriptors"));
+
+		descriptorPanelLayout.setAutoCreateGaps(true);
+		descriptorPanelLayout.setAutoCreateContainerGaps(true);
 
 		// Set up the labels
 
@@ -281,34 +292,66 @@ public class PanelFactory {
 			String shortenedLabel = label.substring(0, labelLength - 2);
 			labelField.setText(shortenedLabel);
 		}
-		
+		labelField.setText(getCollectionAsString(storyComponent.getLabels()));
+
 		visibleBox.setSelected(VisibilityManager.getInstance().isVisible(
 				storyComponent));
 
 		// Set up the field listeners
 
-		// Add JComponents to DescriptorPanel
+		/*
+		 * TODO Set up the field listeners.
+		 */
 
-		descriptorPanel.add(visibleLabel);
-		descriptorPanel.add(visibleBox);
+		// Add JComponents to DescriptorPanel using GroupLayout
+		descriptorPanelLayout.setHorizontalGroup(descriptorPanelLayout
+				.createSequentialGroup()
+				.addGroup(
+						descriptorPanelLayout.createParallelGroup()
+								.addComponent(nameLabel)
+								.addComponent(visibleLabel)
+								.addComponent(labelLabel)
+								.addComponent(typeLabel))
+				.addGroup(
+						descriptorPanelLayout.createParallelGroup()
+								.addComponent(visibleBox)
+								.addComponent(nameField)
+								.addComponent(labelField)
+								.addComponent(typeButton)));
 
-		descriptorPanel.add(nameLabel);
-		descriptorPanel.add(nameField);
-
-		descriptorPanel.add(labelLabel);
-		descriptorPanel.add(labelField);
-
-		descriptorPanel.add(typeLabel);
-		descriptorPanel.add(typeButton);
-
-		descriptorPanel.setMaximumSize(new Dimension(2000, 150));
-
-		SpringUtilities.makeCompactGrid(descriptorPanel, 4, 2, 6, 6, 6, 6);
+		descriptorPanelLayout.setVerticalGroup(descriptorPanelLayout
+				.createSequentialGroup()
+				.addGroup(
+						descriptorPanelLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(visibleLabel)
+								.addComponent(visibleBox))
+				.addGroup(
+						descriptorPanelLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(nameLabel)
+								.addComponent(nameField))
+				.addGroup(
+						descriptorPanelLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(labelLabel)
+								.addComponent(labelField))
+				.addGroup(
+						descriptorPanelLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(typeLabel)
+								.addComponent(typeButton)));
 
 		editorPanel.add(descriptorPanel);
-		editorPanel.add(Box.createHorizontalGlue());
 
-		StoryVisitor storyComponentVisitor = new AbstractNoOpStoryVisitor() {
+		// Determine what kind of component was selected, and display the
+		// appropriate panel.
+
+		storyComponent.process(new AbstractNoOpStoryVisitor() {
 
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
@@ -316,8 +359,10 @@ public class PanelFactory {
 				types.addAll(scriptIt.getTypes());
 				typeSelector.setData(types);
 
-				editorPanel.add(PanelFactory.getInstance()
-						.buildEffectEditorPanel(scriptIt));
+				for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
+					editorPanel.add(PanelFactory.getInstance()
+							.buildCodeBlockEditorPanel(codeBlock));
+				}
 			}
 
 			@Override
@@ -325,7 +370,7 @@ public class PanelFactory {
 				ArrayList<String> types = new ArrayList<String>();
 				types.addAll(knowIt.getTypes());
 				typeSelector.setData(types);
-				
+
 				editorPanel.add(PanelFactory.getInstance()
 						.buildDescriptionEditorPanel(knowIt));
 			}
@@ -351,43 +396,186 @@ public class PanelFactory {
 				// Unimplemented
 				this.defaultProcess(container);
 			}
-		};
+		});
 
-		storyComponent.process(storyComponentVisitor);
-
-		// TODO Add save/cancel buttons down here, centered.
-
-		return editorPanel;
+		return editorScrollPane;
 
 	}
 
-	private JPanel buildEffectEditorPanel(ScriptIt scriptIt) {
-		final JPanel effectEditorPanel;
-		final Collection<CodeBlock> codeBlocks;
-		final Collection<JPanel> codeBlockEditors;
+	private JPanel buildCodeBlockEditorPanel(CodeBlock codeBlock) {
+		final JPanel codeBlockEditorPanel;
 
-		effectEditorPanel = new JPanel();
-		codeBlocks = scriptIt.getCodeBlocks();
+		final JLabel idLabel;
+		final JLabel slotLabel;
+		final JLabel includesLabel;
+		final JLabel typesLabel;
+		final JLabel parametersLabel;
+		final JLabel codeLabel;
 
-		codeBlockEditors = new ArrayList<JPanel>(codeBlocks.size());
+		final JButton addParameterButton;
+		final JTextField slotField;
+		final JTextField includesField;
+		final StoryComponentMultiSelector typeSelector;
+		final JButton typesButton;
+		final JScrollPane parameterScrollPane;
+		final JPanel parameterPanel;
+		final CodeInputTextPane codePanel;
+		final JScrollPane codeScrollPane;
 
-		for (CodeBlock codeBlock : codeBlocks) {
-			JPanel codeBlockEditor = buildCodeBlockPanel(codeBlock);
-			codeBlockEditors.add(codeBlockEditor);
-			effectEditorPanel.add(codeBlockEditor);
+		final GroupLayout codeBlockEditorLayout;
+		final Font labelFont;
+		final List<KnowIt> parameters;
+
+		codeBlockEditorPanel = new JPanel();
+
+		idLabel = new JLabel("ID# 35235"); // TODO Implement ID checking. Will
+											// do once merged with Robin's code.
+		slotLabel = new JLabel("Slot: ");
+		includesLabel = new JLabel("Includes: ");
+		typesLabel = new JLabel("Types: ");
+		parametersLabel = new JLabel("Parameters: ");
+		codeLabel = new JLabel("Code");
+
+		slotField = new JTextField();
+		includesField = new JTextField();
+		typeSelector = new StoryComponentMultiSelector();
+		typesButton = typeSelector.getRootButton();
+		addParameterButton = new JButton("+");
+		parameterPanel = new JPanel();
+		parameterScrollPane = new JScrollPane(parameterPanel);
+		codePanel = new CodeInputTextPane();
+		codeScrollPane = new JScrollPane(codePanel.getTextPane());
+
+		codeBlockEditorLayout = new GroupLayout(codeBlockEditorPanel);
+		labelFont = new Font("SansSerif", Font.BOLD,
+				Integer.parseInt(ScriptEase.getInstance().getPreference(
+						ScriptEase.FONT_SIZE_KEY)) + 1);
+		parameters = codeBlock.getParameters();
+
+		// Set up the codeBlockEditorPanel and the scroll pane
+
+		codeBlockEditorPanel.setLayout(codeBlockEditorLayout);
+		codeBlockEditorPanel.setBorder(new TitledBorder("Code Block: "));
+
+		codeBlockEditorLayout.setAutoCreateGaps(true);
+		codeBlockEditorLayout.setAutoCreateContainerGaps(true);
+
+		codeScrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+		parameterPanel.setLayout(new BoxLayout(parameterPanel,
+				BoxLayout.PAGE_AXIS));
+		
+		parameterScrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+		// Set up the labels
+
+		idLabel.setForeground(Color.GRAY);
+
+		slotLabel.setFont(labelFont);
+		slotLabel.setLabelFor(slotField);
+
+		includesLabel.setFont(labelFont);
+		includesLabel.setLabelFor(includesField);
+
+		typesLabel.setFont(labelFont);
+		typesLabel.setLabelFor(typesButton);
+
+		parametersLabel.setFont(labelFont);
+		parametersLabel.setLabelFor(parameterScrollPane);
+
+		codeLabel.setFont(labelFont);
+		codeLabel.setLabelFor(codeScrollPane);
+
+		// Set up the default field values
+
+		if (codeBlock.hasSlot())
+			slotField.setText(codeBlock.getSlot());
+
+		includesField.setText(getCollectionAsString(codeBlock.getIncludes()));
+
+		ArrayList<String> types = new ArrayList<String>();
+		types.addAll(codeBlock.getTypes());
+		typeSelector.setData(types);
+
+		for (KnowIt parameter : parameters) {
+			parameterPanel.add(buildParameterComponent(parameter));
 		}
 
-		// TODO Set the text, type, and labels like in DescriptionEditor.
+		// TODO Set default codeblock stuff.
 
-		// Also make code block editors:
-		// for (JPanel codeBlockEditor : codeBlockEditors) {
-		// codeBlockEditor.updateDisplay();
-		// }
-		effectEditorPanel.setLayout(new BoxLayout(effectEditorPanel,
-				BoxLayout.PAGE_AXIS));
-		effectEditorPanel.add(Box.createVerticalGlue());
+		// Set up the listeners
 
-		return effectEditorPanel;
+		// TODO Set the listeners
+		// Here's some old code from the codePanel
+		/*
+		 * Old Code: final Collection<FormatFragment> codeFragments =
+		 * codeBlock.getCode(); if (codeFragments.size() > 0)
+		 * codePane.setCodeFragments(codeFragments);
+		 * parameterList.updateBindingList(codeBlock.getParameters());
+		 */
+
+		codeBlockEditorLayout.setHorizontalGroup(codeBlockEditorLayout
+				.createSequentialGroup()
+				.addGroup(
+						codeBlockEditorLayout.createParallelGroup()
+								.addComponent(slotLabel)
+								.addComponent(includesLabel)
+								.addComponent(typesLabel)
+								.addComponent(parametersLabel)
+								.addComponent(addParameterButton)
+								.addComponent(codeLabel))
+				.addGroup(
+						codeBlockEditorLayout
+								.createParallelGroup()
+								.addComponent(idLabel,
+										GroupLayout.Alignment.TRAILING)
+								.addComponent(slotField)
+								.addComponent(includesField)
+								.addComponent(typesButton)
+								.addComponent(parameterScrollPane)
+								.addComponent(codeScrollPane)));
+
+		codeBlockEditorLayout.setVerticalGroup(codeBlockEditorLayout
+				.createSequentialGroup()
+				.addComponent(idLabel)
+				.addGroup(
+						codeBlockEditorLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(slotLabel)
+								.addComponent(slotField))
+				.addGroup(
+						codeBlockEditorLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(includesLabel)
+								.addComponent(includesField))
+				.addGroup(
+						codeBlockEditorLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(typesLabel)
+								.addComponent(typesButton))
+				.addGroup(
+						codeBlockEditorLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addGroup(
+										codeBlockEditorLayout
+												.createSequentialGroup()
+												.addComponent(parametersLabel)
+												.addComponent(
+														addParameterButton))
+								.addComponent(parameterScrollPane))
+				.addGroup(
+						codeBlockEditorLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(codeLabel)
+								.addComponent(codeScrollPane)));
+
+		return codeBlockEditorPanel;
 	}
 
 	/*
@@ -396,14 +584,14 @@ public class PanelFactory {
 	 */
 	public JPanel buildDescriptionEditorPanel(KnowIt knowIt) {
 		final JPanel descriptionEditorPanel;
-		final StoryComponentBindingList bindingList;
+		// final StoryComponentBindingList bindingList;
 
 		descriptionEditorPanel = new JPanel();
-		bindingList = new StoryComponentBindingList(BindingContext.BINDING);
+		// bindingList = new StoryComponentBindingList(BindingContext.BINDING);
+		// TODO See effect editor to see how to do this
 
 		descriptionEditorPanel.setLayout(new BoxLayout(descriptionEditorPanel,
 				BoxLayout.PAGE_AXIS));
-		descriptionEditorPanel.add(bindingList);
 		descriptionEditorPanel.add(Box.createVerticalGlue());
 
 		// Set text of NameField to knowIt.getDisplayText();
@@ -414,60 +602,6 @@ public class PanelFactory {
 		// Set the types to knowIt.getTypes()
 
 		return descriptionEditorPanel;
-	}
-
-	private JPanel buildCodeBlockPanel(CodeBlock codeBlock) {
-		final String CODE_BLOCK = "CodeBlock";
-		final String CODE = "Code";
-		final JPanel codePanel;
-		final JPanel codeBlockPanel;
-		final CodeInputTextPane codePane;
-		final StoryComponentBindingList parameterList;
-		final JScrollPane codeScrollPane;
-		final JLabel label;
-		final Font labelFont;
-
-		codePane = new CodeInputTextPane();
-		parameterList = new StoryComponentBindingList(
-				(BindingContext.PARAMETER));
-		codeBlockPanel = new JPanel();
-		codePanel = new JPanel();
-		codeScrollPane = new JScrollPane(codePane.getTextPane());
-		label = new JLabel(CODE);
-		labelFont = new Font("Helvetica", Font.BOLD,
-				Integer.parseInt(ScriptEase.getInstance().getPreference(
-						ScriptEase.FONT_SIZE_KEY)));
-
-		codeScrollPane
-				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-		label.setFont(labelFont);
-		label.setLabelFor(codeScrollPane);
-
-		codePanel.add(label);
-		codePanel.add(codeScrollPane);
-
-		codeBlockPanel
-				.setLayout(new BoxLayout(codeBlockPanel, BoxLayout.Y_AXIS));
-		codeBlockPanel.setBorder(new TitledBorder(CODE_BLOCK));
-		int preferredWidth = Math.max(parameterList.getPreferredSize().width,
-				codePanel.getPreferredSize().width);
-		int preferredHeight = Math.max(parameterList.getPreferredSize().height,
-				codePanel.getPreferredSize().height);
-		codeBlockPanel.setPreferredSize(new Dimension(preferredWidth,
-				preferredHeight));
-
-		codeBlockPanel.add(parameterList);
-		codeBlockPanel.add(codePanel);
-
-		// TODO Add a listener that updates this panel.
-		/*
-		 * Old Code: final Collection<FormatFragment> codeFragments =
-		 * codeBlock.getCode(); if (codeFragments.size() > 0)
-		 * codePane.setCodeFragments(codeFragments);
-		 * parameterList.updateBindingList(codeBlock.getParameters());
-		 */
-		return codeBlockPanel;
 	}
 
 	/**
@@ -552,6 +686,157 @@ public class PanelFactory {
 			}
 		};
 		return storyVisitor;
+	}
+
+	/**
+	 * Method that returns a collection of Strings as a single String seperated
+	 * by commas.
+	 * 
+	 * An example:
+	 * 
+	 * Collection<String> collection = ["First"], ["Second"], ["Third"]
+	 * getCollectionAsString(collection) == "First, Second, Third"
+	 * 
+	 * @param strings
+	 * @return
+	 */
+	private String getCollectionAsString(Collection<String> strings) {
+		String collectionText = "";
+
+		for (String includeText : strings) {
+			collectionText += includeText + ", ";
+		}
+		int labelLength = collectionText.length();
+		if (labelLength > 0) {
+			return collectionText.substring(0, labelLength - 2);
+		} else
+			return "";
+	}
+
+	/**
+	 * Parameter creator and editor component.
+	 * 
+	 * @param knowIt
+	 * @return
+	 */
+	private JComponent buildParameterComponent(KnowIt knowIt) {
+		final JPanel parameterComponent;
+
+		final JTextField nameField;
+		final StoryComponentMultiSelector typeSelector;
+		final ArrayList<String> types;
+		final JButton typesButton;
+		final JComboBox<String> defaultTypeBox;
+		final JButton deleteButton;
+		final GroupLayout groupLayout;
+		final JComponent bindingConstantSettingComponent;
+
+		final JTextField inactiveTextField;
+
+		final Translator translator;
+		final GameTypeManager gameTypeManager;
+		final TypeValueWidgets defaultTypeGuiType;
+
+		parameterComponent = new JPanel();
+
+		nameField = new JTextField(knowIt.getDisplayText(), 10);
+		typeSelector = new StoryComponentMultiSelector();
+		types = new ArrayList<String>();
+		typesButton = typeSelector.getRootButton();
+		defaultTypeBox = new JComboBox<String>();
+		deleteButton = new JButton("-");
+		groupLayout = new GroupLayout(parameterComponent);
+
+		inactiveTextField = new JTextField(" Cannot set binding for ["
+				+ knowIt.getDefaultType() + "]");
+
+		translator = TranslatorManager.getInstance().getActiveTranslator();
+		gameTypeManager = translator.getGameTypeManager();
+		defaultTypeGuiType = gameTypeManager.getGui(knowIt.getDefaultType());
+
+		parameterComponent.setLayout(groupLayout);
+		parameterComponent.setBorder(new TitledBorder(knowIt.getDisplayText()));
+
+		types.addAll(knowIt.getTypes());
+		typeSelector.setData(types);
+
+		inactiveTextField.setEnabled(false);
+
+		for (String type : types)
+			defaultTypeBox.addItem(type);
+
+		defaultTypeBox.setSelectedItem(knowIt.getDefaultType());
+
+		// Determine what to do with parameters
+
+		/*
+		 * TODO BindingConstantSettingComponent should update when the default
+		 * type is changed, since we could choose to set a default binding at
+		 * that point.
+		 * 
+		 * This would also mean we don't have to worry about this when creating
+		 * a new parameter, since the new one will just have a void type as
+		 * default.
+		 */
+		if (defaultTypeGuiType == null)
+			bindingConstantSettingComponent = inactiveTextField;
+		else {
+			switch (defaultTypeGuiType) {
+			case JTEXTFIELD:
+				bindingConstantSettingComponent = new JTextField(30);
+				break;
+			case JSPINNER:
+				bindingConstantSettingComponent = new JSpinner();
+
+				break;
+			case JCOMBOBOX:
+				final Map<String, String> map;
+				final JComboBox<String> selectorBox;
+
+				map = gameTypeManager.getEnumMap(knowIt.getDefaultType());
+				selectorBox = new JComboBox<String>();
+
+				for (String key : map.keySet())
+					selectorBox.addItem(key + " [" + map.get(key) + "]");
+
+				bindingConstantSettingComponent = selectorBox;
+				break;
+			default: {
+				inactiveTextField.setText("Unimplemented GUI Type: "
+						+ defaultTypeGuiType.toString());
+				bindingConstantSettingComponent = inactiveTextField;
+				break;
+			}
+			}
+		}
+
+		JPanel defaultTypeBoxPanel = new JPanel();
+		JPanel nameFieldPanel = new JPanel();
+		JPanel bindingPanel = new JPanel();
+		
+		defaultTypeBoxPanel.add(defaultTypeBox);
+		nameFieldPanel.add(nameField);
+		bindingPanel.add(bindingConstantSettingComponent);
+		
+		nameFieldPanel.setBorder(new TitledBorder("Name"));
+		defaultTypeBoxPanel.setBorder(new TitledBorder("Default Type"));
+		bindingPanel.setBorder(new TitledBorder("Default Binding"));
+
+		groupLayout.setAutoCreateGaps(true);
+		groupLayout.setAutoCreateContainerGaps(true);
+		groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
+				.addComponent(nameFieldPanel).addComponent(typesButton)
+				.addComponent(defaultTypeBoxPanel)
+				.addComponent(bindingPanel)
+				.addComponent(deleteButton));
+
+		groupLayout.setVerticalGroup(groupLayout
+				.createParallelGroup(GroupLayout.Alignment.CENTER)
+				.addComponent(nameFieldPanel).addComponent(typesButton)
+				.addComponent(deleteButton).addComponent(defaultTypeBoxPanel)
+				.addComponent(bindingPanel));
+
+		return parameterComponent;
 	}
 
 	/**
