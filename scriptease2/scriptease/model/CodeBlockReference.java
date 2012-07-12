@@ -156,12 +156,12 @@ public class CodeBlockReference extends CodeBlock {
 
 	@Override
 	public boolean hasSubject() {
-		return !this.target.hasSubject();
+		return this.target.hasSubject();
 	}
 
 	@Override
 	public boolean hasSlot() {
-		return !this.target.hasSlot();
+		return this.target.hasSlot();
 	}
 
 	@Override
