@@ -38,7 +38,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean canConvert(Class type) {
-		return type.equals(CodeBlock.class);
+		return type.equals(CodeBlockSource.class);
 	}
 
 	@Override
