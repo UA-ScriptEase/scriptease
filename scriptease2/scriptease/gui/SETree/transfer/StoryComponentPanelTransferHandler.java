@@ -329,7 +329,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			if (!success)
 				throw new IllegalStateException("Was unable to add " + newChild
 						+ " to " + parent
-						+ ". This should have been caught by canImport.");
+						+ ". This should have been prevented by canImport.");
 		}
 
 		// End the recording of the paste
