@@ -9,6 +9,8 @@ import java.io.InputStream;
 import scriptease.controller.io.converter.APIDictionaryConverter;
 import scriptease.controller.io.converter.AskItConverter;
 import scriptease.controller.io.converter.CodeBlockConverter;
+import scriptease.controller.io.converter.CodeBlockReferenceConverter;
+import scriptease.controller.io.converter.CodeBlockSourceConverter;
 import scriptease.controller.io.converter.DescribeItConverter;
 import scriptease.controller.io.converter.GameMapConverter;
 import scriptease.controller.io.converter.GameTypeConverter;
@@ -329,6 +331,7 @@ public class FileIO {
 		stream.alias("GraphNode", GraphNode.class);
 		stream.alias("TextNode", TextNode.class);
 		stream.alias("KnowItNode", KnowItNode.class);
+		stream.alias("CodeBlock", CodeBlock.class);
 		stream.alias("CodeBlockSource", CodeBlockSource.class);
 		stream.alias("CodeBlockReference", CodeBlockReference.class);
 		stream.alias("ScriptIt", ScriptIt.class);
@@ -366,6 +369,8 @@ public class FileIO {
 		stream.registerConverter(new TextNodeConverter());
 		stream.registerConverter(new KnowItNodeConverter());
 		stream.registerConverter(new CodeBlockConverter());
+		stream.registerConverter(new CodeBlockSourceConverter());
+		stream.registerConverter(new CodeBlockReferenceConverter());
 		stream.registerConverter(new ScriptItConverter());
 		stream.registerConverter(new QuestPointConverter());
 		stream.registerConverter(new QuestNodeConverter());
