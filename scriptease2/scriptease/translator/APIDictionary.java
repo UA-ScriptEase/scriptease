@@ -14,6 +14,7 @@ import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
@@ -218,6 +219,15 @@ public class APIDictionary implements LibraryObserver {
 					this.found = (CodeBlockSource) block;
 					return;
 				}
+			}
+		}
+		
+		@Override
+		protected void defaultProcessComplex(ComplexStoryComponent complex) {
+			super.defaultProcessComplex(complex);
+			
+			for(StoryComponent child : complex.getChildren()){
+				child.process(this);
 			}
 		}
 	}
