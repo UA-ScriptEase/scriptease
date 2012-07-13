@@ -6,11 +6,8 @@ import java.util.Collection;
 import scriptease.controller.io.FileIO;
 import scriptease.controller.io.FileIO.IoMode;
 import scriptease.model.CodeBlock;
-import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.atomic.KnowIt;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
 import com.thoughtworks.xstream.XStreamException;
@@ -68,10 +65,6 @@ public class CodeBlockConverter implements Converter {
 		Collection<KnowIt> parameters = new ArrayList<KnowIt>(0);
 		Collection<FormatFragment> code = new ArrayList<FormatFragment>(0);
 		Collection<String> types = new ArrayList<String>(0);
-		final Translator activeTranslator;
-
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
 
 		subject = reader.getAttribute(TAG_SUBJECT);
 		if (subject == null)
@@ -111,13 +104,11 @@ public class CodeBlockConverter implements Converter {
 		}
 
 		if (FileIO.getInstance().getMode() == IoMode.STORY) {
-			final CodeBlockSource target;
-
-			target = activeTranslator.getApiDictionary().getCodeBlockByData(
-					subject, slot, types, parameters, includes, code);
-
-			codeBlock = new CodeBlockReference(target);
-
+			// we can't determine precisely enough which codeblock should be
+			// referenced. There just isn't enough uniqueness in the data stored
+			// in stories. - remiller
+			throw new UnsupportedOperationException(
+					"Can't fix stories - not enough data. Sorry!");
 		} else if (FileIO.getInstance().getMode() == IoMode.API_DICTIONARY) {
 			codeBlock = new CodeBlockSource(subject, slot, types, parameters,
 					includes, code, tempId++);

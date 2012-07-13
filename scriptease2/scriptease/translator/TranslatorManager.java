@@ -196,7 +196,7 @@ public class TranslatorManager implements StoryModelPoolObserver {
 	/**
 	 * Shortcut for getting the translator from the active Story Model.
 	 * 
-	 * @return the active translator. Can be <code>null</code>.
+	 * @return the active translator. Can be <code>null</code> when there is no active translator.
 	 */
 	public Translator getActiveTranslator() {
 		return this.activeTranslator;

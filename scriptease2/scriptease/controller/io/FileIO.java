@@ -88,8 +88,17 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
  * @author mfchurch
  */
 public class FileIO {
+	/**
+	 * The modes that are possible for the IO system to be in. These are useful
+	 * for changing behaviour dependent on what's going on. This has been done
+	 * as a global variable with a singleton for simplicity, but if we find that
+	 * we've got a lot of special cases all over, we may want to switch to a
+	 * Strategy pattern style solution.
+	 * 
+	 * @author remiller
+	 */
 	public enum IoMode {
-		API_DICTIONARY, LANGUAGE_DICTIONARY, STORY, NONE;
+		API_DICTIONARY, LANGUAGE_DICTIONARY, STORY, LIBRARY, NONE;
 	}
 
 	private static FileIO instance;
@@ -98,6 +107,10 @@ public class FileIO {
 		if (instance == null)
 			instance = new FileIO();
 		return instance;
+	}
+	
+	private FileIO(){
+		this.mode = IoMode.NONE;
 	}
 
 	private IoMode mode;
@@ -110,7 +123,7 @@ public class FileIO {
 	 * @return The read-in Story.
 	 */
 	public StoryModel readStory(File location) {
-		return (StoryModel) this.readData(location);
+		return (StoryModel) this.readData(location, IoMode.STORY);
 	}
 
 	/**
@@ -121,7 +134,7 @@ public class FileIO {
 	 * @return The read-in Library.
 	 */
 	public LibraryModel readLibrary(File location) {
-		return (LibraryModel) this.readData(location);
+		return (LibraryModel) this.readData(location, IoMode.LIBRARY);
 	}
 
 	/**
@@ -133,9 +146,7 @@ public class FileIO {
 	 *            The file path to write to.
 	 */
 	public void writeAPIDictionary(APIDictionary dictionary, File location) {
-		this.mode = IoMode.API_DICTIONARY;
-		this.writeData(dictionary, location);
-		this.mode = IoMode.NONE;
+		this.writeData(dictionary, location, IoMode.API_DICTIONARY);
 	}
 
 	/**
@@ -157,9 +168,8 @@ public class FileIO {
 			throw new IllegalStateException(
 					"Loop detected in APIDictionary Loading");
 
-		this.mode = IoMode.API_DICTIONARY;
-		APIDictionary apiDictionary = (APIDictionary) this.readData(location);
-		this.mode = IoMode.NONE;
+		APIDictionary apiDictionary = (APIDictionary) this.readData(location,
+				IoMode.API_DICTIONARY);
 
 		return apiDictionary;
 	}
@@ -176,27 +186,40 @@ public class FileIO {
 			throw new IllegalStateException(
 					"Loop detected in LanguageDictionary Loading");
 
-		this.mode = IoMode.LANGUAGE_DICTIONARY;
-		LanguageDictionary languageDict = (LanguageDictionary) this
-				.readData(location);
-		this.mode = IoMode.NONE;
+		LanguageDictionary languageDict = (LanguageDictionary) this.readData(
+				location, IoMode.LANGUAGE_DICTIONARY);
 
 		return languageDict;
 	}
 
 	/**
-	 * Writes the given PatternModel as XML to the given location;
+	 * Writes the given StoryModel as XML to the given location;
 	 * 
 	 * @param model
-	 *            The pattern model to save to disk.
+	 *            The model to save to disk.
 	 * @param location
 	 *            the location to save to.
 	 */
-	public void writePatternModel(PatternModel model, File location) {
-		this.writeData(model, location);
+	public void writeStoryModel(PatternModel model, File location) {
+		this.writeData(model, location, IoMode.STORY);
 	}
 
-	private void writeData(Object dataModel, File location) {
+	/**
+	 * Writes the given LibraryModel as XML to the given location;
+	 * 
+	 * @param model
+	 *            The model to save to disk.
+	 * @param location
+	 *            the location to save to.
+	 */
+	public void writeLibraryModel(PatternModel model, File location) {
+		this.writeData(model, location, IoMode.LIBRARY);
+	}
+
+	private void writeData(Object dataModel, File location, IoMode mode) {
+		final IoMode prevMode = this.mode;
+		this.mode = mode;
+
 		final File backupLocation;
 		FileOutputStream fileOut = null;
 		final XStream stream = this.buildXStream();
@@ -231,7 +254,7 @@ public class FileIO {
 							+ location.getAbsolutePath());
 
 			if (retry)
-				this.writeData(dataModel, location);
+				this.writeData(dataModel, location, mode);
 		} finally {
 			try {
 				if (fileOut != null)
@@ -240,10 +263,15 @@ public class FileIO {
 				System.err
 						.println("Failed to close an output file connection.");
 			}
+
+			this.mode = prevMode;
 		}
 	}
 
-	private Object readData(File location) {
+	private Object readData(File location, IoMode mode) {
+		final IoMode prevMode = this.mode;
+		this.mode = mode;
+
 		InputStream fileIn = null;
 		Object dataModel = null;
 		final XStream stream = this.buildXStream();
@@ -267,7 +295,7 @@ public class FileIO {
 							+ location.getAbsolutePath());
 
 			if (retry)
-				this.readData(location);
+				this.readData(location, mode);
 		} catch (XStreamException e) {
 			System.err
 					.println("An error occured while loading "
@@ -280,6 +308,9 @@ public class FileIO {
 					fileIn.close();
 			} catch (IOException e) {
 				System.err.println("Failed to close an input file connection.");
+			} finally {
+				// put the io mode back
+				this.mode = prevMode;
 			}
 		}
 

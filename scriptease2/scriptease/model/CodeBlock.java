@@ -195,7 +195,7 @@ public abstract class CodeBlock extends StoryComponent implements
 			}
 			if (parent == null)
 				throw new IllegalStateException(
-						"CodeBlock does not have a cause.");
+						"Failed to locate enclosing Cause for CodeBlock " + this.toString());
 			return (ScriptIt) parent;
 		}
 	}

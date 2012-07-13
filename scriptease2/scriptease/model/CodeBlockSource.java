@@ -11,6 +11,7 @@ import scriptease.controller.StoryVisitor;
 import scriptease.controller.apimanagers.EventSlotManager;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
@@ -39,6 +40,10 @@ import scriptease.translator.codegenerator.code.fragments.FormatFragment;
  * <li><b>Includes</b> include file names necessary for the code above to run</li>
  * <li><b>ID</b> unique ID given to each CodeBlockSource on creation.</li>
  * </ul>
+ * 
+ * <code>CodeBlockSources</code>s are not really clonable in the strictest sense
+ * of the term, and instead will return a {@link CodeBlockReference reference}
+ * when {@link #clone()} is called.
  * 
  * @author mfchurch
  * @author remiller
@@ -84,6 +89,10 @@ public class CodeBlockSource extends CodeBlock {
 	 *            The list of includes required for this code block to function.
 	 * @param code
 	 *            The core code to generate for this code block.
+	 * @param id
+	 *            The unique ID of this codeblock. If not being read from a
+	 *            file, then clients should use
+	 *            {@link APIDictionary#getNextCodeBlockID()}
 	 */
 	public CodeBlockSource(String subject, String slot,
 			Collection<String> returnTypes, Collection<KnowIt> parameters,
@@ -114,62 +123,71 @@ public class CodeBlockSource extends CodeBlock {
 	}
 
 	@Override
-	public CodeBlockSource clone() {
-		final Translator activeTranslator;
-		CodeBlockSource clone = null;
+	public CodeBlock clone() {
+		return new CodeBlockReference(this);
 
-		clone = (CodeBlockSource) super.clone();
-
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-
-		clone.init(activeTranslator.getApiDictionary().getNextCodeBlockID());
-
-		// subject
-		if (!this.subjectName.isEmpty())
-			clone.setSubject(new String(this.subjectName));
-		// slot
-		if (!this.slot.isEmpty())
-			clone.setSlot(new String(this.slot));
-		// types
-		Collection<String> clonedTypes = new ArrayList<String>(
-				this.returnTypes.size());
-		for (String type : this.returnTypes) {
-			clonedTypes.add(new String(type));
-		}
-		clone.setTypes(clonedTypes);
-		// parameters
-		Collection<KnowIt> clonedParameters = new ArrayList<KnowIt>(this
-				.getParameters().size());
-		for (KnowIt parameter : this.getParameters()) {
-			clonedParameters.add(parameter.clone());
-		}
-		clone.setParameters(clonedParameters);
-		// includes
-		Collection<String> clonedIncludes = new ArrayList<String>(this
-				.getIncludes().size());
-		for (String include : this.getIncludes()) {
-			clonedIncludes.add(new String(include));
-		}
-		clone.setIncludes(clonedIncludes);
-		// code
-		Collection<FormatFragment> clonedCode = new ArrayList<FormatFragment>(
-				this.getCode().size());
-		for (FormatFragment fragment : this.getCode()) {
-			clonedCode.add(fragment);
-		}
-		clone.setCode(clonedCode);
-
-		return clone;
+		// final Translator activeTranslator;
+		// CodeBlockSource clone = null;
+		//
+		// clone = (CodeBlockSource) super.clone();
+		//
+		// activeTranslator = TranslatorManager.getInstance()
+		// .getActiveTranslator();
+		//
+		// clone.init(activeTranslator.getApiDictionary().getNextCodeBlockID());
+		//
+		// // subject
+		// if (!this.subjectName.isEmpty())
+		// clone.setSubject(new String(this.subjectName));
+		// // slot
+		// if (!this.slot.isEmpty())
+		// clone.setSlot(new String(this.slot));
+		// // types
+		// Collection<String> clonedTypes = new ArrayList<String>(
+		// this.returnTypes.size());
+		// for (String type : this.returnTypes) {
+		// clonedTypes.add(new String(type));
+		// }
+		// clone.setTypes(clonedTypes);
+		// // parameters
+		// Collection<KnowIt> clonedParameters = new ArrayList<KnowIt>(this
+		// .getParameters().size());
+		// for (KnowIt parameter : this.getParameters()) {
+		// clonedParameters.add(parameter.clone());
+		// }
+		// clone.setParameters(clonedParameters);
+		// // includes
+		// Collection<String> clonedIncludes = new ArrayList<String>(this
+		// .getIncludes().size());
+		// for (String include : this.getIncludes()) {
+		// clonedIncludes.add(new String(include));
+		// }
+		// clone.setIncludes(clonedIncludes);
+		// // code
+		// Collection<FormatFragment> clonedCode = new
+		// ArrayList<FormatFragment>(
+		// this.getCode().size());
+		// for (FormatFragment fragment : this.getCode()) {
+		// clonedCode.add(fragment);
+		// }
+		// clone.setCode(clonedCode);
+		//
+		// return clone;
 	}
 
 	@Override
 	public void setSubject(String subject) {
+		if (subject == null)
+			subject = "";
+
 		this.subjectName = subject;
 	}
 
 	@Override
 	public void setSlot(String slot) {
+		if (slot == null)
+			slot = "";
+
 		this.slot = slot;
 	}
 
@@ -232,9 +250,9 @@ public class CodeBlockSource extends CodeBlock {
 		for (String include : this.getIncludes()) {
 			hashCode += include.hashCode();
 		}
-		for (KnowIt implicit : this.getImplicits(this.getOwner())) {
-			hashCode += implicit.getDisplayText().hashCode();
-		}
+		// for (KnowIt implicit : this.getImplicits(this.getOwner())) {
+		// hashCode += implicit.getDisplayText().hashCode();
+		// }
 
 		return hashCode;
 	}
@@ -269,8 +287,8 @@ public class CodeBlockSource extends CodeBlock {
 
 	@Override
 	public String toString() {
-		return "CodeBlockSource [" + this.getSubject() + ", " + this.getSlot()
-				+ ", " + this.getOwner() + "]";
+		return "CodeBlockSource [" + this.subjectName + ", " + this.slot + ", "
+				+ this.getOwner() + "]";
 	}
 
 	@Override
