@@ -57,12 +57,9 @@ public class KnowItBindingRunTime extends KnowItBinding {
 				+ this.types.iterator().next().toString();
 	}
 
-	/**
-	 * Resolved at run time, so they can be the same objects
-	 */
 	@Override
 	public KnowItBinding clone() {
-		return this;
+		return new KnowItBindingRunTime(this.types);
 	}
 
 	@Override

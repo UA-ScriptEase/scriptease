@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
+import scriptease.controller.io.FileIO.IoMode;
 import scriptease.model.CodeBlockReference;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.translator.Translator;
@@ -19,7 +21,11 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
  * Converts {@link CodeBlockReference}s for file I/O. References have their own
- * parameter list, and a target that they must rebind to.
+ * parameter list, and a target that they must rebind to on load. References are
+ * allowed to exist in Stories as well as in the API dictionary.<br>
+ * <br>
+ * Story-side References store their target's ID number, but Translator-side
+ * References store the actual target.
  * 
  * @author remiller
  */
@@ -27,6 +33,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		implements Converter {
 	private static final String TAG_PARAMETERS = "Parameters";
 	private static final String TAG_TARGET = "Target";
+	private static final String TAG_TARGET_ID = "TargetId";
 
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -39,9 +46,19 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 			MarshallingContext context) {
 		final CodeBlockReference codeBlock = (CodeBlockReference) source;
 		final Collection<KnowIt> parameters = codeBlock.getParameters();
+		final IoMode ioMode = FileIO.getInstance().getMode();
 
-		writer.startNode(TAG_TARGET);
-		writer.setValue(Integer.toString(codeBlock.getId()));
+		super.marshal(source, writer, context);
+
+		if (ioMode == IoMode.STORY) {
+			writer.startNode(TAG_TARGET_ID);
+			writer.setValue(Integer.toString(codeBlock.getId()));
+		} else if (ioMode == IoMode.API_DICTIONARY) {
+			writer.startNode(TAG_TARGET);
+			context.convertAnother(codeBlock.getTarget());
+		} else
+			throw new XStreamException(
+					"IO Mode is not a story or API dictionary while writing code block reference.");
 		writer.endNode();
 
 		// Parameters
@@ -59,42 +76,71 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		final CodeBlockReference block = (CodeBlockReference) super.unmarshal(
 				reader, context);
 		final Collection<KnowIt> parameters;
-		int targetId = -1;
+		final int targetId;
+		final CodeBlockSource target;
 		final Translator translator;
+		final IoMode ioMode = FileIO.getInstance().getMode();
+		String nodeName;
 
-		if (FileIO.getInstance().getMode() != FileIO.IoMode.STORY)
-			throw new XStreamException(
-					"CodeBlockReferences can only live in stories! Aaaaaaaaugh!");
-
-		parameters = new ArrayList<KnowIt>();
 		translator = TranslatorManager.getInstance().getActiveTranslator();
 
-		// CodeBlock Source Target
+		// CodeBlockSource Target
 		reader.moveDown();
-		if (!reader.getNodeName().equals(TAG_TARGET))
+		nodeName = reader.getNodeName();
+
+		if (ioMode == IoMode.STORY) {
+			if (!nodeName.equals(TAG_TARGET_ID))
+				dieMissingTarget(TAG_TARGET_ID, nodeName);
+
+			targetId = Integer.parseInt(reader.getValue());
+
+			target = translator.getApiDictionary().getCodeBlockByID(targetId);
+		} else if (ioMode == IoMode.API_DICTIONARY) {
+			if (!nodeName.equals(TAG_TARGET))
+				dieMissingTarget(TAG_TARGET, nodeName);
+
+			target = (CodeBlockSource) context.convertAnother(block,
+					CodeBlockSource.class);
+
+		} else
 			throw new XStreamException(
-					"CodeBlockReference missing target information!");
-		targetId = Integer.parseInt(reader.getValue());
+					"Reading CodeBlock but not in story or API mode.");
+
+		if (target == null)
+			System.err
+					.println("Failed to read target information for " + block + " , nulling the reference.");
+		block.setTarget(target);
 		reader.moveUp();
 
-		// the parameter list doesn't show if there aren't any, so look out for that.
+		// the parameter list doesn't show if there aren't any, so look out for
+		// that.
 		if (reader.hasMoreChildren()) {
+			parameters = new ArrayList<KnowIt>();
+
 			reader.moveDown();
-			final String nodeName = reader.getNodeName();
+			nodeName = reader.getNodeName();
 
 			// Parameters
-			if (nodeName.equals(TAG_PARAMETERS)) {
-				parameters.addAll((Collection<KnowIt>) context.convertAnother(
-						block, ArrayList.class));
+			if (!nodeName.equals(TAG_PARAMETERS)) {
+				throw new XStreamException(
+						"CodeBlockReference missing parameter information, or data is in the wrong order. Expected "
+								+ TAG_PARAMETERS + ", but found " + nodeName);
 			}
+
+			parameters.addAll((Collection<KnowIt>) context.convertAnother(
+					block, ArrayList.class));
 			reader.moveUp();
+
+			block.setBindings(parameters);
 		}
 
-		block.setTarget(translator.getApiDictionary()
-				.getCodeBlockByID(targetId));
-		block.setBindings(parameters);
-
 		return block;
+	}
+
+	private void dieMissingTarget(String expected, String found) {
+		throw new XStreamException(
+				"CodeBlockReference missing target information, or data is in the wrong order. Expected "
+						+ TAG_TARGET_ID + ", but found " + found);
 	}
 
 	@Override

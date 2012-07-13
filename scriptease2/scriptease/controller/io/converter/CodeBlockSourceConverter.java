@@ -24,9 +24,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  * @author remiller
  */
-public class CodeBlockSourceConverter extends StoryComponentConverter implements Converter {
-	private static final String TAG_SUBJECT = "subject";
-	private static final String TAG_SLOT = "slot";
+public class CodeBlockSourceConverter extends StoryComponentConverter implements
+		Converter {
+	private static final String TAG_SUBJECT = "Subject";
+	private static final String TAG_SLOT = "Slot";
 	private static final String TAG_CODE = "Code";
 	private static final String TAG_INCLUDES = "Includes";
 	private static final String TAG_INCLUDE = "Include";
@@ -54,17 +55,22 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 		if (FileIO.getInstance().getMode() != FileIO.IoMode.API_DICTIONARY)
 			throw new XStreamException(
 					"CodeBlockSources can only live in the Translator! Aaaaaaaaugh!");
-		
+
 		super.marshal(source, writer, context);
 
 		// Subject
-		if (block.hasSubject())
-			writer.addAttribute(TAG_SUBJECT, block.getSubject()
-					.getDisplayText());
+		if (block.hasSubject()) {
+			writer.startNode(TAG_SUBJECT);
+			writer.setValue(block.getSubject().getDisplayText());
+			writer.endNode();
+		}
 
 		// Slot
-		if (block.hasSlot())
-			writer.addAttribute(TAG_SLOT, block.getSlot());
+		if (block.hasSlot()) {
+			writer.startNode(TAG_SLOT);
+			writer.setValue(block.getSlot());
+			writer.endNode();
+		}
 
 		writer.startNode(TAG_ID);
 		writer.setValue(Integer.toString(block.getId()));
@@ -109,9 +115,10 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final CodeBlockSource block = (CodeBlockSource) super.unmarshal(reader, context);
-		String subject;
-		String slot;
+		final CodeBlockSource block = (CodeBlockSource) super.unmarshal(reader,
+				context);
+		String subject = "";
+		String slot = "";
 		int id = -1;
 		final Collection<String> includes;
 		final Collection<KnowIt> parameters;
@@ -127,24 +134,29 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 		code = new ArrayList<FormatFragment>();
 		types = new ArrayList<String>();
 
-		subject = reader.getAttribute(TAG_SUBJECT);
-		slot = reader.getAttribute(TAG_SLOT);
-
-		if (subject == null)
-			subject = "";
-
-		if (slot == null)
-			slot = "";
-
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 			final String nodeName = reader.getNodeName();
 
+			// subject
+			if (nodeName.equals(TAG_SUBJECT)) {
+				subject = reader.getValue();
+
+				if (subject == null)
+					subject = "";
+			}
+			// slot
+			else if (nodeName.equals(TAG_SLOT)) {
+				slot = reader.getValue();
+
+				if (slot == null)
+					slot = "";
+			}
 			/*
 			 * ID. Cannot appear in Stories; ID is for CodeBlockSources, and
 			 * those must only exist in the Translator.
 			 */
-			if (nodeName.equals(TAG_ID)) {
+			else if (nodeName.equals(TAG_ID)) {
 				id = Integer.parseInt(reader.getValue());
 			}
 			// Types
@@ -186,7 +198,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 		block.setParameters(parameters);
 		block.setIncludes(includes);
 		block.setCode(code);
-		
+
 		return block;
 	}
 

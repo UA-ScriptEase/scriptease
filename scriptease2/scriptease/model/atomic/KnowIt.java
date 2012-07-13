@@ -201,6 +201,11 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	 * 
 	 * @param value
 	 *            The binding that the KnowIt will point to.
+	 * @see #setBinding(DescribeIt)
+	 * @see #setBinding(GameConstant)
+	 * @see #setBinding(KnowIt)
+	 * @see #setBinding(QuestPoint)
+	 * @see #setBinding(ScriptIt)
 	 */
 	public void setBinding(KnowItBinding value) {
 		if (value == null)

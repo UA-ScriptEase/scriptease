@@ -21,20 +21,25 @@ import scriptease.translator.codegenerator.code.fragments.FormatFragment;
  * those are context/instance-specific (sharing them in the target makes no
  * sense).<br>
  * <br>
- * <code>CodeBlockReference</code>s are intended for use in the Story only. If
- * they are to be used within the Translator, then this class must be updated to
- * reflect that new capability.
+ * <code>CodeBlockReference</code>s can appear either Story side or Translator
+ * side, unlike their cousin {@link CodeBlockSource}.
  * 
  * @author remiller
  */
 public class CodeBlockReference extends CodeBlock {
+	private static class CodeBlockSourceNull extends CodeBlockSource {
+	}
+
+	// Used as a Null Object pattern. Avoids doing null checks everywhere.
+	private static final CodeBlockSource NULL_TARGET = new CodeBlockSourceNull();
+
 	private CodeBlockSource target;
 
 	/**
 	 * Creates a CodeBlockReference that points nowhere.
 	 */
 	public CodeBlockReference() {
-		this(null);
+		this(CodeBlockReference.NULL_TARGET);
 	}
 
 	/**
@@ -55,7 +60,7 @@ public class CodeBlockReference extends CodeBlock {
 
 		clone = (CodeBlockReference) super.clone();
 
-		clone.setTarget(this.target);
+		clone.setTarget(this.getTarget());
 
 		clone.init();
 
@@ -70,7 +75,12 @@ public class CodeBlockReference extends CodeBlock {
 		return clone;
 	}
 
-	private CodeBlockSource getTarget() {
+	/**
+	 * Gets the target CodeBlockSource.
+	 * 
+	 * @return The target.
+	 */
+	public CodeBlockSource getTarget() {
 		return this.target;
 	}
 
@@ -84,6 +94,9 @@ public class CodeBlockReference extends CodeBlock {
 	public void setTarget(CodeBlockSource newTarget) {
 		final CodeBlockSource oldTarget = this.getTarget();
 
+		if (newTarget == null)
+			newTarget = CodeBlockReference.NULL_TARGET;
+
 		if (oldTarget == newTarget)
 			return;
 
@@ -92,11 +105,9 @@ public class CodeBlockReference extends CodeBlock {
 
 		this.target = newTarget;
 
-		if (this.target != null) {
-			this.target.addReference(this);
+		this.target.addReference(this);
 
-			this.setParameters(this.target.getParameters());
-		}
+		this.setParameters(this.target.getParameters());
 	}
 
 	/**
@@ -113,7 +124,6 @@ public class CodeBlockReference extends CodeBlock {
 	public void setParameters(Collection<KnowIt> newBindings) {
 		final List<KnowIt> targetParameters;
 		final List<KnowIt> newParameters;
-		final CodeBlockSource target = this.getTarget();
 
 		/*
 		 * Update our parameters from our target before doing anything. They
@@ -121,8 +131,7 @@ public class CodeBlockReference extends CodeBlock {
 		 * values. Plus, they're shared, so we don't want others to change their
 		 * value.
 		 */
-		targetParameters = target != null ? target.getParameters()
-				: new ArrayList<KnowIt>();
+		targetParameters = this.getTarget().getParameters();
 		newParameters = new ArrayList<KnowIt>(targetParameters.size());
 
 		for (KnowIt param : targetParameters) {
@@ -136,46 +145,58 @@ public class CodeBlockReference extends CodeBlock {
 
 	@Override
 	public void setTypes(Collection<String> types) {
-		this.target.setTypes(types);
+		this.getTarget().setTypes(types);
 	}
 
 	@Override
 	public void setSubject(String subject) {
-		this.target.setSubject(subject);
+		this.getTarget().setSubject(subject);
 	}
 
 	@Override
 	public void setSlot(String slot) {
-		this.target.setSlot(slot);
+		this.getTarget().setSlot(slot);
 	}
 
 	@Override
 	public void setIncludes(Collection<String> includes) {
-		this.target.setIncludes(includes);
+		this.getTarget().setIncludes(includes);
 	}
 
 	@Override
 	public boolean hasSubject() {
-		return this.target.hasSubject();
+		return this.getTarget().hasSubject();
 	}
 
 	@Override
 	public boolean hasSlot() {
-		return this.target.hasSlot();
+		return this.getTarget().hasSlot();
 	}
 
 	@Override
 	public String getSlot() {
-		return this.target.getSlot();
+		final ScriptIt cause;
+		final CodeBlockSource target = this.getTarget();
+
+		if (target.hasSlot()) {
+			return target.getSlot();
+		} else {
+			cause = this.getCause();
+			final CodeBlock parentBlock = cause.getMainCodeBlock();
+			return parentBlock.getSlot();
+		}
 	}
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof CodeBlockReference) {
-			int thisHashCode = this.hashCode();
-			int otherHashCode = other.hashCode();
+		final int thisTargetId;
+		final int otherTargetId;
 
-			return thisHashCode == otherHashCode;
+		if (other instanceof CodeBlockReference) {
+			thisTargetId = this.getTarget().getId();
+			otherTargetId = ((CodeBlockReference) other).getTarget().getId();
+
+			return thisTargetId == otherTargetId;
 		}
 
 		return false;
@@ -183,44 +204,44 @@ public class CodeBlockReference extends CodeBlock {
 
 	@Override
 	public int hashCode() {
-		int hashCode = this.target.hashCode();
+		int hashCode = this.getTarget().getId();
 
 		return hashCode;
 	}
 
 	@Override
 	public Collection<KnowIt> getImplicits(ScriptIt owner) {
-		return this.target.getImplicits(owner);
+		return this.getTarget().getImplicits(owner);
 	}
 
 	public Collection<String> getIncludes() {
-		return this.target.getIncludes();
+		return this.getTarget().getIncludes();
 	}
 
 	@Override
 	public String toString() {
-		return "CodeBlockRef [" + this.target.toString() + ","
+		return "CodeBlockRef [" + this.getTarget().toString() + ","
 				+ this.getParameters() + "]";
 	}
 
 	@Override
 	public Collection<String> getTypes() {
-		return this.target.getTypes();
+		return this.getTarget().getTypes();
 	}
 
 	@Override
 	public String getSubjectName() {
-		return this.target.getSubjectName();
+		return this.getTarget().getSubjectName();
 	}
 
 	@Override
 	public void setCode(Collection<FormatFragment> code) {
-		this.target.setCode(code);
+		this.getTarget().setCode(code);
 	}
 
 	@Override
 	public Collection<FormatFragment> getCode() {
-		return this.target.getCode();
+		return this.getTarget().getCode();
 	}
 
 	protected void targetUpdated(CodeBlockSource source) {
@@ -235,14 +256,18 @@ public class CodeBlockReference extends CodeBlock {
 
 	@Override
 	public int getId() {
-		final CodeBlockSource target = this.getTarget();
-
-		if (target == null)
-			throw new IllegalStateException("No target to get ID from.");
-		else
-			return target.getId();
+		return this.getTarget().getId();
 	}
 
+	/**
+	 * Sets this references parameter bindings to the bindings of the given
+	 * list, matching as best it can to the KnowIt's display name. Not
+	 * guaranteed to match all KnowIts.
+	 * 
+	 * @param newBindings
+	 *            The KnowIts whose bindings are to be used to populate the
+	 *            current parameters.
+	 */
 	public void setBindings(Collection<KnowIt> newBindings) {
 		/*
 		 * Let's go about trying to rebind whatever is possible to match as
@@ -262,7 +287,7 @@ public class CodeBlockReference extends CodeBlock {
 				continue;
 
 			// use its binding now that we have it
-			param.setBinding(match.getBinding());
+			param.setBinding(match.getBinding().clone());
 		}
 	}
 

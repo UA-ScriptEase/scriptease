@@ -187,7 +187,10 @@ public class DialogBuilder {
 				final GameModule module;
 				final SEFrame seFrame = SEFrame.getInstance();
 				final Translator selectedTranslator;
+				final Translator oldTranslator;
 				final StoryModel model;
+				final TranslatorManager translatorMgr = TranslatorManager
+						.getInstance();
 
 				// do everything in a try because otherwise the run will swallow
 				// any exceptions.
@@ -195,29 +198,39 @@ public class DialogBuilder {
 					seFrame.setStatus("Creating New Story ...");
 					selectedTranslator = (Translator) gameComboBox
 							.getSelectedItem();
+					oldTranslator = translatorMgr.getActiveTranslator();
 
-					module = selectedTranslator.loadModule(location);
-					
-					if(module == null){
-						seFrame.setStatus("Story creation aborted.");
-						
+					translatorMgr.setActiveTranslator(selectedTranslator);
+
+					if (selectedTranslator == null) {
+						WindowManager
+								.getInstance()
+								.showProblemDialog("No translator",
+										"No translator was chosen. I can't make a story without it.");
+						seFrame.setStatus("Story creation aborted: no translator chosen.");
 						return;
-					} else{
-						if (selectedTranslator != null) {
-							model = new StoryModel(module, title, author,
-									selectedTranslator);
-	
-							StoryModelPool.getInstance().add(model, true);
-							seFrame.createTabForModel(model);
-						}
+					}
+					module = selectedTranslator.loadModule(location);
+
+					if (module == null) {
+						translatorMgr.setActiveTranslator(oldTranslator);
+						seFrame.setStatus("Story creation aborted: module failed to load.");
+
+						return;
+					} else {
+						model = new StoryModel(module, title, author,
+								selectedTranslator);
+
+						StoryModelPool.getInstance().add(model, true);
+						seFrame.createTabForModel(model);
 					}
 				} catch (Throwable e) {
 					UncaughtExceptionHandler handler = Thread
 							.getDefaultUncaughtExceptionHandler();
-					handler.uncaughtException(Thread.currentThread(),
+					handler.uncaughtException(
+							Thread.currentThread(),
 							new IllegalStateException(
-									"Exception while creating a new Story. "
-											+ e));
+									"Exception while creating a new Story. ", e));
 				}
 			}
 		};

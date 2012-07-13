@@ -22,9 +22,13 @@ import scriptease.translator.codegenerator.code.fragments.FormatFragment;
  * vital game information, such as causes, definitions, effects, types and slots
  * available in the game. It uses a LibraryModel to store the StoryComponents,
  * GameTypeManager to manage the types, and EventSlotManager to manage the
- * slots.
+ * slots.<br>
+ * <br>
+ * APIDictionary also acts as a bit of manager for CodeBlockSources. It is what
+ * knows the next available unique ID to be distributed.
  * 
  * @author mfchurch
+ * @author remiller
  */
 public class APIDictionary implements LibraryObserver {
 	private final LibraryModel library;
@@ -146,7 +150,8 @@ public class APIDictionary implements LibraryObserver {
 			Collection<String> includes, Collection<FormatFragment> code) {
 		final CodeBlockFinder finder = new CodeBlockFinder();
 
-		return finder.findByData(subject, slot, returnTypes, parameters, includes, code);
+		return finder.findByData(subject, slot, returnTypes, parameters,
+				includes, code);
 	}
 
 	/**
@@ -186,7 +191,7 @@ public class APIDictionary implements LibraryObserver {
 
 			return this.found;
 		}
-		
+
 		/**
 		 * Finds a CodeBlockSource by data matching.
 		 * 
