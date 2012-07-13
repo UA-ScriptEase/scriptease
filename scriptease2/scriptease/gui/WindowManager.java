@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -427,7 +428,8 @@ public final class WindowManager implements WindowFocusListener {
 	}
 
 	/*
-	 * TODO Why is this here? Does it actually belong here..? Is it even necessary?
+	 * TODO Why is this here? Does it actually belong here..? Is it even
+	 * necessary?
 	 */
 	public void showStoryComponentBuilder() {
 		JFrame scFrame = new JFrame();
@@ -611,6 +613,11 @@ public final class WindowManager implements WindowFocusListener {
 		preferencesDialog.display();
 	}
 
+	public JDialog buildDialog(String title) {
+		final JDialog dialog = new JDialog(this.currentFrame, title);
+		return dialog;
+	}
+
 	/**
 	 * Creates a new SEFrame.
 	 * 
@@ -634,7 +641,7 @@ public final class WindowManager implements WindowFocusListener {
 	}
 
 	/**
-	 * Creates a new JFrame whose focus will be listened to. 
+	 * Creates a new JFrame whose focus will be listened to.
 	 * 
 	 * @return
 	 */
@@ -642,25 +649,29 @@ public final class WindowManager implements WindowFocusListener {
 		final JFrame scbFrame;
 		final JPanel editingPane;
 		final JPanel libraryPane;
-		
-		scbFrame = new JFrame("Story Component Builder");
-		editingPane = PanelFactory.getInstance().buildStoryComponentEditorPanel();
-		
-		libraryPane = PanelFactory.getInstance().buildStoryComponentLibraryPanel(editingPane);
 
-		
-		// TODO Move to UIListenerFactory 
-		// Note that this is how listeners get added to the LibraryPane at the moment.
-		/*libraryPane.getLibPane().getSCPTree()
-				.addTreeSelectionListener(editingPane);*/
-		
-		//TODO Move to UIListenerFactory
+		scbFrame = new JFrame("Story Component Builder");
+		editingPane = PanelFactory.getInstance()
+				.buildStoryComponentEditorPanel();
+
+		libraryPane = PanelFactory.getInstance()
+				.buildStoryComponentLibraryPanel(editingPane);
+
+		// TODO Move to UIListenerFactory
+		// Note that this is how listeners get added to the LibraryPane at the
+		// moment.
+		/*
+		 * libraryPane.getLibPane().getSCPTree()
+		 * .addTreeSelectionListener(editingPane);
+		 */
+
+		// TODO Move to UIListenerFactory
 		scbFrame.addWindowFocusListener(this);
 
-		scbFrame.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-				libraryPane, editingPane));
+		scbFrame.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, libraryPane,
+				editingPane));
 		scbFrame.setSize(new Dimension(1200, 600));
-		
+
 		return scbFrame;
 	}
 

@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,25 +26,30 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.VisibilityManager;
 import scriptease.controller.apimanagers.GameTypeManager;
-import scriptease.gui.SETree.cell.BindingWidget;
-import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
+import scriptease.gui.action.typemenus.ShowTypeMenuAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.pane.GameObjectPane;
 import scriptease.gui.pane.LibraryPane;
-import scriptease.gui.storycomponentbuilder.CodeInputTextPane;
-import scriptease.gui.storycomponentbuilder.StoryComponentMultiSelector;
+import scriptease.gui.storycomponentbuilder.TypeMenuComponent;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
@@ -54,6 +61,10 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.GameObjectPicker;
+import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.LineFragment;
+import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
+import scriptease.translator.codegenerator.code.fragments.ScopeFragment;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
 
 /**
@@ -173,7 +184,9 @@ public class PanelFactory {
 		nullPanel = new JPanel();
 		nullLabel = new JLabel(text);
 
-		nullPanel.add(nullLabel);
+		nullPanel.setLayout(new BorderLayout());
+
+		nullPanel.add(nullLabel, BorderLayout.CENTER);
 
 		return nullPanel;
 	}
@@ -202,12 +215,17 @@ public class PanelFactory {
 	 * @return
 	 */
 	private JComponent buildStoryComponentEditorPanelContents(
-			StoryComponent storyComponent) {
+			final StoryComponent storyComponent) {
 
-		// TODO Add in the Save and Cancel buttons here, too.
+		// TODO Add in the Save and Reset buttons here, too.
 		// I'm not sure what SpringLayout looks like, so I'll hold off
 		// on those buttons until I get SE running again.
 
+		// TODO Save button should be easy.
+		// TODO Reset button should just reload the translator and redraw the
+		// entire component builder.
+
+		// If storyComponent is null, show a blank JPanel.
 		if (storyComponent == null) {
 			return buildEmptyPanelWithText("Select a Story Component to begin editing it.");
 		}
@@ -222,9 +240,9 @@ public class PanelFactory {
 		final JLabel visibleLabel;
 
 		final JTextField nameField;
-		// TODO Refactor the StoryComponentMultiSelector. Make it work like the
+		// TODO Refactor the TypeMenuComponent. Make it work like the
 		// librarypane one, or just use that one if it's possible.
-		final StoryComponentMultiSelector typeSelector;
+		final ShowTypeMenuAction typeAction;
 		final JButton typeButton;
 		final JTextField labelField;
 		final JCheckBox visibleBox;
@@ -243,8 +261,9 @@ public class PanelFactory {
 		visibleLabel = new JLabel("Visible: ");
 
 		nameField = new JTextField();
-		typeSelector = new StoryComponentMultiSelector();
-		typeButton = typeSelector.getRootButton();
+		typeAction = new ShowTypeMenuAction();
+		typeButton = new JButton(typeAction);
+		// typeSelector.getRootButton();
 		labelField = new JTextField();
 		visibleBox = new JCheckBox();
 
@@ -298,10 +317,48 @@ public class PanelFactory {
 				storyComponent));
 
 		// Set up the field listeners
-
 		/*
-		 * TODO Set up the field listeners.
+		 * TODO Set up the field listeners. May need to add them in the process
+		 * part!
 		 */
+
+		nameField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				storyComponent.setDisplayText(nameField.getText());
+			}
+		});
+
+		labelField.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				final String labelFieldText;
+				final String[] labelArray;
+				final Collection<String> labels;
+
+				labelFieldText = labelField.getText();
+				labelArray = labelFieldText.split(",");
+				labels = new ArrayList<String>();
+
+				for (String label : labelArray) {
+					labels.add(label.trim());
+				}
+
+				storyComponent.setLabels(labels);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+			}
+		});
+		
+		typeAction.deselectAll();
 
 		// Add JComponents to DescriptorPanel using GroupLayout
 		descriptorPanelLayout.setHorizontalGroup(descriptorPanelLayout
@@ -354,25 +411,36 @@ public class PanelFactory {
 		storyComponent.process(new AbstractNoOpStoryVisitor() {
 
 			@Override
-			public void processScriptIt(ScriptIt scriptIt) {
-				ArrayList<String> types = new ArrayList<String>();
-				types.addAll(scriptIt.getTypes());
-				typeSelector.setData(types);
-
+			public void processScriptIt(final ScriptIt scriptIt) {
 				for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
 					editorPanel.add(PanelFactory.getInstance()
 							.buildCodeBlockEditorPanel(codeBlock));
 				}
+				
+				typeAction.selectTypes(scriptIt.getTypes(), true);
+
+				typeAction.setSelectionChangedAction(new Runnable() {
+					@Override
+					public void run() {
+						scriptIt.setTypes(typeAction.getSelectedTypes());
+					}
+				});
+
 			}
 
 			@Override
-			public void processKnowIt(KnowIt knowIt) {
-				ArrayList<String> types = new ArrayList<String>();
-				types.addAll(knowIt.getTypes());
-				typeSelector.setData(types);
-
+			public void processKnowIt(final KnowIt knowIt) {
 				editorPanel.add(PanelFactory.getInstance()
 						.buildDescriptionEditorPanel(knowIt));
+
+				typeAction.selectTypes(knowIt.getTypes(), true);
+
+				typeAction.setSelectionChangedAction(new Runnable() {
+					@Override
+					public void run() {
+						knowIt.setTypes(typeAction.getSelectedTypes());
+					}
+				});
 			}
 
 			@Override
@@ -402,6 +470,14 @@ public class PanelFactory {
 
 	}
 
+	/**
+	 * A JPanel used to edit CodeBlocks. This shows the id, slot, includes,
+	 * types, parameters, and code for the passed in CodeBlock, and allows the
+	 * user to edit it.
+	 * 
+	 * @param codeBlock
+	 * @return
+	 */
 	private JPanel buildCodeBlockEditorPanel(CodeBlock codeBlock) {
 		final JPanel codeBlockEditorPanel;
 
@@ -415,12 +491,11 @@ public class PanelFactory {
 		final JButton addParameterButton;
 		final JTextField slotField;
 		final JTextField includesField;
-		final StoryComponentMultiSelector typeSelector;
+		final TypeMenuComponent typeSelector;
 		final JButton typesButton;
 		final JScrollPane parameterScrollPane;
 		final JPanel parameterPanel;
-		final CodeInputTextPane codePanel;
-		final JScrollPane codeScrollPane;
+		final JComponent codePanel;
 
 		final GroupLayout codeBlockEditorLayout;
 		final Font labelFont;
@@ -438,13 +513,13 @@ public class PanelFactory {
 
 		slotField = new JTextField();
 		includesField = new JTextField();
-		typeSelector = new StoryComponentMultiSelector();
+		typeSelector = new TypeMenuComponent();
 		typesButton = typeSelector.getRootButton();
 		addParameterButton = new JButton("+");
 		parameterPanel = new JPanel();
 		parameterScrollPane = new JScrollPane(parameterPanel);
-		codePanel = new CodeInputTextPane();
-		codeScrollPane = new JScrollPane(codePanel.getTextPane());
+		codePanel = buildCodeInputComponent(codeBlock);
+		;
 
 		codeBlockEditorLayout = new GroupLayout(codeBlockEditorPanel);
 		labelFont = new Font("SansSerif", Font.BOLD,
@@ -460,12 +535,9 @@ public class PanelFactory {
 		codeBlockEditorLayout.setAutoCreateGaps(true);
 		codeBlockEditorLayout.setAutoCreateContainerGaps(true);
 
-		codeScrollPane
-				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
 		parameterPanel.setLayout(new BoxLayout(parameterPanel,
 				BoxLayout.PAGE_AXIS));
-		
+
 		parameterScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
 		// Set up the labels
@@ -485,7 +557,7 @@ public class PanelFactory {
 		parametersLabel.setLabelFor(parameterScrollPane);
 
 		codeLabel.setFont(labelFont);
-		codeLabel.setLabelFor(codeScrollPane);
+		codeLabel.setLabelFor(codePanel);
 
 		// Set up the default field values
 
@@ -496,18 +568,25 @@ public class PanelFactory {
 
 		ArrayList<String> types = new ArrayList<String>();
 		types.addAll(codeBlock.getTypes());
-		typeSelector.setData(types);
+		typeSelector.setTrueData(types);
 
 		for (KnowIt parameter : parameters) {
 			parameterPanel.add(buildParameterComponent(parameter));
 		}
 
-		// TODO Set default codeblock stuff.
-
 		// Set up the listeners
 
+		/*
+		 * slotField.addActionListener(new ActionListener() {
+		 * 
+		 * @Override public void actionPerformed(ActionEvent e) {
+		 * codeBlock.setSlot(slotField.getText()); }
+		 * 
+		 * });
+		 */
 		// TODO Set the listeners
 		// Here's some old code from the codePanel
+
 		/*
 		 * Old Code: final Collection<FormatFragment> codeFragments =
 		 * codeBlock.getCode(); if (codeFragments.size() > 0)
@@ -534,7 +613,7 @@ public class PanelFactory {
 								.addComponent(includesField)
 								.addComponent(typesButton)
 								.addComponent(parameterScrollPane)
-								.addComponent(codeScrollPane)));
+								.addComponent(codePanel)));
 
 		codeBlockEditorLayout.setVerticalGroup(codeBlockEditorLayout
 				.createSequentialGroup()
@@ -573,7 +652,7 @@ public class PanelFactory {
 								.createParallelGroup(
 										GroupLayout.Alignment.BASELINE)
 								.addComponent(codeLabel)
-								.addComponent(codeScrollPane)));
+								.addComponent(codePanel)));
 
 		return codeBlockEditorPanel;
 	}
@@ -723,7 +802,7 @@ public class PanelFactory {
 		final JPanel parameterComponent;
 
 		final JTextField nameField;
-		final StoryComponentMultiSelector typeSelector;
+		final TypeMenuComponent typeSelector;
 		final ArrayList<String> types;
 		final JButton typesButton;
 		final JComboBox<String> defaultTypeBox;
@@ -740,7 +819,7 @@ public class PanelFactory {
 		parameterComponent = new JPanel();
 
 		nameField = new JTextField(knowIt.getDisplayText(), 10);
-		typeSelector = new StoryComponentMultiSelector();
+		typeSelector = new TypeMenuComponent();
 		types = new ArrayList<String>();
 		typesButton = typeSelector.getRootButton();
 		defaultTypeBox = new JComboBox<String>();
@@ -758,7 +837,7 @@ public class PanelFactory {
 		parameterComponent.setBorder(new TitledBorder(knowIt.getDisplayText()));
 
 		types.addAll(knowIt.getTypes());
-		typeSelector.setData(types);
+		typeSelector.setTrueData(types);
 
 		inactiveTextField.setEnabled(false);
 
@@ -778,6 +857,7 @@ public class PanelFactory {
 		 * a new parameter, since the new one will just have a void type as
 		 * default.
 		 */
+
 		if (defaultTypeGuiType == null)
 			bindingConstantSettingComponent = inactiveTextField;
 		else {
@@ -813,11 +893,11 @@ public class PanelFactory {
 		JPanel defaultTypeBoxPanel = new JPanel();
 		JPanel nameFieldPanel = new JPanel();
 		JPanel bindingPanel = new JPanel();
-		
+
 		defaultTypeBoxPanel.add(defaultTypeBox);
 		nameFieldPanel.add(nameField);
 		bindingPanel.add(bindingConstantSettingComponent);
-		
+
 		nameFieldPanel.setBorder(new TitledBorder("Name"));
 		defaultTypeBoxPanel.setBorder(new TitledBorder("Default Type"));
 		bindingPanel.setBorder(new TitledBorder("Default Binding"));
@@ -826,8 +906,7 @@ public class PanelFactory {
 		groupLayout.setAutoCreateContainerGaps(true);
 		groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
 				.addComponent(nameFieldPanel).addComponent(typesButton)
-				.addComponent(defaultTypeBoxPanel)
-				.addComponent(bindingPanel)
+				.addComponent(defaultTypeBoxPanel).addComponent(bindingPanel)
 				.addComponent(deleteButton));
 
 		groupLayout.setVerticalGroup(groupLayout
@@ -837,6 +916,97 @@ public class PanelFactory {
 				.addComponent(bindingPanel));
 
 		return parameterComponent;
+	}
+
+	private JComponent buildCodeInputComponent(CodeBlock codeBlock) {
+		final JTextPane codePane;
+		final JScrollPane codeScrollPane;
+
+		final StyledDocument codePaneDoc;
+		final Style defaultStyle;
+		final Style parameterStyle;
+
+		final Collection<FormatFragment> codeFragments;
+
+		codePane = new JTextPane();
+		codeScrollPane = new JScrollPane(codePane);
+
+		codePaneDoc = codePane.getStyledDocument();
+		defaultStyle = codePane.addStyle("DEFAULT_STYLE", null);
+		parameterStyle = codePane.addStyle("PARAMETER_STYLE", defaultStyle);
+
+		codeFragments = codeBlock.getCode();
+
+		// Set up the styles
+
+		StyleConstants.setFontSize(defaultStyle, 12);
+		StyleConstants.setFontFamily(defaultStyle, "Courier");
+
+		StyleConstants.setForeground(parameterStyle, Color.BLUE);
+		StyleConstants.setBold(parameterStyle, true);
+
+		codePane.setLogicalStyle(defaultStyle);
+
+		// Set up the ScrollPane
+
+		codeScrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+		// Write to the codePane.
+		// TODO Extract method so it can be called by Listener. (? Necessary?)
+		/*
+		 * TODO Need to implement some way of getting code from fragments, and
+		 * also to check what kind of fragment it is.
+		 */
+		for (FormatFragment codeFragment : codeFragments) {
+			if (codeFragment instanceof LineFragment) {
+				for (FormatFragment b : ((LineFragment) codeFragment)
+						.getSubFragments()) {
+					if (b instanceof LiteralFragment) {
+						try {
+							codePaneDoc.insertString(codePaneDoc.getLength(),
+									b.getDirectiveText(), defaultStyle);
+						} catch (BadLocationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					if (b instanceof ScopeFragment) {
+						// int currentOffset = code.length();
+						// String scopeString = ((ScopeFragment)
+						// b).getNameRef();
+						// int currentEnd = currentOffset +
+						// scopeString.length();
+						// StringIndx scopeIndexInfo = new StringIndx(
+						// currentOffset, currentEnd);
+						// scopeIndicies.add(scopeIndexInfo);
+						// code += scopeString;
+						try {
+							codePaneDoc.insertString(codePaneDoc.getLength(),
+									((ScopeFragment) b).getNameRef(),
+									parameterStyle);
+						} catch (BadLocationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					}
+				}
+				try {
+					codePaneDoc.insertString(codePaneDoc.getLength(), "\n",
+							defaultStyle);
+				} catch (BadLocationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		// codePane.setText(code);
+
+		// Add a DocumentListener to codePaneDoc
+
+		return codePane;
 	}
 
 	/**

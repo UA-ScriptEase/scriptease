@@ -127,6 +127,10 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	public Collection<String> getTypes() {
 		return this.getMainCodeBlock().getTypes();
 	}
+	
+	public void setTypes(Collection<String> types) {
+		this.getMainCodeBlock().setTypes(types);
+	}
 
 	/**
 	 * Get the parameters for all of the codeBlocks

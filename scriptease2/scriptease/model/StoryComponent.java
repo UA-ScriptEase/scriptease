@@ -185,6 +185,12 @@ public abstract class StoryComponent implements Cloneable {
 					StoryComponentChangeEnum.LABEL_REMOVED));
 	}
 
+	public void setLabels(Collection<String> labels) {
+		this.labels = labels;
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.LABEL_SET));
+	}
+
 	/**
 	 * Sets the display text to the new string.
 	 * 
