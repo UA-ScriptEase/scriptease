@@ -1,6 +1,7 @@
 package scriptease.gui;
 
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.WindowEvent;
@@ -614,7 +615,7 @@ public final class WindowManager implements WindowFocusListener {
 	}
 
 	public JDialog buildDialog(String title) {
-		final JDialog dialog = new JDialog(this.currentFrame, title);
+		final JDialog dialog = new JDialog(this.currentFrame, title, Dialog.ModalityType.DOCUMENT_MODAL);
 		return dialog;
 	}
 
