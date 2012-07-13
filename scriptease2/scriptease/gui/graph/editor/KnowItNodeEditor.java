@@ -8,7 +8,7 @@ import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-import scriptease.gui.action.view.ShowFilterMenuAction;
+import scriptease.gui.action.typemenus.ShowTypeMenuAction;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.model.atomic.KnowIt;
@@ -42,13 +42,13 @@ public class KnowItNodeEditor extends GraphNodeEditor {
 	@Override
 	public void setNode(GraphNode node) {
 		super.setNode(node);
-		final ShowFilterMenuAction typeFilter = new ShowFilterMenuAction();
+		final ShowTypeMenuAction typeFilter = new ShowTypeMenuAction();
 		final KnowIt knowIt = ((KnowItNode) node).getKnowIt();
 		typeFilter.selectTypes(knowIt.getTypes(), true);
 		typeFilter.setSelectionChangedAction(new Runnable() {
 			@Override
 			public void run() {
-				updateKnowItTypes(typeFilter.getAcceptedTypes());
+				updateKnowItTypes(typeFilter.getSelectedTypes());
 			}
 		});
 		this.remove(typeField);

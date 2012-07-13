@@ -267,7 +267,8 @@ public class StoryComponentPanel extends JPanel implements
 						component);
 			}
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND)
-				|| type.equals(StoryComponentChangeEnum.CHANGE_TEXT_NAME)) {
+				|| type.equals(StoryComponentChangeEnum.CHANGE_TEXT_NAME)
+				|| type.equals(StoryComponentChangeEnum.LABEL_SET)) {
 			StoryComponentPanelFactory.getInstance().refreshMain(this);
 		}
 		// revalidate the panel

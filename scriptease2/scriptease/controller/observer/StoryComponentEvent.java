@@ -49,6 +49,7 @@ public final class StoryComponentEvent {
 		CHANGE_DOIT_TYPE, 
 		LABEL_ADDED, 
 		LABEL_REMOVED,
+		LABEL_SET
 	}
 
 	@Override
