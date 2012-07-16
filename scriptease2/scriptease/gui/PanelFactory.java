@@ -263,7 +263,6 @@ public class PanelFactory {
 		nameField = new JTextField();
 		typeAction = new ShowTypeMenuAction();
 		typeButton = new JButton(typeAction);
-		// typeSelector.getRootButton();
 		labelField = new JTextField();
 		visibleBox = new JCheckBox();
 
@@ -358,7 +357,7 @@ public class PanelFactory {
 			}
 		});
 		
-		typeAction.deselectAll();
+		typeAction.getTypeSelectionDialogBuilder().deselectAll();
 
 		// Add JComponents to DescriptorPanel using GroupLayout
 		descriptorPanelLayout.setHorizontalGroup(descriptorPanelLayout
@@ -417,15 +416,14 @@ public class PanelFactory {
 							.buildCodeBlockEditorPanel(codeBlock));
 				}
 				
-				typeAction.selectTypes(scriptIt.getTypes(), true);
+				typeAction.getTypeSelectionDialogBuilder().selectTypes(scriptIt.getTypes(), true);
 
-				typeAction.setSelectionChangedAction(new Runnable() {
+				typeAction.setAction(new Runnable() {
 					@Override
 					public void run() {
-						scriptIt.setTypes(typeAction.getSelectedTypes());
+						scriptIt.setTypes(typeAction.getTypeSelectionDialogBuilder().getSelectedTypes());
 					}
 				});
-
 			}
 
 			@Override
@@ -433,12 +431,12 @@ public class PanelFactory {
 				editorPanel.add(PanelFactory.getInstance()
 						.buildDescriptionEditorPanel(knowIt));
 
-				typeAction.selectTypes(knowIt.getTypes(), true);
+				typeAction.getTypeSelectionDialogBuilder().selectTypes(knowIt.getTypes(), true);
 
-				typeAction.setSelectionChangedAction(new Runnable() {
+				typeAction.setAction(new Runnable() {
 					@Override
 					public void run() {
-						knowIt.setTypes(typeAction.getSelectedTypes());
+						knowIt.setTypes(typeAction.getTypeSelectionDialogBuilder().getSelectedTypes());
 					}
 				});
 			}

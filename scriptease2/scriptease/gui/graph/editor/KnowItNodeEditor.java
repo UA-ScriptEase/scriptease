@@ -44,11 +44,11 @@ public class KnowItNodeEditor extends GraphNodeEditor {
 		super.setNode(node);
 		final ShowTypeMenuAction typeFilter = new ShowTypeMenuAction();
 		final KnowIt knowIt = ((KnowItNode) node).getKnowIt();
-		typeFilter.selectTypes(knowIt.getTypes(), true);
-		typeFilter.setSelectionChangedAction(new Runnable() {
+		typeFilter.getTypeSelectionDialogBuilder().selectTypes(knowIt.getTypes(), true);
+		typeFilter.setAction(new Runnable() {
 			@Override
 			public void run() {
-				updateKnowItTypes(typeFilter.getSelectedTypes());
+				updateKnowItTypes(typeFilter.getTypeSelectionDialogBuilder().getSelectedTypes());
 			}
 		});
 		this.remove(typeField);

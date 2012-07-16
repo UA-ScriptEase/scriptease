@@ -175,16 +175,16 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 						"SansSerif", Font.PLAIN, 12), Color.black));
 
 		// Sets up the type filter.
-		typeFilter.setSelectionChangedAction(new Runnable() {
+		typeFilter.setAction(new Runnable() {
 			@Override
 			public void run() {
-				causesTree.updateFilter(new TypeFilter(typeFilter
+				causesTree.updateFilter(new TypeFilter(typeFilter.getTypeSelectionDialogBuilder()
 						.getSelectedTypes()));
-				effectsTree.updateFilter(new TypeFilter(typeFilter
+				effectsTree.updateFilter(new TypeFilter(typeFilter.getTypeSelectionDialogBuilder()
 						.getSelectedTypes()));
-				descriptionsTree.updateFilter(new TypeFilter(typeFilter
+				descriptionsTree.updateFilter(new TypeFilter(typeFilter.getTypeSelectionDialogBuilder()
 						.getSelectedTypes()));
-				foldersTree.updateFilter(new TypeFilter(typeFilter
+				foldersTree.updateFilter(new TypeFilter(typeFilter.getTypeSelectionDialogBuilder()
 						.getSelectedTypes()));
 			}
 		});
