@@ -3,9 +3,13 @@ package scriptease.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArraySet;
 
+import scriptease.controller.apimanagers.EventSlotManager;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.translator.Translator;
+import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
 /**
@@ -32,17 +36,32 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * 
 	 * - remiller
 	 */
+	// parameters are instance-specific because we can't share their bindings.
 	private List<KnowIt> parameters;
+
+	// implicits are instance-specific due to their ownership pointers needing
+	// to be set at the instance
+	private Collection<KnowIt> implicits;
 
 	protected void init() {
 		super.init();
 		this.parameters = new ArrayList<KnowIt>();
+
+		// implicits are lazy-load. See getImplicits().
+		this.implicits = null;
 	}
 
 	@Override
 	public String getDisplayText() {
 		final ScriptIt owner = this.getOwner();
 		return owner != null ? owner.getDisplayText() : "";
+	}
+
+	/**
+	 * Does nothing since display text is inherited purely from the parent.
+	 */
+	@Override
+	public void setDisplayText(String text) {
 	}
 
 	@Override
@@ -141,6 +160,56 @@ public abstract class CodeBlock extends StoryComponent implements
 	}
 
 	/**
+	 * Returns a collection of this CodeBlock's implicit KnowIts. Implicit
+	 * KnowIts are things that are known due to an event. A creature's onDamaged
+	 * event, for example, would have a have a damager, a damagee, and a damage
+	 * amount that could be known simply because such an event occurred.<br>
+	 * <br>
+	 * Implicits are lazy-loaded because they actually originate from the Slot
+	 * definitions in {@link EventSlotManager}. They are not saved per code
+	 * block, since they're common amongst code blocks with the same slot. The
+	 * implicits cloned from <code>EventSlotManager</code> have their owner set
+	 * to this code block's Cause (as determined by {@link #getCause()}).
+	 * 
+	 * @return The collection of implicit KnowIts for this code block. It may be
+	 *         empty if there are no implicits, or if there is no loaded
+	 *         translator to check from. Must not return <code>null</code>.
+	 */
+	public Collection<KnowIt> getImplicits() {
+		final Translator active;
+		final EventSlotManager slotManager;
+		final Collection<KnowIt> clonedImplicits;
+		KnowIt clone;
+
+		if (this.implicits == null) {
+			// I guess it's time to load the implicits list. Go git'em boy!
+			active = TranslatorManager.getInstance().getActiveTranslator();
+
+			this.implicits = new CopyOnWriteArraySet<KnowIt>();
+
+			// only get implicits for code blocks that actually have them, which
+			// is determined by slot.
+			if (active != null && this.hasSlot()) {
+				// Arf arf!
+				slotManager = active.getApiDictionary().getEventSlotManager();
+
+				// clone these because they're CodeBlock instance-specific
+				clonedImplicits = new ArrayList<KnowIt>();
+
+				for (KnowIt implicit : slotManager.getImplicits(this.getSlot())) {
+					clone = implicit.clone();
+					clonedImplicits.add(clone);
+					clone.setOwner(this.getCause());
+				}
+
+				this.implicits.addAll(clonedImplicits);
+			}
+		}
+
+		return new ArrayList<KnowIt>(this.implicits);
+	}
+
+	/**
 	 * Determines whether this code block has a subject or not.
 	 * 
 	 * @return <code>true<code> if this code block has a subject set for it.
@@ -195,34 +264,20 @@ public abstract class CodeBlock extends StoryComponent implements
 			}
 			if (parent == null)
 				throw new IllegalStateException(
-						"Failed to locate enclosing Cause for CodeBlock " + this.toString());
+						"Failed to locate enclosing Cause for CodeBlock "
+								+ this.toString());
 			return (ScriptIt) parent;
 		}
 	}
 
 	/**
-	 * Gets the slot that this code block is set to exist on.
+	 * Gets the slot that this code block is set to exist on. If this code block
+	 * does not have a slot itself, <code>getSlot()</code> will return the slot
+	 * of the enclosing cause as determined by {@link #getCause()}.
 	 * 
 	 * @return The code block's relevant event slot reference.
 	 */
 	public abstract String getSlot();
-
-	/**
-	 * Returns a collection of this CodeBlock's implicit KnowIts. Implicit
-	 * KnowIts are things that are known due to an event. A creature's onDamaged
-	 * event, for example, would have a have a damager, a damagee, and a damage
-	 * amount that could be known simply because such an event occurred.<br>
-	 * <br>
-	 * Because the implicits are lazy-loaded, they need to be given the owner.
-	 * 
-	 * @param owner
-	 *            The ScriptIt that will own the implicits.
-	 * 
-	 * @return The collection of implicit KnowIts for this code block. It may be
-	 *         empty if there are no implicits, or if there is no loaded
-	 *         translator to check from. Must not return <code>null</code>.
-	 */
-	public abstract Collection<KnowIt> getImplicits(ScriptIt owner);
 
 	/**
 	 * The list of include names that the script will need to run.

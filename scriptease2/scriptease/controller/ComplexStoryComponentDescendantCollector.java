@@ -25,7 +25,7 @@ public class ComplexStoryComponentDescendantCollector extends
 	public Collection<StoryComponent> collectDescendants(
 			ComplexStoryComponent complex) {
 		children = new ArrayList<StoryComponent>();
-		/**
+		/*
 		 * process the immediate children, so that we don't add the complex as a
 		 */
 		for (StoryComponent child : complex.getChildren())

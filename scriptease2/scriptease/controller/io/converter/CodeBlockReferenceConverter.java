@@ -31,6 +31,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class CodeBlockReferenceConverter extends StoryComponentConverter
 		implements Converter {
+	public static final String TAG_CODE_BLOCK_REF = "CodeBlockReference";
+	
 	private static final String TAG_PARAMETERS = "Parameters";
 	private static final String TAG_TARGET = "Target";
 	private static final String TAG_TARGET_ID = "TargetId";
@@ -53,13 +55,17 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		if (ioMode == IoMode.STORY) {
 			writer.startNode(TAG_TARGET_ID);
 			writer.setValue(Integer.toString(codeBlock.getId()));
+			writer.endNode();
 		} else if (ioMode == IoMode.API_DICTIONARY) {
 			writer.startNode(TAG_TARGET);
+			writer.startNode(CodeBlockSourceConverter.TAG_CODE_BLOCK_SOURCE);
 			context.convertAnother(codeBlock.getTarget());
+			writer.endNode();
+			writer.endNode();
 		} else
 			throw new XStreamException(
 					"IO Mode is not a story or API dictionary while writing code block reference.");
-		writer.endNode();
+		
 
 		// Parameters
 		if (!parameters.isEmpty()) {
@@ -101,14 +107,13 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 
 			target = (CodeBlockSource) context.convertAnother(block,
 					CodeBlockSource.class);
-
 		} else
 			throw new XStreamException(
 					"Reading CodeBlock but not in story or API mode.");
 
 		if (target == null)
-			System.err
-					.println("Failed to read target information for " + block + " , nulling the reference.");
+			System.err.println("Failed to read target information for \""
+					+ block + "\", nulling the reference.");
 		block.setTarget(target);
 		reader.moveUp();
 

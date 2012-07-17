@@ -26,6 +26,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class CodeBlockSourceConverter extends StoryComponentConverter implements
 		Converter {
+	public static final String TAG_CODE_BLOCK_SOURCE = "CodeBlockSource";
+	
 	private static final String TAG_SUBJECT = "Subject";
 	private static final String TAG_SLOT = "Slot";
 	private static final String TAG_CODE = "Code";

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.BindingVisitor;
 import scriptease.controller.apimanagers.EventSlotManager;
 import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.observer.LibraryEvent;
@@ -14,9 +16,12 @@ import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.io.model.Slot;
 
 /**
  * APIDictionary represents the API dictionary used by a Translator to represent
@@ -128,34 +133,6 @@ public class APIDictionary implements LibraryObserver {
 	}
 
 	/**
-	 * Finds the CodeBlockSource that matches the given data fields.
-	 * 
-	 * @param subject
-	 *            The subject of the desired code block.
-	 * @param slot
-	 *            The slot of the desired code block.
-	 * @param returnTypes
-	 *            The return types of the desired code block.
-	 * @param parameters
-	 *            The parameters of the desired code block.
-	 * @param includes
-	 *            The includes of the desired code block.
-	 * @param code
-	 *            The code of the desired code block. This is the only optional
-	 *            segment. If missing, it will be ignored.
-	 * 
-	 * @return The matching code block.
-	 */
-	public CodeBlockSource getCodeBlockByData(String subject, String slot,
-			Collection<String> returnTypes, Collection<KnowIt> parameters,
-			Collection<String> includes, Collection<FormatFragment> code) {
-		final CodeBlockFinder finder = new CodeBlockFinder();
-
-		return finder.findByData(subject, slot, returnTypes, parameters,
-				includes, code);
-	}
-
-	/**
 	 * Finds a CodeBlockSource by its ID number.
 	 * 
 	 * @param targetId
@@ -165,8 +142,11 @@ public class APIDictionary implements LibraryObserver {
 	 */
 	public CodeBlockSource getCodeBlockByID(int targetId) {
 		final CodeBlockFinder finder = new CodeBlockFinder();
+		CodeBlockSource found;
 
-		return finder.findByID(targetId, this.library);
+		found = finder.findByID(targetId, this);
+
+		return found;
 	}
 
 	private class CodeBlockFinder extends AbstractNoOpStoryVisitor {
@@ -178,56 +158,98 @@ public class APIDictionary implements LibraryObserver {
 		 * 
 		 * @param targetId
 		 *            The ID to search by.
-		 * @param library
-		 *            The library to search in.
+		 * @param dictionary
+		 *            The dictionary to search in.
 		 * 
 		 * @return The source with the given id.
 		 */
-		public CodeBlockSource findByID(int targetId, LibraryModel library) {
+		public CodeBlockSource findByID(int targetId, APIDictionary dictionary) {
 			this.targetId = targetId;
 
 			// let's start snooping about. Quick, someone play Pink Panther or
 			// Mission Impossible! - remiller
-			library.getRoot().process(this);
+			dictionary.getLibrary().getRoot().process(this);
 
-			return this.found;
-		}
+			// not in the library. Try the slots next?
+			if (this.found == null) {
+				final Collection<KnowIt> knowIts = new ArrayList<KnowIt>();
 
-		/**
-		 * Finds a CodeBlockSource by data matching.
-		 * 
-		 * @param targetId
-		 *            The ID to search by.
-		 * @param library
-		 *            The library to search in.
-		 * 
-		 * @return The source with the given id.
-		 */
-		public CodeBlockSource findByData(String subject, String slot,
-				Collection<String> returnTypes, Collection<KnowIt> parameters,
-				Collection<String> includes, Collection<FormatFragment> code) {
+				for (Slot slot : dictionary.getEventSlotManager().getEventSlots()) {
+					// gotta collect 'em together first.
+					knowIts.addAll(slot.getImplicits());
+					knowIts.addAll(slot.getParameters());
+					
+					for (KnowIt knowIt : knowIts) {
+						knowIt.process(this);
+
+						if (this.found != null) {
+							return this.found;
+						}
+					}
+					// keep looking
+					knowIts.clear();
+				}
+			}
+
 			return this.found;
 		}
 
 		@Override
 		public void processScriptIt(ScriptIt scriptIt) {
+			if (this.found != null)
+				return;
+
 			super.processScriptIt(scriptIt);
 
 			for (CodeBlock block : scriptIt.getCodeBlocks()) {
-				if (block.getId() == targetId
+				if (block.getId() == this.targetId
 						&& block instanceof CodeBlockSource) {
 					this.found = (CodeBlockSource) block;
 					return;
 				}
 			}
 		}
-		
+
+		@Override
+		public void processKnowIt(KnowIt knowIt) {
+			if (this.found != null)
+				return;
+
+			super.processKnowIt(knowIt);
+
+			final CodeBlockFinder searcher = this;
+			final BindingVisitor bindingSearcher;
+
+			bindingSearcher = new AbstractNoOpBindingVisitor() {
+				@Override
+				public void processFunction(KnowItBindingFunction function) {
+					function.getValue().process(searcher);
+				}
+
+				@Override
+				public void processReference(KnowItBindingReference reference) {
+					reference.getValue().process(searcher);
+				}
+
+				@Override
+				public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+					questPoint.getValue().process(searcher);
+				}
+			};
+
+			knowIt.getBinding().process(bindingSearcher);
+		}
+
 		@Override
 		protected void defaultProcessComplex(ComplexStoryComponent complex) {
 			super.defaultProcessComplex(complex);
-			
-			for(StoryComponent child : complex.getChildren()){
+
+			for (StoryComponent child : complex.getChildren()) {
 				child.process(this);
+
+				// Found it. All craft, pull up!
+				if (this.found != null)
+					return;
 			}
 		}
 	}

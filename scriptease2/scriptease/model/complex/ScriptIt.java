@@ -52,12 +52,12 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	 */
 	public Collection<CodeBlock> getCodeBlocksForLocation(
 			LocationInformation locationInfo) {
-		Collection<CodeBlock> codeBlocks = new ArrayList<CodeBlock>(1);
+		Collection<CodeBlock> matching = new ArrayList<CodeBlock>(1);
 		for (CodeBlock codeBlock : this.codeBlocks) {
 			if (locationInfo.matchesLocation(codeBlock))
-				codeBlocks.add(codeBlock);
+				matching.add(codeBlock);
 		}
-		return codeBlocks;
+		return matching;
 	}
 
 	@Override
@@ -175,7 +175,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	public Collection<KnowIt> getImplicits() {
 		final Collection<KnowIt> implicits = new CopyOnWriteArraySet<KnowIt>();
 		for (CodeBlock codeBlock : this.codeBlocks) {
-			implicits.addAll(codeBlock.getImplicits(this));
+			implicits.addAll(codeBlock.getImplicits());
 		}
 		return implicits;
 	}

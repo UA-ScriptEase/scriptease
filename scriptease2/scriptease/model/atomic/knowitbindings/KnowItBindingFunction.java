@@ -51,7 +51,7 @@ public class KnowItBindingFunction extends KnowItBinding {
 	}
 
 	/**
-	 * Return a new KnowItBindingFunciton bound to a clone of it's DoIt
+	 * Return a new KnowItBindingFunciton bound to a clone of its DoIt
 	 */
 	@Override
 	public KnowItBinding clone() {

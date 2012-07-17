@@ -5,15 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.StoryVisitor;
-import scriptease.controller.apimanagers.EventSlotManager;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
 /**
@@ -53,7 +49,6 @@ public class CodeBlockSource extends CodeBlock {
 	private String subjectName;
 	private String slot;
 	private Collection<String> returnTypes;
-	private Collection<KnowIt> implicits;
 	private Collection<String> includes;
 	private Collection<FormatFragment> code;
 	private Set<WeakReference<CodeBlockReference>> references;
@@ -116,7 +111,6 @@ public class CodeBlockSource extends CodeBlock {
 		this.subjectName = "";
 		this.slot = "";
 		this.returnTypes = new ArrayList<String>();
-		this.implicits = null;
 		this.id = id;
 
 		this.references = new HashSet<WeakReference<CodeBlockReference>>();
@@ -124,6 +118,7 @@ public class CodeBlockSource extends CodeBlock {
 
 	@Override
 	public CodeBlock clone() {
+		// Sources can't be cloned, since they're supposed to be unique.
 		return new CodeBlockReference(this);
 
 		// final Translator activeTranslator;
@@ -255,29 +250,6 @@ public class CodeBlockSource extends CodeBlock {
 		// }
 
 		return hashCode;
-	}
-
-	@Override
-	public Collection<KnowIt> getImplicits(ScriptIt owner) {
-		// lazy-load the implicits list
-		if (this.implicits == null) {
-			final Translator active = TranslatorManager.getInstance()
-					.getActiveTranslator();
-			final EventSlotManager slotManager;
-
-			if (active != null) {
-				this.implicits = new CopyOnWriteArraySet<KnowIt>();
-				slotManager = active.getApiDictionary().getEventSlotManager();
-
-				this.implicits.addAll(slotManager.getImplicits(this.slot));
-
-				for (KnowIt implicit : this.implicits) {
-					implicit.setOwner(owner);
-				}
-			} else
-				this.implicits = new ArrayList<KnowIt>();
-		}
-		return new ArrayList<KnowIt>(this.implicits);
 	}
 
 	@Override

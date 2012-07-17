@@ -37,8 +37,8 @@ import scriptease.translator.io.model.GameObject;
  * in implementation, thus the ScriptItContext must implement these methods in a
  * meaningful manner. Context also provides information such as the current
  * indentation of the code, the propagation of includes, symbols and used names
- * in code generation.
- * <br><br>
+ * in code generation. <br>
+ * <br>
  * When a method is called in a context which does not make sense, it will
  * return a default unimplemented value as an indicator that the call was not
  * appropriate in the current context. For example, asking for the binding of a
@@ -73,7 +73,8 @@ public class Context {
 	 * Sets the Context's location information, which provides useful
 	 * information for determining the Context's subject and slot
 	 * 
-	 * @param data.getSlot()
+	 * @param data
+	 *            .getSlot()
 	 */
 	public final void setLocationInfo(LocationInformation locationInfo) {
 		this.locationInfo = locationInfo;
@@ -145,10 +146,10 @@ public class Context {
 
 	private Collection<StoryComponent> getComponents() {
 		final Collection<StoryComponent> components = new ArrayList<StoryComponent>();
+		final Collection<QuestPoint> questPoints;
 
 		// Get all the QuestPoints from the model
-		Collection<QuestPoint> questPoints = QuestPointNodeGetter
-				.getQuestPoints(this.model);
+		questPoints = QuestPointNodeGetter.getQuestPoints(this.model);
 
 		// for each quest point
 		for (QuestPoint questPoint : questPoints) {
@@ -203,7 +204,7 @@ public class Context {
 	/**
 	 * This finds the CodeBlocks for special circumstances as described in the
 	 * class that implements GameObject in the translator. In Neverwinter
-	 * Nights, this includes code blocks in i_se_aux. 
+	 * Nights, this includes code blocks in i_se_aux.
 	 * 
 	 * @return
 	 */
@@ -303,7 +304,8 @@ public class Context {
 		final Collection<KnowIt> implicits = slotManager
 				.getImplicits(this.locationInfo.getSlot());
 
-	//	List<StoryComponent> components = new ArrayList<StoryComponent>(this.getComponents());
+		// List<StoryComponent> components = new
+		// ArrayList<StoryComponent>(this.getComponents());
 		// Only return implicits that are used in this Context
 		for (KnowIt implicit : implicits) {
 			if (getComponents().contains(implicit))
