@@ -80,9 +80,9 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 /**
- * Reads and writes Stories, Libraries and Dictionaries via various sources on
- * disk using XStream. Singleton so that it can watch for infinite looping on
- * load.
+ * Reads and writes Stories, Libraries and Dictionaries from or to various
+ * sources on disk using XStream. Singleton so that it can watch for infinite
+ * looping on load.
  * 
  * @author remiller
  * @author mfchurch
@@ -108,8 +108,8 @@ public class FileIO {
 			instance = new FileIO();
 		return instance;
 	}
-	
-	private FileIO(){
+
+	private FileIO() {
 		this.mode = IoMode.NONE;
 	}
 
@@ -302,6 +302,17 @@ public class FileIO {
 							+ location.getAbsolutePath()
 							+ ". It might be XStream complaining about a malformatted file, or some other error occured incidentally while loading.");
 			e.printStackTrace();
+
+			retry = WindowManager
+					.getInstance()
+					.showRetryProblemDialog(
+							"Problem Reading",
+							"I can't understand the file "
+									+ location.getAbsolutePath()
+									+ ".\n\nIt might be a malformatted file or from a previous version of ScriptEase.");
+
+			if (retry)
+				this.readData(location, mode);
 		} finally {
 			try {
 				if (fileIn != null)

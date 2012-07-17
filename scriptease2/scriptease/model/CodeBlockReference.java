@@ -30,7 +30,7 @@ public class CodeBlockReference extends CodeBlock {
 	private static class CodeBlockSourceNull extends CodeBlockSource {
 	}
 
-	// Used as a Null Object pattern. Avoids doing null checks everywhere.
+	// Used for a Null Object pattern. Avoids doing null checks everywhere.
 	private static final CodeBlockSource NULL_TARGET = new CodeBlockSourceNull();
 
 	private CodeBlockSource target;
@@ -207,11 +207,6 @@ public class CodeBlockReference extends CodeBlock {
 		int hashCode = this.getTarget().getId();
 
 		return hashCode;
-	}
-
-	@Override
-	public Collection<KnowIt> getImplicits(ScriptIt owner) {
-		return this.getTarget().getImplicits(owner);
 	}
 
 	public Collection<String> getIncludes() {

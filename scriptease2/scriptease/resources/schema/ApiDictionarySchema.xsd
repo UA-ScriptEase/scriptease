@@ -247,8 +247,8 @@
 			<xsd:element name="CodeBlock" type="CodeBlock_Type"
 				maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
-		-->
 
+		-->
 		<xsd:choice>
 			<xsd:sequence>
 				<xsd:element name="CodeBlockReference" type="CodeBlockReference_Type"

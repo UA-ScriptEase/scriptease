@@ -3,6 +3,7 @@ package scriptease.translator.io.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.controller.apimanagers.EventSlotManager;
 import scriptease.model.atomic.KnowIt;
 import scriptease.translator.TranslatorManager;
 
@@ -56,12 +57,15 @@ public class Slot {
 		this.displayName = displayName;
 	}
 
+	/**
+	 * Gets a new list containing this slot's implicit KnowIts. This should not be used except by
+	 * EventSlotManager and SlotConverter. Use
+	 * {@link EventSlotManager#getImplicits(String) instead.}
+	 * 
+	 * @return
+	 */
 	public Collection<KnowIt> getImplicits() {
-		Collection<KnowIt> clonedImplicits = new ArrayList<KnowIt>();
-		for (KnowIt implicit : implicits) {
-			clonedImplicits.add(implicit.clone());
-		}
-		return clonedImplicits;
+		return new ArrayList<KnowIt>(this.implicits);
 	}
 
 	public void addImplicit(KnowIt implicit) {
