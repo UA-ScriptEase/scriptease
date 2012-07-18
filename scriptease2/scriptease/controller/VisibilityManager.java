@@ -17,7 +17,6 @@ import scriptease.model.StoryComponent;
  * Implements the singleton design pattern.
  * 
  * @author mfchurch
- * 
  */
 public class VisibilityManager {
 	private Map<StoryComponent, Boolean> visibilityMap;
