@@ -145,7 +145,7 @@ public abstract class CodeBlock extends StoryComponent implements
 	public void setOwner(ScriptIt newOwner) {
 		super.setOwner(newOwner);
 		for (KnowIt parameter : this.getParameters()) {
-			parameter.setOwner(newOwner);
+			parameter.setOwner(this);
 		}
 	}
 

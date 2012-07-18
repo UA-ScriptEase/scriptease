@@ -19,6 +19,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingConstantContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingFunctionContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingNullContext;
@@ -41,118 +42,196 @@ public class ContextFactory {
 	private static ContextFactory instance;
 	private Context activeContext;
 
-	 public static ContextFactory getInstance() {
+	public static ContextFactory getInstance() {
 		if (instance == null)
 			instance = new ContextFactory();
 		return instance;
 	}
 
 	/**
-	 * Fabricates a new Context based on the pastContext and the source returns
-	 * new _TYPE_Context(pastContext, (_TYPE_)source)
+	 * Creates a context dependent on
+	 * 
+	 * @param context
+	 * @param source
+	 * @return
+	 */
+	public Context createContext(Context context, Object source) {
+		final Context created;
+
+		/*
+		 * This instance of block disgusts me, but we need some way of
+		 * determining which context to create, and type erasure loses that
+		 * info. - remiller
+		 */
+		if (source instanceof String) {
+			created = this.createContext(context, (String) source);
+		} else if (source instanceof CodeBlock) {
+			created = this.createContext(context, (CodeBlock) source);
+		} else if (source instanceof KnowItBinding) {
+			created = this.createContext(context, (KnowItBinding) source);
+		} else if (source instanceof QuestPointNode) {
+			created = this.createContext(context, (QuestPointNode) source);
+		}
+		// this should get checked last, otherwise the ones above can get caught
+		// by it because they're subclasses.
+		else if (source instanceof StoryComponent) {
+			created = this.createContext(context, (StoryComponent) source);
+		} else {
+			throw new CodeGenerationException(
+					"Cannot Generate Context for Object: " + source);
+		}
+
+		return created;
+	}
+
+	/**
+	 * Fabricates a new Context based on the pastContext and the source.
 	 * 
 	 * @param pastContext
 	 * @param source
 	 * @return
 	 */
-	public Context createContext(final Context pastContext, final Object source) {
-		if (source instanceof String) {
-			this.activeContext = pastContext;
-		} else if (source instanceof KnowItBinding) {
-			((KnowItBinding) source).process(new BindingVisitor() {
-				@Override
-				public void processFunction(KnowItBindingFunction function) {
+	private Context createContext(final Context pastContext, final String source) {
+		this.activeContext = pastContext;
+
+		return this.activeContext;
+	}
+
+	/**
+	 * Fabricates a new Context based on the pastContext and the source.
+	 * 
+	 * @param pastContext
+	 * @param source
+	 * @return
+	 */
+	private Context createContext(final Context pastContext,
+			final KnowItBinding source) {
+		((KnowItBinding) source).process(new BindingVisitor() {
+			@Override
+			public void processFunction(KnowItBindingFunction function) {
+				activeContext = new KnowItBindingFunctionContext(pastContext,
+						function);
+			}
+
+			@Override
+			public void processConstant(KnowItBindingConstant constant) {
+				activeContext = new KnowItBindingConstantContext(pastContext,
+						constant);
+			}
+
+			@Override
+			public void processNull(KnowItBindingNull nullBinding) {
+				activeContext = new KnowItBindingNullContext(pastContext,
+						nullBinding);
+			}
+
+			@Override
+			public void processReference(KnowItBindingReference reference) {
+				activeContext = new KnowItBindingReferenceContext(pastContext,
+						reference);
+			}
+
+			@Override
+			public void processRunTime(KnowItBindingRunTime runTime) {
+				activeContext = new KnowItBindingRunTimeContext(pastContext,
+						runTime);
+			}
+
+			@Override
+			public void processDescribeIt(KnowItBindingDescribeIt described) {
+				ScriptIt resolvedDoIt = described.getValue()
+						.getResolvedScriptIt();
+				if (resolvedDoIt != null)
 					activeContext = new KnowItBindingFunctionContext(
-							pastContext, function);
-				}
+							pastContext,
+							new KnowItBindingFunction(resolvedDoIt));
+			}
 
-				@Override
-				public void processConstant(KnowItBindingConstant constant) {
-					activeContext = new KnowItBindingConstantContext(
-							pastContext, constant);
-				}
+			@Override
+			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+				activeContext = new KnowItBindingQuestPointContext(pastContext,
+						questPoint);
 
-				@Override
-				public void processNull(KnowItBindingNull nullBinding) {
-					activeContext = new KnowItBindingNullContext(pastContext,
-							nullBinding);
-				}
+			}
+		});
 
-				@Override
-				public void processReference(KnowItBindingReference reference) {
-					activeContext = new KnowItBindingReferenceContext(
-							pastContext, reference);
-				}
+		return this.activeContext;
+	}
 
-				@Override
-				public void processRunTime(KnowItBindingRunTime runTime) {
-					activeContext = new KnowItBindingRunTimeContext(
-							pastContext, runTime);
-				}
+	/**
+	 * Fabricates a new Context based on the pastContext and the source.
+	 * 
+	 * @param pastContext
+	 * @param source
+	 * @return
+	 */
+	private Context createContext(final Context pastContext,
+			final StoryComponent source) {
+		((StoryComponent) source).process(new AbstractNoOpStoryVisitor() {
+			protected void defaultProcessComplex(ComplexStoryComponent complex) {
+				activeContext = new ComplexStoryComponentContext(pastContext,
+						complex);
+			}
 
-				@Override
-				public void processDescribeIt(KnowItBindingDescribeIt described) {
-					ScriptIt resolvedDoIt = described.getValue()
-							.getResolvedScriptIt();
-					if (resolvedDoIt != null)
-						activeContext = new KnowItBindingFunctionContext(
-								pastContext, new KnowItBindingFunction(
-										resolvedDoIt));
-				}
+			/* COMPLEX TYPES */
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				activeContext = new ScriptItContext(pastContext, scriptIt);
+			}
 
-				@Override
-				public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
-					activeContext = new KnowItBindingQuestPointContext(
-							pastContext, questPoint);
-					
-				}
-			});
-		} else if (source instanceof StoryComponent) {
-			((StoryComponent) source).process(new AbstractNoOpStoryVisitor() {
-				protected void defaultProcessComplex(
-						ComplexStoryComponent complex) {
-					activeContext = new ComplexStoryComponentContext(
-							pastContext, complex);
-				}
-				
-				/* COMPLEX TYPES */
-				@Override
-				public void processScriptIt(ScriptIt scriptIt) {
-					activeContext = new ScriptItContext(pastContext, scriptIt);
-				}
-				
-				@Override
-				public void processStoryItemSequence(StoryItemSequence sequence) {
-					activeContext = new StoryItemSequenceContext(pastContext,
-							sequence);
-				}
+			@Override
+			public void processStoryItemSequence(StoryItemSequence sequence) {
+				activeContext = new StoryItemSequenceContext(pastContext,
+						sequence);
+			}
 
-				@Override
-				public void processStoryComponentContainer(
-						StoryComponentContainer container) {
-					this.defaultProcessComplex(container);
-				}
+			@Override
+			public void processStoryComponentContainer(
+					StoryComponentContainer container) {
+				this.defaultProcessComplex(container);
+			}
 
-				/* ATOMIC TYPES */
-				@Override
-				public void processAskIt(AskIt questionIt) {
-					activeContext = new AskItContext(pastContext, questionIt);
-				}
+			/* ATOMIC TYPES */
+			@Override
+			public void processAskIt(AskIt questionIt) {
+				activeContext = new AskItContext(pastContext, questionIt);
+			}
 
-				@Override
-				public void processKnowIt(KnowIt knowIt) {
-					activeContext = new KnowItContext(pastContext, knowIt);
-				}
-			});
-		} else if (source instanceof CodeBlock) {
-			activeContext = new CodeBlockContext(pastContext,
-					(CodeBlock) source);
-		} else if (source instanceof QuestPointNode) {
-			activeContext = new QuestPointNodeContext(pastContext,
-					(QuestPointNode) source);
-		} else
-			throw new IllegalStateException(
-					"Cannot Generate Context for Object: " + source);
+			@Override
+			public void processKnowIt(KnowIt knowIt) {
+				activeContext = new KnowItContext(pastContext, knowIt);
+			}
+		});
+
+		return this.activeContext;
+	}
+
+	/**
+	 * Fabricates a new Context based on the pastContext and the source.
+	 * 
+	 * @param pastContext
+	 * @param source
+	 * @return
+	 */
+	private Context createContext(final Context pastContext,
+			final CodeBlock source) {
+		this.activeContext = new CodeBlockContext(pastContext,
+				(CodeBlock) source);
+
+		return activeContext;
+	}
+
+	/**
+	 * Fabricates a new Context based on the pastContext and the source.
+	 * 
+	 * @param pastContext
+	 * @param source
+	 * @return
+	 */
+	private Context createContext(final Context pastContext,
+			final QuestPointNode source) {
+		this.activeContext = new QuestPointNodeContext(pastContext,
+				(QuestPointNode) source);
 		return activeContext;
 	}
 }
