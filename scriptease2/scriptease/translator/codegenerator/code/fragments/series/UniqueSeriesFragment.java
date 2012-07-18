@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
-import sun.awt.util.IdentityArrayList;
 
 /**
  * UniqueSeriesFragment is a template subclass of AbstractSeriesFragment,
