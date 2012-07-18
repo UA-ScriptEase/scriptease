@@ -432,7 +432,7 @@ public final class WindowManager implements WindowFocusListener {
 	 * necessary?
 	 */
 	public void showStoryComponentBuilder() {
-		JFrame scFrame = new JFrame();
+		final JFrame scFrame;
 		scFrame = WindowManager.getInstance().buildStoryComponentBuilderFrame();
 		scFrame.setJMenuBar(MenuFactory.buildBuilderMenuBar());
 
