@@ -745,7 +745,6 @@ public class PanelFactory {
 			@Override
 			public void defaultProcess(StoryComponent component) {
 				editorPanel.removeAll();
-				// TODO Remove println
 				editorPanel.add(
 						buildStoryComponentEditorPanelContents(component),
 						BorderLayout.CENTER);
