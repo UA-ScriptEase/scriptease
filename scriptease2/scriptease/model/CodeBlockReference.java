@@ -109,6 +109,15 @@ public class CodeBlockReference extends CodeBlock {
 
 		this.setParameters(this.target.getParameters());
 	}
+	
+	@Override
+	public void setOwner(ScriptIt newOwner) {
+		super.setOwner(newOwner);
+		
+		for(KnowIt param : this.getParameters()){
+			param.setOwner(this);
+		}
+	}
 
 	/**
 	 * Override of {@link CodeBlock#setParameters(Collection)} that re-clones
@@ -124,7 +133,8 @@ public class CodeBlockReference extends CodeBlock {
 	public void setParameters(Collection<KnowIt> newBindings) {
 		final List<KnowIt> targetParameters;
 		final List<KnowIt> newParameters;
-
+		KnowIt clone;
+		
 		/*
 		 * Update our parameters from our target before doing anything. They
 		 * need to be cloned so that we don't start mucking with the default
@@ -135,7 +145,9 @@ public class CodeBlockReference extends CodeBlock {
 		newParameters = new ArrayList<KnowIt>(targetParameters.size());
 
 		for (KnowIt param : targetParameters) {
-			newParameters.add(param.clone());
+			clone = param.clone();
+			newParameters.add(clone);
+			clone.setOwner(null);
 		}
 
 		super.setParameters(newParameters);
@@ -282,7 +294,7 @@ public class CodeBlockReference extends CodeBlock {
 				continue;
 
 			// use its binding now that we have it
-			param.setBinding(match.getBinding().clone());
+			param.setBinding(match.getBinding());
 		}
 	}
 

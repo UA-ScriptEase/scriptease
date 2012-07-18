@@ -108,7 +108,7 @@ public class CodeBlockConverter implements Converter {
 			// referenced. There just isn't enough uniqueness in the data stored
 			// in stories. - remiller
 			throw new UnsupportedOperationException(
-					"Can't fix stories - not enough data. Sorry!");
+					"Can't fix stories with old CodeBlocks - not enough data. Sorry!");
 		} else if (FileIO.getInstance().getMode() == IoMode.API_DICTIONARY) {
 			codeBlock = new CodeBlockSource(subject, slot, types, parameters,
 					includes, code, tempId++);
