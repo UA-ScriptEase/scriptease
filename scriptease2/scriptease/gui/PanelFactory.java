@@ -2,6 +2,9 @@ package scriptease.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,12 +47,11 @@ import scriptease.controller.VisibilityManager;
 import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
-import scriptease.gui.action.typemenus.ShowTypeMenuAction;
+import scriptease.gui.action.typemenus.TypeSelectionAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.pane.GameObjectPane;
 import scriptease.gui.pane.LibraryPane;
-import scriptease.gui.storycomponentbuilder.TypeMenuComponent;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
@@ -184,9 +186,13 @@ public class PanelFactory {
 		nullPanel = new JPanel();
 		nullLabel = new JLabel(text);
 
-		nullPanel.setLayout(new BorderLayout());
+		nullPanel.setLayout(new BoxLayout(nullPanel, BoxLayout.PAGE_AXIS));
 
-		nullPanel.add(nullLabel, BorderLayout.CENTER);
+		nullLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		nullPanel.add(Box.createVerticalGlue());
+		nullPanel.add(nullLabel);
+		nullPanel.add(Box.createVerticalGlue());
 
 		return nullPanel;
 	}
@@ -209,7 +215,7 @@ public class PanelFactory {
 	}
 
 	/**
-	 * Creates a JPanel with fields for Name, Types, Labels, and a check box for
+	 * Creates a JPanel with fields for Name, Labels, and a check box for
 	 * Visibility. This JPanel is common to all story component editor panes.
 	 * 
 	 * @return
@@ -218,8 +224,6 @@ public class PanelFactory {
 			final StoryComponent storyComponent) {
 
 		// TODO Add in the Save and Reset buttons here, too.
-		// I'm not sure what SpringLayout looks like, so I'll hold off
-		// on those buttons until I get SE running again.
 
 		// TODO Save button should be easy.
 		// TODO Reset button should just reload the translator and redraw the
@@ -227,7 +231,7 @@ public class PanelFactory {
 
 		// If storyComponent is null, show a blank JPanel.
 		if (storyComponent == null) {
-			return buildEmptyPanelWithText("Select a Story Component to begin editing it.");
+			return buildEmptyPanelWithText("");
 		}
 
 		final JPanel editorPanel;
@@ -235,15 +239,10 @@ public class PanelFactory {
 		final JPanel descriptorPanel;
 
 		final JLabel nameLabel;
-		final JLabel typeLabel;
 		final JLabel labelLabel;
 		final JLabel visibleLabel;
 
 		final JTextField nameField;
-		// TODO Refactor the TypeMenuComponent. Make it work like the
-		// librarypane one, or just use that one if it's possible.
-		final ShowTypeMenuAction typeAction;
-		final JButton typeButton;
 		final JTextField labelField;
 		final JCheckBox visibleBox;
 
@@ -256,13 +255,10 @@ public class PanelFactory {
 		descriptorPanel = new JPanel();
 
 		nameLabel = new JLabel("Name: ");
-		typeLabel = new JLabel("Types: ");
 		labelLabel = new JLabel("Labels: ");
 		visibleLabel = new JLabel("Visible: ");
 
 		nameField = new JTextField();
-		typeAction = new ShowTypeMenuAction();
-		typeButton = new JButton(typeAction);
 		labelField = new JTextField();
 		visibleBox = new JCheckBox();
 
@@ -276,7 +272,6 @@ public class PanelFactory {
 		editorScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
 		// Set up the descriptorPanel
-
 		descriptorPanel.setLayout(descriptorPanelLayout);
 		descriptorPanel.setBorder(new TitledBorder("Component Descriptors"));
 
@@ -284,12 +279,8 @@ public class PanelFactory {
 		descriptorPanelLayout.setAutoCreateContainerGaps(true);
 
 		// Set up the labels
-
 		nameLabel.setFont(labelFont);
 		nameLabel.setLabelFor(nameField);
-
-		typeLabel.setFont(labelFont);
-		typeLabel.setLabelFor(typeButton);
 
 		labelLabel.setFont(labelFont);
 		labelLabel.setLabelFor(labelField);
@@ -298,29 +289,14 @@ public class PanelFactory {
 		visibleLabel.setLabelFor(visibleBox);
 
 		// Set up the default field values
-
 		nameField.setText(storyComponent.getDisplayText());
 
-		String label = "";
-		for (String storyComponentLabel : storyComponent.getLabels()) {
-			label += storyComponentLabel + ", ";
-		}
-		int labelLength = label.length();
-		if (labelLength > 0) {
-			String shortenedLabel = label.substring(0, labelLength - 2);
-			labelField.setText(shortenedLabel);
-		}
 		labelField.setText(getCollectionAsString(storyComponent.getLabels()));
 
 		visibleBox.setSelected(VisibilityManager.getInstance().isVisible(
 				storyComponent));
 
 		// Set up the field listeners
-		/*
-		 * TODO Set up the field listeners. May need to add them in the process
-		 * part!
-		 */
-
 		nameField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -329,7 +305,6 @@ public class PanelFactory {
 		});
 
 		labelField.getDocument().addDocumentListener(new DocumentListener() {
-
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				final String labelFieldText;
@@ -343,7 +318,6 @@ public class PanelFactory {
 				for (String label : labelArray) {
 					labels.add(label.trim());
 				}
-
 				storyComponent.setLabels(labels);
 			}
 
@@ -356,8 +330,14 @@ public class PanelFactory {
 			public void changedUpdate(DocumentEvent e) {
 			}
 		});
-		
-		typeAction.getTypeSelectionDialogBuilder().deselectAll();
+
+		visibleBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				VisibilityManager.getInstance().setVisibility(storyComponent,
+						visibleBox.isSelected());
+			}
+		});
 
 		// Add JComponents to DescriptorPanel using GroupLayout
 		descriptorPanelLayout.setHorizontalGroup(descriptorPanelLayout
@@ -366,14 +346,12 @@ public class PanelFactory {
 						descriptorPanelLayout.createParallelGroup()
 								.addComponent(nameLabel)
 								.addComponent(visibleLabel)
-								.addComponent(labelLabel)
-								.addComponent(typeLabel))
+								.addComponent(labelLabel))
 				.addGroup(
 						descriptorPanelLayout.createParallelGroup()
 								.addComponent(visibleBox)
 								.addComponent(nameField)
-								.addComponent(labelField)
-								.addComponent(typeButton)));
+								.addComponent(labelField)));
 
 		descriptorPanelLayout.setVerticalGroup(descriptorPanelLayout
 				.createSequentialGroup()
@@ -394,55 +372,33 @@ public class PanelFactory {
 								.createParallelGroup(
 										GroupLayout.Alignment.BASELINE)
 								.addComponent(labelLabel)
-								.addComponent(labelField))
-				.addGroup(
-						descriptorPanelLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(typeLabel)
-								.addComponent(typeButton)));
+								.addComponent(labelField)));
 
 		editorPanel.add(descriptorPanel);
 
-		// Determine what kind of component was selected, and display the
-		// appropriate panel.
-
+		// Display appropriate panel for component.
 		storyComponent.process(new AbstractNoOpStoryVisitor() {
 
 			@Override
 			public void processScriptIt(final ScriptIt scriptIt) {
+				// TODO Also add functionality for editing implicits, which are
+				// all knowits.
+
 				for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
 					editorPanel.add(PanelFactory.getInstance()
 							.buildCodeBlockEditorPanel(codeBlock));
 				}
-				
-				typeAction.getTypeSelectionDialogBuilder().selectTypes(scriptIt.getTypes(), true);
-
-				typeAction.setAction(new Runnable() {
-					@Override
-					public void run() {
-						scriptIt.setTypes(typeAction.getTypeSelectionDialogBuilder().getSelectedTypes());
-					}
-				});
 			}
 
 			@Override
 			public void processKnowIt(final KnowIt knowIt) {
 				editorPanel.add(PanelFactory.getInstance()
 						.buildDescriptionEditorPanel(knowIt));
-
-				typeAction.getTypeSelectionDialogBuilder().selectTypes(knowIt.getTypes(), true);
-
-				typeAction.setAction(new Runnable() {
-					@Override
-					public void run() {
-						knowIt.setTypes(typeAction.getTypeSelectionDialogBuilder().getSelectedTypes());
-					}
-				});
 			}
 
 			@Override
 			public void defaultProcess(StoryComponent component) {
+				// By default, an empty editor panel with text is created.
 				editorPanel.removeAll();
 				editorPanel
 						.add(buildEmptyPanelWithText("Select a Story Component to begin editing it."));
@@ -476,7 +432,7 @@ public class PanelFactory {
 	 * @param codeBlock
 	 * @return
 	 */
-	private JPanel buildCodeBlockEditorPanel(CodeBlock codeBlock) {
+	private JPanel buildCodeBlockEditorPanel(final CodeBlock codeBlock) {
 		final JPanel codeBlockEditorPanel;
 
 		final JLabel idLabel;
@@ -489,7 +445,7 @@ public class PanelFactory {
 		final JButton addParameterButton;
 		final JTextField slotField;
 		final JTextField includesField;
-		final TypeMenuComponent typeSelector;
+		final TypeSelectionAction typeAction;
 		final JButton typesButton;
 		final JScrollPane parameterScrollPane;
 		final JPanel parameterPanel;
@@ -511,13 +467,12 @@ public class PanelFactory {
 
 		slotField = new JTextField();
 		includesField = new JTextField();
-		typeSelector = new TypeMenuComponent();
-		typesButton = typeSelector.getRootButton();
+		typeAction = new TypeSelectionAction();
+		typesButton = new JButton(typeAction);
 		addParameterButton = new JButton("+");
 		parameterPanel = new JPanel();
 		parameterScrollPane = new JScrollPane(parameterPanel);
 		codePanel = buildCodeInputComponent(codeBlock);
-		;
 
 		codeBlockEditorLayout = new GroupLayout(codeBlockEditorPanel);
 		labelFont = new Font("SansSerif", Font.BOLD,
@@ -526,7 +481,6 @@ public class PanelFactory {
 		parameters = codeBlock.getParameters();
 
 		// Set up the codeBlockEditorPanel and the scroll pane
-
 		codeBlockEditorPanel.setLayout(codeBlockEditorLayout);
 		codeBlockEditorPanel.setBorder(new TitledBorder("Code Block: "));
 
@@ -539,7 +493,6 @@ public class PanelFactory {
 		parameterScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
 		// Set up the labels
-
 		idLabel.setForeground(Color.GRAY);
 
 		slotLabel.setFont(labelFont);
@@ -558,7 +511,6 @@ public class PanelFactory {
 		codeLabel.setLabelFor(codePanel);
 
 		// Set up the default field values
-
 		if (codeBlock.hasSlot())
 			slotField.setText(codeBlock.getSlot());
 
@@ -566,23 +518,60 @@ public class PanelFactory {
 
 		ArrayList<String> types = new ArrayList<String>();
 		types.addAll(codeBlock.getTypes());
-		typeSelector.setTrueData(types);
+
+		typeAction.getTypeSelectionDialogBuilder().deselectAll();
+		typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
 
 		for (KnowIt parameter : parameters) {
-			parameterPanel.add(buildParameterComponent(parameter));
+			parameterPanel.add(new ParameterComponent(codeBlock, parameter));
 		}
 
 		// Set up the listeners
+		slotField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				codeBlock.setSlot(slotField.getText());
+			}
+		});
 
-		/*
-		 * slotField.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) {
-		 * codeBlock.setSlot(slotField.getText()); }
-		 * 
-		 * });
-		 */
-		// TODO Set the listeners
+		includesField.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				final String labelFieldText;
+				final String[] labelArray;
+				final Collection<String> labels;
+
+				labelFieldText = includesField.getText();
+				labelArray = labelFieldText.split(",");
+				labels = new ArrayList<String>();
+
+				for (String label : labelArray) {
+					labels.add(label.trim());
+				}
+				codeBlock.setIncludes(labels);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+			}
+		});
+
+		typeAction.setAction(new Runnable() {
+			@Override
+			public void run() {
+				codeBlock.setTypes(typeAction.getTypeSelectionDialogBuilder()
+						.getSelectedTypes());
+			}
+		});
+
+		// TODO Set up the listener to add a new parameter
+
+		// TODO Set the listeners for code panel
 		// Here's some old code from the codePanel
 
 		/*
@@ -671,6 +660,8 @@ public class PanelFactory {
 				BoxLayout.PAGE_AXIS));
 		descriptionEditorPanel.add(Box.createVerticalGlue());
 
+		// Should have the type selection here!
+
 		// Set text of NameField to knowIt.getDisplayText();
 		String labelList = "";
 		for (String label : knowIt.getLabels())
@@ -690,7 +681,7 @@ public class PanelFactory {
 	 */
 	public JPanel buildStoryComponentLibraryPanel(JPanel editorPanel) {
 		final List<Translator> translators;
-		final JComboBox<Translator> libSelector;
+		final JComboBox libSelector;
 		final JPanel libraryPanel;
 		final JPanel translatorPanel;
 		final LibraryPane libraryPane;
@@ -701,6 +692,7 @@ public class PanelFactory {
 		libraryPanel = new JPanel();
 		translatorPanel = new JPanel();
 		translators = new ArrayList<Translator>();
+		// TODO We need to also load invisible story components.
 		libraryPane = new LibraryPane();
 		activeTranslator = TranslatorManager.getInstance()
 				.getActiveTranslator();
@@ -711,8 +703,7 @@ public class PanelFactory {
 		translators.add(null);
 		translators.addAll(TranslatorManager.getInstance().getTranslators());
 
-		libSelector = new JComboBox<Translator>(new Vector<Translator>(
-				translators));
+		libSelector = new JComboBox(new Vector<Translator>(translators));
 		libSelector.setSelectedItem(activeTranslator);
 
 		// TODO This should update the editorpanel, too!
@@ -754,6 +745,7 @@ public class PanelFactory {
 			@Override
 			public void defaultProcess(StoryComponent component) {
 				editorPanel.removeAll();
+				// TODO Remove println
 				editorPanel.add(
 						buildStoryComponentEditorPanelContents(component),
 						BorderLayout.CENTER);
@@ -766,13 +758,14 @@ public class PanelFactory {
 	}
 
 	/**
-	 * Method that returns a collection of Strings as a single String seperated
-	 * by commas.
-	 * 
-	 * An example:
-	 * 
-	 * Collection<String> collection = ["First"], ["Second"], ["Third"]
-	 * getCollectionAsString(collection) == "First, Second, Third"
+	 * Method that returns a collection of Strings as a single String separated
+	 * by commas.<br>
+	 * <br>
+	 * An example: <br>
+	 * If<br>
+	 * <code>Collection&lt;String&gt; collection = ["First"], ["Second"], ["Third"];<br></code>
+	 * then<br>
+	 * <code>getCollectionAsString(collection) == "First, Second, Third"</code>
 	 * 
 	 * @param strings
 	 * @return
@@ -791,131 +784,256 @@ public class PanelFactory {
 	}
 
 	/**
-	 * Parameter creator and editor component.
+	 * ParameterComponents are JComponents used to represent and edit
+	 * parameters. <br>
+	 * <br>
+	 * Parameters have:
+	 * <ul>
+	 * <li>name</li>
+	 * <li>types</li>
+	 * <li>default type</li>
+	 * <li>default binding constant</li>
+	 * </ul>
+	 * A ParameterComponent also has a delete button to remove the parameter
+	 * from the CodeBlock.
 	 * 
-	 * @param knowIt
-	 * @return
+	 * @author kschenk
+	 * 
 	 */
-	private JComponent buildParameterComponent(KnowIt knowIt) {
-		final JPanel parameterComponent;
+	@SuppressWarnings("serial")
+	private class ParameterComponent extends JComponent {
+		private final KnowIt parameter;
 
-		final JTextField nameField;
-		final TypeMenuComponent typeSelector;
-		final ArrayList<String> types;
-		final JButton typesButton;
-		final JComboBox<String> defaultTypeBox;
-		final JButton deleteButton;
-		final GroupLayout groupLayout;
-		final JComponent bindingConstantSettingComponent;
-
-		final JTextField inactiveTextField;
-
-		final Translator translator;
-		final GameTypeManager gameTypeManager;
-		final TypeValueWidgets defaultTypeGuiType;
-
-		parameterComponent = new JPanel();
-
-		nameField = new JTextField(knowIt.getDisplayText(), 10);
-		typeSelector = new TypeMenuComponent();
-		types = new ArrayList<String>();
-		typesButton = typeSelector.getRootButton();
-		defaultTypeBox = new JComboBox<String>();
-		deleteButton = new JButton("-");
-		groupLayout = new GroupLayout(parameterComponent);
-
-		inactiveTextField = new JTextField(" Cannot set binding for ["
-				+ knowIt.getDefaultType() + "]");
-
-		translator = TranslatorManager.getInstance().getActiveTranslator();
-		gameTypeManager = translator.getGameTypeManager();
-		defaultTypeGuiType = gameTypeManager.getGui(knowIt.getDefaultType());
-
-		parameterComponent.setLayout(groupLayout);
-		parameterComponent.setBorder(new TitledBorder(knowIt.getDisplayText()));
-
-		types.addAll(knowIt.getTypes());
-		typeSelector.setTrueData(types);
-
-		inactiveTextField.setEnabled(false);
-
-		for (String type : types)
-			defaultTypeBox.addItem(type);
-
-		defaultTypeBox.setSelectedItem(knowIt.getDefaultType());
-
-		// Determine what to do with parameters
-
-		/*
-		 * TODO BindingConstantSettingComponent should update when the default
-		 * type is changed, since we could choose to set a default binding at
-		 * that point.
+		/**
+		 * Creates a new ParameterComponent with the passed in KnowIt parameter.
 		 * 
-		 * This would also mean we don't have to worry about this when creating
-		 * a new parameter, since the new one will just have a void type as
-		 * default.
+		 * @param parameter
 		 */
+		private ParameterComponent(final CodeBlock codeBlock,
+				final KnowIt parameter) {
+			super();
+			this.parameter = parameter;
 
-		if (defaultTypeGuiType == null)
-			bindingConstantSettingComponent = inactiveTextField;
-		else {
-			switch (defaultTypeGuiType) {
-			case JTEXTFIELD:
-				bindingConstantSettingComponent = new JTextField(30);
-				break;
-			case JSPINNER:
-				bindingConstantSettingComponent = new JSpinner();
+			final JTextField nameField;
+			final TypeSelectionAction typeAction;
+			final ArrayList<String> types;
+			final JButton typesButton;
+			final JComboBox defaultTypeBox;
+			final JButton deleteButton;
+			final GroupLayout groupLayout;
+			final JComponent bindingConstantComponent;
 
-				break;
-			case JCOMBOBOX:
-				final Map<String, String> map;
-				final JComboBox<String> selectorBox;
+			nameField = new JTextField(parameter.getDisplayText(), 10);
+			typeAction = new TypeSelectionAction();
+			types = new ArrayList<String>();
+			typesButton = new JButton(typeAction);
+			defaultTypeBox = new JComboBox();
+			// TODO Need a trash icon for deleteButton
+			deleteButton = new JButton("-");
+			groupLayout = new GroupLayout(this);
+			bindingConstantComponent = new JPanel();
 
-				map = gameTypeManager.getEnumMap(knowIt.getDefaultType());
-				selectorBox = new JComboBox<String>();
+			this.setLayout(groupLayout);
+			this.setBorder(new TitledBorder(parameter.getDisplayText()));
 
-				for (String key : map.keySet())
-					selectorBox.addItem(key + " [" + map.get(key) + "]");
+			// TODO Set the preferred size for this, lengthwise. Shouldn't have
+			// to be big.
+			this.setMaximumSize(new Dimension(1920, 100));
 
-				bindingConstantSettingComponent = selectorBox;
-				break;
-			default: {
-				inactiveTextField.setText("Unimplemented GUI Type: "
-						+ defaultTypeGuiType.toString());
-				bindingConstantSettingComponent = inactiveTextField;
-				break;
-			}
-			}
+			// Set default values
+			types.addAll(parameter.getTypes());
+
+			typeAction.getTypeSelectionDialogBuilder().deselectAll();
+			typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
+
+			for (String type : types)
+				defaultTypeBox.addItem(type);
+
+			defaultTypeBox.setSelectedItem(parameter.getDefaultType());
+
+			updateBindingConstantComponent(bindingConstantComponent);
+
+			// Set up listeners
+			nameField.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					parameter.setDisplayText(nameField.getText());
+				}
+			});
+
+			typeAction.setAction(new Runnable() {
+				// TODO This isn't updating the LibraryPane, but it should.
+				@Override
+				public void run() {
+					Collection<String> newTypes = typeAction
+							.getTypeSelectionDialogBuilder().getSelectedTypes();
+					/*
+					 * Note: This event also causes the check box's action to
+					 * fire. This is why we save the currently selected type
+					 * before adding new items to the list; so we can set it
+					 * again when the items have been added.
+					 * 
+					 * Thankfully, JCheckBox checks if it's in the list before
+					 * setting it, so we don't need to worry about that.
+					 * 
+					 * -kschenk
+					 */
+					String defaultType = parameter.getDefaultType();
+
+					parameter.setTypes(newTypes);
+					defaultTypeBox.removeAllItems();
+
+					for (String type : newTypes)
+						defaultTypeBox.addItem(type);
+
+					defaultTypeBox.setSelectedItem(defaultType);
+				}
+			});
+
+			defaultTypeBox.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final List<String> types;
+					final Collection<String> newTypeList;
+					final String selectedType;
+
+					types = new ArrayList<String>();
+					newTypeList = new ArrayList<String>();
+					selectedType = (String) defaultTypeBox.getSelectedItem();
+
+					types.addAll(parameter.getTypes());
+
+					if (selectedType != null)
+						newTypeList.add(selectedType);
+
+					for (String type : types) {
+						if (!type.equals(selectedType))
+							newTypeList.add(type);
+					}
+
+					parameter.setTypes(newTypeList);
+
+					updateBindingConstantComponent(bindingConstantComponent);
+				}
+			});
+
+			deleteButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final String[] options = { "Yes", "No" };
+
+					int removeConfirmation = WindowManager
+							.getInstance()
+							.showOptionsDialog(
+									"Are you sure you want to remove this parameter?",
+									"Remove Parameter", options);
+
+					if (removeConfirmation == 0) {
+						List<KnowIt> parameters = codeBlock.getParameters();
+						parameters.remove(parameter);
+
+						codeBlock.setParameters(parameters);
+						removeComponentFromComponent(ParameterComponent.this,
+								ParameterComponent.this.getParent());
+					}
+				}
+			});
+
+			JPanel defaultTypeBoxPanel = new JPanel();
+			JPanel nameFieldPanel = new JPanel();
+			JPanel bindingPanel = new JPanel();
+
+			defaultTypeBoxPanel.add(defaultTypeBox);
+			nameFieldPanel.add(nameField);
+			bindingPanel.add(bindingConstantComponent);
+
+			nameFieldPanel.setBorder(new TitledBorder("Name"));
+			defaultTypeBoxPanel.setBorder(new TitledBorder("Default Type"));
+			bindingPanel.setBorder(new TitledBorder("Default Binding"));
+
+			groupLayout.setAutoCreateGaps(true);
+			groupLayout.setAutoCreateContainerGaps(true);
+			groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
+					.addComponent(nameFieldPanel).addComponent(typesButton)
+					.addComponent(defaultTypeBoxPanel)
+					.addComponent(bindingPanel).addComponent(deleteButton));
+
+			groupLayout.setVerticalGroup(groupLayout
+					.createParallelGroup(GroupLayout.Alignment.CENTER)
+					.addComponent(nameFieldPanel).addComponent(typesButton)
+					.addComponent(deleteButton)
+					.addComponent(defaultTypeBoxPanel)
+					.addComponent(bindingPanel));
 		}
 
-		JPanel defaultTypeBoxPanel = new JPanel();
-		JPanel nameFieldPanel = new JPanel();
-		JPanel bindingPanel = new JPanel();
+		/**
+		 * Updates the binding constant component, which is the component that
+		 * is used to set default binding settings.
+		 * 
+		 * @param bindingConstantComponent
+		 */
+		private void updateBindingConstantComponent(
+				JComponent bindingConstantComponent) {
+			final JTextField inactiveTextField;
+			final Translator translator;
+			final TypeValueWidgets defaultTypeGuiType;
+			final GameTypeManager gameTypeManager;
 
-		defaultTypeBoxPanel.add(defaultTypeBox);
-		nameFieldPanel.add(nameField);
-		bindingPanel.add(bindingConstantSettingComponent);
+			translator = TranslatorManager.getInstance().getActiveTranslator();
+			gameTypeManager = translator.getGameTypeManager();
+			defaultTypeGuiType = gameTypeManager.getGui(parameter
+					.getDefaultType());
+			inactiveTextField = new JTextField(" Cannot set binding for ["
+					+ parameter.getDefaultType() + "]");
 
-		nameFieldPanel.setBorder(new TitledBorder("Name"));
-		defaultTypeBoxPanel.setBorder(new TitledBorder("Default Type"));
-		bindingPanel.setBorder(new TitledBorder("Default Binding"));
+			inactiveTextField.setEnabled(false);
 
-		groupLayout.setAutoCreateGaps(true);
-		groupLayout.setAutoCreateContainerGaps(true);
-		groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
-				.addComponent(nameFieldPanel).addComponent(typesButton)
-				.addComponent(defaultTypeBoxPanel).addComponent(bindingPanel)
-				.addComponent(deleteButton));
+			bindingConstantComponent.removeAll();
 
-		groupLayout.setVerticalGroup(groupLayout
-				.createParallelGroup(GroupLayout.Alignment.CENTER)
-				.addComponent(nameFieldPanel).addComponent(typesButton)
-				.addComponent(deleteButton).addComponent(defaultTypeBoxPanel)
-				.addComponent(bindingPanel));
+			if (defaultTypeGuiType == null)
+				bindingConstantComponent.add(inactiveTextField);
+			else {
+				switch (defaultTypeGuiType) {
+				// TODO Add listeners to these text fields, spinners, and combo
+				// boxes.
+				case JTEXTFIELD:
+					bindingConstantComponent.add(new JTextField(30));
+					break;
+				case JSPINNER:
+					bindingConstantComponent.add(new JSpinner());
+					break;
+				case JCOMBOBOX:
+					final Map<String, String> map;
+					final JComboBox selectorBox;
 
-		return parameterComponent;
+					map = gameTypeManager
+							.getEnumMap(parameter.getDefaultType());
+					selectorBox = new JComboBox();
+
+					selectorBox.addItem(null);
+
+					for (String key : map.keySet())
+						selectorBox.addItem(key + " [" + map.get(key) + "]");
+
+					bindingConstantComponent.add(selectorBox);
+					break;
+				default: {
+					inactiveTextField.setText("Unimplemented GUI Type: "
+							+ defaultTypeGuiType.toString());
+					bindingConstantComponent.add(inactiveTextField);
+					break;
+				}
+				}
+			}
+
+			bindingConstantComponent.repaint();
+			bindingConstantComponent.revalidate();
+		}
 	}
 
+	/*
+	 * TODO This may need to be an inner class, like parameter component.
+	 */
 	private JComponent buildCodeInputComponent(CodeBlock codeBlock) {
 		final JTextPane codePane;
 		final JScrollPane codeScrollPane;
@@ -1005,6 +1123,22 @@ public class PanelFactory {
 		// Add a DocumentListener to codePaneDoc
 
 		return codePane;
+	}
+
+	/**
+	 * This method allows us to easily remove a component from another
+	 * component, and then repaint and revalidate the removed from component.
+	 * 
+	 * @param component1
+	 * @param component2
+	 */
+	private void removeComponentFromComponent(JComponent component,
+			Container container) {
+		container.remove(component);
+
+		container.repaint();
+		// TODO Enable when ant is in Java 1.7
+		// container.revalidate();
 	}
 
 	/**

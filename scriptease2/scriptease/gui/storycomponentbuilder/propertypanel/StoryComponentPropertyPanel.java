@@ -30,7 +30,6 @@ public abstract class StoryComponentPropertyPanel extends JPanel implements
 	private Color HIGHLIGHT_COLOUR = Color.YELLOW;
 	private Color BACKGROUND_COLOUR = Color.WHITE;
 	private JPanel displayPanel;
-	//private JButton expansionButton;
 	protected ExpansionButtonSCB expansionButton;
 	protected StoryComponent component;
 	protected StoryComponent parent;
@@ -213,31 +212,6 @@ public abstract class StoryComponentPropertyPanel extends JPanel implements
 			// rebuild the panel to reflect the parameter
 			updatePanel();
 	}
-	
-	/*public class ExpansionButton extends JButton{
-		private StoryComponent component;
-		private StoryComponent parent;
-		
-		public ExpansionButton(Icon icon){
-			super(icon);
-		}
-		
-		public StoryComponent getComp(){
-			return component;
-		}
-		
-		public StoryComponent getParentComp(){
-			return parent;
-		}
-		
-		public void setComp(StoryComponent comp){
-			component = comp;
-		}
-		
-		public void setParent(StoryComponent parentComp){
-			parent = parentComp;
-		}
-	}*/
 }
 
 
