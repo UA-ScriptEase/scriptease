@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;

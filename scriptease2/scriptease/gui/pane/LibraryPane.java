@@ -23,7 +23,7 @@ import scriptease.gui.SETree.filters.CategoryFilter.Category;
 import scriptease.gui.SETree.filters.StoryComponentFilter;
 import scriptease.gui.SETree.filters.TranslatorFilter;
 import scriptease.gui.SETree.filters.TypeFilter;
-import scriptease.gui.action.typemenus.ShowTypeMenuAction;
+import scriptease.gui.action.typemenus.TypeSelectionAction;
 import scriptease.gui.control.FilterableSearchField;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
@@ -147,7 +147,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	private void configurePane() {
 		final JComponent filterPane;
 		final JComponent searchFilterPane;
-		final ShowTypeMenuAction typeFilter;
+		final TypeSelectionAction typeFilter;
 		final BoxLayout filterPaneLayout;
 		final BoxLayout searchFilterPaneLayout;
 		final SpringLayout pickerPaneLayout;
@@ -155,7 +155,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
-		typeFilter = new ShowTypeMenuAction();
+		typeFilter = new TypeSelectionAction();
 		filterPaneLayout = new BoxLayout(filterPane, BoxLayout.Y_AXIS);
 		searchFilterPaneLayout = new BoxLayout(searchFilterPane,
 				BoxLayout.X_AXIS);
