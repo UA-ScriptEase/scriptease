@@ -31,6 +31,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -44,6 +45,7 @@ import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.VisibilityManager;
+import scriptease.controller.apimanagers.EventSlotManager;
 import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
@@ -57,6 +59,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -67,7 +70,10 @@ import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 import scriptease.translator.codegenerator.code.fragments.LineFragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
 import scriptease.translator.codegenerator.code.fragments.ScopeFragment;
+import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
+import scriptease.translator.io.model.Slot;
+import scriptease.translator.io.tools.GameConstantFactory;
 
 /**
  * A factory class for different panels. All major panel construction should go
@@ -198,36 +204,15 @@ public class PanelFactory {
 	}
 
 	/**
-	 * Builds an empty StoryComponentEditorPanel.
-	 * 
-	 * @return
-	 */
-	public JPanel buildStoryComponentEditorPanel() {
-		final JPanel editorPanel;
-
-		editorPanel = new JPanel();
-
-		editorPanel.setLayout(new BorderLayout());
-		editorPanel.add(buildStoryComponentEditorPanelContents(null),
-				BorderLayout.CENTER);
-
-		return editorPanel;
-	}
-
-	/**
 	 * Creates a JPanel with fields for Name, Labels, and a check box for
 	 * Visibility. This JPanel is common to all story component editor panes.
 	 * 
 	 * @return
 	 */
-	private JComponent buildStoryComponentEditorPanelContents(
+	public JComponent buildStoryComponentEditorComponent(
 			final StoryComponent storyComponent) {
 
-		// TODO Add in the Save and Reset buttons here, too.
-
-		// TODO Save button should be easy.
-		// TODO Reset button should just reload the translator and redraw the
-		// entire component builder.
+		// TODO A Save button should go into Menu Bar!
 
 		// If storyComponent is null, show a blank JPanel.
 		if (storyComponent == null) {
@@ -250,6 +235,8 @@ public class PanelFactory {
 
 		final GroupLayout descriptorPanelLayout;
 
+		final String labelToolTip;
+
 		editorPanel = new JPanel();
 		editorScrollPane = new JScrollPane(editorPanel);
 		descriptorPanel = new JPanel();
@@ -266,6 +253,10 @@ public class PanelFactory {
 				Integer.parseInt(ScriptEase.getInstance().getPreference(
 						ScriptEase.FONT_SIZE_KEY)) + 1);
 		descriptorPanelLayout = new GroupLayout(descriptorPanel);
+
+		labelToolTip = "<html><b>Labels</b> are seperated by commas.<br>"
+				+ "Leading and trailing spaces are<br>"
+				+ "removed automatically.</html>";
 
 		editorPanel.setLayout(new BoxLayout(editorPanel, BoxLayout.PAGE_AXIS));
 
@@ -284,7 +275,7 @@ public class PanelFactory {
 
 		labelLabel.setFont(labelFont);
 		labelLabel.setLabelFor(labelField);
-
+		labelLabel.setToolTipText(labelToolTip);
 		visibleLabel.setFont(labelFont);
 		visibleLabel.setLabelFor(visibleBox);
 
@@ -292,15 +283,25 @@ public class PanelFactory {
 		nameField.setText(storyComponent.getDisplayText());
 
 		labelField.setText(getCollectionAsString(storyComponent.getLabels()));
+		labelField.setToolTipText(labelToolTip);
 
 		visibleBox.setSelected(VisibilityManager.getInstance().isVisible(
 				storyComponent));
 
 		// Set up the field listeners
-		nameField.addKeyListener(new KeyAdapter() {
+		nameField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
-			public void keyReleased(KeyEvent e) {
+			public void insertUpdate(DocumentEvent e) {
 				storyComponent.setDisplayText(nameField.getText());
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				this.insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
 			}
 		});
 
@@ -323,7 +324,7 @@ public class PanelFactory {
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				insertUpdate(e);
+				this.insertUpdate(e);
 			}
 
 			@Override
@@ -381,17 +382,33 @@ public class PanelFactory {
 
 			@Override
 			public void processScriptIt(final ScriptIt scriptIt) {
-				// TODO Also add functionality for editing implicits, which are
-				// all knowits.
+				final Collection<CodeBlock> codeBlocks = scriptIt
+						.getCodeBlocks();
 
-				for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
-					editorPanel.add(PanelFactory.getInstance()
-							.buildCodeBlockEditorPanel(codeBlock));
+				if (scriptIt.isCause()) {
+					for (CodeBlock codeBlock : codeBlocks) {
+
+						editorPanel.add(PanelFactory.getInstance()
+								.buildCodeBlockEditorPanel(codeBlock, scriptIt,
+										CodeBlockType.CAUSE));
+					}
+				} else {
+					// This makes sure the first code block is set as main.
+					CodeBlockType type = CodeBlockType.EFFECT_MAIN;
+					for (CodeBlock codeBlock : codeBlocks) {
+						editorPanel.add(PanelFactory.getInstance()
+								.buildCodeBlockEditorPanel(codeBlock, scriptIt,
+										type));
+
+						type = CodeBlockType.EFFECT;
+					}
 				}
 			}
 
 			@Override
 			public void processKnowIt(final KnowIt knowIt) {
+				// TODO We will need to be able to edit implicits eventually.
+				// They are knowits.
 				editorPanel.add(PanelFactory.getInstance()
 						.buildDescriptionEditorPanel(knowIt));
 			}
@@ -420,8 +437,22 @@ public class PanelFactory {
 			}
 		});
 
-		return editorScrollPane;
+		/*
+		 * Sets the scroll bar back to the top of the screen.
+		 * 
+		 * See http://bit.ly/3OXFet for more info.
+		 */
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				editorScrollPane.getVerticalScrollBar().setValue(0);
+			}
+		});
 
+		return editorScrollPane;
+	}
+
+	private static enum CodeBlockType {
+		CAUSE, EFFECT_MAIN, EFFECT
 	}
 
 	/**
@@ -429,21 +460,35 @@ public class PanelFactory {
 	 * types, parameters, and code for the passed in CodeBlock, and allows the
 	 * user to edit it.
 	 * 
+	 * @param scriptIt
+	 * 
 	 * @param codeBlock
 	 * @return
 	 */
-	private JPanel buildCodeBlockEditorPanel(final CodeBlock codeBlock) {
+	private JPanel buildCodeBlockEditorPanel(final CodeBlock codeBlock,
+			final ScriptIt ownerScriptIt, final CodeBlockType codeBlockType) {
+
+		// TODO If cause, then set up a combo box for subject/slot that
+		// disallows emptiness.
+		// TODO If effect, for the first one, disable subject/slot fields.
+		// TODO If second effect, set up combo box as in cause, but with an
+		// empty option.
+
 		final JPanel codeBlockEditorPanel;
 
 		final JLabel idLabel;
+		final JLabel subjectLabel;
 		final JLabel slotLabel;
+		final JLabel implicitsLabel;
 		final JLabel includesLabel;
 		final JLabel typesLabel;
 		final JLabel parametersLabel;
 		final JLabel codeLabel;
 
 		final JButton addParameterButton;
-		final JTextField slotField;
+		final JComboBox subjectBox;
+		final JComboBox slotBox;
+		final JLabel availableImplicitsLabel;
 		final JTextField includesField;
 		final TypeSelectionAction typeAction;
 		final JButton typesButton;
@@ -459,13 +504,17 @@ public class PanelFactory {
 
 		idLabel = new JLabel("ID# 35235"); // TODO Implement ID checking. Will
 											// do once merged with Robin's code.
+		subjectLabel = new JLabel("Subject: ");
 		slotLabel = new JLabel("Slot: ");
+		implicitsLabel = new JLabel("Implicits: ");
 		includesLabel = new JLabel("Includes: ");
 		typesLabel = new JLabel("Types: ");
 		parametersLabel = new JLabel("Parameters: ");
 		codeLabel = new JLabel("Code");
 
-		slotField = new JTextField();
+		subjectBox = new JComboBox();
+		slotBox = new JComboBox();
+		availableImplicitsLabel = new JLabel();
 		includesField = new JTextField();
 		typeAction = new TypeSelectionAction();
 		typesButton = new JButton(typeAction);
@@ -495,8 +544,14 @@ public class PanelFactory {
 		// Set up the labels
 		idLabel.setForeground(Color.GRAY);
 
+		subjectLabel.setFont(labelFont);
+		subjectLabel.setLabelFor(subjectLabel);
+
 		slotLabel.setFont(labelFont);
-		slotLabel.setLabelFor(slotField);
+		slotLabel.setLabelFor(slotBox);
+
+		implicitsLabel.setFont(labelFont);
+		implicitsLabel.setLabelFor(availableImplicitsLabel);
 
 		includesLabel.setFont(labelFont);
 		includesLabel.setLabelFor(includesField);
@@ -511,8 +566,45 @@ public class PanelFactory {
 		codeLabel.setLabelFor(codePanel);
 
 		// Set up the default field values
-		if (codeBlock.hasSlot())
-			slotField.setText(codeBlock.getSlot());
+		availableImplicitsLabel.setForeground(Color.DARK_GRAY);
+
+		if (!(codeBlockType == CodeBlockType.EFFECT_MAIN)) {
+			if (codeBlock.hasSubject()) {
+				KnowIt subject = codeBlock.getSubject();
+				if (subject != null) {
+					final String subjectName = codeBlock.getSubjectName();
+
+					final Translator active = TranslatorManager.getInstance()
+							.getActiveTranslator();
+
+					if (codeBlockType == CodeBlockType.EFFECT) {
+						subjectBox.addItem("");
+					}
+					for (KnowIt parameter : ownerScriptIt.getParameters()) {
+						subjectBox.addItem(parameter.getDisplayText());
+					}
+					subjectBox.setSelectedItem(subjectName);
+
+					for (String slot : active.getGameTypeManager().getSlots(
+							subject.getDefaultType()))
+						slotBox.addItem(slot);
+
+					String implicits = "";
+					for (KnowIt implicit : codeBlock.getImplicits())
+						implicits += "[" + implicit.getDisplayText() + "] ";
+
+					availableImplicitsLabel.setText(implicits.trim());
+				}
+			}
+		} else {
+			subjectBox.setEnabled(false);
+			slotBox.setEnabled(false);
+			availableImplicitsLabel.setEnabled(false);
+		}
+
+		if (codeBlock.hasSlot()) {
+			slotBox.setSelectedItem(codeBlock.getSlot());
+		}
 
 		includesField.setText(getCollectionAsString(codeBlock.getIncludes()));
 
@@ -527,12 +619,64 @@ public class PanelFactory {
 		}
 
 		// Set up the listeners
-		slotField.addActionListener(new ActionListener() {
+		subjectBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				codeBlock.setSlot(slotField.getText());
+				System.out.println("Subject Box Action Called");
+
+				final String subjectName;
+
+				subjectName = (String) subjectBox.getSelectedItem();
+				System.out.println(subjectName);
+
+				slotBox.removeAllItems();
+				availableImplicitsLabel.setText("");
+
+				KnowIt subject = codeBlock.getSubject();
+				if (subject != null) {
+					final Translator active = TranslatorManager.getInstance()
+							.getActiveTranslator();
+
+					for (String slot : active.getGameTypeManager().getSlots(
+							subject.getDefaultType()))
+						slotBox.addItem(slot);
+				}
+				codeBlock.setSubject(subjectName);
 			}
 		});
+		
+		slotBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				codeBlock.setSlot((String)slotBox.getSelectedItem());
+
+				System.out.println("Slot Box Action Called");
+
+				String implicits = "";
+				for (KnowIt implicit : codeBlock.getImplicits())
+					implicits += "[" + implicit.getDisplayText() + "] ";
+				
+				availableImplicitsLabel.setText(implicits.trim());
+			}
+		});
+		/*
+		 * slotField.getDocument().addDocumentListener(new DocumentListener() {
+		 * 
+		 * @Override public void insertUpdate(DocumentEvent e) {
+		 * codeBlock.setSlot(slotField.getText());
+		 * 
+		 * String implicits = ""; for (KnowIt implicit :
+		 * codeBlock.getImplicits()) implicits += "[" +
+		 * implicit.getDisplayText() + "] ";
+		 * 
+		 * availableImplicitsLabel.setText(implicits.trim());
+		 * availableImplicitsLabel.repaint(); }
+		 * 
+		 * @Override public void removeUpdate(DocumentEvent e) {
+		 * insertUpdate(e); }
+		 * 
+		 * @Override public void changedUpdate(DocumentEvent e) { } });
+		 */
 
 		includesField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
@@ -585,7 +729,9 @@ public class PanelFactory {
 				.createSequentialGroup()
 				.addGroup(
 						codeBlockEditorLayout.createParallelGroup()
+								.addComponent(subjectLabel)
 								.addComponent(slotLabel)
+								.addComponent(implicitsLabel)
 								.addComponent(includesLabel)
 								.addComponent(typesLabel)
 								.addComponent(parametersLabel)
@@ -596,7 +742,9 @@ public class PanelFactory {
 								.createParallelGroup()
 								.addComponent(idLabel,
 										GroupLayout.Alignment.TRAILING)
-								.addComponent(slotField)
+								.addComponent(subjectBox)
+								.addComponent(slotBox)
+								.addComponent(availableImplicitsLabel)
 								.addComponent(includesField)
 								.addComponent(typesButton)
 								.addComponent(parameterScrollPane)
@@ -609,8 +757,19 @@ public class PanelFactory {
 						codeBlockEditorLayout
 								.createParallelGroup(
 										GroupLayout.Alignment.BASELINE)
-								.addComponent(slotLabel)
-								.addComponent(slotField))
+								.addComponent(subjectLabel)
+								.addComponent(subjectBox))
+				.addGroup(
+						codeBlockEditorLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(slotLabel).addComponent(slotBox))
+				.addGroup(
+						codeBlockEditorLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(implicitsLabel)
+								.addComponent(availableImplicitsLabel))
 				.addGroup(
 						codeBlockEditorLayout
 								.createParallelGroup(
@@ -679,7 +838,7 @@ public class PanelFactory {
 	 * @param editorPanel
 	 * @return
 	 */
-	public JPanel buildStoryComponentLibraryPanel(JPanel editorPanel) {
+	public JPanel buildStoryComponentLibraryPanel(JComponent editorPanel) {
 		final List<Translator> translators;
 		final JComboBox libSelector;
 		final JPanel libraryPanel;
@@ -740,14 +899,13 @@ public class PanelFactory {
 	 * 
 	 * @return
 	 */
-	public StoryVisitor editorPanelUpdater(final JPanel editorPanel) {
+	public StoryVisitor editorPanelUpdater(final JComponent editorPanel) {
 		StoryVisitor storyVisitor = new AbstractNoOpStoryVisitor() {
 			@Override
 			public void defaultProcess(StoryComponent component) {
 				editorPanel.removeAll();
-				editorPanel.add(
-						buildStoryComponentEditorPanelContents(component),
-						BorderLayout.CENTER);
+
+				editorPanel.add(buildStoryComponentEditorComponent(component));
 
 				editorPanel.repaint();
 				editorPanel.revalidate();
@@ -835,9 +993,7 @@ public class PanelFactory {
 			this.setLayout(groupLayout);
 			this.setBorder(new TitledBorder(parameter.getDisplayText()));
 
-			// TODO Set the preferred size for this, lengthwise. Shouldn't have
-			// to be big.
-			this.setMaximumSize(new Dimension(1920, 100));
+			this.setMaximumSize(new Dimension(1920, 150));
 
 			// Set default values
 			types.addAll(parameter.getTypes());
@@ -982,6 +1138,7 @@ public class PanelFactory {
 			gameTypeManager = translator.getGameTypeManager();
 			defaultTypeGuiType = gameTypeManager.getGui(parameter
 					.getDefaultType());
+
 			inactiveTextField = new JTextField(" Cannot set binding for ["
 					+ parameter.getDefaultType() + "]");
 
@@ -993,10 +1150,48 @@ public class PanelFactory {
 				bindingConstantComponent.add(inactiveTextField);
 			else {
 				switch (defaultTypeGuiType) {
-				// TODO Add listeners to these text fields, spinners, and combo
-				// boxes.
+				// TODO Add listeners to these spinners and combo
+				// boxes so the default binding is set!
 				case JTEXTFIELD:
-					bindingConstantComponent.add(new JTextField(30));
+					final JTextField bindingField;
+					final String bindingText;
+
+					bindingField = new JTextField(30);
+					bindingText = parameter.getBinding().getScriptValue();
+
+					if (bindingText.equals("<unbound!>"))
+						bindingField.setText("");
+					else
+						bindingField.setText(bindingText);
+
+					bindingField.getDocument().addDocumentListener(
+							new DocumentListener() {
+								@Override
+								public void insertUpdate(DocumentEvent e) {
+									final String bindingFieldText;
+									bindingFieldText = bindingField.getText();
+
+									if (bindingFieldText.length() > 0) {
+										GameConstant newConstant = GameConstantFactory
+												.getInstance().getConstant(
+														parameter.getTypes(),
+														bindingField.getText());
+										parameter.setBinding(newConstant);
+									} else
+										parameter
+												.setBinding(new KnowItBindingNull());
+								}
+
+								@Override
+								public void removeUpdate(DocumentEvent e) {
+									insertUpdate(e);
+								}
+
+								@Override
+								public void changedUpdate(DocumentEvent e) {
+								}
+							});
+					bindingConstantComponent.add(bindingField);
 					break;
 				case JSPINNER:
 					bindingConstantComponent.add(new JSpinner());
@@ -1024,7 +1219,6 @@ public class PanelFactory {
 				}
 				}
 			}
-
 			bindingConstantComponent.repaint();
 			bindingConstantComponent.revalidate();
 		}

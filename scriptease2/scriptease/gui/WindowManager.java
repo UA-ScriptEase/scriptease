@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -196,15 +197,18 @@ public final class WindowManager implements WindowFocusListener {
 	 *            The task to run while displaying the progress bar.
 	 * @param taskName
 	 *            The name of the task to be displayed in the progress bar.
+	 * 
+	 * @param progressBarText
+	 *            The text to be shown on the progress bar. This is commonly
+	 *            "Loading...", but can be anything you set it to.
 	 */
-	public void showProgressBar(final SwingWorker<Void, Void> task) {
+	public void showProgressBar(final SwingWorker<Void, Void> task,
+			String progressBarText) {
 		if (WindowManager.progressShowing)
 			return;
 
-		// TODO: The "Loading..." string here should be pulled out to a
-		// parameter. - remiller
 		final JDialog progressBar = DialogBuilder.getInstance()
-				.createProgressBar(this.currentFrame, "Loading...");
+				.createProgressBar(this.currentFrame, progressBarText);
 		task.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent change) {
@@ -427,15 +431,13 @@ public final class WindowManager implements WindowFocusListener {
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	/*
-	 * TODO Why is this here? Does it actually belong here..? Is it even
-	 * necessary?
+	/**
+	 * Shows the Story Component Builder.
 	 */
 	public void showStoryComponentBuilder() {
 		JFrame scFrame = new JFrame();
 		scFrame = WindowManager.getInstance().buildStoryComponentBuilderFrame();
-		scFrame.setJMenuBar(MenuFactory.buildBuilderMenuBar());
-
+		scFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		scFrame.setVisible(true);
 	}
 
@@ -614,7 +616,8 @@ public final class WindowManager implements WindowFocusListener {
 	}
 
 	public JDialog buildDialog(String title) {
-		final JDialog dialog = new JDialog(this.currentFrame, title, Dialog.ModalityType.DOCUMENT_MODAL);
+		final JDialog dialog = new JDialog(this.currentFrame, title,
+				Dialog.ModalityType.DOCUMENT_MODAL);
 		return dialog;
 	}
 
@@ -645,32 +648,28 @@ public final class WindowManager implements WindowFocusListener {
 	 * 
 	 * @return
 	 */
-	public JFrame buildStoryComponentBuilderFrame() {
+	private JFrame buildStoryComponentBuilderFrame() {
 		final JFrame scbFrame;
-		final JPanel editingPane;
+		final JComponent editingPane;
 		final JPanel libraryPane;
 
 		scbFrame = new JFrame("Story Component Builder");
+		
 		editingPane = PanelFactory.getInstance()
-				.buildStoryComponentEditorPanel();
+				.buildStoryComponentEditorComponent(null);
 
 		libraryPane = PanelFactory.getInstance()
 				.buildStoryComponentLibraryPanel(editingPane);
-
-		// TODO Move to UIListenerFactory
-		// Note that this is how listeners get added to the LibraryPane at the
-		// moment.
-		/*
-		 * libraryPane.getLibPane().getSCPTree()
-		 * .addTreeSelectionListener(editingPane);
-		 */
-
+			
 		// TODO Move to UIListenerFactory
 		scbFrame.addWindowFocusListener(this);
-
+		
+		scbFrame.setJMenuBar(MenuFactory.buildBuilderMenuBar());
 		scbFrame.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, libraryPane,
 				editingPane));
+		
 		scbFrame.setSize(new Dimension(1200, 600));
+		scbFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		return scbFrame;
 	}

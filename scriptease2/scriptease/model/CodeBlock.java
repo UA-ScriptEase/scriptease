@@ -31,7 +31,6 @@ public class CodeBlock implements TypedComponent, Cloneable {
 	private String slot;
 	private Collection<String> returnTypes;
 	private List<KnowIt> parameters;
-	private Collection<KnowIt> implicits;
 	private Collection<String> includes;
 	private Collection<FormatFragment> code;
 
@@ -55,7 +54,6 @@ public class CodeBlock implements TypedComponent, Cloneable {
 		this.subject = "";
 		this.slot = "";
 		this.returnTypes = new ArrayList<String>();
-		this.implicits = null;
 		this.parameters = new ArrayList<KnowIt>();
 	}
 
@@ -183,6 +181,9 @@ public class CodeBlock implements TypedComponent, Cloneable {
 	}
 
 	public ScriptIt getCause() {
+		// TODO This used to be && instead of ||. Check if it works as && again
+		// when Story Component Builder stuff is implemented better. Especially
+		// test this with Enable Dialogue Line, since it has two codeblocks.
 		if (!this.subject.isEmpty() && !this.slot.isEmpty())
 			return this.owner;
 		else {
@@ -245,28 +246,29 @@ public class CodeBlock implements TypedComponent, Cloneable {
 
 	/**
 	 * Returns a collection of this CodeBlock's implicit KnowIts. Implicit
-	 * KnowIts are things that are knwon due to the event. A trigger enter even,
-	 * for example, must have a trigger and an enterer.
+	 * KnowIts are things that are known due to the event. A trigger enter
+	 * event, for example, must have a trigger and an enterer.
 	 * 
 	 * @return The collection of implicit KnowIts for this code block. It may be
 	 *         empty if there are no implicits, or if there is no loaded
 	 *         translator to check from.
 	 */
 	public Collection<KnowIt> getImplicits() {
-		if (implicits == null) {
-			final Translator active = TranslatorManager.getInstance()
-					.getActiveTranslator();
-			if (active != null) {
-				implicits = new CopyOnWriteArraySet<KnowIt>();
-				final EventSlotManager eventSlotManager = active
-						.getApiDictionary().getEventSlotManager();
-				implicits.addAll(eventSlotManager.getImplicits(this.slot));
-				for (KnowIt implicit : implicits) {
-					implicit.setOwner(owner);
-				}
-			} else
-				this.implicits = new ArrayList<KnowIt>();
-		}
+		final Collection<KnowIt> implicits;
+
+		final Translator active = TranslatorManager.getInstance()
+				.getActiveTranslator();
+		if (active != null) {
+			implicits = new CopyOnWriteArraySet<KnowIt>();
+			final EventSlotManager eventSlotManager = active.getApiDictionary()
+					.getEventSlotManager();
+			implicits.addAll(eventSlotManager.getImplicits(this.slot));
+			for (KnowIt implicit : implicits) {
+				implicit.setOwner(owner);
+			}
+		} else
+			implicits = new ArrayList<KnowIt>();
+
 		return implicits;
 	}
 
@@ -276,7 +278,7 @@ public class CodeBlock implements TypedComponent, Cloneable {
 
 	/**
 	 * Gets the code associated with the CodeBlock
-	 *
+	 * 
 	 * @return
 	 */
 	// TODO Flyweight. See: https://www.pivotaltracker.com/story/show/17597817

@@ -7,6 +7,7 @@ import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -17,7 +18,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import scriptease.gui.SETree.GameObjectMultiSelector;
 import scriptease.gui.SETree.GameObjectPanelTree;
 import scriptease.gui.SETree.GameObjectTree;
 import scriptease.gui.SETree.cell.BindingWidget;
@@ -37,11 +37,8 @@ public class GameObjectPane implements GameObjectPicker {
 	private FilterableSearchField searchField;
 
 	private GameObjectPanelTree tree = new GameObjectPanelTree();
-	private GameObjectMultiSelector multiSelector;
 
 	public GameObjectPane() {
-		multiSelector = new GameObjectMultiSelector(tree.getStringTypes());
-		multiSelector.addObserver(tree);
 	}
 
 	// TODO Combine parts of this with configurePane() in LibraryPane.java.
@@ -61,7 +58,8 @@ public class GameObjectPane implements GameObjectPicker {
 
 		// Sets up the type filter.
 		searchFilterPane.add(searchField);
-		searchFilterPane.add(multiSelector.getRootButton());
+		//TODO Make types work!
+		searchFilterPane.add(new JButton("Types"));
 		BoxLayout searchFilterPaneLayout = new BoxLayout(searchFilterPane,
 				BoxLayout.X_AXIS);
 		searchFilterPane.setLayout(searchFilterPaneLayout);

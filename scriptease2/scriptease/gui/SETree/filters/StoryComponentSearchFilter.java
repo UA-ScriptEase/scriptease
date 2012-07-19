@@ -3,15 +3,11 @@ package scriptease.gui.SETree.filters;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
-import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
-import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 

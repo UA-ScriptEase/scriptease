@@ -57,6 +57,7 @@ public aspect Progress {
 			}
 		};
 		task.execute();
-		WindowManager.getInstance().showProgressBar(task);
+		// TODO We should somehow pass in loading text here.
+		WindowManager.getInstance().showProgressBar(task, "Loading...");
 	}
 }

@@ -5,8 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 
 import javax.swing.Action;
 import javax.swing.JScrollPane;
@@ -30,7 +28,7 @@ import scriptease.model.StoryModelPool;
 @SuppressWarnings("serial")
 public final class DeleteStoryComponentAction extends
 		ActiveModelSensitiveAction implements TreeSelectionListener,
-		ContainerListener, WindowFocusListener {
+		ContainerListener {
 	private static final String DELETE_TEXT = "Delete";
 
 	private static final Action instance = new DeleteStoryComponentAction();
@@ -67,9 +65,6 @@ public final class DeleteStoryComponentAction extends
 		StoryModelPool.getInstance().addPoolChangeObserver(this);
 
 		SEFrame.getInstance().getStoryTabPane().addContainerListener(this);
-	//	StoryComponentBuilder.getInstance().getLibraryTree()
-		//				.addTreeSelectionListener(this);
-		//StoryComponentBuilder.getInstance().getFrame().addWindowFocusListener(this);
 	}
 
 	@Override
@@ -86,8 +81,6 @@ public final class DeleteStoryComponentAction extends
 	private StoryComponentPanelManager getActiveSelectionManager() {
 		final StoryPanel activeStory;
 		final SEFrame mainFrame = SEFrame.getInstance();
-	//	final StoryComponentEditor builder = StoryComponentEditor
-	//			.getInstance();
 
 		if (mainFrame != null && mainFrame.getFrame().isFocused()) {
 			activeStory = (StoryPanel) mainFrame.getStoryTabPane()
@@ -98,8 +91,6 @@ public final class DeleteStoryComponentAction extends
 				
 			}
 			return null;
-	//	} else if (builder != null && builder.getFrame().isFocused()) {
-	//		return builder.getLibraryTree().getSelectionManager();
 		} else
 			return null;
 	}
@@ -119,16 +110,6 @@ public final class DeleteStoryComponentAction extends
 
 	@Override
 	public void componentRemoved(ContainerEvent e) {
-		this.updateEnabledState();
-	}
-
-	@Override
-	public void windowGainedFocus(WindowEvent e) {
-		this.updateEnabledState();
-	}
-
-	@Override
-	public void windowLostFocus(WindowEvent e) {
 		this.updateEnabledState();
 	}
 }

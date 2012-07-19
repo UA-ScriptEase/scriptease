@@ -28,7 +28,6 @@ import javax.swing.SwingUtilities;
 
 import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpStoryVisitor;
-import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
@@ -44,6 +43,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.tools.GameConstantFactory;
 import scriptease.util.StringOp;
@@ -362,8 +362,15 @@ public class ScriptWidgetFactory {
 		return label;
 	}
 
+	/**
+	 * Creates a new Spinner Editor for a KnowIt.
+	 * 
+	 * @param knowIt
+	 * @param constantValue
+	 * @param bindingType
+	 * @return
+	 */
 	public static JComponent buildSpinnerEditor(final KnowIt knowIt,
-			final GameTypeManager typeManager,
 			final GameConstant constantValue, final String bindingType) {
 		final JComponent comp;
 		final SpinnerNumberModel model;
@@ -386,7 +393,8 @@ public class ScriptWidgetFactory {
 		Comparable<?> min = null; // default to no min limit
 		Comparable<?> max = null; // default to no max limit
 		Number stepSize = 1; // default to int step size
-		String regex = typeManager.getReg(bindingType);
+		String regex = TranslatorManager.getInstance().getActiveTranslator()
+				.getGameTypeManager().getReg(bindingType);
 		final Pattern regexPattern = Pattern.compile(regex);
 		if (regex != null && !regex.isEmpty()) {
 			// if regex doesn't specify negative numbers, make min 0
@@ -465,10 +473,12 @@ public class ScriptWidgetFactory {
 	}
 
 	public static JComponent buildComboEditor(final KnowIt knowIt,
-			final GameTypeManager typeManager, final String bindingType) {
+			final String bindingType) {
 		final JComponent comp;
 		final JComboBox combo;
-		final Map<String, String> enumMap = typeManager.getEnumMap(bindingType);
+		final Map<String, String> enumMap = TranslatorManager.getInstance()
+				.getActiveTranslator().getGameTypeManager()
+				.getEnumMap(bindingType);
 
 		// Sort alphabetically
 		List<String> list = new ArrayList<String>(enumMap.values());

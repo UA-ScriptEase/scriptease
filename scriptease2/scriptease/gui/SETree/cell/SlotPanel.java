@@ -143,13 +143,13 @@ public class SlotPanel extends JPanel {
 				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
 						reference.getValue().getDisplayText(), Color.WHITE);
 			}
-			
+
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
 				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
 						function.getValue().getDisplayText(), Color.WHITE);
 			}
-			
+
 			@Override
 			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
 				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
@@ -173,12 +173,11 @@ public class SlotPanel extends JPanel {
 								.buildLabel(name, Color.WHITE);
 					else if (widgetName.equals(TypeValueWidgets.JSPINNER)) {
 						SlotPanel.this.inputComponent = ScriptWidgetFactory
-								.buildSpinnerEditor(knowIt, typeManager,
-										constantValue, bindingType);
+								.buildSpinnerEditor(knowIt, constantValue,
+										bindingType);
 					} else if (widgetName.equals(TypeValueWidgets.JCOMBOBOX)) {
 						SlotPanel.this.inputComponent = ScriptWidgetFactory
-								.buildComboEditor(knowIt, typeManager,
-										bindingType);
+								.buildComboEditor(knowIt, bindingType);
 					} else {
 						SlotPanel.this.inputComponent = ScriptWidgetFactory
 								.buildValueEditor(knowIt);
