@@ -50,12 +50,10 @@ public final class TypeSelectionAction extends AbstractAction implements
 		super();
 
 		setAction(action);
-
 		// add self as observers of the translator and library
 		LibraryManager.getInstance().addLibraryManagerListener(this);
 		TranslatorManager.getInstance().addTranslatorObserver(this);
 
-		// TODO Update name!
 		this.updateName();
 		this.putValue(SHORT_DESCRIPTION, "Select Type");
 		this.updateEnabledState();
@@ -83,7 +81,6 @@ public final class TypeSelectionAction extends AbstractAction implements
 		if (this.typeBuilder != null)
 			this.typeBuilder.setCloseAction(newAction);
 		else {
-			System.out.println("New TypeSelectionDialogBuilder created.");
 			this.typeBuilder = new TypeSelectionDialogBuilder(newAction);
 		}
 		this.updateName();
@@ -93,7 +90,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 	public void actionPerformed(ActionEvent e) {
 		final JDialog typeDialog;
 
-		typeDialog = this.typeBuilder.getTypeDialog();
+		typeDialog = this.typeBuilder.buildTypeDialog();
 		typeDialog.setVisible(true);
 	}
 

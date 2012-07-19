@@ -173,19 +173,6 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 		if (o instanceof GameObjectLabel) {
 			reDrawTree();
 		}
-		if (o instanceof GameObjectMultiSelector) {
-			@SuppressWarnings("unchecked")
-			ArrayList<String> data = (ArrayList<String>) arg;
-			for (int i = 0; i < gameObjectLabels.size(); i++) {
-				boolean a = false;
-				for (int j = 0; j < data.size(); j++) {
-					if (gameObjectLabels.get(i).labelName.equals(data.get(j)))
-						a = true;
-				}
-				gameObjectLabels.get(i).setVisible(a);
-			}
-			reDrawTree();
-		}
 	}
 
 	public ArrayList<String> getStringTypes() {

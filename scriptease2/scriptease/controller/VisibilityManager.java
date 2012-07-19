@@ -1,7 +1,9 @@
 package scriptease.controller;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -21,12 +23,12 @@ import scriptease.model.StoryComponent;
  */
 public class VisibilityManager {
 	private Map<StoryComponent, Boolean> visibilityMap;
-	private Collection<VisibilityManagerObserver> listeners;
+	private Collection<WeakReference<VisibilityManagerObserver>> observers;
 	private static VisibilityManager instance;
 
 	private VisibilityManager() {
-		this.visibilityMap = new HashMap<StoryComponent, Boolean>();
-		this.listeners = new CopyOnWriteArraySet<VisibilityManagerObserver>();
+		this.visibilityMap = new IdentityHashMap<StoryComponent, Boolean>();
+		this.observers = new CopyOnWriteArraySet<WeakReference<VisibilityManagerObserver>>();
 	}
 
 	public static VisibilityManager getInstance() {
@@ -41,19 +43,35 @@ public class VisibilityManager {
 	 * @param observer
 	 */
 	public void addVisibilityManagerListener(VisibilityManagerObserver observer) {
-		this.listeners.add(observer);
+		for(WeakReference<VisibilityManagerObserver> observerRef: this.observers) {
+			VisibilityManagerObserver visibilityManagerObserver = observerRef.get();
+			if(visibilityManagerObserver != null && visibilityManagerObserver == observer)
+				return;
+		}
+		this.observers.add(new WeakReference<VisibilityManagerObserver>(observer));
 	}
 
 	public void removeVisibilityManagerListener(
 			VisibilityManagerObserver observer) {
-		this.listeners.remove(observer);
+		for (WeakReference<VisibilityManagerObserver> reference : this.observers) {
+			if (reference.get() == observer) {
+				this.observers.remove(reference);
+				return;
+			}
+		}
 	}
 
 	private void notifyObservers(StoryComponent changed, short type) {
-		for (VisibilityManagerObserver observer : this.listeners) {
-			final VisibilityManagerEvent event = new VisibilityManagerEvent(
-					changed, type);
-			observer.visibilityChanged(event);
+		Collection<WeakReference<VisibilityManagerObserver>> observersCopy = new ArrayList<WeakReference<VisibilityManagerObserver>>(
+				this.observers);
+
+		for (WeakReference<VisibilityManagerObserver> observerRef : observersCopy) {
+			VisibilityManagerObserver visibilityManagerObserver = observerRef.get();
+			if (visibilityManagerObserver != null) {
+				final VisibilityManagerEvent event = new VisibilityManagerEvent(
+						changed, type);
+				visibilityManagerObserver.visibilityChanged(event);
+			}
 		}
 	}
 

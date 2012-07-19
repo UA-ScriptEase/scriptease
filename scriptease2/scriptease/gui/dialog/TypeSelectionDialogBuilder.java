@@ -45,10 +45,9 @@ import scriptease.util.GUIOp;
  * 
  */
 public class TypeSelectionDialogBuilder {
-	private final JDialog typeDialog;
-	private final JButton allButton;
 	private final Map<String, Boolean> typesToSelected;
 	private final List<CheckBoxPanel> checkBoxPanels;
+	private final JButton allButton;
 
 	private Runnable closeAction;
 
@@ -56,22 +55,51 @@ public class TypeSelectionDialogBuilder {
 	 * Creates a new TypeSelectionDialogueBuilder, initializing the variables.
 	 */
 	public TypeSelectionDialogBuilder() {
+		this.allButton = new JButton("Deselect All");
+		this.typesToSelected = new HashMap<String, Boolean>();
+		this.checkBoxPanels = new ArrayList<CheckBoxPanel>();
+	}
+
+	/**
+	 * Creates a new TypeSelectionDialogBuilder. The passed okAction will run
+	 * when "Ok" is pressed on the dialog.
+	 * 
+	 * @param closeAction
+	 */
+	public TypeSelectionDialogBuilder(Runnable closeAction) {
+		this();
+		this.closeAction = closeAction;
+	}
+
+	/**
+	 * Sets the close action to the passed runnable. This will run when the
+	 * dialog box is closed.
+	 * 
+	 * @param closeAction
+	 */
+	public void setCloseAction(Runnable closeAction) {
+		this.closeAction = closeAction;
+	}
+
+	/**
+	 * Returns the dialog box that represents Type Selection.
+	 * 
+	 * @return
+	 */
+	public JDialog buildTypeDialog() {
 		final JScrollPane typesScrollPane;
 		final JPanel typesPanel;
 		final JPanel content;
 		final JButton closeButton;
 		final JSeparator separator;
+		final JDialog typeDialog;
 
 		final Translator activeTranslator;
 
 		final GroupLayout groupLayout;
 		final GridLayout gridLayout;
 
-		this.typeDialog = WindowManager.getInstance().buildDialog(
-				"Type Selection");
-		this.allButton = new JButton("Deselect All");
-		this.typesToSelected = new HashMap<String, Boolean>();
-		this.checkBoxPanels = new ArrayList<CheckBoxPanel>();
+		typeDialog = WindowManager.getInstance().buildDialog("Type Selection");
 
 		typesPanel = new JPanel();
 		typesScrollPane = new JScrollPane(typesPanel);
@@ -108,7 +136,7 @@ public class TypeSelectionDialogBuilder {
 			}
 		});
 
-		this.typeDialog.addWindowListener(new WindowAdapter() {
+		typeDialog.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				if (closeAction != null)
@@ -153,29 +181,7 @@ public class TypeSelectionDialogBuilder {
 		typeDialog.pack();
 		typeDialog.setResizable(false);
 		typeDialog.setLocationRelativeTo(typeDialog.getParent());
-	}
-
-	/**
-	 * Creates a new TypeSelectionDialogBuilder. The passed okAction will run
-	 * when "Ok" is pressed on the dialog.
-	 * 
-	 * @param closeAction
-	 */
-	public TypeSelectionDialogBuilder(Runnable closeAction) {
-		this();
-		this.closeAction = closeAction;
-	}
-
-	public void setCloseAction(Runnable closeAction) {
-		this.closeAction = closeAction;
-	}
-
-	/**
-	 * Returns the dialog box that represents Type Selection.
-	 * 
-	 * @return
-	 */
-	public JDialog getTypeDialog() {
+		typeDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		return typeDialog;
 	}
 
