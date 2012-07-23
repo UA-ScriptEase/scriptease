@@ -44,8 +44,6 @@ import scriptease.model.complex.ComplexStoryComponent;
  * @author remiller
  */
 public abstract class StoryComponent implements Cloneable {
-	// these instance variables are not final because they need to be rebound in
-	// a deep clone
 	private String displayText;
 	private Collection<String> labels;
 	public StoryComponent ownerComponent;
@@ -92,7 +90,7 @@ public abstract class StoryComponent implements Cloneable {
 	 *      sibling)
 	 * @return The owner of the receiver StoryComponent.
 	 */
-	public final StoryComponent getOwner() {
+	public StoryComponent getOwner() {
 		return this.ownerComponent;
 	}
 
@@ -118,6 +116,9 @@ public abstract class StoryComponent implements Cloneable {
 	 *      sibling)
 	 */
 	public void setOwner(StoryComponent newOwner) {
+		if(newOwner == null)
+				System.out.println("of the derp");
+		
 		this.ownerComponent = newOwner;
 	}
 
@@ -137,7 +138,6 @@ public abstract class StoryComponent implements Cloneable {
 	 * 
 	 * @return The parameterised display text string.
 	 */
-
 	public String getDisplayText() {
 		return this.displayText;
 	}
@@ -333,7 +333,7 @@ public abstract class StoryComponent implements Cloneable {
 	/**
 	 * This is a double-dispatch hook for the
 	 * {@link scriptease.controller.StoryVisitor} family of controllers.
-	 * <code>processController</code> implements each of: process[X] where [X]
+	 * <code>visitor</code> implements each of: process[X] where [X]
 	 * is each of the leaf members of the <code>StoryComponent</code> family. <BR>
 	 * <BR>
 	 * To Use: Pass in a valid StoryVisitor to this method. The implementing
@@ -341,10 +341,9 @@ public abstract class StoryComponent implements Cloneable {
 	 * <code>StoryVisitor</code> method for the atom's type. Voila! Double
 	 * dispatch! :-)
 	 * 
-	 * @param processController
-	 *            The <code>StoryVisitor</code> that will process just this
+	 * @param visitor
+	 *            The <code>StoryVisitor</code> that will process this
 	 *            StoryComponent.
-	 * @see StoryComponent#processRecursively(StoryVisitor)
 	 */
-	public abstract void process(StoryVisitor processController);
+	public abstract void process(StoryVisitor visitor);
 }

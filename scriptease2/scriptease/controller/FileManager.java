@@ -246,7 +246,7 @@ public final class FileManager {
 		System.out.println("Saving library " + fileName + " to " + location);
 
 		// Write the Library to disk
-		writer.writePatternModel(model,
+		writer.writeLibraryModel(model,
 				FileOp.addExtension(location, FILE_EXTENSION_LIBRARY));
 	}
 
@@ -289,7 +289,7 @@ public final class FileManager {
 		}
 
 		// Write the Story's patterns to XML
-		writer.writePatternModel(model, location);
+		writer.writeStoryModel(model, location);
 
 		// update the map of open files/models to reflect the new file location.
 		// remove the entry corresponding to the model, not the location.

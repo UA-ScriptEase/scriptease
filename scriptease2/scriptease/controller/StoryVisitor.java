@@ -1,6 +1,8 @@
 package scriptease.controller;
 
 import scriptease.gui.quests.QuestPoint;
+import scriptease.model.CodeBlockReference;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
@@ -37,8 +39,12 @@ public interface StoryVisitor {
 
 	public void processStoryItemSequence(StoryItemSequence sequence);
 
+	public void processAskIt(AskIt askIt);
+	
 	/** ATOMIC TYPES **/
 	public void processKnowIt(KnowIt knowIt);
 
-	public void processAskIt(AskIt askIt);
+	public void processCodeBlockSource(CodeBlockSource codeBlockSource);
+	
+	public void processCodeBlockReference(CodeBlockReference codeBlockReference);
 }

@@ -1,5 +1,6 @@
 package scriptease.translator.codegenerator.code.contexts;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.regex.Pattern;
@@ -93,11 +94,30 @@ public class CodeBlockContext extends Context {
 	}
 
 	/**
+	 * Gets the implicit KnowIts of the CodeBlock in context.
+	 */
+	@Override
+	public Iterator<KnowIt> getImplicits() {
+		final Collection<KnowIt> used = new ArrayList<KnowIt>();
+
+		// Only return implicits that are used in this Context
+		for (KnowIt implicit : this.codeBlock.getImplicits()) {
+			if (getComponents().contains(implicit))
+				used.add(implicit);
+		}
+		return used.iterator();
+	}
+
+	/**
 	 * Get the Collection of FormatFragments which represent the method body
 	 */
 	@Override
 	public String getCode() {
-		return FormatFragment.resolveFormat(codeBlock.getCode(), this);
+		final Collection<FormatFragment> codeFragments;
+
+		codeFragments = this.codeBlock.getCode();
+
+		return FormatFragment.resolveFormat(codeFragments, this);
 	}
 
 	@Override

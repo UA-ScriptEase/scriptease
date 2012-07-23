@@ -1,9 +1,9 @@
 package scriptease.translator.codegenerator.code.fragments.series;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
@@ -36,13 +36,11 @@ public class UniqueSeriesFragment extends AbstractSeriesFragment {
 	 * @return The unique iterator.
 	 */
 	public <T> Iterator<T> handle(Iterator<T> iterator) {
-		Collection<T> unique = new ArrayList<T>();
+		Collection<T> unique = new CopyOnWriteArraySet<T>();
 		while (iterator.hasNext()) {
 			T object = iterator.next();
-
-			if (!unique.contains(object)) {
-				unique.add(object);
-			}
+			
+			unique.add(object);
 		}
 		return unique.iterator();
 	}

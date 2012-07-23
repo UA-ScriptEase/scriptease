@@ -17,7 +17,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * Converter superclass for all converters that convert StoryComponents.
  * Subclasses are required to implement {@link #buildComponent()}, in which they
  * build the specific instance of StoryComponent that they are responsible for
- * converting.
+ * converting. They are also expected to call super.marshal(...) and super.unmarshall(...).
  * 
  * @author remiller
  */

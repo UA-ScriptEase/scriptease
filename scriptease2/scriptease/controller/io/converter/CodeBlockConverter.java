@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
+import scriptease.controller.io.FileIO.IoMode;
 import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.atomic.KnowIt;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
+import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -15,11 +18,15 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
- * Converts Codeblocks for File I/O.
+ * Converts {@link CodeBlock}s in File I/O. This is kept around as legacy
+ * support, and should be removed when we are certain that there are no
+ * important Stories left that have old CodeBlocks (from before July 2012) in
+ * their Story file. - remiller
  * 
  * @author mfchurch
- * 
+ * @author remiller
  */
+@Deprecated
 public class CodeBlockConverter implements Converter {
 	private static final String TAG_SUBJECT = "subject";
 	private static final String TAG_SLOT = "slot";
@@ -39,82 +46,31 @@ public class CodeBlockConverter implements Converter {
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
-		final CodeBlock codeBlock = (CodeBlock) source;
-		final String subject;
-		if (codeBlock.hasSubject())
-			subject = codeBlock.getSubject().getDisplayText();
-		else
-			subject = null;
-		final String slot;
-		if (codeBlock.hasSlot())
-			slot = codeBlock.getSlot();
-		else
-			slot = null;
-		final Collection<String> types = codeBlock.getTypes();
-		final Collection<String> includes = codeBlock.getIncludes();
-		final Collection<KnowIt> parameters = codeBlock.getParameters();
-		
-		//TODO This doesn't do anything. Should it? Could it? Would it?
-		final Collection<FormatFragment> code = codeBlock.getCode();
-
-		// Subject
-		if (subject != null)
-			writer.addAttribute(TAG_SUBJECT, subject);
-
-		// Slot
-		if (slot != null)
-			writer.addAttribute(TAG_SLOT, slot);
-
-		// Types
-		writer.startNode(TAG_TYPES);
-		for (String type : types) {
-			writer.startNode(TAG_TYPE);
-			writer.setValue(type);
-			writer.endNode();
-		}
-		writer.endNode();
-
-		// Parameters
-		if (!parameters.isEmpty()) {
-			writer.startNode(TAG_PARAMETERS);
-			context.convertAnother(parameters);
-			writer.endNode();
-		}
-
-		// No need to write code and includes to Stories since they are already
-		// stored in the ApiDictionary <-- This is wrong. 
-		//if (FileIO.getInstance().getMode() == IoMode.API_DICTIONARY) {
-			// Includes
-			if (!includes.isEmpty()) {
-				writer.startNode(TAG_INCLUDES);
-				for (String include : includes) {
-					writer.startNode(TAG_INCLUDE);
-					writer.setValue(include);
-					writer.endNode();
-				}
-				writer.endNode();
-			}
-/*
-			writer.startNode(TAG_CODE);
-			context.convertAnother(code);
-			writer.endNode();*/
-	//	}
+		throw new XStreamException(
+				"CodeBlocks Should not get written directly, but rather should be written as a Source or Reference",
+				new UnsupportedOperationException(
+						"Can't write CodeBlocks, only their subclasses."));
 	}
+
+	private static int tempId = 0;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		CodeBlock codeBlock = null;
+		String subject;
+		String slot;
 		Collection<String> includes = new ArrayList<String>(0);
 		Collection<KnowIt> parameters = new ArrayList<KnowIt>(0);
 		Collection<FormatFragment> code = new ArrayList<FormatFragment>(0);
 		Collection<String> types = new ArrayList<String>(0);
 
-		String subject = reader.getAttribute(TAG_SUBJECT);
+		subject = reader.getAttribute(TAG_SUBJECT);
 		if (subject == null)
 			subject = "";
-		String slot = reader.getAttribute(TAG_SLOT);
+
+		slot = reader.getAttribute(TAG_SLOT);
 		if (slot == null)
 			slot = "";
 
@@ -127,29 +83,40 @@ public class CodeBlockConverter implements Converter {
 				while (reader.hasMoreChildren()) {
 					types.add(FileIO.readValue(reader, TAG_TYPE));
 				}
-			} else
+			}
 			// Parameters
-			if (nodeName.equals(TAG_PARAMETERS)) {
+			else if (nodeName.equals(TAG_PARAMETERS)) {
 				parameters = ((Collection<KnowIt>) context.convertAnother(
 						codeBlock, ArrayList.class));
-			} else
-
+			}
 			// Includes (optional since stories don't need to store includes)
-			if (nodeName.equals(TAG_INCLUDES)) {
+			else if (nodeName.equals(TAG_INCLUDES)) {
 				while (reader.hasMoreChildren()) {
 					includes.add(FileIO.readValue(reader, TAG_INCLUDE));
 				}
-			} else
+			}
 			// Code (optional since stories don't need to store code)
-			if (nodeName.equals(TAG_CODE)) {
+			else if (nodeName.equals(TAG_CODE)) {
 				code = ((Collection<FormatFragment>) context.convertAnother(
 						codeBlock, ArrayList.class));
 			}
 			reader.moveUp();
 		}
 
-		codeBlock = new CodeBlock(subject, slot, types, includes, parameters,
-				code);
+		if (FileIO.getInstance().getMode() == IoMode.STORY) {
+			// we can't determine precisely enough which codeblock should be
+			// referenced. There just isn't enough uniqueness in the data stored
+			// in stories. - remiller
+			throw new UnsupportedOperationException(
+					"Can't fix stories with old CodeBlocks - not enough data. Sorry!");
+		} else if (FileIO.getInstance().getMode() == IoMode.API_DICTIONARY) {
+			codeBlock = new CodeBlockSource(subject, slot, types, parameters,
+					includes, code, tempId++);
+		} else {
+			throw new XStreamException(
+					"Why are there code blocks in something that isn't a story or API dictionary? "
+							+ "How did this even happen?");
+		}
 
 		return codeBlock;
 	}

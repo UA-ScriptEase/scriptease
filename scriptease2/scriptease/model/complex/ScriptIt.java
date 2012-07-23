@@ -52,12 +52,12 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	 */
 	public Collection<CodeBlock> getCodeBlocksForLocation(
 			LocationInformation locationInfo) {
-		Collection<CodeBlock> codeBlocks = new ArrayList<CodeBlock>(1);
+		Collection<CodeBlock> matching = new ArrayList<CodeBlock>(1);
 		for (CodeBlock codeBlock : this.codeBlocks) {
 			if (locationInfo.matchesLocation(codeBlock))
-				codeBlocks.add(codeBlock);
+				matching.add(codeBlock);
 		}
-		return codeBlocks;
+		return matching;
 	}
 
 	@Override
@@ -185,23 +185,25 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	}
 
 	public void removeCodeBlock(CodeBlock codeBlock) {
-		if (this.codeBlocks.remove(codeBlock))
+		if (this.codeBlocks.remove(codeBlock)) {
 			codeBlock.setOwner(null);
-		
-		this.notifyObservers(new StoryComponentEvent(this,
-				StoryComponentChangeEnum.CODE_BLOCK_REMOVED));
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_CODEBLOCK_REMOVED));
+		}
 	}
 
 	public void addCodeBlock(CodeBlock codeBlock) {
-		if (this.codeBlocks.add(codeBlock))
+		if (this.codeBlocks.add(codeBlock)) {
 			codeBlock.setOwner(this);
-		
-		this.notifyObservers(new StoryComponentEvent(this,
-				StoryComponentChangeEnum.CODE_BLOCK_ADDED));
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_CODEBLOCK_ADDED));
+		}
 	}
 
 	public void setCodeBlocks(Collection<CodeBlock> codeBlocks) {
-		this.codeBlocks.clear();
+		for (CodeBlock codeBlock : this.codeBlocks) {
+			this.removeCodeBlock(codeBlock);
+		}
 		for (CodeBlock codeBlock : codeBlocks) {
 			this.addCodeBlock(codeBlock);
 		}

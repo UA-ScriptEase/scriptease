@@ -46,6 +46,7 @@ import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
+import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;

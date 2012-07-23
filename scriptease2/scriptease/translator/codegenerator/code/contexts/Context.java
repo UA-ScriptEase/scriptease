@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 
 import scriptease.controller.ComplexStoryComponentDescendantCollector;
 import scriptease.controller.QuestPointNodeGetter;
-import scriptease.controller.apimanagers.EventSlotManager;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
@@ -23,7 +22,6 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
@@ -74,7 +72,8 @@ public class Context {
 	 * Sets the Context's location information, which provides useful
 	 * information for determining the Context's subject and slot
 	 * 
-	 * @param slot
+	 * @param data
+	 *            .getSlot()
 	 */
 	public final void setLocationInfo(LocationInformation locationInfo) {
 		this.locationInfo = locationInfo;
@@ -134,12 +133,17 @@ public class Context {
 		this.indent = this.indent.substring(indent.length());
 	}
 
-	private Collection<StoryComponent> getComponents() {
+	/**
+	 * Gets all of the story components in this context.
+	 * 
+	 * @return
+	 */
+	protected Collection<StoryComponent> getComponents() {
 		final Collection<StoryComponent> components = new ArrayList<StoryComponent>();
+		final Collection<QuestPoint> questPoints;
 
 		// Get all the QuestPoints from the model
-		Collection<QuestPoint> questPoints = QuestPointNodeGetter
-				.getQuestPoints(this.model);
+		questPoints = QuestPointNodeGetter.getQuestPoints(this.model);
 
 		// for each quest point
 		for (QuestPoint questPoint : questPoints) {
@@ -216,7 +220,7 @@ public class Context {
 						// Gets the code block from the API Dictionary using the
 						// reference string.
 						List<CodeBlock> specialCodeBlocks = this.translator
-								.getApiDictionary().getCodeBlocksByID(
+								.getApiDictionary().getCodeBlocksByValRef(
 										referenceValue);
 						
 						if (specialCodeBlocks != null)
@@ -281,18 +285,8 @@ public class Context {
 	}
 
 	public Iterator<KnowIt> getImplicits() {
-		final Collection<KnowIt> used = new ArrayList<KnowIt>();
-		final EventSlotManager slotManager = TranslatorManager.getInstance()
-				.getActiveTranslator().getSlotManager();
-		final Collection<KnowIt> implicits = slotManager
-				.getImplicits(this.locationInfo.getSlot());
-
-		// Only return implicits that are used in this Context
-		for (KnowIt implicit : implicits) {
-			if (getComponents().contains(implicit))
-				used.add(implicit);
-		}
-		return used.iterator();
+		unimplemented("getImplicits");
+		return null;
 	}
 
 	public Iterator<String> getIncludes() {

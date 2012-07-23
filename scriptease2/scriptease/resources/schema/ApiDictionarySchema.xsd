@@ -136,13 +136,43 @@
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
 	</xsd:complexType>
 
-	<!-- Defines a CodeBlock -->
+	<!-- Defines a Code Block Source -->
+	<xsd:complexType name="CodeBlockSource_Type">
+		<xsd:sequence minOccurs="0" maxOccurs="1">
+			<xsd:group ref="StoryComponentDataGroup" />
+			<xsd:element minOccurs="0" name="Subject" type="xsd:string" />
+			<xsd:element minOccurs="0" name="Slot" type="xsd:string" />
+			<xsd:element name="Id" type="xsd:integer" />
+			<xsd:element name="Types" type="SpecificTypeList_Type" />
+			<xsd:element minOccurs="0" name="Parameters" type="ParameterList_Type" />
+			<xsd:element minOccurs="0" name="Includes" type="IncludesList_Type" />
+			<xsd:element name="Code" type="Code_Type" />
+		</xsd:sequence>
+		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+		<xsd:attribute name="visible" type="xsd:boolean" use="optional" />
+	</xsd:complexType>
+
+	<!-- Defines a Code Block Reference -->
+	<xsd:complexType name="CodeBlockReference_Type">
+		<xsd:sequence minOccurs="0" maxOccurs="1">
+			<xsd:group ref="StoryComponentDataGroup" />
+			<xsd:choice>
+				<xsd:element name="TargetId" type="xsd:integer" />
+				<xsd:element name="Target" type="CodeBlockSource_Type" />
+			</xsd:choice>
+			<xsd:element minOccurs="0" name="Parameters" type="ParameterList_Type" />
+		</xsd:sequence>
+		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+		<xsd:attribute name="visible" type="xsd:boolean" use="optional" />
+	</xsd:complexType>
+
+	<!-- REMOVE -->
 	<xsd:complexType name="CodeBlock_Type">
 		<xsd:sequence minOccurs="0">
 			<xsd:element name="Types" type="SpecificTypeList_Type" />
 			<xsd:element minOccurs="0" name="Parameters" type="ParameterList_Type" />
 			<xsd:element name="Code" type="Code_Type" />
-			<xsd:element name="Includes" type="IncludesList_Type" />			
+			<xsd:element name="Includes" type="IncludesList_Type" />
 		</xsd:sequence>
 		<xsd:attribute name="subject" type="xsd:string" use="optional" />
 		<xsd:attribute name="slot" type="xsd:string" use="optional" />
@@ -211,10 +241,25 @@
 
 	<!-- Defines a list of CodeBlocks -->
 	<xsd:complexType name="CodeBlockList_Type">
+		<!-- 
+
 		<xsd:sequence>
 			<xsd:element name="CodeBlock" type="CodeBlock_Type"
 				maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
+
+		-->
+		<xsd:choice>
+			<xsd:sequence>
+				<xsd:element name="CodeBlockReference" type="CodeBlockReference_Type"
+					maxOccurs="unbounded" minOccurs="0" />
+			</xsd:sequence>
+			<xsd:sequence>
+				<xsd:element name="CodeBlockSource" type="CodeBlockSource_Type"
+					maxOccurs="unbounded" minOccurs="0" />
+			</xsd:sequence>
+		</xsd:choice>
+		
 	</xsd:complexType>
 
 	<!-- Defines a list of Specific game Type keyword references each of these 
@@ -224,10 +269,11 @@
 			<xsd:element name="Type" type="xsd:string" maxOccurs="unbounded" />
 		</xsd:sequence>
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="IncludesList_Type">
 		<xsd:sequence>
-			<xsd:element name="Include" type="xsd:string" maxOccurs="unbounded" minOccurs="0" />
+			<xsd:element name="Include" type="xsd:string" maxOccurs="unbounded"
+				minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 
@@ -252,6 +298,8 @@
 				</xsd:restriction>
 			</xsd:simpleType>
 		</xsd:attribute>
+		<!-- bindings don't get the XStream "reference" attribute because they 
+			aren't meant to be shared. They should be cloning all the time. - remiller -->
 	</xsd:complexType>
 
 	<!-- represents the choice between -->

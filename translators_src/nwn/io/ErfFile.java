@@ -36,6 +36,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameModule;
@@ -59,9 +60,6 @@ import scriptease.util.FileOp;
  * @author remiller
  */
 public final class ErfFile implements GameModule {
-
-	// key for the game directory path property in the translator definition
-	private static final String GAME_DIRECTORY_KEY = "GAME_DIRECTORY";
 
 	// Translator name to be used with the TranslatorManager lookup
 	public static final String NEVERWINTER_NIGHTS = "Neverwinter Nights";
@@ -1730,7 +1728,7 @@ public final class ErfFile implements GameModule {
 			throws FileNotFoundException {
 		final File nwnRoot = TranslatorManager.getInstance()
 				.getTranslator(NEVERWINTER_NIGHTS)
-				.getPathProperty(GAME_DIRECTORY_KEY);
+				.getPathProperty(DescriptionKeys.GAME_DIRECTORY);
 		final File nwnExec = new File(nwnRoot, "nwmain.exe");
 		builder.directory(nwnRoot);
 

@@ -225,13 +225,15 @@ Some important targets to read up on are:
 		<delete dir="${jarDirectory}" />
 		<mkdir dir="${jarDirectory}" />
 
-		<echo>${jarDirectory}/lib</echo>
+		<echo>Copying required libraries...</echo>
 		<copy todir="${jarDirectory}/lib" overwrite="true">
 			<fileset dir="${resourcesDirectory}/lib/">
 				<include name="**/*.jar" />
 			</fileset>
 		</copy>
+		<echo>Copying AspectJ library...</echo>
 		<copy file="${aspectj.home}/lib/aspectjrt.jar" todir="${jarDirectory}/lib" overwrite="true" />
+		<echo>Done copying. </echo>
 
 		<!-- the deployed jar has libraries right next to the jar in a lib folder -->
 		<pathconvert property="jarClasspath" refid="buildClasspath" pathsep=" ">
@@ -240,13 +242,13 @@ Some important targets to read up on are:
 			<map from="${aspectj.home}/lib" to="lib" />
 		</pathconvert>
 
-		<echo>Building with following classpath in maifest file:</echo>
+		<echo>Building with following classpath in manifest file:</echo>
 		<echo>${jarClasspath}</echo>
 
 		<!-- load the versioning data if it's not already in memory -->
 		<property file="${buildNumberLocation}" />
 		<property name="jarVersion" value="${majorVersion}.${build.number}" />
-		<echo>Jar version is ${jarVersion}</echo>
+		<echo>Jar version is ${jarVersion}, (${gitHash})</echo>
 
 		<jar destFile="${jarDirectory}/${jarFile}">
 			<fileset dir="${buildDirectory}" />
