@@ -28,12 +28,12 @@ import scriptease.controller.FileManager;
 import scriptease.controller.io.FileIO;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
-import scriptease.gui.action.file.CloseModelAction;
-import scriptease.gui.action.file.NewModelAction;
-import scriptease.gui.action.file.OpenModelAction;
+import scriptease.gui.action.file.CloseStoryModelAction;
+import scriptease.gui.action.file.NewStoryModelAction;
+import scriptease.gui.action.file.OpenStoryModelAction;
 import scriptease.gui.action.file.OpenRecentFileAction;
-import scriptease.gui.action.file.SaveModelAction;
-import scriptease.gui.action.file.SaveModelExplicitlyAction;
+import scriptease.gui.action.file.SaveStoryModelAction;
+import scriptease.gui.action.file.SaveStoryModelExplicitlyAction;
 import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.story.DeleteStoryComponentAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
@@ -284,18 +284,18 @@ public class MenuFactory {
 		// in the menu. - remiller
 		menu.removeAll();
 
-		menu.add(NewModelAction.getInstance());
-		menu.add(OpenModelAction.getInstance());
+		menu.add(NewStoryModelAction.getInstance());
+		menu.add(OpenStoryModelAction.getInstance());
 		menu.addSeparator();
 
 		menu.add(TestStoryAction.getInstance());
 		menu.addSeparator();
 
-		menu.add(SaveModelAction.getInstance());
-		menu.add(SaveModelExplicitlyAction.getInstance());
+		menu.add(SaveStoryModelAction.getInstance());
+		menu.add(SaveStoryModelExplicitlyAction.getInstance());
 		menu.addSeparator();
 
-		menu.add(CloseModelAction.getInstance());
+		menu.add(CloseStoryModelAction.getInstance());
 		menu.addSeparator();
 
 		// add the recent files list
