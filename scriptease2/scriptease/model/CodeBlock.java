@@ -65,6 +65,18 @@ public abstract class CodeBlock extends StoryComponent implements
 	}
 
 	@Override
+	public int hashCode() {
+		int hashCode = 0;
+
+		final List<KnowIt> params = this.getParameters();
+
+		for (KnowIt param : params)
+			hashCode += param.getBinding().hashCode();
+
+		return hashCode;
+	}
+
+	@Override
 	public CodeBlock clone() {
 		final CodeBlock clone = (CodeBlock) super.clone();
 

@@ -109,12 +109,12 @@ public class CodeBlockReference extends CodeBlock {
 
 		this.setParameters(this.target.getParameters());
 	}
-	
+
 	@Override
 	public void setOwner(ScriptIt newOwner) {
 		super.setOwner(newOwner);
-		
-		for(KnowIt param : this.getParameters()){
+
+		for (KnowIt param : this.getParameters()) {
 			param.setOwner(this);
 		}
 	}
@@ -134,7 +134,7 @@ public class CodeBlockReference extends CodeBlock {
 		final List<KnowIt> targetParameters;
 		final List<KnowIt> newParameters;
 		KnowIt clone;
-		
+
 		/*
 		 * Update our parameters from our target before doing anything. They
 		 * need to be cloned so that we don't start mucking with the default
@@ -201,22 +201,16 @@ public class CodeBlockReference extends CodeBlock {
 
 	@Override
 	public boolean equals(Object other) {
-		final int thisTargetId;
-		final int otherTargetId;
-
-		if (other instanceof CodeBlockReference) {
-			thisTargetId = this.getTarget().getId();
-			otherTargetId = ((CodeBlockReference) other).getTarget().getId();
-
-			return thisTargetId == otherTargetId;
-		}
-
-		return false;
+		return other instanceof CodeBlockReference
+				&& this.hashCode() == other.hashCode();
 	}
 
 	@Override
 	public int hashCode() {
-		int hashCode = this.getTarget().getId();
+		int hashCode;
+
+		hashCode = super.hashCode();
+		hashCode += this.getTarget().getId();
 
 		return hashCode;
 	}
@@ -227,8 +221,8 @@ public class CodeBlockReference extends CodeBlock {
 
 	@Override
 	public String toString() {
-		return "CodeBlockRef [" + this.getTarget().toString() + ","
-				+ this.getParameters() + "]";
+		return "CodeBlockRef [Target:" + this.getTarget().toString()
+				+ ", Params:" + this.getParameters() + "]";
 	}
 
 	@Override
@@ -275,7 +269,7 @@ public class CodeBlockReference extends CodeBlock {
 	 *            The KnowIts whose bindings are to be used to populate the
 	 *            current parameters.
 	 */
-	public void setBindings(Collection<KnowIt> newBindings) {
+	private void setBindings(Collection<KnowIt> newBindings) {
 		/*
 		 * Let's go about trying to rebind whatever is possible to match as
 		 * closely as we can the given parameter list.

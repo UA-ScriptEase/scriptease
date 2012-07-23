@@ -28,9 +28,7 @@ public class CodeGenerationNamifier {
 	private static final int ARBITRARY_STOP_SIZE = 10000;
 	private final CodeGenerationNamifier parentNamifier;
 	private final LanguageDictionary languageDictionary;
-	// Keeps names of KnowIts
 	private final Map<StoryComponent, String> componentsToNames;
-	// Keeps names of CodeBlocks
 	private final Map<CodeBlock, String> codeBlocksToNames;
 
 	public CodeGenerationNamifier(LanguageDictionary languageDictionary) {
