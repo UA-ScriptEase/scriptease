@@ -23,6 +23,11 @@ public abstract class KnowItBinding implements Cloneable {
 
 	@Override
 	public abstract boolean equals(Object other);
+	
+	@Override 
+	public int hashCode(){
+		return this.getValue().hashCode();
+	}
 
 	public abstract KnowItBinding resolveBinding();
 

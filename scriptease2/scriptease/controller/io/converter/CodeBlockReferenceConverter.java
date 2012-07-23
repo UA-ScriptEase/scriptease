@@ -32,7 +32,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class CodeBlockReferenceConverter extends StoryComponentConverter
 		implements Converter {
 	public static final String TAG_CODE_BLOCK_REF = "CodeBlockReference";
-	
+
 	private static final String TAG_PARAMETERS = "Parameters";
 	private static final String TAG_TARGET = "Target";
 	private static final String TAG_TARGET_ID = "TargetId";
@@ -65,7 +65,6 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		} else
 			throw new XStreamException(
 					"IO Mode is not a story or API dictionary while writing code block reference.");
-		
 
 		// Parameters
 		if (!parameters.isEmpty()) {
@@ -117,7 +116,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		block.setTarget(target);
 		reader.moveUp();
 
-		// the parameter list doesn't show if there aren't any, so look out for
+		// the parameter list doesn't exist if there aren't any, so look out for
 		// that.
 		if (reader.hasMoreChildren()) {
 			parameters = new ArrayList<KnowIt>();
@@ -136,7 +135,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 					block, ArrayList.class));
 			reader.moveUp();
 
-			block.setBindings(parameters);
+			block.setParameters(parameters);
 		}
 
 		return block;

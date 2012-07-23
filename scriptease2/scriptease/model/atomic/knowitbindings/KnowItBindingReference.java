@@ -68,7 +68,7 @@ public class KnowItBindingReference extends KnowItBinding {
 	public String toString() {
 		return "KnowItBindingReference : " + this.referenceValue.toString();
 	}
-
+	
 	@Override
 	public boolean isBound() {
 		return this.referenceValue.getBinding().isBound();
