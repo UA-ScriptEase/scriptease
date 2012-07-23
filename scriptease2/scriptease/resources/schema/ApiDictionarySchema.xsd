@@ -241,12 +241,6 @@
 
 	<!-- Defines a list of CodeBlocks -->
 	<xsd:complexType name="CodeBlockList_Type">
-		 <!-- 
-		<xsd:sequence>
-			<xsd:element name="CodeBlock" type="CodeBlock_Type"
-				maxOccurs="unbounded" minOccurs="0" />
-		</xsd:sequence>
-		-->
 		<xsd:choice>
 			<xsd:sequence>
 				<xsd:element name="CodeBlockReference" type="CodeBlockReference_Type"
@@ -257,7 +251,6 @@
 					maxOccurs="unbounded" minOccurs="0" />
 			</xsd:sequence>
 		</xsd:choice>
-		
 	</xsd:complexType>
 
 	<!-- Defines a list of Specific game Type keyword references each of these 
