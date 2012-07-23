@@ -171,6 +171,8 @@ public abstract class StoryComponent implements Cloneable {
 	public void addLabels(Collection<String> labels) {
 		for (String label : labels)
 			this.addLabel(label);
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.LABELS_ADDED));
 	}
 
 	/**

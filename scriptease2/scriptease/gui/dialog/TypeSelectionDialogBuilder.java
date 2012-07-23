@@ -58,6 +58,18 @@ public class TypeSelectionDialogBuilder {
 		this.allButton = new JButton("Deselect All");
 		this.typesToSelected = new HashMap<String, Boolean>();
 		this.checkBoxPanels = new ArrayList<CheckBoxPanel>();
+		
+		final Translator activeTranslator;
+
+		// Create the translator and populate lists.
+		activeTranslator = TranslatorManager.getInstance()
+				.getActiveTranslator();
+
+		if (activeTranslator != null)
+			for (String type : activeTranslator.getGameTypeManager()
+					.getKeywords()) {
+				this.typesToSelected.put(type, Boolean.TRUE);
+			}
 	}
 
 	/**
@@ -94,7 +106,6 @@ public class TypeSelectionDialogBuilder {
 		final JSeparator separator;
 		final JDialog typeDialog;
 
-		final Translator activeTranslator;
 
 		final GroupLayout groupLayout;
 		final GridLayout gridLayout;
@@ -115,16 +126,6 @@ public class TypeSelectionDialogBuilder {
 
 		gridLayout.setHgap(5);
 		gridLayout.setVgap(5);
-
-		// Create the translator and populate lists.
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-
-		if (activeTranslator != null)
-			for (String type : activeTranslator.getGameTypeManager()
-					.getKeywords()) {
-				this.typesToSelected.put(type, Boolean.TRUE);
-			}
 
 		// Set up the action listeners for the buttons.
 		closeButton.addActionListener(new ActionListener() {
@@ -155,7 +156,7 @@ public class TypeSelectionDialogBuilder {
 
 		typesPanel.setLayout(gridLayout);
 		content.setLayout(groupLayout);
-		this.populatePanel(typesPanel, activeTranslator);
+		this.populatePanel(typesPanel);
 
 		typesScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
@@ -191,12 +192,13 @@ public class TypeSelectionDialogBuilder {
 	 * @param panel
 	 * @param activeTranslator
 	 */
-	private void populatePanel(final JPanel panel,
-			final Translator activeTranslator) {
+	private void populatePanel(final JPanel panel) {
 		final Map<String, CheckBoxPanel> typeDisplayTextToCheckBoxPanel;
-
+		final Translator activeTranslator;
+		
 		typeDisplayTextToCheckBoxPanel = new TreeMap<String, CheckBoxPanel>();
-
+		activeTranslator = TranslatorManager.getInstance().getActiveTranslator();
+		
 		// create a menu item for each type
 		if (activeTranslator != null) {
 			GameTypeManager typeManager = activeTranslator.getGameTypeManager();

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.StoryVisitor;
+import scriptease.controller.observer.StoryComponentEvent;
+import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
@@ -119,10 +121,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		return component;
 	}
 
-	/**
-	 * TODO remove these kind of methods, since they are messy and we should be
-	 * enforcing CodeBlock scoping.
-	 */
 	@Override
 	public Collection<String> getTypes() {
 		return this.getMainCodeBlock().getTypes();
@@ -130,13 +128,13 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	
 	public void setTypes(Collection<String> types) {
 		this.getMainCodeBlock().setTypes(types);
+
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_SCRIPT_IT_TYPES));
 	}
 
 	/**
 	 * Get the parameters for all of the codeBlocks
-	 * 
-	 * TODO remove these kind of methods, since they are messy and we should be
-	 * enforcing CodeBlock scoping.
 	 * 
 	 * @return
 	 */
@@ -152,9 +150,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	 * Get a specific parameter from one of the codeBlocks. Returns null if a
 	 * parameter with that displayName is not found.
 	 * 
-	 * TODO remove these kind of methods, since they are messy and we should be
-	 * enforcing CodeBlock scoping.
-	 * 
 	 * @param displayName
 	 * @return
 	 */
@@ -168,9 +163,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 
 	/**
 	 * Get the implicits for all of the codeBlocks
-	 * 
-	 * TODO remove these kind of methods, since they are messy and we should be
-	 * enforcing CodeBlock scoping.
 	 * 
 	 * @return
 	 */
@@ -195,11 +187,17 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	public void removeCodeBlock(CodeBlock codeBlock) {
 		if (this.codeBlocks.remove(codeBlock))
 			codeBlock.setOwner(null);
+		
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CODE_BLOCK_REMOVED));
 	}
 
 	public void addCodeBlock(CodeBlock codeBlock) {
 		if (this.codeBlocks.add(codeBlock))
 			codeBlock.setOwner(this);
+		
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CODE_BLOCK_ADDED));
 	}
 
 	public void setCodeBlocks(Collection<CodeBlock> codeBlocks) {
@@ -207,6 +205,9 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		for (CodeBlock codeBlock : codeBlocks) {
 			this.addCodeBlock(codeBlock);
 		}
+		
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CODE_BLOCKS_SET));
 	}
 
 	public final void processParameters(StoryVisitor processController) {
