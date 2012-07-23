@@ -435,7 +435,7 @@ public final class WindowManager implements WindowFocusListener {
 	 * Shows the Story Component Builder.
 	 */
 	public void showStoryComponentBuilder() {
-		JFrame scFrame = new JFrame();
+		final JFrame scFrame;
 		scFrame = WindowManager.getInstance().buildStoryComponentBuilderFrame();
 		scFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		scFrame.setVisible(true);
