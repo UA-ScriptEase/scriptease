@@ -151,24 +151,4 @@ public class UIListenerFactory {
 		}
 		return false;
 	}
-
-	// DescribeItPanel Listeners:
-
-	public boolean saveComponent(KnowIt knowIt) {
-		Translator activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-		if (knowIt != null && activeTranslator != null) {
-			activeTranslator.getApiDictionary().getLibrary().add(knowIt);
-			File filePath = activeTranslator
-					.getPathProperty(Translator.DescriptionKeys.API_DICTIONARY_PATH
-							.toString());
-
-			FileIO.getInstance().writeAPIDictionary(
-					activeTranslator.getApiDictionary(), filePath);
-
-			return true;
-		}
-		return false;
-	}
-
 }

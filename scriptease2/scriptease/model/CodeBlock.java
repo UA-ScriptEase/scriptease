@@ -181,10 +181,8 @@ public class CodeBlock implements TypedComponent, Cloneable {
 	}
 
 	public ScriptIt getCause() {
-		// TODO This used to be && instead of ||. Check if it works as && again
-		// when Story Component Builder stuff is implemented better. Especially
-		// test this with Enable Dialogue Line, since it has two codeblocks.
-		if (!this.subject.isEmpty() && !this.slot.isEmpty())
+		// TODO This used to be && instead of ||. Does this break anything?
+		if (!this.subject.isEmpty() || !this.slot.isEmpty())
 			return this.owner;
 		else {
 			StoryComponent parent = this.owner.getOwner();

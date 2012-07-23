@@ -83,6 +83,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 		else {
 			this.typeBuilder = new TypeSelectionDialogBuilder(newAction);
 		}
+		
 		this.updateName();
 	}
 
@@ -108,7 +109,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 	 * Updates the name of this action to the amount of types shown. One type
 	 * selected will display the selected types name, all types will display
 	 * "All Types", and no types will display "No Types". Any number of types
-	 * will display the number of types plus " Only".
+	 * will display the number of types plus " Types".
 	 */
 	public void updateName() {
 		final int selectedCount = this.typeBuilder.countSelectedTypes();
@@ -127,7 +128,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 					this.typeBuilder.getSelectedTypes().iterator().next());
 		} else {
 			// show the number of selected types
-			name = selectedCount + " Only";
+			name = selectedCount + " Types";
 		}
 
 		this.putValue(NAME, name);

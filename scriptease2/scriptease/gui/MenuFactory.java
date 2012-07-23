@@ -25,6 +25,7 @@ import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.FileManager;
+import scriptease.controller.io.FileIO;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
 import scriptease.gui.action.file.CloseModelAction;
@@ -45,8 +46,10 @@ import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
+import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.codegenerator.CodeGenerator;
 import scriptease.translator.codegenerator.ScriptInfo;
 
@@ -83,12 +86,14 @@ public class MenuFactory {
 	private static final String ADD = Il8nResources.getString("Add");
 	private static final String TOOLS = Il8nResources.getString("Tools");
 	private static final String HELP = Il8nResources.getString("Help");
-	private static final String CREATE = Il8nResources.getString("Create");
+	private static final String NEW = Il8nResources.getString("New");
+	private static final String SAVE = Il8nResources.getString("Save_Model");
 	private static final String NEW_CAUSE = "Cause";
 	private static final String NEW_EFFECT = Il8nResources.getString("DoIt");
 	private static final String NEW_DESCRIPTION = Il8nResources
 			.getString("KnowIt");
 	private static final String DEBUG = "Debug";
+	private static final String EXIT = Il8nResources.getString("Exit");
 
 	/**
 	 * Creates the top level menu bar.
@@ -116,16 +121,22 @@ public class MenuFactory {
 	 */
 	public static JMenuBar buildBuilderMenuBar() {
 		final JMenuBar builderMenuBar;
-		final JMenu createMenu;
+		final JMenu fileMenu;
+		final JMenu newMenu;
 		final JMenuItem newCause;
 		final JMenuItem newEffect;
 		final JMenuItem newDescription;
+		final JMenuItem save;
+		final JMenuItem exit;
 
 		builderMenuBar = new JMenuBar();
-		createMenu = new JMenu(MenuFactory.CREATE);
+		fileMenu = new JMenu(MenuFactory.FILE);
+		newMenu = new JMenu(MenuFactory.NEW);
 		newCause = new JMenuItem(MenuFactory.NEW_CAUSE);
 		newEffect = new JMenuItem(MenuFactory.NEW_EFFECT);
 		newDescription = new JMenuItem(MenuFactory.NEW_DESCRIPTION);
+		save = new JMenuItem(MenuFactory.SAVE);
+		exit = new JMenuItem(MenuFactory.EXIT);
 
 		/*
 		 * TODO Add these listeners to UIListenerFactory
@@ -141,7 +152,23 @@ public class MenuFactory {
 			}
 		});
 
-		
+		save.addActionListener(new ActionListener() {
+			//TODO Turn this into an action sometime.
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final Translator active;
+				final APIDictionary apiDictionary;
+				final File location;
+				
+				active = TranslatorManager.getInstance().getActiveTranslator();
+				apiDictionary = active.getApiDictionary();
+				location = active.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH
+						.toString());
+				
+				FileIO.getInstance().writeAPIDictionary(apiDictionary, location);
+			}
+			
+		});
 		/*
 		 * TODO Change "Create" menu to a "File" menu with the following structure:
 		 * 
@@ -154,11 +181,15 @@ public class MenuFactory {
 		 * -> Close
 		 * 
 		 */
-		createMenu.add(newCause);
-		createMenu.add(newEffect);
-		createMenu.add(newDescription);
+		newMenu.add(newCause);
+		newMenu.add(newEffect);
+		newMenu.add(newDescription);
 
-		builderMenuBar.add(createMenu);
+		fileMenu.add(newMenu);
+		fileMenu.add(save);
+		fileMenu.add(exit);
+		
+		builderMenuBar.add(fileMenu);
 		builderMenuBar.add(MenuFactory.buildEditMenu());
 
 		return builderMenuBar;
