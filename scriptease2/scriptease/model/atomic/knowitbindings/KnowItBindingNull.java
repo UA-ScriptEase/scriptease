@@ -58,6 +58,11 @@ public class KnowItBindingNull extends KnowItBinding {
 	public boolean equals(Object other) {
 		return other instanceof KnowItBindingNull;
 	}
+	
+	@Override 
+	public int hashCode(){
+		return 0;
+	}
 
 	/**
 	 * KnowItBindingNull are always compatible

@@ -72,7 +72,8 @@ public class Translator {
 	public static final String TRANSLATOR_DESCRIPTION_FILE_NAME = "translator.ini";
 
 	/**
-	 * Enumerates all required or optional keys for Translators.
+	 * Enumerates all required and some common optional keys for Translator
+	 * properties.
 	 * 
 	 * @author remiller
 	 */
@@ -80,7 +81,7 @@ public class Translator {
 		// Mandatory keys
 		NAME, API_DICTIONARY_PATH, LANGUAGE_DICTIONARY_PATH, GAME_MODULE_PATH,
 		// Suggested keys
-		SUPPORTED_FILE_EXTENSIONS, INCLUDES_PATH, ICON_PATH, COMPILER_PATH, CUSTOM_PICKER_PATH, SUPPORTS_TESTING;
+		SUPPORTED_FILE_EXTENSIONS, INCLUDES_PATH, ICON_PATH, COMPILER_PATH, CUSTOM_PICKER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY;
 	}
 
 	private final Properties properties;
@@ -135,8 +136,7 @@ public class Translator {
 
 		// load legal file extensions
 		extensionsString = this
-				.getProperty(DescriptionKeys.SUPPORTED_FILE_EXTENSIONS
-						.toString());
+				.getProperty(DescriptionKeys.SUPPORTED_FILE_EXTENSIONS);
 		if (extensionsString != null) {
 			for (String extension : Arrays.asList(extensionsString.split(","))) {
 				this.legalExtensions.add(extension.trim());
@@ -147,7 +147,7 @@ public class Translator {
 		loader = new GameModuleClassLoader(this.getClass().getClassLoader(),
 				this);
 		gameModuleClassFile = this
-				.getPathProperty(DescriptionKeys.GAME_MODULE_PATH.toString());
+				.getPathProperty(DescriptionKeys.GAME_MODULE_PATH);
 		// new
 		// File(this.getProperty(DescriptionKeys.GAME_MODULE_PATH.toString()));
 
@@ -167,7 +167,7 @@ public class Translator {
 	 */
 	public Collection<File> getIncludes() {
 		final File includeDir = this
-				.getPathProperty(DescriptionKeys.INCLUDES_PATH.toString());
+				.getPathProperty(DescriptionKeys.INCLUDES_PATH);
 		final FileFilter filter = new FileFilter() {
 			@Override
 			public boolean accept(File file) {
@@ -182,9 +182,11 @@ public class Translator {
 
 	/**
 	 * Gets a property specific to a particular Translator. Properties that are
-	 * required by all Translators should be acquired instead by the methods
-	 * build specially for getting them. For getting properties that store a
-	 * file path, use {@link #getPathProperty(String)} instead.
+	 * required by all Translators should be acquired instead through
+	 * {@link #getProperty(DescriptionKeys)} or
+	 * {@link #getPathProperty(DescriptionKeys)}. For getting properties that
+	 * store a file path, use {@link #getPathProperty(String)} or
+	 * {@link #getPathProperty(DescriptionKeys)} instead.
 	 * 
 	 * @param propertyName
 	 *            the key of the property to get from the translator.ini file.
@@ -205,16 +207,43 @@ public class Translator {
 	}
 
 	/**
+	 * Gets a property specific to a particular Translator that has been
+	 * identified as a common or required property. For getting properties that
+	 * store a file path, use {@link #getPathProperty(String)} or
+	 * {@link #getPathProperty(DescriptionKeys)} instead. For getting a custom
+	 * translator property not defined in {@link DescriptionKeys}, use
+	 * {@link #getProperty(String)}.
+	 * 
+	 * @param propertyName
+	 *            the key of the property to get from the translator.ini file.
+	 * @return the value of the property, or <code>null</code> if that property
+	 *         is not found.
+	 * @see #getPathProperty(DescriptionKeys)
+	 * @see #getLanguageDictionary()
+	 * @see #getCompiler()
+	 * @see #getName()
+	 */
+	public String getProperty(DescriptionKeys propertyKey) {
+		return this.getProperty(propertyKey.toString());
+	}
+
+	/**
 	 * Gets a property specific to a particular Translator that is referencing a
 	 * file path. The file path is then cleaned up to be relative to the
 	 * translator's directory, or is left alone if it is an absolute path.
 	 * Returns a File that represents the now-correct directory, or
-	 * <code>null</code> if no such property exists.
+	 * <code>null</code> if no such property exists.<br>
+	 * <br>
+	 * For required or well-known properties, use
+	 * {@link #getPathProperty(DescriptionKeys)}
 	 * 
 	 * @param propertyName
+	 *            The name of the property, case-sensitive, from the
+	 *            translator.ini file.
 	 * @return A File that stores the correct path from the translator to the
 	 *         file noted under the given property or <code>null</code> if
-	 *         <code>propertyName</code> is not a valid property.
+	 *         <code>propertyName</code> is not a property supported by the
+	 *         translator.
 	 * @see #getProperty(String)
 	 * @see #getIncludes()
 	 */
@@ -228,6 +257,29 @@ public class Translator {
 			file = new File(this.location.getParentFile(), path);
 
 		return file;
+	}
+
+	/**
+	 * Gets a property specific to a particular Translator that has been
+	 * identified as a common or required property and is also referencing a
+	 * file path. The file path is then cleaned up to be relative to the
+	 * translator's directory, or is left alone if it is an absolute path.
+	 * Returns a File that represents the now-correct directory, or
+	 * <code>null</code> if no such property exists.<br>
+	 * <br>
+	 * For custom path properties, use {@link #getPathProperty(String)}
+	 * 
+	 * @param propertyKey
+	 *            The key from {@link DescriptionKeys} to look up.
+	 * @return A File that stores the correct path from the translator to the
+	 *         file noted under the given property or <code>null</code> if
+	 *         <code>propertyName</code> is not a property supported by the
+	 *         translator.
+	 * @see #getProperty(String)
+	 * @see #getIncludes()
+	 */
+	public File getPathProperty(DescriptionKeys propertyKey) {
+		return this.getPathProperty(propertyKey.toString());
 	}
 
 	/**
@@ -271,13 +323,10 @@ public class Translator {
 			return false;
 		}
 
-		apiDictPath = this.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH
-				.toString());
+		apiDictPath = this.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH);
 		languageDictPath = this
-				.getPathProperty(DescriptionKeys.LANGUAGE_DICTIONARY_PATH
-						.toString());
-		gameModulePath = this.getPathProperty(DescriptionKeys.GAME_MODULE_PATH
-				.toString());
+				.getPathProperty(DescriptionKeys.LANGUAGE_DICTIONARY_PATH);
+		gameModulePath = this.getPathProperty(DescriptionKeys.GAME_MODULE_PATH);
 
 		/*
 		 * The "translator.ini" file *must* contain a name and references to an
@@ -358,7 +407,7 @@ public class Translator {
 	 * @return the translator's name
 	 */
 	public String getName() {
-		return this.getProperty(DescriptionKeys.NAME.toString());
+		return this.getProperty(DescriptionKeys.NAME);
 	}
 
 	/**
@@ -396,8 +445,7 @@ public class Translator {
 		final File apiFile;
 		xmlReader = FileIO.getInstance();
 		// load the apiDictionary
-		apiFile = this.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH
-				.toString());
+		apiFile = this.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH);
 
 		this.apiDictionary = xmlReader.readAPIDictionary(apiFile);
 
@@ -423,8 +471,7 @@ public class Translator {
 			xmlReader = FileIO.getInstance();
 			// load the languageDictionary
 			languageFile = this
-					.getPathProperty(DescriptionKeys.LANGUAGE_DICTIONARY_PATH
-							.toString());
+					.getPathProperty(DescriptionKeys.LANGUAGE_DICTIONARY_PATH);
 
 			this.languageDictionary = xmlReader
 					.readLanguageDictionary(languageFile);
@@ -447,7 +494,7 @@ public class Translator {
 	 *         compiler is defined.
 	 */
 	public File getCompiler() {
-		return this.getPathProperty(DescriptionKeys.COMPILER_PATH.toString());
+		return this.getPathProperty(DescriptionKeys.COMPILER_PATH);
 	}
 
 	/**
@@ -463,8 +510,7 @@ public class Translator {
 	public Icon getIcon() {
 		final File iconLocation;
 
-		iconLocation = this.getPathProperty(DescriptionKeys.ICON_PATH
-				.toString());
+		iconLocation = this.getPathProperty(DescriptionKeys.ICON_PATH);
 
 		return iconLocation == null ? null : new ImageIcon(
 				iconLocation.getAbsolutePath());
@@ -483,8 +529,7 @@ public class Translator {
 		final String testingSupportStr;
 		final boolean supportsTesting;
 
-		testingSupportStr = this.getProperty(DescriptionKeys.SUPPORTS_TESTING
-				.toString());
+		testingSupportStr = this.getProperty(DescriptionKeys.SUPPORTS_TESTING);
 
 		supportsTesting = testingSupportStr == null ? false : Boolean
 				.parseBoolean(testingSupportStr);
@@ -646,7 +691,7 @@ public class Translator {
 		final File customPickerPath;
 
 		customPickerPath = this
-				.getPathProperty(DescriptionKeys.CUSTOM_PICKER_PATH.toString());
+				.getPathProperty(DescriptionKeys.CUSTOM_PICKER_PATH);
 
 		// Look for a custom picker class.
 		if (this.customGameObjectPicker == null && customPickerPath != null)

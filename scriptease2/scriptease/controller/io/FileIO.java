@@ -9,6 +9,8 @@ import java.io.InputStream;
 import scriptease.controller.io.converter.APIDictionaryConverter;
 import scriptease.controller.io.converter.AskItConverter;
 import scriptease.controller.io.converter.CodeBlockConverter;
+import scriptease.controller.io.converter.CodeBlockReferenceConverter;
+import scriptease.controller.io.converter.CodeBlockSourceConverter;
 import scriptease.controller.io.converter.DescribeItConverter;
 import scriptease.controller.io.converter.GameMapConverter;
 import scriptease.controller.io.converter.GameTypeConverter;
@@ -43,6 +45,8 @@ import scriptease.gui.quests.QuestPointConverter;
 import scriptease.gui.quests.QuestPointNode;
 import scriptease.gui.quests.QuestPointNodeConverter;
 import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockReference;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.StoryModel;
@@ -76,16 +80,25 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 /**
- * Reads and writes Stories, Libraries and Dictionaries via various sources on
- * disk using XStream. Singleton so that it can watch for infinite looping on
- * load.
+ * Reads and writes Stories, Libraries and Dictionaries from or to various
+ * sources on disk using XStream. Singleton so that it can watch for infinite
+ * looping on load.
  * 
  * @author remiller
  * @author mfchurch
  */
 public class FileIO {
+	/**
+	 * The modes that are possible for the IO system to be in. These are useful
+	 * for changing behaviour dependent on what's going on. This has been done
+	 * as a global variable with a singleton for simplicity, but if we find that
+	 * we've got a lot of special cases all over, we may want to switch to a
+	 * Strategy pattern style solution.
+	 * 
+	 * @author remiller
+	 */
 	public enum IoMode {
-		API_DICTIONARY, LANGUAGE_DICTIONARY, STORY, NONE;
+		API_DICTIONARY, LANGUAGE_DICTIONARY, STORY, LIBRARY, NONE;
 	}
 
 	private static FileIO instance;
@@ -94,6 +107,10 @@ public class FileIO {
 		if (instance == null)
 			instance = new FileIO();
 		return instance;
+	}
+
+	private FileIO() {
+		this.mode = IoMode.NONE;
 	}
 
 	private IoMode mode;
@@ -106,7 +123,7 @@ public class FileIO {
 	 * @return The read-in Story.
 	 */
 	public StoryModel readStory(File location) {
-		return (StoryModel) this.readData(location);
+		return (StoryModel) this.readData(location, IoMode.STORY);
 	}
 
 	/**
@@ -117,7 +134,7 @@ public class FileIO {
 	 * @return The read-in Library.
 	 */
 	public LibraryModel readLibrary(File location) {
-		return (LibraryModel) this.readData(location);
+		return (LibraryModel) this.readData(location, IoMode.LIBRARY);
 	}
 
 	/**
@@ -129,9 +146,7 @@ public class FileIO {
 	 *            The file path to write to.
 	 */
 	public void writeAPIDictionary(APIDictionary dictionary, File location) {
-		this.mode = IoMode.API_DICTIONARY;
-		this.writeData(dictionary, location);
-		this.mode = IoMode.NONE;
+		this.writeData(dictionary, location, IoMode.API_DICTIONARY);
 	}
 
 	/**
@@ -142,13 +157,19 @@ public class FileIO {
 	 * @return The API dictionary as read from disk.
 	 */
 	public APIDictionary readAPIDictionary(File location) {
+		/*
+		 * Check against inifiniloops. This is usually caused by trying to get
+		 * something from the API dictionary while the API dictionary isn't done
+		 * loading yet.
+		 * 
+		 * - remiller
+		 */
 		if (this.mode == IoMode.API_DICTIONARY)
 			throw new IllegalStateException(
 					"Loop detected in APIDictionary Loading");
 
-		this.mode = IoMode.API_DICTIONARY;
-		APIDictionary apiDictionary = (APIDictionary) this.readData(location);
-		this.mode = IoMode.NONE;
+		APIDictionary apiDictionary = (APIDictionary) this.readData(location,
+				IoMode.API_DICTIONARY);
 
 		return apiDictionary;
 	}
@@ -165,27 +186,40 @@ public class FileIO {
 			throw new IllegalStateException(
 					"Loop detected in LanguageDictionary Loading");
 
-		this.mode = IoMode.LANGUAGE_DICTIONARY;
-		LanguageDictionary languageDict = (LanguageDictionary) this
-				.readData(location);
-		this.mode = IoMode.NONE;
+		LanguageDictionary languageDict = (LanguageDictionary) this.readData(
+				location, IoMode.LANGUAGE_DICTIONARY);
 
 		return languageDict;
 	}
 
 	/**
-	 * Writes the given PatternModel as XML to the given location;
+	 * Writes the given StoryModel as XML to the given location;
 	 * 
 	 * @param model
-	 *            The pattern model to save to disk.
+	 *            The model to save to disk.
 	 * @param location
 	 *            the location to save to.
 	 */
-	public void writePatternModel(PatternModel model, File location) {
-		this.writeData(model, location);
+	public void writeStoryModel(PatternModel model, File location) {
+		this.writeData(model, location, IoMode.STORY);
 	}
 
-	private void writeData(Object dataModel, File location) {
+	/**
+	 * Writes the given LibraryModel as XML to the given location;
+	 * 
+	 * @param model
+	 *            The model to save to disk.
+	 * @param location
+	 *            the location to save to.
+	 */
+	public void writeLibraryModel(PatternModel model, File location) {
+		this.writeData(model, location, IoMode.LIBRARY);
+	}
+
+	private void writeData(Object dataModel, File location, IoMode mode) {
+		final IoMode prevMode = this.mode;
+		this.mode = mode;
+
 		final File backupLocation;
 		FileOutputStream fileOut = null;
 		final XStream stream = this.buildXStream();
@@ -220,7 +254,7 @@ public class FileIO {
 							+ location.getAbsolutePath());
 
 			if (retry)
-				this.writeData(dataModel, location);
+				this.writeData(dataModel, location, mode);
 		} finally {
 			try {
 				if (fileOut != null)
@@ -229,10 +263,15 @@ public class FileIO {
 				System.err
 						.println("Failed to close an output file connection.");
 			}
+
+			this.mode = prevMode;
 		}
 	}
 
-	private Object readData(File location) {
+	private Object readData(File location, IoMode mode) {
+		final IoMode prevMode = this.mode;
+		this.mode = mode;
+
 		InputStream fileIn = null;
 		Object dataModel = null;
 		final XStream stream = this.buildXStream();
@@ -256,19 +295,33 @@ public class FileIO {
 							+ location.getAbsolutePath());
 
 			if (retry)
-				this.readData(location);
+				this.readData(location, mode);
 		} catch (XStreamException e) {
 			System.err
 					.println("An error occured while loading "
 							+ location.getAbsolutePath()
 							+ ". It might be XStream complaining about a malformatted file, or some other error occured incidentally while loading.");
 			e.printStackTrace();
+
+			retry = WindowManager
+					.getInstance()
+					.showRetryProblemDialog(
+							"Problem Reading",
+							"I can't understand the file "
+									+ location.getAbsolutePath()
+									+ ".\n\nIt might be a malformatted file or from a previous version of ScriptEase.");
+
+			if (retry)
+				this.readData(location, mode);
 		} finally {
 			try {
 				if (fileIn != null)
 					fileIn.close();
 			} catch (IOException e) {
 				System.err.println("Failed to close an input file connection.");
+			} finally {
+				// put the io mode back
+				this.mode = prevMode;
 			}
 		}
 
@@ -321,11 +374,12 @@ public class FileIO {
 		stream.alias("TextNode", TextNode.class);
 		stream.alias("KnowItNode", KnowItNode.class);
 		stream.alias("CodeBlock", CodeBlock.class);
+		stream.alias("CodeBlockSource", CodeBlockSource.class);
+		stream.alias("CodeBlockReference", CodeBlockReference.class);
 		stream.alias("ScriptIt", ScriptIt.class);
 		stream.alias("QuestNode", QuestNode.class);
 		stream.alias("QuestPoint", QuestPoint.class);
 		stream.alias("QuestPointNode", QuestPointNode.class);
-		
 
 		// the below are aliased for backwards compatibility
 
@@ -357,10 +411,12 @@ public class FileIO {
 		stream.registerConverter(new TextNodeConverter());
 		stream.registerConverter(new KnowItNodeConverter());
 		stream.registerConverter(new CodeBlockConverter());
+		stream.registerConverter(new CodeBlockSourceConverter());
+		stream.registerConverter(new CodeBlockReferenceConverter());
 		stream.registerConverter(new ScriptItConverter());
 		stream.registerConverter(new QuestPointConverter());
-		stream.registerConverter(new QuestNodeConverter()); 
-		stream.registerConverter(new QuestPointNodeConverter()); 
+		stream.registerConverter(new QuestNodeConverter());
+		stream.registerConverter(new QuestPointNodeConverter());
 
 		return stream;
 	}

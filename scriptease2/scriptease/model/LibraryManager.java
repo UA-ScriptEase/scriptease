@@ -225,43 +225,6 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	}
 
 	/**
-	 * Finds an equivalent scriptIt in the Library and changes the code to match
-	 * it. This is a temporary solution until we implement a robust flyweight
-	 * pattern for StoryComponents, which would result in a single instance of
-	 * code existing and referencing it instead.
-	 * 
-	 * @author mfchurch
-	 * 
-	 * @param codeBlock
-	 * @return
-	 */
-	public void getCodeForScriptIt(final ScriptIt aScriptIt, CodeBlock codeBlock) {
-		for (LibraryModel model : this.libraries) {
-			Collection<StoryComponent> components = model
-					.getAllStoryComponents();
-			for (StoryComponent component : components) {
-				if (component instanceof ScriptIt) {
-					ScriptIt scriptIt = (ScriptIt) component;
-					// TODO come up with a better equality check than name
-					if (aScriptIt.getDisplayText().equals(
-							scriptIt.getDisplayText())) {
-						Collection<CodeBlock> codeBlocks = scriptIt
-								.getCodeBlocks();
-						for (CodeBlock otherCodeBlock : codeBlocks) {
-							if (otherCodeBlock.equals(codeBlock)) {
-								codeBlock.setCode(otherCodeBlock.getCode());
-								return; 
-							}
-						}
-					}
-				}
-			}
-		}
-		throw new IllegalStateException(
-				"Could not find an equivalent ScriptIt for " + aScriptIt);
-	}
-
-	/**
 	 * Notifies the LibraryManager's Observers that a LibraryModel has been
 	 * added or removed.
 	 */

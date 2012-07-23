@@ -30,12 +30,23 @@ public class EventSlotManager {
 		return this.defaultFormatKeyword;
 	}
 
+	/**
+	 * Returns a collection of implicit KnowIts from the original set for the
+	 * slot.
+	 * 
+	 * @param keyword
+	 *            the slot keyword to search for.
+	 * @return
+	 */
 	public Collection<KnowIt> getImplicits(String keyword) {
+		final Collection<KnowIt> implicits = new ArrayList<KnowIt>();
 		final Slot slot = this.slots.get(keyword);
+
 		if (slot != null) {
-			return slot.getImplicits();
-		} else
-			return new ArrayList<KnowIt>();
+			implicits.addAll(slot.getImplicits());
+		}
+
+		return implicits;
 	}
 
 	public Collection<KnowIt> getParameters(String keyword) {

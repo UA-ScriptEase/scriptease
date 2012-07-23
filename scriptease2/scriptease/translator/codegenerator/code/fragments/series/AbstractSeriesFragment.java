@@ -75,16 +75,21 @@ public abstract class AbstractSeriesFragment extends FormatFragment {
 	@Override
 	public String resolve(Context context) {
 		super.resolve(context);
-		final Iterator<? extends Object> it;
+
 		final StringBuilder code;
+		final Iterator<? extends Object> it;
+		Object next;
+		final ContextFactory contextFactory = ContextFactory.getInstance();
+		Context newContext;
 
 		code = new StringBuilder();
 
 		it = this.buildDataIterator(context);
 
 		while (it.hasNext()) {
-			Context newContext = ContextFactory.getInstance().createContext(
-					context, it.next());
+			next = it.next();
+
+			newContext = contextFactory.createContext(context, next);
 			code.append(FormatFragment.resolveFormat(format, newContext));
 
 			if (it.hasNext())
@@ -104,69 +109,62 @@ public abstract class AbstractSeriesFragment extends FormatFragment {
 	 */
 	private Iterator<? extends Object> buildDataIterator(Context context) {
 		final String dataLabel = this.getDirectiveText();
+		final Iterator<? extends Object> it;
 
 		// IF+ELSE BLOCK ( series ... data= <dataLabel> )
 		if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_SCRIPTIT_EFFECT_SERIES))
-			return this.seriesFilter.applyFilter(handle(context
-					.getScriptItEffects()));
+			it = context.getScriptItEffects();
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_INCLUDES_SERIES)) {
-			return this.seriesFilter.applyFilter(handle(context.getIncludeFiles().iterator()));
-		}
-		else if (dataLabel
+			it = context.getIncludeFiles().iterator();
+		} else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_SCRIPTIT_SERIES))
-			return this.seriesFilter
-					.applyFilter(handle(context.getScriptIts()));
+			it = context.getScriptIts();
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_CODEBLOCK_SERIES))
-			return this.seriesFilter.applyFilter(handle((context
-					.getCodeBlocks())));
+			it = (context.getCodeBlocks());
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_CAUSE_SERIES))
-			return this.seriesFilter.applyFilter(handle(context.getCauses()));
+			it = context.getCauses();
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_ARGUMENT_SERIES))
-			return this.seriesFilter.applyFilter(context.getArguments());
+			it = context.getArguments();
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_PARAMETER_SERIES))
-			return this.seriesFilter
-					.applyFilter(handle(context.getParameters()));
+			it = context.getParameters();
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_VARIABLE_SERIES))
-			return this.seriesFilter
-					.applyFilter(handle(context.getVariables()));
+			it = context.getVariables();
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_IMPLICIT_SERIES))
-			return this.seriesFilter
-					.applyFilter(handle(context.getImplicits()));
+			it = context.getImplicits();
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_EFFECTS_SERIES))
-			return this.seriesFilter.applyFilter(handle(context.getEffects()));
+			it = context.getEffects();
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_CHILDREN_SERIES))
-			return this.seriesFilter.applyFilter(handle(context.getChildren()));
+			it = context.getChildren();
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_QUESTNODES_SERIES))
-			return this.seriesFilter.applyFilter(handle(context.getQuestNodes()));
+			it = context.getQuestNodes();
 		else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_QUESTPOINTNODES_SERIES))
-			return this.seriesFilter.applyFilter(handle(context
-					.getQuestPointNodes()));
+			it = context.getQuestPointNodes();
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_PARENT_NODES_SERIES))
-			return this.seriesFilter.applyFilter(handle(context
-					.getParentNodes()));
-		else if (dataLabel
+				.equalsIgnoreCase(TranslatorKeywordManager.XML_PARENT_NODES_SERIES)) {
+			it = context.getParentNodes();
+		} else if (dataLabel
 				.equalsIgnoreCase(TranslatorKeywordManager.XML_CHILDREN_NODES_SERIES))
-			return this.seriesFilter.applyFilter(handle(context
-					.getChildrenNodes()));
-		// Default return
+			it = context.getChildrenNodes();
 		else {
+			// Default return 'cuz they didn't tell us a real label!
 			System.err.println("Series was unable to be resolved for data: "
 					+ dataLabel + " >");
 			return new ArrayList<String>().iterator();
 		}
+
+		return this.seriesFilter.applyFilter(handle(it));
 	}
 
 	/**

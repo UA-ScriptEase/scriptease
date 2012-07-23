@@ -18,9 +18,9 @@ public final class StoryComponentEvent {
 	private final StoryComponent source;
 	private final StoryComponentChangeEnum type;
 
-	public StoryComponentEvent(StoryComponent comp,
+	public StoryComponentEvent(StoryComponent source,
 			StoryComponentChangeEnum type) {
-		this.source = comp;
+		this.source = source;
 		this.type = type;
 	}
 
@@ -37,7 +37,9 @@ public final class StoryComponentEvent {
 		CHANGE_PARAMETER_LIST_ADD, 
 		CHANGE_PARAMETER_LIST_REMOVE, 
 		CHANGE_CHILD_ADDED, 
-		CHANGE_CHILD_REMOVED, 
+		CHANGE_CHILD_REMOVED,
+		CHANGE_CODEBLOCK_ADDED, 
+		CHANGE_CODEBLOCK_REMOVED, 
 		CHANGE_KNOW_IT_BOUND,
 		CHANGE_KNOW_IT_TYPE,
 		CHANGE_SCRIPT_IT_TYPES,
@@ -48,8 +50,6 @@ public final class StoryComponentEvent {
 		CHANGE_START_IT_SLOT, 
 		CHANGE_START_IT_TYPE,
 		CHANGE_DOIT_TYPE, 
-		CODE_BLOCK_REMOVED,
-		CODE_BLOCK_ADDED,
 		CODE_BLOCKS_SET,
 		CODE_BLOCK_TYPES_SET,
 		CODE_BLOCK_SUBJECT_SET,

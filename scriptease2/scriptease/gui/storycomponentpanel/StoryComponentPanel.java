@@ -270,7 +270,7 @@ public class StoryComponentPanel extends JPanel implements
 				|| type.equals(StoryComponentChangeEnum.CHANGE_TEXT_NAME)
 				|| type.equals(StoryComponentChangeEnum.LABEL_SET)
 				|| type.equals(StoryComponentChangeEnum.CHANGE_START_IT_SLOT)
-				|| type.equals(StoryComponentChangeEnum.CODE_BLOCK_ADDED)) {
+				|| type.equals(StoryComponentChangeEnum.CHANGE_CODEBLOCK_ADDED)) {
 			StoryComponentPanelFactory.getInstance().refreshMain(this);
 		}
 		// revalidate the panel
