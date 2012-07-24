@@ -6,11 +6,8 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.controller.FileManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
 
 /**
  * Represents and performs the Save Model command, as well as encapsulates its
