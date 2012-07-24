@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import scriptease.controller.StoryVisitor;
+import scriptease.controller.io.FileIO;
+import scriptease.controller.io.FileIO.IoMode;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
@@ -116,8 +118,11 @@ public abstract class StoryComponent implements Cloneable {
 	 *      sibling)
 	 */
 	public void setOwner(StoryComponent newOwner) {
-		if(newOwner == null)
+		if(newOwner == null){
+			if(FileIO.getInstance().getMode() == IoMode.STORY)
 				System.out.println("of the derp");
+				
+		}
 		
 		this.ownerComponent = newOwner;
 	}

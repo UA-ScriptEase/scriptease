@@ -103,8 +103,9 @@ public abstract class AbstractNoOpStoryVisitor implements StoryVisitor {
 	 * method in this class' standard Complex Story Component methods. <br>
 	 * <br>
 	 * Override this method if you want to provide a non-null default behaviour
-	 * for every non-overridden <code>process<i>Y</i></code> method. Unless it
-	 * is overridden, it does nothing.
+	 * (like processing children, for example) for every non-overridden
+	 * <code>process<i>Y</i></code> method. Unless it is overridden, it does
+	 * nothing.
 	 * 
 	 * @param complex
 	 *            The ComplexStroyComponent to process with a default behaviour.

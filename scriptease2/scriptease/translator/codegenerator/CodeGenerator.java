@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import scriptease.controller.QuestPointNodeGetter;
+import scriptease.controller.get.QuestPointNodeGetter;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.WindowManager;
 import scriptease.gui.quests.QuestNode;

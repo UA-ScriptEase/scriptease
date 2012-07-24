@@ -9,6 +9,7 @@ import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -90,10 +91,11 @@ public class KnowItConverter extends StoryComponentConverter {
 		// Set the allowable types of the binding.
 		knowIt.setTypes(typeKeys);
 
-		if (binding != null)
+		if (binding != null) {
 			knowIt.setBinding(binding);
+		}
+		// Stories are the only ones that care about nulls.
 		else if (FileIO.getInstance().getMode() == FileIO.IoMode.STORY)
-			// Stories are the only ones that can use bindings.
 			System.err.println("No story binding read for " + knowIt);
 
 		return knowIt;

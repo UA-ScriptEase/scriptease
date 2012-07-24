@@ -5,7 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.concurrent.CopyOnWriteArraySet;
 
+import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.io.converter.APIDictionaryConverter;
 import scriptease.controller.io.converter.AskItConverter;
 import scriptease.controller.io.converter.CodeBlockConverter;
@@ -49,11 +52,14 @@ import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
+import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
@@ -123,7 +129,18 @@ public class FileIO {
 	 * @return The read-in Story.
 	 */
 	public StoryModel readStory(File location) {
-		return (StoryModel) this.readData(location, IoMode.STORY);
+		final StoryModel story;
+		final QuestPoint rootQP;
+
+		story = (StoryModel) this.readData(location, IoMode.STORY);
+
+		// Why are quests so bloody messy? - remiller
+		rootQP = ((QuestPointNode) story.getRoot().getStartPoint())
+				.getQuestPoint();
+
+		BindingFixer.fixBindings(rootQP);
+
+		return story;
 	}
 
 	/**
@@ -134,7 +151,12 @@ public class FileIO {
 	 * @return The read-in Library.
 	 */
 	public LibraryModel readLibrary(File location) {
-		return (LibraryModel) this.readData(location, IoMode.LIBRARY);
+		final LibraryModel lib;
+		lib = (LibraryModel) this.readData(location, IoMode.LIBRARY);
+
+		BindingFixer.fixBindings(lib.getRoot());
+
+		return lib;
 	}
 
 	/**
@@ -170,6 +192,8 @@ public class FileIO {
 
 		APIDictionary apiDictionary = (APIDictionary) this.readData(location,
 				IoMode.API_DICTIONARY);
+
+		BindingFixer.fixBindings(apiDictionary.getLibrary().getRoot());
 
 		return apiDictionary;
 	}
@@ -457,5 +481,117 @@ public class FileIO {
 	 */
 	public IoMode getMode() {
 		return this.mode;
+	}
+
+	/*
+	 * This is all part of a terrible hack. XStream writes out the full KnowIt
+	 * for KnowItBindingReferences, which is normally fine, because it will
+	 * internally reference XML elements that are supposed to be loaded as the
+	 * same object. However, it can't do that with Implicit KnowIts because the
+	 * original reference isn't saved to the file. When reloading, it creates a
+	 * duplicate of the actual implicit it should be pointing to, which causes
+	 * problems. The symptoms for this bug are to have a slot bound to an
+	 * implicit,
+	 * 
+	 * There are a few solutions to this which are:
+	 * 
+	 * 1. Fix the references after everything is done loading. (Ugly hack - the
+	 * current solution)
+	 * 
+	 * 2. Write the owner to the file so that the containing cause can be found,
+	 * its implicits collected, and the binding fixed. (A different ugly hack)
+	 * 
+	 * 3. Have a referencing system similar to the CodeBlock one. I haven't
+	 * thought deeply about this, but I'm pretty sure such a thing could be
+	 * leveraged to fix this problem in a clean way. (The only nice way I can
+	 * think of)
+	 * 
+	 * We can't write the implicits to the file, either, because they don't
+	 * belong there.
+	 * 
+	 * I hate implicits so damned much. They have so many special rules.
+	 * 
+	 * - remiller
+	 */
+	private static class BindingFixer extends AbstractNoOpStoryVisitor {
+		private final Collection<KnowIt> referencesToFix;
+
+		public static void fixBindings(StoryComponent root) {
+			final BindingFixer fixer = new BindingFixer();
+
+			// sniff out the broken links and fix them
+			root.process(fixer);
+		}
+
+		private BindingFixer() {
+			this.referencesToFix = new CopyOnWriteArraySet<KnowIt>();
+		}
+
+		@Override
+		protected void defaultProcessComplex(ComplexStoryComponent complex) {
+			super.defaultProcessComplex(complex);
+
+			for (StoryComponent child : complex.getChildren())
+				child.process(this);
+		}
+
+		@Override
+		public void processKnowIt(KnowIt knowIt) {
+			super.processKnowIt(knowIt);
+
+			this.fixBinding(knowIt);
+		}
+
+		@Override
+		public void processScriptIt(ScriptIt scriptIt) {
+			super.processScriptIt(scriptIt);
+
+			for (KnowIt param : scriptIt.getParameters()) {
+				param.process(this);
+			}
+		}
+
+		private void fixBinding(KnowIt knowIt) {
+			KnowItBinding bindingWrapper;
+			KnowIt referent;
+			Collection<KnowIt> implicits;
+			ScriptIt parentCause;
+
+			bindingWrapper = knowIt.getBinding();
+			parentCause = this.getCause(knowIt);
+
+			if (!(bindingWrapper instanceof KnowItBindingReference)
+					|| parentCause == null)
+				return;
+
+			referent = ((KnowItBindingReference) bindingWrapper).getValue();
+
+			implicits = parentCause.getImplicits();
+
+			// rebind to implicits that match.
+			for (KnowIt inScope : implicits) {
+				if (referent.getDisplayText().equals(inScope.getDisplayText())) {
+					knowIt.setBinding(inScope);
+					break;
+				}
+			}
+		}
+
+		private ScriptIt getCause(KnowIt reference) {
+			StoryComponent parent = reference;
+			ScriptIt scriptIt;
+
+			while (parent != null) {
+				if (parent instanceof ScriptIt) {
+					scriptIt = (ScriptIt) parent;
+					if (scriptIt.isCause())
+						return scriptIt;
+				}
+
+				parent = parent.getOwner();
+			}
+
+			return null;
+		}
 	}
 }

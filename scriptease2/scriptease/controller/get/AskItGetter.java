@@ -1,4 +1,4 @@
-package scriptease.controller;
+package scriptease.controller.get;
 
 import scriptease.model.complex.AskIt;
 
