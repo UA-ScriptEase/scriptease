@@ -7,6 +7,7 @@ import scriptease.controller.VisibilityManager;
 import scriptease.controller.io.FileIO;
 import scriptease.model.StoryComponent;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -17,7 +18,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * Converter superclass for all converters that convert StoryComponents.
  * Subclasses are required to implement {@link #buildComponent()}, in which they
  * build the specific instance of StoryComponent that they are responsible for
- * converting. They are also expected to call super.marshal(...) and super.unmarshall(...).
+ * converting. They are also expected to call super.marshal(...) and
+ * super.unmarshall(...).
  * 
  * @author remiller
  */
@@ -25,20 +27,22 @@ public abstract class StoryComponentConverter implements Converter {
 	private static final String TAG_NAME = "Name";
 	private static final String TAG_LABELS = "Labels";
 	private static final String TAG_LABEL = "Label";
-	private final String TAG_VISIBLE = "visible";
+	private static final String TAG_VISIBLE = "Visible";
 
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final StoryComponent comp = (StoryComponent) source;
 
-		// Visibility
-		writer.addAttribute(TAG_VISIBLE, VisibilityManager.getInstance()
-				.isVisible(comp).toString());
-
 		// Name
 		writer.startNode(TAG_NAME);
 		writer.setValue(comp.getDisplayText());
+		writer.endNode();
+
+		// Visibility
+		writer.startNode(TAG_VISIBLE);
+		writer.setValue(VisibilityManager.getInstance().isVisible(comp)
+				.toString());
 		writer.endNode();
 
 		// Labels
@@ -62,29 +66,26 @@ public abstract class StoryComponentConverter implements Converter {
 			UnmarshallingContext context) {
 		final StoryComponent comp;
 		final String displayText;
-		String visibility;
+		final String visibility;
+		final Collection<String> labels = new ArrayList<String>();
 
 		comp = this.buildComponent(reader, context);
 
-		// Default to true if not found
-		visibility = reader.getAttribute(TAG_VISIBLE);
-		if (visibility == null)
-			visibility = "true";
-
+		// name
 		displayText = FileIO.readValue(reader, TAG_NAME);
 
+		// visibility
+		visibility = FileIO.readValue(reader, TAG_VISIBLE);
+
 		// Labels
-		final Collection<String> labels = new ArrayList<String>();
 		reader.moveDown();
 		if (!reader.getNodeName().equalsIgnoreCase(TAG_LABELS))
-			System.err
-					.println("Failed to read labels for StoryComponent with displayText ["
+			throw new ConversionException(
+					"Failed to read labels for StoryComponent with displayText ["
 							+ displayText + "]");
-		else {
-			while (reader.hasMoreChildren()) {
-				// read all of the labels
-				labels.add(FileIO.readValue(reader, TAG_LABEL));
-			}
+		while (reader.hasMoreChildren()) {
+			// read all of the labels
+			labels.add(FileIO.readValue(reader, TAG_LABEL));
 		}
 		reader.moveUp();
 
