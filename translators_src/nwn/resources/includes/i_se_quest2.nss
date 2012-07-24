@@ -195,8 +195,8 @@ void SE2_Quest_SetStateForRelatives(string name, int state, string relativeList)
     int i;
 
     SE2_Quest_GetAllRelatives(name, relativeList, tempArray);
-	
-	debug("Setting relatives of " + name + " to " + IntToString(state));
+    
+    debug("Setting relatives of " + name + " to " + IntToString(state));
 
     // for each relative
     for(i = 0; i < SCEZ_Struct_ArrayGetSize(player, tempArray); i++) {
@@ -243,6 +243,13 @@ int SE2_Quest_getState(object oPlayer, string name) {
 
 void SE2_Quest_setState(object oPlayer, string name, int state) {
     object module = GetModule();
+    int curState = SE2_Quest_getState(oPlayer, name);
+    
+	// don't bother setting the state to what it is already, 
+	// since we'll just end up throwing spurious events.
+    if(curState == state){
+        return;
+    }
 
     debug("setting " + name + "'s state to " + IntToString(state));
 
