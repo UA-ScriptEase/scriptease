@@ -134,11 +134,13 @@ public class FileIO {
 
 		story = (StoryModel) this.readData(location, IoMode.STORY);
 
-		// Why are quests so bloody messy? - remiller
-		rootQP = ((QuestPointNode) story.getRoot().getStartPoint())
-				.getQuestPoint();
+		if (story != null) {
+			// Why are quests so bloody messy? - remiller
+			rootQP = ((QuestPointNode) story.getRoot().getStartPoint())
+					.getQuestPoint();
 
-		BindingFixer.fixBindings(rootQP);
+			BindingFixer.fixBindings(rootQP);
+		}
 
 		return story;
 	}
