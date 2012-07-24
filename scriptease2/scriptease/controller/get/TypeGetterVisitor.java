@@ -1,8 +1,9 @@
-package scriptease.controller;
+package scriptease.controller.get;
 
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.model.complex.ComplexStoryComponent;
 
 /**

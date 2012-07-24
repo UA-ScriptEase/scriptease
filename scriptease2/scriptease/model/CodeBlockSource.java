@@ -190,7 +190,7 @@ public class CodeBlockSource extends CodeBlock {
 	public void setIncludes(Collection<String> includes) {
 		this.includes = new ArrayList<String>(includes);
 	}
-
+	
 	@Override
 	public boolean hasSubject() {
 		return !this.subjectName.isEmpty();

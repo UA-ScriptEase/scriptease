@@ -3,8 +3,8 @@ package scriptease.translator.codegenerator.code.contexts;
 import java.util.Collection;
 import java.util.Iterator;
 
-import scriptease.controller.VariableGetter;
 import scriptease.controller.apimanagers.TypeConverter;
+import scriptease.controller.get.VariableGetter;
 import scriptease.gui.quests.QuestNode;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;

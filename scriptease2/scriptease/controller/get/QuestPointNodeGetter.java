@@ -1,8 +1,9 @@
-package scriptease.controller;
+package scriptease.controller.get;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;

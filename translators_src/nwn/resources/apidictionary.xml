@@ -5532,16 +5532,16 @@
                 </Line>
               </Series>
             </Series>
-            <Scope data="start">
-              <Line>
-                <Literal>//enable the starting quest point</Literal>
-              </Line>
-              <Line>
-                <Literal>SE2_Quest_setState(GetFirstPC(), </Literal>
+            <Line>
+              <Literal>//enable the starting quest point</Literal>
+            </Line>
+            <Line>
+              <Literal>SE2_Quest_setState(GetFirstPC(), </Literal>
+              <Scope data="start">
                 <Fragment data="formattedValue"/>
-                <Literal>, QUEST_POINT_STATE_ENABLED);</Literal>
-              </Line>
-            </Scope>
+              </Scope>
+              <Literal>, QUEST_POINT_STATE_ENABLED);</Literal>
+            </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
