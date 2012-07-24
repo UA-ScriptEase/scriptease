@@ -6,12 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.io.converter.APIDictionaryConverter;
 import scriptease.controller.io.converter.AskItConverter;
-import scriptease.controller.io.converter.CodeBlockConverter;
 import scriptease.controller.io.converter.CodeBlockReferenceConverter;
 import scriptease.controller.io.converter.CodeBlockSourceConverter;
 import scriptease.controller.io.converter.DescribeItConverter;
@@ -436,7 +434,6 @@ public class FileIO {
 		stream.registerConverter(new DescribeItConverter());
 		stream.registerConverter(new TextNodeConverter());
 		stream.registerConverter(new KnowItNodeConverter());
-		stream.registerConverter(new CodeBlockConverter());
 		stream.registerConverter(new CodeBlockSourceConverter());
 		stream.registerConverter(new CodeBlockReferenceConverter());
 		stream.registerConverter(new ScriptItConverter());
@@ -516,8 +513,6 @@ public class FileIO {
 	 * - remiller
 	 */
 	private static class BindingFixer extends AbstractNoOpStoryVisitor {
-		private final Collection<KnowIt> referencesToFix;
-
 		public static void fixBindings(StoryComponent root) {
 			final BindingFixer fixer = new BindingFixer();
 
@@ -526,7 +521,6 @@ public class FileIO {
 		}
 
 		private BindingFixer() {
-			this.referencesToFix = new CopyOnWriteArraySet<KnowIt>();
 		}
 
 		@Override
