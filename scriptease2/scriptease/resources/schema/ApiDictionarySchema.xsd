@@ -114,6 +114,7 @@
 	<xsd:group name="StoryComponentDataGroup">
 		<xsd:sequence>
 			<xsd:element name="Name" type="xsd:string" />
+			<xsd:element name="Visible" type="xsd:boolean" />
 			<xsd:element name="Labels">
 				<xsd:complexType>
 					<xsd:sequence>
@@ -132,7 +133,6 @@
 			<xsd:element name="Children" type="xsd:string" />
 			<xsd:element name="CodeBlocks" type="CodeBlockList_Type" />
 		</xsd:sequence>
-		<xsd:attribute name="visible" type="xsd:boolean" use="optional" />
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
 	</xsd:complexType>
 
@@ -149,7 +149,6 @@
 			<xsd:element name="Code" type="Code_Type" />
 		</xsd:sequence>
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
-		<xsd:attribute name="visible" type="xsd:boolean" use="optional" />
 	</xsd:complexType>
 
 	<!-- Defines a Code Block Reference -->
@@ -162,20 +161,6 @@
 			</xsd:choice>
 			<xsd:element minOccurs="0" name="Parameters" type="ParameterList_Type" />
 		</xsd:sequence>
-		<xsd:attribute name="reference" type="xsd:string" use="optional" />
-		<xsd:attribute name="visible" type="xsd:boolean" use="optional" />
-	</xsd:complexType>
-
-	<!-- REMOVE -->
-	<xsd:complexType name="CodeBlock_Type">
-		<xsd:sequence minOccurs="0">
-			<xsd:element name="Types" type="SpecificTypeList_Type" />
-			<xsd:element minOccurs="0" name="Parameters" type="ParameterList_Type" />
-			<xsd:element name="Code" type="Code_Type" />
-			<xsd:element name="Includes" type="IncludesList_Type" />
-		</xsd:sequence>
-		<xsd:attribute name="subject" type="xsd:string" use="optional" />
-		<xsd:attribute name="slot" type="xsd:string" use="optional" />
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
 	</xsd:complexType>
 
@@ -206,7 +191,6 @@
 				</xsd:complexType>
 			</xsd:element>
 		</xsd:sequence>
-		<xsd:attribute name="visible" type="xsd:boolean" use="optional" />
 	</xsd:complexType>
 
 	<xsd:complexType name="KnowIt_Type">
@@ -216,7 +200,6 @@
 			<xsd:element name="Binding" type="Binding_Type"
 				minOccurs="0" />
 		</xsd:sequence>
-		<xsd:attribute name="visible" type="xsd:boolean" use="optional" />
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
 	</xsd:complexType>
 
