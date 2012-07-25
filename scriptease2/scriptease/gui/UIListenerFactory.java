@@ -1,6 +1,5 @@
 package scriptease.gui;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -9,14 +8,10 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
 import scriptease.controller.StoryVisitor;
-import scriptease.controller.io.FileIO;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.complex.ScriptIt;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 
 public class UIListenerFactory {
 
@@ -30,24 +25,6 @@ public class UIListenerFactory {
 	public static UIListenerFactory getInstance() {
 		return instance;
 	}
-
-	/*
-	 * This method was in StoryComponentSplitPane on the save button. It called
-	 * the specific "savecomponent" method, which depended on if we were editing
-	 * a scriptit or a knowit.
-	 * 
-	 * 
-	 * private void saveAction(JButton button) {
-	 * 
-	 * if (saveComponent()) {
-	 * 
-	 * // TODO add functionality? Maybe? Or check for exceptions at least?
-	 * 
-	 * } else WindowManager.getInstance().showWarningDialog(SCB_WARNING,
-	 * "Unable to save");
-	 * 
-	 * }
-	 */
 
 	/**
 	 * Builds a tree selection listener for the StoryComponentLibrary. It may be
@@ -70,8 +47,9 @@ public class UIListenerFactory {
 
 					componentPanel = (StoryComponentPanel) e.getSource();
 					component = componentPanel.getStoryComponent();
-
-					component.process(storyVisitor);
+					
+					if (componentPanel.getSelectionManager().getSelectedPanels().size() < 2)
+						component.process(storyVisitor);
 				} else {
 					throw new ClassCastException(
 							"An Object not of type StoryComponentPanel was found in the tree.");
@@ -81,20 +59,6 @@ public class UIListenerFactory {
 
 		return libraryListener;
 	}
-
-	/*
-	 * This method was in the StoryComponentDescriptorTemplate class. It saved a
-	 * component that was passed in the constructor of the class.
-	 * 
-	 * 
-	 * protected void saveComponentToAPI() { Translator activeTranslator =
-	 * TranslatorManager.getInstance() .getActiveTranslator();
-	 * activeTranslator.getApiDictionary().getLibrary().add(component); File
-	 * filePath = activeTranslator
-	 * .getPathProperty(Translator.DescriptionKeys.API_DICTIONARY_PATH
-	 * .toString()); FileIO.getInstance().writeAPIDictionary(
-	 * activeTranslator.getApiDictionary(), filePath); }
-	 */
 
 	// EffectPanel Listeners
 
@@ -117,38 +81,5 @@ public class UIListenerFactory {
 		 * editor.getCodeBlock(); if (editorBlock == codeBlock)
 		 * editor.updateDisplay(); }
 		 */
-	}
-
-	public boolean saveComponent(ScriptIt scriptIt,
-			Collection<JPanel> codeBlockEditors) {
-		boolean componentValueCheck = scriptIt.getTypes().size() > 0
-				&& scriptIt.getDisplayText().length() > 0
-				&& scriptIt.getLabels().size() > 0;
-
-		if (!componentValueCheck) {
-			WindowManager.getInstance().showWarningDialog(
-					"Story Component Builder Error",
-					"One or more of the component parts are missing.");
-			return false;
-		}
-		// Useless options, help force people to make a choice
-		final Translator activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-		if (scriptIt != null && activeTranslator != null) {
-
-			/*
-			 * Figure this out.
-			 * 
-			 * 
-			 * for (JPanel codeBlockEditor : codeBlockEditors) { final CodeBlock
-			 * codeBlock = codeBlockEditor.getCodeBlock(); final
-			 * Collection<FormatFragment> codeFragments = codeBlockEditor
-			 * .getCodeFragments();
-			 * 
-			 * codeBlock.setCode(codeFragments); }
-			 */
-			return true;
-		}
-		return false;
 	}
 }

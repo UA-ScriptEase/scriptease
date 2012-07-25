@@ -3,6 +3,8 @@ package scriptease.gui.pane;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -26,6 +28,7 @@ import scriptease.gui.SETree.filters.TypeFilter;
 import scriptease.gui.action.typemenus.TypeSelectionAction;
 import scriptease.gui.control.FilterableSearchField;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelLibrarySetting;
 import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelSetting;
@@ -47,9 +50,9 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		TranslatorObserver {
 
 	private FilterableSearchField searchField;
-	
+
 	private final JTabbedPane treeTabs;
-	
+
 	private final StoryComponentPanelTree causesTree;
 	private final StoryComponentPanelTree effectsTree;
 	private final StoryComponentPanelTree descriptionsTree;
@@ -107,39 +110,6 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	}
 
 	/**
-	 * Adds a tree selection listener to each of the tabs.
-	 * 
-	 * @param listener
-	 */
-	public void addTreeSelectionListener(TreeSelectionListener listener) {
-		
-		/*
-		 * TODO This works well enough, but what if we want to add more tabs
-		 * later? This should instead iterate over all StoryComponentTrees in
-		 * TreeTabs. We might want to make a helper method that returns a list
-		 * of StoryComponentTrees, since we would do it in multiple methods.
-		 * 
-		 * -kschenk
-		 */
-		this.causesTree.addTreeSelectionListener(listener);
-		this.effectsTree.addTreeSelectionListener(listener);
-		this.descriptionsTree.addTreeSelectionListener(listener);
-		this.foldersTree.addTreeSelectionListener(listener);
-	}
-
-	/**
-	 * Creates the default Filter to be used by the LibraryTreeModel
-	 * 
-	 * @return
-	 */
-	private StoryComponentFilter buildLibraryFilter(CategoryFilter filter) {
-		// Filter by translator
-		filter.addRule(new TranslatorFilter(TranslatorManager.getInstance()
-				.getActiveTranslator()));
-
-		return filter;
-	}
-	/**
 	 * Builds a pane that allows users to drag across any pattern (including
 	 * atoms) from any library into their Story.
 	 * 
@@ -152,21 +122,24 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		final BoxLayout searchFilterPaneLayout;
 		final SpringLayout pickerPaneLayout;
 
-	
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
 		typeFilter = new TypeSelectionAction();
 		filterPaneLayout = new BoxLayout(filterPane, BoxLayout.Y_AXIS);
 		searchFilterPaneLayout = new BoxLayout(searchFilterPane,
 				BoxLayout.X_AXIS);
-		pickerPaneLayout =  new SpringLayout();
-		
-		searchField = new FilterableSearchField(
-				this.causesTree, 20);
-		
+		pickerPaneLayout = new SpringLayout();
+
+		searchField = new FilterableSearchField(this.causesTree, 20);
+
 		searchField.addFilter(this.effectsTree);
 		searchField.addFilter(this.descriptionsTree);
 		searchField.addFilter(this.foldersTree);
+
+		treeTabs.add("Causes", causesTree);
+		treeTabs.add("Effects", effectsTree);
+		treeTabs.add("Descriptions", descriptionsTree);
+		treeTabs.add("Folders", foldersTree);
 
 		filterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
 				.createLineBorder(Color.gray), Il8nResources
@@ -178,14 +151,9 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		typeFilter.setAction(new Runnable() {
 			@Override
 			public void run() {
-				causesTree.updateFilter(new TypeFilter(typeFilter.getTypeSelectionDialogBuilder()
-						.getSelectedTypes()));
-				effectsTree.updateFilter(new TypeFilter(typeFilter.getTypeSelectionDialogBuilder()
-						.getSelectedTypes()));
-				descriptionsTree.updateFilter(new TypeFilter(typeFilter.getTypeSelectionDialogBuilder()
-						.getSelectedTypes()));
-				foldersTree.updateFilter(new TypeFilter(typeFilter.getTypeSelectionDialogBuilder()
-						.getSelectedTypes()));
+				for (StoryComponentPanelTree tree : getListOfTreeTabs())
+					tree.updateFilter(new TypeFilter(typeFilter
+							.getTypeSelectionDialogBuilder().getSelectedTypes()));
 			}
 		});
 
@@ -198,11 +166,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		filterPane.setLayout(filterPaneLayout);
 		filterPane.add(searchFilterPane);
 		this.add(filterPane);
-		
-		treeTabs.add("Causes", causesTree);
-		treeTabs.add("Effects", effectsTree);
-		treeTabs.add("Descriptions", descriptionsTree);
-		treeTabs.add("Folders", foldersTree);
+
 		this.add(treeTabs);
 		this.setPreferredSize(filterPane.getPreferredSize());
 
@@ -226,6 +190,48 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	}
 
 	/**
+	 * Adds a tree selection listener to each of the tabs.
+	 * 
+	 * @param listener
+	 */
+	public void addTreeSelectionListener(TreeSelectionListener listener) {
+		for (StoryComponentPanelTree tree : getListOfTreeTabs()) {
+			tree.addTreeSelectionListener(listener);
+		}
+	}
+	
+	/**
+	 * Returns all tabs that are StoryComponentPanelTrees as a list, in the same
+	 * order as they are in the tabs.
+	 * 
+	 * @return
+	 */
+	private List<StoryComponentPanelTree> getListOfTreeTabs() {
+		final List<StoryComponentPanelTree> treeList;
+
+		treeList = new ArrayList<StoryComponentPanelTree>();
+
+		for (Component treeTab : this.treeTabs.getComponents())
+			if (treeTab instanceof StoryComponentPanelTree)
+				treeList.add((StoryComponentPanelTree) treeTab);
+
+		return treeList;
+	}
+
+	/**
+	 * Creates the default Filter to be used by the LibraryTreeModel
+	 * 
+	 * @return
+	 */
+	private StoryComponentFilter buildLibraryFilter(CategoryFilter filter) {
+		// Filter by translator
+		filter.addRule(new TranslatorFilter(TranslatorManager.getInstance()
+				.getActiveTranslator()));
+
+		return filter;
+	}
+
+	/**
 	 * Keep the display of the library up to date with the changes to Libraries
 	 * 
 	 * TODO This seems to be broken when two modules are loaded. Figure out why!
@@ -236,10 +242,8 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 			@Override
 			public void run() {
 				// invoke later after the translator has finished loading
-				causesTree.filterTree();
-				effectsTree.filterTree();
-				descriptionsTree.filterTree();
-				foldersTree.filterTree();
+				for (StoryComponentPanelTree tree : getListOfTreeTabs())
+					tree.filterTree();
 			}
 		});
 	}
@@ -249,10 +253,9 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 */
 	@Override
 	public void translatorLoaded(Translator newTranslator) {
-		for (Component tree : treeTabs.getComponents()) {
-			((StoryComponentPanelTree) tree).updateFilter(new TranslatorFilter(
-					newTranslator));
-			((StoryComponentPanelTree) tree).filterTree();
+		for (StoryComponentPanelTree tree : getListOfTreeTabs()) {
+			tree.updateFilter(new TranslatorFilter(newTranslator));
+			tree.filterTree();
 		}
 	}
 }

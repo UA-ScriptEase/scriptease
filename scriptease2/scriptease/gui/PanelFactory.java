@@ -2,7 +2,6 @@ package scriptease.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -33,6 +32,8 @@ import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.TreeSelectionListener;
@@ -60,7 +61,6 @@ import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -179,49 +179,20 @@ public class PanelFactory {
 	}
 
 	/**
-	 * Creates a new JPanel with nothing inside except a JLabel of the passed
-	 * text.
-	 * 
-	 * @param text
-	 * @return
-	 */
-	private JPanel buildEmptyPanelWithText(String text) {
-		final JPanel nullPanel;
-		final JLabel nullLabel;
-
-		nullPanel = new JPanel();
-		nullLabel = new JLabel(text);
-
-		nullPanel.setLayout(new BoxLayout(nullPanel, BoxLayout.PAGE_AXIS));
-
-		nullLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-		nullPanel.add(Box.createVerticalGlue());
-		nullPanel.add(nullLabel);
-		nullPanel.add(Box.createVerticalGlue());
-
-		return nullPanel;
-	}
-
-	/**
 	 * Creates a JPanel with fields for Name, Labels, and a check box for
 	 * Visibility. This JPanel is common to all story component editor panes.
 	 * 
 	 * @return
 	 */
 	public JComponent buildStoryComponentEditorComponent(
-			final StoryComponent storyComponent) {
-
-		// TODO A Save button should go into Menu Bar!
-
-		// If storyComponent is null, show a blank JPanel.
-		if (storyComponent == null) {
-			return buildEmptyPanelWithText("");
-		}
+			final LibraryPane libraryPane) {
+		final StoryVisitor storyVisitor;
+		final TreeSelectionListener librarySelectionListener;
 
 		final JPanel editorPanel;
 		final JScrollPane editorScrollPane;
 		final JPanel descriptorPanel;
+		final JPanel componentEditingPanel;
 
 		final JLabel nameLabel;
 		final JLabel labelLabel;
@@ -240,6 +211,7 @@ public class PanelFactory {
 		editorPanel = new JPanel();
 		editorScrollPane = new JScrollPane(editorPanel);
 		descriptorPanel = new JPanel();
+		componentEditingPanel = new JPanel();
 
 		nameLabel = new JLabel("Name: ");
 		labelLabel = new JLabel("Labels: ");
@@ -259,6 +231,8 @@ public class PanelFactory {
 				+ "removed automatically.</html>";
 
 		editorPanel.setLayout(new BoxLayout(editorPanel, BoxLayout.PAGE_AXIS));
+		componentEditingPanel.setLayout(new BoxLayout(componentEditingPanel,
+				BoxLayout.PAGE_AXIS));
 
 		editorScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
@@ -279,80 +253,23 @@ public class PanelFactory {
 		visibleLabel.setFont(labelFont);
 		visibleLabel.setLabelFor(visibleBox);
 
-		// Set up the default field values
-		nameField.setText(storyComponent.getDisplayText());
-
-		labelField.setText(getCollectionAsString(storyComponent.getLabels()));
-		labelField.setToolTipText(labelToolTip);
-
-		visibleBox.setSelected(VisibilityManager.getInstance().isVisible(
-				storyComponent));
-
-		// Set up the field listeners
-		nameField.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				storyComponent.setDisplayText(nameField.getText());
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				this.insertUpdate(e);
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-			}
-		});
-
-		labelField.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				final String labelFieldText;
-				final String[] labelArray;
-				final Collection<String> labels;
-
-				labelFieldText = labelField.getText();
-				labelArray = labelFieldText.split(",");
-				labels = new ArrayList<String>();
-
-				for (String label : labelArray) {
-					labels.add(label.trim());
-				}
-				storyComponent.setLabels(labels);
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				this.insertUpdate(e);
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-			}
-		});
-
-		visibleBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				VisibilityManager.getInstance().setVisibility(storyComponent,
-						visibleBox.isSelected());
-			}
-		});
-
 		// Add JComponents to DescriptorPanel using GroupLayout
 		descriptorPanelLayout.setHorizontalGroup(descriptorPanelLayout
-				.createSequentialGroup()
-				.addGroup(
-						descriptorPanelLayout.createParallelGroup()
-								.addComponent(nameLabel)
-								.addComponent(visibleLabel)
-								.addComponent(labelLabel))
-				.addGroup(
-						descriptorPanelLayout.createParallelGroup()
-								.addComponent(visibleBox)
-								.addComponent(nameField)
-								.addComponent(labelField)));
+				.createParallelGroup().addGroup(
+						descriptorPanelLayout
+								.createSequentialGroup()
+								.addGroup(
+										descriptorPanelLayout
+												.createParallelGroup()
+												.addComponent(nameLabel)
+												.addComponent(visibleLabel)
+												.addComponent(labelLabel))
+								.addGroup(
+										descriptorPanelLayout
+												.createParallelGroup()
+												.addComponent(visibleBox)
+												.addComponent(nameField)
+												.addComponent(labelField))));
 
 		descriptorPanelLayout.setVerticalGroup(descriptorPanelLayout
 				.createSequentialGroup()
@@ -376,35 +293,62 @@ public class PanelFactory {
 								.addComponent(labelField)));
 
 		editorPanel.add(descriptorPanel);
+		editorPanel.add(componentEditingPanel);
 
-		// Display appropriate panel for component.
-		storyComponent.process(new AbstractNoOpStoryVisitor() {
+		editorPanel.setVisible(false);
+
+		/*
+		 * Create an AbstractNoOpStoryVisitor which calls an update on the
+		 * editorPanel. This is used as a sort of Command Pattern with
+		 * UIListenerFactory.
+		 */
+		storyVisitor = new AbstractNoOpStoryVisitor() {
+			private DocumentListener nameFieldListener;
+			private DocumentListener labelFieldListener;
+			private ActionListener visibleBoxListener;
 
 			@Override
 			public void processScriptIt(final ScriptIt scriptIt) {
+				// Causes and effects are processed as ScriptIts
+				componentEditingPanel.removeAll();
+
 				final Collection<CodeBlock> codeBlocks = scriptIt
 						.getCodeBlocks();
 
 				for (CodeBlock codeBlock : codeBlocks) {
-					editorPanel
-							.add(new CodeBlockComponent(codeBlock, scriptIt));
+					componentEditingPanel.add(new CodeBlockComponent(codeBlock,
+							scriptIt));
 				}
+
+				updateComponents(scriptIt);
+
+				editorPanel.repaint();
+				editorPanel.revalidate();
+
+				/*
+				 * Sets the scroll bar back to the top of the screen.
+				 * 
+				 * See http://bit.ly/3OXFet for more info.
+				 */
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						editorScrollPane.getVerticalScrollBar().setValue(0);
+					}
+				});
 			}
 
 			@Override
 			public void processKnowIt(final KnowIt knowIt) {
-				// TODO We will need to be able to edit implicits eventually.
-				// They are knowits.
-				editorPanel.add(PanelFactory.getInstance()
-						.buildDescriptionEditorPanel(knowIt));
-			}
+				// Descriptions are processed as KnowIts.
+				componentEditingPanel.removeAll();
 
-			@Override
-			public void defaultProcess(StoryComponent component) {
-				// By default, an empty editor panel with text is created.
-				editorPanel.removeAll();
-				editorPanel
-						.add(buildEmptyPanelWithText("Select a Story Component to begin editing it."));
+				componentEditingPanel.add(PanelFactory.getInstance()
+						.buildDescriptionEditorPanel(knowIt));
+
+				updateComponents(knowIt);
+
+				editorPanel.repaint();
+				editorPanel.revalidate();
 			}
 
 			// We may want to implement these later, so their default methods
@@ -421,20 +365,132 @@ public class PanelFactory {
 				// Unimplemented
 				this.defaultProcess(container);
 			}
-		});
 
-		/*
-		 * Sets the scroll bar back to the top of the screen.
-		 * 
-		 * See http://bit.ly/3OXFet for more info.
-		 */
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				editorScrollPane.getVerticalScrollBar().setValue(0);
+			/**
+			 * Updates the JComponents based on the selected StoryComponent.
+			 * 
+			 * @param component
+			 */
+			private void updateComponents(final StoryComponent component) {
+				// Set up the default field values
+				nameField.getDocument().removeDocumentListener(
+						nameFieldListener);
+				labelField.getDocument().removeDocumentListener(
+						labelFieldListener);
+				visibleBox.removeActionListener(visibleBoxListener);
+
+				nameField.setText(component.getDisplayText());
+				labelField
+						.setText(getCollectionAsString(component.getLabels()));
+				labelField.setToolTipText(labelToolTip);
+				visibleBox.setSelected(VisibilityManager.getInstance()
+						.isVisible(component));
+
+				nameFieldListener = nameFieldListener(nameField, component);
+				labelFieldListener = labelFieldListener(labelField, component);
+				visibleBoxListener = visibleBoxListener(visibleBox, component);
+
+				nameField.getDocument().addDocumentListener(nameFieldListener);
+				labelField.getDocument()
+						.addDocumentListener(labelFieldListener);
+				visibleBox.addActionListener(visibleBoxListener);
+
+				editorPanel.setVisible(true);
 			}
-		});
+
+			@Override
+			public void defaultProcess(StoryComponent component) {
+				editorPanel.setVisible(false);
+			}
+		};
+
+		librarySelectionListener = UIListenerFactory.getInstance()
+				.buildStoryComponentLibraryListener(storyVisitor);
+
+		// Add the tree listener
+		libraryPane.addTreeSelectionListener(librarySelectionListener);
 
 		return editorScrollPane;
+	}
+
+	/**
+	 * Listener for the name field for editing a story component.
+	 * 
+	 * @param component
+	 * @return
+	 */
+	private DocumentListener nameFieldListener(final JTextField nameField,
+			final StoryComponent component) {
+		return new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				component.setDisplayText(nameField.getText());
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				this.insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+			}
+		};
+	}
+
+	/**
+	 * Listener for the label field for editing a story component.
+	 * 
+	 * @param labelField
+	 * @param component
+	 * @return
+	 */
+	private DocumentListener labelFieldListener(final JTextField labelField,
+			final StoryComponent component) {
+		return new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				final String labelFieldText;
+				final String[] labelArray;
+				final Collection<String> labels;
+
+				labelFieldText = labelField.getText();
+				labelArray = labelFieldText.split(",");
+				labels = new ArrayList<String>();
+
+				for (String label : labelArray) {
+					labels.add(label.trim());
+				}
+				component.setLabels(labels);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				this.insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+			}
+		};
+	}
+
+	/**
+	 * Listener for the visible box for editing a story component.
+	 * 
+	 * @param visibleBox
+	 * @param component
+	 * @return
+	 */
+	private ActionListener visibleBoxListener(final JCheckBox visibleBox,
+			final StoryComponent component) {
+		return new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				VisibilityManager.getInstance().setVisibility(component,
+						visibleBox.isSelected());
+			}
+		};
 	}
 
 	/*
@@ -472,24 +528,19 @@ public class PanelFactory {
 	 * @param editorPanel
 	 * @return
 	 */
-	public JPanel buildStoryComponentLibraryPanel(JComponent editorPanel) {
+	public JPanel buildStoryComponentLibraryPanel(LibraryPane libraryPane) {
 		final List<Translator> translators;
 		final JComboBox libSelector;
 		final JPanel libraryPanel;
 		final JPanel translatorPanel;
-		final LibraryPane libraryPane;
 		final Translator activeTranslator;
-		final TreeSelectionListener librarySelectionListener;
-		final StoryVisitor storyVisitor;
 
 		libraryPanel = new JPanel();
 		translatorPanel = new JPanel();
 		translators = new ArrayList<Translator>();
 		// TODO We need to also load invisible story components.
-		libraryPane = new LibraryPane();
 		activeTranslator = TranslatorManager.getInstance()
 				.getActiveTranslator();
-		storyVisitor = editorPanelUpdater(editorPanel);
 
 		libraryPanel.setLayout(new BoxLayout(libraryPanel, BoxLayout.Y_AXIS));
 
@@ -512,40 +563,9 @@ public class PanelFactory {
 
 		libraryPanel.add(translatorPanel);
 
-		librarySelectionListener = UIListenerFactory.getInstance()
-				.buildStoryComponentLibraryListener(storyVisitor);
-
-		// Add the tree listener
-		libraryPane.addTreeSelectionListener(librarySelectionListener);
-
 		libraryPanel.add(libraryPane);
 
 		return libraryPanel;
-	}
-
-	/**
-	 * Creates an AbstractNoOpStoryVisitor which calls an update on the
-	 * editorPanel. This is used as a sort of Command Pattern with
-	 * UIListenerFactory.
-	 * 
-	 * @param editorPanel
-	 *            The editorPanel to update.
-	 * 
-	 * @return
-	 */
-	public StoryVisitor editorPanelUpdater(final JComponent editorPanel) {
-		StoryVisitor storyVisitor = new AbstractNoOpStoryVisitor() {
-			@Override
-			public void defaultProcess(StoryComponent component) {
-				editorPanel.removeAll();
-
-				editorPanel.add(buildStoryComponentEditorComponent(component));
-
-				editorPanel.repaint();
-				editorPanel.revalidate();
-			}
-		};
-		return storyVisitor;
 	}
 
 	/**
@@ -575,22 +595,6 @@ public class PanelFactory {
 	}
 
 	/**
-	 * This method allows us to easily remove a component from another
-	 * component, and then repaint and revalidate the removed from component.
-	 * 
-	 * @param component1
-	 * @param component2
-	 */
-	private void removeComponentFromComponent(JComponent component,
-			Container container) {
-		container.remove(component);
-
-		container.repaint();
-		// TODO Enable when ant is in Java 1.7
-		// container.revalidate();
-	}
-
-	/**
 	 * Method to set the translator. This is separate so that Progress.aj can
 	 * show the loading bar when a new Translator is loading.
 	 * 
@@ -617,17 +621,6 @@ public class PanelFactory {
 		private final CodeBlock codeBlock;
 		private final ScriptIt scriptIt;
 
-		// TODO If cause, then set up a combo box for subject/slot that
-		// disallows emptiness.
-		// TODO If main effect, no subject/slot fields.
-		// TODO If second effect, set up combo box as in cause, but with an
-		// empty option.
-
-		/*
-		 * So differences between each of these are: subject/slot fields. The
-		 * rest is common.
-		 */
-
 		/**
 		 * Sets up the JPanel used to edit CodeBlocks. This shows the id, slot,
 		 * includes, types, parameters, and code for the passed in CodeBlock,
@@ -643,6 +636,10 @@ public class PanelFactory {
 			this.codeBlock = codeBlock;
 			this.scriptIt = scriptIt;
 
+			this.redrawComponents();
+		}
+
+		private void redrawComponents() {
 			final JLabel idLabel;
 			final JLabel subjectLabel;
 			final JLabel slotLabel;
@@ -667,10 +664,7 @@ public class PanelFactory {
 			final Font labelFont;
 			final List<KnowIt> parameters;
 
-			idLabel = new JLabel("ID# 35235"); // TODO Implement ID checking.
-												// Will
-												// do once merged with Robin's
-												// code.
+			idLabel = new JLabel("ID# " + codeBlock.getId());
 			subjectLabel = new JLabel("Subject: ");
 			slotLabel = new JLabel("Slot: ");
 			implicitsLabel = new JLabel("Implicits: ");
@@ -697,6 +691,8 @@ public class PanelFactory {
 			parameters = codeBlock.getParameters();
 
 			// Set up the codeBlockEditorPanel and the scroll pane
+			this.removeAll();
+
 			this.setLayout(codeBlockEditorLayout);
 			this.setBorder(new TitledBorder("Code Block: "));
 
@@ -753,8 +749,8 @@ public class PanelFactory {
 			typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
 
 			for (KnowIt parameter : parameters) {
-				parameterPanel
-						.add(new ParameterComponent(codeBlock, parameter));
+				parameterPanel.add(new ParameterComponent(scriptIt, codeBlock, parameter,
+						this));
 			}
 
 			includesField.getDocument().addDocumentListener(
@@ -802,9 +798,20 @@ public class PanelFactory {
 				}
 			});
 
-			// TODO Set up the listener to add a new parameter
+			addParameterButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					parameters.add(new KnowIt());
+					codeBlock.setParameters(parameters);
+					
+					CodeBlockComponent.this.redrawComponents();
+					
+					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+							StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_ADD));
+				}
+			});
 
-			// TODO Set the listeners for code panel
+			// TODO Set up the code panel
 			// Here's some old code from the codePanel
 
 			/*
@@ -919,19 +926,6 @@ public class PanelFactory {
 
 				if (!slots.isEmpty())
 					subjectBox.addItem(parameter.getDisplayText());
-
-				/*
-				 * TODO When default type is changed, check if they have slots
-				 * before allowing them as subjects again. Remove from subject
-				 * box if not. 
-				 * 
-				 * Now, how will we handle causes, where one subject
-				 * need be present?
-				 * 
-				 * We disallow selecting the default type as a type without slots,
-				 * if the currently selected subject is the parameter we're editing.
-				 * 
-				 */
 			}
 
 			// Set up the listeners
@@ -1021,7 +1015,7 @@ public class PanelFactory {
 		}
 
 		/*
-		 * TODO This may need to be an inner class, like parameter component.
+		 * TODO This be needin' an inner class, like parameter component.
 		 */
 		private JComponent buildCodeInputComponent(CodeBlock codeBlock) {
 			final JTextPane codePane;
@@ -1144,8 +1138,9 @@ public class PanelFactory {
 		 * 
 		 * @param parameter
 		 */
-		private ParameterComponent(final CodeBlock codeBlock,
-				final KnowIt parameter) {
+		private ParameterComponent(final ScriptIt scriptIt, final CodeBlock codeBlock,
+				final KnowIt parameter,
+				final CodeBlockComponent codeBlockComponent) {
 			super();
 			this.parameter = parameter;
 
@@ -1171,6 +1166,8 @@ public class PanelFactory {
 			this.setLayout(groupLayout);
 			this.setBorder(new TitledBorder(parameter.getDisplayText()));
 
+			// Set up sizes
+			// TODO Set up sizes for everything, so it doesn't look as horrible.
 			this.setMaximumSize(new Dimension(1920, 150));
 
 			// Set default values
@@ -1195,7 +1192,6 @@ public class PanelFactory {
 			});
 
 			typeAction.setAction(new Runnable() {
-				// TODO This isn't updating the LibraryPane, but it should.
 				@Override
 				public void run() {
 					Collection<String> newTypes = typeAction
@@ -1220,6 +1216,9 @@ public class PanelFactory {
 						defaultTypeBox.addItem(type);
 
 					defaultTypeBox.setSelectedItem(defaultType);
+
+					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+							StoryComponentChangeEnum.CHANGE_PARAMETER_TYPES_SET));
 				}
 			});
 
@@ -1246,7 +1245,11 @@ public class PanelFactory {
 
 					parameter.setTypes(newTypeList);
 
+					codeBlockComponent.redrawComponents();
 					updateBindingConstantComponent(bindingConstantComponent);
+					
+					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+							StoryComponentChangeEnum.CHANGE_PARAMETER_DEFAULT_TYPE_SET));
 				}
 			});
 
@@ -1266,8 +1269,13 @@ public class PanelFactory {
 						parameters.remove(parameter);
 
 						codeBlock.setParameters(parameters);
-						removeComponentFromComponent(ParameterComponent.this,
-								ParameterComponent.this.getParent());
+
+						codeBlockComponent.remove(ParameterComponent.this);
+						codeBlockComponent.redrawComponents();
+						
+
+						scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+								StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_REMOVE));
 					}
 				}
 			});
@@ -1327,15 +1335,16 @@ public class PanelFactory {
 			if (defaultTypeGuiType == null)
 				bindingConstantComponent.add(inactiveTextField);
 			else {
+				final String bindingText;
+				bindingText = parameter.getBinding().getScriptValue();
+
 				switch (defaultTypeGuiType) {
 				// TODO Add listeners to these spinners and combo
 				// boxes so the default binding is set!
 				case JTEXTFIELD:
 					final JTextField bindingField;
-					final String bindingText;
 
 					bindingField = new JTextField(30);
-					bindingText = parameter.getBinding().getScriptValue();
 
 					if (bindingText.equals("<unbound!>"))
 						bindingField.setText("");
@@ -1349,15 +1358,11 @@ public class PanelFactory {
 									final String bindingFieldText;
 									bindingFieldText = bindingField.getText();
 
-									if (bindingFieldText.length() > 0) {
-										GameConstant newConstant = GameConstantFactory
-												.getInstance().getConstant(
-														parameter.getTypes(),
-														bindingField.getText());
-										parameter.setBinding(newConstant);
-									} else
-										parameter
-												.setBinding(new KnowItBindingNull());
+									GameConstant newConstant = GameConstantFactory
+											.getInstance().getConstant(
+													parameter.getTypes(),
+													bindingFieldText);
+									parameter.setBinding(newConstant);
 								}
 
 								@Override
@@ -1372,22 +1377,73 @@ public class PanelFactory {
 					bindingConstantComponent.add(bindingField);
 					break;
 				case JSPINNER:
-					bindingConstantComponent.add(new JSpinner());
+					final JSpinner bindingSpinner;
+					final int bindingInt;
+
+					bindingSpinner = new JSpinner();
+
+					if (bindingText.equals("<unbound!>"))
+						bindingSpinner.setValue(0);
+					else {
+						bindingInt = Integer.parseInt(bindingText);
+						bindingSpinner.setValue(bindingInt);
+					}
+					bindingSpinner.addChangeListener(new ChangeListener() {
+						@Override
+						public void stateChanged(ChangeEvent e) {
+							final Object bindingFieldValue;
+							bindingFieldValue = bindingSpinner.getValue();
+
+							GameConstant newConstant = GameConstantFactory
+									.getInstance().getConstant(
+											parameter.getTypes(),
+											bindingFieldValue.toString());
+							parameter.setBinding(newConstant);
+						}
+					});
+					bindingConstantComponent.add(bindingSpinner);
 					break;
 				case JCOMBOBOX:
 					final Map<String, String> map;
-					final JComboBox selectorBox;
+					final JComboBox bindingBox;
 
 					map = gameTypeManager
 							.getEnumMap(parameter.getDefaultType());
-					selectorBox = new JComboBox();
+					bindingBox = new JComboBox();
 
-					selectorBox.addItem(null);
+					bindingBox.addItem(null);
 
 					for (String key : map.keySet())
-						selectorBox.addItem(key + " [" + map.get(key) + "]");
+						bindingBox.addItem(map.get(key));
 
-					bindingConstantComponent.add(selectorBox);
+					if (bindingText.equals("<unbound!>"))
+						bindingBox.setSelectedItem(null);
+					else
+						bindingBox.setSelectedItem(bindingText);
+
+					bindingBox.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							final Object bindingBoxValue;
+							bindingBoxValue = bindingBox.getSelectedItem();
+
+							GameConstant newConstant = GameConstantFactory
+									.getInstance().getConstant(
+											parameter.getTypes(),
+											bindingBoxValue.toString());
+							parameter.setBinding(newConstant);
+
+							/*
+							 * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+							 * Good morning! TODO TODO Issue: ComboBox default
+							 * not set :( TODO TODO TODO TODO TODO TODO TODO
+							 * TODO TODO TODO
+							 */
+
+						}
+					});
+
+					bindingConstantComponent.add(bindingBox);
 					break;
 				default: {
 					inactiveTextField.setText("Unimplemented GUI Type: "

@@ -487,7 +487,7 @@ public class ScriptWidgetFactory {
 
 		String scriptValue = knowIt.getBinding().getScriptValue();
 		if (scriptValue != null && !scriptValue.isEmpty())
-			combo.setSelectedItem(enumMap.get(scriptValue));
+			combo.setSelectedItem(scriptValue);
 		else
 			combo.setSelectedIndex(-1);
 
