@@ -17,6 +17,12 @@ import scriptease.model.atomic.KnowIt;
 public class KnowItBindingReference extends KnowItBinding {
 	private final KnowIt referenceValue;
 
+	/**
+	 * Builds a reference to the given KnowIt.
+	 * 
+	 * @param value
+	 *            the referent.
+	 */
 	public KnowItBindingReference(KnowIt value) {
 		this.referenceValue = value;
 	}
@@ -51,7 +57,8 @@ public class KnowItBindingReference extends KnowItBinding {
 	}
 
 	/**
-	 * Returns the deepest KnowItBinding of the KnowItBindingReference
+	 * Determines the deepest non-reference KnowItBinding of the
+	 * KnowItBindingReference chain.
 	 * 
 	 * @return
 	 */
@@ -68,7 +75,7 @@ public class KnowItBindingReference extends KnowItBinding {
 	public String toString() {
 		return "KnowItBindingReference : " + this.referenceValue.toString();
 	}
-	
+
 	@Override
 	public boolean isBound() {
 		return this.referenceValue.getBinding().isBound();

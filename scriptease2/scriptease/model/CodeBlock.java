@@ -199,7 +199,8 @@ public abstract class CodeBlock extends StoryComponent implements
 
 			this.implicits = new CopyOnWriteArraySet<KnowIt>();
 
-			// only get implicits for code blocks that actually have them, which
+			// only fetch implicits for code blocks that actually have them,
+			// which
 			// is determined by slot.
 			if (active != null && this.hasSlot()) {
 				// Arf arf!
@@ -211,7 +212,7 @@ public abstract class CodeBlock extends StoryComponent implements
 				for (KnowIt implicit : slotManager.getImplicits(this.getSlot())) {
 					clone = implicit.clone();
 					clonedImplicits.add(clone);
-					clone.setOwner(this.getCause());
+					clone.setOwner(this);
 				}
 
 				this.implicits.addAll(clonedImplicits);
@@ -265,7 +266,12 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * @return The encapsulating Cause.
 	 */
 	public ScriptIt getCause() {
-		if (!this.getSubjectName().isEmpty() || !this.getSlot().isEmpty())
+		/*
+		 * This is a || because sometimes while editing we can have only one.
+		 * It's not a valid cause-codeblock while in that state, but this is as
+		 * close as we can get. - remiller
+		 */
+		if (this.hasSubject() || this.hasSlot())
 			return (ScriptIt) this.getOwner();
 		else {
 			StoryComponent parent = this.getOwner().getOwner();

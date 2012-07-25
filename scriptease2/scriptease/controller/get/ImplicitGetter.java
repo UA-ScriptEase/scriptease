@@ -1,5 +1,6 @@
-package scriptease.controller;
+package scriptease.controller.get;
 
+import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.ScriptIt;

@@ -54,6 +54,18 @@ public class CodeBlockReference extends CodeBlock {
 	}
 
 	@Override
+	public void setOwner(StoryComponent newOwner) {
+		super.setOwner(newOwner);
+
+		// we set the parameters initially to null, and then to ourself to mimic
+		// the way that parameters get loaded normally. Scoping rules are
+		// dependant on it, which is silly, but that's how it is. - remiller
+		for (KnowIt param : this.getParameters()) {
+			param.setOwner(this);
+		}
+	}
+
+	@Override
 	public CodeBlockReference clone() {
 		CodeBlockReference clone = null;
 		final Collection<KnowIt> clonedParameters;
@@ -110,15 +122,6 @@ public class CodeBlockReference extends CodeBlock {
 		this.setParameters(this.target.getParameters());
 	}
 
-	@Override
-	public void setOwner(ScriptIt newOwner) {
-		super.setOwner(newOwner);
-
-		for (KnowIt param : this.getParameters()) {
-			param.setOwner(this);
-		}
-	}
-
 	/**
 	 * Override of {@link CodeBlock#setParameters(Collection)} that re-clones
 	 * parameters from the target and then tries to match bindings to the given
@@ -147,6 +150,7 @@ public class CodeBlockReference extends CodeBlock {
 		for (KnowIt param : targetParameters) {
 			clone = param.clone();
 			newParameters.add(clone);
+			// see setOwner() for why this is set to null
 			clone.setOwner(null);
 		}
 

@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import scriptease.controller.ComplexStoryComponentDescendantCollector;
-import scriptease.controller.QuestPointNodeGetter;
+import scriptease.controller.get.QuestPointNodeGetter;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;

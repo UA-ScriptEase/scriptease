@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import scriptease.controller.AbstractNoOpStoryVisitor;
-import scriptease.controller.AskItGetter;
-import scriptease.controller.ImplicitGetter;
-import scriptease.controller.VariableGetter;
+import scriptease.controller.get.AskItGetter;
+import scriptease.controller.get.ImplicitGetter;
+import scriptease.controller.get.VariableGetter;
 import scriptease.gui.quests.QuestNode;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
