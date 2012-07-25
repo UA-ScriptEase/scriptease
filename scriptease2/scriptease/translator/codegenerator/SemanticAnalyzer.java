@@ -6,8 +6,8 @@ import java.util.List;
 
 import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
-import scriptease.controller.QuestPointNodeGetter;
 import scriptease.controller.apimanagers.TypeConverter;
+import scriptease.controller.get.QuestPointNodeGetter;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.modelverifier.rule.StoryRule;
 import scriptease.gui.quests.QuestNode;

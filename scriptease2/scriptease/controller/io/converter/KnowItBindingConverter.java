@@ -353,14 +353,17 @@ public class KnowItBindingConverter implements Converter {
 
 	private KnowItBindingReference unmarshallReferenceBinding(
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
+		final KnowIt referent;
 		KnowItBindingReference binding = new KnowItBindingReference(null);
-
+		
 		// move down and read as a knowIt
 		reader.moveDown();
-		KnowItBindingReference knowItBindingReference = new KnowItBindingReference(
-				(KnowIt) context.convertAnother(binding, KnowIt.class));
+		referent = (KnowIt) context.convertAnother(binding, KnowIt.class);
 		reader.moveUp();
-		return knowItBindingReference;
+		
+		binding = new KnowItBindingReference(referent);
+		
+		return binding;
 	}
 
 	private KnowItBindingDescribeIt unmarshallDescribeItBinding(

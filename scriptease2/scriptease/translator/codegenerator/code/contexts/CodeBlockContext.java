@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
-import scriptease.controller.VariableGetter;
+import scriptease.controller.get.VariableGetter;
 import scriptease.gui.quests.QuestNode;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;

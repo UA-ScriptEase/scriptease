@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import scriptease.controller.StoryVisitor;
+import scriptease.controller.io.FileIO;
+import scriptease.controller.io.FileIO.IoMode;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
