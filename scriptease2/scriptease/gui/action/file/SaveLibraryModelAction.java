@@ -6,20 +6,17 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.controller.FileManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
 
 /**
- * Represents and performs the Save Model command, as well as encapsulates its
+ * Represents and performs the Save Library Model command, as well as encapsulates its
  * enabled and name display state. <br>
  * <br>
- * Save Model entails calling the FileManager's method for saving a particular
- * model with the currently selected model as argument.
+ * Save Library Model entails calling the FileManager's method for saving a particular
+ * library model with the currently selected model as argument.
  * 
- * @author remiller
+ * @author kschenk
  */
 @SuppressWarnings("serial")
 public final class SaveLibraryModelAction extends ActiveModelSensitiveAction {

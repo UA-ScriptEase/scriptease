@@ -116,9 +116,6 @@ public abstract class StoryComponent implements Cloneable {
 	 *      sibling)
 	 */
 	public void setOwner(StoryComponent newOwner) {
-		if(newOwner == null)
-				System.out.println("of the derp");
-		
 		this.ownerComponent = newOwner;
 	}
 

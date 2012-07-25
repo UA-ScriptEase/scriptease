@@ -31,6 +31,7 @@ import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.gui.pane.LibraryPane;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.LibraryManager;
@@ -651,21 +652,24 @@ public final class WindowManager implements WindowFocusListener {
 	private JFrame buildStoryComponentBuilderFrame() {
 		final JFrame scbFrame;
 		final JComponent editingPane;
-		final JPanel libraryPane;
-
+		final LibraryPane libraryPane;
+		final JPanel librarySelectionPane;
+		
 		scbFrame = new JFrame("Story Component Builder");
 		
+		libraryPane = new LibraryPane();
+		
+		librarySelectionPane = PanelFactory.getInstance()
+				.buildStoryComponentLibraryPanel(libraryPane);
+		
 		editingPane = PanelFactory.getInstance()
-				.buildStoryComponentEditorComponent(null);
-
-		libraryPane = PanelFactory.getInstance()
-				.buildStoryComponentLibraryPanel(editingPane);
+				.buildStoryComponentEditorComponent(libraryPane);
 			
 		// TODO Move to UIListenerFactory
 		scbFrame.addWindowFocusListener(this);
 		
 		scbFrame.setJMenuBar(MenuFactory.buildBuilderMenuBar());
-		scbFrame.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, libraryPane,
+		scbFrame.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, librarySelectionPane,
 				editingPane));
 		
 		scbFrame.setSize(new Dimension(1200, 600));
