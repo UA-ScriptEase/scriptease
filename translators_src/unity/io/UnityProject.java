@@ -59,7 +59,7 @@ public final class UnityProject implements GameModule {
 	}
 
 	@Override
-	public List<GameConstant> getInstancesOfType(String type) {
+	public List<GameConstant> getResourcesOfType(String type) {
 		// TODO Auto-generated method stub
 		return null;
 	}
