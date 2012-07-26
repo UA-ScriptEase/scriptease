@@ -106,17 +106,16 @@ public class APIDictionary implements LibraryObserver {
 		return "APIDictionary [" + this.getName() + "]";
 	}
 
-	public List<CodeBlock> getCodeBlocksByValRef(String scriptValue) {
-		List<StoryComponent> componentList = this.library.getEffectsCategory()
-				.getChildren();
-		List<CodeBlock> codeBlockList = new ArrayList<CodeBlock>();
+	public List<CodeBlock> getCodeBlocksByName(String scriptValue) {
+		final List<StoryComponent> componentList;
+
+		componentList = this.library.getEffectsCategory().getChildren();
+		
 		for (StoryComponent component : componentList) {
-			if (component instanceof ScriptIt) {
-				if (component.getDisplayText().equals(scriptValue)) {
-					codeBlockList
-							.addAll(((ScriptIt) component).getCodeBlocks());
-					return codeBlockList;
-				}
+			if (component instanceof ScriptIt
+					&& component.getDisplayText().equals(scriptValue)) {
+				return new ArrayList<CodeBlock>(
+						((ScriptIt) component).getCodeBlocks());
 			}
 		}
 
@@ -174,11 +173,12 @@ public class APIDictionary implements LibraryObserver {
 			if (this.found == null) {
 				final Collection<KnowIt> knowIts = new ArrayList<KnowIt>();
 
-				for (Slot slot : dictionary.getEventSlotManager().getEventSlots()) {
+				for (Slot slot : dictionary.getEventSlotManager()
+						.getEventSlots()) {
 					// gotta collect 'em together first.
 					knowIts.addAll(slot.getImplicits());
 					knowIts.addAll(slot.getParameters());
-					
+
 					for (KnowIt knowIt : knowIts) {
 						knowIt.process(this);
 
