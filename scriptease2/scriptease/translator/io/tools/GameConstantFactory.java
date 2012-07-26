@@ -81,37 +81,7 @@ public class GameConstantFactory {
 				}
 			};
 		} else {
-			newConstant = new GameConstant() {
-				@Override
-				public Collection<String> getTypes() {
-					return types;
-				}
-
-				@Override
-				public String getResolutionText() {
-					return resolutionCode;
-				}
-
-				@Override
-				public String getName() {
-					return resolutionCode; 
-				}
-
-				@Override
-				public String toString() {
-					return getName();
-				}
-
-				@Override
-				public String getTag() {
-					return resolutionCode;
-				}
-
-				@Override
-				public String getTemplateID() {
-					return resref;
-				}
-			};
+			newConstant = new SimpleGameConstant(types, resolutionCode);
 		}
 		return newConstant;
 
