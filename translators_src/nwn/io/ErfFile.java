@@ -531,8 +531,17 @@ public final class ErfFile implements GameModule {
 	 *         if no such resource exists.
 	 */
 	private NWNResource getResourceByResRef(String receiverResRef) {
+		GameConstant rep;
+		String resref;
+
 		for (NWNResource resource : this.resources) {
-			if (resource.getResRef().equals(receiverResRef)) {
+			if (resource.isGFF()
+					&& (rep = resource.getGFF().getObjectRepresentation()) != null)
+				resref = rep.getTemplateID();
+			else
+				resref = resource.getResRef();
+
+			if (resref.equals(receiverResRef)) {
 				return resource;
 			}
 		}
@@ -1186,7 +1195,7 @@ public final class ErfFile implements GameModule {
 			newKey = new ErfKey(resRef, ErfFile.this.entryCount, fileType);
 
 			// this resourceOffset isn't the final one. It's replaced by a real
-			// offset on save. The value I'm initialising it to here is just a
+			// offset on save. The value I'm initializing it to here is just a
 			// defensive placeholder that should point to a location past the
 			// end of the original file, so we don't accidentally clobber
 			// something
@@ -1334,6 +1343,13 @@ public final class ErfFile implements GameModule {
 			return this.resourceListEntry.getResourceSize();
 		}
 
+		@Override
+		public String toString() {
+			return "NWNREsource[" + this.getResRef() + ", Type: "
+					+ this.getResType() + ", Offset;size: "
+					+ this.getOffsetToResource() + ";" + this.getResourceSize()
+					+ "]";
+		}
 	}
 
 	/**
@@ -1682,30 +1698,28 @@ public final class ErfFile implements GameModule {
 
 	@Override
 	public GameConstant getInstanceForObjectIdentifier(String id) {
-		NWNResource resource = this.getResourceByResRef(id);
+		GameConstant gameResource = null;
+		NWNResource nwResource = this.getResourceByResRef(id);
 
-		// check to see if it is a dialog line
-		if (resource == null) {
+		// Not found? Check to see if it is a dialog line
+		if (nwResource == null) {
 			if (id.matches(DialogueLine.DIALOG_LINE_REF_REGEX)) {
 				final String[] split = id.split("#", 2);
 				final String conversationResRef = split[0];
 				final String dialogResRef = split[1];
 
-				final NWNResource convoResource = this
-						.getResourceByResRef(conversationResRef);
-				if (convoResource != null) {
-					NWNConversation conversation = (NWNConversation) convoResource
+				nwResource = this.getResourceByResRef(conversationResRef);
+				if (nwResource != null) {
+					NWNConversation conversation = (NWNConversation) nwResource
 							.getGFF().getObjectRepresentation();
-					return conversation.getDialogLine(dialogResRef);
+					gameResource = conversation.getDialogLine(dialogResRef);
 				}
 			}
+		} else if (nwResource.isGFF()) {
+			gameResource = nwResource.getGFF().getObjectRepresentation();
 		}
 
-		if (resource != null && resource.isGFF())
-			return resource.getGFF().getObjectRepresentation();
-		else
-			return null;
-
+		return gameResource;
 	}
 
 	@Override
