@@ -31,8 +31,20 @@ public class IndentedFragment extends FormatFragment {
 		this.subFragments = new ArrayList<FormatFragment>(children);
 	}
 
+	/**
+	 * Return the sub fragments inside the indented fragment.
+	 * @return
+	 */
 	public Collection<FormatFragment> getSubFragments() {
 		return this.subFragments;
+	}
+	
+	/**
+	 * Set the subfragments inside the indented fragment.
+	 * @param subFragments
+	 */
+	public void setSubFragments(List<FormatFragment> subFragments) {
+		this.subFragments = subFragments;
 	}
 
 	/*
