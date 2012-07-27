@@ -94,7 +94,7 @@ public class GenericFileFormat {
 
 		reader.seek(filePosition);
 
-		// read GFF HEADER DATA
+		// read GFF HEADER DATA, as from GFF doc 3.2
 		this.fileType = reader.readString(4);
 		this.version = reader.readString(4);
 		this.structOffset = reader.readUnsignedInt(true);
@@ -256,7 +256,8 @@ public class GenericFileFormat {
 				// get the top level struct
 				final GffStruct topLevel = this.getTopLevelStruct();
 
-				representation = new NWNConversation(reader, name, topLevel);
+				representation = new NWNConversation(reader, name + "."
+						+ TYPE_DIALOGUE_BP, topLevel);
 			}
 			// other types
 			else {
@@ -270,7 +271,7 @@ public class GenericFileFormat {
 				ArrayList<String> objectTypes = new ArrayList<String>(1);
 				objectTypes.add(type);
 
-				representation = new NWNObject(this.resRef, objectTypes, name,
+				representation = new NWNObject(this.resRef + "." + this.getFileType(), objectTypes, name,
 						tag);
 			}
 			// clean up
@@ -334,13 +335,14 @@ public class GenericFileFormat {
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_BP)) {
 			name = this.readField(reader, "Mod_Name");
 		}
-		//TODO The journal blueprints have been disabled due to Quests not working properly with them.
-//		// journal blueprints
-//		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
-//			name = this.readField(reader, "Name");
-//		}
-		// sound, conversation and other blueprints 
-		//TODO These should have their specific names.
+		// TODO The journal blueprints have been disabled due to Quests not
+		// working properly with them.
+		// // journal blueprints
+		// else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+		// name = this.readField(reader, "Name");
+		// }
+		// sound, conversation and other blueprints
+		// TODO These should have their specific names.
 		else {
 			name = this.resRef;
 		}
@@ -371,8 +373,8 @@ public class GenericFileFormat {
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_SOUND_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_TRIGGER_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)
-//				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)
-				) {
+		// || type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)
+		) {
 			tag = this.readField(reader, "Tag");
 		} else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_BP)) {
 			tag = this.readField(reader, "Mod_Tag");
@@ -519,17 +521,17 @@ public class GenericFileFormat {
 		String typeString = this.fileType.trim();
 
 		ArrayList<String> importantTypes = new ArrayList<String>();
-		importantTypes.add(GenericFileFormat.TYPE_DIALOGUE_BP); 
+		importantTypes.add(GenericFileFormat.TYPE_DIALOGUE_BP);
 		importantTypes.add(GenericFileFormat.TYPE_MODULE_BP);
-		importantTypes.add(GenericFileFormat.TYPE_JOURNAL_BP); 
+		importantTypes.add(GenericFileFormat.TYPE_JOURNAL_BP);
 		importantTypes.add(GenericFileFormat.TYPE_CREATURE_BP);
-		importantTypes.add(GenericFileFormat.TYPE_DOOR_BP);  
+		importantTypes.add(GenericFileFormat.TYPE_DOOR_BP);
 		importantTypes.add(GenericFileFormat.TYPE_ENCOUNTER_BP);
-		importantTypes.add(GenericFileFormat.TYPE_ITEM_BP);    
+		importantTypes.add(GenericFileFormat.TYPE_ITEM_BP);
 		importantTypes.add(GenericFileFormat.TYPE_MERCHANT_BP);
 		importantTypes.add(GenericFileFormat.TYPE_PLACEABLE_BP);
-		importantTypes.add(GenericFileFormat.TYPE_SOUND_BP); 
-		importantTypes.add(GenericFileFormat.TYPE_TRIGGER_BP); 
+		importantTypes.add(GenericFileFormat.TYPE_SOUND_BP);
+		importantTypes.add(GenericFileFormat.TYPE_TRIGGER_BP);
 		importantTypes.add(GenericFileFormat.TYPE_WAYPOINT_BP);
 		importantTypes.add(GenericFileFormat.TYPE_GAME_INSTANCE_FILE);
 
@@ -658,7 +660,7 @@ public class GenericFileFormat {
 		this.beforeFieldIndicesArray = null;
 		this.afterFieldIndicesArray = null;
 	}
-	
+
 	/**
 	 * DLG file specific writing code. Called in
 	 * {@link #write(ScriptEaseFileAccess, long)}.
@@ -976,7 +978,7 @@ public class GenericFileFormat {
 		public String getResolutionText() {
 			return this.resRef;
 		}
-		
+
 		@Override
 		public String getName() {
 			return this.resRef;
@@ -1134,7 +1136,7 @@ public class GenericFileFormat {
 		 */
 		public abstract class DialogueLine implements GameConversationNode {
 			// Dialog line resref format: dialogResRef_list_index
-			public static final String DIALOG_LINE_REF_REGEX = "[a-zA-Z0-9_]+#[a-zA-Z]+#[0-9]+";
+			public static final String DIALOG_LINE_REF_REGEX = "[a-zA-Z0-9_\\.]+#[a-zA-Z]+#[0-9]+";
 			private static final String DIALOG_LINE = "dialogue_line";
 			// ResRef of conditional script to run to determine if this line of
 			// conversation appears to the player.
@@ -1147,17 +1149,17 @@ public class GenericFileFormat {
 			protected int index;
 
 			protected GffStruct struct;
-			
+
 			protected boolean isLink;
 
 			public DialogueLine(ScriptEaseFileAccess reader, GffStruct struct)
 					throws IOException {
-				
+
 				this.struct = struct;
 				// parse the important dialog fields
 				this.build(reader, struct);
 			}
-			
+
 			public GffStruct getStruct() {
 				return struct;
 			}
@@ -1331,10 +1333,10 @@ public class GenericFileFormat {
 		 */
 		public class NPCEntryDialogue extends DialogueLine {
 			// List of Sync Structs describing the list of possible Player
-			// replies to this line of NPC dialog. 
+			// replies to this line of NPC dialog.
 			// Struct ID = list index.
 			private List<RepliesSyncStruct> replyPointers;
-			
+
 			public final static String NPC_ENTRY_LIST = "entrylist";
 
 			public NPCEntryDialogue(ScriptEaseFileAccess reader,
@@ -1379,8 +1381,8 @@ public class GenericFileFormat {
 									reader, aStruct);
 							replyPointers.add(sync);
 						}
-					} 
-					//lable could also equal "Speaker", which may be important.
+					}
+					// lable could also equal "Speaker", which may be important.
 				}
 			}
 
@@ -1496,9 +1498,10 @@ public class GenericFileFormat {
 		protected long getDataOrDataOffset() {
 			return dataOrDataOffset;
 		}
-		
+
 		/**
 		 * Sets the DataOrDataOffset to the passed long.
+		 * 
 		 * @param offset
 		 */
 		protected void setDataOrDataOffset(long offset) {
