@@ -657,7 +657,7 @@ public final class WindowManager implements WindowFocusListener {
 		
 		scbFrame = new JFrame("Story Component Builder");
 		
-		libraryPane = new LibraryPane();
+		libraryPane = new LibraryPane(true);
 		
 		librarySelectionPane = PanelFactory.getInstance()
 				.buildStoryComponentLibraryPanel(libraryPane);

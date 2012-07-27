@@ -257,6 +257,7 @@ public class CodeBlockReference extends CodeBlock {
 		}
 
 		this.setParameters(source.getParameters());
+		this.resetImplicits();
 	}
 
 	@Override

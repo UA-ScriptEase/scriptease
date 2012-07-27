@@ -2,15 +2,15 @@ package scriptease.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -48,12 +48,16 @@ import scriptease.controller.StoryVisitor;
 import scriptease.controller.VisibilityManager;
 import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.observer.StoryComponentEvent;
+import scriptease.controller.observer.StoryComponentObserverAdder;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
+import scriptease.gui.action.storycomponentbuilder.InsertLineAction;
 import scriptease.gui.action.typemenus.TypeSelectionAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.nodes.GraphNode;
+import scriptease.gui.managers.FormatFragmentSelectionManager;
 import scriptease.gui.pane.GameObjectPane;
 import scriptease.gui.pane.LibraryPane;
 import scriptease.model.CodeBlock;
@@ -68,12 +72,15 @@ import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.GameObjectPicker;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.IndentedFragment;
 import scriptease.translator.codegenerator.code.fragments.LineFragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
+import scriptease.translator.codegenerator.code.fragments.ReferenceFragment;
 import scriptease.translator.codegenerator.code.fragments.ScopeFragment;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
 import scriptease.translator.io.tools.GameConstantFactory;
+import scriptease.util.GUIOp;
 
 /**
  * A factory class for different panels. All major panel construction should go
@@ -311,6 +318,8 @@ public class PanelFactory {
 			public void processScriptIt(final ScriptIt scriptIt) {
 				// Causes and effects are processed as ScriptIts
 				componentEditingPanel.removeAll();
+				FormatFragmentSelectionManager.getInstance().setFormatFragment(
+						null, null);
 
 				final Collection<CodeBlock> codeBlocks = scriptIt
 						.getCodeBlocks();
@@ -341,6 +350,8 @@ public class PanelFactory {
 			public void processKnowIt(final KnowIt knowIt) {
 				// Descriptions are processed as KnowIts.
 				componentEditingPanel.removeAll();
+				FormatFragmentSelectionManager.getInstance().setFormatFragment(
+						null, null);
 
 				componentEditingPanel.add(PanelFactory.getInstance()
 						.buildDescriptionEditorPanel(knowIt));
@@ -621,6 +632,10 @@ public class PanelFactory {
 		private final CodeBlock codeBlock;
 		private final ScriptIt scriptIt;
 
+		private final JComboBox subjectBox;
+		private final JComboBox slotBox;
+		private final JLabel availableImplicitsLabel;
+
 		/**
 		 * Sets up the JPanel used to edit CodeBlocks. This shows the id, slot,
 		 * includes, types, parameters, and code for the passed in CodeBlock,
@@ -636,10 +651,18 @@ public class PanelFactory {
 			this.codeBlock = codeBlock;
 			this.scriptIt = scriptIt;
 
-			this.redrawComponents();
+			this.subjectBox = new JComboBox();
+			this.slotBox = new JComboBox();
+			this.availableImplicitsLabel = new JLabel();
+
+			this.setupMainComponent();
 		}
 
-		private void redrawComponents() {
+		/**
+		 * Sets up the main component of the Code Block Component. Call this to
+		 * refresh it.
+		 */
+		private void setupMainComponent() {
 			final JLabel idLabel;
 			final JLabel subjectLabel;
 			final JLabel slotLabel;
@@ -650,15 +673,12 @@ public class PanelFactory {
 			final JLabel codeLabel;
 
 			final JButton addParameterButton;
-			final JComboBox subjectBox;
-			final JComboBox slotBox;
-			final JLabel availableImplicitsLabel;
 			final JTextField includesField;
 			final TypeSelectionAction typeAction;
 			final JButton typesButton;
 			final JScrollPane parameterScrollPane;
 			final JPanel parameterPanel;
-			final JComponent codePanel;
+			final CodeEditorPanel codePanel;
 
 			final GroupLayout codeBlockEditorLayout;
 			final Font labelFont;
@@ -673,16 +693,13 @@ public class PanelFactory {
 			parametersLabel = new JLabel("Parameters: ");
 			codeLabel = new JLabel("Code");
 
-			subjectBox = new JComboBox();
-			slotBox = new JComboBox();
-			availableImplicitsLabel = new JLabel();
 			includesField = new JTextField();
 			typeAction = new TypeSelectionAction();
 			typesButton = new JButton(typeAction);
 			addParameterButton = new JButton("+");
 			parameterPanel = new JPanel();
 			parameterScrollPane = new JScrollPane(parameterPanel);
-			codePanel = buildCodeInputComponent(codeBlock);
+			codePanel = new CodeEditorPanel(codeBlock);
 
 			codeBlockEditorLayout = new GroupLayout(this);
 			labelFont = new Font("SansSerif", Font.BOLD,
@@ -730,12 +747,7 @@ public class PanelFactory {
 			codeLabel.setLabelFor(codePanel);
 
 			// Set up the default field values
-			if (scriptIt.isCause())
-				setCauseSubjectBoxes(subjectBox, slotBox,
-						availableImplicitsLabel);
-			else
-				setEffectSubjectBoxes(subjectBox, slotBox,
-						availableImplicitsLabel);
+			this.setupComponents(true);
 
 			availableImplicitsLabel.setForeground(Color.DARK_GRAY);
 
@@ -749,8 +761,8 @@ public class PanelFactory {
 			typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
 
 			for (KnowIt parameter : parameters) {
-				parameterPanel.add(new ParameterComponent(scriptIt, codeBlock, parameter,
-						this));
+				parameterPanel.add(new ParameterComponent(scriptIt, codeBlock,
+						parameter, this));
 			}
 
 			includesField.getDocument().addDocumentListener(
@@ -769,10 +781,6 @@ public class PanelFactory {
 								labels.add(label.trim());
 							}
 							codeBlock.setIncludes(labels);
-
-							scriptIt.notifyObservers(new StoryComponentEvent(
-									scriptIt,
-									StoryComponentChangeEnum.CODE_BLOCK_INCLUDES_SET));
 						}
 
 						@Override
@@ -803,9 +811,11 @@ public class PanelFactory {
 				public void actionPerformed(ActionEvent e) {
 					parameters.add(new KnowIt());
 					codeBlock.setParameters(parameters);
-					
-					CodeBlockComponent.this.redrawComponents();
-					
+
+					CodeBlockComponent.this.setupMainComponent();
+					CodeBlockComponent.this.repaint();
+					CodeBlockComponent.this.revalidate();
+
 					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
 							StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_ADD));
 				}
@@ -902,14 +912,12 @@ public class PanelFactory {
 		}
 
 		/**
-		 * Sets up the subject and slot boxes and implicits label for causes.
+		 * Sets up the subject and slot boxes and implicits label.
 		 * 
-		 * @param subjectBox
-		 * @param slotBox
-		 * @param implicitsLabel
+		 * @param initializeSlotBoxListener
+		 *            Initializes the listeners for the slot box.
 		 */
-		private void setCauseSubjectBoxes(final JComboBox subjectBox,
-				final JComboBox slotBox, final JLabel implicitsLabel) {
+		private void setupComponents(boolean initializeSlotBoxListener) {
 
 			final String initialSlot;
 			final Translator active = TranslatorManager.getInstance()
@@ -920,6 +928,19 @@ public class PanelFactory {
 			else
 				initialSlot = "";
 
+			// Listeners are removed here, because if we don't, removeAllItems
+			// fires them off.
+			if (!initializeSlotBoxListener) {
+				final ActionListener[] subjectBoxListeners = subjectBox
+						.getListeners(ActionListener.class);
+				if (subjectBoxListeners.length > 0) {
+					for (ActionListener subjectBoxListener : subjectBoxListeners)
+						subjectBox.removeActionListener(subjectBoxListener);
+				}
+				subjectBox.removeAllItems();
+			}
+
+			subjectBox.addItem(null);
 			for (KnowIt parameter : this.scriptIt.getParameters()) {
 				final Collection<String> slots = active.getGameTypeManager()
 						.getSlots(parameter.getDefaultType());
@@ -938,7 +959,7 @@ public class PanelFactory {
 					subjectName = (String) subjectBox.getSelectedItem();
 
 					slotBox.removeAllItems();
-					implicitsLabel.setText("");
+					availableImplicitsLabel.setText("");
 
 					codeBlock.setSubject(subjectName);
 					codeBlock.setSlot("");
@@ -967,27 +988,32 @@ public class PanelFactory {
 							StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
 				}
 			});
+			if (initializeSlotBoxListener) {
 
-			slotBox.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					String selectedSlot = (String) slotBox.getSelectedItem();
+				slotBox.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						String selectedSlot = (String) slotBox
+								.getSelectedItem();
 
-					if (selectedSlot != null)
-						codeBlock.setSlot((String) slotBox.getSelectedItem());
-					else
-						codeBlock.setSlot("");
+						if (selectedSlot != null)
+							codeBlock.setSlot((String) slotBox
+									.getSelectedItem());
+						else
+							codeBlock.setSlot("");
 
-					String implicits = "";
-					for (KnowIt implicit : codeBlock.getImplicits())
-						implicits += "[" + implicit.getDisplayText() + "] ";
+						String implicits = "";
+						for (KnowIt implicit : codeBlock.getImplicits())
+							implicits += "[" + implicit.getDisplayText() + "] ";
 
-					implicitsLabel.setText(implicits.trim());
+						availableImplicitsLabel.setText(implicits.trim());
 
-					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
-							StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
-				}
-			});
+						scriptIt.notifyObservers(new StoryComponentEvent(
+								scriptIt,
+								StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
+					}
+				});
+			}
 
 			if (this.codeBlock.hasSubject()) {
 				final KnowIt subject;
@@ -1000,115 +1026,9 @@ public class PanelFactory {
 					subjectBox.setSelectedItem(subjectName);
 					slotBox.setSelectedItem(initialSlot);
 				}
+			} else if (!scriptIt.isCause()) {
+				subjectBox.setSelectedItem(null);
 			}
-
-		}
-
-		private void setEffectSubjectBoxes(JComboBox subjectBox,
-				JComboBox slotBox, JLabel implicitsLabel) {
-			subjectBox.addItem("");
-			setCauseSubjectBoxes(subjectBox, slotBox, implicitsLabel);
-
-			if (!this.codeBlock.hasSubject()) {
-				subjectBox.setSelectedItem("");
-			}
-		}
-
-		/*
-		 * TODO This be needin' an inner class, like parameter component.
-		 */
-		private JComponent buildCodeInputComponent(CodeBlock codeBlock) {
-			final JTextPane codePane;
-			final JScrollPane codeScrollPane;
-
-			final StyledDocument codePaneDoc;
-			final Style defaultStyle;
-			final Style parameterStyle;
-
-			final Collection<FormatFragment> codeFragments;
-
-			codePane = new JTextPane();
-			codeScrollPane = new JScrollPane(codePane);
-
-			codePaneDoc = codePane.getStyledDocument();
-			defaultStyle = codePane.addStyle("DEFAULT_STYLE", null);
-			parameterStyle = codePane.addStyle("PARAMETER_STYLE", defaultStyle);
-
-			codeFragments = codeBlock.getCode();
-
-			// Set up the styles
-
-			StyleConstants.setFontSize(defaultStyle, 12);
-			StyleConstants.setFontFamily(defaultStyle, "Courier");
-
-			StyleConstants.setForeground(parameterStyle, Color.BLUE);
-			StyleConstants.setBold(parameterStyle, true);
-
-			codePane.setLogicalStyle(defaultStyle);
-
-			// Set up the ScrollPane
-
-			codeScrollPane
-					.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-			// Write to the codePane.
-			// TODO Extract method so it can be called by Listener. (?
-			// Necessary?)
-			/*
-			 * TODO Need to implement some way of getting code from fragments,
-			 * and also to check what kind of fragment it is.
-			 */
-			for (FormatFragment codeFragment : codeFragments) {
-				if (codeFragment instanceof LineFragment) {
-					for (FormatFragment b : ((LineFragment) codeFragment)
-							.getSubFragments()) {
-						if (b instanceof LiteralFragment) {
-							try {
-								codePaneDoc.insertString(
-										codePaneDoc.getLength(),
-										b.getDirectiveText(), defaultStyle);
-							} catch (BadLocationException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-						if (b instanceof ScopeFragment) {
-							// int currentOffset = code.length();
-							// String scopeString = ((ScopeFragment)
-							// b).getNameRef();
-							// int currentEnd = currentOffset +
-							// scopeString.length();
-							// StringIndx scopeIndexInfo = new StringIndx(
-							// currentOffset, currentEnd);
-							// scopeIndicies.add(scopeIndexInfo);
-							// code += scopeString;
-							try {
-								codePaneDoc.insertString(
-										codePaneDoc.getLength(),
-										((ScopeFragment) b).getNameRef(),
-										parameterStyle);
-							} catch (BadLocationException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-
-						}
-					}
-					try {
-						codePaneDoc.insertString(codePaneDoc.getLength(), "\n",
-								defaultStyle);
-					} catch (BadLocationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-
-			// codePane.setText(code);
-
-			// Add a DocumentListener to codePaneDoc
-
-			return codePane;
 		}
 	}
 
@@ -1138,8 +1058,8 @@ public class PanelFactory {
 		 * 
 		 * @param parameter
 		 */
-		private ParameterComponent(final ScriptIt scriptIt, final CodeBlock codeBlock,
-				final KnowIt parameter,
+		private ParameterComponent(final ScriptIt scriptIt,
+				final CodeBlock codeBlock, final KnowIt parameter,
 				final CodeBlockComponent codeBlockComponent) {
 			super();
 			this.parameter = parameter;
@@ -1184,10 +1104,25 @@ public class PanelFactory {
 			updateBindingConstantComponent(bindingConstantComponent);
 
 			// Set up listeners
-			nameField.addKeyListener(new KeyAdapter() {
+			nameField.getDocument().addDocumentListener(new DocumentListener() {
 				@Override
-				public void keyReleased(KeyEvent e) {
-					parameter.setDisplayText(nameField.getText());
+				public void insertUpdate(DocumentEvent e) {
+					final String newInput;
+					newInput = nameField.getText();
+
+					parameter.setDisplayText(newInput);
+					codeBlock.setSubject(newInput);
+
+					codeBlockComponent.setupComponents(false);
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					insertUpdate(e);
+				}
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
 				}
 			});
 
@@ -1245,10 +1180,11 @@ public class PanelFactory {
 
 					parameter.setTypes(newTypeList);
 
-					codeBlockComponent.redrawComponents();
+					codeBlockComponent.setupComponents(false);
 					updateBindingConstantComponent(bindingConstantComponent);
-					
-					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+
+					scriptIt.notifyObservers(new StoryComponentEvent(
+							scriptIt,
 							StoryComponentChangeEnum.CHANGE_PARAMETER_DEFAULT_TYPE_SET));
 				}
 			});
@@ -1271,10 +1207,13 @@ public class PanelFactory {
 						codeBlock.setParameters(parameters);
 
 						codeBlockComponent.remove(ParameterComponent.this);
-						codeBlockComponent.redrawComponents();
-						
 
-						scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+						codeBlockComponent.setupMainComponent();
+						codeBlockComponent.repaint();
+						codeBlockComponent.revalidate();
+
+						scriptIt.notifyObservers(new StoryComponentEvent(
+								scriptIt,
 								StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_REMOVE));
 					}
 				}
@@ -1339,8 +1278,6 @@ public class PanelFactory {
 				bindingText = parameter.getBinding().getScriptValue();
 
 				switch (defaultTypeGuiType) {
-				// TODO Add listeners to these spinners and combo
-				// boxes so the default binding is set!
 				case JTEXTFIELD:
 					final JTextField bindingField;
 
@@ -1432,14 +1369,6 @@ public class PanelFactory {
 											parameter.getTypes(),
 											bindingBoxValue.toString());
 							parameter.setBinding(newConstant);
-
-							/*
-							 * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-							 * Good morning! TODO TODO Issue: ComboBox default
-							 * not set :( TODO TODO TODO TODO TODO TODO TODO
-							 * TODO TODO TODO
-							 */
-
 						}
 					});
 
@@ -1455,6 +1384,352 @@ public class PanelFactory {
 			}
 			bindingConstantComponent.repaint();
 			bindingConstantComponent.revalidate();
+		}
+	}
+
+	/**
+	 * Panel used to edit code!
+	 * 
+	 * @author kschenk
+	 * 
+	 */
+	@SuppressWarnings("serial")
+	private class CodeEditorPanel extends JPanel implements
+			StoryComponentObserver {
+
+		private final Map<JPanel, FormatFragment> panelToFragmentMap;
+		private CodeBlock codeBlock;
+		/**
+		 * The top level JPanel.
+		 */
+		private JPanel codeEditorPanel;
+
+		public CodeEditorPanel(CodeBlock codeBlock) {
+			super();
+			this.codeBlock = codeBlock;
+
+			panelToFragmentMap = new HashMap<JPanel, FormatFragment>();
+
+			this.codeBlock.addStoryComponentObserver(this);
+
+			this.setupCodeEditorPanel();
+
+			FormatFragmentSelectionManager.getInstance().setFormatFragment(
+					null, codeBlock);
+		}
+
+		private void setupCodeEditorPanel() {
+			this.removeAll();
+
+			final JToolBar toolbar;
+
+			final JScrollPane codeEditorScrollPane;
+			final Collection<FormatFragment> codeFragments;
+
+			toolbar = new JToolBar("Code Editor ToolBar");
+
+			// TODO These buttons should all be actions.
+			final JButton lineButton = new JButton(
+					InsertLineAction.getInstance());
+			final JButton indentButton = new JButton("Indent");
+			final JButton literalButton = new JButton("Literal");
+			final JButton parameterButton = new JButton("Parameter");
+			final JButton childrenButton = new JButton("Children");
+			final JButton deleteButton = new JButton("Delete");
+
+			codeEditorPanel = objectContainerPanel("Code");
+
+			panelToFragmentMap.put(codeEditorPanel, null);
+
+			codeEditorPanel.setLayout(new BoxLayout(codeEditorPanel,
+					BoxLayout.PAGE_AXIS));
+			codeEditorScrollPane = new JScrollPane(codeEditorPanel);
+
+			codeFragments = codeBlock.getCode();
+
+			buildDefaultPanes(codeEditorPanel, codeFragments);
+
+			this.setLayout(new BorderLayout());
+
+			toolbar.setFloatable(false);
+
+			toolbar.add(lineButton);
+			toolbar.add(indentButton);
+			toolbar.add(literalButton);
+			toolbar.add(parameterButton);
+			toolbar.add(childrenButton);
+			toolbar.add(deleteButton);
+
+			this.add(toolbar, BorderLayout.PAGE_START);
+			this.add(codeEditorScrollPane, BorderLayout.CENTER);
+
+			this.repaint();
+			this.revalidate();
+		}
+
+		private JPanel objectContainerPanel(final String title) {
+			final JPanel objectContainerPanel;
+
+			objectContainerPanel = new JPanel();
+			objectContainerPanel.setName(title);
+
+			objectContainerPanel.setBorder(BorderFactory
+					.createTitledBorder(title));
+			objectContainerPanel.setOpaque(true);
+
+			objectContainerPanel.addMouseListener(new MouseAdapter() {
+				/*
+				 * TODO Implement hovering color changes. Note that the
+				 * following code will not work correctly. But the colors work
+				 * alright.
+				 */
+				@Override
+				public void mousePressed(MouseEvent e) {
+					/*
+					 * objectContainerPanel.setBackground(GUIOp.scaleColour(
+					 * Color.LIGHT_GRAY, 1.2));
+					 */
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					FormatFragmentSelectionManager.getInstance()
+							.setFormatFragment(
+									panelToFragmentMap
+											.get(objectContainerPanel),
+									codeBlock);
+					setupCodeEditorPanel();
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					/*
+					 * objectContainerPanel.setBackground(GUIOp.scaleColour(
+					 * Color.LIGHT_GRAY, 1.0));
+					 */
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+					/*
+					 * if (panel != null) { if
+					 * (!panel.equals(objectContainerPanel))
+					 * objectContainerPanel.setBackground(defaultColor); } else
+					 * objectContainerPanel.setBackground(defaultColor);
+					 */
+				}
+			});
+
+			return objectContainerPanel;
+		}
+
+		private JPanel linePanel() {
+			final String TITLE = "Line";
+			final JPanel linePanel;
+
+			linePanel = objectContainerPanel(TITLE);
+
+			return linePanel;
+		}
+
+		private JPanel indentPanel() {
+			final String TITLE = "Indent";
+
+			final JPanel indentPanel;
+
+			indentPanel = objectContainerPanel(TITLE);
+
+			indentPanel.setLayout(new BoxLayout(indentPanel,
+					BoxLayout.PAGE_AXIS));
+
+			return indentPanel;
+		}
+
+		private JPanel literalPanel(final LiteralFragment literalFragment) {
+			final String TITLE = "Literal";
+
+			final JPanel literalPanel;
+			final JTextField literalField;
+
+			literalPanel = objectContainerPanel(TITLE);
+			literalField = new JTextField(literalFragment.getDirectiveText());
+
+			literalField.setMinimumSize(new Dimension(15, literalField
+					.getMinimumSize().height));
+
+			literalField.getDocument().addDocumentListener(
+					new DocumentListener() {
+
+						@Override
+						public void insertUpdate(DocumentEvent e) {
+							literalFragment.setDirectiveText(literalField
+									.getText());
+						}
+
+						@Override
+						public void removeUpdate(DocumentEvent e) {
+							literalFragment.setDirectiveText(literalField
+									.getText());
+						}
+
+						@Override
+						public void changedUpdate(DocumentEvent e) {
+						}
+
+					});
+
+			literalPanel.add(literalField);
+
+			return literalPanel;
+		}
+
+		private JPanel parameterPanel(final ScopeFragment scopeFragment) {
+			final String TITLE = "Parameter";
+
+			final JPanel parameterPanel;
+			final JComboBox parameterBox;
+			final List<KnowIt> parameterList;
+
+			parameterPanel = objectContainerPanel(TITLE);
+			parameterBox = new JComboBox();
+			parameterList = this.codeBlock.getParameters();
+
+			for (KnowIt parameter : parameterList) {
+				parameterBox.addItem(parameter.getDisplayText());
+			}
+			parameterBox.setSelectedItem(scopeFragment.getNameRef());
+
+			parameterBox.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					scopeFragment.setNameRef((String) parameterBox
+							.getSelectedItem());
+				}
+			});
+
+			parameterPanel.add(parameterBox);
+
+			return parameterPanel;
+		}
+
+		private JPanel childrenPanel() {
+			final String TITLE = "Children";
+
+			final JPanel childrenPanel;
+			final JLabel childrenLabel;
+
+			childrenPanel = objectContainerPanel("");
+			childrenLabel = new JLabel(TITLE);
+
+			childrenPanel.setBorder(BorderFactory
+					.createLineBorder(Color.LIGHT_GRAY));
+			childrenPanel.add(childrenLabel);
+
+			return childrenPanel;
+		}
+
+		/**
+		 * Recursively builds the default panel according to the passed code
+		 * fragments.
+		 * 
+		 * @param panel
+		 * @param codeFragments
+		 */
+		private void buildDefaultPanes(JPanel panel,
+				Collection<FormatFragment> codeFragments) {
+
+			for (FormatFragment codeFragment : codeFragments) {
+				JPanel fragmentPanel = new JPanel();
+
+				final Color defaultColor;
+
+				defaultColor = fragmentPanel.getBackground();
+
+				if (codeFragment instanceof LineFragment) {
+					/*
+					 * In the APIDictionary:
+					 * 
+					 * <Line> stuff </Line>
+					 * 
+					 * Lines can be the top most container, but can also be
+					 * contained in Indents. They use the LanguageDictionary to
+					 * line break whatever code is contained inside from the
+					 * previous code.
+					 */
+					fragmentPanel = linePanel();
+					buildDefaultPanes(fragmentPanel,
+							((LineFragment) codeFragment).getSubFragments());
+					panel.add(fragmentPanel);
+					panelToFragmentMap.put(fragmentPanel,
+							(LineFragment) codeFragment);
+				} else if (codeFragment instanceof IndentedFragment) {
+					/*
+					 * In the APIDictionary:
+					 * 
+					 * <Indent> stuff </Indent>
+					 * 
+					 * Note that indents are the top most possible container!
+					 * They use the LanguageDictionary to indent whatever code
+					 * is contained inside.
+					 */
+					fragmentPanel = indentPanel();
+					buildDefaultPanes(fragmentPanel,
+							((IndentedFragment) codeFragment).getSubFragments());
+					panel.add(fragmentPanel);
+					panelToFragmentMap.put(fragmentPanel,
+							(IndentedFragment) codeFragment);
+				} else if (codeFragment instanceof LiteralFragment) {
+					/*
+					 * In the API Dictionary: <Literal>code goes here</Literal>
+					 */
+					fragmentPanel = literalPanel((LiteralFragment) codeFragment);
+					panel.add(fragmentPanel);
+					panelToFragmentMap.put(fragmentPanel,
+							(LiteralFragment) codeFragment);
+				} else if (codeFragment instanceof ScopeFragment) {
+					/*
+					 * In the APIDictionary (minus weird spacing):
+					 * 
+					 * <Scope data="argument" ref="Parameter Name">
+					 * 
+					 * <Fragment data="name"/>
+					 * 
+					 * </Scope>
+					 */
+					fragmentPanel = parameterPanel((ScopeFragment) codeFragment);
+					panel.add(fragmentPanel);
+					panelToFragmentMap.put(fragmentPanel,
+							(ScopeFragment) codeFragment);
+				} else if (codeFragment instanceof ReferenceFragment) {
+					/*
+					 * In the APIDictionary:
+					 * 
+					 * <FormatRef ref="children"/>
+					 */
+					fragmentPanel = childrenPanel();
+					panel.add(fragmentPanel);
+					panelToFragmentMap.put(fragmentPanel,
+							(ReferenceFragment) codeFragment);
+				}
+
+				if (FormatFragmentSelectionManager.getInstance()
+						.getFormatFragment() != null) {
+					if (FormatFragmentSelectionManager.getInstance()
+							.getFormatFragment() == codeFragment)
+						fragmentPanel.setBackground(GUIOp.scaleColour(
+								Color.LIGHT_GRAY, 1.1));
+					else
+						fragmentPanel.setBackground(defaultColor);
+				} else {
+					codeEditorPanel.setBackground(GUIOp.scaleColour(
+							Color.LIGHT_GRAY, 1.1));
+				}
+			}
+		}
+
+		@Override
+		public void componentChanged(StoryComponentEvent event) {
+			setupCodeEditorPanel();
 		}
 	}
 }

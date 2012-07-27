@@ -34,6 +34,10 @@ public class ScopeFragment extends FormatFragment {
 	public void setSubFragments(List<FormatFragment> subFragments) {
 		this.subFragments = subFragments;
 	}
+	
+	public void setNameRef(String nameRef) {
+		this.nameRef = nameRef;
+	}
 
 	public String getNameRef() {
 		return this.nameRef;

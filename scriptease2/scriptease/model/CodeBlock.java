@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.apimanagers.EventSlotManager;
+import scriptease.controller.observer.StoryComponentEvent;
+import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
@@ -28,7 +30,7 @@ import scriptease.translator.codegenerator.code.fragments.FormatFragment;
  * @author remiller
  */
 public abstract class CodeBlock extends StoryComponent implements
-		TypedComponent {
+		TypedComponent, StoryComponentObserver {
 	/*
 	 * Only instance-specific information may be stored in this parent class.
 	 * Anything that is translator-only must be stored in CodeBlockSource,
@@ -169,6 +171,13 @@ public abstract class CodeBlock extends StoryComponent implements
 	 */
 	public List<KnowIt> getParameters() {
 		return new ArrayList<KnowIt>(this.parameters);
+	}
+	
+	/**
+	 * Resets the implicits to null.
+	 */
+	protected void resetImplicits() {
+		this.implicits = null;
 	}
 
 	/**
@@ -319,4 +328,10 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * @return The base id of this code block.
 	 */
 	public abstract int getId();
+	
+
+	@Override
+	public void componentChanged(StoryComponentEvent event) {
+		this.notifyObservers(event);
+	}
 }

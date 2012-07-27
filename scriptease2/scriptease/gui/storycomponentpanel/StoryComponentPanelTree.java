@@ -29,8 +29,8 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	private StoryComponentPanelManager selectionManager;
 	private StoryComponentPanel rootPanel;
 	private StoryComponentPanelSetting settings;
-	// Default to a VisibilityFilter
-	private Filter filterRule = new VisibilityFilter();
+	private StoryComponent root;
+	private Filter filterRule;
 	
 	public StoryComponentPanelTree(StoryComponentPanelSetting settings) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -44,13 +44,11 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 
 	public StoryComponentPanelTree(StoryComponent root,
 			StoryComponentPanelSetting settings) {
-		this(root, settings, null);
+		this(root, settings, null, false);
 	}
-
-	private StoryComponent root;
 	
 	public StoryComponentPanelTree(StoryComponent root,
-			StoryComponentPanelSetting settings, Filter filter) {
+			StoryComponentPanelSetting settings, Filter filter, boolean showInvisible) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -58,6 +56,11 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		this.settings = settings;
 		this.root = root;
 		this.setRoot(root);
+		
+		if(showInvisible)
+			filterRule = null;
+		else
+			filterRule = new VisibilityFilter();
 		
 		if (filter != null)
 			this.updateFilter(filter);

@@ -62,7 +62,7 @@ public final class StoryComponentEvent {
 		LABEL_ADDED, 
 		LABELS_ADDED,
 		LABEL_REMOVED,
-		LABEL_SET
+		LABEL_SET, CHANGE_CODEBLOCK_CODE
 	}
 
 	@Override

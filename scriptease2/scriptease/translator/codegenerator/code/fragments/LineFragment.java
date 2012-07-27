@@ -25,6 +25,18 @@ public class LineFragment extends FormatFragment {
 	private String newLineChar;
 
 	/**
+	 * Constructor without FormatFragment list specified.
+	 * 
+	 * @param nlChar
+	 *            the character to mark a new line.
+	 */
+	public LineFragment(String nlChar) {
+		super("");
+		this.newLineChar = nlChar;
+		this.subFragments = new ArrayList<FormatFragment>();
+	}
+	
+	/**
 	 * Constructor with FormatFragment list specified.
 	 * 
 	 * @param nlChar
