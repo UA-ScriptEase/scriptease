@@ -127,7 +127,7 @@ public final class SEFrame implements StoryModelPoolObserver {
 		final JPanel content = new JPanel();
 
 		// TODO this should build the LibraryPane using PanelFactory.
-		final JComponent libraryPane = new LibraryPane();
+		final JComponent libraryPane = new LibraryPane(false);
 		final JComponent objectPane = PanelFactory.getInstance().buildGameObjectPane(null);
 		final JComponent statusBar = this.buildStatusBar();
 

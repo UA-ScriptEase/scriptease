@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import scriptease.controller.StoryVisitor;
+import scriptease.controller.observer.StoryComponentEvent;
+import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
@@ -184,6 +186,8 @@ public class CodeBlockSource extends CodeBlock {
 			slot = "";
 
 		this.slot = slot;
+		this.updateReferences();
+		this.resetImplicits();
 	}
 
 	@Override
@@ -305,6 +309,7 @@ public class CodeBlockSource extends CodeBlock {
 	@Override
 	public void setCode(Collection<FormatFragment> code) {
 		this.code = new ArrayList<FormatFragment>(code);
+		this.notifyObservers(new StoryComponentEvent(this, StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
 	}
 
 	@Override

@@ -58,8 +58,8 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	private final StoryComponentPanelTree descriptionsTree;
 	private final StoryComponentPanelTree foldersTree;
 
-	public LibraryPane() {
-		this(new StoryComponentPanelLibrarySetting());
+	public LibraryPane(boolean showInvisible) {
+		this(new StoryComponentPanelLibrarySetting(), showInvisible);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 * 
 	 * @param librarySettings
 	 */
-	public LibraryPane(StoryComponentPanelSetting librarySettings) {
+	public LibraryPane(StoryComponentPanelSetting librarySettings, boolean showInvisible) {
 		final LibraryManager libManager = LibraryManager.getInstance();
 		final StoryComponentContainer root;
 		final StoryComponentFilter causesFilter;
@@ -93,13 +93,13 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 
 		// Create the Tree with the root and the default filter
 		this.causesTree = new StoryComponentPanelTree(root, librarySettings,
-				causesFilter);
+				causesFilter, showInvisible);
 		this.effectsTree = new StoryComponentPanelTree(root, librarySettings,
-				effectsFilter);
+				effectsFilter, showInvisible);
 		this.descriptionsTree = new StoryComponentPanelTree(root,
-				librarySettings, descriptionsFilter);
+				librarySettings, descriptionsFilter, showInvisible);
 		this.foldersTree = new StoryComponentPanelTree(root, librarySettings,
-				foldersFilter);
+				foldersFilter, showInvisible);
 
 		// Configure the displaying of the pane
 		this.configurePane();
