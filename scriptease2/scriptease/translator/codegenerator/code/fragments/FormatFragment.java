@@ -1,6 +1,7 @@
 package scriptease.translator.codegenerator.code.fragments;
 
 import java.util.Collection;
+import java.util.List;
 
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.fragments.series.SeriesFragment;
@@ -57,6 +58,8 @@ public abstract class FormatFragment {
 		this.context = context;
 		return "";
 	}
+	
+	
 
 	/**
 	 * Gets the code generation directive to be used in resolving this fragment.

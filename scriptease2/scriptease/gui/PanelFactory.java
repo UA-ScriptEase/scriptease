@@ -28,7 +28,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
@@ -37,10 +36,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpStoryVisitor;
@@ -48,12 +43,17 @@ import scriptease.controller.StoryVisitor;
 import scriptease.controller.VisibilityManager;
 import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.observer.StoryComponentEvent;
-import scriptease.controller.observer.StoryComponentObserverAdder;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
+import scriptease.gui.action.storycomponentbuilder.DeleteFragmentAction;
+import scriptease.gui.action.storycomponentbuilder.InsertIndentAction;
 import scriptease.gui.action.storycomponentbuilder.InsertLineAction;
+import scriptease.gui.action.storycomponentbuilder.InsertLiteralAction;
+import scriptease.gui.action.storycomponentbuilder.InsertReferenceAction;
+import scriptease.gui.action.storycomponentbuilder.InsertScopeAction;
+import scriptease.gui.action.storycomponentbuilder.InsertSimpleAction;
 import scriptease.gui.action.typemenus.TypeSelectionAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.nodes.GraphNode;
@@ -70,13 +70,16 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
 import scriptease.translator.codegenerator.GameObjectPicker;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
-import scriptease.translator.codegenerator.code.fragments.IndentedFragment;
-import scriptease.translator.codegenerator.code.fragments.LineFragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
 import scriptease.translator.codegenerator.code.fragments.ReferenceFragment;
-import scriptease.translator.codegenerator.code.fragments.ScopeFragment;
+import scriptease.translator.codegenerator.code.fragments.SimpleFragment;
+import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
+import scriptease.translator.codegenerator.code.fragments.container.IndentedFragment;
+import scriptease.translator.codegenerator.code.fragments.container.LineFragment;
+import scriptease.translator.codegenerator.code.fragments.container.ScopeFragment;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
 import scriptease.translator.io.tools.GameConstantFactory;
@@ -1431,11 +1434,20 @@ public class PanelFactory {
 			// TODO These buttons should all be actions.
 			final JButton lineButton = new JButton(
 					InsertLineAction.getInstance());
-			final JButton indentButton = new JButton("Indent");
-			final JButton literalButton = new JButton("Literal");
-			final JButton parameterButton = new JButton("Parameter");
-			final JButton childrenButton = new JButton("Children");
-			final JButton deleteButton = new JButton("Delete");
+			final JButton indentButton = new JButton(
+					InsertIndentAction.getInstance());
+			final JButton scopeButton = new JButton(
+					InsertScopeAction.getInstance());
+			final JButton simpleButton = new JButton(
+					InsertSimpleAction.getInstance());
+			final JButton literalButton = new JButton(
+					InsertLiteralAction.getInstance());
+			final JButton referenceButton = new JButton(
+					InsertReferenceAction.getInstance());
+			final JButton deleteButton = new JButton(
+					DeleteFragmentAction.getInstance());
+			final JButton moveUpButton = new JButton("Up#!#");
+			final JButton moveDownButton = new JButton("Down#!#");
 
 			codeEditorPanel = objectContainerPanel("Code");
 
@@ -1455,10 +1467,13 @@ public class PanelFactory {
 
 			toolbar.add(lineButton);
 			toolbar.add(indentButton);
+			toolbar.add(scopeButton);
+			toolbar.add(simpleButton);
 			toolbar.add(literalButton);
-			toolbar.add(parameterButton);
-			toolbar.add(childrenButton);
+			toolbar.add(referenceButton);
 			toolbar.add(deleteButton);
+			toolbar.add(moveUpButton);
+			toolbar.add(moveDownButton);
 
 			this.add(toolbar, BorderLayout.PAGE_START);
 			this.add(codeEditorScrollPane, BorderLayout.CENTER);
@@ -1523,6 +1538,11 @@ public class PanelFactory {
 			return objectContainerPanel;
 		}
 
+		/**
+		 * Creates a panel representing a Line Fragment.
+		 * 
+		 * @return
+		 */
 		private JPanel linePanel() {
 			final String TITLE = "Line";
 			final JPanel linePanel;
@@ -1532,12 +1552,23 @@ public class PanelFactory {
 			return linePanel;
 		}
 
+		/**
+		 * Creates a panel representing an Indent Fragment.
+		 * 
+		 * @return
+		 */
 		private JPanel indentPanel() {
 			final String TITLE = "Indent";
 
 			final JPanel indentPanel;
+			final JPanel sizePanel;
 
 			indentPanel = objectContainerPanel(TITLE);
+			sizePanel = new JPanel();
+
+			sizePanel.setOpaque(false);
+
+			indentPanel.add(sizePanel);
 
 			indentPanel.setLayout(new BoxLayout(indentPanel,
 					BoxLayout.PAGE_AXIS));
@@ -1545,6 +1576,12 @@ public class PanelFactory {
 			return indentPanel;
 		}
 
+		/**
+		 * Creates a panel representing a Literal Fragment.
+		 * 
+		 * @param literalFragment
+		 * @return
+		 */
 		private JPanel literalPanel(final LiteralFragment literalFragment) {
 			final String TITLE = "Literal";
 
@@ -1564,6 +1601,9 @@ public class PanelFactory {
 						public void insertUpdate(DocumentEvent e) {
 							literalFragment.setDirectiveText(literalField
 									.getText());
+
+							literalField.repaint();
+							literalField.revalidate();
 						}
 
 						@Override
@@ -1583,49 +1623,214 @@ public class PanelFactory {
 			return literalPanel;
 		}
 
-		private JPanel parameterPanel(final ScopeFragment scopeFragment) {
-			final String TITLE = "Parameter";
+		/*
+		 * Parameters look like this:
+		 * 
+		 * <Scope data="argument" ref="Plot"> <Fragment data="name"
+		 * legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/> </Scope>
+		 * 
+		 * 
+		 * So we need to get subfragments, because they have simplefragments
+		 * inside.
+		 * 
+		 * ScopeFragments that are parameters have: directive: "argument" <- Can
+		 * be drop down menu from enumeration nameRef: "quest point"
+		 * 
+		 * 1 SimpleFragment directive: "name" legalRange:
+		 * "^[a-zA-Z]+[0-9a-zA-Z_]*"
+		 * 
+		 * Need a simplePanel
+		 * 
+		 * ScopePanel should be a container, too, with various things inside
+		 */
 
-			final JPanel parameterPanel;
-			final JComboBox parameterBox;
-			final List<KnowIt> parameterList;
+		/**
+		 * Creates a panel representing a Scope Fragment.
+		 * 
+		 * @param scopeFragment
+		 * @return
+		 */
+		private JPanel scopePanel(final ScopeFragment scopeFragment) {
+			final String TITLE = "Scope";
 
-			parameterPanel = objectContainerPanel(TITLE);
-			parameterBox = new JComboBox();
-			parameterList = this.codeBlock.getParameters();
+			final JPanel scopePanel;
+			final JPanel scopeComponentPanel;
+			final JComboBox directiveBox;
+			final JTextField nameRefField;
+			final JLabel directiveLabel;
+			final JLabel nameRefLabel;
 
-			for (KnowIt parameter : parameterList) {
-				parameterBox.addItem(parameter.getDisplayText());
-			}
-			parameterBox.setSelectedItem(scopeFragment.getNameRef());
+			scopePanel = objectContainerPanel(TITLE);
+			scopeComponentPanel = new JPanel();
+			directiveBox = new JComboBox();
+			nameRefField = new JTextField();
+			directiveLabel = new JLabel("Data");
+			nameRefLabel = new JLabel("NameRef");
 
-			parameterBox.addActionListener(new ActionListener() {
+			directiveLabel.setLabelFor(directiveBox);
+			nameRefLabel.setLabelFor(nameRefField);
+
+			for (CodeGenerationKeywordConstants.Scope directiveType : CodeGenerationKeywordConstants.Scope
+					.values())
+				directiveBox.addItem(directiveType.name());
+
+			directiveBox.setSelectedItem(scopeFragment.getDirectiveText()
+					.toUpperCase());
+
+			directiveBox.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					scopeFragment.setNameRef((String) parameterBox
+					scopeFragment.setDirectiveText((String) directiveBox
 							.getSelectedItem());
 				}
 			});
 
-			parameterPanel.add(parameterBox);
+			nameRefField.setText(scopeFragment.getNameRef());
 
-			return parameterPanel;
+			nameRefField.getDocument().addDocumentListener(
+					new DocumentListener() {
+
+						@Override
+						public void insertUpdate(DocumentEvent e) {
+							scopeFragment.setNameRef(nameRefField.getText());
+						}
+
+						@Override
+						public void removeUpdate(DocumentEvent e) {
+							insertUpdate(e);
+						}
+
+						@Override
+						public void changedUpdate(DocumentEvent e) {
+						}
+					});
+
+			scopePanel
+					.setLayout(new BoxLayout(scopePanel, BoxLayout.PAGE_AXIS));
+
+			scopeComponentPanel.setOpaque(false);
+
+			scopeComponentPanel.add(directiveLabel);
+			scopeComponentPanel.add(directiveBox);
+			scopeComponentPanel.add(nameRefLabel);
+			scopeComponentPanel.add(nameRefField);
+
+			scopePanel.add(scopeComponentPanel);
+
+			return scopePanel;
 		}
 
-		private JPanel childrenPanel() {
-			final String TITLE = "Children";
+		/**
+		 * Creates a panel representing a Simple Fragment.
+		 * 
+		 * @param simpleFragment
+		 * @return
+		 */
+		private JPanel simplePanel(final SimpleFragment simpleFragment) {
+			final String TITLE = "Simple";
 
-			final JPanel childrenPanel;
-			final JLabel childrenLabel;
+			final JPanel simplePanel;
+			final JComboBox directiveBox;
+			final JTextField legalRangeField;
+			final JLabel directiveLabel;
+			final JLabel legalRangeLabel;
 
-			childrenPanel = objectContainerPanel("");
-			childrenLabel = new JLabel(TITLE);
+			simplePanel = objectContainerPanel(TITLE);
+			directiveBox = new JComboBox();
+			legalRangeField = new JTextField();
+			directiveLabel = new JLabel("Data");
+			legalRangeLabel = new JLabel("LegalRange");
 
-			childrenPanel.setBorder(BorderFactory
-					.createLineBorder(Color.LIGHT_GRAY));
-			childrenPanel.add(childrenLabel);
+			directiveLabel.setLabelFor(directiveBox);
+			legalRangeLabel.setLabelFor(legalRangeField);
 
-			return childrenPanel;
+			for (CodeGenerationKeywordConstants.DataTypes directiveType : CodeGenerationKeywordConstants.DataTypes
+					.values())
+				directiveBox.addItem(directiveType.name());
+
+			directiveBox.setSelectedItem(simpleFragment.getDirectiveText()
+					.toUpperCase());
+
+			directiveBox.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					simpleFragment.setDirectiveText((String) directiveBox
+							.getSelectedItem());
+				}
+			});
+
+			legalRangeField.setText(simpleFragment.getLegalRange().toString());
+
+			legalRangeField.getDocument().addDocumentListener(
+					new DocumentListener() {
+
+						@Override
+						public void insertUpdate(DocumentEvent e) {
+							simpleFragment.setLegalRange(legalRangeField
+									.getText());
+						}
+
+						@Override
+						public void removeUpdate(DocumentEvent e) {
+							insertUpdate(e);
+						}
+
+						@Override
+						public void changedUpdate(DocumentEvent e) {
+						}
+					});
+
+			simplePanel.add(directiveLabel);
+			simplePanel.add(directiveBox);
+			simplePanel.add(legalRangeLabel);
+			simplePanel.add(legalRangeField);
+
+			return simplePanel;
+		}
+
+		/**
+		 * Creates a panel representing a Reference Fragment.
+		 * 
+		 * @param referenceFragment
+		 * @return
+		 */
+		private JPanel referencePanel(final ReferenceFragment referenceFragment) {
+			final String TITLE = "Reference";
+
+			final JPanel referencePanel;
+			final JTextField referenceField;
+
+			referencePanel = objectContainerPanel(TITLE);
+			referenceField = new JTextField(
+					referenceFragment.getDirectiveText());
+
+			referenceField.setMinimumSize(new Dimension(15, referenceField
+					.getMinimumSize().height));
+
+			referenceField.getDocument().addDocumentListener(
+					new DocumentListener() {
+
+						@Override
+						public void insertUpdate(DocumentEvent e) {
+							referenceFragment.setDirectiveText(referenceField
+									.getText());
+						}
+
+						@Override
+						public void removeUpdate(DocumentEvent e) {
+							referenceFragment.setDirectiveText(referenceField
+									.getText());
+						}
+
+						@Override
+						public void changedUpdate(DocumentEvent e) {
+						}
+
+					});
+
+			referencePanel.add(referenceField);
+
+			return referencePanel;
 		}
 
 		/**
@@ -1696,7 +1901,9 @@ public class PanelFactory {
 					 * 
 					 * </Scope>
 					 */
-					fragmentPanel = parameterPanel((ScopeFragment) codeFragment);
+					fragmentPanel = scopePanel((ScopeFragment) codeFragment);
+					buildDefaultPanes(fragmentPanel,
+							((ScopeFragment) codeFragment).getSubFragments());
 					panel.add(fragmentPanel);
 					panelToFragmentMap.put(fragmentPanel,
 							(ScopeFragment) codeFragment);
@@ -1706,19 +1913,30 @@ public class PanelFactory {
 					 * 
 					 * <FormatRef ref="children"/>
 					 */
-					fragmentPanel = childrenPanel();
+					fragmentPanel = referencePanel((ReferenceFragment) codeFragment);
 					panel.add(fragmentPanel);
 					panelToFragmentMap.put(fragmentPanel,
 							(ReferenceFragment) codeFragment);
+				} else if (codeFragment instanceof SimpleFragment) {
+					fragmentPanel = simplePanel((SimpleFragment) codeFragment);
+					panel.add(fragmentPanel);
+					panelToFragmentMap.put(fragmentPanel,
+							(SimpleFragment) codeFragment);
 				}
 
-				if (FormatFragmentSelectionManager.getInstance()
-						.getFormatFragment() != null) {
-					if (FormatFragmentSelectionManager.getInstance()
-							.getFormatFragment() == codeFragment)
-						fragmentPanel.setBackground(GUIOp.scaleColour(
-								Color.LIGHT_GRAY, 1.1));
-					else
+				final FormatFragment selectedFragment;
+
+				selectedFragment = FormatFragmentSelectionManager.getInstance()
+						.getFormatFragment();
+				if (selectedFragment != null) {
+					if (selectedFragment == codeFragment) {
+						if (selectedFragment instanceof AbstractContainerFragment)
+							fragmentPanel.setBackground(GUIOp.scaleColour(
+									Color.LIGHT_GRAY, 1.1));
+						else
+							fragmentPanel.setBackground(GUIOp.scaleColour(
+									Color.LIGHT_GRAY, 1.0));
+					} else
 						fragmentPanel.setBackground(defaultColor);
 				} else {
 					codeEditorPanel.setBackground(GUIOp.scaleColour(

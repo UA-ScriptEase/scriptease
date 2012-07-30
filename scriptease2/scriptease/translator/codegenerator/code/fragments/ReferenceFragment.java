@@ -29,7 +29,7 @@ public class ReferenceFragment extends FormatFragment {
 	public String resolve(Context context) {
 		final String format = this.getDirectiveText();
 		return FormatFragment.resolveFormat(context.getTranslator()
-				.getLanguageDictionary().getFormat(format),
+				.getLanguageDictionary().getFormat(format.toUpperCase()),
 				context);
 	}
 

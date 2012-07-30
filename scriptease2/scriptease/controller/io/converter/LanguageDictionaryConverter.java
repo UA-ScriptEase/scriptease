@@ -84,8 +84,7 @@ public class LanguageDictionaryConverter implements Converter {
 		name = reader.getAttribute(TAG_NAME);
 
 		// indentation
-		indentString = FileIO.readValue(reader,
-				TAG_INDENTED_STRING);
+		indentString = FileIO.readValue(reader, TAG_INDENTED_STRING);
 
 		// reserved words
 		reservedWords = new ArrayList<String>();
@@ -118,7 +117,7 @@ public class LanguageDictionaryConverter implements Converter {
 		reader.moveUp();
 
 		for (FormatIDFragment fragment : fragments) {
-			formatMap.put(fragment.getDirectiveText(), fragment);
+			formatMap.put(fragment.getDirectiveText().toUpperCase(), fragment);
 		}
 
 		languageDictionary = new LanguageDictionary(name, indentString,

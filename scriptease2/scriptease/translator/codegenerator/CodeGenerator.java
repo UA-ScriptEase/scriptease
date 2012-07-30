@@ -87,17 +87,18 @@ public class CodeGenerator {
 
 		// Get the format keyword from the slot and get the format from the
 		// language dictionary
-		fileFormat = languageDictionary.getFormat(slot.getFormatKeyword());
+		fileFormat = languageDictionary.getFormat(slot.getFormatKeyword()
+				.toUpperCase());
 
 		// resolve the format into code
 		try {
 			return FormatFragment.resolveFormat(fileFormat, context);
 		} catch (CodeGenerationException e) {
 			return "CodeGenerationException occured at the script generating level with message: "
-					+ e.getMessage() ;
+					+ e.getMessage();
 		}
 	}
-	
+
 	/**
 	 * Generates the script files based on the current state of the model.
 	 * Returns the generated scriptInfo files, and any problems that may have

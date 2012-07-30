@@ -112,6 +112,9 @@
 				<Literal>;</Literal>
 			</Line>
 		</Format>
+		<Format id="function_as_value">
+			<FormatRef ref="functionHeader" />
+		</Format>
 		<Format id="functionHeader">
 			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			<Literal>(</Literal>
