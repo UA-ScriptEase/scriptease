@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import scriptease.translator.codegenerator.CharacterRange;
 import scriptease.translator.codegenerator.CodeGenerationException;
-import scriptease.translator.codegenerator.TranslatorKeywordManager;
+import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
 import scriptease.translator.codegenerator.code.contexts.Context;
 
 /**
@@ -19,7 +19,11 @@ import scriptease.translator.codegenerator.code.contexts.Context;
  */
 public class SimpleFragment extends FormatFragment {
 	private String defaultText = "";
-	private Pattern legalRange;
+	private String legalRange = "";
+
+	public SimpleFragment() {
+		super("");
+	}
 
 	/**
 	 * See:
@@ -30,7 +34,7 @@ public class SimpleFragment extends FormatFragment {
 	 * @param legalRange
 	 *            The allowed range of alphanumeric characters.
 	 */
-	public SimpleFragment(String label, Pattern legalRange) {
+	public SimpleFragment(String label, String legalRange) {
 		super(label);
 		this.legalRange = legalRange;
 	}
@@ -66,10 +70,12 @@ public class SimpleFragment extends FormatFragment {
 		try {
 			// IF+ELSE BLOCK (fragment data = <dataLabel>)
 			if (dataLabel
-					.equalsIgnoreCase(TranslatorKeywordManager.XML_NAME_FORMAT))
-				resolveString = context.getUniqueName(this.legalRange);
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.NAME
+							.name()))
+				resolveString = context.getUniqueName(Pattern.compile(this.legalRange));
 			else if (dataLabel
-					.equalsIgnoreCase(TranslatorKeywordManager.XML_TYPE_FORMAT)) {
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.TYPE
+							.name())) {
 				try {
 					resolveString = context.getType();
 				} catch (CodeGenerationException e) {
@@ -79,32 +85,41 @@ public class SimpleFragment extends FormatFragment {
 						throw e;
 				}
 			} else if (dataLabel
-					.equalsIgnoreCase(TranslatorKeywordManager.XML_CODE_FORMAT))
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.CODE
+							.name()))
 				resolveString = context.getCode();
 			else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_TEMPLATEID_FORMAT))
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.TEMPLATEID
+							.name()))
 				resolveString = context.getTemplateID();
 			else if (dataLabel
-					.equalsIgnoreCase(TranslatorKeywordManager.XML_VALUE_FORMAT))
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.VALUE
+							.name()))
 				resolveString = context.getValue();
 			else if (dataLabel
-					.equalsIgnoreCase(TranslatorKeywordManager.XML_CONDITION_FORMAT))
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.CONDITION
+							.name()))
 				resolveString = context.getCondition();
 			else if (dataLabel
-					.equalsIgnoreCase(TranslatorKeywordManager.XML_FORMATTED_VALUE))
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.FORMATTEDVALUE
+							.name()))
 				resolveString = context.getFormattedValue();
 			else if (dataLabel
-					.equalsIgnoreCase(TranslatorKeywordManager.XML_INCLUDE_FORMAT))
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.INCLUDE
+							.name()))
 				resolveString = context.getInclude();
 			else if (dataLabel
-					.equalsIgnoreCase(TranslatorKeywordManager.XML_SUBJECT))
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.SUBJECT
+							.name()))
 				resolveString = context.getSubject().getBinding()
 						.getScriptValue();
 			else if (dataLabel
-					.equalsIgnoreCase(TranslatorKeywordManager.XML_FANIN))
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.FANIN
+							.name()))
 				resolveString = context.getFanIn();
 			else if (dataLabel
-					.equalsIgnoreCase(TranslatorKeywordManager.XML_QUEST_CONTAINER))
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.QUESTCONTAINER
+							.name()))
 				resolveString = context.getQuestContainer();
 			else
 				throw (new CodeGenerationException(
@@ -118,8 +133,18 @@ public class SimpleFragment extends FormatFragment {
 		}
 	}
 
-	public final Pattern getLegalRange() {
+	public final String getLegalRange() {
 		return this.legalRange;
+	}
+
+	/**
+	 * Set the legal range of the simple fragment. This needs to be in regex
+	 * format.
+	 * 
+	 * @param legalRange
+	 */
+	public void setLegalRange(String legalRange) {
+		this.legalRange = legalRange;
 	}
 
 	/**
@@ -139,10 +164,6 @@ public class SimpleFragment extends FormatFragment {
 	@Override
 	public String toString() {
 		return "SimpleFragment [" + this.getDirectiveText() + "]";
-	}
-
-	public void setLegalRange(Pattern compile) {
-		this.legalRange = compile;
 	}
 
 	@Override

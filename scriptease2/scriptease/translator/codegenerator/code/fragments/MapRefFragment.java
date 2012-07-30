@@ -1,7 +1,5 @@
 package scriptease.translator.codegenerator.code.fragments;
 
-import java.util.regex.Pattern;
-
 import scriptease.translator.codegenerator.code.contexts.Context;
 
 /**
@@ -32,7 +30,7 @@ public class MapRefFragment extends FormatFragment {
 		super.resolve(context);
 		final String key;
 		final SimpleFragment simpleFrag = new SimpleFragment(
-				this.getDirectiveText(), Pattern.compile(""));
+				this.getDirectiveText(), "");
 
 		key = simpleFrag.resolve(context);
 

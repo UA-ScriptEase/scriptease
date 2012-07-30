@@ -24,7 +24,8 @@ public class SimpleFragmentConverter implements Converter {
 		writer.addAttribute(DATA_TAG, simple.getDirectiveText());
 
 		// Legal Format Tag
-		Pattern legalRange = simple.getLegalRange();
+		Pattern legalRange = Pattern.compile(simple.getLegalRange());
+				//simple.getLegalRange();
 		if (legalRange != null && !legalRange.toString().isEmpty())
 			writer.addAttribute(LEGAL_FORMAT_TAG, legalRange.toString());
 
@@ -54,7 +55,7 @@ public class SimpleFragmentConverter implements Converter {
 		// Default Text Tag
 		defaultText = reader.getAttribute(DEFAULT_TAG);
 
-		simple = new SimpleFragment(data, Pattern.compile(pattern));
+		simple = new SimpleFragment(data, pattern);
 
 		if (defaultText != null && !defaultText.isEmpty()) {
 			simple.setDefaultText(defaultText);

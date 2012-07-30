@@ -208,6 +208,7 @@ Some important targets to read up on are:
 			<arg value="script@${linuxMachine}:&quot;${SLOCCountLocation}&quot;" />
 			<arg value="./" />
 		</exec>
+		<echo message = "You need to set your path before using SLOC. Go to www.dwheeler.com/sloccount/sloccount.html#path" />
 	</target>
 
 	<!-- 

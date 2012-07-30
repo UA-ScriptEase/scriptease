@@ -13,7 +13,6 @@ import scriptease.controller.observer.LibraryEvent;
 import scriptease.controller.observer.LibraryManagerEvent;
 import scriptease.controller.observer.LibraryManagerObserver;
 import scriptease.controller.observer.LibraryObserver;
-import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryModelPoolEvent;
 import scriptease.controller.observer.StoryModelPoolObserver;
 import scriptease.controller.observer.TranslatorObserver;
@@ -264,17 +263,6 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 */
 	@Override
 	public void modelChanged(LibraryModel changed, LibraryEvent event) {
-		final StoryComponentEvent storyComponentEvent = event.getEvent();
-
-		// Add the added StoryComponent
-		if (event.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED) {
-			this.masterRoot.addStoryChild(storyComponentEvent.getSource());
-		}
-		// Remove the deleted StoryComponent
-		else if (event.getEventType() == LibraryEvent.STORYCOMPONENT_REMOVED) {
-			this.masterRoot.removeStoryChild(storyComponentEvent.getSource());
-		}
-
 		notifyChange(new LibraryManagerEvent(changed,
 				LibraryManagerEvent.LIBRARYMODEL_CHANGED, event));
 	}

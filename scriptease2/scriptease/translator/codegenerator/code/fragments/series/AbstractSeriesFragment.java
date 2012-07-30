@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import scriptease.translator.codegenerator.CharacterRange;
-import scriptease.translator.codegenerator.TranslatorKeywordManager;
+import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
@@ -113,49 +113,64 @@ public abstract class AbstractSeriesFragment extends FormatFragment {
 
 		// IF+ELSE BLOCK ( series ... data= <dataLabel> )
 		if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_SCRIPTIT_EFFECT_SERIES))
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.SCRIPTITEFFECTS
+						.name()))
 			it = context.getScriptItEffects();
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_INCLUDES_SERIES)) {
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.INCLUDES
+						.name())) {
 			it = context.getIncludeFiles().iterator();
 		} else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_SCRIPTIT_SERIES))
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.SCRIPTITS
+						.name()))
 			it = context.getScriptIts();
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_CODEBLOCK_SERIES))
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.CODEBLOCKS
+						.name()))
 			it = (context.getCodeBlocks());
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_CAUSE_SERIES))
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.CAUSES
+						.name()))
 			it = context.getCauses();
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_ARGUMENT_SERIES))
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.ARGUMENTS
+						.name()))
 			it = context.getArguments();
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_PARAMETER_SERIES))
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.PARAMETERS
+						.name()))
 			it = context.getParameters();
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_VARIABLE_SERIES))
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.VARIABLES
+						.name()))
 			it = context.getVariables();
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_IMPLICIT_SERIES))
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.IMPLICITS
+						.name()))
 			it = context.getImplicits();
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_EFFECTS_SERIES))
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.EFFECTS
+						.name()))
 			it = context.getEffects();
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_CHILDREN_SERIES))
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.CHILDREN
+						.name()))
 			it = context.getChildren();
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_QUESTNODES_SERIES))
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.QUESTNODES
+						.name()))
 			it = context.getQuestNodes();
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_QUESTPOINTNODES_SERIES))
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.QUESTPOINTNODES
+						.name()))
 			it = context.getQuestPointNodes();
 		else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_PARENT_NODES_SERIES)) {
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.PARENTNODES
+						.name())) {
 			it = context.getParentNodes();
 		} else if (dataLabel
-				.equalsIgnoreCase(TranslatorKeywordManager.XML_CHILDREN_NODES_SERIES))
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.Series.CHILDRENNODES
+						.name()))
 			it = context.getChildrenNodes();
 		else {
 			// Default return 'cuz they didn't tell us a real label!

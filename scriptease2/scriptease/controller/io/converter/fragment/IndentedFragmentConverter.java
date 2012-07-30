@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
-import scriptease.translator.codegenerator.code.fragments.IndentedFragment;
+import scriptease.translator.codegenerator.code.fragments.container.IndentedFragment;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
