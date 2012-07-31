@@ -66,6 +66,42 @@ public class CodeBlockSource extends CodeBlock {
 	}
 
 	/**
+	 * Creates a new CodeBlockSource with the given property.
+	 * 
+	 * @param id
+	 *            The unique ID of this codeblock. If not being read from a
+	 *            file, then clients should use
+	 *            {@link APIDictionary#getNextCodeBlockID()}
+	 */
+	public CodeBlockSource(int id) {
+		this("", "", new ArrayList<String>(), new ArrayList<KnowIt>(),
+				new ArrayList<String>(), new ArrayList<FormatFragment>(), id);
+	}
+
+	/**
+	 * Creates a new CodeBlockSource with the given properties.
+	 * 
+	 * @param subject
+	 *            The name of the subject KnowIt that will be the event slot
+	 *            owner.
+	 * @param slot
+	 *            The event slot name to be used by
+	 *            {@link scriptease.translator.io.model.GameModule GameModule}
+	 *            to determine the script hook to attach to.
+	 * @param parameters
+	 *            The parameter list of this code block.
+	 * @param id
+	 *            The unique ID of this codeblock. If not being read from a
+	 *            file, then clients should use
+	 *            {@link APIDictionary#getNextCodeBlockID()}
+	 */
+	public CodeBlockSource(String subject, String slot,
+			Collection<KnowIt> parameters, int id) {
+		this(subject, slot, new ArrayList<String>(), parameters,
+				new ArrayList<String>(), new ArrayList<FormatFragment>(), id);
+	}
+
+	/**
 	 * Creates a new CodeBlockSource with the given properties.
 	 * 
 	 * @param subject
@@ -194,7 +230,7 @@ public class CodeBlockSource extends CodeBlock {
 	public void setIncludes(Collection<String> includes) {
 		this.includes = new ArrayList<String>(includes);
 	}
-	
+
 	@Override
 	public boolean hasSubject() {
 		return !this.subjectName.isEmpty();
@@ -309,7 +345,8 @@ public class CodeBlockSource extends CodeBlock {
 	@Override
 	public void setCode(Collection<FormatFragment> code) {
 		this.code = new ArrayList<FormatFragment>(code);
-		this.notifyObservers(new StoryComponentEvent(this, StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
 	}
 
 	@Override

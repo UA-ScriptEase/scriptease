@@ -84,18 +84,20 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	}
 
 	/**
-	 * A cause is a ScriptIt with a single CodeBlock which has a subject and
-	 * slot
+	 * A cause is a ScriptIt where all CodeBlocks have a subject and a slot.
 	 * 
-	 * @return
+	 * @return true if all CodeBlocks have both subjects and slots.
+	 * 
 	 */
 	public boolean isCause() {
-		int size = codeBlocks.size();
-		if (size == 1) {
-			CodeBlock main = this.getMainCodeBlock();
-			return main.hasSubject() && main.hasSlot();
-		} else
+		if(codeBlocks.size() == 0)
 			return false;
+		
+		for (CodeBlock codeBlock : codeBlocks) {
+			if (!codeBlock.hasSubject() || !codeBlock.hasSlot())
+				return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -125,7 +127,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	public Collection<String> getTypes() {
 		return this.getMainCodeBlock().getTypes();
 	}
-	
+
 	public void setTypes(Collection<String> types) {
 		this.getMainCodeBlock().setTypes(types);
 
@@ -207,7 +209,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		for (CodeBlock codeBlock : codeBlocks) {
 			this.addCodeBlock(codeBlock);
 		}
-		
+
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CODE_BLOCKS_SET));
 	}

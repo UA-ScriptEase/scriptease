@@ -240,7 +240,8 @@
 		keywords must be defined in the TypeList_Type block -->
 	<xsd:complexType name="SpecificTypeList_Type">
 		<xsd:sequence>
-			<xsd:element name="Type" type="xsd:string" maxOccurs="unbounded" />
+			<xsd:element name="Type" type="xsd:string" maxOccurs="unbounded"
+				minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 

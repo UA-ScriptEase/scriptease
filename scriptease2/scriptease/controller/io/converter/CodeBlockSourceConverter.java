@@ -8,6 +8,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 
 import com.thoughtworks.xstream.XStreamException;
@@ -27,7 +28,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class CodeBlockSourceConverter extends StoryComponentConverter implements
 		Converter {
 	public static final String TAG_CODE_BLOCK_SOURCE = "CodeBlockSource";
-	
+
 	private static final String TAG_SUBJECT = "Subject";
 	private static final String TAG_SLOT = "Slot";
 	private static final String TAG_CODE = "Code";
@@ -106,11 +107,9 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 		}
 
 		// code
-		if (!code.isEmpty()) {
-			writer.startNode(TAG_CODE);
-			context.convertAnother(code);
-			writer.endNode();
-		}
+		writer.startNode(TAG_CODE);
+		context.convertAnother(code);
+		writer.endNode();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -192,6 +191,8 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 
 			reader.moveUp();
 		}
+
+
 
 		block.setId(id);
 		block.setSubject(subject);
