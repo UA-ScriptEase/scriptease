@@ -27,7 +27,7 @@
 	</xsd:group>
 
 	<xsd:complexType name="Code_Type">
-		<xsd:sequence maxOccurs="unbounded">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="0">
 			<xsd:group ref="AllCodeDirectives" />
 		</xsd:sequence>
 	</xsd:complexType>

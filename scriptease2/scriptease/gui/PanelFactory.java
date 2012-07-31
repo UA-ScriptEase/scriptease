@@ -30,6 +30,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -48,12 +49,12 @@ import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.action.storycomponentbuilder.DeleteFragmentAction;
-import scriptease.gui.action.storycomponentbuilder.InsertIndentAction;
-import scriptease.gui.action.storycomponentbuilder.InsertLineAction;
-import scriptease.gui.action.storycomponentbuilder.InsertLiteralAction;
-import scriptease.gui.action.storycomponentbuilder.InsertReferenceAction;
-import scriptease.gui.action.storycomponentbuilder.InsertScopeAction;
-import scriptease.gui.action.storycomponentbuilder.InsertSimpleAction;
+import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertIndentAction;
+import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertLineAction;
+import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertLiteralAction;
+import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertReferenceAction;
+import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertScopeAction;
+import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertSimpleAction;
 import scriptease.gui.action.typemenus.TypeSelectionAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.nodes.GraphNode;
@@ -61,6 +62,7 @@ import scriptease.gui.managers.FormatFragmentSelectionManager;
 import scriptease.gui.pane.GameObjectPane;
 import scriptease.gui.pane.LibraryPane;
 import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
@@ -211,6 +213,7 @@ public class PanelFactory {
 		final JTextField nameField;
 		final JTextField labelField;
 		final JCheckBox visibleBox;
+		final JButton addCodeBlockButton;
 
 		final Font labelFont;
 
@@ -230,6 +233,7 @@ public class PanelFactory {
 		nameField = new JTextField();
 		labelField = new JTextField();
 		visibleBox = new JCheckBox();
+		addCodeBlockButton = new JButton("Add CodeBlock");
 
 		labelFont = new Font("SansSerif", Font.BOLD,
 				Integer.parseInt(ScriptEase.getInstance().getPreference(
@@ -252,6 +256,7 @@ public class PanelFactory {
 
 		descriptorPanelLayout.setAutoCreateGaps(true);
 		descriptorPanelLayout.setAutoCreateContainerGaps(true);
+		descriptorPanelLayout.setHonorsVisibility(true);
 
 		// Set up the labels
 		nameLabel.setFont(labelFont);
@@ -263,23 +268,34 @@ public class PanelFactory {
 		visibleLabel.setFont(labelFont);
 		visibleLabel.setLabelFor(visibleBox);
 
+		addCodeBlockButton.setVisible(false);
+
 		// Add JComponents to DescriptorPanel using GroupLayout
-		descriptorPanelLayout.setHorizontalGroup(descriptorPanelLayout
-				.createParallelGroup().addGroup(
-						descriptorPanelLayout
-								.createSequentialGroup()
-								.addGroup(
-										descriptorPanelLayout
-												.createParallelGroup()
-												.addComponent(nameLabel)
-												.addComponent(visibleLabel)
-												.addComponent(labelLabel))
-								.addGroup(
-										descriptorPanelLayout
-												.createParallelGroup()
-												.addComponent(visibleBox)
-												.addComponent(nameField)
-												.addComponent(labelField))));
+		descriptorPanelLayout
+				.setHorizontalGroup(descriptorPanelLayout
+						.createParallelGroup()
+						.addGroup(
+								descriptorPanelLayout
+										.createSequentialGroup()
+										.addGroup(
+												descriptorPanelLayout
+														.createParallelGroup()
+														.addComponent(nameLabel)
+														.addComponent(
+																visibleLabel)
+														.addComponent(
+																labelLabel))
+										.addGroup(
+												descriptorPanelLayout
+														.createParallelGroup()
+														.addComponent(
+																visibleBox)
+														.addComponent(nameField)
+														.addComponent(
+																labelField)
+														.addComponent(
+																addCodeBlockButton,
+																GroupLayout.Alignment.TRAILING))));
 
 		descriptorPanelLayout.setVerticalGroup(descriptorPanelLayout
 				.createSequentialGroup()
@@ -300,7 +316,8 @@ public class PanelFactory {
 								.createParallelGroup(
 										GroupLayout.Alignment.BASELINE)
 								.addComponent(labelLabel)
-								.addComponent(labelField)));
+								.addComponent(labelField))
+				.addComponent(addCodeBlockButton));
 
 		editorPanel.add(descriptorPanel);
 		editorPanel.add(componentEditingPanel);
@@ -316,21 +333,29 @@ public class PanelFactory {
 			private DocumentListener nameFieldListener;
 			private DocumentListener labelFieldListener;
 			private ActionListener visibleBoxListener;
+			private ActionListener addCodeBlockListener;
 
 			@Override
 			public void processScriptIt(final ScriptIt scriptIt) {
 				// Causes and effects are processed as ScriptIts
+				final Collection<CodeBlock> codeBlocks;
+
+				codeBlocks = scriptIt.getCodeBlocks();
+
 				componentEditingPanel.removeAll();
 				FormatFragmentSelectionManager.getInstance().setFormatFragment(
 						null, null);
-
-				final Collection<CodeBlock> codeBlocks = scriptIt
-						.getCodeBlocks();
 
 				for (CodeBlock codeBlock : codeBlocks) {
 					componentEditingPanel.add(new CodeBlockComponent(codeBlock,
 							scriptIt));
 				}
+
+				addCodeBlockButton.setVisible(true);
+				addCodeBlockButton.removeActionListener(addCodeBlockListener);
+				addCodeBlockListener = addCodeBlockButtonListener(scriptIt,
+						componentEditingPanel);
+				addCodeBlockButton.addActionListener(addCodeBlockListener);
 
 				updateComponents(scriptIt);
 
@@ -355,6 +380,8 @@ public class PanelFactory {
 				componentEditingPanel.removeAll();
 				FormatFragmentSelectionManager.getInstance().setFormatFragment(
 						null, null);
+
+				addCodeBlockButton.setVisible(false);
 
 				componentEditingPanel.add(PanelFactory.getInstance()
 						.buildDescriptionEditorPanel(knowIt));
@@ -503,6 +530,36 @@ public class PanelFactory {
 			public void actionPerformed(ActionEvent e) {
 				VisibilityManager.getInstance().setVisibility(component,
 						visibleBox.isSelected());
+			}
+		};
+	}
+
+	/**
+	 * Listener for a button that adds code blocks to script its.
+	 * 
+	 * @param addCodeBlockButton
+	 * @param scriptIt
+	 * @return
+	 */
+	private ActionListener addCodeBlockButtonListener(final ScriptIt scriptIt,
+			final JPanel componentEditingPanel) {
+		return new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final CodeBlock codeBlock;
+
+				codeBlock = new CodeBlockSource("", "",
+						new ArrayList<String>(), new ArrayList<KnowIt>(),
+						new ArrayList<String>(),
+						new ArrayList<FormatFragment>(), TranslatorManager
+								.getInstance().getActiveTranslator()
+								.getApiDictionary().getNextCodeBlockID());
+
+				scriptIt.addCodeBlock(codeBlock);
+				componentEditingPanel.add(new CodeBlockComponent(codeBlock,
+						scriptIt));
+				componentEditingPanel.repaint();
+				componentEditingPanel.revalidate();
 			}
 		};
 	}
@@ -682,7 +739,6 @@ public class PanelFactory {
 			final JScrollPane parameterScrollPane;
 			final JPanel parameterPanel;
 			final CodeEditorPanel codePanel;
-
 			final GroupLayout codeBlockEditorLayout;
 			final Font labelFont;
 			final List<KnowIt> parameters;
@@ -694,7 +750,7 @@ public class PanelFactory {
 			includesLabel = new JLabel("Includes: ");
 			typesLabel = new JLabel("Types: ");
 			parametersLabel = new JLabel("Parameters: ");
-			codeLabel = new JLabel("Code");
+			codeLabel = new JLabel("Code: ");
 
 			includesField = new JTextField();
 			typeAction = new TypeSelectionAction();
@@ -703,7 +759,6 @@ public class PanelFactory {
 			parameterPanel = new JPanel();
 			parameterScrollPane = new JScrollPane(parameterPanel);
 			codePanel = new CodeEditorPanel(codeBlock);
-
 			codeBlockEditorLayout = new GroupLayout(this);
 			labelFont = new Font("SansSerif", Font.BOLD,
 					Integer.parseInt(ScriptEase.getInstance().getPreference(
@@ -713,6 +768,9 @@ public class PanelFactory {
 			// Set up the codeBlockEditorPanel and the scroll pane
 			this.removeAll();
 
+			// TODO Make it so this doesn't reset to top when redrawn.
+			// And remove some things from here. Not everything needs to be
+			// recreated twice.
 			this.setLayout(codeBlockEditorLayout);
 			this.setBorder(new TitledBorder("Code Block: "));
 
@@ -723,7 +781,8 @@ public class PanelFactory {
 			parameterPanel.setLayout(new BoxLayout(parameterPanel,
 					BoxLayout.PAGE_AXIS));
 
-			parameterScrollPane.setBorder(BorderFactory.createEmptyBorder());
+			parameterScrollPane.setPreferredSize(new Dimension(400, 250));
+			parameterScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
 			// Set up the labels
 			idLabel.setForeground(Color.GRAY);
@@ -1034,6 +1093,8 @@ public class PanelFactory {
 			}
 		}
 	}
+
+	// TODO Different coloured borders + titles for each!
 
 	/**
 	 * ParameterComponents are JComponents used to represent and edit
@@ -1431,7 +1492,6 @@ public class PanelFactory {
 
 			toolbar = new JToolBar("Code Editor ToolBar");
 
-			// TODO These buttons should all be actions.
 			final JButton lineButton = new JButton(
 					InsertLineAction.getInstance());
 			final JButton indentButton = new JButton(
@@ -1446,16 +1506,22 @@ public class PanelFactory {
 					InsertReferenceAction.getInstance());
 			final JButton deleteButton = new JButton(
 					DeleteFragmentAction.getInstance());
-			final JButton moveUpButton = new JButton("Up#!#");
-			final JButton moveDownButton = new JButton("Down#!#");
 
-			codeEditorPanel = objectContainerPanel("Code");
+			// TODO Implement these
+			final JButton moveUpButton = new JButton("Up#!#");
+			moveUpButton.setEnabled(false);
+			final JButton moveDownButton = new JButton("Down#!#");
+			moveDownButton.setEnabled(false);
+
+			codeEditorPanel = objectContainerPanel("Code", Color.GRAY);
 
 			panelToFragmentMap.put(codeEditorPanel, null);
 
 			codeEditorPanel.setLayout(new BoxLayout(codeEditorPanel,
 					BoxLayout.PAGE_AXIS));
 			codeEditorScrollPane = new JScrollPane(codeEditorPanel);
+			codeEditorScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+			codeEditorScrollPane.setPreferredSize(new Dimension(400, 300));
 
 			codeFragments = codeBlock.getCode();
 
@@ -1482,14 +1548,21 @@ public class PanelFactory {
 			this.revalidate();
 		}
 
-		private JPanel objectContainerPanel(final String title) {
+		private JPanel objectContainerPanel(final String title,
+				final Color color) {
 			final JPanel objectContainerPanel;
+			final Border lineBorder;
+			final Border titledBorder;
 
 			objectContainerPanel = new JPanel();
 			objectContainerPanel.setName(title);
 
-			objectContainerPanel.setBorder(BorderFactory
-					.createTitledBorder(title));
+			lineBorder = BorderFactory.createLineBorder(color);
+			titledBorder = BorderFactory.createTitledBorder(lineBorder, title,
+					TitledBorder.LEADING, TitledBorder.TOP, new Font(
+							"SansSerif", Font.BOLD, 12), color);
+
+			objectContainerPanel.setBorder(titledBorder);
 			objectContainerPanel.setOpaque(true);
 
 			objectContainerPanel.addMouseListener(new MouseAdapter() {
@@ -1547,7 +1620,7 @@ public class PanelFactory {
 			final String TITLE = "Line";
 			final JPanel linePanel;
 
-			linePanel = objectContainerPanel(TITLE);
+			linePanel = objectContainerPanel(TITLE, Color.red);
 
 			return linePanel;
 		}
@@ -1563,7 +1636,7 @@ public class PanelFactory {
 			final JPanel indentPanel;
 			final JPanel sizePanel;
 
-			indentPanel = objectContainerPanel(TITLE);
+			indentPanel = objectContainerPanel(TITLE, Color.orange);
 			sizePanel = new JPanel();
 
 			sizePanel.setOpaque(false);
@@ -1574,53 +1647,6 @@ public class PanelFactory {
 					BoxLayout.PAGE_AXIS));
 
 			return indentPanel;
-		}
-
-		/**
-		 * Creates a panel representing a Literal Fragment.
-		 * 
-		 * @param literalFragment
-		 * @return
-		 */
-		private JPanel literalPanel(final LiteralFragment literalFragment) {
-			final String TITLE = "Literal";
-
-			final JPanel literalPanel;
-			final JTextField literalField;
-
-			literalPanel = objectContainerPanel(TITLE);
-			literalField = new JTextField(literalFragment.getDirectiveText());
-
-			literalField.setMinimumSize(new Dimension(15, literalField
-					.getMinimumSize().height));
-
-			literalField.getDocument().addDocumentListener(
-					new DocumentListener() {
-
-						@Override
-						public void insertUpdate(DocumentEvent e) {
-							literalFragment.setDirectiveText(literalField
-									.getText());
-
-							literalField.repaint();
-							literalField.revalidate();
-						}
-
-						@Override
-						public void removeUpdate(DocumentEvent e) {
-							literalFragment.setDirectiveText(literalField
-									.getText());
-						}
-
-						@Override
-						public void changedUpdate(DocumentEvent e) {
-						}
-
-					});
-
-			literalPanel.add(literalField);
-
-			return literalPanel;
 		}
 
 		/*
@@ -1660,7 +1686,7 @@ public class PanelFactory {
 			final JLabel directiveLabel;
 			final JLabel nameRefLabel;
 
-			scopePanel = objectContainerPanel(TITLE);
+			scopePanel = objectContainerPanel(TITLE, Color.yellow);
 			scopeComponentPanel = new JPanel();
 			directiveBox = new JComboBox();
 			nameRefField = new JTextField();
@@ -1693,6 +1719,8 @@ public class PanelFactory {
 						@Override
 						public void insertUpdate(DocumentEvent e) {
 							scopeFragment.setNameRef(nameRefField.getText());
+
+							scopePanel.revalidate();
 						}
 
 						@Override
@@ -1735,7 +1763,7 @@ public class PanelFactory {
 			final JLabel directiveLabel;
 			final JLabel legalRangeLabel;
 
-			simplePanel = objectContainerPanel(TITLE);
+			simplePanel = objectContainerPanel(TITLE, Color.green);
 			directiveBox = new JComboBox();
 			legalRangeField = new JTextField();
 			directiveLabel = new JLabel("Data");
@@ -1766,8 +1794,9 @@ public class PanelFactory {
 
 						@Override
 						public void insertUpdate(DocumentEvent e) {
-							simpleFragment.setLegalRange(legalRangeField
-									.getText());
+							simpleFragment.setLegalRange(legalRangeField.getText());
+
+							simplePanel.revalidate();
 						}
 
 						@Override
@@ -1789,6 +1818,51 @@ public class PanelFactory {
 		}
 
 		/**
+		 * Creates a panel representing a Literal Fragment.
+		 * 
+		 * @param literalFragment
+		 * @return
+		 */
+		private JPanel literalPanel(final LiteralFragment literalFragment) {
+			final String TITLE = "Literal";
+
+			final JPanel literalPanel;
+			final JTextField literalField;
+
+			literalPanel = objectContainerPanel(TITLE, Color.blue);
+			literalField = new JTextField(literalFragment.getDirectiveText());
+
+			literalField.setMinimumSize(new Dimension(15, literalField
+					.getMinimumSize().height));
+
+			literalField.getDocument().addDocumentListener(
+					new DocumentListener() {
+
+						@Override
+						public void insertUpdate(DocumentEvent e) {
+							literalFragment.setDirectiveText(literalField.getText());
+
+							literalPanel.revalidate();
+						}
+
+						@Override
+						public void removeUpdate(DocumentEvent e) {
+							literalFragment.setDirectiveText(literalField
+									.getText());
+						}
+
+						@Override
+						public void changedUpdate(DocumentEvent e) {
+						}
+
+					});
+
+			literalPanel.add(literalField);
+
+			return literalPanel;
+		}
+
+		/**
 		 * Creates a panel representing a Reference Fragment.
 		 * 
 		 * @param referenceFragment
@@ -1800,7 +1874,7 @@ public class PanelFactory {
 			final JPanel referencePanel;
 			final JTextField referenceField;
 
-			referencePanel = objectContainerPanel(TITLE);
+			referencePanel = objectContainerPanel(TITLE, Color.magenta.darker());
 			referenceField = new JTextField(
 					referenceFragment.getDirectiveText());
 
@@ -1812,8 +1886,9 @@ public class PanelFactory {
 
 						@Override
 						public void insertUpdate(DocumentEvent e) {
-							referenceFragment.setDirectiveText(referenceField
-									.getText());
+							referenceFragment.setDirectiveText(referenceField.getText());
+
+							referencePanel.revalidate();
 						}
 
 						@Override

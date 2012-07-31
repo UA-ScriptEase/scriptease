@@ -59,12 +59,17 @@ public class APIDictionary implements LibraryObserver {
 	@Override
 	public void modelChanged(LibraryModel model, LibraryEvent event) {
 		final StoryComponent source = event.getEvent().getSource();
-		CodeBlockSource block;
 
 		if (event.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED) {
-			if (source instanceof CodeBlockSource) {
-				block = (CodeBlockSource) source;
-				this.nextID = Math.max(block.getId() + 1, this.nextID);
+			if (source instanceof ScriptIt) {
+				final List<CodeBlock> codeBlocks;
+
+				codeBlocks = new ArrayList<CodeBlock>(
+						((ScriptIt) source).getCodeBlocks());
+				
+				for(CodeBlock codeBlock : codeBlocks) {
+					this.nextID = Math.max(codeBlock.getId() +1, this.nextID);
+				}
 			}
 		}
 	};
@@ -133,6 +138,16 @@ public class APIDictionary implements LibraryObserver {
 	}
 
 	/**
+	 * Increases the NextCodeBlockID to the passed int. If the current id is
+	 * larger than the passed int, nothing is changed.
+	 * 
+	 * @param ID
+	 */
+	public void increaseNextCodeBlockIDTo(int ID) {
+		this.nextID = Math.max(this.nextID, ID);
+	}
+
+	/**
 	 * Finds a CodeBlockSource by its ID number.
 	 * 
 	 * @param targetId
@@ -174,11 +189,12 @@ public class APIDictionary implements LibraryObserver {
 			if (this.found == null) {
 				final Collection<KnowIt> knowIts = new ArrayList<KnowIt>();
 
-				for (Slot slot : dictionary.getEventSlotManager().getEventSlots()) {
+				for (Slot slot : dictionary.getEventSlotManager()
+						.getEventSlots()) {
 					// gotta collect 'em together first.
 					knowIts.addAll(slot.getImplicits());
 					knowIts.addAll(slot.getParameters());
-					
+
 					for (KnowIt knowIt : knowIts) {
 						knowIt.process(this);
 

@@ -37,6 +37,7 @@ import scriptease.gui.action.file.SaveStoryModelExplicitlyAction;
 import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.story.DeleteStoryComponentAction;
 import scriptease.gui.action.storycomponentbuilder.NewCauseAction;
+import scriptease.gui.action.storycomponentbuilder.NewEffectAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
@@ -134,24 +135,10 @@ public class MenuFactory {
 		fileMenu = new JMenu(MenuFactory.FILE);
 		newMenu = new JMenu(MenuFactory.NEW);
 		newCause = new JMenuItem(NewCauseAction.getInstance());
-		newEffect = new JMenuItem(MenuFactory.NEW_EFFECT);
+		newEffect = new JMenuItem(NewEffectAction.getInstance());
 		newDescription = new JMenuItem(MenuFactory.NEW_DESCRIPTION);
 		save = new JMenuItem(MenuFactory.SAVE);
 		exit = new JMenuItem(MenuFactory.EXIT);
-
-		/*
-		 * TODO Add these listeners to UIListenerFactory
-		 * 
-		 * The "newCause actionlistener is an example of a listener, but there
-		 * will be different ones eventually.
-		 */
-
-		newCause.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO buildCauseEditorPane();
-			}
-		});
 
 		save.addActionListener(new ActionListener() {
 			//TODO Turn this into an action sometime.

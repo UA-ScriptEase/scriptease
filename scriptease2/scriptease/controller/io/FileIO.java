@@ -314,7 +314,7 @@ public class FileIO {
 			e.printStackTrace();
 
 			retry = WindowManager.getInstance().showRetryProblemDialog(
-					"Problem Reading",
+					"Reading",
 					"ScriptEase was unable to read from "
 							+ location.getAbsolutePath());
 
@@ -330,7 +330,7 @@ public class FileIO {
 			retry = WindowManager
 					.getInstance()
 					.showRetryProblemDialog(
-							"Problem Reading",
+							"Reading",
 							"I can't understand the file "
 									+ location.getAbsolutePath()
 									+ ".\n\nIt might be a malformatted file or from a previous version of ScriptEase.");

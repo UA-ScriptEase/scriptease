@@ -28,7 +28,6 @@ import scriptease.gui.SETree.filters.TypeFilter;
 import scriptease.gui.action.typemenus.TypeSelectionAction;
 import scriptease.gui.control.FilterableSearchField;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelLibrarySetting;
 import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelSetting;
