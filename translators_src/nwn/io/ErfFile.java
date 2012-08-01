@@ -543,22 +543,6 @@ public final class ErfFile implements GameModule {
 	}
 
 	/**
-	 * Checks a list of resources for the passed resref.
-	 * 
-	 * @param resourceList
-	 * @param resRef
-	 * @return
-	 */
-	public boolean containsResourceByResRef(List<NWNResource> resourceList,
-			String resRef) {
-		for (NWNResource resource : resourceList) {
-			if (resource.getResRef().equals(resRef))
-				return true;
-		}
-		return false;
-	}
-
-	/**
 	 * Compiles the scripts and include files with the NWN compiler.
 	 * 
 	 * @throws IOException
