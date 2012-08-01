@@ -773,7 +773,7 @@ public class GenericFileFormat {
 	 * @author mfchurch
 	 * 
 	 */
-	public class GffStruct {
+	protected class GffStruct {
 		private final long typeNumber;
 		private final long dataOrDataOffset;
 		private final long fieldCount;
