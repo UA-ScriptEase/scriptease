@@ -3,7 +3,7 @@ package scriptease.controller.io.converter.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 import scriptease.translator.codegenerator.code.fragments.container.IndentedFragment;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -27,13 +27,13 @@ public class IndentedFragmentConverter implements Converter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final List<FormatFragment> subFragments;
+		final List<Fragment> subFragments;
 		IndentedFragment indented = null;
 
 		// Read sub fragments
-		subFragments = new ArrayList<FormatFragment>();
+		subFragments = new ArrayList<Fragment>();
 		if (reader.hasMoreChildren()) {
-			subFragments.addAll((List<FormatFragment>) context.convertAnother(
+			subFragments.addAll((List<Fragment>) context.convertAnother(
 					indented, ArrayList.class));
 		}
 

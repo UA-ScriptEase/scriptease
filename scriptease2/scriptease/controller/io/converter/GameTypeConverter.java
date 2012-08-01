@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
 
@@ -98,7 +98,7 @@ public class GameTypeConverter implements Converter {
 		final String name;
 		final String keyword;
 		final String codeSymbol;
-		final Collection<FormatFragment> fragments = new ArrayList<FormatFragment>();
+		final Collection<Fragment> fragments = new ArrayList<Fragment>();
 		final Collection<String> slots = new ArrayList<String>();
 		String enums = "";
 		String reg = "";
@@ -120,7 +120,7 @@ public class GameTypeConverter implements Converter {
 			// Read Format
 			String node = reader.getNodeName();
 			if (node.equals(TAG_FORMAT)) {
-				fragments.addAll((Collection<FormatFragment>) context
+				fragments.addAll((Collection<Fragment>) context
 						.convertAnother(type, ArrayList.class));
 			}
 

@@ -6,8 +6,8 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
-import scriptease.translator.codegenerator.code.fragments.ReferenceFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 
 /**
  * Represents and performs the Insert Reference command, as well as
@@ -42,7 +42,7 @@ public final class InsertReferenceAction extends AbstractInsertFragmentAction {
 	}
 
 	@Override
-	protected FormatFragment newFragment() {
-		return new ReferenceFragment("");
+	protected Fragment newFragment() {
+		return new FormatReferenceFragment("");
 	}
 }

@@ -2,7 +2,7 @@ package scriptease.controller.io.converter.fragment;
 
 import java.util.regex.Pattern;
 
-import scriptease.translator.codegenerator.code.fragments.SimpleFragment;
+import scriptease.translator.codegenerator.code.fragments.SimpleDataFragment;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -18,7 +18,7 @@ public class SimpleFragmentConverter implements Converter {
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
-		final SimpleFragment simple = (SimpleFragment) source;
+		final SimpleDataFragment simple = (SimpleDataFragment) source;
 
 		// Data Tag
 		writer.addAttribute(DATA_TAG, simple.getDirectiveText());
@@ -39,7 +39,7 @@ public class SimpleFragmentConverter implements Converter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final SimpleFragment simple;
+		final SimpleDataFragment simple;
 		final String data;
 		String pattern;
 		String defaultText;
@@ -55,7 +55,7 @@ public class SimpleFragmentConverter implements Converter {
 		// Default Text Tag
 		defaultText = reader.getAttribute(DEFAULT_TAG);
 
-		simple = new SimpleFragment(data, pattern);
+		simple = new SimpleDataFragment(data, pattern);
 
 		if (defaultText != null && !defaultText.isEmpty()) {
 			simple.setDefaultText(defaultText);
@@ -67,6 +67,6 @@ public class SimpleFragmentConverter implements Converter {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean canConvert(Class type) {
-		return type.equals(SimpleFragment.class);
+		return type.equals(SimpleDataFragment.class);
 	}
 }

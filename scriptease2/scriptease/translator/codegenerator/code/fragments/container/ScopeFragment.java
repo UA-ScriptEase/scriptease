@@ -7,17 +7,17 @@ import java.util.List;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 
 public class ScopeFragment extends AbstractContainerFragment {
 
 	private String nameRef = "";
-	private List<FormatFragment> subFragments;
+	private List<Fragment> subFragments;
 
 	public ScopeFragment() {
 		super("");
 		this.nameRef = "";
-		this.subFragments = new ArrayList<FormatFragment>();
+		this.subFragments = new ArrayList<Fragment>();
 	}
 	
 	/**
@@ -29,19 +29,19 @@ public class ScopeFragment extends AbstractContainerFragment {
 	 * @param subFragments
 	 */
 	public ScopeFragment(String data, String nameRef,
-			List<FormatFragment> subFragments) {
+			List<Fragment> subFragments) {
 		super(data);
 		this.nameRef = nameRef;
 		this.subFragments = subFragments;
 	}
 
 	@Override
-	public Collection<FormatFragment> getSubFragments() {
+	public Collection<Fragment> getSubFragments() {
 		return this.subFragments;
 	}
 
 	@Override
-	public void setSubFragments(List<FormatFragment> subFragments) {
+	public void setSubFragments(List<Fragment> subFragments) {
 		this.subFragments = subFragments;
 	}
 	
@@ -63,7 +63,7 @@ public class ScopeFragment extends AbstractContainerFragment {
 		if (scope != null) {
 			Context newContext = ContextFactory.getInstance().createContext(
 					context, scope);
-			return (FormatFragment.resolveFormat(this.subFragments, newContext));
+			return (Fragment.resolveFormat(this.subFragments, newContext));
 		} else
 			return "< Scope was unable to be resolved for data: "
 					+ this.getDirectiveText() + " >";

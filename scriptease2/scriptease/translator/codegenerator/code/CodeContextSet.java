@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 
 /**
  * Stores intermediary Code Generation data. There are three code segments that
@@ -20,9 +20,9 @@ import scriptease.translator.codegenerator.code.fragments.FormatFragment;
  * @author remiller
  */
 public class CodeContextSet {
-	private final List<FormatFragment> declaration;
-	private final List<FormatFragment> definition;
-	private final List<FormatFragment> call;
+	private final List<Fragment> declaration;
+	private final List<Fragment> definition;
+	private final List<Fragment> call;
 
 	/**
 	 * Creates a new instance that has no declaration, definition, or call.
@@ -43,12 +43,12 @@ public class CodeContextSet {
 	 *            The collection of fragments that define how the code concept
 	 *            gets used
 	 */
-	public CodeContextSet(Collection<FormatFragment> declaration,
-			Collection<FormatFragment> definition,
-			Collection<FormatFragment> call) {
-		this.declaration = new ArrayList<FormatFragment>();
-		this.definition = new ArrayList<FormatFragment>();
-		this.call = new ArrayList<FormatFragment>();
+	public CodeContextSet(Collection<Fragment> declaration,
+			Collection<Fragment> definition,
+			Collection<Fragment> call) {
+		this.declaration = new ArrayList<Fragment>();
+		this.definition = new ArrayList<Fragment>();
+		this.call = new ArrayList<Fragment>();
 
 		if (declaration != null)
 			this.declaration.addAll(declaration);
@@ -74,7 +74,7 @@ public class CodeContextSet {
 	 * @param addedCode
 	 *            the collection of fragments to add.
 	 */
-	public void appendToDeclaration(Collection<FormatFragment> addedCode) {
+	public void appendToDeclaration(Collection<Fragment> addedCode) {
 		this.declaration.addAll(addedCode);
 	}
 
@@ -83,7 +83,7 @@ public class CodeContextSet {
 	 * 
 	 * @param addedCode
 	 */
-	public void appendToDefinition(Collection<FormatFragment> addedCode) {
+	public void appendToDefinition(Collection<Fragment> addedCode) {
 		this.definition.addAll(addedCode);
 	}
 
@@ -92,7 +92,7 @@ public class CodeContextSet {
 	 * 
 	 * @param addedCode
 	 */
-	public void appendToCall(Collection<FormatFragment> addedCode) {
+	public void appendToCall(Collection<Fragment> addedCode) {
 		this.call.addAll(addedCode);
 	}
 
@@ -101,8 +101,8 @@ public class CodeContextSet {
 	 * 
 	 * @return the declaration
 	 */
-	public List<FormatFragment> getDeclaration() {
-		return new ArrayList<FormatFragment>(this.declaration);
+	public List<Fragment> getDeclaration() {
+		return new ArrayList<Fragment>(this.declaration);
 	}
 
 	/**
@@ -110,8 +110,8 @@ public class CodeContextSet {
 	 * 
 	 * @return the definition
 	 */
-	public List<FormatFragment> getDefinition() {
-		return new ArrayList<FormatFragment>(this.definition);
+	public List<Fragment> getDefinition() {
+		return new ArrayList<Fragment>(this.definition);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class CodeContextSet {
 	 * 
 	 * @return the call
 	 */
-	public List<FormatFragment> getCall() {
-		return new ArrayList<FormatFragment>(this.call);
+	public List<Fragment> getCall() {
+		return new ArrayList<Fragment>(this.call);
 	}
 }

@@ -9,7 +9,7 @@ import scriptease.translator.codegenerator.CharacterRange;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 
 /**
  * Represents a location where a sequence of related code tokens must be
@@ -21,9 +21,9 @@ import scriptease.translator.codegenerator.code.fragments.FormatFragment;
  * 
  * @author mfchurch, jtduncan
  */
-public abstract class AbstractSeriesFragment extends FormatFragment {
+public abstract class AbstractSeriesFragment extends Fragment {
 	private final String separator;
-	private List<FormatFragment> format;
+	private List<Fragment> format;
 	private SeriesFilter seriesFilter;
 
 	@Override
@@ -41,7 +41,7 @@ public abstract class AbstractSeriesFragment extends FormatFragment {
 
 	/**
 	 * See:
-	 * {@link FormatFragment#FormatFragment(String, CharacterRange, char[])}
+	 * {@link Fragment#FormatFragment(String, CharacterRange, char[])}
 	 * 
 	 * @param data
 	 *            The specific data list label.
@@ -53,14 +53,14 @@ public abstract class AbstractSeriesFragment extends FormatFragment {
 	 *            list during resolution.
 	 */
 	public AbstractSeriesFragment(String data, String separator,
-			List<FormatFragment> format, String filter, String filterType) {
+			List<Fragment> format, String filter, String filterType) {
 		super(data);
 		this.separator = separator;
 		this.format = format;
 		this.seriesFilter = new SeriesFilter(filter, filterType);
 	}
 
-	public Collection<FormatFragment> getSubFragments() {
+	public Collection<Fragment> getSubFragments() {
 		return this.format;
 	}
 
@@ -90,7 +90,7 @@ public abstract class AbstractSeriesFragment extends FormatFragment {
 			next = it.next();
 
 			newContext = contextFactory.createContext(context, next);
-			code.append(FormatFragment.resolveFormat(format, newContext));
+			code.append(Fragment.resolveFormat(format, newContext));
 
 			if (it.hasNext())
 				code.append(this.separator);

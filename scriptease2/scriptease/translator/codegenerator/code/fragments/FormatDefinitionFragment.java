@@ -10,17 +10,17 @@ import java.util.List;
  * @author mfchurch
  * 
  */
-public class FormatIDFragment extends FormatFragment {
+public class FormatDefinitionFragment extends Fragment {
 
 	// The list of FormatFragment contained herein.
-	private List<FormatFragment> subFragments = new ArrayList<FormatFragment>();
+	private List<Fragment> subFragments = new ArrayList<Fragment>();
 
-	public FormatIDFragment(String text, List<FormatFragment> children) {
+	public FormatDefinitionFragment(String text, List<Fragment> children) {
 		super(text);
-		this.subFragments = new ArrayList<FormatFragment>(children);
+		this.subFragments = new ArrayList<Fragment>(children);
 	}
 
-	public Collection<FormatFragment> getSubFragments() {
+	public Collection<Fragment> getSubFragments() {
 		return this.subFragments;
 	}
 
@@ -32,7 +32,7 @@ public class FormatIDFragment extends FormatFragment {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof FormatIDFragment) {
+		if (obj instanceof FormatDefinitionFragment) {
 			return this.hashCode() == obj.hashCode();
 		}
 		return false;

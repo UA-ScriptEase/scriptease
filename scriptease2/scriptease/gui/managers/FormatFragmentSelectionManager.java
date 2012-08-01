@@ -1,7 +1,7 @@
 package scriptease.gui.managers;
 
 import scriptease.model.CodeBlock;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 
 /**
  * A selection manager for the format fragments in the Story Component Builder,
@@ -13,7 +13,7 @@ import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 public class FormatFragmentSelectionManager {
 	private static FormatFragmentSelectionManager instance = new FormatFragmentSelectionManager();
 
-	private FormatFragment fragment;
+	private Fragment fragment;
 
 	private CodeBlock codeBlock;
 
@@ -27,7 +27,7 @@ public class FormatFragmentSelectionManager {
 	 * @param fragment
 	 * @param codeBlock
 	 */
-	public void setFormatFragment(FormatFragment fragment, CodeBlock codeBlock) {
+	public void setFormatFragment(Fragment fragment, CodeBlock codeBlock) {
 		this.fragment = fragment;
 		this.codeBlock = codeBlock;
 	}
@@ -37,7 +37,7 @@ public class FormatFragmentSelectionManager {
 	 * 
 	 * @return
 	 */
-	public FormatFragment getFormatFragment() {
+	public Fragment getFormatFragment() {
 		return this.fragment;
 	}
 	

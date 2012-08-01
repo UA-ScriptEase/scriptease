@@ -3,7 +3,7 @@ package scriptease.controller.io.converter.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 import scriptease.translator.codegenerator.code.fragments.series.AbstractSeriesFragment;
 import scriptease.translator.codegenerator.code.fragments.series.SeriesFilter.FilterBy;
 import scriptease.translator.codegenerator.code.fragments.series.SeriesFragment;
@@ -31,7 +31,7 @@ public class SeriesFragmentConverter implements Converter {
 		writer.addAttribute(DATA_TAG, series.getDirectiveText());
 
 		// Unique Tag
-		if (series instanceof UniqueSeriesFragment)
+		if (series.isUnique)
 			writer.addAttribute(UNIQUE_TAG, "true");
 
 		// FilterBy Tag
@@ -59,20 +59,20 @@ public class SeriesFragmentConverter implements Converter {
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final String data;
-		String isUnique;
+		String uniqueString;
 		String filterBy;
 		String filter;
-		List<FormatFragment> subFragments = new ArrayList<FormatFragment>();
+		List<Fragment> subFragments = new ArrayList<Fragment>();
 		String separator = null;
 		AbstractSeriesFragment series = null;
 
 		// Data Tag
 		data = reader.getAttribute(DATA_TAG);
 		// Unique Tag
-		isUnique = reader.getAttribute(UNIQUE_TAG);
+		uniqueString = reader.getAttribute(UNIQUE_TAG);
 		// FilterBy Tag
-		if (isUnique == null)
-			isUnique = "false";
+		if (uniqueString == null)
+			uniqueString = "false";
 		filterBy = reader.getAttribute(FILTER_BY_TAG);
 		if (filterBy == null)
 			filterBy = "";
@@ -88,16 +88,19 @@ public class SeriesFragmentConverter implements Converter {
 		// Separator Tag
 		if (reader.hasMoreChildren()) {
 			// Read Sub Fragments
-			subFragments.addAll((List<FormatFragment>) context.convertAnother(
-					series, ArrayList.class));
+			subFragments.addAll((List<Fragment>) context.convertAnother(series,
+					ArrayList.class));
 		}
 
-		if (isUnique.equalsIgnoreCase("true"))
-			series = new UniqueSeriesFragment(data, separator, subFragments,
-					filter, filterBy);
+		boolean isUnique;
+
+		if (uniqueString.equalsIgnoreCase("true"))
+			isUnique = true;
 		else
-			series = new SeriesFragment(data, separator, subFragments, filter,
-					filterBy);
+			isUnique = false;
+
+		series = new SeriesFragment(data, separator, subFragments, filter,
+				filterBy, isUnique);
 
 		return series;
 	}
@@ -105,7 +108,6 @@ public class SeriesFragmentConverter implements Converter {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean canConvert(Class type) {
-		return type.equals(SeriesFragment.class)
-				|| type.equals(UniqueSeriesFragment.class);
+		return type.equals(SeriesFragment.class);
 	}
 }

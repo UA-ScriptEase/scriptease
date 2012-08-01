@@ -15,7 +15,7 @@ import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 
 /**
  * Context that is created for all CodeBlocks. Enables all relevant information
@@ -113,11 +113,11 @@ public class CodeBlockContext extends Context {
 	 */
 	@Override
 	public String getCode() {
-		final Collection<FormatFragment> codeFragments;
+		final Collection<Fragment> codeFragments;
 
 		codeFragments = this.codeBlock.getCode();
 
-		return FormatFragment.resolveFormat(codeFragments, this);
+		return Fragment.resolveFormat(codeFragments, this);
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import java.util.List;
 import scriptease.controller.StoryVisitor;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 
 /**
  * Reference to a code block in the translator. Most of the methods implemented
@@ -240,12 +240,12 @@ public class CodeBlockReference extends CodeBlock {
 	}
 
 	@Override
-	public void setCode(Collection<FormatFragment> code) {
+	public void setCode(Collection<Fragment> code) {
 		this.getTarget().setCode(code);
 	}
 
 	@Override
-	public Collection<FormatFragment> getCode() {
+	public Collection<Fragment> getCode() {
 		return this.getTarget().getCode();
 	}
 

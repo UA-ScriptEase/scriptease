@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
-import scriptease.translator.codegenerator.code.fragments.FormatIDFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.FormatDefinitionFragment;
 import scriptease.translator.io.model.GameMap;
 
 /**
@@ -20,7 +20,7 @@ import scriptease.translator.io.model.GameMap;
  */
 public class LanguageDictionary {
 
-	private final Map<String, FormatIDFragment> formatMap;
+	private final Map<String, FormatDefinitionFragment> formatMap;
 	private final Collection<String> reservedWords;
 	private final Map<String, GameMap> maps;
 	private String indentString;
@@ -41,11 +41,11 @@ public class LanguageDictionary {
 	 */
 	public LanguageDictionary(String name, String indentString,
 			Collection<String> reservedWords,
-			Map<String, FormatIDFragment> formatMap, Map<String, GameMap> maps) {
+			Map<String, FormatDefinitionFragment> formatMap, Map<String, GameMap> maps) {
 		this.name = name;
 		this.indentString = indentString;
 		this.reservedWords = new HashSet<String>(reservedWords);
-		this.formatMap = new HashMap<String, FormatIDFragment>(formatMap);
+		this.formatMap = new HashMap<String, FormatDefinitionFragment>(formatMap);
 		this.maps = new HashMap<String, GameMap>(maps);
 	}
 
@@ -88,10 +88,10 @@ public class LanguageDictionary {
 	 * @param formatID
 	 * @return
 	 */
-	public List<FormatFragment> getFormat(String formatID) {
-		final List<FormatFragment> format;
-		final FormatIDFragment formatIDFragment;
-		format = new ArrayList<FormatFragment>();
+	public List<Fragment> getFormat(String formatID) {
+		final List<Fragment> format;
+		final FormatDefinitionFragment formatIDFragment;
+		format = new ArrayList<Fragment>();
 		formatIDFragment = this.formatMap.get(formatID);
 
 		if (formatIDFragment != null) {
@@ -103,7 +103,7 @@ public class LanguageDictionary {
 		return format;
 	}
 
-	public Collection<FormatIDFragment> getFormats() {
+	public Collection<FormatDefinitionFragment> getFormats() {
 		return this.formatMap.values();
 	}
 

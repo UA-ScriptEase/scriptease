@@ -14,7 +14,7 @@ import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 import scriptease.translator.io.model.GameObject;
 
 /**
@@ -48,7 +48,7 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 	 */
 	@Override
 	public String getFormattedValue() {
-		final Collection<FormatFragment> typeFormat;
+		final Collection<Fragment> typeFormat;
 
 		typeFormat = this.translator.getGameTypeManager().getFormat(
 				((KnowItBindingConstant) binding).getFirstType());
@@ -64,11 +64,11 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 									+ this.binding
 									+ ". Maybe it's missing from the API library?");
 
-				final Collection<FormatFragment> codeFragments;
+				final Collection<Fragment> codeFragments;
 
 				codeFragments = codeBlocks.get(0).getCode();
 
-				String bindingCode = FormatFragment.resolveFormat(
+				String bindingCode = Fragment.resolveFormat(
 						codeFragments, this);
 
 				return bindingCode;
@@ -76,7 +76,7 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 				return this.getValue();
 			}
 		}
-		return FormatFragment.resolveFormat(typeFormat, this);
+		return Fragment.resolveFormat(typeFormat, this);
 	}
 
 	@Override

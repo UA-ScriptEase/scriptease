@@ -6,7 +6,7 @@ import java.util.List;
 
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.contexts.Context;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 
 /**
  * This fragment wraps LineFragments which need to be presented at the same
@@ -20,11 +20,11 @@ import scriptease.translator.codegenerator.code.fragments.FormatFragment;
 public class IndentedFragment extends AbstractContainerFragment {
 
 	// The list of FormatFragment contained herein.
-	private List<FormatFragment> subFragments = new ArrayList<FormatFragment>();
+	private List<Fragment> subFragments = new ArrayList<Fragment>();
 
 	public IndentedFragment() {
 		super("");
-		this.subFragments = new ArrayList<FormatFragment>();
+		this.subFragments = new ArrayList<Fragment>();
 	}
 
 	/**
@@ -33,18 +33,18 @@ public class IndentedFragment extends AbstractContainerFragment {
 	 * 
 	 * @param indentChar
 	 */
-	public IndentedFragment(List<FormatFragment> subFragments) {
+	public IndentedFragment(List<Fragment> subFragments) {
 		super("");
-		this.subFragments = new ArrayList<FormatFragment>(subFragments);
+		this.subFragments = new ArrayList<Fragment>(subFragments);
 	}
 
 	@Override
-	public Collection<FormatFragment> getSubFragments() {
+	public Collection<Fragment> getSubFragments() {
 		return this.subFragments;
 	}
 
 	@Override
-	public void setSubFragments(List<FormatFragment> subFragments) {
+	public void setSubFragments(List<Fragment> subFragments) {
 		this.subFragments = subFragments;
 	}
 
@@ -64,7 +64,7 @@ public class IndentedFragment extends AbstractContainerFragment {
 				.getLanguageDictionary().getIndent();
 		context.increaseIndent(indent);
 
-		for (FormatFragment fragment : this.subFragments) {
+		for (Fragment fragment : this.subFragments) {
 			generated += fragment.resolve(context);
 		}
 

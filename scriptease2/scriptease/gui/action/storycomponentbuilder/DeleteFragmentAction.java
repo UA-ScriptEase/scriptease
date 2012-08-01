@@ -8,7 +8,7 @@ import java.util.List;
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.gui.managers.FormatFragmentSelectionManager;
 import scriptease.model.CodeBlock;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
 
 /**
@@ -52,8 +52,8 @@ public class DeleteFragmentAction extends ActiveTranslatorSensitiveAction {
 	 * @return
 	 */
 	private void deleteFragment(
-			final List<FormatFragment> topLevelFormatFragments,
-			final FormatFragment selectedFragment,
+			final List<Fragment> topLevelFormatFragments,
+			final Fragment selectedFragment,
 			final AbstractContainerFragment parentFragment) {
 
 		if (topLevelFormatFragments.remove(selectedFragment)) {
@@ -61,14 +61,14 @@ public class DeleteFragmentAction extends ActiveTranslatorSensitiveAction {
 				parentFragment.setSubFragments(topLevelFormatFragments);
 
 		} else {
-			for (FormatFragment formatFragment : topLevelFormatFragments) {
+			for (Fragment formatFragment : topLevelFormatFragments) {
 				if (formatFragment instanceof AbstractContainerFragment) {
-					final Collection<FormatFragment> subFragments;
-					final List<FormatFragment> subFragmentsList;
+					final Collection<Fragment> subFragments;
+					final List<Fragment> subFragmentsList;
 
 					subFragments = ((AbstractContainerFragment) formatFragment)
 							.getSubFragments();
-					subFragmentsList = new ArrayList<FormatFragment>();
+					subFragmentsList = new ArrayList<Fragment>();
 
 					subFragmentsList.addAll(subFragments);
 
@@ -86,14 +86,14 @@ public class DeleteFragmentAction extends ActiveTranslatorSensitiveAction {
 		codeBlock = FormatFragmentSelectionManager.getInstance().getCodeBlock();
 
 		if (codeBlock != null) {
-			final FormatFragment selectedFragment;
-			final Collection<FormatFragment> code;
-			final ArrayList<FormatFragment> fragments;
+			final Fragment selectedFragment;
+			final Collection<Fragment> code;
+			final ArrayList<Fragment> fragments;
 
 			selectedFragment = FormatFragmentSelectionManager.getInstance()
 					.getFormatFragment();
 			code = codeBlock.getCode();
-			fragments = new ArrayList<FormatFragment>();
+			fragments = new ArrayList<Fragment>();
 
 			fragments.addAll(code);
 

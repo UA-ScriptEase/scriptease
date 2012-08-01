@@ -17,24 +17,24 @@ import scriptease.translator.codegenerator.code.contexts.Context;
  * 
  * @author remiller
  */
-public class SimpleFragment extends FormatFragment {
+public class SimpleDataFragment extends Fragment {
 	private String defaultText = "";
 	private String legalRange = "";
 
-	public SimpleFragment() {
+	public SimpleDataFragment() {
 		super("");
 	}
 
 	/**
 	 * See:
-	 * {@link FormatFragment#FormatFragment(String, CharacterRange, char[])}
+	 * {@link Fragment#FormatFragment(String, CharacterRange, char[])}
 	 * 
 	 * @param label
 	 *            The specific simple directive.
 	 * @param legalRange
 	 *            The allowed range of alphanumeric characters.
 	 */
-	public SimpleFragment(String label, String legalRange) {
+	public SimpleDataFragment(String label, String legalRange) {
 		super(label);
 		this.legalRange = legalRange;
 	}
@@ -45,7 +45,7 @@ public class SimpleFragment extends FormatFragment {
 	 * @param other
 	 *            the fragment to copy.
 	 */
-	public SimpleFragment(SimpleFragment other) {
+	public SimpleDataFragment(SimpleDataFragment other) {
 		this(other.getDirectiveText(), other.getLegalRange());
 	}
 
@@ -58,7 +58,7 @@ public class SimpleFragment extends FormatFragment {
 	 * @param other
 	 *            the fragment to copy.
 	 */
-	public SimpleFragment(String label, SimpleFragment other) {
+	public SimpleDataFragment(String label, SimpleDataFragment other) {
 		this(label, other.getLegalRange());
 	}
 
@@ -168,7 +168,7 @@ public class SimpleFragment extends FormatFragment {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof SimpleFragment) {
+		if (obj instanceof SimpleDataFragment) {
 			return this.hashCode() == obj.hashCode();
 		}
 		return false;

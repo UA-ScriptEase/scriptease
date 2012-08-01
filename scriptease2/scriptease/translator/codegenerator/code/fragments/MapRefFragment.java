@@ -13,7 +13,7 @@ import scriptease.translator.codegenerator.code.contexts.Context;
  * @author mfchurch
  * 
  */
-public class MapRefFragment extends FormatFragment {
+public class MapRefFragment extends Fragment {
 	private String ref = "";
 
 	public MapRefFragment(String data, String ref) {
@@ -29,7 +29,7 @@ public class MapRefFragment extends FormatFragment {
 	public String resolve(Context context) {
 		super.resolve(context);
 		final String key;
-		final SimpleFragment simpleFrag = new SimpleFragment(
+		final SimpleDataFragment simpleFrag = new SimpleDataFragment(
 				this.getDirectiveText(), "");
 
 		key = simpleFrag.resolve(context);
