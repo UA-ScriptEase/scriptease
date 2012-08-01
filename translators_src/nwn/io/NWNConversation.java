@@ -71,9 +71,9 @@ public class NWNConversation implements GameConversation {
 
 			// Conversation Fields
 			if (label.equals("EndConverAbort")) {
-				this.endConverAbort = field.getString();
+				this.endConverAbort = field.getStringData();
 			} else if (label.equals("EndConversation")) {
-				this.endConversation = field.getString();
+				this.endConversation = field.getStringData();
 			} else if (label.equals("EntryList")) {
 				this.entryList = new ArrayList<NPCEntryDialogue>();
 				List<GffStruct> readList = field.getList();
@@ -190,12 +190,12 @@ public class NWNConversation implements GameConversation {
 				}
 				// Index into the Top-Level Struct EntryList
 				else if (label.equals("Index")) {
-					this.index = new Integer(field.getString());
+					this.index = new Integer(field.getStringData());
 				}
 				// Field 'IsChild' is 1 when it is a link. Because that
 				// totally makes sense, BioWare.
 				else if (label.equals("IsChild")) {
-					this.isLink = field.getString().equals("1");
+					this.isLink = field.getStringData().equals("1");
 				}
 			}
 		}
@@ -322,7 +322,7 @@ public class NWNConversation implements GameConversation {
 
 				// Dialog Fields
 				if (label.equals("Text")) {
-					text = field.getString();
+					text = field.getStringData();
 				}
 				// 'script' = when dialogue line is reached
 				else if (label.equals("Script")) {
