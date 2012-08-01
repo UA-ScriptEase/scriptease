@@ -1,8 +1,6 @@
 package io;
 
 import io.GenericFileFormat.GffField;
-import io.GenericFileFormat.GffStruct;
-import io.NWNConversation;
 import io.NWNConversation.DialogueLine;
 
 import java.io.BufferedReader;
@@ -35,8 +33,8 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.Translator.DescriptionKeys;
+import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameModule;
@@ -416,87 +414,15 @@ public final class ErfFile implements GameModule {
 		receiverResourceGFF.setField(scriptInfo.getSlot(), scriptResRef);
 
 		for (NWNResource resource : this.resources) {
-			if (resource.isGFF()) {
-				GenericFileFormat gitFileGFF = resource.getGFF();
-				String fileType = gitFileGFF.getFileType().trim();
-				if (fileType
-						.equalsIgnoreCase(GenericFileFormat.TYPE_GAME_INSTANCE_FILE)) {
+			if (!resource.isGFF()) {
+				continue;
+			}
 
-					GffStruct gitFileStruct = gitFileGFF.getTopLevelStruct();
+			GenericFileFormat gff = resource.getGFF();
 
-					List<GffField> gitFileFields;
-
-					// The list of lists in a Git File. e.g. Creature List
-					gitFileFields = gitFileStruct.getGffFields();
-
-					// Go through the lists of lists in a GIT File.
-					for (GffField gitFileField : gitFileFields) {
-
-						String gitFileFieldLabel = gitFileGFF.getLabelArray()
-								.get((int) gitFileField.getLabelIndex());
-
-						// Find the correct list. The rest of the comments
-						// will use the creature list as an example.
-						if (gitFileFieldLabel.equals(receiverResourceGFF
-								.getGITListLabel())) {
-
-							// List of all (e.g.) creature structs in
-							// creature list.
-							List<GffStruct> gitIndividualFieldStructList = gitFileField
-									.getList();
-
-							// Parses the individual creatures from the
-							// list.
-							for (GffStruct individualFieldStruct : gitIndividualFieldStructList) {
-
-								List<GffField> individualFieldStructFields = individualFieldStruct
-										.getGffFields();
-
-								// The individual creature fields, such as
-								// the resref we will use.
-								for (GffField individualFieldStructField : individualFieldStructFields) {
-									// Checks if the field equals
-									// TemplateResRef. This means the
-									// individualFieldStruct creature is the
-									// same as the
-									// individualFieldStructField creature.
-									final List<String> fieldLabels = individualFieldStructField
-											.getGFF().getLabelArray();
-									final int labelIndex = (int) individualFieldStructField
-											.getLabelIndex();
-									if (fieldLabels.get(labelIndex).equals(
-											"TemplateResRef")) {
-										if (individualFieldStructField
-												.getString().equals(
-														receiverResourceGFF
-																.getResRef())) {
-
-											// Look for the field to place
-											// the script into
-											for (GffField individualFieldStructField2 : individualFieldStructFields) {
-												final List<String> fieldLabels2 = individualFieldStructField2
-														.getGFF()
-														.getLabelArray();
-												final int labelIndex2 = (int) individualFieldStructField2
-														.getLabelIndex();
-												if (fieldLabels2.get(
-														labelIndex2).equals(
-														scriptInfo.getSlot())) {
-													individualFieldStructField2
-															.getGFF()
-															.setField(
-																	individualFieldStructField2,
-																	scriptResRef);
-													break;
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+			if (gff.isInstanceUpdatable()) {
+				gff.updateAllInstances(receiverResourceGFF,
+						scriptInfo.getSlot(), scriptResRef);
 			}
 		}
 	}
