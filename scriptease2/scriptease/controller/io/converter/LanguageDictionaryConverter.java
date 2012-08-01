@@ -7,7 +7,7 @@ import java.util.Map;
 
 import scriptease.controller.io.FileIO;
 import scriptease.translator.LanguageDictionary;
-import scriptease.translator.codegenerator.code.fragments.FormatIDFragment;
+import scriptease.translator.codegenerator.code.fragments.FormatDefinitionFragment;
 import scriptease.translator.io.model.GameMap;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -75,7 +75,7 @@ public class LanguageDictionaryConverter implements Converter {
 		final String indentString;
 		final Collection<String> reservedWords;
 		final Map<String, GameMap> maps;
-		final Map<String, FormatIDFragment> formatMap;
+		final Map<String, FormatDefinitionFragment> formatMap;
 		LanguageDictionary languageDictionary = null;
 
 		System.err.println("Unmarshaling LanguageDictionary");
@@ -107,16 +107,16 @@ public class LanguageDictionaryConverter implements Converter {
 		reader.moveUp();
 
 		// formats
-		Collection<FormatIDFragment> fragments = new ArrayList<FormatIDFragment>();
-		formatMap = new HashMap<String, FormatIDFragment>();
+		Collection<FormatDefinitionFragment> fragments = new ArrayList<FormatDefinitionFragment>();
+		formatMap = new HashMap<String, FormatDefinitionFragment>();
 
 		reader.moveDown();
 		if (reader.hasMoreChildren())
-			fragments.addAll(((Collection<FormatIDFragment>) context
+			fragments.addAll(((Collection<FormatDefinitionFragment>) context
 					.convertAnother(languageDictionary, ArrayList.class)));
 		reader.moveUp();
 
-		for (FormatIDFragment fragment : fragments) {
+		for (FormatDefinitionFragment fragment : fragments) {
 			formatMap.put(fragment.getDirectiveText().toUpperCase(), fragment);
 		}
 

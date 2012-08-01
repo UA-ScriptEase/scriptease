@@ -12,7 +12,7 @@ import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEn
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 
 /**
  * Concrete representation of a specific code block in the API Dictionary.
@@ -52,7 +52,7 @@ public class CodeBlockSource extends CodeBlock {
 	private String slot;
 	private Collection<String> returnTypes;
 	private Collection<String> includes;
-	private Collection<FormatFragment> code;
+	private Collection<Fragment> code;
 	private Set<WeakReference<CodeBlockReference>> references;
 	private int id;
 
@@ -61,7 +61,7 @@ public class CodeBlockSource extends CodeBlock {
 	 */
 	public CodeBlockSource() {
 		this("", "", new ArrayList<String>(), new ArrayList<KnowIt>(),
-				new ArrayList<String>(), new ArrayList<FormatFragment>(),
+				new ArrayList<String>(), new ArrayList<Fragment>(),
 				CodeBlockSource.DEFAULT_ID);
 	}
 
@@ -75,7 +75,7 @@ public class CodeBlockSource extends CodeBlock {
 	 */
 	public CodeBlockSource(int id) {
 		this("", "", new ArrayList<String>(), new ArrayList<KnowIt>(),
-				new ArrayList<String>(), new ArrayList<FormatFragment>(), id);
+				new ArrayList<String>(), new ArrayList<Fragment>(), id);
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class CodeBlockSource extends CodeBlock {
 	public CodeBlockSource(String subject, String slot,
 			Collection<KnowIt> parameters, int id) {
 		this(subject, slot, new ArrayList<String>(), parameters,
-				new ArrayList<String>(), new ArrayList<FormatFragment>(), id);
+				new ArrayList<String>(), new ArrayList<Fragment>(), id);
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class CodeBlockSource extends CodeBlock {
 	 */
 	public CodeBlockSource(String subject, String slot,
 			Collection<String> returnTypes, Collection<KnowIt> parameters,
-			Collection<String> includes, Collection<FormatFragment> code, int id) {
+			Collection<String> includes, Collection<Fragment> code, int id) {
 		this.init(id);
 		this.setSubject(subject);
 		this.setSlot(slot);
@@ -343,15 +343,15 @@ public class CodeBlockSource extends CodeBlock {
 	}
 
 	@Override
-	public void setCode(Collection<FormatFragment> code) {
-		this.code = new ArrayList<FormatFragment>(code);
+	public void setCode(Collection<Fragment> code) {
+		this.code = new ArrayList<Fragment>(code);
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
 	}
 
 	@Override
-	public Collection<FormatFragment> getCode() {
-		return new ArrayList<FormatFragment>(this.code);
+	public Collection<Fragment> getCode() {
+		return new ArrayList<Fragment>(this.code);
 	}
 
 	/**

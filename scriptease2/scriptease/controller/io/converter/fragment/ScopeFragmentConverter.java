@@ -3,7 +3,7 @@ package scriptease.controller.io.converter.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 import scriptease.translator.codegenerator.code.fragments.container.ScopeFragment;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -39,7 +39,7 @@ public class ScopeFragmentConverter implements Converter {
 			UnmarshallingContext context) {
 		final String data;
 		final String ref;
-		final List<FormatFragment> subFragments = new ArrayList<FormatFragment>();
+		final List<Fragment> subFragments = new ArrayList<Fragment>();
 		ScopeFragment scope = null;
 
 		// Data Tag
@@ -50,7 +50,7 @@ public class ScopeFragmentConverter implements Converter {
 
 		// Read Sub Fragments
 		if (reader.hasMoreChildren()) {
-			subFragments.addAll((List<FormatFragment>) context.convertAnother(
+			subFragments.addAll((List<Fragment>) context.convertAnother(
 					scope, ArrayList.class));
 		}
 

@@ -1,10 +1,12 @@
 package scriptease.translator.codegenerator.code.fragments.series;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.translator.codegenerator.CharacterRange;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 
 /**
  * SeriesFragments is a template subclass of AbstractSeriesFragment, meaning
@@ -20,10 +22,10 @@ import scriptease.translator.codegenerator.code.fragments.FormatFragment;
  * 
  */
 public class SeriesFragment extends AbstractSeriesFragment {
+	private final boolean isUnique;
 
 	/**
-	 * See:
-	 * {@link FormatFragment#FormatFragment(String, CharacterRange, char[])}
+	 * See: {@link Fragment#FormatFragment(String, CharacterRange, char[])}
 	 * 
 	 * @param data
 	 *            The specific data list label.
@@ -35,12 +37,23 @@ public class SeriesFragment extends AbstractSeriesFragment {
 	 *            list during resolution.
 	 */
 	public SeriesFragment(String data, String separator,
-			List<FormatFragment> subFragments, String filter, String filterType) {
+			List<Fragment> subFragments, String filter, String filterType, boolean isUnique) {
 		super(data, separator, subFragments, filter, filterType);
+		this.isUnique = isUnique;
 	}
 
 	public <T> Iterator<T> handle(Iterator<T> iterator) {
-		return iterator;
+		if (this.isUnique)
+			return iterator;
+		else {
+			Collection<T> unique = new CopyOnWriteArraySet<T>();
+			while (iterator.hasNext()) {
+				T object = iterator.next();
+
+				unique.add(object);
+			}
+			return unique.iterator();
+		}
 	}
 
 	@Override
@@ -48,5 +61,9 @@ public class SeriesFragment extends AbstractSeriesFragment {
 		if (obj instanceof SeriesFragment)
 			return this.hashCode() == obj.hashCode();
 		return false;
+	}
+	
+	public boolean isUnique() {
+		return this.isUnique;
 	}
 }

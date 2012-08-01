@@ -3,8 +3,8 @@ package scriptease.controller.io.converter.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
-import scriptease.translator.codegenerator.code.fragments.FormatIDFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.FormatDefinitionFragment;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -18,7 +18,7 @@ public class FormatIDFragmentConverter implements Converter {
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
-		final FormatIDFragment format = (FormatIDFragment) source;
+		final FormatDefinitionFragment format = (FormatDefinitionFragment) source;
 
 		// Write the Fragment's ID
 		writer.addAttribute(ID_TAG, format.getDirectiveText());
@@ -32,26 +32,26 @@ public class FormatIDFragmentConverter implements Converter {
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final String id;
-		final List<FormatFragment> subFragments;
-		FormatIDFragment format = null;
+		final List<Fragment> subFragments;
+		FormatDefinitionFragment format = null;
 
 		// Read the Fragment's ID
 		id = reader.getAttribute(ID_TAG);
 
 		// Read sub fragments
-		subFragments = new ArrayList<FormatFragment>();
+		subFragments = new ArrayList<Fragment>();
 		if (reader.hasMoreChildren()) {
-			subFragments.addAll((List<FormatFragment>) context.convertAnother(
+			subFragments.addAll((List<Fragment>) context.convertAnother(
 					format, ArrayList.class));
 		}
 
-		format = new FormatIDFragment(id, subFragments);
+		format = new FormatDefinitionFragment(id, subFragments);
 		return format;
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean canConvert(Class type) {
-		return type.equals(FormatIDFragment.class);
+		return type.equals(FormatDefinitionFragment.class);
 	}
 }

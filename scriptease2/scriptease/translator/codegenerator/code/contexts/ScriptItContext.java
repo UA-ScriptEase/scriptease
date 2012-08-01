@@ -13,7 +13,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 
 public class ScriptItContext extends ComplexStoryComponentContext {
 
@@ -89,7 +89,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	 */
 	@Override
 	public String getCode() {
-		final Collection<FormatFragment> code = new ArrayList<FormatFragment>();
+		final Collection<Fragment> code = new ArrayList<Fragment>();
 		final Collection<CodeBlock> codeBlocks = ((ScriptIt) component)
 				.getCodeBlocksForLocation(this.locationInfo);
 
@@ -98,7 +98,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 			code.addAll(codeBlock.getCode());
 		}
 
-		return FormatFragment.resolveFormat(code, this);
+		return Fragment.resolveFormat(code, this);
 	}
 
 	@Override

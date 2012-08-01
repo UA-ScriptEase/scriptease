@@ -9,10 +9,10 @@ import scriptease.translator.codegenerator.code.contexts.Context;
  * 
  * @author remiller
  */
-public class LiteralFragment extends FormatFragment {
+public class LiteralFragment extends Fragment {
 	/**
 	 * See:
-	 * {@link FormatFragment#FormatFragment(String, CharacterRange, char[])}
+	 * {@link Fragment#FormatFragment(String, CharacterRange, char[])}
 	 * 
 	 * @param text
 	 *            The specific literal.

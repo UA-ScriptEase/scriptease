@@ -3,7 +3,7 @@ package scriptease.translator.codegenerator.code.fragments;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ScriptItContext;
 
-public class ScriptItReferenceFragment extends ReferenceFragment {
+public class ScriptItReferenceFragment extends FormatReferenceFragment {
 
 	public ScriptItReferenceFragment(String text) {
 		super(text);

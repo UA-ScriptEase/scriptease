@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -30,6 +31,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
@@ -74,10 +76,10 @@ import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
 import scriptease.translator.codegenerator.GameObjectPicker;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
-import scriptease.translator.codegenerator.code.fragments.ReferenceFragment;
-import scriptease.translator.codegenerator.code.fragments.SimpleFragment;
+import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
+import scriptease.translator.codegenerator.code.fragments.SimpleDataFragment;
 import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
 import scriptease.translator.codegenerator.code.fragments.container.IndentedFragment;
 import scriptease.translator.codegenerator.code.fragments.container.LineFragment;
@@ -551,7 +553,7 @@ public class PanelFactory {
 				codeBlock = new CodeBlockSource("", "",
 						new ArrayList<String>(), new ArrayList<KnowIt>(),
 						new ArrayList<String>(),
-						new ArrayList<FormatFragment>(), TranslatorManager
+						new ArrayList<Fragment>(), TranslatorManager
 								.getInstance().getActiveTranslator()
 								.getApiDictionary().getNextCodeBlockID());
 
@@ -1452,7 +1454,7 @@ public class PanelFactory {
 	}
 
 	/**
-	 * Panel used to edit code!
+	 * Panel used to edit code graphically.
 	 * 
 	 * @author kschenk
 	 * 
@@ -1461,73 +1463,60 @@ public class PanelFactory {
 	private class CodeEditorPanel extends JPanel implements
 			StoryComponentObserver {
 
-		private final Map<JPanel, FormatFragment> panelToFragmentMap;
-		private CodeBlock codeBlock;
+		private final Map<JPanel, Fragment> panelToFragmentMap;
+		private final CodeBlock codeBlock;
 		/**
 		 * The top level JPanel.
 		 */
-		private JPanel codeEditorPanel;
+		private final JPanel codeEditorPanel;
+		private final JScrollPane codeEditorScrollPane;
 
 		public CodeEditorPanel(CodeBlock codeBlock) {
 			super();
 			this.codeBlock = codeBlock;
-
-			panelToFragmentMap = new HashMap<JPanel, FormatFragment>();
-
+			this.panelToFragmentMap = new HashMap<JPanel, Fragment>();
 			this.codeBlock.addStoryComponentObserver(this);
 
-			this.setupCodeEditorPanel();
-
-			FormatFragmentSelectionManager.getInstance().setFormatFragment(
-					null, codeBlock);
-		}
-
-		private void setupCodeEditorPanel() {
-			this.removeAll();
+			final String CODE_EDITOR_PANEL_NAME = "Code";
 
 			final JToolBar toolbar;
+			final JButton lineButton;
+			final JButton indentButton;
+			final JButton scopeButton;
+			final JButton simpleButton;
+			final JButton literalButton;
+			final JButton referenceButton;
+			final JButton deleteButton;
+			final JButton moveUpButton;
+			final JButton moveDownButton;
 
-			final JScrollPane codeEditorScrollPane;
-			final Collection<FormatFragment> codeFragments;
+			final Border lineBorder;
+			final Border titledBorder;
 
 			toolbar = new JToolBar("Code Editor ToolBar");
+			lineButton = new JButton(InsertLineAction.getInstance());
+			indentButton = new JButton(InsertIndentAction.getInstance());
+			scopeButton = new JButton(InsertScopeAction.getInstance());
+			simpleButton = new JButton(InsertSimpleAction.getInstance());
+			literalButton = new JButton(InsertLiteralAction.getInstance());
+			referenceButton = new JButton(InsertReferenceAction.getInstance());
+			deleteButton = new JButton(DeleteFragmentAction.getInstance());
+			moveUpButton = new JButton("Up#!#");
+			moveDownButton = new JButton("Down#!#");
 
-			final JButton lineButton = new JButton(
-					InsertLineAction.getInstance());
-			final JButton indentButton = new JButton(
-					InsertIndentAction.getInstance());
-			final JButton scopeButton = new JButton(
-					InsertScopeAction.getInstance());
-			final JButton simpleButton = new JButton(
-					InsertSimpleAction.getInstance());
-			final JButton literalButton = new JButton(
-					InsertLiteralAction.getInstance());
-			final JButton referenceButton = new JButton(
-					InsertReferenceAction.getInstance());
-			final JButton deleteButton = new JButton(
-					DeleteFragmentAction.getInstance());
+			lineBorder = BorderFactory.createLineBorder(Color.gray);
+			titledBorder = BorderFactory.createTitledBorder(lineBorder,
+					CODE_EDITOR_PANEL_NAME, TitledBorder.LEADING,
+					TitledBorder.TOP, new Font("SansSerif", Font.PLAIN, 12),
+					Color.gray);
 
-			// TODO Implement these
-			final JButton moveUpButton = new JButton("Up#!#");
-			moveUpButton.setEnabled(false);
-			final JButton moveDownButton = new JButton("Down#!#");
+			this.codeEditorPanel = objectContainerPanel(CODE_EDITOR_PANEL_NAME,
+					titledBorder);
+			this.codeEditorScrollPane = new JScrollPane(codeEditorPanel);
+
+			// TODO Implement these buttons and enable them.
 			moveDownButton.setEnabled(false);
-
-			codeEditorPanel = objectContainerPanel("Code", Color.GRAY);
-
-			panelToFragmentMap.put(codeEditorPanel, null);
-
-			codeEditorPanel.setLayout(new BoxLayout(codeEditorPanel,
-					BoxLayout.PAGE_AXIS));
-			codeEditorScrollPane = new JScrollPane(codeEditorPanel);
-			codeEditorScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-			codeEditorScrollPane.setPreferredSize(new Dimension(400, 300));
-
-			codeFragments = codeBlock.getCode();
-
-			buildDefaultPanes(codeEditorPanel, codeFragments);
-
-			this.setLayout(new BorderLayout());
+			moveUpButton.setEnabled(false);
 
 			toolbar.setFloatable(false);
 
@@ -1541,35 +1530,67 @@ public class PanelFactory {
 			toolbar.add(moveUpButton);
 			toolbar.add(moveDownButton);
 
+			this.codeEditorScrollPane.getVerticalScrollBar().setUnitIncrement(
+					16);
+			this.codeEditorScrollPane.setPreferredSize(new Dimension(400, 300));
+
+			this.setLayout(new BorderLayout());
+			this.codeEditorPanel.setLayout(new BoxLayout(codeEditorPanel,
+					BoxLayout.PAGE_AXIS));
+
+			this.panelToFragmentMap.put(this.codeEditorPanel, null);
 			this.add(toolbar, BorderLayout.PAGE_START);
 			this.add(codeEditorScrollPane, BorderLayout.CENTER);
 
-			this.repaint();
-			this.revalidate();
+			this.fillCodeEditorPanel();
+
+			FormatFragmentSelectionManager.getInstance().setFormatFragment(
+					null, codeBlock);
 		}
 
+		/**
+		 * Fills the code editor panel with FormatFragments present in the
+		 * CodeBlock.
+		 */
+		private void fillCodeEditorPanel() {
+			final Collection<Fragment> codeFragments;
+			final Rectangle visibleRectangle;
+
+			codeFragments = this.codeBlock.getCode();
+			visibleRectangle = this.codeEditorScrollPane.getVisibleRect();
+
+			this.codeEditorPanel.removeAll();
+			this.buildDefaultPanes(this.codeEditorPanel, codeFragments);
+			this.codeEditorPanel.repaint();
+			this.codeEditorPanel.revalidate();
+
+			this.codeEditorScrollPane.scrollRectToVisible(visibleRectangle);
+		}
+
+		/**
+		 * This creates a panel with the specified title, and using the passed
+		 * in colour. It is used by the various Fragment Panels to create a
+		 * common appearance between them.
+		 * 
+		 * @param title
+		 * @param color
+		 * @return
+		 */
 		private JPanel objectContainerPanel(final String title,
-				final Color color) {
+				final Border border) {
 			final JPanel objectContainerPanel;
-			final Border lineBorder;
-			final Border titledBorder;
 
 			objectContainerPanel = new JPanel();
 			objectContainerPanel.setName(title);
 
-			lineBorder = BorderFactory.createLineBorder(color);
-			titledBorder = BorderFactory.createTitledBorder(lineBorder, title,
-					TitledBorder.LEADING, TitledBorder.TOP, new Font(
-							"SansSerif", Font.BOLD, 12), color);
-
-			objectContainerPanel.setBorder(titledBorder);
+			objectContainerPanel.setBorder(border);
 			objectContainerPanel.setOpaque(true);
 
 			objectContainerPanel.addMouseListener(new MouseAdapter() {
 				/*
 				 * TODO Implement hovering color changes. Note that the
-				 * following code will not work correctly. But the colors work
-				 * alright.
+				 * following code will not work correctly. But the colors look
+				 * ok, for a grey and bland interface.
 				 */
 				@Override
 				public void mousePressed(MouseEvent e) {
@@ -1586,7 +1607,7 @@ public class PanelFactory {
 									panelToFragmentMap
 											.get(objectContainerPanel),
 									codeBlock);
-					setupCodeEditorPanel();
+					fillCodeEditorPanel();
 				}
 
 				@Override
@@ -1612,21 +1633,37 @@ public class PanelFactory {
 		}
 
 		/**
-		 * Creates a panel representing a Line Fragment.
+		 * Creates a panel representing a LineFragment. This is a container
+		 * fragment, meaning it can contain other fragments. LineFragments place
+		 * whatever code is within them on its own line. Code does not
+		 * automatically wrap, so using LineFragments can help with formatting.
 		 * 
 		 * @return
 		 */
 		private JPanel linePanel() {
 			final String TITLE = "Line";
 			final JPanel linePanel;
+			final Border lineBorder;
+			final Border titledBorder;
 
-			linePanel = objectContainerPanel(TITLE, Color.red);
+			lineBorder = BorderFactory.createLineBorder(Color.GRAY);
+			titledBorder = BorderFactory.createTitledBorder(lineBorder, TITLE,
+					TitledBorder.LEADING, TitledBorder.TOP, new Font(
+							"SansSerif", Font.BOLD, 12), Color.BLACK);
+			
+			linePanel = objectContainerPanel(TITLE, titledBorder);
 
 			return linePanel;
 		}
 
 		/**
-		 * Creates a panel representing an Indent Fragment.
+		 * Creates a panel representing an IndentedFragment. This is a container
+		 * fragment, meaning it can contain other fragments. IndentedFragments
+		 * indent whatever code is within them using the indent string. Using
+		 * IndentedFragments can help with formatting.<br>
+		 * <br>
+		 * The indent string is defined in the LanguageDictionary within the
+		 * &lt;IndentString /&gt; tag.
 		 * 
 		 * @return
 		 */
@@ -1635,12 +1672,20 @@ public class PanelFactory {
 
 			final JPanel indentPanel;
 			final JPanel sizePanel;
+			final Border lineBorder;
+			final Border titledBorder;
 
-			indentPanel = objectContainerPanel(TITLE, Color.orange);
 			sizePanel = new JPanel();
+			lineBorder = BorderFactory.createMatteBorder(1, 5, 1, 1, Color.GRAY);
+			titledBorder = BorderFactory.createTitledBorder(lineBorder, TITLE,
+					TitledBorder.LEADING, TitledBorder.TOP, new Font(
+							"SansSerif", Font.BOLD, 12), Color.BLACK);
 
+			indentPanel = objectContainerPanel(TITLE, titledBorder);
+		
 			sizePanel.setOpaque(false);
 
+			indentPanel.add(Box.createHorizontalStrut(15));
 			indentPanel.add(sizePanel);
 
 			indentPanel.setLayout(new BoxLayout(indentPanel,
@@ -1649,31 +1694,34 @@ public class PanelFactory {
 			return indentPanel;
 		}
 
-		/*
-		 * Parameters look like this:
-		 * 
-		 * <Scope data="argument" ref="Plot"> <Fragment data="name"
-		 * legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/> </Scope>
-		 * 
-		 * 
-		 * So we need to get subfragments, because they have simplefragments
-		 * inside.
-		 * 
-		 * ScopeFragments that are parameters have: directive: "argument" <- Can
-		 * be drop down menu from enumeration nameRef: "quest point"
-		 * 
-		 * 1 SimpleFragment directive: "name" legalRange:
-		 * "^[a-zA-Z]+[0-9a-zA-Z_]*"
-		 * 
-		 * Need a simplePanel
-		 * 
-		 * ScopePanel should be a container, too, with various things inside
-		 */
-
 		/**
-		 * Creates a panel representing a Scope Fragment.
+		 * Creates a panel representing a Scope Fragment.<br>
+		 * <br>
+		 * <b>How A User Will Insert a Parameter:</b> <br>
+		 * <br>
+		 * <ol>
+		 * <li>Insert a ScopeFragment into the Code Editor.</li>
+		 * <li>Set the Data box to "Argument".</li>
+		 * <li>Set the NameRef field to the desired parameter name.</li>
+		 * <li>Insert a SimpleFragment into the ScopeFragment</li>
+		 * <li>Set the Data field to "Name"</li>
+		 * <li>Set the LegalValues field to a relevant regular expression.<br>
+		 * The RegEx commonly used in the Neverwinter Nights translator is
+		 * <code>"^[a-zA-Z]+[0-9a-zA-Z_]*"</code>.
+		 * </ol>
+		 * The resulting code will look something like this:<br>
+		 * <br>
+		 * <code>
+		 * &lt;Scope data="argument" ref="Plot"&gt;
+		 * <br>
+		 * &nbsp;&nbsp;&lt;Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/&gt;
+		 * <br>
+		 * &lt;/Scope&gt;
+		 * </code>
 		 * 
 		 * @param scopeFragment
+		 *            The ScopeFragment to create a panel for. This can be a
+		 *            completely new ScopeFragment.
 		 * @return
 		 */
 		private JPanel scopePanel(final ScopeFragment scopeFragment) {
@@ -1685,8 +1733,15 @@ public class PanelFactory {
 			final JTextField nameRefField;
 			final JLabel directiveLabel;
 			final JLabel nameRefLabel;
+			final Border lineBorder;
+			final Border titledBorder;
 
-			scopePanel = objectContainerPanel(TITLE, Color.yellow);
+			lineBorder = BorderFactory.createLineBorder(Color.green.darker());
+			titledBorder = BorderFactory.createTitledBorder(lineBorder, TITLE,
+					TitledBorder.LEADING, TitledBorder.TOP, new Font(
+							"SansSerif", Font.BOLD, 12), Color.green.darker());
+
+			scopePanel = objectContainerPanel(TITLE, titledBorder);
 			scopeComponentPanel = new JPanel();
 			directiveBox = new JComboBox();
 			nameRefField = new JTextField();
@@ -1754,7 +1809,7 @@ public class PanelFactory {
 		 * @param simpleFragment
 		 * @return
 		 */
-		private JPanel simplePanel(final SimpleFragment simpleFragment) {
+		private JPanel simplePanel(final SimpleDataFragment simpleFragment) {
 			final String TITLE = "Simple";
 
 			final JPanel simplePanel;
@@ -1762,8 +1817,15 @@ public class PanelFactory {
 			final JTextField legalRangeField;
 			final JLabel directiveLabel;
 			final JLabel legalRangeLabel;
+			final Border lineBorder;
+			final Border titledBorder;
 
-			simplePanel = objectContainerPanel(TITLE, Color.green);
+			lineBorder = BorderFactory.createLineBorder(Color.blue);
+			titledBorder = BorderFactory.createTitledBorder(lineBorder, TITLE,
+					TitledBorder.LEADING, TitledBorder.TOP, new Font(
+							"SansSerif", Font.BOLD, 12), Color.blue);
+
+			simplePanel = objectContainerPanel(TITLE, titledBorder);
 			directiveBox = new JComboBox();
 			legalRangeField = new JTextField();
 			directiveLabel = new JLabel("Data");
@@ -1794,7 +1856,8 @@ public class PanelFactory {
 
 						@Override
 						public void insertUpdate(DocumentEvent e) {
-							simpleFragment.setLegalRange(legalRangeField.getText());
+							simpleFragment.setLegalRange(legalRangeField
+									.getText());
 
 							simplePanel.revalidate();
 						}
@@ -1828,8 +1891,15 @@ public class PanelFactory {
 
 			final JPanel literalPanel;
 			final JTextField literalField;
+			final Border lineBorder;
+			final Border titledBorder;
 
-			literalPanel = objectContainerPanel(TITLE, Color.blue);
+			lineBorder = BorderFactory.createLineBorder(Color.black);
+			titledBorder = BorderFactory.createTitledBorder(lineBorder, TITLE,
+					TitledBorder.LEADING, TitledBorder.TOP, new Font(
+							"SansSerif", Font.BOLD, 12), Color.black);
+
+			literalPanel = objectContainerPanel(TITLE, titledBorder);
 			literalField = new JTextField(literalFragment.getDirectiveText());
 
 			literalField.setMinimumSize(new Dimension(15, literalField
@@ -1840,7 +1910,8 @@ public class PanelFactory {
 
 						@Override
 						public void insertUpdate(DocumentEvent e) {
-							literalFragment.setDirectiveText(literalField.getText());
+							literalFragment.setDirectiveText(literalField
+									.getText());
 
 							literalPanel.revalidate();
 						}
@@ -1868,13 +1939,20 @@ public class PanelFactory {
 		 * @param referenceFragment
 		 * @return
 		 */
-		private JPanel referencePanel(final ReferenceFragment referenceFragment) {
+		private JPanel referencePanel(final FormatReferenceFragment referenceFragment) {
 			final String TITLE = "Reference";
 
 			final JPanel referencePanel;
 			final JTextField referenceField;
+			final Border lineBorder;
+			final Border titledBorder;
 
-			referencePanel = objectContainerPanel(TITLE, Color.magenta.darker());
+			lineBorder = BorderFactory.createLineBorder(Color.magenta.darker());
+			titledBorder = BorderFactory.createTitledBorder(lineBorder, TITLE,
+					TitledBorder.LEADING, TitledBorder.TOP, new Font(
+							"SansSerif", Font.BOLD, 12), Color.magenta.darker());
+
+			referencePanel = objectContainerPanel(TITLE, titledBorder);
 			referenceField = new JTextField(
 					referenceFragment.getDirectiveText());
 
@@ -1886,7 +1964,8 @@ public class PanelFactory {
 
 						@Override
 						public void insertUpdate(DocumentEvent e) {
-							referenceFragment.setDirectiveText(referenceField.getText());
+							referenceFragment.setDirectiveText(referenceField
+									.getText());
 
 							referencePanel.revalidate();
 						}
@@ -1916,9 +1995,9 @@ public class PanelFactory {
 		 * @param codeFragments
 		 */
 		private void buildDefaultPanes(JPanel panel,
-				Collection<FormatFragment> codeFragments) {
+				Collection<Fragment> codeFragments) {
 
-			for (FormatFragment codeFragment : codeFragments) {
+			for (Fragment codeFragment : codeFragments) {
 				JPanel fragmentPanel = new JPanel();
 
 				final Color defaultColor;
@@ -1982,27 +2061,29 @@ public class PanelFactory {
 					panel.add(fragmentPanel);
 					panelToFragmentMap.put(fragmentPanel,
 							(ScopeFragment) codeFragment);
-				} else if (codeFragment instanceof ReferenceFragment) {
+				} else if (codeFragment instanceof FormatReferenceFragment) {
 					/*
 					 * In the APIDictionary:
 					 * 
 					 * <FormatRef ref="children"/>
 					 */
-					fragmentPanel = referencePanel((ReferenceFragment) codeFragment);
+					fragmentPanel = referencePanel((FormatReferenceFragment) codeFragment);
 					panel.add(fragmentPanel);
 					panelToFragmentMap.put(fragmentPanel,
-							(ReferenceFragment) codeFragment);
-				} else if (codeFragment instanceof SimpleFragment) {
-					fragmentPanel = simplePanel((SimpleFragment) codeFragment);
+							(FormatReferenceFragment) codeFragment);
+				} else if (codeFragment instanceof SimpleDataFragment) {
+					fragmentPanel = simplePanel((SimpleDataFragment) codeFragment);
 					panel.add(fragmentPanel);
 					panelToFragmentMap.put(fragmentPanel,
-							(SimpleFragment) codeFragment);
+							(SimpleDataFragment) codeFragment);
 				}
 
-				final FormatFragment selectedFragment;
+				final Fragment selectedFragment;
 
 				selectedFragment = FormatFragmentSelectionManager.getInstance()
 						.getFormatFragment();
+
+				codeEditorPanel.setBackground(defaultColor);
 				if (selectedFragment != null) {
 					if (selectedFragment == codeFragment) {
 						if (selectedFragment instanceof AbstractContainerFragment)
@@ -2014,15 +2095,16 @@ public class PanelFactory {
 					} else
 						fragmentPanel.setBackground(defaultColor);
 				} else {
-					codeEditorPanel.setBackground(GUIOp.scaleColour(
+					this.codeEditorPanel.setBackground(GUIOp.scaleColour(
 							Color.LIGHT_GRAY, 1.1));
 				}
+
 			}
 		}
 
 		@Override
 		public void componentChanged(StoryComponentEvent event) {
-			setupCodeEditorPanel();
+			fillCodeEditorPanel();
 		}
 	}
 }

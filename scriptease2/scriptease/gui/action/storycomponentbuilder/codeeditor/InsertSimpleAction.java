@@ -6,8 +6,8 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
-import scriptease.translator.codegenerator.code.fragments.SimpleFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.SimpleDataFragment;
 
 /**
  * Represents and performs the Insert Simple command, as well as encapsulating
@@ -42,7 +42,7 @@ public final class InsertSimpleAction extends AbstractInsertFragmentAction {
 	}
 
 	@Override
-	protected FormatFragment newFragment() {
-		return new SimpleFragment();
+	protected Fragment newFragment() {
+		return new SimpleDataFragment();
 	}
 }

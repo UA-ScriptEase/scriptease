@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
 
@@ -46,9 +46,9 @@ public class GameTypeManager {
 		this.gameTypes.put(type.getKeyword(), type);
 	}
 
-	public Collection<FormatFragment> getFormat(String keyword) {
+	public Collection<Fragment> getFormat(String keyword) {
 		final GameType type = gameTypes.get(keyword);
-		final Collection<FormatFragment> format = new ArrayList<FormatFragment>();
+		final Collection<Fragment> format = new ArrayList<Fragment>();
 		if (type != null)
 			format.addAll(type.getFormat());
 		return format;

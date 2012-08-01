@@ -19,7 +19,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 import scriptease.translator.io.model.GameType;
 
 /**

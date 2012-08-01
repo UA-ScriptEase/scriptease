@@ -9,15 +9,15 @@ import scriptease.translator.codegenerator.code.contexts.Context;
  * 
  * @author remiller
  */
-public class ReferenceFragment extends FormatFragment {
+public class FormatReferenceFragment extends Fragment {
 	/**
 	 * See:
-	 * {@link FormatFragment#FormatFragment(String, CharacterRange, char[])}
+	 * {@link Fragment#FormatFragment(String, CharacterRange, char[])}
 	 * 
 	 * @param text
 	 *            The format reference label.
 	 */
-	public ReferenceFragment(String text) {
+	public FormatReferenceFragment(String text) {
 		super(text);
 	}
 
@@ -28,7 +28,7 @@ public class ReferenceFragment extends FormatFragment {
 	@Override
 	public String resolve(Context context) {
 		final String format = this.getDirectiveText();
-		return FormatFragment.resolveFormat(context.getTranslator()
+		return Fragment.resolveFormat(context.getTranslator()
 				.getLanguageDictionary().getFormat(format.toUpperCase()),
 				context);
 	}

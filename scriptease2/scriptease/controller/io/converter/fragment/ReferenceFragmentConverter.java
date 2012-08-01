@@ -2,7 +2,7 @@ package scriptease.controller.io.converter.fragment;
 
 import scriptease.translator.codegenerator.code.fragments.AskItReferenceFragment;
 import scriptease.translator.codegenerator.code.fragments.KnowItReferenceFragment;
-import scriptease.translator.codegenerator.code.fragments.ReferenceFragment;
+import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 import scriptease.translator.codegenerator.code.fragments.ScriptItReferenceFragment;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -21,7 +21,7 @@ public class ReferenceFragmentConverter implements Converter {
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
-		final ReferenceFragment reference = (ReferenceFragment) source;
+		final FormatReferenceFragment reference = (FormatReferenceFragment) source;
 
 		// Data Tag
 		if (reference instanceof ScriptItReferenceFragment)
@@ -45,7 +45,7 @@ public class ReferenceFragmentConverter implements Converter {
 		ref = reader.getAttribute(REF_TAG);
 
 		// Start vanilla
-		ReferenceFragment reference = new ReferenceFragment(ref);
+		FormatReferenceFragment reference = new FormatReferenceFragment(ref);
 
 		// Data Tag
 		data = reader.getAttribute(DATA_TAG);
@@ -65,7 +65,7 @@ public class ReferenceFragmentConverter implements Converter {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean canConvert(Class type) {
-		return type.equals(ReferenceFragment.class)
+		return type.equals(FormatReferenceFragment.class)
 				|| type.equals(ScriptItReferenceFragment.class)
 				|| type.equals(AskItReferenceFragment.class)
 				|| type.equals(KnowItReferenceFragment.class);

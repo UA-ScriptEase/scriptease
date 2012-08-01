@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 
 /**
  * Represents a valid game type possible in the game's scripting language. Each
@@ -37,7 +37,7 @@ public class GameType {
 	private Collection<String> slots;
 	private TypeValueWidgets guiEditorName;
 	private Map<String, String> enums;
-	private Collection<FormatFragment> format;
+	private Collection<Fragment> format;
 	private String codeSymbol;
 
 	/**
@@ -64,7 +64,7 @@ public class GameType {
 	 *            <code>JTextField</code>
 	 */
 	public GameType(String name, String keyword, String codeSymbol,
-			Collection<FormatFragment> fragments, Collection<String> slots,
+			Collection<Fragment> fragments, Collection<String> slots,
 			String enums, String regEx, TypeValueWidgets gui) {
 
 		// Sanity check. If we're not requiring a selection from a list of
@@ -80,7 +80,7 @@ public class GameType {
 		this.slots = new ArrayList<String>();
 		this.slots.addAll(slots);
 		this.guiEditorName = gui;
-		this.format = new ArrayList<FormatFragment>();
+		this.format = new ArrayList<Fragment>();
 		this.enums = this.convertEnumStringToMap(enums);
 		this.format.addAll(fragments);
 		this.codeSymbol = codeSymbol;
@@ -176,7 +176,7 @@ public class GameType {
 		this.keyword = keyword;
 	}
 
-	public void setFormat(Collection<FormatFragment> format) {
+	public void setFormat(Collection<Fragment> format) {
 		this.format = format;
 	}
 
@@ -188,7 +188,7 @@ public class GameType {
 		return this.codeSymbol;
 	}
 
-	public Collection<FormatFragment> getFormat() {
+	public Collection<Fragment> getFormat() {
 		return this.format;
 	}
 

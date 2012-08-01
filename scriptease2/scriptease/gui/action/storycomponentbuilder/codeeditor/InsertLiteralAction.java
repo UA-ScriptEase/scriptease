@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.translator.codegenerator.code.fragments.FormatFragment;
+import scriptease.translator.codegenerator.code.fragments.Fragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
 
 /**
@@ -42,7 +42,7 @@ public final class InsertLiteralAction extends AbstractInsertFragmentAction {
 	}
 
 	@Override
-	protected FormatFragment newFragment() {
+	protected Fragment newFragment() {
 		return new LiteralFragment("");
 	}
 }
