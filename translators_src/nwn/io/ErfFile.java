@@ -2,8 +2,8 @@ package io;
 
 import io.GenericFileFormat.GffField;
 import io.GenericFileFormat.GffStruct;
-import io.GenericFileFormat.NWNConversation;
-import io.GenericFileFormat.NWNConversation.DialogueLine;
+import io.NWNConversation;
+import io.NWNConversation.DialogueLine;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -104,7 +104,7 @@ public final class ErfFile implements GameModule {
 	private long OffsetToResourceList;
 
 	// CONSTANTS
-	private static final String SCRIPT_FILE_PREFIX = "se_";
+	protected static final String SCRIPT_FILE_PREFIX = "se_";
 	private static final String INCLUDE_FILE_PREFIX = "i_se_";
 	private static final int RESREF_MAX_LENGTH = 16;
 	private static final int HEADER_RESERVED_BYTES = 116;
@@ -138,7 +138,7 @@ public final class ErfFile implements GameModule {
 		// create NWNResources for each ErfKey/ResourceListElement pair
 		for (int index = 0; index < this.entryCount; index++) {
 			NWNResource resource = new NWNResource(keys.get(index),
-					elementIndexes.get(index));
+					elementIndexes.get(index), this.fileAccess);
 
 			this.resources.add(resource);
 		}
@@ -335,15 +335,8 @@ public final class ErfFile implements GameModule {
 
 	@Override
 	public void addScripts(Collection<ScriptInfo> scriptList) {
-		List<NWNResource> generatedResources = new ArrayList<NWNResource>();
-
-		for (NWNResource resource : this.resources) {
-			if (resource.isScriptEaseGenerated()) {
-				generatedResources.add(resource);
-			}
-		}
 		// Remove everything ScriptEase related that exists
-		this.removeScriptEaseReferences(generatedResources);
+		this.removeScriptEaseReferences();
 
 		int scriptCounter = 0;
 
@@ -433,73 +426,68 @@ public final class ErfFile implements GameModule {
 
 					List<GffField> gitFileFields;
 
-					try {
-						// The list of lists in a Git File. e.g. Creature List
-						gitFileFields = gitFileStruct
-								.readGffFields(this.fileAccess);
+					// The list of lists in a Git File. e.g. Creature List
+					gitFileFields = gitFileStruct.getGffFields();
 
-						// Go through the lists of lists in a GIT File.
-						for (GffField gitFileField : gitFileFields) {
+					// Go through the lists of lists in a GIT File.
+					for (GffField gitFileField : gitFileFields) {
 
-							String gitFileFieldLabel = gitFileGFF
-									.getLabelArray().get(
-											(int) gitFileField.getLabelIndex());
+						String gitFileFieldLabel = gitFileGFF.getLabelArray()
+								.get((int) gitFileField.getLabelIndex());
 
-							// Find the correct list. The rest of the comments
-							// will use the creature list as an example.
-							if (gitFileFieldLabel.equals(receiverResourceGFF
-									.getGITListLabel())) {
+						// Find the correct list. The rest of the comments
+						// will use the creature list as an example.
+						if (gitFileFieldLabel.equals(receiverResourceGFF
+								.getGITListLabel())) {
 
-								// List of all (e.g.) creature structs in
-								// creature list.
-								List<GffStruct> gitIndividualFieldStructList = gitFileField
-										.readList(this.fileAccess);
+							// List of all (e.g.) creature structs in
+							// creature list.
+							List<GffStruct> gitIndividualFieldStructList = gitFileField
+									.getList();
 
-								// Parses the individual creatures from the
-								// list.
-								for (GffStruct individualFieldStruct : gitIndividualFieldStructList) {
+							// Parses the individual creatures from the
+							// list.
+							for (GffStruct individualFieldStruct : gitIndividualFieldStructList) {
 
-									List<GffField> individualFieldStructFields = individualFieldStruct
-											.readGffFields(this.fileAccess);
+								List<GffField> individualFieldStructFields = individualFieldStruct
+										.getGffFields();
 
-									// The individual creature fields, such as
-									// the resref we will use.
-									for (GffField individualFieldStructField : individualFieldStructFields) {
-										// Checks if the field equals
-										// TemplateResRef. This means the
-										// individualFieldStruct creature is the
-										// same as the
-										// individualFieldStructField creature.
-										final List<String> fieldLabels = individualFieldStructField
-												.getGFF().getLabelArray();
-										final int labelIndex = (int) individualFieldStructField
-												.getLabelIndex();
-										if (fieldLabels.get(labelIndex).equals(
-												"TemplateResRef")) {
-											if (individualFieldStructField
-													.readString(this.fileAccess)
-													.equals(receiverResourceGFF
-															.getResRef())) {
-												// Look for the field to place
-												// the script into
+								// The individual creature fields, such as
+								// the resref we will use.
+								for (GffField individualFieldStructField : individualFieldStructFields) {
+									// Checks if the field equals
+									// TemplateResRef. This means the
+									// individualFieldStruct creature is the
+									// same as the
+									// individualFieldStructField creature.
+									final List<String> fieldLabels = individualFieldStructField
+											.getGFF().getLabelArray();
+									final int labelIndex = (int) individualFieldStructField
+											.getLabelIndex();
+									if (fieldLabels.get(labelIndex).equals(
+											"TemplateResRef")) {
+										if (individualFieldStructField
+												.getString().equals(
+														receiverResourceGFF
+																.getResRef())) {
 
-												for (GffField individualFieldStructField2 : individualFieldStructFields) {
-													final List<String> fieldLabels2 = individualFieldStructField2
+											// Look for the field to place
+											// the script into
+											for (GffField individualFieldStructField2 : individualFieldStructFields) {
+												final List<String> fieldLabels2 = individualFieldStructField2
+														.getGFF()
+														.getLabelArray();
+												final int labelIndex2 = (int) individualFieldStructField2
+														.getLabelIndex();
+												if (fieldLabels2.get(
+														labelIndex2).equals(
+														scriptInfo.getSlot())) {
+													individualFieldStructField2
 															.getGFF()
-															.getLabelArray();
-													final int labelIndex2 = (int) individualFieldStructField2
-															.getLabelIndex();
-													if (fieldLabels2.get(
-															labelIndex2)
-															.equals(scriptInfo
-																	.getSlot())) {
-														individualFieldStructField2
-																.getGFF()
-																.setField(
-																		individualFieldStructField2,
-																		scriptResRef);
-														break;
-													}
+															.setField(
+																	individualFieldStructField2,
+																	scriptResRef);
+													break;
 												}
 											}
 										}
@@ -507,14 +495,6 @@ public final class ErfFile implements GameModule {
 								}
 							}
 						}
-					} catch (IOException e) {
-						Thread.currentThread()
-								.getUncaughtExceptionHandler()
-								.uncaughtException(
-										Thread.currentThread(),
-										new IOException(
-												"Exception when accessing GFFFields:"
-														+ e));
 					}
 				}
 			}
@@ -565,7 +545,7 @@ public final class ErfFile implements GameModule {
 	 */
 	private void updateHeader(int addOrRemoveCount) {
 		this.entryCount += addOrRemoveCount;
-		this.OffsetToResourceList += (ErfKey.ERF_KEY_BYTE_LENGTH * addOrRemoveCount);
+		this.OffsetToResourceList += (ErfKey.BYTE_LENGTH * addOrRemoveCount);
 	}
 
 	@Override
@@ -613,200 +593,25 @@ public final class ErfFile implements GameModule {
 	 * Removes all ScriptEase files that are not on the whitelist. Should be
 	 * called as often as necessary so no garbage is left behind.
 	 * 
-	 * @param whiteList
 	 */
-	private void removeScriptEaseReferences(List<NWNResource> whiteList) {
-		List<NWNResource> blackList = new ArrayList<NWNResource>();
+	private void removeScriptEaseReferences() {
+		final List<NWNResource> nonScriptEaseResources = new ArrayList<NWNResource>();
+		GenericFileFormat gff;
 
+		// find all of the previously generated resources
 		for (NWNResource resource : this.resources) {
-			if (!whiteList.contains(resource)) {
-				blackList.add(resource);
+			if (!resource.isScriptEaseGenerated()) {
+				nonScriptEaseResources.add(resource);
 			}
 		}
 
-		Map<String, String> customObjectResRefFieldMap = new HashMap<String, String>();
 		/*
-		 * Remove the scriptease code form all instances.
+		 * Remove the scriptease code from all instances.
 		 */
-		for (NWNResource resource : blackList) {
+		for (NWNResource resource : nonScriptEaseResources) {
 			if (resource.isGFF()) {
-				GenericFileFormat resourceGFF = resource.getGFF();
-				String fileType = resourceGFF.getFileType().trim();
-
-				// Check if it's a GIT file
-				if (fileType
-						.equalsIgnoreCase(GenericFileFormat.TYPE_GAME_INSTANCE_FILE)) {
-
-					GffStruct gitFileStruct = resourceGFF.getTopLevelStruct();
-
-					List<GffField> gitFileFields;
-
-					try {
-						// The list of lists in a Git File. e.g. Creature List
-						gitFileFields = gitFileStruct
-								.readGffFields(this.fileAccess);
-
-						// Go through the lists of lists in a GIT File.
-						for (GffField gitFileField : gitFileFields) {
-							String gitFileFieldLabel = resourceGFF
-									.getLabelArray().get(
-											(int) gitFileField.getLabelIndex());
-
-							// Ignore AreaProperties field.
-							if (!gitFileFieldLabel.equals("AreaProperties")) {
-								List<GffStruct> individualFieldStructList = gitFileField
-										.readList(this.fileAccess);
-								// Individual structs (e.g. Creatures)
-								for (GffStruct individualFieldStruct : individualFieldStructList) {
-									List<GffField> individualFieldStructFields = individualFieldStruct
-											.readGffFields(this.fileAccess);
-									// Individual fields (e.g. resref, onUsed,
-									// etc.)
-
-									String templateName = "";
-
-									for (GffField individualFieldStructField : individualFieldStructFields) {
-										String fieldStructFieldLabel = resourceGFF
-												.getLabelArray()
-												.get((int) individualFieldStructField
-														.getLabelIndex());
-
-										if (fieldStructFieldLabel
-												.equals("TemplateResRef")) {
-											templateName = individualFieldStructField
-													.readString(this.fileAccess);
-										}
-										// Only go through "Script" fields. This
-										// updates the instances:
-										else if (fieldStructFieldLabel
-												.startsWith("Script")) {
-											String scriptName = individualFieldStructField
-													.readString(this.fileAccess);
-
-											if (scriptName.startsWith("se_")) {
-												customObjectResRefFieldMap.put(
-														templateName,
-														fieldStructFieldLabel);
-												individualFieldStructField
-														.getGFF()
-														.setField(
-																individualFieldStructField,
-																"");
-											}
-										}
-									}
-								}
-							}
-						}
-					} catch (IOException e) {
-						Thread.currentThread()
-								.getUncaughtExceptionHandler()
-								.uncaughtException(
-										Thread.currentThread(),
-										new IOException(
-												"Exception when accessing GFFFields:"
-														+ e));
-					}
-				} else if (fileType
-						.equalsIgnoreCase(GenericFileFormat.TYPE_DIALOGUE_BP)) {
-
-					GffStruct dlgFileStruct = resourceGFF.getTopLevelStruct();
-
-					List<GffField> dlgFileFields;
-
-					try {
-						// The list of lists in a Git File. e.g. Creature List
-						dlgFileFields = dlgFileStruct
-								.readGffFields(this.fileAccess);
-
-						for (GffField dlgFilefield : dlgFileFields) {
-							final String dlgFieldlabel = resourceGFF
-									.getLabelArray().get(
-											(int) dlgFilefield.getLabelIndex());
-
-							// Handle fields:
-							if (dlgFieldlabel.equals("EndConverAbort")
-									|| dlgFieldlabel.equals("EndConversation")) {
-								final String scriptName = dlgFilefield
-										.readString(this.fileAccess);
-
-								if (scriptName
-										.startsWith(ErfFile.SCRIPT_FILE_PREFIX)) {
-									resourceGFF.setField(dlgFilefield, "");
-								}
-
-								// Handle lists:
-							} else if (dlgFieldlabel.equals("EntryList")
-									|| dlgFieldlabel.equals("ReplyList")
-									|| dlgFieldlabel.equals("StartingList")) {
-								List<GffStruct> readList = dlgFilefield
-										.readList(this.fileAccess);
-								for (GffStruct aStruct : readList) {
-									final List<GffField> listFields = aStruct
-											.readGffFields(this.fileAccess);
-									for (GffField listField : listFields) {
-										String listFieldLabel = resourceGFF
-												.getLabelArray()
-												.get((int) listField
-														.getLabelIndex());
-
-										if (listFieldLabel.equals("Script")
-												|| listFieldLabel
-														.equals("Active")) {
-											final String scriptName = listField
-													.readString(this.fileAccess);
-
-											if (scriptName
-													.startsWith(ErfFile.SCRIPT_FILE_PREFIX))
-												resourceGFF.setField(listField,
-														"");
-										}
-										// This is for the sync structs inside
-										// of reply and entry dialogues.
-										if (listFieldLabel
-												.equals("EntriesList")
-												|| listFieldLabel
-														.equals("RepliesList")) {
-											List<GffStruct> syncList = listField
-													.readList(this.fileAccess);
-
-											for (GffStruct syncStruct : syncList) {
-												final List<GffField> syncFields = syncStruct
-														.readGffFields(this.fileAccess);
-
-												for (GffField syncField : syncFields) {
-													String syncFieldLabel = resourceGFF
-															.getLabelArray()
-															.get((int) syncField
-																	.getLabelIndex());
-													if (syncFieldLabel
-															.equals("Active")) {
-														final String scriptName = syncField
-																.readString(this.fileAccess);
-														if (scriptName
-																.startsWith(ErfFile.SCRIPT_FILE_PREFIX))
-															resourceGFF
-																	.setField(
-																			syncField,
-																			"");
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					} catch (IOException e) {
-						Thread.currentThread()
-								.getUncaughtExceptionHandler()
-								.uncaughtException(
-										Thread.currentThread(),
-										new IOException(
-												"Exception when accessing GFFFields:"
-														+ e));
-					}
-				}
+				gff = resource.getGFF();
+				gff.removeScriptEaseReferences();
 			}
 		}
 	}
@@ -992,20 +797,56 @@ public final class ErfFile implements GameModule {
 	 * @throws IOException
 	 */
 	private void writeResources() throws IOException {
-		int resourceDataLocation = (int) this.OffsetToResourceList
+		final long offsetToResourceData = this.OffsetToResourceList
 				+ (this.entryCount * ResourceListElement.BYTE_LENGTH);
-
-		// first, we need to cache all of the data before we start
-		// clobbering the file's contents.
-
-		// this.fileAccess.seek(this.OriginalOffsetToResourceData);
+		int resourceOffset;
 
 		ScriptEaseFileAccess oldFile = this.fileAccess;
 		if (this.previousLocation != null)
 			this.fileAccess = new ScriptEaseFileAccess(this.location,
 					oldFile.isReadOnly() ? "r" : "rw");
 
-		// Sort the NWNresources by resref.
+		// Sort the NWNresources by resref. Apparently BioWare does this, not
+		// that the docs say as much.
+		this.sortResources();
+
+		// Writes out the ErfKey segment (i.e. palcuses, se_* file names etc)
+		this.fileAccess.seek(this.OffsetToKeyList);
+		for (NWNResource resource : this.resources) {
+			resource.writeErfKey(this.fileAccess);
+		}
+
+		// Write null bytes at end of erf key segment until resourcelist. Again,
+		// BioWare seems to do this without telling us.
+		long erfKeySize = this.OffsetToKeyList + this.resources.size()
+				* ErfKey.BYTE_LENGTH;
+		long nullCount = this.OffsetToResourceList - erfKeySize;
+		this.fileAccess.seek(erfKeySize);
+		this.fileAccess.writeNullBytes((int) (nullCount));
+
+		/*
+		 * finally, write out the ResourceListElements and their related data
+		 * sections. resourceOffset is the location of the resource's data
+		 * within the data segment, not the location of the resource entry in
+		 * the resource list
+		 */
+		resourceOffset = (int) offsetToResourceData;
+		for (int i = 0; i < this.resources.size(); i++) {
+			// go to the resource list element's location and write it.
+			this.fileAccess.seek(this.OffsetToResourceList + i
+					* ResourceListElement.BYTE_LENGTH);
+			NWNResource resource = this.resources.get(i);
+			resource.setOffsetToResource(resourceOffset);
+			resource.writeResourceListEntry(this.fileAccess);
+
+			// go to the data location and plop it there.
+			this.fileAccess.seek(offsetToResourceData + resourceOffset);
+			resource.write(this.fileAccess);
+			resourceOffset += resource.getResourceSize();
+		}
+	}
+
+	private void sortResources() {
 		Comparator<NWNResource> nwnResourceComparator = new Comparator<NWNResource>() {
 
 			@Override
@@ -1035,48 +876,9 @@ public final class ErfFile implements GameModule {
 		};
 		Collections.sort(this.resources, nwnResourceComparator);
 
+		// update ids to the new sorted position
 		for (NWNResource resource : this.resources) {
 			resource.setResID(this.resources.indexOf(resource));
-		}
-
-		for (NWNResource resource : this.resources) {
-			resource.cacheData(oldFile);
-		}
-
-		// Writes out the ErfKey segment (i.e. palcuses, se_* file names etc)
-		this.fileAccess.seek(this.OffsetToKeyList);
-		for (NWNResource resource : this.resources) {
-			resource.writeErfKey(this.fileAccess);
-		}
-
-		// calculate changes if the resource is a GFF
-		// and if the GFF has been modified.
-		for (NWNResource resource : this.resources) {
-			if (resource.isGFF() && resource.getGFF().hasChanges()) {
-				resource.updateForChanges(this.fileAccess);
-			}
-		}
-
-		// Write null bytes at end of erf key segment until resourcelist.
-
-		long erfKeySize = this.OffsetToKeyList + this.resources.size() * 24;
-		long nullCount = this.OffsetToResourceList - erfKeySize;
-		this.fileAccess.seek(erfKeySize);
-		this.fileAccess.writeNullBytes((int) (nullCount));
-
-		// then, write out the ResourceListElements
-		this.fileAccess.seek(this.OffsetToResourceList);
-		for (NWNResource resource : this.resources) {
-			resource.writeResourceListEntry(this.fileAccess,
-					resourceDataLocation);
-			resourceDataLocation += resource.getResourceSize();
-		}
-
-		// and finally, write out the data segment
-		this.fileAccess.seek(this.OffsetToResourceList
-				+ (this.entryCount * ResourceListElement.BYTE_LENGTH));
-		for (NWNResource resource : this.resources) {
-			resource.write(this.fileAccess);
 		}
 	}
 
@@ -1103,7 +905,7 @@ public final class ErfFile implements GameModule {
 		private final ErfKey key;
 		private final ResourceListElement resourceListEntry;
 
-		// at most one of these two will be null depending on the type of this
+		// only one of these two will be null depending on the type of this
 		// resource
 		/**
 		 * byteData is the contents of the file as bytes.
@@ -1124,20 +926,35 @@ public final class ErfFile implements GameModule {
 		 * @throws IOException
 		 * @see #ErfFile(String, ErfKey, ResourceListElement)
 		 */
-		public NWNResource(ErfKey key, ResourceListElement entry)
-				throws IOException {
+		public NWNResource(ErfKey key, ResourceListElement entry,
+				ScriptEaseFileAccess reader) throws IOException {
 			this.key = key;
 			this.resourceListEntry = entry;
 
-			if (this.key.isGFF())
+			if (this.key.isGFF()) {
 				this.gff = new GenericFileFormat(this.key.getResRef(),
 						ErfFile.this.fileAccess, entry.offsetToResource);
-			else
+			} else {
 				this.gff = null;
+				reader.seek(this.resourceListEntry.getOffsetToResource());
 
-			this.byteData = null;
+				this.byteData = reader.readBytes(this.resourceListEntry
+						.getResourceSize());
+			}
 		}
 
+		public void setOffsetToResource(int resourceOffset) {
+			this.resourceListEntry.setOffsetToResource(resourceOffset);
+		}
+
+		/**
+		 * Gets the raw byte data from the resource.
+		 * 
+		 * @return the raw file's byte data.
+		 * @throws IllegalStateException
+		 *             if the resource is a GFF.
+		 * @see NWNResource#getGFF()
+		 */
 		public byte[] getData() {
 			if (this.isGFF())
 				throw new IllegalStateException(
@@ -1218,29 +1035,6 @@ public final class ErfFile implements GameModule {
 		}
 
 		/**
-		 * Reads this NWNResource's data as a byte array. If the data is already
-		 * in memory, then that is returned and no reading is performed. <br>
-		 * <br>
-		 * This method exists to allow for lazy loading of data, since there is
-		 * no point in storing irrelevant game data in memory. An area's tiles
-		 * are an example of irrelevant data.
-		 * 
-		 * @param fileAccess
-		 *            The source to read from.
-		 * @throws IOException
-		 */
-		public void cacheData(ScriptEaseFileAccess reader) throws IOException {
-			if (this.gff != null) {
-				this.gff.cacheData(reader, this.getResourceSize());
-			} else if ((this.byteData == null) && (this.gff == null)) {
-				reader.seek(this.resourceListEntry.getOffsetToResource());
-
-				this.byteData = reader.readBytes(this.resourceListEntry
-						.getResourceSize());
-			}
-		}
-
-		/**
 		 * Gets this NWNResource's data as a GFF file.
 		 * 
 		 * @return GFF representation of this NWNResource's data.
@@ -1277,36 +1071,11 @@ public final class ErfFile implements GameModule {
 		 * the ResourceListElement's offset location to the supplied value
 		 * 
 		 * @param writer
+		 *            The writer to write to.
 		 */
-		public void writeResourceListEntry(ScriptEaseFileAccess writer,
-				int resourceDataLocation) throws IOException {
-			this.resourceListEntry.setOffsetToResource(resourceDataLocation);
+		public void writeResourceListEntry(ScriptEaseFileAccess writer)
+				throws IOException {
 			this.resourceListEntry.write(writer);
-		}
-
-		/**
-		 * Updates the size of the resourceListEntry
-		 * 
-		 * @param reader
-		 */
-		public void updateForChanges(ScriptEaseFileAccess reader) {
-			final int sizeDifference = this.gff.calculateSizeDifference(reader);
-
-			if (sizeDifference > 0) {
-				this.resourceListEntry.setResourceSize(this.resourceListEntry
-						.getResourceSize() + sizeDifference);
-
-				// grow the field data count to match the new size
-				this.gff.setFieldDataCount(this.gff.getFieldDataCount()
-						+ sizeDifference);
-
-				// shift down the fieldIndicesArray
-				this.gff.setFieldIndicesOffset(this.gff.getFieldIndicesOffset()
-						+ sizeDifference);
-				// shift down the listIndicesArray
-				this.gff.setListIndicesOffset(this.gff.getListIndicesOffset()
-						+ sizeDifference);
-			}
 		}
 
 		public void setResID(int resID) {
@@ -1350,6 +1119,13 @@ public final class ErfFile implements GameModule {
 					+ this.getOffsetToResource() + ";" + this.getResourceSize()
 					+ "]";
 		}
+
+		public void updateSize() {
+			// only GFFs can be changed by scriptease, so only update those.
+			if (this.isGFF())
+				this.resourceListEntry.setResourceSize((int) this.getGFF()
+						.getByteLength());
+		}
 	}
 
 	/**
@@ -1361,13 +1137,12 @@ public final class ErfFile implements GameModule {
 	 * 
 	 */
 	private final static class ErfKey {
-
 		private static final int UNUSED_BYTES = 2;
 
 		/**
 		 * The size of any ErfKey in bytes
 		 */
-		public static final short ERF_KEY_BYTE_LENGTH = 32;
+		public static final short BYTE_LENGTH = 24;
 		// These types come from the Key/BIF documentation, table 1.3.1
 		public static final short SCRIPT_COMPILED_TYPE = 2010;
 		public static final short SCRIPT_SOURCE_TYPE = 2009;
@@ -1649,7 +1424,7 @@ public final class ErfFile implements GameModule {
 		 * 
 		 * @param newSize
 		 */
-		public void setResourceSize(int newSize) {
+		protected void setResourceSize(int newSize) {
 			this.resourceSize = newSize;
 		}
 
@@ -1658,7 +1433,7 @@ public final class ErfFile implements GameModule {
 		 * 
 		 * @return The resource size.
 		 */
-		public int getResourceSize() {
+		protected int getResourceSize() {
 			return this.resourceSize;
 		}
 	}
