@@ -39,3 +39,6 @@ translators_src/*/*.zip
 # and while we're at it, don't allow anything in the installed translators directory into the repo. 
 # Translator development stuff should go into translators_src
 scriptease2/translators/
+
+# ignore the sloccount directory. 
+sloccount-2.26/
