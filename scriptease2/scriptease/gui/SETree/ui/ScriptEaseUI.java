@@ -5,6 +5,8 @@ import java.awt.Color;
 import javax.swing.Icon;
 import javax.swing.UIManager;
 
+import scriptease.util.GUIOp;
+
 /**
  * Common interface for all of the ScriptEase UI classes.
  * 
@@ -40,6 +42,59 @@ public interface ScriptEaseUI {
 	 * The colour (gold) used for selected graph nodes
 	 */
 	public static final Color SELECTED_GRAPH_NODE = new Color(255, 234, 67);
+
+	/**
+	 * The colour (White) used by Fragments by default Story Component Builder.
+	 */
+	public static final Color FRAGMENT_DEFAULT_COLOR = Color.white;
+	/**
+	 * The colour (Grey) used for the code editor in Story Component Builder.
+	 */
+	public static final Color CODE_EDITOR_COLOR = Color.GRAY;
+
+	/**
+	 * The colour (Light Grey) used for Line Fragments in Story Component
+	 * Builder.
+	 */
+	public static final Color LINE_FRAGMENT_COLOR = Color.LIGHT_GRAY;
+
+	/**
+	 * The colour (Light Grey) used for the Indent Fragments in Story Component
+	 * Builder.
+	 */
+	public static final Color INDENT_FRAGMENT_COLOR = Color.LIGHT_GRAY;
+
+	/**
+	 * The colour (Dark Green) used for the Scope Fragments in Story Component
+	 * Builder.
+	 */
+	public static final Color SCOPE_FRAGMENT_COLOR = GUIOp.scaleColour(
+			Color.GREEN, 0.5);
+
+	/**
+	 * The colour (Dark Orange) used for the Series Fragments in Story Component
+	 * Builder.
+	 */
+	public static final Color SERIES_FRAGMENT_COLOR = new Color(250, 165, 17).darker();
+
+	/**
+	 * The colour (Blue) used for the Simple Fragments in Story Component
+	 * Builder.
+	 */
+	public static final Color SIMPLE_FRAGMENT_COLOR = Color.BLUE;
+
+	/**
+	 * The colour (Gray) used for the Literal Fragments in Story Component
+	 * Builder.
+	 */
+	public static final Color LITERAL_FRAGMENT_COLOR = Color.GRAY;
+
+	/**
+	 * The colour (Purple) used for the Reference Fragments in Story Component
+	 * Builder.
+	 */
+	public static final Color REFERENCE_FRAGMENT_COLOR = GUIOp.scaleColour(
+			Color.magenta, 0.7);
 
 	/**
 	 * Icon used to indicate a collapse will occur

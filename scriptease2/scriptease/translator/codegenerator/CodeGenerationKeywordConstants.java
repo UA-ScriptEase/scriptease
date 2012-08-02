@@ -16,12 +16,12 @@ package scriptease.translator.codegenerator;
 public interface CodeGenerationKeywordConstants {
 
 	// Used in: KnowItBindingFunctionContext
-	public static enum Function {
+	public static enum FunctionConstants {
 		FUNCTION_AS_VALUE
 	}
 
 	// Used in ScopeFragment.
-	public static enum Scope {
+	public static enum ScopeTypes {
 		ARGUMENT,
 		ASKIT,
 		BINDING,
@@ -35,7 +35,7 @@ public interface CodeGenerationKeywordConstants {
 		SUBJECT
 	}
 
-	// Used in SimpleFragment
+	// Used in SimpleFragment 
 	public static enum DataTypes {
 		CODE,
 		CONDITION,
@@ -50,8 +50,15 @@ public interface CodeGenerationKeywordConstants {
 		VALUE
 	}
 
-	// Used in AbstractSeriesFragment
-	public static enum Series {
+	//Used in SeriesFragment
+	public static enum SeriesFilterType {
+		NAME,
+		SLOT,
+		NONE,
+	}
+	
+	// Used in SeriesFragment
+	public static enum SeriesTypes {
 		ARGUMENTS,
 		CAUSES,
 		CHILDREN,

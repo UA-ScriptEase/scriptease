@@ -17,9 +17,9 @@ import scriptease.model.StoryModel;
 import scriptease.translator.LanguageDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.contexts.Context;
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.SimpleDataFragment;
-import scriptease.translator.codegenerator.code.fragments.series.SeriesFragment;
+import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Slot;
 
@@ -52,7 +52,7 @@ import scriptease.translator.io.model.Slot;
  * 
  * @author remiller
  * @author mfchurch
- * @see Fragment
+ * @see AbstractFragment
  * @see SimpleDataFragment
  * @see SeriesFragment
  */
@@ -72,7 +72,7 @@ public class CodeGenerator {
 	 * @return the code for the script.
 	 */
 	private String generateScript(Context context) {
-		final List<Fragment> fileFormat;
+		final List<AbstractFragment> fileFormat;
 		final Translator translator = context.getTranslator();
 		final LanguageDictionary languageDictionary = translator
 				.getLanguageDictionary();
@@ -92,7 +92,7 @@ public class CodeGenerator {
 
 		// resolve the format into code
 		try {
-			return Fragment.resolveFormat(fileFormat, context);
+			return AbstractFragment.resolveFormat(fileFormat, context);
 		} catch (CodeGenerationException e) {
 			return "CodeGenerationException occured at the script generating level with message: "
 					+ e.getMessage();

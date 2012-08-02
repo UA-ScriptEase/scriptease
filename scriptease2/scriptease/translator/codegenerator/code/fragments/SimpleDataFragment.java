@@ -17,7 +17,7 @@ import scriptease.translator.codegenerator.code.contexts.Context;
  * 
  * @author remiller
  */
-public class SimpleDataFragment extends Fragment {
+public class SimpleDataFragment extends AbstractFragment {
 	private String defaultText = "";
 	private String legalRange = "";
 
@@ -27,7 +27,7 @@ public class SimpleDataFragment extends Fragment {
 
 	/**
 	 * See:
-	 * {@link Fragment#FormatFragment(String, CharacterRange, char[])}
+	 * {@link AbstractFragment#FormatFragment(String, CharacterRange, char[])}
 	 * 
 	 * @param label
 	 *            The specific simple directive.

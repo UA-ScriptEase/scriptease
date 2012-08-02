@@ -6,8 +6,8 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.translator.codegenerator.code.fragments.Fragment;
-import scriptease.translator.codegenerator.code.fragments.container.IndentedFragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.codegenerator.code.fragments.container.IndentFragment;
 
 /**
  * Represents and performs the Insert Indent command, as well as encapsulating
@@ -46,7 +46,7 @@ public final class InsertIndentAction extends AbstractInsertFragmentAction {
 	}
 
 	@Override
-	protected Fragment newFragment() {
-		return new IndentedFragment();
+	protected AbstractFragment newFragment() {
+		return new IndentFragment();
 	}
 }

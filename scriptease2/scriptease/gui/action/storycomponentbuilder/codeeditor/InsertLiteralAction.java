@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
 
 /**
@@ -29,7 +29,7 @@ public final class InsertLiteralAction extends AbstractInsertFragmentAction {
 	private InsertLiteralAction() {
 		super(InsertLiteralAction.INSERT_LITERAL_TEXT);
 		this.putValue(Action.ACCELERATOR_KEY,
-				KeyStroke.getKeyStroke(KeyEvent.VK_5, ActionEvent.CTRL_MASK));
+				KeyStroke.getKeyStroke(KeyEvent.VK_6, ActionEvent.CTRL_MASK));
 	}
 
 	/**
@@ -42,7 +42,7 @@ public final class InsertLiteralAction extends AbstractInsertFragmentAction {
 	}
 
 	@Override
-	protected Fragment newFragment() {
+	protected AbstractFragment newFragment() {
 		return new LiteralFragment("");
 	}
 }

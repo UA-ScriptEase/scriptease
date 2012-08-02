@@ -10,7 +10,7 @@ import scriptease.model.StoryComponent;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
  * Context representing a QuestPointNode (also QuestPoint)
@@ -55,14 +55,14 @@ public class QuestPointNodeContext extends GraphNodeContext {
 
 	@Override
 	public String getFormattedValue() {
-		final Collection<Fragment> typeFormat;
+		final Collection<AbstractFragment> typeFormat;
 		
 		typeFormat = this.translator.getGameTypeManager().getFormat(
 				QuestPoint.QUEST_POINT_TYPE);
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();
 
-		return Fragment.resolveFormat(typeFormat, this);
+		return AbstractFragment.resolveFormat(typeFormat, this);
 	}
 
 	@Override

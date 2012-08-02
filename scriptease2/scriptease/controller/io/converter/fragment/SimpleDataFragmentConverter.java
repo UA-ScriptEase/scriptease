@@ -10,7 +10,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-public class SimpleFragmentConverter implements Converter {
+public class SimpleDataFragmentConverter implements Converter {
 	private static final String LEGAL_FORMAT_TAG = "legalValues";
 	private static final String DATA_TAG = "data";
 	private static final String DEFAULT_TAG = "default";

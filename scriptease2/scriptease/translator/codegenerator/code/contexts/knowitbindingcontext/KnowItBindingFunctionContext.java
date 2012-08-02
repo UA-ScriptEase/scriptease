@@ -10,7 +10,7 @@ import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
  * KnowItBindingFunctionContext is Context for a KnowItBindingFunction object.
@@ -49,8 +49,8 @@ public class KnowItBindingFunctionContext extends KnowItBindingContext {
 				.getLanguageDictionary();
 		// TODO 'functionHeader' should not be hardcoded here. Figure out
 		// why it is, and get it out of here.
-		return Fragment.resolveFormat(languageDictionary
-				.getFormat(CodeGenerationKeywordConstants.Function.FUNCTION_AS_VALUE.name()),
+		return AbstractFragment.resolveFormat(languageDictionary
+				.getFormat(CodeGenerationKeywordConstants.FunctionConstants.FUNCTION_AS_VALUE.name()),
 				scriptItContext);
 	}
 }

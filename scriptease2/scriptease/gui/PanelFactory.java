@@ -3,6 +3,7 @@ package scriptease.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -31,7 +32,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
@@ -48,15 +48,19 @@ import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
+import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
-import scriptease.gui.action.storycomponentbuilder.DeleteFragmentAction;
+import scriptease.gui.action.storycomponentbuilder.codeeditor.DeleteFragmentAction;
 import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertIndentAction;
 import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertLineAction;
 import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertLiteralAction;
 import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertReferenceAction;
 import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertScopeAction;
+import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertSeriesAction;
 import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertSimpleAction;
+import scriptease.gui.action.storycomponentbuilder.codeeditor.MoveFragmentDownAction;
+import scriptease.gui.action.storycomponentbuilder.codeeditor.MoveFragmentUpAction;
 import scriptease.gui.action.typemenus.TypeSelectionAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.nodes.GraphNode;
@@ -75,19 +79,23 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
+import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.ScopeTypes;
+import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.SeriesFilterType;
+import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.SeriesTypes;
 import scriptease.translator.codegenerator.GameObjectPicker;
-import scriptease.translator.codegenerator.code.fragments.Fragment;
-import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
+import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
 import scriptease.translator.codegenerator.code.fragments.SimpleDataFragment;
-import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
-import scriptease.translator.codegenerator.code.fragments.container.IndentedFragment;
+import scriptease.translator.codegenerator.code.fragments.container.IndentFragment;
 import scriptease.translator.codegenerator.code.fragments.container.LineFragment;
 import scriptease.translator.codegenerator.code.fragments.container.ScopeFragment;
+import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
 import scriptease.translator.io.tools.GameConstantFactory;
 import scriptease.util.GUIOp;
+import scriptease.util.StringOp;
 
 /**
  * A factory class for different panels. All major panel construction should go
@@ -190,6 +198,52 @@ public class PanelFactory {
 		JPanel jPanel = new JPanel();
 		jPanel.setVisible(false);
 		return jPanel;
+	}
+
+	/**
+	 * Builds the library pane for the Story Component Editor. This pane allows
+	 * loading of different translators through a ComboBox.
+	 * 
+	 * @param editorPanel
+	 * @return
+	 */
+	public JPanel buildStoryComponentLibraryPanel(LibraryPane libraryPane) {
+		final List<Translator> translators;
+		final JComboBox libSelector;
+		final JPanel libraryPanel;
+		final JPanel translatorPanel;
+		final Translator activeTranslator;
+
+		libraryPanel = new JPanel();
+		translatorPanel = new JPanel();
+		translators = new ArrayList<Translator>();
+		activeTranslator = TranslatorManager.getInstance()
+				.getActiveTranslator();
+
+		libraryPanel.setLayout(new BoxLayout(libraryPanel, BoxLayout.Y_AXIS));
+
+		translators.add(null);
+		translators.addAll(TranslatorManager.getInstance().getTranslators());
+
+		libSelector = new JComboBox(new Vector<Translator>(translators));
+		libSelector.setSelectedItem(activeTranslator);
+
+		// TODO This should update the editorpanel, too!
+		libSelector.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setTranslator((Translator) libSelector.getSelectedItem());
+			}
+		});
+
+		translatorPanel.add(new JLabel("Currently loaded translator: "));
+		translatorPanel.add(libSelector);
+
+		libraryPanel.add(translatorPanel);
+
+		libraryPanel.add(libraryPane);
+
+		return libraryPanel;
 	}
 
 	/**
@@ -337,9 +391,7 @@ public class PanelFactory {
 			private ActionListener visibleBoxListener;
 			private ActionListener addCodeBlockListener;
 
-			@Override
-			public void processScriptIt(final ScriptIt scriptIt) {
-				// Causes and effects are processed as ScriptIts
+			private void setUpScriptItEditingPanel(final ScriptIt scriptIt) {
 				final Collection<CodeBlock> codeBlocks;
 
 				codeBlocks = scriptIt.getCodeBlocks();
@@ -353,13 +405,30 @@ public class PanelFactory {
 							scriptIt));
 				}
 
+				editorPanel.repaint();
+				editorPanel.revalidate();
+			}
+
+			@Override
+			public void processScriptIt(final ScriptIt scriptIt) {
+				// Causes and effects are processed as ScriptIts
 				addCodeBlockButton.setVisible(true);
 				addCodeBlockButton.removeActionListener(addCodeBlockListener);
 				addCodeBlockListener = addCodeBlockButtonListener(scriptIt,
 						componentEditingPanel);
 				addCodeBlockButton.addActionListener(addCodeBlockListener);
-
+			
+				setUpScriptItEditingPanel(scriptIt);
 				updateComponents(scriptIt);
+
+				// TODO Add more stuff here?
+				scriptIt.addStoryComponentObserver(new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						System.out.println("Stuff happened!");
+						setUpScriptItEditingPanel(scriptIt);
+					}
+				});
 
 				editorPanel.repaint();
 				editorPanel.revalidate();
@@ -423,8 +492,8 @@ public class PanelFactory {
 				visibleBox.removeActionListener(visibleBoxListener);
 
 				nameField.setText(component.getDisplayText());
-				labelField
-						.setText(getCollectionAsString(component.getLabels()));
+				labelField.setText(StringOp.getCollectionAsString(
+						component.getLabels(), ", "));
 				labelField.setToolTipText(labelToolTip);
 				visibleBox.setSelected(VisibilityManager.getInstance()
 						.isVisible(component));
@@ -441,6 +510,119 @@ public class PanelFactory {
 				editorPanel.setVisible(true);
 			}
 
+			/**
+			 * Listener for the name field for editing a story component.
+			 * 
+			 * @param component
+			 * @return
+			 */
+			private DocumentListener nameFieldListener(
+					final JTextField nameField, final StoryComponent component) {
+				return new DocumentListener() {
+					@Override
+					public void insertUpdate(DocumentEvent e) {
+						component.setDisplayText(nameField.getText());
+					}
+
+					@Override
+					public void removeUpdate(DocumentEvent e) {
+						this.insertUpdate(e);
+					}
+
+					@Override
+					public void changedUpdate(DocumentEvent e) {
+					}
+				};
+			}
+
+			/**
+			 * Listener for the label field for editing a story component.
+			 * 
+			 * @param labelField
+			 * @param component
+			 * @return
+			 */
+			private DocumentListener labelFieldListener(
+					final JTextField labelField, final StoryComponent component) {
+				return new DocumentListener() {
+					@Override
+					public void insertUpdate(DocumentEvent e) {
+						final String labelFieldText;
+						final String[] labelArray;
+						final Collection<String> labels;
+
+						labelFieldText = labelField.getText();
+						labelArray = labelFieldText.split(",");
+						labels = new ArrayList<String>();
+
+						for (String label : labelArray) {
+							labels.add(label.trim());
+						}
+						component.setLabels(labels);
+					}
+
+					@Override
+					public void removeUpdate(DocumentEvent e) {
+						this.insertUpdate(e);
+					}
+
+					@Override
+					public void changedUpdate(DocumentEvent e) {
+					}
+				};
+			}
+
+			/**
+			 * Listener for the visible box for editing a story component.
+			 * 
+			 * @param visibleBox
+			 * @param component
+			 * @return
+			 */
+			private ActionListener visibleBoxListener(
+					final JCheckBox visibleBox, final StoryComponent component) {
+				return new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						VisibilityManager.getInstance().setVisibility(
+								component, visibleBox.isSelected());
+					}
+				};
+			}
+
+			/**
+			 * Listener for a button that adds code blocks to script its.
+			 * 
+			 * @param addCodeBlockButton
+			 * @param scriptIt
+			 * @return
+			 */
+			private ActionListener addCodeBlockButtonListener(
+					final ScriptIt scriptIt, final JPanel componentEditingPanel) {
+				return new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						final CodeBlock codeBlock;
+
+						codeBlock = new CodeBlockSource("", "",
+								new ArrayList<String>(),
+								new ArrayList<KnowIt>(),
+								new ArrayList<String>(),
+								new ArrayList<AbstractFragment>(),
+								TranslatorManager.getInstance()
+										.getActiveTranslator()
+										.getApiDictionary()
+										.getNextCodeBlockID());
+
+						scriptIt.addCodeBlock(codeBlock);
+						componentEditingPanel.add(new CodeBlockComponent(
+								codeBlock, scriptIt));
+						componentEditingPanel.repaint();
+						componentEditingPanel.revalidate();
+					}
+				};
+			}
+
 			@Override
 			public void defaultProcess(StoryComponent component) {
 				editorPanel.setVisible(false);
@@ -454,116 +636,6 @@ public class PanelFactory {
 		libraryPane.addTreeSelectionListener(librarySelectionListener);
 
 		return editorScrollPane;
-	}
-
-	/**
-	 * Listener for the name field for editing a story component.
-	 * 
-	 * @param component
-	 * @return
-	 */
-	private DocumentListener nameFieldListener(final JTextField nameField,
-			final StoryComponent component) {
-		return new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				component.setDisplayText(nameField.getText());
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				this.insertUpdate(e);
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-			}
-		};
-	}
-
-	/**
-	 * Listener for the label field for editing a story component.
-	 * 
-	 * @param labelField
-	 * @param component
-	 * @return
-	 */
-	private DocumentListener labelFieldListener(final JTextField labelField,
-			final StoryComponent component) {
-		return new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				final String labelFieldText;
-				final String[] labelArray;
-				final Collection<String> labels;
-
-				labelFieldText = labelField.getText();
-				labelArray = labelFieldText.split(",");
-				labels = new ArrayList<String>();
-
-				for (String label : labelArray) {
-					labels.add(label.trim());
-				}
-				component.setLabels(labels);
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				this.insertUpdate(e);
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-			}
-		};
-	}
-
-	/**
-	 * Listener for the visible box for editing a story component.
-	 * 
-	 * @param visibleBox
-	 * @param component
-	 * @return
-	 */
-	private ActionListener visibleBoxListener(final JCheckBox visibleBox,
-			final StoryComponent component) {
-		return new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				VisibilityManager.getInstance().setVisibility(component,
-						visibleBox.isSelected());
-			}
-		};
-	}
-
-	/**
-	 * Listener for a button that adds code blocks to script its.
-	 * 
-	 * @param addCodeBlockButton
-	 * @param scriptIt
-	 * @return
-	 */
-	private ActionListener addCodeBlockButtonListener(final ScriptIt scriptIt,
-			final JPanel componentEditingPanel) {
-		return new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final CodeBlock codeBlock;
-
-				codeBlock = new CodeBlockSource("", "",
-						new ArrayList<String>(), new ArrayList<KnowIt>(),
-						new ArrayList<String>(),
-						new ArrayList<Fragment>(), TranslatorManager
-								.getInstance().getActiveTranslator()
-								.getApiDictionary().getNextCodeBlockID());
-
-				scriptIt.addCodeBlock(codeBlock);
-				componentEditingPanel.add(new CodeBlockComponent(codeBlock,
-						scriptIt));
-				componentEditingPanel.repaint();
-				componentEditingPanel.revalidate();
-			}
-		};
 	}
 
 	/*
@@ -595,92 +667,6 @@ public class PanelFactory {
 	}
 
 	/**
-	 * Builds the library pane for the Story Component Editor. This pane allows
-	 * loading of different translators through a ComboBox.
-	 * 
-	 * @param editorPanel
-	 * @return
-	 */
-	public JPanel buildStoryComponentLibraryPanel(LibraryPane libraryPane) {
-		final List<Translator> translators;
-		final JComboBox libSelector;
-		final JPanel libraryPanel;
-		final JPanel translatorPanel;
-		final Translator activeTranslator;
-
-		libraryPanel = new JPanel();
-		translatorPanel = new JPanel();
-		translators = new ArrayList<Translator>();
-		// TODO We need to also load invisible story components.
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-
-		libraryPanel.setLayout(new BoxLayout(libraryPanel, BoxLayout.Y_AXIS));
-
-		translators.add(null);
-		translators.addAll(TranslatorManager.getInstance().getTranslators());
-
-		libSelector = new JComboBox(new Vector<Translator>(translators));
-		libSelector.setSelectedItem(activeTranslator);
-
-		// TODO This should update the editorpanel, too!
-		libSelector.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setTranslator((Translator) libSelector.getSelectedItem());
-			}
-		});
-
-		translatorPanel.add(new JLabel("Currently loaded translator: "));
-		translatorPanel.add(libSelector);
-
-		libraryPanel.add(translatorPanel);
-
-		libraryPanel.add(libraryPane);
-
-		return libraryPanel;
-	}
-
-	/**
-	 * Method that returns a collection of Strings as a single String separated
-	 * by commas.<br>
-	 * <br>
-	 * An example: <br>
-	 * If<br>
-	 * <code>Collection&lt;String&gt; collection = ["First"], ["Second"], ["Third"];<br></code>
-	 * then<br>
-	 * <code>getCollectionAsString(collection) == "First, Second, Third"</code>
-	 * 
-	 * @param strings
-	 * @return
-	 */
-	private static String getCollectionAsString(Collection<String> strings) {
-		String collectionText = "";
-
-		for (String includeText : strings) {
-			collectionText += includeText + ", ";
-		}
-		int labelLength = collectionText.length();
-		if (labelLength > 0) {
-			return collectionText.substring(0, labelLength - 2);
-		} else
-			return "";
-	}
-
-	/**
-	 * Method to set the translator. This is separate so that Progress.aj can
-	 * show the loading bar when a new Translator is loading.
-	 * 
-	 * @author remiller
-	 * 
-	 * @param t
-	 *            The Translator to load
-	 */
-	private void setTranslator(Translator t) {
-		TranslatorManager.getInstance().setActiveTranslator(t);
-	}
-
-	/**
 	 * A factory for builing code block components. Code block components are
 	 * all very similar, but differ depending on if they are Cause or Effects.
 	 * Within Effects, Code Blocks differ depending on if they are the first
@@ -690,10 +676,12 @@ public class PanelFactory {
 	 * 
 	 */
 	@SuppressWarnings("serial")
-	private class CodeBlockComponent extends JComponent {
+	private class CodeBlockComponent extends JComponent implements
+			StoryComponentObserver {
 		private final CodeBlock codeBlock;
 		private final ScriptIt scriptIt;
 
+		private final JButton deleteCodeBlockButton;
 		private final JComboBox subjectBox;
 		private final JComboBox slotBox;
 		private final JLabel availableImplicitsLabel;
@@ -713,9 +701,12 @@ public class PanelFactory {
 			this.codeBlock = codeBlock;
 			this.scriptIt = scriptIt;
 
+			this.deleteCodeBlockButton = new JButton("Delete CodeBlock");
 			this.subjectBox = new JComboBox();
 			this.slotBox = new JComboBox();
 			this.availableImplicitsLabel = new JLabel();
+
+			this.scriptIt.addStoryComponentObserver(this);
 
 			this.setupMainComponent();
 		}
@@ -815,14 +806,25 @@ public class PanelFactory {
 
 			availableImplicitsLabel.setForeground(Color.DARK_GRAY);
 
-			includesField
-					.setText(getCollectionAsString(codeBlock.getIncludes()));
+			includesField.setText(StringOp.getCollectionAsString(
+					codeBlock.getIncludes(), ", "));
 
 			ArrayList<String> types = new ArrayList<String>();
 			types.addAll(codeBlock.getTypes());
 
 			typeAction.getTypeSelectionDialogBuilder().deselectAll();
 			typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
+
+			deleteCodeBlockButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						scriptIt.removeCodeBlock(codeBlock);
+					}
+				});
+				
+			if (this.scriptIt.getCodeBlocks().size() < 2) {
+				deleteCodeBlockButton.setVisible(false);
+			}
 
 			for (KnowIt parameter : parameters) {
 				parameterPanel.add(new ParameterComponent(scriptIt, codeBlock,
@@ -885,45 +887,49 @@ public class PanelFactory {
 				}
 			});
 
-			// TODO Set up the code panel
-			// Here's some old code from the codePanel
+			codeBlockEditorLayout
+					.setHorizontalGroup(codeBlockEditorLayout
+							.createSequentialGroup()
+							.addGroup(
+									codeBlockEditorLayout.createParallelGroup()
 
-			/*
-			 * Old Code: final Collection<FormatFragment> codeFragments =
-			 * codeBlock.getCode(); if (codeFragments.size() > 0)
-			 * codePane.setCodeFragments(codeFragments);
-			 * parameterList.updateBindingList(codeBlock.getParameters());
-			 */
-
-			codeBlockEditorLayout.setHorizontalGroup(codeBlockEditorLayout
-					.createSequentialGroup()
-					.addGroup(
-							codeBlockEditorLayout.createParallelGroup()
 									.addComponent(subjectLabel)
-									.addComponent(slotLabel)
-									.addComponent(implicitsLabel)
-									.addComponent(includesLabel)
-									.addComponent(typesLabel)
-									.addComponent(parametersLabel)
-									.addComponent(addParameterButton)
-									.addComponent(codeLabel))
-					.addGroup(
-							codeBlockEditorLayout
-									.createParallelGroup()
-									.addComponent(idLabel,
-											GroupLayout.Alignment.TRAILING)
-									.addComponent(subjectBox)
-									.addComponent(slotBox)
-									.addComponent(availableImplicitsLabel)
-									.addComponent(includesField)
-									.addComponent(typesButton)
-									.addComponent(parameterScrollPane)
-									.addComponent(codePanel)));
+											.addComponent(slotLabel)
+											.addComponent(implicitsLabel)
+											.addComponent(includesLabel)
+											.addComponent(typesLabel)
+											.addComponent(parametersLabel)
+											.addComponent(addParameterButton)
+											.addComponent(codeLabel))
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup()
+											.addGroup(
+													GroupLayout.Alignment.TRAILING,
+													codeBlockEditorLayout
+															.createSequentialGroup()
+															.addComponent(
+																	deleteCodeBlockButton)
+															.addComponent(
+																	idLabel))
+											.addComponent(subjectBox)
+											.addComponent(slotBox)
+											.addComponent(
+													availableImplicitsLabel)
+											.addComponent(includesField)
+											.addComponent(typesButton)
+											.addComponent(parameterScrollPane)
+											.addComponent(codePanel)));
 
 			codeBlockEditorLayout
 					.setVerticalGroup(codeBlockEditorLayout
 							.createSequentialGroup()
-							.addComponent(idLabel)
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addComponent(deleteCodeBlockButton)
+											.addComponent(idLabel))
 							.addGroup(
 									codeBlockEditorLayout
 											.createParallelGroup(
@@ -1094,9 +1100,18 @@ public class PanelFactory {
 				subjectBox.setSelectedItem(null);
 			}
 		}
-	}
 
-	// TODO Different coloured borders + titles for each!
+		// TODO Do more stuff in here rather than elsewhere.
+		@Override
+		public void componentChanged(StoryComponentEvent event) {
+			if (this.scriptIt.getCodeBlocks().size() > 1)
+				this.deleteCodeBlockButton.setVisible(true);
+			else
+				this.deleteCodeBlockButton.setVisible(false);
+
+			this.revalidate();
+		}
+	}
 
 	/**
 	 * ParameterComponents are JComponents used to represent and edit
@@ -1115,6 +1130,7 @@ public class PanelFactory {
 	 * @author kschenk
 	 * 
 	 */
+	// TODO Implement StoryComponentObserver?
 	@SuppressWarnings("serial")
 	private class ParameterComponent extends JComponent {
 		private final KnowIt parameter;
@@ -1154,7 +1170,7 @@ public class PanelFactory {
 
 			// Set up sizes
 			// TODO Set up sizes for everything, so it doesn't look as horrible.
-			this.setMaximumSize(new Dimension(1920, 150));
+			this.setMaximumSize(new Dimension(1920, 100));
 
 			// Set default values
 			types.addAll(parameter.getTypes());
@@ -1463,19 +1479,21 @@ public class PanelFactory {
 	private class CodeEditorPanel extends JPanel implements
 			StoryComponentObserver {
 
-		private final Map<JPanel, Fragment> panelToFragmentMap;
+		private final Map<JPanel, AbstractFragment> panelToFragmentMap;
 		private final CodeBlock codeBlock;
 		/**
 		 * The top level JPanel.
 		 */
 		private final JPanel codeEditorPanel;
 		private final JScrollPane codeEditorScrollPane;
+		private String simplePanelName;
 
 		public CodeEditorPanel(CodeBlock codeBlock) {
 			super();
 			this.codeBlock = codeBlock;
-			this.panelToFragmentMap = new HashMap<JPanel, Fragment>();
+			this.panelToFragmentMap = new HashMap<JPanel, AbstractFragment>();
 			this.codeBlock.addStoryComponentObserver(this);
+			this.simplePanelName = "Simple Data";
 
 			final String CODE_EDITOR_PANEL_NAME = "Code";
 
@@ -1483,12 +1501,14 @@ public class PanelFactory {
 			final JButton lineButton;
 			final JButton indentButton;
 			final JButton scopeButton;
+			final JButton seriesButton;
 			final JButton simpleButton;
 			final JButton literalButton;
 			final JButton referenceButton;
 			final JButton deleteButton;
 			final JButton moveUpButton;
 			final JButton moveDownButton;
+			final JButton listerineButton;
 
 			final Border lineBorder;
 			final Border titledBorder;
@@ -1497,38 +1517,48 @@ public class PanelFactory {
 			lineButton = new JButton(InsertLineAction.getInstance());
 			indentButton = new JButton(InsertIndentAction.getInstance());
 			scopeButton = new JButton(InsertScopeAction.getInstance());
+			seriesButton = new JButton(InsertSeriesAction.getInstance());
 			simpleButton = new JButton(InsertSimpleAction.getInstance());
 			literalButton = new JButton(InsertLiteralAction.getInstance());
 			referenceButton = new JButton(InsertReferenceAction.getInstance());
 			deleteButton = new JButton(DeleteFragmentAction.getInstance());
-			moveUpButton = new JButton("Up#!#");
-			moveDownButton = new JButton("Down#!#");
+			moveUpButton = new JButton(MoveFragmentUpAction.getInstance());
+			moveDownButton = new JButton(MoveFragmentDownAction.getInstance());
+			listerineButton = new JButton(" ");
 
-			lineBorder = BorderFactory.createLineBorder(Color.gray);
+			lineBorder = BorderFactory
+					.createLineBorder(ScriptEaseUI.CODE_EDITOR_COLOR);
 			titledBorder = BorderFactory.createTitledBorder(lineBorder,
 					CODE_EDITOR_PANEL_NAME, TitledBorder.LEADING,
 					TitledBorder.TOP, new Font("SansSerif", Font.PLAIN, 12),
-					Color.gray);
+					ScriptEaseUI.CODE_EDITOR_COLOR);
 
-			this.codeEditorPanel = objectContainerPanel(CODE_EDITOR_PANEL_NAME,
-					titledBorder);
+			this.codeEditorPanel = objectContainerPanel(CODE_EDITOR_PANEL_NAME);
 			this.codeEditorScrollPane = new JScrollPane(codeEditorPanel);
 
-			// TODO Implement these buttons and enable them.
-			moveDownButton.setEnabled(false);
-			moveUpButton.setEnabled(false);
+			listerineButton.setOpaque(false);
+			listerineButton.setContentAreaFilled(false);
+			listerineButton.setBorderPainted(false);
+			listerineButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					simplePanelName = "Listerine";
+				}
+			});
 
 			toolbar.setFloatable(false);
 
 			toolbar.add(lineButton);
 			toolbar.add(indentButton);
 			toolbar.add(scopeButton);
+			toolbar.add(seriesButton);
 			toolbar.add(simpleButton);
 			toolbar.add(literalButton);
 			toolbar.add(referenceButton);
 			toolbar.add(deleteButton);
 			toolbar.add(moveUpButton);
 			toolbar.add(moveDownButton);
+			toolbar.add(listerineButton);
 
 			this.codeEditorScrollPane.getVerticalScrollBar().setUnitIncrement(
 					16);
@@ -1537,6 +1567,7 @@ public class PanelFactory {
 			this.setLayout(new BorderLayout());
 			this.codeEditorPanel.setLayout(new BoxLayout(codeEditorPanel,
 					BoxLayout.PAGE_AXIS));
+			this.codeEditorPanel.setBorder(titledBorder);
 
 			this.panelToFragmentMap.put(this.codeEditorPanel, null);
 			this.add(toolbar, BorderLayout.PAGE_START);
@@ -1553,7 +1584,7 @@ public class PanelFactory {
 		 * CodeBlock.
 		 */
 		private void fillCodeEditorPanel() {
-			final Collection<Fragment> codeFragments;
+			final Collection<AbstractFragment> codeFragments;
 			final Rectangle visibleRectangle;
 
 			codeFragments = this.codeBlock.getCode();
@@ -1576,30 +1607,17 @@ public class PanelFactory {
 		 * @param color
 		 * @return
 		 */
-		private JPanel objectContainerPanel(final String title,
-				final Border border) {
+		private JPanel objectContainerPanel(final String title) {
 			final JPanel objectContainerPanel;
 
 			objectContainerPanel = new JPanel();
 			objectContainerPanel.setName(title);
 
-			objectContainerPanel.setBorder(border);
 			objectContainerPanel.setOpaque(true);
+			objectContainerPanel
+					.setBackground(ScriptEaseUI.FRAGMENT_DEFAULT_COLOR);
 
 			objectContainerPanel.addMouseListener(new MouseAdapter() {
-				/*
-				 * TODO Implement hovering color changes. Note that the
-				 * following code will not work correctly. But the colors look
-				 * ok, for a grey and bland interface.
-				 */
-				@Override
-				public void mousePressed(MouseEvent e) {
-					/*
-					 * objectContainerPanel.setBackground(GUIOp.scaleColour(
-					 * Color.LIGHT_GRAY, 1.2));
-					 */
-				}
-
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					FormatFragmentSelectionManager.getInstance()
@@ -1609,26 +1627,7 @@ public class PanelFactory {
 									codeBlock);
 					fillCodeEditorPanel();
 				}
-
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					/*
-					 * objectContainerPanel.setBackground(GUIOp.scaleColour(
-					 * Color.LIGHT_GRAY, 1.0));
-					 */
-				}
-
-				@Override
-				public void mouseExited(MouseEvent e) {
-					/*
-					 * if (panel != null) { if
-					 * (!panel.equals(objectContainerPanel))
-					 * objectContainerPanel.setBackground(defaultColor); } else
-					 * objectContainerPanel.setBackground(defaultColor);
-					 */
-				}
 			});
-
 			return objectContainerPanel;
 		}
 
@@ -1644,14 +1643,14 @@ public class PanelFactory {
 			final String TITLE = "Line";
 			final JPanel linePanel;
 			final Border lineBorder;
-			final Border titledBorder;
 
-			lineBorder = BorderFactory.createLineBorder(Color.GRAY);
-			titledBorder = BorderFactory.createTitledBorder(lineBorder, TITLE,
-					TitledBorder.LEADING, TitledBorder.TOP, new Font(
-							"SansSerif", Font.BOLD, 12), Color.BLACK);
-			
-			linePanel = objectContainerPanel(TITLE, titledBorder);
+			lineBorder = BorderFactory
+					.createLineBorder(ScriptEaseUI.LINE_FRAGMENT_COLOR);
+
+			linePanel = objectContainerPanel(TITLE);
+
+			linePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+			linePanel.setBorder(lineBorder);
 
 			return linePanel;
 		}
@@ -1667,29 +1666,35 @@ public class PanelFactory {
 		 * 
 		 * @return
 		 */
-		private JPanel indentPanel() {
+		private JPanel indentPanel(IndentFragment indentFragment) {
 			final String TITLE = "Indent";
 
 			final JPanel indentPanel;
-			final JPanel sizePanel;
+			final JPanel subFragmentsPanel;
+			final JLabel indentLabel;
 			final Border lineBorder;
-			final Border titledBorder;
 
-			sizePanel = new JPanel();
-			lineBorder = BorderFactory.createMatteBorder(1, 5, 1, 1, Color.GRAY);
-			titledBorder = BorderFactory.createTitledBorder(lineBorder, TITLE,
-					TitledBorder.LEADING, TitledBorder.TOP, new Font(
-							"SansSerif", Font.BOLD, 12), Color.BLACK);
+			indentPanel = objectContainerPanel(TITLE);
+			subFragmentsPanel = new JPanel();
+			indentLabel = new JLabel(String.valueOf('\u21e5'));
+			lineBorder = BorderFactory
+					.createLineBorder(ScriptEaseUI.INDENT_FRAGMENT_COLOR);
 
-			indentPanel = objectContainerPanel(TITLE, titledBorder);
-		
-			sizePanel.setOpaque(false);
+			indentLabel.setForeground(ScriptEaseUI.INDENT_FRAGMENT_COLOR);
+			indentLabel.setFont(new Font("SansSerif", Font.PLAIN, 32));
 
-			indentPanel.add(Box.createHorizontalStrut(15));
-			indentPanel.add(sizePanel);
+			indentPanel.setBorder(lineBorder);
 
-			indentPanel.setLayout(new BoxLayout(indentPanel,
+			indentPanel.add(indentLabel);
+
+			subFragmentsPanel.setLayout(new BoxLayout(subFragmentsPanel,
 					BoxLayout.PAGE_AXIS));
+
+			buildDefaultPanes(subFragmentsPanel,
+					indentFragment.getSubFragments());
+
+			indentPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+			indentPanel.add(subFragmentsPanel);
 
 			return indentPanel;
 		}
@@ -1736,12 +1741,14 @@ public class PanelFactory {
 			final Border lineBorder;
 			final Border titledBorder;
 
-			lineBorder = BorderFactory.createLineBorder(Color.green.darker());
+			lineBorder = BorderFactory
+					.createLineBorder(ScriptEaseUI.SCOPE_FRAGMENT_COLOR);
 			titledBorder = BorderFactory.createTitledBorder(lineBorder, TITLE,
 					TitledBorder.LEADING, TitledBorder.TOP, new Font(
-							"SansSerif", Font.BOLD, 12), Color.green.darker());
+							"SansSerif", Font.BOLD, 12),
+					ScriptEaseUI.SCOPE_FRAGMENT_COLOR);
 
-			scopePanel = objectContainerPanel(TITLE, titledBorder);
+			scopePanel = objectContainerPanel(TITLE);
 			scopeComponentPanel = new JPanel();
 			directiveBox = new JComboBox();
 			nameRefField = new JTextField();
@@ -1751,8 +1758,7 @@ public class PanelFactory {
 			directiveLabel.setLabelFor(directiveBox);
 			nameRefLabel.setLabelFor(nameRefField);
 
-			for (CodeGenerationKeywordConstants.Scope directiveType : CodeGenerationKeywordConstants.Scope
-					.values())
+			for (ScopeTypes directiveType : ScopeTypes.values())
 				directiveBox.addItem(directiveType.name());
 
 			directiveBox.setSelectedItem(scopeFragment.getDirectiveText()
@@ -1790,6 +1796,7 @@ public class PanelFactory {
 
 			scopePanel
 					.setLayout(new BoxLayout(scopePanel, BoxLayout.PAGE_AXIS));
+			scopePanel.setBorder(titledBorder);
 
 			scopeComponentPanel.setOpaque(false);
 
@@ -1804,13 +1811,177 @@ public class PanelFactory {
 		}
 
 		/**
+		 * Series panel for editing series fragments.
+		 * 
+		 * @param seriesFragment
+		 * @return
+		 */
+		private JPanel seriesPanel(final SeriesFragment seriesFragment) {
+			final String TITLE = "Series";
+
+			final JPanel seriesPanel;
+			final JPanel seriesComponentPanel;
+			final JPanel filterComponentPanel;
+
+			final JComboBox directiveBox;
+			final JTextField separatorField;
+			final JCheckBox uniqueCheckBox;
+			final JTextField filterField;
+			final JComboBox filterTypeBox;
+
+			final JLabel directiveLabel;
+			final JLabel separatorLabel;
+			final JLabel uniqueLabel;
+			final JLabel filterLabel;
+			final JLabel filterTypeLabel;
+
+			final Border lineBorder;
+			final Border titledBorder;
+
+			lineBorder = BorderFactory
+					.createLineBorder(ScriptEaseUI.SERIES_FRAGMENT_COLOR);
+			titledBorder = BorderFactory.createTitledBorder(lineBorder, TITLE,
+					TitledBorder.LEADING, TitledBorder.TOP, new Font(
+							"SansSerif", Font.BOLD, 12),
+					ScriptEaseUI.SERIES_FRAGMENT_COLOR);
+
+			seriesPanel = objectContainerPanel(TITLE);
+			seriesComponentPanel = new JPanel();
+			filterComponentPanel = new JPanel();
+
+			directiveBox = new JComboBox();
+			separatorField = new JTextField();
+			uniqueCheckBox = new JCheckBox();
+			filterField = new JTextField();
+			filterTypeBox = new JComboBox();
+
+			directiveLabel = new JLabel("Data");
+			separatorLabel = new JLabel("Separator");
+			uniqueLabel = new JLabel("Unique");
+			filterLabel = new JLabel("Filter");
+			filterTypeLabel = new JLabel("Filter Type");
+
+			directiveLabel.setLabelFor(directiveBox);
+			separatorLabel.setLabelFor(separatorField);
+			uniqueLabel.setLabelFor(uniqueCheckBox);
+			filterLabel.setLabelFor(filterField);
+			filterTypeLabel.setLabelFor(filterTypeBox);
+
+			for (SeriesTypes directiveType : SeriesTypes.values())
+				directiveBox.addItem(directiveType.name());
+
+			directiveBox.setSelectedItem(seriesFragment.getDirectiveText()
+					.toUpperCase());
+
+			directiveBox.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					seriesFragment.setDirectiveText((String) directiveBox
+							.getSelectedItem());
+				}
+			});
+
+			separatorField.setText(seriesFragment.getSeparator());
+
+			separatorField.getDocument().addDocumentListener(
+					new DocumentListener() {
+
+						@Override
+						public void insertUpdate(DocumentEvent e) {
+							seriesFragment.setSeparator(separatorField
+									.getText());
+
+							seriesPanel.revalidate();
+						}
+
+						@Override
+						public void removeUpdate(DocumentEvent e) {
+							insertUpdate(e);
+						}
+
+						@Override
+						public void changedUpdate(DocumentEvent e) {
+						}
+					});
+
+			uniqueCheckBox.setSelected(seriesFragment.isUnique());
+
+			uniqueCheckBox.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					seriesFragment.setUnique(uniqueCheckBox.isSelected());
+				}
+			});
+
+			filterField.setText(seriesFragment.getFilter());
+
+			filterField.getDocument().addDocumentListener(
+					new DocumentListener() {
+						@Override
+						public void insertUpdate(DocumentEvent e) {
+							seriesFragment.setFilter(filterField.getText());
+
+							seriesPanel.revalidate();
+						}
+
+						@Override
+						public void removeUpdate(DocumentEvent e) {
+							insertUpdate(e);
+						}
+
+						@Override
+						public void changedUpdate(DocumentEvent e) {
+						}
+					});
+
+			for (SeriesFilterType filterType : SeriesFilterType.values()) {
+				filterTypeBox.addItem(filterType);
+			}
+
+			filterTypeBox.setSelectedItem(seriesFragment.getFilterType());
+
+			filterTypeBox.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					seriesFragment
+							.setFilterType((SeriesFilterType) filterTypeBox
+									.getSelectedItem());
+				}
+			});
+
+			seriesPanel.setLayout(new BoxLayout(seriesPanel,
+					BoxLayout.PAGE_AXIS));
+			seriesPanel.setBorder(titledBorder);
+
+			seriesComponentPanel.setOpaque(false);
+			filterComponentPanel.setOpaque(false);
+
+			seriesComponentPanel.add(directiveLabel);
+			seriesComponentPanel.add(directiveBox);
+			seriesComponentPanel.add(separatorLabel);
+			seriesComponentPanel.add(separatorField);
+			seriesComponentPanel.add(uniqueLabel);
+			seriesComponentPanel.add(uniqueCheckBox);
+
+			filterComponentPanel.add(filterLabel);
+			filterComponentPanel.add(filterField);
+			filterComponentPanel.add(filterTypeLabel);
+			filterComponentPanel.add(filterTypeBox);
+
+			seriesPanel.add(seriesComponentPanel);
+			seriesPanel.add(filterComponentPanel);
+
+			return seriesPanel;
+		}
+
+		/**
 		 * Creates a panel representing a Simple Fragment.
 		 * 
 		 * @param simpleFragment
 		 * @return
 		 */
 		private JPanel simplePanel(final SimpleDataFragment simpleFragment) {
-			final String TITLE = "Simple";
+			final String TITLE = "Simple Data";
 
 			final JPanel simplePanel;
 			final JComboBox directiveBox;
@@ -1820,12 +1991,15 @@ public class PanelFactory {
 			final Border lineBorder;
 			final Border titledBorder;
 
-			lineBorder = BorderFactory.createLineBorder(Color.blue);
-			titledBorder = BorderFactory.createTitledBorder(lineBorder, TITLE,
-					TitledBorder.LEADING, TitledBorder.TOP, new Font(
-							"SansSerif", Font.BOLD, 12), Color.blue);
+			simplePanel = objectContainerPanel(TITLE);
 
-			simplePanel = objectContainerPanel(TITLE, titledBorder);
+			lineBorder = BorderFactory
+					.createLineBorder(ScriptEaseUI.SIMPLE_FRAGMENT_COLOR);
+			titledBorder = BorderFactory.createTitledBorder(lineBorder,
+					this.simplePanelName, TitledBorder.LEADING,
+					TitledBorder.TOP, new Font("SansSerif", Font.BOLD, 12),
+					ScriptEaseUI.SIMPLE_FRAGMENT_COLOR);
+
 			directiveBox = new JComboBox();
 			legalRangeField = new JTextField();
 			directiveLabel = new JLabel("Data");
@@ -1872,6 +2046,8 @@ public class PanelFactory {
 						}
 					});
 
+			simplePanel.setBorder(titledBorder);
+
 			simplePanel.add(directiveLabel);
 			simplePanel.add(directiveBox);
 			simplePanel.add(legalRangeLabel);
@@ -1894,12 +2070,14 @@ public class PanelFactory {
 			final Border lineBorder;
 			final Border titledBorder;
 
-			lineBorder = BorderFactory.createLineBorder(Color.black);
+			lineBorder = BorderFactory
+					.createLineBorder(ScriptEaseUI.LITERAL_FRAGMENT_COLOR);
 			titledBorder = BorderFactory.createTitledBorder(lineBorder, TITLE,
 					TitledBorder.LEADING, TitledBorder.TOP, new Font(
-							"SansSerif", Font.BOLD, 12), Color.black);
+							"SansSerif", Font.BOLD, 12),
+					ScriptEaseUI.LITERAL_FRAGMENT_COLOR);
 
-			literalPanel = objectContainerPanel(TITLE, titledBorder);
+			literalPanel = objectContainerPanel(TITLE);
 			literalField = new JTextField(literalFragment.getDirectiveText());
 
 			literalField.setMinimumSize(new Dimension(15, literalField
@@ -1928,6 +2106,8 @@ public class PanelFactory {
 
 					});
 
+			literalPanel.setBorder(titledBorder);
+
 			literalPanel.add(literalField);
 
 			return literalPanel;
@@ -1939,20 +2119,23 @@ public class PanelFactory {
 		 * @param referenceFragment
 		 * @return
 		 */
-		private JPanel referencePanel(final FormatReferenceFragment referenceFragment) {
-			final String TITLE = "Reference";
+		private JPanel referencePanel(
+				final FormatReferenceFragment referenceFragment) {
+			final String TITLE = "Format Reference";
 
 			final JPanel referencePanel;
 			final JTextField referenceField;
 			final Border lineBorder;
 			final Border titledBorder;
 
-			lineBorder = BorderFactory.createLineBorder(Color.magenta.darker());
+			lineBorder = BorderFactory
+					.createLineBorder(ScriptEaseUI.REFERENCE_FRAGMENT_COLOR);
 			titledBorder = BorderFactory.createTitledBorder(lineBorder, TITLE,
 					TitledBorder.LEADING, TitledBorder.TOP, new Font(
-							"SansSerif", Font.BOLD, 12), Color.magenta.darker());
+							"SansSerif", Font.BOLD, 12),
+					ScriptEaseUI.REFERENCE_FRAGMENT_COLOR);
 
-			referencePanel = objectContainerPanel(TITLE, titledBorder);
+			referencePanel = objectContainerPanel(TITLE);
 			referenceField = new JTextField(
 					referenceFragment.getDirectiveText());
 
@@ -1982,6 +2165,8 @@ public class PanelFactory {
 
 					});
 
+			referencePanel.setBorder(titledBorder);
+
 			referencePanel.add(referenceField);
 
 			return referencePanel;
@@ -1995,116 +2180,131 @@ public class PanelFactory {
 		 * @param codeFragments
 		 */
 		private void buildDefaultPanes(JPanel panel,
-				Collection<Fragment> codeFragments) {
+				Collection<AbstractFragment> codeFragments) {
 
-			for (Fragment codeFragment : codeFragments) {
+			for (AbstractFragment codeFragment : codeFragments) {
 				JPanel fragmentPanel = new JPanel();
 
-				final Color defaultColor;
+				final AbstractFragment selectedFragment;
 
-				defaultColor = fragmentPanel.getBackground();
+				selectedFragment = FormatFragmentSelectionManager.getInstance()
+						.getFormatFragment();
+
+				codeEditorPanel
+						.setBackground(ScriptEaseUI.FRAGMENT_DEFAULT_COLOR);
 
 				if (codeFragment instanceof LineFragment) {
-					/*
-					 * In the APIDictionary:
-					 * 
-					 * <Line> stuff </Line>
-					 * 
-					 * Lines can be the top most container, but can also be
-					 * contained in Indents. They use the LanguageDictionary to
-					 * line break whatever code is contained inside from the
-					 * previous code.
-					 */
+					final JLabel lineLabel;
+
+					lineLabel = new JLabel("\\n");
 					fragmentPanel = linePanel();
+
+					if (codeFragment == selectedFragment)
+						fragmentPanel.setBackground(GUIOp.scaleWhite(
+								ScriptEaseUI.LINE_FRAGMENT_COLOR, 1.2));
+
+					lineLabel.setForeground(ScriptEaseUI.LINE_FRAGMENT_COLOR);
+					lineLabel.setFont(new Font("SansSerif", Font.PLAIN, 32));
+
 					buildDefaultPanes(fragmentPanel,
 							((LineFragment) codeFragment).getSubFragments());
+
+					fragmentPanel.add(lineLabel);
+
 					panel.add(fragmentPanel);
 					panelToFragmentMap.put(fragmentPanel,
 							(LineFragment) codeFragment);
-				} else if (codeFragment instanceof IndentedFragment) {
-					/*
-					 * In the APIDictionary:
-					 * 
-					 * <Indent> stuff </Indent>
-					 * 
-					 * Note that indents are the top most possible container!
-					 * They use the LanguageDictionary to indent whatever code
-					 * is contained inside.
-					 */
-					fragmentPanel = indentPanel();
-					buildDefaultPanes(fragmentPanel,
-							((IndentedFragment) codeFragment).getSubFragments());
+				} else if (codeFragment instanceof IndentFragment) {
+					fragmentPanel = indentPanel((IndentFragment) codeFragment);
+
+					if (codeFragment == selectedFragment)
+						fragmentPanel.setBackground(GUIOp.scaleWhite(
+								ScriptEaseUI.INDENT_FRAGMENT_COLOR, 1.2));
+
 					panel.add(fragmentPanel);
 					panelToFragmentMap.put(fragmentPanel,
-							(IndentedFragment) codeFragment);
+							(IndentFragment) codeFragment);
 				} else if (codeFragment instanceof LiteralFragment) {
-					/*
-					 * In the API Dictionary: <Literal>code goes here</Literal>
-					 */
 					fragmentPanel = literalPanel((LiteralFragment) codeFragment);
+
+					if (codeFragment == selectedFragment)
+						fragmentPanel.setBackground(GUIOp.scaleWhite(
+								ScriptEaseUI.LITERAL_FRAGMENT_COLOR, 1.7));
+
 					panel.add(fragmentPanel);
 					panelToFragmentMap.put(fragmentPanel,
 							(LiteralFragment) codeFragment);
 				} else if (codeFragment instanceof ScopeFragment) {
-					/*
-					 * In the APIDictionary (minus weird spacing):
-					 * 
-					 * <Scope data="argument" ref="Parameter Name">
-					 * 
-					 * <Fragment data="name"/>
-					 * 
-					 * </Scope>
-					 */
 					fragmentPanel = scopePanel((ScopeFragment) codeFragment);
+
+					if (codeFragment == selectedFragment)
+						fragmentPanel.setBackground(GUIOp.scaleWhite(
+								ScriptEaseUI.SCOPE_FRAGMENT_COLOR, 5.0));
+
 					buildDefaultPanes(fragmentPanel,
 							((ScopeFragment) codeFragment).getSubFragments());
 					panel.add(fragmentPanel);
 					panelToFragmentMap.put(fragmentPanel,
 							(ScopeFragment) codeFragment);
+				} else if (codeFragment instanceof SeriesFragment) {
+					fragmentPanel = seriesPanel((SeriesFragment) codeFragment);
+
+					if (codeFragment == selectedFragment)
+						fragmentPanel.setBackground(GUIOp.scaleWhite(
+								ScriptEaseUI.SERIES_FRAGMENT_COLOR, 3.0));
+
+					buildDefaultPanes(fragmentPanel,
+							((SeriesFragment) codeFragment).getSubFragments());
+					panel.add(fragmentPanel);
+					panelToFragmentMap.put(fragmentPanel,
+							(SeriesFragment) codeFragment);
 				} else if (codeFragment instanceof FormatReferenceFragment) {
-					/*
-					 * In the APIDictionary:
-					 * 
-					 * <FormatRef ref="children"/>
-					 */
 					fragmentPanel = referencePanel((FormatReferenceFragment) codeFragment);
+
+					if (codeFragment == selectedFragment)
+						fragmentPanel.setBackground(GUIOp.scaleWhite(
+								ScriptEaseUI.REFERENCE_FRAGMENT_COLOR, 3.0));
+
 					panel.add(fragmentPanel);
 					panelToFragmentMap.put(fragmentPanel,
 							(FormatReferenceFragment) codeFragment);
 				} else if (codeFragment instanceof SimpleDataFragment) {
 					fragmentPanel = simplePanel((SimpleDataFragment) codeFragment);
+
+					if (codeFragment == selectedFragment)
+						fragmentPanel.setBackground(GUIOp.scaleWhite(
+								ScriptEaseUI.SIMPLE_FRAGMENT_COLOR, 3.5));
+
 					panel.add(fragmentPanel);
 					panelToFragmentMap.put(fragmentPanel,
 							(SimpleDataFragment) codeFragment);
 				}
 
-				final Fragment selectedFragment;
-
-				selectedFragment = FormatFragmentSelectionManager.getInstance()
-						.getFormatFragment();
-
-				codeEditorPanel.setBackground(defaultColor);
-				if (selectedFragment != null) {
-					if (selectedFragment == codeFragment) {
-						if (selectedFragment instanceof AbstractContainerFragment)
-							fragmentPanel.setBackground(GUIOp.scaleColour(
-									Color.LIGHT_GRAY, 1.1));
-						else
-							fragmentPanel.setBackground(GUIOp.scaleColour(
-									Color.LIGHT_GRAY, 1.0));
-					} else
-						fragmentPanel.setBackground(defaultColor);
-				} else {
-					this.codeEditorPanel.setBackground(GUIOp.scaleColour(
-							Color.LIGHT_GRAY, 1.1));
-				}
-
+				if (selectedFragment == null)
+					codeEditorPanel.setBackground(GUIOp.scaleWhite(
+							ScriptEaseUI.CODE_EDITOR_COLOR, 1.7));
 			}
 		}
 
+		// TODO Might want to edit this a bit more.. add more things here
+		// instead of up there. This gets fired when a fragment is added.
 		@Override
 		public void componentChanged(StoryComponentEvent event) {
 			fillCodeEditorPanel();
 		}
 	}
+
+	/**
+	 * Method to set the translator. This is separate so that Progress.aj can
+	 * show the loading bar when a new Translator is loading.
+	 * 
+	 * @author remiller
+	 * 
+	 * @param t
+	 *            The Translator to load
+	 */
+	private void setTranslator(Translator t) {
+		TranslatorManager.getInstance().setActiveTranslator(t);
+	}
+
 }

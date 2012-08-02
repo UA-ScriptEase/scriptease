@@ -3,7 +3,6 @@ package scriptease.gui;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -25,13 +24,13 @@ import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.FileManager;
-import scriptease.controller.io.FileIO;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
 import scriptease.gui.action.file.CloseStoryModelAction;
 import scriptease.gui.action.file.NewStoryModelAction;
 import scriptease.gui.action.file.OpenRecentFileAction;
 import scriptease.gui.action.file.OpenStoryModelAction;
+import scriptease.gui.action.file.SaveLibraryModelAction;
 import scriptease.gui.action.file.SaveStoryModelAction;
 import scriptease.gui.action.file.SaveStoryModelExplicitlyAction;
 import scriptease.gui.action.file.TestStoryAction;
@@ -48,9 +47,7 @@ import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
-import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerator;
 import scriptease.translator.codegenerator.ScriptInfo;
@@ -89,9 +86,6 @@ public class MenuFactory {
 	private static final String TOOLS = Il8nResources.getString("Tools");
 	private static final String HELP = Il8nResources.getString("Help");
 	private static final String NEW = Il8nResources.getString("New");
-	private static final String SAVE = Il8nResources.getString("Save_Model");
-	private static final String NEW_CAUSE = "Cause";
-	private static final String NEW_EFFECT = Il8nResources.getString("DoIt");
 	private static final String NEW_DESCRIPTION = Il8nResources
 			.getString("KnowIt");
 	private static final String DEBUG = "Debug";
@@ -137,38 +131,9 @@ public class MenuFactory {
 		newCause = new JMenuItem(NewCauseAction.getInstance());
 		newEffect = new JMenuItem(NewEffectAction.getInstance());
 		newDescription = new JMenuItem(MenuFactory.NEW_DESCRIPTION);
-		save = new JMenuItem(MenuFactory.SAVE);
+		save = new JMenuItem(SaveLibraryModelAction.getInstance());
 		exit = new JMenuItem(MenuFactory.EXIT);
 
-		save.addActionListener(new ActionListener() {
-			//TODO Turn this into an action sometime.
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final Translator active;
-				final APIDictionary apiDictionary;
-				final File location;
-				
-				active = TranslatorManager.getInstance().getActiveTranslator();
-				apiDictionary = active.getApiDictionary();
-				location = active.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH
-						.toString());
-				
-				FileIO.getInstance().writeAPIDictionary(apiDictionary, location);
-			}
-			
-		});
-		/*
-		 * TODO Change "Create" menu to a "File" menu with the following structure:
-		 * 
-		 * File 
-		 * 	-> New
-		 * 		-> Cause
-		 * 		-> Effect
-		 * 		-> Description
-		 * -> Save
-		 * -> Close
-		 * 
-		 */
 		newMenu.add(newCause);
 		newMenu.add(newEffect);
 		newMenu.add(newDescription);

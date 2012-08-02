@@ -8,13 +8,13 @@ import java.util.List;
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.gui.managers.FormatFragmentSelectionManager;
 import scriptease.model.CodeBlock;
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
 import sun.awt.util.IdentityArrayList;
 
 /**
  * This class contains all of the methods that can insert FormatFragments into
- * code blocks using the story component editor. Subclasses should have an a
+ * code blocks using the story component editor.
  * 
  * @author kschenk
  * 
@@ -36,9 +36,9 @@ public abstract class AbstractInsertFragmentAction extends
 	 */
 	private void insertFragmentIntoContainerFragment(
 			final AbstractContainerFragment containerFragment) {
-		final ArrayList<Fragment> subFragments;
+		final ArrayList<AbstractFragment> subFragments;
 
-		subFragments = new ArrayList<Fragment>();
+		subFragments = new ArrayList<AbstractFragment>();
 
 		subFragments.addAll(containerFragment.getSubFragments());
 		subFragments.add(this.newFragment());
@@ -58,8 +58,8 @@ public abstract class AbstractInsertFragmentAction extends
 	 * @return
 	 */
 	private void insertFragmentAfterFragment(
-			final List<Fragment> topLevelFormatFragments,
-			final Fragment selectedFragment,
+			final List<AbstractFragment> topLevelFormatFragments,
+			final AbstractFragment selectedFragment,
 			final AbstractContainerFragment parentFragment) {
 
 		if (topLevelFormatFragments.contains(selectedFragment)) {
@@ -71,14 +71,14 @@ public abstract class AbstractInsertFragmentAction extends
 				parentFragment.setSubFragments(topLevelFormatFragments);
 
 		} else {
-			for (Fragment formatFragment : topLevelFormatFragments) {
+			for (AbstractFragment formatFragment : topLevelFormatFragments) {
 				if (formatFragment instanceof AbstractContainerFragment) {
-					final Collection<Fragment> subFragments;
-					final List<Fragment> subFragmentsList;
+					final Collection<AbstractFragment> subFragments;
+					final List<AbstractFragment> subFragmentsList;
 
 					subFragments = ((AbstractContainerFragment) formatFragment)
 							.getSubFragments();
-					subFragmentsList = new IdentityArrayList<Fragment>();
+					subFragmentsList = new IdentityArrayList<AbstractFragment>();
 
 					subFragmentsList.addAll(subFragments);
 
@@ -96,7 +96,7 @@ public abstract class AbstractInsertFragmentAction extends
 	 * @param fragments
 	 */
 	private void insertFragmentAtEnd(
-			final Collection<Fragment> fragments) {
+			final Collection<AbstractFragment> fragments) {
 		fragments.add(this.newFragment());
 	}
 
@@ -105,7 +105,7 @@ public abstract class AbstractInsertFragmentAction extends
 	 * 
 	 * @return
 	 */
-	protected abstract Fragment newFragment();
+	protected abstract AbstractFragment newFragment();
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -114,16 +114,14 @@ public abstract class AbstractInsertFragmentAction extends
 		codeBlock = FormatFragmentSelectionManager.getInstance().getCodeBlock();
 
 		if (codeBlock != null) {
-			final Fragment selectedFragment;
-			final Collection<Fragment> code;
-			final ArrayList<Fragment> fragments;
+			final AbstractFragment selectedFragment;
+			final IdentityArrayList<AbstractFragment> fragments;
 
 			selectedFragment = FormatFragmentSelectionManager.getInstance()
 					.getFormatFragment();
-			code = codeBlock.getCode();
-			fragments = new ArrayList<Fragment>();
+			fragments = new IdentityArrayList<AbstractFragment>();
 
-			fragments.addAll(code);
+			fragments.addAll(codeBlock.getCode());
 
 			if (selectedFragment != null) {
 				

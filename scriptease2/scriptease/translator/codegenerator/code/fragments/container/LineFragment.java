@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import scriptease.translator.codegenerator.code.contexts.Context;
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
  * This element represents a single line of code. LineFragment.resolve() calls
@@ -18,7 +18,7 @@ import scriptease.translator.codegenerator.code.fragments.Fragment;
 public class LineFragment extends AbstractContainerFragment {
 
 	// These are the fragments which are contained within this line.
-	private List<Fragment> subFragments;
+	private List<AbstractFragment> subFragments;
 
 	// This is a string because a new line is not necessarily expressable as a
 	// single character. This is the case, for example, with HTML, which uses
@@ -34,7 +34,7 @@ public class LineFragment extends AbstractContainerFragment {
 	public LineFragment(String nlChar) {
 		super("");
 		this.newLineChar = nlChar;
-		this.subFragments = new ArrayList<Fragment>();
+		this.subFragments = new ArrayList<AbstractFragment>();
 	}
 	
 	/**
@@ -45,19 +45,19 @@ public class LineFragment extends AbstractContainerFragment {
 	 * @param fragments
 	 *            the child fragments
 	 */
-	public LineFragment(String nlChar, List<Fragment> fragments) {
+	public LineFragment(String nlChar, List<AbstractFragment> fragments) {
 		super("");
 		this.newLineChar = nlChar;
-		this.subFragments = new ArrayList<Fragment>(fragments);
+		this.subFragments = new ArrayList<AbstractFragment>(fragments);
 	}
 	
 	@Override
-	public void setSubFragments(List<Fragment> subFragments) {
+	public void setSubFragments(List<AbstractFragment> subFragments) {
 		this.subFragments = subFragments;
 	}
 
 	@Override
-	public Collection<Fragment> getSubFragments() {
+	public Collection<AbstractFragment> getSubFragments() {
 		return this.subFragments;
 	}
 
@@ -72,7 +72,7 @@ public class LineFragment extends AbstractContainerFragment {
 	public String resolve(Context context) {
 		super.resolve(context);
 		String generated = context.getIndent();
-		for (Fragment fragment : this.subFragments) {
+		for (AbstractFragment fragment : this.subFragments) {
 			generated += fragment.resolve(context);
 		}
 		return generated + this.newLineChar;

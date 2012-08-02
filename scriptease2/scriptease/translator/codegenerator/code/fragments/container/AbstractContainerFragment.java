@@ -3,7 +3,7 @@ package scriptease.translator.codegenerator.code.fragments.container;
 import java.util.Collection;
 import java.util.List;
 
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
  * An abstract class for fragments that can contain sub fragments.
@@ -11,7 +11,7 @@ import scriptease.translator.codegenerator.code.fragments.Fragment;
  * @author kschenk
  *
  */
-public abstract class AbstractContainerFragment extends Fragment{
+public abstract class AbstractContainerFragment extends AbstractFragment{
 
 	public AbstractContainerFragment(String text) {
 		super(text);
@@ -20,11 +20,11 @@ public abstract class AbstractContainerFragment extends Fragment{
 	/**
 	 * Sets the subfragments in the container fragment.
 	 */
-	public abstract void setSubFragments(List<Fragment> subFragments);
+	public abstract void setSubFragments(List<AbstractFragment> subFragments);
 
 	/**
 	 * Returns the subfragments in the container fragment.
 	 */
-	public abstract Collection<Fragment> getSubFragments();
+	public abstract Collection<AbstractFragment> getSubFragments();
 
 }
