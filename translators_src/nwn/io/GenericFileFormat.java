@@ -35,7 +35,7 @@ public class GenericFileFormat {
 	private static final String TYPE_PLACEABLE_BP = "UTP";
 	private static final String TYPE_ITEM_BP = "UTI";
 	private static final String TYPE_DOOR_BP = "UTD";
-	public static final String TYPE_DIALOGUE_BP = "DLG";
+	private static final String TYPE_DIALOGUE_BP = "DLG";
 	private static final String TYPE_JOURNAL_BP = "JRL";
 	private static final String TYPE_MODULE_BP = "IFO";
 	private static final String TYPE_GAME_INSTANCE_FILE = "GIT";
@@ -107,7 +107,7 @@ public class GenericFileFormat {
 		labelOffset = reader.readUnsignedInt(true);
 		labelCount = reader.readUnsignedInt(true);
 		fieldDataOffset = reader.readUnsignedInt(true);
-		/* fieldDataCount = */reader.readUnsignedInt(true);
+		reader.skipBytes(4); // fieldDataCount, which we don't use
 		fieldIndicesOffset = reader.readUnsignedInt(true);
 		fieldIndicesCount = reader.readUnsignedInt(true);
 		listIndicesOffset = reader.readUnsignedInt(true);
@@ -125,9 +125,10 @@ public class GenericFileFormat {
 			throw new IOException(
 					"NWN GFF: Cannot read a GFF whose version is not V3.2.");
 
+		// need to read labels first to make debugging easier
+		this.readLabels(reader, labelOffset, labelCount);
 		this.readStructs(reader, structOffset, structCount, fieldIndicesOffset);
 		this.readFields(reader, fieldOffset, fieldCount, fieldDataOffset);
-		this.readLabels(reader, labelOffset, labelCount);
 		this.readFieldIndices(reader, fieldIndicesOffset, fieldIndicesCount);
 		this.readListIndices(reader, listIndicesOffset, listIndicesCount);
 	}
@@ -356,7 +357,7 @@ public class GenericFileFormat {
 	 * 
 	 * @return a GameType representing the NWN type.
 	 */
-	protected String getScriptEaseType() {
+	private String getScriptEaseType() {
 		String type = null;
 		final String typeString = this.fileType.trim();
 		if (typeString.equalsIgnoreCase(GenericFileFormat.TYPE_CREATURE_BP)) {
@@ -395,7 +396,7 @@ public class GenericFileFormat {
 		if (type == null) {
 			System.err
 					.println("NWN GFF: Could not convert NWN type \""
-							+ type
+							+ typeString
 							+ "\" to ScriptEase type. Defaulting type to first available");
 			type = GameTypeManager.DEFAULT_VOID_TYPE;
 		}
@@ -459,19 +460,19 @@ public class GenericFileFormat {
 	private final void readFields(ScriptEaseFileAccess reader,
 			long fieldOffset, long fieldCount, long fieldDataOffset)
 			throws IOException {
-		reader.seek(this.filePosition + fieldOffset);
-
 		for (int i = 0; i < (int) fieldCount; i++) {
-			this.fieldArray.add(new GffField(reader, i, fieldDataOffset));
+			reader.seek(this.filePosition + fieldOffset
+					+ (i * GffField.BYTE_LENGTH));
+			this.fieldArray.add(new GffField(reader, fieldDataOffset));
 		}
 	}
 
 	private final void readStructs(ScriptEaseFileAccess reader,
 			long structOffset, long structCount, long fieldIndicesOffset)
 			throws IOException {
-		reader.seek(this.filePosition + structOffset);
-
 		for (long i = 0; i < structCount; i++) {
+			reader.seek(this.filePosition + structOffset
+					+ (i * GffStruct.BYTE_LENGTH));
 			this.structArray.add(new GffStruct(reader, fieldIndicesOffset));
 		}
 	}
@@ -487,30 +488,49 @@ public class GenericFileFormat {
 	}
 
 	private final void readFieldIndices(ScriptEaseFileAccess reader,
-			long fieldIndicesOffset, long fieldIndicesCount) throws IOException {
+			long fieldIndicesOffset, long fieldIndicesSize) throws IOException {
 		reader.seek(this.filePosition + fieldIndicesOffset);
 
-		for (long i = 0; i < fieldIndicesCount; i++) {
+		int bytesRead = 0;
+		while (bytesRead < fieldIndicesSize) {
 			this.fieldIndicesArray.add(reader.readUnsignedInt(true));
+			bytesRead += 4;
 		}
 	}
 
 	private final void readListIndices(ScriptEaseFileAccess reader,
-			long listIndicesOffset, long listIndicesCount) throws IOException {
+			long listIndicesOffset, long listIndicesSize) throws IOException {
 		reader.seek(this.filePosition + listIndicesOffset);
 
 		// for each list, load the elements of that list
-		for (long i = 0; i < listIndicesCount; i++) {
-			long numElements = reader.readUnsignedInt(true);
-			List<Long> indexList = new ArrayList<Long>((int) numElements);
+		long bytesRead = 0;
+		while (bytesRead < listIndicesSize) {
+			final long numElements = reader.readUnsignedInt(true);
+			final List<Long> indexList = new ArrayList<Long>((int) numElements);
+
+			bytesRead += 4;
 
 			for (long j = 0; j < numElements; j++) {
 				indexList.add(reader.readUnsignedInt(true));
+				bytesRead += 4;
 			}
 
 			// ... and add that list like a boss.
 			this.listIndicesArray.add(indexList);
 		}
+	}
+
+	protected void setField(GffField field, String newData) {
+		if (field == null)
+			throw new NullPointerException(
+					"Null GffField given when setting field value.");
+
+		field.setData(newData);
+	}
+
+	protected void setField(String fieldLabel, String newData) {
+		GffField field = this.findFieldForLabel(fieldLabel);
+		this.setField(field, newData);
 	}
 
 	@Override
@@ -774,10 +794,11 @@ public class GenericFileFormat {
 	 * 
 	 */
 	protected class GffStruct {
+		public static final long BYTE_LENGTH = 12;
+
 		private final long typeNumber;
 		private final long dataOrDataOffset;
 		private final long fieldCount;
-		private final List<GffField> fields;
 
 		/**
 		 * Builds a new GFF struct that is read from the given reader, and whose
@@ -795,8 +816,6 @@ public class GenericFileFormat {
 			this.typeNumber = reader.readUnsignedInt(true);
 			this.dataOrDataOffset = reader.readUnsignedInt(true);
 			this.fieldCount = reader.readUnsignedInt(true);
-
-			this.fields = this.readGffFields(reader, fieldIndicesOffset);
 		}
 
 		/**
@@ -819,17 +838,11 @@ public class GenericFileFormat {
 		}
 
 		/**
-		 * Reads the fields from the given GffStruct and returns them in a List.
+		 * Gets the fields that this struct logically contains.
 		 * 
-		 * @param reader
-		 * @param fieldIndicesOffset
-		 *            The offset to the Field Indices Array where struct fields
-		 *            are stored.
-		 * @return
-		 * @throws IOException
+		 * @return this struct's fields.
 		 */
-		private List<GffField> readGffFields(ScriptEaseFileAccess reader,
-				long fieldIndicesOffset) throws IOException {
+		protected List<GffField> getGffFields() {
 			final int fieldCount = (int) this.fieldCount;
 			final int dataOrDataOffset = (int) this.dataOrDataOffset;
 			final List<GffField> fields = new ArrayList<GffField>(fieldCount);
@@ -849,30 +862,19 @@ public class GenericFileFormat {
 			 * these DWORDs is an index into the Field Array.
 			 */
 			else {
-				reader.seek(filePosition + fieldIndicesOffset
-						+ dataOrDataOffset);
-
-				List<Long> indices = new ArrayList<Long>(fieldCount);
+				// div 4 because each index is DWORD (4 bytes)
+				final long fieldIndicesStart = dataOrDataOffset / 4;
+				long index;
 				for (long i = 0; i < fieldCount; i++) {
-					long index = reader.readUnsignedInt(true);
-					indices.add(index);
-				}
+					// get the index from the Field Indices
+					index = fieldIndicesArray
+							.get((int) (fieldIndicesStart + i));
 
-				for (long index : indices) {
-					final GffField field = fieldArray.get((int) index);
-					fields.add(field);
+					// resolve the index to an actual field.
+					fields.add(fieldArray.get((int) index));
 				}
 			}
 			return fields;
-		}
-
-		/**
-		 * Gets the fields from this struct.
-		 * 
-		 * @return this struct's fields.
-		 */
-		protected List<GffField> getGffFields() {
-			return new ArrayList<GffField>(this.fields);
 		}
 
 		/**
@@ -929,22 +931,25 @@ public class GenericFileFormat {
 	 * 
 	 */
 	protected class GffField {
+		public static final int BYTE_LENGTH = 12;
+
 		private static final int MAX_RESREF_LENGTH = 16;
-		private static final int TYPE_NUM_CEXOLOCSTRING = 12;
-		private static final int TYPE_NUM_RESREF = 11;
-		private static final int TYPE_NUM_CEXOSTRING = 10;
-		private static final int TYPE_NUM_DOUBLE = 9;
-		private static final int TYPE_NUM_INT64 = 7;
+
+		private static final int TYPE_NUM_INT = 5;
 		private static final int TYPE_NUM_DWORD64 = 6;
+		private static final int TYPE_NUM_INT64 = 7;
+		private static final int TYPE_NUM_FLOAT = 8;
+		private static final int TYPE_NUM_DOUBLE = 9;
+		private static final int TYPE_NUM_CEXOSTRING = 10;
+		private static final int TYPE_NUM_RESREF = 11;
+		private static final int TYPE_NUM_CEXOLOCSTRING = 12;
+		private static final int TYPE_NUM_VOID = 13;
 		private static final int TYPE_NUM_STRUCT = 14;
 		private static final int TYPE_NUM_LIST = 15;
+
 		private final long typeNumber;
 		private final long labelIndex;
 		private long dataOrDataOffset; // this can increase if its an offset
-
-		// this isn't part of the original struct. Added so that field knows
-		// where it lives within the Field Array. - remiller
-		private long fieldIndex;
 
 		// Field data variables that store the field's data for "complex types"
 		// (see isComplex() for more)
@@ -952,15 +957,15 @@ public class GenericFileFormat {
 		private double fieldDataDouble;
 		private long fieldDataDWord64;
 		private long fieldDataInt64;
+		private byte[] fieldDataBytes;
 
 		// end field data variables
 
-		private GffField(ScriptEaseFileAccess reader, long index,
-				long fieldDataOffset) throws IOException {
+		private GffField(ScriptEaseFileAccess reader, long fieldDataOffset)
+				throws IOException {
 			this.typeNumber = reader.readUnsignedInt(true);
 			this.labelIndex = reader.readUnsignedInt(true);
 			this.dataOrDataOffset = reader.readUnsignedInt(true);
-			this.fieldIndex = index;
 
 			this.readData(reader, fieldDataOffset);
 		}
@@ -1002,35 +1007,6 @@ public class GenericFileFormat {
 		 */
 		protected long getDataOrDataOffset() {
 			return dataOrDataOffset;
-		}
-
-		/**
-		 * Sets the DataOrDataOffset to the passed long.
-		 * 
-		 * @param offset
-		 */
-		protected void setDataOrDataOffset(long offset) {
-			this.dataOrDataOffset = offset;
-		}
-
-		/**
-		 * Sums the data offset with the given delta.
-		 * 
-		 * @param delta
-		 */
-		protected void increaseOffset(int delta) {
-			this.dataOrDataOffset += delta;
-		}
-
-		/**
-		 * Gets the offset of this field within the Field Array.
-		 * 
-		 * @return the offset of this field within the Field Array.
-		 */
-		protected long getFieldOffset() {
-			// 4 * 3 is for the three unsigned int (4-byte) data members
-			int size = (4 * 3);
-			return this.fieldIndex * size;
 		}
 
 		/**
@@ -1103,6 +1079,17 @@ public class GenericFileFormat {
 		}
 
 		/**
+		 * Gets this field's label as stored in the label arrays indexed by
+		 * {@link #getLabelIndex()}.
+		 * 
+		 * @return the field's label.
+		 */
+		protected String getLabel() {
+			return GenericFileFormat.this.labelArray.get((int) this
+					.getLabelIndex());
+		}
+
+		/**
 		 * Reads and stores the data of this field.
 		 * 
 		 * @param reader
@@ -1110,9 +1097,10 @@ public class GenericFileFormat {
 		 * @throws IOException
 		 *             if everything goes to hell.
 		 */
-		protected void readData(ScriptEaseFileAccess reader,
-				long fieldDataOffset) throws IOException {
-			if (!this.isComplexType()) {
+		private void readData(ScriptEaseFileAccess reader, long fieldDataOffset)
+				throws IOException {
+			if (!this.isComplexType() || this.isStructType()
+					|| this.isListType()) {
 				// if simple type, we already have the data in dataOrDataOffset
 				// if list or struct, data is loaded into the structArray or
 				// listIndicesArray
@@ -1168,12 +1156,19 @@ public class GenericFileFormat {
 					}
 				}
 				break;
+			case GffField.TYPE_NUM_VOID:
+				// voids are arbitrary binary data. hopefully that doesn't cause
+				// us nightmares
+				long numBytes = reader.readUnsignedInt(true);
+				this.fieldDataBytes = reader.readBytes((int) numBytes);
+				break;
 			default:
 				// This should never happen, unless we missed a type or we
 				// somehow hit a snag while reading unsigned ints and
 				// casting them?
 				throw new IllegalStateException(
-						"I don't know what type this is: " + this.getType());
+						"I don't know what type this is: " + this.getType()
+								+ " for field " + this.getLabel());
 			}
 		}
 
@@ -1204,6 +1199,8 @@ public class GenericFileFormat {
 				case GffField.TYPE_NUM_RESREF:
 				case GffField.TYPE_NUM_CEXOLOCSTRING:
 					this.fieldDataString = value;
+				case GffField.TYPE_NUM_VOID:
+					this.fieldDataBytes = value.getBytes();
 				default:
 					// This should never happen, unless we missed a type or we
 					// somehow hit a snag while reading unsigned ints and
@@ -1243,6 +1240,8 @@ public class GenericFileFormat {
 				case GffField.TYPE_NUM_RESREF:
 				case GffField.TYPE_NUM_CEXOLOCSTRING:
 					return this.fieldDataString;
+				case GffField.TYPE_NUM_VOID:
+					return new String(this.fieldDataBytes);
 				default:
 					// This should never happen, unless we missed a type or we
 					// somehow hit a snag while reading unsigned ints and
@@ -1347,7 +1346,8 @@ public class GenericFileFormat {
 		protected boolean isComplexType() {
 			long type = this.getType();
 
-			return (type > 5) && (type != 8);
+			return (type > GffField.TYPE_NUM_INT)
+					&& (type != GffField.TYPE_NUM_FLOAT);
 		}
 
 		/**
@@ -1376,30 +1376,6 @@ public class GenericFileFormat {
 
 			return (type == GffField.TYPE_NUM_LIST);
 		}
-
-		/**
-		 * Gets this field's label as stored in the label arrays indexed by
-		 * {@link #getLabelIndex()}.
-		 * 
-		 * @return the field's label.
-		 */
-		protected String getLabel() {
-			return GenericFileFormat.this.labelArray.get((int) this
-					.getLabelIndex());
-		}
-	}
-
-	protected void setField(GffField field, String newData) {
-		if (field == null)
-			throw new NullPointerException(
-					"Null GffField given when setting field value.");
-
-		field.setData(newData);
-	}
-
-	protected void setField(String fieldLabel, String newData) {
-		GffField field = this.findFieldForLabel(fieldLabel);
-		this.setField(field, newData);
 	}
 
 	/**
@@ -1409,18 +1385,6 @@ public class GenericFileFormat {
 	 */
 	protected long getByteLength() {
 		return this.fileSize;
-	}
-
-	/**
-	 * Calculates the size in bytes of an List Indices Array list.
-	 * 
-	 * @param list
-	 * @return
-	 */
-	private static int calculateListByteSize(List<Long> list) {
-		// size+1 because they store the size as a DWORD before the
-		// elements, * 4 because DWORDs are 4 bytes each
-		return (list.size() + 1) * 4;
 	}
 
 	protected void removeScriptEaseReferences() {
@@ -1609,5 +1573,17 @@ public class GenericFileFormat {
 		String fileType = this.getFileType().trim();
 		return fileType
 				.equalsIgnoreCase(GenericFileFormat.TYPE_GAME_INSTANCE_FILE);
+	}
+
+	/**
+	 * Calculates the size in bytes of an List Indices Array list.
+	 * 
+	 * @param list
+	 * @return
+	 */
+	private static int calculateListByteSize(List<Long> list) {
+		// size+1 because they store the size as a DWORD before the
+		// elements, * 4 because DWORDs are 4 bytes each
+		return (list.size() + 1) * 4;
 	}
 }
