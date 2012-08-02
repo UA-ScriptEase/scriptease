@@ -752,6 +752,9 @@ public final class ErfFile implements GameModule {
 			// go to the data location and plop it there.
 			this.fileAccess.seek(offsetToResourceData + resourceOffset);
 			resource.write(this.fileAccess);
+			
+			// need to get resource size after it's been written, otherwise
+			// it'll get the old size.
 			resourceOffset += resource.getResourceSize();
 		}
 	}
@@ -843,7 +846,7 @@ public final class ErfFile implements GameModule {
 
 			if (this.key.isGFF()) {
 				this.gff = new GenericFileFormat(this.key.getResRef(),
-						ErfFile.this.fileAccess, entry.offsetToResource);
+						ErfFile.this.fileAccess, entry.getOffsetToResource());
 			} else {
 				this.gff = null;
 				reader.seek(this.resourceListEntry.getOffsetToResource());
@@ -1019,7 +1022,10 @@ public final class ErfFile implements GameModule {
 		}
 
 		public int getResourceSize() {
-			return this.resourceListEntry.getResourceSize();
+			if (this.isGFF())
+				return (int) this.getGFF().getByteLength();
+			else
+				return this.resourceListEntry.getResourceSize();
 		}
 
 		@Override
@@ -1028,13 +1034,6 @@ public final class ErfFile implements GameModule {
 					+ this.getResType() + ", Offset;size: "
 					+ this.getOffsetToResource() + ";" + this.getResourceSize()
 					+ "]";
-		}
-
-		public void updateSize() {
-			// only GFFs can be changed by scriptease, so only update those.
-			if (this.isGFF())
-				this.resourceListEntry.setResourceSize((int) this.getGFF()
-						.getByteLength());
 		}
 	}
 
@@ -1052,7 +1051,7 @@ public final class ErfFile implements GameModule {
 		/**
 		 * The size of any ErfKey in bytes
 		 */
-		public static final short BYTE_LENGTH = 24;
+		public static final short BYTE_LENGTH = 32;
 		// These types come from the Key/BIF documentation, table 1.3.1
 		public static final short SCRIPT_COMPILED_TYPE = 2010;
 		public static final short SCRIPT_SOURCE_TYPE = 2009;
@@ -1327,15 +1326,6 @@ public final class ErfFile implements GameModule {
 		 */
 		public void setOffsetToResource(int offset) {
 			this.offsetToResource = offset;
-		}
-
-		/**
-		 * Updates the size of the resource.
-		 * 
-		 * @param newSize
-		 */
-		protected void setResourceSize(int newSize) {
-			this.resourceSize = newSize;
 		}
 
 		/**
