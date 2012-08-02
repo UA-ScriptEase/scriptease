@@ -6,7 +6,7 @@ import java.util.List;
 
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.contexts.Context;
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
  * This fragment wraps LineFragments which need to be presented at the same
@@ -17,14 +17,14 @@ import scriptease.translator.codegenerator.code.fragments.Fragment;
  * @author jason
  * 
  */
-public class IndentedFragment extends AbstractContainerFragment {
+public class IndentFragment extends AbstractContainerFragment {
 
 	// The list of FormatFragment contained herein.
-	private List<Fragment> subFragments = new ArrayList<Fragment>();
+	private List<AbstractFragment> subFragments = new ArrayList<AbstractFragment>();
 
-	public IndentedFragment() {
+	public IndentFragment() {
 		super("");
-		this.subFragments = new ArrayList<Fragment>();
+		this.subFragments = new ArrayList<AbstractFragment>();
 	}
 
 	/**
@@ -33,18 +33,18 @@ public class IndentedFragment extends AbstractContainerFragment {
 	 * 
 	 * @param indentChar
 	 */
-	public IndentedFragment(List<Fragment> subFragments) {
+	public IndentFragment(List<AbstractFragment> subFragments) {
 		super("");
-		this.subFragments = new ArrayList<Fragment>(subFragments);
+		this.subFragments = new ArrayList<AbstractFragment>(subFragments);
 	}
 
 	@Override
-	public Collection<Fragment> getSubFragments() {
+	public Collection<AbstractFragment> getSubFragments() {
 		return this.subFragments;
 	}
 
 	@Override
-	public void setSubFragments(List<Fragment> subFragments) {
+	public void setSubFragments(List<AbstractFragment> subFragments) {
 		this.subFragments = subFragments;
 	}
 
@@ -64,7 +64,7 @@ public class IndentedFragment extends AbstractContainerFragment {
 				.getLanguageDictionary().getIndent();
 		context.increaseIndent(indent);
 
-		for (Fragment fragment : this.subFragments) {
+		for (AbstractFragment fragment : this.subFragments) {
 			generated += fragment.resolve(context);
 		}
 
@@ -80,7 +80,7 @@ public class IndentedFragment extends AbstractContainerFragment {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof IndentedFragment) {
+		if (obj instanceof IndentFragment) {
 			return this.hashCode() == obj.hashCode();
 		}
 		return false;

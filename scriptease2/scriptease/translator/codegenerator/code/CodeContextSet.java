@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
  * Stores intermediary Code Generation data. There are three code segments that
@@ -20,9 +20,9 @@ import scriptease.translator.codegenerator.code.fragments.Fragment;
  * @author remiller
  */
 public class CodeContextSet {
-	private final List<Fragment> declaration;
-	private final List<Fragment> definition;
-	private final List<Fragment> call;
+	private final List<AbstractFragment> declaration;
+	private final List<AbstractFragment> definition;
+	private final List<AbstractFragment> call;
 
 	/**
 	 * Creates a new instance that has no declaration, definition, or call.
@@ -43,12 +43,12 @@ public class CodeContextSet {
 	 *            The collection of fragments that define how the code concept
 	 *            gets used
 	 */
-	public CodeContextSet(Collection<Fragment> declaration,
-			Collection<Fragment> definition,
-			Collection<Fragment> call) {
-		this.declaration = new ArrayList<Fragment>();
-		this.definition = new ArrayList<Fragment>();
-		this.call = new ArrayList<Fragment>();
+	public CodeContextSet(Collection<AbstractFragment> declaration,
+			Collection<AbstractFragment> definition,
+			Collection<AbstractFragment> call) {
+		this.declaration = new ArrayList<AbstractFragment>();
+		this.definition = new ArrayList<AbstractFragment>();
+		this.call = new ArrayList<AbstractFragment>();
 
 		if (declaration != null)
 			this.declaration.addAll(declaration);
@@ -74,7 +74,7 @@ public class CodeContextSet {
 	 * @param addedCode
 	 *            the collection of fragments to add.
 	 */
-	public void appendToDeclaration(Collection<Fragment> addedCode) {
+	public void appendToDeclaration(Collection<AbstractFragment> addedCode) {
 		this.declaration.addAll(addedCode);
 	}
 
@@ -83,7 +83,7 @@ public class CodeContextSet {
 	 * 
 	 * @param addedCode
 	 */
-	public void appendToDefinition(Collection<Fragment> addedCode) {
+	public void appendToDefinition(Collection<AbstractFragment> addedCode) {
 		this.definition.addAll(addedCode);
 	}
 
@@ -92,7 +92,7 @@ public class CodeContextSet {
 	 * 
 	 * @param addedCode
 	 */
-	public void appendToCall(Collection<Fragment> addedCode) {
+	public void appendToCall(Collection<AbstractFragment> addedCode) {
 		this.call.addAll(addedCode);
 	}
 
@@ -101,8 +101,8 @@ public class CodeContextSet {
 	 * 
 	 * @return the declaration
 	 */
-	public List<Fragment> getDeclaration() {
-		return new ArrayList<Fragment>(this.declaration);
+	public List<AbstractFragment> getDeclaration() {
+		return new ArrayList<AbstractFragment>(this.declaration);
 	}
 
 	/**
@@ -110,8 +110,8 @@ public class CodeContextSet {
 	 * 
 	 * @return the definition
 	 */
-	public List<Fragment> getDefinition() {
-		return new ArrayList<Fragment>(this.definition);
+	public List<AbstractFragment> getDefinition() {
+		return new ArrayList<AbstractFragment>(this.definition);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class CodeContextSet {
 	 * 
 	 * @return the call
 	 */
-	public List<Fragment> getCall() {
-		return new ArrayList<Fragment>(this.call);
+	public List<AbstractFragment> getCall() {
+		return new ArrayList<AbstractFragment>(this.call);
 	}
 }

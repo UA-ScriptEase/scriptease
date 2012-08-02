@@ -9,7 +9,7 @@ import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.converters.Converter;
@@ -52,7 +52,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 		final Collection<String> types = block.getTypes();
 		final Collection<KnowIt> parameters = block.getParameters();
 		final Collection<String> includes = block.getIncludes();
-		final Collection<Fragment> code = block.getCode();
+		final Collection<AbstractFragment> code = block.getCode();
 
 		// make sure Very Bad Things aren't happening.
 		if (FileIO.getInstance().getMode() != FileIO.IoMode.API_DICTIONARY)
@@ -123,7 +123,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 		int id = -1;
 		final Collection<String> includes;
 		final Collection<KnowIt> parameters;
-		final Collection<Fragment> code;
+		final Collection<AbstractFragment> code;
 		final Collection<String> types;
 
 		if (FileIO.getInstance().getMode() != FileIO.IoMode.API_DICTIONARY)
@@ -132,7 +132,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 
 		includes = new ArrayList<String>();
 		parameters = new ArrayList<KnowIt>();
-		code = new ArrayList<Fragment>();
+		code = new ArrayList<AbstractFragment>();
 		types = new ArrayList<String>();
 
 		while (reader.hasMoreChildren()) {
@@ -185,7 +185,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 			 * in the translator only.
 			 */
 			else if (nodeName.equals(TAG_CODE)) {
-				code.addAll(((Collection<Fragment>) context
+				code.addAll(((Collection<AbstractFragment>) context
 						.convertAnother(block, ArrayList.class)));
 			}
 

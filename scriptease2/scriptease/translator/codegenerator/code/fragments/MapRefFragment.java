@@ -13,7 +13,7 @@ import scriptease.translator.codegenerator.code.contexts.Context;
  * @author mfchurch
  * 
  */
-public class MapRefFragment extends Fragment {
+public class MapRefFragment extends AbstractFragment {
 	private String ref = "";
 
 	public MapRefFragment(String data, String ref) {

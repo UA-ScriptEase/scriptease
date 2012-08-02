@@ -1,10 +1,9 @@
 package scriptease.translator.codegenerator.code.fragments;
 
 import java.util.Collection;
-import java.util.List;
 
 import scriptease.translator.codegenerator.code.contexts.Context;
-import scriptease.translator.codegenerator.code.fragments.series.SeriesFragment;
+import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
 
 /**
  * Special code generation token that abstractly represents a piece of the code
@@ -28,7 +27,7 @@ import scriptease.translator.codegenerator.code.fragments.series.SeriesFragment;
  * 
  * @author remiller
  */
-public abstract class Fragment {
+public abstract class AbstractFragment {
 	private String directive;
 	private Context context;
 
@@ -39,7 +38,7 @@ public abstract class Fragment {
 	 *            The specific directive text to be used in
 	 *            {@link #resolve(CodeGenerationContext)}.
 	 */
-	public Fragment(String text) {
+	public AbstractFragment(String text) {
 		this.directive = text;
 	}
 
@@ -84,11 +83,11 @@ public abstract class Fragment {
 	 * @return the code as resolved by resolving the format tokens in the
 	 *         context.
 	 */
-	public static String resolveFormat(Collection<Fragment> format,
+	public static String resolveFormat(Collection<AbstractFragment> format,
 			Context context) {
 		StringBuilder code = new StringBuilder();
 
-		for (Fragment token : format) {
+		for (AbstractFragment token : format) {
 			// This is where it gets set to "PlayerCharacter".
 			code.append(token.resolve(context));
 		}
@@ -102,7 +101,7 @@ public abstract class Fragment {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Fragment) {
+		if (other instanceof AbstractFragment) {
 			return this.hashCode() == other.hashCode();
 		}
 		return false;

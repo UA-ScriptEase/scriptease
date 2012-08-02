@@ -3,7 +3,7 @@ package scriptease.controller.io.converter.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.LineFragment;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -27,12 +27,12 @@ public class LineFragmentConverter implements Converter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final List<Fragment> subFragments = new ArrayList<Fragment>();
+		final List<AbstractFragment> subFragments = new ArrayList<AbstractFragment>();
 		LineFragment line = null;
 
 		// Read Sub Fragments
 		if (reader.hasMoreChildren()) {
-			subFragments.addAll((List<Fragment>) context.convertAnother(
+			subFragments.addAll((List<AbstractFragment>) context.convertAnother(
 					line, ArrayList.class));
 		}
 

@@ -12,7 +12,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
  * A CodeBlock represents a block of code which is generated in script,
@@ -140,7 +140,7 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * @param code
 	 *            The new code.
 	 */
-	public abstract void setCode(Collection<Fragment> code);
+	public abstract void setCode(Collection<AbstractFragment> code);
 
 	/**
 	 * CodeBlocks can only be owned by ScriptIts
@@ -318,7 +318,7 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * 
 	 * @return the code block's code.
 	 */
-	public abstract Collection<Fragment> getCode();
+	public abstract Collection<AbstractFragment> getCode();
 
 	/**
 	 * Gets the base ID for this CodeBlock. The Base ID is the ID of the source

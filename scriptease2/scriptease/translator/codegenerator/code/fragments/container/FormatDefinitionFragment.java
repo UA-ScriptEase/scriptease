@@ -1,8 +1,10 @@
-package scriptease.translator.codegenerator.code.fragments;
+package scriptease.translator.codegenerator.code.fragments.container;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
  * FormatFragment used to store a format in the Language Dictionary.
@@ -10,17 +12,22 @@ import java.util.List;
  * @author mfchurch
  * 
  */
-public class FormatDefinitionFragment extends Fragment {
+public class FormatDefinitionFragment extends AbstractContainerFragment {
 
 	// The list of FormatFragment contained herein.
-	private List<Fragment> subFragments = new ArrayList<Fragment>();
+	private List<AbstractFragment> subFragments = new ArrayList<AbstractFragment>();
 
-	public FormatDefinitionFragment(String text, List<Fragment> children) {
+	public FormatDefinitionFragment(String text, List<AbstractFragment> children) {
 		super(text);
-		this.subFragments = new ArrayList<Fragment>(children);
+		this.subFragments = new ArrayList<AbstractFragment>(children);
 	}
 
-	public Collection<Fragment> getSubFragments() {
+	@Override
+	public void setSubFragments(List<AbstractFragment> subFragments) {
+		this.subFragments = subFragments;
+	}
+	
+	public Collection<AbstractFragment> getSubFragments() {
 		return this.subFragments;
 	}
 

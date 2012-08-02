@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 
 /**
@@ -29,7 +29,7 @@ public final class InsertReferenceAction extends AbstractInsertFragmentAction {
 	private InsertReferenceAction() {
 		super(InsertReferenceAction.INSERT_REFERENCE_TEXT);
 		this.putValue(Action.ACCELERATOR_KEY,
-				KeyStroke.getKeyStroke(KeyEvent.VK_6, ActionEvent.CTRL_MASK));
+				KeyStroke.getKeyStroke(KeyEvent.VK_7, ActionEvent.CTRL_MASK));
 	}
 
 	/**
@@ -42,7 +42,7 @@ public final class InsertReferenceAction extends AbstractInsertFragmentAction {
 	}
 
 	@Override
-	protected Fragment newFragment() {
+	protected AbstractFragment newFragment() {
 		return new FormatReferenceFragment("");
 	}
 }

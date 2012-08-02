@@ -3,11 +3,9 @@ package scriptease.controller.io.converter.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import scriptease.translator.codegenerator.code.fragments.Fragment;
-import scriptease.translator.codegenerator.code.fragments.series.AbstractSeriesFragment;
-import scriptease.translator.codegenerator.code.fragments.series.SeriesFilter.FilterBy;
-import scriptease.translator.codegenerator.code.fragments.series.SeriesFragment;
-import scriptease.translator.codegenerator.code.fragments.series.UniqueSeriesFragment;
+import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.SeriesFilterType;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -25,22 +23,23 @@ public class SeriesFragmentConverter implements Converter {
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
-		final AbstractSeriesFragment series = (AbstractSeriesFragment) source;
+		final SeriesFragment series = (SeriesFragment) source;
 
 		// Data Tag
 		writer.addAttribute(DATA_TAG, series.getDirectiveText());
 
 		// Unique Tag
-		if (series.isUnique)
+		if (series.isUnique())
 			writer.addAttribute(UNIQUE_TAG, "true");
 
 		// FilterBy Tag
-		String filterType = series.getFilter().getType().toString();
-		if (filterType != null && !filterType.equals(FilterBy.NONE.toString()))
+		String filterType = series.getSeriesFilter().getType().toString();
+		if (filterType != null
+				&& !filterType.equals(SeriesFilterType.NONE.toString()))
 			writer.addAttribute(FILTER_BY_TAG, filterType);
 
 		// Filter Tag
-		String filterValue = series.getFilter().getValue();
+		String filterValue = series.getSeriesFilter().getValue();
 		if (filterValue != null && !filterValue.isEmpty())
 			writer.addAttribute(FILTER_TAG, filterValue);
 
@@ -60,11 +59,11 @@ public class SeriesFragmentConverter implements Converter {
 			UnmarshallingContext context) {
 		final String data;
 		String uniqueString;
-		String filterBy;
+		String filterTypeString;
 		String filter;
-		List<Fragment> subFragments = new ArrayList<Fragment>();
+		List<AbstractFragment> subFragments = new ArrayList<AbstractFragment>();
 		String separator = null;
-		AbstractSeriesFragment series = null;
+		SeriesFragment series = null;
 
 		// Data Tag
 		data = reader.getAttribute(DATA_TAG);
@@ -73,9 +72,9 @@ public class SeriesFragmentConverter implements Converter {
 		// FilterBy Tag
 		if (uniqueString == null)
 			uniqueString = "false";
-		filterBy = reader.getAttribute(FILTER_BY_TAG);
-		if (filterBy == null)
-			filterBy = "";
+		filterTypeString = reader.getAttribute(FILTER_BY_TAG);
+		if (filterTypeString == null)
+			filterTypeString = "";
 		// Filter Tag
 		filter = reader.getAttribute(FILTER_TAG);
 		if (filter == null)
@@ -88,8 +87,8 @@ public class SeriesFragmentConverter implements Converter {
 		// Separator Tag
 		if (reader.hasMoreChildren()) {
 			// Read Sub Fragments
-			subFragments.addAll((List<Fragment>) context.convertAnother(series,
-					ArrayList.class));
+			subFragments.addAll((List<AbstractFragment>) context
+					.convertAnother(series, ArrayList.class));
 		}
 
 		boolean isUnique;
@@ -99,8 +98,18 @@ public class SeriesFragmentConverter implements Converter {
 		else
 			isUnique = false;
 
+		SeriesFilterType filterType;
+
+		if (filterTypeString.equalsIgnoreCase(SeriesFilterType.NAME.name()))
+			filterType = SeriesFilterType.NAME;
+		else if (filterTypeString
+				.equalsIgnoreCase(SeriesFilterType.SLOT.name()))
+			filterType = SeriesFilterType.SLOT;
+		else
+			filterType = SeriesFilterType.NONE;
+
 		series = new SeriesFragment(data, separator, subFragments, filter,
-				filterBy, isUnique);
+				filterType, isUnique);
 
 		return series;
 	}

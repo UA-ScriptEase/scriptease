@@ -7,7 +7,7 @@ import java.util.Map;
 
 import scriptease.controller.io.FileIO;
 import scriptease.translator.LanguageDictionary;
-import scriptease.translator.codegenerator.code.fragments.FormatDefinitionFragment;
+import scriptease.translator.codegenerator.code.fragments.container.FormatDefinitionFragment;
 import scriptease.translator.io.model.GameMap;
 
 import com.thoughtworks.xstream.converters.Converter;

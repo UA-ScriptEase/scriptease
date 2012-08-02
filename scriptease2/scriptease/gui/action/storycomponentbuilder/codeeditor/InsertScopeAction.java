@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.ScopeFragment;
 
 /**
@@ -42,7 +42,7 @@ public final class InsertScopeAction extends AbstractInsertFragmentAction {
 	}
 
 	@Override
-	protected Fragment newFragment() {
+	protected AbstractFragment newFragment() {
 		return new ScopeFragment();
 	}
 }

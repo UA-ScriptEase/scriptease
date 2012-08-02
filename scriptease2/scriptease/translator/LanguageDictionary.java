@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import scriptease.translator.codegenerator.code.fragments.Fragment;
-import scriptease.translator.codegenerator.code.fragments.FormatDefinitionFragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.codegenerator.code.fragments.container.FormatDefinitionFragment;
 import scriptease.translator.io.model.GameMap;
 
 /**
@@ -88,10 +88,10 @@ public class LanguageDictionary {
 	 * @param formatID
 	 * @return
 	 */
-	public List<Fragment> getFormat(String formatID) {
-		final List<Fragment> format;
+	public List<AbstractFragment> getFormat(String formatID) {
+		final List<AbstractFragment> format;
 		final FormatDefinitionFragment formatIDFragment;
-		format = new ArrayList<Fragment>();
+		format = new ArrayList<AbstractFragment>();
 		formatIDFragment = this.formatMap.get(formatID);
 
 		if (formatIDFragment != null) {

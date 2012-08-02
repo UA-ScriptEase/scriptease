@@ -11,7 +11,7 @@ import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
  * Code generation Context for a KnowItBindingQuestPoint object.
@@ -39,14 +39,14 @@ public class KnowItBindingQuestPointContext extends KnowItBindingContext {
 	
 	@Override
 	public String getFormattedValue() {
-		final Collection<Fragment> typeFormat;
+		final Collection<AbstractFragment> typeFormat;
 		
 		typeFormat = this.translator.getGameTypeManager().getFormat(
 				QuestPoint.QUEST_POINT_TYPE);
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();
 
-		return Fragment.resolveFormat(typeFormat, this);
+		return AbstractFragment.resolveFormat(typeFormat, this);
 	}
 
 	/**

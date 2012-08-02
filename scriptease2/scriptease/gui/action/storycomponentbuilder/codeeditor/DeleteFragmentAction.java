@@ -1,4 +1,4 @@
-package scriptease.gui.action.storycomponentbuilder;
+package scriptease.gui.action.storycomponentbuilder.codeeditor;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -8,8 +8,9 @@ import java.util.List;
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.gui.managers.FormatFragmentSelectionManager;
 import scriptease.model.CodeBlock;
-import scriptease.translator.codegenerator.code.fragments.Fragment;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
+import sun.awt.util.IdentityArrayList;
 
 /**
  * Represents and performs the Delete Fragment command, as well as encapsulating
@@ -52,8 +53,8 @@ public class DeleteFragmentAction extends ActiveTranslatorSensitiveAction {
 	 * @return
 	 */
 	private void deleteFragment(
-			final List<Fragment> topLevelFormatFragments,
-			final Fragment selectedFragment,
+			final List<AbstractFragment> topLevelFormatFragments,
+			final AbstractFragment selectedFragment,
 			final AbstractContainerFragment parentFragment) {
 
 		if (topLevelFormatFragments.remove(selectedFragment)) {
@@ -61,14 +62,14 @@ public class DeleteFragmentAction extends ActiveTranslatorSensitiveAction {
 				parentFragment.setSubFragments(topLevelFormatFragments);
 
 		} else {
-			for (Fragment formatFragment : topLevelFormatFragments) {
+			for (AbstractFragment formatFragment : topLevelFormatFragments) {
 				if (formatFragment instanceof AbstractContainerFragment) {
-					final Collection<Fragment> subFragments;
-					final List<Fragment> subFragmentsList;
+					final Collection<AbstractFragment> subFragments;
+					final List<AbstractFragment> subFragmentsList;
 
 					subFragments = ((AbstractContainerFragment) formatFragment)
 							.getSubFragments();
-					subFragmentsList = new ArrayList<Fragment>();
+					subFragmentsList = new ArrayList<AbstractFragment>();
 
 					subFragmentsList.addAll(subFragments);
 
@@ -86,14 +87,14 @@ public class DeleteFragmentAction extends ActiveTranslatorSensitiveAction {
 		codeBlock = FormatFragmentSelectionManager.getInstance().getCodeBlock();
 
 		if (codeBlock != null) {
-			final Fragment selectedFragment;
-			final Collection<Fragment> code;
-			final ArrayList<Fragment> fragments;
+			final AbstractFragment selectedFragment;
+			final Collection<AbstractFragment> code;
+			final IdentityArrayList<AbstractFragment> fragments;
 
 			selectedFragment = FormatFragmentSelectionManager.getInstance()
 					.getFormatFragment();
 			code = codeBlock.getCode();
-			fragments = new ArrayList<Fragment>();
+			fragments = new IdentityArrayList<AbstractFragment>();
 
 			fragments.addAll(code);
 

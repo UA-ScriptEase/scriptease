@@ -1,5 +1,6 @@
 package scriptease.util;
 
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -220,11 +221,45 @@ public class StringOp {
 			return legalMatcher.group();
 		}
 	}
-	
-	public static int wordCount(String source){
+
+	public static int wordCount(String source) {
 		String wordArray[] = source.split(" ");
 		return wordArray.length;
 	}
-	
-	
+
+	/**
+	 * Method that returns a collection of Strings as a single String separated
+	 * by the separator.<br>
+	 * <br>
+	 * An example: <br>
+	 * If<br>
+	 * <code>Collection&lt;String&gt; collection = ["First"], ["Second"], ["Third"];<br></code>
+	 * and <br>
+	 * <code>String seperator = ", "</code><br>
+	 * then<br>
+	 * <code>getCollectionAsString(collection) returns "First, Second, Third"</code>
+	 * 
+	 * 
+	 * @param strings
+	 *            The collection of strings
+	 * @param separator
+	 *            The separator used to separate the strings.
+	 * @return A collection in String representation
+	 * @author kschenk
+	 */
+	public static String getCollectionAsString(Collection<String> strings,
+			String separator) {
+		String collectionText = "";
+
+		for (String includeText : strings) {
+			collectionText += includeText + separator;
+		}
+		int labelLength = collectionText.length();
+		if (labelLength > 0) {
+			return collectionText
+					.substring(0, labelLength - separator.length());
+		} else
+			return "";
+	}
+
 }
