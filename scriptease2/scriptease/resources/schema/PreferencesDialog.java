@@ -1,4 +1,4 @@
-package scriptease.gui;
+package scriptease.resources.schema;
 
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -26,6 +26,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import scriptease.ScriptEase;
+import scriptease.gui.WindowManager;
 import scriptease.gui.internationalization.Il8nResources;
 
 /*

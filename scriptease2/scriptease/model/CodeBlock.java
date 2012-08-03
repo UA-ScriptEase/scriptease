@@ -125,7 +125,7 @@ public abstract class CodeBlock extends StoryComponent implements
 	public void setParameters(Collection<KnowIt> parameters) {
 		this.parameters = new ArrayList<KnowIt>(parameters);
 	}
-
+	
 	/**
 	 * Sets the includes to the given include list.
 	 * 
