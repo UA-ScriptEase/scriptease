@@ -65,11 +65,6 @@ public final class ErfFile implements GameModule {
 	public static final String NEVERWINTER_NIGHTS = "Neverwinter Nights";
 
 	/**
-	 * Stores <code>NWNResource</code>s that are not script ease generated.
-	 */
-	// private final List<NWNResource> ungeneratedResources;
-
-	/**
 	 * Stores <code>NWNResource</code>s that are script ease generated.
 	 */
 	private final List<NWNResource> resources;
@@ -115,14 +110,12 @@ public final class ErfFile implements GameModule {
 	private static final int HEADER_RESERVED_BYTES = 116;
 
 	public ErfFile() {
-		// this.ungeneratedResources = new ArrayList<NWNResource>();
 		this.resources = new ArrayList<NWNResource>();
 		this.uncompiledScripts = new ArrayList<NWNResource>();
 	}
 
 	@Override
 	public void load(boolean readOnly) throws IOException {
-		// this.ungeneratedResources.clear();
 		this.resources.clear();
 
 		String readOnlyTag;
@@ -247,7 +240,7 @@ public final class ErfFile implements GameModule {
 	 * Returns a List of GameObjects which match the given ScriptEase GameType.
 	 */
 	@Override
-	public List<GameConstant> getInstancesOfType(String type) {
+	public List<GameConstant> getResourcesOfType(String type) {
 		List<GameConstant> filteredObjects = new ArrayList<GameConstant>();
 
 		for (NWNResource resource : this.resources) {
