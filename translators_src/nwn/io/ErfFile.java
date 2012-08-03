@@ -240,7 +240,7 @@ public final class ErfFile implements GameModule {
 	 * Returns a List of GameObjects which match the given ScriptEase GameType.
 	 */
 	@Override
-	public List<GameConstant> getResourcesOfType(String type) {
+	public List<GameConstant> getInstancesOfType(String type) {
 		List<GameConstant> filteredObjects = new ArrayList<GameConstant>();
 
 		for (NWNResource resource : this.resources) {

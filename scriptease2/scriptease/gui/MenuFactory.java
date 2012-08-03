@@ -3,8 +3,10 @@ package scriptease.gui;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -51,6 +53,7 @@ import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerator;
 import scriptease.translator.codegenerator.ScriptInfo;
+import scriptease.util.FileOp;
 
 /**
  * MenuFactory is responsible for building all of the menus in ScriptEase
@@ -141,7 +144,7 @@ public class MenuFactory {
 		fileMenu.add(newMenu);
 		fileMenu.add(save);
 		fileMenu.add(exit);
-		
+
 		builderMenuBar.add(fileMenu);
 		builderMenuBar.add(MenuFactory.buildEditMenu());
 
@@ -368,19 +371,20 @@ public class MenuFactory {
 		return menu;
 	}
 
-	@SuppressWarnings("serial")
 	public static JMenu buildToolsMenu() {
 		final JMenu menu = new JMenu(MenuFactory.TOOLS);
 		menu.setMnemonic(KeyEvent.VK_T);
 
-		// TODO: Encapsulate this into an action object.
-		JMenuItem item = new AutofiringMenuItem(
-				Il8nResources.getString("Story_Component_Builder")) {
+		JMenuItem item = new JMenuItem(
+				Il8nResources.getString("Story_Component_Builder"));
+		item.addActionListener(new ActionListener() {
 			@Override
-			protected void action() {
+			public void actionPerformed(ActionEvent e) {
 				WindowManager.getInstance().showStoryComponentBuilder();
 			}
-		};
+
+		});
+
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B,
 				ActionEvent.CTRL_MASK));
 
@@ -412,44 +416,58 @@ public class MenuFactory {
 	@SuppressWarnings("serial")
 	public static JMenu buildDebugMenu() {
 		final JMenu menu = new JMenu(MenuFactory.DEBUG);
-		JMenuItem item;
+		final JMenuItem throwExceptionItem;
+		final JMenuItem throwErrorItem;
+		final JMenuItem generateCodeItem;
+		final JMenuItem viewGraphEditorItem;
 
 		menu.add(MenuFactory.buildStoryMenu());
 
 		menu.setMnemonic(KeyEvent.VK_D);
 
-		item = new AutofiringMenuItem("Throw Exception") {
+		throwExceptionItem = new JMenuItem("Throw Exception!");
+		throwErrorItem = new JMenuItem("Throw Error!");
+		generateCodeItem = new JMenuItem("Generate Code");
+		viewGraphEditorItem = new JMenuItem("View Graph Editor (NWN Only)");
+
+		throwExceptionItem.addActionListener(new ActionListener() {
+
 			@Override
-			protected void action() {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						throw new RuntimeException("This is a fake exception");
-					}
-				});
+			public void actionPerformed(ActionEvent e) {
+				final File monocleDinosaur;
+				monocleDinosaur = new File("scriptease/resources/monocleDinosaur.txt");
+				String monocleDinosaurString;
+
+				try {
+					monocleDinosaurString = FileOp
+							.readFileAsString(monocleDinosaur);
+				} catch (IOException e1) {
+					monocleDinosaurString = "Exception!";
+				}
+				throw new RuntimeException(monocleDinosaurString);
 			}
-		};
-		item.setMnemonic(KeyEvent.VK_A);
-		menu.add(item);
+		});
 
-		item = new AutofiringMenuItem("Throw Error") {
+		throwErrorItem.addActionListener(new ActionListener() {
 			@Override
-			protected void action() {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						throw new Error("This is a fake error");
-					}
-				});
+			public void actionPerformed(ActionEvent e) {
+				final File monocleDinosaur;
+				monocleDinosaur = new File("scriptease/resources/monocleDinosaur.txt");
+				String monocleDinosaurString;
+
+				try {
+					monocleDinosaurString = FileOp
+							.readFileAsString(monocleDinosaur);
+				} catch (IOException e1) {
+					monocleDinosaurString = "Exception!";
+				}
+				throw new Error(monocleDinosaurString);
 			}
-		};
-		menu.add(item);
+		});
 
-		menu.addSeparator();
-
-		item = new AutofiringMenuItem("Generate Code") {
+		generateCodeItem.addActionListener(new ActionListener() {
 			@Override
-			protected void action() {
+			public void actionPerformed(ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
@@ -482,14 +500,11 @@ public class MenuFactory {
 					}
 				});
 			}
-		};
-		menu.add(item);
+		});
 
-		menu.addSeparator();
-		item = new AutofiringMenuItem("View Graph Editor (NWN Only)") {
-
+		viewGraphEditorItem.addActionListener(new ActionListener() {
 			@Override
-			protected void action() {
+			public void actionPerformed(ActionEvent e) {
 				final TranslatorManager manager = TranslatorManager
 						.getInstance();
 				Translator nwn = manager.getTranslator("Neverwinter Nights");
@@ -505,7 +520,8 @@ public class MenuFactory {
 											JFrame frame = new JFrame(
 													"Graph Editor");
 
-											frame.add(PanelFactory.getInstance()
+											frame.add(PanelFactory
+													.getInstance()
 													.buildDescribeItPanel(
 															described
 																	.getValue()
@@ -521,8 +537,16 @@ public class MenuFactory {
 					});
 				}
 			}
-		};
-		menu.add(item);
+
+		});
+
+		throwExceptionItem.setMnemonic(KeyEvent.VK_A);
+		menu.add(throwExceptionItem);
+		menu.add(throwErrorItem);
+		menu.addSeparator();
+		menu.add(generateCodeItem);
+		menu.addSeparator();
+		menu.add(viewGraphEditorItem);
 
 		return menu;
 	}
