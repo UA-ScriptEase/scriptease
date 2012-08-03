@@ -141,7 +141,7 @@ public class GameObjectTreeModel extends DefaultTreeModel implements Filterable 
 				gameObjects = new ArrayList<GameConstant>(0);
 			} else {
 				gameObjects = ((StoryModel) activeModel).getModule()
-						.getInstancesOfType(type);
+						.getResourcesOfType(type);
 
 				gameObjects = new ArrayList<GameConstant>(
 						this.filterGameObjects(gameObjects));

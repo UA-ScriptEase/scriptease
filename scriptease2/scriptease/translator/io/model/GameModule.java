@@ -89,7 +89,7 @@ public interface GameModule {
 	 * @return A list of all <code>GameObject</code>s that have the supplied
 	 *         type.
 	 */
-	public List<GameConstant> getInstancesOfType(String type);
+	public List<GameConstant> getResourcesOfType(String type);
 
 	/**
 	 * Retrieves the GameConstant object that represents the game data that is

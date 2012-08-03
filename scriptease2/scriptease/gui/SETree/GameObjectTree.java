@@ -20,7 +20,6 @@ public class GameObjectTree extends SETreeModel {
 
 	private StoryModel activeModel;
 
-
 	public GameObjectTree() {
 		activeModel = StoryModelPool.getInstance().getActiveModel();
 		createAndPopulateTree();
@@ -48,24 +47,24 @@ public class GameObjectTree extends SETreeModel {
 		}
 
 		for (GameConversationNode a : getChildren) {
-			if(!a.isLink())
+			if (!a.isLink())
 				treeModel.addLeaf(parent, a);
 		}
 		for (GameConversationNode a : getChildren) {
-			if(!a.isLink())
+			if (!a.isLink())
 				addRecusivleyAllNodes(a);
 		}
 	}
 
-	private void addAllChildren(GameConversation parent){
+	private void addAllChildren(GameConversation parent) {
 		List<GameConversationNode> conversationRoots;
 		conversationRoots = parent.getConversationRoots();
 
-		for(GameConversationNode root : conversationRoots){
-			treeModel.addLeaf(parent,root);
+		for (GameConversationNode root : conversationRoots) {
+			treeModel.addLeaf(parent, root);
 		}
 
-		for(GameConversationNode childrenRoots : conversationRoots){
+		for (GameConversationNode childrenRoots : conversationRoots) {
 			addRecusivleyAllNodes(childrenRoots);
 
 		}
@@ -84,7 +83,7 @@ public class GameObjectTree extends SETreeModel {
 
 		// For each type in the translator.
 		typeManager = TranslatorManager.getInstance().getActiveTranslator()
-		.getGameTypeManager();
+				.getGameTypeManager();
 		Collection<String> keywords = typeManager.getKeywords();
 		List<String> types = new ArrayList<String>(keywords);
 		Collections.sort(types, new Comparator<String>() {
@@ -112,23 +111,23 @@ public class GameObjectTree extends SETreeModel {
 				treeModel.addLeaf(treeModel.getHead(), typeName);
 				for (GameConstant obj : gameObjs) {
 					treeModel.addLeaf(typeName, obj);
-//					if(((GameObject)obj).getAttributes().size() > 0){
-//						for(GameObject attributes : ((GameObject)obj).getAttributes()){
-//							treeModel.addLeaf(obj,attributes);
-//						}
-//					}
+					// if(((GameObject)obj).getAttributes().size() > 0){
+					// for(GameObject attributes :
+					// ((GameObject)obj).getAttributes()){
+					// treeModel.addLeaf(obj,attributes);
+					// }
+					// }
 				}
 			}
 
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private Collection<GameConstant> getAllObjectsOfType(String type) {
-		List allGameObjects;
+		List<GameConstant> allGameObjects;
 
 		allGameObjects = ((StoryModel) activeModel).getModule()
-		.getInstancesOfType(type);
+				.getResourcesOfType(type);
 		allGameObjects = new ArrayList<GameConstant>(
 				this.filterGameObjects(allGameObjects));
 
@@ -142,7 +141,6 @@ public class GameObjectTree extends SETreeModel {
 
 		return allGameObjects;
 	}
-
 
 	/**
 	 * Filter the StoryComponentPanelTree immediate children, does nothing if no
@@ -168,6 +166,4 @@ public class GameObjectTree extends SETreeModel {
 		return filteredObjects;
 	}
 
-
 }
-

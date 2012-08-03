@@ -220,7 +220,7 @@ public class Context {
 						// Gets the code block from the API Dictionary using the
 						// reference string.
 						List<CodeBlock> specialCodeBlocks = this.translator
-								.getApiDictionary().getCodeBlocksByValRef(
+								.getApiDictionary().getCodeBlocksByName(
 										referenceValue);
 						
 						if (specialCodeBlocks != null)

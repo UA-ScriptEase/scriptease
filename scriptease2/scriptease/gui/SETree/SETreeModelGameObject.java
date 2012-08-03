@@ -129,12 +129,11 @@ public class SETreeModelGameObject extends SETreeModel {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private Collection<GameConstant> getAllObjectsOfType(String type) {
-		List allGameObjects;
+		List<GameConstant> allGameObjects;
 
 		allGameObjects = ((StoryModel) activeModel).getModule()
-				.getInstancesOfType(type);
+				.getResourcesOfType(type);
 		allGameObjects = new ArrayList<GameConstant>(
 				this.filterGameObjects(allGameObjects));
 
