@@ -38,6 +38,8 @@ import scriptease.translator.TranslatorManager;
 
 @SuppressWarnings("serial")
 /**
+ * TODO So this shouldn't exist. At all. It should be in the Panel Factory, but without the useless junk. 
+ * 
  * LibraryPane represents the JPanel used for managing, filtering and choosing
  * Patterns from the loaded Libraries. It appears in the top left corner of
  * the main ScriptEase window.
@@ -67,7 +69,8 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 * 
 	 * @param librarySettings
 	 */
-	public LibraryPane(StoryComponentPanelSetting librarySettings, boolean showInvisible) {
+	public LibraryPane(StoryComponentPanelSetting librarySettings,
+			boolean showInvisible) {
 		final LibraryManager libManager = LibraryManager.getInstance();
 		final StoryComponentContainer root;
 		final StoryComponentFilter causesFilter;
@@ -198,7 +201,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 			tree.addTreeSelectionListener(listener);
 		}
 	}
-	
+
 	/**
 	 * Returns all tabs that are StoryComponentPanelTrees as a list, in the same
 	 * order as they are in the tabs.
