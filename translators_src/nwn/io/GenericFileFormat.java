@@ -99,7 +99,9 @@ public class GenericFileFormat {
 		labelOffset = reader.readUnsignedInt(true) + filePosition;
 		labelCount = reader.readUnsignedInt(true);
 		fieldDataOffset = reader.readUnsignedInt(true) + filePosition;
-		reader.skipBytes(4); // fieldDataCount, which we don't use and re-calculate in writeHeader().
+		// 4 bytes of fieldDataCount, which we don't use and re-calculate in
+		// writeHeader(). - remiller
+		reader.skipBytes(4);
 		fieldIndicesOffset = reader.readUnsignedInt(true) + filePosition;
 		fieldIndicesCount = reader.readUnsignedInt(true);
 		listIndicesOffset = reader.readUnsignedInt(true) + filePosition;
@@ -551,7 +553,8 @@ public class GenericFileFormat {
 	 */
 	protected long write(ScriptEaseFileAccess writer, long filePosition)
 			throws IOException {
-		final long structsOffset = 4 * 14; // 14 header entries, 4 bytes each
+		final int headerSize = 4 * 14; // 14 header entries, 4 bytes each
+		final long structsOffset = headerSize;
 		final long fieldsOffset;
 		final long labelsOffset;
 		final long fieldDataOffset;
@@ -561,20 +564,26 @@ public class GenericFileFormat {
 
 		// Write file's data before header. Each of these return values is the
 		// size of the chunk it just wrote.
-		fieldsOffset = this.writeStructs(writer, structsOffset) + filePosition;
-		labelsOffset = this.writeFields(writer, fieldsOffset) + filePosition;
-		fieldDataOffset = this.writeLabels(writer, labelsOffset) + filePosition;
-		fieldIndicesArrayOffset = this.writeFieldDataBlock(writer,
-				fieldDataOffset) + filePosition;
-		listIndicesArrayOffset = this.writeFieldIndices(writer,
-				fieldIndicesArrayOffset) + filePosition;
+		fieldsOffset = structsOffset
+				+ this.writeStructs(writer, filePosition + structsOffset);
+		labelsOffset = fieldsOffset
+				+ this.writeFields(writer, filePosition + fieldsOffset);
+		fieldDataOffset = labelsOffset
+				+ this.writeLabels(writer, filePosition + labelsOffset);
+		fieldIndicesArrayOffset = fieldDataOffset
+				+ this.writeFieldDataBlock(writer, filePosition
+						+ fieldDataOffset);
+		listIndicesArrayOffset = fieldIndicesArrayOffset
+				+ this.writeFieldIndices(writer, filePosition
+						+ fieldIndicesArrayOffset);
 		fileSize = listIndicesArrayOffset
-				+ this.writeListIndices(writer, listIndicesArrayOffset);
+				+ this.writeListIndices(writer, filePosition
+						+ listIndicesArrayOffset);
 
 		// write the now fully-known header data
 		this.writeHeader(writer, filePosition, structsOffset, fieldsOffset,
 				labelsOffset, fieldDataOffset, fieldIndicesArrayOffset,
-				listIndicesArrayOffset);
+				listIndicesArrayOffset, fileSize);
 
 		return fileSize;
 	}
@@ -746,7 +755,17 @@ public class GenericFileFormat {
 	private void writeHeader(ScriptEaseFileAccess writer, long filePosition,
 			long structOffset, long fieldsOffset, long labelsOffset,
 			long fieldDataOffset, long fieldIndicesArrayOffset,
-			long listIndicesArrayOffset) throws IOException {
+			long listIndicesArrayOffset, long fileSize) throws IOException {
+		final long fieldDataCount;
+		final long fieldIndicesCount;
+		final long listIndicesCount;
+
+		// these counts are calculated because they are byte lengths, not
+		// logical size.
+		fieldDataCount = fieldIndicesArrayOffset - fieldDataOffset;
+		fieldIndicesCount = listIndicesArrayOffset - fieldIndicesArrayOffset;
+		listIndicesCount = fileSize - listIndicesArrayOffset;
+
 		writer.seek(filePosition);
 
 		writer.writeString(this.fileType, 4);
@@ -758,11 +777,11 @@ public class GenericFileFormat {
 		writer.writeUnsignedInt(labelsOffset, true);
 		writer.writeUnsignedInt(this.labelArray.size(), true);
 		writer.writeUnsignedInt(fieldDataOffset, true);
-		writer.writeUnsignedInt(fieldIndicesArrayOffset - fieldDataOffset, true);
+		writer.writeUnsignedInt(fieldDataCount, true);
 		writer.writeUnsignedInt(fieldIndicesArrayOffset, true);
-		writer.writeUnsignedInt(this.fieldIndicesArray.size(), true);
+		writer.writeUnsignedInt(fieldIndicesCount, true);
 		writer.writeUnsignedInt(listIndicesArrayOffset, true);
-		writer.writeUnsignedInt(this.listIndicesArray.size(), true);
+		writer.writeUnsignedInt(listIndicesCount, true);
 	}
 
 	/**

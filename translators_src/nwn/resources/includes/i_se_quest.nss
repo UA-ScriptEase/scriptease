@@ -752,7 +752,7 @@ void SCEZ_Quest_SetQuestAbandoned(string quest, string journalEntry)
 {
     object player = GetFirstPC();
     string baseQuest = SCEZ_Quest_GetBaseQuest(quest);
-    
+
     if(!SCEZ_Quest_GetQuestCompleted(quest) && !SCEZ_Quest_GetQuestFailed(quest) ){
         if(!SCEZ_Journal_GetQuestHistoryEmpty(quest, player))
          //&& GetStringLength(journalEntry) != 0
@@ -776,63 +776,63 @@ void SCEZ_Quest_SetQuestAbandoned(string quest, string journalEntry)
 int SCEZ_Quest_Event_UserPointIsEnabled(string pointpair){
     string point = SCEZ_Quest_extractQuestPoint(pointpair);
     string quest = SCEZ_Quest_extractQuest(pointpair);
-    
+
     return SCEZ_Quest_Event_PointIsEnabled(quest, point);
 }
 
 int SCEZ_Quest_Event_UserPointIsReached(string pointpair){
     string point = SCEZ_Quest_extractQuestPoint(pointpair);
     string quest = SCEZ_Quest_extractQuest(pointpair);
-    
+
     return SCEZ_Quest_Event_PointIsReached(quest, point);
 }
 
 int SCEZ_Quest_Event_UserPointBecomesReached(string pointpair, int type, string entry, int xp, int gold){
     string point = SCEZ_Quest_extractQuestPoint(pointpair);
     string quest = SCEZ_Quest_extractQuest(pointpair);
-    
+
     return SCEZ_Quest_Event_PointBecomesReached(quest, point, type, entry, xp, gold);
 }
 
 int SCEZ_Quest_Event_UserPointBecomesFailed(string pointpair, int type, string entry, string enablers, int enablersRequired){
     string point = SCEZ_Quest_extractQuestPoint(pointpair);
     string quest = SCEZ_Quest_extractQuest(pointpair);
-    
+
     return SCEZ_Quest_Event_PointBecomesFailed(quest, point, type, entry, enablers, enablersRequired);
 }
 
 int SCEZ_Quest_Event_UserPointEnabledBy(string pointpair, string enablers, int enablersRequired){
     string point = SCEZ_Quest_extractQuestPoint(pointpair);
     string quest = SCEZ_Quest_extractQuest(pointpair);
-    
+
     return SCEZ_Quest_Event_PointEnabledBy(quest, point, enablers, enablersRequired);
 }
 
 int SCEZ_Quest_Event_UserPointFailedBy(string pointpair, string enablers){
     string point = SCEZ_Quest_extractQuestPoint(pointpair);
     string quest = SCEZ_Quest_extractQuest(pointpair);
-    
+
     return SCEZ_Quest_Event_PointFailedBy(quest, point, enablers);
 }
 
 int SCEZ_Quest_UserGetPointEnabled(string pointpair){
     string point = SCEZ_Quest_extractQuestPoint(pointpair);
     string quest = SCEZ_Quest_extractQuest(pointpair);
-    
+
     return SCEZ_Quest_GetPointEnabled(quest, point);
 }
 
 int SCEZ_Quest_UserGetPointFailed(string pointpair){
     string point = SCEZ_Quest_extractQuestPoint(pointpair);
     string quest = SCEZ_Quest_extractQuest(pointpair);
-    
+
     return SCEZ_Quest_GetPointFailed(quest, point);
 }
 
 int SCEZ_Quest_UserGetPointReached(string pointpair){
     string point = SCEZ_Quest_extractQuestPoint(pointpair);
     string quest = SCEZ_Quest_extractQuest(pointpair);
-    
+
     return SCEZ_Quest_GetPointReached(quest, point);
 }
 
