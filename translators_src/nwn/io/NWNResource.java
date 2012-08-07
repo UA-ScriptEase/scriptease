@@ -138,18 +138,15 @@ public class NWNResource implements Comparable<NWNResource> {
 	 *            The offset to the Resource List segment.
 	 * @param elementOffset
 	 *            The offset to the intended location of the Resource List
-	 *            entry.
-	 * @param offsetToDataSegement
-	 *            The offset to the Resource Data segment.
+	 *            entry, relative to the start of the ERF file.
 	 * @param dataOffset
-	 *            The offset within the resource data segment to write to.
+	 *            The offset to the resource data, relative to the start of the
+	 *            ERF file.
 	 * @throws IOException
 	 * @return the number of bytes written in the data segment.
 	 */
 	protected long writeResourceListData(ScriptEaseFileAccess writer,
-			long offsetToResourceList, long elementOffset,
-			long offsetToDataSegement, int dataOffset) throws IOException {
-		final long dataLocation = offsetToDataSegement + dataOffset;
+			long elementOffset, long dataLocation) throws IOException {
 		long bytesWritten;
 
 		// ByteData != null for data scriptease doesn't interpret
@@ -167,11 +164,10 @@ public class NWNResource implements Comparable<NWNResource> {
 
 		// now that the data segment is in, update and write the resource
 		// list entry
-		this.resourceListEntry.setOffsetToResource(dataOffset);
+		this.resourceListEntry.setOffsetToResource((int) dataLocation);
 		this.resourceListEntry.setResourceSize((int) bytesWritten);
 
-		this.resourceListEntry.write(writer, offsetToResourceList,
-				elementOffset);
+		this.resourceListEntry.write(writer, elementOffset);
 
 		return bytesWritten;
 	}

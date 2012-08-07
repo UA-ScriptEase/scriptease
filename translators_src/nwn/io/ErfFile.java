@@ -424,15 +424,11 @@ public final class ErfFile implements GameModule {
 
 	@Override
 	public void save(boolean compile) throws IOException {
-		final long entryCount;
 		// size in bytes, not number of entries
 		final int localizedStringsSize;
 		final long offsetToLocalizedStrings;
 		final long offsetToKeyList;
 		final long offsetToResourceList;
-		final GregorianCalendar calendar = new GregorianCalendar();
-		final int year;
-		int dayOfYear;
 
 		if (compile) {
 			try {
@@ -449,29 +445,21 @@ public final class ErfFile implements GameModule {
 
 		// compute stuff we need to know to write.
 		localizedStringsSize = this.localizedStrings.length;
-		entryCount = this.resources.size();
 		offsetToLocalizedStrings = HEADER_BYTE_SIZE;
 		offsetToKeyList = offsetToLocalizedStrings + localizedStringsSize;
 		offsetToResourceList = offsetToKeyList + this.resources.size()
 				* ErfKey.BYTE_LENGTH;
 
-		// Set the date. ex: Day 1 = Jan 1, 2 = Jan 2, 158 = Jun 7.
-		year = calendar.get(Calendar.YEAR) - 1900;
-		dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
-		if (calendar.isLeapYear(year))
-			dayOfYear--;
-
 		// start writing now
-		this.writeHeader(localizedStringsSize, entryCount,
-				offsetToLocalizedStrings, offsetToKeyList,
-				offsetToResourceList, year, dayOfYear);
+		this.writeHeader(localizedStringsSize, offsetToLocalizedStrings,
+				offsetToKeyList, offsetToResourceList);
 
 		// write the localized strings
 		this.fileAccess.seek(offsetToLocalizedStrings);
 		this.fileAccess.writeBytes(this.localizedStrings);
 
-		this.writeKeys(entryCount, offsetToKeyList, offsetToResourceList);
-		this.writeResources(entryCount, offsetToResourceList);
+		this.writeKeys(offsetToKeyList, offsetToResourceList);
+		this.writeResources(offsetToResourceList);
 
 		// Remove everything ScriptEase related that exists to have a clean
 		// slate for next time we add new stuff.
@@ -612,7 +600,6 @@ public final class ErfFile implements GameModule {
 	 * Writes all of the ERF header information
 	 * 
 	 * @param localizedStringsSize
-	 * @param entryCount
 	 * @param offsetToLocalizedStrings
 	 * @param offsetToKeyList
 	 * @param offsetToResourceList
@@ -621,10 +608,20 @@ public final class ErfFile implements GameModule {
 	 * 
 	 * @throws IOException
 	 */
-	private void writeHeader(long localizedStringsSize, long entryCount,
+	private void writeHeader(long localizedStringsSize,
 			long offsetToLocalizedStrings, long offsetToKeyList,
-			long offsetToResourceList, long year, long dayOfYear)
-			throws IOException {
+			long offsetToResourceList) throws IOException {
+		final int entryCount = this.resources.size();
+		final GregorianCalendar calendar = new GregorianCalendar();
+		final int year;
+		int dayOfYear;
+
+		// Set the date. ex: Day 1 = Jan 1, 2 = Jan 2, 158 = Jun 7.
+		year = calendar.get(Calendar.YEAR) - 1900;
+		dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
+		if (calendar.isLeapYear(year))
+			dayOfYear--;
+
 		this.fileAccess.seek(0);
 
 		this.fileAccess.writeString(this.fileType, 4);
@@ -647,8 +644,9 @@ public final class ErfFile implements GameModule {
 		this.fileAccess.skipBytes(ErfFile.HEADER_RESERVED_BYTES);
 	}
 
-	private void writeKeys(long entryCount, long offsetToKeyList,
-			long offsetToResourceList) throws IOException {
+	private void writeKeys(long offsetToKeyList, long offsetToResourceList)
+			throws IOException {
+		final int entryCount = this.resources.size();
 		int id = 0;
 
 		// Writes out the ErfKey segment (i.e. palcuses, se_* file names etc)
@@ -668,18 +666,17 @@ public final class ErfFile implements GameModule {
 	/**
 	 * Writes all of the resources to appropriate files in Neverwinter Nights.
 	 * 
-	 * @param entryCount
 	 * @param offsetToResourceList
 	 * 
 	 * @throws IOException
 	 */
-	private void writeResources(long entryCount, long offsetToResourceList)
-			throws IOException {
+	private void writeResources(long offsetToResourceList) throws IOException {
+		final int entryCount = this.resources.size();
 		final long resourceListSize;
 		final long offsetToResourceData;
 		NWNResource resource;
 		long elementOffset;
-		int dataChunkOffset;
+		long dataChunkOffset;
 
 		resourceListSize = entryCount * ResourceListElement.BYTE_LENGTH;
 		offsetToResourceData = offsetToResourceList + resourceListSize;
@@ -689,15 +686,14 @@ public final class ErfFile implements GameModule {
 		 * dataChunkOffset is the location of the resource's data within the
 		 * data segment.
 		 */
-		dataChunkOffset = 0;
+		dataChunkOffset = offsetToResourceData;
 		for (int i = 0; i < entryCount; i++) {
 			resource = this.resources.get(i);
 
 			elementOffset = i * ResourceListElement.BYTE_LENGTH;
 
 			dataChunkOffset += resource.writeResourceListData(this.fileAccess,
-					offsetToResourceList, elementOffset, offsetToResourceData,
-					dataChunkOffset);
+					offsetToResourceList + elementOffset, dataChunkOffset);
 		}
 	}
 

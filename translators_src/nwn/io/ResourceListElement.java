@@ -38,8 +38,8 @@ public class ResourceListElement {
 	 * Writes a ResourceListElement to disk.
 	 * 
 	 * @param offset
-	 *            The offset into the Resource Data segment of the ErfFile for
-	 *            the resource this ResourceListElement points to.
+	 *            The offset from the start of the ErfFile to this resource's
+	 *            data.
 	 * @param size
 	 *            The size of this resource.
 	 */
@@ -51,26 +51,22 @@ public class ResourceListElement {
 	/**
 	 * @param writer
 	 *            The file to write to.
-	 * @param resourceListOffset
 	 * @param elementOffset
 	 * 
 	 * @throws IOException
 	 */
-	protected void write(ScriptEaseFileAccess writer, long resourceListOffset,
-			long elementOffset) throws IOException {
+	protected void write(ScriptEaseFileAccess writer, long elementOffset)
+			throws IOException {
 		// go to the resource list element's location and write it.
-		writer.seek(resourceListOffset + elementOffset);
+		writer.seek(elementOffset);
 
 		writer.writeInt(this.offsetToResource, true);
 		writer.writeInt(this.resourceSize, true);
 	}
 
 	/**
-	 * Get the offset into the Resource Data segment. <br>
-	 * <br>
-	 * NOTE: This is <b>different from the documentation</b>. In the docs, it
-	 * says this is an offset from the start of the file, but that becomes a
-	 * nightmare later when we're writing our own stuff piecemeal.
+	 * Get the offset into the Resource Data segment relative to the start of
+	 * the ERF file.
 	 * 
 	 * @return Offset into the Resource Data segment
 	 */
@@ -79,12 +75,9 @@ public class ResourceListElement {
 	}
 
 	/**
-	 * Updates the offset into the Resource Data segment to the given value.
-	 * Only use this when saving the entire Erf. <br>
-	 * <br>
-	 * NOTE: This is <b>different from the documentation</b>. In the docs, it
-	 * says this is an offset from the start of the file, but that becomes a
-	 * nightmare later when we're writing our own stuff piecemeal.
+	 * Updates the offset into the Resource Data segment (relative to the start
+	 * of the ERF file) to the given value. Only use this when saving the entire
+	 * Erf.
 	 * 
 	 * @return Offset into the Resource Data segment
 	 */
