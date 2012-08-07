@@ -1297,7 +1297,7 @@ public class GenericFileFormat {
 					if (this.fieldDataLocString.strRef == -1) {
 						// 0 for the English version. We're not interested in
 						// supporting internationalization yet.
-						return this.fieldDataLocString.strings.get(0);
+						return this.fieldDataLocString.strings.get(0L);
 					} else {
 						return this.fieldDataString;
 					}
