@@ -85,7 +85,7 @@ public class NWNResource implements Comparable<NWNResource> {
 	 *            The byte sequence of the byteData as it will appear on disk.
 	 * @throws IOException
 	 */
-	protected NWNResource(String resRef, int id, short fileType, byte[] data) {
+	protected NWNResource(String resRef, short fileType, byte[] data) {
 		final ResourceListElement newEntry;
 		final ErfKey newKey;
 
@@ -97,7 +97,7 @@ public class NWNResource implements Comparable<NWNResource> {
 		resRef = resRef.toLowerCase();
 
 		// the next resourceID is the same as the number of entries
-		newKey = new ErfKey(resRef, id, fileType);
+		newKey = new ErfKey(resRef, fileType);
 		newEntry = new ResourceListElement(-1, data.length);
 
 		this.key = newKey;
@@ -134,8 +134,13 @@ public class NWNResource implements Comparable<NWNResource> {
 	 * 
 	 * @param writer
 	 *            The writer to write to.
-	 * @param offsetToResourceData
-	 *            The offset to the resource data segment.
+	 * @param offsetToResourceList
+	 *            The offset to the Resource List segment.
+	 * @param elementOffset
+	 *            The offset to the intended location of the Resource List
+	 *            entry.
+	 * @param offsetToDataSegement
+	 *            The offset to the Resource Data segment.
 	 * @param dataOffset
 	 *            The offset within the resource data segment to write to.
 	 * @throws IOException
@@ -143,22 +148,19 @@ public class NWNResource implements Comparable<NWNResource> {
 	 */
 	protected long writeResourceListData(ScriptEaseFileAccess writer,
 			long offsetToResourceList, long elementOffset,
-			long offsetToResourceData, int dataOffset) throws IOException {
-		final int offset = this.resourceListEntry.getOffsetToResource();
+			long offsetToDataSegement, int dataOffset) throws IOException {
+		final long dataLocation = offsetToDataSegement + dataOffset;
 		long bytesWritten;
-
-		// go to the data location and plop it there.
-		writer.seek(offsetToResourceData + dataOffset);
 
 		// ByteData != null for data scriptease doesn't interpret
 		if (this.byteData != null) {
-			writer.seek(offset);
+			writer.seek(dataLocation);
 			writer.write(this.byteData);
 			bytesWritten = this.byteData.length;
 		}
 		// GFF is used for everything else.
 		else if (this.gff != null) {
-			bytesWritten = this.gff.write(writer, offset);
+			bytesWritten = this.gff.write(writer, dataLocation);
 		} else {
 			throw new IllegalStateException("NWNResource has no data!");
 		}
@@ -198,20 +200,29 @@ public class NWNResource implements Comparable<NWNResource> {
 	 *         ScriptEase.
 	 */
 	public boolean isScriptEaseGenerated() {
-		return ErfFile.isScriptEaseGenerated(this.key.getResRef());
-	}
+		final String resRef = this.getResRef();
+		final short type = this.key.getResType();
+		final boolean rightType;
 
-	protected void writeErfKey(ScriptEaseFileAccess writer) throws IOException {
-		this.key.write(writer);
+		// TODO: Determine this based on a saved resref list in the the
+		// module's associated story file. That way
+		// we're not guessing: we know exactly which are generated.
+
+		rightType = type == ErfKey.SCRIPT_COMPILED_TYPE
+				|| type == ErfKey.SCRIPT_SOURCE_TYPE;
+
+		return rightType && ErfFile.isScriptEaseGenerated(resRef);
 	}
 
 	/**
-	 * Sets the resource id.
-	 * 
-	 * @param resID
+	 * @param resourceId
+	 *            The resource ID number. This is equivalent to
+	 *            <code>( ErfKeyFileLocation - OffSetToKeyList ) / entryCount</code>
+	 *            or to its index in the resources list.
 	 */
-	protected void setResID(int resID) {
-		this.key.setResId(resID);
+	protected void writeErfKey(ScriptEaseFileAccess writer, int resourceId)
+			throws IOException {
+		this.key.write(writer, resourceId);
 	}
 
 	/**
