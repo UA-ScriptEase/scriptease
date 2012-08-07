@@ -644,7 +644,7 @@ public final class ErfFile implements GameModule {
 		 * messages between spies. NWN was probably a big cover for
 		 * international espionage. - remiller
 		 */
-		this.fileAccess.skipBytes(116);
+		this.fileAccess.skipBytes(ErfFile.HEADER_RESERVED_BYTES);
 	}
 
 	private void writeKeys(long entryCount, long offsetToKeyList,
