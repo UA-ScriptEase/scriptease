@@ -22,7 +22,6 @@ import scriptease.translator.io.tools.ScriptEaseFileAccess;
  */
 public class TlkLookup {
 
-
 	private static final TlkLookup instance = new TlkLookup();
 
 	private static final String DEFAULT_TLK_FILENAME = "dialog";
@@ -93,25 +92,20 @@ public class TlkLookup {
 	 * @throws IOException
 	 */
 	public String lookup(long stringRef) throws IOException {
-		String result = null;
+		TlkFile file = null;
 
-		if(customTLK == null || defaultTLK == null) {
-			return "";
-		}
 		// first, check if it is a valid String Ref, as per documentation
 		// section 2.2
-		if ((stringRef == 0xFFFFFFFF)) {
-			return "";
+		if ((stringRef != 0xFFFFFFFF)) {
+			// then, we check stringRef's custom tlk bit
+			if ((stringRef & CUSTOM_TLK_BIT) != 0) {
+				file = this.customTLK;
+			} else {
+				file = this.defaultTLK;
+			}
 		}
 
-		// then, we check stringRef's custom tlk bit
-		if ((stringRef & CUSTOM_TLK_BIT) != 0) {
-			result = customTLK.get(stringRef);
-		} else {
-			result = defaultTLK.get(stringRef);
-		}
-
-		return result;
+		return file != null ? file.get(stringRef) : "";
 	}
 
 	/**
