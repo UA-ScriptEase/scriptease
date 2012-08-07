@@ -103,7 +103,6 @@ public class ErfKey {
 	}
 
 	private final String resRef;
-	private int resId;
 	private final short resType;
 
 	/**
@@ -120,20 +119,25 @@ public class ErfKey {
 	}
 
 	/**
+	 * This exists as an adapter for {@link #ErfKey(ScriptEaseFileAccess)}. It
+	 * drops the id on purpose, because we compute it at write time, and even
+	 * BioWare says it's redundant data.
+	 */
+	private ErfKey(String resRef, int id, short type) {
+		this(resRef, type);
+	}
+
+	/**
 	 * Creates a new ErfKey.
 	 * 
 	 * @param resRef
 	 *            The unique name of the resource.
-	 * @param resourceID
-	 *            The resource ID number. This is equivalent to
-	 *            <code>( ErfKeyFileLocation - OffSetToKeyList ) / entryCount</code>
 	 * @param resourceType
 	 *            The type of the resource from table 1.3.1 in the Key/BIF
 	 *            documentation
 	 */
-	public ErfKey(String resRef, int resourceID, short resourceType) {
+	public ErfKey(String resRef, short resourceType) {
 		this.resRef = resRef;
-		this.resId = resourceID;
 		this.resType = resourceType;
 	}
 
@@ -142,17 +146,18 @@ public class ErfKey {
 	 * 
 	 * @param stream
 	 *            The stream that will perform the writing.
+	 * @param resourceID
+	 *            The resource ID number. This is equivalent to
+	 *            <code>( ErfKeyFileLocation - OffSetToKeyList ) / entryCount</code>
+	 *            or to its index in the resources list.
 	 * @throws IOException
 	 */
-	public void write(ScriptEaseFileAccess stream) throws IOException {
+	public void write(ScriptEaseFileAccess stream, int resourceID)
+			throws IOException {
 		stream.writeString(this.resRef, ErfKey.RESREF_MAX_LENGTH);
-		stream.writeInt(this.resId, true);
+		stream.writeInt(resourceID, true);
 		stream.writeShort(this.resType, true);
 		stream.writeNullBytes(ErfKey.UNUSED_BYTES); // Unused space
-	}
-
-	public void setResId(int resID) {
-		this.resId = resID;
 	}
 
 	protected short getResType() {
@@ -195,7 +200,7 @@ public class ErfKey {
 
 	@Override
 	public String toString() {
-		return "ErfKey [" + resRef + ", " + resId + ", " + resType + "]";
+		return "ErfKey [" + this.resRef + ", type: " + this.resType + "]";
 	}
 
 	protected String getExtension() {
