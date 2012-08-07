@@ -329,6 +329,10 @@ public class NWNConversation implements GameConversation {
 					script = field;
 				}
 			}
+
+			if (text == null)
+				throw new IllegalStateException(
+						"Failed to read text for dialogue line.");
 		}
 
 		@Override
