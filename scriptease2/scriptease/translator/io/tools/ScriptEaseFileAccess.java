@@ -89,7 +89,7 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 			text += "\0";
 		}
 
-		this.writeBytes(text.getBytes());
+		this.writeBytes(text);
 	}
 
 	/**
