@@ -209,7 +209,7 @@ public class GenericFileFormat {
 
 			name += lastName == null ? "" : " " + lastName;
 		}
-		// door, placeable, item, merchant/store blueprints
+		// door, placeable, item, sound, merchant/store blueprints
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_DOOR_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_PLACEABLE_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_MERCHANT_BP)
@@ -227,16 +227,15 @@ public class GenericFileFormat {
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_INFO)) {
 			name = this.findFieldForLabel("Mod_Name").getStringData();
 		}
-		// TODO The journal blueprint names have been disabled because they
-		// actually have internal structs we need to pull data from.
-
-		// // journal blueprints
-		// else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
-		// name = this.readField(reader, "Name");
-		// }
-
-		// sound, conversation and other blueprints
-		// TODO These should have their specific names.
+		// journal blueprints
+		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+			name = "";// this.readField(reader, "Name");
+		}
+		// areas
+		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_AREA_FILE)) {
+			name = this.findFieldForLabel("Name").getStringData();
+		}
+		// other blueprints don't have a display name, just a resref.
 		else {
 			name = this.resRef;
 		}
