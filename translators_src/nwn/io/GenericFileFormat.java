@@ -69,6 +69,11 @@ public class GenericFileFormat {
 	 */
 	private static final int LABEL_BYTE_LENGTH = 16;
 
+	/**
+	 * Internationalization table for GFFField data.
+	 */
+	private static final TlkManager stringTable = TlkManager.getInstance();
+
 	protected GenericFileFormat(String resRef, ScriptEaseFileAccess reader,
 			long filePosition) throws IOException {
 		final String version;
@@ -534,7 +539,8 @@ public class GenericFileFormat {
 	public String toString() {
 		String stringRep = "";
 
-		stringRep += "GFF [" + this.resRef + "Type:" + this.fileType + "]\n";
+		stringRep += "GFF [\"" + this.resRef + "\" Type:" + this.fileType
+				+ "]\n";
 
 		for (GffField field : this.fieldArray) {
 			stringRep += field.toString() + "\n";
@@ -942,6 +948,7 @@ public class GenericFileFormat {
 	 * 
 	 */
 	protected class GffField {
+
 		public static final int BYTE_LENGTH = 12;
 
 		private static final int MAX_RESREF_LENGTH = 16;
@@ -957,6 +964,9 @@ public class GenericFileFormat {
 		private static final int TYPE_NUM_VOID = 13;
 		private static final int TYPE_NUM_STRUCT = 14;
 		private static final int TYPE_NUM_LIST = 15;
+
+		// max length is defined in GFF doc page 4
+		private static final int EXO_STRING_MAX_LENGTH = 1024;
 
 		private final long typeNumber;
 		private final long labelIndex;
@@ -1170,7 +1180,7 @@ public class GenericFileFormat {
 				// page 3, and 4.6 for details. - remiller
 
 				// length here means length in bytes of this total structure
-				// after the length
+				// after the length int
 				length = reader.readUnsignedInt(true);
 				long stringRef = reader.readUnsignedInt(true);
 				long stringCount = reader.readUnsignedInt(true);
@@ -1178,25 +1188,20 @@ public class GenericFileFormat {
 				this.fieldDataLocString = new CExoLocString();
 				this.fieldDataLocString.strRef = stringRef;
 
-				// saved within this file.
-				if (stringRef == -1) {
-					int stringLen;
+				// Store all the ones saved within this file. If it's in the
+				// internationalization (TLK) file, then we'll look that up
+				// separately.
+				int stringLen;
 
-					for (int i = 0; i < stringCount; i++) {
-						long id = reader.readInt(true);
+				for (int i = 0; i < stringCount; i++) {
+					long id = reader.readInt(true);
 
-						stringLen = reader.readInt(true);
-						String value = reader.readString(stringLen);
+					stringLen = reader.readInt(true);
+					String value = reader.readString(stringLen);
 
-						this.fieldDataLocString.strings.put(id, value);
-					}
+					this.fieldDataLocString.strings.put(id, value);
 				}
-				// pointing to external internationalization file
-				else {
-					TlkLookup stringTable = TlkLookup.getInstance();
 
-					this.fieldDataString = stringTable.lookup(stringRef);
-				}
 				break;
 			case GffField.TYPE_NUM_VOID:
 				// voids are arbitrary binary data. Hopefully that doesn't cause
@@ -1294,13 +1299,21 @@ public class GenericFileFormat {
 				case GffField.TYPE_NUM_RESREF:
 					return this.fieldDataString;
 				case GffField.TYPE_NUM_CEXOLOCSTRING:
-					if (this.fieldDataLocString.strRef == -1) {
-						// 0 for the English version. We're not interested in
-						// supporting internationalization yet.
-						return this.fieldDataLocString.strings.get(0L);
-					} else {
-						return this.fieldDataString;
+					String value;
+					// we prioritize strings stored in the file over external
+					// ones, like the toolset does (as described in GFF
+					// documentation).
+
+					// 0 for the English version. We're not interested in
+					// supporting internationalization yet.
+					value = this.fieldDataLocString.strings.get(0L);
+
+					if (value == null) {
+						value = GenericFileFormat.stringTable
+								.lookup(this.fieldDataLocString.strRef);
 					}
+
+					return value;
 				case GffField.TYPE_NUM_VOID:
 					return new String(this.fieldDataBytes);
 				default:
@@ -1325,6 +1338,8 @@ public class GenericFileFormat {
 		 */
 		protected void writeFieldData(ScriptEaseFileAccess writer,
 				long fieldDataOffset) throws IOException {
+			String strValue;
+
 			/*
 			 * Non-complex types are inherently handled by writing the field
 			 * itself, since that's where they are stored, so we just deal with
@@ -1353,10 +1368,14 @@ public class GenericFileFormat {
 
 				throw new IllegalStateException("I can't write a Double yet!");
 			case GffField.TYPE_NUM_CEXOSTRING:
-				writer.writeUnsignedInt(this.fieldDataString.length(), true);
+				strValue = this.fieldDataString;
 
-				writer.writeString(this.fieldDataString,
-						this.fieldDataString.length());
+				if (strValue.length() > EXO_STRING_MAX_LENGTH)
+					strValue.substring(0, EXO_STRING_MAX_LENGTH);
+
+				writer.writeUnsignedInt(strValue.length(), true);
+
+				writer.writeString(strValue, strValue.length());
 
 				break;
 			case GffField.TYPE_NUM_RESREF:
@@ -1373,7 +1392,6 @@ public class GenericFileFormat {
 			case GffField.TYPE_NUM_CEXOLOCSTRING:
 				final Map<Long, String> strings = this.fieldDataLocString.strings;
 				final long strRef = this.fieldDataLocString.strRef;
-				String value;
 
 				// byteSize does not include itself in the size calculation
 				int byteSize = this.fieldDataLocString.getByteSize();
@@ -1386,9 +1404,13 @@ public class GenericFileFormat {
 				if (strRef == -1) {
 					for (long id : strings.keySet()) {
 						writer.writeUnsignedInt(id, true);
-						value = strings.get(id);
-						writer.writeUnsignedInt(value.length(), true);
-						writer.writeString(value);
+						strValue = strings.get(id);
+
+						if (strValue.length() > EXO_STRING_MAX_LENGTH)
+							strValue.substring(0, EXO_STRING_MAX_LENGTH);
+
+						writer.writeUnsignedInt(strValue.length(), true);
+						writer.writeString(strValue);
 					}
 				}
 
