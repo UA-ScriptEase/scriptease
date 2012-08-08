@@ -227,14 +227,17 @@ public class GenericFileFormat {
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_INFO)) {
 			name = this.findFieldForLabel("Mod_Name").getStringData();
 		}
-		// journal blueprints
-		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
-			name = "";// this.readField(reader, "Name");
-		}
 		// areas
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_AREA_FILE)) {
 			name = this.findFieldForLabel("Name").getStringData();
 		}
+
+		// FIXME: Disabled until we access these differntly.
+		// journal blueprints
+		// else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+		// name = "";// this.readField(reader, "Name");
+		// }
+
 		// other blueprints don't have a display name, just a resref.
 		else {
 			name = this.resRef;
