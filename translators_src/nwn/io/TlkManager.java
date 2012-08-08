@@ -3,11 +3,9 @@ package io;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.Translator.DescriptionKeys;
+import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
 
 /**
@@ -98,16 +96,14 @@ public class TlkManager {
 		// String flag masks
 		private static final int STRING_FLAG_TEXT_PRESENT = 0x0001;
 
-		private final long stringCount;
-		private final Map<Long, String> strings;
+		private final String[] strings;
 
 		public TlkFile(File f) throws IOException, FileNotFoundException {
 			final ScriptEaseFileAccess reader;
+			final long stringCount;
 			String fileType;
 			String version;
 			long stringEntriesOffset;
-
-			this.strings = new HashMap<Long, String>();
 
 			// "r" = read-only
 			reader = new ScriptEaseFileAccess(f, "r");
@@ -115,7 +111,7 @@ public class TlkManager {
 			fileType = reader.readString(4);
 			version = reader.readString(4);
 			reader.skipBytes(4); // skip language id
-			this.stringCount = reader.readUnsignedInt(true);
+			stringCount = reader.readUnsignedInt(true);
 			stringEntriesOffset = reader.readUnsignedInt(true);
 
 			// ensure the correct file type and version
@@ -127,10 +123,12 @@ public class TlkManager {
 						+ TLK_VERSION + " but received " + version + ".");
 			}
 
-			this.readData(reader, stringEntriesOffset);
+			this.strings = new String[(int) stringCount];
+
+			this.readData(reader, stringCount, stringEntriesOffset);
 		}
 
-		private void readData(ScriptEaseFileAccess reader,
+		private void readData(ScriptEaseFileAccess reader, long stringCount,
 				long stringEntriesOffset) throws IOException {
 			long flags;
 			long offsetToString; // offset to the string itself
@@ -138,14 +136,10 @@ public class TlkManager {
 			String value;
 			long stringDataBookmark = TlkFile.STRING_DATA_TABLE_OFFSET;
 
-			for (long i = 0; i < this.stringCount; i++) {
+			for (int i = 0; i < stringCount; i++) {
 				reader.seek(stringDataBookmark);
 
 				flags = reader.readUnsignedInt(true);
-
-				if ((flags & 0x1) != TlkFile.STRING_FLAG_TEXT_PRESENT) {
-					continue;
-				}
 
 				// skip the sound file ResRef,
 				// sound volume variance (4) and
@@ -161,12 +155,16 @@ public class TlkManager {
 				// remember where we are
 				stringDataBookmark = reader.getFilePointer();
 
-				// go read the string contents
-				reader.seek(stringEntriesOffset + offsetToString);
+				if ((flags & 0x1) != TlkFile.STRING_FLAG_TEXT_PRESENT) {
+					value = "";
+				} else {
+					// go read the string contents
+					reader.seek(stringEntriesOffset + offsetToString);
 
-				value = reader.readString((int) stringSize);
+					value = reader.readString((int) stringSize);
+				}
 
-				this.strings.put(i, value);
+				this.strings[i] = value;
 			}
 		}
 
@@ -188,13 +186,13 @@ public class TlkManager {
 			// mask off the first two bits, as per section 2.2 of documentation
 			stringRef = (stringRef & 0x00FFFFFF);
 
-			if (stringRef >= this.stringCount) {
+			if (stringRef >= this.strings.length) {
 				throw new IllegalArgumentException("Impossible string ref: "
-						+ stringRef + ", TLK table string count = "
-						+ this.stringCount);
+						+ stringRef + ", TLK table string size = "
+						+ this.strings.length);
 			}
 
-			string = this.strings.get(stringRef);
+			string = this.strings[(int) stringRef];
 
 			return string == null ? "" : string;
 		}
