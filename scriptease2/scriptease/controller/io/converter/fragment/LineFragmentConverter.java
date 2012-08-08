@@ -36,7 +36,7 @@ public class LineFragmentConverter implements Converter {
 					line, ArrayList.class));
 		}
 
-		line = new LineFragment("\n", subFragments);
+		line = new LineFragment(System.getProperty("line.separator"), subFragments);
 		return line;
 	}
 
