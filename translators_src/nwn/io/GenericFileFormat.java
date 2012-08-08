@@ -212,7 +212,8 @@ public class GenericFileFormat {
 		// door, placeable, item, merchant/store blueprints
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_DOOR_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_PLACEABLE_BP)
-				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_MERCHANT_BP)) {
+				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_MERCHANT_BP)
+				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_SOUND_BP)) {
 			name = this.findFieldForLabel("LocName").getStringData();
 		}
 		// item, encounter, trigger, waypoint blueprints
