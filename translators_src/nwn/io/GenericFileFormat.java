@@ -60,11 +60,6 @@ public class GenericFileFormat {
 	private final String resRef;
 
 	/**
-	 * Stored variable to keep the same instance over time.
-	 */
-	private GameConstant representation;
-
-	/**
 	 * Length of the Labels in the GFF, from GFF documentation section 3.5
 	 */
 	private static final int LABEL_BYTE_LENGTH = 16;
@@ -191,12 +186,14 @@ public class GenericFileFormat {
 	 * Gets the value of the name field of the GFF. The actual field(s) that are
 	 * relevant can change from type to type.
 	 * 
+	 * @param index
+	 * 
 	 * @param reader
 	 *            the Stream to read from.
 	 * @return
 	 * @throws IOException
 	 */
-	private String getName() {
+	private String getName(String index) {
 		final String type = this.fileType.trim();
 		String name;
 
@@ -204,8 +201,10 @@ public class GenericFileFormat {
 		if (type.equalsIgnoreCase(GenericFileFormat.TYPE_CREATURE_BP)) {
 			final String lastName;
 
-			name = this.findFieldForLabel("FirstName").getStringData();
-			lastName = this.findFieldForLabel("LastName").getStringData();
+			name = getFieldByLabel(this.fieldArray, "FirstName")
+					.getStringData();
+			lastName = getFieldByLabel(this.fieldArray, "LastName")
+					.getStringData();
 
 			name += lastName == null ? "" : " " + lastName;
 		}
@@ -214,30 +213,34 @@ public class GenericFileFormat {
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_PLACEABLE_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_MERCHANT_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_SOUND_BP)) {
-			name = this.findFieldForLabel("LocName").getStringData();
+			name = getFieldByLabel(this.fieldArray, "LocName").getStringData();
 		}
 		// item, encounter, trigger, waypoint blueprints
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_ITEM_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_ENCOUNTER_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_TRIGGER_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)) {
-			name = this.findFieldForLabel("LocalizedName").getStringData();
+			name = getFieldByLabel(this.fieldArray, "LocalizedName")
+					.getStringData();
 		}
 		// module blueprints
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_INFO)) {
-			name = this.findFieldForLabel("Mod_Name").getStringData();
+			name = getFieldByLabel(this.fieldArray, "Mod_Name").getStringData();
 		}
 		// areas
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_AREA_FILE)) {
-			name = this.findFieldForLabel("Name").getStringData();
+			name = getFieldByLabel(this.fieldArray, "Name").getStringData();
 		}
-
-		// FIXME: Disabled until we access these differntly.
 		// journal blueprints
-		// else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
-		// name = "";// this.readField(reader, "Name");
-		// }
+		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+			List<GffStruct> categories = getFieldByLabel(this.fieldArray,
+					"Categories").getList();
+			List<GffField> fieldList;
 
+			fieldList = categories.get(Integer.valueOf(index)).getGffFields();
+
+			name = getFieldByLabel(fieldList, "Name").getStringData();
+		}
 		// other blueprints don't have a display name, just a resref.
 		else {
 			name = this.resRef;
@@ -252,11 +255,12 @@ public class GenericFileFormat {
 	 * 
 	 * @return The tag of this GFF, or an empty string.
 	 */
-	private String readTag() {
-		final String tag;
+	private String getTag(String index) {
 		final String type = this.fileType.trim();
+		final List<GffField> fieldList;
+		final String label;
 
-		if (type.equalsIgnoreCase("ARE")
+		if (type.equalsIgnoreCase(GenericFileFormat.TYPE_AREA_FILE)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_CREATURE_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_DOOR_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_ENCOUNTER_BP)
@@ -265,17 +269,24 @@ public class GenericFileFormat {
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_PLACEABLE_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_SOUND_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_TRIGGER_BP)
-				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)
-		// || type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)
-		) {
-			tag = this.findFieldForLabel("Tag").getStringData();
+				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)) {
+			fieldList = this.fieldArray;
+			label = "Tag";
 		} else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_INFO)) {
 			// BioWare, why you no consistent?
-			tag = this.findFieldForLabel("Mod_Tag").getStringData();
-		} else
-			tag = "";
+			fieldList = this.fieldArray;
+			label = "Mod_Tag";
+		} else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+			List<GffStruct> categories = getFieldByLabel(this.fieldArray,
+					"Categories").getList();
 
-		return tag;
+			fieldList = categories.get(Integer.valueOf(index)).getGffFields();
+			label = "Tag";
+		} else {
+			return "";
+		}
+
+		return getFieldByLabel(fieldList, label).getStringData();
 	}
 
 	/**
@@ -292,7 +303,8 @@ public class GenericFileFormat {
 
 		scriptSlots = typeManager.getSlots(getScriptEaseType());
 		for (String slotName : scriptSlots) {
-			reference = this.findFieldForLabel(slotName).getStringData();
+			reference = getFieldByLabel(this.fieldArray, slotName)
+					.getStringData();
 
 			// don't keep references to ScriptEase-generated files
 			if (ErfFile.isScriptEaseGenerated(reference)) {
@@ -305,52 +317,99 @@ public class GenericFileFormat {
 	}
 
 	/**
-	 * Extracts a ScriptEase representation of this GFF.
 	 * 
-	 * @return The ScriptEase version of this GFF object that.
+	 * @return The ScriptEase notion of this game object.
 	 */
-	public GameConstant getObjectRepresentation() {
-		if (!this.isValuable()) {
-			return null;
+	protected GameConstant getObjectRepresentation() {
+		return this.getObjectRepresentation(null);
+	}
+
+	/**
+	 * Extracts a ScriptEase representation of this GFF. <code>index</code> is a
+	 * string that is used by GFFs that aren't directly game objects themselves,
+	 * but are instead containers. These GFFs use the given string as indexing
+	 * information to determine which of their contents to get a game object
+	 * representation for.
+	 * 
+	 * @param index
+	 *            Data used to resolve which internal part of this GFF to return
+	 *            the game object for. May be <code>null</code> or
+	 *            <code>""</code> if the GFF isn't a blueprint wrapper.
+	 * 
+	 * @return The ScriptEase version of this GFF object that matches the
+	 *         indexing information.
+	 */
+	protected GameConstant getObjectRepresentation(String index) {
+		final GameConstant representation;
+		final String name;
+		final String fileType = this.getFileType().trim();
+
+		if (!this.generatesObject()) {
+			throw new UnsupportedOperationException(fileType
+					+ " does not generate an object representation.");
 		}
 
-		// First time through? Build it.
-		if (this.representation == null) {
-			final String name;
+		if (index == null)
+			index = "";
 
-			// read the object name
-			name = this.getName();
-
-			// conversations
-			if (this.fileType.trim().equalsIgnoreCase(
-					GenericFileFormat.TYPE_DIALOGUE_BP)) {
-				// get the top level struct
-				final GffStruct topLevel = this.getTopLevelStruct();
-
-				this.representation = new NWNConversation(name + "."
-						+ TYPE_DIALOGUE_BP, topLevel);
-			}
-			// other types
-			else {
-				final String tag;
-				// get the object tag
-				tag = this.readTag();
-
-				// get the object type
-				String type = this.getScriptEaseType();
-
-				ArrayList<String> objectTypes = new ArrayList<String>(1);
-				objectTypes.add(type);
-
-				this.representation = new NWNObject(this.resRef + "."
-						+ this.getFileType(), objectTypes, name, tag);
-			}
-
-			// clean up
-			this.removeGeneratedReferences();
+		if (index.isEmpty()
+				&& fileType.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+			throw new IllegalArgumentException("Journals require an indexer.");
 		}
 
-		return this.representation;
+		// read the object name
+		name = this.getName(index);
+
+		// conversations
+		if (fileType.equalsIgnoreCase(GenericFileFormat.TYPE_DIALOGUE_BP)) {
+			// get the top level struct
+			final GffStruct topLevel = this.getTopLevelStruct();
+
+			NWNConversation convo = new NWNConversation(name + "." + fileType,
+					topLevel);
+			if (index.isEmpty()) {
+				return convo;
+			} else {
+				return convo.getDialogLine(index);
+			}
+		}
+		// other types
+		else {
+			final String tag;
+			final String type;
+
+			tag = this.getTag(index);
+			type = this.getScriptEaseType();
+
+			representation = new NWNObject(this.resRef + "." + fileType, type,
+					name, tag);
+		}
+
+		// clean up
+		this.removeGeneratedReferences();
+
+		return representation;
+	}
+
+	protected Collection<GameConstant> getInternalObjectRepresentations() {
+		final Collection<GameConstant> reps;
+		final List<GffStruct> categories;
+
+		categories = getFieldByLabel(this.fieldArray, "Categories").getList();
+
+		if (!this.getFileType().trim()
+				.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+			throw new IllegalStateException(
+					"Can only get internal object reps from Journals.");
+		}
+
+		reps = new ArrayList<GameConstant>();
+
+		for (int i = 0; i < categories.size(); i++) {
+			reps.add(this.getObjectRepresentation(Integer.toString(i)));
+		}
+
+		return reps;
 	}
 
 	/**
@@ -359,7 +418,7 @@ public class GenericFileFormat {
 	 * 
 	 * @return a GameType representing the NWN type.
 	 */
-	private String getScriptEaseType() {
+	protected String getScriptEaseType() {
 		String type = null;
 		final String typeString = this.fileType.trim();
 		if (typeString.equalsIgnoreCase(GenericFileFormat.TYPE_CREATURE_BP)) {
@@ -410,45 +469,16 @@ public class GenericFileFormat {
 	}
 
 	/**
-	 * Searches this GFF's field list for the field that matches the supplied
-	 * label.
+	 * Determines if this GFF is of a type that can generate a ScriptEase
+	 * object.
 	 * 
-	 * @param label
-	 *            The label to search by.
-	 * @return The field that matches the given label, or <code>null</code> if
-	 *         the field
+	 * @return if this GFF can be translated into something important to
+	 *         ScriptEase
 	 */
-	protected GffField findFieldForLabel(String label) {
-		String searchLabel;
-		for (GffField field : this.fieldArray) {
-			searchLabel = this.labelArray.get((int) field.getLabelIndex());
+	protected boolean generatesObject() {
+		final String typeString = this.fileType.trim();
+		final ArrayList<String> importantTypes = new ArrayList<String>();
 
-			if (searchLabel.equalsIgnoreCase(label)) {
-				return field;
-			}
-		}
-
-		throw new IllegalStateException(
-				"Tried to read a field from a GFF type (" + this.getFileType()
-						+ ") that does not include the field " + label);
-	}
-
-	/**
-	 * Determines if this GFF is of a type that is useful to ScriptEase. If
-	 * ScriptEase needs to be able to read new types, they should be added here. <br>
-	 * <br>
-	 * A potential future improvement could be to take the list of important
-	 * data types and store them in a file as part of a data-driven approach.
-	 * 
-	 * @return if this GFF is important to ScriptEase
-	 */
-	private boolean isValuable() {
-		String typeString = this.fileType.trim();
-
-		ArrayList<String> importantTypes = new ArrayList<String>();
-		importantTypes.add(GenericFileFormat.TYPE_DIALOGUE_BP);
-		importantTypes.add(GenericFileFormat.TYPE_MODULE_INFO);
-		importantTypes.add(GenericFileFormat.TYPE_JOURNAL_BP);
 		importantTypes.add(GenericFileFormat.TYPE_CREATURE_BP);
 		importantTypes.add(GenericFileFormat.TYPE_DOOR_BP);
 		importantTypes.add(GenericFileFormat.TYPE_ENCOUNTER_BP);
@@ -458,8 +488,10 @@ public class GenericFileFormat {
 		importantTypes.add(GenericFileFormat.TYPE_SOUND_BP);
 		importantTypes.add(GenericFileFormat.TYPE_TRIGGER_BP);
 		importantTypes.add(GenericFileFormat.TYPE_WAYPOINT_BP);
-		importantTypes.add(GenericFileFormat.TYPE_AREA_GAME_INSTANCE_FILE);
+		importantTypes.add(GenericFileFormat.TYPE_DIALOGUE_BP);
 		importantTypes.add(GenericFileFormat.TYPE_AREA_FILE);
+		importantTypes.add(GenericFileFormat.TYPE_MODULE_INFO);
+		importantTypes.add(GenericFileFormat.TYPE_JOURNAL_BP);
 
 		return importantTypes.contains(typeString);
 	}
@@ -525,6 +557,33 @@ public class GenericFileFormat {
 		}
 	}
 
+	/**
+	 * Searches this GFF's field list for the field that matches the supplied
+	 * label.
+	 * 
+	 * @param fieldList
+	 *            the list to search in.
+	 * @param label
+	 *            The label to search by.
+	 * @return The field that matches the given label
+	 */
+	private static GffField getFieldByLabel(Collection<GffField> fieldList,
+			String label) {
+		String searchLabel;
+		for (GffField field : fieldList) {
+			searchLabel = field.getLabel();
+
+			if (searchLabel.equalsIgnoreCase(label)) {
+				return field;
+			}
+		}
+
+		// this can happen if it is called on the incorrect list, or with a
+		// label
+		// that doens't exist.
+		throw new IllegalStateException("Failed to locate field " + label);
+	}
+
 	protected void setField(GffField field, String newData) {
 		if (field == null)
 			throw new NullPointerException(
@@ -534,7 +593,7 @@ public class GenericFileFormat {
 	}
 
 	protected void setField(String fieldLabel, String newData) {
-		GffField field = this.findFieldForLabel(fieldLabel);
+		GffField field = getFieldByLabel(this.fieldArray, fieldLabel);
 		this.setField(field, newData);
 	}
 
@@ -1012,12 +1071,6 @@ public class GenericFileFormat {
 			this.readData(reader, fieldDataOffset);
 		}
 
-		@Override
-		public String toString() {
-			return "GffField [" + this.getName() + ", type: " + this.typeNumber
-					+ "]";
-		}
-
 		/**
 		 * Writes out the GffField data to the writer.
 		 * 
@@ -1028,6 +1081,12 @@ public class GenericFileFormat {
 			writer.writeUnsignedInt(this.typeNumber, true);
 			writer.writeUnsignedInt(this.labelIndex, true);
 			writer.writeUnsignedInt(this.dataOrDataOffset, true);
+		}
+
+		@Override
+		public String toString() {
+			return "GffField [" + this.getName() + ", type: " + this.typeNumber
+					+ "]";
 		}
 
 		/**
@@ -1639,7 +1698,7 @@ public class GenericFileFormat {
 					} else {
 						System.err.println("Could not find and update slot "
 								+ slot + " on instances of " + sourceResRef
-								+ " in the area " + this.getName());
+								+ " in the area " + this.getName(""));
 					}
 				}
 			}

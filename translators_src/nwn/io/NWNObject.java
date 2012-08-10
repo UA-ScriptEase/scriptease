@@ -1,9 +1,15 @@
 package io;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import scriptease.translator.io.model.GameObject;
 
+/**
+ * Neverwinter Nights implementation of {@link GameObject}.
+ * 
+ * @author remiller
+ */
 public final class NWNObject implements GameObject {
 	private final int objectID;
 	private int resolutionMethod;
@@ -16,6 +22,10 @@ public final class NWNObject implements GameObject {
 	public static final int SEARCH_TYPE_RANDOM = 1;
 	public static final int SEARCH_TYPE_NEAREST_INCLUDE_SELF = 2;
 	public static final int SEARCH_TYPE_RANDOM_INCLUDE_SELF = 3;
+
+	public NWNObject(String resRef, String type, String name, String tag) {
+		this(resRef, Arrays.asList(type), name, tag);
+	}
 
 	public NWNObject(String resRef, Collection<String> types, String name,
 			String tag) {

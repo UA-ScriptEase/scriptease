@@ -279,8 +279,6 @@ public class NWNConversation implements GameConversation {
 	 * 
 	 */
 	public abstract class DialogueLine implements GameConversationNode {
-		// Dialog line resref format: dialogResRef_list_index
-		public static final String DIALOG_LINE_REF_REGEX = "[a-zA-Z0-9_\\.]+#[a-zA-Z]+#[0-9]+";
 		private static final String DIALOG_LINE = "dialogue_line";
 		// ResRef of conditional script to run to determine if this line of
 		// conversation appears to the player.

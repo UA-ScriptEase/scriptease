@@ -58,10 +58,22 @@ import scriptease.util.FileOp;
  */
 public final class ErfFile implements GameModule {
 
-	private static final String VERSION = "V1.0";
-
 	// Translator name to be used with the TranslatorManager lookup
 	public static final String NEVERWINTER_NIGHTS = "Neverwinter Nights";
+
+	// matches a resref
+	private static final String RESREF_REGEX = "[a-zA-Z0-9_\\.]+";
+
+	// Dialog line indexing format: <dialogResRef>#<list>#<index_number>
+	private static final String DIALOG_LINE_REF_REGEX = RESREF_REGEX
+			+ "#[a-zA-Z]+#[0-9]+";
+
+	// Journal Category indexing format:
+	// <journalsResRef>#<category_index_number>
+	private static final String JOURNAL_CATEGORY_REF_REGEX = RESREF_REGEX
+			+ "#[0-9]+";
+
+	private static final String VERSION = "V1.0";
 
 	/**
 	 * Stores <code>NWNResource</code>s that are script ease generated.
@@ -226,14 +238,23 @@ public final class ErfFile implements GameModule {
 	 */
 	@Override
 	public List<GameConstant> getResourcesOfType(String type) {
-		List<GameConstant> filteredObjects = new ArrayList<GameConstant>();
+		final List<GameConstant> filteredObjects = new ArrayList<GameConstant>();
+		GenericFileFormat gff;
+		String gffType;
 
 		for (NWNResource resource : this.resources) {
-			if (resource != null && resource.isGFF() && !resource.ignorable()) {
-				GameConstant object = resource.getGFF()
-						.getObjectRepresentation();
-				if (object != null && object.getTypes().contains(type)) {
-					filteredObjects.add(object);
+			if (resource != null && resource.isGFF()
+					&& resource.generatesObject()) {
+				gff = resource.getGFF();
+				gffType = gff.getScriptEaseType();
+
+				if (gffType != null && gffType.equalsIgnoreCase(type)) {
+					if (gffType.equalsIgnoreCase("journal")) {
+						filteredObjects.addAll(gff
+								.getInternalObjectRepresentations());
+					} else {
+						filteredObjects.add(gff.getObjectRepresentation());
+					}
 				}
 			}
 		}
@@ -317,14 +338,14 @@ public final class ErfFile implements GameModule {
 				this.uncompiledScripts.add(scriptResource);
 
 				// Manage the script slot references
-				final IdentifiableGameConstant object = scriptInfo.getSubject();
+				final IdentifiableGameConstant subject = scriptInfo.getSubject();
 
 				final String receiverResRef;
 				final NWNResource receiverResource;
 
 				// Hardcoded for conversations.
-				if (object instanceof DialogueLine) {
-					final DialogueLine dialogueLine = (DialogueLine) object;
+				if (subject instanceof DialogueLine) {
+					final DialogueLine dialogueLine = (DialogueLine) subject;
 					receiverResRef = dialogueLine.getConversationResRef();
 
 					// Get the parent conversation file resource
@@ -346,7 +367,7 @@ public final class ErfFile implements GameModule {
 						receiverResource.getGFF().setField(field, scriptResRef);
 					}
 				} else {
-					receiverResRef = object.getTemplateID();
+					receiverResRef = subject.getTemplateID();
 					receiverResource = this.getResourceByResRef(receiverResRef);
 
 					if (receiverResource == null) {
@@ -392,24 +413,20 @@ public final class ErfFile implements GameModule {
 	/**
 	 * Finds the resource that matches the given ResRef.
 	 * 
-	 * @param receiverResRef
+	 * @param keyResRef
 	 *            The ResRef (resource reference string ID) for the resource
 	 *            desired.
 	 * @return The NWNResource matching the given ResRef, or <code>null</code>
 	 *         if no such resource exists.
 	 */
-	private NWNResource getResourceByResRef(String receiverResRef) {
-		GameConstant rep;
+	private NWNResource getResourceByResRef(String keyResRef) {
+		keyResRef = keyResRef.trim();
 		String resref;
 
 		for (NWNResource resource : this.resources) {
-			if (resource.isGFF()
-					&& (rep = resource.getGFF().getObjectRepresentation()) != null)
-				resref = rep.getTemplateID();
-			else
-				resref = resource.getResRef();
+			resref = resource.getExtendedResRef().trim();
 
-			if (resref.equals(receiverResRef)) {
+			if (resref.equalsIgnoreCase(keyResRef)) {
 				return resource;
 			}
 		}
@@ -734,19 +751,32 @@ public final class ErfFile implements GameModule {
 	public GameConstant getInstanceForObjectIdentifier(String id) {
 		GameConstant gameResource = null;
 		NWNResource nwResource = this.getResourceByResRef(id);
+		final String resref;
+		final String index;
 
 		// Not found? Check to see if it is a dialog line
 		if (nwResource == null) {
-			if (id.matches(DialogueLine.DIALOG_LINE_REF_REGEX)) {
+			if (id.matches(ErfFile.DIALOG_LINE_REF_REGEX)) {
 				final String[] split = id.split("#", 2);
-				final String conversationResRef = split[0];
-				final String dialogResRef = split[1];
+				resref = split[0];
+				index = split[1];
 
-				nwResource = this.getResourceByResRef(conversationResRef);
-				if (nwResource != null) {
-					NWNConversation conversation = (NWNConversation) nwResource
-							.getGFF().getObjectRepresentation();
-					gameResource = conversation.getDialogLine(dialogResRef);
+				nwResource = this.getResourceByResRef(resref);
+
+				if (nwResource != null && nwResource.isGFF()) {
+					gameResource = nwResource.getGFF().getObjectRepresentation(
+							index);
+				}
+			} else if (id.matches(JOURNAL_CATEGORY_REF_REGEX)) {
+				final String[] split = id.split("#", 2);
+				resref = split[0];
+				index = split[1];
+
+				nwResource = this.getResourceByResRef(resref);
+
+				if (nwResource != null && nwResource.isGFF()) {
+					gameResource = nwResource.getGFF().getObjectRepresentation(
+							index);
 				}
 			}
 		} else if (nwResource.isGFF()) {
