@@ -229,8 +229,27 @@ public class NWNResource implements Comparable<NWNResource> {
 		return this.key.isGFF();
 	}
 
+	/**
+	 * Gets the refref for this resource.
+	 * 
+	 * @return The unique-by-category Resource Reference id for this resource.
+	 * @see #getExtendedResRef()
+	 */
 	public String getResRef() {
 		return this.key.getResRef();
+	}
+
+	/**
+	 * Gets the resref of this GFF concatenated with its file extension. For
+	 * example, the creature resref "watson" would return
+	 * <code>watson.utc</code>. There are no guarantees as to capitalization.
+	 * This is a completely unique identifier.
+	 * 
+	 * @return The resref with its file extension.
+	 * @see #getResRef()
+	 */
+	protected String getExtendedResRef() {
+		return this.getResRef() + "." + this.key.getExtension();
 	}
 
 	/**
@@ -242,8 +261,13 @@ public class NWNResource implements Comparable<NWNResource> {
 		return this.key.getExtension();
 	}
 
-	protected boolean ignorable() {
-		return this.key.getResType() == ErfKey.AREA_GAME_INSTANCE_FILE_TYPE;
+	/**
+	 * Not all GFFs have an Object Representation.
+	 * 
+	 * @return
+	 */
+	protected boolean generatesObject() {
+		return this.isGFF() && this.getGFF().generatesObject();
 	}
 
 	@Override
