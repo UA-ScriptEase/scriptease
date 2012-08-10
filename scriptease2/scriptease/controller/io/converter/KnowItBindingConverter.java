@@ -333,10 +333,13 @@ public class KnowItBindingConverter implements Converter {
 
 		gameObject = currentModule.getInstanceForObjectIdentifier(id);
 
-		if (gameObject != null)
+		if (gameObject != null) {
 			return new KnowItBindingConstant(gameObject);
-		else
+		} else {
+			System.err.println("Binding lookup failed for id " + id
+					+ ", assigning null instead.");
 			return null;
+		}
 	}
 
 	private KnowItBindingFunction unmarshallFunctionBinding(
