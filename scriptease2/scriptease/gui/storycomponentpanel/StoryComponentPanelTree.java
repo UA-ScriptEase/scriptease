@@ -19,7 +19,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 /**
  * Tree which contains a root StoryComponentPanel, a StoryComponentPanelManager
  * which manages selection for the entire tree, and StoryComponentPanelSetting
- * for defining tree drag and drag and selection behavior.
+ * for defining tree drag and drop and selection behavior.
  * 
  * @author mfchurch
  * @author lari
@@ -31,7 +31,11 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	private StoryComponentPanelSetting settings;
 	private StoryComponent root;
 	private Filter filterRule;
+
 	
+	/*
+	 * This is only used in PathAssigner class.
+	 */
 	public StoryComponentPanelTree(StoryComponentPanelSetting settings) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -129,7 +133,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	}
 
 	/**
-	 * Determines the number of search results are found.
+	 * Determines the number of search results found.
 	 * 
 	 * @param visibleCount
 	 * @param root

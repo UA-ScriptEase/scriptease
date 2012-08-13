@@ -19,6 +19,8 @@ import scriptease.model.complex.ScriptIt;
  * JPanel used for assigning a ScriptIt to a selected DescribeIt path. Displays
  * the ScriptIt in the JPanel.
  * 
+ * TODO This should be in some other class with all of the other describeit stuff.
+ * 
  * @author mfchurch
  * @author kschenk
  * 
