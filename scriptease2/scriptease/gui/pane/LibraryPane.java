@@ -29,8 +29,8 @@ import scriptease.gui.action.typemenus.TypeSelectionAction;
 import scriptease.gui.control.FilterableSearchField;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
-import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelLibrarySetting;
-import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelSetting;
+import scriptease.gui.storycomponentpanel.setting.$StoryComponentPanelLibrarySetting;
+import scriptease.gui.storycomponentpanel.setting.$StoryComponentPanelSetting;
 import scriptease.model.LibraryManager;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.Translator;
@@ -60,7 +60,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	private final StoryComponentPanelTree foldersTree;
 
 	public LibraryPane(boolean showInvisible) {
-		this(new StoryComponentPanelLibrarySetting(), showInvisible);
+		this(new $StoryComponentPanelLibrarySetting(), showInvisible);
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 * 
 	 * @param librarySettings
 	 */
-	public LibraryPane(StoryComponentPanelSetting librarySettings,
+	public LibraryPane($StoryComponentPanelSetting librarySettings,
 			boolean showInvisible) {
 		final LibraryManager libManager = LibraryManager.getInstance();
 		final StoryComponentContainer root;

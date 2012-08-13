@@ -14,7 +14,7 @@ import scriptease.model.complex.StoryItemSequence;
  * 
  */
 public class StoryComponentPanelStorySetting extends AbstractNoOpStoryVisitor
-		implements StoryComponentPanelSetting {
+		implements $StoryComponentPanelSetting {
 	private StoryComponentPanel panel;
 
 	@Override
