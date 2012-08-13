@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.JDialog;
@@ -43,6 +44,10 @@ import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.gui.storycomponentlist.StoryComponentPanelList;
+import scriptease.gui.storycomponentpanel.StoryComponentPanel;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
+import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
@@ -418,6 +423,7 @@ public class MenuFactory {
 		final JMenuItem throwErrorItem;
 		final JMenuItem generateCodeItem;
 		final JMenuItem viewGraphEditorItem;
+		final JMenuItem viewListItem;
 
 		menu.add(MenuFactory.buildStoryMenu());
 
@@ -427,6 +433,7 @@ public class MenuFactory {
 		throwErrorItem = new JMenuItem("Throw Error!");
 		generateCodeItem = new JMenuItem("Generate Code");
 		viewGraphEditorItem = new JMenuItem("View Graph Editor (NWN Only)");
+		viewListItem = new JMenuItem("View Story Component List");
 
 		throwExceptionItem.addActionListener(new ActionListener() {
 
@@ -537,7 +544,37 @@ public class MenuFactory {
 					});
 				}
 			}
+		});
 
+		viewListItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final JFrame frame = new JFrame();
+				final StoryComponent root;
+				final StoryComponentPanel rootPanel;
+				final List<StoryComponentPanel> panelList;
+
+				root = LibraryManager.getInstance().getLibraryMasterRoot();
+				rootPanel = StoryComponentPanelFactory.getInstance()
+						.buildPanel(root);
+				panelList = new ArrayList<StoryComponentPanel>();
+
+				for (StoryComponentPanel panel : rootPanel.getChildrenPanels()) {
+					for (StoryComponentPanel children : panel
+							.getChildrenPanels()) {
+						for (StoryComponentPanel child : children
+								.getChildrenPanels()) {
+							panelList.add(child);
+						}
+					}
+				}
+
+				frame.add(new StoryComponentPanelList(panelList, false));
+
+				frame.pack();
+				frame.setVisible(true);
+			}
 		});
 
 		throwExceptionItem.setMnemonic(KeyEvent.VK_A);
@@ -547,6 +584,7 @@ public class MenuFactory {
 		menu.add(generateCodeItem);
 		menu.addSeparator();
 		menu.add(viewGraphEditorItem);
+		menu.add(viewListItem);
 
 		return menu;
 	}

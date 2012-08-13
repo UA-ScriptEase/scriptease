@@ -12,7 +12,7 @@ import scriptease.gui.SETree.filters.Filter;
 import scriptease.gui.SETree.filters.Filterable;
 import scriptease.gui.SETree.filters.StoryComponentFilter;
 import scriptease.gui.SETree.filters.VisibilityFilter;
-import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelSetting;
+import scriptease.gui.storycomponentpanel.setting.$StoryComponentPanelSetting;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 
@@ -28,15 +28,15 @@ import scriptease.model.complex.ComplexStoryComponent;
 public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	private StoryComponentPanelManager selectionManager;
 	private StoryComponentPanel rootPanel;
-	private StoryComponentPanelSetting settings;
+	private $StoryComponentPanelSetting settings;
 	private StoryComponent root;
 	private Filter filterRule;
 
 	
 	/*
-	 * This is only used in PathAssigner class.
+	 * TODO This is only used in PathAssigner class!
 	 */
-	public StoryComponentPanelTree(StoryComponentPanelSetting settings) {
+	public StoryComponentPanelTree($StoryComponentPanelSetting settings) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -47,12 +47,12 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	}
 
 	public StoryComponentPanelTree(StoryComponent root,
-			StoryComponentPanelSetting settings) {
+			$StoryComponentPanelSetting settings) {
 		this(root, settings, null, false);
 	}
 	
 	public StoryComponentPanelTree(StoryComponent root,
-			StoryComponentPanelSetting settings, Filter filter, boolean showInvisible) {
+			$StoryComponentPanelSetting settings, Filter filter, boolean showInvisible) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -186,7 +186,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * 
 	 * @return
 	 */
-	public StoryComponentPanelSetting getSettings() {
+	public $StoryComponentPanelSetting getSettings() {
 		return this.settings;
 	}
 
@@ -196,7 +196,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * 
 	 * @param settings
 	 */
-	public void setSettings(StoryComponentPanelSetting settings) {
+	public void setSettings($StoryComponentPanelSetting settings) {
 		this.settings = settings;
 		if (this.rootPanel != null)
 			this.settings.updateComplexSettings(this.rootPanel);
