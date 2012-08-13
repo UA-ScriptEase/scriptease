@@ -337,14 +337,14 @@ public class MenuFactory {
 		editMenu.addSeparator();
 
 		// Create and add the preferences item.
-		@SuppressWarnings("serial")
-		final JMenuItem preferencesItem = new AutofiringMenuItem(
-				Il8nResources.getString("Preferences") + "...") {
+		final JMenuItem preferencesItem = new JMenuItem(
+				Il8nResources.getString("Preferences") + "...");
+		preferencesItem.addActionListener(new ActionListener() {
 			@Override
-			protected void action() {
+			public void actionPerformed(ActionEvent event) {
 				WindowManager.getInstance().showPreferencesDialog();
 			}
-		};
+		});
 		preferencesItem.setMnemonic(KeyEvent.VK_R);
 		editMenu.add(preferencesItem);
 
@@ -352,21 +352,20 @@ public class MenuFactory {
 		return editMenu;
 	}
 
-	@SuppressWarnings("serial")
 	public static JMenu buildHelpMenu() {
-		// TODO: Encapsulate this into an action object.
 		final JMenu menu = new JMenu(MenuFactory.HELP);
 		menu.setMnemonic(KeyEvent.VK_H);
 
-		JMenuItem item = new AutofiringMenuItem(
-				Il8nResources.getString("About_ScriptEase")) {
+		final JMenuItem helpMenuItem = new JMenuItem("About_ScriptEase");
+
+		helpMenuItem.addActionListener(new ActionListener() {
 			@Override
-			protected void action() {
+			public void actionPerformed(ActionEvent e) {
 				WindowManager.getInstance().showAboutScreen();
 			}
-		};
-		item.setMnemonic(KeyEvent.VK_A);
-		menu.add(item);
+		});
+		helpMenuItem.setMnemonic(KeyEvent.VK_A);
+		menu.add(helpMenuItem);
 
 		return menu;
 	}
@@ -413,7 +412,6 @@ public class MenuFactory {
 		return menu;
 	}
 
-	@SuppressWarnings("serial")
 	public static JMenu buildDebugMenu() {
 		final JMenu menu = new JMenu(MenuFactory.DEBUG);
 		final JMenuItem throwExceptionItem;
@@ -435,7 +433,8 @@ public class MenuFactory {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final File monocleDinosaur;
-				monocleDinosaur = new File("scriptease/resources/monocleDinosaur.txt");
+				monocleDinosaur = new File(
+						"scriptease/resources/monocleDinosaur.txt");
 				String monocleDinosaurString;
 
 				try {
@@ -452,7 +451,8 @@ public class MenuFactory {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final File monocleDinosaur;
-				monocleDinosaur = new File("scriptease/resources/monocleDinosaur.txt");
+				monocleDinosaur = new File(
+						"scriptease/resources/monocleDinosaur.txt");
 				String monocleDinosaurString;
 
 				try {
