@@ -373,7 +373,16 @@ public class DialogBuilder {
 		wizard.display();
 	}
 
-	public LibraryModel showNewLibaryWizard(Frame parent) {
+	/**
+	 * This is never used. Translator assigned to new Library Model may be
+	 * wrong. Check before implementing this.
+	 * 
+	 * @deprecated
+	 * 
+	 * @param parent
+	 * @return
+	 */
+	public LibraryModel showNewLibraryWizard(Frame parent) {
 		final JPanel newLibraryPanel;
 		final JLabel authorLabel;
 		final JTextField authorField;

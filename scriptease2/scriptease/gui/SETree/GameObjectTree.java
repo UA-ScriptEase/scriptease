@@ -152,9 +152,12 @@ public class GameObjectTree extends SETreeModel {
 			Collection<GameConstant> gameObjects) {
 		Collection<GameConstant> filteredObjects = new ArrayList<GameConstant>();
 
-		if (filter == null || gameObjects == null)
-			return gameObjects;
-
+		if (filter == null)
+			if(gameObjects == null)
+				return filteredObjects;
+			else
+				return gameObjects;
+		
 		for (GameConstant gameObject : gameObjects) {
 			// If the child was accepted by the filter
 			boolean accepted = filter.isAcceptable(gameObject);

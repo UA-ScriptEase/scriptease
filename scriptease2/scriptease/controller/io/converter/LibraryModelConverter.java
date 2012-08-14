@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
-import scriptease.gui.SETree.filters.CategoryFilter.Category;
 import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 
@@ -40,23 +39,23 @@ public class LibraryModelConverter implements Converter {
 		// write out the libary's patterns by category
 
 		// effects
-		writer.startNode(Category.EFFECTS.toString());
+		writer.startNode("EFFECTS");
 		context.convertAnother(model.getEffectsCategory().getChildren());
 		writer.endNode();
 
 		// causes
-		writer.startNode(Category.CAUSES.toString());
+		writer.startNode("CAUSES");
 		context.convertAnother(model.getCausesCategory().getChildren());
 		writer.endNode();
 
-		// effects
-		writer.startNode(Category.DESCRIPTIONS.toString());
+		// Descriptions
+		writer.startNode("DESCRIPTIONS");
 		context.convertAnother(model.getDescriptionsCategory()
 				.getChildren());
 		writer.endNode();
 
 		// folders
-		writer.startNode(Category.FOLDERS.toString());
+		writer.startNode("FOLDERS");
 		context.convertAnother(model.getFoldersCategory().getChildren());
 		writer.endNode();
 	}
@@ -64,14 +63,15 @@ public class LibraryModelConverter implements Converter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		LibraryModel model = null;
+		final LibraryModel model;
 		final String title;
 		final String author;
 
 		title = FileIO.readValue(reader, TAG_TITLE);
 		author = FileIO.readValue(reader, TAG_AUTHOR);
-
+		
 		model = new LibraryModel(title, author);
+		
 		model.setAutosaving(true);
 
 		this.unmarshallLibraryContents(reader, context, model);

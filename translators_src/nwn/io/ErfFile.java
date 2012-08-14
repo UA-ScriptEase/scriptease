@@ -239,7 +239,8 @@ public final class ErfFile implements GameModule {
 	/**
 	 * Returns a List of GameObjects which match the given ScriptEase GameType.
 	 */
-	public List<GameConstant> getInstancesOfType(String type) {
+	@Override
+	public List<GameConstant> getResourcesOfType(String type) {
 		List<GameConstant> filteredObjects = new ArrayList<GameConstant>();
 
 		for (NWNResource resource : this.resources) {
@@ -1736,10 +1737,5 @@ public final class ErfFile implements GameModule {
 		argsList.add(FileOp.removeExtension(this.location).getName());
 
 		return argsList;
-	}
-
-	public List<GameConstant> getResourcesOfType(String type) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

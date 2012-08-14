@@ -97,6 +97,10 @@ public class APIDictionary implements LibraryObserver {
 	public String getAuthor() {
 		return this.library.getAuthor();
 	}
+	
+	public Translator getTranslator() {
+		return this.library.getTranslator();
+	}
 
 	public void setName(String name) {
 		this.library.setTitle(name);
@@ -104,6 +108,10 @@ public class APIDictionary implements LibraryObserver {
 
 	public void setAuthor(String author) {
 		this.library.setAuthor(author);
+	}
+
+	public void setTranslator(Translator translator) {
+		this.library.setTranslator(translator);
 	}
 
 	@Override

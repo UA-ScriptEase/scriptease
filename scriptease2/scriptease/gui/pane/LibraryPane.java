@@ -20,18 +20,17 @@ import javax.swing.event.TreeSelectionListener;
 import scriptease.controller.observer.LibraryManagerEvent;
 import scriptease.controller.observer.LibraryManagerObserver;
 import scriptease.controller.observer.TranslatorObserver;
-import scriptease.gui.SETree.filters.CategoryFilter;
-import scriptease.gui.SETree.filters.CategoryFilter.Category;
 import scriptease.gui.SETree.filters.StoryComponentFilter;
 import scriptease.gui.SETree.filters.TranslatorFilter;
 import scriptease.gui.SETree.filters.TypeFilter;
 import scriptease.gui.action.typemenus.TypeSelectionAction;
 import scriptease.gui.control.FilterableSearchField;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
+import scriptease.gui.storycomponentlist.StoryComponentPanelList;
 import scriptease.gui.storycomponentpanel.setting.$StoryComponentPanelLibrarySetting;
 import scriptease.gui.storycomponentpanel.setting.$StoryComponentPanelSetting;
 import scriptease.model.LibraryManager;
+import scriptease.model.LibraryModel;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -52,12 +51,12 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 
 	private FilterableSearchField searchField;
 
-	private final JTabbedPane treeTabs;
+	private final JTabbedPane listTabs;
 
-	private final StoryComponentPanelTree causesTree;
-	private final StoryComponentPanelTree effectsTree;
-	private final StoryComponentPanelTree descriptionsTree;
-	private final StoryComponentPanelTree foldersTree;
+	private final StoryComponentPanelList causesList;
+	private final StoryComponentPanelList effectsList;
+	private final StoryComponentPanelList descriptionsList;
+	private final StoryComponentPanelList foldersList;
 
 	public LibraryPane(boolean showInvisible) {
 		this(new $StoryComponentPanelLibrarySetting(), showInvisible);
@@ -72,36 +71,15 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	public LibraryPane($StoryComponentPanelSetting librarySettings,
 			boolean showInvisible) {
 		final LibraryManager libManager = LibraryManager.getInstance();
-		final StoryComponentContainer root;
-		final StoryComponentFilter causesFilter;
-		final StoryComponentFilter effectsFilter;
-		final StoryComponentFilter descriptionsFilter;
-		final StoryComponentFilter foldersFilter;
-
-		// Construct the Root for the Pane to display
-		root = libManager.getLibraryMasterRoot();
-
-		// Create the default filter.
-		causesFilter = this.buildLibraryFilter(new CategoryFilter(
-				Category.CAUSES));
-		effectsFilter = this.buildLibraryFilter(new CategoryFilter(
-				Category.EFFECTS));
-		descriptionsFilter = this.buildLibraryFilter(new CategoryFilter(
-				Category.DESCRIPTIONS));
-		foldersFilter = this.buildLibraryFilter(new CategoryFilter(
-				Category.FOLDERS));
-
-		this.treeTabs = new JTabbedPane();
+		this.listTabs = new JTabbedPane();
 
 		// Create the Tree with the root and the default filter
-		this.causesTree = new StoryComponentPanelTree(root, librarySettings,
-				causesFilter, showInvisible);
-		this.effectsTree = new StoryComponentPanelTree(root, librarySettings,
-				effectsFilter, showInvisible);
-		this.descriptionsTree = new StoryComponentPanelTree(root,
-				librarySettings, descriptionsFilter, showInvisible);
-		this.foldersTree = new StoryComponentPanelTree(root, librarySettings,
-				foldersFilter, showInvisible);
+		this.causesList = new StoryComponentPanelList(showInvisible);
+		this.effectsList = new StoryComponentPanelList(showInvisible);
+		this.descriptionsList = new StoryComponentPanelList(showInvisible);
+		this.foldersList = new StoryComponentPanelList(showInvisible);
+
+		this.addStoryComponentsToLists();
 
 		// Configure the displaying of the pane
 		this.configurePane();
@@ -109,6 +87,34 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		// Listen for changes to the Libraries and Translator
 		libManager.addLibraryManagerListener(this);
 		TranslatorManager.getInstance().addTranslatorObserver(this);
+	}
+
+	/**
+	 * Adds story components from to the associated StoryComponentLists to
+	 * represent them visually.
+	 */
+	private void addStoryComponentsToLists() {
+		final Translator activeTranslator;
+
+		activeTranslator = TranslatorManager.getInstance()
+				.getActiveTranslator();
+
+		for (StoryComponentPanelList list : getListOfListTabs()) {
+			list.removeAllStoryComponents();
+		}
+
+		if (activeTranslator != null) {
+			for (LibraryModel library : activeTranslator.getLibraries()) {
+				this.causesList.addStoryComponents(library.getCausesCategory()
+						.getChildren());
+				this.effectsList.addStoryComponents(library
+						.getEffectsCategory().getChildren());
+				this.descriptionsList.addStoryComponents(library
+						.getDescriptionsCategory().getChildren());
+				this.foldersList.addStoryComponents(library
+						.getFoldersCategory().getChildren());
+			}
+		}
 	}
 
 	/**
@@ -132,16 +138,16 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 				BoxLayout.X_AXIS);
 		pickerPaneLayout = new SpringLayout();
 
-		searchField = new FilterableSearchField(this.causesTree, 20);
+		searchField = new FilterableSearchField(this.causesList, 20);
 
-		searchField.addFilter(this.effectsTree);
-		searchField.addFilter(this.descriptionsTree);
-		searchField.addFilter(this.foldersTree);
+		searchField.addFilter(this.effectsList);
+		searchField.addFilter(this.descriptionsList);
+		searchField.addFilter(this.foldersList);
 
-		treeTabs.add("Causes", causesTree);
-		treeTabs.add("Effects", effectsTree);
-		treeTabs.add("Descriptions", descriptionsTree);
-		treeTabs.add("Folders", foldersTree);
+		listTabs.add("Causes", causesList);
+		listTabs.add("Effects", effectsList);
+		listTabs.add("Descriptions", descriptionsList);
+		listTabs.add("Folders", foldersList);
 
 		filterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
 				.createLineBorder(Color.gray), Il8nResources
@@ -153,8 +159,11 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		typeFilter.setAction(new Runnable() {
 			@Override
 			public void run() {
-				for (StoryComponentPanelTree tree : getListOfTreeTabs())
-					tree.updateFilter(new TypeFilter(typeFilter
+				for (StoryComponentPanelList list : getListOfListTabs())
+
+					// FIXME Find out what happened when this was called on
+					// StoryComponentPanelTree and do same in the list
+					list.updateFilter(new TypeFilter(typeFilter
 							.getTypeSelectionDialogBuilder().getSelectedTypes()));
 			}
 		});
@@ -169,7 +178,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		filterPane.add(searchFilterPane);
 		this.add(filterPane);
 
-		this.add(treeTabs);
+		this.add(listTabs);
 		this.setPreferredSize(filterPane.getPreferredSize());
 
 		// Spring filterPane
@@ -180,13 +189,13 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 		pickerPaneLayout.putConstraint(SpringLayout.EAST, filterPane, -5,
 				SpringLayout.EAST, this);
 		// Spring pickerTree
-		pickerPaneLayout.putConstraint(SpringLayout.WEST, treeTabs, 5,
+		pickerPaneLayout.putConstraint(SpringLayout.WEST, listTabs, 5,
 				SpringLayout.WEST, this);
-		pickerPaneLayout.putConstraint(SpringLayout.EAST, treeTabs, -5,
+		pickerPaneLayout.putConstraint(SpringLayout.EAST, listTabs, -5,
 				SpringLayout.EAST, this);
-		pickerPaneLayout.putConstraint(SpringLayout.SOUTH, treeTabs, -5,
+		pickerPaneLayout.putConstraint(SpringLayout.SOUTH, listTabs, -5,
 				SpringLayout.SOUTH, this);
-		pickerPaneLayout.putConstraint(SpringLayout.NORTH, treeTabs, 5,
+		pickerPaneLayout.putConstraint(SpringLayout.NORTH, listTabs, 5,
 				SpringLayout.SOUTH, filterPane);
 		this.setLayout(pickerPaneLayout);
 	}
@@ -197,9 +206,13 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 * @param listener
 	 */
 	public void addTreeSelectionListener(TreeSelectionListener listener) {
-		for (StoryComponentPanelTree tree : getListOfTreeTabs()) {
-			tree.addTreeSelectionListener(listener);
+		// FIXME So we can't really add tree selection listeners to a list,
+		// obviously. Figure this out.
+
+		for (StoryComponentPanelList list : getListOfListTabs()) {
+			// tree.addTreeSelectionListener(listener);
 		}
+
 	}
 
 	/**
@@ -208,16 +221,16 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 * 
 	 * @return
 	 */
-	private List<StoryComponentPanelTree> getListOfTreeTabs() {
-		final List<StoryComponentPanelTree> treeList;
+	private List<StoryComponentPanelList> getListOfListTabs() {
+		final List<StoryComponentPanelList> listList;
 
-		treeList = new ArrayList<StoryComponentPanelTree>();
+		listList = new ArrayList<StoryComponentPanelList>();
 
-		for (Component treeTab : this.treeTabs.getComponents())
-			if (treeTab instanceof StoryComponentPanelTree)
-				treeList.add((StoryComponentPanelTree) treeTab);
+		for (Component listTab : this.listTabs.getComponents())
+			if (listTab instanceof StoryComponentPanelList)
+				listList.add((StoryComponentPanelList) listTab);
 
-		return treeList;
+		return listList;
 	}
 
 	/**
@@ -225,7 +238,7 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 * 
 	 * @return
 	 */
-	private StoryComponentFilter buildLibraryFilter(CategoryFilter filter) {
+	private StoryComponentFilter buildLibraryFilter(StoryComponentFilter filter) {
 		// Filter by translator
 		filter.addRule(new TranslatorFilter(TranslatorManager.getInstance()
 				.getActiveTranslator()));
@@ -240,12 +253,15 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 */
 	@Override
 	public void modelChanged(final LibraryManagerEvent managerEvent) {
+		this.addStoryComponentsToLists();
+
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				// invoke later after the translator has finished loading
-				for (StoryComponentPanelTree tree : getListOfTreeTabs())
-					tree.filterTree();
+				for (StoryComponentPanelList list : getListOfListTabs()) {
+					list.filterList();
+				}
 			}
 		});
 	}
@@ -255,9 +271,11 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 */
 	@Override
 	public void translatorLoaded(Translator newTranslator) {
-		for (StoryComponentPanelTree tree : getListOfTreeTabs()) {
-			tree.updateFilter(new TranslatorFilter(newTranslator));
-			tree.filterTree();
+		this.addStoryComponentsToLists();
+
+		for (StoryComponentPanelList list : getListOfListTabs()) {
+			list.updateFilter(new TranslatorFilter(newTranslator));
+			list.filterList();
 		}
 	}
 }
