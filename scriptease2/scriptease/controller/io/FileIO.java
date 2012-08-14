@@ -25,11 +25,11 @@ import scriptease.controller.io.converter.StoryComponentContainerConverter;
 import scriptease.controller.io.converter.StoryItemSequenceConverter;
 import scriptease.controller.io.converter.StoryModelConverter;
 import scriptease.controller.io.converter.fragment.FormatDefinitionFragmentConverter;
+import scriptease.controller.io.converter.fragment.FormatReferenceFragmentConverter;
 import scriptease.controller.io.converter.fragment.IndentedFragmentConverter;
 import scriptease.controller.io.converter.fragment.LineFragmentConverter;
 import scriptease.controller.io.converter.fragment.LiteralFragmentConverter;
 import scriptease.controller.io.converter.fragment.MapRefFragmentConverter;
-import scriptease.controller.io.converter.fragment.FormatReferenceFragmentConverter;
 import scriptease.controller.io.converter.fragment.ScopeFragmentConverter;
 import scriptease.controller.io.converter.fragment.SeriesFragmentConverter;
 import scriptease.controller.io.converter.fragment.SimpleDataFragmentConverter;
@@ -63,6 +63,7 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.LanguageDictionary;
+import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
 import scriptease.translator.codegenerator.code.fragments.MapRefFragment;
@@ -177,7 +178,7 @@ public class FileIO {
 	 *            The file path to read from.
 	 * @return The API dictionary as read from disk.
 	 */
-	public APIDictionary readAPIDictionary(File location) {
+	public APIDictionary readAPIDictionary(Translator translator, File location) {
 		/*
 		 * Check against inifiniloops. This is usually caused by trying to get
 		 * something from the API dictionary while the API dictionary isn't done
@@ -191,6 +192,8 @@ public class FileIO {
 
 		APIDictionary apiDictionary = (APIDictionary) this.readData(location,
 				IoMode.API_DICTIONARY);
+		
+		apiDictionary.setTranslator(translator);
 
 		BindingFixer.fixBindings(apiDictionary.getLibrary().getRoot());
 

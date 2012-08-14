@@ -11,7 +11,6 @@ import scriptease.controller.observer.LibraryObserver;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
-import scriptease.gui.SETree.filters.CategoryFilter.Category;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
@@ -38,6 +37,7 @@ import scriptease.translator.Translator;
  */
 public class LibraryModel extends PatternModel implements
 		StoryComponentObserver {
+	private Translator translator;
 	private final Collection<LibraryObserver> listeners;
 	private StoryComponentContainer effectsCategory;
 	private StoryComponentContainer causesCategory;
@@ -47,20 +47,39 @@ public class LibraryModel extends PatternModel implements
 	private StoryComponentContainer modelRoot;
 
 	/**
-	 * Builds a new Library model with a blank author and title.
+	 * Builds a new Library model with a blank author and title, and null
+	 * translator.
+	 */
+	public LibraryModel() {
+		this("", "", null);
+	}
+
+	/**
+	 * Builds a new Library model with a blank author and title, and the passed
+	 * translator.
+	 * 
+	 * @param translator
+	 *            The translator that the library belongs to.
+	 */
+	public LibraryModel(Translator translator) {
+		this("", "", translator);
+	}
+
+	/**
+	 * Builds a new Library model with the supplied author and title, and a null
+	 * translator.
 	 * 
 	 * @param title
 	 *            the name of the library.
 	 * @param author
-	 *            the author of the library.
 	 */
-	public LibraryModel() {
-		this("", "");
+	public LibraryModel(String title, String author) {
+		this(title, author, null);
 	}
 
 	/**
-	 * Builds a new Library model with the supplied author and title
-	 * information.
+	 * Builds a new Library model with the supplied author, title, and
+	 * translator.
 	 * 
 	 * @param title
 	 *            the name of the library.
@@ -69,8 +88,10 @@ public class LibraryModel extends PatternModel implements
 	 * @param translator
 	 *            The translator that this library belongs to.
 	 */
-	public LibraryModel(String title, String author) {
+	public LibraryModel(String title, String author, Translator translator) {
 		super(title, author);
+
+		this.translator = translator;
 
 		this.modelRoot = new StoryComponentContainer(title);
 
@@ -129,23 +150,27 @@ public class LibraryModel extends PatternModel implements
 
 	@Override
 	public Translator getTranslator() {
-		return null;
+		return this.translator;
+	}
+
+	public void setTranslator(Translator translator) {
+		this.translator = translator;
 	}
 
 	public StoryComponentContainer getEffectsCategory() {
-		return effectsCategory;
+		return this.effectsCategory;
 	}
 
 	public StoryComponentContainer getCausesCategory() {
-		return causesCategory;
+		return this.causesCategory;
 	}
 
 	public StoryComponentContainer getDescriptionsCategory() {
-		return descriptionsCategory;
+		return this.descriptionsCategory;
 	}
 
 	public StoryComponentContainer getFoldersCategory() {
-		return folderCategory;
+		return this.folderCategory;
 	}
 
 	/**
@@ -165,18 +190,18 @@ public class LibraryModel extends PatternModel implements
 			for (StoryComponent child : root.getChildren()) {
 				containerChild = (StoryComponentContainer) child;
 
-				if (child.getDisplayText().equalsIgnoreCase(
-						Category.EFFECTS.toString()))
+				if (child.getDisplayText().equalsIgnoreCase("EFFECTS"))
 					this.effectsCategory = containerChild;
-				else if (child.getDisplayText().equalsIgnoreCase(
-						Category.CAUSES.toString()))
+				else if (child.getDisplayText().equalsIgnoreCase("CAUSES"))
 					this.causesCategory = containerChild;
-				else if (child.getDisplayText().equalsIgnoreCase(
-						Category.DESCRIPTIONS.toString()))
+				else if (child.getDisplayText()
+						.equalsIgnoreCase("DESCRIPTIONS"))
 					this.descriptionsCategory = containerChild;
-				else if (child.getDisplayText().equalsIgnoreCase(
-						Category.FOLDERS.toString()))
+				else if (child.getDisplayText().equalsIgnoreCase("FOLDERS"))
 					this.folderCategory = containerChild;
+				else
+					System.out.println("Unimplemented Child Type: "
+							+ child.getDisplayText());
 			}
 
 			this.registerCategoryChildTypes();
@@ -228,12 +253,16 @@ public class LibraryModel extends PatternModel implements
 	@Override
 	public void componentChanged(StoryComponentEvent event) {
 		if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED) {
-			/*System.out.println("Removed '" + event.getSource() + "' from "
-					+ toString());*/ //Debug Code
+			/*
+			 * System.out.println("Removed '" + event.getSource() + "' from " +
+			 * toString());
+			 */// Debug Code
 			notifyChange(LibraryEvent.STORYCOMPONENT_REMOVED, event);
 		} else if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
-			/*System.out.println("Added '" + event.getSource() + "' to "
-					+ toString());*/ //Debug Code
+			/*
+			 * System.out.println("Added '" + event.getSource() + "' to " +
+			 * toString());
+			 */// Debug Code
 			notifyChange(LibraryEvent.STORYCOMPONENT_ADDED, event);
 		} else {
 			notifyChange(LibraryEvent.STORYCOMPONENT_CHANGED, event);

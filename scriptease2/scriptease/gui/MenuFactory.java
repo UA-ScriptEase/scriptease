@@ -556,6 +556,7 @@ public class MenuFactory {
 				final List<StoryComponentPanel> panelList;
 
 				root = LibraryManager.getInstance().getLibraryMasterRoot();
+				
 				rootPanel = StoryComponentPanelFactory.getInstance()
 						.buildPanel(root);
 				panelList = new ArrayList<StoryComponentPanel>();
@@ -570,7 +571,7 @@ public class MenuFactory {
 					}
 				}
 
-				frame.add(new StoryComponentPanelList(panelList, false));
+			//	frame.add(new StoryComponentPanelList(panelt, false));
 
 				frame.pack();
 				frame.setVisible(true);

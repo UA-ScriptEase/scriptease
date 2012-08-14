@@ -229,8 +229,17 @@ public final class WindowManager implements WindowFocusListener {
 		progressBar.setVisible(true);
 	}
 
+	/**
+	 * This is never used. Translator assigned to new Library Model in
+	 * DialogBuilder.showNewLibraryWizard may be wrong. Check before
+	 * implementing this.
+	 * 
+	 * @deprecated
+	 * 
+	 * @return
+	 */
 	public LibraryModel buildNewLibraryWizardDialog() {
-		return DialogBuilder.getInstance().showNewLibaryWizard(
+		return DialogBuilder.getInstance().showNewLibraryWizard(
 				this.currentFrame);
 	}
 

@@ -22,6 +22,8 @@ import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.SEFrame;
 import scriptease.gui.WindowManager;
+import scriptease.model.LibraryManager;
+import scriptease.model.LibraryModel;
 import scriptease.translator.codegenerator.GameObjectPicker;
 import scriptease.translator.io.model.GameModule;
 import scriptease.util.FileOp;
@@ -79,9 +81,18 @@ public class Translator {
 	 */
 	public enum DescriptionKeys {
 		// Mandatory keys
-		NAME, API_DICTIONARY_PATH, LANGUAGE_DICTIONARY_PATH, GAME_MODULE_PATH,
+		NAME,
+		API_DICTIONARY_PATH,
+		LANGUAGE_DICTIONARY_PATH,
+		GAME_MODULE_PATH,
 		// Suggested keys
-		SUPPORTED_FILE_EXTENSIONS, INCLUDES_PATH, ICON_PATH, COMPILER_PATH, CUSTOM_PICKER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY;
+		SUPPORTED_FILE_EXTENSIONS,
+		INCLUDES_PATH,
+		ICON_PATH,
+		COMPILER_PATH,
+		CUSTOM_PICKER_PATH,
+		SUPPORTS_TESTING,
+		GAME_DIRECTORY;
 	}
 
 	private final Properties properties;
@@ -447,7 +458,7 @@ public class Translator {
 		// load the apiDictionary
 		apiFile = this.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH);
 
-		this.apiDictionary = xmlReader.readAPIDictionary(apiFile);
+		this.apiDictionary = xmlReader.readAPIDictionary(this, apiFile);
 
 		if (this.apiDictionary == null)
 			throw new IllegalStateException("Unable to load the APIDictionary.");
@@ -698,6 +709,47 @@ public class Translator {
 			this.customGameObjectPicker = loadCustomGameObjectPicker(customPickerPath);
 
 		return this.customGameObjectPicker;
+	}
+
+	/**
+	 * Returns the libraries associated with the translator, including the
+	 * default libraries that are marked by having a null translator. These are
+	 * obtained from the Library Manager.
+	 * 
+	 * @return
+	 */
+	public Collection<LibraryModel> getLibraries() {
+		final Collection<LibraryModel> libraries;
+
+		libraries = new ArrayList<LibraryModel>();
+
+		for (LibraryModel library : LibraryManager.getInstance().getLibraries())
+			if (library.getTranslator() == this
+					|| library.getTranslator() == null)
+				libraries.add(library);
+
+		return libraries;
+	}
+
+	/**
+	 * Returns only the libraries associated with the translator. These are
+	 * obtained from the Library Manager.
+	 * 
+	 * Note that this method does not return default libraries that should be
+	 * common across all translators.
+	 * 
+	 * @return
+	 */
+	public Collection<LibraryModel> getLibrariesSpecificToTranslator() {
+		final Collection<LibraryModel> libraries;
+
+		libraries = new ArrayList<LibraryModel>();
+
+		for (LibraryModel library : LibraryManager.getInstance().getLibraries())
+			if (library.getTranslator() == this)
+				libraries.add(library);
+
+		return libraries;
 	}
 
 	/**
