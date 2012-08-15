@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.undo.UndoManager;
@@ -28,20 +29,27 @@ import scriptease.model.complex.ComplexStoryComponent;
  * <br>
  * It is a Singleton class; get the sole instance from {@link #getInstance()}.
  * 
+ * If any other components ever need to be added that contain Story Components,
+ * add a check to the "getSourceActions" method, and then add to the
+ * "createTransferable" method to get the StoryComponentPanels out of whatever
+ * container component was used. This is what we are doing with JLists that
+ * contain Story Component Panels.
+ * 
  * @author remiller
  * @author mfchurch
+ * @author kschenk
  * @see TransferHandler
  */
 @SuppressWarnings("serial")
 public class StoryComponentPanelTransferHandler extends TransferHandler {
 	private static final StoryComponentPanelTransferHandler instance = new StoryComponentPanelTransferHandler();
-	public static DataFlavor storyCompFlavour;
+	protected static DataFlavor storyCompFlavour;
 
 	public static StoryComponentPanelTransferHandler getInstance() {
 		return StoryComponentPanelTransferHandler.instance;
 	}
 
-	protected StoryComponentPanelTransferHandler() {
+	private StoryComponentPanelTransferHandler() {
 		if (StoryComponentPanelTransferHandler.storyCompFlavour == null) {
 			try {
 				String storyComponentFlavour = DataFlavor.javaJVMLocalObjectMimeType
@@ -55,6 +63,20 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			}
 		}
 	}
+	
+	@Override
+	public int getSourceActions(JComponent c) {
+		if (c instanceof StoryComponentPanel) {
+			StoryComponentPanel panel = (StoryComponentPanel) c;
+			if (panel.isRemovable()) {
+				return TransferHandler.COPY_OR_MOVE;
+			} else
+				return TransferHandler.COPY;
+		} else if (c instanceof JList) {
+			return TransferHandler.COPY;
+		}
+		return TransferHandler.NONE;
+	}
 
 	/**
 	 * Creates a transferable from the given component. Returns null if
@@ -63,21 +85,30 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 */
 	@Override
 	protected Transferable createTransferable(JComponent comp) {
-		final List<StoryComponent> data = new ArrayList<StoryComponent>();
-		final StoryComponentPanel panel = (StoryComponentPanel) comp;
-		final StoryComponentPanelManager selectionManager = panel
-				.getSelectionManager();
+		final List<StoryComponent> data;
 
-		// Get the parent selected StoryComponents, since the children will be
-		// grabbed implicitly from the model
-		if (selectionManager != null) {
-			for (StoryComponentPanel aPanel : selectionManager
-					.getSelectedParents())
-				data.add(aPanel.getStoryComponent());
-		}
+		data = new ArrayList<StoryComponent>();
 
-		/* if nothing is selected */
-		if (data.isEmpty())
+		if (comp instanceof StoryComponentPanel) {
+			final StoryComponentPanel panel;
+			// Get the parent selected StoryComponents, since the children will
+			// be
+			// grabbed implicitly from the model
+			panel = (StoryComponentPanel) comp;
+			final StoryComponentPanelManager selectionManager = panel
+					.getSelectionManager();
+			if (selectionManager != null) {
+				for (StoryComponentPanel aPanel : selectionManager
+						.getSelectedParents())
+					data.add(aPanel.getStoryComponent());
+			}
+		} else if (comp instanceof JList) {
+			for (Object panelObject : ((JList) comp).getSelectedValues()) {
+				if (panelObject instanceof StoryComponentPanel)
+					data.add(((StoryComponentPanel) panelObject)
+							.getStoryComponent());
+			}
+		} else
 			return null;
 
 		// Create a Transferable with those StoryComponents
@@ -109,174 +140,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				return false;
 		}
 	}
-
-	private boolean canAcceptChildren(StoryComponent potentialParent,
-			Collection<StoryComponent> potentialChildren) {
-		boolean acceptable = true;
-
-		for (StoryComponent child : potentialChildren) {
-			acceptable &= (potentialParent instanceof ComplexStoryComponent)
-					&& ((ComplexStoryComponent) potentialParent)
-							.canAcceptChild(child);
-		}
-
-		return acceptable;
-	}
-
-	/**
-	 * Determines where the transfer will be inserting into.
-	 * 
-	 * @param support
-	 *            The transfer context.
-	 * @param panel
-	 *            The StoryComponentPanel that will be receiving the transfer.
-	 * @return The child index in the parent that would receive the drop.
-	 */
-	private int getInsertionIndex(StoryComponentPanel panel,
-			TransferSupport support) {
-		final StoryComponent parent = panel.getStoryComponent();
-		final Point mouseLocation = support.getDropLocation().getDropPoint();
-		int index = -1;
-
-		// if the mouse is within the panel's boundries
-		if (mouseLocation != null && parent instanceof ComplexStoryComponent) {
-			double yMouseLocation = mouseLocation.getY();
-			if (((ComplexStoryComponent) parent).getChildCount() > 0) {
-				StoryComponentPanel closest = this.findClosestChildPanel(
-						yMouseLocation, panel);
-				if (closest != null) {
-					final StoryComponent child = closest.getStoryComponent();
-					index = ((ComplexStoryComponent) parent)
-							.getChildIndex(child);
-				}
-			} else
-				index = 0;
-		}
-		return index;
-	}
-
-	// Don't look further than MAX_Y pixels for the closest panel
-	private static final int MAX_Y = 1000;
-
-	/**
-	 * Get the closest child StoryComponentPanel to the given parentPanel based
-	 * on the given yLocation. May return null if it is unable to find a child
-	 * panel within MAX_Y pixels of given yLocation
-	 * 
-	 * @param yLocation
-	 * @param parentPanel
-	 * @return
-	 */
-	private StoryComponentPanel findClosestChildPanel(double yLocation,
-			StoryComponentPanel parentPanel) {
-		// tracking variables used to maintain which panel is closest
-		double closest = MAX_Y;
-		StoryComponentPanel closestPanel = null;
-
-		final Collection<StoryComponentPanel> children = parentPanel
-				.getChildrenPanels();
-		// for each child, check if it is closer than the current closest
-		for (StoryComponentPanel child : children) {
-			double yChildLocation = child.getLocation().getY();
-			double yDifference = Math.abs(yChildLocation - yLocation);
-			if (yDifference < closest) {
-				closest = yDifference;
-				closestPanel = child;
-			}
-		}
-		return closestPanel;
-	}
-
-	/**
-	 * Returns if the given support contains a Binding
-	 * 
-	 * @param support
-	 * @return
-	 */
-	private boolean isBinding(TransferSupport support) {
-		Transferable transferable = support.getTransferable();
-		KnowItBinding binding = null;
-
-		try {
-			binding = ((BindingWidget) transferable
-					.getTransferData(BindingWidgetTransferHandler.KnowItBindingFlavor))
-					.getBinding();
-			return binding != null;
-		} catch (UnsupportedFlavorException e) {
-			// No chocolate for you!
-			return false;
-		} catch (IOException e) {
-			return false;
-		}
-	}
-
-	/**
-	 * Attempts to extract StoryComponents from the Transfer Support. Returns
-	 * <code>null</code> on failure.
-	 * 
-	 * @param support
-	 *            The support to extract from.
-	 * @return the StoryComponent extracted from the support, or
-	 *         <code>null</code> if one cannot be found.
-	 */
-	protected Collection<StoryComponent> extractStoryComponents(
-			TransferSupport support) {
-		return extractStoryComponents(support.getTransferable());
-	}
-
-	/**
-	 * Attempts to extract StoryComponents from the Transferable. Returns null
-	 * on failure.
-	 * 
-	 * @param transferData
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	protected Collection<StoryComponent> extractStoryComponents(
-			Transferable transferData) {
-		Collection<StoryComponent> data = null;
-
-		// FLAVA FAAVVVEE
-		if (transferData
-				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
-			try {
-				data = (Collection<StoryComponent>) transferData
-						.getTransferData(StoryComponentPanelTransferHandler.storyCompFlavour);
-			} catch (UnsupportedFlavorException e) {
-				// data flavour is incompatible, the import is impossible
-				return null;
-			} catch (IOException e) {
-				System.err
-						.println("Augh! TransferHandler IO problem?! I don't even know what this MEANS!"
-								+ e);
-				return null;
-			}
-		}
-		return data;
-	}
-
-	@Override
-	public void exportToClipboard(JComponent comp, Clipboard clip, int action)
-			throws IllegalStateException {
-		// Start an undoable action for cut, but not for copy.
-		if (!UndoManager.getInstance().hasOpenUndoableAction()
-				&& action == TransferHandler.MOVE)
-			UndoManager.getInstance().startUndoableAction("Cut");
-		super.exportToClipboard(comp, clip, action);
-	}
-
-	@Override
-	public void exportAsDrag(JComponent comp, InputEvent e, int action) {
-		// Start an undoable action for the move.
-		if (!UndoManager.getInstance().hasOpenUndoableAction())
-			UndoManager.getInstance().startUndoableAction("Move");
-		super.exportAsDrag(comp, e, action); 
-	}
-
+	
 	@Override
 	public boolean importData(TransferSupport support) {
-		System.out.println(support.getComponent() + " from " +support.getComponent().getClass());
-
 		// sanity check
 		if (!this.canImport(support))
 			return false;
@@ -341,7 +207,25 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		return true;
 	}
+	
+	@Override
+	public void exportToClipboard(JComponent comp, Clipboard clip, int action)
+			throws IllegalStateException {
+		// Start an undoable action for cut, but not for copy.
+		if (!UndoManager.getInstance().hasOpenUndoableAction()
+				&& action == TransferHandler.MOVE)
+			UndoManager.getInstance().startUndoableAction("Cut");
+		super.exportToClipboard(comp, clip, action);
+	}
 
+	@Override
+	public void exportAsDrag(JComponent comp, InputEvent e, int action) {
+		// Start an undoable action for the move.
+		if (!UndoManager.getInstance().hasOpenUndoableAction())
+			UndoManager.getInstance().startUndoableAction("Move");
+		super.exportAsDrag(comp, e, action);
+	}
+	
 	@Override
 	protected void exportDone(JComponent source, Transferable data, int action) {
 		final List<StoryComponent> removedComponents = new ArrayList<StoryComponent>();
@@ -370,16 +254,173 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		}
 	}
 
-	@Override
-	public int getSourceActions(JComponent c) {
-		if (c instanceof StoryComponentPanel) {
-			StoryComponentPanel panel = (StoryComponentPanel) c;
-			if (panel.isRemovable()) {
-				return TransferHandler.COPY_OR_MOVE;
-			} else
-				return TransferHandler.COPY;
+
+	/**
+	 * Determines whether the potential parent can accept the potential
+	 * children. Recommended to call before attempting to add children to
+	 * parent.
+	 * 
+	 * @param potentialParent
+	 * @param potentialChildren
+	 * @return
+	 */
+	private boolean canAcceptChildren(StoryComponent potentialParent,
+			Collection<StoryComponent> potentialChildren) {
+		boolean acceptable = true;
+
+		for (StoryComponent child : potentialChildren) {
+			acceptable &= (potentialParent instanceof ComplexStoryComponent)
+					&& ((ComplexStoryComponent) potentialParent)
+							.canAcceptChild(child);
 		}
-		return TransferHandler.NONE;
+
+		return acceptable;
+	}
+
+	/**
+	 * Determines where the transfer will be inserting into.
+	 * 
+	 * @param support
+	 *            The transfer context.
+	 * @param panel
+	 *            The StoryComponentPanel that will be receiving the transfer.
+	 * @return The child index in the parent that would receive the drop.
+	 */
+	private int getInsertionIndex(StoryComponentPanel panel,
+			TransferSupport support) {
+		final StoryComponent parent = panel.getStoryComponent();
+		final Point mouseLocation = support.getDropLocation().getDropPoint();
+		int index = -1;
+
+		// if the mouse is within the panel's boundries
+		if (mouseLocation != null && parent instanceof ComplexStoryComponent) {
+			double yMouseLocation = mouseLocation.getY();
+			if (((ComplexStoryComponent) parent).getChildCount() > 0) {
+				StoryComponentPanel closest = this.findClosestChildPanel(
+						yMouseLocation, panel);
+				if (closest != null) {
+					final StoryComponent child = closest.getStoryComponent();
+					index = ((ComplexStoryComponent) parent)
+							.getChildIndex(child);
+				}
+			} else
+				index = 0;
+		}
+		return index;
+	}
+
+	/**
+	 * Get the closest child StoryComponentPanel to the given parentPanel based
+	 * on the given yLocation. May return null if it is unable to find a child
+	 * panel within MAX_Y pixels of given yLocation
+	 * 
+	 * @param yLocation
+	 * @param parentPanel
+	 * @return
+	 */
+	private StoryComponentPanel findClosestChildPanel(double yLocation,
+			StoryComponentPanel parentPanel) {
+		// Don't look further than MAX_Y pixels for the closest panel
+		final int MAX_Y = 1000;
+		// tracking variables used to maintain which panel is closest
+		double closest = MAX_Y;
+		StoryComponentPanel closestPanel = null;
+
+		final Collection<StoryComponentPanel> children = parentPanel
+				.getChildrenPanels();
+		// for each child, check if it is closer than the current closest
+		for (StoryComponentPanel child : children) {
+			double yChildLocation = child.getLocation().getY();
+			double yDifference = Math.abs(yChildLocation - yLocation);
+			if (yDifference < closest) {
+				closest = yDifference;
+				closestPanel = child;
+			}
+		}
+		return closestPanel;
+	}
+
+	/**
+	 * Returns true if the given support contains a Binding
+	 * 
+	 * @param support
+	 * @return
+	 */
+	private boolean isBinding(TransferSupport support) {
+		Transferable transferable = support.getTransferable();
+		KnowItBinding binding = null;
+
+		try {
+			binding = ((BindingWidget) transferable
+					.getTransferData(BindingWidgetTransferHandler.KnowItBindingFlavor))
+					.getBinding();
+			return binding != null;
+		} catch (UnsupportedFlavorException e) {
+			// No chocolate for you!
+			return false;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	/**
+	 * Attempts to extract StoryComponents from the Transfer Support. Returns
+	 * <code>null</code> on failure.
+	 * 
+	 * @param support
+	 *            The support to extract from.
+	 * @return the StoryComponent extracted from the support, or
+	 *         <code>null</code> if one cannot be found.
+	 */
+	protected Collection<StoryComponent> extractStoryComponents(
+			TransferSupport support) {
+		return extractStoryComponents(support.getTransferable());
+	}
+
+	/**
+	 * Attempts to extract StoryComponents from the Transferable. Returns null
+	 * on failure.
+	 * 
+	 * @param transferData
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	protected Collection<StoryComponent> extractStoryComponents(
+			Transferable transferData) {
+		Collection<StoryComponent> data = null;
+		// @formatter:off
+		/* 
+		 *    FLAVA FAAVVVEE
+		 *  \\_    _____    _//
+		 *    \\_.'_____`._//
+		 *    .'.-'  12 `-.`.
+		 *   /,' 11      1 `.\
+		 *  // 10      /   2 \\
+		 * ;;         /       ::
+		 * || 9  ----O      3 ||
+		 * ::                 ;;
+		 *  \\ 8           4 //
+		 *   \`. 7       5 ,'/
+		 *    '.`-.__6__.-'.'
+		 *      `-._____.-'
+		 *
+		 */
+		//@formatter:on
+		if (transferData
+				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
+			try {
+				data = (Collection<StoryComponent>) transferData
+						.getTransferData(StoryComponentPanelTransferHandler.storyCompFlavour);
+			} catch (UnsupportedFlavorException e) {
+				// data flavour is incompatible, the import is impossible
+				return null;
+			} catch (IOException e) {
+				System.err.println("Augh! TransferHandler IO problem?! "
+						+ "I don't even know what this MEANS!" + e);
+				return null;
+			}
+		}
+		return data;
 	}
 
 	/**
