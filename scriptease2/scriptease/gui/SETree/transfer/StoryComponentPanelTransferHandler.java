@@ -63,7 +63,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			}
 		}
 	}
-	
+
 	@Override
 	public int getSourceActions(JComponent c) {
 		if (c instanceof StoryComponentPanel) {
@@ -123,24 +123,27 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (isBinding(support)) {
 			return true;
 		} else {
-			final StoryComponentPanel acceptingPanel = (StoryComponentPanel) support
-					.getComponent();
-			final StoryComponent acceptingStoryComponent = acceptingPanel
-					.getStoryComponent();
-			// Only import to complex story components which are editable
-			if (acceptingPanel.isEditable()
-					&& acceptingStoryComponent instanceof ComplexStoryComponent) {
+			if (support.getComponent() instanceof StoryComponentPanel) {
+				final StoryComponentPanel acceptingPanel = (StoryComponentPanel) support
+						.getComponent();
+				final StoryComponent acceptingStoryComponent = acceptingPanel
+						.getStoryComponent();
+				// Only import to complex story components which are editable
+				if (acceptingPanel.isEditable()
+						&& acceptingStoryComponent instanceof ComplexStoryComponent) {
 
-				final Collection<StoryComponent> potentialChildren = this
-						.extractStoryComponents(support);
+					final Collection<StoryComponent> potentialChildren = this
+							.extractStoryComponents(support);
 
-				return potentialChildren != null ? this.canAcceptChildren(
-						acceptingStoryComponent, potentialChildren) : false;
+					return potentialChildren != null ? this.canAcceptChildren(
+							acceptingStoryComponent, potentialChildren) : false;
+				} else
+					return false;
 			} else
 				return false;
 		}
 	}
-	
+
 	@Override
 	public boolean importData(TransferSupport support) {
 		// sanity check
@@ -207,7 +210,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		return true;
 	}
-	
+
 	@Override
 	public void exportToClipboard(JComponent comp, Clipboard clip, int action)
 			throws IllegalStateException {
@@ -225,7 +228,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			UndoManager.getInstance().startUndoableAction("Move");
 		super.exportAsDrag(comp, e, action);
 	}
-	
+
 	@Override
 	protected void exportDone(JComponent source, Transferable data, int action) {
 		final List<StoryComponent> removedComponents = new ArrayList<StoryComponent>();
@@ -253,7 +256,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			}
 		}
 	}
-
 
 	/**
 	 * Determines whether the potential parent can accept the potential
