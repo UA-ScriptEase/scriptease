@@ -1,5 +1,6 @@
 package scriptease.gui.SETree.transfer;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -12,43 +13,42 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.cell.BindingWidget;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
-import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ComplexStoryComponent;
 
 /**
- * StoryComponentPanelTransferHandler is a more specific TransferHandler that is
- * intended to control Drag and Drop operations on StoryComponentPanels.<br>
+ * StoryComponentPanelListTransferHandler is a more specific TransferHandler
+ * that is intended to control Drag and Drop operations on JLists of
+ * StoryComponentPanels.<br>
  * <br>
  * It is a Singleton class; get the sole instance from {@link #getInstance()}.
  * 
- * @author remiller
- * @author mfchurch
+ * @author kschenk
+ * @see StoryComponentTransferHandler
  * @see TransferHandler
  */
 @SuppressWarnings("serial")
-public class StoryComponentPanelTransferHandler extends TransferHandler {
-	private static final StoryComponentPanelTransferHandler instance = new StoryComponentPanelTransferHandler();
-	public static DataFlavor storyCompFlavour;
+public class StoryComponentListTransferHandler extends TransferHandler {
+	private static final StoryComponentListTransferHandler instance = new StoryComponentListTransferHandler();
+	public static DataFlavor storyCompListFlavour;
 
-	public static StoryComponentPanelTransferHandler getInstance() {
-		return StoryComponentPanelTransferHandler.instance;
+	public static StoryComponentListTransferHandler getInstance() {
+		return StoryComponentListTransferHandler.instance;
 	}
 
-	protected StoryComponentPanelTransferHandler() {
-		if (StoryComponentPanelTransferHandler.storyCompFlavour == null) {
+	protected StoryComponentListTransferHandler() {
+		if (StoryComponentListTransferHandler.storyCompListFlavour == null) {
 			try {
 				String storyComponentFlavour = DataFlavor.javaJVMLocalObjectMimeType
-						+ ";class="
-						+ scriptease.model.StoryComponent.class
-								.getCanonicalName();
-				StoryComponentPanelTransferHandler.storyCompFlavour = new DataFlavor(
+						+ ";class=" + JList.class.getCanonicalName();
+				StoryComponentListTransferHandler.storyCompListFlavour = new DataFlavor(
 						storyComponentFlavour);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -56,35 +56,32 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		}
 	}
 
-	/**
+/*	*//**
 	 * Creates a transferable from the given component. Returns null if
 	 * selectedNodes is null since calling control-x without a selected node
 	 * will still fire this.
-	 */
+	 *//*
 	@Override
-	protected Transferable createTransferable(JComponent comp) {
-		final List<StoryComponent> data = new ArrayList<StoryComponent>();
-		final StoryComponentPanel panel = (StoryComponentPanel) comp;
-		final StoryComponentPanelManager selectionManager = panel
-				.getSelectionManager();
+	protected Transferable createTransferable(JComponent source) {
 
-		// Get the parent selected StoryComponents, since the children will be
-		// grabbed implicitly from the model
-		if (selectionManager != null) {
-			for (StoryComponentPanel aPanel : selectionManager
-					.getSelectedParents())
-				data.add(aPanel.getStoryComponent());
-		}
+		final List<StoryComponent> data;
 
-		/* if nothing is selected */
-		if (data.isEmpty())
+		data = new ArrayList<StoryComponent>();
+
+		if (source instanceof JList) {
+			for (Object panelObject : ((JList) source).getSelectedValues()) {
+				if (panelObject instanceof StoryComponentPanel)
+					data.add(((StoryComponentPanel) panelObject)
+							.getStoryComponent());
+			}
+		} else
 			return null;
 
 		// Create a Transferable with those StoryComponents
 		StoryComponentPanelTransferable storyComponentPanelTransferable = new StoryComponentPanelTransferable(
 				data);
 		return storyComponentPanelTransferable;
-	}
+	}*/
 
 	@Override
 	public boolean canImport(TransferSupport support) {
@@ -92,21 +89,48 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (isBinding(support)) {
 			return true;
 		} else {
-			final StoryComponentPanel acceptingPanel = (StoryComponentPanel) support
-					.getComponent();
-			final StoryComponent acceptingStoryComponent = acceptingPanel
-					.getStoryComponent();
-			// Only import to complex story components which are editable
-			if (acceptingPanel.isEditable()
-					&& acceptingStoryComponent instanceof ComplexStoryComponent) {
+			final Component supportComponent;
+			final List<StoryComponentPanel> acceptingPanels;
 
-				final Collection<StoryComponent> potentialChildren = this
-						.extractStoryComponents(support);
+			supportComponent = support.getComponent();
+			acceptingPanels = new ArrayList<StoryComponentPanel>();
 
-				return potentialChildren != null ? this.canAcceptChildren(
-						acceptingStoryComponent, potentialChildren) : false;
+			if (supportComponent instanceof StoryComponentPanel)
+				acceptingPanels.add((StoryComponentPanel) support
+						.getComponent());
+			else if (supportComponent instanceof JList) {
+				for (Object panelObject : ((JList) support.getComponent())
+						.getSelectedValues()) {
+					if (panelObject instanceof StoryComponentPanel)
+						acceptingPanels.add((StoryComponentPanel) panelObject);
+				}
 			} else
 				return false;
+
+			for (StoryComponentPanel acceptingPanel : acceptingPanels) {
+				final StoryComponent acceptingStoryComponent = acceptingPanel
+						.getStoryComponent();
+				// Only import to complex story components which are editable
+				if (/*
+					 * acceptingPanel.isEditable() &&
+					 */acceptingStoryComponent instanceof ComplexStoryComponent) {
+
+					final Collection<StoryComponent> potentialChildren = this
+							.extractStoryComponents(support);
+
+					if (potentialChildren == null)
+						return false;
+					else if (!this.canAcceptChildren(acceptingStoryComponent,
+							potentialChildren))
+						return false;
+					// return potentialChildren != null ?
+					// this.canAcceptChildren(
+					// acceptingStoryComponent, potentialChildren) : false;
+
+				} else
+					return false;
+			}
+			return true;
 		}
 	}
 
@@ -238,10 +262,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		// FLAVA FAAVVVEE
 		if (transferData
-				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
+				.isDataFlavorSupported(StoryComponentListTransferHandler.storyCompListFlavour)) {
 			try {
 				data = (Collection<StoryComponent>) transferData
-						.getTransferData(StoryComponentPanelTransferHandler.storyCompFlavour);
+						.getTransferData(StoryComponentListTransferHandler.storyCompListFlavour);
 			} catch (UnsupportedFlavorException e) {
 				// data flavour is incompatible, the import is impossible
 				return null;
@@ -262,6 +286,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (!UndoManager.getInstance().hasOpenUndoableAction()
 				&& action == TransferHandler.MOVE)
 			UndoManager.getInstance().startUndoableAction("Cut");
+
+		if (comp instanceof JList)
+			comp = (JComponent) ((JList) comp).getSelectedValue();
+
 		super.exportToClipboard(comp, clip, action);
 	}
 
@@ -270,13 +298,15 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		// Start an undoable action for the move.
 		if (!UndoManager.getInstance().hasOpenUndoableAction())
 			UndoManager.getInstance().startUndoableAction("Move");
-		super.exportAsDrag(comp, e, action); 
+
+		if (comp instanceof JList)
+			comp = (JComponent) ((JList) comp).getSelectedValue();
+
+		super.exportAsDrag(comp, e, action);
 	}
 
 	@Override
 	public boolean importData(TransferSupport support) {
-		System.out.println(support.getComponent() + " from " +support.getComponent().getClass());
-
 		// sanity check
 		if (!this.canImport(support))
 			return false;
@@ -372,6 +402,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 	@Override
 	public int getSourceActions(JComponent c) {
+		if (c instanceof JList)
+			c = (StoryComponentPanel) ((JList) c).getSelectedValue();
 		if (c instanceof StoryComponentPanel) {
 			StoryComponentPanel panel = (StoryComponentPanel) c;
 			if (panel.isRemovable()) {
@@ -380,54 +412,5 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				return TransferHandler.COPY;
 		}
 		return TransferHandler.NONE;
-	}
-
-	/**
-	 * SETreeTransfer holds a list of StoryComponents that have been pulled from
-	 * the SETree in a transfer operation.
-	 * 
-	 * @author remiller
-	 * @author mfchurch
-	 */
-	protected class StoryComponentPanelTransferable implements Transferable {
-		private List<StoryComponent> data;
-
-		public StoryComponentPanelTransferable(List<StoryComponent> nodes) {
-			this.data = nodes;
-		}
-
-		@Override
-		public List<StoryComponent> getTransferData(DataFlavor flavour)
-				throws UnsupportedFlavorException, IOException {
-			if (flavour.getRepresentationClass() == StoryComponent.class) {
-				return this.data;
-			} else
-				throw new UnsupportedFlavorException(flavour);
-		}
-
-		/**
-		 * Returns the data flavours that a StoryComponentPanelTransferable
-		 * supports. A flavour is just an interpretation of the data that this
-		 * object contains. <BR>
-		 * <BR>
-		 * Currently, only the StoryComponent flavour is supported, but could
-		 * potentially be expanded to include other flavours, like a string
-		 * flavour for example.
-		 */
-		@Override
-		public DataFlavor[] getTransferDataFlavors() {
-			return new DataFlavor[] { StoryComponentPanelTransferHandler.storyCompFlavour };
-		}
-
-		@Override
-		public boolean isDataFlavorSupported(DataFlavor flavor) {
-			return flavor
-					.equals(StoryComponentPanelTransferHandler.storyCompFlavour);
-		}
-
-		@Override
-		public String toString() {
-			return "StoryComponentPanelTransferable [" + data + "]";
-		}
 	}
 }

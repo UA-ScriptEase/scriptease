@@ -10,7 +10,7 @@ import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEn
 import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
-import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelStorySetting;
+import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelSetting;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.complex.ScriptIt;
@@ -39,7 +39,7 @@ public class PathAssigner extends JPanel implements StoryComponentObserver {
 		this.describeIt = null;
 		this.path = null;
 		this.tree = new StoryComponentPanelTree(
-				new StoryComponentPanelStorySetting());
+				new StoryComponentPanelSetting());
 
 		this.add(tree);
 	}
@@ -59,7 +59,7 @@ public class PathAssigner extends JPanel implements StoryComponentObserver {
 
 		this.remove(tree);
 		tree = new StoryComponentPanelTree(scriptIt,
-				new StoryComponentPanelStorySetting());
+				new StoryComponentPanelSetting());
 		this.add(tree);
 		this.setOpaque(true);
 

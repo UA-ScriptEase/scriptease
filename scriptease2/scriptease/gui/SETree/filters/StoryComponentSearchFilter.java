@@ -49,13 +49,12 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	private int search(StoryComponent component, String key) {
 		final Collection<String> searchableData;
 		Integer count = 1;
-		
+
 		if (key != null && !key.trim().isEmpty()) {
 			searchableData = getSearchDataForComponent(component);
-			count = SearchFilterHelper.countKeyMatches(searchableData,
-					key);
+			count = SearchFilterHelper.countKeyMatches(searchableData, key);
 		}
-		
+
 		return count;
 	}
 
@@ -68,7 +67,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	private Collection<String> getSearchDataForComponent(
 			StoryComponent component) {
 		SearchDataCompiler searchData = new SearchDataCompiler();
-		//Freezes on this line...
+		// Freezes on this line...
 		searchData.compile(component);
 		return searchData.getData();
 	}
@@ -117,15 +116,16 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 				this.compile(parameter);
 			}
 			// searchable by implicit
-			//int i = 0;
-			//System.out.println("Size of Implicits" + scriptIt.getImplicits().size());
+			// int i = 0;
+			// System.out.println("Size of Implicits" +
+			// scriptIt.getImplicits().size());
 			for (KnowIt implicit : scriptIt.getImplicits()) {
-				//i++;
-				//System.out.println("Index of Implicit: " + i);
-				//More problems here it seems
+				// i++;
+				// System.out.println("Index of Implicit: " + i);
+				// More problems here it seems
 				this.compile(implicit);
 			}
-		
+
 			// searchable by slot
 			for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
 				if (codeBlock.hasSlot())
@@ -133,32 +133,33 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 			}
 			searchData.addAll(scriptIt.getTypes());
 		}
-		
+
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
 			defaultProcess(knowIt);
 			searchData.addAll(knowIt.getTypes());
-	//		final KnowItBinding binding = knowIt.getBinding();
-		/*	binding.process(new AbstractNoOpBindingVisitor() {
-				@Override
-				public void processFunction(KnowItBindingFunction function) {
-					final ScriptIt doIt = function.getValue();
-					SearchDataCompiler.this.compile(doIt);
-				}
 
-				@Override
-				public void processDescribeIt(KnowItBindingDescribeIt described) {
-					final DescribeIt describeIt = described.getValue();
-					final Collection<ScriptIt> doIts = describeIt
-							.getScriptIts();
-					for (final ScriptIt doIt : doIts) {
-						SearchDataCompiler.this.compile(doIt);
-					}
-				}
-			});*/
-//			binding.process(new AbstractNoOpBindingVisitor() {
-				//Inner methods need alot ofwork...
-	//		});
+			/*
+			 * XXX What is this stuff? Remove it or make it work!
+			 */
+
+			// final KnowItBinding binding = knowIt.getBinding();
+			/*
+			 * binding.process(new AbstractNoOpBindingVisitor() {
+			 * 
+			 * @Override public void processFunction(KnowItBindingFunction
+			 * function) { final ScriptIt doIt = function.getValue();
+			 * SearchDataCompiler.this.compile(doIt); }
+			 * 
+			 * @Override public void processDescribeIt(KnowItBindingDescribeIt
+			 * described) { final DescribeIt describeIt = described.getValue();
+			 * final Collection<ScriptIt> doIts = describeIt .getScriptIts();
+			 * for (final ScriptIt doIt : doIts) {
+			 * SearchDataCompiler.this.compile(doIt); } } });
+			 */
+			// binding.process(new AbstractNoOpBindingVisitor() {
+			// Inner methods need alot ofwork...
+			// });
 		}
 	}
 }

@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,7 +39,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.TreeSelectionListener;
 
 import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpStoryVisitor;
@@ -151,7 +151,7 @@ public class StoryComponentBuilderPanelFactory {
 	public JComponent buildStoryComponentEditorComponent(
 			final LibraryPane libraryPane) {
 		final StoryVisitor storyVisitor;
-		final TreeSelectionListener librarySelectionListener;
+		final MouseListener librarySelectionListener;
 
 		final JPanel editorPanel;
 		final JScrollPane editorScrollPane;
@@ -534,7 +534,7 @@ public class StoryComponentBuilderPanelFactory {
 				.getInstance().buildStoryComponentLibraryListener(storyVisitor);
 
 		// Add the tree listener
-		libraryPane.addTreeSelectionListener(librarySelectionListener);
+		libraryPane.addListMouseListener(librarySelectionListener);
 
 		return editorScrollPane;
 	}
@@ -558,7 +558,7 @@ public class StoryComponentBuilderPanelFactory {
 		// Should have the type selection here!
 
 		// Set text of NameField to knowIt.getDisplayText();
-		String labelList = "";
+		//String labelList = "";
 		for (String label : knowIt.getLabels())
 			label += label + ", ";
 		// Set the Label list to labelList

@@ -13,11 +13,9 @@ import scriptease.model.complex.StoryItemSequence;
  * @author mfchurch
  * 
  */
-public class StoryComponentPanelStorySetting extends AbstractNoOpStoryVisitor
-		implements $StoryComponentPanelSetting {
+public class StoryComponentPanelSetting extends AbstractNoOpStoryVisitor {
 	private StoryComponentPanel panel;
 
-	@Override
 	public void updateSettings(StoryComponentPanel panel) {
 		this.panel = panel;
 		panel.getStoryComponent().process(this);
@@ -25,7 +23,6 @@ public class StoryComponentPanelStorySetting extends AbstractNoOpStoryVisitor
 		this.panel = null; //Hack used to pass in some information, then reset the variable.
 	}
 
-	@Override
 	public void updateComplexSettings(StoryComponentPanel rootPanel) {
 		updateSettings(rootPanel);
 		for (StoryComponentPanel panel : rootPanel

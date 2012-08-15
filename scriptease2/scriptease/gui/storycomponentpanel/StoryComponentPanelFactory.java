@@ -18,7 +18,7 @@ import scriptease.gui.SETree.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.describeIts.DescribeItPanel;
 import scriptease.gui.quests.QuestPoint;
-import scriptease.gui.storycomponentpanel.setting.$StoryComponentPanelSetting;
+import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelSetting;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
@@ -101,7 +101,7 @@ public class StoryComponentPanelFactory {
 				// Update the settings of the child panel to match the parents
 				StoryComponentPanelTree parentTree = panel.getParentTree();
 				if (parentTree != null) {
-					$StoryComponentPanelSetting settings = parentTree
+					StoryComponentPanelSetting settings = parentTree
 							.getSettings();
 					if (settings != null)
 						settings.updateComplexSettings(childPanel);

@@ -44,9 +44,9 @@ import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.storycomponentlist.StoryComponentPanelList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelList;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
@@ -423,7 +423,6 @@ public class MenuFactory {
 		final JMenuItem throwErrorItem;
 		final JMenuItem generateCodeItem;
 		final JMenuItem viewGraphEditorItem;
-		final JMenuItem viewListItem;
 
 		menu.add(MenuFactory.buildStoryMenu());
 
@@ -433,7 +432,6 @@ public class MenuFactory {
 		throwErrorItem = new JMenuItem("Throw Error!");
 		generateCodeItem = new JMenuItem("Generate Code");
 		viewGraphEditorItem = new JMenuItem("View Graph Editor (NWN Only)");
-		viewListItem = new JMenuItem("View Story Component List");
 
 		throwExceptionItem.addActionListener(new ActionListener() {
 
@@ -546,38 +544,6 @@ public class MenuFactory {
 			}
 		});
 
-		viewListItem.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final JFrame frame = new JFrame();
-				final StoryComponent root;
-				final StoryComponentPanel rootPanel;
-				final List<StoryComponentPanel> panelList;
-
-				root = LibraryManager.getInstance().getLibraryMasterRoot();
-				
-				rootPanel = StoryComponentPanelFactory.getInstance()
-						.buildPanel(root);
-				panelList = new ArrayList<StoryComponentPanel>();
-
-				for (StoryComponentPanel panel : rootPanel.getChildrenPanels()) {
-					for (StoryComponentPanel children : panel
-							.getChildrenPanels()) {
-						for (StoryComponentPanel child : children
-								.getChildrenPanels()) {
-							panelList.add(child);
-						}
-					}
-				}
-
-			//	frame.add(new StoryComponentPanelList(panelt, false));
-
-				frame.pack();
-				frame.setVisible(true);
-			}
-		});
-
 		throwExceptionItem.setMnemonic(KeyEvent.VK_A);
 		menu.add(throwExceptionItem);
 		menu.add(throwErrorItem);
@@ -585,7 +551,6 @@ public class MenuFactory {
 		menu.add(generateCodeItem);
 		menu.addSeparator();
 		menu.add(viewGraphEditorItem);
-		menu.add(viewListItem);
 
 		return menu;
 	}
