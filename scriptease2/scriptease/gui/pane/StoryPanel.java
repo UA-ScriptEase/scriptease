@@ -12,8 +12,7 @@ import javax.swing.JScrollPane;
 import scriptease.gui.PanelFactory;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
-import scriptease.gui.storycomponentpanel.setting.$StoryComponentPanelSetting;
-import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelStorySetting;
+import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelSetting;
 import scriptease.model.StoryModel;
 
 /**
@@ -98,7 +97,7 @@ public class StoryPanel extends JPanel {
 
 		this.add(questPanel);
 
-		$StoryComponentPanelSetting storySettings = new StoryComponentPanelStorySetting();
+		StoryComponentPanelSetting storySettings = new StoryComponentPanelSetting();
 		this.storyComponentTree = new StoryComponentPanelTree(questPoint,
 				storySettings);
 

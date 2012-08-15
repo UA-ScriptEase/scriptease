@@ -25,9 +25,7 @@ public class FilterableSearchField extends JTextField {
 
 	public FilterableSearchField(Filterable filterable, int size) {
 		super(size);
-		this.filterable = filterable;
-		DocumentListener listener = new SearchListener(this, filterable);
-		this.getDocument().addDocumentListener(listener);
+		this.addFilter(filterable);
 	}
 	
 	public void addFilter(Filterable filterable) {
@@ -95,7 +93,8 @@ public class FilterableSearchField extends JTextField {
 	
 	/*
 	 * Without a timer. Timer should not be the issue, so this code can likely
-	 * get removed later.
+	 * get removed later. Unless it's so dang fast that we don't need no stinkin' 
+	 * timers.
 	 */
 	
 /*	private final class SearchListener implements DocumentListener {

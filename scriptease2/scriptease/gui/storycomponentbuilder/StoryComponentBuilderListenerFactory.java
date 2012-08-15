@@ -1,5 +1,8 @@
 package scriptease.gui.storycomponentbuilder;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -7,9 +10,8 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.StoryVisitor;
@@ -56,24 +58,29 @@ public class StoryComponentBuilderListenerFactory {
 	 *        specific story component is selected.
 	 * @return
 	 */
-	protected TreeSelectionListener buildStoryComponentLibraryListener(
+	protected MouseListener buildStoryComponentLibraryListener(
 			final StoryVisitor storyVisitor) {
-		return new TreeSelectionListener() {
+		return new MouseAdapter() {
 			@Override
-			public void valueChanged(TreeSelectionEvent e) {
-				if (e.getSource() instanceof StoryComponentPanel) {
+			public void mouseReleased(MouseEvent e) {
+				if (e.getSource() instanceof JList) {
+					final JList componentList;
 					final StoryComponentPanel componentPanel;
 					final StoryComponent component;
 
-					componentPanel = (StoryComponentPanel) e.getSource();
-					component = componentPanel.getStoryComponent();
+					componentList = (JList) e.getSource();
 
-					if (componentPanel.getSelectionManager()
-							.getSelectedPanels().size() < 2)
+					if (componentList.getSelectedValue() instanceof StoryComponentPanel) {
+						componentPanel = (StoryComponentPanel) componentList
+								.getSelectedValue();
+						component = componentPanel.getStoryComponent();
+
 						component.process(storyVisitor);
-				} else {
-					throw new ClassCastException(
-							"An Object not of type StoryComponentPanel was found in the tree.");
+					} else {
+						throw new ClassCastException(
+								"StoryComponentPanel expected but "
+										+ e.getSource().getClass() + " found.");
+					}
 				}
 			}
 		};
@@ -202,9 +209,9 @@ public class StoryComponentBuilderListenerFactory {
 								parameterPanel
 										.add(StoryComponentBuilderPanelFactory
 												.getInstance()
-												.buildParameterPanel(
-														scriptIt, codeBlock,
-														knowIt, parameterPanel));
+												.buildParameterPanel(scriptIt,
+														codeBlock, knowIt,
+														parameterPanel));
 							}
 
 							subjectBox.revalidate();
