@@ -149,7 +149,7 @@ public class KnowItBindingConverter implements Converter {
 		writer.endNode();
 
 		writer.startNode(TAG_VALUE);
-		writer.setValue(constant.getResolutionText());
+		writer.setValue(constant.getCodeText());
 		writer.endNode();
 	}
 

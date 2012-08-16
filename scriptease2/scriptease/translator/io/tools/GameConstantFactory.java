@@ -51,7 +51,7 @@ public class GameConstantFactory {
 		if (resref != null && !resref.isEmpty()) {
 			newConstant = new IdentifiableGameConstant() {
 				@Override
-				public String getResolutionText() {
+				public String getCodeText() {
 					return resolutionCode;
 				}
 

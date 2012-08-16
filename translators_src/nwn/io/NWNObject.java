@@ -10,14 +10,8 @@ import scriptease.translator.io.model.GameObject;
  * 
  * @author remiller
  */
-public final class NWNObject implements GameObject {
-	private final int objectID;
+public final class NWNObject extends NWNGameConstant implements GameObject {
 	private int resolutionMethod;
-	private final String resRef; // short for Resource Reference
-	private Collection<String> types;
-	private final String name; // name and tag are for display purposes
-	private final String tag;
-
 	public static final int SEARCH_TYPE_NEAREST = 0;
 	public static final int SEARCH_TYPE_RANDOM = 1;
 	public static final int SEARCH_TYPE_NEAREST_INCLUDE_SELF = 2;
@@ -29,21 +23,17 @@ public final class NWNObject implements GameObject {
 
 	public NWNObject(String resRef, Collection<String> types, String name,
 			String tag) {
-		this.resRef = resRef;
-		this.types = types;
-		this.name = name;
-		this.tag = tag;
-		this.objectID = 0;
+		super(resRef, types, name, tag);
 		this.resolutionMethod = NWNObject.SEARCH_TYPE_NEAREST_INCLUDE_SELF;
 	}
-
+	
 	@Override
 	public int getObjectID() {
-		return this.objectID;
+		return 0;
 	}
 
 	@Override
-	public String getResolutionText() {
+	public String getCodeText() {
 		String code = "DefaultResolutionText";
 
 		switch (this.resolutionMethod) {
@@ -74,32 +64,8 @@ public final class NWNObject implements GameObject {
 		return this.resolutionMethod;
 	}
 
-	/**
-	 * Returns the ResRef of the NWNObject.
-	 */
-	@Override
-	public String getTemplateID() {
-		return this.resRef;
-	}
-
-	@Override
-	public Collection<String> getTypes() {
-		return this.types;
-	}
-
-	public String getName() {
-		if (this.name == null || this.name.isEmpty())
-			return this.resRef + "*";
-		return this.name;
-	}
-
-	@Override
-	public String getTag() {
-		return this.tag;
-	}
-
 	@Override
 	public String toString() {
-		return this.resRef;
+		return this.getTemplateID();
 	}
 }

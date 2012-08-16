@@ -1,8 +1,5 @@
 package io;
 
-import io.GenericFileFormat.GffField;
-import io.NWNConversation.DialogueLine;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,7 +35,6 @@ import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.GameObject;
-import scriptease.translator.io.model.IdentifiableGameConstant;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
 import scriptease.util.FileOp;
 
@@ -338,74 +334,57 @@ public final class ErfFile implements GameModule {
 				this.uncompiledScripts.add(scriptResource);
 
 				// Manage the script slot references
-				final IdentifiableGameConstant subject = scriptInfo.getSubject();
-
 				final String receiverResRef;
 				final NWNResource receiverResource;
 
-				// Hardcoded for conversations.
-				if (subject instanceof DialogueLine) {
-					final DialogueLine dialogueLine = (DialogueLine) subject;
-					receiverResRef = dialogueLine.getConversationResRef();
+				receiverResRef = scriptInfo.getSubject().getTemplateID();
+				receiverResource = this.getResourceByResRef(receiverResRef);
 
-					// Get the parent conversation file resource
-					receiverResource = this.getResourceByResRef(receiverResRef);
-
-					/*
-					 * Get the appropriate field from the dialogue line, since
-					 * we can/ have many dialogue lines in a conversation so
-					 * searching by label is no longer acceptable.
-					 */
-					final GffField field = dialogueLine.getField(scriptInfo
-							.getSlot());
-
-					if (receiverResource == null) {
-						throw new NoSuchElementException(
-								"Script slot update failed. Cannot find resource for ResRef \""
-										+ receiverResRef + "\"");
-					} else if (receiverResource.isGFF()) {
-						receiverResource.getGFF().setField(field, scriptResRef);
-					}
-				} else {
-					receiverResRef = subject.getTemplateID();
-					receiverResource = this.getResourceByResRef(receiverResRef);
-
-					if (receiverResource == null) {
-						throw new NoSuchElementException(
-								"Script slot update failed. Cannot find resource for ResRef \""
-										+ receiverResRef + "\"");
-					} else if (receiverResource.isGFF()) {
-						updateAllInstances(receiverResource, scriptInfo,
-								scriptResRef);
-					}
+				if (receiverResource == null) {
+					throw new NoSuchElementException(
+							"Script slot update failed. Cannot find resource for ResRef \""
+									+ receiverResRef + "\"");
+				} else if (!receiverResource.isGFF()) {
+					throw new NoSuchElementException(
+							"Script slot update failed. Resource \""
+									+ receiverResRef + "\" is not a GFF file.");
 				}
+
+				this.update(receiverResource.getGFF(), scriptResRef, scriptInfo);
 			}
 		}
 	}
 
 	/**
-	 * Updates all instances for the script and resource passed.
+	 * Updates all the given blueprint GFF's script slot to the given script
+	 * resref. If it has instances that can be updated (ex: creatures), they are
+	 * updated to reflect the new change.
 	 * 
-	 * @param receiverResource
-	 * @param scriptInfo
+	 * @param blueprintGFF
+	 *            The GFF to update.
 	 * @param scriptResRef
+	 *            the resref of the script to attach.
+	 * @param scriptInfo
+	 *            The other information about the script file.
 	 */
-	private void updateAllInstances(NWNResource receiverResource,
-			ScriptInfo scriptInfo, String scriptResRef) {
+	private void update(GenericFileFormat blueprintGFF, String scriptResRef,
+			ScriptInfo scriptInfo) {
+		GenericFileFormat gff;
 
-		GenericFileFormat receiverResourceGFF = receiverResource.getGFF();
-		receiverResourceGFF.setField(scriptInfo.getSlot(), scriptResRef);
+		blueprintGFF.setField(scriptInfo.getSlot(), scriptResRef);
 
-		for (NWNResource resource : this.resources) {
-			if (!resource.isGFF()) {
-				continue;
-			}
+		if (!blueprintGFF.isInstanceUpdatable()) {
+			for (NWNResource resource : this.resources) {
+				if (!resource.isGFF()) {
+					continue;
+				}
 
-			GenericFileFormat gff = resource.getGFF();
+				gff = resource.getGFF();
 
-			if (gff.isInstanceUpdatable()) {
-				gff.updateAllInstances(receiverResourceGFF,
-						scriptInfo.getSlot(), scriptResRef);
+				if (gff.isInstanceUpdatable()) {
+					gff.updateAllInstances(blueprintGFF, scriptInfo.getSlot(),
+							scriptResRef);
+				}
 			}
 		}
 	}
