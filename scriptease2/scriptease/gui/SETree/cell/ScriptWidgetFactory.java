@@ -379,7 +379,7 @@ public class ScriptWidgetFactory {
 		float initVal;
 
 		try {
-			initVal = Float.parseFloat(constantValue.getResolutionText());
+			initVal = Float.parseFloat(constantValue.getCodeText());
 		} catch (NumberFormatException e) {
 			initVal = 0;
 		}

@@ -18,15 +18,12 @@ import scriptease.translator.io.model.GameConversationNode;
 public class GameObjectTree extends SETreeModel {
 	private final String DIALOGUE_TAG = "dialogue";
 
-	private StoryModel activeModel;
-
 	public GameObjectTree() {
-		activeModel = StoryModelPool.getInstance().getActiveModel();
 		createAndPopulateTree();
 	}
 
-	public void setFilter(Filter addFilter) {
-		filter = addFilter;
+	public void setFilter(Filter filter) {
+		this.filter = filter;
 	}
 
 	/**
@@ -36,21 +33,21 @@ public class GameObjectTree extends SETreeModel {
 	 */
 	@SuppressWarnings("unchecked")
 	private void addRecusivleyAllNodes(GameConversationNode parent) {
-		if (parent.isTerminal() == true) {
+		if (parent.isTerminal()) {
 			return;
 		}
 
-		List<GameConversationNode> getChildren;
-		getChildren = (List<GameConversationNode>) parent.getChildren();
-		if (getChildren.size() == 0) {
+		List<GameConversationNode> children;
+		children = (List<GameConversationNode>) parent.getChildren();
+		if (children.size() == 0) {
 			return;
 		}
 
-		for (GameConversationNode a : getChildren) {
+		for (GameConversationNode a : children) {
 			if (!a.isLink())
 				treeModel.addLeaf(parent, a);
 		}
-		for (GameConversationNode a : getChildren) {
+		for (GameConversationNode a : children) {
 			if (!a.isLink())
 				addRecusivleyAllNodes(a);
 		}
@@ -124,12 +121,13 @@ public class GameObjectTree extends SETreeModel {
 	}
 
 	private Collection<GameConstant> getAllObjectsOfType(String type) {
+		final StoryModel activeModel;
 		List<GameConstant> allGameObjects;
 
-		allGameObjects = ((StoryModel) activeModel).getModule()
-				.getResourcesOfType(type);
-		allGameObjects = new ArrayList<GameConstant>(
-				this.filterGameObjects(allGameObjects));
+		activeModel = StoryModelPool.getInstance().getActiveModel();
+
+		allGameObjects = this.filterGameObjects(activeModel.getModule()
+				.getResourcesOfType(type));
 
 		Collections.sort(allGameObjects, new Comparator<GameConstant>() {
 			@Override
@@ -148,12 +146,14 @@ public class GameObjectTree extends SETreeModel {
 	 * 
 	 * @return
 	 */
-	public Collection<GameConstant> filterGameObjects(
-			Collection<GameConstant> gameObjects) {
-		Collection<GameConstant> filteredObjects = new ArrayList<GameConstant>();
+	private List<GameConstant> filterGameObjects(List<GameConstant> gameObjects) {
+		List<GameConstant> filteredObjects = new ArrayList<GameConstant>();
 
-		if (filter == null || gameObjects == null)
-			return gameObjects;
+		if (filter == null)
+			if (gameObjects == null)
+				return filteredObjects;
+			else
+				return gameObjects;
 
 		for (GameConstant gameObject : gameObjects) {
 			// If the child was accepted by the filter
@@ -165,5 +165,4 @@ public class GameObjectTree extends SETreeModel {
 
 		return filteredObjects;
 	}
-
 }

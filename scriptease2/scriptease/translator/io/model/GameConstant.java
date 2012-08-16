@@ -10,13 +10,6 @@ import scriptease.model.TypedComponent;
  */
 public interface GameConstant extends TypedComponent {
 	/**
-	 * Gets the code that will resolve to an object as specified by the user.
-	 * 
-	 * @return The code string that represents the method of object resolution
-	 */
-	public String getResolutionText();
-
-	/**
 	 * The displayable name of the object
 	 * 
 	 * @return
@@ -37,4 +30,11 @@ public interface GameConstant extends TypedComponent {
 	 * @return
 	 */
 	public String getTemplateID();
+	
+	/**
+	 * Gets the code that will resolve to an object as specified by the user.
+	 * 
+	 * @return The code string that represents the method of object resolution
+	 */
+	public String getCodeText();
 }

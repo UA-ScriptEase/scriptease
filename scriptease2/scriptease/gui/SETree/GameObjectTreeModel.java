@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -23,7 +22,6 @@ import scriptease.gui.SETree.filters.GameConstantFilter;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
@@ -31,7 +29,6 @@ import scriptease.translator.io.model.GameConversationNode;
 @SuppressWarnings("serial")
 public class GameObjectTreeModel extends DefaultTreeModel implements Filterable {
 	protected Filter filter;
-	private JTree tree;
 
 	public GameObjectTreeModel() {
 		this(null);
@@ -44,15 +41,6 @@ public class GameObjectTreeModel extends DefaultTreeModel implements Filterable 
 
 	public void setFilter(Filter filter) {
 		this.filter = filter;
-	}
-
-	/**
-	 * Give the model the JTree so it can expand the rows.. HACK
-	 * 
-	 * @param tree
-	 */
-	public void setTree(JTree tree) {
-		this.tree = tree;
 	}
 
 	/**
@@ -106,19 +94,18 @@ public class GameObjectTreeModel extends DefaultTreeModel implements Filterable 
 	 * Builds the Tree based on the active model and GameObjectFilter
 	 */
 	private void populateGameObjects() {
+		final StoryModel activeModel;
 		final GameTypeManager typeManager;
-		// Get the active model.
-		StoryModel activeModel = StoryModelPool.getInstance().getActiveModel();
-		// Build the tree:
-		// Make a node for the root of the tree.
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new JLabel(
-				"Available Game Objects"));
+		final List<String> types;
+		final DefaultMutableTreeNode root;
 
-		// For each type in the translator.
-		typeManager = TranslatorManager.getInstance().getActiveTranslator()
-				.getGameTypeManager();
-		Collection<String> keywords = typeManager.getKeywords();
-		List<String> types = new ArrayList<String>(keywords);
+		activeModel = StoryModelPool.getInstance().getActiveModel();
+		typeManager = activeModel.getTranslator().getGameTypeManager();
+		types = new ArrayList<String>(typeManager.getKeywords());
+
+		root = new DefaultMutableTreeNode(new JLabel("Available Game Objects"));
+
+		// sort types based on their display text, not keyword.
 		Collections.sort(types, new Comparator<String>() {
 			@Override
 			public int compare(String o1, String o2) {
@@ -128,24 +115,22 @@ public class GameObjectTreeModel extends DefaultTreeModel implements Filterable 
 			}
 		});
 
-		for (final String type : types) {
-			// Make a node for the type.
-			DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode(
-					new JLabel(typeManager.getDisplayText(type)));
-
+		// add every game object available into the appropriate type category.
+		if (activeModel != null) {
 			List<GameConstant> gameObjects;
-			
+			DefaultMutableTreeNode typeNode;
+			DefaultMutableTreeNode objectNode;
 
-			// Get all GameObjects of the type.
-			if (activeModel == null) {
-				gameObjects = new ArrayList<GameConstant>(0);
-			} else {
-				gameObjects = ((StoryModel) activeModel).getModule()
-						.getResourcesOfType(type);
+			for (final String type : types) {
+				typeNode = new DefaultMutableTreeNode(new JLabel(
+						typeManager.getDisplayText(type)));
+
+				gameObjects = activeModel.getModule().getResourcesOfType(type);
 
 				gameObjects = new ArrayList<GameConstant>(
 						this.filterGameObjects(gameObjects));
 
+				// sort game objects based on display name as well
 				Collections.sort(gameObjects, new Comparator<GameConstant>() {
 					@Override
 					public int compare(GameConstant o1, GameConstant o2) {
@@ -153,38 +138,33 @@ public class GameObjectTreeModel extends DefaultTreeModel implements Filterable 
 								o1.getName(), o2.getName());
 					}
 				});
-			}
 
-			// For each GameObject of the type.
-			for (GameConstant gameObject : gameObjects) {
-				DefaultMutableTreeNode objectNode = buildGameObjectNode(gameObject);
-				if (gameObject instanceof GameConversation) {
-					final List<GameConversationNode> roots = ((GameConversation) gameObject)
-							.getConversationRoots();
-					for (GameConversationNode dialog : roots) {
-						this.resolveConversationNodeBranch(dialog, objectNode,
-								new ArrayList<GameConversationNode>());
+				for (GameConstant gameObject : gameObjects) {
+					objectNode = buildGameObjectNode(gameObject);
+					
+					if (gameObject instanceof GameConversation) {
+						final List<GameConversationNode> roots;
+
+						roots = ((GameConversation) gameObject)
+								.getConversationRoots();
+						for (GameConversationNode dialog : roots) {
+							this.resolveConversationNodeBranch(dialog,
+									objectNode,
+									new ArrayList<GameConversationNode>());
+						}
 					}
+
+					// Add the GameObject node to the category.
+					typeNode.add(objectNode);
 				}
-				// Add the GameObject node to the category.
-				typeNode.add(objectNode);
+
+				// hide empty ones because they're obnoxious.
+				if (typeNode.getChildCount() > 0)
+					root.add(typeNode);
 			}
-
-			// Add the category to the root if it has any elements
-			if (typeNode.getChildCount() > 0)
-				root.add(typeNode);
 		}
+
 		this.setRoot(root);
-
-		// if the model has a tree, expand all rows.. HACK
-		if (tree != null) {
-			// expand the tree
-			// TODO bug where this will cause an infinite loop when trying to
-			// expand dialogues
-			// for (int row = 0; row < tree.getRowCount(); row++) {
-			// tree.expandRow(row);
-			// }
-		}
 	}
 
 	/**
