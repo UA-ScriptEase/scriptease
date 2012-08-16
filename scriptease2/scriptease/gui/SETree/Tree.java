@@ -9,7 +9,6 @@ import java.util.HashMap;
  *          Object's type in the tree.
  */
 public class Tree<T> {
-
   private T root;
   private ArrayList<Tree<T>> leafs = new ArrayList<Tree<T>>();
   private Tree<T> parent = null;

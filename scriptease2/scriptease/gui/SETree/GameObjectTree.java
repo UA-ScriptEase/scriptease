@@ -16,73 +16,26 @@ import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
 
 public class GameObjectTree extends SETreeModel {
-	private final String DIALOGUE_TAG = "dialogue";
-
 	public GameObjectTree() {
-		createAndPopulateTree();
+		treeModel = new Tree<Object>("Available Game Objects");
+		this.populate();
 	}
 
 	public void setFilter(Filter filter) {
 		this.filter = filter;
 	}
 
-	/**
-	 * Recursively adds all nodes from a conversation tree as types.
-	 * 
-	 * @param parent
-	 */
-	@SuppressWarnings("unchecked")
-	private void addRecusivleyAllNodes(GameConversationNode parent) {
-		if (parent.isTerminal()) {
-			return;
-		}
-
-		List<GameConversationNode> children;
-		children = (List<GameConversationNode>) parent.getChildren();
-		if (children.size() == 0) {
-			return;
-		}
-
-		for (GameConversationNode a : children) {
-			if (!a.isLink())
-				treeModel.addLeaf(parent, a);
-		}
-		for (GameConversationNode a : children) {
-			if (!a.isLink())
-				addRecusivleyAllNodes(a);
-		}
-	}
-
-	private void addAllChildren(GameConversation parent) {
-		List<GameConversationNode> conversationRoots;
-		conversationRoots = parent.getConversationRoots();
-
-		for (GameConversationNode root : conversationRoots) {
-			treeModel.addLeaf(parent, root);
-		}
-
-		for (GameConversationNode childrenRoots : conversationRoots) {
-			addRecusivleyAllNodes(childrenRoots);
-
-		}
-
-	}
-
 	@Override
-	protected void createAndPopulateTree() {
+	protected void populate() {
 		final GameTypeManager typeManager;
-		// Get the active model.
-		StoryModelPool.getInstance().getActiveModel();
-		// Build the tree:
-		// Make a node for the root of the tree.
-		String availObjects = "Available Game Objects";
-		treeModel = new Tree<Object>(availObjects);
+		final List<String> types;
+		Collection<GameConstant> gameObjects;
 
 		// For each type in the translator.
 		typeManager = TranslatorManager.getInstance().getActiveTranslator()
 				.getGameTypeManager();
-		Collection<String> keywords = typeManager.getKeywords();
-		List<String> types = new ArrayList<String>(keywords);
+		types = new ArrayList<String>(typeManager.getKeywords());
+
 		Collections.sort(types, new Comparator<String>() {
 			@Override
 			public int compare(String o1, String o2) {
@@ -93,34 +46,25 @@ public class GameObjectTree extends SETreeModel {
 		});
 
 		for (String typeName : types) {
-			ArrayList<GameConstant> gameObjs = (ArrayList<GameConstant>) getAllObjectsOfType(typeName);
+			gameObjects = this.getObjectsOfType(typeName);
 
-			if (gameObjs.size() <= 0)
+			// Ignore empty categories because they're confusing.
+			if (gameObjects.size() <= 0)
 				continue;
 
-			if (typeName.equals(DIALOGUE_TAG)) {
-				for (GameConstant convo : gameObjs) {
-					GameConversation dialogue = (GameConversation) convo;
-					treeModel.addLeaf(typeName, dialogue);
-					addAllChildren(dialogue);
-				}
-			} else {
-				treeModel.addLeaf(treeModel.getHead(), typeName);
-				for (GameConstant obj : gameObjs) {
-					treeModel.addLeaf(typeName, obj);
-					// if(((GameObject)obj).getAttributes().size() > 0){
-					// for(GameObject attributes :
-					// ((GameObject)obj).getAttributes()){
-					// treeModel.addLeaf(obj,attributes);
-					// }
-					// }
+			treeModel.addLeaf(treeModel.getHead(), typeName);
+
+			for (GameConstant object : gameObjects) {
+				treeModel.addLeaf(typeName, object);
+
+				if (object instanceof GameConversation) {
+					addAllChildren((GameConversation) object);
 				}
 			}
-
 		}
 	}
 
-	private Collection<GameConstant> getAllObjectsOfType(String type) {
+	private Collection<GameConstant> getObjectsOfType(String type) {
 		final StoryModel activeModel;
 		List<GameConstant> allGameObjects;
 
@@ -138,6 +82,47 @@ public class GameObjectTree extends SETreeModel {
 		});
 
 		return allGameObjects;
+	}
+
+	/**
+	 * Recursively adds all nodes from a conversation tree as types.
+	 * 
+	 * @param parent
+	 */
+	private void addRecusivleyAllNodes(GameConversationNode parent) {
+		final List<? extends GameConversationNode> children;
+
+		if (parent.isTerminal()) {
+			return;
+		}
+
+		children = parent.getChildren();
+
+		if (children.size() == 0) {
+			return;
+		}
+
+		for (GameConversationNode child : children) {
+			if (!child.isLink()) {
+				treeModel.addLeaf(parent, child);
+				addRecusivleyAllNodes(child);
+			}
+		}
+	}
+
+	private void addAllChildren(GameConversation parent) {
+		List<GameConversationNode> conversationRoots;
+		conversationRoots = parent.getConversationRoots();
+
+		for (GameConversationNode root : conversationRoots) {
+			treeModel.addLeaf(parent, root);
+		}
+
+		for (GameConversationNode childrenRoots : conversationRoots) {
+			addRecusivleyAllNodes(childrenRoots);
+
+		}
+
 	}
 
 	/**
