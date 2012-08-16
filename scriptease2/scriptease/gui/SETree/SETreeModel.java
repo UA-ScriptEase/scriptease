@@ -23,7 +23,7 @@ public abstract class SETreeModel extends Observable implements Filterable {
 		
 	}
 	
-	protected abstract void createAndPopulateTree();
+	protected abstract void populate();
 	
 	
 	@Override

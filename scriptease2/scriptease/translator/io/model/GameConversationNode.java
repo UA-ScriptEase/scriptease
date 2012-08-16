@@ -14,7 +14,7 @@ public interface GameConversationNode extends IdentifiableGameConstant {
 	public List<? extends GameConversationNode> getChildren();
 	
 	/**
-	 * Determines if this node is a terminal node. This is identical to <code>{@link #getChildren()} == 0</code>
+	 * Determines if this node is a terminal node. This is identical to <code>{@link #getChildren()}.size() == 0</code>
 	 * 
 	 * @return <code>true</code> if the node is terminal. 
 	 */
