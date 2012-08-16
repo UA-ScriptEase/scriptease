@@ -58,7 +58,7 @@ public class GameObjectTree extends SETreeModel {
 				treeModel.addChild(typeName, object);
 
 				if (object instanceof GameConversation) {
-					addAllChildren((GameConversation) object);
+					addConversationLines((GameConversation) object);
 				}
 			}
 		}
@@ -84,14 +84,14 @@ public class GameObjectTree extends SETreeModel {
 		return allGameObjects;
 	}
 	
-	private void addAllChildren(GameConversation parent) {
+	private void addConversationLines(GameConversation parent) {
 		final List<GameConversationNode> roots;
 
 		roots = parent.getConversationRoots();
 
 		for (GameConversationNode root : roots) {
 			treeModel.addChild(parent, root);
-			addRecusivleyAllNodes(root);
+			this.addLines(root);
 		}
 	}
 
@@ -100,7 +100,7 @@ public class GameObjectTree extends SETreeModel {
 	 * 
 	 * @param parent
 	 */
-	private void addRecusivleyAllNodes(GameConversationNode parent) {
+	private void addLines(GameConversationNode parent) {
 		final List<? extends GameConversationNode> children;
 
 		if (parent.isTerminal()) {
@@ -116,7 +116,7 @@ public class GameObjectTree extends SETreeModel {
 		for (GameConversationNode child : children) {
 			if (!child.isLink()) {
 				treeModel.addChild(parent, child);
-				addRecusivleyAllNodes(child);
+				addLines(child);
 			}
 		}
 	}

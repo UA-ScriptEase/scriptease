@@ -87,4 +87,13 @@ public class Tree<T> {
 		return new ArrayList<T>();
 	}
 
+	@Override
+	public String toString() {
+		String str = this.root.toString();
+
+		if (this.children.size() > 0)
+			str += " < " + this.children.toString();
+
+		return str;
+	}
 }
