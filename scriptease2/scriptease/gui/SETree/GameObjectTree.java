@@ -52,10 +52,10 @@ public class GameObjectTree extends SETreeModel {
 			if (gameObjects.size() <= 0)
 				continue;
 
-			treeModel.addLeaf(treeModel.getHead(), typeName);
+			treeModel.addChild(treeModel.getHead(), typeName);
 
 			for (GameConstant object : gameObjects) {
-				treeModel.addLeaf(typeName, object);
+				treeModel.addChild(typeName, object);
 
 				if (object instanceof GameConversation) {
 					addAllChildren((GameConversation) object);
@@ -83,6 +83,17 @@ public class GameObjectTree extends SETreeModel {
 
 		return allGameObjects;
 	}
+	
+	private void addAllChildren(GameConversation parent) {
+		final List<GameConversationNode> roots;
+
+		roots = parent.getConversationRoots();
+
+		for (GameConversationNode root : roots) {
+			treeModel.addChild(parent, root);
+			addRecusivleyAllNodes(root);
+		}
+	}
 
 	/**
 	 * Recursively adds all nodes from a conversation tree as types.
@@ -104,25 +115,10 @@ public class GameObjectTree extends SETreeModel {
 
 		for (GameConversationNode child : children) {
 			if (!child.isLink()) {
-				treeModel.addLeaf(parent, child);
+				treeModel.addChild(parent, child);
 				addRecusivleyAllNodes(child);
 			}
 		}
-	}
-
-	private void addAllChildren(GameConversation parent) {
-		List<GameConversationNode> conversationRoots;
-		conversationRoots = parent.getConversationRoots();
-
-		for (GameConversationNode root : conversationRoots) {
-			treeModel.addLeaf(parent, root);
-		}
-
-		for (GameConversationNode childrenRoots : conversationRoots) {
-			addRecusivleyAllNodes(childrenRoots);
-
-		}
-
 	}
 
 	/**
