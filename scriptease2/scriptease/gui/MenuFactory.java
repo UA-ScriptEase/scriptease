@@ -46,7 +46,7 @@ import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
-import scriptease.gui.storycomponentpanel.StoryComponentPanelList;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;

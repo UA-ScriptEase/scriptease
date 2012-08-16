@@ -11,6 +11,7 @@ import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.pane.GameObjectPane;
+import scriptease.gui.pane.LibraryPane;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.translator.Translator;
@@ -117,5 +118,9 @@ public class PanelFactory {
 		JPanel jPanel = new JPanel();
 		jPanel.setVisible(false);
 		return jPanel;
+	}
+	
+	public JPanel buildLibraryPane(boolean showInvisible) {
+		return new LibraryPane(showInvisible);
 	}
 }

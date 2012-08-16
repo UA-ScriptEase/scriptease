@@ -76,7 +76,7 @@ public class StoryComponentBuilderListenerFactory {
 						component = componentPanel.getStoryComponent();
 
 						component.process(storyVisitor);
-					} else {
+					} else if (componentList.getSelectedValue() != null){
 						throw new ClassCastException(
 								"StoryComponentPanel expected but "
 										+ e.getSource().getClass() + " found.");
