@@ -2,17 +2,13 @@ package scriptease.gui.storycomponentpanel;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.MouseListener;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
-import javax.swing.DropMode;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 
 import scriptease.controller.VisibilityManager;
@@ -21,29 +17,30 @@ import scriptease.gui.SETree.filters.Filterable;
 import scriptease.gui.SETree.filters.StoryComponentFilter;
 import scriptease.gui.SETree.filters.VisibilityFilter;
 import scriptease.gui.SETree.transfer.StoryComponentPanelTransferHandler;
-import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 
 /**
- * LISTS OF THINGS!!! =O
+ * Creates a JList that is able to render Story Component Panels as items. The
+ * JList also has a transfer handler attached that gives the ability to drag and
+ * drop the Panels.
  * 
- * TODO Write better javadoc comments
+ * At the moment, this List is used to display the Library. However, it should
+ * be very easy to use it elsewhere if necessary. Just create a list with the
+ * constructor, then add story components with the addStoryComponents method.
  * 
  * @author kschenk
  * 
  */
 @SuppressWarnings("serial")
-public class StoryComponentPanelList extends JScrollPane implements Filterable {
-	private final static JPanel blankPanel = new JPanel();
-
-	private final DefaultListModel listModel;
-	private final JList list;
+public class StoryComponentPanelJList extends JList implements Filterable {
 	private Filter filterRule;
 
 	/**
-	 * Constructor.
+	 * Creates a JList that is able to render Story Component Panels as items.
+	 * The JList also has a transfer handler attached that gives the ability to
+	 * drag and drop the Panels. <br>
+	 * <br>
+	 * Panels should be added using {@link #addStoryComponents(Collection)}
 	 * 
 	 * @param filter
 	 * 
@@ -53,14 +50,13 @@ public class StoryComponentPanelList extends JScrollPane implements Filterable {
 	 * @param showInvisible
 	 *            If true, invisible components will be shown as well.
 	 */
-	public StoryComponentPanelList(StoryComponentFilter filter,
+	public StoryComponentPanelJList(StoryComponentFilter filter,
 			boolean showInvisible) {
 		super();
 
-		this.listModel = new DefaultListModel();
-		this.list = new JList(this.listModel);
+		DefaultListModel listModel = new DefaultListModel();
 
-		blankPanel.setSize(new Dimension(0, 0));
+		this.setModel(listModel);
 
 		if (showInvisible)
 			filterRule = null;
@@ -70,47 +66,63 @@ public class StoryComponentPanelList extends JScrollPane implements Filterable {
 		if (filter != null)
 			this.updateFilter(filter);
 
-		this.list.setCellRenderer(new StoryComponentPanelListRenderer());
-		// TODO Might be necessary to implement this:
-		// this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		this.list.setLayoutOrientation(JList.VERTICAL);
+		this.setCellRenderer(new StoryComponentListRenderer());
+		this.setLayoutOrientation(JList.VERTICAL);
 
-		this.list.setSelectionBackground(Color.LIGHT_GRAY);
-		this.list.setBackground(Color.WHITE);
+		this.setSelectionBackground(Color.LIGHT_GRAY);
+		this.setBackground(Color.WHITE);
 
-		// FIXME Doesn't work
-		this.list.setDragEnabled(true);
-		this.list.setTransferHandler(StoryComponentPanelTransferHandler
+		this.setDragEnabled(true);
+		this.setTransferHandler(StoryComponentPanelTransferHandler
 				.getInstance());
-
-
-		this.setViewportView(this.list);
 	}
 
 	/**
-	 * Set the elements of the tree to the passed story components.
+	 * Generates panels for the passed in list of Story Components and adds them
+	 * to the list. <br>
+	 * <br>
+	 * Note: This does not remove any Story Component Panels. Call
+	 * {@link #removeAllStoryComponents()} first, as needed.
 	 * 
 	 * @param storyComponentList
 	 */
 	public void addStoryComponents(Collection<StoryComponent> storyComponentList) {
+		final DefaultListModel listModel;
+
+		listModel = (DefaultListModel) this.getModel();
+
 		for (StoryComponent component : storyComponentList) {
 			if (!(filterRule == null)) {
 				if (!filterRule.isAcceptable(component))
 					continue;
 			}
-			this.listModel.addElement(StoryComponentPanelFactory.getInstance()
+			listModel.addElement(StoryComponentPanelFactory.getInstance()
 					.buildPanel(component));
 		}
 
 		for (int i = 0; i < listModel.size(); i++)
-			this.listModel.setElementAt(listModel.getElementAt(i), i);
+			listModel.setElementAt(listModel.getElementAt(i), i);
 	}
 
 	/**
 	 * Removes all Story Components from the list.
 	 */
 	public void removeAllStoryComponents() {
-		this.listModel.removeAllElements();
+		final DefaultListModel listModel;
+		listModel = (DefaultListModel) this.getModel();
+
+		listModel.removeAllElements();
+	}
+
+	/**
+	 * Adds a mouse listener to the list. This method needs to exist because
+	 * using the {@link #addMouseListener(MouseListener)} method would just add
+	 * a mouse listener to the JScrollPane.
+	 * 
+	 * @param mouseListener
+	 */
+	public void addListMouseListener(MouseListener mouseListener) {
+		this.addMouseListener(mouseListener);
 	}
 
 	@Override
@@ -123,38 +135,6 @@ public class StoryComponentPanelList extends JScrollPane implements Filterable {
 			this.filterRule = newFilterRule;
 		else
 			this.filterRule.addRule(newFilterRule);
-
-		filterList();
-	}
-
-	public void filterList() {
-		if (this.filterRule == null)
-			return;
-
-		final Translator activeTranslator;
-
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-
-		this.removeAllStoryComponents();
-
-		if (activeTranslator != null)
-			for (LibraryModel libraryModel : TranslatorManager.getInstance()
-					.getActiveTranslator().getLibraries()) {
-				this.addStoryComponents(libraryModel.getMainStoryComponents());
-			}
-
-		this.list.repaint();
-		this.revalidate();
-	}
-
-	/**
-	 * Adds a mouse listener to the list.
-	 * 
-	 * @param mouseListener
-	 */
-	public void addListMouseListener(MouseListener mouseListener) {
-		this.list.addMouseListener(mouseListener);
 	}
 
 	/**
@@ -163,7 +143,7 @@ public class StoryComponentPanelList extends JScrollPane implements Filterable {
 	 * @author kschenk
 	 * 
 	 */
-	private class StoryComponentPanelListRenderer implements ListCellRenderer {
+	private class StoryComponentListRenderer implements ListCellRenderer {
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
@@ -180,8 +160,8 @@ public class StoryComponentPanelList extends JScrollPane implements Filterable {
 				else
 					valuePanel.setBackground(list.getBackground());
 
-				valuePanel.setBorder(BorderFactory.createMatteBorder(1, 2, 0,
-						1, Color.LIGHT_GRAY));
+				valuePanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1,
+						0, Color.LIGHT_GRAY));
 
 				final Boolean isVisible;
 

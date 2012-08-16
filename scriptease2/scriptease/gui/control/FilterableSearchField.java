@@ -17,17 +17,20 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 
 @SuppressWarnings("serial")
 public class FilterableSearchField extends JTextField {
-	
+
+	// TODO This junk class has been removed from Library Pane entirely. After
+	// we implement the indexed searching, the timer will be uneccessary. 
+
 	public final static String SEARCH_FILTER_LABEL = Il8nResources
 			.getString("Search_Filter_");
-	
+
 	private Filterable filterable;
 
 	public FilterableSearchField(Filterable filterable, int size) {
 		super(size);
 		this.addFilter(filterable);
 	}
-	
+
 	public void addFilter(Filterable filterable) {
 		this.filterable = filterable;
 		DocumentListener listener = new SearchListener(this, filterable);
@@ -41,7 +44,7 @@ public class FilterableSearchField extends JTextField {
 	private final class SearchListener implements DocumentListener {
 		private final int TIME_BUFFER = 800;
 		private final Timer timer;
-		
+
 		public SearchListener(final JTextField searchField,
 				final Filterable filterable) {
 			timer = new Timer(TIME_BUFFER, new ActionListener() {
@@ -53,28 +56,26 @@ public class FilterableSearchField extends JTextField {
 					 * 
 					 * Create a filter class that has two constructors, one with
 					 * GameObjectTreeModel, and the other with a
-					 * StoryComponentPanelTree. 
+					 * StoryComponentPanelTree.
 					 * 
 					 * Then we can just call:
 					 * 
-					 * filterable.updateFilter(new ComponentFilter(searchField.getText());
+					 * filterable.updateFilter(new
+					 * ComponentFilter(searchField.getText());
 					 */
 					if (filterable instanceof GameObjectTreeModel)
-						filterable.updateFilter(new GameConstantSearchFilter(
-								searchField.getText()));
-					else if (filterable instanceof StoryComponentPanelTree)
-						filterable.updateFilter(new StoryComponentSearchFilter(
+						((GameObjectTreeModel) filterable).updateFilter(new GameConstantSearchFilter(
 								searchField.getText()));
 					timer.stop();
 				}
 			});
 			timer.setRepeats(false);
 		}
-		
+
 		private void executeSearch() {
 			timer.restart();
 		}
-		
+
 		@Override
 		public void insertUpdate(DocumentEvent e) {
 			this.executeSearch();
@@ -90,49 +91,40 @@ public class FilterableSearchField extends JTextField {
 			this.executeSearch();
 		}
 	}
-	
+
 	/*
 	 * Without a timer. Timer should not be the issue, so this code can likely
-	 * get removed later. Unless it's so dang fast that we don't need no stinkin' 
-	 * timers.
+	 * get removed later. Unless it's so dang fast that we don't need no
+	 * stinkin' timers.
 	 */
-	
-/*	private final class SearchListener implements DocumentListener {
-		private final JTextField searchField;
-		private final Filterable filterable;
-		
-		public SearchListener(final JTextField searchField,
-				final Filterable filterable) {
-			this.searchField = searchField;
-			this.filterable = filterable;
-		}
-		
-		private void executeSearch() {
-			if (filterable instanceof GameObjectTreeModel)
-				filterable.updateFilter(new GameConstantSearchFilter(
-						searchField.getText()));
-			else if (filterable instanceof StoryComponentPanelTree)
-				filterable.updateFilter(new StoryComponentSearchFilter(
-						searchField.getText()));		}
-		
-		@Override
-		public void insertUpdate(DocumentEvent e) {
-			this.executeSearch();
-		}
 
-		@Override
-		public void removeUpdate(DocumentEvent e) {
-			this.executeSearch();
-		}
-
-		@Override
-		public void changedUpdate(DocumentEvent e) {
-			this.executeSearch();
-		}
-	}*/
+	/*
+	 * private final class SearchListener implements DocumentListener { private
+	 * final JTextField searchField; private final Filterable filterable;
+	 * 
+	 * public SearchListener(final JTextField searchField, final Filterable
+	 * filterable) { this.searchField = searchField; this.filterable =
+	 * filterable; }
+	 * 
+	 * private void executeSearch() { if (filterable instanceof
+	 * GameObjectTreeModel) filterable.updateFilter(new
+	 * GameConstantSearchFilter( searchField.getText())); else if (filterable
+	 * instanceof StoryComponentPanelTree) filterable.updateFilter(new
+	 * StoryComponentSearchFilter( searchField.getText())); }
+	 * 
+	 * @Override public void insertUpdate(DocumentEvent e) {
+	 * this.executeSearch(); }
+	 * 
+	 * @Override public void removeUpdate(DocumentEvent e) {
+	 * this.executeSearch(); }
+	 * 
+	 * @Override public void changedUpdate(DocumentEvent e) {
+	 * this.executeSearch(); } }
+	 */
 
 	@Override
-	public String toString(){ 
-		return "FilterableSearchField ["+filterable.getClass().getName()+"]";
+	public String toString() {
+		return "FilterableSearchField [" + filterable.getClass().getName()
+				+ "]";
 	}
 }

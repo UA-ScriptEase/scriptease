@@ -1,38 +1,37 @@
 package scriptease.gui.pane;
 
 import java.awt.Color;
-import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.SpringLayout;
-import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import scriptease.controller.observer.LibraryManagerEvent;
 import scriptease.controller.observer.LibraryManagerObserver;
-import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.SETree.filters.CategoryFilter;
 import scriptease.gui.SETree.filters.CategoryFilter.Category;
-import scriptease.gui.SETree.filters.StoryComponentFilter;
 import scriptease.gui.SETree.filters.StoryComponentSearchFilter;
 import scriptease.gui.SETree.filters.TranslatorFilter;
 import scriptease.gui.SETree.filters.TypeFilter;
 import scriptease.gui.action.typemenus.TypeSelectionAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.storycomponentpanel.StoryComponentPanelList;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.model.LibraryManager;
+import scriptease.model.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
@@ -47,15 +46,8 @@ import scriptease.translator.TranslatorManager;
  * @author mfchurch
  * @author kschenk
  */
-public class LibraryPane extends JPanel implements LibraryManagerObserver,
-		TranslatorObserver {
-
-	private final JTabbedPane listTabs;
-
-	private final StoryComponentPanelList causesList;
-	private final StoryComponentPanelList effectsList;
-	private final StoryComponentPanelList descriptionsList;
-	private final StoryComponentPanelList foldersList;
+public class LibraryPane extends JPanel implements LibraryManagerObserver {
+	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
 
 	/**
 	 * Creates a new LibraryPane with default filters, and configures its
@@ -65,81 +57,51 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 *            Whether to show invisible story components or not.
 	 */
 	public LibraryPane(boolean showInvisible) {
-		final LibraryManager libManager = LibraryManager.getInstance();
+		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
 
-		final StoryComponentFilter causesFilter;
-		final StoryComponentFilter effectsFilter;
-		final StoryComponentFilter descriptionsFilter;
-		final StoryComponentFilter foldersFilter;
-
-		this.listTabs = new JTabbedPane();
-
-		// Create the default filter.
-		causesFilter = this.buildLibraryFilter(new CategoryFilter(
-				Category.CAUSES));
-		effectsFilter = this.buildLibraryFilter(new CategoryFilter(
-				Category.EFFECTS));
-		descriptionsFilter = this.buildLibraryFilter(new CategoryFilter(
-				Category.DESCRIPTIONS));
-		foldersFilter = this.buildLibraryFilter(new CategoryFilter(
-				Category.FOLDERS));
-
-		// Create the Tree with the root and the default filter
-		this.causesList = new StoryComponentPanelList(causesFilter,
-				showInvisible);
-		this.effectsList = new StoryComponentPanelList(effectsFilter,
-				showInvisible);
-		this.descriptionsList = new StoryComponentPanelList(descriptionsFilter,
-				showInvisible);
-		this.foldersList = new StoryComponentPanelList(foldersFilter,
-				showInvisible);
-
-		// Configure the displaying of the pane
-		this.configurePane();
-
-		// Listen for changes to the Libraries and Translator
-		libManager.addLibraryManagerListener(this);
-		TranslatorManager.getInstance().addTranslatorObserver(this);
-	}
-
-	/**
-	 * Builds a pane that allows users to drag across any pattern (including
-	 * atoms) from any library into their Story.
-	 * 
-	 */
-	private void configurePane() {
+		final JTabbedPane listTabs;
 		final JComponent filterPane;
 		final JComponent searchFilterPane;
 		final JTextField searchField;
-		final TypeSelectionAction typeFilter;
-		final BoxLayout filterPaneLayout;
-		final BoxLayout searchFilterPaneLayout;
-		final SpringLayout pickerPaneLayout;
 
+		final TypeSelectionAction typeFilter;
+
+		final StoryComponentPanelJList causesList;
+		final StoryComponentPanelJList effectsList;
+		final StoryComponentPanelJList descriptionsList;
+		final StoryComponentPanelJList foldersList;
+
+		listTabs = new JTabbedPane();
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
-		typeFilter = new TypeSelectionAction();
-		filterPaneLayout = new BoxLayout(filterPane, BoxLayout.Y_AXIS);
-		searchFilterPaneLayout = new BoxLayout(searchFilterPane,
-				BoxLayout.X_AXIS);
-		pickerPaneLayout = new SpringLayout();
-
-		/*
-		 * searchField = new FilterableSearchField(this.causesList, 20);
-		 * searchField.addFilter(this.effectsList);
-		 * searchField.addFilter(this.descriptionsList);
-		 * searchField.addFilter(this.foldersList);
-		 */
-
 		searchField = new JTextField(20);
 
+		typeFilter = new TypeSelectionAction();
+
+		// Create the Tree with the root and the default filter
+		causesList = new StoryComponentPanelJList(new CategoryFilter(
+				Category.CAUSES), showInvisible);
+		effectsList = new StoryComponentPanelJList(new CategoryFilter(
+				Category.EFFECTS), showInvisible);
+		descriptionsList = new StoryComponentPanelJList(new CategoryFilter(
+				Category.DESCRIPTIONS), showInvisible);
+		foldersList = new StoryComponentPanelJList(new CategoryFilter(
+				Category.FOLDERS), showInvisible);
+
+		this.storyComponentPanelJLists.add(causesList);
+		this.storyComponentPanelJLists.add(effectsList);
+		this.storyComponentPanelJLists.add(descriptionsList);
+		this.storyComponentPanelJLists.add(foldersList);
+
+		// Set up the listeners
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				for (StoryComponentPanelList list : getListOfListTabs())
+				for (StoryComponentPanelJList list : storyComponentPanelJLists)
 					list.updateFilter(new StoryComponentSearchFilter(
 							searchField.getText()));
+				updateLists();
 			}
 
 			@Override
@@ -152,18 +114,15 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 			}
 		});
 
-		/*
-		 * XXX or how about when a search is run, we get the text, and update
-		 * all the lists based on if the text even appears there. Like type
-		 * selection filter.
-		 * 
-		 * Don't even need a separate class, likely.
-		 */
-
-		listTabs.add("Causes", causesList);
-		listTabs.add("Effects", effectsList);
-		listTabs.add("Descriptions", descriptionsList);
-		listTabs.add("Folders", foldersList);
+		typeFilter.setAction(new Runnable() {
+			@Override
+			public void run() {
+				for (StoryComponentPanelJList list : storyComponentPanelJLists)
+					list.updateFilter(new TypeFilter(typeFilter
+							.getTypeSelectionDialogBuilder().getSelectedTypes()));
+				updateLists();
+			}
+		});
 
 		filterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
 				.createLineBorder(Color.gray), Il8nResources
@@ -171,47 +130,32 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
 						"SansSerif", Font.PLAIN, 12), Color.black));
 
-		// Sets up the type filter.
-		typeFilter.setAction(new Runnable() {
-			@Override
-			public void run() {
-				for (StoryComponentPanelList list : getListOfListTabs())
-					list.updateFilter(new TypeFilter(typeFilter
-							.getTypeSelectionDialogBuilder().getSelectedTypes()));
-			}
-		});
+		listTabs.add("Causes", new JScrollPane(causesList));
+		listTabs.add("Effects", new JScrollPane(effectsList));
+		listTabs.add("Descriptions", new JScrollPane(descriptionsList));
+		listTabs.add("Folders", new JScrollPane(foldersList));
 
 		// SearchFilterPane
 		searchFilterPane.add(searchField);
 		searchFilterPane.add(new JButton(typeFilter));
-		searchFilterPane.setLayout(searchFilterPaneLayout);
+		searchFilterPane.setLayout(new BoxLayout(searchFilterPane,
+				BoxLayout.LINE_AXIS));
 
 		// FilterPane Layout
-		filterPane.setLayout(filterPaneLayout);
+		filterPane.setLayout(new BoxLayout(filterPane, BoxLayout.PAGE_AXIS));
 		filterPane.add(searchFilterPane);
+		filterPane.setMaximumSize(new Dimension(2400, 50));
+
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.add(filterPane);
-
+		this.add(Box.createVerticalStrut(5));
 		this.add(listTabs);
-		this.setPreferredSize(filterPane.getPreferredSize());
 
-		// Spring filterPane
-		// TODO Change this to group layout.
-		pickerPaneLayout.putConstraint(SpringLayout.WEST, filterPane, 5,
-				SpringLayout.WEST, this);
-		pickerPaneLayout.putConstraint(SpringLayout.NORTH, filterPane, 5,
-				SpringLayout.NORTH, this);
-		pickerPaneLayout.putConstraint(SpringLayout.EAST, filterPane, -5,
-				SpringLayout.EAST, this);
-		// Spring pickerTree
-		pickerPaneLayout.putConstraint(SpringLayout.WEST, listTabs, 5,
-				SpringLayout.WEST, this);
-		pickerPaneLayout.putConstraint(SpringLayout.EAST, listTabs, -5,
-				SpringLayout.EAST, this);
-		pickerPaneLayout.putConstraint(SpringLayout.SOUTH, listTabs, -5,
-				SpringLayout.SOUTH, this);
-		pickerPaneLayout.putConstraint(SpringLayout.NORTH, listTabs, 5,
-				SpringLayout.SOUTH, filterPane);
-		this.setLayout(pickerPaneLayout);
+		// Configure the displaying of the pane
+		this.updateLists();
+
+		// Listen for changes to the Libraries
+		LibraryManager.getInstance().addLibraryManagerListener(this);
 	}
 
 	/**
@@ -220,62 +164,44 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver,
 	 * @param listener
 	 */
 	public void addListMouseListener(MouseListener listener) {
-		for (StoryComponentPanelList list : getListOfListTabs()) {
+		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
 			list.addListMouseListener(listener);
 		}
 	}
 
 	/**
-	 * Returns all tabs that are StoryComponentPanelLists as a list, in the same
-	 * order as they are in the tabs.
-	 * 
-	 * @return
+	 * Updates the lists based on their filters. Works by removing and adding
+	 * back all components in the list panes.
 	 */
-	private List<StoryComponentPanelList> getListOfListTabs() {
-		final List<StoryComponentPanelList> listList;
+	private void updateLists() {
+		final Translator activeTranslator;
 
-		listList = new ArrayList<StoryComponentPanelList>();
+		activeTranslator = TranslatorManager.getInstance()
+				.getActiveTranslator();
 
-		for (Component listTab : this.listTabs.getComponents())
-			if (listTab instanceof StoryComponentPanelList)
-				listList.add((StoryComponentPanelList) listTab);
+		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			list.updateFilter(new TranslatorFilter(TranslatorManager
+					.getInstance().getActiveTranslator()));
 
-		return listList;
+			list.removeAllStoryComponents();
+
+			if (activeTranslator != null)
+				for (LibraryModel libraryModel : TranslatorManager
+						.getInstance().getActiveTranslator().getLibraries()) {
+					list.addStoryComponents(libraryModel
+							.getMainStoryComponents());
+				}
+
+			list.repaint();
+			this.revalidate();
+		}
 	}
 
 	/**
-	 * Creates the default Filter to be used by the LibraryTreeModel
-	 * 
-	 * @return
-	 */
-	private StoryComponentFilter buildLibraryFilter(CategoryFilter filter) {
-		// Filter by translator
-		filter.addRule(new TranslatorFilter(TranslatorManager.getInstance()
-				.getActiveTranslator()));
-
-		return filter;
-	}
-
-	/**
-	 * Keep the display of the library up to date with the changes to Libraries
-	 * 
-	 * TODO This seems to be broken when two modules are loaded. Figure out why!
-	 * Note: that may be fixed now that we're using lists and stuff.
-	 * Note 2: this used to "invokelater", but that caused issues. Removed it.
+	 * Keep the display of the library up to date with the changes to Libraries.
 	 */
 	@Override
 	public void modelChanged(final LibraryManagerEvent managerEvent) {
-		for (StoryComponentPanelList list : getListOfListTabs())
-			list.filterList();
-	}
-
-	/**
-	 * Update the translator filter and redraw the list.
-	 */
-	@Override
-	public void translatorLoaded(Translator newTranslator) {
-		for (StoryComponentPanelList list : getListOfListTabs()) {
-			list.updateFilter(new TranslatorFilter(newTranslator));
-		}
+		updateLists();
 	}
 }
