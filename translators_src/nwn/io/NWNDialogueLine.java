@@ -86,7 +86,7 @@ public class NWNDialogueLine extends NWNGameConstant implements
 
 	@Override
 	public boolean isTerminal() {
-		return this.getChildren().size() > 0;
+		return this.getChildren().size() == 0;
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
 
-@SuppressWarnings("serial")
 /**
  * Tree like representation of objects used  representation of a tree, 
  *
@@ -16,6 +15,7 @@ enum ElementTreeType{
 	GAME_OBJECT, STORY_COMPONENT;
 }
 
+@SuppressWarnings("serial")
 public abstract class SEElementTree extends JScrollPane implements Observer {
 	//Pane has a one-to-one match with this Model
 	protected SETreeModel treeModel;
