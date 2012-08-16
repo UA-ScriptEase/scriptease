@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -64,7 +65,6 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 		for (Object a : getChildren) {
 			addChildrenRoots((GameConversationNode) a);
 		}
-
 	}
 
 	private void addGameObjectPanelToTree(GameObjectPanel addObject) {
@@ -73,48 +73,49 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 	}
 
 	private void expandTree() {
-		ArrayList<Object> firstRowExpansion = (ArrayList<Object>) treeModel
-				.getTree().getSuccessors(treeModel.getTree().getHead());
-		int size = firstRowExpansion.size();
-		for (int i = 0; i < size; i++) {
-			if (firstRowExpansion.get(i) instanceof String) {
-				GameObjectLabel label = new GameObjectLabel(firstRowExpansion
-						.get(i).toString());
-				label.addObserver(this);
-				this.add(label.getLabelPanel());
-				gameObjectLabels.add(label);
 
-				if (!firstRowExpansion.get(i).equals("dialogue")) {
-					Collection<Object> categoryExpansion = treeModel.getTree()
-							.getSuccessors(firstRowExpansion.get(i));
-					for (Object getGameObject : categoryExpansion) {
-						GameObjectPanel newObjPanel = new GameObjectPanel(
-								(GameObject) getGameObject, CONSTANT_OFFSET);
-						this.addGameObjectPanelToTree(newObjPanel);
-					}
+		List<Object> firstRowExpansion = (List<Object>) treeModel.getTree()
+				.getSuccessors(treeModel.getTree().getHead());
+		for (int i = 0; i < firstRowExpansion.size(); i++) {
+			if (!(firstRowExpansion.get(i) instanceof String)) {
+				continue;
+			}
+			GameObjectLabel label = new GameObjectLabel(firstRowExpansion
+					.get(i).toString());
+			label.addObserver(this);
+			this.add(label.getLabelPanel());
+			gameObjectLabels.add(label);
+
+			if (!firstRowExpansion.get(i).equals("dialogue")) {
+				Collection<Object> categoryExpansion = treeModel.getTree()
+						.getSuccessors(firstRowExpansion.get(i));
+				for (Object getGameObject : categoryExpansion) {
+					GameObjectPanel newObjPanel = new GameObjectPanel(
+							(GameObject) getGameObject, CONSTANT_OFFSET);
+					this.addGameObjectPanelToTree(newObjPanel);
 				}
+			}
 
-				// The dialogue adding code goes here
-				else if (firstRowExpansion.get(i).equals("dialogue")) {
-					Collection<Object> diagExpansion = treeModel.getTree()
-							.getSuccessors(firstRowExpansion.get(i));
-					for (Object dialogueExpansionNode : diagExpansion) {
-						GameObjectPanel newObjPanel = new GameObjectPanel(
-								(GameConversation) dialogueExpansionNode,
-								CONSTANT_OFFSET);
-						this.gameObjectPanel.add(newObjPanel);
-						this.add(newObjPanel.getGameObjectPane());
+			// The dialogue adding code goes here
+			else if (firstRowExpansion.get(i).equals("dialogue")) {
+				Collection<Object> diagExpansion = treeModel.getTree()
+						.getSuccessors(firstRowExpansion.get(i));
+				for (Object dialogueExpansionNode : diagExpansion) {
+					GameObjectPanel newObjPanel = new GameObjectPanel(
+							(GameConversation) dialogueExpansionNode,
+							CONSTANT_OFFSET);
+					this.gameObjectPanel.add(newObjPanel);
+					this.add(newObjPanel.getGameObjectPane());
 
-						Collection<Object> convExpansion = treeModel.getTree()
-								.getSuccessors(dialogueExpansionNode);
-						for (Object gameConversation : convExpansion) {
-							GameObjectPanelConversation newObjPanel2 = new GameObjectPanelConversation(
-									(GameConversationNode) gameConversation,
-									CONSTANT_OFFSET * 2);
-							this.gameObjectPanel.add(newObjPanel2);
-							this.add(newObjPanel2.getGameObjectPane());
-							addChildrenRoots((GameConversationNode) gameConversation);
-						}
+					Collection<Object> convExpansion = treeModel.getTree()
+							.getSuccessors(dialogueExpansionNode);
+					for (Object gameConversation : convExpansion) {
+						GameObjectPanelConversation newObjPanel2 = new GameObjectPanelConversation(
+								(GameConversationNode) gameConversation,
+								CONSTANT_OFFSET * 5);
+						this.gameObjectPanel.add(newObjPanel2);
+						this.add(newObjPanel2.getGameObjectPane());
+						addChildrenRoots((GameConversationNode) gameConversation);
 					}
 				}
 			}
@@ -150,7 +151,7 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 							Collection<Object> convExpansion = treeModel
 									.getTree().getSuccessors(z.get(j));
 							ArrayList<Object> bees3 = (ArrayList<Object>) convExpansion;
-							
+
 							for (int zl = 0; zl < convExpansion.size(); zl++) {
 								GameObjectPanel newObjPanel2 = new GameObjectPanel(
 										(GameConversationNode) bees3.get(zl),
@@ -207,10 +208,6 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 
 		public boolean getVisbile() {
 			return visible;
-		}
-
-		public void setVisible(boolean set) {
-			visible = set;
 		}
 
 		public String getLabel() {

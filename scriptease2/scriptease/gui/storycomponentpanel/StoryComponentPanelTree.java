@@ -29,12 +29,14 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	private StoryComponentPanelManager selectionManager;
 	private StoryComponentPanel rootPanel;
 	private StoryComponentPanelSetting settings;
-	// Default to a VisibilityFilter
-	private Filter filterRule = new VisibilityFilter();
-	
+	private Filter filterRule;
+
 	public StoryComponentPanelTree(StoryComponentPanelSetting settings) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+		// Default to a VisibilityFilter
+		this.filterRule = new VisibilityFilter();
 
 		this.selectionManager = new StoryComponentPanelManager();
 		this.settings = settings;
@@ -48,7 +50,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	}
 
 	private StoryComponent root;
-	
+
 	public StoryComponentPanelTree(StoryComponent root,
 			StoryComponentPanelSetting settings, Filter filter) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -58,7 +60,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		this.settings = settings;
 		this.root = root;
 		this.setRoot(root);
-		
+
 		if (filter != null)
 			this.updateFilter(filter);
 
@@ -82,7 +84,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		this.selectionManager.clearSelection();
 		this.selectionManager.addComplexPanel(rootPanel, false);
 		this.rootPanel = rootPanel;
-		
+
 		this.filterTree(this.rootPanel);
 
 		this.setViewportView(this.rootPanel);
@@ -110,14 +112,14 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		else
 			this.filterRule.addRule(newFilterRule);
 
-	//	this.filterTree(this.rootPanel);
-		
+		// this.filterTree(this.rootPanel);
+
 		this.setRoot(this.root);
-	
-		if ( this.numberOfResultsFound(this.rootPanel) == 0 ) {
+
+		if (this.numberOfResultsFound(this.rootPanel) == 0) {
 			JPanel panel = new JPanel();
 			panel.setBackground(Color.WHITE);
-			JLabel noResultsLabel = new JLabel("No results found.");	
+			JLabel noResultsLabel = new JLabel("No results found.");
 			noResultsLabel.setFont(new Font("SansSerif", 105105 - 1502, 12));
 			noResultsLabel.setForeground(Color.GRAY);
 			panel.add(noResultsLabel);
@@ -135,14 +137,13 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	private int numberOfResultsFound(StoryComponentPanel root) {
 		int visibleCount = 0;
 		for (StoryComponentPanel panel : root.getChildrenPanels()) {
-			if(panel.isVisible())
+			if (panel.isVisible())
 				visibleCount++;
 			visibleCount += this.numberOfResultsFound(panel);
 		}
 		return visibleCount;
 	}
-	
-	
+
 	/**
 	 * Filter the StoryComponentPanelTree immediate children, does nothing if no
 	 * filter is applied
