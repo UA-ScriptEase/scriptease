@@ -35,7 +35,7 @@ import scriptease.gui.SEFrame;
 import scriptease.gui.WindowManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
+import scriptease.model.PatternModelPool;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.TranslatorManager;
@@ -220,7 +220,7 @@ public class DialogBuilder {
 						model = new StoryModel(module, title, author,
 								selectedTranslator);
 
-						StoryModelPool.getInstance().add(model, true);
+						PatternModelPool.getInstance().add(model, true);
 						seFrame.createTabForModel(model);
 					}
 				} catch (Throwable e) {

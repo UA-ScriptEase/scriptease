@@ -21,7 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicButtonUI;
 
-import scriptease.gui.action.file.CloseTabAction;
+import scriptease.gui.action.file.CloseStoryTabAction;
+import scriptease.model.PatternModel;
 
 /**
  * Panel intended to be used as a closeable tab for a JTabbedPane.
@@ -41,7 +42,7 @@ public class CloseableTab extends JPanel {
 	 *            The icon to display in the tab. Passing <code>null</code> will
 	 *            show no icon.
 	 */
-	public CloseableTab(final JTabbedPane parent, final StoryPanel panel,
+	public CloseableTab(final JTabbedPane parent, final PatternModel model,
 			Icon icon) {
 		// unset the annoying gaps that come with default FlowLayout
 		super(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -78,7 +79,7 @@ public class CloseableTab extends JPanel {
 		// add more space between the label and the button
 		label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 		
-		closeButton = new TabButton(new CloseTabAction(panel));
+		closeButton = new TabButton(new CloseStoryTabAction(model));
 		closeButton.setHideActionText(true);
 		this.add(closeButton);
 

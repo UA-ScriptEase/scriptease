@@ -225,7 +225,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 				for (String type : knowIt.getAcceptableTypes()) {
 					TypeWidget typeWidget = ScriptWidgetFactory
 							.buildTypeWidget(type);
-					
+
 					typeWidget.setSelected(true);
 					typeWidget.setBackground(ScriptEaseUI.COLOUR_BOUND);
 					typePanel.add(typeWidget);
@@ -247,10 +247,10 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 			this.configureListeners(node, this.component);
 			this.configureAppearance(this.component, node);
 			this.component.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
-			this.component
-					.add(ScriptWidgetFactory.buildFanInPanel(node
-							.getQuestPoint().getFanIn()));
-			this.component.add(ScriptWidgetFactory.buildBindingWidget(node.getQuestPoint(), false));
+			this.component.add(ScriptWidgetFactory.buildFanInPanel(node
+					.getQuestPoint().getFanIn()));
+			this.component.add(ScriptWidgetFactory.buildBindingWidget(
+					node.getQuestPoint(), false));
 		}
 
 		@Override

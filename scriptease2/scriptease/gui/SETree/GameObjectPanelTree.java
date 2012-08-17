@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import scriptease.gui.SETree.ui.ScriptEaseUI;
+import scriptease.model.StoryModel;
 import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
 import scriptease.translator.io.model.GameObject;
@@ -28,9 +29,9 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 
 	private final int CONSTANT_OFFSET = 10;
 
-	public GameObjectPanelTree() {
+	public GameObjectPanelTree(StoryModel storyModel) {
 		super();
-		treeModel = new GameObjectTree();
+		treeModel = new GameObjectTree(storyModel);
 		gameObjectPanel = new ArrayList<GameObjectPanel>();
 		gameObjectLabels = new ArrayList<GameObjectPanelTree.GameObjectLabel>();
 		expandTree();
@@ -205,6 +206,7 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 
 		}
 
+		// YOUR SPELLING IS BAD AND YOU SHOULD FEEL BAD
 		public boolean getVisbile() {
 			return visible;
 		}

@@ -1,4 +1,3 @@
-
 package scriptease.controller;
 
 import java.io.File;
@@ -32,8 +31,8 @@ import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
+import scriptease.model.PatternModelPool;
 import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.CodeGenerator;
 import scriptease.translator.codegenerator.ScriptInfo;
@@ -217,19 +216,31 @@ public final class FileManager {
 	 *            The model to be saved.
 	 * @see #saveAs(StoryModel)
 	 */
-	public void save(final StoryModel model) {
-		final File location = this.reverseLookup(model);
-		final String saveMessage = "Saving story " + model.getTitle() + " to "
-				+ location;
+	public void save(final PatternModel model) {
 
-		System.out.println(saveMessage);
-		SEFrame.getInstance().setStatus(saveMessage + " ...");
-		if (location == null) {
-			this.saveAs(model);
-			return;
-		}
+		model.process(new AbstractNoOpModelVisitor() {
+			@Override
+			public void processLibraryModel(LibraryModel libraryModel) {
+				// TODO Write/Save APIDictionary here
+			}
 
-		this.writeStoryModelFile(model, location);
+			@Override
+			public void processStoryModel(StoryModel storyModel) {
+				final File location = FileManager.this
+						.reverseLookup(storyModel);
+				final String saveMessage = "Saving story " + model.getTitle()
+						+ " to " + location;
+
+				System.out.println(saveMessage);
+				SEFrame.getInstance().setStatus(saveMessage + " ...");
+				if (location == null) {
+					FileManager.this.saveAs(storyModel);
+					return;
+				}
+
+				FileManager.this.writeStoryModelFile(storyModel, location);
+			}
+		});
 	}
 
 	/**
@@ -305,14 +316,14 @@ public final class FileManager {
 		// update the recent files menu items in the GUI.
 		this.notifyObservers(model, location);
 	}
-	
+
 	private void writeCode(StoryModel model, boolean compile) {
 		// generate the code
 		final GameModule module = model.getModule();
 		final Translator translator = model.getTranslator();
 		final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
-		final Collection<ScriptInfo> scriptInfos = CodeGenerator.generateCode(model,
-				problems);
+		final Collection<ScriptInfo> scriptInfos = CodeGenerator.generateCode(
+				model, problems);
 
 		module.addScripts(scriptInfos);
 		module.addIncludeFiles(translator.getIncludes());
@@ -320,20 +331,21 @@ public final class FileManager {
 		this.saveScriptInOutput(scriptInfos, translator);
 
 		// now save that code to the module
-		compile &= problems.isEmpty()
-				&& translator.getCompiler() != null
+		compile &= problems.isEmpty() && translator.getCompiler() != null
 				&& translator.getCompiler().exists();
-		
+
 		if (translator.getCompiler() == null
 				|| !translator.getCompiler().exists())
 			WindowManager
-					.getInstance().showWarningDialog(
+					.getInstance()
+					.showWarningDialog(
 							"Compiler not found",
-							"I couldn't find the compiler for "+translator.getName()+
-							".\n\nCheck that the compiler path in the \"translator.ini\" file" +
-							" in the translator directory is correct." +
-							"\nRestart ScriptEase after saving." +
-							"\n\nI saved the story without compiling.");
+							"I couldn't find the compiler for "
+									+ translator.getName()
+									+ ".\n\nCheck that the compiler path in the \"translator.ini\" file"
+									+ " in the translator directory is correct."
+									+ "\nRestart ScriptEase after saving."
+									+ "\n\nI saved the story without compiling.");
 
 		try {
 			if (compile)
@@ -356,8 +368,7 @@ public final class FileManager {
 					Thread.currentThread(), new IOError(e));
 		} catch (GameCompilerException e) {
 			if (compile) {
-				SEFrame.getInstance().setStatus(
-						"Compilation Failed.");
+				SEFrame.getInstance().setStatus("Compilation Failed.");
 				if (WindowManager
 						.getInstance()
 						.showRetryProblemDialog(
@@ -371,8 +382,6 @@ public final class FileManager {
 		}
 	}
 
-	
-
 	/**
 	 * Saves a copy of the scripts and include files in scriptease's output
 	 * directory
@@ -385,7 +394,7 @@ public final class FileManager {
 		String outputDir = ScriptEase.getInstance().getPreference(
 				ScriptEase.OUTPUT_DIRECTORY_KEY)
 				+ "/";
-		String storyName = StoryModelPool.getInstance().getActiveModel()
+		String storyName = PatternModelPool.getInstance().getActiveModel()
 				.getName();
 
 		new File(outputDir + storyName).mkdirs();
@@ -526,7 +535,7 @@ public final class FileManager {
 			// the menu items update themselves correctly - remiller
 			this.updateRecentFiles(location);
 
-			StoryModelPool.getInstance().add(model, true);
+			PatternModelPool.getInstance().add(model, true);
 		}
 		this.notifyObservers(model, location);
 
@@ -578,14 +587,24 @@ public final class FileManager {
 	 * @return <code>true</code> only if the model can safely be closed without
 	 *         losing any desired unsaved changes.
 	 */
-	public boolean hasUnsavedChanges(StoryModel model) {
+	public boolean hasUnsavedChanges(PatternModel model) {
 		if (!UndoManager.getInstance().isSaved(model)) {
 			int choice = WindowManager.getInstance().showConfirmClose(model);
 
 			if (choice == JOptionPane.CANCEL_OPTION)
 				return false;
 			else if (choice == JOptionPane.YES_OPTION)
-				this.save(model);
+				model.process(new AbstractNoOpModelVisitor() {
+					@Override
+					public void processStoryModel(StoryModel storyModel) {
+						FileManager.this.save(storyModel);
+					}
+
+					@Override
+					public void processLibraryModel(LibraryModel libraryModel) {
+						// TODO Add saving behaviour for libraries here!
+					}
+				});
 		}
 
 		// the only way we should get here is if the user had unsaved changes
@@ -602,27 +621,42 @@ public final class FileManager {
 	 * @param model
 	 *            The model whose files should be closed.
 	 */
-	public boolean close(StoryModel model) {
-		final GameModule module;
-
+	public boolean close(PatternModel model) {
 		if (model == null)
 			return false;
 
-		module = model.getModule();
+		model.process(new AbstractNoOpModelVisitor() {
+			@Override
+			public void processLibraryModel(LibraryModel libraryModel) {
+				// TODO Auto-generated method stub
+				super.processLibraryModel(libraryModel);
+			}
 
-		try {
-			module.close();
-		} catch (IOException e) {
-			// I can't think of anything better to do with this sort of
-			// error except let ScriptEase explode. - remiller
-			Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
-					Thread.currentThread(), new IOError(e));
-		}
+			@Override
+			public void processStoryModel(StoryModel storyModel) {
+				final GameModule module;
 
-		this.openFiles.remove(this.reverseLookup(model));
+				module = storyModel.getModule();
 
-		SEFrame.getInstance().removeStoryPanelsForModel(model);
-		StoryModelPool.getInstance().remove(model);
+				try {
+					module.close();
+				} catch (IOException e) {
+					// I can't think of anything better to do with this sort
+					// of
+					// error except let ScriptEase explode. - remiller
+					Thread.getDefaultUncaughtExceptionHandler()
+							.uncaughtException(Thread.currentThread(),
+									new IOError(e));
+				}
+
+				FileManager.this.openFiles.remove(FileManager.this
+						.reverseLookup(storyModel));
+
+				SEFrame.getInstance().removeStoryPanelsForModel(storyModel);
+				PatternModelPool.getInstance().remove(storyModel);
+			}
+		});
+
 		return true;
 	}
 
@@ -638,13 +672,13 @@ public final class FileManager {
 		// ensure that we won't be losing any unsaved changes. This has to be a
 		// separate loop from the closing loop because if we cancel the close,
 		// we need to be able to back out fully.
-		for (StoryModel model : StoryModelPool.getInstance().getModels()) {
+		for (PatternModel model : PatternModelPool.getInstance().getModels()) {
 			if (!this.hasUnsavedChanges(model))
 				return false;
 		}
 
 		// actually perform... The Closing. Cue dramatic music!
-		for (StoryModel model : StoryModelPool.getInstance().getModels()) {
+		for (PatternModel model : PatternModelPool.getInstance().getModels()) {
 			if (!this.close(model))
 				return false;
 		}

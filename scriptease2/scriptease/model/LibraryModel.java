@@ -6,6 +6,7 @@ import java.util.Collection;
 import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.FileManager;
+import scriptease.controller.ModelVisitor;
 import scriptease.controller.observer.LibraryEvent;
 import scriptease.controller.observer.LibraryObserver;
 import scriptease.controller.observer.StoryComponentEvent;
@@ -540,5 +541,10 @@ public class LibraryModel extends PatternModel implements
 				}
 			});
 		}
+	}
+
+	@Override
+	public void process(ModelVisitor processController) {
+		processController.processLibraryModel(this);
 	}
 }

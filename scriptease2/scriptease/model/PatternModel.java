@@ -2,6 +2,7 @@ package scriptease.model;
 
 import java.io.File;
 
+import scriptease.controller.ModelVisitor;
 import scriptease.translator.Translator;
 import scriptease.util.FileOp;
 
@@ -11,6 +12,7 @@ import scriptease.util.FileOp;
  * the tree of patterns that it contains.
  * 
  * @author remiller
+ * @author kschenk
  */
 public abstract class PatternModel {
 	private String name;
@@ -91,4 +93,21 @@ public abstract class PatternModel {
 	public String toString() {
 		return this.getName();
 	}
+
+	/**
+	 * This is a double-dispatch hook for the
+	 * {@link scriptease.controller.ModelVisitor} family of controllers.
+	 * <code>visitor</code> implements each of: process[X] where [X]
+	 * is each of the leaf members of the <code>PatternModel</code> family. <BR>
+	 * <BR>
+	 * To Use: Pass in a valid ModelVisitor to this method. The implementing
+	 * atom of this method will dispatch the appropriate
+	 * <code>ModelVisitor</code> method for the atom's type. Voila! Double
+	 * dispatch! :-)
+	 * 
+	 * @param visitor
+	 *            The <code>ModelVisitor</code> that will process this
+	 *            PatternModel.
+	 */
+	public abstract void process(ModelVisitor visitor);
 }

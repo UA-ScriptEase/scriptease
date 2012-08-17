@@ -13,8 +13,8 @@ import scriptease.controller.observer.LibraryEvent;
 import scriptease.controller.observer.LibraryManagerEvent;
 import scriptease.controller.observer.LibraryManagerObserver;
 import scriptease.controller.observer.LibraryObserver;
-import scriptease.controller.observer.StoryModelPoolEvent;
-import scriptease.controller.observer.StoryModelPoolObserver;
+import scriptease.controller.observer.PatternModelPoolEvent;
+import scriptease.controller.observer.PatternModelPoolObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
@@ -43,7 +43,7 @@ import scriptease.translator.TranslatorManager;
  * @author mfchurch
  */
 public class LibraryManager implements TranslatorObserver, LibraryObserver,
-		StoryModelPoolObserver {
+		PatternModelPoolObserver {
 
 	final private static LibraryManager instance = new LibraryManager();
 	private static final String SCRIPTEASE_LIBRARY = "ScriptEase";
@@ -72,7 +72,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 		this.buildDefaultLibrary();
 
 		TranslatorManager.getInstance().addTranslatorObserver(this);
-		StoryModelPool.getInstance().addPoolChangeObserver(this);
+		PatternModelPool.getInstance().addPoolChangeObserver(this);
 	}
 
 	/**
@@ -282,10 +282,10 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 * translator, removes the translator from loadedTranslators.
 	 */
 	@Override
-	public void modelChanged(StoryModelPoolEvent event) {
-		if (event.getEventType() == StoryModelPoolEvent.STORY_MODEL_REMOVED)
+	public void modelChanged(PatternModelPoolEvent event) {
+		if (event.getEventType() == PatternModelPoolEvent.PATTERN_MODEL_REMOVED)
 			for (Translator translator : this.loadedTranslators.keySet()) {
-				if (!StoryModelPool.getInstance().usingTranslator(translator)) {
+				if (!PatternModelPool.getInstance().usingTranslator(translator)) {
 					this.remove(loadedTranslators.get(translator));
 					loadedTranslators.remove(translator);
 					break;

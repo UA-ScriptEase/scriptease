@@ -21,7 +21,7 @@ import scriptease.gui.SETree.filters.Filter;
 import scriptease.gui.SETree.filters.Filterable;
 import scriptease.gui.SETree.filters.GameConstantFilter;
 import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
+import scriptease.model.PatternModelPool;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
@@ -32,13 +32,18 @@ import scriptease.translator.io.model.GameConversationNode;
 public class GameObjectTreeModel extends DefaultTreeModel implements Filterable {
 	protected Filter filter;
 	private JTree tree;
+	private final StoryModel storyModel;
 
-	public GameObjectTreeModel() {
-		this(null);
-	}
-
-	public GameObjectTreeModel(TreeNode root) {
+	/*
+	 * Unsurprisingly, this class is NEVER USED. But I didn't delete it yet.
+	 * Why? Because this class is what implements the search for Game Object
+	 * Tree. Of course, it doesn't do anything since it's not implemented, but
+	 * we might be able to use some of the code (if we can make sense of it).
+	 * -kschenk
+	 */
+	public GameObjectTreeModel(TreeNode root, StoryModel storyModel) {
 		super(root);
+		this.storyModel = storyModel;
 		populateGameObjects();
 	}
 
@@ -107,8 +112,6 @@ public class GameObjectTreeModel extends DefaultTreeModel implements Filterable 
 	 */
 	private void populateGameObjects() {
 		final GameTypeManager typeManager;
-		// Get the active model.
-		StoryModel activeModel = StoryModelPool.getInstance().getActiveModel();
 		// Build the tree:
 		// Make a node for the root of the tree.
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new JLabel(
@@ -134,14 +137,12 @@ public class GameObjectTreeModel extends DefaultTreeModel implements Filterable 
 					new JLabel(typeManager.getDisplayText(type)));
 
 			List<GameConstant> gameObjects;
-			
 
 			// Get all GameObjects of the type.
-			if (activeModel == null) {
+			if (storyModel == null) {
 				gameObjects = new ArrayList<GameConstant>(0);
 			} else {
-				gameObjects = ((StoryModel) activeModel).getModule()
-						.getResourcesOfType(type);
+				gameObjects = storyModel.getModule().getResourcesOfType(type);
 
 				gameObjects = new ArrayList<GameConstant>(
 						this.filterGameObjects(gameObjects));

@@ -84,7 +84,7 @@ public class ModelVerifier implements StoryComponentObserver {
 	 * When ModelVerifier is notified of a change in the model, validate the
 	 * model with rules that are listening for the given eventType. Collect the
 	 * problems with a string description of the solution and notify the user.
-	 * If the user wishes to continue, apply the changes necissary to maintain
+	 * If the user wishes to continue, apply the changes necessary to maintain
 	 * model consistency otherwise undo the last action.
 	 */
 	@Override

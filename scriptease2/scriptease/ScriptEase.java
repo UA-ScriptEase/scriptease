@@ -69,7 +69,6 @@ public final class ScriptEase implements Runnable {
 	// */
 
 	public static final String RECENT_FILE_PREFIX = "recentFile";
-	public static final String ACTIVE_TRANSLATOR_KEY = "activeTranslator";
 	public static final String DEBUG_KEY = "debug";
 	public static final String OUTPUT_DIRECTORY_KEY = "outputDirectory";
 	public static final String PREFERRED_LAYOUT_KEY = "PreferredLayout";
@@ -135,7 +134,7 @@ public final class ScriptEase implements Runnable {
 	 * in a directory that is unique to the user like their home directory on
 	 * linux, or My Documents on Windows.
 	 */
-	public static final File SCRIPTEASE_USER_DATA_DIR = new File(
+	private static final File SCRIPTEASE_USER_DATA_DIR = new File(
 			System.getProperty("user.home"), "ScriptEase");
 
 	/**

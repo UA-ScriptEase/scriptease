@@ -11,8 +11,8 @@ import javax.swing.event.TreeSelectionListener;
 import scriptease.gui.SETree.filters.Filter;
 import scriptease.gui.SETree.filters.Filterable;
 import scriptease.gui.SETree.filters.StoryComponentFilter;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelSetting;
-import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 
 /**
@@ -29,11 +29,15 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	private StoryComponentPanelManager selectionManager;
 	private StoryComponentPanel rootPanel;
 	private StoryComponentPanelSetting settings;
-	private StoryComponent root;
+	private QuestPoint root;
 	private Filter filterRule;
 
-	public StoryComponentPanelTree(StoryComponentPanelSetting settings) {
-		this(null, settings);
+	public StoryComponentPanelTree() {
+		this(null, new StoryComponentPanelSetting());
+	}
+
+	public StoryComponentPanelTree(QuestPoint root) {
+		this(root, new StoryComponentPanelSetting());
 	}
 
 	/**
@@ -42,7 +46,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * @param root
 	 * @param settings
 	 */
-	public StoryComponentPanelTree(StoryComponent root,
+	public StoryComponentPanelTree(QuestPoint root,
 			StoryComponentPanelSetting settings) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -65,7 +69,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * @param root
 	 *            The root StoryComponent for the tree.
 	 */
-	public void setRoot(StoryComponent root) {
+	public void setRoot(QuestPoint root) {
 		final StoryComponentPanel rootPanel = StoryComponentPanelFactory
 				.getInstance().buildPanel(root);
 		if (this.settings != null)

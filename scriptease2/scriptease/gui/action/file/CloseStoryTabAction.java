@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import scriptease.gui.SEFrame;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.pane.StoryPanel;
+import scriptease.model.PatternModel;
 
 /**
  * Represents and performs the Close Tab command, as well as encapsulates its
@@ -20,21 +20,21 @@ import scriptease.gui.pane.StoryPanel;
  * @author remiller
  */
 @SuppressWarnings("serial")
-public class CloseTabAction extends ActiveModelSensitiveAction {
+public class CloseStoryTabAction extends ActiveModelSensitiveAction {
 	private static final String CLOSE_MODULE = Il8nResources
 			.getString("Close_Model");
-	private final StoryPanel panel;
+	private final PatternModel model;
 
 	/**
 	 * Defines an <code>CloseModelAction</code> object with a mnemonic.
 	 */
-	public CloseTabAction(StoryPanel panel) {
-		super(CloseTabAction.CLOSE_MODULE);
-		this.panel = panel;
+	public CloseStoryTabAction(PatternModel model) {
+		super(CloseStoryTabAction.CLOSE_MODULE);
+		this.model = model;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		SEFrame.getInstance().removeStoryPanelTab(panel);
+		SEFrame.getInstance().removeStoryPanelTab(model);
 	}
 }

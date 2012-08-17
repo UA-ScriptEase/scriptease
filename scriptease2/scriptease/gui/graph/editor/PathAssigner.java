@@ -10,7 +10,6 @@ import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEn
 import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
-import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelSetting;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.complex.ScriptIt;
@@ -19,7 +18,8 @@ import scriptease.model.complex.ScriptIt;
  * JPanel used for assigning a ScriptIt to a selected DescribeIt path. Displays
  * the ScriptIt in the JPanel.
  * 
- * TODO This should be in some other class with all of the other describeit stuff.
+ * TODO This should be in some other class with all of the other describeit
+ * stuff.
  * 
  * @author mfchurch
  * @author kschenk
@@ -38,8 +38,7 @@ public class PathAssigner extends JPanel implements StoryComponentObserver {
 	public PathAssigner() {
 		this.describeIt = null;
 		this.path = null;
-		this.tree = new StoryComponentPanelTree(
-				new StoryComponentPanelSetting());
+		this.tree = new StoryComponentPanelTree();
 
 		this.add(tree);
 	}
@@ -58,8 +57,7 @@ public class PathAssigner extends JPanel implements StoryComponentObserver {
 		final ScriptIt scriptIt = describeIt.getScriptItForPath(this.path);
 
 		this.remove(tree);
-		tree = new StoryComponentPanelTree(scriptIt,
-				new StoryComponentPanelSetting());
+		// TODO Need to reimplement this! tree = new StoryComponentPanelTree(scriptIt);
 		this.add(tree);
 		this.setOpaque(true);
 

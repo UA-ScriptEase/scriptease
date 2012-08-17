@@ -13,9 +13,9 @@ import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEn
 import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.quests.QuestPoint;
+import scriptease.model.PatternModel;
+import scriptease.model.PatternModelPool;
 import scriptease.model.StoryComponent;
-import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
@@ -223,7 +223,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
 				// Find an appropriate Default binding for the type.
-				final StoryModel activeModel = StoryModelPool.getInstance()
+				final PatternModel activeModel = PatternModelPool.getInstance()
 						.getActiveModel();
 				if (activeModel != null) {
 					final Translator translator = activeModel.getTranslator();

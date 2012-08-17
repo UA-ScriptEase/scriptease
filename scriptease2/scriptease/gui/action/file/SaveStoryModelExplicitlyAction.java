@@ -9,8 +9,9 @@ import javax.swing.KeyStroke;
 import scriptease.controller.FileManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.model.PatternModel;
+import scriptease.model.PatternModelPool;
 import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
 
 /**
  * Represents and performs the Save Model Explicitly (Save As...) command, as
@@ -23,19 +24,24 @@ import scriptease.model.StoryModelPool;
  * @author remiller
  */
 @SuppressWarnings("serial")
-public final class SaveStoryModelExplicitlyAction extends ActiveModelSensitiveAction {
+public class SaveStoryModelExplicitlyAction extends ActiveModelSensitiveAction {
 	private static final String SAVE_AS = Il8nResources
 			.getString("Save_Model_As");
 
+	/*
+	 * TODO This class needs to update legality based on what kind of model is
+	 * selected. It shouldn't be legal to perform a save as with a LibraryModel,
+	 * but it should with a story model.
+	 */
 	private static final Action instance = new SaveStoryModelExplicitlyAction();
 
 	/**
 	 * Gets the sole instance of this particular type of Action
 	 * 
-	 * @return The sole instance of this particular type of Action
+	 * @SaveModelExplicitlyActionis particular type of Action
 	 */
 	public static Action getInstance() {
-		return SaveStoryModelExplicitlyAction.instance;
+		return instance;
 	}
 
 	/**
@@ -45,19 +51,21 @@ public final class SaveStoryModelExplicitlyAction extends ActiveModelSensitiveAc
 		super(SaveStoryModelExplicitlyAction.SAVE_AS + "...");
 
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
-		this.putValue(Action.ACCELERATOR_KEY,
-				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
+		this.putValue(
+				Action.ACCELERATOR_KEY,
+				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK
+						+ ActionEvent.SHIFT_MASK));
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		final StoryModel activeModel = StoryModelPool.getInstance()
+		final PatternModel activeModel = PatternModelPool.getInstance()
 				.getActiveModel();
 
 		if (activeModel == null)
 			return;
-		
-		FileManager.getInstance().saveAs(activeModel);
+		else if (activeModel instanceof StoryModel)
+			FileManager.getInstance().saveAs((StoryModel) activeModel);
 	}
 }

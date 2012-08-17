@@ -12,13 +12,13 @@ import java.util.Set;
 
 import scriptease.ScriptEase;
 import scriptease.ScriptEase.ConfigurationKeys;
-import scriptease.controller.observer.StoryModelPoolEvent;
-import scriptease.controller.observer.StoryModelPoolObserver;
+import scriptease.controller.observer.PatternModelPoolEvent;
+import scriptease.controller.observer.PatternModelPoolObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.SEFrame;
 import scriptease.gui.WindowManager;
-import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
+import scriptease.model.PatternModel;
+import scriptease.model.PatternModelPool;
 import scriptease.translator.codegenerator.GameObjectPicker;
 
 /**
@@ -35,7 +35,7 @@ import scriptease.translator.codegenerator.GameObjectPicker;
  * 
  * @author graves
  */
-public class TranslatorManager implements StoryModelPoolObserver {
+public class TranslatorManager implements PatternModelPoolObserver {
 	private static final String NO_TRANSLATORS_PROBLEM = "ScriptEase could not locate any valid game translators in its \"translators\" directory. "
 			+ "\n\nYou will not be able to open Story files or perform any other game-specific operations.";
 
@@ -70,7 +70,7 @@ public class TranslatorManager implements StoryModelPoolObserver {
 
 		// scan for translators in the translators folder
 		this.fillTranslatorPool();
-		StoryModelPool.getInstance().addPoolChangeObserver(this);
+		PatternModelPool.getInstance().addPoolChangeObserver(this);
 	}
 
 	/**
@@ -302,17 +302,17 @@ public class TranslatorManager implements StoryModelPoolObserver {
 	}
 
 	@Override
-	public void modelChanged(StoryModelPoolEvent event) {
+	public void modelChanged(PatternModelPoolEvent event) {
 		final short eventType = event.getEventType();
-		final StoryModel model = event.getStoryModel();
+		final PatternModel model = event.getPatternModel();
 		Translator translator = (model == null ? null : model.getTranslator());
 
-		if (eventType == StoryModelPoolEvent.STORY_MODEL_ACTIVATED) {
+		if (eventType == PatternModelPoolEvent.PATTERN_MODEL_ACTIVATED) {
 			if (this.activeTranslator != translator) {
 				this.setActiveTranslator(translator);
 			}
-		} else if (eventType == StoryModelPoolEvent.STORY_MODEL_REMOVED) {
-			if (!StoryModelPool.getInstance().usingTranslator(translator))
+		} else if (eventType == PatternModelPoolEvent.PATTERN_MODEL_REMOVED) {
+			if (!PatternModelPool.getInstance().usingTranslator(translator))
 				translator.unLoadTranslator();
 		}
 	}

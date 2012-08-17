@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.JDialog;
@@ -29,12 +28,12 @@ import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.FileManager;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
-import scriptease.gui.action.file.CloseStoryModelAction;
+import scriptease.gui.action.file.ClosePatternModelAction;
 import scriptease.gui.action.file.NewStoryModelAction;
 import scriptease.gui.action.file.OpenRecentFileAction;
 import scriptease.gui.action.file.OpenStoryModelAction;
 import scriptease.gui.action.file.SaveLibraryModelAction;
-import scriptease.gui.action.file.SaveStoryModelAction;
+import scriptease.gui.action.file.SaveModelAction;
 import scriptease.gui.action.file.SaveStoryModelExplicitlyAction;
 import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.story.DeleteStoryComponentAction;
@@ -44,14 +43,11 @@ import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.storycomponentpanel.StoryComponentPanel;
-import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
-import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
-import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
+import scriptease.model.PatternModel;
+import scriptease.model.PatternModelPool;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.translator.Translator;
@@ -252,11 +248,11 @@ public class MenuFactory {
 		menu.add(TestStoryAction.getInstance());
 		menu.addSeparator();
 
-		menu.add(SaveStoryModelAction.getInstance());
+		menu.add(SaveModelAction.getInstance());
 		menu.add(SaveStoryModelExplicitlyAction.getInstance());
 		menu.addSeparator();
 
-		menu.add(CloseStoryModelAction.getInstance());
+		menu.add(ClosePatternModelAction.getInstance());
 		menu.addSeparator();
 
 		// add the recent files list
@@ -379,6 +375,30 @@ public class MenuFactory {
 		final JMenu menu = new JMenu(MenuFactory.TOOLS);
 		menu.setMnemonic(KeyEvent.VK_T);
 
+		final JMenu storyComponentBuilderMenu;
+
+		storyComponentBuilderMenu = new JMenu("Story Component Builder");
+
+		for (final Translator translator : TranslatorManager.getInstance()
+				.getTranslators()) {
+			final JMenuItem translatorItem;
+
+			translatorItem = new JMenuItem(translator.getName());
+
+			translatorItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					TranslatorManager.getInstance().setActiveTranslator(
+							translator);
+
+					SEFrame.getInstance().createTabForModel(
+							translator.getLibrary());
+				}
+			});
+
+			storyComponentBuilderMenu.add(translatorItem);
+		}
+
 		JMenuItem item = new JMenuItem(
 				Il8nResources.getString("Story_Component_Builder"));
 		item.addActionListener(new ActionListener() {
@@ -392,6 +412,7 @@ public class MenuFactory {
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B,
 				ActionEvent.CTRL_MASK));
 
+		menu.add(storyComponentBuilderMenu);
 		menu.add(item);
 
 		return menu;
@@ -477,12 +498,12 @@ public class MenuFactory {
 					@Override
 					public void run() {
 						// Get the active model with which to generate code.
-						StoryModel activeModel = StoryModelPool.getInstance()
+						PatternModel activeModel = PatternModelPool.getInstance()
 								.getActiveModel();
-						if (activeModel != null) {
+						if (activeModel != null && activeModel instanceof StoryModel) {
 							final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
 							final Collection<ScriptInfo> scriptInfos = CodeGenerator
-									.generateCode(activeModel, problems);
+									.generateCode((StoryModel) activeModel, problems);
 
 							String code = "";
 							for (ScriptInfo script : scriptInfos) {
