@@ -23,6 +23,7 @@ import scriptease.gui.SETree.GameObjectTree;
 import scriptease.gui.SETree.cell.BindingWidget;
 import scriptease.gui.control.FilterableSearchField;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.model.StoryModel;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.translator.codegenerator.GameObjectPicker;
 
@@ -35,10 +36,10 @@ public class GameObjectPane implements GameObjectPicker {
 	// Although the default picker will be used, a customPicker can define
 	// certain behavior of the default one.
 	private FilterableSearchField searchField;
+	private GameObjectPanelTree tree;
 
-	private GameObjectPanelTree tree = new GameObjectPanelTree();
-
-	public GameObjectPane() {
+	public GameObjectPane(StoryModel storyModel) {
+		this.tree = new GameObjectPanelTree(storyModel);
 	}
 
 	// TODO Combine parts of this with configurePane() in LibraryPane.java.

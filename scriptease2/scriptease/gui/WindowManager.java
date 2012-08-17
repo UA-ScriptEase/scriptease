@@ -37,8 +37,8 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
+import scriptease.model.PatternModel;
 import scriptease.model.StoryComponent;
-import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.util.StringOp;
@@ -396,7 +396,7 @@ public final class WindowManager implements WindowFocusListener {
 	 *         <code>JOptionPane.NO_OPTION</code>, or
 	 *         <code>JOptionPane.CANCEL_OPTION</code>
 	 */
-	public int showConfirmClose(StoryModel model) {
+	public int showConfirmClose(PatternModel model) {
 		int choice = JOptionPane.showConfirmDialog(this.currentFrame,
 				"The story \"" + model + "\" has been modified. "
 						+ WindowManager.CONFIRM_CLOSE_TEXT,

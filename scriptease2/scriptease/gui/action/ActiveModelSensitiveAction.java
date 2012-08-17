@@ -3,9 +3,9 @@ package scriptease.gui.action;
 import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
-import scriptease.controller.observer.StoryModelPoolEvent;
-import scriptease.controller.observer.StoryModelPoolObserver;
-import scriptease.model.StoryModelPool;
+import scriptease.controller.observer.PatternModelPoolEvent;
+import scriptease.controller.observer.PatternModelPoolObserver;
+import scriptease.model.PatternModelPool;
 
 /**
  * Abstract Action implementation that defines a group of Actions whose enabled
@@ -23,7 +23,7 @@ import scriptease.model.StoryModelPool;
  */
 @SuppressWarnings("serial")
 public abstract class ActiveModelSensitiveAction extends AbstractAction
-		implements StoryModelPoolObserver {
+		implements PatternModelPoolObserver {
 	/**
 	 * Builds an action that is sensitive to the model pool's active model
 	 * state. It is protected to disallow non-actions from instantiating this
@@ -36,13 +36,13 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction
 		super(name);
 
 		this.updateEnabledState();
-		StoryModelPool.getInstance().addPoolChangeObserver(this);
+		PatternModelPool.getInstance().addPoolChangeObserver(this);
 	}
 
 	@Override
-	public void modelChanged(final StoryModelPoolEvent event) {
-		if (event.getEventType() == StoryModelPoolEvent.STORY_MODEL_ACTIVATED
-				|| event.getEventType() == StoryModelPoolEvent.STORY_MODEL_REMOVED) {
+	public void modelChanged(final PatternModelPoolEvent event) {
+		if (event.getEventType() == PatternModelPoolEvent.PATTERN_MODEL_ACTIVATED
+				|| event.getEventType() == PatternModelPoolEvent.PATTERN_MODEL_REMOVED) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					ActiveModelSensitiveAction.this.updateEnabledState();
@@ -72,6 +72,6 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction
 	 * @return True if this action is legal.
 	 */
 	protected boolean isLegal() {
-		return StoryModelPool.getInstance().hasActiveModel();
+		return PatternModelPool.getInstance().hasActiveModel();
 	}
 }

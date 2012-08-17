@@ -47,8 +47,9 @@ import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
+import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModel;
 import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
 
@@ -211,7 +212,7 @@ public class ToolBarFactory {
 		questEditorToolBar.add(fanInLabel);
 		fanInLabel.setLabelFor(fanInSpinner);
 		questEditorToolBar.add(fanInSpinner);
-		
+
 		questEditorToolBar.add(nameLabel);
 		nameLabel.setLabelFor(nameField);
 		questEditorToolBar.add(nameField);
@@ -293,7 +294,7 @@ public class ToolBarFactory {
 	 */
 	private static void updateQuestToolBar(JTextField nameField,
 			JSpinner fanInSpinner, QuestPointNode questNode) {
-		
+
 		updateFanInSpinner(fanInSpinner, questNode);
 		updateNameField(nameField, questNode);
 
@@ -832,10 +833,11 @@ public class ToolBarFactory {
 								questPoint.setFanIn(fanIn - 1);
 
 						case SELECT_GRAPH_NODE:
-							final StoryModel model = StoryModelPool
+						  
+						 	final PatternModel model = PatternModelPool
 									.getInstance().getActiveModel();
 
-							if (model != null) {
+							if (model != null && model instanceof StoryModel) {
 								sourceNode
 										.process(new AbstractNoOpGraphNodeVisitor() {
 											@Override
@@ -844,11 +846,16 @@ public class ToolBarFactory {
 
 												QuestPoint questPoint = questPointNode
 														.getQuestPoint();
-
+												
+												List<JPanel> panels = PanelFactory.getInstance().getPanelsForModel(model);
+												
+												for(JPanel panel : panels)
+												PanelFactory.getInstance().setRootForTreeInPanel(panel, questPoint);
+/*		TODO I'm working on getting rid of this. If I forget to delete it and you find this, go ahead and destroy it
 												SEFrame.getInstance()
 														.activatePanelForQuestPoint(
-																model,
-																questPoint);
+																(StoryModel) model,
+																questPoint);*/
 											}
 										});
 							}

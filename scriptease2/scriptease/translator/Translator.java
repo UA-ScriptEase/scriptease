@@ -732,7 +732,7 @@ public class Translator {
 	}
 
 	/**
-	 * Returns only the libraries associated with the translator. These are
+	 * Returns only the library associated with the translator. This is
 	 * obtained from the Library Manager.
 	 * 
 	 * Note that this method does not return default libraries that should be
@@ -740,16 +740,12 @@ public class Translator {
 	 * 
 	 * @return
 	 */
-	public Collection<LibraryModel> getLibrariesSpecificToTranslator() {
-		final Collection<LibraryModel> libraries;
-
-		libraries = new ArrayList<LibraryModel>();
-
+	public LibraryModel getLibrary() {
 		for (LibraryModel library : LibraryManager.getInstance().getLibraries())
 			if (library.getTranslator() == this)
-				libraries.add(library);
-
-		return libraries;
+				return library;
+	
+		return null;
 	}
 
 	/**

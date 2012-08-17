@@ -14,8 +14,9 @@ import scriptease.gui.SEFrame;
 import scriptease.gui.WindowManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.model.PatternModel;
+import scriptease.model.PatternModelPool;
 import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.util.StringOp;
@@ -28,7 +29,8 @@ import scriptease.util.StringOp;
  * translator, if there is much a method available. Otherwise, it will be
  * disabled.
  * 
- * TODO: Supress actions and disable scriptease while game is playing.
+ * TODO Illegalize actions and disable scriptease while game is playing. TODO
+ * Illegalize action when a LibraryModel is open instead of a StoryModel
  * 
  * @author lari
  * @author remiller
@@ -65,12 +67,15 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		final WindowManager winMan = WindowManager.getInstance();
-		final StoryModel activeModel = StoryModelPool.getInstance()
+		final PatternModel activeModel = PatternModelPool.getInstance()
 				.getActiveModel();
 		final Thread testThread;
 		final Runnable testTask;
 
-		if (!winMan.showConfirmTestStory())
+		// TODO Temporarily checking instanceof. Should instead be illegal when
+		// not Story Model!
+		if (!winMan.showConfirmTestStory()
+				|| !(activeModel instanceof StoryModel))
 			return;
 
 		testTask = new Runnable() {
@@ -83,12 +88,12 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 				frame.setStatus("Testing " + activeModel.getTitle());
 				try {
 					procBuilder = new ProcessBuilder();
-					procBuilder.command(activeModel.getModule().getTestCommand(
-							procBuilder));
+					procBuilder.command(((StoryModel) activeModel).getModule()
+							.getTestCommand(procBuilder));
 
 					// I think merging error and regular output is probably a
-					// good thing
-					// since we don't do anything special with them. - remiller
+					// good thing since we don't do anything special with them.
+					// - remiller
 					procBuilder.redirectErrorStream(true);
 					tester = procBuilder.start();
 
@@ -100,7 +105,7 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 					 * since we don't care what the game does, we won't hold up
 					 * ourselves for it. - remiller
 					 */
-					
+
 					// dump the process output, just in case it's important.
 					String line;
 					while ((line = input.readLine()) != null) {

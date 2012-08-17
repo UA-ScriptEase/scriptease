@@ -1,6 +1,11 @@
 package scriptease.gui;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -12,10 +17,14 @@ import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.pane.GameObjectPane;
 import scriptease.gui.pane.LibraryPane;
+import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
+import scriptease.model.PatternModel;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.GameObjectPicker;
+import scriptease.util.BiHashMap;
 
 /**
  * A factory class for different panels. All major panel construction should go
@@ -98,18 +107,16 @@ public class PanelFactory {
 	 * by category, allowing the user to drag them onto bindings in a Story.
 	 * 
 	 * @return A JPanel GameObject picker.
-	 * @author graves
-	 * @author mfchurch
 	 */
-	public JPanel buildGameObjectPane(StoryModel model) {
+	public JPanel buildGameObjectPane(StoryModel storyModel) {
 		GameObjectPicker picker;
 
-		if (model != null) {
-			Translator translator = model.getTranslator();
+		if (storyModel != null) {
+			Translator translator = storyModel.getTranslator();
 			if (translator != null) {
 				// Get the picker
 				if ((picker = translator.getCustomGameObjectPicker()) == null) {
-					picker = new GameObjectPane();
+					picker = new GameObjectPane(storyModel);
 				}
 				return picker.getPickerPanel();
 			}
@@ -119,8 +126,103 @@ public class PanelFactory {
 		jPanel.setVisible(false);
 		return jPanel;
 	}
-	
-	public JPanel buildLibraryPane(boolean showInvisible) {
-		return new LibraryPane(showInvisible);
+
+	private final static BiHashMap<PatternModel, List<JPanel>> modelsToPanes = new BiHashMap<PatternModel, List<JPanel>>();
+
+	private final static Map<JPanel, StoryComponentPanelTree> panesToTrees = new IdentityHashMap<JPanel, StoryComponentPanelTree>();
+
+	public JPanel buildStoryPanel(StoryModel model, QuestPoint questPoint) {
+		final JPanel storyPanel;
+		final JPanel questPanel;
+		final StoryComponentPanelTree storyComponentTree;
+
+		List<JPanel> panes;
+
+		storyPanel = new JPanel(new GridLayout(0, 1));
+		questPanel = PanelFactory.getInstance().buildQuestPanel(
+				model.getRoot().getStartPoint());
+		storyComponentTree = new StoryComponentPanelTree(questPoint);
+
+		panes = modelsToPanes.getValue(model);
+
+		if(panes == null) {
+			panes = new ArrayList<JPanel>();
+			panes.add(storyPanel);
+			modelsToPanes.put(model, panes);
+		}
+
+		storyPanel.setOpaque(false);
+
+		panes.add(storyPanel);
+
+		storyPanel.add(questPanel);
+
+		storyPanel.add(storyComponentTree);
+
+		panesToTrees.put(storyPanel, storyComponentTree);
+		
+		return storyPanel;
+	}
+
+	public void setRootForTreeInPanel(JPanel panel, QuestPoint questPoint) {
+		panesToTrees.get(panel).setRoot(questPoint);
+	}
+
+	public StoryComponentPanelTree getTreeForPanel(JPanel panel) {
+		return panesToTrees.get(panel);
+	}
+
+	public PatternModel getModelForPanel(JPanel modelPanel) {
+		for (List<JPanel> jPanelList : modelsToPanes.getValues())
+			if (jPanelList.contains(modelPanel))
+				return modelsToPanes.getKey(jPanelList);
+
+		throw new IllegalStateException(
+				"Encountered null model when attempting to get model for "
+						+ modelPanel.getName());
+	}
+
+	/**
+	 * Gets the collection of panes that are currently displaying the given
+	 * model. Cannot be null.
+	 * 
+	 * @param model
+	 * @return
+	 */
+	public List<JPanel> getPanelsForModel(PatternModel model) {
+		final List<JPanel> panels = modelsToPanes.getValue(model);
+
+		if (panels == null)
+			throw new IllegalStateException(
+					"Encountered null list of model display panels when "
+							+ "attempting to get panels for " + model.getName());
+
+		return panels;
+	}
+
+	/**
+	 * Removes the given StoryPanel from list of StoryPanel's associated with
+	 * the given model.
+	 * 
+	 * @param model
+	 * @param panel
+	 */
+	public void removeStoryPanelForModel(PatternModel model, JPanel panel) {
+		final List<JPanel> panels = modelsToPanes.getValue(model);
+
+		if (panels == null)
+			throw new IllegalStateException(
+					"Encountered null list of model display panels "
+							+ "when attempting to remove panels for "
+							+ model.getName());
+
+		panels.remove(panel);
+		modelsToPanes.put(model, panels);
+	}
+
+	private static LibraryPane mainLibraryPane = new LibraryPane(false);
+
+	public LibraryPane getMainLibraryPane() {
+		return mainLibraryPane;
 	}
 }

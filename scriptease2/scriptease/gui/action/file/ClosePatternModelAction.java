@@ -6,11 +6,11 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.controller.FileManager;
+import scriptease.gui.SEFrame;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
+import scriptease.model.PatternModel;
+import scriptease.model.PatternModelPool;
 
 /**
  * Represents and performs the Save Model command, as well as encapsulates its
@@ -22,10 +22,10 @@ import scriptease.model.StoryModelPool;
  * @author remiller
  */
 @SuppressWarnings("serial")
-public final class SaveStoryModelAction extends ActiveModelSensitiveAction {
-	private static final String SAVE = Il8nResources.getString("Save_Model");
+public final class ClosePatternModelAction extends ActiveModelSensitiveAction {
+	private static final String CLOSE = Il8nResources.getString("Close_Model");
 
-	private static final Action instance = new SaveStoryModelAction();
+	private static final Action instance = new ClosePatternModelAction();
 
 	/**
 	 * Gets the sole instance of this particular type of Action
@@ -33,37 +33,39 @@ public final class SaveStoryModelAction extends ActiveModelSensitiveAction {
 	 * @return The sole instance of this particular type of Action
 	 */
 	public static Action getInstance() {
-		return SaveStoryModelAction.instance;
+		return ClosePatternModelAction.instance;
 	}
 
 	/**
 	 * Defines a <code>SaveModelAction</code> object with a mnemonic and
 	 * accelerator.
 	 */
-	private SaveStoryModelAction() {
-		super(SaveStoryModelAction.SAVE);
+	private ClosePatternModelAction() {
+		super(ClosePatternModelAction.CLOSE);
 
-		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
-		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-				KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_W);
+		this.putValue(Action.ACCELERATOR_KEY,
+				KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
 	}
 
 	@Override
 	protected boolean isLegal() {
 		return super.isLegal()
 		// removed until we actually implement undoable commands - remiller
-		/*  	&& !UndoManager.getInstance().isSaved(
-						StoryModelPool.getInstance().getActiveModel())*/;
+		/*
+		 * && !UndoManager.getInstance().isSaved(
+		 * StoryModelPool.getInstance().getActiveModel())
+		 */;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final StoryModel activeModel = StoryModelPool.getInstance()
-				.getActiveModel();
+		final PatternModel activeModel;
+		
+		activeModel = PatternModelPool.getInstance().getActiveModel();
 
-		if (activeModel == null)
-			return;
-
-		FileManager.getInstance().save(activeModel);
+		if (activeModel != null) {
+			SEFrame.getInstance().removeStoryPanelTab(activeModel);
+		}
 	}
 }

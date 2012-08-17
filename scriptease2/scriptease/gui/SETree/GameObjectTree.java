@@ -8,8 +8,8 @@ import java.util.List;
 
 import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.gui.SETree.filters.Filter;
+import scriptease.model.PatternModelPool;
 import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
@@ -18,10 +18,10 @@ import scriptease.translator.io.model.GameConversationNode;
 public class GameObjectTree extends SETreeModel {
 	private final String DIALOGUE_TAG = "dialogue";
 
-	private StoryModel activeModel;
+	private StoryModel storyModel;
 
-	public GameObjectTree() {
-		activeModel = StoryModelPool.getInstance().getActiveModel();
+	public GameObjectTree(StoryModel storyModel) {
+		this.storyModel = storyModel;
 		createAndPopulateTree();
 	}
 
@@ -75,7 +75,7 @@ public class GameObjectTree extends SETreeModel {
 	protected void createAndPopulateTree() {
 		final GameTypeManager typeManager;
 		// Get the active model.
-		StoryModelPool.getInstance().getActiveModel();
+		PatternModelPool.getInstance().getActiveModel();
 		// Build the tree:
 		// Make a node for the root of the tree.
 		String availObjects = "Available Game Objects";
@@ -126,8 +126,7 @@ public class GameObjectTree extends SETreeModel {
 	private Collection<GameConstant> getAllObjectsOfType(String type) {
 		List<GameConstant> allGameObjects;
 
-		allGameObjects = ((StoryModel) activeModel).getModule()
-				.getResourcesOfType(type);
+		allGameObjects = storyModel.getModule().getResourcesOfType(type);
 		allGameObjects = new ArrayList<GameConstant>(
 				this.filterGameObjects(allGameObjects));
 
@@ -153,11 +152,11 @@ public class GameObjectTree extends SETreeModel {
 		Collection<GameConstant> filteredObjects = new ArrayList<GameConstant>();
 
 		if (filter == null)
-			if(gameObjects == null)
+			if (gameObjects == null)
 				return filteredObjects;
 			else
 				return gameObjects;
-		
+
 		for (GameConstant gameObject : gameObjects) {
 			// If the child was accepted by the filter
 			boolean accepted = filter.isAcceptable(gameObject);

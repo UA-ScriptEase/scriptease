@@ -11,7 +11,7 @@ import scriptease.gui.SETree.SETreeModel;
 import scriptease.gui.SETree.Tree;
 import scriptease.gui.SETree.filters.Filter;
 import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
+import scriptease.model.PatternModelPool;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
@@ -21,15 +21,18 @@ public class SETreeModelGameObject extends SETreeModel {
 	/*
 	 * TODO Refactor and comment, or merge it with something else. Not sure what
 	 * this class is even doing.
+	 * 
+	 * Actually, it looks like it's not even doing anything. Nothing calls it,
+	 * so it's just sitting here, all sad and lonely. Either call it sometime or
+	 * put it out of its misery.
 	 */
 
 	private final String DIALOGUE_TAG = "dialogue";
-	// private final String AVA
 
-	private StoryModel activeModel;
+	private final StoryModel storyModel;
 
-	public SETreeModelGameObject() {
-		activeModel = StoryModelPool.getInstance().getActiveModel();
+	public SETreeModelGameObject(StoryModel storyModel) {
+		this.storyModel = storyModel;
 		createAndPopulateTree();
 	}
 
@@ -81,7 +84,7 @@ public class SETreeModelGameObject extends SETreeModel {
 	protected void createAndPopulateTree() {
 		final GameTypeManager typeManager;
 		// Get the active model.
-		StoryModelPool.getInstance().getActiveModel();
+		PatternModelPool.getInstance().getActiveModel();
 		// Build the tree:
 		// Make a node for the root of the tree.
 		String availObjects = "Available Game Objects";
@@ -132,7 +135,7 @@ public class SETreeModelGameObject extends SETreeModel {
 	private Collection<GameConstant> getAllObjectsOfType(String type) {
 		List<GameConstant> allGameObjects;
 
-		allGameObjects = ((StoryModel) activeModel).getModule()
+		allGameObjects = storyModel.getModule()
 				.getResourcesOfType(type);
 		allGameObjects = new ArrayList<GameConstant>(
 				this.filterGameObjects(allGameObjects));

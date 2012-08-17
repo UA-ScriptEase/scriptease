@@ -63,6 +63,7 @@ public class FilterableSearchField extends JTextField {
 					 * filterable.updateFilter(new
 					 * ComponentFilter(searchField.getText());
 					 */
+					
 					if (filterable instanceof GameObjectTreeModel)
 						((GameObjectTreeModel) filterable).updateFilter(new GameConstantSearchFilter(
 								searchField.getText()));

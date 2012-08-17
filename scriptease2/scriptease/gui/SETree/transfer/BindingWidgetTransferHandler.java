@@ -17,7 +17,7 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.cell.BindingWidget;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.model.StoryComponent;
-import scriptease.model.StoryModelPool;
+import scriptease.model.PatternModelPool;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
@@ -189,7 +189,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 
 			// Set the history to the active model
 			UndoManager.getInstance().setActiveHistory(
-					StoryModelPool.getInstance().getActiveModel());
+					PatternModelPool.getInstance().getActiveModel());
 			if (sourceBinding != null) {
 				// Bind the KnowIt with the source binding.
 				KnowItBinding binding = destinationKnowIt.getBinding();

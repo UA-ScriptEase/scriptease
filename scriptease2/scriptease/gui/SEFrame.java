@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import javax.swing.BorderFactory;
@@ -24,17 +25,19 @@ import javax.swing.event.ChangeListener;
 
 import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpGraphNodeVisitor;
+import scriptease.controller.AbstractNoOpModelVisitor;
 import scriptease.controller.FileManager;
-import scriptease.controller.observer.StoryModelPoolEvent;
-import scriptease.controller.observer.StoryModelPoolObserver;
+import scriptease.controller.observer.PatternModelPoolEvent;
+import scriptease.controller.observer.PatternModelPoolObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.pane.CloseableTab;
-import scriptease.gui.pane.LibraryPane;
-import scriptease.gui.pane.StoryPanel;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
+import scriptease.gui.storycomponentbuilder.StoryComponentBuilderPanelFactory;
+import scriptease.model.LibraryModel;
+import scriptease.model.PatternModel;
 import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
+import scriptease.model.PatternModelPool;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
@@ -47,9 +50,11 @@ import scriptease.translator.TranslatorManager;
  * 
  * @author remiller
  * @author mfchurch
+ * @author kschenk
  */
+
 @SuppressWarnings("serial")
-public final class SEFrame implements StoryModelPoolObserver {
+public final class SEFrame implements PatternModelPoolObserver {
 	private static final int MIN_HEIGHT = 480;
 	private static final int MIN_WIDTH = 640;
 
@@ -60,45 +65,61 @@ public final class SEFrame implements StoryModelPoolObserver {
 	private TimedLabel statusLabel;
 	private QuestPoint startQuestPoint;
 
-
 	private final JFrame seFrame;
-	
+
 	public static String preferredLayout;
 
+	private static final SEFrame instance = new SEFrame();
+
+	/**
+	 * Gets the sole instance of SEFrame.
+	 * 
+	 * @return
+	 */
+	public static final SEFrame getInstance() {
+		return SEFrame.instance;
+	}
+
 	private SEFrame() {
-		seFrame = WindowManager.getInstance().buildScriptEaseFrame(ScriptEase.TITLE);
-		
-		seFrame.setMinimumSize(new Dimension(SEFrame.MIN_WIDTH, SEFrame.MIN_HEIGHT));
+		seFrame = WindowManager.getInstance().buildScriptEaseFrame(
+				ScriptEase.TITLE);
+
+		seFrame.setMinimumSize(new Dimension(SEFrame.MIN_WIDTH,
+				SEFrame.MIN_HEIGHT));
 		seFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		this.storyTabs = new JTabbedPane();
-		
+
 		// Register a change listener
 		this.storyTabs.addChangeListener(new ChangeListener() {
 			// This method is called whenever the selected tab changes
 			public void stateChanged(ChangeEvent evt) {
-				final StoryPanel frame;
+				final JPanel frame;
 
 				JTabbedPane pane = (JTabbedPane) evt.getSource();
 				// Get the activated frame
-				frame = (StoryPanel) pane.getSelectedComponent();
+				frame = (JPanel) pane.getSelectedComponent();
 
-				StoryModel model = (frame == null ? null : frame.getModel());
-				StoryModelPool.getInstance().activate(model);
+				if (frame != null) {
+					PatternModel model = PanelFactory.getInstance()
+							.getModelForPanel(frame);
+					PatternModelPool.getInstance().activate(model);
+				}
 			}
 		});
 
 		this.middlePane = new JPanel();
 		this.middlePane.setLayout(new GridLayout(1, 1));
 		this.middlePane.add(storyTabs);
-		
+
 		this.populate();
 
-		StoryModelPool.getInstance().addPoolChangeObserver(this);
+		PatternModelPool.getInstance().addPoolChangeObserver(this);
 	}
-	
+
 	/**
 	 * Returns the JFrame representing ScriptEase.
+	 * 
 	 * @return
 	 */
 	public JFrame getFrame() {
@@ -126,8 +147,8 @@ public final class SEFrame implements StoryModelPoolObserver {
 	public void populate() {
 		final JPanel content = new JPanel();
 
-		final JComponent libraryPane = PanelFactory.getInstance().buildLibraryPane(false);
-		final JComponent objectPane = PanelFactory.getInstance().buildGameObjectPane(null);
+		final JComponent objectPane = PanelFactory.getInstance()
+				.buildGameObjectPane(null);
 		final JComponent statusBar = this.buildStatusBar();
 
 		final GroupLayout layout = new GroupLayout(content);
@@ -139,8 +160,8 @@ public final class SEFrame implements StoryModelPoolObserver {
 
 		// Compressed Layout
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
-			leftSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, libraryPane,
-					objectPane);
+			leftSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, PanelFactory
+					.getInstance().getMainLibraryPane(), objectPane);
 			rightSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftSplit,
 					this.middlePane);
 
@@ -163,7 +184,8 @@ public final class SEFrame implements StoryModelPoolObserver {
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
 			final int dir = JSplitPane.HORIZONTAL_SPLIT;
 
-			leftSplit = new JSplitPane(dir, libraryPane, this.middlePane);
+			leftSplit = new JSplitPane(dir, PanelFactory.getInstance()
+					.getMainLibraryPane(), this.middlePane);
 			rightSplit = new JSplitPane(dir, leftSplit, objectPane);
 
 			content.add(rightSplit);
@@ -220,6 +242,7 @@ public final class SEFrame implements StoryModelPoolObserver {
 
 	/**
 	 * Creates a status bar.
+	 * 
 	 * @return
 	 */
 	private JComponent buildStatusBar() {
@@ -246,19 +269,9 @@ public final class SEFrame implements StoryModelPoolObserver {
 		return statusBar;
 	}
 
-	private static final SEFrame instance = new SEFrame();
-
-	/**
-	 * Gets the sole instance of SEFrame.
-	 * 
-	 * @return
-	 */
-	public static final SEFrame getInstance() {
-		return SEFrame.instance;
-	}
-
 	private void updateGameObjectPane(StoryModel model) {
-		final JPanel newGameObjectPane = PanelFactory.getInstance().buildGameObjectPane(model);
+		final JPanel newGameObjectPane = PanelFactory.getInstance()
+				.buildGameObjectPane(model);
 
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
 			this.leftSplit.setBottomComponent(newGameObjectPane);
@@ -270,6 +283,37 @@ public final class SEFrame implements StoryModelPoolObserver {
 		}
 	}
 
+	// TODO May not be necessary. We might be able to just combine both into one
+	// somehow
+	public void createTabForModel(PatternModel model) {
+		if (model instanceof StoryModel)
+			createTabForModel((StoryModel) model);
+		else if (model instanceof LibraryModel)
+			createTabForModel((LibraryModel) model);
+	}
+
+	public void createTabForModel(LibraryModel model) {
+		final Icon icon;
+
+		if (model.getTranslator() != null)
+			icon = model.getTranslator().getIcon();
+		else
+			icon = null;
+
+		final JPanel scbPanel;
+		final JComponent editingPane;
+
+		scbPanel = new JPanel();
+
+		editingPane = StoryComponentBuilderPanelFactory.getInstance()
+				.buildStoryComponentEditorComponent(
+						PanelFactory.getInstance().getMainLibraryPane());
+
+		scbPanel.add(editingPane);
+
+		this.storyTabs.addTab(model.getName(), icon, scbPanel);
+		this.storyTabs.setSelectedComponent(scbPanel);
+	}
 
 	/**
 	 * Creates a tab for the given StoryModel defaulting to the starting
@@ -294,11 +338,28 @@ public final class SEFrame implements StoryModelPoolObserver {
 				+ startQuestPoint.toString());
 
 		if (startQuestPoint != null) {
-			final StoryPanel newPanel = new StoryPanel(model, startQuestPoint);
-			final CloseableTab newTab = new CloseableTab(this.storyTabs,
-					newPanel, icon);
+			final JPanel newPanel = PanelFactory.getInstance().buildStoryPanel(
+					model, startQuestPoint);
+			final CloseableTab newTab = new CloseableTab(this.storyTabs, model,
+					icon);
 
-			this.storyTabs.addTab(newPanel.getTitle(), icon, newPanel);
+			// TODO Get the actual title!
+			String temporaryTitleString = "TemporaryTitleString";
+			/*
+			 * Get Title Method
+			 * 
+			 * final StoryModel model = this.model; final String title;
+			 * 
+			 * String modelTitle = model.getTitle(); if (modelTitle == null ||
+			 * modelTitle.equals("")) modelTitle = "<Untitled>";
+			 * 
+			 * title = modelTitle + "(" +
+			 * model.getModule().getLocation().getName() + ")";
+			 * 
+			 * return title;
+			 */
+
+			this.storyTabs.addTab(temporaryTitleString, icon, newPanel);
 			this.storyTabs.setTabComponentAt(
 					this.storyTabs.indexOfComponent(newPanel), newTab);
 			this.storyTabs.setSelectedComponent(newPanel);
@@ -320,9 +381,7 @@ public final class SEFrame implements StoryModelPoolObserver {
 	 */
 	public void removeStoryPanelsForModel(final StoryModel model) {
 		for (int i = 0; i < this.storyTabs.getTabCount(); i++) {
-			StoryPanel panel = (StoryPanel) this.storyTabs.getComponentAt(i);
-			if (panel.represents(model))
-				this.removeStoryPanelTab(panel);
+			this.removeStoryPanelTab(model);
 		}
 	}
 
@@ -334,57 +393,66 @@ public final class SEFrame implements StoryModelPoolObserver {
 	 * @param panel
 	 * @param model
 	 */
-	public void removeStoryPanelTab(StoryPanel panel) {
-		final StoryModel model = panel.getModel();
+	public void removeStoryPanelTab(PatternModel model) {
+		final List<JPanel> panels = PanelFactory.getInstance()
+				.getPanelsForModel(model);
 
 		// remove the panel
-		this.storyTabs.remove(panel);
-		StoryPanel.removeStoryPanelForModel(model, panel);
-
-		// check if there are any other tabs for the same model
-		if (!this.containsTabForModel(model)
-				&& FileManager.getInstance().hasUnsavedChanges(model)) {
+		for (JPanel panel : panels) {
+			this.storyTabs.remove(panel);
+			PanelFactory.getInstance().removeStoryPanelForModel(model, panel);
+		}
+		// check if there are any unsaved changes
+		if (FileManager.getInstance().hasUnsavedChanges(model)) {
 			// otherwise, close the StoryModel
-			FileManager.getInstance().close(model);
-		}
-	}
 
-	/**
-	 * Checks if there exists any StoryPanel tabs which represent the given
-	 * model
-	 * 
-	 * @param model
-	 * @return
-	 */
-	private boolean containsTabForModel(StoryModel model) {
-		for (Component panel : this.storyTabs.getComponents()) {
-			if (panel instanceof StoryPanel
-					&& ((StoryPanel) panel).represents(model)) {
-				return true;
-			}
+			model.process(new AbstractNoOpModelVisitor() {
+				@Override
+				public void processLibraryModel(LibraryModel libraryModel) {
+					// TODO Should close the translator if it's not open
+					// anywhere else.
+					// We can use the usingTranslator in PatternModelPool to
+					// check for this.
+				};
+
+				@Override
+				public void processStoryModel(StoryModel storyModel) {
+					FileManager.getInstance().close(storyModel);
+				}
+			});
 		}
-		return false;
 	}
 
 	@Override
-	public void modelChanged(StoryModelPoolEvent event) {
+	public void modelChanged(PatternModelPoolEvent event) {
 		final short eventType = event.getEventType();
-		final StoryModel model = event.getStoryModel();
+		final PatternModel model = event.getPatternModel();
 
-		if (eventType == StoryModelPoolEvent.STORY_MODEL_ACTIVATED) {
-			this.updateGameObjectPane(model);
+		if (eventType == PatternModelPoolEvent.PATTERN_MODEL_ACTIVATED) {
 
-			// Update the frame title
-			String newTitle = "";
-			if (model != null) {
-				String modelTitle = model.getTitle();
-				if (!modelTitle.isEmpty())
-					newTitle += modelTitle + " - ";
-			}
+			model.process(new AbstractNoOpModelVisitor() {
+				@Override
+				public void processLibraryModel(LibraryModel libraryModel) {
+					// TODO Do stuff when model changed to a librarymodel
+				}
 
-			newTitle += ScriptEase.TITLE;
+				@Override
+				public void processStoryModel(StoryModel storyModel) {
+					SEFrame.this.updateGameObjectPane(storyModel);
 
-			seFrame.setTitle(newTitle);
+					// Update the frame title
+					String newTitle = "";
+					if (model != null) {
+						String modelTitle = model.getTitle();
+						if (!modelTitle.isEmpty())
+							newTitle += modelTitle + " - ";
+					}
+
+					newTitle += ScriptEase.TITLE;
+
+					seFrame.setTitle(newTitle);
+				}
+			});
 		}
 	}
 
@@ -428,32 +496,42 @@ public final class SEFrame implements StoryModelPoolObserver {
 		}
 	}
 
-	public StoryPanel getActiveStory() {
-		final int selectedIndex = this.storyTabs.getSelectedIndex();
-		final StoryModel activeModel;
+	/**
+	 * Returns the active model.
+	 * 
+	 * TODO This should be in ModelPool class, really. Not sure why it's here.
+	 * XXX This used to return a storypanel, so that's why things are weird.
+	 * 
+	 * 
+	 * @return
+	 */
+	public PatternModel getActiveModel() {
+		final int selectedIndex;
+		final JPanel modelPanel;
+		final PatternModel activeModel;
 
-		// assumes all tabs contain story panes as added in createTabForModel
-		StoryPanel storyPanel = (StoryPanel) this.storyTabs
-				.getComponentAt(selectedIndex);
-		activeModel = storyPanel.getModel();
+		selectedIndex = this.storyTabs.getSelectedIndex();
+		modelPanel = (JPanel) this.storyTabs.getComponentAt(selectedIndex);
+		activeModel = PanelFactory.getInstance().getModelForPanel(modelPanel);
 
 		// this is just a sanity check.
-		if (activeModel != StoryModelPool.getInstance().getActiveModel())
+		if (activeModel != PatternModelPool.getInstance().getActiveModel())
 			throw new IllegalStateException(
 					"Active tab is not representing active model");
 
-		return storyPanel;
+		return activeModel;
 	}
-
-	/**
-	 * Activates the StoryPanel for the given model and questPoint. If it's not
-	 * found, does nothing.
+	/*
+	 * TODO IS THIS NECESSARY?
+	 *//**
+	 * Activates the StoryPanel for the given model and questPoint. If it's
+	 * not found, does nothing.
 	 * 
-	 * @param model
 	 * @param questPoint
+	 * @param model
 	 */
-	public void activatePanelForQuestPoint(StoryModel model,
-			QuestPoint questPoint) {
-		getActiveStory().setTree(questPoint);
-	}
+	/*
+	 * public void activatePanelForQuestPoint(StoryModel model, QuestPoint
+	 * questPoint) { //TODO IMplement this again model.setTree(questPoint); }
+	 */
 }

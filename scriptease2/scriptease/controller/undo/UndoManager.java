@@ -7,13 +7,13 @@ import java.util.List;
 
 import scriptease.controller.FileManager;
 import scriptease.controller.observer.FileManagerObserver;
-import scriptease.controller.observer.StoryModelPoolEvent;
-import scriptease.controller.observer.StoryModelPoolObserver;
+import scriptease.controller.observer.PatternModelPoolEvent;
+import scriptease.controller.observer.PatternModelPoolObserver;
 import scriptease.controller.observer.UndoManagerObserver;
 import scriptease.gui.SEFrame;
 import scriptease.model.PatternModel;
 import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
+import scriptease.model.PatternModelPool;
 
 /**
  * Maintains multiple modification histories and manages requests for undoing or
@@ -49,7 +49,7 @@ import scriptease.model.StoryModelPool;
  * @author remiller
  * @author mfchurch
  */
-public final class UndoManager implements StoryModelPoolObserver,
+public final class UndoManager implements PatternModelPoolObserver,
 		FileManagerObserver {
 	private final static UndoManager instance = new UndoManager();
 	private ArrayList<WeakReference<UndoManagerObserver>> observers;
@@ -70,7 +70,7 @@ public final class UndoManager implements StoryModelPoolObserver,
 	private boolean performingUndoRedo = false;
 
 	private UndoManager() {
-		StoryModelPool.getInstance().addPoolChangeObserver(this);
+		PatternModelPool.getInstance().addPoolChangeObserver(this);
 		FileManager.getInstance().addObserver(this);
 		observers = new ArrayList<WeakReference<UndoManagerObserver>>();
 	}
@@ -314,7 +314,7 @@ public final class UndoManager implements StoryModelPoolObserver,
 	 * 
 	 * @return <code>true</code> if the given model's changes has been saved.
 	 */
-	public boolean isSaved(StoryModel model) {
+	public boolean isSaved(PatternModel model) {
 		return this.findHistoryForModel(model).isSaved();
 	}
 
@@ -397,14 +397,14 @@ public final class UndoManager implements StoryModelPoolObserver,
 	}
 
 	@Override
-	public void modelChanged(StoryModelPoolEvent event) {
+	public void modelChanged(PatternModelPoolEvent event) {
 		final short eventType = event.getEventType();
-		final StoryModel model = event.getStoryModel();
+		final PatternModel model = event.getPatternModel();
 
 		// Keep an up-to-date mapping of open models to their histories
-		if (eventType == StoryModelPoolEvent.STORY_MODEL_ADDED) {
+		if (eventType == PatternModelPoolEvent.PATTERN_MODEL_ADDED) {
 			this.storyHistories.add(new History(model));
-		} else if (eventType == StoryModelPoolEvent.STORY_MODEL_REMOVED) {
+		} else if (eventType == PatternModelPoolEvent.PATTERN_MODEL_REMOVED) {
 			History removed = this.findHistoryForModel(model);
 
 			if (removed != null && this.activeHistory != null) {
@@ -419,7 +419,7 @@ public final class UndoManager implements StoryModelPoolObserver,
 						&& (removed.undoStack.peek() == this.unfinishedCommand))
 					this.unfinishedCommand = null;
 			}
-		} else if (eventType == StoryModelPoolEvent.STORY_MODEL_ACTIVATED) {
+		} else if (eventType == PatternModelPoolEvent.PATTERN_MODEL_ACTIVATED) {
 			this.setActiveHistory(model);
 		}
 	}

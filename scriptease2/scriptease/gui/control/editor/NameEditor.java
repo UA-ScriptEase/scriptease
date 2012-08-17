@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 
 import scriptease.controller.undo.UndoManager;
 import scriptease.model.StoryComponent;
-import scriptease.model.StoryModelPool;
+import scriptease.model.PatternModelPool;
 
 /**
  * NameEditor is a modified textfield that is attached to a KnowIt and updates
@@ -109,7 +109,7 @@ public class NameEditor extends JTextField {
 	 */
 	protected void updateText() {
 		final String newValue = this.getText();
-		if (StoryModelPool.getInstance().hasActiveModel()) {
+		if (PatternModelPool.getInstance().hasActiveModel()) {
 			final String oldValue = this.storyComponent.getDisplayText();
 			if (!oldValue.equals(newValue)) {
 				if (!UndoManager.getInstance().hasOpenUndoableAction()) {

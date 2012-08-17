@@ -1,5 +1,6 @@
 package scriptease.model;
 
+import scriptease.controller.ModelVisitor;
 import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
@@ -12,6 +13,7 @@ import scriptease.translator.io.model.GameModule;
  * 
  * @author remiller
  * @author mfchurch
+ * @author kschenk
  */
 public final class StoryModel extends PatternModel {
 	private final GameModule module;
@@ -124,5 +126,10 @@ public final class StoryModel extends PatternModel {
 	@Override
 	public String toString() {
 		return "StoryModel [" + this.getName() + "]";
+	}
+
+	@Override
+	public void process(ModelVisitor processController) {
+		processController.processStoryModel(this);
 	}
 }
