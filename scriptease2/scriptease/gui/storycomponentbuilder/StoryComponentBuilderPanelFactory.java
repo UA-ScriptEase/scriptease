@@ -32,7 +32,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
@@ -148,13 +147,12 @@ public class StoryComponentBuilderPanelFactory {
 	 * 
 	 * @return
 	 */
-	public JComponent buildStoryComponentEditorComponent(
+	public JPanel buildStoryComponentEditorScrollPane(
 			final LibraryPane libraryPane) {
 		final StoryVisitor storyVisitor;
 		final MouseListener librarySelectionListener;
 
 		final JPanel editorPanel;
-		final JScrollPane editorScrollPane;
 		final JPanel descriptorPanel;
 		final JPanel componentEditingPanel;
 
@@ -174,7 +172,6 @@ public class StoryComponentBuilderPanelFactory {
 		final String labelToolTip;
 
 		editorPanel = new JPanel();
-		editorScrollPane = new JScrollPane(editorPanel);
 		descriptorPanel = new JPanel();
 		componentEditingPanel = new JPanel();
 
@@ -199,8 +196,6 @@ public class StoryComponentBuilderPanelFactory {
 		editorPanel.setLayout(new BoxLayout(editorPanel, BoxLayout.PAGE_AXIS));
 		componentEditingPanel.setLayout(new BoxLayout(componentEditingPanel,
 				BoxLayout.PAGE_AXIS));
-
-		editorScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
 		// Set up the descriptorPanel
 		descriptorPanel.setLayout(descriptorPanelLayout);
@@ -330,17 +325,6 @@ public class StoryComponentBuilderPanelFactory {
 
 				editorPanel.repaint();
 				editorPanel.revalidate();
-
-				/*
-				 * Sets the scroll bar back to the top of the screen.
-				 * 
-				 * See http://bit.ly/3OXFet for more info.
-				 */
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						editorScrollPane.getVerticalScrollBar().setValue(0);
-					}
-				});
 			}
 
 			@Override
@@ -536,7 +520,7 @@ public class StoryComponentBuilderPanelFactory {
 		// Add the tree listener
 		libraryPane.addListMouseListener(librarySelectionListener);
 
-		return editorScrollPane;
+		return editorPanel;
 	}
 
 	/*

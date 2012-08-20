@@ -42,8 +42,8 @@ public class CloseableTab extends JPanel {
 	 *            The icon to display in the tab. Passing <code>null</code> will
 	 *            show no icon.
 	 */
-	public CloseableTab(final JTabbedPane parent, final PatternModel model,
-			Icon icon) {
+	public CloseableTab(final JTabbedPane parent, final JPanel panel,
+			final PatternModel model, Icon icon) {
 		// unset the annoying gaps that come with default FlowLayout
 		super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
@@ -78,8 +78,8 @@ public class CloseableTab extends JPanel {
 
 		// add more space between the label and the button
 		label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-		
-		closeButton = new TabButton(new CloseStoryTabAction(model));
+
+		closeButton = new TabButton(new CloseStoryTabAction(panel, model));
 		closeButton.setHideActionText(true);
 		this.add(closeButton);
 
@@ -132,7 +132,7 @@ public class CloseableTab extends JPanel {
 			g2.setStroke(new BasicStroke(2));
 			g2.setColor(Color.BLACK);
 			if (getModel().isRollover()) {
-				g2.setColor(Color.MAGENTA);
+				g2.setColor(Color.LIGHT_GRAY);
 			}
 			int delta = 6;
 			g2.drawLine(delta, delta, getWidth() - delta - 1, getHeight()

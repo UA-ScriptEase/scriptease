@@ -18,8 +18,11 @@ import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.pane.GameObjectPane;
 import scriptease.gui.pane.LibraryPane;
 import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.storycomponentbuilder.StoryComponentBuilderPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
+import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
+import scriptease.model.PatternModelPool;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.translator.Translator;
@@ -145,29 +148,60 @@ public class PanelFactory {
 
 		panes = modelsToPanes.getValue(model);
 
-		if(panes == null) {
+		if (panes == null) {
 			panes = new ArrayList<JPanel>();
-			panes.add(storyPanel);
-			modelsToPanes.put(model, panes);
 		}
 
 		storyPanel.setOpaque(false);
 
 		panes.add(storyPanel);
 
+		modelsToPanes.put(model, panes);
+
 		storyPanel.add(questPanel);
 
 		storyPanel.add(storyComponentTree);
 
 		panesToTrees.put(storyPanel, storyComponentTree);
-		
+
 		return storyPanel;
+	}
+
+	public JPanel buildStoryComponentBuilderPanel(LibraryModel model) {
+		final JPanel scbPanel;
+
+		List<JPanel> panes;
+
+		panes = modelsToPanes.getValue(model);
+		scbPanel = StoryComponentBuilderPanelFactory.getInstance()
+				.buildStoryComponentEditorScrollPane(
+						PanelFactory.getInstance().getMainLibraryPane());
+
+		if (panes == null) {
+			panes = new ArrayList<JPanel>();
+			panes.add(scbPanel);
+			modelsToPanes.put(model, panes);
+		}
+		panes.add(scbPanel);
+		PatternModelPool.getInstance().add(model);
+
+		return scbPanel;
 	}
 
 	public void setRootForTreeInPanel(JPanel panel, QuestPoint questPoint) {
 		panesToTrees.get(panel).setRoot(questPoint);
 	}
 
+	/**
+	 * NOTE: Methods that call this method should always either check if null is
+	 * returned, or use {@link #getModelForPanel(JPanel)} to check if the panel
+	 * passed in represents a StoryModel. Only Story Model panels are added to
+	 * the map, so if you attempt to use a different kind of PatternModel, this
+	 * method will just return null.
+	 * 
+	 * @param panel
+	 * @return
+	 */
 	public StoryComponentPanelTree getTreeForPanel(JPanel panel) {
 		return panesToTrees.get(panel);
 	}
@@ -192,10 +226,14 @@ public class PanelFactory {
 	public List<JPanel> getPanelsForModel(PatternModel model) {
 		final List<JPanel> panels = modelsToPanes.getValue(model);
 
-		if (panels == null)
-			throw new IllegalStateException(
-					"Encountered null list of model display panels when "
-							+ "attempting to get panels for " + model.getName());
+		if (panels == null) {
+			System.out
+					.println("WARNING: Encountered null list of model display "
+							+ "panels when attempting to get panels for "
+							+ model.getName());
+
+			return new ArrayList<JPanel>();
+		}
 
 		return panels;
 	}
@@ -208,16 +246,22 @@ public class PanelFactory {
 	 * @param panel
 	 */
 	public void removeStoryPanelForModel(PatternModel model, JPanel panel) {
-		final List<JPanel> panels = modelsToPanes.getValue(model);
+		final List<JPanel> panels = new ArrayList<JPanel>();
 
-		if (panels == null)
+		if (modelsToPanes.getValue(model) == null)
 			throw new IllegalStateException(
 					"Encountered null list of model display panels "
 							+ "when attempting to remove panels for "
 							+ model.getName());
 
+		panels.addAll(modelsToPanes.getValue(model));
+
 		panels.remove(panel);
-		modelsToPanes.put(model, panels);
+
+		if (!panels.isEmpty())
+			modelsToPanes.put(model, panels);
+		else
+			modelsToPanes.removeKey(model);
 	}
 
 	private static LibraryPane mainLibraryPane = new LibraryPane(false);

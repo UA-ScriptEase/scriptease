@@ -18,7 +18,9 @@ import scriptease.gui.SEFrame;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
+import scriptease.model.PatternModel;
 import scriptease.model.PatternModelPool;
+import scriptease.model.StoryModel;
 
 /**
  * Represents and performs the Delete StoryComponent command, as well as
@@ -88,7 +90,11 @@ public final class DeleteStoryComponentAction extends
 				activeStory = (JPanel) mainFrame.getStoryTabPane()
 						.getSelectedComponent();
 
-				if (activeStory != null) {
+				final PatternModel model;
+				model = PanelFactory.getInstance()
+						.getModelForPanel(activeStory);
+
+				if (activeStory != null && model instanceof StoryModel) {
 					return PanelFactory.getInstance()
 							.getTreeForPanel(activeStory).getSelectionManager();
 
@@ -103,8 +109,9 @@ public final class DeleteStoryComponentAction extends
 		final Component child = e.getChild();
 
 		if (child instanceof JPanel) {
-			JScrollPane treePane = PanelFactory.getInstance()
-					.getTreeForPanel((JPanel) child);
+			JScrollPane treePane = PanelFactory.getInstance().getTreeForPanel(
+					(JPanel) child);
+
 			if (treePane != null && treePane instanceof StoryComponentPanelTree)
 				((StoryComponentPanelTree) treePane)
 						.addTreeSelectionListener(this);

@@ -5,12 +5,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import scriptease.exception.BidirectionalityViolatedException;
 
 /**
  * A class that creates a bidirectional hash map. Since it uses hash maps, core
@@ -20,8 +18,7 @@ import scriptease.exception.BidirectionalityViolatedException;
  * However, this type of map allows the user to search up keys by values and
  * values by keys. So unlike HashMap, you cannot have one value with multiple
  * keys. Both keys and values must be unique. Of course, the BiHashMap checks
- * for this automatically, but don't come running to me if you put an entry with
- * the same value as another key and it overwrites that one.
+ * for this automatically.
  * 
  * @author kschenk
  * 
@@ -104,7 +101,7 @@ public class BiHashMap<K, V> {
 	 */
 	public V getValue(K key) {
 		if (this.containsKey(key))
-			return (mainMap.get(key));
+			return mainMap.get(key);
 		else
 			return null;
 	}
@@ -133,7 +130,7 @@ public class BiHashMap<K, V> {
 	 */
 	public void put(K key, V value) {
 		this.removeKey(key);
-		this.removeValue(value);
+		this.removeValue(this.getValue(key));
 		this.mainMap.put(key, value);
 		this.reverseMap.put(value, key);
 		this.checkBidirectionality();
@@ -149,7 +146,7 @@ public class BiHashMap<K, V> {
 		this.checkBidirectionality();
 		for (Entry<V, K> entry : this.reverseMap.entrySet()) {
 			if (entry.getValue() == key) {
-				this.reverseMap.remove(entry.getValue());
+				this.reverseMap.remove(entry.getKey());
 				break;
 			}
 		}
@@ -176,8 +173,8 @@ public class BiHashMap<K, V> {
 	 * Empties the BiHashMap. The keys are torn from their values and thrown
 	 * into a fiery vortex of doom. As the values cry out for their lost
 	 * companions, the ground falls out from underneath them, revealing a lake
-	 * full of plague and snapping sea turtles. Nothing remains inside the
-	 * BiHashMap. Nothing.
+	 * full of dark and evil things. Nothing remains inside the BiHashMap.
+	 * Nothing.
 	 * 
 	 * @see HashMap#clear()
 	 */
@@ -188,7 +185,10 @@ public class BiHashMap<K, V> {
 
 	/**
 	 * Returns a Collection of keys of the BiHashMap. This is a cloned
-	 * collection so that modifications to it will not affect the map.
+	 * collection so that modifications to it will not affect the maps. If we
+	 * returned pointers like a regular map, then modifications to the list
+	 * would only apply to the reverse map list, eventually leading to a
+	 * BidirectionalityViolatedException.
 	 * 
 	 * @return
 	 */
@@ -205,7 +205,10 @@ public class BiHashMap<K, V> {
 
 	/**
 	 * Returns a Collection of values of the BiHashMap. This is a cloned
-	 * collection so that modifications to it will not affect the map.
+	 * collection so that modifications to it will not affect the map. If we
+	 * returned pointers like a regular map, then modifications to the list
+	 * would only apply to the reverse map list, eventually leading to a
+	 * BidirectionalityViolatedException.
 	 * 
 	 * @return
 	 */
@@ -222,7 +225,10 @@ public class BiHashMap<K, V> {
 
 	/**
 	 * Returns a Set of entries of the BiHashMap. This is a cloned set so that
-	 * modifications to it will not affect the map.
+	 * modifications to it will not affect the map. If we returned pointers like
+	 * a regular map, then modifications to the list would only apply to the
+	 * reverse map list, eventually leading to a
+	 * BidirectionalityViolatedException.
 	 * 
 	 * @return
 	 */
@@ -254,20 +260,20 @@ public class BiHashMap<K, V> {
 			throw new BidirectionalityViolatedException(
 					"One map in HashBiMap is empty while other is not.");
 
-		final Iterator<Entry<V, K>> reverseMapIterator;
-		reverseMapIterator = this.reverseMap.entrySet().iterator();
-
 		for (Entry<K, V> mainMapEntry : mainMap.entrySet()) {
-			final Entry<V, K> reverseMapEntry;
-			reverseMapEntry = reverseMapIterator.next();
-
-			if (mainMapEntry.getKey() != reverseMapEntry.getValue())
+			boolean keyFound = false;
+			for (Entry<V, K> reverseMapEntry : reverseMap.entrySet()) {
+				if (mainMapEntry.getKey() == reverseMapEntry.getValue()) {
+					if (mainMapEntry.getValue() != reverseMapEntry.getKey())
+						throw new BidirectionalityViolatedException("Value "
+								+ mainMapEntry.getValue()
+								+ " is present in only one map.");
+					keyFound = true;
+				}
+			}
+			if (!keyFound)
 				throw new BidirectionalityViolatedException("Key "
 						+ mainMapEntry.getKey()
-						+ " is present in only one map.");
-			if (mainMapEntry.getValue() != reverseMapEntry.getKey())
-				throw new BidirectionalityViolatedException("Value "
-						+ mainMapEntry.getValue()
 						+ " is present in only one map.");
 		}
 	}

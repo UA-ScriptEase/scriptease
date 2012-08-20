@@ -75,7 +75,8 @@ public interface ScriptEaseUI {
 	 * The colour (Dark Orange) used for the Series Fragments in Story Component
 	 * Builder.
 	 */
-	public static final Color SERIES_FRAGMENT_COLOR = new Color(250, 165, 17).darker();
+	public static final Color SERIES_FRAGMENT_COLOR = new Color(250, 165, 17)
+			.darker();
 
 	/**
 	 * The colour (Blue) used for the Simple Fragments in Story Component
@@ -95,6 +96,12 @@ public interface ScriptEaseUI {
 	 */
 	public static final Color REFERENCE_FRAGMENT_COLOR = GUIOp.scaleColour(
 			Color.magenta, 0.7);
+
+	/**
+	 * The standard increment that should usually be used for vertical
+	 * scrollbars.
+	 */
+	public static final int VERTICAL_SCROLLBAR_INCREMENT = 16;
 
 	/**
 	 * Icon used to indicate a collapse will occur

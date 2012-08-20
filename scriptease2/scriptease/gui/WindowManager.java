@@ -5,7 +5,6 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -58,7 +57,7 @@ import scriptease.util.StringOp;
  * @author remiller
  * @author lari
  */
-public final class WindowManager implements WindowFocusListener {
+public final class WindowManager {
 	private static final String CODE_GENERATION_PROBLEM = "Code Generation Problem";
 	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase 2";
 	private static final String ABOUT_SCRIPTEASE_MESSAGE = "ScriptEase 2\n"
@@ -635,7 +634,7 @@ public final class WindowManager implements WindowFocusListener {
 	/**
 	 * Creates a new SEFrame.
 	 * 
-	 * TODO Add everything in SEFrame to this class.
+	 * TODO Add everything in SEFrame to this method.
 	 * 
 	 * @return
 	 */
@@ -650,7 +649,6 @@ public final class WindowManager implements WindowFocusListener {
 					super.processWindowEvent(e);
 			}
 		};
-		frame.addWindowFocusListener(this);
 		return frame;
 	}
 
@@ -660,6 +658,8 @@ public final class WindowManager implements WindowFocusListener {
 	 * @return
 	 */
 	private JFrame buildStoryComponentBuilderFrame() {
+		//TODO Get rid of this entire method!
+		
 		final JFrame scbFrame;
 		final JComponent editingPane;
 		final LibraryPane libraryPane;
@@ -673,10 +673,7 @@ public final class WindowManager implements WindowFocusListener {
 				.buildStoryComponentLibraryPanel(libraryPane);
 
 		editingPane = StoryComponentBuilderPanelFactory.getInstance()
-				.buildStoryComponentEditorComponent(libraryPane);
-
-		// TODO Move to UIListenerFactory
-		scbFrame.addWindowFocusListener(this);
+				.buildStoryComponentEditorScrollPane(libraryPane);
 
 		scbFrame.setJMenuBar(MenuFactory.buildBuilderMenuBar());
 		scbFrame.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
@@ -687,17 +684,4 @@ public final class WindowManager implements WindowFocusListener {
 
 		return scbFrame;
 	}
-
-	/*
-	 * TODO Move to UIListenerFactory
-	 */
-	@Override
-	public void windowGainedFocus(WindowEvent e) {
-		this.currentFrame = (JFrame) e.getComponent();
-	}
-
-	@Override
-	public void windowLostFocus(WindowEvent e) {
-	}
-
 }

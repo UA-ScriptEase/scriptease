@@ -1,6 +1,5 @@
 package scriptease.gui;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -17,6 +16,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.Timer;
@@ -30,14 +30,14 @@ import scriptease.controller.FileManager;
 import scriptease.controller.observer.PatternModelPoolEvent;
 import scriptease.controller.observer.PatternModelPoolObserver;
 import scriptease.controller.observer.TranslatorObserver;
+import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.pane.CloseableTab;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
-import scriptease.gui.storycomponentbuilder.StoryComponentBuilderPanelFactory;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
-import scriptease.model.StoryModel;
 import scriptease.model.PatternModelPool;
+import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
@@ -269,6 +269,11 @@ public final class SEFrame implements PatternModelPoolObserver {
 		return statusBar;
 	}
 
+	/**
+	 * Updates the game object pane based on the passed in model.
+	 * 
+	 * @param model
+	 */
 	private void updateGameObjectPane(StoryModel model) {
 		final JPanel newGameObjectPane = PanelFactory.getInstance()
 				.buildGameObjectPane(model);
@@ -283,35 +288,52 @@ public final class SEFrame implements PatternModelPoolObserver {
 		}
 	}
 
-	// TODO May not be necessary. We might be able to just combine both into one
-	// somehow
-	public void createTabForModel(PatternModel model) {
-		if (model instanceof StoryModel)
-			createTabForModel((StoryModel) model);
-		else if (model instanceof LibraryModel)
-			createTabForModel((LibraryModel) model);
+	/**
+	 * Hides the game object pane from view.
+	 * 
+	 */
+	private void hideGameObjectPane() {
+		final JPanel newPanel;
+
+		newPanel = new JPanel();
+
+		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
+			this.leftSplit.setBottomComponent(newPanel);
+			this.leftSplit.revalidate();
+		} else if (preferredLayout
+				.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
+			this.rightSplit.setRightComponent(newPanel);
+			this.rightSplit.revalidate();
+		}
 	}
 
+	/**
+	 * Creates a tab for the given LibraryModel, allowing the user to edit it
+	 * with the story component builder.
+	 * 
+	 * @param model
+	 */
 	public void createTabForModel(LibraryModel model) {
 		final Icon icon;
-
+		final JPanel scbPanel;
+		final JScrollPane scbScrollPane;
+		final CloseableTab newTab;
 		if (model.getTranslator() != null)
 			icon = model.getTranslator().getIcon();
 		else
 			icon = null;
 
-		final JPanel scbPanel;
-		final JComponent editingPane;
+		scbPanel = PanelFactory.getInstance().buildStoryComponentBuilderPanel(
+				model);
+		scbScrollPane = new JScrollPane(scbPanel);
+		newTab = new CloseableTab(this.storyTabs, scbPanel, model, icon);
 
-		scbPanel = new JPanel();
-
-		editingPane = StoryComponentBuilderPanelFactory.getInstance()
-				.buildStoryComponentEditorComponent(
-						PanelFactory.getInstance().getMainLibraryPane());
-
-		scbPanel.add(editingPane);
+		scbScrollPane.getVerticalScrollBar().setUnitIncrement(
+				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
 		this.storyTabs.addTab(model.getName(), icon, scbPanel);
+		this.storyTabs.setTabComponentAt(
+				this.storyTabs.indexOfComponent(scbPanel), newTab);
 		this.storyTabs.setSelectedComponent(scbPanel);
 	}
 
@@ -322,7 +344,12 @@ public final class SEFrame implements PatternModelPoolObserver {
 	 * @param model
 	 */
 	public void createTabForModel(StoryModel model) {
-		final Icon icon = model.getTranslator().getIcon();
+		final Icon icon;
+
+		if (model.getTranslator() != null)
+			icon = model.getTranslator().getIcon();
+		else
+			icon = null;
 
 		model.getRoot().getStartPoint()
 				.process(new AbstractNoOpGraphNodeVisitor() {
@@ -334,32 +361,23 @@ public final class SEFrame implements PatternModelPoolObserver {
 					}
 				});
 
-		System.out.println("Start Quest Point is: "
-				+ startQuestPoint.toString());
-
 		if (startQuestPoint != null) {
-			final JPanel newPanel = PanelFactory.getInstance().buildStoryPanel(
-					model, startQuestPoint);
-			final CloseableTab newTab = new CloseableTab(this.storyTabs, model,
-					icon);
+			final JPanel newPanel;
+			final CloseableTab newTab;
+			String modelTitle;
+			final String title;
 
-			// TODO Get the actual title!
-			String temporaryTitleString = "TemporaryTitleString";
-			/*
-			 * Get Title Method
-			 * 
-			 * final StoryModel model = this.model; final String title;
-			 * 
-			 * String modelTitle = model.getTitle(); if (modelTitle == null ||
-			 * modelTitle.equals("")) modelTitle = "<Untitled>";
-			 * 
-			 * title = modelTitle + "(" +
-			 * model.getModule().getLocation().getName() + ")";
-			 * 
-			 * return title;
-			 */
+			newPanel = PanelFactory.getInstance().buildStoryPanel(model,
+					startQuestPoint);
+			newTab = new CloseableTab(this.storyTabs, newPanel, model, icon);
+			modelTitle = model.getTitle();
+			if (modelTitle == null || modelTitle.equals(""))
+				modelTitle = "<Untitled>";
 
-			this.storyTabs.addTab(temporaryTitleString, icon, newPanel);
+			title = modelTitle + "("
+					+ model.getModule().getLocation().getName() + ")";
+
+			this.storyTabs.addTab(title, icon, newPanel);
 			this.storyTabs.setTabComponentAt(
 					this.storyTabs.indexOfComponent(newPanel), newTab);
 			this.storyTabs.setSelectedComponent(newPanel);
@@ -376,12 +394,15 @@ public final class SEFrame implements PatternModelPoolObserver {
 	}
 
 	/**
-	 * @param model
+	 * @param activeModel
 	 *            The StoryModel whose storyPanel is to be removed.
 	 */
-	public void removeStoryPanelsForModel(final StoryModel model) {
-		for (int i = 0; i < this.storyTabs.getTabCount(); i++) {
-			this.removeStoryPanelTab(model);
+	public void removeAllPanelsForModel(final PatternModel activeModel) {
+		final List<JPanel> panels = PanelFactory.getInstance()
+				.getPanelsForModel(activeModel);
+
+		for (JPanel panel : panels) {
+			this.removePanelForModel(panel, activeModel);
 		}
 	}
 
@@ -393,15 +414,13 @@ public final class SEFrame implements PatternModelPoolObserver {
 	 * @param panel
 	 * @param model
 	 */
-	public void removeStoryPanelTab(PatternModel model) {
-		final List<JPanel> panels = PanelFactory.getInstance()
-				.getPanelsForModel(model);
+	public void removePanelForModel(JPanel panel, PatternModel model) {
 
 		// remove the panel
-		for (JPanel panel : panels) {
-			this.storyTabs.remove(panel);
-			PanelFactory.getInstance().removeStoryPanelForModel(model, panel);
-		}
+		PanelFactory.getInstance().removeStoryPanelForModel(model, panel);
+
+		this.storyTabs.remove(panel);
+
 		// check if there are any unsaved changes
 		if (FileManager.getInstance().hasUnsavedChanges(model)) {
 			// otherwise, close the StoryModel
@@ -410,13 +429,14 @@ public final class SEFrame implements PatternModelPoolObserver {
 				@Override
 				public void processLibraryModel(LibraryModel libraryModel) {
 					// TODO Should close the translator if it's not open
-					// anywhere else.
-					// We can use the usingTranslator in PatternModelPool to
-					// check for this.
+					// anywhere else. We can use the usingTranslator in
+					// PatternModelPool to check for this.
 				};
 
 				@Override
 				public void processStoryModel(StoryModel storyModel) {
+					// TODO This also closes the librarymodel, even if it's open
+					// in StoryComponentBuilder.
 					FileManager.getInstance().close(storyModel);
 				}
 			});
@@ -431,16 +451,11 @@ public final class SEFrame implements PatternModelPoolObserver {
 		if (eventType == PatternModelPoolEvent.PATTERN_MODEL_ACTIVATED) {
 
 			model.process(new AbstractNoOpModelVisitor() {
-				@Override
-				public void processLibraryModel(LibraryModel libraryModel) {
-					// TODO Do stuff when model changed to a librarymodel
-				}
 
-				@Override
-				public void processStoryModel(StoryModel storyModel) {
-					SEFrame.this.updateGameObjectPane(storyModel);
-
-					// Update the frame title
+				/**
+				 * Sets the ScriptEase title based on the model selected.
+				 */
+				private void setScriptEaseTitle() {
 					String newTitle = "";
 					if (model != null) {
 						String modelTitle = model.getTitle();
@@ -452,10 +467,24 @@ public final class SEFrame implements PatternModelPoolObserver {
 
 					seFrame.setTitle(newTitle);
 				}
+
+				@Override
+				public void processLibraryModel(LibraryModel libraryModel) {
+					SEFrame.this.hideGameObjectPane();
+					this.setScriptEaseTitle();
+				}
+
+				@Override
+				public void processStoryModel(StoryModel storyModel) {
+					SEFrame.this.updateGameObjectPane(storyModel);
+					this.setScriptEaseTitle();
+				}
 			});
 		}
 	}
 
+	// TODO This should be in the "ScriptEase" class itself. Anything should be
+	// able to send messages to it, then messages are sent back to this thing.
 	private class TimedLabel extends JLabel {
 		private Queue<String> messages;
 		final Timer textQueue;
@@ -495,43 +524,4 @@ public final class SEFrame implements PatternModelPoolObserver {
 				setText(text);
 		}
 	}
-
-	/**
-	 * Returns the active model.
-	 * 
-	 * TODO This should be in ModelPool class, really. Not sure why it's here.
-	 * XXX This used to return a storypanel, so that's why things are weird.
-	 * 
-	 * 
-	 * @return
-	 */
-	public PatternModel getActiveModel() {
-		final int selectedIndex;
-		final JPanel modelPanel;
-		final PatternModel activeModel;
-
-		selectedIndex = this.storyTabs.getSelectedIndex();
-		modelPanel = (JPanel) this.storyTabs.getComponentAt(selectedIndex);
-		activeModel = PanelFactory.getInstance().getModelForPanel(modelPanel);
-
-		// this is just a sanity check.
-		if (activeModel != PatternModelPool.getInstance().getActiveModel())
-			throw new IllegalStateException(
-					"Active tab is not representing active model");
-
-		return activeModel;
-	}
-	/*
-	 * TODO IS THIS NECESSARY?
-	 *//**
-	 * Activates the StoryPanel for the given model and questPoint. If it's
-	 * not found, does nothing.
-	 * 
-	 * @param questPoint
-	 * @param model
-	 */
-	/*
-	 * public void activatePanelForQuestPoint(StoryModel model, QuestPoint
-	 * questPoint) { //TODO IMplement this again model.setTree(questPoint); }
-	 */
 }
