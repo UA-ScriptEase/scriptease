@@ -27,8 +27,6 @@ import scriptease.exception.GameCompilerException;
 import scriptease.gui.SEFrame;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
-import scriptease.model.StoryModel;
-import scriptease.model.StoryModelPool;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.TranslatorManager;
@@ -476,7 +474,7 @@ public final class ErfFile implements GameModule {
 		offsetToKeyList = offsetToLocalizedStrings + localizedStringsSize;
 		offsetToResourceList = offsetToKeyList + this.resources.size()
 				* ErfKey.BYTE_LENGTH;
-		
+
 		this.createBackup();
 
 		// start writing now
@@ -515,16 +513,18 @@ public final class ErfFile implements GameModule {
 	 * @throws IOException
 	 */
 	private void compile() throws IOException {
-		final File compilerLocation = TranslatorManager.getInstance()
-				.getActiveTranslator().getCompiler();
-		final File compilationDir = FileManager.getInstance()
-				.createTempDirectory("scriptease_compile");
-		final File nssRegex = new File(compilationDir,
-				ErfFile.SCRIPT_FILE_PREFIX + "*.nss");
-
+		final File compilerLocation;
+		final File compilationDir;
+		final File nssRegex;
 		final Map<String, File> resrefsToFiles = new HashMap<String, File>();
 		final Process compilation;
 		final ProcessBuilder procBuilder;
+
+		compilerLocation = ErfFile.getTranslator().getCompiler();
+		compilationDir = FileManager.getInstance().createTempDirectory(
+				"scriptease_compile");
+		nssRegex = new File(compilationDir, ErfFile.SCRIPT_FILE_PREFIX
+				+ "*.nss");
 
 		if (!compilerLocation.exists())
 			throw new GameCompilerException(new FileNotFoundException(
@@ -532,21 +532,21 @@ public final class ErfFile implements GameModule {
 
 		// write out all of the uncompiled source code to a temp directory for
 		// the compiler to grab.
+		File scriptFile;
+		OutputStream out;
 		for (NWNResource uncompiled : this.uncompiledScripts) {
-			File scriptFile = FileManager.getInstance().createTempFile(
-					ErfFile.SCRIPT_FILE_PREFIX + "temp", ".nss",
-					compilationDir, 16);
+			scriptFile = new File(compilationDir, uncompiled.getExtendedResRef().toLowerCase());
+
 			resrefsToFiles.put(uncompiled.getResRef(), scriptFile);
 
-			OutputStream out = new FileOutputStream(scriptFile);
+			out = new FileOutputStream(scriptFile);
 
 			uncompiled.writeData(out);
 			out.flush();
 			out.close();
 		}
 
-		Collection<File> includeList = ((StoryModel) StoryModelPool
-				.getInstance().getActiveModel()).getTranslator().getIncludes();
+		Collection<File> includeList = ErfFile.getTranslator().getIncludes();
 		for (File include : includeList) {
 			try {
 				String fileName = include.getName();
@@ -587,15 +587,17 @@ public final class ErfFile implements GameModule {
 				throw new GameCompilerException("Compiler failed.");
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			throw new GameCompilerException("Compiler thread was interrupted.");
 		}
 
 		// get all of the compiler's compiled byte code output into resources
+		File byteCodeFile;
+		byte[] byteCode;
+		NWNResource compiledResource;
 
 		for (String resRef : resrefsToFiles.keySet()) {
-			final String fileName = FileOp.removeExtension(
-					resrefsToFiles.get(resRef)).getAbsolutePath();
-			final File byteCodeFile = new File(fileName + ".ncs");
+			byteCodeFile = FileOp.replaceExtension(resrefsToFiles.get(resRef),
+					"ncs").getAbsoluteFile();
 
 			if (!byteCodeFile.exists()) {
 				// compiler error
@@ -605,9 +607,9 @@ public final class ErfFile implements GameModule {
 			} else
 				SEFrame.getInstance().setStatus("Compilation Succeeded!");
 
-			final byte[] byteCode = FileOp.readFileAsBytes(byteCodeFile);
+			byteCode = FileOp.readFileAsBytes(byteCodeFile);
 
-			NWNResource compiledResource = new NWNResource(resRef,
+			compiledResource = new NWNResource(resRef,
 					ErfKey.SCRIPT_COMPILED_TYPE, byteCode);
 
 			this.resources.add(compiledResource);
