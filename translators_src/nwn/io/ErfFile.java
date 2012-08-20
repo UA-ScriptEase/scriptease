@@ -457,8 +457,6 @@ public final class ErfFile implements GameModule {
 		final long offsetToKeyList;
 		final long offsetToResourceList;
 
-		this.createBackup();
-
 		if (compile) {
 			try {
 				this.compile();
@@ -478,6 +476,8 @@ public final class ErfFile implements GameModule {
 		offsetToKeyList = offsetToLocalizedStrings + localizedStringsSize;
 		offsetToResourceList = offsetToKeyList + this.resources.size()
 				* ErfKey.BYTE_LENGTH;
+		
+		this.createBackup();
 
 		// start writing now
 		this.writeHeader(localizedStringsSize, offsetToLocalizedStrings,
@@ -495,16 +495,17 @@ public final class ErfFile implements GameModule {
 		this.removeScriptEaseData();
 	}
 
-	protected void createBackup() throws IOException {
+	private void createBackup() throws IOException {
 		final File backupLocation;
-		
+
 		backupLocation = FileOp.replaceExtension(this.location, "SE_BackupMod");
-		
+
 		if (backupLocation.exists())
 			backupLocation.delete();
-		
+
 		FileOp.copyFile(this.location, backupLocation);
-		
+
+		// zero length to drop all the old data.
 		this.fileAccess.setLength(0);
 	}
 
@@ -533,7 +534,8 @@ public final class ErfFile implements GameModule {
 		// the compiler to grab.
 		for (NWNResource uncompiled : this.uncompiledScripts) {
 			File scriptFile = FileManager.getInstance().createTempFile(
-					ErfFile.SCRIPT_FILE_PREFIX, ".nss", compilationDir, 16);
+					ErfFile.SCRIPT_FILE_PREFIX + "temp", ".nss",
+					compilationDir, 16);
 			resrefsToFiles.put(uncompiled.getResRef(), scriptFile);
 
 			OutputStream out = new FileOutputStream(scriptFile);
@@ -597,7 +599,9 @@ public final class ErfFile implements GameModule {
 
 			if (!byteCodeFile.exists()) {
 				// compiler error
-				throw new GameCompilerException("Compiler failed.");
+				throw new GameCompilerException(
+						"Compiler failed to create NCS file " + byteCodeFile
+								+ ".");
 			} else
 				SEFrame.getInstance().setStatus("Compilation Succeeded!");
 
