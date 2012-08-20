@@ -29,6 +29,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.StoryModelPool;
+import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.ScriptInfo;
@@ -54,20 +55,16 @@ import scriptease.util.FileOp;
  */
 public final class ErfFile implements GameModule {
 
-	// Translator name to be used with the TranslatorManager lookup
-	public static final String NEVERWINTER_NIGHTS = "Neverwinter Nights";
+	public static Translator getTranslator() {
+		return TranslatorManager.getInstance().getTranslator(
+				"Neverwinter Nights");
+	}
 
-	// matches a resref
-	private static final String RESREF_REGEX = "[a-zA-Z0-9_\\.]+";
-
-	// Dialog line indexing format: <dialogResRef>#<list>#<index_number>
-	private static final String DIALOG_LINE_REF_REGEX = RESREF_REGEX
-			+ "#[a-zA-Z]+#[0-9]+";
-
-	// Journal Category indexing format:
-	// <journalsResRef>#<category_index_number>
-	private static final String JOURNAL_CATEGORY_REF_REGEX = RESREF_REGEX
-			+ "#[0-9]+";
+	/**
+	 * Matches a resref. Alphanumeric and underscore. Min 1, max 16 characters.
+	 * Optional 3 character extension.
+	 */
+	protected static final String RESREF_REGEX = "[a-zA-Z0-9_]{1,16}(\\.[a-zA-Z0-9]{,3})?$";
 
 	private static final String VERSION = "V1.0";
 
@@ -306,7 +303,6 @@ public final class ErfFile implements GameModule {
 	 * @return returns the NWNresource that was added to resources
 	 */
 	private NWNResource addScript(String scriptResRef, String code) {
-		// TODO: Richard wants more meaningful resRef names for scripts
 		NWNResource scriptResource;
 		scriptResource = new NWNResource(scriptResRef,
 				ErfKey.SCRIPT_SOURCE_TYPE, code.getBytes());
@@ -318,39 +314,50 @@ public final class ErfFile implements GameModule {
 
 	@Override
 	public void addScripts(Collection<ScriptInfo> scriptList) {
+		String code;
+		String scriptResRef;
+		String idNum;
 		int scriptCounter = 0;
+		NWNResource scriptResource;
+		String receiverResRef;
+
+		// the 36 here is to get a number in a base 36 number system. Think of
+		// it like hex that uses the whole alphabet.
+		final int radix = 36;
 
 		this.uncompiledScripts.clear();
 
 		for (ScriptInfo scriptInfo : scriptList) {
 			if (scriptInfo != null) {
-				String code = scriptInfo.getCode();
-
-				String scriptResRef = ErfFile.SCRIPT_FILE_PREFIX
-						+ Integer.toString(scriptCounter, 36);
-				scriptCounter++;
-
-				NWNResource scriptResource = this.addScript(scriptResRef, code);
-				this.uncompiledScripts.add(scriptResource);
-
-				// Manage the script slot references
-				final String receiverResRef;
-				final NWNResource receiverResource;
-
+				code = scriptInfo.getCode();
 				receiverResRef = scriptInfo.getSubject().getTemplateID();
-				receiverResource = this.getResourceByResRef(receiverResRef);
 
-				if (receiverResource == null) {
-					throw new NoSuchElementException(
-							"Script slot update failed. Cannot find resource for ResRef \""
-									+ receiverResRef + "\"");
-				} else if (!receiverResource.isGFF()) {
-					throw new NoSuchElementException(
-							"Script slot update failed. Resource \""
-									+ receiverResRef + "\" is not a GFF file.");
+				idNum = "_" + Integer.toString(scriptCounter++, radix);
+
+				scriptResRef = receiverResRef;
+
+				// remove indexing info if its there
+				if (scriptResRef.contains(GenericFileFormat.RESREF_SEPARATOR))
+					scriptResRef = scriptResRef
+							.split(GenericFileFormat.RESREF_SEPARATOR)[0];
+
+				// same with extension.
+				scriptResRef = FileOp.removeExtension(scriptResRef);
+
+				// prepend our prefix and append our unique ID
+				scriptResRef = ErfFile.SCRIPT_FILE_PREFIX + scriptResRef
+						+ idNum;
+
+				// enforce max length on resrefs
+				if (scriptResRef.length() > ErfKey.RESREF_MAX_LENGTH) {
+					scriptResRef = scriptResRef.substring(0,
+							ErfKey.RESREF_MAX_LENGTH - idNum.length()) + idNum;
 				}
 
-				this.update(receiverResource.getGFF(), scriptResRef, scriptInfo);
+				scriptResource = this.addScript(scriptResRef, code);
+				this.uncompiledScripts.add(scriptResource);
+
+				this.update(receiverResRef, scriptResRef, scriptInfo);
 			}
 		}
 	}
@@ -360,18 +367,40 @@ public final class ErfFile implements GameModule {
 	 * resref. If it has instances that can be updated (ex: creatures), they are
 	 * updated to reflect the new change.
 	 * 
-	 * @param blueprintGFF
-	 *            The GFF to update.
+	 * @param receiverResRef
+	 *            The resource resref to update.
 	 * @param scriptResRef
 	 *            the resref of the script to attach.
 	 * @param scriptInfo
 	 *            The other information about the script file.
 	 */
-	private void update(GenericFileFormat blueprintGFF, String scriptResRef,
+	private void update(String receiverResRef, String scriptResRef,
 			ScriptInfo scriptInfo) {
+		final NWNResource receiverResource;
+		String[] split;
+		String index = null;
+
+		split = receiverResRef.split(GenericFileFormat.RESREF_SEPARATOR);
+
+		receiverResRef = split[0];
+		index = split.length > 1 ? split[1] : null;
+
+		receiverResource = this.getResourceByResRef(receiverResRef);
+
+		if (receiverResource == null) {
+			throw new NoSuchElementException(
+					"Script slot update failed. Cannot find resource for ResRef \""
+							+ receiverResRef + "\"");
+		} else if (!receiverResource.isGFF()) {
+			throw new NoSuchElementException(
+					"Script slot update failed. Resource \"" + receiverResRef
+							+ "\" is not a GFF file.");
+		}
+
+		GenericFileFormat blueprintGFF = receiverResource.getGFF();
 		GenericFileFormat gff;
 
-		blueprintGFF.setField(scriptInfo.getSlot(), scriptResRef);
+		blueprintGFF.setField(index, scriptInfo.getSlot(), scriptResRef);
 
 		if (!blueprintGFF.isInstanceUpdatable()) {
 			for (NWNResource resource : this.resources) {
@@ -400,6 +429,7 @@ public final class ErfFile implements GameModule {
 	 */
 	private NWNResource getResourceByResRef(String keyResRef) {
 		keyResRef = keyResRef.trim();
+
 		String resref;
 
 		for (NWNResource resource : this.resources) {
@@ -420,11 +450,14 @@ public final class ErfFile implements GameModule {
 
 	@Override
 	public void save(boolean compile) throws IOException {
+
 		// size in bytes, not number of entries
 		final int localizedStringsSize;
 		final long offsetToLocalizedStrings;
 		final long offsetToKeyList;
 		final long offsetToResourceList;
+
+		this.createBackup();
 
 		if (compile) {
 			try {
@@ -460,6 +493,19 @@ public final class ErfFile implements GameModule {
 		// Remove everything ScriptEase related that exists to have a clean
 		// slate for next time we add new stuff.
 		this.removeScriptEaseData();
+	}
+
+	protected void createBackup() throws IOException {
+		final File backupLocation;
+		
+		backupLocation = FileOp.replaceExtension(this.location, "SE_BackupMod");
+		
+		if (backupLocation.exists())
+			backupLocation.delete();
+		
+		FileOp.copyFile(this.location, backupLocation);
+		
+		this.fileAccess.setLength(0);
 	}
 
 	/**
@@ -728,38 +774,23 @@ public final class ErfFile implements GameModule {
 
 	@Override
 	public GameConstant getInstanceForObjectIdentifier(String id) {
-		GameConstant gameResource = null;
-		NWNResource nwResource = this.getResourceByResRef(id);
+		final GameConstant gameResource;
+		final NWNResource nwResource;
 		final String resref;
 		final String index;
+		final String[] split;
 
-		// Not found? Check to see if it is a dialog line
-		if (nwResource == null) {
-			if (id.matches(ErfFile.DIALOG_LINE_REF_REGEX)) {
-				final String[] split = id.split("#", 2);
-				resref = split[0];
-				index = split[1];
+		// extract indexing info if it's available
+		split = id.split(GenericFileFormat.RESREF_SEPARATOR, 2);
+		resref = split[0];
+		index = (split.length > 1) ? split[1] : null;
 
-				nwResource = this.getResourceByResRef(resref);
+		nwResource = this.getResourceByResRef(resref);
 
-				if (nwResource != null && nwResource.isGFF()) {
-					gameResource = nwResource.getGFF().getObjectRepresentation(
-							index);
-				}
-			} else if (id.matches(JOURNAL_CATEGORY_REF_REGEX)) {
-				final String[] split = id.split("#", 2);
-				resref = split[0];
-				index = split[1];
-
-				nwResource = this.getResourceByResRef(resref);
-
-				if (nwResource != null && nwResource.isGFF()) {
-					gameResource = nwResource.getGFF().getObjectRepresentation(
-							index);
-				}
-			}
-		} else if (nwResource.isGFF()) {
-			gameResource = nwResource.getGFF().getObjectRepresentation();
+		if (nwResource != null && nwResource.isGFF()) {
+			gameResource = nwResource.getGFF().getObjectRepresentation(index);
+		} else {
+			gameResource = null;
 		}
 
 		return gameResource;
@@ -776,10 +807,13 @@ public final class ErfFile implements GameModule {
 	@Override
 	public List<String> getTestCommand(ProcessBuilder builder)
 			throws FileNotFoundException {
-		final File nwnRoot = TranslatorManager.getInstance()
-				.getTranslator(NEVERWINTER_NIGHTS)
-				.getPathProperty(DescriptionKeys.GAME_DIRECTORY);
-		final File nwnExec = new File(nwnRoot, "nwmain.exe");
+		final File nwnRoot;
+		final File nwnExec;
+		final List<String> argsList;
+
+		nwnRoot = getTranslator().getPathProperty(
+				DescriptionKeys.GAME_DIRECTORY);
+		nwnExec = new File(nwnRoot, "nwmain.exe");
 		builder.directory(nwnRoot);
 
 		if (!nwnRoot.exists())
@@ -788,7 +822,7 @@ public final class ErfFile implements GameModule {
 		else if (!nwnExec.exists())
 			throw new FileNotFoundException("Missing nwmain.exe");
 
-		List<String> argsList = new ArrayList<String>();
+		argsList = new ArrayList<String>();
 		argsList.add(nwnExec.getAbsolutePath());
 		argsList.add("+TestNewModule");
 		argsList.add(FileOp.removeExtension(this.location).getName());

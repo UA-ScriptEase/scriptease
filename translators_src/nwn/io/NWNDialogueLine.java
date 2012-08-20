@@ -8,10 +8,19 @@ import java.util.List;
 import scriptease.translator.io.model.GameConversationNode;
 import scriptease.util.StringOp;
 
+/**
+ * Represents a Neverwinter Nights conversation line. <br>
+ * <br>
+ * Dialog line indexing format:
+ * <i>dialogResRef</i><b>#</b><i>index</i><b>&gt;</b
+ * ><i>index</i><b>&gt;</b><i>index</i><b>&gt;</b>...
+ * 
+ * @author remiller
+ */
 public class NWNDialogueLine extends NWNGameConstant implements
 		GameConversationNode {
-	protected static final String RESREF_SEPARATOR = "#";
-	protected static final String INDEXER_SEPARATOR = ":";
+	protected static final String INDEXER_SEPARATOR = ">";
+
 	private static final String TYPE_DIALOG_LINE = "dialogue_line";
 
 	private final GffStruct dialogueSyncStruct;
@@ -42,7 +51,7 @@ public class NWNDialogueLine extends NWNGameConstant implements
 			GffStruct dialogueSyncStruct, boolean isPlayerLine,
 			List<String> indexes) {
 		super(constructResRef(convo, dialogueSyncStruct, indexes),
-				TYPE_DIALOG_LINE, resolveSync(dialogueSyncStruct, convo,
+				TYPE_DIALOG_LINE, convo.resolveSyncStruct(dialogueSyncStruct,
 						isPlayerLine).getString("Text"), "");
 
 		this.conversation = convo;
@@ -67,8 +76,8 @@ public class NWNDialogueLine extends NWNGameConstant implements
 			else
 				childListLabel = "RepliesList";
 
-			childSyncStructs = resolveSync(this.dialogueSyncStruct,
-					this.conversation, this.isPlayerLine).getList(
+			childSyncStructs = this.conversation.resolveSyncStruct(
+					this.dialogueSyncStruct, this.isPlayerLine).getList(
 					childListLabel);
 
 			for (GffStruct syncStruct : childSyncStructs) {
@@ -117,41 +126,14 @@ public class NWNDialogueLine extends NWNGameConstant implements
 		return this.getName();
 	}
 
-	private static GffStruct resolveSync(GffStruct sync,
-			GenericFileFormat convo, boolean isPlayerLine) {
-		final String listLabel;
-		final int index;
-		final List<GffStruct> dialogueStructList;
-
-		if (isPlayerLine)
-			listLabel = GenericFileFormat.DIALOGUE_PLAYER_REPLY_LIST;
-		else
-			listLabel = GenericFileFormat.DIALOGUE_NPC_ENTRY_LIST;
-
-		dialogueStructList = convo.getList(listLabel);
-
-		index = getDialogueLineIndex(sync);
-
-		return dialogueStructList.get(index);
-	}
-
 	private static String constructResRef(GenericFileFormat convo,
 			GffStruct dialogueSyncStruct, List<String> indexes) {
 		String lineResRef;
 
-		lineResRef = convo.getResRef() + RESREF_SEPARATOR;
+		lineResRef = convo.getResRef() + "." + convo.getFileType().trim()
+				+ GenericFileFormat.RESREF_SEPARATOR;
 		lineResRef += StringOp.join(indexes, INDEXER_SEPARATOR);
 
 		return lineResRef;
-	}
-
-	/**
-	 * Gets the value of the "Index" field from a given Sync Struct.
-	 * 
-	 * @param syncStruct
-	 *            the struct to query.
-	 */
-	private static int getDialogueLineIndex(GffStruct syncStruct) {
-		return new Integer(syncStruct.getString("Index"));
 	}
 }

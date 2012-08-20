@@ -76,6 +76,7 @@ public class FileOp {
 	 * @param target
 	 *            The path to alter.
 	 * @return A duplicate File object that lacks the original's file extension.
+	 * @see FileOp#removeExtension(String)
 	 * @see FileOp#replaceExtension(File, String)
 	 */
 	public static File removeExtension(File target) {
@@ -95,12 +96,40 @@ public class FileOp {
 
 	/**
 	 * Removes the file extension (.xxx) from the given File object's path name
-	 * and replaces it with the supplied extension. The new file path is
-	 * returned. <br>
+	 * and the new file path is returned. The extension notation character (".")
+	 * is not included in the result. <br>
+	 * <br>
+	 * For example, calling <code>removeExtension</code> on a name "myFile.txt"
+	 * would yield a file name "myFile".<br>
+	 * <br>
+	 * If the supplied file name has no file extension, then a copy of the
+	 * original file name is returned.
+	 * 
+	 * @param target
+	 *            The path to alter.
+	 * @return A duplicate string object that lacks the original's file
+	 *         extension.
+	 * @see FileOp#removeExtension(File)
+	 * @see FileOp#replaceExtension(File, String)
+	 */
+	public static String removeExtension(String fileName) {
+		int dotLocation = fileName.lastIndexOf('.');
+
+		if (dotLocation > 0) {
+			fileName = fileName.substring(0, dotLocation);
+		}
+
+		return new String(fileName);
+	}
+
+	/**
+	 * Creates a new File with the file extension removed (.xxx) from the given
+	 * File object's path name and replaced with the supplied extension. The new
+	 * File is returned. <br>
 	 * <br>
 	 * For example, calling <code>replaceExtension</code> with a file named
 	 * "myFile.txt" and the string <code>"ini"</code> as arguments would yield a
-	 * file named "myFile.ini".<br>
+	 * new File named "myFile.ini".<br>
 	 * <br>
 	 * If the supplied File has no file extension, then the supplied extension
 	 * is added. <br>

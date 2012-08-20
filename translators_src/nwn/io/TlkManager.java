@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import scriptease.translator.Translator.DescriptionKeys;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
 
 /**
@@ -34,9 +33,8 @@ public class TlkManager {
 		final String nwnRoot;
 		final File defaultTlkFile;
 
-		nwnRoot = TranslatorManager.getInstance()
-				.getTranslator(ErfFile.NEVERWINTER_NIGHTS)
-				.getProperty(DescriptionKeys.GAME_DIRECTORY).trim();
+		nwnRoot = ErfFile.getTranslator().getProperty(
+				DescriptionKeys.GAME_DIRECTORY).trim();
 
 		defaultTlkFile = new File(nwnRoot, TlkManager.DEFAULT_TLK_FILENAME);
 
