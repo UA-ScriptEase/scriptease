@@ -84,12 +84,14 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 	 * @throws IOException
 	 */
 	public void writeString(String text, int length) throws IOException {
-		// append nulls until we hit the length quota
-		while (text.length() < length) {
-			text += "\0";
-		}
-
 		this.writeBytes(text);
+
+		int written = text.length();
+		// append nulls until we hit the length quota
+		while (written < length) {
+			this.writeByte('\0');
+			written++;
+		}
 	}
 
 	/**
