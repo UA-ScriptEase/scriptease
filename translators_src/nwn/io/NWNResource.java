@@ -242,14 +242,14 @@ public class NWNResource implements Comparable<NWNResource> {
 	/**
 	 * Gets the resref of this GFF concatenated with its file extension. For
 	 * example, the creature resref "watson" would return
-	 * <code>watson.utc</code>. There are no guarantees as to capitalization.
-	 * This is a completely unique identifier.
+	 * <code>watson.utc</code>. The returned string is in lower case. This is a
+	 * completely unique identifier.
 	 * 
 	 * @return The resref with its file extension.
 	 * @see #getResRef()
 	 */
 	protected String getExtendedResRef() {
-		return this.getResRef() + "." + this.key.getExtension();
+		return (this.getResRef() + "." + this.key.getExtension()).toLowerCase();
 	}
 
 	/**
