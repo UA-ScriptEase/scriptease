@@ -5,6 +5,8 @@ package scriptease.gui.action.file;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.JPanel;
+
 import scriptease.gui.SEFrame;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
@@ -24,17 +26,19 @@ public class CloseStoryTabAction extends ActiveModelSensitiveAction {
 	private static final String CLOSE_MODULE = Il8nResources
 			.getString("Close_Model");
 	private final PatternModel model;
+	private final JPanel panel;
 
 	/**
 	 * Defines an <code>CloseModelAction</code> object with a mnemonic.
 	 */
-	public CloseStoryTabAction(PatternModel model) {
+	public CloseStoryTabAction(JPanel panel, PatternModel model) {
 		super(CloseStoryTabAction.CLOSE_MODULE);
 		this.model = model;
+		this.panel = panel;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		SEFrame.getInstance().removeStoryPanelTab(model);
+		SEFrame.getInstance().removePanelForModel(this.panel, this.model);
 	}
 }

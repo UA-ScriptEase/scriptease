@@ -24,7 +24,6 @@ import scriptease.controller.io.FileIO;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
 import scriptease.controller.undo.UndoManager;
-import scriptease.exception.GameCompilerException;
 import scriptease.gui.SEFrame;
 import scriptease.gui.WindowManager;
 import scriptease.gui.internationalization.Il8nResources;
@@ -33,6 +32,7 @@ import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelPool;
 import scriptease.model.StoryModel;
+import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.CodeGenerator;
 import scriptease.translator.codegenerator.ScriptInfo;
@@ -642,8 +642,7 @@ public final class FileManager {
 					module.close();
 				} catch (IOException e) {
 					// I can't think of anything better to do with this sort
-					// of
-					// error except let ScriptEase explode. - remiller
+					// of error except let ScriptEase explode. - remiller
 					Thread.getDefaultUncaughtExceptionHandler()
 							.uncaughtException(Thread.currentThread(),
 									new IOError(e));
@@ -652,7 +651,7 @@ public final class FileManager {
 				FileManager.this.openFiles.remove(FileManager.this
 						.reverseLookup(storyModel));
 
-				SEFrame.getInstance().removeStoryPanelsForModel(storyModel);
+				SEFrame.getInstance().removeAllPanelsForModel(storyModel);
 				PatternModelPool.getInstance().remove(storyModel);
 			}
 		});

@@ -13,11 +13,11 @@ import scriptease.model.PatternModel;
 import scriptease.model.PatternModelPool;
 
 /**
- * Represents and performs the Save Model command, as well as encapsulates its
+ * Represents and performs the Close Model command, as well as encapsulates its
  * enabled and name display state. <br>
  * <br>
- * Save Model entails calling the FileManager's method for saving a particular
- * model with the currently selected model as argument.
+ * Close Model entails calling the FileManager's close method for closing a
+ * particular model with the currently selected model as argument.
  * 
  * @author remiller
  */
@@ -61,11 +61,11 @@ public final class ClosePatternModelAction extends ActiveModelSensitiveAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final PatternModel activeModel;
-		
+
 		activeModel = PatternModelPool.getInstance().getActiveModel();
 
 		if (activeModel != null) {
-			SEFrame.getInstance().removeStoryPanelTab(activeModel);
+			SEFrame.getInstance().removeAllPanelsForModel(activeModel);
 		}
 	}
 }
