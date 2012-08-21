@@ -10,7 +10,7 @@ import scriptease.gui.SEFrame;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.PatternModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 
 /**
  * Represents and performs the Close Model command, as well as encapsulates its
@@ -62,10 +62,10 @@ public final class ClosePatternModelAction extends ActiveModelSensitiveAction {
 	public void actionPerformed(ActionEvent e) {
 		final PatternModel activeModel;
 
-		activeModel = PatternModelPool.getInstance().getActiveModel();
+		activeModel = PatternModelManager.getInstance().getActiveModel();
 
 		if (activeModel != null) {
-			SEFrame.getInstance().removeAllPanelsForModel(activeModel);
+			SEFrame.getInstance().removeAllComponentsForModel(activeModel);
 		}
 	}
 }

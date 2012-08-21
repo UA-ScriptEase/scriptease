@@ -11,7 +11,7 @@ import scriptease.gui.SETree.SETreeModel;
 import scriptease.gui.SETree.Tree;
 import scriptease.gui.SETree.filters.Filter;
 import scriptease.model.StoryModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
@@ -84,7 +84,7 @@ public class SETreeModelGameObject extends SETreeModel {
 	protected void createAndPopulateTree() {
 		final GameTypeManager typeManager;
 		// Get the active model.
-		PatternModelPool.getInstance().getActiveModel();
+		PatternModelManager.getInstance().getActiveModel();
 		// Build the tree:
 		// Make a node for the root of the tree.
 		String availObjects = "Available Game Objects";

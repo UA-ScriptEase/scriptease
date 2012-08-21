@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.Action;
 
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
-import scriptease.gui.managers.FormatFragmentSelectionManager;
+import scriptease.gui.libraryeditor.FormatFragmentSelectionManager;
 import scriptease.model.CodeBlock;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;

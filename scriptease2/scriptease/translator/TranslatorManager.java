@@ -13,12 +13,12 @@ import java.util.Set;
 import scriptease.ScriptEase;
 import scriptease.ScriptEase.ConfigurationKeys;
 import scriptease.controller.observer.PatternModelPoolEvent;
-import scriptease.controller.observer.PatternModelPoolObserver;
+import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.SEFrame;
 import scriptease.gui.WindowManager;
 import scriptease.model.PatternModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 import scriptease.translator.codegenerator.GameObjectPicker;
 
 /**
@@ -35,7 +35,7 @@ import scriptease.translator.codegenerator.GameObjectPicker;
  * 
  * @author graves
  */
-public class TranslatorManager implements PatternModelPoolObserver {
+public class TranslatorManager implements PatternModelObserver {
 	private static final String NO_TRANSLATORS_PROBLEM = "ScriptEase could not locate any valid game translators in its \"translators\" directory. "
 			+ "\n\nYou will not be able to open Story files or perform any other game-specific operations.";
 
@@ -70,7 +70,7 @@ public class TranslatorManager implements PatternModelPoolObserver {
 
 		// scan for translators in the translators folder
 		this.fillTranslatorPool();
-		PatternModelPool.getInstance().addPoolChangeObserver(this);
+		PatternModelManager.getInstance().addPatternModelPoolObserver(this);
 	}
 
 	/**
@@ -312,7 +312,7 @@ public class TranslatorManager implements PatternModelPoolObserver {
 				this.setActiveTranslator(translator);
 			}
 		} else if (eventType == PatternModelPoolEvent.PATTERN_MODEL_REMOVED) {
-			if (!PatternModelPool.getInstance().usingTranslator(translator))
+			if (!PatternModelManager.getInstance().usingTranslator(translator))
 				translator.unLoadTranslator();
 		}
 	}

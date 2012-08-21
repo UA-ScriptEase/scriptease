@@ -30,7 +30,7 @@ import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
@@ -394,7 +394,7 @@ public final class FileManager {
 		String outputDir = ScriptEase.getInstance().getPreference(
 				ScriptEase.OUTPUT_DIRECTORY_KEY)
 				+ "/";
-		String storyName = PatternModelPool.getInstance().getActiveModel()
+		String storyName = PatternModelManager.getInstance().getActiveModel()
 				.getName();
 
 		new File(outputDir + storyName).mkdirs();
@@ -535,7 +535,7 @@ public final class FileManager {
 			// the menu items update themselves correctly - remiller
 			this.updateRecentFiles(location);
 
-			PatternModelPool.getInstance().add(model, true);
+			PatternModelManager.getInstance().add(model, true);
 		}
 		this.notifyObservers(model, location);
 
@@ -651,8 +651,8 @@ public final class FileManager {
 				FileManager.this.openFiles.remove(FileManager.this
 						.reverseLookup(storyModel));
 
-				SEFrame.getInstance().removeAllPanelsForModel(storyModel);
-				PatternModelPool.getInstance().remove(storyModel);
+				SEFrame.getInstance().removeAllComponentsForModel(storyModel);
+				PatternModelManager.getInstance().remove(storyModel);
 			}
 		});
 
@@ -671,13 +671,13 @@ public final class FileManager {
 		// ensure that we won't be losing any unsaved changes. This has to be a
 		// separate loop from the closing loop because if we cancel the close,
 		// we need to be able to back out fully.
-		for (PatternModel model : PatternModelPool.getInstance().getModels()) {
+		for (PatternModel model : PatternModelManager.getInstance().getModels()) {
 			if (!this.hasUnsavedChanges(model))
 				return false;
 		}
 
 		// actually perform... The Closing. Cue dramatic music!
-		for (PatternModel model : PatternModelPool.getInstance().getModels()) {
+		for (PatternModel model : PatternModelManager.getInstance().getModels()) {
 			if (!this.close(model))
 				return false;
 		}

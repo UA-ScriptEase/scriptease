@@ -4,8 +4,8 @@ import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
 import scriptease.controller.observer.PatternModelPoolEvent;
-import scriptease.controller.observer.PatternModelPoolObserver;
-import scriptease.model.PatternModelPool;
+import scriptease.controller.observer.PatternModelObserver;
+import scriptease.model.PatternModelManager;
 
 /**
  * Abstract Action implementation that defines a group of Actions whose enabled
@@ -23,7 +23,7 @@ import scriptease.model.PatternModelPool;
  */
 @SuppressWarnings("serial")
 public abstract class ActiveModelSensitiveAction extends AbstractAction
-		implements PatternModelPoolObserver {
+		implements PatternModelObserver {
 	/**
 	 * Builds an action that is sensitive to the model pool's active model
 	 * state. It is protected to disallow non-actions from instantiating this
@@ -36,7 +36,7 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction
 		super(name);
 
 		this.updateEnabledState();
-		PatternModelPool.getInstance().addPoolChangeObserver(this);
+		PatternModelManager.getInstance().addPatternModelPoolObserver(this);
 	}
 
 	@Override
@@ -72,6 +72,6 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction
 	 * @return True if this action is legal.
 	 */
 	protected boolean isLegal() {
-		return PatternModelPool.getInstance().hasActiveModel();
+		return PatternModelManager.getInstance().hasActiveModel();
 	}
 }

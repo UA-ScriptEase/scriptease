@@ -8,7 +8,7 @@ import java.util.List;
 
 import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.gui.SETree.filters.Filter;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
@@ -75,7 +75,7 @@ public class GameObjectTree extends SETreeModel {
 	protected void createAndPopulateTree() {
 		final GameTypeManager typeManager;
 		// Get the active model.
-		PatternModelPool.getInstance().getActiveModel();
+		PatternModelManager.getInstance().getActiveModel();
 		// Build the tree:
 		// Make a node for the root of the tree.
 		String availObjects = "Available Game Objects";

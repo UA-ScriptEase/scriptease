@@ -19,7 +19,7 @@ import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.PatternModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 
 /**
@@ -65,7 +65,7 @@ public final class DeleteStoryComponentAction extends
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
 		this.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-		PatternModelPool.getInstance().addPoolChangeObserver(this);
+		PatternModelManager.getInstance().addPatternModelPoolObserver(this);
 
 		SEFrame.getInstance().getStoryTabPane().addContainerListener(this);
 	}
@@ -92,11 +92,11 @@ public final class DeleteStoryComponentAction extends
 
 				final PatternModel model;
 				model = PanelFactory.getInstance()
-						.getModelForPanel(activeStory);
+						.getModelForComponent(activeStory);
 
 				if (activeStory != null && model instanceof StoryModel) {
 					return PanelFactory.getInstance()
-							.getTreeForPanel(activeStory).getSelectionManager();
+							.getTreeForComponent(activeStory).getSelectionManager();
 
 				}
 			}
@@ -109,7 +109,7 @@ public final class DeleteStoryComponentAction extends
 		final Component child = e.getChild();
 
 		if (child instanceof JPanel) {
-			JScrollPane treePane = PanelFactory.getInstance().getTreeForPanel(
+			JScrollPane treePane = PanelFactory.getInstance().getTreeForComponent(
 					(JPanel) child);
 
 			if (treePane != null && treePane instanceof StoryComponentPanelTree)

@@ -15,7 +15,7 @@ import scriptease.gui.WindowManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.PatternModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -67,7 +67,7 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		final WindowManager winMan = WindowManager.getInstance();
-		final PatternModel activeModel = PatternModelPool.getInstance()
+		final PatternModel activeModel = PatternModelManager.getInstance()
 				.getActiveModel();
 		final Thread testThread;
 		final Runnable testTask;

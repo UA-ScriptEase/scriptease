@@ -5,7 +5,7 @@ import java.io.File;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.quests.QuestNode;
 import scriptease.model.StoryModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameModule;
@@ -115,7 +115,7 @@ public class StoryModelConverter implements Converter{
 		catch (XStreamException e) {
 			model = null;
 			// Unload the translator if not being used.
-			if (!PatternModelPool.getInstance().usingTranslator(translator))
+			if (!PatternModelManager.getInstance().usingTranslator(translator))
 				translator.unLoadTranslator();
 			TranslatorManager.getInstance().setActiveTranslator(null);
 			// Pass it back up

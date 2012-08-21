@@ -21,7 +21,6 @@ import scriptease.gui.SETree.filters.Filter;
 import scriptease.gui.SETree.filters.Filterable;
 import scriptease.gui.SETree.filters.GameConstantFilter;
 import scriptease.model.StoryModel;
-import scriptease.model.PatternModelPool;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;

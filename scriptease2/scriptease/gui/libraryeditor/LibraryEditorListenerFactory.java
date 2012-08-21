@@ -1,4 +1,4 @@
-package scriptease.gui.storycomponentbuilder;
+package scriptease.gui.libraryeditor;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -20,6 +20,8 @@ import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEn
 import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.CodeBlock;
+import scriptease.model.LibraryModel;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
@@ -31,11 +33,11 @@ import scriptease.translator.TranslatorManager;
  * @author kschenk
  * 
  */
-public class StoryComponentBuilderListenerFactory {
+public class LibraryEditorListenerFactory {
 
-	private static StoryComponentBuilderListenerFactory instance = new StoryComponentBuilderListenerFactory();
+	private static LibraryEditorListenerFactory instance = new LibraryEditorListenerFactory();
 
-	// These need to be instance variables or else they gets garbage collected.
+	// These need to be instance variables or else they get garbage collected.
 	// Call refreshCodeBlockComponentObserverList when a new codeblock selected.
 	private StoryComponentObserver scriptItObserver;
 	private List<StoryComponentObserver> codeBlockComponentObservers = new ArrayList<StoryComponentObserver>();
@@ -45,7 +47,7 @@ public class StoryComponentBuilderListenerFactory {
 	 * 
 	 * @return
 	 */
-	protected static StoryComponentBuilderListenerFactory getInstance() {
+	protected static LibraryEditorListenerFactory getInstance() {
 		return instance;
 	}
 
@@ -58,30 +60,32 @@ public class StoryComponentBuilderListenerFactory {
 	 *        specific story component is selected.
 	 * @return
 	 */
-	protected MouseListener buildStoryComponentLibraryListener(
+	protected MouseListener buildStoryComponentMouseListener(
 			final StoryVisitor storyVisitor) {
 		return new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if (e.getSource() instanceof JList) {
-					final JList componentList;
-					final StoryComponentPanel componentPanel;
-					final StoryComponent component;
+				if (PatternModelManager.getInstance().getActiveModel() instanceof LibraryModel)
+					if (e.getSource() instanceof JList) {
+						final JList componentList;
+						final StoryComponentPanel componentPanel;
+						final StoryComponent component;
 
-					componentList = (JList) e.getSource();
+						componentList = (JList) e.getSource();
 
-					if (componentList.getSelectedValue() instanceof StoryComponentPanel) {
-						componentPanel = (StoryComponentPanel) componentList
-								.getSelectedValue();
-						component = componentPanel.getStoryComponent();
+						if (componentList.getSelectedValue() instanceof StoryComponentPanel) {
+							componentPanel = (StoryComponentPanel) componentList
+									.getSelectedValue();
+							component = componentPanel.getStoryComponent();
 
-						component.process(storyVisitor);
-					} else if (componentList.getSelectedValue() != null){
-						throw new ClassCastException(
-								"StoryComponentPanel expected but "
-										+ e.getSource().getClass() + " found.");
+							component.process(storyVisitor);
+						} else if (componentList.getSelectedValue() != null) {
+							throw new ClassCastException(
+									"StoryComponentPanel expected but "
+											+ e.getSource().getClass()
+											+ " found.");
+						}
 					}
-				}
 			}
 		};
 	}
@@ -150,7 +154,7 @@ public class StoryComponentBuilderListenerFactory {
 									.getSlots(knowItToAdd.getDefaultType());
 
 							parameterPanel
-									.add(StoryComponentBuilderPanelFactory
+									.add(LibraryEditorPanelFactory
 											.getInstance()
 											.buildParameterPanel(scriptIt,
 													codeBlock, knowItToAdd,
@@ -207,7 +211,7 @@ public class StoryComponentBuilderListenerFactory {
 							parameterPanel.removeAll();
 							for (KnowIt knowIt : codeBlock.getParameters()) {
 								parameterPanel
-										.add(StoryComponentBuilderPanelFactory
+										.add(LibraryEditorPanelFactory
 												.getInstance()
 												.buildParameterPanel(scriptIt,
 														codeBlock, knowIt,

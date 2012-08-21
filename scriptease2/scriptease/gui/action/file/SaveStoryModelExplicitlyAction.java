@@ -10,7 +10,7 @@ import scriptease.controller.FileManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.PatternModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 
 /**
@@ -60,7 +60,7 @@ public class SaveStoryModelExplicitlyAction extends ActiveModelSensitiveAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		final PatternModel activeModel = PatternModelPool.getInstance()
+		final PatternModel activeModel = PatternModelManager.getInstance()
 				.getActiveModel();
 
 		if (activeModel == null)

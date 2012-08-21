@@ -8,21 +8,28 @@ import scriptease.model.StoryComponent;
  * component is acceptable.
  * 
  * @author mfchurch
+ * @author kschenk
  */
 public class VisibilityFilter extends StoryComponentFilter {
+	private boolean hideInvisible;
+
+	public VisibilityFilter(boolean hideInvisible) {
+		this.hideInvisible = hideInvisible;
+	}
+
 	@Override
 	public int getMatchCount(StoryComponent component) {
-		return VisibilityManager.getInstance().isVisible(component) ? 1 : 0;
+		if (hideInvisible)
+			return VisibilityManager.getInstance().isVisible(component) ? 1 : 0;
+		else
+			return 1;
 	}
 
 	@Override
 	public void addRule(Filter newFilter) {
-		/*
-		 * Ignore incoming VisibilityFilters. We do nothing with them since
-		 * there is nothing to update.
-		 */
-		if (!(newFilter instanceof VisibilityFilter)) {
+		if (newFilter instanceof VisibilityFilter) {
+			this.hideInvisible = ((VisibilityFilter) newFilter).hideInvisible;
+		} else
 			super.addRule(newFilter);
-		}
 	}
 }

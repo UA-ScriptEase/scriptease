@@ -47,21 +47,18 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * @param storyComponentList
 	 *            The list of StoryComponents to display in the list.
 	 * 
-	 * @param showInvisible
+	 * @param hideInvisible
 	 *            If true, invisible components will be shown as well.
 	 */
 	public StoryComponentPanelJList(StoryComponentFilter filter,
-			boolean showInvisible) {
+			boolean hideInvisible) {
 		super();
 
 		DefaultListModel listModel = new DefaultListModel();
 
 		this.setModel(listModel);
 
-		if (showInvisible)
-			filterRule = null;
-		else
-			filterRule = new VisibilityFilter();
+		filterRule = new VisibilityFilter(hideInvisible);
 
 		if (filter != null)
 			this.updateFilter(filter);
@@ -151,29 +148,25 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 			if (value instanceof StoryComponentPanel) {
 				final StoryComponentPanel valuePanel;
 				final StoryComponent valueComponent;
+				final Boolean isVisible;
 
 				valuePanel = (StoryComponentPanel) value;
 				valueComponent = valuePanel.getStoryComponent();
-
-				if (isSelected)
-					valuePanel.setBackground(list.getSelectionBackground());
-				else
-					valuePanel.setBackground(list.getBackground());
+				isVisible = VisibilityManager.getInstance().isVisible(
+						valueComponent);
 
 				valuePanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1,
 						0, Color.LIGHT_GRAY));
 
-				final Boolean isVisible;
-
-				isVisible = VisibilityManager.getInstance().isVisible(
-						valueComponent);
-
-				if (isVisible || isSelected)
-					return valuePanel;
-				else {
+				if (isSelected && isVisible)
+					valuePanel.setBackground(list.getSelectionBackground());
+				else if (isSelected && !isVisible)
+					valuePanel.setBackground(Color.GRAY);
+				else if (!isSelected && !isVisible)
 					valuePanel.setBackground(Color.DARK_GRAY);
-					return valuePanel;
-				}
+				else if (!isSelected && isVisible)
+					valuePanel.setBackground(list.getBackground());
+				return valuePanel;
 			} else
 				return new JLabel("Error: Not a story component: "
 						+ value.toString());

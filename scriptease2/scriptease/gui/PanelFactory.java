@@ -1,12 +1,14 @@
 package scriptease.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
@@ -15,14 +17,14 @@ import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.nodes.GraphNode;
+import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.pane.GameObjectPane;
-import scriptease.gui.pane.LibraryPane;
+import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.quests.QuestPoint;
-import scriptease.gui.storycomponentbuilder.StoryComponentBuilderPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.translator.Translator;
@@ -127,93 +129,97 @@ public class PanelFactory {
 		// otherwise return an empty hidden JPanel
 		JPanel jPanel = new JPanel();
 		jPanel.setVisible(false);
+		jPanel.setSize(new Dimension(0,0));
 		return jPanel;
 	}
 
-	private final static BiHashMap<PatternModel, List<JPanel>> modelsToPanes = new BiHashMap<PatternModel, List<JPanel>>();
+	private final static BiHashMap<PatternModel, List<JComponent>> modelsToComponents = new BiHashMap<PatternModel, List<JComponent>>();
 
-	private final static Map<JPanel, StoryComponentPanelTree> panesToTrees = new IdentityHashMap<JPanel, StoryComponentPanelTree>();
+	private final static Map<JComponent, StoryComponentPanelTree> componentsToTrees = new IdentityHashMap<JComponent, StoryComponentPanelTree>();
 
 	public JPanel buildStoryPanel(StoryModel model, QuestPoint questPoint) {
 		final JPanel storyPanel;
 		final JPanel questPanel;
 		final StoryComponentPanelTree storyComponentTree;
 
-		List<JPanel> panes;
+		List<JComponent> panes;
 
 		storyPanel = new JPanel(new GridLayout(0, 1));
 		questPanel = PanelFactory.getInstance().buildQuestPanel(
 				model.getRoot().getStartPoint());
 		storyComponentTree = new StoryComponentPanelTree(questPoint);
 
-		panes = modelsToPanes.getValue(model);
+		panes = modelsToComponents.getValue(model);
 
 		if (panes == null) {
-			panes = new ArrayList<JPanel>();
+			panes = new ArrayList<JComponent>();
 		}
 
 		storyPanel.setOpaque(false);
 
 		panes.add(storyPanel);
 
-		modelsToPanes.put(model, panes);
+		modelsToComponents.put(model, panes);
 
 		storyPanel.add(questPanel);
 
 		storyPanel.add(storyComponentTree);
 
-		panesToTrees.put(storyPanel, storyComponentTree);
+		componentsToTrees.put(storyPanel, storyComponentTree);
 
 		return storyPanel;
 	}
 
-	public JPanel buildStoryComponentBuilderPanel(LibraryModel model) {
+	public JScrollPane buildLibraryEditorPanel(LibraryModel model) {
 		final JPanel scbPanel;
+		final JScrollPane scbScrollPane;
 
-		List<JPanel> panes;
+		List<JComponent> components;
 
-		panes = modelsToPanes.getValue(model);
-		scbPanel = StoryComponentBuilderPanelFactory.getInstance()
-				.buildStoryComponentEditorScrollPane(
+		components = modelsToComponents.getValue(model);
+		scbPanel = LibraryEditorPanelFactory.getInstance()
+				.buildLibraryEditorPanel(
 						PanelFactory.getInstance().getMainLibraryPane());
+		scbScrollPane = new JScrollPane(scbPanel);
 
-		if (panes == null) {
-			panes = new ArrayList<JPanel>();
-			panes.add(scbPanel);
-			modelsToPanes.put(model, panes);
+		if (components == null) {
+			components = new ArrayList<JComponent>();
+			components.add(scbScrollPane);
+			modelsToComponents.put(model, components);
 		}
-		panes.add(scbPanel);
-		PatternModelPool.getInstance().add(model);
+		components.add(scbScrollPane);
+		PatternModelManager.getInstance().add(model);
 
-		return scbPanel;
+		return scbScrollPane;
 	}
 
-	public void setRootForTreeInPanel(JPanel panel, QuestPoint questPoint) {
-		panesToTrees.get(panel).setRoot(questPoint);
+	public void setRootForTreeInComponent(JComponent component,
+			QuestPoint questPoint) {
+		componentsToTrees.get(component).setRoot(questPoint);
 	}
 
 	/**
 	 * NOTE: Methods that call this method should always either check if null is
-	 * returned, or use {@link #getModelForPanel(JPanel)} to check if the panel
-	 * passed in represents a StoryModel. Only Story Model panels are added to
-	 * the map, so if you attempt to use a different kind of PatternModel, this
-	 * method will just return null.
+	 * returned, or use {@link #getModelForPanel(JComponent)} to check if the
+	 * panel passed in represents a StoryModel. Only Story Model panels are
+	 * added to the map, so if you attempt to use a different kind of
+	 * PatternModel, this method will just return null.
 	 * 
-	 * @param panel
+	 * @param component
 	 * @return
 	 */
-	public StoryComponentPanelTree getTreeForPanel(JPanel panel) {
-		return panesToTrees.get(panel);
+	public StoryComponentPanelTree getTreeForComponent(JComponent component) {
+		return componentsToTrees.get(component);
 	}
 
-	public PatternModel getModelForPanel(JPanel modelPanel) {
-		for (List<JPanel> jPanelList : modelsToPanes.getValues())
-			if (jPanelList.contains(modelPanel))
-				return modelsToPanes.getKey(jPanelList);
+	public PatternModel getModelForComponent(JComponent modelComponent) {
+		for (List<JComponent> jComponentList : modelsToComponents.getValues())
+			if (jComponentList.contains(modelComponent))
+				return modelsToComponents.getKey(jComponentList);
 
 		throw new IllegalStateException(
 				"Encountered null model when attempting to get model for "
-						+ modelPanel.getName());
+						+ modelComponent.getName());
 	}
 
 	/**
@@ -223,8 +229,8 @@ public class PanelFactory {
 	 * @param model
 	 * @return
 	 */
-	public List<JPanel> getPanelsForModel(PatternModel model) {
-		final List<JPanel> panels = modelsToPanes.getValue(model);
+	public List<JComponent> getComponentsForModel(PatternModel model) {
+		final List<JComponent> panels = modelsToComponents.getValue(model);
 
 		if (panels == null) {
 			System.out
@@ -232,41 +238,41 @@ public class PanelFactory {
 							+ "panels when attempting to get panels for "
 							+ model.getName());
 
-			return new ArrayList<JPanel>();
+			return new ArrayList<JComponent>();
 		}
 
 		return panels;
 	}
 
 	/**
-	 * Removes the given StoryPanel from list of StoryPanel's associated with
-	 * the given model.
+	 * Removes the given component from the list of the component's associated
+	 * with the given model.
 	 * 
 	 * @param model
-	 * @param panel
+	 * @param component
 	 */
-	public void removeStoryPanelForModel(PatternModel model, JPanel panel) {
-		final List<JPanel> panels = new ArrayList<JPanel>();
+	public void removeComponentForModel(PatternModel model, JComponent component) {
+		final List<JComponent> components = new ArrayList<JComponent>();
 
-		if (modelsToPanes.getValue(model) == null)
+		if (modelsToComponents.getValue(model) == null)
 			throw new IllegalStateException(
 					"Encountered null list of model display panels "
 							+ "when attempting to remove panels for "
 							+ model.getName());
 
-		panels.addAll(modelsToPanes.getValue(model));
+		components.addAll(modelsToComponents.getValue(model));
 
-		panels.remove(panel);
+		components.remove(component);
 
-		if (!panels.isEmpty())
-			modelsToPanes.put(model, panels);
+		if (!components.isEmpty())
+			modelsToComponents.put(model, components);
 		else
-			modelsToPanes.removeKey(model);
+			modelsToComponents.removeKey(model);
 	}
 
-	private static LibraryPane mainLibraryPane = new LibraryPane(false);
+	private static LibraryPanel mainLibraryPane = new LibraryPanel(true);
 
-	public LibraryPane getMainLibraryPane() {
+	public LibraryPanel getMainLibraryPane() {
 		return mainLibraryPane;
 	}
 }

@@ -22,23 +22,26 @@ import javax.swing.event.DocumentListener;
 
 import scriptease.controller.observer.LibraryManagerEvent;
 import scriptease.controller.observer.LibraryManagerObserver;
+import scriptease.controller.observer.PatternModelPoolEvent;
+import scriptease.controller.observer.PatternModelObserver;
 import scriptease.gui.SETree.filters.CategoryFilter;
 import scriptease.gui.SETree.filters.CategoryFilter.Category;
 import scriptease.gui.SETree.filters.StoryComponentSearchFilter;
 import scriptease.gui.SETree.filters.TranslatorFilter;
 import scriptease.gui.SETree.filters.TypeFilter;
+import scriptease.gui.SETree.filters.VisibilityFilter;
 import scriptease.gui.action.typemenus.TypeSelectionAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
+import scriptease.model.PatternModel;
+import scriptease.model.PatternModelManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
 @SuppressWarnings("serial")
 /**
- * TODO So this shouldn't exist. At all. It should be in the Panel Factory, but without the useless junk. 
- * 
  * LibraryPane represents the JPanel used for managing, filtering and choosing
  * Patterns from the loaded Libraries. It appears in the top left corner of
  * the main ScriptEase window.
@@ -46,17 +49,18 @@ import scriptease.translator.TranslatorManager;
  * @author mfchurch
  * @author kschenk
  */
-public class LibraryPane extends JPanel implements LibraryManagerObserver {
+public class LibraryPanel extends JPanel implements LibraryManagerObserver,
+		PatternModelObserver {
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
 
 	/**
 	 * Creates a new LibraryPane with default filters, and configures its
 	 * display.
 	 * 
-	 * @param showInvisible
+	 * @param hideInvisible
 	 *            Whether to show invisible story components or not.
 	 */
-	public LibraryPane(boolean showInvisible) {
+	public LibraryPanel(boolean hideInvisible) {
 		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
 
 		final JTabbedPane listTabs;
@@ -80,13 +84,13 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver {
 
 		// Create the Tree with the root and the default filter
 		causesList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.CAUSES), showInvisible);
+				Category.CAUSES), hideInvisible);
 		effectsList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.EFFECTS), showInvisible);
+				Category.EFFECTS), hideInvisible);
 		descriptionsList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.DESCRIPTIONS), showInvisible);
+				Category.DESCRIPTIONS), hideInvisible);
 		foldersList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.FOLDERS), showInvisible);
+				Category.FOLDERS), hideInvisible);
 
 		this.storyComponentPanelJLists.add(causesList);
 		this.storyComponentPanelJLists.add(effectsList);
@@ -154,14 +158,17 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver {
 		// Configure the displaying of the pane
 		this.updateLists();
 
-		// Listen for changes to the Libraries
-		LibraryManager.getInstance().addLibraryManagerListener(this);
+		LibraryManager.getInstance().addLibraryManagerObserver(this);
+		PatternModelManager.getInstance().addPatternModelPoolObserver(this);
 	}
 
 	/**
-	 * Adds a list mouse listener to each of the tabs.
+	 * Adds a list mouse listener to each of the tabs. This listens on the
+	 * entire list, not just individual cells, so cells will have to be dealt
+	 * with separately.
 	 * 
 	 * @param listener
+	 * @see StoryComponentPanelJList#addMouseListener(MouseListener)
 	 */
 	public void addListMouseListener(MouseListener listener) {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
@@ -174,14 +181,23 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver {
 	 * back all components in the list panes.
 	 */
 	private void updateLists() {
-		final Translator activeTranslator;
-
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			final PatternModel model;
+			final Translator activeTranslator;
+			final boolean hideInvisible;
+
+			model = PatternModelManager.getInstance().getActiveModel();
+			activeTranslator = TranslatorManager.getInstance()
+					.getActiveTranslator();
+
+			if (model instanceof LibraryModel)
+				hideInvisible = false;
+			else
+				hideInvisible = true;
+
 			list.updateFilter(new TranslatorFilter(TranslatorManager
 					.getInstance().getActiveTranslator()));
+			list.updateFilter(new VisibilityFilter(hideInvisible));
 
 			list.removeAllStoryComponents();
 
@@ -198,10 +214,23 @@ public class LibraryPane extends JPanel implements LibraryManagerObserver {
 	}
 
 	/**
-	 * Keep the display of the library up to date with the changes to Libraries.
+	 * This listener checks for when the model is changed. This usually happens
+	 * when you load a model, or when you switch them by switching tabs.
 	 */
 	@Override
-	public void modelChanged(final LibraryManagerEvent managerEvent) {
-		updateLists();
+	public void modelChanged(PatternModelPoolEvent event) {
+		if (event.getEventType() == PatternModelPoolEvent.PATTERN_MODEL_ACTIVATED)
+			updateLists();
+	}
+
+	/**
+	 * Keep the display of the library up to date with the changes to Libraries.
+	 * This listener is important for the Story Component Builder, so that
+	 * changes made there will apply to the library view as well.
+	 */
+	@Override
+	public void modelChanged(LibraryManagerEvent event) {
+		if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED)
+			updateLists();
 	}
 }

@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.SpringLayout;
 import javax.swing.ToolTipManager;
@@ -21,7 +22,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import scriptease.gui.SETree.GameObjectPanelTree;
 import scriptease.gui.SETree.GameObjectTree;
 import scriptease.gui.SETree.cell.BindingWidget;
-import scriptease.gui.control.FilterableSearchField;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
@@ -35,7 +35,7 @@ import scriptease.translator.codegenerator.GameObjectPicker;
 public class GameObjectPane implements GameObjectPicker {
 	// Although the default picker will be used, a customPicker can define
 	// certain behavior of the default one.
-	private FilterableSearchField searchField;
+	private JTextField searchField;
 	private GameObjectPanelTree tree;
 
 	public GameObjectPane(StoryModel storyModel) {
@@ -46,7 +46,8 @@ public class GameObjectPane implements GameObjectPicker {
 	private JPanel buildFilterPane(GameObjectTree model) {
 		final JPanel filterPane;
 
-		searchField = new FilterableSearchField(model, 20);
+		searchField = new JTextField(20);
+		//TODO Search Field does zip, zilch, nada
 		
 		filterPane = new JPanel();
 		filterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
