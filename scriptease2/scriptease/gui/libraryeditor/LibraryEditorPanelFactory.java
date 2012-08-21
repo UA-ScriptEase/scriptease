@@ -1,4 +1,4 @@
-package scriptease.gui.storycomponentbuilder;
+package scriptease.gui.libraryeditor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -59,8 +58,7 @@ import scriptease.gui.action.storycomponentbuilder.codeeditor.InsertSimpleAction
 import scriptease.gui.action.storycomponentbuilder.codeeditor.MoveFragmentDownAction;
 import scriptease.gui.action.storycomponentbuilder.codeeditor.MoveFragmentUpAction;
 import scriptease.gui.action.typemenus.TypeSelectionAction;
-import scriptease.gui.managers.FormatFragmentSelectionManager;
-import scriptease.gui.pane.LibraryPane;
+import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
@@ -88,67 +86,35 @@ import scriptease.translator.io.tools.GameConstantFactory;
 import scriptease.util.GUIOp;
 import scriptease.util.StringOp;
 
-public class StoryComponentBuilderPanelFactory {
-	private static StoryComponentBuilderPanelFactory instance = new StoryComponentBuilderPanelFactory();
+/**
+ * A factory used to create a library editor. This is a singleton class, so use
+ * the {@link #getInstance()} method to work with it.
+ * 
+ * @author kschenk
+ * 
+ */
+public class LibraryEditorPanelFactory {
+	private static LibraryEditorPanelFactory instance = new LibraryEditorPanelFactory();
 
-	public static StoryComponentBuilderPanelFactory getInstance() {
+	/**
+	 * Returns the single instance of StoryComponentBuilderPanelFactory
+	 * 
+	 * @return
+	 */
+	public static LibraryEditorPanelFactory getInstance() {
 		return instance;
 	}
 
 	/**
-	 * Builds the library pane for the Story Component Editor. This pane allows
-	 * loading of different translators through a ComboBox.
-	 * 
-	 * @param editorPanel
-	 * @return
-	 */
-	public JPanel buildStoryComponentLibraryPanel(LibraryPane libraryPane) {
-		final List<Translator> translators;
-		final JComboBox libSelector;
-		final JPanel libraryPanel;
-		final JPanel translatorPanel;
-		final Translator activeTranslator;
-
-		libraryPanel = new JPanel();
-		translatorPanel = new JPanel();
-		translators = new ArrayList<Translator>();
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-
-		libraryPanel.setLayout(new BoxLayout(libraryPanel, BoxLayout.Y_AXIS));
-
-		translators.add(null);
-		translators.addAll(TranslatorManager.getInstance().getTranslators());
-
-		libSelector = new JComboBox(new Vector<Translator>(translators));
-		libSelector.setSelectedItem(activeTranslator);
-
-		// TODO This should update the editorpanel, too!
-		libSelector.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setTranslator((Translator) libSelector.getSelectedItem());
-			}
-		});
-
-		translatorPanel.add(new JLabel("Currently loaded translator: "));
-		translatorPanel.add(libSelector);
-
-		libraryPanel.add(translatorPanel);
-
-		libraryPanel.add(libraryPane);
-
-		return libraryPanel;
-	}
-
-	/**
 	 * Creates a JPanel with fields for Name, Labels, and a check box for
-	 * Visibility. This JPanel is common to all story component editor panes.
+	 * Visibility. This JPanel is common to all library editor panes.
+	 * 
+	 * @param libraryPane
+	 *            The LibraryPanel to be acted on.
 	 * 
 	 * @return
 	 */
-	public JPanel buildStoryComponentEditorScrollPane(
-			final LibraryPane libraryPane) {
+	public JPanel buildLibraryEditorPanel(final LibraryPanel libraryPane) {
 		final StoryVisitor storyVisitor;
 		final MouseListener librarySelectionListener;
 
@@ -307,7 +273,7 @@ public class StoryComponentBuilderPanelFactory {
 
 			@Override
 			public void processScriptIt(final ScriptIt scriptIt) {
-				StoryComponentBuilderListenerFactory.getInstance()
+				LibraryEditorListenerFactory.getInstance()
 						.refreshCodeBlockComponentObserverList();
 				// Causes and effects are processed as ScriptIts
 				addCodeBlockButton.setVisible(true);
@@ -319,7 +285,7 @@ public class StoryComponentBuilderPanelFactory {
 				setUpScriptItCodeBlocks(scriptIt).run();
 				updateComponents(scriptIt);
 
-				scriptIt.addStoryComponentObserver(StoryComponentBuilderListenerFactory
+				scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
 						.getInstance().buildScriptItEditorObserver(
 								setUpScriptItCodeBlocks(scriptIt)));
 
@@ -329,7 +295,7 @@ public class StoryComponentBuilderPanelFactory {
 
 			@Override
 			public void processKnowIt(final KnowIt knowIt) {
-				StoryComponentBuilderListenerFactory.getInstance()
+				LibraryEditorListenerFactory.getInstance()
 						.refreshCodeBlockComponentObserverList();
 
 				// Descriptions are processed as KnowIts.
@@ -339,7 +305,7 @@ public class StoryComponentBuilderPanelFactory {
 
 				addCodeBlockButton.setVisible(false);
 
-				componentEditingPanel.add(StoryComponentBuilderPanelFactory
+				componentEditingPanel.add(LibraryEditorPanelFactory
 						.getInstance().buildDescriptionEditorPanel(knowIt));
 
 				updateComponents(knowIt);
@@ -352,15 +318,27 @@ public class StoryComponentBuilderPanelFactory {
 			// are here in case.
 			@Override
 			public void processAskIt(AskIt questionIt) {
-				// Unimplemented
 				this.defaultProcess(questionIt);
 			}
 
 			@Override
 			public void processStoryComponentContainer(
 					StoryComponentContainer container) {
-				// Unimplemented
 				this.defaultProcess(container);
+			}
+
+			@Override
+			public void defaultProcess(StoryComponent component) {
+				LibraryEditorListenerFactory.getInstance()
+						.refreshCodeBlockComponentObserverList();
+				updateComponents(component);
+
+				addCodeBlockButton.setVisible(false);
+
+				componentEditingPanel.removeAll();
+
+				editorPanel.repaint();
+				editorPanel.revalidate();
 			}
 
 			/**
@@ -489,33 +467,20 @@ public class StoryComponentBuilderPanelFactory {
 					public void actionPerformed(ActionEvent e) {
 						final CodeBlock codeBlock;
 
-						codeBlock = new CodeBlockSource("", "",
-								new ArrayList<String>(),
-								new ArrayList<KnowIt>(),
-								new ArrayList<String>(),
-								new ArrayList<AbstractFragment>(),
-								TranslatorManager.getInstance()
-										.getActiveTranslator()
-										.getApiDictionary()
-										.getNextCodeBlockID());
+						codeBlock = new CodeBlockSource(TranslatorManager
+								.getInstance().getActiveTranslator()
+								.getApiDictionary().getNextCodeBlockID());
 
 						scriptIt.addCodeBlock(codeBlock);
-						componentEditingPanel.add(buildCodeBlockComponent(
-								codeBlock, scriptIt));
 						componentEditingPanel.repaint();
 						componentEditingPanel.revalidate();
 					}
 				};
 			}
-
-			@Override
-			public void defaultProcess(StoryComponent component) {
-				editorPanel.setVisible(false);
-			}
 		};
 
-		librarySelectionListener = StoryComponentBuilderListenerFactory
-				.getInstance().buildStoryComponentLibraryListener(storyVisitor);
+		librarySelectionListener = LibraryEditorListenerFactory.getInstance()
+				.buildStoryComponentMouseListener(storyVisitor);
 
 		// Add the tree listener
 		libraryPane.addListMouseListener(librarySelectionListener);
@@ -527,7 +492,7 @@ public class StoryComponentBuilderPanelFactory {
 	 * TODO Will need to implement DescribeItGraphPanel here or just combine
 	 * them
 	 */
-	public JPanel buildDescriptionEditorPanel(KnowIt knowIt) {
+	private JPanel buildDescriptionEditorPanel(KnowIt knowIt) {
 		final JPanel descriptionEditorPanel;
 		// final StoryComponentBindingList bindingList;
 
@@ -542,7 +507,7 @@ public class StoryComponentBuilderPanelFactory {
 		// Should have the type selection here!
 
 		// Set text of NameField to knowIt.getDisplayText();
-		//String labelList = "";
+		// String labelList = "";
 		for (String label : knowIt.getLabels())
 			label += label + ", ";
 		// Set the Label list to labelList
@@ -648,22 +613,22 @@ public class StoryComponentBuilderPanelFactory {
 		parametersLabel.setFont(labelFont);
 		codeLabel.setFont(labelFont);
 
-		scriptIt.addStoryComponentObserver(StoryComponentBuilderListenerFactory
+		scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
 				.getInstance().buildCodeBlockComponentObserver(
 						deleteCodeBlockButton));
 
-		scriptIt.addStoryComponentObserver(StoryComponentBuilderListenerFactory
+		scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
 				.getInstance().buildParameterPanelObserver(codeBlock,
 						parameterPanel, subjectBox));
 
-		scriptIt.addStoryComponentObserver(StoryComponentBuilderListenerFactory
+		scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
 				.getInstance().buildSubjectBoxObserver(codeBlock, subjectBox,
 						slotBox));
 
-		scriptIt.addStoryComponentObserver(StoryComponentBuilderListenerFactory
+		scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
 				.getInstance().buildSlotBoxObserver(codeBlock, implicitsLabel));
 
-		scriptIt.addStoryComponentObserver(StoryComponentBuilderListenerFactory
+		scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
 				.getInstance()
 				.buildParameterNameObserver(codeBlock, subjectBox));
 
@@ -1000,11 +965,11 @@ public class StoryComponentBuilderPanelFactory {
 			updateBindingConstantComponent(bindingConstantComponent);
 
 			// Set up listeners
-			knowIt.addStoryComponentObserver(StoryComponentBuilderListenerFactory
+			knowIt.addStoryComponentObserver(LibraryEditorListenerFactory
 					.getInstance().buildParameterTypeObserver(knowIt,
 							defaultTypeBox));
 
-			knowIt.addStoryComponentObserver(StoryComponentBuilderListenerFactory
+			knowIt.addStoryComponentObserver(LibraryEditorListenerFactory
 					.getInstance().buildParameterDefaultTypeObserver());
 
 			nameField.getDocument().addDocumentListener(new DocumentListener() {
@@ -1276,7 +1241,7 @@ public class StoryComponentBuilderPanelFactory {
 		private final JScrollPane codeEditorScrollPane;
 		private String simplePanelName;
 
-		public CodeEditorPanel(CodeBlock codeBlock) {
+		private CodeEditorPanel(CodeBlock codeBlock) {
 			super();
 			this.codeBlock = codeBlock;
 			this.panelToFragmentMap = new HashMap<JPanel, AbstractFragment>();
@@ -2081,18 +2046,4 @@ public class StoryComponentBuilderPanelFactory {
 			fillCodeEditorPanel();
 		}
 	}
-
-	/**
-	 * Method to set the translator. This is separate so that Progress.aj can
-	 * show the loading bar when a new Translator is loading.
-	 * 
-	 * @author remiller
-	 * 
-	 * @param t
-	 *            The Translator to load
-	 */
-	private void setTranslator(Translator t) {
-		TranslatorManager.getInstance().setActiveTranslator(t);
-	}
-
 }

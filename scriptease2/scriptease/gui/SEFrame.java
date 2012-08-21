@@ -27,8 +27,8 @@ import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.AbstractNoOpModelVisitor;
 import scriptease.controller.FileManager;
+import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.PatternModelPoolEvent;
-import scriptease.controller.observer.PatternModelPoolObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.pane.CloseableTab;
@@ -36,7 +36,7 @@ import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -54,7 +54,7 @@ import scriptease.translator.TranslatorManager;
  */
 
 @SuppressWarnings("serial")
-public final class SEFrame implements PatternModelPoolObserver {
+public final class SEFrame implements PatternModelObserver {
 	private static final int MIN_HEIGHT = 480;
 	private static final int MIN_WIDTH = 640;
 
@@ -94,16 +94,16 @@ public final class SEFrame implements PatternModelPoolObserver {
 		this.storyTabs.addChangeListener(new ChangeListener() {
 			// This method is called whenever the selected tab changes
 			public void stateChanged(ChangeEvent evt) {
-				final JPanel frame;
+				final JComponent tab;
 
 				JTabbedPane pane = (JTabbedPane) evt.getSource();
 				// Get the activated frame
-				frame = (JPanel) pane.getSelectedComponent();
+				tab = (JComponent) pane.getSelectedComponent();
 
-				if (frame != null) {
+				if (tab != null) {
 					PatternModel model = PanelFactory.getInstance()
-							.getModelForPanel(frame);
-					PatternModelPool.getInstance().activate(model);
+							.getModelForComponent(tab);
+					PatternModelManager.getInstance().activate(model);
 				}
 			}
 		});
@@ -114,7 +114,7 @@ public final class SEFrame implements PatternModelPoolObserver {
 
 		this.populate();
 
-		PatternModelPool.getInstance().addPoolChangeObserver(this);
+		PatternModelManager.getInstance().addPatternModelPoolObserver(this);
 	}
 
 	/**
@@ -190,8 +190,6 @@ public final class SEFrame implements PatternModelPoolObserver {
 
 			content.add(rightSplit);
 			content.add(statusBar);
-
-			leftSplit.setResizeWeight(0.5);
 
 			// stretch the split panels
 			layout.setHorizontalGroup(layout.createParallelGroup()
@@ -280,6 +278,7 @@ public final class SEFrame implements PatternModelPoolObserver {
 
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
 			this.leftSplit.setBottomComponent(newGameObjectPane);
+			leftSplit.setDividerLocation(this.getFrame().getHeight() / 2);
 			this.leftSplit.revalidate();
 		} else if (preferredLayout
 				.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
@@ -296,6 +295,7 @@ public final class SEFrame implements PatternModelPoolObserver {
 		final JPanel newPanel;
 
 		newPanel = new JPanel();
+		newPanel.setVisible(false);
 
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
 			this.leftSplit.setBottomComponent(newPanel);
@@ -315,7 +315,6 @@ public final class SEFrame implements PatternModelPoolObserver {
 	 */
 	public void createTabForModel(LibraryModel model) {
 		final Icon icon;
-		final JPanel scbPanel;
 		final JScrollPane scbScrollPane;
 		final CloseableTab newTab;
 		if (model.getTranslator() != null)
@@ -323,18 +322,17 @@ public final class SEFrame implements PatternModelPoolObserver {
 		else
 			icon = null;
 
-		scbPanel = PanelFactory.getInstance().buildStoryComponentBuilderPanel(
+		scbScrollPane = PanelFactory.getInstance().buildLibraryEditorPanel(
 				model);
-		scbScrollPane = new JScrollPane(scbPanel);
-		newTab = new CloseableTab(this.storyTabs, scbPanel, model, icon);
+		newTab = new CloseableTab(this.storyTabs, scbScrollPane, model, icon);
 
 		scbScrollPane.getVerticalScrollBar().setUnitIncrement(
 				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
-		this.storyTabs.addTab(model.getName(), icon, scbPanel);
+		this.storyTabs.addTab(model.getName(), icon, scbScrollPane);
 		this.storyTabs.setTabComponentAt(
-				this.storyTabs.indexOfComponent(scbPanel), newTab);
-		this.storyTabs.setSelectedComponent(scbPanel);
+				this.storyTabs.indexOfComponent(scbScrollPane), newTab);
+		this.storyTabs.setSelectedComponent(scbScrollPane);
 	}
 
 	/**
@@ -397,12 +395,12 @@ public final class SEFrame implements PatternModelPoolObserver {
 	 * @param activeModel
 	 *            The StoryModel whose storyPanel is to be removed.
 	 */
-	public void removeAllPanelsForModel(final PatternModel activeModel) {
-		final List<JPanel> panels = PanelFactory.getInstance()
-				.getPanelsForModel(activeModel);
+	public void removeAllComponentsForModel(final PatternModel activeModel) {
+		final List<JComponent> components = PanelFactory.getInstance()
+				.getComponentsForModel(activeModel);
 
-		for (JPanel panel : panels) {
-			this.removePanelForModel(panel, activeModel);
+		for (JComponent component : components) {
+			this.removeComponentForModel(component, activeModel);
 		}
 	}
 
@@ -411,15 +409,17 @@ public final class SEFrame implements PatternModelPoolObserver {
 	 * StoryPanels for the given model. storyTabs.remove should not be called
 	 * outside of this method.
 	 * 
-	 * @param panel
+	 * @param component
 	 * @param model
 	 */
-	public void removePanelForModel(JPanel panel, PatternModel model) {
+	public void removeComponentForModel(JComponent component, PatternModel model) {
+
+		// TODO This is where we update things when tab is closed.
 
 		// remove the panel
-		PanelFactory.getInstance().removeStoryPanelForModel(model, panel);
+		PanelFactory.getInstance().removeComponentForModel(model, component);
 
-		this.storyTabs.remove(panel);
+		this.storyTabs.remove(component);
 
 		// check if there are any unsaved changes
 		if (FileManager.getInstance().hasUnsavedChanges(model)) {
@@ -435,8 +435,8 @@ public final class SEFrame implements PatternModelPoolObserver {
 
 				@Override
 				public void processStoryModel(StoryModel storyModel) {
-					// TODO This also closes the librarymodel, even if it's open
-					// in StoryComponentBuilder.
+					// TODO This closes all story models that are the same if
+					// two of the same ones are opened.
 					FileManager.getInstance().close(storyModel);
 				}
 			});
@@ -470,14 +470,19 @@ public final class SEFrame implements PatternModelPoolObserver {
 
 				@Override
 				public void processLibraryModel(LibraryModel libraryModel) {
+					SEFrame.this.getFrame().setJMenuBar(
+							MenuFactory.createMainMenuBar(true));
 					SEFrame.this.hideGameObjectPane();
 					this.setScriptEaseTitle();
 				}
 
 				@Override
 				public void processStoryModel(StoryModel storyModel) {
+					SEFrame.this.getFrame().setJMenuBar(
+							MenuFactory.createMainMenuBar(false));
 					SEFrame.this.updateGameObjectPane(storyModel);
 					this.setScriptEaseTitle();
+
 				}
 			});
 		}

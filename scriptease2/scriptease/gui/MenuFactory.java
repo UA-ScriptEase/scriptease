@@ -45,7 +45,7 @@ import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
@@ -83,6 +83,7 @@ import scriptease.util.FileOp;
  * documentation on how to use Action instances with Swing widgets.
  * 
  * @author remiller
+ * @author kschenk
  */
 public class MenuFactory {
 	private static final String FILE = Il8nResources.getString("File");
@@ -93,17 +94,20 @@ public class MenuFactory {
 	private static final String NEW_DESCRIPTION = Il8nResources
 			.getString("KnowIt");
 	private static final String DEBUG = "Debug";
-	private static final String EXIT = Il8nResources.getString("Exit");
 
 	/**
-	 * Creates the top level menu bar.
+	 * Creates the top level menu bar for a story.
+	 * 
+	 * @param libraryEditor
+	 *            Builds a slightly different file menu if the main menu is
+	 *            getting created for the library editor.
 	 * 
 	 * @return the top level menu bar.
 	 */
-	public static JMenuBar createStoryMenuBar() {
+	public static JMenuBar createMainMenuBar(boolean libraryEditor) {
 		final JMenuBar bar = new JMenuBar();
 
-		bar.add(MenuFactory.buildFileMenu());
+		bar.add(MenuFactory.buildFileMenu(libraryEditor));
 		bar.add(MenuFactory.buildEditMenu());
 		bar.add(MenuFactory.buildToolsMenu());
 
@@ -112,44 +116,6 @@ public class MenuFactory {
 			bar.add(MenuFactory.buildDebugMenu());
 
 		return bar;
-	}
-
-	/**
-	 * Used in the StoryComponentBuilder.
-	 * 
-	 * @return
-	 */
-	public static JMenuBar buildBuilderMenuBar() {
-		final JMenuBar builderMenuBar;
-		final JMenu fileMenu;
-		final JMenu newMenu;
-		final JMenuItem newCause;
-		final JMenuItem newEffect;
-		final JMenuItem newDescription;
-		final JMenuItem save;
-		final JMenuItem exit;
-
-		builderMenuBar = new JMenuBar();
-		fileMenu = new JMenu(MenuFactory.FILE);
-		newMenu = new JMenu(MenuFactory.NEW);
-		newCause = new JMenuItem(NewCauseAction.getInstance());
-		newEffect = new JMenuItem(NewEffectAction.getInstance());
-		newDescription = new JMenuItem(MenuFactory.NEW_DESCRIPTION);
-		save = new JMenuItem(SaveLibraryModelAction.getInstance());
-		exit = new JMenuItem(MenuFactory.EXIT);
-
-		newMenu.add(newCause);
-		newMenu.add(newEffect);
-		newMenu.add(newDescription);
-
-		fileMenu.add(newMenu);
-		fileMenu.add(save);
-		fileMenu.add(exit);
-
-		builderMenuBar.add(fileMenu);
-		builderMenuBar.add(MenuFactory.buildEditMenu());
-
-		return builderMenuBar;
 	}
 
 	/**
@@ -188,12 +154,64 @@ public class MenuFactory {
 	 * 
 	 * @return The File menu.
 	 */
-	public static JMenu buildFileMenu() {
+	public static JMenu buildFileMenu(boolean libraryEditor) {
 		final JMenu menu = new JMenu(MenuFactory.FILE);
 		menu.setMnemonic(KeyEvent.VK_F);
 
-		fillFileMenu(menu);
+		// clear the menu to make sure we *only* have File Menu relevant stuff
+		// in the menu. - remiller
+		menu.removeAll();
 
+		if (!libraryEditor)
+			menu.add(NewStoryModelAction.getInstance());
+		else {
+			final JMenu newMenu;
+			final JMenuItem newCause;
+			final JMenuItem newEffect;
+			final JMenuItem newDescription;
+
+			newMenu = new JMenu(MenuFactory.NEW);
+			newCause = new JMenuItem(NewCauseAction.getInstance());
+			newEffect = new JMenuItem(NewEffectAction.getInstance());
+			newDescription = new JMenuItem(MenuFactory.NEW_DESCRIPTION);
+
+			newMenu.add(NewStoryModelAction.getInstance());
+			newMenu.addSeparator();
+			newMenu.add(newCause);
+			newMenu.add(newEffect);
+			newMenu.add(newDescription);
+
+			menu.add(newMenu);
+		}
+
+		menu.add(OpenStoryModelAction.getInstance());
+		menu.add(ClosePatternModelAction.getInstance());
+		menu.addSeparator();
+
+		menu.add(TestStoryAction.getInstance());
+		menu.addSeparator();
+
+		if (!libraryEditor) {
+			menu.add(SaveModelAction.getInstance());
+			menu.add(SaveStoryModelExplicitlyAction.getInstance());
+		} else {
+			menu.add(SaveLibraryModelAction.getInstance());
+			JMenuItem saveAs = new JMenuItem("Save As (Unimplemented)");
+			saveAs.setEnabled(false);
+			menu.add(saveAs);
+		}
+		menu.addSeparator();
+
+		// add the recent files list
+		short i;
+		for (i = 0; i < FileManager.getInstance().getRecentFileCount(); i++) {
+			menu.add(new OpenRecentFileAction(i));
+		}
+
+		if (i > 0)
+			menu.addSeparator();
+
+		menu.add(ExitScriptEaseAction.getInstance());
 		// Set up a listener to update the file menu's recent file list.
 		// I'm doing this via an anonymous inner class because I don't think its
 		// worth creating a new subclass over. - remiller
@@ -228,43 +246,6 @@ public class MenuFactory {
 						(short) (i - startIndex))), i);
 			}
 		}
-	}
-
-	/**
-	 * Configures the given menu as the File Menu
-	 * 
-	 * @param menu
-	 *            The menu to be configured.
-	 */
-	private static void fillFileMenu(JMenu menu) {
-		// clear the menu to make sure we *only* have File Menu relevant stuff
-		// in the menu. - remiller
-		menu.removeAll();
-
-		menu.add(NewStoryModelAction.getInstance());
-		menu.add(OpenStoryModelAction.getInstance());
-		menu.addSeparator();
-
-		menu.add(TestStoryAction.getInstance());
-		menu.addSeparator();
-
-		menu.add(SaveModelAction.getInstance());
-		menu.add(SaveStoryModelExplicitlyAction.getInstance());
-		menu.addSeparator();
-
-		menu.add(ClosePatternModelAction.getInstance());
-		menu.addSeparator();
-
-		// add the recent files list
-		short i;
-		for (i = 0; i < FileManager.getInstance().getRecentFileCount(); i++) {
-			menu.add(new OpenRecentFileAction(i));
-		}
-
-		if (i > 0)
-			menu.addSeparator();
-
-		menu.add(ExitScriptEaseAction.getInstance());
 	}
 
 	/**
@@ -398,22 +379,7 @@ public class MenuFactory {
 
 			storyComponentBuilderMenu.add(translatorItem);
 		}
-
-		JMenuItem item = new JMenuItem(
-				Il8nResources.getString("Story_Component_Builder"));
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				WindowManager.getInstance().showStoryComponentBuilder();
-			}
-
-		});
-
-		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B,
-				ActionEvent.CTRL_MASK));
-
 		menu.add(storyComponentBuilderMenu);
-		menu.add(item);
 
 		return menu;
 	}
@@ -498,12 +464,14 @@ public class MenuFactory {
 					@Override
 					public void run() {
 						// Get the active model with which to generate code.
-						PatternModel activeModel = PatternModelPool.getInstance()
-								.getActiveModel();
-						if (activeModel != null && activeModel instanceof StoryModel) {
+						PatternModel activeModel = PatternModelManager
+								.getInstance().getActiveModel();
+						if (activeModel != null
+								&& activeModel instanceof StoryModel) {
 							final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
 							final Collection<ScriptInfo> scriptInfos = CodeGenerator
-									.generateCode((StoryModel) activeModel, problems);
+									.generateCode((StoryModel) activeModel,
+											problems);
 
 							String code = "";
 							for (ScriptInfo script : scriptInfos) {

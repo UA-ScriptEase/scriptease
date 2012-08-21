@@ -47,7 +47,7 @@ import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 import scriptease.model.PatternModel;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
@@ -833,8 +833,8 @@ public class ToolBarFactory {
 								questPoint.setFanIn(fanIn - 1);
 
 						case SELECT_GRAPH_NODE:
-						  
-						 	final PatternModel model = PatternModelPool
+
+							final PatternModel model = PatternModelManager
 									.getInstance().getActiveModel();
 
 							if (model != null && model instanceof StoryModel) {
@@ -846,16 +846,18 @@ public class ToolBarFactory {
 
 												QuestPoint questPoint = questPointNode
 														.getQuestPoint();
-												
-												List<JPanel> panels = PanelFactory.getInstance().getPanelsForModel(model);
-												
-												for(JPanel panel : panels)
-												PanelFactory.getInstance().setRootForTreeInPanel(panel, questPoint);
-/*		TODO I'm working on getting rid of this. If I forget to delete it and you find this, go ahead and destroy it
-												SEFrame.getInstance()
-														.activatePanelForQuestPoint(
-																(StoryModel) model,
-																questPoint);*/
+
+												List<JComponent> components = PanelFactory
+														.getInstance()
+														.getComponentsForModel(
+																model);
+
+												for (JComponent component : components)
+													PanelFactory
+															.getInstance()
+															.setRootForTreeInComponent(
+																	component,
+																	questPoint);
 											}
 										});
 							}

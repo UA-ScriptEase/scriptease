@@ -33,7 +33,7 @@ import scriptease.gui.SEFrame;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.Translator.DescriptionKeys;
@@ -853,7 +853,7 @@ public final class ErfFile implements GameModule {
 			out.close();
 		}
 
-		Collection<File> includeList = ((StoryModel) PatternModelPool
+		Collection<File> includeList = ((StoryModel) PatternModelManager
 				.getInstance().getActiveModel()).getTranslator().getIncludes();
 		for (File include : includeList) {
 			try {

@@ -16,6 +16,7 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -42,7 +43,7 @@ public class CloseableTab extends JPanel {
 	 *            The icon to display in the tab. Passing <code>null</code> will
 	 *            show no icon.
 	 */
-	public CloseableTab(final JTabbedPane parent, final JPanel panel,
+	public CloseableTab(final JTabbedPane parent, final JComponent component,
 			final PatternModel model, Icon icon) {
 		// unset the annoying gaps that come with default FlowLayout
 		super(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -79,7 +80,7 @@ public class CloseableTab extends JPanel {
 		// add more space between the label and the button
 		label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
-		closeButton = new TabButton(new CloseStoryTabAction(panel, model));
+		closeButton = new TabButton(new CloseStoryTabAction(component, model));
 		closeButton.setHideActionText(true);
 		this.add(closeButton);
 

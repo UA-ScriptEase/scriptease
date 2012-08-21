@@ -8,12 +8,12 @@ import java.util.List;
 import scriptease.controller.FileManager;
 import scriptease.controller.observer.FileManagerObserver;
 import scriptease.controller.observer.PatternModelPoolEvent;
-import scriptease.controller.observer.PatternModelPoolObserver;
+import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.UndoManagerObserver;
 import scriptease.gui.SEFrame;
 import scriptease.model.PatternModel;
 import scriptease.model.StoryModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 
 /**
  * Maintains multiple modification histories and manages requests for undoing or
@@ -49,7 +49,7 @@ import scriptease.model.PatternModelPool;
  * @author remiller
  * @author mfchurch
  */
-public final class UndoManager implements PatternModelPoolObserver,
+public final class UndoManager implements PatternModelObserver,
 		FileManagerObserver {
 	private final static UndoManager instance = new UndoManager();
 	private ArrayList<WeakReference<UndoManagerObserver>> observers;
@@ -70,7 +70,7 @@ public final class UndoManager implements PatternModelPoolObserver,
 	private boolean performingUndoRedo = false;
 
 	private UndoManager() {
-		PatternModelPool.getInstance().addPoolChangeObserver(this);
+		PatternModelManager.getInstance().addPatternModelPoolObserver(this);
 		FileManager.getInstance().addObserver(this);
 		observers = new ArrayList<WeakReference<UndoManagerObserver>>();
 	}

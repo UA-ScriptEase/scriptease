@@ -1,10 +1,10 @@
 package scriptease.controller.observer;
 
 import scriptease.model.PatternModel;
-import scriptease.model.PatternModelPool;
+import scriptease.model.PatternModelManager;
 
 /**
- * Encapsulates the possible changes in a {@link PatternModelPool}. An instance of
+ * Encapsulates the possible changes in a {@link PatternModelManager}. An instance of
  * <code>PatternModelPoolEvent</code> will be passed to objects who are interested
  * in such changes, who can then query the event for more specific information
  * as to what has changed.

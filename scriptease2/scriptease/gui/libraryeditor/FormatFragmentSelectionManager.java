@@ -1,21 +1,20 @@
-package scriptease.gui.managers;
+package scriptease.gui.libraryeditor;
 
 import scriptease.model.CodeBlock;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
- * A selection manager for the format fragments in the Story Component Builder,
- * in the Code Block Editor, in the Code Editor. This class is a singleton.
+ * A selection manager for the format fragments in the Library Editor, in the
+ * Code Block Editor, in the Code Editor. This class is a singleton.
  * 
  * @author kschenk
  * 
  */
 public class FormatFragmentSelectionManager {
-	private static FormatFragmentSelectionManager instance = new FormatFragmentSelectionManager();
-
 	private AbstractFragment fragment;
-
 	private CodeBlock codeBlock;
+
+	private static FormatFragmentSelectionManager instance = new FormatFragmentSelectionManager();
 
 	public static FormatFragmentSelectionManager getInstance() {
 		return instance;
@@ -40,9 +39,10 @@ public class FormatFragmentSelectionManager {
 	public AbstractFragment getFormatFragment() {
 		return this.fragment;
 	}
-	
+
 	/**
 	 * Returns the code block for the selected format fragment.
+	 * 
 	 * @return
 	 */
 	public CodeBlock getCodeBlock() {

@@ -2,7 +2,6 @@ package scriptease.gui;
 
 import java.awt.Color;
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -12,14 +11,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.SwingWorker.StateValue;
@@ -30,8 +28,6 @@ import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.pane.LibraryPane;
-import scriptease.gui.storycomponentbuilder.StoryComponentBuilderPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.LibraryManager;
@@ -118,7 +114,7 @@ public final class WindowManager {
 	public void showMainFrame() {
 		JFrame frame = SEFrame.getInstance().getFrame();
 
-		frame.setJMenuBar(MenuFactory.createStoryMenuBar());
+		frame.setJMenuBar(MenuFactory.createMainMenuBar(false));
 
 		if (!frame.isVisible())
 			frame.setVisible(true);
@@ -442,16 +438,6 @@ public final class WindowManager {
 	}
 
 	/**
-	 * Shows the Story Component Builder.
-	 */
-	public void showStoryComponentBuilder() {
-		final JFrame scFrame;
-		scFrame = WindowManager.getInstance().buildStoryComponentBuilderFrame();
-		scFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		scFrame.setVisible(true);
-	}
-
-	/**
 	 * Shows a dialog that will let the user either try to retry an action or
 	 * cancel.
 	 * 
@@ -650,38 +636,5 @@ public final class WindowManager {
 			}
 		};
 		return frame;
-	}
-
-	/**
-	 * Creates a new JFrame whose focus will be listened to.
-	 * 
-	 * @return
-	 */
-	private JFrame buildStoryComponentBuilderFrame() {
-		//TODO Get rid of this entire method!
-		
-		final JFrame scbFrame;
-		final JComponent editingPane;
-		final LibraryPane libraryPane;
-		final JPanel librarySelectionPane;
-
-		scbFrame = new JFrame("Story Component Builder");
-
-		libraryPane = new LibraryPane(true);
-
-		librarySelectionPane = StoryComponentBuilderPanelFactory.getInstance()
-				.buildStoryComponentLibraryPanel(libraryPane);
-
-		editingPane = StoryComponentBuilderPanelFactory.getInstance()
-				.buildStoryComponentEditorScrollPane(libraryPane);
-
-		scbFrame.setJMenuBar(MenuFactory.buildBuilderMenuBar());
-		scbFrame.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-				librarySelectionPane, editingPane));
-
-		scbFrame.setSize(new Dimension(1200, 600));
-		scbFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-		return scbFrame;
 	}
 }

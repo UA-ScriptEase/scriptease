@@ -3,7 +3,6 @@ package scriptease.controller.io.converter;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.StoryComponentClassNameConverter;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
@@ -91,8 +90,7 @@ public class StoryItemSequenceConverter extends ComplexStoryComponentConverter {
 			for (String name : (Collection<String>) context.convertAnother(
 					storyItemSequence, ArrayList.class)) {
 				storyItemSequence.registerChildType(
-						StoryComponentClassNameConverter
-								.convertToModelClass(name),
+						this.convertToModelClass(name),
 						ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 			}
 		}
@@ -117,4 +115,22 @@ public class StoryItemSequenceConverter extends ComplexStoryComponentConverter {
 
 		return storyItemSequence;
 	}
+
+	private Class<? extends StoryComponent> convertToModelClass(String name) {
+
+		if (name.equals("ScriptIt")) {
+			return ScriptIt.class;
+		} else if (name.equals("KnowIt")) {
+			return KnowIt.class;
+		} else if (name.equals("StoryComponentContainer")) {
+			return StoryComponentContainer.class;
+		} else if (name.equals("AskIt")) {
+			return AskIt.class;
+		} else if (name.equals("StoryItemSequence")) {
+			return StoryItemSequence.class;
+		} else
+			throw new IllegalStateException("Unable to convert between Name ["
+					+ name + "] and a valid model class");
+	}
+
 }

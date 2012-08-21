@@ -51,7 +51,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 
 		setAction(action);
 		// add self as observers of the translator and library
-		LibraryManager.getInstance().addLibraryManagerListener(this);
+		LibraryManager.getInstance().addLibraryManagerObserver(this);
 		TranslatorManager.getInstance().addTranslatorObserver(this);
 
 		this.updateName();
@@ -83,7 +83,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 		else {
 			this.typeBuilder = new TypeSelectionDialogBuilder(newAction);
 		}
-		
+
 		this.updateName();
 	}
 
@@ -168,10 +168,11 @@ public final class TypeSelectionAction extends AbstractAction implements
 			public void run() {
 				if (managerEvent.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
 					final LibraryEvent event = managerEvent.getEvent();
-					if (event.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED
-							|| event.getEventType() == LibraryEvent.STORYCOMPONENT_REMOVED) {
-						TypeSelectionAction.this.updateEnabledState();
-					}
+					if (event != null)
+						if (event.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED
+								|| event.getEventType() == LibraryEvent.STORYCOMPONENT_REMOVED) {
+							TypeSelectionAction.this.updateEnabledState();
+						}
 				}
 			}
 		});

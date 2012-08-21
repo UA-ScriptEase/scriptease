@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.observer.PatternModelPoolEvent;
-import scriptease.controller.observer.PatternModelPoolObserver;
+import scriptease.controller.observer.PatternModelObserver;
 import scriptease.gui.SEFrame;
 import scriptease.translator.Translator;
 
@@ -16,7 +16,7 @@ import scriptease.translator.Translator;
  * be <i>at most</i> one active model at any one time.<br>
  * <br>
  * Interested parties can register themselves with <code>PatternModelPool</code>
- * as {@link PatternModelPoolObserver}s and be notified of changes to the pool
+ * as {@link PatternModelObserver}s and be notified of changes to the pool
  * when they occur.<br>
  * <br>
  * <code>PatternModelPool</code> is a Singleton class since it seems unlikely that
@@ -25,28 +25,28 @@ import scriptease.translator.Translator;
  * @author remiller
  * @author kschenk
  */
-public final class PatternModelPool {
+public final class PatternModelManager {
 	private final List<PatternModel> models;
-	private final List<WeakReference<PatternModelPoolObserver>> observers;
+	private final List<WeakReference<PatternModelObserver>> observers;
 	private PatternModel activeModel;
 
-	private final static PatternModelPool instance = new PatternModelPool();
+	private final static PatternModelManager instance = new PatternModelManager();
 
 	/**
 	 * Gets the sole instance of the PatternModelPool.
 	 * 
 	 * @return the PatternModel pool
 	 */
-	public static PatternModelPool getInstance() {
-		return PatternModelPool.instance;
+	public static PatternModelManager getInstance() {
+		return PatternModelManager.instance;
 	}
 
 	/**
 	 * Builds a new PatternModelPool that has no active model
 	 */
-	private PatternModelPool() {
+	private PatternModelManager() {
 		this.models = new ArrayList<PatternModel>();
-		this.observers = new ArrayList<WeakReference<PatternModelPoolObserver>>();
+		this.observers = new ArrayList<WeakReference<PatternModelObserver>>();
 		this.activeModel = null;
 	}
 
@@ -160,8 +160,8 @@ public final class PatternModelPool {
 	 * @param observer
 	 *            the listener to add
 	 */
-	public void addPoolChangeObserver(PatternModelPoolObserver observer) {
-		this.observers.add(new WeakReference<PatternModelPoolObserver>(observer));
+	public void addPatternModelPoolObserver(PatternModelObserver observer) {
+		this.observers.add(new WeakReference<PatternModelObserver>(observer));
 	}
 
 	/**
@@ -171,8 +171,8 @@ public final class PatternModelPool {
 	 * @param observer
 	 *            the listener to remove
 	 */
-	public void removePoolChangeObserver(PatternModelPoolObserver observer) {
-		for (WeakReference<PatternModelPoolObserver> reference : this.observers) {
+	public void removePoolChangeObserver(PatternModelObserver observer) {
+		for (WeakReference<PatternModelObserver> reference : this.observers) {
 			if (reference.get() == observer) {
 				this.observers.remove(reference);
 				return;
@@ -181,11 +181,11 @@ public final class PatternModelPool {
 	}
 
 	private void notifyChange(PatternModel model, short eventType) {
-		Collection<WeakReference<PatternModelPoolObserver>> observersCopy = new ArrayList<WeakReference<PatternModelPoolObserver>>(
+		Collection<WeakReference<PatternModelObserver>> observersCopy = new ArrayList<WeakReference<PatternModelObserver>>(
 				this.observers);
 
-		for (WeakReference<PatternModelPoolObserver> observerRef : observersCopy) {
-			PatternModelPoolObserver patternModelPoolObserver = observerRef.get();
+		for (WeakReference<PatternModelObserver> observerRef : observersCopy) {
+			PatternModelObserver patternModelPoolObserver = observerRef.get();
 			if (patternModelPoolObserver != null)
 				patternModelPoolObserver.modelChanged(new PatternModelPoolEvent(
 						model, eventType));

@@ -8,7 +8,6 @@ import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 import com.thoughtworks.xstream.XStreamException;
