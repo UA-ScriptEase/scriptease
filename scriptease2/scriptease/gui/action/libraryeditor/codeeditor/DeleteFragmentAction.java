@@ -1,4 +1,4 @@
-package scriptease.gui.action.storycomponentbuilder.codeeditor;
+package scriptease.gui.action.libraryeditor.codeeditor;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;

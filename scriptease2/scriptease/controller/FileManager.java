@@ -24,6 +24,7 @@ import scriptease.controller.io.FileIO;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.PanelFactory;
 import scriptease.gui.SEFrame;
 import scriptease.gui.WindowManager;
 import scriptease.gui.internationalization.Il8nResources;
@@ -648,11 +649,14 @@ public final class FileManager {
 									new IOError(e));
 				}
 
-				FileManager.this.openFiles.remove(FileManager.this
-						.reverseLookup(storyModel));
+				if (PanelFactory.getInstance()
+						.getComponentsForModel(storyModel).size() < 1) {
+					PatternModelManager.getInstance().remove(storyModel);
+				
+					FileManager.this.openFiles.remove(FileManager.this
+							.reverseLookup(storyModel));
 
-				SEFrame.getInstance().removeAllComponentsForModel(storyModel);
-				PatternModelManager.getInstance().remove(storyModel);
+				}
 			}
 		});
 

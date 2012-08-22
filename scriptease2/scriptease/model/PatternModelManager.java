@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import scriptease.controller.observer.PatternModelPoolEvent;
+import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.gui.SEFrame;
 import scriptease.translator.Translator;
@@ -118,7 +118,7 @@ public final class PatternModelManager {
 	 */
 	public void add(PatternModel model, boolean activate) {
 		if (this.models.add(model))
-			this.notifyChange(model, PatternModelPoolEvent.PATTERN_MODEL_ADDED);
+			this.notifyChange(model, PatternModelEvent.PATTERN_MODEL_ADDED);
 
 		if (activate)
 			this.activate(model);
@@ -134,7 +134,7 @@ public final class PatternModelManager {
 		if (this.activeModel == model)
 			this.activeModel = null;
 		if (this.models.remove(model))
-			this.notifyChange(model, PatternModelPoolEvent.PATTERN_MODEL_REMOVED);
+			this.notifyChange(model, PatternModelEvent.PATTERN_MODEL_REMOVED);
 	}
 
 	/**
@@ -150,7 +150,7 @@ public final class PatternModelManager {
 		if (model != null)
 			SEFrame.getInstance().setStatus(model + " activated");
 
-		this.notifyChange(model, PatternModelPoolEvent.PATTERN_MODEL_ACTIVATED);
+		this.notifyChange(model, PatternModelEvent.PATTERN_MODEL_ACTIVATED);
 	}
 
 	/**
@@ -187,7 +187,7 @@ public final class PatternModelManager {
 		for (WeakReference<PatternModelObserver> observerRef : observersCopy) {
 			PatternModelObserver patternModelPoolObserver = observerRef.get();
 			if (patternModelPoolObserver != null)
-				patternModelPoolObserver.modelChanged(new PatternModelPoolEvent(
+				patternModelPoolObserver.modelChanged(new PatternModelEvent(
 						model, eventType));
 		}
 	}

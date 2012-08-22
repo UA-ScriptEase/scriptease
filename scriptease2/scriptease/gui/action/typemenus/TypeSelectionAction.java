@@ -112,7 +112,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 	 * will display the number of types plus " Types".
 	 */
 	public void updateName() {
-		final int selectedCount = this.typeBuilder.countSelectedTypes();
+		final int selectedCount = this.typeBuilder.getSelectedTypes().size();
 		String name;
 		final Translator activeTranslator = TranslatorManager.getInstance()
 				.getActiveTranslator();

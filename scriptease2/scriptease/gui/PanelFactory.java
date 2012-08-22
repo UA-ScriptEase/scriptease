@@ -58,9 +58,9 @@ public class PanelFactory {
 
 		ToolBarButtonAction.addJComponent(graphPanel);
 
-		final JToolBar graphToolBar = ToolBarFactory
+		final JToolBar graphToolBar = ToolBarFactory.getInstance()
 				.buildGraphEditorToolBar(graphPanel);
-		final JToolBar questToolBar = ToolBarFactory
+		final JToolBar questToolBar = ToolBarFactory.getInstance()
 				.buildQuestEditorToolBar(graphPanel);
 
 		questPanel.add(graphToolBar.add(questToolBar), BorderLayout.PAGE_START);
@@ -91,10 +91,10 @@ public class PanelFactory {
 
 		ToolBarButtonAction.addJComponent(graphPanel);
 
-		final JToolBar graphToolBar = ToolBarFactory
+		final JToolBar graphToolBar = ToolBarFactory.getInstance()
 				.buildGraphEditorToolBar(graphPanel);
 
-		final JToolBar describeItToolBar = ToolBarFactory
+		final JToolBar describeItToolBar = ToolBarFactory.getInstance()
 				.buildDescribeItToolBar(editedDescribeIt, graphPanel);
 
 		describeItPanel.add(graphToolBar.add(describeItToolBar),
@@ -129,7 +129,7 @@ public class PanelFactory {
 		// otherwise return an empty hidden JPanel
 		JPanel jPanel = new JPanel();
 		jPanel.setVisible(false);
-		jPanel.setSize(new Dimension(0,0));
+		jPanel.setSize(new Dimension(0, 0));
 		return jPanel;
 	}
 

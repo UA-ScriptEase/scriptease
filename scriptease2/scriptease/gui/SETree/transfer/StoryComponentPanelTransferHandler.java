@@ -92,8 +92,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (comp instanceof StoryComponentPanel) {
 			final StoryComponentPanel panel;
 			// Get the parent selected StoryComponents, since the children will
-			// be
-			// grabbed implicitly from the model
+			// be grabbed implicitly from the model
 			panel = (StoryComponentPanel) comp;
 			final StoryComponentPanelManager selectionManager = panel
 					.getSelectionManager();

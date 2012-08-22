@@ -5,7 +5,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import javax.swing.BorderFactory;
@@ -15,6 +14,7 @@ import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -27,11 +27,11 @@ import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpGraphNodeVisitor;
 import scriptease.controller.AbstractNoOpModelVisitor;
 import scriptease.controller.FileManager;
+import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
-import scriptease.controller.observer.PatternModelPoolEvent;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
-import scriptease.gui.pane.CloseableTab;
+import scriptease.gui.pane.CloseableModelTab;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointNode;
 import scriptease.model.LibraryModel;
@@ -55,19 +55,13 @@ import scriptease.translator.TranslatorManager;
 
 @SuppressWarnings("serial")
 public final class SEFrame implements PatternModelObserver {
-	private static final int MIN_HEIGHT = 480;
-	private static final int MIN_WIDTH = 640;
-
 	private final JTabbedPane storyTabs;
 	private final JComponent middlePane;
 	private JSplitPane rightSplit;
 	private JSplitPane leftSplit;
 	private TimedLabel statusLabel;
-	private QuestPoint startQuestPoint;
 
 	private final JFrame seFrame;
-
-	public static String preferredLayout;
 
 	private static final SEFrame instance = new SEFrame();
 
@@ -81,14 +75,16 @@ public final class SEFrame implements PatternModelObserver {
 	}
 
 	private SEFrame() {
-		seFrame = WindowManager.getInstance().buildScriptEaseFrame(
+		this.seFrame = WindowManager.getInstance().buildScriptEaseFrame(
 				ScriptEase.TITLE);
-
-		seFrame.setMinimumSize(new Dimension(SEFrame.MIN_WIDTH,
-				SEFrame.MIN_HEIGHT));
-		seFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
 		this.storyTabs = new JTabbedPane();
+		this.middlePane = new JPanel();
+
+		final int MIN_HEIGHT = 480;
+		final int MIN_WIDTH = 640;
+
+		this.seFrame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
+		this.seFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		// Register a change listener
 		this.storyTabs.addChangeListener(new ChangeListener() {
@@ -108,7 +104,6 @@ public final class SEFrame implements PatternModelObserver {
 			}
 		});
 
-		this.middlePane = new JPanel();
 		this.middlePane.setLayout(new GridLayout(1, 1));
 		this.middlePane.add(storyTabs);
 
@@ -127,20 +122,6 @@ public final class SEFrame implements PatternModelObserver {
 	}
 
 	/**
-	 * Sets the Status Label to the given message
-	 * 
-	 * @param message
-	 *            The message to display.
-	 */
-	public void setStatus(final String message) {
-		if (this.statusLabel != null) {
-			this.statusLabel.queueText(message);
-		} else
-			System.err
-					.println("Tried to set the message of a null status label");
-	}
-
-	/**
 	 * Used by the constructor to set up and lay out the frame's internals. Also
 	 * used to rebuild the frame's internals when the preferred layout changes.
 	 */
@@ -152,6 +133,8 @@ public final class SEFrame implements PatternModelObserver {
 		final JComponent statusBar = this.buildStatusBar();
 
 		final GroupLayout layout = new GroupLayout(content);
+		final String preferredLayout;
+
 		content.setLayout(layout);
 
 		// Get the preferred layout.
@@ -210,32 +193,17 @@ public final class SEFrame implements PatternModelObserver {
 	}
 
 	/**
-	 * JLabel with a TranslatorObserver since we cannot use WeakReferences
+	 * Sets the Status Label to the given message
 	 * 
-	 * @author mfchurch
-	 * 
+	 * @param message
+	 *            The message to display.
 	 */
-	private class GameLabel extends JLabel implements TranslatorObserver {
-		private final static String noTransText = "-None-";
-
-		public GameLabel() {
-			super(noTransText);
-
-			TranslatorManager.getInstance().addTranslatorObserver(this);
-		}
-
-		@Override
-		public void translatorLoaded(Translator newTranslator) {
-			if (newTranslator != null) {
-				this.setText(newTranslator.getName());
-				this.setEnabled(true);
-				this.setIcon(newTranslator.getIcon());
-			} else {
-				this.setText(noTransText);
-				this.setEnabled(false);
-				this.setIcon(null);
-			}
-		}
+	public void setStatus(final String message) {
+		if (this.statusLabel != null) {
+			this.statusLabel.queueText(message);
+		} else
+			System.err
+					.println("Tried to set the message of a null status label");
 	}
 
 	/**
@@ -275,6 +243,9 @@ public final class SEFrame implements PatternModelObserver {
 	private void updateGameObjectPane(StoryModel model) {
 		final JPanel newGameObjectPane = PanelFactory.getInstance()
 				.buildGameObjectPane(model);
+		final String preferredLayout;
+		preferredLayout = ScriptEase.getInstance().getPreference(
+				ScriptEase.PREFERRED_LAYOUT_KEY);
 
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
 			this.leftSplit.setBottomComponent(newGameObjectPane);
@@ -289,10 +260,12 @@ public final class SEFrame implements PatternModelObserver {
 
 	/**
 	 * Hides the game object pane from view.
-	 * 
 	 */
 	private void hideGameObjectPane() {
 		final JPanel newPanel;
+		final String preferredLayout;
+		preferredLayout = ScriptEase.getInstance().getPreference(
+				ScriptEase.PREFERRED_LAYOUT_KEY);
 
 		newPanel = new JPanel();
 		newPanel.setVisible(false);
@@ -308,40 +281,11 @@ public final class SEFrame implements PatternModelObserver {
 	}
 
 	/**
-	 * Creates a tab for the given LibraryModel, allowing the user to edit it
-	 * with the story component builder.
+	 * Creates a tab for the given model.
 	 * 
 	 * @param model
 	 */
-	public void createTabForModel(LibraryModel model) {
-		final Icon icon;
-		final JScrollPane scbScrollPane;
-		final CloseableTab newTab;
-		if (model.getTranslator() != null)
-			icon = model.getTranslator().getIcon();
-		else
-			icon = null;
-
-		scbScrollPane = PanelFactory.getInstance().buildLibraryEditorPanel(
-				model);
-		newTab = new CloseableTab(this.storyTabs, scbScrollPane, model, icon);
-
-		scbScrollPane.getVerticalScrollBar().setUnitIncrement(
-				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
-
-		this.storyTabs.addTab(model.getName(), icon, scbScrollPane);
-		this.storyTabs.setTabComponentAt(
-				this.storyTabs.indexOfComponent(scbScrollPane), newTab);
-		this.storyTabs.setSelectedComponent(scbScrollPane);
-	}
-
-	/**
-	 * Creates a tab for the given StoryModel defaulting to the starting
-	 * QuestPoint as editing
-	 * 
-	 * @param model
-	 */
-	public void createTabForModel(StoryModel model) {
+	public void createTabForModel(PatternModel model) {
 		final Icon icon;
 
 		if (model.getTranslator() != null)
@@ -349,37 +293,72 @@ public final class SEFrame implements PatternModelObserver {
 		else
 			icon = null;
 
-		model.getRoot().getStartPoint()
-				.process(new AbstractNoOpGraphNodeVisitor() {
-					@Override
-					public void processQuestPointNode(
-							QuestPointNode questPointNode) {
+		model.process(new AbstractNoOpModelVisitor() {
+			@Override
+			public void processLibraryModel(LibraryModel libraryModel) {
+				// Creates a Library Editor panel
+				final JScrollPane scbScrollPane;
+				final CloseableModelTab newTab;
 
-						startQuestPoint = questPointNode.getQuestPoint();
-					}
-				});
+				scbScrollPane = PanelFactory.getInstance()
+						.buildLibraryEditorPanel(libraryModel);
+				newTab = new CloseableModelTab(SEFrame.this.storyTabs,
+						scbScrollPane, libraryModel, icon);
 
-		if (startQuestPoint != null) {
-			final JPanel newPanel;
-			final CloseableTab newTab;
-			String modelTitle;
-			final String title;
+				scbScrollPane.getVerticalScrollBar().setUnitIncrement(
+						ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
-			newPanel = PanelFactory.getInstance().buildStoryPanel(model,
-					startQuestPoint);
-			newTab = new CloseableTab(this.storyTabs, newPanel, model, icon);
-			modelTitle = model.getTitle();
-			if (modelTitle == null || modelTitle.equals(""))
-				modelTitle = "<Untitled>";
+				SEFrame.this.storyTabs.addTab(libraryModel.getName()
+						+ "[Editor]", icon, scbScrollPane);
+				SEFrame.this.storyTabs.setTabComponentAt(
+						SEFrame.this.storyTabs.indexOfComponent(scbScrollPane),
+						newTab);
+			}
 
-			title = modelTitle + "("
-					+ model.getModule().getLocation().getName() + ")";
+			@Override
+			public void processStoryModel(final StoryModel storyModel) {
+				// Creates a story editor panel with a quest graph
+				storyModel.getRoot().getStartPoint()
+						.process(new AbstractNoOpGraphNodeVisitor() {
+							@Override
+							public void processQuestPointNode(
+									QuestPointNode questPointNode) {
+								final QuestPoint startQuestPoint;
+								final JPanel newPanel;
+								final CloseableModelTab newTab;
+								String modelTitle;
+								final String title;
 
-			this.storyTabs.addTab(title, icon, newPanel);
-			this.storyTabs.setTabComponentAt(
-					this.storyTabs.indexOfComponent(newPanel), newTab);
-			this.storyTabs.setSelectedComponent(newPanel);
-		}
+								startQuestPoint = questPointNode
+										.getQuestPoint();
+								newPanel = PanelFactory.getInstance()
+										.buildStoryPanel(storyModel,
+												startQuestPoint);
+								newTab = new CloseableModelTab(
+										SEFrame.this.storyTabs, newPanel,
+										storyModel, icon);
+								modelTitle = storyModel.getTitle();
+
+								if (modelTitle == null || modelTitle.equals(""))
+									modelTitle = "<Untitled>";
+
+								title = modelTitle
+										+ "("
+										+ storyModel.getModule().getLocation()
+												.getName() + ")";
+
+								SEFrame.this.storyTabs.addTab(title, icon,
+										newPanel);
+								SEFrame.this.storyTabs.setTabComponentAt(
+										SEFrame.this.storyTabs
+												.indexOfComponent(newPanel),
+										newTab);
+								SEFrame.this.storyTabs
+										.setSelectedComponent(newPanel);
+							}
+						});
+			}
+		});
 	}
 
 	/**
@@ -392,19 +371,6 @@ public final class SEFrame implements PatternModelObserver {
 	}
 
 	/**
-	 * @param activeModel
-	 *            The StoryModel whose storyPanel is to be removed.
-	 */
-	public void removeAllComponentsForModel(final PatternModel activeModel) {
-		final List<JComponent> components = PanelFactory.getInstance()
-				.getComponentsForModel(activeModel);
-
-		for (JComponent component : components) {
-			this.removeComponentForModel(component, activeModel);
-		}
-	}
-
-	/**
 	 * Removes the given StoryPanel from list of StoryTabs and the list of
 	 * StoryPanels for the given model. storyTabs.remove should not be called
 	 * outside of this method.
@@ -412,10 +378,7 @@ public final class SEFrame implements PatternModelObserver {
 	 * @param component
 	 * @param model
 	 */
-	public void removeComponentForModel(JComponent component, PatternModel model) {
-
-		// TODO This is where we update things when tab is closed.
-
+	public void removeModelComponent(JComponent component, PatternModel model) {
 		// remove the panel
 		PanelFactory.getInstance().removeComponentForModel(model, component);
 
@@ -435,8 +398,6 @@ public final class SEFrame implements PatternModelObserver {
 
 				@Override
 				public void processStoryModel(StoryModel storyModel) {
-					// TODO This closes all story models that are the same if
-					// two of the same ones are opened.
 					FileManager.getInstance().close(storyModel);
 				}
 			});
@@ -444,11 +405,11 @@ public final class SEFrame implements PatternModelObserver {
 	}
 
 	@Override
-	public void modelChanged(PatternModelPoolEvent event) {
+	public void modelChanged(PatternModelEvent event) {
 		final short eventType = event.getEventType();
 		final PatternModel model = event.getPatternModel();
 
-		if (eventType == PatternModelPoolEvent.PATTERN_MODEL_ACTIVATED) {
+		if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
 
 			model.process(new AbstractNoOpModelVisitor() {
 
@@ -470,21 +431,36 @@ public final class SEFrame implements PatternModelObserver {
 
 				@Override
 				public void processLibraryModel(LibraryModel libraryModel) {
-					SEFrame.this.getFrame().setJMenuBar(
-							MenuFactory.createMainMenuBar(true));
+					// This sucks, but we need to revalidate the menu bar.
+					// http://bugs.sun.com/view_bug.do?bug_id=4949810
+					final JMenuBar bar = MenuFactory.createMainMenuBar(true);
+					SEFrame.this.getFrame().setJMenuBar(bar);
 					SEFrame.this.hideGameObjectPane();
 					this.setScriptEaseTitle();
+					bar.revalidate();
+
 				}
 
 				@Override
 				public void processStoryModel(StoryModel storyModel) {
-					SEFrame.this.getFrame().setJMenuBar(
-							MenuFactory.createMainMenuBar(false));
+					// This sucks, but we need to revalidate the menu bar.
+					// http://bugs.sun.com/view_bug.do?bug_id=4949810
+					final JMenuBar bar = MenuFactory.createMainMenuBar(false);
+					SEFrame.this.getFrame().setJMenuBar(bar);
 					SEFrame.this.updateGameObjectPane(storyModel);
 					this.setScriptEaseTitle();
-
+					bar.revalidate();
 				}
 			});
+		} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED
+				&& PatternModelManager.getInstance().getActiveModel() == null) {
+			this.hideGameObjectPane();
+			// This sucks, but we need to revalidate the menu bar.
+			// http://bugs.sun.com/view_bug.do?bug_id=4949810
+			final JMenuBar bar = MenuFactory.createMainMenuBar(false);
+			seFrame.setJMenuBar(bar);
+			seFrame.setTitle(ScriptEase.TITLE);
+			bar.revalidate();
 		}
 	}
 
@@ -527,6 +503,35 @@ public final class SEFrame implements PatternModelObserver {
 			messages.add(text);
 			if (this.getText().isEmpty())
 				setText(text);
+		}
+	}
+
+	/**
+	 * JLabel with a TranslatorObserver since we cannot use WeakReferences
+	 * 
+	 * @author mfchurch
+	 * 
+	 */
+	private class GameLabel extends JLabel implements TranslatorObserver {
+		private final static String noTransText = "-None-";
+
+		public GameLabel() {
+			super(noTransText);
+
+			TranslatorManager.getInstance().addTranslatorObserver(this);
+		}
+
+		@Override
+		public void translatorLoaded(Translator newTranslator) {
+			if (newTranslator != null) {
+				this.setText(newTranslator.getName());
+				this.setEnabled(true);
+				this.setIcon(newTranslator.getIcon());
+			} else {
+				this.setText(noTransText);
+				this.setEnabled(false);
+				this.setIcon(null);
+			}
 		}
 	}
 }

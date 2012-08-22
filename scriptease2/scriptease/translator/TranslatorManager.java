@@ -12,7 +12,7 @@ import java.util.Set;
 
 import scriptease.ScriptEase;
 import scriptease.ScriptEase.ConfigurationKeys;
-import scriptease.controller.observer.PatternModelPoolEvent;
+import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.SEFrame;
@@ -168,7 +168,7 @@ public class TranslatorManager implements PatternModelObserver {
 	}
 
 	/**
-	 * Gets all translators that ScriptEase knows about
+	 * Gets all translators that ScriptEase knows about.
 	 * 
 	 * @return all translators
 	 */
@@ -302,16 +302,16 @@ public class TranslatorManager implements PatternModelObserver {
 	}
 
 	@Override
-	public void modelChanged(PatternModelPoolEvent event) {
+	public void modelChanged(PatternModelEvent event) {
 		final short eventType = event.getEventType();
 		final PatternModel model = event.getPatternModel();
 		Translator translator = (model == null ? null : model.getTranslator());
 
-		if (eventType == PatternModelPoolEvent.PATTERN_MODEL_ACTIVATED) {
+		if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
 			if (this.activeTranslator != translator) {
 				this.setActiveTranslator(translator);
 			}
-		} else if (eventType == PatternModelPoolEvent.PATTERN_MODEL_REMOVED) {
+		} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED) {
 			if (!PatternModelManager.getInstance().usingTranslator(translator))
 				translator.unLoadTranslator();
 		}

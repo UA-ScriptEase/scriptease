@@ -13,7 +13,7 @@ import scriptease.controller.observer.LibraryEvent;
 import scriptease.controller.observer.LibraryManagerEvent;
 import scriptease.controller.observer.LibraryManagerObserver;
 import scriptease.controller.observer.LibraryObserver;
-import scriptease.controller.observer.PatternModelPoolEvent;
+import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.model.atomic.KnowIt;
@@ -282,11 +282,11 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 * translator, removes the translator from loadedTranslators.
 	 */
 	@Override
-	public void modelChanged(PatternModelPoolEvent event) {
-		if (event.getEventType() == PatternModelPoolEvent.PATTERN_MODEL_REMOVED)
+	public void modelChanged(PatternModelEvent event) {
+		if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED)
 			for (Translator translator : this.loadedTranslators.keySet()) {
 				if (!PatternModelManager.getInstance().usingTranslator(translator)) {
-					this.remove(loadedTranslators.get(translator));
+					//this.remove(loadedTranslators.get(translator));
 					loadedTranslators.remove(translator);
 					break;
 				}
