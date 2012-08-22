@@ -202,25 +202,4 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		return "StoryComponentPanelTree [" + rootPanel.getStoryComponent()
 				+ "]";
 	}
-
-	/**
-	 * Registers a new listener to be notified of tree selection changes.
-	 * 
-	 * @param listener
-	 *            The listener to register.
-	 */
-	public void addTreeSelectionListener(TreeSelectionListener listener) {
-		this.selectionManager.addTreeSelectionListener(listener);
-	}
-
-	/**
-	 * Unregisters a listener to be no longer notified of tree selection
-	 * changes.
-	 * 
-	 * @param listener
-	 *            The listener to unregister.
-	 */
-	public void removeTreeSelectionListener(TreeSelectionListener listener) {
-		this.selectionManager.removeTreeSelectionListener(listener);
-	}
 }

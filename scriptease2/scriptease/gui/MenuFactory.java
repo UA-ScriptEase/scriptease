@@ -2,7 +2,6 @@ package scriptease.gui;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -30,6 +29,7 @@ import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.FileManager;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
+import scriptease.gui.action.DeleteAction;
 import scriptease.gui.action.file.ClosePatternModelAction;
 import scriptease.gui.action.file.NewStoryModelAction;
 import scriptease.gui.action.file.OpenRecentFileAction;
@@ -40,7 +40,6 @@ import scriptease.gui.action.file.SaveStoryModelExplicitlyAction;
 import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
 import scriptease.gui.action.libraryeditor.NewEffectAction;
-import scriptease.gui.action.story.DeleteStoryComponentAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
@@ -316,7 +315,7 @@ public class MenuFactory {
 		editMenu.add(pasteItem);
 
 		// delete item
-		editMenu.add(DeleteStoryComponentAction.getInstance());
+		editMenu.add(DeleteAction.getInstance());
 
 		editMenu.addSeparator();
 
