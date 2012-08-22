@@ -2,28 +2,20 @@ package scriptease.gui.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
 import javax.swing.FocusManager;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 
-import scriptease.gui.PanelFactory;
-import scriptease.gui.SEFrame;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
-import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
-import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
-import scriptease.model.PatternModel;
+import scriptease.model.LibraryModel;
 import scriptease.model.PatternModelManager;
-import scriptease.model.StoryModel;
+import scriptease.translator.APIDictionary;
+import scriptease.translator.Translator;
+import scriptease.translator.TranslatorManager;
 
 /**
  * Represents and performs the Delete command, as well as encapsulates its
@@ -73,24 +65,37 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 		final Component focusOwner;
 
 		focusOwner = FocusManager.getCurrentManager().getFocusOwner();
-		
+
 		if (focusOwner instanceof StoryComponentPanel) {
-			//Leave this be. It lets us delete many at once.
 			final StoryComponentPanel panel;
 			panel = (StoryComponentPanel) focusOwner;
-			
+
 			panel.getSelectionManager().deleteSelected();
-			//this.getActiveSelectionManager().deleteSelected();
-		} else if (focusOwner instanceof StoryComponentPanelJList) {
+		} else if (focusOwner instanceof StoryComponentPanelJList
+				&& PatternModelManager.getInstance().getActiveModel() instanceof LibraryModel) {
 			final StoryComponentPanelJList list;
 			list = (StoryComponentPanelJList) focusOwner;
-			
-			//Git zee selected story components and EXTERMEENATE ZEM!
+
+			for (Object selectedObject : list.getSelectedValues()) {
+				final StoryComponentPanel selectedPanel;
+				selectedPanel = (StoryComponentPanel) selectedObject;
+
+				final Translator activeTranslator;
+				final APIDictionary apiDictionary;
+				final LibraryModel libraryModel;
+
+				activeTranslator = TranslatorManager.getInstance()
+						.getActiveTranslator();
+				apiDictionary = activeTranslator.getApiDictionary();
+				libraryModel = apiDictionary.getLibrary();
+
+				libraryModel.remove(selectedPanel.getStoryComponent());
+			}
 		} else if (focusOwner instanceof GraphPanel) {
 			final GraphPanel graphPanel;
 			graphPanel = (GraphPanel) focusOwner;
-			
-			//Get the selected quest point and 0bl173r4t3 1t
+
+			// Get the selected quest point and 0bl173r4t3 1t
 		}
 	}
 }

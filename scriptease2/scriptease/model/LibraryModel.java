@@ -226,6 +226,52 @@ public class LibraryModel extends PatternModel implements
 		component.process(new CategoryAdder());
 	}
 
+	public void remove(StoryComponent component) {
+		component.process(new AbstractNoOpStoryVisitor() {
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				final boolean success;
+				if (scriptIt.isCause()) {
+					success = LibraryModel.this.causesCategory
+							.removeStoryChild(scriptIt);
+					if (success)
+						scriptIt.removeStoryComponentObserver(LibraryModel.this);
+				} else {
+					success = LibraryModel.this.effectsCategory
+							.removeStoryChild(scriptIt);
+					if (success)
+						scriptIt.removeStoryComponentObserver(LibraryModel.this);
+				}
+			}
+
+			@Override
+			public void processAskIt(AskIt askIt) {
+				final boolean success = LibraryModel.this.effectsCategory
+						.removeStoryChild(askIt);
+				if (success)
+					askIt.removeStoryComponentObserver(LibraryModel.this);
+			}
+
+			@Override
+			public void processKnowIt(KnowIt knowIt) {
+				final boolean success = LibraryModel.this.descriptionsCategory
+						.removeStoryChild(knowIt);
+				if (success) {
+					knowIt.removeStoryComponentObserver(LibraryModel.this);
+				}
+			}
+
+			@Override
+			public void processStoryComponentContainer(
+					StoryComponentContainer container) {
+				final boolean success = LibraryModel.this.folderCategory
+						.removeStoryChild(container);
+				if (success)
+					container.removeStoryComponentObserver(LibraryModel.this);
+			}
+		});
+	}
+
 	public void addAll(Collection<? extends StoryComponent> components) {
 		for (StoryComponent component : components) {
 			this.add(component);
@@ -281,9 +327,9 @@ public class LibraryModel extends PatternModel implements
 	 */
 	public Collection<StoryComponent> getMainStoryComponents() {
 		final Collection<StoryComponent> components;
-		
+
 		components = new ArrayList<StoryComponent>();
-		
+
 		components.addAll(this.effectsCategory.getChildren());
 		components.addAll(this.causesCategory.getChildren());
 		components.addAll(this.descriptionsCategory.getChildren());
@@ -298,9 +344,9 @@ public class LibraryModel extends PatternModel implements
 	 */
 	public Collection<StoryComponent> getAllStoryComponents() {
 		final Collection<StoryComponent> components;
-		
+
 		components = new ArrayList<StoryComponent>();
-		
+
 		components.addAll(this.effectsCategory.getChildren());
 		components.addAll(this.causesCategory.getChildren());
 		components.addAll(this.descriptionsCategory.getChildren());
