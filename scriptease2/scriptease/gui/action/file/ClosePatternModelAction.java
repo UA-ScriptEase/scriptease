@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
 import scriptease.gui.SEFrame;
@@ -65,7 +66,10 @@ public final class ClosePatternModelAction extends ActiveModelSensitiveAction {
 		activeModel = PatternModelManager.getInstance().getActiveModel();
 
 		if (activeModel != null) {
-			SEFrame.getInstance().removeAllComponentsForModel(activeModel);
+			SEFrame.getInstance().removeModelComponent(
+					(JComponent) SEFrame.getInstance().getStoryTabPane()
+							.getSelectedComponent(), activeModel);
+
 		}
 	}
 }

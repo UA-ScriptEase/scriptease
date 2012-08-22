@@ -22,7 +22,7 @@ import javax.swing.event.DocumentListener;
 
 import scriptease.controller.observer.LibraryManagerEvent;
 import scriptease.controller.observer.LibraryManagerObserver;
-import scriptease.controller.observer.PatternModelPoolEvent;
+import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.gui.SETree.filters.CategoryFilter;
 import scriptease.gui.SETree.filters.CategoryFilter.Category;
@@ -99,7 +99,6 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 
 		// Set up the listeners
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
-
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				for (StoryComponentPanelJList list : storyComponentPanelJLists)
@@ -218,8 +217,8 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 	 * when you load a model, or when you switch them by switching tabs.
 	 */
 	@Override
-	public void modelChanged(PatternModelPoolEvent event) {
-		if (event.getEventType() == PatternModelPoolEvent.PATTERN_MODEL_ACTIVATED)
+	public void modelChanged(PatternModelEvent event) {
+		if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED)
 			updateLists();
 	}
 

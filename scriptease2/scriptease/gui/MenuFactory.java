@@ -2,6 +2,7 @@ package scriptease.gui;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.AbstractButton;
+import javax.swing.FocusManager;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -36,9 +38,9 @@ import scriptease.gui.action.file.SaveLibraryModelAction;
 import scriptease.gui.action.file.SaveModelAction;
 import scriptease.gui.action.file.SaveStoryModelExplicitlyAction;
 import scriptease.gui.action.file.TestStoryAction;
+import scriptease.gui.action.libraryeditor.NewCauseAction;
+import scriptease.gui.action.libraryeditor.NewEffectAction;
 import scriptease.gui.action.story.DeleteStoryComponentAction;
-import scriptease.gui.action.storycomponentbuilder.NewCauseAction;
-import scriptease.gui.action.storycomponentbuilder.NewEffectAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
@@ -356,9 +358,9 @@ public class MenuFactory {
 		final JMenu menu = new JMenu(MenuFactory.TOOLS);
 		menu.setMnemonic(KeyEvent.VK_T);
 
-		final JMenu storyComponentBuilderMenu;
+		final JMenu libraryEditorMenu;
 
-		storyComponentBuilderMenu = new JMenu("Story Component Builder");
+		libraryEditorMenu = new JMenu("Library Editor");
 
 		for (final Translator translator : TranslatorManager.getInstance()
 				.getTranslators()) {
@@ -377,9 +379,9 @@ public class MenuFactory {
 				}
 			});
 
-			storyComponentBuilderMenu.add(translatorItem);
+			libraryEditorMenu.add(translatorItem);
 		}
-		menu.add(storyComponentBuilderMenu);
+		menu.add(libraryEditorMenu);
 
 		return menu;
 	}
@@ -410,7 +412,8 @@ public class MenuFactory {
 		final JMenuItem throwErrorItem;
 		final JMenuItem generateCodeItem;
 		final JMenuItem viewGraphEditorItem;
-
+		final JMenuItem consoleOutputItem;
+		
 		menu.add(MenuFactory.buildStoryMenu());
 
 		menu.setMnemonic(KeyEvent.VK_D);
@@ -419,6 +422,7 @@ public class MenuFactory {
 		throwErrorItem = new JMenuItem("Throw Error!");
 		generateCodeItem = new JMenuItem("Generate Code");
 		viewGraphEditorItem = new JMenuItem("View Graph Editor (NWN Only)");
+		consoleOutputItem = new JMenuItem("Print Things!");
 
 		throwExceptionItem.addActionListener(new ActionListener() {
 
@@ -532,6 +536,13 @@ public class MenuFactory {
 				}
 			}
 		});
+		
+		consoleOutputItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Current Focus: "+FocusManager.getCurrentManager().getFocusOwner());
+			}
+		});
 
 		throwExceptionItem.setMnemonic(KeyEvent.VK_A);
 		menu.add(throwExceptionItem);
@@ -540,6 +551,7 @@ public class MenuFactory {
 		menu.add(generateCodeItem);
 		menu.addSeparator();
 		menu.add(viewGraphEditorItem);
+		menu.add(consoleOutputItem);
 
 		return menu;
 	}

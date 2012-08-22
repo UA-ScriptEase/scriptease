@@ -16,5 +16,5 @@ public interface PatternModelObserver {
 	 * @param event
 	 *            The {@link PatternModel} that was added.
 	 */
-	public void modelChanged(PatternModelPoolEvent event);
+	public void modelChanged(PatternModelEvent event);
 }

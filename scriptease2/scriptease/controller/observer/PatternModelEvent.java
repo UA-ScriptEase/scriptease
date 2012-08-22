@@ -13,7 +13,7 @@ import scriptease.model.PatternModelManager;
  * @author kschenk
  * 
  */
-public final class PatternModelPoolEvent {
+public final class PatternModelEvent {
 	private final PatternModel source;
 	private final short eventType;
 
@@ -32,7 +32,7 @@ public final class PatternModelPoolEvent {
 	 *            The type constant that represents how the PatternModelPool
 	 *            changed. This should be one of <code>PATTERN_MODEL_*</code>
 	 */
-	public PatternModelPoolEvent(PatternModel changed, short type) {
+	public PatternModelEvent(PatternModel changed, short type) {
 		this.source = changed;
 		this.eventType = type;
 	}

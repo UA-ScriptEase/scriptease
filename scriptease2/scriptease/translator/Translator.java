@@ -732,8 +732,8 @@ public class Translator {
 	}
 
 	/**
-	 * Returns only the library associated with the translator. This is
-	 * obtained from the Library Manager.
+	 * Returns only the library associated with the translator. This is obtained
+	 * from the Library Manager.
 	 * 
 	 * Note that this method does not return default libraries that should be
 	 * common across all translators.
@@ -744,7 +744,9 @@ public class Translator {
 		for (LibraryModel library : LibraryManager.getInstance().getLibraries())
 			if (library.getTranslator() == this)
 				return library;
-	
+
+		System.err.println("Warning: No libraries found for translator "
+				+ this.getName());
 		return null;
 	}
 

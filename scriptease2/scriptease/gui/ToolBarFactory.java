@@ -66,14 +66,21 @@ import scriptease.model.atomic.KnowIt;
  * 
  */
 public class ToolBarFactory {
-
-	private static final JLabel nameLabel = new JLabel(
-			Il8nResources.getString("Name") + ":");
-	private static final JLabel fanInLabel = new JLabel("Fan In:");
 	private static final String KNOW_IT_EDITOR = "Know It Node Editing Bar";
 	private static final String TEXT_NODE_EDITOR = "Text Node Editing Bar";
 	private static final String PATH_EDITOR = "Path Editing Bar";
 	private static final String NO_EDITOR = "No Editor";
+
+	private static ToolBarFactory instance = new ToolBarFactory();
+
+	/**
+	 * Returns the sole instance of ToolBarFactory.
+	 * 
+	 * @return
+	 */
+	public static ToolBarFactory getInstance() {
+		return instance;
+	}
 
 	/**
 	 * By "putting" each observer to its respective JToolBar when it is created,
@@ -84,7 +91,7 @@ public class ToolBarFactory {
 	 * strong references. - remiller
 	 */
 	@Deprecated
-	private static Map<JToolBar, GraphNodeObserver> observerMap = new LinkedHashMap<JToolBar, GraphNodeObserver>();
+	private Map<JToolBar, GraphNodeObserver> observerMap = new LinkedHashMap<JToolBar, GraphNodeObserver>();
 
 	/**
 	 * Builds a toolbar to edit graphs with. Includes buttons for selecting
@@ -92,7 +99,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	public static JToolBar buildGraphEditorToolBar(GraphPanel gPanel) {
+	public JToolBar buildGraphEditorToolBar(GraphPanel gPanel) {
 		final JToolBar graphEditorToolBar = new JToolBar();
 
 		final ButtonGroup graphEditorButtonGroup = new ButtonGroup();
@@ -181,7 +188,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	public static JToolBar buildQuestEditorToolBar(GraphPanel gPanel) {
+	public JToolBar buildQuestEditorToolBar(GraphPanel gPanel) {
 
 		final JToolBar questEditorToolBar = buildGraphEditorToolBar(gPanel);
 
@@ -189,15 +196,20 @@ public class ToolBarFactory {
 		final int FAN_IN_SPINNER_LENGTH = 50;
 		final int NAME_FIELD_LENGTH = 150;
 
+		final JLabel nameLabel = new JLabel(Il8nResources.getString("Name")
+				+ ":");
+		final JLabel fanInLabel = new JLabel("Fan In:");
+
 		final JTextField nameField = buildNameField(new Dimension(
 				NAME_FIELD_LENGTH, TOOL_BAR_HEIGHT));
 
 		final JSpinner fanInSpinner = buildFanInSpinner(new Dimension(
-				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT));
+				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT), fanInLabel);
 
 		gPanel.getHeadNode().process(new AbstractNoOpGraphNodeVisitor() {
 			public void processQuestPointNode(QuestPointNode questPointNode) {
-				updateQuestToolBar(nameField, fanInSpinner, questPointNode);
+				updateQuestToolBar(nameField, fanInSpinner, nameLabel,
+						fanInLabel, questPointNode);
 			}
 		});
 
@@ -218,7 +230,7 @@ public class ToolBarFactory {
 		questEditorToolBar.add(nameField);
 
 		GraphNodeObserver questBarObserver = new QuestToolBarObserver(
-				nameField, fanInSpinner, gPanel);
+				nameField, fanInSpinner, nameLabel, fanInLabel, gPanel);
 
 		GraphNode.observeDepthMap(questBarObserver, gPanel.getHeadNode());
 
@@ -234,7 +246,7 @@ public class ToolBarFactory {
 	 * @param gPanel
 	 * @return
 	 */
-	public static JToolBar buildDescribeItToolBar(DescribeIt editedDescribeIt,
+	public JToolBar buildDescribeItToolBar(DescribeIt editedDescribeIt,
 			GraphPanel gPanel) {
 		final JToolBar describeItToolBar = buildGraphEditorToolBar(gPanel);
 		// final GraphNode headNode = gPanel.getHeadNode();
@@ -289,14 +301,19 @@ public class ToolBarFactory {
 	 *            The field for editing the quest point name.
 	 * @param fanInSpinner
 	 *            The spinner for editing the fan in value.
+	 * @param nameLabel
+	 *            The JLabel associated with the nameField
+	 * @param fanInLabel
+	 *            The JLabel associated with the fanInSpinner
 	 * @param questNode
 	 *            The quest node to edit.
 	 */
-	private static void updateQuestToolBar(JTextField nameField,
-			JSpinner fanInSpinner, QuestPointNode questNode) {
+	private void updateQuestToolBar(JTextField nameField,
+			JSpinner fanInSpinner, JLabel nameLabel, JLabel fanInLabel,
+			QuestPointNode questNode) {
 
-		updateFanInSpinner(fanInSpinner, questNode);
-		updateNameField(nameField, questNode);
+		updateFanInSpinner(fanInSpinner, fanInLabel, questNode);
+		updateNameField(nameField, nameLabel, questNode);
 
 	}
 
@@ -306,7 +323,7 @@ public class ToolBarFactory {
 	 * @param maxSize
 	 * @return
 	 */
-	private static JTextField buildNameField(final Dimension maxSize) {
+	private JTextField buildNameField(final Dimension maxSize) {
 		JTextField nameField = new JTextField(10);
 		nameField.setMaximumSize(maxSize);
 
@@ -318,7 +335,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	private static DocumentListener nameFieldListener(JTextField nameField,
+	private DocumentListener nameFieldListener(JTextField nameField,
 			QuestPointNode questNode) {
 		final JTextField nField = nameField;
 		final QuestPointNode qNode = questNode;
@@ -351,7 +368,7 @@ public class ToolBarFactory {
 	 * @param nameField
 	 * @param questNode
 	 */
-	private static void updateNameField(JTextField nameField,
+	private void updateNameField(JTextField nameField, JLabel nameLabel,
 			QuestPointNode questNode) {
 		if (questNode != null) {
 
@@ -362,7 +379,6 @@ public class ToolBarFactory {
 					nameFieldListener(nameField, questNode));
 
 			nameField.setText(displayText);
-
 			if (questNode.isDeletable()) {
 				nameLabel.setEnabled(true);
 				nameField.setEnabled(true);
@@ -387,7 +403,8 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	private static JSpinner buildFanInSpinner(final Dimension maxSize) {
+	private JSpinner buildFanInSpinner(final Dimension maxSize,
+			final JLabel fanInLabel) {
 		final JSpinner fanInSpinner = new JSpinner();
 		fanInSpinner.setMaximumSize(maxSize);
 
@@ -406,7 +423,7 @@ public class ToolBarFactory {
 	 * @param questPoint
 	 * @return
 	 */
-	private static ChangeListener fanInSpinnerListener(JSpinner fanInSpinner,
+	private ChangeListener fanInSpinnerListener(JSpinner fanInSpinner,
 			QuestPointNode questNode) {
 		final JSpinner fanInSpin = fanInSpinner;
 		final QuestPointNode questN = questNode;
@@ -442,8 +459,8 @@ public class ToolBarFactory {
 	 * 
 	 * @return The SpinnerModel
 	 */
-	private static void updateFanInSpinner(JSpinner fanInSpinner,
-			QuestPointNode questNode) {
+	private void updateFanInSpinner(JSpinner fanInSpinner,
+			JLabel fanInLabel, QuestPointNode questNode) {
 
 		if (questNode != null) {
 			int maxFanIn = questNode.getParents().size();
@@ -494,7 +511,7 @@ public class ToolBarFactory {
 	 * @author kschenk
 	 * 
 	 */
-	private static class GraphToolBarObserver implements GraphNodeObserver {
+	private class GraphToolBarObserver implements GraphNodeObserver {
 		/**
 		 * Adds the node to the graph bar observer if a new one is added.
 		 */
@@ -594,12 +611,14 @@ public class ToolBarFactory {
 	 * 
 	 * @author kschenk
 	 */
-	private static class QuestToolBarObserver implements GraphNodeObserver {
-		private JTextField nameField;
-		private JSpinner fanInSpinner;
+	private class QuestToolBarObserver implements GraphNodeObserver {
+		final private JTextField nameField;
+		final private JSpinner fanInSpinner;
+		final private JLabel nameLabel;
+		final private JLabel fanInLabel;
 
 		private GraphNode previousNode;
-		private GraphPanel gPanel;
+		final private GraphPanel gPanel;
 
 		/**
 		 * Creates the observer for the quest toolbar. It requires the name
@@ -612,9 +631,12 @@ public class ToolBarFactory {
 		 * @param editor
 		 */
 		public QuestToolBarObserver(JTextField nameField,
-				JSpinner fanInSpinner, GraphPanel gPanel) {
+				JSpinner fanInSpinner, JLabel nameLabel, JLabel fanInLabel,
+				GraphPanel gPanel) {
 			this.nameField = nameField;
 			this.fanInSpinner = fanInSpinner;
+			this.nameLabel = nameLabel;
+			this.fanInLabel = fanInLabel;
 			this.previousNode = gPanel.getHeadNode();
 			this.gPanel = gPanel;
 		}
@@ -712,7 +734,8 @@ public class ToolBarFactory {
 
 			previousNode.process(new AbstractNoOpGraphNodeVisitor() {
 				public void processQuestPointNode(QuestPointNode questPointNode) {
-					updateQuestToolBar(nameField, fanInSpinner, questPointNode);
+					updateQuestToolBar(nameField, fanInSpinner, nameLabel,
+							fanInLabel, questPointNode);
 				}
 			});
 		}
@@ -862,16 +885,16 @@ public class ToolBarFactory {
 										});
 							}
 							updateQuestToolBar(nameField, fanInSpinner,
-									questPointNode);
+									nameLabel, fanInLabel, questPointNode);
 							break;
 						case INSERT_GRAPH_NODE:
 							insertQuestPoint(sourceNode);
 							updateQuestToolBar(nameField, fanInSpinner,
-									questPointNode);
+									nameLabel, fanInLabel, questPointNode);
 							break;
 						case CONNECT_GRAPH_NODE:
 							updateQuestToolBar(nameField, fanInSpinner,
-									questPointNode);
+									nameLabel, fanInLabel, questPointNode);
 							previousNode = sourceNode;
 							break;
 
@@ -979,5 +1002,4 @@ public class ToolBarFactory {
 			}
 		}
 	}
-
 }

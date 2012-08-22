@@ -1,4 +1,4 @@
-package scriptease.gui.action.storycomponentbuilder.codeeditor;
+package scriptease.gui.action.libraryeditor.codeeditor;
 
 /**
  * Represents and performs the Move Fragment Up action as well as encapsulating

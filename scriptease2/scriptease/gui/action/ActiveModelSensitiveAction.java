@@ -3,7 +3,7 @@ package scriptease.gui.action;
 import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
-import scriptease.controller.observer.PatternModelPoolEvent;
+import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.model.PatternModelManager;
 
@@ -40,9 +40,9 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction
 	}
 
 	@Override
-	public void modelChanged(final PatternModelPoolEvent event) {
-		if (event.getEventType() == PatternModelPoolEvent.PATTERN_MODEL_ACTIVATED
-				|| event.getEventType() == PatternModelPoolEvent.PATTERN_MODEL_REMOVED) {
+	public void modelChanged(final PatternModelEvent event) {
+		if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED
+				|| event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					ActiveModelSensitiveAction.this.updateEnabledState();

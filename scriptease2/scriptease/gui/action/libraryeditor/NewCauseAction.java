@@ -1,4 +1,4 @@
-package scriptease.gui.action.storycomponentbuilder;
+package scriptease.gui.action.libraryeditor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;

@@ -106,7 +106,6 @@ public class TypeSelectionDialogBuilder {
 		final JSeparator separator;
 		final JDialog typeDialog;
 
-
 		final GroupLayout groupLayout;
 		final GridLayout gridLayout;
 
@@ -145,6 +144,10 @@ public class TypeSelectionDialogBuilder {
 				typeDialog.setVisible(false);
 			}
 		});
+		
+		for(ActionListener listener : this.allButton.getActionListeners()) {
+			this.allButton.removeActionListener(listener);
+		}
 
 		this.allButton.addActionListener(new ActionListener() {
 			@Override
@@ -241,15 +244,6 @@ public class TypeSelectionDialogBuilder {
 	}
 
 	/**
-	 * Counts how many types are selected.
-	 * 
-	 * @return
-	 */
-	public int countSelectedTypes() {
-		return this.getSelectedTypes().size();
-	}
-
-	/**
 	 * Gets a collection of selected type check boxes
 	 * 
 	 * @return a collection of selected type check boxes
@@ -303,7 +297,7 @@ public class TypeSelectionDialogBuilder {
 	}
 
 	private boolean isAllSelected() {
-		return this.countSelectedTypes() >= this.typesToSelected.size();
+		return this.getSelectedTypes().size() >= this.typesToSelected.size();
 	}
 
 	/**

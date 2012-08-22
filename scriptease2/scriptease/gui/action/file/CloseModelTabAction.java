@@ -22,23 +22,23 @@ import scriptease.model.PatternModel;
  * @author remiller
  */
 @SuppressWarnings("serial")
-public class CloseStoryTabAction extends ActiveModelSensitiveAction {
+public class CloseModelTabAction extends ActiveModelSensitiveAction {
 	private static final String CLOSE_MODULE = Il8nResources
 			.getString("Close_Model");
-	private final PatternModel model;
 	private final JComponent component;
-
+	private final PatternModel model;
+	
 	/**
 	 * Defines an <code>CloseModelAction</code> object with a mnemonic.
 	 */
-	public CloseStoryTabAction(JComponent component, PatternModel model) {
-		super(CloseStoryTabAction.CLOSE_MODULE);
-		this.model = model;
+	public CloseModelTabAction(JComponent component, PatternModel model) {
+		super(CloseModelTabAction.CLOSE_MODULE);
 		this.component = component;
+		this.model = model;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		SEFrame.getInstance().removeComponentForModel(this.component, this.model);
+		SEFrame.getInstance().removeModelComponent(this.component, this.model);
 	}
 }
