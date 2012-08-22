@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-
 import scriptease.controller.observer.StoryComponentObserverRemover;
 import scriptease.controller.undo.UndoManager;
 import scriptease.model.StoryComponent;
@@ -24,12 +21,9 @@ import scriptease.model.complex.ComplexStoryComponent;
 public class StoryComponentPanelManager {
 	private Map<StoryComponentPanel, Boolean> selected;
 	private StoryComponentPanel lastSelected;
-	private Collection<TreeSelectionListener> selectionListeners;
 
 	public StoryComponentPanelManager() {
 		this.selected = new HashMap<StoryComponentPanel, Boolean>();
-
-		this.selectionListeners = new ArrayList<TreeSelectionListener>();
 	}
 
 	/**
@@ -92,15 +86,9 @@ public class StoryComponentPanelManager {
 			for (StoryComponentPanel subPanel : panel
 					.getDescendantStoryComponentPanels()) {
 				this.selected.put(subPanel, isSelected);
-				// I'm putting in pretty much dummy selection events because we
-				// don't need full support yet. So sue me. - remiller
-				this.notifySelectionChange(new TreeSelectionEvent(subPanel,
-						null, null, null, null));
 			}
 
 			this.selected.put(panel, isSelected);
-			this.notifySelectionChange(new TreeSelectionEvent(panel, null, null,
-					null, null));
 
 			panel.requestFocusInWindow();
 			updatePanelBackgrounds();
@@ -360,32 +348,5 @@ public class StoryComponentPanelManager {
 				selectedPanels.add(entry.getKey());
 		}
 		return selectedPanels;
-	}
-
-	/**
-	 * Registers a new listener to be notified of tree selection changes.
-	 * 
-	 * @param listener
-	 *            The listener to register.
-	 */
-	public void addTreeSelectionListener(TreeSelectionListener listener) {
-		this.selectionListeners.add(listener);
-	}
-
-	/**
-	 * Unregisters a listener to be no longer notified of tree selection
-	 * changes.
-	 * 
-	 * @param listener
-	 *            The listener to unregister.
-	 */
-	public void removeTreeSelectionListener(TreeSelectionListener listener) {
-		this.selectionListeners.remove(listener);
-	}
-
-	private void notifySelectionChange(TreeSelectionEvent e) {
-		for (TreeSelectionListener listener : this.selectionListeners) {
-			listener.valueChanged(e);
-		}
 	}
 }

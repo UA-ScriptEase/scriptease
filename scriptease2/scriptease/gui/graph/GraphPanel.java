@@ -297,6 +297,9 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 						node.notifyObservers(event);
 
 						pressComponents.remove(src);
+						
+						requestFocusInWindow();
+						
 						configureAppearance(src, node);
 					}
 
