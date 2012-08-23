@@ -29,7 +29,7 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import scriptease.controller.apimanagers.GameTypeManager;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.util.GUIOp;
@@ -109,7 +109,7 @@ public class TypeSelectionDialogBuilder {
 		final GroupLayout groupLayout;
 		final GridLayout gridLayout;
 
-		typeDialog = WindowManager.getInstance().buildDialog("Type Selection");
+		typeDialog = WindowFactory.getInstance().buildDialog("Type Selection");
 
 		typesPanel = new JPanel();
 		typesScrollPane = new JScrollPane(typesPanel);

@@ -35,7 +35,7 @@ import scriptease.controller.io.converter.fragment.SeriesFragmentConverter;
 import scriptease.controller.io.converter.fragment.SimpleDataFragmentConverter;
 import scriptease.controller.io.converter.graphnode.KnowItNodeConverter;
 import scriptease.controller.io.converter.graphnode.TextNodeConverter;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.gui.graph.nodes.TextNode;
@@ -160,18 +160,6 @@ public class FileIO {
 	}
 
 	/**
-	 * Writes an API Dictionary to disk at the given location.
-	 * 
-	 * @param dictionary
-	 *            The dictionary to write.
-	 * @param location
-	 *            The file path to write to.
-	 */
-	public void writeAPIDictionary(APIDictionary dictionary, File location) {
-		this.writeData(dictionary, location, IoMode.API_DICTIONARY);
-	}
-
-	/**
 	 * Read the API dictionary file from the given location.
 	 * 
 	 * @param location
@@ -231,15 +219,15 @@ public class FileIO {
 	}
 
 	/**
-	 * Writes the given LibraryModel as XML to the given location;
+	 * Writes an API Dictionary to disk at the given location.
 	 * 
-	 * @param model
-	 *            The model to save to disk.
+	 * @param dictionary
+	 *            The dictionary to write.
 	 * @param location
-	 *            the location to save to.
+	 *            The file path to write to.
 	 */
-	public void writeLibraryModel(PatternModel model, File location) {
-		this.writeData(model, location, IoMode.LIBRARY);
+	public void writeAPIDictionary(APIDictionary dictionary, File location) {
+		this.writeData(dictionary, location, IoMode.API_DICTIONARY);
 	}
 
 	private void writeData(Object dataModel, File location, IoMode mode) {
@@ -274,7 +262,7 @@ public class FileIO {
 			System.err.println("Patterns save problem: Could not access "
 					+ location.getAbsolutePath());
 
-			boolean retry = WindowManager.getInstance().showRetryProblemDialog(
+			boolean retry = WindowFactory.getInstance().showRetryProblemDialog(
 					"Save Patterns File",
 					"ScriptEase was unable to access "
 							+ location.getAbsolutePath());
@@ -315,7 +303,7 @@ public class FileIO {
 					+ location.getAbsolutePath());
 			e.printStackTrace();
 
-			retry = WindowManager.getInstance().showRetryProblemDialog(
+			retry = WindowFactory.getInstance().showRetryProblemDialog(
 					"Reading",
 					"ScriptEase was unable to read from "
 							+ location.getAbsolutePath());
@@ -329,7 +317,7 @@ public class FileIO {
 							+ ". It might be XStream complaining about a malformatted file, or some other error occured incidentally while loading.");
 			e.printStackTrace();
 
-			retry = WindowManager
+			retry = WindowFactory
 					.getInstance()
 					.showRetryProblemDialog(
 							"Reading",

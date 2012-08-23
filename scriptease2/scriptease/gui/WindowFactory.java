@@ -15,7 +15,6 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -39,7 +38,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.util.StringOp;
 
 /**
- * The WindowManager class is a facade responsible for all of the windows,
+ * The WindowFactory class is a facade responsible for all of the windows,
  * pop-ups and dialogs that ScriptEase uses. Other classes are to request the
  * window manager to perform any window displays but <b>not closes</b>. Those
  * windows opened through the window manager will deal with closing themselves. <br>
@@ -48,12 +47,13 @@ import scriptease.util.StringOp;
  * other such major frame states, the window manager should probably deal with
  * that, too. Similar story for dynamic GUI operations.<br>
  * <br>
- * WindowManager implements the singleton design pattern.
+ * WindowFactory implements the singleton design pattern.
  * 
  * @author remiller
  * @author lari
+ * @author kschenk
  */
-public final class WindowManager {
+public final class WindowFactory {
 	private static final String CODE_GENERATION_PROBLEM = "Code Generation Problem";
 	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase 2";
 	private static final String ABOUT_SCRIPTEASE_MESSAGE = "ScriptEase 2\n"
@@ -62,9 +62,6 @@ public final class WindowManager {
 			+ "\n\n" + "Game Scripting and Code Generation for any game!\n"
 			+ "Visit us online at http://www.cs.ualberta.ca/~script/\n";
 	private static final String LAST_DIRECTORY_KEY = "LastDirectory_FilterType";
-	// private static final String CONFIRM_EXIT_TITLE = "Confirm Exit";
-	// private static final String CONFIRM_EXIT_TEXT =
-	// "Are you sure you want to exit ScriptEase?";
 	private static final String CONFIRM_OVERWRITE_TITLE = "Save As";
 	private static final String CONFIRM_OVERWRITE_TEXT = "Are you sure you want to overwrite it?";
 	private static final String CONFIRM_CLOSE_TITLE = "Save Resources";
@@ -78,14 +75,18 @@ public final class WindowManager {
 	private static final String TEST_STORY = Il8nResources
 			.getString("Test_Story");
 
-	private JFileChooser chooser;
 
-	private JFrame currentFrame;
+	/*
+	 * This is never actually set, so it's just null. All of these windows are
+	 * thus just created on the root pane. However, if we ever have multiple
+	 * windows, this will be useful.
+	 */
+	private final JFrame currentFrame = null;
 
 	/**
 	 * The sole instance of this class as per the singleton pattern.
 	 */
-	private static final WindowManager instance = new WindowManager();
+	private static final WindowFactory instance = new WindowFactory();
 
 	/**
 	 * exceptionShowing is a safety flag to prevent multiple ExceptionDialogs
@@ -94,17 +95,10 @@ public final class WindowManager {
 	private static boolean exceptionShowing = false;
 	public static boolean progressShowing = false;
 
-	private WindowManager() {
-		this.chooser = new JFileChooser();
-
-		// disable "All Files" option
-		this.chooser.setAcceptAllFileFilterUsed(false);
-	}
-
 	/**
 	 * @return the sole instance of WindowManager
 	 */
-	public static WindowManager getInstance() {
+	public static WindowFactory getInstance() {
 		return instance;
 	}
 
@@ -133,8 +127,8 @@ public final class WindowManager {
 			@Override
 			public void run() {
 				JOptionPane.showMessageDialog(currentFrame,
-						WindowManager.ERROR_MESSAGE,
-						WindowManager.CRITICAL_ERROR_TITLE,
+						WindowFactory.ERROR_MESSAGE,
+						WindowFactory.CRITICAL_ERROR_TITLE,
 						JOptionPane.ERROR_MESSAGE);
 
 				ScriptEase.getInstance()
@@ -168,17 +162,17 @@ public final class WindowManager {
 	 */
 	public void showExceptionDialog() {
 		// safety check to avoid infinite dialog spawns
-		if (WindowManager.exceptionShowing)
+		if (WindowFactory.exceptionShowing)
 			return;
 
 		JDialog dialog = DialogBuilder.getInstance().createExceptionDialog(
 				this.currentFrame);
-		WindowManager.exceptionShowing = true;
+		WindowFactory.exceptionShowing = true;
 
 		dialog.setLocationRelativeTo(dialog.getParent());
 		dialog.setVisible(true);
 
-		WindowManager.exceptionShowing = false;
+		WindowFactory.exceptionShowing = false;
 	}
 
 	public void showNewStoryWizardDialog() {
@@ -201,7 +195,7 @@ public final class WindowManager {
 	 */
 	public void showProgressBar(final SwingWorker<Void, Void> task,
 			String progressBarText) {
-		if (WindowManager.progressShowing)
+		if (WindowFactory.progressShowing)
 			return;
 
 		final JDialog progressBar = DialogBuilder.getInstance()
@@ -214,13 +208,13 @@ public final class WindowManager {
 						task.removePropertyChangeListener(this);
 						progressBar.setVisible(false);
 						progressBar.dispose();
-						WindowManager.progressShowing = false;
+						WindowFactory.progressShowing = false;
 					}
 				}
 			}
 		});
 
-		WindowManager.progressShowing = true;
+		WindowFactory.progressShowing = true;
 		progressBar.setVisible(true);
 	}
 
@@ -365,7 +359,7 @@ public final class WindowManager {
 		panel.add(new JLabel("Do you wish to continue?"));
 
 		int choice = JOptionPane.showConfirmDialog(this.currentFrame, panel,
-				WindowManager.CONFIRM_MODEL_TITLE, JOptionPane.YES_NO_OPTION);
+				WindowFactory.CONFIRM_MODEL_TITLE, JOptionPane.YES_NO_OPTION);
 		return choice == JOptionPane.OK_OPTION;
 	}
 
@@ -378,8 +372,8 @@ public final class WindowManager {
 		int choice = JOptionPane.showConfirmDialog(this.currentFrame,
 				"The file: \"" + location.getAbsolutePath()
 						+ "\" already exists.\n"
-						+ WindowManager.CONFIRM_OVERWRITE_TEXT,
-				WindowManager.CONFIRM_OVERWRITE_TITLE,
+						+ WindowFactory.CONFIRM_OVERWRITE_TEXT,
+				WindowFactory.CONFIRM_OVERWRITE_TITLE,
 				JOptionPane.YES_NO_OPTION);
 		return choice == JOptionPane.OK_OPTION;
 	}
@@ -394,8 +388,8 @@ public final class WindowManager {
 	public int showConfirmClose(PatternModel model) {
 		int choice = JOptionPane.showConfirmDialog(this.currentFrame,
 				"The story \"" + model + "\" has been modified. "
-						+ WindowManager.CONFIRM_CLOSE_TEXT,
-				WindowManager.CONFIRM_CLOSE_TITLE,
+						+ WindowFactory.CONFIRM_CLOSE_TEXT,
+				WindowFactory.CONFIRM_CLOSE_TITLE,
 				JOptionPane.YES_NO_CANCEL_OPTION);
 
 		return choice;
@@ -461,10 +455,10 @@ public final class WindowManager {
 			acceptText = "Retry";
 		}
 
-		String[] values = { acceptText, WindowManager.CANCEL };
+		String[] values = { acceptText, WindowFactory.CANCEL };
 
 		int choice = JOptionPane.showOptionDialog(this.currentFrame, message,
-				WindowManager.RETRY_TITLE_START + " " + operationName,
+				WindowFactory.RETRY_TITLE_START + " " + operationName,
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
 				null, values, values[0]);
 		return choice == JOptionPane.OK_OPTION;
@@ -561,6 +555,13 @@ public final class WindowManager {
 	 */
 	public File showFileChooser(String operation, FileFilter filter,
 			File directoryPath) {
+		final JFileChooser chooser;
+
+		chooser = new JFileChooser();
+
+		// disable "All Files" option
+		chooser.setAcceptAllFileFilterUsed(false);
+		
 		final ScriptEase se = ScriptEase.getInstance();
 		final int buttonChoice;
 		final File choice;
@@ -569,31 +570,31 @@ public final class WindowManager {
 		String lastDirectory = null;
 		String lastDirectoryKey = null;
 
-		this.chooser.resetChoosableFileFilters();
-		this.chooser.setAcceptAllFileFilterUsed(true);
+		chooser.resetChoosableFileFilters();
+		chooser.setAcceptAllFileFilterUsed(true);
 		if (!isNullFilter) {
-			lastDirectoryKey = WindowManager.LAST_DIRECTORY_KEY
+			lastDirectoryKey = WindowFactory.LAST_DIRECTORY_KEY
 					+ StringOp.makeAlphaNumeric(filter.getDescription());
 			lastDirectory = se.getPreference(lastDirectoryKey);
-			this.chooser.setFileFilter(filter);
+			chooser.setFileFilter(filter);
 		}
 
 		if (lastDirectory != null)
 			lastChoicePath = new File(lastDirectory);
 		if (directoryPath != null)
-			this.chooser.setCurrentDirectory(directoryPath);
+			chooser.setCurrentDirectory(directoryPath);
 		else
-			this.chooser.setCurrentDirectory(lastChoicePath);
+			chooser.setCurrentDirectory(lastChoicePath);
 
 		// clear the selected file (since it shows up by default and isn't
 		// usually the correct extension)
-		this.chooser.setSelectedFile(new File(""));
+		chooser.setSelectedFile(new File(""));
 
-		buttonChoice = this.chooser.showDialog(this.currentFrame, operation);
+		buttonChoice = chooser.showDialog(this.currentFrame, operation);
 
 		if (buttonChoice == JFileChooser.APPROVE_OPTION) {
-			choice = this.chooser.getSelectedFile();
-			lastChoicePath = this.chooser.getCurrentDirectory();
+			choice = chooser.getSelectedFile();
+			lastChoicePath = chooser.getCurrentDirectory();
 
 			se.setPreference(lastDirectoryKey, lastChoicePath.getAbsolutePath());
 		} else

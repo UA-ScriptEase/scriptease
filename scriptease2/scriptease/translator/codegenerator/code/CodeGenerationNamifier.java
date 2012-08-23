@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.translator.LanguageDictionary;
@@ -136,7 +136,7 @@ public class CodeGenerationNamifier {
 					+ name
 					+ " already exists, and could not be uniquified given the naming rules in the current translator. Please choose a different name.";
 
-			WindowManager.getInstance().showProblemDialog("Name exists",
+			WindowFactory.getInstance().showProblemDialog("Name exists",
 					message);
 		}
 
@@ -185,7 +185,7 @@ public class CodeGenerationNamifier {
 
 		if (source.isEmpty()) {
 			// The given name is completely useless.
-			WindowManager
+			WindowFactory
 					.getInstance()
 					.showProblemDialog(
 							"Bad Name Given",

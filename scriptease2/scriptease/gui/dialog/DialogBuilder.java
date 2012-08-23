@@ -32,7 +32,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.gui.ExceptionDialog;
 import scriptease.gui.SEFrame;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.model.LibraryModel;
 import scriptease.model.StoryModel;
 import scriptease.model.PatternModelManager;
@@ -202,7 +202,7 @@ public class DialogBuilder {
 					translatorMgr.setActiveTranslator(selectedTranslator);
 
 					if (selectedTranslator == null) {
-						WindowManager
+						WindowFactory
 								.getInstance()
 								.showProblemDialog("No translator",
 										"No translator was chosen. I can't make a story without it.");
@@ -299,7 +299,7 @@ public class DialogBuilder {
 								.getParentFile();
 				}
 
-				location = WindowManager.getInstance().showFileChooser(
+				location = WindowFactory.getInstance().showFileChooser(
 						"Select", filter, defaultLocation);
 
 				if (location != null)
@@ -395,7 +395,6 @@ public class DialogBuilder {
 		newLibraryPanel = new JPanel();
 
 		model = new LibraryModel();
-		model.setAutosaving(true);
 
 		authorLabel = new JLabel("Author: ");
 		authorField = new JTextField(20);

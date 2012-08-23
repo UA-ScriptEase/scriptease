@@ -7,7 +7,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import javax.swing.SwingWorker;
 
 import scriptease.gui.PanelFactory;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.dialog.WizardDialog;
 import scriptease.model.StoryModel;
 
@@ -58,6 +58,6 @@ public aspect Progress {
 		};
 		task.execute();
 		// TODO We should somehow pass in loading text here.
-		WindowManager.getInstance().showProgressBar(task, "Loading...");
+		WindowFactory.getInstance().showProgressBar(task, "Loading...");
 	}
 }

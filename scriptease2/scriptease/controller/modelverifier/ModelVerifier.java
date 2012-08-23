@@ -19,7 +19,7 @@ import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.controller.observer.StoryComponentObserverAdder;
 import scriptease.controller.observer.StoryComponentObserverRemover;
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.translator.TranslatorManager;
@@ -157,7 +157,7 @@ public class ModelVerifier implements StoryComponentObserver {
 				this.isSolving = true;
 
 				if (notify) {
-					accept = WindowManager.getInstance().showSolvableProblems(
+					accept = WindowFactory.getInstance().showSolvableProblems(
 							storyProblems);
 				}
 

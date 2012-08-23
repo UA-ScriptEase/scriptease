@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 
 import scriptease.controller.get.QuestPointNodeGetter;
 import scriptease.controller.modelverifier.problem.StoryProblem;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.quests.QuestNode;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
@@ -157,7 +157,7 @@ public class CodeGenerator {
 			while (!executor.isTerminated())
 				;
 		} else {
-			WindowManager.getInstance().showCompileProblems(problems);
+			WindowFactory.getInstance().showCompileProblems(problems);
 		}
 
 		if (translator.getCompiler() != null

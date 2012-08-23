@@ -11,7 +11,6 @@ import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
-import scriptease.model.StoryModel;
 
 /**
  * Represents and performs the Save Model Explicitly (Save As...) command, as
@@ -24,16 +23,11 @@ import scriptease.model.StoryModel;
  * @author remiller
  */
 @SuppressWarnings("serial")
-public class SaveStoryModelExplicitlyAction extends ActiveModelSensitiveAction {
+public class SaveModelExplicitlyAction extends ActiveModelSensitiveAction {
 	private static final String SAVE_AS = Il8nResources
 			.getString("Save_Model_As");
 
-	/*
-	 * TODO This class needs to update legality based on what kind of model is
-	 * selected. It shouldn't be legal to perform a save as with a LibraryModel,
-	 * but it should with a story model.
-	 */
-	private static final Action instance = new SaveStoryModelExplicitlyAction();
+	private static final Action instance = new SaveModelExplicitlyAction();
 
 	/**
 	 * Gets the sole instance of this particular type of Action
@@ -47,8 +41,8 @@ public class SaveStoryModelExplicitlyAction extends ActiveModelSensitiveAction {
 	/**
 	 * Defines an <code>CloseModelAction</code> object with a mnemonic.
 	 */
-	private SaveStoryModelExplicitlyAction() {
-		super(SaveStoryModelExplicitlyAction.SAVE_AS + "...");
+	private SaveModelExplicitlyAction() {
+		super(SaveModelExplicitlyAction.SAVE_AS + "...");
 
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
 		this.putValue(
@@ -58,14 +52,21 @@ public class SaveStoryModelExplicitlyAction extends ActiveModelSensitiveAction {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	protected boolean isLegal() {
+		return super.isLegal()
+		// removed until we actually implement undoable commands - remiller
+		/*  	&& !UndoManager.getInstance().isSaved(
+						StoryModelPool.getInstance().getActiveModel())*/;
+	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
 		final PatternModel activeModel = PatternModelManager.getInstance()
 				.getActiveModel();
 
 		if (activeModel == null)
 			return;
-		else if (activeModel instanceof StoryModel)
-			FileManager.getInstance().saveAs((StoryModel) activeModel);
+
+		FileManager.getInstance().saveAs(activeModel);
 	}
 }

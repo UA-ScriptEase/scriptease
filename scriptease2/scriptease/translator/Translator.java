@@ -21,7 +21,7 @@ import scriptease.controller.apimanagers.EventSlotManager;
 import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.SEFrame;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.translator.codegenerator.GameObjectPicker;
@@ -616,14 +616,14 @@ public class Translator {
 			module.load(false);
 		} catch (FileNotFoundException e) {
 			System.err.println("Module not found at [" + location + "]");
-			WindowManager.getInstance().showProblemDialog(
+			WindowFactory.getInstance().showProblemDialog(
 					"Problem loading Game Module",
 					"I couldn't find a Game Module at \"" + location
 							+ "\". \n\nPlease tell me a new location to use.");
 			module = null;
 		} catch (IOException e) {
 			e.printStackTrace();
-			WindowManager
+			WindowFactory
 					.getInstance()
 					.showProblemDialog(
 							"Problem loading GameModule",
@@ -654,7 +654,7 @@ public class Translator {
 		filter = new FileNameExtensionFilter(this.getName() + " Game Files",
 				this.getLegalExtensions());
 		// Otherwise pass in a null filter (defaults to accept all)
-		newLocation = WindowManager.getInstance().showFileChooser("Select",
+		newLocation = WindowFactory.getInstance().showFileChooser("Select",
 				filter, this.getLocation());
 
 		return newLocation;

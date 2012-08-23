@@ -71,8 +71,6 @@ public class LibraryModelConverter implements Converter {
 		author = FileIO.readValue(reader, TAG_AUTHOR);
 		
 		model = new LibraryModel(title, author);
-		
-		model.setAutosaving(true);
 
 		this.unmarshallLibraryContents(reader, context, model);
 
@@ -93,11 +91,6 @@ public class LibraryModelConverter implements Converter {
 	private void unmarshallLibraryContents(HierarchicalStreamReader reader,
 			UnmarshallingContext context, LibraryModel library) {
 		final Collection<StoryComponent> contents;
-		final boolean wasSaving;
-
-		// disable autosaving while constructing the library
-		wasSaving = library.isAutosaving();
-		library.setAutosaving(false);
 
 		// read in the libary's patterns by category
 		contents = new ArrayList<StoryComponent>();
@@ -135,7 +128,5 @@ public class LibraryModelConverter implements Converter {
 		for (StoryComponent comp : contents) {
 			library.add(comp);
 		}
-
-		library.setAutosaving(wasSaving);
 	}
 }

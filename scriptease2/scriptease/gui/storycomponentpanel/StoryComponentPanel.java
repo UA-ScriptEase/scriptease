@@ -30,6 +30,7 @@ import scriptease.controller.observer.StoryComponentObserverAdder;
 import scriptease.controller.observer.StoryComponentObserverRemover;
 import scriptease.controller.observer.VisibilityManagerEvent;
 import scriptease.controller.observer.VisibilityManagerObserver;
+import scriptease.gui.ComponentFocusManager;
 import scriptease.model.StoryComponent;
 
 /**
@@ -72,18 +73,18 @@ public class StoryComponentPanel extends JPanel implements
 		InputMap input = this.getInputMap(WHEN_FOCUSED);
 		input.put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK),
-				"COPY");
+				"Copy");
 		input.put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_DOWN_MASK),
-				"CUT");
+				"Cut");
 		input.put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK),
-				"PASTE");
+				"Paste");
 
 		ActionMap am = new ActionMap();
-		am.put("COPY", TransferHandler.getCopyAction());
-		am.put("CUT", TransferHandler.getCutAction());
-		am.put("PASTE", TransferHandler.getPasteAction());
+		am.put("Copy", TransferHandler.getCopyAction());
+		am.put("Cut", TransferHandler.getCutAction());
+		am.put("Paste", TransferHandler.getPasteAction());
 		this.setActionMap(am);
 
 		// Observer the panel and its children
@@ -95,6 +96,9 @@ public class StoryComponentPanel extends JPanel implements
 
 		// Visibility Listener
 		VisibilityManager.getInstance().addVisibilityManagerListener(this);
+		this.addFocusListener(ComponentFocusManager.getInstance()
+				.defaultFocusListener(this));
+
 		// Set Initial visibility to reflect the VisibilityManager
 		this.setVisible(VisibilityManager.getInstance().isVisible(component));
 	}
@@ -124,22 +128,21 @@ public class StoryComponentPanel extends JPanel implements
 		return this.selectable;
 	}
 
-
 	/**
 	 * Returns the visible state of the component.
+	 * 
 	 * @return
 	 */
 	public boolean isVisible() {
 		return this.isVisible;
 	}
-	
-	
+
 	@Override
 	public void setVisible(boolean isVisible) {
 		final StoryComponentPanel parent = this.getParentStoryComponentPanel();
 		this.isVisible = isVisible;
 		super.setVisible(isVisible);
-		
+
 		// also show all parents so that I can be shown
 		if (isVisible && parent != null) {
 			parent.setVisible(isVisible);
@@ -262,7 +265,8 @@ public class StoryComponentPanel extends JPanel implements
 			}
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_CHILD_REMOVED)) {
 			StoryComponentObserverRemover.removeObservers(this, component);
-			if (component.getOwner() == null || component.getOwner() == this.component) {
+			if (component.getOwner() == null
+					|| component.getOwner() == this.component) {
 				StoryComponentPanelFactory.getInstance().removeChild(this,
 						component);
 			}

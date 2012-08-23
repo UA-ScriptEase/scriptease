@@ -26,7 +26,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import scriptease.ScriptEase;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.internationalization.Il8nResources;
 
 /*
@@ -138,7 +138,7 @@ public class PreferencesDialog {
 
 				// Notify the user that changes take effect after restarting the
 				// program.
-				WindowManager.getInstance().showInformationDialog(
+				WindowFactory.getInstance().showInformationDialog(
 						PROGRAM_RESTART_REQUIRED_TITLE,
 						PROGRAM_RESTART_REQUIRED_TEXT);
 

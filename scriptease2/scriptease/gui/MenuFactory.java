@@ -34,9 +34,8 @@ import scriptease.gui.action.file.ClosePatternModelAction;
 import scriptease.gui.action.file.NewStoryModelAction;
 import scriptease.gui.action.file.OpenRecentFileAction;
 import scriptease.gui.action.file.OpenStoryModelAction;
-import scriptease.gui.action.file.SaveLibraryModelAction;
 import scriptease.gui.action.file.SaveModelAction;
-import scriptease.gui.action.file.SaveStoryModelExplicitlyAction;
+import scriptease.gui.action.file.SaveModelExplicitlyAction;
 import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
 import scriptease.gui.action.libraryeditor.NewEffectAction;
@@ -155,7 +154,7 @@ public class MenuFactory {
 	 * 
 	 * @return The File menu.
 	 */
-	public static JMenu buildFileMenu(boolean libraryEditor) {
+	private static JMenu buildFileMenu(boolean libraryEditor) {
 		final JMenu menu = new JMenu(MenuFactory.FILE);
 		menu.setMnemonic(KeyEvent.VK_F);
 
@@ -192,15 +191,8 @@ public class MenuFactory {
 		menu.add(TestStoryAction.getInstance());
 		menu.addSeparator();
 
-		if (!libraryEditor) {
-			menu.add(SaveModelAction.getInstance());
-			menu.add(SaveStoryModelExplicitlyAction.getInstance());
-		} else {
-			menu.add(SaveLibraryModelAction.getInstance());
-			JMenuItem saveAs = new JMenuItem("Save As (Unimplemented)");
-			saveAs.setEnabled(false);
-			menu.add(saveAs);
-		}
+		menu.add(SaveModelAction.getInstance());
+		menu.add(SaveModelExplicitlyAction.getInstance());
 		menu.addSeparator();
 
 		// add the recent files list
@@ -254,7 +246,7 @@ public class MenuFactory {
 	 * 
 	 * @return the Edit Menu
 	 */
-	public static JMenu buildEditMenu() {
+	private static JMenu buildEditMenu() {
 		// Create the Edit menu to return.
 		final JMenu editMenu = new JMenu(Il8nResources.getString("Edit"));
 		editMenu.setMnemonic(KeyEvent.VK_E);
@@ -325,7 +317,7 @@ public class MenuFactory {
 		preferencesItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				WindowManager.getInstance().showPreferencesDialog();
+				WindowFactory.getInstance().showPreferencesDialog();
 			}
 		});
 		preferencesItem.setMnemonic(KeyEvent.VK_R);
@@ -335,7 +327,7 @@ public class MenuFactory {
 		return editMenu;
 	}
 
-	public static JMenu buildHelpMenu() {
+	private static JMenu buildHelpMenu() {
 		final JMenu menu = new JMenu(MenuFactory.HELP);
 		menu.setMnemonic(KeyEvent.VK_H);
 
@@ -344,7 +336,7 @@ public class MenuFactory {
 		helpMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				WindowManager.getInstance().showAboutScreen();
+				WindowFactory.getInstance().showAboutScreen();
 			}
 		});
 		helpMenuItem.setMnemonic(KeyEvent.VK_A);
@@ -353,7 +345,7 @@ public class MenuFactory {
 		return menu;
 	}
 
-	public static JMenu buildToolsMenu() {
+	private static JMenu buildToolsMenu() {
 		final JMenu menu = new JMenu(MenuFactory.TOOLS);
 		menu.setMnemonic(KeyEvent.VK_T);
 
@@ -398,21 +390,21 @@ public class MenuFactory {
 	 * 
 	 * @return The Story menu.
 	 */
-	public static JMenu buildStoryMenu() {
+	private static JMenu buildStoryMenu() {
 		final JMenu menu = new JMenu(MenuFactory.ADD);
 		menu.setMnemonic(KeyEvent.VK_A);
 
 		return menu;
 	}
 
-	public static JMenu buildDebugMenu() {
+	private static JMenu buildDebugMenu() {
 		final JMenu menu = new JMenu(MenuFactory.DEBUG);
 		final JMenuItem throwExceptionItem;
 		final JMenuItem throwErrorItem;
 		final JMenuItem generateCodeItem;
 		final JMenuItem viewGraphEditorItem;
 		final JMenuItem consoleOutputItem;
-		
+
 		menu.add(MenuFactory.buildStoryMenu());
 
 		menu.setMnemonic(KeyEvent.VK_D);
@@ -535,11 +527,12 @@ public class MenuFactory {
 				}
 			}
 		});
-		
-		consoleOutputItem.addActionListener(new ActionListener(){
+
+		consoleOutputItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Current Focus: "+FocusManager.getCurrentManager().getFocusOwner());
+				System.out.println("Current Focus: "
+						+ FocusManager.getCurrentManager().getFocusOwner());
 			}
 		});
 

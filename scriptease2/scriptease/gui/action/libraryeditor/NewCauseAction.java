@@ -10,7 +10,7 @@ import javax.swing.KeyStroke;
 
 import scriptease.controller.VisibilityManager;
 import scriptease.controller.apimanagers.GameTypeManager;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
@@ -106,7 +106,7 @@ public class NewCauseAction extends ActiveTranslatorSensitiveAction {
 
 			libraryModel.add(newCause);
 		} else {
-			WindowManager.getInstance().showWarningDialog(
+			WindowFactory.getInstance().showWarningDialog(
 					"No Types With Slots Found",
 					"I couldn't find any game types with slots.\n\n"
 							+ "Add a type with a slot, or a slot to an\n"

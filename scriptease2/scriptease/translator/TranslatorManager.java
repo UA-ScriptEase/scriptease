@@ -16,7 +16,7 @@ import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.SEFrame;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.translator.codegenerator.GameObjectPicker;
@@ -111,7 +111,7 @@ public class TranslatorManager implements PatternModelObserver {
 		}
 
 		if (this.translatorPool.isEmpty())
-			WindowManager.getInstance().showInformationDialog("No Translators",
+			WindowFactory.getInstance().showInformationDialog("No Translators",
 					NO_TRANSLATORS_PROBLEM);
 	}
 
@@ -132,7 +132,7 @@ public class TranslatorManager implements PatternModelObserver {
 			System.err.println("Failed to load translator: "
 					+ newTranslatorLocation.getAbsolutePath());
 
-			retry = WindowManager.getInstance().showRetryProblemDialog(
+			retry = WindowFactory.getInstance().showRetryProblemDialog(
 					"Failed to load translator.",
 
 					"An I/O exception occurred while attempting to load the "
@@ -153,7 +153,7 @@ public class TranslatorManager implements PatternModelObserver {
 							+ newTranslatorLocation.getAbsolutePath()
 							+ "). Moving on.");
 
-			WindowManager
+			WindowFactory
 					.getInstance()
 					.showProblemDialog(
 							"Invalid translator",
