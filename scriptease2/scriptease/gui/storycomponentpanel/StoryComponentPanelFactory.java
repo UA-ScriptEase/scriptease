@@ -47,15 +47,10 @@ import scriptease.model.complex.ScriptIt;
  * @author mfchurch
  */
 public class StoryComponentPanelFactory {
-	private static StoryComponentPanelFactory instance;
-	private final static String QUESTION = "question";
-
-	private StoryComponentPanelFactory() {
-	}
+	private static final StoryComponentPanelFactory instance = new StoryComponentPanelFactory();
+	private static final String QUESTION = "question";
 
 	public static StoryComponentPanelFactory getInstance() {
-		if (instance == null)
-			instance = new StoryComponentPanelFactory();
 		return instance;
 	}
 
@@ -166,25 +161,6 @@ public class StoryComponentPanelFactory {
 	}
 
 	/**
-	 * Adds the StoryComponent's Labels to the given JPanel
-	 * 
-	 * @param displayNamePanel
-	 * @param storyComponent
-	 */
-	private static void addLabels(JPanel displayNamePanel,
-			StoryComponent storyComponent) {
-		for (String labelText : storyComponent.getLabels()) {
-			if (!labelText.isEmpty()) {
-				JLabel label = ScriptWidgetFactory.buildLabel(labelText,
-						ScriptWidgetFactory.LABEL_TEXT_COLOUR,
-						ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR);
-				displayNamePanel.add(label);
-				displayNamePanel.add(Box.createHorizontalStrut(5));
-			}
-		}
-	}
-
-	/**
 	 * Converts the display text of a StoryComponent from a String into a
 	 * graphical representation that uses different GUI components.
 	 * 
@@ -206,8 +182,16 @@ public class StoryComponentPanelFactory {
 		displayNamePanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 
 		// Add the StoryComponent's labels
-		addLabels(displayNamePanel, storyComponent);
-
+		for (String labelText : storyComponent.getLabels()) {
+			if (!labelText.isEmpty()) {
+				JLabel label = ScriptWidgetFactory.buildLabel(labelText,
+						ScriptWidgetFactory.LABEL_TEXT_COLOUR,
+						ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR);
+				displayNamePanel.add(label);
+				displayNamePanel.add(Box.createHorizontalStrut(5));
+			}
+		}
+		
 		// Loop through the display text until there is no more to parse.
 		while (toParse.length() > 0) {
 			// Get the first occurrence of a parameter name.
@@ -374,9 +358,7 @@ public class StoryComponentPanelFactory {
 	 * 
 	 * @author mfchurch
 	 */
-	private class StoryComponentPanelBuilder extends AbstractNoOpStoryVisitor {
-		private StoryComponentPanel panel;
-
+	private class StoryComponentPanelBuilder {
 		/**
 		 * Builds and returns a StoryComponentPanel which represents the given
 		 * StoryComponent
@@ -384,13 +366,13 @@ public class StoryComponentPanelFactory {
 		 * @param component
 		 * @return
 		 */
-		public StoryComponentPanel build(StoryComponent component) {
+		private StoryComponentPanel build(StoryComponent component) {
 			if (component == null)
 				throw new IllegalArgumentException(
 						"Cannot build a StoryComponentPanel for a null StoryComponent");
 
-			panel = new StoryComponentPanel(component);
-			component.process(this);
+			StoryComponentPanel panel = new StoryComponentPanel(component);
+			component.process(componentProcessor(panel));
 			panel.setTransferHandler(StoryComponentPanelTransferHandler
 					.getInstance());
 
@@ -399,12 +381,55 @@ public class StoryComponentPanelFactory {
 			return panel;
 		}
 
+		private AbstractNoOpStoryVisitor componentProcessor(
+				final StoryComponentPanel panel) {
+			return new AbstractNoOpStoryVisitor() {
+				@Override
+				public void processQuestPoint(QuestPoint questPoint) {
+					// Add an expansion button
+					addExpansionButton(questPoint, panel);
+
+					JPanel mainPanel = new JPanel();
+					buildMainQuestPointPanel(questPoint, mainPanel);
+
+					// Add a BindingWidget for the QuestPoint
+					panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
+
+					// Add the children panels
+					addChildrenPanels(questPoint, panel);
+				}
+
+				@Override
+				protected void defaultProcessComplex(
+						ComplexStoryComponent complex) {
+					// Add an expansion button
+					addExpansionButton(complex, panel);
+
+					JPanel mainPanel = new JPanel();
+					buildMainComplexPanel(complex, mainPanel);
+
+					// Add a label for the complex story component
+					panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
+
+					// Add the children panels
+					addChildrenPanels(complex, panel);
+				}
+
+				@Override
+				public void processKnowIt(final KnowIt knowIt) {
+					JPanel mainPanel = new JPanel();
+					buildMainKnowItPanel(knowIt, mainPanel);
+					panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
+				}
+			};
+		}
+
 		/**
 		 * Refreshs only the Main Panel in the StoryComponentPanel
 		 * 
 		 * @param panel
 		 */
-		public void refreshMain(StoryComponentPanel panel) {
+		private void refreshMain(StoryComponentPanel panel) {
 			final StoryComponent storyComponent = panel.getStoryComponent();
 			final StoryComponentPanelLayoutManager layout = panel.getLayout();
 			if (layout != null) {
@@ -436,22 +461,8 @@ public class StoryComponentPanelFactory {
 			}
 		}
 
-		@Override
-		public void processQuestPoint(QuestPoint questPoint) {
-			// Add an expansion button
-			this.addExpansionButton(questPoint);
-
-			JPanel mainPanel = new JPanel();
-			buildMainQuestPointPanel(questPoint, mainPanel);
-
-			// Add a BindingWidget for the QuestPoint
-			this.panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
-
-			// Add the children panels
-			this.addChildrenPanels(questPoint);
-		}
-
-		private void addExpansionButton(ComplexStoryComponent complex) {
+		private void addExpansionButton(ComplexStoryComponent complex,
+				final StoryComponentPanel panel) {
 			// Add expansion button if you are not root
 			if (complex.getOwner() != null) {
 				final ExpansionButton expansionButton = ScriptWidgetFactory
@@ -470,14 +481,14 @@ public class StoryComponentPanelFactory {
 			}
 		}
 
-		private void addChildrenPanels(ComplexStoryComponent complex) {
+		private void addChildrenPanels(ComplexStoryComponent complex, StoryComponentPanel panel) {
 			final boolean hasChildren = complex.getChildCount() > 0;
 			if (hasChildren) {
 				// Add child panels
 				for (StoryComponent component : complex.getChildren()) {
 					StoryComponentPanel childPanel = StoryComponentPanelFactory
 							.getInstance().buildPanel(component);
-					this.panel.add(childPanel,
+					panel.add(childPanel,
 							StoryComponentPanelLayoutManager.CHILD);
 				}
 			}
@@ -500,28 +511,6 @@ public class StoryComponentPanelFactory {
 				JPanel mainPanel) {
 			// Add a label for the complex story component
 			parseDisplayText(mainPanel, complex);
-		}
-
-		@Override
-		protected void defaultProcessComplex(ComplexStoryComponent complex) {
-			// Add an expansion button
-			this.addExpansionButton(complex);
-
-			JPanel mainPanel = new JPanel();
-			buildMainComplexPanel(complex, mainPanel);
-
-			// Add a label for the complex story component
-			this.panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
-
-			// Add the children panels
-			this.addChildrenPanels(complex);
-		}
-
-		@Override
-		public void processKnowIt(final KnowIt knowIt) {
-			JPanel mainPanel = new JPanel();
-			buildMainKnowItPanel(knowIt, mainPanel);
-			this.panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
 		}
 	}
 }

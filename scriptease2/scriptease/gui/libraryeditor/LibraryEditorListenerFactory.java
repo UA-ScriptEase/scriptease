@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.StoryVisitor;
+import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
@@ -25,6 +26,7 @@ import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
 /**
@@ -153,12 +155,10 @@ public class LibraryEditorListenerFactory {
 									.getActiveTranslator().getGameTypeManager()
 									.getSlots(knowItToAdd.getDefaultType());
 
-							parameterPanel
-									.add(LibraryEditorPanelFactory
-											.getInstance()
-											.buildParameterPanel(scriptIt,
-													codeBlock, knowItToAdd,
-													parameterPanel));
+							parameterPanel.add(LibraryEditorPanelFactory
+									.getInstance().buildParameterPanel(
+											scriptIt, codeBlock, knowItToAdd,
+											parameterPanel));
 
 							if (!slots.isEmpty())
 								subjectBox
@@ -210,12 +210,10 @@ public class LibraryEditorListenerFactory {
 
 							parameterPanel.removeAll();
 							for (KnowIt knowIt : codeBlock.getParameters()) {
-								parameterPanel
-										.add(LibraryEditorPanelFactory
-												.getInstance()
-												.buildParameterPanel(scriptIt,
-														codeBlock, knowIt,
-														parameterPanel));
+								parameterPanel.add(LibraryEditorPanelFactory
+										.getInstance().buildParameterPanel(
+												scriptIt, codeBlock, knowIt,
+												parameterPanel));
 							}
 
 							subjectBox.revalidate();
@@ -496,6 +494,13 @@ public class LibraryEditorListenerFactory {
 				final StoryComponent component;
 				final StoryVisitor storyVisitor;
 
+				final Translator activeTranslator;
+				final GameTypeManager gameTypeManager;
+
+				activeTranslator = TranslatorManager.getInstance()
+						.getActiveTranslator();
+				gameTypeManager = activeTranslator.getGameTypeManager();
+
 				type = event.getType();
 				component = event.getSource();
 				storyVisitor = new AbstractNoOpStoryVisitor() {
@@ -510,7 +515,8 @@ public class LibraryEditorListenerFactory {
 							defaultTypeBox.removeAllItems();
 
 							for (String type : knowIt.getTypes()) {
-								defaultTypeBox.addItem(type);
+								defaultTypeBox.addItem(gameTypeManager
+										.getDisplayText(type) + " - " + type);
 							}
 
 							defaultTypeBox.setSelectedItem(initialDefaultType);

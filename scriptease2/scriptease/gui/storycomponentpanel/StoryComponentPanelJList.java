@@ -19,6 +19,7 @@ import scriptease.gui.SETree.filters.StoryComponentFilter;
 import scriptease.gui.SETree.filters.VisibilityFilter;
 import scriptease.gui.SETree.transfer.StoryComponentPanelTransferHandler;
 import scriptease.model.StoryComponent;
+import scriptease.model.complex.ScriptIt;
 
 /**
  * Creates a JList that is able to render Story Component Panels as items. The
@@ -97,6 +98,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				if (!filterRule.isAcceptable(component))
 					continue;
 			}
+
 			listModel.addElement(StoryComponentPanelFactory.getInstance()
 					.buildPanel(component));
 		}

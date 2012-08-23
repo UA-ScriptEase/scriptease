@@ -16,7 +16,7 @@ import scriptease.translator.TranslatorManager;
 
 /**
  * TypeWidget represents the JToggleButton drawn to show the Type of a slot. It
- * was abstracted into it's own class so it could maintain an weak referenced
+ * was abstracted into it's own class so it could maintain a weak referenced
  * observer with the Translator.
  * 
  * @author mfchurch
