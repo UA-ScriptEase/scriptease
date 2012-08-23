@@ -555,7 +555,6 @@ public class LibraryEditorPanelFactory {
 		final Font labelFont;
 
 		final List<KnowIt> parameters;
-		final Translator activeTranslator;
 
 		subjectLabel = new JLabel("Subject: ");
 		slotLabel = new JLabel("Slot: ");
@@ -586,8 +585,6 @@ public class LibraryEditorPanelFactory {
 						ScriptEase.FONT_SIZE_KEY)) + 1);
 
 		parameters = codeBlock.getParameters();
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
 
 		// Set up the layout
 		codeBlockPanel.setLayout(codeBlockEditorLayout);
@@ -634,8 +631,7 @@ public class LibraryEditorPanelFactory {
 
 		subjectBox.addItem(null);
 		for (KnowIt parameter : scriptIt.getParameters()) {
-			final Collection<String> slots = activeTranslator
-					.getGameTypeManager().getSlots(parameter.getDefaultType());
+			final Collection<String> slots = getCommonSlotsForTypes(parameter);
 
 			if (!slots.isEmpty())
 				subjectBox.addItem(parameter.getDisplayText());
@@ -662,33 +658,18 @@ public class LibraryEditorPanelFactory {
 		if (codeBlock.hasSubject()) {
 			KnowIt subject = codeBlock.getSubject();
 			if (subject != null) {
-				final Collection<String> subjectSlots;
+				final Collection<String> slots;
+				final String subjectName;
 
-				subjectSlots = TranslatorManager.getInstance()
-						.getActiveTranslator().getGameTypeManager()
-						.getSlots(subject.getDefaultType());
+				subjectName = codeBlock.getSubjectName();
+				slots = getCommonSlotsForTypes(subject);
 
-				for (String slot : subjectSlots) {
+				for (String slot : slots) {
 					slotBox.addItem(slot);
 				}
-				if (!subjectSlots.isEmpty())
-					slotBox.setSelectedItem(subjectSlots.toArray()[0]);
-			}
-		}
-
-		if (codeBlock.hasSubject()) {
-			final KnowIt subject;
-			subject = codeBlock.getSubject();
-
-			if (subject != null) {
-				final String subjectName;
-				subjectName = codeBlock.getSubjectName();
-
 				subjectBox.setSelectedItem(subjectName);
 				slotBox.setSelectedItem(initialSlot);
 			}
-		} else if (!scriptIt.isCause()) {
-			subjectBox.setSelectedItem(null);
 		}
 
 		String implicits = "";
@@ -873,15 +854,44 @@ public class LibraryEditorPanelFactory {
 		return codeBlockPanel;
 	}
 
+	/**
+	 * Returns a list of slots that are common in all of the types in the knowit
+	 * passed in.
+	 * 
+	 * @param subject
+	 * @return
+	 */
+	private Collection<String> getCommonSlotsForTypes(KnowIt subject) {
+		final Collection<String> slots;
+
+		slots = TranslatorManager.getInstance().getActiveTranslator()
+				.getGameTypeManager().getSlots(subject.getDefaultType());
+
+		for (String type : subject.getTypes()) {
+			final Collection<String> otherSlots;
+
+			otherSlots = new ArrayList<String>();
+
+			for (String slot : TranslatorManager.getInstance()
+					.getActiveTranslator().getGameTypeManager().getSlots(type)) {
+				if (slots.contains(slot))
+					otherSlots.add(slot);
+			}
+
+			slots.removeAll(slots);
+			slots.addAll(otherSlots);
+		}
+
+		return slots;
+	}
+
 	protected JPanel buildParameterPanel(ScriptIt scriptIt,
 			CodeBlock codeBlock, KnowIt knowIt, JPanel parameterPanel) {
-		return new ParameterComponent(scriptIt, codeBlock, knowIt,
-				parameterPanel);
+		return new ParameterPanel(scriptIt, codeBlock, knowIt, parameterPanel);
 	}
 
 	/**
-	 * ParameterComponents are JComponents used to represent and edit
-	 * parameters. <br>
+	 * ParameterPanelss are JPanels used to represent and edit parameters. <br>
 	 * <br>
 	 * Parameters have:
 	 * <ul>
@@ -890,14 +900,14 @@ public class LibraryEditorPanelFactory {
 	 * <li>default type</li>
 	 * <li>default binding constant</li>
 	 * </ul>
-	 * A ParameterComponent also has a delete button to remove the parameter
-	 * from the CodeBlock.
+	 * A ParameterPanel also has a delete button to remove the parameter from
+	 * the CodeBlock.
 	 * 
 	 * @author kschenk
 	 * 
 	 */
 	@SuppressWarnings("serial")
-	private class ParameterComponent extends JPanel {
+	private class ParameterPanel extends JPanel {
 		private final KnowIt knowIt;
 
 		/**
@@ -905,7 +915,7 @@ public class LibraryEditorPanelFactory {
 		 * 
 		 * @param knowIt
 		 */
-		private ParameterComponent(final ScriptIt scriptIt,
+		private ParameterPanel(final ScriptIt scriptIt,
 				final CodeBlock codeBlock, final KnowIt knowIt,
 				final JPanel parameterPanel) {
 			super();
@@ -920,9 +930,13 @@ public class LibraryEditorPanelFactory {
 			final GroupLayout groupLayout;
 			final JComponent bindingConstantComponent;
 
+			final JPanel typesPanel;
 			final JPanel defaultTypeBoxPanel;
 			final JPanel nameFieldPanel;
 			final JPanel bindingPanel;
+
+			final Translator activeTranslator;
+			final GameTypeManager gameTypeManager;
 
 			nameField = new JTextField(knowIt.getDisplayText(), 10);
 			typeAction = new TypeSelectionAction();
@@ -934,15 +948,20 @@ public class LibraryEditorPanelFactory {
 			groupLayout = new GroupLayout(this);
 			bindingConstantComponent = new JPanel();
 
+			typesPanel = new JPanel();
 			defaultTypeBoxPanel = new JPanel();
 			nameFieldPanel = new JPanel();
 			bindingPanel = new JPanel();
 
+			activeTranslator = TranslatorManager.getInstance()
+					.getActiveTranslator();
+			gameTypeManager = activeTranslator.getGameTypeManager();
 			// Set up layouts and such
 			this.setLayout(groupLayout);
 			this.setBorder(BorderFactory.createEtchedBorder());
 			this.setBackground(GUIOp.scaleColour(Color.GRAY, 1.9));
 
+			typesPanel.setOpaque(false);
 			defaultTypeBoxPanel.setOpaque(false);
 			nameFieldPanel.setOpaque(false);
 			bindingPanel.setOpaque(false);
@@ -958,9 +977,11 @@ public class LibraryEditorPanelFactory {
 			typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
 
 			for (String type : types)
-				defaultTypeBox.addItem(type);
+				defaultTypeBox.addItem(gameTypeManager.getDisplayText(type)
+						+ " - " + type);
 
-			defaultTypeBox.setSelectedItem(knowIt.getDefaultType());
+			defaultTypeBox.setSelectedItem(gameTypeManager
+					.getDisplayText(knowIt.getDefaultType()));
 
 			updateBindingConstantComponent(bindingConstantComponent);
 
@@ -1019,10 +1040,14 @@ public class LibraryEditorPanelFactory {
 					final List<String> types;
 					final Collection<String> newTypeList;
 					final String selectedType;
+					final String selectedItem;
 
 					types = new ArrayList<String>();
 					newTypeList = new ArrayList<String>();
-					selectedType = (String) defaultTypeBox.getSelectedItem();
+
+					selectedItem = (String) defaultTypeBox.getSelectedItem();
+
+					selectedType = selectedItem.split(" - ")[1];
 
 					types.addAll(knowIt.getTypes());
 
@@ -1059,10 +1084,12 @@ public class LibraryEditorPanelFactory {
 				}
 			});
 
+			typesPanel.add(typesButton);
 			defaultTypeBoxPanel.add(defaultTypeBox);
 			nameFieldPanel.add(nameField);
 			bindingPanel.add(bindingConstantComponent);
 
+			typesPanel.setBorder(new TitledBorder("Types"));
 			nameFieldPanel.setBorder(new TitledBorder("Name"));
 			defaultTypeBoxPanel.setBorder(new TitledBorder("Default Type"));
 			bindingPanel.setBorder(new TitledBorder("Default Binding"));
@@ -1070,13 +1097,13 @@ public class LibraryEditorPanelFactory {
 			groupLayout.setAutoCreateGaps(true);
 			groupLayout.setAutoCreateContainerGaps(true);
 			groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
-					.addComponent(nameFieldPanel).addComponent(typesButton)
+					.addComponent(nameFieldPanel).addComponent(typesPanel)
 					.addComponent(defaultTypeBoxPanel)
 					.addComponent(bindingPanel).addComponent(deleteButton));
 
 			groupLayout.setVerticalGroup(groupLayout
 					.createParallelGroup(GroupLayout.Alignment.CENTER)
-					.addComponent(nameFieldPanel).addComponent(typesButton)
+					.addComponent(nameFieldPanel).addComponent(typesPanel)
 					.addComponent(deleteButton)
 					.addComponent(defaultTypeBoxPanel)
 					.addComponent(bindingPanel));

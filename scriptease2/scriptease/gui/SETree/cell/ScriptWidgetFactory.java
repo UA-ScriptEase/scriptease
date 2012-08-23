@@ -17,6 +17,7 @@ import java.util.WeakHashMap;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
@@ -295,7 +296,6 @@ public class ScriptWidgetFactory {
 	 * @return
 	 */
 	public static JComponent buildSlotPanel(final KnowIt knowIt) {
-
 		final SlotPanel slotPanel = new SlotPanel(knowIt);
 
 		widgetsToStoryComponents.put(slotPanel, knowIt);
