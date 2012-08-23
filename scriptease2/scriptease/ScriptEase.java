@@ -28,7 +28,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import scriptease.controller.FileManager;
 import scriptease.controller.exceptionhandler.ScriptEaseExceptionHandler;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.translator.TranslatorManager;
 import scriptease.util.FileOp;
@@ -273,7 +273,7 @@ public final class ScriptEase implements Runnable {
 	public void run() {
 		this.preLoadUserLibraries();
 
-		WindowManager.getInstance().showMainFrame();
+		WindowFactory.getInstance().showMainFrame();
 	}
 
 	/**
@@ -511,7 +511,7 @@ public final class ScriptEase implements Runnable {
 	}
 
 	private void handleUIFailure() {
-		boolean retry = WindowManager.getInstance().showRetryProblemDialog(
+		boolean retry = WindowFactory.getInstance().showRetryProblemDialog(
 				"Load UI", null);
 
 		if (retry)

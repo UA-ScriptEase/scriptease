@@ -11,7 +11,7 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.gui.SEFrame;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.PatternModel;
@@ -66,7 +66,7 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		final WindowManager winMan = WindowManager.getInstance();
+		final WindowFactory winMan = WindowFactory.getInstance();
 		final PatternModel activeModel = PatternModelManager.getInstance()
 				.getActiveModel();
 		final Thread testThread;

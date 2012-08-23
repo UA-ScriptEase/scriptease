@@ -7,7 +7,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.internationalization.Il8nResources;
 
 /**
@@ -48,7 +48,7 @@ public final class NewStoryModelAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// run a new model wizard!
-		WindowManager.getInstance().showNewStoryWizardDialog();
+		WindowFactory.getInstance().showNewStoryWizardDialog();
 	}
 
 }

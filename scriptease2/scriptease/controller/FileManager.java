@@ -26,21 +26,23 @@ import scriptease.controller.observer.FileManagerObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.PanelFactory;
 import scriptease.gui.SEFrame;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
+import scriptease.translator.APIDictionary;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
+import scriptease.translator.Translator.DescriptionKeys;
+import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerator;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
 import scriptease.util.FileOp;
-import scriptease.util.StringOp;
 
 /**
  * The file manager is responsible for knowing about and controlling access to
@@ -73,6 +75,9 @@ public final class FileManager {
 
 	public static final FileNameExtensionFilter STORY_FILTER = new FileNameExtensionFilter(
 			"ScriptEase Story Files", FileManager.FILE_EXTENSION_STORY);
+
+	public static final FileNameExtensionFilter LIBRARY_FILTER = new FileNameExtensionFilter(
+			"ScriptEase Library Files", FileManager.FILE_EXTENSION_LIBRARY);
 
 	/**
 	 * Set of all openFiles currently open. Strictly speaking, the model itself
@@ -173,41 +178,6 @@ public final class FileManager {
 	}
 
 	/**
-	 * Prompts the user to choose a file location, then saves the given model to
-	 * that location.<br>
-	 * If the file does not have the proper extension, the proper extension is
-	 * added.
-	 * 
-	 * @param model
-	 *            The model to be saved.
-	 * @see #save(StoryModel)
-	 */
-	public void saveAs(StoryModel model) {
-		final WindowManager windowManager = WindowManager.getInstance();
-
-		File location = windowManager.showFileChooser(FileManager.SAVE_AS,
-				STORY_FILTER);
-
-		// make sure the user didn't cancel/close window.
-		if (location == null) {
-			return;
-		}
-
-		// ensure that the location has the proper extension.
-		if (!FileOp.getExtension(location).equalsIgnoreCase(
-				FILE_EXTENSION_STORY)) {
-			location = FileOp.addExtension(location, FILE_EXTENSION_STORY);
-		}
-
-		// check if the location exists already.
-		if (location.exists() && !windowManager.showConfirmOverwrite(location))
-			return;
-
-		// save the model
-		this.writeStoryModelFile(model, location);
-	}
-
-	/**
 	 * Saves the given model. Checks the map of open files to see if the model
 	 * has already been saved somewhere. If so, it saves the given model there.
 	 * If not, it calls <code>saveAs</code> to prompt the user for a new
@@ -217,20 +187,29 @@ public final class FileManager {
 	 *            The model to be saved.
 	 * @see #saveAs(StoryModel)
 	 */
-	public void save(final PatternModel model) {
+	public void save(PatternModel model) {
 
 		model.process(new AbstractNoOpModelVisitor() {
 			@Override
 			public void processLibraryModel(LibraryModel libraryModel) {
-				// TODO Write/Save APIDictionary here
+				final Translator active;
+				final APIDictionary apiDictionary;
+				final File location;
+				
+				active = TranslatorManager.getInstance().getActiveTranslator();
+				apiDictionary = active.getApiDictionary();
+				location = active.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH
+						.toString());
+				
+				FileIO.getInstance().writeAPIDictionary(apiDictionary, location);
 			}
 
 			@Override
 			public void processStoryModel(StoryModel storyModel) {
 				final File location = FileManager.this
 						.reverseLookup(storyModel);
-				final String saveMessage = "Saving story " + model.getTitle()
-						+ " to " + location;
+				final String saveMessage = "Saving story "
+						+ storyModel.getTitle() + " to " + location;
 
 				System.out.println(saveMessage);
 				SEFrame.getInstance().setStatus(saveMessage + " ...");
@@ -245,21 +224,74 @@ public final class FileManager {
 	}
 
 	/**
-	 * Saves the given LibraryModel to disk
+	 * Prompts the user to choose a file location, then saves the given model to
+	 * that location.<br>
+	 * If the file does not have the proper extension, the proper extension is
+	 * added.
 	 * 
 	 * @param model
+	 *            The model to be saved.
+	 * @see #save(PatternModel)
 	 */
-	public void save(LibraryModel model) {
-		final FileIO writer = FileIO.getInstance();
-		final File location;
-		final String fileName = StringOp.makeAlphaNumeric(model.getTitle());
+	public void saveAs(PatternModel model) {
+		model.process(new AbstractNoOpModelVisitor() {
+			@Override
+			public void processLibraryModel(LibraryModel libraryModel) {
+				final WindowFactory windowManager = WindowFactory.getInstance();
+				final Translator active;
+				final APIDictionary apiDictionary;
+				
+				active = TranslatorManager.getInstance().getActiveTranslator();
+				apiDictionary = active.getApiDictionary();
+				
+				File location = windowManager.showFileChooser(
+						FileManager.SAVE_AS, LIBRARY_FILTER);
 
-		location = new File(SE_PATTERNS_DIR + fileName);
-		System.out.println("Saving library " + fileName + " to " + location);
+				if (location == null) {
+					return;
+				}
 
-		// Write the Library to disk
-		writer.writeLibraryModel(model,
-				FileOp.addExtension(location, FILE_EXTENSION_LIBRARY));
+				if (!FileOp.getExtension(location).equalsIgnoreCase(
+						FILE_EXTENSION_LIBRARY)) {
+					location = FileOp.addExtension(location,
+							FILE_EXTENSION_LIBRARY);
+				}
+
+				if (location.exists()
+						&& !windowManager.showConfirmOverwrite(location))
+					return;
+
+				FileIO.getInstance().writeAPIDictionary(apiDictionary, location);
+			}
+
+			@Override
+			public void processStoryModel(StoryModel storyModel) {
+				final WindowFactory windowManager = WindowFactory.getInstance();
+
+				File location = windowManager.showFileChooser(
+						FileManager.SAVE_AS, STORY_FILTER);
+
+				// make sure the user didn't cancel/close window.
+				if (location == null) {
+					return;
+				}
+
+				// ensure that the location has the proper extension.
+				if (!FileOp.getExtension(location).equalsIgnoreCase(
+						FILE_EXTENSION_STORY)) {
+					location = FileOp.addExtension(location,
+							FILE_EXTENSION_STORY);
+				}
+
+				// check if the location exists already.
+				if (location.exists()
+						&& !windowManager.showConfirmOverwrite(location))
+					return;
+
+				// save the model
+				FileManager.this.writeStoryModelFile(storyModel, location);
+			}
+		});
 	}
 
 	/**
@@ -272,7 +304,7 @@ public final class FileManager {
 	 */
 	private void writeStoryModelFile(StoryModel model, File location) {
 		final StoryModel storedModel = this.openFiles.get(location);
-		final WindowManager windowManager = WindowManager.getInstance();
+		final WindowFactory windowManager = WindowFactory.getInstance();
 		final FileIO writer = FileIO.getInstance();
 
 		// make sure the file isn't already being used by another model.
@@ -337,7 +369,7 @@ public final class FileManager {
 
 		if (translator.getCompiler() == null
 				|| !translator.getCompiler().exists())
-			WindowManager
+			WindowFactory
 					.getInstance()
 					.showWarningDialog(
 							"Compiler not found",
@@ -370,7 +402,7 @@ public final class FileManager {
 		} catch (GameCompilerException e) {
 			if (compile) {
 				SEFrame.getInstance().setStatus("Compilation Failed.");
-				if (WindowManager
+				if (WindowFactory
 						.getInstance()
 						.showRetryProblemDialog(
 								"Compiling",
@@ -511,7 +543,7 @@ public final class FileManager {
 		final FileIO reader;
 
 		if (location == null || !location.exists()) {
-			WindowManager.getInstance().showProblemDialog(
+			WindowFactory.getInstance().showProblemDialog(
 					"File Not Found",
 					"I could not locate the file \""
 							+ location.getAbsolutePath() + "\".");
@@ -590,22 +622,12 @@ public final class FileManager {
 	 */
 	public boolean hasUnsavedChanges(PatternModel model) {
 		if (!UndoManager.getInstance().isSaved(model)) {
-			int choice = WindowManager.getInstance().showConfirmClose(model);
+			int choice = WindowFactory.getInstance().showConfirmClose(model);
 
 			if (choice == JOptionPane.CANCEL_OPTION)
 				return false;
 			else if (choice == JOptionPane.YES_OPTION)
-				model.process(new AbstractNoOpModelVisitor() {
-					@Override
-					public void processStoryModel(StoryModel storyModel) {
-						FileManager.this.save(storyModel);
-					}
-
-					@Override
-					public void processLibraryModel(LibraryModel libraryModel) {
-						// TODO Add saving behaviour for libraries here!
-					}
-				});
+				this.save(model);
 		}
 
 		// the only way we should get here is if the user had unsaved changes
@@ -652,7 +674,7 @@ public final class FileManager {
 				if (PanelFactory.getInstance()
 						.getComponentsForModel(storyModel).size() < 1) {
 					PatternModelManager.getInstance().remove(storyModel);
-				
+
 					FileManager.this.openFiles.remove(FileManager.this
 							.reverseLookup(storyModel));
 

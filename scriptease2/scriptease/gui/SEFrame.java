@@ -75,7 +75,7 @@ public final class SEFrame implements PatternModelObserver {
 	}
 
 	private SEFrame() {
-		this.seFrame = WindowManager.getInstance().buildScriptEaseFrame(
+		this.seFrame = WindowFactory.getInstance().buildScriptEaseFrame(
 				ScriptEase.TITLE);
 		this.storyTabs = new JTabbedPane();
 		this.middlePane = new JPanel();

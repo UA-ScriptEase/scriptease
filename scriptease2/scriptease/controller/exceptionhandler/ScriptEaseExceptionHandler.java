@@ -5,7 +5,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 
 import javax.swing.JOptionPane;
 
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 
 /**
  * Error handling class that will perform the following duties when an exception
@@ -53,7 +53,7 @@ public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 		if (thrown instanceof java.lang.Error) {
 			// Very Bad Things are happening. Duck and cover.
 			try {
-			WindowManager.getInstance().showErrorDialog();
+			WindowFactory.getInstance().showErrorDialog();
 			} catch (Throwable t) {
 				JOptionPane.showMessageDialog(null,
 						"ScriptEase has encountered a critical error: "+ t.getMessage());
@@ -62,7 +62,7 @@ public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 			}
 		} else if (thrown instanceof java.lang.Exception) {
 			thrown.printStackTrace(System.err);
-			WindowManager.getInstance().showExceptionDialog();
+			WindowFactory.getInstance().showExceptionDialog();
 		} else {
 			// This should never ever happen. If it does, take a good look at
 			// the Throwable thrown and why it is not an Exception or Error

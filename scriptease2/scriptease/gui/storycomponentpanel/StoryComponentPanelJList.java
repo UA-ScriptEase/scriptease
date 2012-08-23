@@ -12,6 +12,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 import scriptease.controller.VisibilityManager;
+import scriptease.gui.ComponentFocusManager;
 import scriptease.gui.SETree.filters.Filter;
 import scriptease.gui.SETree.filters.Filterable;
 import scriptease.gui.SETree.filters.StoryComponentFilter;
@@ -62,6 +63,9 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 		if (filter != null)
 			this.updateFilter(filter);
+
+		this.addFocusListener(ComponentFocusManager.getInstance()
+				.defaultFocusListener(this));
 
 		this.setCellRenderer(new StoryComponentListRenderer());
 		this.setLayoutOrientation(JList.VERTICAL);

@@ -5,13 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
-import javax.swing.FocusManager;
 import javax.swing.KeyStroke;
 
+import scriptease.gui.ComponentFocusManager;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.model.LibraryModel;
+import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
@@ -44,8 +45,11 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 	 * current selection.
 	 */
 	protected boolean isLegal() {
+		final PatternModel activeModel;
 
-		return true;
+		activeModel = PatternModelManager.getInstance().getActiveModel();
+
+		return activeModel != null;
 	}
 
 	/**
@@ -57,6 +61,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
 		this.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+
 		PatternModelManager.getInstance().addPatternModelPoolObserver(this);
 	}
 
@@ -64,7 +69,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;
 
-		focusOwner = FocusManager.getCurrentManager().getFocusOwner();
+		focusOwner = ComponentFocusManager.getInstance().getFocus();
 
 		if (focusOwner instanceof StoryComponentPanel) {
 			final StoryComponentPanel panel;
@@ -92,10 +97,18 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 				libraryModel.remove(selectedPanel.getStoryComponent());
 			}
 		} else if (focusOwner instanceof GraphPanel) {
-			final GraphPanel graphPanel;
-			graphPanel = (GraphPanel) focusOwner;
+			// final GraphPanel graphPanel;
+			// graphPanel = (GraphPanel) focusOwner;
 
-			// Get the selected quest point and 0bl173r4t3 1t
+			/*
+			 * TODO Since graph points, quest points, quest point nodes,
+			 * listeners, etc are wiggidy-wack, we can't implement this right
+			 * now. Once we are able to get the currently selected quest node,
+			 * though, we'll be able to.
+			 * 
+			 * We really need to implement better listeners for our graphs, and
+			 * a better way of managing them.
+			 */
 		}
 	}
 }

@@ -16,7 +16,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import scriptease.ScriptEase;
 import scriptease.ScriptEase.ConfigurationKeys;
 import scriptease.gui.ExceptionDialog;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 
 /**
  * NetworkHandler provides bug report handling for ScriptEase. It connects to
@@ -140,7 +140,7 @@ public class NetworkHandler extends Handler {
 	 * occured.
 	 */
 	private void error() {
-		WindowManager.getInstance().showProblemDialog("Error Report Failed",
+		WindowFactory.getInstance().showProblemDialog("Error Report Failed",
 				CONNECTION_ERROR_MESSAGE);
 	}
 
@@ -150,7 +150,7 @@ public class NetworkHandler extends Handler {
 	 */
 	private void success() {
 		String msg = "The error reporting was successfully sent!\n";
-		WindowManager.getInstance().showInformationDialog(
+		WindowFactory.getInstance().showInformationDialog(
 				"Error Report Sucess", msg);
 	}
 

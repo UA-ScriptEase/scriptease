@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
-import scriptease.controller.FileManager;
 import scriptease.controller.ModelVisitor;
 import scriptease.controller.observer.LibraryEvent;
 import scriptease.controller.observer.LibraryObserver;
@@ -44,7 +43,6 @@ public class LibraryModel extends PatternModel implements
 	private StoryComponentContainer causesCategory;
 	private StoryComponentContainer descriptionsCategory;
 	private StoryComponentContainer folderCategory;
-	private boolean autosaving;
 	private StoryComponentContainer modelRoot;
 
 	/**
@@ -112,7 +110,6 @@ public class LibraryModel extends PatternModel implements
 		}
 
 		this.registerCategoryChildTypes();
-		this.autosaving = false;
 		this.listeners = new ArrayList<LibraryObserver>();
 	}
 
@@ -300,24 +297,12 @@ public class LibraryModel extends PatternModel implements
 	@Override
 	public void componentChanged(StoryComponentEvent event) {
 		if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED) {
-			/*
-			 * System.out.println("Removed '" + event.getSource() + "' from " +
-			 * toString());
-			 */// Debug Code
 			notifyChange(LibraryEvent.STORYCOMPONENT_REMOVED, event);
 		} else if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
-			/*
-			 * System.out.println("Added '" + event.getSource() + "' to " +
-			 * toString());
-			 */// Debug Code
 			notifyChange(LibraryEvent.STORYCOMPONENT_ADDED, event);
 		} else {
 			notifyChange(LibraryEvent.STORYCOMPONENT_CHANGED, event);
 		}
-
-		// Optionally save the modified model to disk
-		if (this.autosaving)
-			FileManager.getInstance().save(this);
 	}
 
 	/**
@@ -410,14 +395,6 @@ public class LibraryModel extends PatternModel implements
 				return true;
 		}
 		return false;
-	}
-
-	public boolean isAutosaving() {
-		return this.autosaving;
-	}
-
-	public void setAutosaving(boolean autosave) {
-		this.autosaving = autosave;
 	}
 
 	/**

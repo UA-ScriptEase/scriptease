@@ -9,7 +9,7 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.controller.FileManager;
-import scriptease.gui.WindowManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.util.FileOp;
 
@@ -55,7 +55,7 @@ public final class OpenStoryModelAction extends AbstractAction {
 		File location = null;
 		boolean tryAgain = false;
 		do {
-			location = WindowManager.getInstance().showFileChooser(OPEN_MODEL, FileManager.STORY_FILTER);
+			location = WindowFactory.getInstance().showFileChooser(OPEN_MODEL, FileManager.STORY_FILTER);
 
 			if (location == null) {
 				return;
@@ -64,7 +64,7 @@ public final class OpenStoryModelAction extends AbstractAction {
 				// save logic can use them too.
 			} else if (!FileOp.getExtension(location).equalsIgnoreCase("ses")
 					&& !FileOp.getExtension(location).equalsIgnoreCase("sel")) {
-				tryAgain = WindowManager
+				tryAgain = WindowFactory
 						.getInstance()
 						.showRetryProblemDialog(
 								"Opening File",

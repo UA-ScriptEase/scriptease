@@ -137,7 +137,7 @@ public class PreferencesDialog {
 
 				// Notify the user that changes take effect after restarting the
 				// program.
-				WindowManager.getInstance().showInformationDialog(
+				WindowFactory.getInstance().showInformationDialog(
 						PROGRAM_RESTART_REQUIRED_TITLE,
 						PROGRAM_RESTART_REQUIRED_TEXT);
 
