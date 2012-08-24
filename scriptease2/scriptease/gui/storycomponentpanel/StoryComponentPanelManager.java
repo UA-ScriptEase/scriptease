@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import scriptease.controller.observer.StoryComponentObserverRemover;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 
@@ -274,18 +275,18 @@ public class StoryComponentPanelManager {
 	private void displayPanelSelection(final StoryComponentPanel panel,
 			final Boolean isSelected) {
 		if (isSelected) {
-			panel.setBackground(StoryComponentPanel.SELECTED_COLOUR);
+			panel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
 			StoryComponentPanel parentStoryComponentPanel = panel
 					.getParentStoryComponentPanel();
 			// If the parent is selected, don't draw a box around the child
 			if (this.selected.containsKey(parentStoryComponentPanel)
 					&& !this.selected.get(parentStoryComponentPanel))
-				panel.setBorder(StoryComponentPanel.SELECTED_BORDER);
+				panel.setBorder(ScriptEaseUI.SELECTED_BORDER);
 			else
-				panel.setBorder(StoryComponentPanel.UNSELECTED_BORDER);
+				panel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
 		} else {
-			panel.setBackground(StoryComponentPanel.UNSELECTED_COLOUR);
-			panel.setBorder(StoryComponentPanel.UNSELECTED_BORDER);
+			panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
+			panel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
 		}
 	}
 

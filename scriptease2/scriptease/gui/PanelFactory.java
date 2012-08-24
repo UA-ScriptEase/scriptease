@@ -140,7 +140,7 @@ public class PanelFactory {
 	public JPanel buildStoryPanel(StoryModel model, QuestPoint questPoint) {
 		final JPanel storyPanel;
 		final JPanel questPanel;
-		final StoryComponentPanelTree storyComponentTree;
+		 final StoryComponentPanelTree storyComponentTree;
 
 		List<JComponent> panes;
 

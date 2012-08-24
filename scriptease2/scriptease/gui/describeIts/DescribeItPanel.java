@@ -166,8 +166,8 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			ScriptIt resolvedDoIt = describeIt.getResolvedScriptIt();
 
 			if (resolvedDoIt != null) {
-				StoryComponentPanelFactory.parseDisplayText(collapsedPanel,
-						resolvedDoIt);
+				StoryComponentPanelFactory.getInstance().parseDisplayText(
+						collapsedPanel, resolvedDoIt);
 
 				xSize += collapsedPanel.getPreferredSize().getWidth();
 				ySize = Math.max(ySize, (int) collapsedPanel.getPreferredSize()
@@ -203,8 +203,8 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			final ScriptIt resolvedDoIt = describeIt.getResolvedScriptIt();
 
 			if (resolvedDoIt != null) {
-				StoryComponentPanelFactory.parseDisplayText(collapsedPanel,
-						resolvedDoIt);
+				StoryComponentPanelFactory.getInstance().parseDisplayText(
+						collapsedPanel, resolvedDoIt);
 
 				collapsedPanel.setBounds(xLocation, yLocation,
 						(int) collapsedPanel.getPreferredSize().getWidth(),

@@ -17,7 +17,6 @@ import java.util.WeakHashMap;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
@@ -29,8 +28,7 @@ import javax.swing.SwingUtilities;
 
 import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpStoryVisitor;
-import scriptease.controller.observer.StoryComponentEvent;
-import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.ObserverFactory;
 import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.transfer.BindingTransferHandlerExportOnly;
@@ -76,14 +74,6 @@ public class ScriptWidgetFactory {
 	 * be updated.
 	 */
 	private static Map<Component, StoryComponent> widgetsToStoryComponents = new WeakHashMap<Component, StoryComponent>();
-
-	/**
-	 * This is an awful hack and should be used as little as possible. It must
-	 * be removed when we complete the refactor as outlined in
-	 * https://www.pivotaltracker.com/story/show/31828709
-	 */
-	@Deprecated
-	private static List<StoryComponentObserver> storyComponentListeners = new ArrayList<StoryComponentObserver>();
 
 	/**
 	 * Retrieves the StoryComponent that the given JComponent edits. This can
@@ -196,24 +186,11 @@ public class ScriptWidgetFactory {
 			if (editable) {
 				widget.add(ScriptWidgetFactory.buildNameEditor(storyComponent));
 			} else {
-				final JLabel nameLabel = ScriptWidgetFactory.buildLabel(
-						storyComponent.getDisplayText(), Color.WHITE);
+				final JLabel nameLabel;
+				nameLabel = ScriptWidgetFactory.buildLabel(storyComponent,
+						Color.WHITE);
 
-				StoryComponentObserver scListener = new StoryComponentObserver() {
-					@Override
-					public void componentChanged(StoryComponentEvent event) {
-						// only update the name for now, but if anything else is
-						// needed later, it should be added here. - remiller
-						if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
-							nameLabel.setText(event.getSource()
-									.getDisplayText());
-						}
-					}
-				};
-
-				storyComponentListeners.add(scListener);
-
-				storyComponent.addStoryComponentObserver(scListener);
+				// TODO
 
 				widget.add(nameLabel);
 			}
@@ -301,6 +278,28 @@ public class ScriptWidgetFactory {
 		widgetsToStoryComponents.put(slotPanel, knowIt);
 
 		return slotPanel;
+	}
+
+	/**
+	 * Builds a label for displaying text representing a story component with a
+	 * listener that checks for changes to the text.
+	 * 
+	 * @param component
+	 * @param textColor
+	 * @return
+	 */
+	public static JLabel buildLabel(StoryComponent component, Color textColor) {
+		final JLabel label;
+		
+		label = buildLabel(component.getDisplayText(), textColor);
+
+/*		final StoryComponentObserver observer;
+		observer = ObserverFactory.getInstance().buildNameLabelObserver(
+				nameLabel);
+		storyComponent.addStoryComponentObserver(observer);
+		*/
+		return new JLabel();
+
 	}
 
 	/**

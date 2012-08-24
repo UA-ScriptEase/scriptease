@@ -1,6 +1,5 @@
 package scriptease.gui.storycomponentpanel;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.KeyEvent;
@@ -10,17 +9,15 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.swing.ActionMap;
-import javax.swing.BorderFactory;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.MatteBorder;
 import javax.swing.event.MouseInputListener;
 
+import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.ContainerCollector;
 import scriptease.controller.VisibilityManager;
 import scriptease.controller.observer.StoryComponentEvent;
@@ -32,28 +29,21 @@ import scriptease.controller.observer.VisibilityManagerEvent;
 import scriptease.controller.observer.VisibilityManagerObserver;
 import scriptease.gui.ComponentFocusManager;
 import scriptease.model.StoryComponent;
+import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.StoryItemSequence;
 
 /**
  * JPanel used to properly observe and redraw its component. Can be editable and
- * extendable to be shown/hidden.
+ * extendible to be shown/hidden.
  * 
  * @author mfchurch
- * 
+ * @author kschenk
  */
 @SuppressWarnings("serial")
 public class StoryComponentPanel extends JPanel implements
 		StoryComponentObserver, MouseInputListener, VisibilityManagerObserver {
-	// Colour and Border
-	public static final Color UNSELECTED_COLOUR = Color.WHITE;
-	public static final Color SELECTED_COLOUR = new Color(220, 220, 220);
-	public static final MatteBorder SELECTED_BORDER = BorderFactory
-			.createMatteBorder(1, 1, 1, 1, Color.black);
-	public static final CompoundBorder UNSELECTED_BORDER = BorderFactory
-			.createCompoundBorder(
-					BorderFactory.createMatteBorder(0, 1, 0, 0, Color.gray),
-					BorderFactory.createEmptyBorder(1, 0, 1, 1));
-	private final StoryComponentPanelLayoutManager layout = new StoryComponentPanelLayoutManager();
 
+	private final StoryComponentPanelLayoutManager layout = new StoryComponentPanelLayoutManager();
 	// Component
 	private final StoryComponent component;
 	// Panel Properties
@@ -271,7 +261,8 @@ public class StoryComponentPanel extends JPanel implements
 						component);
 			}
 		} else {
-			StoryComponentPanelFactory.getInstance().refreshMain(this);
+			StoryComponentPanelFactory.getInstance()
+					.refreshStoryComponentPanel(this);
 		}
 		// revalidate the panel
 		this.revalidate();
@@ -294,6 +285,46 @@ public class StoryComponentPanel extends JPanel implements
 		if (parentTree != null)
 			return parentTree.getSelectionManager();
 		return null;
+	}
+
+	/**
+	 * Makes every StoryComponentPanel editable, and any non-root
+	 * StoryComponentPanels selectable and removable
+	 */
+	public void updateComplexSettings() {
+		updateSettings(this);
+		for (StoryComponentPanel panel : this
+				.getDescendantStoryComponentPanels()) {
+			updateSettings(panel);
+		}
+	}
+
+	private void updateSettings(final StoryComponentPanel panel) {
+		panel.getStoryComponent().process(new AbstractNoOpStoryVisitor() {
+			@Override
+			protected void defaultProcess(StoryComponent component) {
+				panel.setSelectable(true);
+				panel.setRemovable(true);
+			}
+
+			/**
+			 * Everything but the root is selectable
+			 */
+			@Override
+			protected void defaultProcessComplex(ComplexStoryComponent complex) {
+				boolean notRoot = (complex.getOwner() != null);
+				panel.setSelectable(notRoot);
+				panel.setRemovable(notRoot);
+			}
+
+			@Override
+			public void processStoryItemSequence(StoryItemSequence sequence) {
+				panel.setSelectable(true);
+				panel.setRemovable(false);
+			}
+		});
+
+		panel.setEditable(true);
 	}
 
 	/**

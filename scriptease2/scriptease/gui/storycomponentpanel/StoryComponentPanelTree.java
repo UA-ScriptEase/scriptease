@@ -11,7 +11,6 @@ import scriptease.gui.SETree.filters.Filter;
 import scriptease.gui.SETree.filters.Filterable;
 import scriptease.gui.SETree.filters.StoryComponentFilter;
 import scriptease.gui.quests.QuestPoint;
-import scriptease.gui.storycomponentpanel.setting.StoryComponentPanelSetting;
 import scriptease.model.complex.ComplexStoryComponent;
 
 /**
@@ -27,16 +26,11 @@ import scriptease.model.complex.ComplexStoryComponent;
 public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	private StoryComponentPanelManager selectionManager;
 	private StoryComponentPanel rootPanel;
-	private StoryComponentPanelSetting settings;
 	private QuestPoint root;
 	private Filter filterRule;
 
 	public StoryComponentPanelTree() {
-		this(null, new StoryComponentPanelSetting());
-	}
-
-	public StoryComponentPanelTree(QuestPoint root) {
-		this(root, new StoryComponentPanelSetting());
+		this(null);
 	}
 
 	/**
@@ -45,13 +39,11 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * @param root
 	 * @param settings
 	 */
-	public StoryComponentPanelTree(QuestPoint root,
-			StoryComponentPanelSetting settings) {
+	public StoryComponentPanelTree(QuestPoint root) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 		this.selectionManager = new StoryComponentPanelManager();
-		this.settings = settings;
 		this.root = root;
 
 		if (root != null)
@@ -69,13 +61,11 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 *            The root StoryComponent for the tree.
 	 */
 	public void setRoot(QuestPoint root) {
-		final StoryComponentPanel rootPanel = StoryComponentPanelFactory
-				.getInstance().buildPanel(root);
-		if (this.settings != null)
-			this.settings.updateComplexSettings(rootPanel);
+		this.rootPanel = StoryComponentPanelFactory.getInstance()
+				.buildStoryComponentPanel(root);
+		this.rootPanel.updateComplexSettings();
 		this.selectionManager.clearSelection();
 		this.selectionManager.addComplexPanel(rootPanel, false);
-		this.rootPanel = rootPanel;
 
 		this.filterTree(this.rootPanel);
 
@@ -103,8 +93,6 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 			this.filterRule = newFilterRule;
 		else
 			this.filterRule.addRule(newFilterRule);
-
-		// this.filterTree(this.rootPanel);
 
 		this.setRoot(this.root);
 
@@ -165,27 +153,6 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 
 	public StoryComponentPanelManager getSelectionManager() {
 		return this.selectionManager;
-	}
-
-	/**
-	 * Gets the StoryComponentPanelTree's settings
-	 * 
-	 * @return
-	 */
-	public StoryComponentPanelSetting getSettings() {
-		return this.settings;
-	}
-
-	/**
-	 * Sets the StoryComponentPanelTree's settings to the given settings, and
-	 * updates the root to reflect them
-	 * 
-	 * @param settings
-	 */
-	public void setSettings(StoryComponentPanelSetting settings) {
-		this.settings = settings;
-		if (this.rootPanel != null)
-			this.settings.updateComplexSettings(this.rootPanel);
 	}
 
 	public void setSelectionManager(StoryComponentPanelManager selectionManager) {
