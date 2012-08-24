@@ -11,6 +11,9 @@ public class GameConstantSearchFilter extends GameConstantFilter {
 	final private Map<GameConstant, Integer> keyCountPerComponent;
 	private String searchText;
 
+	// XXX NOTE: This class no longer works. Code is still here for when we
+	// implement it into indexed search.
+
 	public GameConstantSearchFilter(String searchText) {
 		this.searchText = searchText;
 		this.keyCountPerComponent = new HashMap<GameConstant, Integer>();
@@ -39,7 +42,10 @@ public class GameConstantSearchFilter extends GameConstantFilter {
 
 		if (key != null && !key.trim().isEmpty()) {
 			searchableData = getSearchDataForGameObject(object);
-			count = SearchFilterHelper.countKeyMatches(searchableData, key);
+			// XXX This method has been moved to StoryComponentSearchFilter.
+			// XXX Once we implement indexed search, we won't need specific
+			// search classes anymore.
+			// count = SearchFilterHelper.countKeyMatches(searchableData, key);
 		}
 
 		return count;

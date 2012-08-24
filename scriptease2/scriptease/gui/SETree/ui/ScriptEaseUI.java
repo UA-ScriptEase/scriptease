@@ -2,8 +2,11 @@ package scriptease.gui.SETree.ui;
 
 import java.awt.Color;
 
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.UIManager;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.MatteBorder;
 
 import scriptease.util.GUIOp;
 
@@ -37,6 +40,16 @@ public interface ScriptEaseUI {
 	 * The colour (Light Grey) used for bound type widgets
 	 */
 	public static final Color COLOUR_BOUND = Color.LIGHT_GRAY;
+	
+	/**
+	 * The colour (Grey) used for selected UI Components
+	 */
+	public static final Color SELECTED_COLOUR = new Color(220, 220, 220);
+
+	/**
+	 * The colour (White) used for unselected UI components
+	 */
+	public static final Color UNSELECTED_COLOUR = Color.WHITE;
 
 	/**
 	 * The colour (gold) used for selected graph nodes
@@ -114,4 +127,18 @@ public interface ScriptEaseUI {
 	 */
 	public static final Icon EXPAND_ICON = (Icon) UIManager
 			.get("Tree.collapsedIcon");
+	
+	/**
+	 * The border used for selected UI components.
+	 */
+	public static final MatteBorder SELECTED_BORDER = BorderFactory
+			.createMatteBorder(1, 1, 1, 1, Color.black);
+	
+	/**
+	 * The border used for unselected UI components.
+	 */
+	public static final CompoundBorder UNSELECTED_BORDER = BorderFactory
+			.createCompoundBorder(
+					BorderFactory.createMatteBorder(0, 1, 0, 0, Color.gray),
+					BorderFactory.createEmptyBorder(1, 0, 1, 1));
 }

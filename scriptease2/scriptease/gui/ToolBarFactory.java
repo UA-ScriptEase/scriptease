@@ -750,7 +750,6 @@ public class ToolBarFactory {
 		 */
 		private void insertQuestPoint(GraphNode node) {
 			// if this is the second click,
-
 			GraphNode oldSelectedNode = gPanel.getOldSelectedNode();
 
 			if (oldSelectedNode != null) {

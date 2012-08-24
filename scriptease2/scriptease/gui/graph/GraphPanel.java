@@ -48,7 +48,6 @@ import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.gui.graph.nodes.TextNode;
 import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPointNode;
-import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.util.GUIOp;
 import sun.awt.util.IdentityArrayList;
@@ -109,7 +108,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		this.setUI(new GraphPanelUI());
 
 		this.setOpaque(true);
-		this.setBackground(StoryComponentPanel.UNSELECTED_COLOUR);
+		this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 	}
 
 	/**

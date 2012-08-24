@@ -208,6 +208,8 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 				}
 
 			list.repaint();
+			list.revalidate();
+
 			this.revalidate();
 		}
 	}

@@ -1,6 +1,7 @@
 package scriptease.gui.SETree.filters;
 
 import java.util.Collection;
+import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.AbstractNoOpStoryVisitor;
@@ -19,6 +20,9 @@ import scriptease.model.complex.ScriptIt;
  * @author remiller
  */
 public class StoryComponentSearchFilter extends StoryComponentFilter {
+	private static final String WHITESPACE_AND_QUOTES = " \t\r\n\"";
+	private static final String QUOTES_ONLY = "\"";
+
 	private String searchText;
 
 	public StoryComponentSearchFilter(String searchText) {
@@ -52,7 +56,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 
 		if (key != null && !key.trim().isEmpty()) {
 			searchableData = getSearchDataForComponent(component);
-			count = SearchFilterHelper.countKeyMatches(searchableData, key);
+			count = countKeyMatches(searchableData, key);
 		}
 
 		return count;
@@ -67,9 +71,69 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	private Collection<String> getSearchDataForComponent(
 			StoryComponent component) {
 		SearchDataCompiler searchData = new SearchDataCompiler();
-		// Freezes on this line...
 		searchData.compile(component);
 		return searchData.getData();
+	}
+
+	/**
+	 * Counts the number of key matches in the given collection of tokens
+	 * 
+	 * @param tokens
+	 * @param key
+	 * @return
+	 */
+	private Integer countKeyMatches(Collection<String> searchableData, String key) {
+		int count = 0;
+		Collection<String> parsedKeys = parseKey(key);
+		for (String parsedKey : parsedKeys) {
+			int localCount = 0;
+			for (String data : searchableData) {
+				if (data.toLowerCase().contains(parsedKey.toLowerCase()))
+					localCount++;
+			}
+			if (localCount == 0)
+				return 0;
+			count += localCount;
+		}
+		return count;
+	}
+
+	/**
+	 * Returns a Collection of String tokens representing either words, or
+	 * phrases in quotations from the given text based on
+	 * http://www.javapractices.com/topic/TopicAction.do?Id=87
+	 * 
+	 * @param text
+	 * @return
+	 */
+	private Collection<String> parseKey(String text) {
+		Collection<String> result = new CopyOnWriteArraySet<String>();
+
+		String currentDelims = WHITESPACE_AND_QUOTES;
+		boolean returnTokens = true;
+
+		StringTokenizer parser = new StringTokenizer(text, currentDelims,
+				returnTokens);
+
+		while (parser.hasMoreTokens()) {
+			String token = parser.nextToken(currentDelims);
+			if (!token.equals(QUOTES_ONLY)) {
+				token = token.trim();
+				if (!token.equals("")) {
+					result.add(token);
+				}
+			} else {
+				currentDelims = flipDelimiters(currentDelims);
+			}
+		}
+		return result;
+	}
+
+	private String flipDelimiters(String currentDelims) {
+		if (currentDelims.equals(WHITESPACE_AND_QUOTES))
+			return QUOTES_ONLY;
+		else
+			return WHITESPACE_AND_QUOTES;
 	}
 
 	/**
@@ -81,16 +145,16 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	private class SearchDataCompiler extends AbstractNoOpStoryVisitor {
 		private Collection<String> searchData;
 
-		public SearchDataCompiler() {
+		private SearchDataCompiler() {
 			searchData = new CopyOnWriteArraySet<String>();
 		}
 
-		public void compile(StoryComponent component) {
+		private void compile(StoryComponent component) {
 			searchData.add(component.getDisplayText());
 			component.process(this);
 		}
 
-		public Collection<String> getData() {
+		private Collection<String> getData() {
 			return searchData;
 		}
 

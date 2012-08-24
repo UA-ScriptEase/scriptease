@@ -200,6 +200,8 @@ public final class WindowFactory {
 
 		final JDialog progressBar = DialogBuilder.getInstance()
 				.createProgressBar(this.currentFrame, progressBarText);
+
+		WindowFactory.progressShowing = true;
 		task.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent change) {
@@ -213,8 +215,7 @@ public final class WindowFactory {
 				}
 			}
 		});
-
-		WindowFactory.progressShowing = true;
+		
 		progressBar.setVisible(true);
 	}
 
@@ -275,7 +276,7 @@ public final class WindowFactory {
 			// if avaliable, show the panel being changed, otherwise use the
 			// display text
 			StoryComponentPanel componentPanel = StoryComponentPanelFactory
-					.getInstance().buildPanel(component);
+					.getInstance().buildStoryComponentPanel(component);
 			if (componentPanel != null) {
 				componentPanel.setEnabled(false);
 				problemPanel.add(componentPanel);
@@ -338,7 +339,7 @@ public final class WindowFactory {
 				@Override
 				protected void defaultProcess(StoryComponent component) {
 					StoryComponentPanel componentPanel = StoryComponentPanelFactory
-							.getInstance().buildPanel(component);
+							.getInstance().buildStoryComponentPanel(component);
 					if (componentPanel != null) {
 						// Setup the panel
 						componentPanel.setEditable(false);

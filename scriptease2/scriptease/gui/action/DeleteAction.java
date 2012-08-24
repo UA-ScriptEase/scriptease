@@ -72,12 +72,14 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 		focusOwner = ComponentFocusManager.getInstance().getFocus();
 
 		if (focusOwner instanceof StoryComponentPanel) {
+			// Delete StoryComponentPanels
 			final StoryComponentPanel panel;
 			panel = (StoryComponentPanel) focusOwner;
 
 			panel.getSelectionManager().deleteSelected();
 		} else if (focusOwner instanceof StoryComponentPanelJList
 				&& PatternModelManager.getInstance().getActiveModel() instanceof LibraryModel) {
+			// Delete elements from StoryComponentPanelJList
 			final StoryComponentPanelJList list;
 			list = (StoryComponentPanelJList) focusOwner;
 
@@ -97,6 +99,8 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 				libraryModel.remove(selectedPanel.getStoryComponent());
 			}
 		} else if (focusOwner instanceof GraphPanel) {
+			//Delete QuestNode
+			
 			// final GraphPanel graphPanel;
 			// graphPanel = (GraphPanel) focusOwner;
 
