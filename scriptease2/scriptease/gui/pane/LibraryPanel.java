@@ -1,6 +1,7 @@
 package scriptease.gui.pane;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseListener;
@@ -51,6 +52,9 @@ import scriptease.translator.TranslatorManager;
  */
 public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		PatternModelObserver {
+
+	private final JTabbedPane listTabs;
+
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
 
 	/**
@@ -63,7 +67,6 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 	public LibraryPanel(boolean hideInvisible) {
 		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
 
-		final JTabbedPane listTabs;
 		final JComponent filterPane;
 		final JComponent searchFilterPane;
 		final JTextField searchField;
@@ -206,11 +209,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 					list.addStoryComponents(libraryModel
 							.getMainStoryComponents());
 				}
-
-			list.repaint();
-			list.revalidate();
-
-			this.revalidate();
+			
 		}
 	}
 

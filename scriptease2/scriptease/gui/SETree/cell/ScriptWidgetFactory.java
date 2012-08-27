@@ -28,7 +28,9 @@ import javax.swing.SwingUtilities;
 
 import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpStoryVisitor;
-import scriptease.controller.ObserverFactory;
+import scriptease.controller.ObservedJPanel;
+import scriptease.controller.observer.StoryComponentEvent;
+import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.transfer.BindingTransferHandlerExportOnly;
@@ -187,12 +189,29 @@ public class ScriptWidgetFactory {
 				widget.add(ScriptWidgetFactory.buildNameEditor(storyComponent));
 			} else {
 				final JLabel nameLabel;
-				nameLabel = ScriptWidgetFactory.buildLabel(storyComponent,
-						Color.WHITE);
+				final ObservedJPanel observedLabel;
+				final StoryComponentObserver observer;
 
-				// TODO
+				nameLabel = ScriptWidgetFactory.buildLabel(
+						storyComponent.getDisplayText(), Color.WHITE);
+				observer = new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						// only update the name for now, but if anything else is
+						// needed later, it should be added here. - remiller
+						if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+							nameLabel.setText(event.getSource()
+									.getDisplayText());
+						}
+					}
+				};
+				
+				
+				observedLabel = new ObservedJPanel(nameLabel, observer);
 
-				widget.add(nameLabel);
+				storyComponent.addStoryComponentObserver(observer);
+
+				widget.add(observedLabel);
 			}
 
 			widget.setTransferHandler(BindingTransferHandlerExportOnly
@@ -278,28 +297,6 @@ public class ScriptWidgetFactory {
 		widgetsToStoryComponents.put(slotPanel, knowIt);
 
 		return slotPanel;
-	}
-
-	/**
-	 * Builds a label for displaying text representing a story component with a
-	 * listener that checks for changes to the text.
-	 * 
-	 * @param component
-	 * @param textColor
-	 * @return
-	 */
-	public static JLabel buildLabel(StoryComponent component, Color textColor) {
-		final JLabel label;
-		
-		label = buildLabel(component.getDisplayText(), textColor);
-
-/*		final StoryComponentObserver observer;
-		observer = ObserverFactory.getInstance().buildNameLabelObserver(
-				nameLabel);
-		storyComponent.addStoryComponentObserver(observer);
-		*/
-		return new JLabel();
-
 	}
 
 	/**

@@ -255,6 +255,8 @@ public abstract class StoryComponent implements Cloneable {
 			StoryComponentObserver storyComponentObserver = observerRef.get();
 			if (storyComponentObserver != null)
 				storyComponentObserver.componentChanged(event);
+			else
+				this.observers.remove(observerRef);
 		}
 	}
 
