@@ -6,7 +6,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.controller.VisibilityManager;
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
@@ -63,9 +62,7 @@ public class NewEffectAction extends ActiveTranslatorSensitiveAction {
 
 		newCause.addCodeBlock(codeBlock);
 		newCause.setDisplayText("Do Something");
-
-		// Set the visibility
-		VisibilityManager.getInstance().setVisibility(newCause, true);
+		newCause.setVisible(true);
 
 		libraryModel.add(newCause);
 	}

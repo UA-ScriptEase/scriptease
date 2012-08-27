@@ -271,7 +271,7 @@ public class BindingWidgetUI extends ComponentUI {
 		// This is for BindingWidgets....
 		for (String type : comp.getBinding().getTypes()) {
 
-			this.typeRenderer = ScriptWidgetFactory.buildTypeWidget(type);
+			this.typeRenderer = ScriptWidgetFactory.getTypeWidget(type);
 
 			this.typeRenderer.setBackground(bgColor);
 
@@ -298,7 +298,7 @@ public class BindingWidgetUI extends ComponentUI {
 		if (binding.isBound()) {
 			type = binding.getFirstType();
 
-			this.typeRenderer = ScriptWidgetFactory.buildTypeWidget(type);
+			this.typeRenderer = ScriptWidgetFactory.getTypeWidget(type);
 		} else
 			this.typeRenderer = null;
 

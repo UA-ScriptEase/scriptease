@@ -19,14 +19,11 @@ import javax.swing.event.MouseInputListener;
 
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.ContainerCollector;
-import scriptease.controller.VisibilityManager;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.controller.observer.StoryComponentObserverAdder;
 import scriptease.controller.observer.StoryComponentObserverRemover;
-import scriptease.controller.observer.VisibilityManagerEvent;
-import scriptease.controller.observer.VisibilityManagerObserver;
 import scriptease.gui.ComponentFocusManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -41,7 +38,7 @@ import scriptease.model.complex.StoryItemSequence;
  */
 @SuppressWarnings("serial")
 public class StoryComponentPanel extends JPanel implements
-		StoryComponentObserver, MouseInputListener, VisibilityManagerObserver {
+		StoryComponentObserver, MouseInputListener {
 
 	private final StoryComponentPanelLayoutManager layout = new StoryComponentPanelLayoutManager();
 	// Component
@@ -83,13 +80,10 @@ public class StoryComponentPanel extends JPanel implements
 		// Layout
 		this.setLayout(layout);
 
-		// Visibility Listener
-		VisibilityManager.getInstance().addVisibilityManagerListener(this);
 		this.addFocusListener(ComponentFocusManager.getInstance()
 				.defaultFocusListener(this));
 
-		// Set Initial visibility to reflect the VisibilityManager
-		this.setVisible(VisibilityManager.getInstance().isVisible(component));
+		this.setVisible(component.isVisible());
 	}
 
 	@Override
@@ -237,6 +231,8 @@ public class StoryComponentPanel extends JPanel implements
 				StoryComponentPanelFactory.getInstance().removeChild(this,
 						component);
 			}
+		} else if (type.equals(StoryComponentChangeEnum.CHANGE_VISIBILITY)) {
+			this.setVisible(component.isVisible());
 		} else {
 			StoryComponentPanelFactory.getInstance()
 					.refreshStoryComponentPanel(this);
@@ -341,18 +337,6 @@ public class StoryComponentPanel extends JPanel implements
 		if (selectionManager != null)
 			selectionManager.toggleSelection(this, e);
 		e.consume();
-	}
-
-	@Override
-	public void visibilityChanged(VisibilityManagerEvent event) {
-		final short type = event.getEventType();
-		final StoryComponent changed = event.getSource();
-		if (changed == this.component) {
-			if (type == VisibilityManagerEvent.VISIBILITY_ADDED)
-				this.setVisible(true);
-			else if (type == VisibilityManagerEvent.VISIBILITY_REMOVED)
-				this.setVisible(false);
-		}
 	}
 
 	@Override

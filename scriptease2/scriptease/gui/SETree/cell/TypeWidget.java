@@ -20,6 +20,7 @@ import scriptease.translator.TranslatorManager;
  * observer with the Translator.
  * 
  * @author mfchurch
+ * @author kschenk
  * 
  */
 @SuppressWarnings("serial")
