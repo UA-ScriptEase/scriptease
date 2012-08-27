@@ -989,6 +989,8 @@ public final class FileManager {
 			FileManagerObserver observer = observerRef.get();
 			if (observer != null)
 				observer.fileReferenced(model, location);
+			else
+				this.observers.remove(observerRef);
 		}
 	}
 }

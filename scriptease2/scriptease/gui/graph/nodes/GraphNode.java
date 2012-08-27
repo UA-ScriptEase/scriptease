@@ -145,6 +145,8 @@ public abstract class GraphNode implements Cloneable {
 			GraphNodeObserver graphNodeObserver = observerRef.get();
 			if (graphNodeObserver != null)
 				graphNodeObserver.nodeChanged(event);
+			else
+				this.observers.remove(observerRef);
 		}
 	}
 

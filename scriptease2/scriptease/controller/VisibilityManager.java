@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.observer.VisibilityManagerEvent;
@@ -21,12 +22,12 @@ import scriptease.model.StoryComponent;
  * @author mfchurch
  */
 public class VisibilityManager {
-	private Map<StoryComponent, Boolean> visibilityMap;
+	private Map<WeakReference<StoryComponent>, Boolean> visibilityMap;
 	private Collection<WeakReference<VisibilityManagerObserver>> observers;
 	private static VisibilityManager instance;
 
 	private VisibilityManager() {
-		this.visibilityMap = new IdentityHashMap<StoryComponent, Boolean>();
+		this.visibilityMap = new IdentityHashMap<WeakReference<StoryComponent>, Boolean>();
 		this.observers = new CopyOnWriteArraySet<WeakReference<VisibilityManagerObserver>>();
 	}
 
@@ -42,12 +43,15 @@ public class VisibilityManager {
 	 * @param observer
 	 */
 	public void addVisibilityManagerListener(VisibilityManagerObserver observer) {
-		for(WeakReference<VisibilityManagerObserver> observerRef: this.observers) {
-			VisibilityManagerObserver visibilityManagerObserver = observerRef.get();
-			if(visibilityManagerObserver != null && visibilityManagerObserver == observer)
+		for (WeakReference<VisibilityManagerObserver> observerRef : this.observers) {
+			VisibilityManagerObserver visibilityManagerObserver = observerRef
+					.get();
+			if (visibilityManagerObserver != null
+					&& visibilityManagerObserver == observer)
 				return;
 		}
-		this.observers.add(new WeakReference<VisibilityManagerObserver>(observer));
+		this.observers.add(new WeakReference<VisibilityManagerObserver>(
+				observer));
 	}
 
 	public void removeVisibilityManagerListener(
@@ -65,17 +69,20 @@ public class VisibilityManager {
 				this.observers);
 
 		for (WeakReference<VisibilityManagerObserver> observerRef : observersCopy) {
-			VisibilityManagerObserver visibilityManagerObserver = observerRef.get();
+			VisibilityManagerObserver visibilityManagerObserver = observerRef
+					.get();
 			if (visibilityManagerObserver != null) {
 				final VisibilityManagerEvent event = new VisibilityManagerEvent(
 						changed, type);
 				visibilityManagerObserver.visibilityChanged(event);
-			}
+			} else
+				this.observers.remove(observerRef);
 		}
 	}
 
 	public void setVisibility(StoryComponent component, boolean visible) {
-		this.visibilityMap.put(component, visible);
+		this.visibilityMap.put(new WeakReference<StoryComponent>(component),
+				visible);
 		final short change;
 		if (visible) {
 			change = VisibilityManagerEvent.VISIBILITY_ADDED;
@@ -92,11 +99,11 @@ public class VisibilityManager {
 	 * @return
 	 */
 	public Boolean isVisible(StoryComponent component) {
-		Boolean isVisible;
-		if (!this.visibilityMap.containsKey(component))
-			isVisible = true;
-		else
-			isVisible = this.visibilityMap.get(component);
-		return isVisible;
+		for (Entry<WeakReference<StoryComponent>, Boolean> entry : this.visibilityMap
+				.entrySet()) {
+			if (entry.getKey().get() == component)
+				return entry.getValue();
+		}
+		return true;
 	}
 }

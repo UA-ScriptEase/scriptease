@@ -16,11 +16,11 @@ import scriptease.translator.Translator;
  * be <i>at most</i> one active model at any one time.<br>
  * <br>
  * Interested parties can register themselves with <code>PatternModelPool</code>
- * as {@link PatternModelObserver}s and be notified of changes to the pool
- * when they occur.<br>
+ * as {@link PatternModelObserver}s and be notified of changes to the pool when
+ * they occur.<br>
  * <br>
- * <code>PatternModelPool</code> is a Singleton class since it seems unlikely that
- * we will ever need more than one pool per application instance.
+ * <code>PatternModelPool</code> is a Singleton class since it seems unlikely
+ * that we will ever need more than one pool per application instance.
  * 
  * @author remiller
  * @author kschenk
@@ -105,8 +105,8 @@ public final class PatternModelManager {
 	}
 
 	/**
-	 * Adds the given <code>PatternModel</code> to the model pool and immediately
-	 * activates it if <code>activate</code> is true.
+	 * Adds the given <code>PatternModel</code> to the model pool and
+	 * immediately activates it if <code>activate</code> is true.
 	 * 
 	 * @param model
 	 *            The model to add.
@@ -154,8 +154,8 @@ public final class PatternModelManager {
 	}
 
 	/**
-	 * Adds a PatternModelPoolObserver to this pool's list of observers to notify
-	 * when a change to the pool occurs.
+	 * Adds a PatternModelPoolObserver to this pool's list of observers to
+	 * notify when a change to the pool occurs.
 	 * 
 	 * @param observer
 	 *            the listener to add
@@ -189,6 +189,8 @@ public final class PatternModelManager {
 			if (patternModelPoolObserver != null)
 				patternModelPoolObserver.modelChanged(new PatternModelEvent(
 						model, eventType));
+			else
+				this.observers.remove(observerRef);
 		}
 	}
 }

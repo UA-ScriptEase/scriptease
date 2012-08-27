@@ -98,6 +98,8 @@ public final class UndoManager implements PatternModelObserver,
 			UndoManagerObserver undoManagerObserver = observerRef.get();
 			if (undoManagerObserver != null)
 				undoManagerObserver.stackChanged();
+			else
+				this.observers.remove(observerRef);
 		}
 	}
 

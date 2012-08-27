@@ -6,10 +6,11 @@ import java.awt.event.MouseListener;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.ListCellRenderer;
+import javax.swing.JPanel;
 
 import scriptease.controller.VisibilityManager;
 import scriptease.gui.ComponentFocusManager;
@@ -35,6 +36,12 @@ import scriptease.model.StoryComponent;
 @SuppressWarnings("serial")
 public class StoryComponentPanelJList extends JList implements Filterable {
 	private Filter filterRule;
+
+	private static final JPanel noResultsPanel = new JPanel();
+	static {
+		noResultsPanel.setOpaque(false);
+		noResultsPanel.add(new JLabel("No Results Found"));
+	}
 
 	/**
 	 * Creates a JList that is able to render Story Component Panels as items.
@@ -92,6 +99,8 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 		listModel = (DefaultListModel) this.getModel();
 
+		listModel.removeElement(noResultsPanel);
+
 		for (StoryComponent component : storyComponentList) {
 			if (!(filterRule == null)) {
 				if (!filterRule.isAcceptable(component))
@@ -102,8 +111,11 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 					.buildStoryComponentPanel(component));
 		}
 
-		for (int i = 0; i < listModel.size(); i++)
-			listModel.setElementAt(listModel.getElementAt(i), i);
+		if (listModel.isEmpty())
+			listModel.addElement(noResultsPanel);
+		else
+			for (int i = 0; i < listModel.size(); i++)
+				listModel.setElementAt(listModel.getElementAt(i), i);
 	}
 
 	/**
@@ -111,6 +123,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 */
 	public void removeAllStoryComponents() {
 		final DefaultListModel listModel;
+
 		listModel = (DefaultListModel) this.getModel();
 
 		listModel.clear();
@@ -145,7 +158,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * @author kschenk
 	 * 
 	 */
-	private class StoryComponentListRenderer implements ListCellRenderer {
+	private class StoryComponentListRenderer extends DefaultListCellRenderer {
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
@@ -173,6 +186,8 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				else if (!isSelected && isVisible)
 					valuePanel.setBackground(list.getBackground());
 				return valuePanel;
+			} else if (value instanceof JPanel) {
+				return (JPanel) value;
 			} else
 				return new JLabel("Error: Not a story component: "
 						+ value.toString());

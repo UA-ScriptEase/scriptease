@@ -237,6 +237,8 @@ public class TranslatorManager implements PatternModelObserver {
 			TranslatorObserver graphNodeObserver = observerRef.get();
 			if (graphNodeObserver != null)
 				graphNodeObserver.translatorLoaded(this.activeTranslator);
+			else
+				this.observers.remove(observerRef);
 		}
 	}
 

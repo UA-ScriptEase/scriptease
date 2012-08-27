@@ -235,7 +235,9 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 			LibraryManagerObserver libraryManagerObserver = observerRef.get();
 			if (libraryManagerObserver != null)
 				libraryManagerObserver.modelChanged(event);
-		}
+			else
+				this.observers.remove(observerRef);
+		} 
 	}
 
 	/**
