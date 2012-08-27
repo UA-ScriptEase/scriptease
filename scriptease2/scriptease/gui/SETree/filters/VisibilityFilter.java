@@ -1,6 +1,5 @@
 package scriptease.gui.SETree.filters;
 
-import scriptease.controller.VisibilityManager;
 import scriptease.model.StoryComponent;
 
 /**
@@ -20,7 +19,7 @@ public class VisibilityFilter extends StoryComponentFilter {
 	@Override
 	public int getMatchCount(StoryComponent component) {
 		if (hideInvisible)
-			return VisibilityManager.getInstance().isVisible(component) ? 1 : 0;
+			return component.isVisible() ? 1 : 0;
 		else
 			return 1;
 	}

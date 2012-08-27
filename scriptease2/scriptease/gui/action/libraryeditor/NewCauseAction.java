@@ -8,7 +8,6 @@ import java.util.Collection;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.controller.VisibilityManager;
 import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
@@ -100,9 +99,7 @@ public class NewCauseAction extends ActiveTranslatorSensitiveAction {
 
 			newCause.addCodeBlock(codeBlock);
 			newCause.setDisplayText("When <" + SUBJECT + ">");
-
-			// Set the visibility
-			VisibilityManager.getInstance().setVisibility(newCause, true);
+			newCause.setVisible(true);
 
 			libraryModel.add(newCause);
 		} else {

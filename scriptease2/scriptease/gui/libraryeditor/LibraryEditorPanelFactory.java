@@ -41,7 +41,6 @@ import javax.swing.event.DocumentListener;
 import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.StoryVisitor;
-import scriptease.controller.VisibilityManager;
 import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
@@ -358,8 +357,7 @@ public class LibraryEditorPanelFactory {
 				labelField.setText(StringOp.getCollectionAsString(
 						component.getLabels(), ", "));
 				labelField.setToolTipText(labelToolTip);
-				visibleBox.setSelected(VisibilityManager.getInstance()
-						.isVisible(component));
+				visibleBox.setSelected(component.isVisible());
 
 				nameFieldListener = nameFieldListener(nameField, component);
 				labelFieldListener = labelFieldListener(labelField, component);
@@ -447,8 +445,7 @@ public class LibraryEditorPanelFactory {
 				return new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						VisibilityManager.getInstance().setVisibility(
-								component, visibleBox.isSelected());
+						component.setVisible(visibleBox.isSelected());
 					}
 				};
 			}

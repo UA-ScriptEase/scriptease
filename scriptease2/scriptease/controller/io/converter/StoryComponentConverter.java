@@ -3,7 +3,6 @@ package scriptease.controller.io.converter;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.VisibilityManager;
 import scriptease.controller.io.FileIO;
 import scriptease.model.StoryComponent;
 
@@ -41,8 +40,7 @@ public abstract class StoryComponentConverter implements Converter {
 
 		// Visibility
 		writer.startNode(TAG_VISIBLE);
-		writer.setValue(VisibilityManager.getInstance().isVisible(comp)
-				.toString());
+		writer.setValue(comp.isVisible().toString());
 		writer.endNode();
 
 		// Labels
@@ -92,10 +90,7 @@ public abstract class StoryComponentConverter implements Converter {
 		// Actually init the StoryComponent.
 		comp.setDisplayText(displayText);
 		comp.addLabels(labels);
-
-		// Set the visibility
-		VisibilityManager.getInstance().setVisibility(comp,
-				visibility.equalsIgnoreCase("true"));
+		comp.setVisible(visibility.equalsIgnoreCase("true"));
 
 		return comp;
 	}

@@ -223,7 +223,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 				typePanel.setOpaque(false);
 				for (String type : knowIt.getAcceptableTypes()) {
 					TypeWidget typeWidget = ScriptWidgetFactory
-							.buildTypeWidget(type);
+							.getTypeWidget(type);
 
 					typeWidget.setSelected(true);
 					typeWidget.setBackground(ScriptEaseUI.COLOUR_BOUND);

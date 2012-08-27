@@ -12,7 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import scriptease.controller.VisibilityManager;
 import scriptease.gui.ComponentFocusManager;
 import scriptease.gui.SETree.filters.Filter;
 import scriptease.gui.SETree.filters.Filterable;
@@ -171,8 +170,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				valuePanel = (StoryComponentPanel) value;
 
 				valueComponent = valuePanel.getStoryComponent();
-				isVisible = VisibilityManager.getInstance().isVisible(
-						valueComponent);
+				isVisible = valueComponent.isVisible();
 
 				valuePanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1,
 						0, Color.LIGHT_GRAY));

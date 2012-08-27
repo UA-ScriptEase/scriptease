@@ -42,10 +42,13 @@ import scriptease.model.complex.ComplexStoryComponent;
  * 
  * @author jtduncan
  * @author remiller
+ * @author kschenk
  */
 public abstract class StoryComponent implements Cloneable {
 	private String displayText;
 	private Collection<String> labels;
+	private Boolean isVisible;
+
 	public StoryComponent ownerComponent;
 	private Collection<WeakReference<StoryComponentObserver>> observers;
 
@@ -79,6 +82,7 @@ public abstract class StoryComponent implements Cloneable {
 		this.observers = new ArrayList<WeakReference<StoryComponentObserver>>();
 		this.displayText = StoryComponent.BLANK_TEXT;
 		this.labels = new ArrayList<String>();
+		this.isVisible = true;
 	}
 
 	/**
@@ -137,6 +141,15 @@ public abstract class StoryComponent implements Cloneable {
 	 */
 	public String getDisplayText() {
 		return this.displayText;
+	}
+
+	/**
+	 * Gets the visibility of the StoryComponent
+	 * 
+	 * @return
+	 */
+	public Boolean isVisible() {
+		return this.isVisible;
 	}
 
 	/**
@@ -200,6 +213,17 @@ public abstract class StoryComponent implements Cloneable {
 		this.displayText = newDisplayText;
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_TEXT_NAME));
+	}
+
+	/**
+	 * Sets the visibility to the boolean.
+	 * 
+	 * @param isVisible
+	 */
+	public void setVisible(Boolean isVisible) {
+		this.isVisible = isVisible;
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_VISIBILITY));
 	}
 
 	/**
@@ -298,6 +322,7 @@ public abstract class StoryComponent implements Cloneable {
 
 		// make them the same again, now that they're less conjoined.
 		clone.setDisplayText(new String(this.displayText));
+		clone.setVisible(this.isVisible);
 		clone.setOwner(this.ownerComponent);
 
 		// add all of the labels
@@ -318,7 +343,7 @@ public abstract class StoryComponent implements Cloneable {
 				&& (other.getClass().equals(this.getClass()))) {
 			comp = (StoryComponent) other;
 			equal = comp.getDisplayText().equals(this.displayText);
-
+			equal &= comp.isVisible == this.isVisible;
 			for (String label : comp.getLabels()) {
 				equal &= this.labels.contains(label);
 			}
@@ -332,8 +357,8 @@ public abstract class StoryComponent implements Cloneable {
 	/**
 	 * This is a double-dispatch hook for the
 	 * {@link scriptease.controller.StoryVisitor} family of controllers.
-	 * <code>visitor</code> implements each of: process[X] where [X]
-	 * is each of the leaf members of the <code>StoryComponent</code> family. <BR>
+	 * <code>visitor</code> implements each of: process[X] where [X] is each of
+	 * the leaf members of the <code>StoryComponent</code> family. <BR>
 	 * <BR>
 	 * To Use: Pass in a valid StoryVisitor to this method. The implementing
 	 * atom of this method will dispatch the appropriate
