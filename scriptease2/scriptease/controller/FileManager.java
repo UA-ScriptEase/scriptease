@@ -654,7 +654,7 @@ public final class FileManager {
 		model.process(new AbstractNoOpModelVisitor() {
 			@Override
 			public void processLibraryModel(LibraryModel libraryModel) {
-				// TODO Auto-generated method stub
+				// TODO Possibly add functionality to close translators.
 				super.processLibraryModel(libraryModel);
 			}
 
