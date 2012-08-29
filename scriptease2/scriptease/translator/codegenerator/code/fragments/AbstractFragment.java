@@ -88,7 +88,6 @@ public abstract class AbstractFragment {
 		StringBuilder code = new StringBuilder();
 
 		for (AbstractFragment token : format) {
-			// This is where it gets set to "PlayerCharacter".
 			code.append(token.resolve(context));
 		}
 

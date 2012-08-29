@@ -57,6 +57,13 @@ public interface CodeGenerationKeywordConstants {
 		NONE,
 	}
 	
+	public static enum FormatReferenceType {
+		NONE,
+		ASKIT,
+		KNOWIT,
+		SCRIPTIT
+	}
+	
 	// Used in SeriesFragment
 	public static enum SeriesTypes {
 		ARGUMENTS,
