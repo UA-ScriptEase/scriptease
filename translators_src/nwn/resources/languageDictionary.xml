@@ -123,6 +123,34 @@
 			</Series>
 			<Literal>)</Literal>
 		</Format>
+		<Format id="causeConditional">
+			<Line>
+				<Literal>//Condition Variables</Literal>
+			</Line>
+			<Series data="variables">
+				<FormatRef ref="functionCall" />
+			</Series>
+			<Line />
+			<Line>
+				<Literal>if(</Literal>
+				<Fragment data="questpointenabled" />
+				<Literal>){</Literal>
+			</Line>
+			<Indent>
+				<Scope data="storyChild">
+					<FormatRef ref="functionCall" />
+				</Scope>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+			<Scope data="alwaysChild">
+				<FormatRef ref="childrenWithOutImplicits" />
+			</Scope>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
 		<Format id="functionCall">
 			<!-- Code block context -->
 			<Scope data="mainCodeBlock">

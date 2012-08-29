@@ -5957,9 +5957,10 @@
                 <Literal>;</Literal>
               </Line>
               <Line>
-                <Literal>SE2_Quest_RegisterQuestPoint(GetFirstPC(), name, </Literal>
+                <Literal>SE2_Quest_RegisterQuestPoint(</Literal>
+                <Literal>name, </Literal>
                 <Fragment data="fanIn"/>
-                <Literal>);</Literal>
+                <Literal>, GetFirstPC());</Literal>
               </Line>
               <Series data="parentNodes" unique="true">
                 <Line>
@@ -5982,7 +5983,7 @@
               <Literal>//enable the starting quest point</Literal>
             </Line>
             <Line>
-              <Literal>SE2_Quest_SetState(GetFirstPC(), </Literal>
+              <Literal>SE2_Quest_setState(GetFirstPC(), </Literal>
               <Scope data="start">
                 <Fragment data="formattedValue"/>
               </Scope>
@@ -23282,11 +23283,11 @@
           </Includes>
           <Code>
             <Line>
-              <Literal>SE2_Quest_SetState(GetFirstPC(),</Literal>
+              <Literal>SE2_Quest_SucceedQuestPoint(</Literal>
               <Scope data="argument" ref="QuestPoint">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
               </Scope>
-              <Literal>, QUEST_POINT_STATE_SUCCESS);</Literal>
+              <Literal>);</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -23321,11 +23322,11 @@
           </Includes>
           <Code>
             <Line>
-              <Literal>SE2_Quest_SetState(GetFirstPC(), </Literal>
+              <Literal>SE2_Quest_FailQuestPoint(</Literal>
               <Scope data="argument" ref="QuestPoint">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
               </Scope>
-              <Literal>, QUEST_POINT_STATE_FAIL);</Literal>
+              <Literal>);</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -23957,9 +23958,9 @@
           </Includes>
           <Code>
             <Line>
-              <Literal>SE2_Quest_ResetAtQuestPoint(GetFirstPC(), </Literal>
+              <Literal>SE2_Quest_ResetAtQuestPoint(</Literal>
               <Scope data="argument" ref="Quest Point">
-                <Fragment data="name" />
+                <Fragment data="name"/>
               </Scope>
               <Literal>);</Literal>
             </Line>
@@ -23996,7 +23997,7 @@
           </Includes>
           <Code>
             <Line>
-              <Literal>return SE2_Quest_GetState(GetFirstPC(), </Literal>
+              <Literal>return SE2_Quest_getState(GetFirstPC(), </Literal>
               <Scope data="argument" ref="QuestPoint">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
               </Scope>
@@ -24035,7 +24036,7 @@
           </Includes>
           <Code>
             <Line>
-              <Literal>return SE2_Quest_GetState(GetFirstPC(), </Literal>
+              <Literal>return SE2_Quest_getState(GetFirstPC(), </Literal>
               <Scope data="argument" ref="QuestPoint">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
               </Scope>
