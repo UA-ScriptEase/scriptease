@@ -1,13 +1,12 @@
 package scriptease.controller.undo;
 
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import scriptease.controller.observer.GraphNodeObserver;
 import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.quests.QuestNode;
+import scriptease.model.CodeBlock;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.StoryComponent;
@@ -175,7 +174,7 @@ public aspect Undo {
 	 */
 	public pointcut settingLibraryModelRoot():
 		within(LibraryModel+) && execution(* setRoot(StoryComponent+));
-	
+
 	/**
 	 * Defines the Set Root operation in StoryModels.
 	 */
@@ -194,42 +193,27 @@ public aspect Undo {
 	public pointcut selectingDescribeItPath():
 		within(DescribeIt+) && execution(* setSelectedPath(List<GraphNode>));
 
+	/**
+	 * Defines the AddCodeBlock operation in ScriptIts.
+	 */
+	public pointcut addingCodeBlock():
+		within(ScriptIt+) && execution(* addCodeBlock(CodeBlock));
+
+	/**
+	 * Defines the RemoveCodeBlock operation in ScriptIts.
+	 */
+	public pointcut removingCodeBlock():
+		within(ScriptIt+) && execution(* removeCodeBlock(CodeBlock));
+
 	/*
 	 * ====================== ADVICE ======================
 	 */
-	private static final UndoManager undo = UndoManager.getInstance();
-	private Queue<Modification> modifications = new ConcurrentLinkedQueue<Modification>();
 	private boolean recording = true;
 
-	private pointcut definedStoryComponentModifications():
-		Undo.settingName() ||
-		Undo.addingLabel() ||
-		Undo.removingLabel() || 
-		Undo.addingObserver() ||
-		Undo.removingObserver()||
-		Undo.settingKeyword() ||
-		Undo.settingBinding() ||
-		Undo.addingType() ||
-		Undo.removingType() ||
-		Undo.clearingTypes() ||
-		Undo.addingChild() ||
-		Undo.removingChild() ||
-		Undo.settingCondition()||
-		Undo.settingTitle() ||
-		Undo.settingAuthor() ||
-		Undo.settingStoryModelRoot() ||
-		Undo.settingLibraryModelRoot() ||
-		Undo.addingGraphNodeObserver() ||
-		Undo.removingGraphNodeObserver() ||
-		Undo.selectingGraphNode() 
-		;
-
-	after() returning: definedStoryComponentModifications(){
-		if (undo.hasOpenUndoableAction()) {
-			while (!modifications.isEmpty()) {
-				undo.appendModification(modifications.poll());
-			}
-		}
+	private void addModification(Modification mod) {
+		final UndoManager undo = UndoManager.getInstance();
+		if (undo.hasOpenUndoableAction() && recording)
+			undo.appendModification(mod);
 	}
 
 	KnowIt around(): cloneKnowIt() {
@@ -281,8 +265,7 @@ public aspect Undo {
 				return "setting " + owner + "'s name to " + newName;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final StoryComponent owner, final String addedLabel): addingLabel() && args(addedLabel) && this(owner) {
@@ -303,8 +286,7 @@ public aspect Undo {
 			}
 
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final StoryComponent owner, final String removedLabel): removingLabel() && args(removedLabel) && this(owner){
@@ -324,8 +306,7 @@ public aspect Undo {
 				return "removing parameter " + removedLabel + " from " + owner;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final StoryComponent owner,
@@ -346,8 +327,7 @@ public aspect Undo {
 				return "adding observer " + addedObserver + " to " + owner;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final StoryComponent owner,
@@ -369,8 +349,7 @@ public aspect Undo {
 						+ owner;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final GraphNode owner, final GraphNodeObserver addedObserver): addingGraphNodeObserver() && args(addedObserver) && this(owner){
@@ -390,8 +369,7 @@ public aspect Undo {
 				return "adding observer " + addedObserver + " to " + owner;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final GraphNode owner, final GraphNodeObserver removedObserver): removingGraphNodeObserver() && args(removedObserver) && this(owner){
@@ -412,8 +390,7 @@ public aspect Undo {
 						+ owner;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final KnowIt owner, final KnowItBinding newBinding): settingBinding() && args(newBinding) && this(owner) {
@@ -429,8 +406,7 @@ public aspect Undo {
 				return "setting " + owner + "'s binding to " + newBinding;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final KnowIt owner, final String newType): addingType() && args(newType) && this(owner) {
@@ -450,8 +426,7 @@ public aspect Undo {
 				return "adding type " + newType + " to " + owner;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final KnowIt owner, final String newType): removingType() && args(newType) && this(owner) {
@@ -474,8 +449,7 @@ public aspect Undo {
 				return "removing type " + newType + " from " + owner;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final ComplexStoryComponent owner, final StoryComponent addedChild,
@@ -497,8 +471,7 @@ public aspect Undo {
 				return "adding " + addedChild + " to " + owner;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final ComplexStoryComponent owner, final StoryComponent removedChild): removingChild() && args(removedChild) && this(owner){
@@ -520,8 +493,7 @@ public aspect Undo {
 				return "removing " + removedChild + " from " + owner;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final AskIt owner, final KnowIt newCondition): settingCondition() && args(newCondition) && this(owner) {
@@ -537,8 +509,7 @@ public aspect Undo {
 				return "setting " + owner + "'s condition to" + newCondition;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final PatternModel owner, final String newTitle): settingTitle() && args(newTitle) && this(owner){
@@ -554,8 +525,7 @@ public aspect Undo {
 				return "setting " + owner + "'s title to" + newTitle;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final PatternModel owner, final String newAuthor): settingAuthor() && args(newAuthor) && this(owner){
@@ -571,8 +541,7 @@ public aspect Undo {
 				return "setting " + owner + "'s author to" + newAuthor;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final LibraryModel owner, final StoryComponentContainer newRoot): settingLibraryModelRoot() && args(newRoot) && this(owner) {
@@ -588,24 +557,23 @@ public aspect Undo {
 				return "setting " + owner + "'s root to" + newRoot;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
-	
+
 	before(final StoryModel owner, final QuestNode newRoot): settingStoryModelRoot() && args(newRoot) && this(owner) {
-		Modification mod = new FieldModification<QuestNode>(newRoot, owner.getRoot()) {
+		Modification mod = new FieldModification<QuestNode>(newRoot,
+				owner.getRoot()) {
 			@Override
 			public void setOp(QuestNode value) {
 				owner.setRoot(value);
 			}
-			
+
 			@Override
 			public String toString() {
 				return "setting " + owner + "'s root to" + newRoot;
 			}
 		};
-		if(undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final GraphNode owner, final Boolean selection): selectingGraphNode() && args(selection) && this(owner){
@@ -621,8 +589,7 @@ public aspect Undo {
 				return "setting " + owner + "'s selection to" + selection;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
 	}
 
 	before(final DescribeIt describeIt, final List<GraphNode> path): selectingDescribeItPath() && args(path) && this(describeIt){
@@ -638,7 +605,48 @@ public aspect Undo {
 				return "setting " + describeIt + "'s selectedPath to" + path;
 			}
 		};
-		if (undo.hasOpenUndoableAction() && recording)
-			this.modifications.add(mod);
+		this.addModification(mod);
+	}
+
+	before(final ScriptIt scriptIt, final CodeBlock codeBlock): addingCodeBlock() && args(codeBlock) && this(scriptIt) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				scriptIt.addCodeBlock(codeBlock);
+			}
+
+			@Override
+			public void undo() {
+				scriptIt.removeCodeBlock(codeBlock);
+			}
+
+			@Override
+			public String toString() {
+				return "adding " + codeBlock + " to " + scriptIt;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final ScriptIt scriptIt, final CodeBlock codeBlock): removingCodeBlock() && args(codeBlock) && this(scriptIt) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				scriptIt.removeCodeBlock(codeBlock);
+			}
+
+			@Override
+			public void undo() {
+				scriptIt.addCodeBlock(codeBlock);
+			}
+
+			@Override
+			public String toString() {
+				return "removing " + codeBlock + " to " + scriptIt;
+			}
+		};
+		this.addModification(mod);
 	}
 }

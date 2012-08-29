@@ -27,7 +27,7 @@ import scriptease.translator.Translator;
  */
 public final class PatternModelManager {
 	private final List<PatternModel> models;
-	private final List<WeakReference<PatternModelObserver>> observers;
+	private final List<WeakPatternModelObserverReference<PatternModelObserver>> observers;
 	private PatternModel activeModel;
 
 	private final static PatternModelManager instance = new PatternModelManager();
@@ -46,7 +46,7 @@ public final class PatternModelManager {
 	 */
 	private PatternModelManager() {
 		this.models = new ArrayList<PatternModel>();
-		this.observers = new ArrayList<WeakReference<PatternModelObserver>>();
+		this.observers = new ArrayList<WeakPatternModelObserverReference<PatternModelObserver>>();
 		this.activeModel = null;
 	}
 
@@ -160,8 +160,24 @@ public final class PatternModelManager {
 	 * @param observer
 	 *            the listener to add
 	 */
-	public void addPatternModelPoolObserver(PatternModelObserver observer) {
-		this.observers.add(new WeakReference<PatternModelObserver>(observer));
+	public void addPatternModelObserver(PatternModelObserver observer) {
+		final Collection<WeakPatternModelObserverReference<PatternModelObserver>> observersCopy;
+
+		observersCopy = new ArrayList<WeakPatternModelObserverReference<PatternModelObserver>>(
+				this.observers);
+
+		for (WeakPatternModelObserverReference<PatternModelObserver> observerRef : observersCopy) {
+			PatternModelObserver storyComponentObserver = observerRef.get();
+			if (storyComponentObserver != null
+					&& storyComponentObserver == observer)
+				return;
+			else if (storyComponentObserver == null)
+				this.observers.remove(observerRef);
+		}
+
+		this.observers
+				.add(new WeakPatternModelObserverReference<PatternModelObserver>(
+						observer));
 	}
 
 	/**
@@ -171,8 +187,8 @@ public final class PatternModelManager {
 	 * @param observer
 	 *            the listener to remove
 	 */
-	public void removePoolChangeObserver(PatternModelObserver observer) {
-		for (WeakReference<PatternModelObserver> reference : this.observers) {
+	public void removePatternModelObserver(PatternModelObserver observer) {
+		for (WeakPatternModelObserverReference<PatternModelObserver> reference : this.observers) {
 			if (reference.get() == observer) {
 				this.observers.remove(reference);
 				return;
@@ -181,16 +197,31 @@ public final class PatternModelManager {
 	}
 
 	private void notifyChange(PatternModel model, short eventType) {
-		Collection<WeakReference<PatternModelObserver>> observersCopy = new ArrayList<WeakReference<PatternModelObserver>>(
+		Collection<WeakPatternModelObserverReference<PatternModelObserver>> observersCopy = new ArrayList<WeakPatternModelObserverReference<PatternModelObserver>>(
 				this.observers);
 
-		for (WeakReference<PatternModelObserver> observerRef : observersCopy) {
+		for (WeakPatternModelObserverReference<PatternModelObserver> observerRef : observersCopy) {
 			PatternModelObserver patternModelPoolObserver = observerRef.get();
 			if (patternModelPoolObserver != null)
 				patternModelPoolObserver.modelChanged(new PatternModelEvent(
 						model, eventType));
 			else
 				this.observers.remove(observerRef);
+		}
+	}
+
+	/**
+	 * WeakReference wrapper used to track how many WeakReferences of each type
+	 * are generated. This class provides no functionality, but it does make it
+	 * easier for us to see where memory leaks may be occuring.
+	 * 
+	 * @author kschenk
+	 * 
+	 * @param <T>
+	 */
+	private class WeakPatternModelObserverReference<T> extends WeakReference<T> {
+		public WeakPatternModelObserverReference(T referent) {
+			super(referent);
 		}
 	}
 }

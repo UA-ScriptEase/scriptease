@@ -45,6 +45,7 @@ import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.libraryeditor.codeeditor.DeleteFragmentAction;
 import scriptease.gui.action.libraryeditor.codeeditor.InsertIndentAction;
@@ -177,6 +178,7 @@ public class LibraryEditorPanelFactory {
 		labelLabel.setFont(labelFont);
 		labelLabel.setLabelFor(labelField);
 		labelLabel.setToolTipText(labelToolTip);
+
 		visibleLabel.setFont(labelFont);
 		visibleLabel.setLabelFor(visibleBox);
 
@@ -462,6 +464,11 @@ public class LibraryEditorPanelFactory {
 				return new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
+						if (!UndoManager.getInstance().hasOpenUndoableAction())
+							UndoManager.getInstance().startUndoableAction(
+									"Adding CodeBlock to "
+											+ scriptIt.getDisplayText());
+
 						final CodeBlock codeBlock;
 
 						codeBlock = new CodeBlockSource(TranslatorManager
@@ -469,8 +476,8 @@ public class LibraryEditorPanelFactory {
 								.getApiDictionary().getNextCodeBlockID());
 
 						scriptIt.addCodeBlock(codeBlock);
-						componentEditingPanel.repaint();
-						componentEditingPanel.revalidate();
+						
+						UndoManager.getInstance().endUndoableAction();
 					}
 				};
 			}
@@ -679,7 +686,12 @@ public class LibraryEditorPanelFactory {
 		deleteCodeBlockButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (!UndoManager.getInstance().hasOpenUndoableAction())
+					UndoManager.getInstance().startUndoableAction(
+							"Adding CodeBlock to "
+									+ scriptIt.getDisplayText());
 				scriptIt.removeCodeBlock(codeBlock);
+				UndoManager.getInstance().endUndoableAction();
 			}
 		});
 

@@ -51,14 +51,14 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	private final Map<Translator, LibraryModel> loadedTranslators;
 	private final StoryComponentContainer masterRoot;
 
-	private final Collection<WeakReference<LibraryManagerObserver>> observers;
+	private final Collection<WeakLibraryManagerObserverReference<LibraryManagerObserver>> observers;
 
 	private LibraryManager() {
 		this.libraries = new CopyOnWriteArraySet<LibraryModel>();
 		this.loadedTranslators = new HashMap<Translator, LibraryModel>();
 		this.masterRoot = new StoryComponentContainer("Library");
 
-		this.observers = new CopyOnWriteArraySet<WeakReference<LibraryManagerObserver>>();
+		this.observers = new CopyOnWriteArraySet<WeakLibraryManagerObserverReference<LibraryManagerObserver>>();
 
 		this.masterRoot.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
@@ -72,7 +72,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 		this.buildDefaultLibrary();
 
 		TranslatorManager.getInstance().addTranslatorObserver(this);
-		PatternModelManager.getInstance().addPatternModelPoolObserver(this);
+		PatternModelManager.getInstance().addPatternModelObserver(this);
 	}
 
 	/**
@@ -205,7 +205,23 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 * @param observer
 	 */
 	public void addLibraryManagerObserver(LibraryManagerObserver observer) {
-		this.observers.add(new WeakReference<LibraryManagerObserver>(observer));
+		final Collection<WeakLibraryManagerObserverReference<LibraryManagerObserver>> observersCopy;
+
+		observersCopy = new ArrayList<WeakLibraryManagerObserverReference<LibraryManagerObserver>>(
+				this.observers);
+
+		for (WeakLibraryManagerObserverReference<LibraryManagerObserver> observerRef : observersCopy) {
+			LibraryManagerObserver storyComponentObserver = observerRef.get();
+			if (storyComponentObserver != null
+					&& storyComponentObserver == observer)
+				return;
+			else if (storyComponentObserver == null)
+				this.observers.remove(observerRef);
+		}
+
+		this.observers
+				.add(new WeakLibraryManagerObserverReference<LibraryManagerObserver>(
+						observer));
 	}
 
 	/**
@@ -215,7 +231,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 * @param observer
 	 */
 	public void removeLibraryChangeListener(LibraryManagerObserver observer) {
-		for (WeakReference<LibraryManagerObserver> reference : this.observers) {
+		for (WeakLibraryManagerObserverReference<LibraryManagerObserver> reference : this.observers) {
 			if (reference.get() == observer) {
 				this.observers.remove(reference);
 				return;
@@ -228,16 +244,16 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 * added or removed.
 	 */
 	private void notifyChange(LibraryManagerEvent event) {
-		Collection<WeakReference<LibraryManagerObserver>> observersCopy = new ArrayList<WeakReference<LibraryManagerObserver>>(
+		Collection<WeakLibraryManagerObserverReference<LibraryManagerObserver>> observersCopy = new ArrayList<WeakLibraryManagerObserverReference<LibraryManagerObserver>>(
 				this.observers);
 
-		for (WeakReference<LibraryManagerObserver> observerRef : observersCopy) {
+		for (WeakLibraryManagerObserverReference<LibraryManagerObserver> observerRef : observersCopy) {
 			LibraryManagerObserver libraryManagerObserver = observerRef.get();
 			if (libraryManagerObserver != null)
 				libraryManagerObserver.modelChanged(event);
 			else
 				this.observers.remove(observerRef);
-		} 
+		}
 	}
 
 	/**
@@ -287,11 +303,28 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	public void modelChanged(PatternModelEvent event) {
 		if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED)
 			for (Translator translator : this.loadedTranslators.keySet()) {
-				if (!PatternModelManager.getInstance().usingTranslator(translator)) {
-					//this.remove(loadedTranslators.get(translator));
+				if (!PatternModelManager.getInstance().usingTranslator(
+						translator)) {
+					// this.remove(loadedTranslators.get(translator));
 					loadedTranslators.remove(translator);
 					break;
 				}
 			}
+	}
+
+	/**
+	 * WeakReference wrapper used to track how many WeakReferences of each type
+	 * are generated. This class provides no functionality, but it does make it
+	 * easier for us to see where memory leaks may be occurring.
+	 * 
+	 * @author kschenk
+	 * 
+	 * @param <T>
+	 */
+	private class WeakLibraryManagerObserverReference<T> extends
+			WeakReference<T> {
+		public WeakLibraryManagerObserverReference(T referent) {
+			super(referent);
+		}
 	}
 }

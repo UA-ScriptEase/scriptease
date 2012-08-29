@@ -109,7 +109,7 @@ public final class SEFrame implements PatternModelObserver {
 
 		this.populate();
 
-		PatternModelManager.getInstance().addPatternModelPoolObserver(this);
+		PatternModelManager.getInstance().addPatternModelObserver(this);
 	}
 
 	/**

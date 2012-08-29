@@ -36,7 +36,7 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction
 		super(name);
 
 		this.updateEnabledState();
-		PatternModelManager.getInstance().addPatternModelPoolObserver(this);
+		PatternModelManager.getInstance().addPatternModelObserver(this);
 	}
 
 	@Override

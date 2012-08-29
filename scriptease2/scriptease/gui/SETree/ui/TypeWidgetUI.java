@@ -41,7 +41,15 @@ import scriptease.util.GUIOp;
 public class TypeWidgetUI extends BasicToggleButtonUI implements
 		ScriptEaseUI {
 	private static final int LINE_THICKNESS = 1;
-
+	
+	private static final GradientLineBorder BORDER = new GradientLineBorder(LINE_THICKNESS);
+	
+	private static final TypeWidgetUI instance = new TypeWidgetUI();
+	
+	public static TypeWidgetUI getInstance() {
+		return instance;
+	}
+	
 	@Override 
 	public void installUI(JComponent comp) {
 		super.installUI(comp);
@@ -54,11 +62,8 @@ public class TypeWidgetUI extends BasicToggleButtonUI implements
 
 	private void installBorder(JComponent comp) {
 		final AbstractButton button = (AbstractButton) comp;
-		final GradientLineBorder border;
 
-		border = new GradientLineBorder(LINE_THICKNESS);
-
-		button.setBorder(border);
+		button.setBorder(BORDER);
 	}
 
 	@Override

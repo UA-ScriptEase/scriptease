@@ -89,7 +89,7 @@ public final class FileManager {
 
 	private final Map<File, FileChannel> filesToChannels;
 
-	private final List<WeakReference<FileManagerObserver>> observers;
+	private final List<WeakFileManagerObserverReference<FileManagerObserver>> observers;
 
 	/**
 	 * The sole instance of this class as per the singleton pattern.
@@ -112,7 +112,7 @@ public final class FileManager {
 
 		this.filesToChannels = new HashMap<File, FileChannel>();
 
-		this.observers = new ArrayList<WeakReference<FileManagerObserver>>(
+		this.observers = new ArrayList<WeakFileManagerObserverReference<FileManagerObserver>>(
 				FileManager.RECENT_FILE_MAX);
 
 		// now we load in the pattern libraries.
@@ -195,13 +195,15 @@ public final class FileManager {
 				final Translator active;
 				final APIDictionary apiDictionary;
 				final File location;
-				
+
 				active = TranslatorManager.getInstance().getActiveTranslator();
 				apiDictionary = active.getApiDictionary();
-				location = active.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH
-						.toString());
-				
-				FileIO.getInstance().writeAPIDictionary(apiDictionary, location);
+				location = active
+						.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH
+								.toString());
+
+				FileIO.getInstance()
+						.writeAPIDictionary(apiDictionary, location);
 			}
 
 			@Override
@@ -240,10 +242,10 @@ public final class FileManager {
 				final WindowFactory windowManager = WindowFactory.getInstance();
 				final Translator active;
 				final APIDictionary apiDictionary;
-				
+
 				active = TranslatorManager.getInstance().getActiveTranslator();
 				apiDictionary = active.getApiDictionary();
-				
+
 				File location = windowManager.showFileChooser(
 						FileManager.SAVE_AS, LIBRARY_FILTER);
 
@@ -261,7 +263,8 @@ public final class FileManager {
 						&& !windowManager.showConfirmOverwrite(location))
 					return;
 
-				FileIO.getInstance().writeAPIDictionary(apiDictionary, location);
+				FileIO.getInstance()
+						.writeAPIDictionary(apiDictionary, location);
 			}
 
 			@Override
@@ -969,11 +972,27 @@ public final class FileManager {
 	}
 
 	public void addObserver(FileManagerObserver observer) {
-		this.observers.add(new WeakReference<FileManagerObserver>(observer));
+		final Collection<WeakFileManagerObserverReference<FileManagerObserver>> observersCopy;
+
+		observersCopy = new ArrayList<WeakFileManagerObserverReference<FileManagerObserver>>(
+				this.observers);
+
+		for (WeakFileManagerObserverReference<FileManagerObserver> observerRef : observersCopy) {
+			FileManagerObserver storyComponentObserver = observerRef.get();
+			if (storyComponentObserver != null
+					&& storyComponentObserver == observer)
+				return;
+			else if (storyComponentObserver == null)
+				this.observers.remove(observerRef);
+		}
+
+		this.observers
+				.add(new WeakFileManagerObserverReference<FileManagerObserver>(
+						observer));
 	}
 
 	public void removeObserver(FileManagerObserver observer) {
-		for (WeakReference<FileManagerObserver> reference : this.observers) {
+		for (WeakFileManagerObserverReference<FileManagerObserver> reference : this.observers) {
 			if (reference.get() == observer) {
 				this.observers.remove(reference);
 				return;
@@ -982,15 +1001,30 @@ public final class FileManager {
 	}
 
 	private void notifyObservers(StoryModel model, File location) {
-		Collection<WeakReference<FileManagerObserver>> observersCopy = new ArrayList<WeakReference<FileManagerObserver>>(
+		Collection<WeakFileManagerObserverReference<FileManagerObserver>> observersCopy = new ArrayList<WeakFileManagerObserverReference<FileManagerObserver>>(
 				this.observers);
 
-		for (WeakReference<FileManagerObserver> observerRef : observersCopy) {
+		for (WeakFileManagerObserverReference<FileManagerObserver> observerRef : observersCopy) {
 			FileManagerObserver observer = observerRef.get();
 			if (observer != null)
 				observer.fileReferenced(model, location);
 			else
 				this.observers.remove(observerRef);
+		}
+	}
+
+	/**
+	 * WeakReference wrapper used to track how many WeakReferences of each type
+	 * are generated. This class provides no functionality, but it does make it
+	 * easier for us to see where memory leaks may be occurring.
+	 * 
+	 * @author kschenk
+	 * 
+	 * @param <T>
+	 */
+	private class WeakFileManagerObserverReference<T> extends WeakReference<T> {
+		public WeakFileManagerObserverReference(T referent) {
+			super(referent);
 		}
 	}
 }
