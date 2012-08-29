@@ -20,7 +20,6 @@ import scriptease.translator.TranslatorManager;
  * observer with the Translator.
  * 
  * @author mfchurch
- * @author kschenk
  * 
  */
 @SuppressWarnings("serial")
@@ -32,7 +31,7 @@ public class TypeWidget extends JToggleButton implements TranslatorObserver {
 		final int fontSize;
 		final String typeName;
 
-		this.setUI(new TypeWidgetUI());
+		this.setUI(TypeWidgetUI.getInstance());
 		this.setEnabled(false);
 		this.setFocusable(false);
 

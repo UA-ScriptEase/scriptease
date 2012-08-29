@@ -62,7 +62,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 		this.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 
-		PatternModelManager.getInstance().addPatternModelPoolObserver(this);
+		PatternModelManager.getInstance().addPatternModelObserver(this);
 	}
 
 	@Override

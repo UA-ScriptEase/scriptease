@@ -160,7 +160,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		this.updateLists();
 
 		LibraryManager.getInstance().addLibraryManagerObserver(this);
-		PatternModelManager.getInstance().addPatternModelPoolObserver(this);
+		PatternModelManager.getInstance().addPatternModelObserver(this);
 	}
 
 	/**

@@ -158,54 +158,6 @@ public class CodeBlockSource extends CodeBlock {
 	public CodeBlock clone() {
 		// Sources can't be cloned, since they're supposed to be unique.
 		return new CodeBlockReference(this);
-
-		// final Translator activeTranslator;
-		// CodeBlockSource clone = null;
-		//
-		// clone = (CodeBlockSource) super.clone();
-		//
-		// activeTranslator = TranslatorManager.getInstance()
-		// .getActiveTranslator();
-		//
-		// clone.init(activeTranslator.getApiDictionary().getNextCodeBlockID());
-		//
-		// // subject
-		// if (!this.subjectName.isEmpty())
-		// clone.setSubject(new String(this.subjectName));
-		// // slot
-		// if (!this.slot.isEmpty())
-		// clone.setSlot(new String(this.slot));
-		// // types
-		// Collection<String> clonedTypes = new ArrayList<String>(
-		// this.returnTypes.size());
-		// for (String type : this.returnTypes) {
-		// clonedTypes.add(new String(type));
-		// }
-		// clone.setTypes(clonedTypes);
-		// // parameters
-		// Collection<KnowIt> clonedParameters = new ArrayList<KnowIt>(this
-		// .getParameters().size());
-		// for (KnowIt parameter : this.getParameters()) {
-		// clonedParameters.add(parameter.clone());
-		// }
-		// clone.setParameters(clonedParameters);
-		// // includes
-		// Collection<String> clonedIncludes = new ArrayList<String>(this
-		// .getIncludes().size());
-		// for (String include : this.getIncludes()) {
-		// clonedIncludes.add(new String(include));
-		// }
-		// clone.setIncludes(clonedIncludes);
-		// // code
-		// Collection<FormatFragment> clonedCode = new
-		// ArrayList<FormatFragment>(
-		// this.getCode().size());
-		// for (FormatFragment fragment : this.getCode()) {
-		// clonedCode.add(fragment);
-		// }
-		// clone.setCode(clonedCode);
-		//
-		// return clone;
 	}
 
 	@Override

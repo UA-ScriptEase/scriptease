@@ -37,7 +37,7 @@ import scriptease.model.complex.ScriptIt;
  * It is a StoryVisitor which is what allows it to build GUI for any Story
  * Component.<br>
  * <br>
- * Use {@link StoryComponentPanelFactory#buildPanel(StoryComponent, boolean)} to
+ * Use {@link StoryComponentPanelFactory#buildStoryComponentPanel(StoryComponent, boolean)} to
  * have a GUIComponent Builder build a JPanel to represent the StoryComponent
  * supplied.
  * 

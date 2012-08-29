@@ -26,7 +26,7 @@ import sun.awt.util.IdentityArrayList;
 public abstract class GraphNode implements Cloneable {
 	protected IdentityArrayList<GraphNode> parents;
 	protected IdentityArrayList<GraphNode> children;
-	protected Collection<WeakReference<GraphNodeObserver>> observers;
+	protected Collection<WeakGraphNodeObserverReference<GraphNodeObserver>> observers;
 
 	protected boolean isBeingUsed;
 	protected boolean selected;
@@ -83,7 +83,7 @@ public abstract class GraphNode implements Cloneable {
 	private void init() {
 		this.parents = new IdentityArrayList<GraphNode>(INIT_CAPACITY);
 		this.children = new IdentityArrayList<GraphNode>(INIT_CAPACITY);
-		this.observers = new ArrayList<WeakReference<GraphNodeObserver>>();
+		this.observers = new ArrayList<WeakGraphNodeObserverReference<GraphNodeObserver>>();
 	}
 
 	/**
@@ -117,17 +117,22 @@ public abstract class GraphNode implements Cloneable {
 	}
 
 	public void addGraphNodeObserver(GraphNodeObserver observer) {
-		for (WeakReference<GraphNodeObserver> observerRef : this.observers) {
+		Collection<WeakGraphNodeObserverReference<GraphNodeObserver>> observersCopy = new ArrayList<WeakGraphNodeObserverReference<GraphNodeObserver>>(
+				this.observers);
+		
+		for (WeakGraphNodeObserverReference<GraphNodeObserver> observerRef : observersCopy) {
 			GraphNodeObserver graphNodeObserver = observerRef.get();
 			if (graphNodeObserver != null && graphNodeObserver == observer)
 				return;
+			else if (graphNodeObserver == null)
+				this.observers.remove(observerRef);
 		}
 
-		this.observers.add(new WeakReference<GraphNodeObserver>(observer));
+		this.observers.add(new WeakGraphNodeObserverReference<GraphNodeObserver>(observer));
 	}
-
+	
 	public void removeGraphNodeObserver(GraphNodeObserver observer) {
-		for (WeakReference<GraphNodeObserver> reference : this.observers) {
+		for (WeakGraphNodeObserverReference<GraphNodeObserver> reference : this.observers) {
 			if (reference.get() == observer) {
 				this.observers.remove(reference);
 				return;
@@ -138,10 +143,10 @@ public abstract class GraphNode implements Cloneable {
 	// Note: This is public so that the mouseListener attached to the JComponent
 	// that represents the GraphNode can call it. TODO: refactor this.
 	public void notifyObservers(final GraphNodeEvent event) {
-		Collection<WeakReference<GraphNodeObserver>> observersCopy = new ArrayList<WeakReference<GraphNodeObserver>>(
+		Collection<WeakGraphNodeObserverReference<GraphNodeObserver>> observersCopy = new ArrayList<WeakGraphNodeObserverReference<GraphNodeObserver>>(
 				this.observers);
 
-		for (WeakReference<GraphNodeObserver> observerRef : observersCopy) {
+		for (WeakGraphNodeObserverReference<GraphNodeObserver> observerRef : observersCopy) {
 			GraphNodeObserver graphNodeObserver = observerRef.get();
 			if (graphNodeObserver != null)
 				graphNodeObserver.nodeChanged(event);
@@ -606,6 +611,21 @@ public abstract class GraphNode implements Cloneable {
 		Collection<GraphNode> nodes = observable.getNodeDepthMap().keySet();
 		for (GraphNode childNode : nodes) {
 			childNode.addGraphNodeObserver(observer);
+		}
+	}
+	
+	/**
+	 * WeakReference wrapper used to track how many WeakReferences of each type
+	 * are generated. This class provides no functionality, but it does make it
+	 * easier for us to see where memory leaks may be occuring.
+	 * 
+	 * @author kschenk
+	 * 
+	 * @param <T>
+	 */
+	private class WeakGraphNodeObserverReference<T> extends WeakReference<T> {
+		public WeakGraphNodeObserverReference(T referent) {
+			super(referent);
 		}
 	}
 }

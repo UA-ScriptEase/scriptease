@@ -3,6 +3,7 @@ package scriptease.controller.undo;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.FileManager;
@@ -12,8 +13,8 @@ import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.UndoManagerObserver;
 import scriptease.gui.SEFrame;
 import scriptease.model.PatternModel;
-import scriptease.model.StoryModel;
 import scriptease.model.PatternModelManager;
+import scriptease.model.StoryModel;
 
 /**
  * Maintains multiple modification histories and manages requests for undoing or
@@ -52,7 +53,7 @@ import scriptease.model.PatternModelManager;
 public final class UndoManager implements PatternModelObserver,
 		FileManagerObserver {
 	private final static UndoManager instance = new UndoManager();
-	private ArrayList<WeakReference<UndoManagerObserver>> observers;
+	private ArrayList<WeakUndoManagerObserverReference<UndoManagerObserver>> observers;
 
 	private List<History> storyHistories = new ArrayList<History>();
 	private History activeHistory;
@@ -70,20 +71,32 @@ public final class UndoManager implements PatternModelObserver,
 	private boolean performingUndoRedo = false;
 
 	private UndoManager() {
-		PatternModelManager.getInstance().addPatternModelPoolObserver(this);
+		PatternModelManager.getInstance().addPatternModelObserver(this);
 		FileManager.getInstance().addObserver(this);
-		observers = new ArrayList<WeakReference<UndoManagerObserver>>();
+		observers = new ArrayList<WeakUndoManagerObserverReference<UndoManagerObserver>>();
 	}
 
 	public final void addUndoManagerObserver(UndoManagerObserver observer) {
-		if (this.observers.contains(observer)) {
-			return;
+		
+		final Collection<WeakUndoManagerObserverReference<UndoManagerObserver>> observersCopy;
+
+		observersCopy = new ArrayList<WeakUndoManagerObserverReference<UndoManagerObserver>>(
+				this.observers);
+
+		for (WeakUndoManagerObserverReference<UndoManagerObserver> observerRef : observersCopy) {
+			UndoManagerObserver undoManagerObserver = observerRef.get();
+			if (undoManagerObserver != null
+					&& undoManagerObserver == observer)
+				return;
+			else if (undoManagerObserver == null)
+				this.observers.remove(observerRef);
 		}
-		this.observers.add(new WeakReference<UndoManagerObserver>(observer));
+
+		this.observers.add(new WeakUndoManagerObserverReference<UndoManagerObserver>(observer));
 	}
 
 	public final void removeUndoManagerObserver(UndoManagerObserver observer) {
-		for (WeakReference<UndoManagerObserver> reference : this.observers) {
+		for (WeakUndoManagerObserverReference<UndoManagerObserver> reference : this.observers) {
 			if (reference.get() == observer) {
 				this.observers.remove(reference);
 				return;
@@ -92,9 +105,9 @@ public final class UndoManager implements PatternModelObserver,
 	}
 
 	protected final void notifyObservers() {
-		ArrayList<WeakReference<UndoManagerObserver>> observersCopy = new ArrayList<WeakReference<UndoManagerObserver>>(
+		ArrayList<WeakUndoManagerObserverReference<UndoManagerObserver>> observersCopy = new ArrayList<WeakUndoManagerObserverReference<UndoManagerObserver>>(
 				this.observers);
-		for (WeakReference<UndoManagerObserver> observerRef : observersCopy) {
+		for (WeakUndoManagerObserverReference<UndoManagerObserver> observerRef : observersCopy) {
 			UndoManagerObserver undoManagerObserver = observerRef.get();
 			if (undoManagerObserver != null)
 				undoManagerObserver.stackChanged();
@@ -432,5 +445,19 @@ public final class UndoManager implements PatternModelObserver,
 
 		history.markSaved();
 	}
-
+	
+	/**
+	 * WeakReference wrapper used to track how many WeakReferences of each type
+	 * are generated. This class provides no functionality, but it does make it
+	 * easier for us to see where memory leaks may be occuring.
+	 * 
+	 * @author kschenk
+	 * 
+	 * @param <T>
+	 */
+	private class WeakUndoManagerObserverReference<T> extends WeakReference<T> {
+		public WeakUndoManagerObserverReference(T referent) {
+			super(referent);
+		}
+	}
 }
