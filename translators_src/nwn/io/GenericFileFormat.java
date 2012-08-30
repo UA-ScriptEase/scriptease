@@ -388,6 +388,7 @@ public class GenericFileFormat {
 		final GameConstant representation;
 		final String name;
 		final String fileType = this.getFileType().trim();
+		String templateId = this.getResRef() + "." + fileType;
 
 		if (!this.generatesObject()) {
 			throw new UnsupportedOperationException(fileType
@@ -405,7 +406,7 @@ public class GenericFileFormat {
 		// conversations
 		if (fileType.equalsIgnoreCase(GenericFileFormat.TYPE_DIALOGUE_BP)) {
 			if (index.isEmpty()) {
-				return new NWNConversation(this);
+				return new NWNConversation(templateId, this);
 			} else {
 				return this.getDialogLine(Arrays.asList(index
 						.split(NWNDialogueLine.INDEXER_SEPARATOR)));
@@ -413,6 +414,10 @@ public class GenericFileFormat {
 		}
 		// other types
 		else {
+			if (fileType.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+				templateId += GenericFileFormat.RESREF_SEPARATOR + index;
+			}
+
 			name = this.getName(index);
 			final String tag;
 			final String type;
@@ -420,8 +425,7 @@ public class GenericFileFormat {
 			tag = this.getTag(index);
 			type = this.getScriptEaseType();
 
-			representation = new NWNObject(this.getResRef() + "." + fileType,
-					type, name, tag);
+			representation = new NWNObject(templateId, type, name, tag);
 		}
 
 		// clean up
@@ -1021,8 +1025,8 @@ public class GenericFileFormat {
 
 		@Override
 		public String toString() {
-			return "GffStruct [" + typeNumber + ", " + dataOrDataOffset + ", "
-					+ fieldCount + "]";
+			return "GffStruct [" + this.typeNumber + ", "
+					+ this.dataOrDataOffset + ", " + this.fieldCount + "]";
 		}
 
 		/**
@@ -1040,7 +1044,8 @@ public class GenericFileFormat {
 			 * Field Array.
 			 */
 			if (fieldCount == 1) {
-				final GffField field = fieldArray.get(dataOrDataOffset);
+				final GffField field = GenericFileFormat.this.fieldArray
+						.get(dataOrDataOffset);
 				fields.add(field);
 			}
 			/*
@@ -1055,11 +1060,12 @@ public class GenericFileFormat {
 				long index;
 				for (long i = 0; i < fieldCount; i++) {
 					// get the index from the Field Indices
-					index = fieldIndicesArray
+					index = GenericFileFormat.this.fieldIndicesArray
 							.get((int) (fieldIndicesStart + i));
 
 					// resolve the index to an actual field.
-					fields.add(fieldArray.get((int) index));
+					fields.add(GenericFileFormat.this.fieldArray
+							.get((int) index));
 				}
 			}
 			return fields;
@@ -1090,18 +1096,15 @@ public class GenericFileFormat {
 
 			// go through each script field and fix the reference
 			for (GffField field : fields) {
-				// only bother looking at script slot fields.
-				if (!slotNames.contains(field.getLabel())) {
-					continue;
-				}
-
 				if (field.isStructType()) {
 					field.getGffStruct().removeScriptEaseReferences();
 				} else if (field.isListType()) {
 					for (GffStruct struct : field.getListData()) {
 						struct.removeScriptEaseReferences();
 					}
-				} else {
+				}
+				// only bother looking at script slot fields.
+				else if (slotNames.contains(field.getLabel())) {
 					fieldValue = field.getStringData();
 
 					if (ErfFile.isScriptEaseGenerated(fieldValue)) {
@@ -1184,9 +1187,9 @@ public class GenericFileFormat {
 				// start with 4 + 4 = 8 for the StringRef + StringCount
 				int size = 8;
 
-				for (Long id : strings.keySet()) {
+				for (Long id : this.strings.keySet()) {
 					size += 8; // id and length storage
-					size += strings.get(id).length();
+					size += this.strings.get(id).length();
 				}
 
 				return size;
@@ -1235,14 +1238,14 @@ public class GenericFileFormat {
 		 * @return Unsigned int in a long representing the type.
 		 */
 		private long getType() {
-			return typeNumber;
+			return this.typeNumber;
 		}
 
 		/**
 		 * @return the labelIndex
 		 */
 		private long getLabelIndex() {
-			return labelIndex;
+			return this.labelIndex;
 		}
 
 		/**
@@ -1261,7 +1264,8 @@ public class GenericFileFormat {
 			 * into the Field Data Block, but for a Struct, it is an index into
 			 * the Struct Array.
 			 */
-			return structArray.get((int) this.dataOrDataOffset);
+			return GenericFileFormat.this.structArray
+					.get((int) this.dataOrDataOffset);
 		}
 
 		/**
@@ -1288,11 +1292,12 @@ public class GenericFileFormat {
 			// this is the offset in bytes into the list array
 			int countedOffset = 0;
 
-			for (List<Long> list : listIndicesArray) {
+			for (List<Long> list : GenericFileFormat.this.listIndicesArray) {
 				if (countedOffset == this.dataOrDataOffset) {
 					// Found it. Resolve the indices.
 					for (long index : list) {
-						final GffStruct struct = structArray.get((int) index);
+						final GffStruct struct = GenericFileFormat.this.structArray
+								.get((int) index);
 						structs.add(struct);
 					}
 
@@ -1390,12 +1395,14 @@ public class GenericFileFormat {
 				int stringLen;
 
 				for (int i = 0; i < stringCount; i++) {
-					long id = reader.readInt(true);
+					long id = reader.readUnsignedInt(true);
 
 					stringLen = reader.readInt(true);
-					String value = reader.readString(stringLen);
+					if (stringLen > 0) {
+						String value = reader.readString(stringLen);
 
-					this.fieldDataLocString.strings.put(id, value);
+						this.fieldDataLocString.strings.put(id, value);
+					}
 				}
 
 				break;
@@ -1638,18 +1645,18 @@ public class GenericFileFormat {
 				writer.writeUnsignedInt(strRef, true);
 				writer.writeUnsignedInt(strings.size(), true);
 
-				// We only write the actual value if its stored in erf file.
-				if (strRef == -1) {
-					for (long id : strings.keySet()) {
-						writer.writeUnsignedInt(id, true);
-						strValue = strings.get(id);
+				// Write the value to the ERF file, even if it's already in the
+				// TLK file. The toolset does this when you run a Build on the
+				// module, so it can't be that bad. - remiller
+				for (long id : strings.keySet()) {
+					writer.writeUnsignedInt(id, true);
+					strValue = strings.get(id);
 
-						if (strValue.length() > EXO_STRING_MAX_LENGTH)
-							strValue.substring(0, EXO_STRING_MAX_LENGTH);
+					if (strValue.length() > EXO_STRING_MAX_LENGTH)
+						strValue.substring(0, EXO_STRING_MAX_LENGTH);
 
-						writer.writeUnsignedInt(strValue.length(), true);
-						writer.writeString(strValue);
-					}
+					writer.writeUnsignedInt(strValue.length(), true);
+					writer.writeString(strValue);
 				}
 
 				break;
@@ -1727,102 +1734,9 @@ public class GenericFileFormat {
 	}
 
 	protected void removeScriptEaseReferences() {
-		// String fileType = this.getFileType().trim();
-
-		// if (fileType
-		// .equalsIgnoreCase(GenericFileFormat.TYPE_GAME_INSTANCE_FILE)) {
-
 		GffStruct gitFileStruct = this.getTopLevelStruct();
 
 		gitFileStruct.removeScriptEaseReferences();
-
-		// // Go through the lists of lists in a GIT File. (e.g. Creature
-		// // List, etc)
-		// for (GffField gitFileField : gitFileStruct.getGffFields()) {
-		// // Ignore AreaProperties field.
-		// if (gitFileField.getLabel().equals("AreaProperties")) {
-		// continue;
-		// }
-		//
-		// // Individual structs (e.g. Creatures)
-		// for (GffStruct individualFieldStruct : gitFileField.getListData()) {
-		// individualFieldStruct.removeScriptEaseReferences();
-		// }
-		// }
-		// }
-		// else if (fileType
-		// .equalsIgnoreCase(GenericFileFormat.TYPE_DIALOGUE_BP)) {
-		//
-		// GffStruct dlgFileStruct = this.getTopLevelStruct();
-		//
-		// List<GffField> dlgFileFields;
-		//
-		// // The list of lists in a Git File. e.g. Creature List
-		// dlgFileFields = dlgFileStruct.getGffFields();
-		//
-		// for (GffField dlgFilefield : dlgFileFields) {
-		// final String dlgFieldlabel = this.getLabelArray().get(
-		// (int) dlgFilefield.getLabelIndex());
-		//
-		// // Handle fields:
-		// if (dlgFieldlabel.equals("EndConverAbort")
-		// || dlgFieldlabel.equals("EndConversation")) {
-		// final String scriptName = dlgFilefield.getString();
-		//
-		// if (scriptName.startsWith(ErfFile.SCRIPT_FILE_PREFIX)) {
-		// this.setField(dlgFilefield, "");
-		// }
-		//
-		// // Handle lists:
-		// } else if (dlgFieldlabel.equals("EntryList")
-		// || dlgFieldlabel.equals("ReplyList")
-		// || dlgFieldlabel.equals("StartingList")) {
-		// List<GffStruct> readList = dlgFilefield.getListData();
-		// for (GffStruct aStruct : readList) {
-		// final List<GffField> listFields = aStruct
-		// .getGffFields();
-		// for (GffField listField : listFields) {
-		// String listFieldLabel = this.getLabelArray().get(
-		// (int) listField.getLabelIndex());
-		//
-		// if (listFieldLabel.equals("Script")
-		// || listFieldLabel.equals("Active")) {
-		// final String scriptName = listField.getString();
-		//
-		// if (scriptName
-		// .startsWith(ErfFile.SCRIPT_FILE_PREFIX))
-		// this.setField(listField, "");
-		// }
-		// // This is for the sync structs inside
-		// // of reply and entry dialogues.
-		// if (listFieldLabel.equals("EntriesList")
-		// || listFieldLabel.equals("RepliesList")) {
-		// List<GffStruct> syncList = listField.getListData();
-		//
-		// for (GffStruct syncStruct : syncList) {
-		// final List<GffField> syncFields = syncStruct
-		// .getGffFields();
-		//
-		// for (GffField syncField : syncFields) {
-		// String syncFieldLabel = this
-		// .getLabelArray()
-		// .get((int) syncField
-		// .getLabelIndex());
-		// if (syncFieldLabel.equals("Active")) {
-		// final String scriptName = syncField
-		// .getString();
-		// if (scriptName
-		// .startsWith(ErfFile.SCRIPT_FILE_PREFIX))
-		// this.setField(syncField, "");
-		// }
-		// }
-		// }
-		// }
-		// }
-		// }
-		// }
-		// }
-		// }
 	}
 
 	/**
@@ -1843,7 +1757,7 @@ public class GenericFileFormat {
 		if (!this.isInstanceUpdatable()) {
 			throw new IllegalStateException(
 					"Cannot update instances in anything but a GIT file. This is a "
-							+ fileType + " file.");
+							+ this.getFileType() + " file.");
 		}
 
 		final GffStruct gitFileStruct = this.getTopLevelStruct();
