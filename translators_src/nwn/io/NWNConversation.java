@@ -8,6 +8,7 @@ import java.util.List;
 
 import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
+import scriptease.util.FileOp;
 
 /**
  * Conversation scriptease-side game resource implementation.
@@ -19,15 +20,14 @@ public class NWNConversation extends NWNGameConstant implements
 	protected static final String TYPE_DIALOGUE = "dialogue";
 	private final GenericFileFormat convo;
 
-	public NWNConversation(GenericFileFormat conversation) {
-		super(conversation.getResRef(), TYPE_DIALOGUE,
-				conversation.getResRef(), "");
+	public NWNConversation(String resref, GenericFileFormat conversation) {
+		super(resref, TYPE_DIALOGUE, conversation.getResRef(), "");
 		this.convo = conversation;
 	}
 
 	@Override
 	public String getCodeText() {
-		return this.getTemplateID();
+		return "\"" + FileOp.removeExtension(this.getTemplateID()) + "\"";
 	}
 
 	@Override

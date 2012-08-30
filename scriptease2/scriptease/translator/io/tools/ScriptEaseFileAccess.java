@@ -393,7 +393,7 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 	public void writeUnsignedLong(long value, boolean reverseEndianess)
 			throws IOException {
 		byte[] bytes = BitwiseConverter
-				.longToByteArray((long) (value & 0xFFFFFFFFL));
+				.longToByteArray(value & 0xFFFFFFFFL);
 
 		if (reverseEndianess) {
 			bytes = BitwiseConverter.reverseEndian(bytes, INT_BYTE_LENGTH);
