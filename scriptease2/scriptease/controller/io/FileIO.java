@@ -15,6 +15,7 @@ import scriptease.controller.io.converter.CodeBlockSourceConverter;
 import scriptease.controller.io.converter.DescribeItConverter;
 import scriptease.controller.io.converter.GameMapConverter;
 import scriptease.controller.io.converter.GameTypeConverter;
+import scriptease.controller.io.converter.IdentityArrayListConverter;
 import scriptease.controller.io.converter.KnowItBindingConverter;
 import scriptease.controller.io.converter.KnowItConverter;
 import scriptease.controller.io.converter.LanguageDictionaryConverter;
@@ -429,6 +430,8 @@ public class FileIO {
 		stream.registerConverter(new QuestPointConverter());
 		stream.registerConverter(new QuestNodeConverter());
 		stream.registerConverter(new QuestPointNodeConverter());
+		
+		stream.registerConverter(new IdentityArrayListConverter(stream.getMapper()));
 
 		return stream;
 	}
