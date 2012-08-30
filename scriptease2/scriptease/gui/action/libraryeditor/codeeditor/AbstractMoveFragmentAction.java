@@ -1,6 +1,7 @@
 package scriptease.gui.action.libraryeditor.codeeditor;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public abstract class AbstractMoveFragmentAction extends
 	 * @return
 	 */
 	private void moveFragment(
-			final List<AbstractFragment> topLevelFormatFragments,
+			final ArrayList<AbstractFragment> topLevelFormatFragments,
 			final AbstractFragment selectedFragment,
 			final AbstractContainerFragment parentFragment) {
 
@@ -67,11 +68,11 @@ public abstract class AbstractMoveFragmentAction extends
 			for (AbstractFragment formatFragment : topLevelFormatFragments) {
 				if (formatFragment instanceof AbstractContainerFragment) {
 					final Collection<AbstractFragment> subFragments;
-					final List<AbstractFragment> subFragmentsList;
+					final ArrayList<AbstractFragment> subFragmentsList;
 
 					subFragments = ((AbstractContainerFragment) formatFragment)
 							.getSubFragments();
-					subFragmentsList = new IdentityArrayList<AbstractFragment>();
+					subFragmentsList = new ArrayList<AbstractFragment>();
 
 					subFragmentsList.addAll(subFragments);
 
@@ -90,11 +91,11 @@ public abstract class AbstractMoveFragmentAction extends
 
 		if (codeBlock != null) {
 			final AbstractFragment selectedFragment;
-			final IdentityArrayList<AbstractFragment> fragments;
+			final ArrayList<AbstractFragment> fragments;
 
 			selectedFragment = FormatFragmentSelectionManager.getInstance()
 					.getFormatFragment();
-			fragments = new IdentityArrayList<AbstractFragment>();
+			fragments = new ArrayList<AbstractFragment>();
 
 			fragments.addAll(codeBlock.getCode());
 
