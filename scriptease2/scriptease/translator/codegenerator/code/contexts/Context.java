@@ -222,7 +222,7 @@ public class Context {
 						List<CodeBlock> specialCodeBlocks = this.translator
 								.getApiDictionary().getCodeBlocksByName(
 										referenceValue);
-						
+
 						if (specialCodeBlocks != null)
 							codeBlocks.addAll(specialCodeBlocks);
 					}
@@ -284,6 +284,16 @@ public class Context {
 		return null;
 	}
 
+	public StoryItemSequence getStoryChild() {
+		unimplemented("getStoryChild");
+		return null;
+	}
+
+	public StoryItemSequence getAlwaysChild() {
+		unimplemented("getAlwaysChild");
+		return null;
+	}
+
 	public Iterator<KnowIt> getImplicits() {
 		unimplemented("getImplicits");
 		return null;
@@ -306,6 +316,11 @@ public class Context {
 
 	public StoryComponent getOwner() {
 		unimplemented("getOwner");
+		return null;
+	}
+	
+	public QuestPoint getQuestPoint() {
+		unimplemented("getQuestPoint");
 		return null;
 	}
 
@@ -433,7 +448,7 @@ public class Context {
 		unimplemented("getQuestContainer");
 		return null;
 	}
-	
+
 	public String getTemplateID() {
 		unimplemented("getTemplateID");
 		return null;

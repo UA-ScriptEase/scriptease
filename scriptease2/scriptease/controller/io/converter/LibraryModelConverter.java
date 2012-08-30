@@ -54,9 +54,9 @@ public class LibraryModelConverter implements Converter {
 				.getChildren());
 		writer.endNode();
 
-		// folders
-		writer.startNode("FOLDERS");
-		context.convertAnother(model.getFoldersCategory().getChildren());
+		// controllers
+		writer.startNode("CONTROLLERS");
+		context.convertAnother(model.getControllersCategory().getChildren());
 		writer.endNode();
 	}
 
@@ -117,7 +117,7 @@ public class LibraryModelConverter implements Converter {
 					.convertAnother(library, ArrayList.class));
 		reader.moveUp();
 
-		// folders
+		// controllers
 		reader.moveDown();
 		if (reader.hasMoreChildren())
 			contents.addAll((Collection<? extends StoryComponent>) context

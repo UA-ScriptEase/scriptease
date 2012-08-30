@@ -307,7 +307,7 @@ public class CodeBlockSource extends CodeBlock {
 	}
 
 	/**
-	 * Registers a reference with the
+	 * Registers a reference
 	 * 
 	 * @param added
 	 */

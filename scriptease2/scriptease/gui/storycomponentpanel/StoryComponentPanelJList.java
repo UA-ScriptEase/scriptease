@@ -19,6 +19,7 @@ import scriptease.gui.SETree.filters.StoryComponentFilter;
 import scriptease.gui.SETree.filters.VisibilityFilter;
 import scriptease.gui.SETree.transfer.StoryComponentPanelTransferHandler;
 import scriptease.model.StoryComponent;
+import scriptease.model.complex.ScriptIt;
 
 /**
  * Creates a JList that is able to render Story Component Panels as items. The
@@ -125,13 +126,13 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 		listModel = (DefaultListModel) this.getModel();
 
-		/*for (Object object : listModel.toArray()) {
-			if (object instanceof StoryComponentPanel) {
-				StoryComponentPanel panel = (StoryComponentPanel) object;
-				StoryComponentObserverRemover.removeObservers(panel,
-						panel.getStoryComponent());
-			}
-		}*/
+		/*
+		 * for (Object object : listModel.toArray()) { if (object instanceof
+		 * StoryComponentPanel) { StoryComponentPanel panel =
+		 * (StoryComponentPanel) object;
+		 * StoryComponentObserverRemover.removeObservers(panel,
+		 * panel.getStoryComponent()); } }
+		 */
 
 		listModel.clear();
 	}
@@ -191,6 +192,12 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 					valuePanel.setBackground(Color.DARK_GRAY);
 				else if (!isSelected && isVisible)
 					valuePanel.setBackground(list.getBackground());
+
+				if (valueComponent instanceof ScriptIt) {
+					valuePanel.setShowChildren(false);
+					valuePanel.getExpansionButton().setCollapsed(true);
+				}
+
 				return valuePanel;
 			} else if (value instanceof JPanel) {
 				return (JPanel) value;

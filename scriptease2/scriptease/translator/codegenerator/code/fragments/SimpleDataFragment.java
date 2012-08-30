@@ -72,7 +72,8 @@ public class SimpleDataFragment extends AbstractFragment {
 			if (dataLabel
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.NAME
 							.name()))
-				resolveString = context.getUniqueName(Pattern.compile(this.legalRange));
+				resolveString = context.getUniqueName(Pattern
+						.compile(this.legalRange));
 			else if (dataLabel
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.TYPE
 							.name())) {
@@ -100,6 +101,10 @@ public class SimpleDataFragment extends AbstractFragment {
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.CONDITION
 							.name()))
 				resolveString = context.getCondition();
+			else if (dataLabel
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.CURRENTQUESTPOINT
+							.name()))
+				resolveString = context.getQuestPoint().getDisplayText();
 			else if (dataLabel
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.FORMATTEDVALUE
 							.name()))

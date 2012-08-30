@@ -86,18 +86,6 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 		types.add(GameTypeManager.DEFAULT_BOOL_TYPE);
 		AskIt conditional = new AskIt(new KnowIt("question", types));
 		scriptEaseLibrary.add(conditional);
-		// Add an empty folder
-		StoryComponentContainer folder = new StoryComponentContainer(
-				"New Folder");
-		folder.registerChildType(ScriptIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		folder.registerChildType(AskIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		folder.registerChildType(KnowIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		folder.registerChildType(StoryComponentContainer.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		scriptEaseLibrary.add(folder);
 
 		this.add(scriptEaseLibrary);
 	}

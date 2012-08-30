@@ -21,7 +21,10 @@ public class CategoryFilter extends StoryComponentFilter {
 	 * @author remiller
 	 */
 	public enum Category {
-		EFFECTS, DESCRIPTIONS, CAUSES, FOLDERS;
+		EFFECTS,
+		DESCRIPTIONS,
+		CAUSES,
+		CONTROLLERS;
 	}
 
 	private Category category;
@@ -61,13 +64,13 @@ public class CategoryFilter extends StoryComponentFilter {
 		@Override
 		public void processStoryComponentContainer(
 				StoryComponentContainer container) {
-			if (CategoryFilter.this.category.equals(Category.FOLDERS))
+			if (CategoryFilter.this.category.equals(Category.CONTROLLERS))
 				this.acceptable = true;
 		}
 
 		@Override
 		public void processStoryItemSequence(StoryItemSequence sequence) {
-			if (CategoryFilter.this.category.equals(Category.FOLDERS))
+			if (CategoryFilter.this.category.equals(Category.CONTROLLERS))
 				this.acceptable = true;
 		}
 
@@ -82,7 +85,7 @@ public class CategoryFilter extends StoryComponentFilter {
 		@Override
 		public void processAskIt(AskIt questionIt) {
 			this.acceptable = CategoryFilter.this.category
-					.equals(Category.EFFECTS);
+					.equals(Category.CONTROLLERS);
 		}
 
 		@Override

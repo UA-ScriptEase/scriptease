@@ -22,6 +22,7 @@ public interface CodeGenerationKeywordConstants {
 
 	// Used in ScopeFragment.
 	public static enum ScopeTypes {
+		ALWAYSCHILD,
 		ARGUMENT,
 		ASKIT,
 		BINDING,
@@ -32,10 +33,11 @@ public interface CodeGenerationKeywordConstants {
 		OWNER,
 		SCRIPTIT,
 		START,
+		STORYCHILD,
 		SUBJECT
 	}
 
-	// Used in SimpleFragment 
+	// Used in SimpleFragment
 	public static enum DataTypes {
 		CODE,
 		CONDITION,
@@ -47,23 +49,24 @@ public interface CodeGenerationKeywordConstants {
 		SUBJECT,
 		TEMPLATEID,
 		TYPE,
-		VALUE
+		VALUE,
+		CURRENTQUESTPOINT
 	}
 
-	//Used in SeriesFragment
+	// Used in SeriesFragment
 	public static enum SeriesFilterType {
 		NAME,
 		SLOT,
 		NONE,
 	}
-	
+
 	public static enum FormatReferenceType {
 		NONE,
 		ASKIT,
 		KNOWIT,
 		SCRIPTIT
 	}
-	
+
 	// Used in SeriesFragment
 	public static enum SeriesTypes {
 		ARGUMENTS,
