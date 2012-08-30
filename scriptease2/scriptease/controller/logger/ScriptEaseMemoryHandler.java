@@ -1,7 +1,6 @@
 package scriptease.controller.logger;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Vector;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -17,10 +16,10 @@ import java.util.logging.MemoryHandler;
  * 
  */
 public class ScriptEaseMemoryHandler extends Handler {
-	private List<String> buffer;
+	private final Vector<String> buffer;
 	private Level pushLevel;
-	private Handler target;
-	private int size;
+	private final Handler target;
+	private final int maxSize;
 	private ScriptEaseFormatter formatter;
 
 	public ScriptEaseMemoryHandler(Handler target, int size, Level pushLevel) {
@@ -32,14 +31,10 @@ public class ScriptEaseMemoryHandler extends Handler {
 		}
 		this.pushLevel = pushLevel;
 		this.target = target;
-		this.size = size;
+		this.maxSize = size;
 
-		init();
-	}
-
-	private void init() {
-		this.buffer = new ArrayList<String>();
-		formatter = new ScriptEaseFormatter();
+		this.buffer = new Vector<String>();
+		this.formatter = new ScriptEaseFormatter();
 	}
 
 	@Override
@@ -47,23 +42,25 @@ public class ScriptEaseMemoryHandler extends Handler {
 		if (!isLoggable(record)) {
 			return;
 		}
-		if (buffer.size() >= this.size)
-			buffer.remove(0);
-		buffer.add(formatter.format(record));
+		if (this.buffer.size() >= this.maxSize)
+			this.buffer.remove(0);
+		this.buffer.add(this.formatter.format(record));
 
-		if (record.getLevel().intValue() >= pushLevel.intValue()) {
+		if (record.getLevel().intValue() >= this.pushLevel.intValue()) {
 			push();
 		}
 	}
 
 	public synchronized void push() {
-		String msg = " ------- \n";
-		for (String record : buffer) {
-			msg += record;
+		StringBuffer msg = new StringBuffer(" ------- \n");
+
+		for (String record : this.buffer) {
+			msg.append(record);
 		}
-		LogRecord condensedRec = new LogRecord(this.pushLevel, msg);
+
+		LogRecord condensedRec = new LogRecord(this.pushLevel, msg.toString());
 		this.target.publish(condensedRec);
-		buffer.clear();
+		this.buffer.clear();
 	}
 
 	@Override
@@ -81,11 +78,12 @@ public class ScriptEaseMemoryHandler extends Handler {
 		if (newLevel == null) {
 			throw new NullPointerException();
 		}
-		pushLevel = newLevel;
+
+		this.pushLevel = newLevel;
 	}
 
 	public synchronized Level getPushLevel() {
-		return pushLevel;
+		return this.pushLevel;
 	}
 
 	@Override
