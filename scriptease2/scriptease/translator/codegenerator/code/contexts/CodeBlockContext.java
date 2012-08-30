@@ -7,12 +7,16 @@ import java.util.regex.Pattern;
 
 import scriptease.controller.get.VariableGetter;
 import scriptease.gui.quests.QuestNode;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -40,6 +44,21 @@ public class CodeBlockContext extends Context {
 	public CodeBlockContext(Context other, CodeBlock source) {
 		this(other);
 		codeBlock = source;
+	}
+
+	@Override
+	public QuestPoint getQuestPoint() {
+		StoryComponent component = this.codeBlock.getOwner();
+		
+		while (!(component instanceof QuestPoint) && component != null)
+			component = component.getOwner();
+
+		if (component != null)
+			return (QuestPoint) component;
+		else
+			throw new CodeGenerationException(
+					"Failed to find a Quest Point parent for CodeBlock: "
+							+ this.codeBlock);
 	}
 
 	@Override
@@ -128,5 +147,33 @@ public class CodeBlockContext extends Context {
 	@Override
 	public String toString() {
 		return "CodeBlockContext [" + this.codeBlock + "]";
+	}
+
+	/**
+	 * Get the ScriptIt's Story Child
+	 */
+	@Override
+	public StoryItemSequence getStoryChild() {
+		ScriptIt cause = codeBlock.getCause();
+		if (cause != null)
+			return cause.getStoryBlock();
+		else
+			throw new CodeGenerationException(
+					"Attempted to get Story Block for a CodeBlock without a Cause: "
+							+ codeBlock);
+	}
+
+	/**
+	 * Get the ScriptIt's Always Child
+	 */
+	@Override
+	public StoryItemSequence getAlwaysChild() {
+		ScriptIt cause = codeBlock.getCause();
+		if (cause != null)
+			return cause.getAlwaysBlock();
+		else
+			throw new CodeGenerationException(
+					"Attempted to get Always Block for a CodeBlock without a Cause: "
+							+ codeBlock);
 	}
 }

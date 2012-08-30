@@ -146,15 +146,30 @@ public final class AskIt extends ComplexStoryComponent {
 	public StoryItemSequence getIfBlock() {
 		return this.ifBlock;
 	}
-
+	
+	/**
+	 * Gets the container for children that are in the Else part of the AskIt.
+	 * 
+	 * @return the container for children that are in the Else part of the
+	 *         AskIt.
+	 */
+	public StoryItemSequence getElseBlock() {
+		return this.elseBlock;
+	}
+	
 	public void setIfBlock(StoryItemSequence ifBlock) {
 		this.ifBlock = ifBlock;
 		ifBlock.setOwner(this);
 	}
+	
+	public void setElseBlock(StoryItemSequence elseBlock) {
+		this.elseBlock = elseBlock;
+		elseBlock.setOwner(this);
+	}
 
 	/**
-	 * TODO Handles these stupid If/ElseBlock pointers.. we need to fix this
-	 * NOT THIS
+	 * TODO Handles these stupid If/ElseBlock pointers.. we need to fix this NOT
+	 * THIS
 	 */
 	@Override
 	public boolean addStoryChildBefore(StoryComponent newChild,
@@ -167,21 +182,6 @@ public final class AskIt extends ComplexStoryComponent {
 				this.setElseBlock((StoryItemSequence) newChild);
 		}
 		return success;
-	}
-
-	/**
-	 * Gets the container for children that are in the Else part of the AskIt.
-	 * 
-	 * @return the container for children that are in the Else part of the
-	 *         AskIt.
-	 */
-	public StoryItemSequence getElseBlock() {
-		return this.elseBlock;
-	}
-
-	public void setElseBlock(StoryItemSequence elseBlock) {
-		this.elseBlock = elseBlock;
-		elseBlock.setOwner(this);
 	}
 
 	@Override

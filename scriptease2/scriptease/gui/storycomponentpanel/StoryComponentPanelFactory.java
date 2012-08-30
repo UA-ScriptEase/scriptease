@@ -400,6 +400,8 @@ public class StoryComponentPanelFactory {
 					panel.revalidate();
 				}
 			});
+			
+			panel.setExpansionButton(expansionButton);
 			panel.add(expansionButton, StoryComponentPanelLayoutManager.BUTTON);
 		}
 	}

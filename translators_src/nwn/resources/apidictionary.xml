@@ -59,7 +59,7 @@
     <Type>
       <Name>Dialogue</Name>
       <Keyword>dialogue</Keyword>
-      <CodeSymbol>null</CodeSymbol>
+      <CodeSymbol>string</CodeSymbol>
       <Slots>
         <Slot>EndConversation</Slot>
         <Slot>EndConverAbort</Slot>
@@ -5957,10 +5957,9 @@
                 <Literal>;</Literal>
               </Line>
               <Line>
-                <Literal>SE2_Quest_RegisterQuestPoint(</Literal>
-                <Literal>name, </Literal>
+                <Literal>SE2_Quest_RegisterQuestPoint(GetFirstPC(), name, </Literal>
                 <Fragment data="fanIn"/>
-                <Literal>, GetFirstPC());</Literal>
+                <Literal>);</Literal>
               </Line>
               <Series data="parentNodes" unique="true">
                 <Line>
@@ -5983,7 +5982,7 @@
               <Literal>//enable the starting quest point</Literal>
             </Line>
             <Line>
-              <Literal>SE2_Quest_setState(GetFirstPC(), </Literal>
+              <Literal>SE2_Quest_SetState(GetFirstPC(), </Literal>
               <Scope data="start">
                 <Fragment data="formattedValue"/>
               </Scope>
@@ -20282,7 +20281,9 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>void</Type>
+                <Type>creature</Type>
+                <Type>door</Type>
+                <Type>placeable</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -20298,7 +20299,9 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>void</Type>
+                <Type>creature</Type>
+                <Type>door</Type>
+                <Type>placeable</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -20309,19 +20312,11 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionStartConversation(</Literal>
-              <Scope data="argument" ref="Conversation">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
-              <Scope data="argument" ref="Starter">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
-              <Scope data="argument" ref="Conversation">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
               <Scope data="argument" ref="Partner">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="argument" ref="Conversation">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>) );</Literal>
@@ -23283,11 +23278,11 @@
           </Includes>
           <Code>
             <Line>
-              <Literal>SE2_Quest_SucceedQuestPoint(</Literal>
+              <Literal>SE2_Quest_SetState(GetFirstPC(),</Literal>
               <Scope data="argument" ref="QuestPoint">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>, QUEST_POINT_STATE_SUCCESS);</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -23322,11 +23317,11 @@
           </Includes>
           <Code>
             <Line>
-              <Literal>SE2_Quest_FailQuestPoint(</Literal>
+              <Literal>SE2_Quest_SetState(GetFirstPC(), </Literal>
               <Scope data="argument" ref="QuestPoint">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>, QUEST_POINT_STATE_FAIL);</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -23910,16 +23905,98 @@
             </KnowIt>
           </Parameters>
           <Code>
+			<Line>
+				<Literal>string templateID = &quot;</Literal>
+				<Scope data="argument" ref="Object">
+					<Fragment data="templateID" />
+				</Scope>
+				<Literal>&quot;;</Literal>
+			</Line>
+			<Line>
+				<Literal>int dotLoc = FindSubString(templateID, &quot;.&quot;);</Literal>
+			</Line>
+			<Line>
+				<Literal>string resref = GetStringLeft(templateID, dotLoc);</Literal>
+			</Line>
+			<Line>
+				<Literal>string typeExt = GetStringRight(templateID, dotLoc);</Literal>
+			</Line>
+			<Line>
+				<Literal>int type;</Literal>
+			</Line>
+			<Line>
+				<Literal>// Cleverly determine that pesky constant from the template id (resref) extension.</Literal>
+			</Line> 
+			<Line>
+				<Literal>if(typeExt == "utc"){</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>// this little piggy was a piggy</Literal>
+				</Line>
+				<Line>
+					<Literal>type = OBJECT_TYPE_CREATURE;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>} else if(typeExt == "uti"){</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>// this little piggy was a meal</Literal>
+				</Line>
+				<Line>
+					<Literal>type = OBJECT_TYPE_ITEM;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>} else if(typeExt == "utp"){</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>// this little piggy was a statue</Literal>
+				</Line>
+				<Line>
+					<Literal>type = OBJECT_TYPE_PLACEABLE;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>} else if(typeExt == "uts"){</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>// this little piggy was a butcher's shop</Literal>
+				</Line>
+				<Line>
+					<Literal>type = OBJECT_TYPE_STORE;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>} else if(typeExt == "utw"){</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>// and this little piggy went wee wee wee, all the way home.</Literal>
+				</Line> 
+				<Line>
+					<Literal>// Because it knows where that is.</Literal>
+				</Line>
+				<Line>
+					<Literal>type = OBJECT_TYPE_WAYPOINT;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+			<Line>
+				<Literal>// Now we can actually do the thing with the stuff.</Literal>
+			</Line>
             <Line>
               <Literal>CreateObject(</Literal>
               <Scope data="argument" ref="Object Type">
                 <Fragment data="name"/>
               </Scope>
-              <Literal>, &quot;</Literal>
-              <Scope data="argument" ref="Object">
-                <Fragment data="templateID"/>
-              </Scope>
-              <Literal>&quot;, </Literal>
+              <Literal>, resref, </Literal>
               <Scope data="argument" ref="Location">
                 <Fragment data="name"/>
               </Scope>
@@ -23958,9 +24035,9 @@
           </Includes>
           <Code>
             <Line>
-              <Literal>SE2_Quest_ResetAtQuestPoint(</Literal>
+              <Literal>SE2_Quest_ResetAtQuestPoint(GetFirstPC(), </Literal>
               <Scope data="argument" ref="Quest Point">
-                <Fragment data="name"/>
+                <Fragment data="name" />
               </Scope>
               <Literal>);</Literal>
             </Line>
@@ -23997,7 +24074,7 @@
           </Includes>
           <Code>
             <Line>
-              <Literal>return SE2_Quest_getState(GetFirstPC(), </Literal>
+              <Literal>return SE2_Quest_GetState(GetFirstPC(), </Literal>
               <Scope data="argument" ref="QuestPoint">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
               </Scope>
@@ -24036,7 +24113,7 @@
           </Includes>
           <Code>
             <Line>
-              <Literal>return SE2_Quest_getState(GetFirstPC(), </Literal>
+              <Literal>return SE2_Quest_GetState(GetFirstPC(), </Literal>
               <Scope data="argument" ref="QuestPoint">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
               </Scope>

@@ -20,23 +20,42 @@ import scriptease.translator.codegenerator.LocationInformation;
  * subjects and slots and return types.
  * 
  * @author mfchurch
+ * @author kschenk
  * 
  */
 public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
+	/**
+	 * The group of children that are in the Story part of the Cause.
+	 */
+	private StoryItemSequence storyBlock;
+
+	/**
+	 * The group of children that are in the Always part of the Cause.
+	 */
+	private StoryItemSequence alwaysBlock;
+
 	protected Collection<CodeBlock> codeBlocks;
 
 	public ScriptIt(String name) {
 		super(name);
-		this.registerChildType(ScriptIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.registerChildType(KnowIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.registerChildType(StoryComponentContainer.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.registerChildType(AskIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
 		this.codeBlocks = new ArrayList<CodeBlock>();
+
+		final List<Class<? extends StoryComponent>> validTypes;
+
+		validTypes = new ArrayList<Class<? extends StoryComponent>>();
+
+		this.registerChildType(StoryItemSequence.class, 2);
+
+		validTypes.add(ScriptIt.class);
+		validTypes.add(KnowIt.class);
+		validTypes.add(AskIt.class);
+		validTypes.add(StoryComponentContainer.class);
+
+		this.storyBlock = new StoryItemSequence(validTypes);
+		this.storyBlock.setDisplayText("Story:");
+		this.alwaysBlock = new StoryItemSequence(validTypes);
+		this.alwaysBlock.setDisplayText("Always:");
 	}
 
 	public Collection<CodeBlock> getCodeBlocks() {
@@ -61,21 +80,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	}
 
 	@Override
-	public boolean canAcceptChild(StoryComponent potentialChild) {
-		if (this.codeBlocks.size() == 0)
-			return true;
-		if (!this.isCause()
-				|| (potentialChild instanceof ScriptIt && ((ScriptIt) potentialChild)
-						.isCause()))
-			// Causes should not have other Causes inside of them, nor should
-			// Effects allow children. We don't even know what would mean. To
-			// think of it is terrifying. - remiller
-			return false;
-		else
-			return super.canAcceptChild(potentialChild);
-	}
-
-	@Override
 	public boolean equals(Object other) {
 		if (super.equals(other) && other instanceof ScriptIt) {
 			return this.codeBlocks.equals(((ScriptIt) other).codeBlocks);
@@ -90,9 +94,9 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	 * 
 	 */
 	public boolean isCause() {
-		if(codeBlocks.size() == 0)
+		if (codeBlocks.size() == 0)
 			return false;
-		
+
 		for (CodeBlock codeBlock : codeBlocks) {
 			if (!codeBlock.hasSubject() || !codeBlock.hasSlot())
 				return false;
@@ -120,7 +124,61 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 			component.addCodeBlock(codeBlock.clone());
 		}
 
+		if (component.isCause()) {
+			component
+					.setStoryBlock((StoryItemSequence) component.childComponents
+							.get(0));
+			component
+					.setAlwaysBlock((StoryItemSequence) component.childComponents
+							.get(1));
+		}
+
 		return component;
+	}
+
+	/**
+	 * Gets the container for children that are in the Story block of a cause.
+	 * 
+	 * @return
+	 */
+	public StoryItemSequence getStoryBlock() {
+		return this.storyBlock;
+	}
+
+	/**
+	 * Gets the container for children that are in the Always block of a cause.
+	 * 
+	 * @return
+	 */
+	public StoryItemSequence getAlwaysBlock() {
+		return this.alwaysBlock;
+	}
+
+	public void setStoryBlock(StoryItemSequence storyBlock) {
+		this.storyBlock = storyBlock;
+		storyBlock.setOwner(this);
+	}
+
+	public void setAlwaysBlock(StoryItemSequence alwaysBlock) {
+		this.alwaysBlock = alwaysBlock;
+		alwaysBlock.setOwner(this);
+	}
+
+	/**
+	 * TODO Handles these stupid If/ElseBlock pointers.. we need to fix this NOT
+	 * THIS
+	 */
+	@Override
+	public boolean addStoryChildBefore(StoryComponent newChild,
+			StoryComponent sibling) {
+		boolean success = super.addStoryChildBefore(newChild, sibling);
+		if (success) {
+			if (this.getChildren().iterator().next() == newChild)
+				this.setStoryBlock((StoryItemSequence) newChild);
+			else
+				this.setAlwaysBlock((StoryItemSequence) newChild);
+		}
+		return success;
 	}
 
 	@Override
@@ -192,6 +250,8 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 			this.notifyObservers(new StoryComponentEvent(this,
 					StoryComponentChangeEnum.CHANGE_CODEBLOCK_REMOVED));
 		}
+
+		this.updateStoryChildren();
 	}
 
 	public void addCodeBlock(CodeBlock codeBlock) {
@@ -199,6 +259,24 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 			codeBlock.setOwner(this);
 			this.notifyObservers(new StoryComponentEvent(this,
 					StoryComponentChangeEnum.CHANGE_CODEBLOCK_ADDED));
+		}
+
+		this.updateStoryChildren();
+	}
+
+	/**
+	 * Updates the ScriptIt to display the Story and Always blocks, depending on
+	 * if it is a cause or not.
+	 */
+	public void updateStoryChildren() {
+		if (this.isCause()) {
+			if (!this.childComponents.contains(this.storyBlock))
+				this.addStoryChild(this.storyBlock);
+			if (!this.childComponents.contains(this.alwaysBlock))
+				this.addStoryChild(this.alwaysBlock);
+		} else {
+			this.removeStoryChild(this.storyBlock);
+			this.removeStoryChild(this.alwaysBlock);
 		}
 	}
 
@@ -209,6 +287,8 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		for (CodeBlock codeBlock : codeBlocks) {
 			this.addCodeBlock(codeBlock);
 		}
+
+		this.updateStoryChildren();
 
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CODE_BLOCKS_SET));
@@ -244,4 +324,5 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		for (KnowIt implicit : this.getImplicits())
 			implicit.process(processController);
 	}
+
 }

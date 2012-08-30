@@ -92,9 +92,9 @@
 		<Format id="children">
 			<FormatRef ref="implicitsDeclaration" />
 			<FormatRef ref="implicitsDefinition" />
-			<FormatRef ref="childrenWithOutImplicits" />
+			<FormatRef ref="scriptItConditional" />
 		</Format>
-		<Format id="childrenWithOutImplicits">
+		<Format id="childrenWithoutImplicits">
 			<FormatRef ref="variablesDeclaration" />
 			<Line>
 				<Literal>// Children</Literal>
@@ -102,7 +102,7 @@
 			<!-- Actions and description definitions come last -->
 			<Series data="children">
 				<FormatRef data="scriptIt" ref="functionCall" />
-				<FormatRef data="askIt" ref="conditional" />
+				<FormatRef data="askIt" ref="askItConditional" />
 				<FormatRef data="knowIt" ref="knowItDefinition" />
 			</Series>
 		</Format>
@@ -122,34 +122,6 @@
 				<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			</Series>
 			<Literal>)</Literal>
-		</Format>
-		<Format id="causeConditional">
-			<Line>
-				<Literal>//Condition Variables</Literal>
-			</Line>
-			<Series data="variables">
-				<FormatRef ref="functionCall" />
-			</Series>
-			<Line />
-			<Line>
-				<Literal>if(</Literal>
-				<Fragment data="questpointenabled" />
-				<Literal>){</Literal>
-			</Line>
-			<Indent>
-				<Scope data="storyChild">
-					<FormatRef ref="functionCall" />
-				</Scope>
-			</Indent>
-			<Line>
-				<Literal>}</Literal>
-			</Line>
-			<Scope data="alwaysChild">
-				<FormatRef ref="childrenWithOutImplicits" />
-			</Scope>
-			<Line>
-				<Literal>}</Literal>
-			</Line>
 		</Format>
 		<Format id="functionCall">
 			<!-- Code block context -->
@@ -204,7 +176,28 @@
 				<Literal>;</Literal>
 			</Line>
 		</Format>
-		<Format id="conditional">
+
+		<!-- Conditionals for ScriptIts -->
+		<Format id="scriptItConditional">
+			<Line>
+				<Literal>if(SE2_Quest_GetState(GetFirstPC(), "</Literal>
+				<Fragment data="currentquestpoint" />
+				<Literal>") == QUEST_POINT_STATE_ENABLED){</Literal>
+			</Line>
+			<Indent>
+				<Scope data="storyChild">
+					<FormatRef ref="childrenWithoutImplicits" />
+				</Scope>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+			<Scope data="alwaysChild">
+				<FormatRef ref="childrenWithoutImplicits" />
+			</Scope>
+		</Format>
+
+		<Format id="askItConditional">
 			<Line>
 				<Literal>//Condition Variables</Literal>
 			</Line>
@@ -219,7 +212,7 @@
 			</Line>
 			<Indent>
 				<Scope data="ifChild">
-					<FormatRef ref="childrenWithOutImplicits" />
+					<FormatRef ref="childrenWithoutImplicits" />
 				</Scope>
 			</Indent>
 			<Line>
@@ -227,7 +220,7 @@
 			</Line>
 			<Indent>
 				<Scope data="elseChild">
-					<FormatRef ref="childrenWithOutImplicits" />
+					<FormatRef ref="childrenWithoutImplicits" />
 				</Scope>
 			</Indent>
 			<Line>
@@ -258,7 +251,7 @@
 				<Literal>}</Literal>
 			</Line>
 		</Format>
-		
+
 		<!-- Used in the Active slot on Dialogue Lines -->
 		<Format id="conversation_conditional">
 			<!-- include files first -->
@@ -373,7 +366,7 @@
 			</Series>
 			<Line />
 		</Format>
-		
+
 		<Format id="include">
 			<Line>
 				<Literal>#include "</Literal>
@@ -381,10 +374,13 @@
 				<Literal>"</Literal>
 			</Line>
 		</Format>
-		
+
 		<Format id="includes">
 			<Line>
 				<Literal>// Includes</Literal>
+			</Line>
+			<Line>
+				<Literal>#include "i_se_quest2"</Literal>
 			</Line>
 			<Series data="includes" unique="true">
 				<FormatRef ref="include" />

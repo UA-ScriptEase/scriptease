@@ -42,7 +42,7 @@ public class LibraryModel extends PatternModel implements
 	private StoryComponentContainer effectsCategory;
 	private StoryComponentContainer causesCategory;
 	private StoryComponentContainer descriptionsCategory;
-	private StoryComponentContainer folderCategory;
+	private StoryComponentContainer controllersCategory;
 	private StoryComponentContainer modelRoot;
 
 	/**
@@ -101,7 +101,7 @@ public class LibraryModel extends PatternModel implements
 		categories.add(effectsCategory);
 		categories.add(causesCategory);
 		categories.add(descriptionsCategory);
-		categories.add(folderCategory);
+		categories.add(controllersCategory);
 
 		this.getRoot().registerChildType(StoryComponentContainer.class,
 				categories.size());
@@ -117,25 +117,23 @@ public class LibraryModel extends PatternModel implements
 		effectsCategory.clearAllowableChildren();
 		causesCategory.clearAllowableChildren();
 		descriptionsCategory.clearAllowableChildren();
-		folderCategory.clearAllowableChildren();
+		controllersCategory.clearAllowableChildren();
 
 		effectsCategory.registerChildType(ScriptIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		effectsCategory.registerChildType(AskIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		causesCategory.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		descriptionsCategory.registerChildType(KnowIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		folderCategory.registerChildType(StoryComponentContainer.class,
+		controllersCategory.registerChildType(StoryComponentContainer.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		folderCategory.registerChildType(ScriptIt.class,
+		controllersCategory.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		folderCategory.registerChildType(AskIt.class,
+		controllersCategory.registerChildType(AskIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		folderCategory.registerChildType(StoryItemSequence.class,
+		controllersCategory.registerChildType(StoryItemSequence.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		folderCategory.registerChildType(KnowIt.class,
+		controllersCategory.registerChildType(KnowIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 	}
 
@@ -143,7 +141,7 @@ public class LibraryModel extends PatternModel implements
 		effectsCategory.addStoryComponentObserver(this);
 		causesCategory.addStoryComponentObserver(this);
 		descriptionsCategory.addStoryComponentObserver(this);
-		folderCategory.addStoryComponentObserver(this);
+		controllersCategory.addStoryComponentObserver(this);
 	}
 
 	@Override
@@ -167,8 +165,8 @@ public class LibraryModel extends PatternModel implements
 		return this.descriptionsCategory;
 	}
 
-	public StoryComponentContainer getFoldersCategory() {
-		return this.folderCategory;
+	public StoryComponentContainer getControllersCategory() {
+		return this.controllersCategory;
 	}
 
 	/**
@@ -195,8 +193,8 @@ public class LibraryModel extends PatternModel implements
 				else if (child.getDisplayText()
 						.equalsIgnoreCase("DESCRIPTIONS"))
 					this.descriptionsCategory = containerChild;
-				else if (child.getDisplayText().equalsIgnoreCase("FOLDERS"))
-					this.folderCategory = containerChild;
+				else if (child.getDisplayText().equalsIgnoreCase("CONTROLLERS"))
+					this.controllersCategory = containerChild;
 				else
 					System.out.println("Unimplemented Child Type: "
 							+ child.getDisplayText());
@@ -243,7 +241,7 @@ public class LibraryModel extends PatternModel implements
 
 			@Override
 			public void processAskIt(AskIt askIt) {
-				final boolean success = LibraryModel.this.effectsCategory
+				final boolean success = LibraryModel.this.controllersCategory
 						.removeStoryChild(askIt);
 				if (success)
 					askIt.removeStoryComponentObserver(LibraryModel.this);
@@ -261,7 +259,7 @@ public class LibraryModel extends PatternModel implements
 			@Override
 			public void processStoryComponentContainer(
 					StoryComponentContainer container) {
-				final boolean success = LibraryModel.this.folderCategory
+				final boolean success = LibraryModel.this.controllersCategory
 						.removeStoryChild(container);
 				if (success)
 					container.removeStoryComponentObserver(LibraryModel.this);
@@ -318,7 +316,7 @@ public class LibraryModel extends PatternModel implements
 		components.addAll(this.effectsCategory.getChildren());
 		components.addAll(this.causesCategory.getChildren());
 		components.addAll(this.descriptionsCategory.getChildren());
-		components.addAll(this.folderCategory.getChildren());
+		components.addAll(this.controllersCategory.getChildren());
 		return components;
 	}
 
@@ -335,7 +333,7 @@ public class LibraryModel extends PatternModel implements
 		components.addAll(this.effectsCategory.getChildren());
 		components.addAll(this.causesCategory.getChildren());
 		components.addAll(this.descriptionsCategory.getChildren());
-		components.addAll(this.folderCategory.getChildren());
+		components.addAll(this.controllersCategory.getChildren());
 
 		// Get the implicit and parameters of the binding scriptIts
 		final Collection<StoryComponent> implicitsAndParameters = new ArrayList<StoryComponent>();
@@ -404,7 +402,7 @@ public class LibraryModel extends PatternModel implements
 		effectsCategory = new StoryComponentContainer("Effects");
 		causesCategory = new StoryComponentContainer("Causes");
 		descriptionsCategory = new StoryComponentContainer("Descriptions");
-		folderCategory = new StoryComponentContainer("Folders");
+		controllersCategory = new StoryComponentContainer("Controllers");
 		this.registerObservers();
 
 	}
@@ -434,7 +432,7 @@ public class LibraryModel extends PatternModel implements
 
 		@Override
 		public void processAskIt(AskIt askIt) {
-			final boolean success = LibraryModel.this.effectsCategory
+			final boolean success = LibraryModel.this.controllersCategory
 					.addStoryChild(askIt);
 			if (success)
 				askIt.addStoryComponentObserver(LibraryModel.this);
@@ -461,7 +459,7 @@ public class LibraryModel extends PatternModel implements
 		@Override
 		public void processStoryComponentContainer(
 				StoryComponentContainer container) {
-			final boolean success = LibraryModel.this.folderCategory
+			final boolean success = LibraryModel.this.controllersCategory
 					.addStoryChild(container);
 			if (success)
 				container.addStoryComponentObserver(LibraryModel.this);
@@ -479,7 +477,7 @@ public class LibraryModel extends PatternModel implements
 	}
 
 	/**
-	 * DoItRetriever finds a DoIt in the LibraryModel with the given displayName
+	 * Finds a ScriptIt in the LibraryModel with the given displayName
 	 * 
 	 * @author mfchurch
 	 * 
@@ -514,9 +512,9 @@ public class LibraryModel extends PatternModel implements
 				else
 					effect.process(this);
 			}
-			StoryComponentContainer folderCategory = LibraryModel.this
-					.getFoldersCategory();
-			for (StoryComponent effect : folderCategory.getChildren()) {
+			StoryComponentContainer controllersCategory = LibraryModel.this
+					.getControllersCategory();
+			for (StoryComponent effect : controllersCategory.getChildren()) {
 				if (scriptIt != null)
 					return scriptIt;
 				else

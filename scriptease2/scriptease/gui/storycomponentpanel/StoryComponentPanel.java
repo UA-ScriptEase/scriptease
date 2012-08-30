@@ -25,6 +25,7 @@ import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.controller.observer.StoryComponentObserverAdder;
 import scriptease.controller.observer.StoryComponentObserverRemover;
 import scriptease.gui.ComponentFocusManager;
+import scriptease.gui.control.ExpansionButton;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.StoryItemSequence;
@@ -47,6 +48,8 @@ public class StoryComponentPanel extends JPanel implements
 	private boolean editable;
 	private boolean selectable;
 	private boolean removable;
+
+	private ExpansionButton expansionButton;
 
 	public StoryComponentPanel(StoryComponent component) {
 		// State of Panel
@@ -109,6 +112,14 @@ public class StoryComponentPanel extends JPanel implements
 
 	public boolean isSelectable() {
 		return this.selectable;
+	}
+
+	public void setExpansionButton(ExpansionButton expansionButton) {
+		this.expansionButton = expansionButton;
+	}
+
+	public ExpansionButton getExpansionButton() {
+		return this.expansionButton;
 	}
 
 	public void setEditable(boolean editable) {

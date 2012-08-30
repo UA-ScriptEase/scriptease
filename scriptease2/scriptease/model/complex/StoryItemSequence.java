@@ -14,8 +14,6 @@ import scriptease.model.StoryComponent;
  */
 public class StoryItemSequence extends ComplexStoryComponent {
 
-	/************* CONSTRUCTORS ********************/
-
 	public StoryItemSequence(
 			Collection<Class<? extends StoryComponent>> validTypes) {
 		for (Class<? extends StoryComponent> validType : validTypes) {
@@ -24,11 +22,27 @@ public class StoryItemSequence extends ComplexStoryComponent {
 		}
 	}
 
-	/************* IMPORTANT CODE ******************/
-
 	@Override
 	public void process(StoryVisitor processController) {
 		processController.processStoryItemSequence(this);
+	}
+
+	/**
+	 * Special check so that we do not add a cause to a StoryItemSequence. If we
+	 * ever want to add Causes to StoryItemSequences in the future, we could
+	 * just add a boolean flag for this check that gets added in the
+	 * constructor.
+	 */
+	@Override
+	public boolean canAcceptChild(StoryComponent potentialChild) {
+		if ((potentialChild instanceof ScriptIt && ((ScriptIt) potentialChild)
+				.isCause()))
+			// Causes should not have other Causes inside of them, nor should
+			// Effects allow children. We don't even know what would mean. To
+			// think of it is terrifying. - remiller
+			return false;
+		else
+			return super.canAcceptChild(potentialChild);
 	}
 
 	@Override

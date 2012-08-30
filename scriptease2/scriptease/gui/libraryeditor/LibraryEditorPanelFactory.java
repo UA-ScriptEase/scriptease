@@ -767,6 +767,7 @@ public class LibraryEditorPanelFactory {
 
 				codeBlock.setSubject(subjectName);
 
+				scriptIt.updateStoryChildren();
 				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
 						StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
 			}
@@ -782,6 +783,7 @@ public class LibraryEditorPanelFactory {
 				else
 					codeBlock.setSlot("");
 
+				scriptIt.updateStoryChildren();
 				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
 						StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
 			}

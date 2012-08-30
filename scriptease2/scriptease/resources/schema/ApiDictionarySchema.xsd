@@ -130,10 +130,19 @@
 	<xsd:complexType name="ScriptIt_Type">
 		<xsd:sequence minOccurs="0">
 			<xsd:group ref="StoryComponentDataGroup" />
-			<xsd:element name="Children" type="xsd:string" />
+			<xsd:element name="Children" type="StoryItemSequenceList_Type" />
 			<xsd:element name="CodeBlocks" type="CodeBlockList_Type" />
 		</xsd:sequence>
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+	</xsd:complexType>
+
+	<!-- Defines a StoryItemSequence -->
+	<xsd:complexType name="StoryItemSequence_Type">
+		<xsd:sequence minOccurs="0" maxOccurs="2">
+			<xsd:group ref="StoryComponentDataGroup" />
+			<xsd:element name="Children" type="xsd:string" />
+			<xsd:element name="ValidTypes" type="ValidList_Type" />
+		</xsd:sequence>
 	</xsd:complexType>
 
 	<!-- Defines a Code Block Source -->
@@ -236,6 +245,16 @@
 		</xsd:choice>
 	</xsd:complexType>
 
+	<!-- Defines a list of StoryItemSequences -->
+	<xsd:complexType name="StoryItemSequenceList_Type">
+		<xsd:choice>
+			<xsd:sequence>
+				<xsd:element name="StoryItemSequence" type="StoryItemSequence_Type"
+					maxOccurs="unbounded" minOccurs="0" />
+			</xsd:sequence>
+		</xsd:choice>
+	</xsd:complexType>
+
 	<!-- Defines a list of Specific game Type keyword references each of these 
 		keywords must be defined in the TypeList_Type block -->
 	<xsd:complexType name="SpecificTypeList_Type">
@@ -248,6 +267,13 @@
 	<xsd:complexType name="IncludesList_Type">
 		<xsd:sequence>
 			<xsd:element name="Include" type="xsd:string" maxOccurs="unbounded"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="ValidList_Type">
+		<xsd:sequence>
+			<xsd:element name="Value" type="xsd:string" maxOccurs="unbounded"
 				minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>

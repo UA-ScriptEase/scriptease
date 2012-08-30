@@ -31,9 +31,6 @@ public class FormatReferenceFragmentConverter implements Converter {
 
 		// Ref Tag
 		ref = reader.getAttribute(REF_TAG);
-		for (int i = 0; i < reader.getAttributeCount(); i++) {
-			System.out.println(reader.getAttribute(i));
-		}
 		data = reader.getAttribute(DATA_TAG);
 
 		// Start vanilla
