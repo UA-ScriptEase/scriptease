@@ -38,8 +38,8 @@ public class NetworkHandler extends Handler {
 
 	@Override
 	public void close() throws SecurityException {
-		if (client != null) {
-			client.getConnectionManager().shutdown();
+		if (this.client != null) {
+			this.client.getConnectionManager().shutdown();
 		}
 	}
 
@@ -49,8 +49,8 @@ public class NetworkHandler extends Handler {
 	 * @author mfchurch
 	 */
 	private void connect() {
-		client = new DefaultHttpClient();
-		post = new HttpPost(ScriptEase.getInstance().getConfiguration(
+		this.client = new DefaultHttpClient();
+		this.post = new HttpPost(ScriptEase.getInstance().getConfiguration(
 				ConfigurationKeys.BugServer));
 	}
 
@@ -78,12 +78,12 @@ public class NetworkHandler extends Handler {
 	public void sendBugReport(String comment) {
 		String report;
 
-		connect();
-		report = generateReport(comment);
+		this.connect();
+		report = this.generateReport(comment);
 
 		try {
-			post.setEntity(new StringEntity(report));
-			HttpResponse response = client.execute(post);
+			this.post.setEntity(new StringEntity(report));
+			HttpResponse response = this.client.execute(this.post);
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					response.getEntity().getContent()));
 			String readLine;
@@ -93,14 +93,14 @@ public class NetworkHandler extends Handler {
 			}
 			// tell the user if the report was sucessfully sent and clear
 			// the buffer
-			if (response.getStatusLine().getStatusCode() == HTML_SUCESS) {
-				success();
+			if (response.getStatusLine().getStatusCode() == NetworkHandler.HTML_SUCESS) {
+				this.success();
 				this.buffered = null;
 			} else
 				throw new IOException();
 		} catch (Throwable e) {
 			// inform the user of an error sending the report
-			error();
+			this.error();
 		}
 	}
 
@@ -121,8 +121,8 @@ public class NetworkHandler extends Handler {
 		report += ScriptEase.getInstance().getVersion();
 		report += " (" + ScriptEase.getInstance().getSpecificVersion() + ")";
 		report += ("</version>\n<log>\n");
-		if (buffered != null)
-			report += (formatter.format(buffered).trim() + "\n");
+		if (this.buffered != null)
+			report += (formatter.format(this.buffered).trim() + "\n");
 		report += ("</log>\n<comment>\n");
 		report += comment + "\n";
 		report += ("</comment>\n<system>\n");
@@ -141,7 +141,7 @@ public class NetworkHandler extends Handler {
 	 */
 	private void error() {
 		WindowFactory.getInstance().showProblemDialog("Error Report Failed",
-				CONNECTION_ERROR_MESSAGE);
+				NetworkHandler.CONNECTION_ERROR_MESSAGE);
 	}
 
 	/**

@@ -132,7 +132,7 @@ public abstract class StoryComponent implements Cloneable {
 	 *         StoryComponent
 	 */
 	public Set<Class<? extends StoryComponent>> getValidChildTypes() {
-		return new HashSet<Class<? extends StoryComponent>>(noValidChildren);
+		return new HashSet<Class<? extends StoryComponent>>(StoryComponent.noValidChildren);
 	}
 
 	/**

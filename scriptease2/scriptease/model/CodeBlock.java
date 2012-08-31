@@ -5,13 +5,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import scriptease.controller.apimanagers.EventSlotManager;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.EventSlotManager;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -253,7 +253,7 @@ public abstract class CodeBlock extends StoryComponent implements
 	 */
 	public KnowIt getSubject() {
 		final ScriptIt cause = this.getCause();
-		if (!hasSubject()) {
+		if (!this.hasSubject()) {
 			final CodeBlock parentBlock = cause.getMainCodeBlock();
 			return parentBlock.getSubject();
 		} else {
@@ -281,7 +281,7 @@ public abstract class CodeBlock extends StoryComponent implements
 		 * close as we can get. - remiller
 		 */
 		if (this.hasSubject() || this.hasSlot())
-			return (ScriptIt) this.getOwner();
+			return this.getOwner();
 		else {
 			StoryComponent parent = this.getOwner().getOwner();
 			while (parent != null) {

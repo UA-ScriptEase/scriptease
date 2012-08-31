@@ -7,7 +7,7 @@ public class ScriptItGetter extends TypeGetterVisitor<ScriptIt> {
 
 	@Override
 	public void processScriptIt(ScriptIt doIt) {
-		objects.add(doIt);
+		this.objects.add(doIt);
 	}
 
 	@Override

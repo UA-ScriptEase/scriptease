@@ -28,7 +28,9 @@ public class GameType {
 	 * @author remiller
 	 */
 	public enum TypeValueWidgets {
-		JTEXTFIELD, JSPINNER, JCOMBOBOX;
+		JTEXTFIELD,
+		JSPINNER,
+		JCOMBOBOX;
 	}
 
 	private String displayName;
@@ -131,12 +133,12 @@ public class GameType {
 			final String value = entry.getKey();
 			final String name = entry.getValue();
 			String enumEntry;
-			
-			if(value.equals(""))
+
+			if (value.equals(""))
 				continue;
-			
+
 			enumEntry = value;
-			
+
 			// Don't bother putting the name if it's the same as the value
 			if (!name.equals(value))
 				enumEntry += "<" + name + ">";
@@ -159,7 +161,7 @@ public class GameType {
 	 * @return
 	 */
 	public String getEnumString() {
-		return convertEnumMapToString(this.enums);
+		return this.convertEnumMapToString(this.enums);
 	}
 
 	/**
@@ -193,11 +195,11 @@ public class GameType {
 	}
 
 	public String getKeyword() {
-		return keyword;
+		return this.keyword;
 	}
 
 	public String getReg() {
-		return regEx;
+		return this.regEx;
 	}
 
 	public void setReg(String reg) {
@@ -205,13 +207,13 @@ public class GameType {
 	}
 
 	public Boolean hasReg() {
-		if (regEx != null && !regEx.isEmpty())
+		if (this.regEx != null && !this.regEx.isEmpty())
 			return true;
 		return false;
 	}
 
 	public String getDisplayName() {
-		return displayName;
+		return this.displayName;
 	}
 
 	public void setDisplayName(String displayName) {
@@ -253,15 +255,15 @@ public class GameType {
 	 * @return Collection<String> of the Type's valid slots.
 	 */
 	public Collection<String> getSlots() {
-		if (this.slots != null) {
-			return new ArrayList<String>(this.slots);
-		} else
+		if (this.slots == null) {
 			return new ArrayList<String>();
+		}
+		return new ArrayList<String>(this.slots);
 	}
 
 	public Boolean hasSlot(String slot) {
-		if (slots != null) {
-			for (String value : slots) {
+		if (this.slots != null) {
+			for (String value : this.slots) {
 				if (value.equals(slot)) {
 					return true;
 				}
@@ -269,7 +271,7 @@ public class GameType {
 			return false;
 		}
 		System.err.println("Tried to access slot " + slot + " on type "
-				+ displayName + " which does not have slots");
+				+ this.displayName + " which does not have slots");
 		return false;
 	}
 
@@ -284,7 +286,7 @@ public class GameType {
 				return true;
 			}
 			GameType other = (GameType) obj;
-			return other.keyword.equals(keyword);
+			return other.keyword.equals(this.keyword);
 		}
 		return false;
 	}
@@ -303,7 +305,7 @@ public class GameType {
 	 * @return
 	 */
 	public boolean hasGUI() {
-		if (guiEditorName != null)
+		if (this.guiEditorName != null)
 			return true;
 		return false;
 	}

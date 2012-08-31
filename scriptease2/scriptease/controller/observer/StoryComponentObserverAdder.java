@@ -66,7 +66,7 @@ public class StoryComponentObserverAdder {
 		public void processStoryComponentContainer(
 				StoryComponentContainer storyComponentContainer) {
 			storyComponentContainer.addStoryComponentObserver(this.observer);
-			processComplexStoryComponent(storyComponentContainer);
+			this.processComplexStoryComponent(storyComponentContainer);
 		}
 
 		@Override
@@ -74,7 +74,7 @@ public class StoryComponentObserverAdder {
 			scriptIt.addStoryComponentObserver(this.observer);
 			scriptIt.processSubjects(this);
 			scriptIt.processParameters(this);
-			processComplexStoryComponent(scriptIt);
+			this.processComplexStoryComponent(scriptIt);
 		}
 
 		@Override
@@ -100,13 +100,13 @@ public class StoryComponentObserverAdder {
 		public void processAskIt(AskIt askIt) {
 			askIt.addStoryComponentObserver(this.observer);
 			askIt.getCondition().process(this);
-			processComplexStoryComponent(askIt);
+			this.processComplexStoryComponent(askIt);
 		}
 
 		@Override
 		public void processStoryItemSequence(StoryItemSequence sequence) {
 			sequence.addStoryComponentObserver(this.observer);
-			processComplexStoryComponent(sequence);
+			this.processComplexStoryComponent(sequence);
 		}
 	}
 

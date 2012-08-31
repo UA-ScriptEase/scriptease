@@ -114,7 +114,7 @@ public class CodeBlockSource extends CodeBlock {
 	 * @param returnTypes
 	 *            The possible return types of this CodeBlock. All of these
 	 *            Strings must exist in a
-	 *            {@link scriptease.controller.apimanagers.GameTypeManager
+	 *            {@link scriptease.translator.apimanagers.GameTypeManager
 	 *            GameTypeManager}
 	 * @param parameters
 	 *            The parameter list of this code block.
@@ -196,7 +196,7 @@ public class CodeBlockSource extends CodeBlock {
 	@Override
 	public String getSlot() {
 		final ScriptIt cause;
-		if (hasSlot()) {
+		if (this.hasSlot()) {
 			return this.slot;
 		} else {
 			cause = this.getCause();

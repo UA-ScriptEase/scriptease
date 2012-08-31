@@ -19,8 +19,8 @@ public class ImplicitGetter extends TypeGetterVisitor<KnowIt> {
 				// implicits
 				final KnowIt value = reference.getValue();
 				value.getBinding().process(this);
-				if (!objects.contains(value))
-					objects.add(value);
+				if (!ImplicitGetter.this.objects.contains(value))
+					ImplicitGetter.this.objects.add(value);
 			}
 		});
 	}

@@ -199,7 +199,7 @@ public class FileOp {
 			locationFile = null;
 		} else {
 			// resource was found in jar
-			locationFile = new File(resourcesDirectory, location);
+			locationFile = new File(FileOp.resourcesDirectory, location);
 
 			// has it been extracted yet?
 			if (!locationFile.exists()) {
@@ -257,7 +257,7 @@ public class FileOp {
 		try {
 			in = new FileInputStream(source);
 
-			contents = readStreamAsBytes(in);
+			contents = FileOp.readStreamAsBytes(in);
 		} finally {
 			if (in != null)
 				in.close();
@@ -307,7 +307,7 @@ public class FileOp {
 	 */
 	public static String readFileAsString(File source) throws IOException {
 		FileReader reader = new FileReader(source);
-		return readStreamAsString(reader);
+		return FileOp.readStreamAsString(reader);
 	}
 
 	private static String readStreamAsString(Reader source) throws IOException {

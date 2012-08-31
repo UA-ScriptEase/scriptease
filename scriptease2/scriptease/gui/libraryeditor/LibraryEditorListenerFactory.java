@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.StoryVisitor;
-import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
@@ -28,6 +27,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 
 /**
  * Factory for listeners for the Story Component Builder.
@@ -101,7 +101,7 @@ public class LibraryEditorListenerFactory {
 	 */
 	protected StoryComponentObserver buildScriptItEditorObserver(
 			final Runnable runnable) {
-		scriptItObserver = new StoryComponentObserver() {
+		this.scriptItObserver = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
 				final StoryComponentChangeEnum type;
@@ -157,8 +157,7 @@ public class LibraryEditorListenerFactory {
 
 							parameterPanel.add(LibraryEditorPanelFactory
 									.getInstance().buildParameterPanel(
-											scriptIt, codeBlock, knowItToAdd,
-											parameterPanel));
+											scriptIt, codeBlock, knowItToAdd));
 
 							if (!slots.isEmpty())
 								subjectBox
@@ -212,8 +211,7 @@ public class LibraryEditorListenerFactory {
 							for (KnowIt knowIt : codeBlock.getParameters()) {
 								parameterPanel.add(LibraryEditorPanelFactory
 										.getInstance().buildParameterPanel(
-												scriptIt, codeBlock, knowIt,
-												parameterPanel));
+												scriptIt, codeBlock, knowIt));
 							}
 
 							subjectBox.revalidate();
@@ -227,7 +225,7 @@ public class LibraryEditorListenerFactory {
 				component.process(storyVisitor);
 			}
 		};
-		codeBlockComponentObservers.add(parameterPanelObserver);
+		this.codeBlockComponentObservers.add(parameterPanelObserver);
 
 		return parameterPanelObserver;
 	}
@@ -262,8 +260,7 @@ public class LibraryEditorListenerFactory {
 								KnowIt subject = codeBlock.getSubject();
 								if (subject != null
 										&& !codeBlock.getSubjectName().equals(
-												(String) subjectBox
-														.getSelectedItem())) {
+												subjectBox.getSelectedItem())) {
 									final Collection<String> subjectSlots;
 
 									subjectSlots = TranslatorManager
@@ -292,7 +289,7 @@ public class LibraryEditorListenerFactory {
 				component.process(storyVisitor);
 			}
 		};
-		codeBlockComponentObservers.add(subjectBoxObserver);
+		this.codeBlockComponentObservers.add(subjectBoxObserver);
 
 		return subjectBoxObserver;
 	}
@@ -337,7 +334,7 @@ public class LibraryEditorListenerFactory {
 				component.process(storyVisitor);
 			}
 		};
-		codeBlockComponentObservers.add(subjectBoxObserver);
+		this.codeBlockComponentObservers.add(subjectBoxObserver);
 
 		return subjectBoxObserver;
 	}
@@ -382,7 +379,7 @@ public class LibraryEditorListenerFactory {
 				component.process(storyVisitor);
 			}
 		};
-		codeBlockComponentObservers.add(codeBlockObserver);
+		this.codeBlockComponentObservers.add(codeBlockObserver);
 
 		return codeBlockObserver;
 	}
@@ -470,7 +467,7 @@ public class LibraryEditorListenerFactory {
 				component.process(storyVisitor);
 			}
 		};
-		codeBlockComponentObservers.add(parameterPanelObserver);
+		this.codeBlockComponentObservers.add(parameterPanelObserver);
 
 		return parameterPanelObserver;
 	}
@@ -529,7 +526,7 @@ public class LibraryEditorListenerFactory {
 				component.process(storyVisitor);
 			}
 		};
-		codeBlockComponentObservers.add(codeBlockObserver);
+		this.codeBlockComponentObservers.add(codeBlockObserver);
 
 		return codeBlockObserver;
 	}
@@ -570,7 +567,7 @@ public class LibraryEditorListenerFactory {
 				component.process(storyVisitor);
 			}
 		};
-		codeBlockComponentObservers.add(codeBlockObserver);
+		this.codeBlockComponentObservers.add(codeBlockObserver);
 
 		return codeBlockObserver;
 	}
@@ -580,6 +577,7 @@ public class LibraryEditorListenerFactory {
 	 * ones can get garbage collected.
 	 */
 	protected void refreshCodeBlockComponentObserverList() {
-		codeBlockComponentObservers.removeAll(codeBlockComponentObservers);
+		this.codeBlockComponentObservers
+				.removeAll(this.codeBlockComponentObservers);
 	}
 }

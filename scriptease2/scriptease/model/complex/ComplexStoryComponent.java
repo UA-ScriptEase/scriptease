@@ -133,9 +133,9 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 		siblingIndex = this.childComponents.indexOf(sibling);
 
 		if ((siblingIndex < 0) || (sibling == null))
-			childComponents.add(newChild);
+			this.childComponents.add(newChild);
 		else
-			childComponents.add(siblingIndex, newChild);
+			this.childComponents.add(siblingIndex, newChild);
 
 		newChild.setOwner(this);
 
@@ -212,7 +212,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 	 * @see StoryComponent#process(StoryVisitor)
 	 */
 	public final void processChildren(StoryVisitor processController) {
-		for (StoryComponent child : childComponents) {
+		for (StoryComponent child : this.childComponents) {
 			child.process(processController);
 		}
 	}

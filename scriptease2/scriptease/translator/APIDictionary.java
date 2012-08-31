@@ -7,8 +7,6 @@ import java.util.List;
 import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.BindingVisitor;
-import scriptease.controller.apimanagers.EventSlotManager;
-import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.observer.LibraryEvent;
 import scriptease.controller.observer.LibraryObserver;
 import scriptease.model.CodeBlock;
@@ -21,6 +19,8 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.translator.apimanagers.EventSlotManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.Slot;
 
 /**

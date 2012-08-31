@@ -265,7 +265,7 @@ public final class ScriptEase implements Runnable {
 			Toolkit.getDefaultToolkit().beep();
 			e.printStackTrace();
 
-			this.exit(ERROR_CODE_UNSPECIFIED);
+			this.exit(ScriptEase.ERROR_CODE_UNSPECIFIED);
 		}
 	}
 
@@ -295,7 +295,7 @@ public final class ScriptEase implements Runnable {
 		// non-explicit patterns directories should live in the user data
 		// directory
 		if (!patternsDir.isAbsolute())
-			patternsDir = new File(SCRIPTEASE_USER_DATA_DIR,
+			patternsDir = new File(ScriptEase.SCRIPTEASE_USER_DATA_DIR,
 					patternsDir.getPath());
 
 		if (!patternsDir.exists() && !patternsDir.mkdirs())
@@ -324,27 +324,27 @@ public final class ScriptEase implements Runnable {
 	}
 
 	private void checkDebugging() {
-		DEBUG_MODE = Boolean.parseBoolean(this.getPreference(DEBUG_KEY));
+		ScriptEase.DEBUG_MODE = Boolean.parseBoolean(this.getPreference(ScriptEase.DEBUG_KEY));
 	}
 
 	private void loadConfigurations() {
 		// load config
 		this.loadConfiguration(this.configuration,
-				FileOp.getFileResource(CONFIG_FILE_LOCATION));
+				FileOp.getFileResource(ScriptEase.CONFIG_FILE_LOCATION));
 
 		this.ensureConfigDirectories();
 
 		// load default user prefs
 		this.loadConfiguration(this.defaultPrefs,
-				FileOp.getFileResource(DEFAULT_PREFS_LOCATION));
+				FileOp.getFileResource(ScriptEase.DEFAULT_PREFS_LOCATION));
 
 		// load saved user prefs
-		File userFile = FileOp.getFileResource(USER_PREFS_LOCATION);
+		File userFile = FileOp.getFileResource(ScriptEase.USER_PREFS_LOCATION);
 		if ((userFile == null || !userFile.exists())) {
 			System.err
 					.println("User preferences file not found, attempting to create it...");
 
-			userFile = new File(".", USER_PREFS_LOCATION);
+			userFile = new File(".", ScriptEase.USER_PREFS_LOCATION);
 
 			try {
 				userFile.createNewFile();
@@ -412,7 +412,7 @@ public final class ScriptEase implements Runnable {
 				if (key.equals(ConfigurationKeys.TranslatorsDirectory))
 					file = new File(".", file.getPath());
 				else
-					file = new File(SCRIPTEASE_USER_DATA_DIR, file.getPath());
+					file = new File(ScriptEase.SCRIPTEASE_USER_DATA_DIR, file.getPath());
 			}
 
 			if (!file.exists() && !file.mkdirs())

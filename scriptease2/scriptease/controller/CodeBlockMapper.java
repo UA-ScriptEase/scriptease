@@ -34,7 +34,7 @@ public class CodeBlockMapper extends AbstractNoOpStoryVisitor {
 			bucket.add(codeBlock);
 			this.codeBlocks.put(key, bucket);
 		}
-		defaultProcessComplex(scriptIt);
+		this.defaultProcessComplex(scriptIt);
 	}
 
 	public Map<String, List<CodeBlock>> getCodeBlocks() {

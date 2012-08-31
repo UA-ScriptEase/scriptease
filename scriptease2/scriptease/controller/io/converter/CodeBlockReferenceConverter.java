@@ -144,7 +144,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 	private void dieMissingTarget(String expected, String found) {
 		throw new XStreamException(
 				"CodeBlockReference missing target information, or data is in the wrong order. Expected "
-						+ TAG_TARGET_ID + ", but found " + found);
+						+ expected + ", but found " + found);
 	}
 
 	@Override

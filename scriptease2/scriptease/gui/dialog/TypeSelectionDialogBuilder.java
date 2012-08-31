@@ -28,10 +28,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
-import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.gui.WindowFactory;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.util.GUIOp;
 
 /**

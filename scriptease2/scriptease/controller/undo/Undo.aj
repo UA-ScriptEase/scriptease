@@ -212,7 +212,7 @@ public aspect Undo {
 
 	private void addModification(Modification mod) {
 		final UndoManager undo = UndoManager.getInstance();
-		if (undo.hasOpenUndoableAction() && recording)
+		if (undo.hasOpenUndoableAction() && this.recording)
 			undo.appendModification(mod);
 	}
 
@@ -441,7 +441,7 @@ public aspect Undo {
 			@Override
 			public void undo() {
 				owner.addType(newType);
-				owner.setBinding(binding);
+				owner.setBinding(this.binding);
 			}
 
 			@Override

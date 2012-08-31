@@ -19,9 +19,9 @@ public class MouseForwardingAdapter extends MouseAdapter {
 	private static MouseForwardingAdapter instance;
 
 	public static MouseForwardingAdapter getInstance() {
-		if (instance == null)
-			instance = new MouseForwardingAdapter();
-		return instance;
+		if (MouseForwardingAdapter.instance == null)
+			MouseForwardingAdapter.instance = new MouseForwardingAdapter();
+		return MouseForwardingAdapter.instance;
 	}
 
 	private MouseForwardingAdapter() {
@@ -29,28 +29,28 @@ public class MouseForwardingAdapter extends MouseAdapter {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		passToParentListener(e);
+		this.passToParentListener(e);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		passToParentListener(e);
+		this.passToParentListener(e);
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		passToParentListener(e);
+		this.passToParentListener(e);
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		passToParentListener(e);
+		this.passToParentListener(e);
 	}
 
 	private void passToParentListener(MouseEvent e) {
 		int i = 0;
 		Container parent = e.getComponent().getParent();
-		while (parent != null && !e.isConsumed() && i < SAFE_LIMIT) {
+		while (parent != null && !e.isConsumed() && i < this.SAFE_LIMIT) {
 			e.setSource(parent);
 			// pass the event
 			parent.dispatchEvent(e);

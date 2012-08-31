@@ -29,7 +29,7 @@ public final class GraphNodeEvent {
 	}
 	
 	public Boolean isShiftDown() {
-		return isShiftDown;
+		return this.isShiftDown;
 	}
 	
 	public void setShiftDown(boolean isShiftDown) {

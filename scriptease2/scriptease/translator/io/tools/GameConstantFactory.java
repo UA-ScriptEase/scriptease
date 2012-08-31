@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.translator.io.model.GameConstant;
-import scriptease.translator.io.model.IdentifiableGameConstant;
 
 /**
  * Factory used to facilitate the creation of GameConstant types.
@@ -15,12 +14,10 @@ public class GameConstantFactory {
 	private static GameConstantFactory instance;
 
 	public static GameConstantFactory getInstance() {
-		if (instance != null)
-			return instance;
-		else {
-			instance = new GameConstantFactory();
-			return instance;
-		}
+		if (GameConstantFactory.instance != null)
+			return GameConstantFactory.instance;
+		GameConstantFactory.instance = new GameConstantFactory();
+		return GameConstantFactory.instance;
 	}
 
 	/**
@@ -38,53 +35,11 @@ public class GameConstantFactory {
 
 	public GameConstant getConstant(final Collection<String> types,
 			final String resolutionCode) {
-		return this.getConstant(types, resolutionCode, null);
-	}
-
-	public GameConstant getConstant(final Collection<String> types,
-			final String resolutionCode, final String resref) {
 		if (resolutionCode == null)
 			throw new IllegalArgumentException(
 					"Cannot create a GameConstant with a null resolutionCode");
 
-		final GameConstant newConstant;
-		if (resref != null && !resref.isEmpty()) {
-			newConstant = new IdentifiableGameConstant() {
-				@Override
-				public String getResolutionText() {
-					return resolutionCode;
-				}
-
-				@Override
-				public String getName() {
-					return getTemplateID();
-				}
-
-				@Override
-				public Collection<String> getTypes() {
-					return types;
-				}
-
-				@Override
-				public String toString() {
-					return getName();
-				}
-
-				@Override
-				public String getTemplateID() {
-					return resref;
-				}
-
-				@Override
-				public String getTag() {
-					return resref;
-				}
-			};
-		} else {
-			newConstant = new SimpleGameConstant(types, resolutionCode);
-		}
-		return newConstant;
-
+		return new SimpleGameConstant(types, resolutionCode);
 	}
 
 	public GameConstant getTypedBlankConstant(final String type) {

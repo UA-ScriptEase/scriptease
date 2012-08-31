@@ -79,7 +79,7 @@ public class ToolBarFactory {
 	 * @return
 	 */
 	public static ToolBarFactory getInstance() {
-		return instance;
+		return ToolBarFactory.instance;
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class ToolBarFactory {
 
 		GraphNode.observeDepthMap(graphBarObserver, gPanel.getHeadNode());
 
-		observerMap.put(graphEditorToolBar, graphBarObserver);
+		this.observerMap.put(graphEditorToolBar, graphBarObserver);
 
 		return graphEditorToolBar;
 	}
@@ -190,7 +190,7 @@ public class ToolBarFactory {
 	 */
 	public JToolBar buildQuestEditorToolBar(GraphPanel gPanel) {
 
-		final JToolBar questEditorToolBar = buildGraphEditorToolBar(gPanel);
+		final JToolBar questEditorToolBar = this.buildGraphEditorToolBar(gPanel);
 
 		final int TOOL_BAR_HEIGHT = 32;
 		final int FAN_IN_SPINNER_LENGTH = 50;
@@ -200,15 +200,15 @@ public class ToolBarFactory {
 				+ ":");
 		final JLabel fanInLabel = new JLabel("Fan In:");
 
-		final JTextField nameField = buildNameField(new Dimension(
+		final JTextField nameField = this.buildNameField(new Dimension(
 				NAME_FIELD_LENGTH, TOOL_BAR_HEIGHT));
 
-		final JSpinner fanInSpinner = buildFanInSpinner(new Dimension(
+		final JSpinner fanInSpinner = this.buildFanInSpinner(new Dimension(
 				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT), fanInLabel);
 
 		gPanel.getHeadNode().process(new AbstractNoOpGraphNodeVisitor() {
 			public void processQuestPointNode(QuestPointNode questPointNode) {
-				updateQuestToolBar(nameField, fanInSpinner, nameLabel,
+				ToolBarFactory.this.updateQuestToolBar(nameField, fanInSpinner, nameLabel,
 						fanInLabel, questPointNode);
 			}
 		});
@@ -234,7 +234,7 @@ public class ToolBarFactory {
 
 		GraphNode.observeDepthMap(questBarObserver, gPanel.getHeadNode());
 
-		observerMap.put(questEditorToolBar, questBarObserver);
+		this.observerMap.put(questEditorToolBar, questBarObserver);
 
 		return questEditorToolBar;
 	}
@@ -248,7 +248,7 @@ public class ToolBarFactory {
 	 */
 	public JToolBar buildDescribeItToolBar(DescribeIt editedDescribeIt,
 			GraphPanel gPanel) {
-		final JToolBar describeItToolBar = buildGraphEditorToolBar(gPanel);
+		final JToolBar describeItToolBar = this.buildGraphEditorToolBar(gPanel);
 		// final GraphNode headNode = gPanel.getHeadNode();
 
 		final int TOOL_BAR_HEIGHT = 32;
@@ -269,18 +269,18 @@ public class ToolBarFactory {
 		TextNodeEditor textNodeEditor = new TextNodeEditor();
 		PathAssigner pathEditor = new PathAssigner();
 
-		describeItEditBar.add(knowItEditor, KNOW_IT_EDITOR);
-		describeItEditBar.add(textNodeEditor, TEXT_NODE_EDITOR);
-		describeItEditBar.add(pathEditor, PATH_EDITOR);
+		describeItEditBar.add(knowItEditor, ToolBarFactory.KNOW_IT_EDITOR);
+		describeItEditBar.add(textNodeEditor, ToolBarFactory.TEXT_NODE_EDITOR);
+		describeItEditBar.add(pathEditor, ToolBarFactory.PATH_EDITOR);
 
 		JPanel noEditorPanel = new JPanel();
 		noEditorPanel.add(new JLabel("Path does not have an end point."));
-		describeItEditBar.add(noEditorPanel, NO_EDITOR);
+		describeItEditBar.add(noEditorPanel, ToolBarFactory.NO_EDITOR);
 
 		describeItToolBar.add(describeItEditBar);
 
 		CardLayout cl = (CardLayout) describeItEditBar.getLayout();
-		cl.show(describeItEditBar, TEXT_NODE_EDITOR);
+		cl.show(describeItEditBar, ToolBarFactory.TEXT_NODE_EDITOR);
 
 		GraphNodeObserver describeItBarObserver = new DescribeItToolBarObserver(
 				editedDescribeIt, cl, describeItEditBar, knowItEditor,
@@ -288,7 +288,7 @@ public class ToolBarFactory {
 
 		GraphNode.observeDepthMap(describeItBarObserver, gPanel.getHeadNode());
 
-		observerMap.put(describeItToolBar, describeItBarObserver);
+		this.observerMap.put(describeItToolBar, describeItBarObserver);
 
 		return describeItToolBar;
 	}
@@ -312,8 +312,8 @@ public class ToolBarFactory {
 			JSpinner fanInSpinner, JLabel nameLabel, JLabel fanInLabel,
 			QuestPointNode questNode) {
 
-		updateFanInSpinner(fanInSpinner, fanInLabel, questNode);
-		updateNameField(nameField, nameLabel, questNode);
+		this.updateFanInSpinner(fanInSpinner, fanInLabel, questNode);
+		this.updateNameField(nameField, nameLabel, questNode);
 
 	}
 
@@ -350,12 +350,12 @@ public class ToolBarFactory {
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				insertUpdate(e);
+				this.insertUpdate(e);
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				insertUpdate(e);
+				this.insertUpdate(e);
 			}
 		};
 
@@ -376,7 +376,7 @@ public class ToolBarFactory {
 
 			nameField.setDocument(new PlainDocument());
 			nameField.getDocument().addDocumentListener(
-					nameFieldListener(nameField, questNode));
+					this.nameFieldListener(nameField, questNode));
 
 			nameField.setText(displayText);
 			if (questNode.isDeletable()) {
@@ -483,7 +483,7 @@ public class ToolBarFactory {
 						.getChangeListeners()[1]);
 			}
 
-			fanInSpinner.addChangeListener(fanInSpinnerListener(fanInSpinner,
+			fanInSpinner.addChangeListener(this.fanInSpinnerListener(fanInSpinner,
 					questNode));
 
 			if (!questNode.isStartNode()) {
@@ -526,7 +526,7 @@ public class ToolBarFactory {
 			final GraphNode sourceNode = event.getSource();
 			final GraphNodeEventType type = event.getEventType();
 
-			GraphNode oldSelectedNode = gPanel.getOldSelectedNode();
+			GraphNode oldSelectedNode = this.gPanel.getOldSelectedNode();
 
 			if (type == GraphNodeEventType.SELECTED) {
 				switch (ToolBarButtonAction.getMode()) {
@@ -564,11 +564,11 @@ public class ToolBarFactory {
 						shallowerNode.addChild(deeperNode);
 
 						// Reset the tool.
-						gPanel.setOldSelectedNode(null);
+						this.gPanel.setOldSelectedNode(null);
 					}
 					// update the last selected node
 					else
-						gPanel.setOldSelectedNode(sourceNode);
+						this.gPanel.setOldSelectedNode(sourceNode);
 					break;
 
 				case DISCONNECT_GRAPH_NODE:
@@ -591,11 +591,11 @@ public class ToolBarFactory {
 						}
 
 						// Reset the tool.
-						gPanel.setOldSelectedNode(null);
+						this.gPanel.setOldSelectedNode(null);
 					}
 					// update the last selected node
 					else
-						gPanel.setOldSelectedNode(sourceNode);
+						this.gPanel.setOldSelectedNode(sourceNode);
 					break;
 				}
 
@@ -732,10 +732,10 @@ public class ToolBarFactory {
 				}
 			}
 
-			previousNode.process(new AbstractNoOpGraphNodeVisitor() {
+			this.previousNode.process(new AbstractNoOpGraphNodeVisitor() {
 				public void processQuestPointNode(QuestPointNode questPointNode) {
-					updateQuestToolBar(nameField, fanInSpinner, nameLabel,
-							fanInLabel, questPointNode);
+					ToolBarFactory.this.updateQuestToolBar(QuestToolBarObserver.this.nameField, QuestToolBarObserver.this.fanInSpinner, QuestToolBarObserver.this.nameLabel,
+							QuestToolBarObserver.this.fanInLabel, questPointNode);
 				}
 			});
 		}
@@ -750,7 +750,7 @@ public class ToolBarFactory {
 		 */
 		private void insertQuestPoint(GraphNode node) {
 			// if this is the second click,
-			GraphNode oldSelectedNode = gPanel.getOldSelectedNode();
+			GraphNode oldSelectedNode = this.gPanel.getOldSelectedNode();
 
 			if (oldSelectedNode != null) {
 
@@ -762,7 +762,7 @@ public class ToolBarFactory {
 				// Cases for clicking the same node.
 				if (oldSelectedNode == node) {
 
-					if (oldSelectedNode == gPanel.getHeadNode()) {
+					if (oldSelectedNode == this.gPanel.getHeadNode()) {
 						// Get the children of the start node.
 						List<GraphNode> startNodeChildren = oldSelectedNode
 								.getChildren();
@@ -820,12 +820,12 @@ public class ToolBarFactory {
 					newQuestPointNode.addChild(furtherFromStartNode);
 				}
 				// Reset the tool:
-				gPanel.setOldSelectedNode(null);
+				this.gPanel.setOldSelectedNode(null);
 
 			} else {
 				// otherwise this is the first click, so store the node for
 				// later:
-				gPanel.setOldSelectedNode(node);
+				this.gPanel.setOldSelectedNode(node);
 			}
 		}
 
@@ -836,8 +836,8 @@ public class ToolBarFactory {
 
 			if (type == GraphNodeEventType.SELECTED) {
 				if (ToolBarButtonAction.getMode() != ToolBarButtonMode.DELETE_GRAPH_NODE) {
-					swapSelected(previousNode, sourceNode);
-					previousNode = sourceNode;
+					this.swapSelected(this.previousNode, sourceNode);
+					this.previousNode = sourceNode;
 				}
 
 				sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
@@ -883,22 +883,22 @@ public class ToolBarFactory {
 											}
 										});
 							}
-							updateQuestToolBar(nameField, fanInSpinner,
-									nameLabel, fanInLabel, questPointNode);
+							ToolBarFactory.this.updateQuestToolBar(QuestToolBarObserver.this.nameField, QuestToolBarObserver.this.fanInSpinner,
+									QuestToolBarObserver.this.nameLabel, QuestToolBarObserver.this.fanInLabel, questPointNode);
 							break;
 						case INSERT_GRAPH_NODE:
-							insertQuestPoint(sourceNode);
-							updateQuestToolBar(nameField, fanInSpinner,
-									nameLabel, fanInLabel, questPointNode);
+							QuestToolBarObserver.this.insertQuestPoint(sourceNode);
+							ToolBarFactory.this.updateQuestToolBar(QuestToolBarObserver.this.nameField, QuestToolBarObserver.this.fanInSpinner,
+									QuestToolBarObserver.this.nameLabel, QuestToolBarObserver.this.fanInLabel, questPointNode);
 							break;
 						case CONNECT_GRAPH_NODE:
-							updateQuestToolBar(nameField, fanInSpinner,
-									nameLabel, fanInLabel, questPointNode);
-							previousNode = sourceNode;
+							ToolBarFactory.this.updateQuestToolBar(QuestToolBarObserver.this.nameField, QuestToolBarObserver.this.fanInSpinner,
+									QuestToolBarObserver.this.nameLabel, QuestToolBarObserver.this.fanInLabel, questPointNode);
+							QuestToolBarObserver.this.previousNode = sourceNode;
 							break;
 
 						case DELETE_GRAPH_NODE:
-							deleteQuestNode(sourceNode, questPointNode);
+							QuestToolBarObserver.this.deleteQuestNode(sourceNode, questPointNode);
 							break;
 						}
 					}
@@ -968,29 +968,29 @@ public class ToolBarFactory {
 						if (sourceNode.isTerminalNode()) {
 
 							System.out.println("Path Editor");
-							pathEditor.setNode(this.editedDescribeIt);
-							cardLayout.show(describeItEditBar, PATH_EDITOR);
+							this.pathEditor.setNode(this.editedDescribeIt);
+							this.cardLayout.show(this.describeItEditBar, ToolBarFactory.PATH_EDITOR);
 						} else {
-							cardLayout.show(describeItEditBar, NO_EDITOR);
+							this.cardLayout.show(this.describeItEditBar, ToolBarFactory.NO_EDITOR);
 						}
 					} else {
-						editedDescribeIt.clearSelection();
+						this.editedDescribeIt.clearSelection();
 						sourceNode.setSelected(true);
 						sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
 
 							@Override
 							public void processTextNode(TextNode textNode) {
-								textNodeEditor.setNode(textNode);
-								cardLayout.show(describeItEditBar,
-										TEXT_NODE_EDITOR);
+								DescribeItToolBarObserver.this.textNodeEditor.setNode(textNode);
+								DescribeItToolBarObserver.this.cardLayout.show(DescribeItToolBarObserver.this.describeItEditBar,
+										ToolBarFactory.TEXT_NODE_EDITOR);
 
 							}
 
 							@Override
 							public void processKnowItNode(KnowItNode knowItNode) {
-								knowItEditor.setNode(knowItNode);
-								cardLayout.show(describeItEditBar,
-										KNOW_IT_EDITOR);
+								DescribeItToolBarObserver.this.knowItEditor.setNode(knowItNode);
+								DescribeItToolBarObserver.this.cardLayout.show(DescribeItToolBarObserver.this.describeItEditBar,
+										ToolBarFactory.KNOW_IT_EDITOR);
 							}
 						});
 					}

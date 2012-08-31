@@ -6,8 +6,6 @@ import java.util.HashSet;
 
 import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.StoryVisitor;
-import scriptease.controller.apimanagers.GameTypeManager;
-import scriptease.controller.apimanagers.TypeConverter;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
@@ -27,6 +25,8 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
+import scriptease.translator.apimanagers.TypeConverter;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.tools.GameConstantFactory;
 

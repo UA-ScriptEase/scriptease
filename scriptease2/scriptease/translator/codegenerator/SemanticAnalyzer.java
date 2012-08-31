@@ -6,9 +6,9 @@ import java.util.List;
 
 import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.AbstractNoOpStoryVisitor;
-import scriptease.controller.apimanagers.TypeConverter;
 import scriptease.controller.get.QuestPointNodeGetter;
 import scriptease.controller.modelverifier.problem.StoryProblem;
+import scriptease.controller.modelverifier.rule.ParameterBoundRule;
 import scriptease.controller.modelverifier.rule.StoryRule;
 import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
@@ -23,6 +23,7 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.TypeConverter;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.FileContext;
@@ -39,7 +40,7 @@ import scriptease.translator.codegenerator.code.contexts.FileContext;
  * 
  * @author remiller
  * @author mfchurch
- */ 
+ */
 public class SemanticAnalyzer extends AbstractNoOpStoryVisitor {
 	private final QuestNode model;
 	private final Translator translator;
@@ -54,13 +55,14 @@ public class SemanticAnalyzer extends AbstractNoOpStoryVisitor {
 	 * Creates a new instance that will recursively analyze the StoryComponent
 	 * tree.
 	 */
-	public SemanticAnalyzer(QuestNode model, Translator translator,
-			Collection<StoryRule> rules) {
+	public SemanticAnalyzer(QuestNode model, Translator translator) {
 		this.problems = new ArrayList<StoryProblem>();
 		this.translator = translator;
-		this.rules = rules;
+		this.rules = new ArrayList<StoryRule>();
 		this.model = model;
 
+		// Make sure all parameters are bound before generating code
+		this.rules.add(new ParameterBoundRule());
 		// Get all the QuestPoints in the model
 		Collection<QuestPoint> questPoints = QuestPointNodeGetter
 				.getQuestPoints(this.model);
@@ -74,7 +76,7 @@ public class SemanticAnalyzer extends AbstractNoOpStoryVisitor {
 
 	public Context buildContext(LocationInformation locationInfo) {
 		return new FileContext(this.model, "", new CodeGenerationNamifier(
-				translator.getLanguageDictionary()), translator, locationInfo);
+				this.translator.getLanguageDictionary()), this.translator, locationInfo);
 	}
 
 	/**

@@ -17,13 +17,13 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import scriptease.controller.apimanagers.EventSlotManager;
-import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.SEFrame;
 import scriptease.gui.WindowFactory;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
+import scriptease.translator.apimanagers.EventSlotManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.codegenerator.GameObjectPicker;
 import scriptease.translator.io.model.GameModule;
 import scriptease.util.FileOp;
@@ -129,7 +129,7 @@ public class Translator {
 
 		if (descriptionFile == null
 				|| !descriptionFile.getName().equalsIgnoreCase(
-						TRANSLATOR_DESCRIPTION_FILE_NAME)) {
+						Translator.TRANSLATOR_DESCRIPTION_FILE_NAME)) {
 			throw new IllegalArgumentException(
 					"Tried to load a translator from a file that was not a translator.ini file.");
 		}
@@ -155,7 +155,7 @@ public class Translator {
 		}
 
 		// load the Game Module implementation (but don't create an instance)
-		loader = new GameModuleClassLoader(this.getClass().getClassLoader(),
+		this.loader = new GameModuleClassLoader(this.getClass().getClassLoader(),
 				this);
 		gameModuleClassFile = this
 				.getPathProperty(DescriptionKeys.GAME_MODULE_PATH);
@@ -167,7 +167,7 @@ public class Translator {
 						: "could not be found") + " at "
 				+ gameModuleClassFile.getAbsolutePath());
 
-		this.gameModuleClass = loader.loadGameModuleClass(gameModuleClassFile);
+		this.gameModuleClass = this.loader.loadGameModuleClass(gameModuleClassFile);
 	}
 
 	/**
@@ -385,19 +385,19 @@ public class Translator {
 		// extract the referenced file(s) into the temp directory that it stores
 		// all of these things. - remiller
 		System.out.println("Extracting XML Schema dependencies...");
-		FileOp.getFileResource(CODE_ELEMENT_SCHEMA_LOCATION);
+		FileOp.getFileResource(Translator.CODE_ELEMENT_SCHEMA_LOCATION);
 		System.out.println("Done");
 
 		try {
 			if (!FileOp.validateXML(apiDictPath,
-					FileOp.getFileResource(API_DICT_SCHEMA_LOCATION))) {
+					FileOp.getFileResource(Translator.API_DICT_SCHEMA_LOCATION))) {
 				System.err
 						.println("The "
 								+ this.getName()
 								+ " translator's API dictionary does not pass validation.");
 				return false;
 			} else if (!FileOp.validateXML(languageDictPath,
-					FileOp.getFileResource(LANGUAGE_DICT_SCHEMA_LOCATION))) {
+					FileOp.getFileResource(Translator.LANGUAGE_DICT_SCHEMA_LOCATION))) {
 				System.err
 						.println("The "
 								+ this.getName()
@@ -640,7 +640,7 @@ public class Translator {
 			if (newLocation == null)
 				module = null;
 			else
-				module = loadModule(newLocation);
+				module = this.loadModule(newLocation);
 		}
 
 		return module;
@@ -676,8 +676,8 @@ public class Translator {
 		try {
 			// must use Binary Name. Ex: "translators.NWN.data.ErfFile"
 			// this.customPicker
-			Class<GameObjectPicker> pickerClass = (Class<GameObjectPicker>) loader
-					.loadClass(loader.getBinaryNameForClassFile(location));
+			Class<GameObjectPicker> pickerClass = (Class<GameObjectPicker>) this.loader
+					.loadClass(this.loader.getBinaryNameForClassFile(location));
 			objPicker = (pickerClass).newInstance();
 		} catch (ClassNotFoundException e) {
 			System.err.println("The file: " + location.getAbsolutePath()
@@ -706,7 +706,7 @@ public class Translator {
 
 		// Look for a custom picker class.
 		if (this.customGameObjectPicker == null && customPickerPath != null)
-			this.customGameObjectPicker = loadCustomGameObjectPicker(customPickerPath);
+			this.customGameObjectPicker = this.loadCustomGameObjectPicker(customPickerPath);
 
 		return this.customGameObjectPicker;
 	}
@@ -804,7 +804,7 @@ public class Translator {
 							classData.length - n, n);
 				}
 
-				result = defineClass(null, classData, 0, classData.length);
+				result = this.defineClass(null, classData, 0, classData.length);
 
 				if (result == null)
 					throw new ClassFormatError();
@@ -861,7 +861,7 @@ public class Translator {
 
 				return loadedClass;
 			} catch (ClassNotFoundException e) {
-				handleFailedClassLoad(e,
+				this.handleFailedClassLoad(e,
 						"The Game Module implementation class could not be loaded");
 			}
 			// catch (InstantiationException e) {
@@ -873,7 +873,7 @@ public class Translator {
 			// "The Game Module implementation class could not be accessed");
 			// }
 			catch (ClassCastException e) {
-				handleFailedClassLoad(e,
+				this.handleFailedClassLoad(e,
 						"The Game Module implementation class is not a subclass of GameModule");
 			}
 

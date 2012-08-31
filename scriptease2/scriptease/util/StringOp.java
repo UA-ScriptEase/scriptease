@@ -103,9 +103,9 @@ public class StringOp {
 	}
 
 	public static String makeXMLSafe(String toProcess) {
-		for (int i = 0; i < XML_SENSITIVE.length; i++)
-			toProcess = StringOp.replaceAll(toProcess, XML_SENSITIVE[i],
-					XML_EQUIV[i]);
+		for (int i = 0; i < StringOp.XML_SENSITIVE.length; i++)
+			toProcess = StringOp.replaceAll(toProcess, StringOp.XML_SENSITIVE[i],
+					StringOp.XML_EQUIV[i]);
 
 		return toProcess;
 	}

@@ -3,7 +3,7 @@ package scriptease.translator.io.model;
 import java.util.List;
 
 /**
- * GameConversation represents a game independant conversation graph.
+ * GameConversation represents a game independent conversation graph.
  * 
  * @author mfchurch
  * 

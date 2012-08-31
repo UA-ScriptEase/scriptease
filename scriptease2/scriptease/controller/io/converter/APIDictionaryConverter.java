@@ -3,10 +3,10 @@ package scriptease.controller.io.converter;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.apimanagers.EventSlotManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
+import scriptease.translator.apimanagers.EventSlotManager;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
 

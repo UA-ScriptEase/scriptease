@@ -35,18 +35,18 @@ public class VariableGetter extends TypeGetterVisitor<KnowIt> {
 					//NOTE: These if statements were removed because not all
 					//parameters/knowits were getting declared. If there is
 					//ever an issue with parameters/knowits, check here.
-						objects.add(parameter);
+						VariableGetter.this.objects.add(parameter);
 				}
 			}
 		});
 		//if (!objects.contains(knowIt))
-			objects.add(knowIt);
+			this.objects.add(knowIt);
 	}
 
 	@Override
 	public void processAskIt(AskIt questionIt) {
 		KnowIt condition = questionIt.getCondition();
-		objects.add(condition);
+		this.objects.add(condition);
 	}
 
 	@Override

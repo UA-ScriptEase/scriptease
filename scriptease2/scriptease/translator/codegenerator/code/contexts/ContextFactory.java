@@ -106,34 +106,34 @@ public class ContextFactory {
 	 */
 	private Context createContext(final Context pastContext,
 			final KnowItBinding source) {
-		((KnowItBinding) source).process(new BindingVisitor() {
+		source.process(new BindingVisitor() {
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				activeContext = new KnowItBindingFunctionContext(pastContext,
+				ContextFactory.this.activeContext = new KnowItBindingFunctionContext(pastContext,
 						function);
 			}
 
 			@Override
 			public void processConstant(KnowItBindingConstant constant) {
-				activeContext = new KnowItBindingConstantContext(pastContext,
+				ContextFactory.this.activeContext = new KnowItBindingConstantContext(pastContext,
 						constant);
 			}
 
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
-				activeContext = new KnowItBindingNullContext(pastContext,
+				ContextFactory.this.activeContext = new KnowItBindingNullContext(pastContext,
 						nullBinding);
 			}
 
 			@Override
 			public void processReference(KnowItBindingReference reference) {
-				activeContext = new KnowItBindingReferenceContext(pastContext,
+				ContextFactory.this.activeContext = new KnowItBindingReferenceContext(pastContext,
 						reference);
 			}
 
 			@Override
 			public void processRunTime(KnowItBindingRunTime runTime) {
-				activeContext = new KnowItBindingRunTimeContext(pastContext,
+				ContextFactory.this.activeContext = new KnowItBindingRunTimeContext(pastContext,
 						runTime);
 			}
 
@@ -142,14 +142,14 @@ public class ContextFactory {
 				ScriptIt resolvedDoIt = described.getValue()
 						.getResolvedScriptIt();
 				if (resolvedDoIt != null)
-					activeContext = new KnowItBindingFunctionContext(
+					ContextFactory.this.activeContext = new KnowItBindingFunctionContext(
 							pastContext,
 							new KnowItBindingFunction(resolvedDoIt));
 			}
 
 			@Override
 			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
-				activeContext = new KnowItBindingQuestPointContext(pastContext,
+				ContextFactory.this.activeContext = new KnowItBindingQuestPointContext(pastContext,
 						questPoint);
 
 			}
@@ -167,21 +167,21 @@ public class ContextFactory {
 	 */
 	private Context createContext(final Context pastContext,
 			final StoryComponent source) {
-		((StoryComponent) source).process(new AbstractNoOpStoryVisitor() {
+		source.process(new AbstractNoOpStoryVisitor() {
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
-				activeContext = new ComplexStoryComponentContext(pastContext,
+				ContextFactory.this.activeContext = new ComplexStoryComponentContext(pastContext,
 						complex);
 			}
 
 			/* COMPLEX TYPES */
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
-				activeContext = new ScriptItContext(pastContext, scriptIt);
+				ContextFactory.this.activeContext = new ScriptItContext(pastContext, scriptIt);
 			}
 
 			@Override
 			public void processStoryItemSequence(StoryItemSequence sequence) {
-				activeContext = new StoryItemSequenceContext(pastContext,
+				ContextFactory.this.activeContext = new StoryItemSequenceContext(pastContext,
 						sequence);
 			}
 
@@ -194,12 +194,12 @@ public class ContextFactory {
 			/* ATOMIC TYPES */
 			@Override
 			public void processAskIt(AskIt questionIt) {
-				activeContext = new AskItContext(pastContext, questionIt);
+				ContextFactory.this.activeContext = new AskItContext(pastContext, questionIt);
 			}
 
 			@Override
 			public void processKnowIt(KnowIt knowIt) {
-				activeContext = new KnowItContext(pastContext, knowIt);
+				ContextFactory.this.activeContext = new KnowItContext(pastContext, knowIt);
 			}
 		});
 
@@ -216,9 +216,9 @@ public class ContextFactory {
 	private Context createContext(final Context pastContext,
 			final CodeBlock source) {
 		this.activeContext = new CodeBlockContext(pastContext,
-				(CodeBlock) source);
+				source);
 
-		return activeContext;
+		return this.activeContext;
 	}
 
 	/**
@@ -231,7 +231,7 @@ public class ContextFactory {
 	private Context createContext(final Context pastContext,
 			final QuestPointNode source) {
 		this.activeContext = new QuestPointNodeContext(pastContext,
-				(QuestPointNode) source);
-		return activeContext;
+				source);
+		return this.activeContext;
 	}
 }

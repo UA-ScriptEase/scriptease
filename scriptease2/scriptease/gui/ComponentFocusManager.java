@@ -24,7 +24,7 @@ public class ComponentFocusManager {
 	 * @return
 	 */
 	public static ComponentFocusManager getInstance() {
-		return instance;
+		return ComponentFocusManager.instance;
 	}
 
 	/**

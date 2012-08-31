@@ -7,12 +7,12 @@ import javax.swing.JToggleButton;
 
 import scriptease.ScriptEase;
 import scriptease.controller.MouseForwardingAdapter;
-import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.SETree.ui.TypeWidgetUI;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 
 /**
  * TypeWidget represents the JToggleButton drawn to show the Type of a slot. It

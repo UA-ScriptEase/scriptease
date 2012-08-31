@@ -109,9 +109,9 @@ public class FileIO {
 	private static FileIO instance;
 
 	public static FileIO getInstance() {
-		if (instance == null)
-			instance = new FileIO();
-		return instance;
+		if (FileIO.instance == null)
+			FileIO.instance = new FileIO();
+		return FileIO.instance;
 	}
 
 	private FileIO() {

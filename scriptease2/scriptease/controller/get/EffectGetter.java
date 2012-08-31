@@ -7,11 +7,11 @@ import scriptease.model.complex.ScriptIt;
 public class EffectGetter extends TypeGetterVisitor<StoryComponent> {
 	@Override
 	public void processAskIt(AskIt askIt) {
-		objects.add(askIt);
+		this.objects.add(askIt);
 	}
 
 	@Override
 	public void processScriptIt(ScriptIt doIt) {
-		objects.add(doIt);
+		this.objects.add(doIt);
 	}
 }

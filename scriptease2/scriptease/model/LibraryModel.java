@@ -98,10 +98,10 @@ public class LibraryModel extends PatternModel implements
 
 		this.buildCategories();
 
-		categories.add(effectsCategory);
-		categories.add(causesCategory);
-		categories.add(descriptionsCategory);
-		categories.add(controllersCategory);
+		categories.add(this.effectsCategory);
+		categories.add(this.causesCategory);
+		categories.add(this.descriptionsCategory);
+		categories.add(this.controllersCategory);
 
 		this.getRoot().registerChildType(StoryComponentContainer.class,
 				categories.size());
@@ -114,34 +114,34 @@ public class LibraryModel extends PatternModel implements
 	}
 
 	private void registerCategoryChildTypes() {
-		effectsCategory.clearAllowableChildren();
-		causesCategory.clearAllowableChildren();
-		descriptionsCategory.clearAllowableChildren();
-		controllersCategory.clearAllowableChildren();
+		this.effectsCategory.clearAllowableChildren();
+		this.causesCategory.clearAllowableChildren();
+		this.descriptionsCategory.clearAllowableChildren();
+		this.controllersCategory.clearAllowableChildren();
 
-		effectsCategory.registerChildType(ScriptIt.class,
+		this.effectsCategory.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		causesCategory.registerChildType(ScriptIt.class,
+		this.causesCategory.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		descriptionsCategory.registerChildType(KnowIt.class,
+		this.descriptionsCategory.registerChildType(KnowIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		controllersCategory.registerChildType(StoryComponentContainer.class,
+		this.controllersCategory.registerChildType(StoryComponentContainer.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		controllersCategory.registerChildType(ScriptIt.class,
+		this.controllersCategory.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		controllersCategory.registerChildType(AskIt.class,
+		this.controllersCategory.registerChildType(AskIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		controllersCategory.registerChildType(StoryItemSequence.class,
+		this.controllersCategory.registerChildType(StoryItemSequence.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		controllersCategory.registerChildType(KnowIt.class,
+		this.controllersCategory.registerChildType(KnowIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 	}
 
 	private void registerObservers() {
-		effectsCategory.addStoryComponentObserver(this);
-		causesCategory.addStoryComponentObserver(this);
-		descriptionsCategory.addStoryComponentObserver(this);
-		controllersCategory.addStoryComponentObserver(this);
+		this.effectsCategory.addStoryComponentObserver(this);
+		this.causesCategory.addStoryComponentObserver(this);
+		this.descriptionsCategory.addStoryComponentObserver(this);
+		this.controllersCategory.addStoryComponentObserver(this);
 	}
 
 	@Override
@@ -295,11 +295,11 @@ public class LibraryModel extends PatternModel implements
 	@Override
 	public void componentChanged(StoryComponentEvent event) {
 		if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED) {
-			notifyChange(LibraryEvent.STORYCOMPONENT_REMOVED, event);
+			this.notifyChange(LibraryEvent.STORYCOMPONENT_REMOVED, event);
 		} else if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
-			notifyChange(LibraryEvent.STORYCOMPONENT_ADDED, event);
+			this.notifyChange(LibraryEvent.STORYCOMPONENT_ADDED, event);
 		} else {
-			notifyChange(LibraryEvent.STORYCOMPONENT_CHANGED, event);
+			this.notifyChange(LibraryEvent.STORYCOMPONENT_CHANGED, event);
 		}
 	}
 
@@ -387,7 +387,7 @@ public class LibraryModel extends PatternModel implements
 	 * @return
 	 */
 	public boolean containsStoryComponent(StoryComponent sc) {
-		Collection<StoryComponent> components = getAllStoryComponents();
+		Collection<StoryComponent> components = this.getAllStoryComponents();
 		for (StoryComponent component : components) {
 			if (component == sc)
 				return true;
@@ -399,10 +399,10 @@ public class LibraryModel extends PatternModel implements
 	 * Initializes the categories, their acceptable child types, and observers
 	 */
 	private void buildCategories() {
-		effectsCategory = new StoryComponentContainer("Effects");
-		causesCategory = new StoryComponentContainer("Causes");
-		descriptionsCategory = new StoryComponentContainer("Descriptions");
-		controllersCategory = new StoryComponentContainer("Controllers");
+		this.effectsCategory = new StoryComponentContainer("Effects");
+		this.causesCategory = new StoryComponentContainer("Causes");
+		this.descriptionsCategory = new StoryComponentContainer("Descriptions");
+		this.controllersCategory = new StoryComponentContainer("Controllers");
 		this.registerObservers();
 
 	}
@@ -491,41 +491,41 @@ public class LibraryModel extends PatternModel implements
 			StoryComponentContainer causesCategory = LibraryModel.this
 					.getCausesCategory();
 			for (StoryComponent cause : causesCategory.getChildren()) {
-				if (scriptIt != null)
-					return scriptIt;
+				if (this.scriptIt != null)
+					return this.scriptIt;
 				else
 					cause.process(this);
 			}
 			StoryComponentContainer effectsCategory = LibraryModel.this
 					.getEffectsCategory();
 			for (StoryComponent effect : effectsCategory.getChildren()) {
-				if (scriptIt != null)
-					return scriptIt;
+				if (this.scriptIt != null)
+					return this.scriptIt;
 				else
 					effect.process(this);
 			}
 			StoryComponentContainer descriptionsCategory = LibraryModel.this
 					.getDescriptionsCategory();
 			for (StoryComponent effect : descriptionsCategory.getChildren()) {
-				if (scriptIt != null)
-					return scriptIt;
+				if (this.scriptIt != null)
+					return this.scriptIt;
 				else
 					effect.process(this);
 			}
 			StoryComponentContainer controllersCategory = LibraryModel.this
 					.getControllersCategory();
 			for (StoryComponent effect : controllersCategory.getChildren()) {
-				if (scriptIt != null)
-					return scriptIt;
+				if (this.scriptIt != null)
+					return this.scriptIt;
 				else
 					effect.process(this);
 			}
-			return scriptIt;
+			return this.scriptIt;
 		}
 
 		@Override
 		public void processAskIt(AskIt questionIt) {
-			defaultProcessComplex(questionIt);
+			this.defaultProcessComplex(questionIt);
 			questionIt.getCondition().process(this);
 		}
 
@@ -533,9 +533,9 @@ public class LibraryModel extends PatternModel implements
 		public void processScriptIt(ScriptIt scriptIt) {
 			for (KnowIt parameter : scriptIt.getParameters())
 				parameter.process(this);
-			if (scriptIt.getDisplayText().equals(displayName))
+			if (scriptIt.getDisplayText().equals(this.displayName))
 				this.scriptIt = scriptIt;
-			defaultProcessComplex(scriptIt);
+			this.defaultProcessComplex(scriptIt);
 		}
 
 		@Override

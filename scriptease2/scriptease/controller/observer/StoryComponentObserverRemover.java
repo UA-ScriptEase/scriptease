@@ -40,7 +40,7 @@ public class StoryComponentObserverRemover extends AbstractNoOpStoryVisitor {
 	public void processStoryComponentContainer(
 			StoryComponentContainer storyComponentContainer) {
 		storyComponentContainer.removeStoryComponentObserver(this.observer);
-		processComplexStoryComponent(storyComponentContainer);
+		this.processComplexStoryComponent(storyComponentContainer);
 	}
 
 	@Override
@@ -60,12 +60,12 @@ public class StoryComponentObserverRemover extends AbstractNoOpStoryVisitor {
 	public void processAskIt(AskIt askIt) {
 		askIt.removeStoryComponentObserver(this.observer);
 		askIt.getCondition().process(this);
-		processComplexStoryComponent(askIt);
+		this.processComplexStoryComponent(askIt);
 	}
 
 	@Override
 	public void processStoryItemSequence(StoryItemSequence sequence) {
 		sequence.removeStoryComponentObserver(this.observer);
-		processComplexStoryComponent(sequence);
+		this.processComplexStoryComponent(sequence);
 	}
 }

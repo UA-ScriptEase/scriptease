@@ -3,7 +3,6 @@ package scriptease.translator.codegenerator.code.contexts;
 import java.util.Collection;
 import java.util.Iterator;
 
-import scriptease.controller.apimanagers.TypeConverter;
 import scriptease.controller.get.VariableGetter;
 import scriptease.gui.quests.QuestNode;
 import scriptease.model.atomic.KnowIt;
@@ -13,6 +12,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.TypeConverter;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;

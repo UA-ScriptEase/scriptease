@@ -1,4 +1,4 @@
-package scriptease.controller.apimanagers;
+package scriptease.translator.apimanagers;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,12 +30,12 @@ public class GameTypeManager {
 	private final TypeConverter typeConverter;
 
 	public GameTypeManager() {
-		gameTypes = new HashMap<String, GameType>();
-		typeConverter = new TypeConverter();
+		this.gameTypes = new HashMap<String, GameType>();
+		this.typeConverter = new TypeConverter();
 	}
 
 	public Collection<GameType> getGameTypes() {
-		return new ArrayList<GameType>(gameTypes.values());
+		return new ArrayList<GameType>(this.gameTypes.values());
 	}
 
 	public TypeConverter getTypeConverter() {
@@ -47,7 +47,7 @@ public class GameTypeManager {
 	}
 
 	public Collection<AbstractFragment> getFormat(String keyword) {
-		final GameType type = gameTypes.get(keyword);
+		final GameType type = this.gameTypes.get(keyword);
 		final Collection<AbstractFragment> format = new ArrayList<AbstractFragment>();
 		if (type != null)
 			format.addAll(type.getFormat());
@@ -60,7 +60,7 @@ public class GameTypeManager {
 	 * @return A collection of the GameTypeManager's keyword
 	 */
 	public Collection<String> getKeywords() {
-		return new ArrayList<String>(gameTypes.keySet());
+		return new ArrayList<String>(this.gameTypes.keySet());
 	}
 
 	public void clear() {
@@ -68,7 +68,7 @@ public class GameTypeManager {
 	}
 
 	public String getReg(String keyword) {
-		final GameType type = gameTypes.get(keyword);
+		final GameType type = this.gameTypes.get(keyword);
 		if (type != null) {
 			return type.getReg();
 		} else
@@ -76,7 +76,7 @@ public class GameTypeManager {
 	}
 
 	public Map<String, String> getEnumMap(String keyword) {
-		final GameType type = gameTypes.get(keyword);
+		final GameType type = this.gameTypes.get(keyword);
 		if (type != null) {
 			return type.getEnumMap();
 		} else
@@ -84,7 +84,7 @@ public class GameTypeManager {
 	}
 
 	public String getDisplayText(String keyword) {
-		final GameType type = gameTypes.get(keyword);
+		final GameType type = this.gameTypes.get(keyword);
 		if (type != null) {
 			return type.getDisplayName();
 		} else
@@ -92,7 +92,7 @@ public class GameTypeManager {
 	}
 
 	public boolean hasReg(String keyword) {
-		final GameType type = gameTypes.get(keyword);
+		final GameType type = this.gameTypes.get(keyword);
 		if (type != null) {
 			return type.hasReg();
 		} else
@@ -100,7 +100,7 @@ public class GameTypeManager {
 	}
 
 	public Collection<String> getSlots(String keyword) {
-		final GameType type = gameTypes.get(keyword);
+		final GameType type = this.gameTypes.get(keyword);
 		if (type != null) {
 			return type.getSlots();
 		} else
@@ -108,7 +108,7 @@ public class GameTypeManager {
 	}
 
 	public String getCodeSymbol(String keyword) {
-		final GameType type = gameTypes.get(keyword);
+		final GameType type = this.gameTypes.get(keyword);
 		if (type != null) {
 			return type.getCodeSymbol();
 		} else
@@ -124,7 +124,7 @@ public class GameTypeManager {
 	 *         <code>null</code> if there is no widget specified.
 	 */
 	public TypeValueWidgets getGui(String keyword) {
-		final GameType type = gameTypes.get(keyword);
+		final GameType type = this.gameTypes.get(keyword);
 
 		return type != null ? type.getGui() : null;
 	}
@@ -140,7 +140,7 @@ public class GameTypeManager {
 	}
 
 	public boolean hasGUI(String keyword) {
-		final GameType type = gameTypes.get(keyword);
+		final GameType type = this.gameTypes.get(keyword);
 		if (type != null) {
 			return type.hasGUI();
 		} else
@@ -148,7 +148,7 @@ public class GameTypeManager {
 	}
 
 	public boolean hasEnum(String keyword) {
-		final GameType type = gameTypes.get(keyword);
+		final GameType type = this.gameTypes.get(keyword);
 		if (type != null) {
 			return type.hasEnum();
 		} else

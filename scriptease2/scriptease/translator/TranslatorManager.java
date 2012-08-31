@@ -55,7 +55,7 @@ public class TranslatorManager implements PatternModelObserver {
 	 * @return the sole instance of the TranslatorManager.
 	 */
 	public static TranslatorManager getInstance() {
-		return instance;
+		return TranslatorManager.instance;
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class TranslatorManager implements PatternModelObserver {
 
 		if (this.translatorPool.isEmpty())
 			WindowFactory.getInstance().showInformationDialog("No Translators",
-					NO_TRANSLATORS_PROBLEM);
+					TranslatorManager.NO_TRANSLATORS_PROBLEM);
 	}
 
 	/**

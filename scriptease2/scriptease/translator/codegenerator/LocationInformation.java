@@ -44,11 +44,11 @@ public class LocationInformation {
 	}
 
 	public String getSlot() {
-		return slot;
+		return this.slot;
 	}
 
 	public IdentifiableGameConstant getSubject() {
-		return subject;
+		return this.subject;
 	}
 
 	@Override

@@ -100,10 +100,10 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 	 * @throws IOException
 	 */
 	public short readShort(boolean reverseEndianess) throws IOException {
-		byte[] bytes = this.readBytes(SHORT_BYTE_LENGTH);
+		byte[] bytes = this.readBytes(ScriptEaseFileAccess.SHORT_BYTE_LENGTH);
 
 		if (reverseEndianess) {
-			bytes = BitwiseConverter.reverseEndian(bytes, SHORT_BYTE_LENGTH);
+			bytes = BitwiseConverter.reverseEndian(bytes, ScriptEaseFileAccess.SHORT_BYTE_LENGTH);
 		}
 
 		return BitwiseConverter.byteArrToShort(bytes);
@@ -121,7 +121,7 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 			throws IOException {
 		if (reverseEndianess) {
 			byte[] bytes = BitwiseConverter.shortToByteArray(value);
-			bytes = BitwiseConverter.reverseEndian(bytes, SHORT_BYTE_LENGTH);
+			bytes = BitwiseConverter.reverseEndian(bytes, ScriptEaseFileAccess.SHORT_BYTE_LENGTH);
 			value = BitwiseConverter.byteArrToShort(bytes);
 		}
 
@@ -137,10 +137,10 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 	 * @throws IOException
 	 */
 	public int readInt(boolean reverseEndianess) throws IOException {
-		byte[] bytes = readBytes(INT_BYTE_LENGTH);
+		byte[] bytes = this.readBytes(ScriptEaseFileAccess.INT_BYTE_LENGTH);
 
 		if (reverseEndianess) {
-			bytes = BitwiseConverter.reverseEndian(bytes, INT_BYTE_LENGTH);
+			bytes = BitwiseConverter.reverseEndian(bytes, ScriptEaseFileAccess.INT_BYTE_LENGTH);
 		}
 
 		return BitwiseConverter.byteArrToInt(bytes);
@@ -160,7 +160,7 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 		byte[] bytes = BitwiseConverter.intToByteArray(value);
 
 		if (reverseEndianess) {
-			bytes = BitwiseConverter.reverseEndian(bytes, INT_BYTE_LENGTH);
+			bytes = BitwiseConverter.reverseEndian(bytes, ScriptEaseFileAccess.INT_BYTE_LENGTH);
 		}
 
 		this.writeBytes(bytes);
@@ -175,10 +175,10 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 	 * @throws IOException
 	 */
 	public long readLong(boolean reverseEndianess) throws IOException {
-		byte[] bytes = readBytes(LONG_BYTE_LENGTH);
+		byte[] bytes = this.readBytes(ScriptEaseFileAccess.LONG_BYTE_LENGTH);
 
 		if (reverseEndianess) {
-			bytes = BitwiseConverter.reverseEndian(bytes, LONG_BYTE_LENGTH);
+			bytes = BitwiseConverter.reverseEndian(bytes, ScriptEaseFileAccess.LONG_BYTE_LENGTH);
 		}
 
 		return BitwiseConverter.byteArrToLong(bytes);
@@ -198,7 +198,7 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 		byte[] bytes = BitwiseConverter.longToByteArray(value);
 
 		if (reverseEndianess) {
-			bytes = BitwiseConverter.reverseEndian(bytes, INT_BYTE_LENGTH);
+			bytes = BitwiseConverter.reverseEndian(bytes, ScriptEaseFileAccess.INT_BYTE_LENGTH);
 		}
 
 		this.writeBytes(bytes);
@@ -215,10 +215,10 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 	 * @throws IOException
 	 */
 	public int readUnsignedShort(boolean reverseEndianess) throws IOException {
-		byte[] bytes = readBytes(SHORT_BYTE_LENGTH);
+		byte[] bytes = this.readBytes(ScriptEaseFileAccess.SHORT_BYTE_LENGTH);
 
 		if (reverseEndianess) {
-			bytes = BitwiseConverter.reverseEndian(bytes, SHORT_BYTE_LENGTH);
+			bytes = BitwiseConverter.reverseEndian(bytes, ScriptEaseFileAccess.SHORT_BYTE_LENGTH);
 		}
 
 		return BitwiseConverter.byteArrToInt(bytes);
@@ -232,10 +232,10 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 	 * @throws IOException
 	 */
 	public long readUnsignedInt(boolean reverseEndianess) throws IOException {
-		byte[] bytes = readBytes(INT_BYTE_LENGTH);
+		byte[] bytes = this.readBytes(ScriptEaseFileAccess.INT_BYTE_LENGTH);
 
 		if (reverseEndianess) {
-			bytes = BitwiseConverter.reverseEndian(bytes, INT_BYTE_LENGTH);
+			bytes = BitwiseConverter.reverseEndian(bytes, ScriptEaseFileAccess.INT_BYTE_LENGTH);
 		}
 
 		return BitwiseConverter.byteArrToLong(bytes);
@@ -252,11 +252,11 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 	 */
 	public BigInteger readUnsignedLong(boolean reverseEndianess)
 			throws IOException {
-		byte[] bytes = readBytes(LONG_BYTE_LENGTH);
+		byte[] bytes = this.readBytes(ScriptEaseFileAccess.LONG_BYTE_LENGTH);
 		String longString = "00000000";
 
 		if (reverseEndianess) {
-			bytes = BitwiseConverter.reverseEndian(bytes, LONG_BYTE_LENGTH);
+			bytes = BitwiseConverter.reverseEndian(bytes, ScriptEaseFileAccess.LONG_BYTE_LENGTH);
 		}
 
 		longString += Long.toString(BitwiseConverter.byteArrToLong(bytes));
@@ -336,7 +336,7 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 				.intToByteArray((int) (value & 0xFFFFFFFFL));
 
 		if (reverseEndianess) {
-			bytes = BitwiseConverter.reverseEndian(bytes, INT_BYTE_LENGTH);
+			bytes = BitwiseConverter.reverseEndian(bytes, ScriptEaseFileAccess.INT_BYTE_LENGTH);
 		}
 
 		this.writeBytes(bytes);

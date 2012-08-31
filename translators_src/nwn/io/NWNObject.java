@@ -5,7 +5,6 @@ import java.util.Collection;
 import scriptease.translator.io.model.GameObject;
 
 public final class NWNObject implements GameObject {
-	private final int objectID;
 	private int resolutionMethod;
 	private final String resRef; // short for Resource Reference
 	private Collection<String> types;
@@ -23,13 +22,7 @@ public final class NWNObject implements GameObject {
 		this.types = types;
 		this.name = name;
 		this.tag = tag;
-		this.objectID = 0;
 		this.resolutionMethod = NWNObject.SEARCH_TYPE_NEAREST_INCLUDE_SELF;
-	}
-
-	@Override
-	public int getObjectID() {
-		return this.objectID;
 	}
 
 	@Override

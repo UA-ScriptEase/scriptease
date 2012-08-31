@@ -65,7 +65,7 @@ public class ListOp {
 	 * @return
 	 */
 	public static <T> boolean equalsContains(Collection<T> collection, T key) {
-		return equalsRetrieve(collection, key) != null;
+		return ListOp.equalsRetrieve(collection, key) != null;
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class ListOp {
 	public static <T> boolean identityContains(Collection<List<T>> collection,
 			List<T> key) {
 		for (List<T> subCollection : collection) {
-			if (identityEqualLists(subCollection, key))
+			if (ListOp.identityEqualLists(subCollection, key))
 				return true;
 		}
 		return false;
@@ -96,7 +96,7 @@ public class ListOp {
 	 * @return
 	 */
 	public static <T> boolean identityContains(Collection<T> collection, T key) {
-		return identityEqualsRetrieve(collection, key) != null;
+		return ListOp.identityEqualsRetrieve(collection, key) != null;
 	}
 
 	/**

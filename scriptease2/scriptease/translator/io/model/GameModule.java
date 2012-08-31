@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import scriptease.controller.modelverifier.rule.StoryRule;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.translator.codegenerator.ScriptInfo;
@@ -27,10 +26,11 @@ public interface GameModule {
 	/**
 	 * Reads the game data into memory.<br>
 	 * <br>
-	 * For a GameModule implementer to honour the interface contract, it must
+	 * For a GameModule implementation to honour the interface contract, it must
 	 * perform its file access exclusively in the <code>load</code> and
 	 * <code>{@link #save(boolean)}</code> methods.<br>
-	 * <br> {@link #setLocation(File)} must be called before <code>load</code> is
+	 * <br>
+	 * {@link #setLocation(File)} must be called before <code>load</code> is
 	 * invoked.
 	 * 
 	 * @param readOnly
@@ -49,7 +49,7 @@ public interface GameModule {
 
 	/**
 	 * Writes the GameModule to disk. If the module is a database, then this is
-	 * where the change set would be push to the database.<br>
+	 * where the change set would be pushed to the database.<br>
 	 * <br>
 	 * For a GameModule implementer to honour the interface contract, it must
 	 * perform its file access exclusively in the {@link #load(boolean)} and
@@ -60,7 +60,7 @@ public interface GameModule {
 	 * then it is simply overwritten without question.
 	 * 
 	 * @param compile
-	 *         
+	 * 
 	 * @see #getLocation()
 	 * @see #setLocation(File)
 	 */
@@ -134,12 +134,12 @@ public interface GameModule {
 	 * appropriate game representation of the template<br>
 	 * <br>
 	 * This should be used to store all sorts of template data. This does not
-	 * include scripts because it is addScript(GameDataTemplate)'s duty to
-	 * handle scripts and their references.
+	 * include scripts because it is addScripts(Collection)'s duty to handle
+	 * scripts and their references.
 	 * 
 	 * @param template
 	 *            The template whose data must be written to memory.
-	 * @see #addScript(GameDataTemplate)
+	 * @see #addScripts(Collection)
 	 */
 	public void addGameObject(GameObject object);
 
@@ -177,22 +177,12 @@ public interface GameModule {
 	public void addIncludeFiles(Collection<File> scriptList);
 
 	/**
-	 * Returns a collection of rules that must pass in order for the module to
-	 * attempt compilation. This conforms to the StoryRule/ModelVerification
-	 * System and will display to the user whether or not the module is ready
-	 * for code generation.
-	 * 
-	 * @see StoryRule
-	 * @return Collection of all StoryRules for code generation.
-	 */
-	public Collection<StoryRule> getCodeGenerationRules();
-
-	/**
 	 * Creates a list of String arguments for running a process that executes
 	 * this GameModule in the game. The list is as would be given to a
 	 * ProcessBuilder. For example:
 	 * 
-	 * <code>[ "C:\\Program Files\\NWN\\nwmain.exe", "+TestNewModule", "C:\\Program Files\\NWN\\modules\\Story"]</code>
+	 * <code>[ "C:\\Program Files\\NWN\\nwmain.exe", "+TestNewModule", 
+	 * "C:\\Program Files\\NWN\\modules\\Story"]</code>
 	 * 
 	 * Implementations may expect that the translator.ini knows where the
 	 * executable resides.

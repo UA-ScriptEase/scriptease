@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
@@ -415,7 +415,7 @@ public class GenericFileFormat {
 	 * @return the objectRepresentation
 	 */
 	public final GameConstant getObjectRepresentation() {
-		return objectRepresentation;
+		return this.objectRepresentation;
 	}
 
 	/**
@@ -787,12 +787,12 @@ public class GenericFileFormat {
 
 		@Override
 		public String toString() {
-			return "GffStruct [" + typeNumber + ", " + dataOrDataOffset + ", "
-					+ fieldCount + "]";
+			return "GffStruct [" + this.typeNumber + ", " + this.dataOrDataOffset + ", "
+					+ this.fieldCount + "]";
 		}
 
 		public GenericFileFormat getGFF() {
-			return genericFileFormat;
+			return GenericFileFormat.this.genericFileFormat;
 		}
 
 		/**
@@ -814,7 +814,7 @@ public class GenericFileFormat {
 			 * Field Array.
 			 */
 			if (fieldCount == 1) {
-				final GffField field = fieldArray.get(dataOrDataOffset);
+				final GffField field = GenericFileFormat.this.fieldArray.get(dataOrDataOffset);
 				fields.add(field);
 			}
 			/*
@@ -824,7 +824,7 @@ public class GenericFileFormat {
 			 * these DWORDs is an index into the Field Array.
 			 */
 			else {
-				reader.seek(gffOffset + fieldIndicesOffset + dataOrDataOffset);
+				reader.seek(GenericFileFormat.this.gffOffset + GenericFileFormat.this.fieldIndicesOffset + dataOrDataOffset);
 
 				List<Long> indices = new ArrayList<Long>(fieldCount);
 				for (long i = 0; i < fieldCount; i++) {
@@ -833,7 +833,7 @@ public class GenericFileFormat {
 				}
 
 				for (long index : indices) {
-					final GffField field = fieldArray.get((int) index);
+					final GffField field = GenericFileFormat.this.fieldArray.get((int) index);
 					fields.add(field);
 				}
 			}
@@ -895,9 +895,9 @@ public class GenericFileFormat {
 			final String list = split[0];
 			final Integer index = new Integer(split[1]);
 			if (list.equalsIgnoreCase(PlayerReplyDialogue.PLAYER_REPLY_LIST)) {
-				return replyList.get(index);
+				return this.replyList.get(index);
 			} else if (list.equalsIgnoreCase(NPCEntryDialogue.NPC_ENTRY_LIST)) {
-				return entryList.get(index);
+				return this.entryList.get(index);
 			} else
 				throw new IllegalArgumentException("Invalid NWNDialog resRef");
 		}
@@ -913,31 +913,31 @@ public class GenericFileFormat {
 
 			// parse the fields that we care about
 			for (GffField field : fields) {
-				final String label = labelArray
+				final String label = GenericFileFormat.this.labelArray
 						.get((int) field.getLabelIndex());
 
 				// Conversation Fields
 				if (label.equals("EndConverAbort")) {
-					endConverAbort = field.readString(reader);
+					this.endConverAbort = field.readString(reader);
 				} else if (label.equals("EndConversation")) {
-					endConversation = field.readString(reader);
+					this.endConversation = field.readString(reader);
 				} else if (label.equals("EntryList")) {
-					entryList = new ArrayList<NPCEntryDialogue>();
+					this.entryList = new ArrayList<NPCEntryDialogue>();
 					List<GffStruct> readList = field.readList(reader);
 					for (GffStruct aStruct : readList) {
-						entryList.add(new NPCEntryDialogue(reader, aStruct));
+						this.entryList.add(new NPCEntryDialogue(reader, aStruct));
 					}
 				} else if (label.equals("ReplyList")) {
-					replyList = new ArrayList<PlayerReplyDialogue>();
+					this.replyList = new ArrayList<PlayerReplyDialogue>();
 					List<GffStruct> readList = field.readList(reader);
 					for (GffStruct aStruct : readList) {
-						replyList.add(new PlayerReplyDialogue(reader, aStruct));
+						this.replyList.add(new PlayerReplyDialogue(reader, aStruct));
 					}
 				} else if (label.equals("StartingList")) {
-					startingList = new ArrayList<EntriesSyncStruct>();
+					this.startingList = new ArrayList<EntriesSyncStruct>();
 					List<GffStruct> readList = field.readList(reader);
 					for (GffStruct aStruct : readList) {
-						startingList
+						this.startingList
 								.add(new EntriesSyncStruct(reader, aStruct));
 					}
 				}
@@ -959,7 +959,7 @@ public class GenericFileFormat {
 		private NPCEntryDialogue getElementFromEntryList(int index) {
 			if (this.entryList != null && index >= 0
 					&& index < this.entryList.size()) {
-				return entryList.get(index);
+				return this.entryList.get(index);
 			}
 			return null;
 		}
@@ -997,7 +997,7 @@ public class GenericFileFormat {
 		@Override
 		public List<GameConversationNode> getConversationRoots() {
 			List<GameConversationNode> list = new ArrayList<GameConversationNode>(
-					startingList.size());
+					this.startingList.size());
 			for (EntriesSyncStruct entry : this.startingList) {
 				list.add(entry.getReference());
 			}
@@ -1033,7 +1033,7 @@ public class GenericFileFormat {
 
 				// Read the reference fields
 				for (GffField field : fields) {
-					final String label = labelArray.get((int) field
+					final String label = GenericFileFormat.this.labelArray.get((int) field
 							.getLabelIndex());
 
 					// Dialog Fields
@@ -1079,7 +1079,7 @@ public class GenericFileFormat {
 			protected void updateReference() {
 				// append the data to the existing entry
 				final NPCEntryDialogue entry = this.getReference();
-				if (active != null && entry != null) {
+				if (this.active != null && entry != null) {
 					entry.active = this.active;
 					entry.index = this.index;
 					entry.isLink = this.isLink();
@@ -1089,7 +1089,7 @@ public class GenericFileFormat {
 
 			@Override
 			public NPCEntryDialogue getReference() {
-				return getElementFromEntryList(index);
+				return getElementFromEntryList(this.index);
 			}
 		}
 
@@ -1111,7 +1111,7 @@ public class GenericFileFormat {
 			protected void updateReference() {
 				// append the data to the existing entry
 				final PlayerReplyDialogue reply = getReference();
-				if (active != null && reply != null) {
+				if (this.active != null && reply != null) {
 					reply.active = this.active;
 					reply.index = this.index;
 					reply.isLink = this.isLink();
@@ -1121,7 +1121,7 @@ public class GenericFileFormat {
 
 			@Override
 			public PlayerReplyDialogue getReference() {
-				return getElementFromReplyList(index);
+				return getElementFromReplyList(this.index);
 			}
 		}
 
@@ -1159,11 +1159,11 @@ public class GenericFileFormat {
 			}
 			
 			public GffStruct getStruct() {
-				return struct;
+				return this.struct;
 			}
 
 			public String getConversationResRef() {
-				return resRef;
+				return NWNConversation.this.resRef;
 			}
 
 			/**
@@ -1176,16 +1176,16 @@ public class GenericFileFormat {
 				final List<GffField> fields = struct.readGffFields(reader);
 
 				for (GffField field : fields) {
-					final String label = labelArray.get((int) field
+					final String label = GenericFileFormat.this.labelArray.get((int) field
 							.getLabelIndex());
 
 					// Dialog Fields
 					if (label.equals("Text")) {
-						text = field.readString(reader);
+						this.text = field.readString(reader);
 					}
 					// 'script' = when dialogue line is reached
 					else if (label.equals("Script")) {
-						script = field;
+						this.script = field;
 					}
 				}
 			}
@@ -1204,7 +1204,7 @@ public class GenericFileFormat {
 
 			@Override
 			public String getName() {
-				return text;
+				return this.text;
 			}
 
 			public GffField getField(String field) {
@@ -1252,10 +1252,10 @@ public class GenericFileFormat {
 			}
 
 			public void resolveEntries() {
-				if (entryPointers == null)
+				if (this.entryPointers == null)
 					throw new IllegalStateException(
 							"EntryList has not been initialized yet!");
-				for (EntriesSyncStruct entry : entryPointers) {
+				for (EntriesSyncStruct entry : this.entryPointers) {
 					entry.updateReference();
 				}
 			}
@@ -1267,10 +1267,10 @@ public class GenericFileFormat {
 
 				final List<GffField> fields = struct.readGffFields(reader);
 
-				entryPointers = new ArrayList<EntriesSyncStruct>();
+				this.entryPointers = new ArrayList<EntriesSyncStruct>();
 
 				for (GffField field : fields) {
-					final String label = labelArray.get((int) field
+					final String label = GenericFileFormat.this.labelArray.get((int) field
 							.getLabelIndex());
 
 					// List of Sync Structs describing the list of possible NPC
@@ -1280,7 +1280,7 @@ public class GenericFileFormat {
 						for (GffStruct aStruct : readList) {
 							final EntriesSyncStruct sync = new EntriesSyncStruct(
 									reader, aStruct);
-							entryPointers.add(sync);
+							this.entryPointers.add(sync);
 						}
 					}
 				}
@@ -1311,12 +1311,12 @@ public class GenericFileFormat {
 			 */
 			@Override
 			public String getTemplateID() {
-				return resRef + "#" + PLAYER_REPLY_LIST + "#" + index;
+				return NWNConversation.this.resRef + "#" + PLAYER_REPLY_LIST + "#" + this.index;
 			}
 
 			@Override
 			public String getTag() {
-				return resRef;
+				return NWNConversation.this.resRef;
 			}
 		}
 
@@ -1349,10 +1349,10 @@ public class GenericFileFormat {
 			 * we cannot guarantee the index is valid.
 			 */
 			public void resolveReplies() {
-				if (replyPointers == null)
+				if (this.replyPointers == null)
 					throw new IllegalStateException(
 							"ReplyList has not been initialized yet!");
-				for (RepliesSyncStruct reply : replyPointers) {
+				for (RepliesSyncStruct reply : this.replyPointers) {
 					reply.updateReference();
 				}
 			}
@@ -1362,12 +1362,12 @@ public class GenericFileFormat {
 					throws IOException {
 				super.build(reader, struct);
 
-				replyPointers = new ArrayList<RepliesSyncStruct>();
+				this.replyPointers = new ArrayList<RepliesSyncStruct>();
 
 				final List<GffField> fields = struct.readGffFields(reader);
 
 				for (GffField field : fields) {
-					final String label = labelArray.get((int) field
+					final String label = GenericFileFormat.this.labelArray.get((int) field
 							.getLabelIndex());
 
 					// List of Sync Structs describing the list of possible
@@ -1377,7 +1377,7 @@ public class GenericFileFormat {
 						for (GffStruct aStruct : readList) {
 							final RepliesSyncStruct sync = new RepliesSyncStruct(
 									reader, aStruct);
-							replyPointers.add(sync);
+							this.replyPointers.add(sync);
 						}
 					} 
 					//lable could also equal "Speaker", which may be important.
@@ -1409,18 +1409,18 @@ public class GenericFileFormat {
 			 */
 			@Override
 			public String getTemplateID() {
-				return resRef + "#" + NPC_ENTRY_LIST + "#" + index;
+				return NWNConversation.this.resRef + "#" + NPC_ENTRY_LIST + "#" + this.index;
 			}
 
 			@Override
 			public String getTag() {
-				return resRef;
+				return NWNConversation.this.resRef;
 			}
 		}
 
 		@Override
 		public String getTag() {
-			return resRef;
+			return this.resRef;
 		}
 	}
 
@@ -1457,7 +1457,7 @@ public class GenericFileFormat {
 
 		@Override
 		public String toString() {
-			return "GffField [" + labelArray.get((int) labelIndex) + "]";
+			return "GffField [" + GenericFileFormat.this.labelArray.get((int) this.labelIndex) + "]";
 		}
 
 		/**
@@ -1473,28 +1473,28 @@ public class GenericFileFormat {
 		}
 
 		public GenericFileFormat getGFF() {
-			return genericFileFormat;
+			return GenericFileFormat.this.genericFileFormat;
 		}
 
 		/**
 		 * @return Unsigned int in a long representing the type.
 		 */
 		public long getType() {
-			return typeNumber;
+			return this.typeNumber;
 		}
 
 		/**
 		 * @return the labelIndex
 		 */
 		public long getLabelIndex() {
-			return labelIndex;
+			return this.labelIndex;
 		}
 
 		/**
 		 * @return the dataOrDataOffset
 		 */
 		protected long getDataOrDataOffset() {
-			return dataOrDataOffset;
+			return this.dataOrDataOffset;
 		}
 		
 		/**
@@ -1531,7 +1531,7 @@ public class GenericFileFormat {
 			// into the Field Data Block, but for a Struct, it is an index into
 			// the Struct Array.
 			if (this.isStructType()) {
-				return structArray.get((int) this.dataOrDataOffset);
+				return GenericFileFormat.this.structArray.get((int) this.dataOrDataOffset);
 			} else
 				throw new IllegalStateException(
 						"GffField does not contain a GffStruct.");
@@ -1545,7 +1545,7 @@ public class GenericFileFormat {
 				// The starting address of a List is specified in its Field's
 				// DataOrDataOffset value as a byte offset into the Field
 				// Indices Array, at which is located a List element.
-				reader.seek(gffOffset + listIndicesOffset
+				reader.seek(GenericFileFormat.this.gffOffset + GenericFileFormat.this.listIndicesOffset
 						+ this.dataOrDataOffset);
 
 				// The first DWORD is the Size of the List, and it specifies how
@@ -1561,7 +1561,7 @@ public class GenericFileFormat {
 				}
 				// Resolve the indices
 				for (long index : indices) {
-					final GffStruct struct = structArray.get((int) index);
+					final GffStruct struct = GenericFileFormat.this.structArray.get((int) index);
 					list.add(struct);
 				}
 
@@ -1588,7 +1588,7 @@ public class GenericFileFormat {
 				fieldData = Long.toString(this.dataOrDataOffset);
 			} else if (!this.isListType() && !this.isStructType()) {
 				// get to the data
-				reader.seek(gffOffset + fieldDataOffset + this.dataOrDataOffset);
+				reader.seek(GenericFileFormat.this.gffOffset + GenericFileFormat.this.fieldDataOffset + this.dataOrDataOffset);
 
 				long length;
 

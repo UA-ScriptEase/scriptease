@@ -44,7 +44,7 @@ public class ObservedJPanel extends JPanel {
 	 * @return
 	 */
 	public Object getObserver() {
-		return observer;
+		return this.observer;
 	}
 
 	/**
@@ -53,6 +53,6 @@ public class ObservedJPanel extends JPanel {
 	 * @return
 	 */
 	public JComponent getObservedComponent() {
-		return component;
+		return this.component;
 	}
 }
