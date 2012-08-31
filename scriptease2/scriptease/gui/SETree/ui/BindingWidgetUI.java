@@ -1,8 +1,6 @@
 package scriptease.gui.SETree.ui;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -184,9 +182,9 @@ public class BindingWidgetUI extends ComponentUI {
 		float height = metrics.getHeight() + LINE_THICKNESS;
 		float totalHeight = label.getHeight();
 
-		shape.setRoundRect(LINE_THICKNESS / 2, (totalHeight - height) / 2,
+		this.shape.setRoundRect(LINE_THICKNESS / 2, (totalHeight - height) / 2,
 				width, height, height, height);
-		return shape;
+		return this.shape;
 	}
 
 	@Override
@@ -237,8 +235,8 @@ public class BindingWidgetUI extends ComponentUI {
 				this.determineLinePaint(label, this.isUp(label)), labelShape,
 				LINE_THICKNESS);
 
-		borderRenderer.paintBorder((Component) label, tempGraphics, 0, 0,
-				(int) label.getWidth(), (int) label.getHeight());
+		borderRenderer.paintBorder(label, tempGraphics, 0, 0, label.getWidth(),
+				label.getHeight());
 	}
 
 	// Configure a Gradient to fill the shape with and paint it
@@ -280,7 +278,7 @@ public class BindingWidgetUI extends ComponentUI {
 			renderer.paintComponent(
 					g,
 					this.typeRenderer,
-					(Container) comp,
+					comp,
 					i * preferredTypeSize.width,
 					Math.round(comp.getHeight() / 2 - preferredTypeSize.height
 							/ 2), preferredTypeSize.width,
@@ -312,7 +310,7 @@ public class BindingWidgetUI extends ComponentUI {
 		final Point2D start;
 		final Point2D end;
 		final Paint paint;
-		final int height = (int) label.getHeight();
+		final int height = label.getHeight();
 		// I hate arrays. - remiller
 		final float[] startDistances;
 		final Color[] gradient;

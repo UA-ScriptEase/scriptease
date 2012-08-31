@@ -52,7 +52,7 @@ public class ModelVerifier implements StoryComponentObserver {
 	public ModelVerifier(ComplexStoryComponent root) {
 		this.root = root;
 		this.rules = new HashMap<StoryComponentChangeEnum, Collection<StoryRule>>(
-				INITIAL_CAPACITY);
+				ModelVerifier.INITIAL_CAPACITY);
 		this.isSolving = false;
 		// observe changes to the model
 		StoryComponentObserverAdder adder = new StoryComponentObserverAdder();
@@ -71,12 +71,12 @@ public class ModelVerifier implements StoryComponentObserver {
 	public void addRule(StoryRule rule,
 			Collection<StoryComponentChangeEnum> events) {
 		for (StoryComponentChangeEnum event : events) {
-			Collection<StoryRule> visitors = rules.get(event);
+			Collection<StoryRule> visitors = this.rules.get(event);
 			if (visitors == null) {
-				visitors = new ArrayList<StoryRule>(INITIAL_CAPACITY);
+				visitors = new ArrayList<StoryRule>(ModelVerifier.INITIAL_CAPACITY);
 			}
 			visitors.add(rule);
-			rules.put(event, visitors);
+			this.rules.put(event, visitors);
 		}
 	}
 
@@ -109,7 +109,7 @@ public class ModelVerifier implements StoryComponentObserver {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				assertModelRules(source, eventType);
+				ModelVerifier.this.assertModelRules(source, eventType);
 			}
 		});
 	}
@@ -117,7 +117,7 @@ public class ModelVerifier implements StoryComponentObserver {
 	private void assertModelRules(StoryComponent source,
 			StoryComponentChangeEnum eventType) {
 		// Find problems in the model
-		final Collection<StoryRule> visitors = rules.get(eventType);
+		final Collection<StoryRule> visitors = this.rules.get(eventType);
 		final List<StoryProblem> storyProblems = new ArrayList<StoryProblem>();
 
 		if (visitors != null) {
@@ -153,7 +153,7 @@ public class ModelVerifier implements StoryComponentObserver {
 			}
 
 			// only solve one problem set at a time
-			if (!isSolving) {
+			if (!this.isSolving) {
 				this.isSolving = true;
 
 				if (notify) {

@@ -6,11 +6,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.gui.SETree.filters.Filter;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;

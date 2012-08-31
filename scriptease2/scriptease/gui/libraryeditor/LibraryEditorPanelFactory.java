@@ -41,7 +41,6 @@ import javax.swing.event.DocumentListener;
 import scriptease.ScriptEase;
 import scriptease.controller.AbstractNoOpStoryVisitor;
 import scriptease.controller.StoryVisitor;
-import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
@@ -68,6 +67,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.ScopeTypes;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.SeriesFilterType;
@@ -278,10 +278,10 @@ public class LibraryEditorPanelFactory {
 						.refreshCodeBlockComponentObserverList();
 				// Causes and effects are processed as ScriptIts
 				addCodeBlockButton.setVisible(true);
-				addCodeBlockButton.removeActionListener(addCodeBlockListener);
-				addCodeBlockListener = addCodeBlockButtonListener(scriptIt,
-						componentEditingPanel);
-				addCodeBlockButton.addActionListener(addCodeBlockListener);
+				addCodeBlockButton
+						.removeActionListener(this.addCodeBlockListener);
+				this.addCodeBlockListener = addCodeBlockButtonListener(scriptIt);
+				addCodeBlockButton.addActionListener(this.addCodeBlockListener);
 
 				setUpScriptItCodeBlocks(scriptIt).run();
 				updateComponents(scriptIt);
@@ -350,10 +350,10 @@ public class LibraryEditorPanelFactory {
 			private void updateComponents(final StoryComponent component) {
 				// Set up the default field values
 				nameField.getDocument().removeDocumentListener(
-						nameFieldListener);
+						this.nameFieldListener);
 				labelField.getDocument().removeDocumentListener(
-						labelFieldListener);
-				visibleBox.removeActionListener(visibleBoxListener);
+						this.labelFieldListener);
+				visibleBox.removeActionListener(this.visibleBoxListener);
 
 				nameField.setText(component.getDisplayText());
 				labelField.setText(StringOp.getCollectionAsString(
@@ -361,14 +361,17 @@ public class LibraryEditorPanelFactory {
 				labelField.setToolTipText(labelToolTip);
 				visibleBox.setSelected(component.isVisible());
 
-				nameFieldListener = nameFieldListener(nameField, component);
-				labelFieldListener = labelFieldListener(labelField, component);
-				visibleBoxListener = visibleBoxListener(visibleBox, component);
+				this.nameFieldListener = nameFieldListener(nameField, component);
+				this.labelFieldListener = labelFieldListener(labelField,
+						component);
+				this.visibleBoxListener = visibleBoxListener(visibleBox,
+						component);
 
-				nameField.getDocument().addDocumentListener(nameFieldListener);
-				labelField.getDocument()
-						.addDocumentListener(labelFieldListener);
-				visibleBox.addActionListener(visibleBoxListener);
+				nameField.getDocument().addDocumentListener(
+						this.nameFieldListener);
+				labelField.getDocument().addDocumentListener(
+						this.labelFieldListener);
+				visibleBox.addActionListener(this.visibleBoxListener);
 
 				editorPanel.setVisible(true);
 			}
@@ -460,7 +463,7 @@ public class LibraryEditorPanelFactory {
 			 * @return
 			 */
 			private ActionListener addCodeBlockButtonListener(
-					final ScriptIt scriptIt, final JPanel componentEditingPanel) {
+					final ScriptIt scriptIt) {
 				return new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -476,7 +479,7 @@ public class LibraryEditorPanelFactory {
 								.getApiDictionary().getNextCodeBlockID());
 
 						scriptIt.addCodeBlock(codeBlock);
-						
+
 						UndoManager.getInstance().endUndoableAction();
 					}
 				};
@@ -688,8 +691,7 @@ public class LibraryEditorPanelFactory {
 			public void actionPerformed(ActionEvent e) {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
 					UndoManager.getInstance().startUndoableAction(
-							"Adding CodeBlock to "
-									+ scriptIt.getDisplayText());
+							"Adding CodeBlock to " + scriptIt.getDisplayText());
 				scriptIt.removeCodeBlock(codeBlock);
 				UndoManager.getInstance().endUndoableAction();
 			}
@@ -701,7 +703,7 @@ public class LibraryEditorPanelFactory {
 
 		for (KnowIt parameter : parameters) {
 			parameterPanel.add(this.buildParameterPanel(scriptIt, codeBlock,
-					parameter, parameterPanel));
+					parameter));
 		}
 
 		includesField.getDocument().addDocumentListener(new DocumentListener() {
@@ -897,8 +899,8 @@ public class LibraryEditorPanelFactory {
 	}
 
 	protected JPanel buildParameterPanel(ScriptIt scriptIt,
-			CodeBlock codeBlock, KnowIt knowIt, JPanel parameterPanel) {
-		return new ParameterPanel(scriptIt, codeBlock, knowIt, parameterPanel);
+			CodeBlock codeBlock, KnowIt knowIt) {
+		return new ParameterPanel(scriptIt, codeBlock, knowIt);
 	}
 
 	/**
@@ -927,8 +929,7 @@ public class LibraryEditorPanelFactory {
 		 * @param knowIt
 		 */
 		private ParameterPanel(final ScriptIt scriptIt,
-				final CodeBlock codeBlock, final KnowIt knowIt,
-				final JPanel parameterPanel) {
+				final CodeBlock codeBlock, final KnowIt knowIt) {
 			super();
 			this.knowIt = knowIt;
 
@@ -1135,11 +1136,11 @@ public class LibraryEditorPanelFactory {
 
 			translator = TranslatorManager.getInstance().getActiveTranslator();
 			gameTypeManager = translator.getGameTypeManager();
-			defaultTypeGuiType = gameTypeManager
-					.getGui(knowIt.getDefaultType());
+			defaultTypeGuiType = gameTypeManager.getGui(this.knowIt
+					.getDefaultType());
 
 			inactiveTextField = new JTextField(" Cannot set binding for ["
-					+ knowIt.getDefaultType() + "]");
+					+ this.knowIt.getDefaultType() + "]");
 
 			inactiveTextField.setEnabled(false);
 
@@ -1149,7 +1150,7 @@ public class LibraryEditorPanelFactory {
 				bindingConstantComponent.add(inactiveTextField);
 			else {
 				final String bindingText;
-				bindingText = knowIt.getBinding().getScriptValue();
+				bindingText = this.knowIt.getBinding().getScriptValue();
 
 				switch (defaultTypeGuiType) {
 				case JTEXTFIELD:
@@ -1171,9 +1172,11 @@ public class LibraryEditorPanelFactory {
 
 									GameConstant newConstant = GameConstantFactory
 											.getInstance().getConstant(
-													knowIt.getTypes(),
+													ParameterPanel.this.knowIt
+															.getTypes(),
 													bindingFieldText);
-									knowIt.setBinding(newConstant);
+									ParameterPanel.this.knowIt
+											.setBinding(newConstant);
 								}
 
 								@Override
@@ -1207,9 +1210,10 @@ public class LibraryEditorPanelFactory {
 
 							GameConstant newConstant = GameConstantFactory
 									.getInstance().getConstant(
-											knowIt.getTypes(),
+											ParameterPanel.this.knowIt
+													.getTypes(),
 											bindingFieldValue.toString());
-							knowIt.setBinding(newConstant);
+							ParameterPanel.this.knowIt.setBinding(newConstant);
 						}
 					});
 					bindingConstantComponent.add(bindingSpinner);
@@ -1218,7 +1222,8 @@ public class LibraryEditorPanelFactory {
 					final Map<String, String> map;
 					final JComboBox bindingBox;
 
-					map = gameTypeManager.getEnumMap(knowIt.getDefaultType());
+					map = gameTypeManager.getEnumMap(this.knowIt
+							.getDefaultType());
 					bindingBox = new JComboBox();
 
 					bindingBox.addItem(null);
@@ -1239,9 +1244,10 @@ public class LibraryEditorPanelFactory {
 
 							GameConstant newConstant = GameConstantFactory
 									.getInstance().getConstant(
-											knowIt.getTypes(),
+											ParameterPanel.this.knowIt
+													.getTypes(),
 											bindingBoxValue.toString());
-							knowIt.setBinding(newConstant);
+							ParameterPanel.this.knowIt.setBinding(newConstant);
 						}
 					});
 
@@ -1325,7 +1331,7 @@ public class LibraryEditorPanelFactory {
 					ScriptEaseUI.CODE_EDITOR_COLOR);
 
 			this.codeEditorPanel = objectContainerPanel(CODE_EDITOR_PANEL_NAME);
-			this.codeEditorScrollPane = new JScrollPane(codeEditorPanel);
+			this.codeEditorScrollPane = new JScrollPane(this.codeEditorPanel);
 
 			listerineButton.setOpaque(false);
 			listerineButton.setContentAreaFilled(false);
@@ -1333,7 +1339,7 @@ public class LibraryEditorPanelFactory {
 			listerineButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					simplePanelName = "Listerine";
+					CodeEditorPanel.this.simplePanelName = "Listerine";
 				}
 			});
 
@@ -1356,13 +1362,13 @@ public class LibraryEditorPanelFactory {
 			this.codeEditorScrollPane.setPreferredSize(new Dimension(400, 400));
 
 			this.setLayout(new BorderLayout());
-			this.codeEditorPanel.setLayout(new BoxLayout(codeEditorPanel,
+			this.codeEditorPanel.setLayout(new BoxLayout(this.codeEditorPanel,
 					BoxLayout.PAGE_AXIS));
 			this.codeEditorPanel.setBorder(titledBorder);
 
 			this.panelToFragmentMap.put(this.codeEditorPanel, null);
 			this.add(toolbar, BorderLayout.PAGE_START);
-			this.add(codeEditorScrollPane, BorderLayout.CENTER);
+			this.add(this.codeEditorScrollPane, BorderLayout.CENTER);
 
 			this.fillCodeEditorPanel();
 
@@ -1413,9 +1419,9 @@ public class LibraryEditorPanelFactory {
 				public void mouseReleased(MouseEvent e) {
 					FormatFragmentSelectionManager.getInstance()
 							.setFormatFragment(
-									panelToFragmentMap
+									CodeEditorPanel.this.panelToFragmentMap
 											.get(objectContainerPanel),
-									codeBlock);
+									CodeEditorPanel.this.codeBlock);
 					fillCodeEditorPanel();
 				}
 			});
@@ -1981,7 +1987,7 @@ public class LibraryEditorPanelFactory {
 				selectedFragment = FormatFragmentSelectionManager.getInstance()
 						.getFormatFragment();
 
-				codeEditorPanel
+				this.codeEditorPanel
 						.setBackground(ScriptEaseUI.FRAGMENT_DEFAULT_COLOR);
 
 				if (codeFragment instanceof LineFragment) {
@@ -2003,7 +2009,7 @@ public class LibraryEditorPanelFactory {
 					fragmentPanel.add(lineLabel);
 
 					panel.add(fragmentPanel);
-					panelToFragmentMap.put(fragmentPanel,
+					this.panelToFragmentMap.put(fragmentPanel,
 							(LineFragment) codeFragment);
 				} else if (codeFragment instanceof IndentFragment) {
 					fragmentPanel = indentPanel((IndentFragment) codeFragment);
@@ -2013,7 +2019,7 @@ public class LibraryEditorPanelFactory {
 								ScriptEaseUI.INDENT_FRAGMENT_COLOR, 1.2));
 
 					panel.add(fragmentPanel);
-					panelToFragmentMap.put(fragmentPanel,
+					this.panelToFragmentMap.put(fragmentPanel,
 							(IndentFragment) codeFragment);
 				} else if (codeFragment instanceof LiteralFragment) {
 					fragmentPanel = literalPanel((LiteralFragment) codeFragment);
@@ -2023,7 +2029,7 @@ public class LibraryEditorPanelFactory {
 								ScriptEaseUI.LITERAL_FRAGMENT_COLOR, 1.7));
 
 					panel.add(fragmentPanel);
-					panelToFragmentMap.put(fragmentPanel,
+					this.panelToFragmentMap.put(fragmentPanel,
 							(LiteralFragment) codeFragment);
 				} else if (codeFragment instanceof ScopeFragment) {
 					fragmentPanel = scopePanel((ScopeFragment) codeFragment);
@@ -2035,7 +2041,7 @@ public class LibraryEditorPanelFactory {
 					buildDefaultPanes(fragmentPanel,
 							((ScopeFragment) codeFragment).getSubFragments());
 					panel.add(fragmentPanel);
-					panelToFragmentMap.put(fragmentPanel,
+					this.panelToFragmentMap.put(fragmentPanel,
 							(ScopeFragment) codeFragment);
 				} else if (codeFragment instanceof SeriesFragment) {
 					fragmentPanel = seriesPanel((SeriesFragment) codeFragment);
@@ -2047,7 +2053,7 @@ public class LibraryEditorPanelFactory {
 					buildDefaultPanes(fragmentPanel,
 							((SeriesFragment) codeFragment).getSubFragments());
 					panel.add(fragmentPanel);
-					panelToFragmentMap.put(fragmentPanel,
+					this.panelToFragmentMap.put(fragmentPanel,
 							(SeriesFragment) codeFragment);
 				} else if (codeFragment instanceof FormatReferenceFragment) {
 					fragmentPanel = referencePanel((FormatReferenceFragment) codeFragment);
@@ -2057,7 +2063,7 @@ public class LibraryEditorPanelFactory {
 								ScriptEaseUI.REFERENCE_FRAGMENT_COLOR, 3.0));
 
 					panel.add(fragmentPanel);
-					panelToFragmentMap.put(fragmentPanel,
+					this.panelToFragmentMap.put(fragmentPanel,
 							(FormatReferenceFragment) codeFragment);
 				} else if (codeFragment instanceof SimpleDataFragment) {
 					fragmentPanel = simplePanel((SimpleDataFragment) codeFragment);
@@ -2067,12 +2073,12 @@ public class LibraryEditorPanelFactory {
 								ScriptEaseUI.SIMPLE_FRAGMENT_COLOR, 3.5));
 
 					panel.add(fragmentPanel);
-					panelToFragmentMap.put(fragmentPanel,
+					this.panelToFragmentMap.put(fragmentPanel,
 							(SimpleDataFragment) codeFragment);
 				}
 
 				if (selectedFragment == null)
-					codeEditorPanel.setBackground(GUIOp.scaleWhite(
+					this.codeEditorPanel.setBackground(GUIOp.scaleWhite(
 							ScriptEaseUI.CODE_EDITOR_COLOR, 1.7));
 			}
 		}

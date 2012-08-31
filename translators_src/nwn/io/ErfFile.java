@@ -27,16 +27,14 @@ import java.util.Set;
 
 import scriptease.controller.CodeBlockMapper;
 import scriptease.controller.FileManager;
-import scriptease.controller.modelverifier.rule.ParameterBoundRule;
-import scriptease.controller.modelverifier.rule.StoryRule;
 import scriptease.gui.SEFrame;
 import scriptease.model.CodeBlock;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
-import scriptease.model.PatternModelManager;
 import scriptease.translator.GameCompilerException;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.Translator.DescriptionKeys;
+import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameModule;
@@ -594,7 +592,7 @@ public final class ErfFile implements GameModule {
 
 		this.updateHeader(-generatedResources.size());
 
-		System.out.println("Size after saving Generated: " + resources.size());// +
+		System.out.println("Size after saving Generated: " + this.resources.size());// +
 																				// " Ungenerated: "
 																				// +
 																				// ungeneratedResources.size());
@@ -962,7 +960,7 @@ public final class ErfFile implements GameModule {
 
 		int year = cal.get(Calendar.YEAR) - 1900;
 
-		this.fileAccess.writeInt((int) year, true);
+		this.fileAccess.writeInt(year, true);
 
 		// ignore Build Day
 		int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
@@ -970,7 +968,7 @@ public final class ErfFile implements GameModule {
 			dayOfYear--;
 
 		// Change the date. 1 = Jan 1. 2 = Jan 2. 158 = Jun 7.
-		this.fileAccess.writeInt((int) (dayOfYear), true);
+		this.fileAccess.writeInt(dayOfYear, true);
 		// ignore DescriptionStrRef
 		this.fileAccess.skipBytes(ScriptEaseFileAccess.INT_BYTE_LENGTH);
 		// Last 116 bytes are supposedly reserved. Skip them.
@@ -1456,7 +1454,7 @@ public final class ErfFile implements GameModule {
 
 		@Override
 		public String toString() {
-			return "ErfKey [" + resRef + ", " + resId + ", " + resType + "]";
+			return "ErfKey [" + this.resRef + ", " + this.resId + ", " + this.resType + "]";
 		}
 
 		/**
@@ -1706,14 +1704,6 @@ public final class ErfFile implements GameModule {
 		else
 			return null;
 
-	}
-
-	@Override
-	public Collection<StoryRule> getCodeGenerationRules() {
-		Collection<StoryRule> rules = new ArrayList<StoryRule>();
-		// Make sure all parameters are bound before generating code
-		rules.add(new ParameterBoundRule());
-		return rules;
 	}
 
 	@Override

@@ -14,7 +14,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
-import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.gui.SETree.cell.BindingWidget;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.SETree.filters.Filter;
@@ -23,6 +22,7 @@ import scriptease.gui.SETree.filters.GameConstantFilter;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;

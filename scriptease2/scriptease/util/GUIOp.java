@@ -36,21 +36,21 @@ public class GUIOp {
 	 */
 	public static Color scaleWhite(Color source, double factor) {
 		double average = (((double) (source.getRed() + source.getBlue() + source
-				.getGreen())) / (double) (3 * MAX_COLOUR_VALUE))
-				* (double) MAX_COLOUR_VALUE;
+				.getGreen())) / (double) (3 * GUIOp.MAX_COLOUR_VALUE))
+				* GUIOp.MAX_COLOUR_VALUE;
 		double amount = average * (factor - 1.0);
 		int red = (int) (source.getRed() + amount);
 		int green = (int) (source.getGreen() + amount);
 		int blue = (int) (source.getBlue() + amount);
 
 		// keep it within the extreme values allowed by colours.
-		red = Math.min(red, MAX_COLOUR_VALUE);
-		green = Math.min(green, MAX_COLOUR_VALUE);
-		blue = Math.min(blue, MAX_COLOUR_VALUE);
+		red = Math.min(red, GUIOp.MAX_COLOUR_VALUE);
+		green = Math.min(green, GUIOp.MAX_COLOUR_VALUE);
+		blue = Math.min(blue, GUIOp.MAX_COLOUR_VALUE);
 
-		red = Math.max(red, MIN_COLOUR_VALUE);
-		green = Math.max(green, MIN_COLOUR_VALUE);
-		blue = Math.max(blue, MIN_COLOUR_VALUE);
+		red = Math.max(red, GUIOp.MIN_COLOUR_VALUE);
+		green = Math.max(green, GUIOp.MIN_COLOUR_VALUE);
+		blue = Math.max(blue, GUIOp.MIN_COLOUR_VALUE);
 
 		return new Color(red, green, blue);
 	}
@@ -86,13 +86,13 @@ public class GUIOp {
 		blue = (int) (blue * factor);
 
 		// keep it within the extreme values allowed by colours.
-		red = Math.min(red, MAX_COLOUR_VALUE);
-		green = Math.min(green, MAX_COLOUR_VALUE);
-		blue = Math.min(blue, MAX_COLOUR_VALUE);
+		red = Math.min(red, GUIOp.MAX_COLOUR_VALUE);
+		green = Math.min(green, GUIOp.MAX_COLOUR_VALUE);
+		blue = Math.min(blue, GUIOp.MAX_COLOUR_VALUE);
 
-		red = Math.max(red, MIN_COLOUR_VALUE);
-		green = Math.max(green, MIN_COLOUR_VALUE);
-		blue = Math.max(blue, MIN_COLOUR_VALUE);
+		red = Math.max(red, GUIOp.MIN_COLOUR_VALUE);
+		green = Math.max(green, GUIOp.MIN_COLOUR_VALUE);
+		blue = Math.max(blue, GUIOp.MIN_COLOUR_VALUE);
 
 		return new Color(red, green, blue);
 	}
@@ -128,7 +128,7 @@ public class GUIOp {
 				final int frames = 100;
 				for (int n = 0; n <= frames; n++) {
 					double alpha = 1.0 * n / frames;
-					component.setBackground(combine(c2, c1, alpha));
+					component.setBackground(GUIOp.combine(c2, c1, alpha));
 					component.repaint();
 				}
 				return null;
@@ -178,8 +178,8 @@ public class GUIOp {
 		ta = arrowWidth / (1.5f * ((float) Math.tan(theta) / 1.5f) * fLength);
 
 		// find the base of the arrow
-		baseX = ((float) xPoints[0] - ta * vecLine[0]);
-		baseY = ((float) yPoints[0] - ta * vecLine[1]);
+		baseX = (xPoints[0] - ta * vecLine[0]);
+		baseY = (yPoints[0] - ta * vecLine[1]);
 
 		// build the points on the sides of the arrow
 		xPoints[1] = (int) (baseX + th * vecLeft[0]);

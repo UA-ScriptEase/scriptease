@@ -34,42 +34,42 @@ public class ScriptEaseMemoryHandler extends Handler {
 		this.target = target;
 		this.size = size;
 
-		init();
+		this.init();
 	}
 
 	private void init() {
 		this.buffer = new ArrayList<String>();
-		formatter = new ScriptEaseFormatter();
+		this.formatter = new ScriptEaseFormatter();
 	}
 
 	@Override
 	public void publish(LogRecord record) {
-		if (!isLoggable(record)) {
+		if (!this.isLoggable(record)) {
 			return;
 		}
-		if (buffer.size() >= this.size)
-			buffer.remove(0);
-		buffer.add(formatter.format(record));
+		if (this.buffer.size() >= this.size)
+			this.buffer.remove(0);
+		this.buffer.add(this.formatter.format(record));
 
-		if (record.getLevel().intValue() >= pushLevel.intValue()) {
-			push();
+		if (record.getLevel().intValue() >= this.pushLevel.intValue()) {
+			this.push();
 		}
 	}
 
 	public synchronized void push() {
 		String msg = " ------- \n";
-		for (String record : buffer) {
+		for (String record : this.buffer) {
 			msg += record;
 		}
 		LogRecord condensedRec = new LogRecord(this.pushLevel, msg);
 		this.target.publish(condensedRec);
-		buffer.clear();
+		this.buffer.clear();
 	}
 
 	@Override
 	public void close() throws SecurityException {
 		this.target.close();
-		setLevel(Level.OFF);
+		this.setLevel(Level.OFF);
 	}
 
 	@Override
@@ -81,11 +81,11 @@ public class ScriptEaseMemoryHandler extends Handler {
 		if (newLevel == null) {
 			throw new NullPointerException();
 		}
-		pushLevel = newLevel;
+		this.pushLevel = newLevel;
 	}
 
 	public synchronized Level getPushLevel() {
-		return pushLevel;
+		return this.pushLevel;
 	}
 
 	@Override

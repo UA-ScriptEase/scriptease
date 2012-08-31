@@ -30,12 +30,12 @@ public class GraphNodeReferenceResolver implements GraphNodeVisitor {
 	 * @param graphNode
 	 */
 	public void resolveReferences(GraphNode graphNode) {
-		nodes = new ArrayList<GraphNode>();
+		this.nodes = new ArrayList<GraphNode>();
 
 		// Use a set to group equal nodes together
 		Set<GraphNode> equalSet = new HashSet<GraphNode>(graphNode
 				.getNodeDepthMap().keySet());
-		nodes.addAll(equalSet);
+		this.nodes.addAll(equalSet);
 
 		// fix the problems
 		graphNode.process(this);
@@ -43,12 +43,12 @@ public class GraphNodeReferenceResolver implements GraphNodeVisitor {
 
 	@Override
 	public void processTextNode(TextNode textNode) {
-		processDefault(textNode);
+		this.processDefault(textNode);
 	}
 
 	@Override
 	public void processKnowItNode(KnowItNode knowItNode) {
-		processDefault(knowItNode);
+		this.processDefault(knowItNode);
 	}
 
 	private void processDefault(GraphNode graphNode) {
@@ -57,7 +57,7 @@ public class GraphNodeReferenceResolver implements GraphNodeVisitor {
 		for (GraphNode child : children) {
 			boolean replaced = false;
 			// if it is not original
-			for (GraphNode originalNode : nodes) {
+			for (GraphNode originalNode : this.nodes) {
 				// replace it with the original
 				if (originalNode.equals(child) && originalNode != child) {
 					replaced = graphNode.replaceChild(child, originalNode);
@@ -71,11 +71,11 @@ public class GraphNodeReferenceResolver implements GraphNodeVisitor {
 
 	@Override
 	public void processQuestPointNode(QuestPointNode questPointNode) {
-		processDefault(questPointNode);
+		this.processDefault(questPointNode);
 	}
 
 	@Override
 	public void processQuestNode(QuestNode questNode) {
-		processDefault(questNode);
+		this.processDefault(questNode);
 	}
 }

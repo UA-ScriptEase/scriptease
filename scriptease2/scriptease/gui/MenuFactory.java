@@ -213,7 +213,7 @@ public class MenuFactory {
 			public void fileReferenced(StoryModel model, File location) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						rebuildRecentFiles(menu);
+						MenuFactory.rebuildRecentFiles(menu);
 					}
 				});
 			}

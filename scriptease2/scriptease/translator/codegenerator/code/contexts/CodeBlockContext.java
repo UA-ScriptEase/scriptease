@@ -43,7 +43,7 @@ public class CodeBlockContext extends Context {
 
 	public CodeBlockContext(Context other, CodeBlock source) {
 		this(other);
-		codeBlock = source;
+		this.codeBlock = source;
 	}
 
 	@Override
@@ -63,19 +63,19 @@ public class CodeBlockContext extends Context {
 
 	@Override
 	public Iterator<StoryComponent> getChildren() {
-		return codeBlock.getOwner().getChildren().iterator();
+		return this.codeBlock.getOwner().getChildren().iterator();
 	}
 
 	@Override
 	public String getUniqueName(Pattern legalFormat) {
-		return this.getNamifier().getUniqueName(codeBlock, legalFormat);
+		return this.getNamifier().getUniqueName(this.codeBlock, legalFormat);
 	}
 
 	@Override
 	public String getType() {
 		// Grab the first type of the first codeBlock - Assumes they will all
 		// have matching codeSymbols
-		String type = codeBlock.getTypes().iterator().next();
+		String type = this.codeBlock.getTypes().iterator().next();
 
 		return TranslatorManager.getInstance().getActiveTranslator()
 				.getGameTypeManager().getCodeSymbol(type);
@@ -83,7 +83,7 @@ public class CodeBlockContext extends Context {
 
 	@Override
 	public KnowIt getParameter(String keyword) {
-		for (KnowIt parameter : codeBlock.getParameters()) {
+		for (KnowIt parameter : this.codeBlock.getParameters()) {
 			if (parameter.getDisplayText().equalsIgnoreCase(keyword)) {
 				return parameter;
 			}
@@ -99,7 +99,7 @@ public class CodeBlockContext extends Context {
 	@Override
 	public Iterator<KnowIt> getVariables() {
 		VariableGetter knowItGetter = new VariableGetter();
-		Collection<StoryComponent> children = ((ComplexStoryComponent) codeBlock
+		Collection<StoryComponent> children = ((ComplexStoryComponent) this.codeBlock
 				.getOwner()).getChildren();
 		for (StoryComponent child : children) {
 			child.process(knowItGetter);
@@ -109,7 +109,7 @@ public class CodeBlockContext extends Context {
 
 	@Override
 	public Iterator<KnowIt> getParameters() {
-		return codeBlock.getParameters().iterator();
+		return this.codeBlock.getParameters().iterator();
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class CodeBlockContext extends Context {
 
 	@Override
 	public KnowIt getSubject() {
-		return codeBlock.getSubject();
+		return this.codeBlock.getSubject();
 	}
 
 	@Override
@@ -154,13 +154,13 @@ public class CodeBlockContext extends Context {
 	 */
 	@Override
 	public StoryItemSequence getStoryChild() {
-		ScriptIt cause = codeBlock.getCause();
+		ScriptIt cause = this.codeBlock.getCause();
 		if (cause != null)
 			return cause.getStoryBlock();
 		else
 			throw new CodeGenerationException(
 					"Attempted to get Story Block for a CodeBlock without a Cause: "
-							+ codeBlock);
+							+ this.codeBlock);
 	}
 
 	/**
@@ -168,12 +168,12 @@ public class CodeBlockContext extends Context {
 	 */
 	@Override
 	public StoryItemSequence getAlwaysChild() {
-		ScriptIt cause = codeBlock.getCause();
+		ScriptIt cause = this.codeBlock.getCause();
 		if (cause != null)
 			return cause.getAlwaysBlock();
 		else
 			throw new CodeGenerationException(
 					"Attempted to get Always Block for a CodeBlock without a Cause: "
-							+ codeBlock);
+							+ this.codeBlock);
 	}
 }

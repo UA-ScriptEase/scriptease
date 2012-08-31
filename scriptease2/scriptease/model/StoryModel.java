@@ -63,9 +63,9 @@ public final class StoryModel extends PatternModel {
 				"Start"));
 		QuestPointNode endNode = new QuestPointNode(new QuestPoint(
 				"End", 1));
-		startNode.addChild(endNode);
+		this.startNode.addChild(endNode);
 		
-		this.modelRoot = new QuestNode(title, startNode, endNode, false);
+		this.modelRoot = new QuestNode(title, this.startNode, endNode, false);
 		this.module = module;
 		this.translator = translator;
 //		this.modelVerifier = new ModelVerifier(this.modelRoot);

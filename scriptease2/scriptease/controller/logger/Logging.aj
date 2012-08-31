@@ -41,16 +41,16 @@ public aspect Logging {
 	static {
 		// TODO: USE CONFIG FILE TO IMPORT LEVEL SETTINGS
 		// create loggers
-		consoleLog.setLevel(CONSOLE_LEVEL);
-		consoleLog.setUseParentHandlers(false);
-		outputLog.setLevel(OUTPUT_LEVEL);
+		Logging.consoleLog.setLevel(Logging.CONSOLE_LEVEL);
+		Logging.consoleLog.setUseParentHandlers(false);
+		Logging.outputLog.setLevel(Logging.OUTPUT_LEVEL);
 
 		// create handlers
 		Handler consoleHandler = new ConsoleHandler();
 		Handler fileHandler = null;
 		Handler networkHandler = null;
 		try {
-			fileHandler = new FileHandler(FILE_LOG);
+			fileHandler = new FileHandler(Logging.FILE_LOG);
 		} catch (IOException e) {
 			// how to handle?
 			System.out.println("Handler Error");
@@ -58,15 +58,15 @@ public aspect Logging {
 		networkHandler = NetworkHandler.getInstance();
 		
 		// set handlers level
-		consoleHandler.setLevel(CONSOLE_LEVEL);
-		fileHandler.setLevel(OUTPUT_LEVEL);
-		networkHandler.setLevel(OUTPUT_LEVEL);
+		consoleHandler.setLevel(Logging.CONSOLE_LEVEL);
+		fileHandler.setLevel(Logging.OUTPUT_LEVEL);
+		networkHandler.setLevel(Logging.OUTPUT_LEVEL);
 
 		List<Handler> handlers = new ArrayList<Handler>();
 		handlers.add(fileHandler);
 		handlers.add(networkHandler);
 		MultiHandler multiHandler = new MultiHandler(handlers);
-		multiHandler.setLevel(OUTPUT_LEVEL);
+		multiHandler.setLevel(Logging.OUTPUT_LEVEL);
 		ScriptEaseMemoryHandler memoryHandler = new ScriptEaseMemoryHandler(
 				multiHandler, 1000, Level.SEVERE);
 
@@ -78,8 +78,8 @@ public aspect Logging {
 		memoryHandler.setFormatter(formatter);
 
 		// link handlers to their logger
-		consoleLog.addHandler(consoleHandler);
-		outputLog.addHandler(memoryHandler);
+		Logging.consoleLog.addHandler(consoleHandler);
+		Logging.outputLog.addHandler(memoryHandler);
 	}
 
 	// ==================================== POINT CUTS ====================================
@@ -133,40 +133,40 @@ public aspect Logging {
 	// ==================================== ADVICE ====================================
 	// advice for context pointcut
 	after(Context pastContext, Object source) : context(pastContext, source) {
-		outputLog.log(Level.FINEST,
+		Logging.outputLog.log(Level.FINEST,
 				" CONTEXT SCOPING INTO >> " + pastContext.getIndent()
-						+ GetSimpleName(source));
+						+ this.GetSimpleName(source));
 	}
 
 	// advice for unimplemented pointcut
 	after(String methodName, Object caller) : unimplemented(methodName, caller) {
-		outputLog.log(Level.WARNING, "UNIMPLEMENTED CALL TO " + methodName
-				+ " IN " + GetSimpleName(caller));
+		Logging.outputLog.log(Level.WARNING, "UNIMPLEMENTED CALL TO " + methodName
+				+ " IN " + this.GetSimpleName(caller));
 	}
 
 	// advice for action pointcut
 	before(Action owner): actions(owner){
-		outputLog.log(Level.FINEST, "ACTION " + GetSimpleName(owner));
+		Logging.outputLog.log(Level.FINEST, "ACTION " + this.GetSimpleName(owner));
 	}
 
 	// advice for exception pointcut
 	before(Thread thread, Throwable exception): exception(thread, exception) {
-		outputLog.log(Level.SEVERE, "EXCEPTION " + makeTraceString(exception));
+		Logging.outputLog.log(Level.SEVERE, "EXCEPTION " + Logging.makeTraceString(exception));
 	}
 
 	// advice for system pointcut
 	void around(PrintStream ps, String txt, Object caller): system(ps,txt,caller)	{
 		final Level lvl = (ps == System.out)? Level.INFO : Level.WARNING;
-		final String msg = "\t" + txt + "\t(" + GetSimpleName(caller) + " class)";
+		final String msg = "\t" + txt + "\t(" + this.GetSimpleName(caller) + " class)";
 		
-		outputLog.log(lvl, msg);
+		Logging.outputLog.log(lvl, msg);
 	}
 	
 	// advice for system pointcut
 	void around(PrintStream ps, String txt): systemStatic(ps,txt)	{
 		final Level lvl = (ps == System.out)? Level.INFO : Level.WARNING;
 		
-		outputLog.log(lvl, "\t" + txt + "\t(Unknown class)");
+		Logging.outputLog.log(lvl, "\t" + txt + "\t(Unknown class)");
 	}
 
 	// ==================================== HELPERS ====================================

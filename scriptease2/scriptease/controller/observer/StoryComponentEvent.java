@@ -69,6 +69,6 @@ public final class StoryComponentEvent {
 
 	@Override
 	public String toString() {
-		return "StoryComponentEvent [" + type + " : " + source + "]";
+		return "StoryComponentEvent [" + this.type + " : " + this.source + "]";
 	}
 }

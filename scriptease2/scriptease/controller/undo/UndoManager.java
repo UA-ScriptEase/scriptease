@@ -73,7 +73,7 @@ public final class UndoManager implements PatternModelObserver,
 	private UndoManager() {
 		PatternModelManager.getInstance().addPatternModelObserver(this);
 		FileManager.getInstance().addObserver(this);
-		observers = new ArrayList<WeakUndoManagerObserverReference<UndoManagerObserver>>();
+		this.observers = new ArrayList<WeakUndoManagerObserverReference<UndoManagerObserver>>();
 	}
 
 	public final void addUndoManagerObserver(UndoManagerObserver observer) {
@@ -141,7 +141,7 @@ public final class UndoManager implements PatternModelObserver,
 					"Cannot start a new undoable action inside of undoable action '"
 							+ this.unfinishedCommand + "'");
 
-		if (activeHistory != null)
+		if (this.activeHistory != null)
 			this.unfinishedCommand = new UndoableCommand(name);
 	}
 
@@ -188,7 +188,7 @@ public final class UndoManager implements PatternModelObserver,
 	 * 
 	 */
 	public void clearRedo() {
-		activeHistory.redoStack.clear();
+		this.activeHistory.redoStack.clear();
 		this.notifyObservers();
 	}
 
@@ -232,7 +232,7 @@ public final class UndoManager implements PatternModelObserver,
 
 		activeHistory.ensureMaxSize();
 		this.unfinishedCommand = null;
-		notifyObservers();
+		this.notifyObservers();
 	}
 
 	/**
@@ -258,7 +258,7 @@ public final class UndoManager implements PatternModelObserver,
 		history.redoStack.push(command);
 		this.performingUndoRedo = false;
 		SEFrame.getInstance().setStatus("Undo " + command.getName());
-		notifyObservers();
+		this.notifyObservers();
 	}
 
 	/**
@@ -384,7 +384,7 @@ public final class UndoManager implements PatternModelObserver,
 	 * @return the History for the active pattern model
 	 */
 	private History getActiveHistory() {
-		return activeHistory;
+		return this.activeHistory;
 	}
 
 	/**
@@ -427,7 +427,7 @@ public final class UndoManager implements PatternModelObserver,
 
 				if (this.activeHistory.equals(removed)) {
 					this.activeHistory = null;
-					notifyObservers();
+					this.notifyObservers();
 				}
 
 				if (!removed.undoStack.isEmpty()

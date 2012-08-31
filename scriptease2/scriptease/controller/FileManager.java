@@ -123,7 +123,7 @@ public final class FileManager {
 	 * @return the Singleton instance
 	 */
 	public static final FileManager getInstance() {
-		return instance;
+		return FileManager.instance;
 	}
 
 	/**
@@ -247,16 +247,16 @@ public final class FileManager {
 				apiDictionary = active.getApiDictionary();
 
 				File location = windowManager.showFileChooser(
-						FileManager.SAVE_AS, LIBRARY_FILTER);
+						FileManager.SAVE_AS, FileManager.LIBRARY_FILTER);
 
 				if (location == null) {
 					return;
 				}
 
 				if (!FileOp.getExtension(location).equalsIgnoreCase(
-						FILE_EXTENSION_LIBRARY)) {
+						FileManager.FILE_EXTENSION_LIBRARY)) {
 					location = FileOp.addExtension(location,
-							FILE_EXTENSION_LIBRARY);
+							FileManager.FILE_EXTENSION_LIBRARY);
 				}
 
 				if (location.exists()
@@ -272,7 +272,7 @@ public final class FileManager {
 				final WindowFactory windowManager = WindowFactory.getInstance();
 
 				File location = windowManager.showFileChooser(
-						FileManager.SAVE_AS, STORY_FILTER);
+						FileManager.SAVE_AS, FileManager.STORY_FILTER);
 
 				// make sure the user didn't cancel/close window.
 				if (location == null) {
@@ -281,9 +281,9 @@ public final class FileManager {
 
 				// ensure that the location has the proper extension.
 				if (!FileOp.getExtension(location).equalsIgnoreCase(
-						FILE_EXTENSION_STORY)) {
+						FileManager.FILE_EXTENSION_STORY)) {
 					location = FileOp.addExtension(location,
-							FILE_EXTENSION_STORY);
+							FileManager.FILE_EXTENSION_STORY);
 				}
 
 				// check if the location exists already.
@@ -481,9 +481,7 @@ public final class FileManager {
 	}
 
 	/**
-	 * Gets the File location associated with the given model. TODO: change
-	 * openFiles into a bimap (when one is written), so it can be queried by key
-	 * and value instead of using this reverse lookup.
+	 * Gets the File location associated with the given model.
 	 * 
 	 * @param model
 	 *            The <code>StoryModel</code> whose location is being
@@ -555,8 +553,8 @@ public final class FileManager {
 
 		// if we've already got the model open, then we don't need to
 		// load it again.
-		if (openFiles.containsKey(location)) {
-			model = openFiles.get(location);
+		if (this.openFiles.containsKey(location)) {
+			model = this.openFiles.get(location);
 			this.updateRecentFiles(location);
 		} else {
 			reader = FileIO.getInstance();
@@ -564,7 +562,7 @@ public final class FileManager {
 			if (model == null)
 				return;
 
-			openFiles.put(location, model);
+			this.openFiles.put(location, model);
 
 			// this needs to happen before we add it to the model pool
 			// so that

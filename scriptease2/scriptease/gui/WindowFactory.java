@@ -99,7 +99,7 @@ public final class WindowFactory {
 	 * @return the sole instance of WindowManager
 	 */
 	public static WindowFactory getInstance() {
-		return instance;
+		return WindowFactory.instance;
 	}
 
 	/**
@@ -126,7 +126,7 @@ public final class WindowFactory {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(currentFrame,
+				JOptionPane.showMessageDialog(WindowFactory.this.currentFrame,
 						WindowFactory.ERROR_MESSAGE,
 						WindowFactory.CRITICAL_ERROR_TITLE,
 						JOptionPane.ERROR_MESSAGE);
@@ -288,7 +288,7 @@ public final class WindowFactory {
 		}
 
 		JOptionPane.showMessageDialog(this.currentFrame, panel,
-				CODE_GENERATION_PROBLEM, JOptionPane.WARNING_MESSAGE);
+				WindowFactory.CODE_GENERATION_PROBLEM, JOptionPane.WARNING_MESSAGE);
 	}
 
 	/**
@@ -331,9 +331,9 @@ public final class WindowFactory {
 					final StoryComponent owner = knowIt.getOwner();
 					if (owner != null
 							&& !(knowIt.getBinding() instanceof KnowItBindingFunction))
-						defaultProcess(owner);
+						this.defaultProcess(owner);
 					else
-						defaultProcess(knowIt);
+						this.defaultProcess(knowIt);
 				}
 
 				@Override
@@ -403,9 +403,9 @@ public final class WindowFactory {
 	 *         otherwise.
 	 */
 	public boolean showConfirmTestStory() {
-		String[] options = { SAVE_AND_TEST, CANCEL };
+		String[] options = { WindowFactory.SAVE_AND_TEST, WindowFactory.CANCEL };
 		int n = JOptionPane.showOptionDialog(this.currentFrame,
-				"Save and test story?", TEST_STORY,
+				"Save and test story?", WindowFactory.TEST_STORY,
 				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, options, options[1]);
 
@@ -428,7 +428,7 @@ public final class WindowFactory {
 	 */
 	public void showAboutScreen() {
 		JOptionPane.showMessageDialog(this.currentFrame,
-				ABOUT_SCRIPTEASE_MESSAGE, ABOUT_SCRIPTEASE_TITLE,
+				WindowFactory.ABOUT_SCRIPTEASE_MESSAGE, WindowFactory.ABOUT_SCRIPTEASE_TITLE,
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -483,7 +483,7 @@ public final class WindowFactory {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(currentFrame, message,
+				JOptionPane.showMessageDialog(WindowFactory.this.currentFrame, message,
 						"ScriptEase: " + title, JOptionPane.ERROR_MESSAGE);
 			}
 		});
@@ -507,7 +507,7 @@ public final class WindowFactory {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(currentFrame, message,
+				JOptionPane.showMessageDialog(WindowFactory.this.currentFrame, message,
 						"ScriptEase: " + title, JOptionPane.WARNING_MESSAGE);
 			}
 		});
@@ -528,7 +528,7 @@ public final class WindowFactory {
 			@Override
 			public void run() {
 				JOptionPane
-						.showMessageDialog(currentFrame, message,
+						.showMessageDialog(WindowFactory.this.currentFrame, message,
 								"ScriptEase: " + title,
 								JOptionPane.INFORMATION_MESSAGE);
 			}

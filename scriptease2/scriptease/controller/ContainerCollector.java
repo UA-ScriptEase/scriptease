@@ -12,7 +12,7 @@ public class ContainerCollector {
 		for (Component component : components) {
 			allComponents.add(component);
 			if (component instanceof Container)
-				allComponents.addAll(getAllComponents((Container) component));
+				allComponents.addAll(this.getAllComponents((Container) component));
 		}
 		return allComponents;
 	}

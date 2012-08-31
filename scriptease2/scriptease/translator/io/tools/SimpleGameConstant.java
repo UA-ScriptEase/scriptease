@@ -22,7 +22,7 @@ public class SimpleGameConstant implements GameConstant {
 
 	@Override
 	public Collection<String> getTypes() {
-		return types;
+		return this.types;
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class SimpleGameConstant implements GameConstant {
 
 	@Override
 	public String toString() {
-		return getName();
+		return this.getName();
 	}
 
 	@Override

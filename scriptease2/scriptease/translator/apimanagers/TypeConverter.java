@@ -1,4 +1,4 @@
-package scriptease.controller.apimanagers;
+package scriptease.translator.apimanagers;
 
 import java.util.ArrayList;
 import java.util.Collection;

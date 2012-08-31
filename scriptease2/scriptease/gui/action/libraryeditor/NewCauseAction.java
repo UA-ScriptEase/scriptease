@@ -8,7 +8,6 @@ import java.util.Collection;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.model.CodeBlock;
@@ -19,6 +18,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameType;
 
 /**

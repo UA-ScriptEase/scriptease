@@ -3,7 +3,6 @@ package scriptease.gui.action.libraryeditor.codeeditor;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.swing.Action;
 
@@ -12,7 +11,6 @@ import scriptease.gui.libraryeditor.FormatFragmentSelectionManager;
 import scriptease.model.CodeBlock;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
-import sun.awt.util.IdentityArrayList;
 
 /**
  * This class contains all of the methods that can move FormatFragments in code

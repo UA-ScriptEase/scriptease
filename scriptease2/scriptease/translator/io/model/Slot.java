@@ -3,9 +3,9 @@ package scriptease.translator.io.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.apimanagers.EventSlotManager;
 import scriptease.model.atomic.KnowIt;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.EventSlotManager;
 
 /**
  * Represents a game slot in Scriptease Each slot contains a unique keyword, a
@@ -34,7 +34,7 @@ public class Slot {
 	}
 
 	public String getDisplayName() {
-		return displayName;
+		return this.displayName;
 	}
 
 	/**
@@ -46,11 +46,11 @@ public class Slot {
 	 * @return
 	 */
 	public String getFormatKeyword() {
-		if (formatKeyword == null || formatKeyword.isEmpty())
+		if (this.formatKeyword == null || this.formatKeyword.isEmpty())
 			return TranslatorManager.getInstance().getActiveTranslator()
 					.getApiDictionary().getEventSlotManager()
 					.getDefaultFormatKeyword();
-		return formatKeyword;
+		return this.formatKeyword;
 	}
 
 	public void setDisplayName(String displayName) {
@@ -85,7 +85,7 @@ public class Slot {
 	}
 
 	public String getKeyword() {
-		return keyword;
+		return this.keyword;
 	}
 
 	public void setKeyword(String keyword) {
@@ -103,7 +103,7 @@ public class Slot {
 				return true;
 			}
 			Slot other = (Slot) obj;
-			return other.keyword.equals(keyword);
+			return other.keyword.equals(this.keyword);
 		}
 		return false;
 	}

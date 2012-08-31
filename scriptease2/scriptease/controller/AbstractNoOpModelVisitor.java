@@ -41,7 +41,7 @@ public abstract class AbstractNoOpModelVisitor implements ModelVisitor {
 	 * for every non-overridden process<i>Z</i> method. Unless it is overridden,
 	 * it does nothing.
 	 * 
-	 * @param component
+	 * @param model 
 	 *            The PatternModel to process with a default behaviour.
 	 */
 	protected void defaultProcess(PatternModel model) {

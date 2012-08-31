@@ -42,7 +42,7 @@ public class PanelFactory {
 	private static PanelFactory instance = new PanelFactory();
 
 	public static PanelFactory getInstance() {
-		return instance;
+		return PanelFactory.instance;
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class PanelFactory {
 				model.getRoot().getStartPoint());
 		storyComponentTree = new StoryComponentPanelTree(questPoint);
 
-		panes = modelsToComponents.getValue(model);
+		panes = PanelFactory.modelsToComponents.getValue(model);
 
 		if (panes == null) {
 			panes = new ArrayList<JComponent>();
@@ -159,13 +159,13 @@ public class PanelFactory {
 
 		panes.add(storyPanel);
 
-		modelsToComponents.put(model, panes);
+		PanelFactory.modelsToComponents.put(model, panes);
 
 		storyPanel.add(questPanel);
 
 		storyPanel.add(storyComponentTree);
 
-		componentsToTrees.put(storyPanel, storyComponentTree);
+		PanelFactory.componentsToTrees.put(storyPanel, storyComponentTree);
 
 		return storyPanel;
 	}
@@ -176,7 +176,7 @@ public class PanelFactory {
 
 		List<JComponent> components;
 
-		components = modelsToComponents.getValue(model);
+		components = PanelFactory.modelsToComponents.getValue(model);
 		scbPanel = LibraryEditorPanelFactory.getInstance()
 				.buildLibraryEditorPanel(
 						PanelFactory.getInstance().getMainLibraryPane());
@@ -185,7 +185,7 @@ public class PanelFactory {
 		if (components == null) {
 			components = new ArrayList<JComponent>();
 			components.add(scbScrollPane);
-			modelsToComponents.put(model, components);
+			PanelFactory.modelsToComponents.put(model, components);
 		}
 		components.add(scbScrollPane);
 		PatternModelManager.getInstance().add(model);
@@ -195,7 +195,7 @@ public class PanelFactory {
 
 	public void setRootForTreeInComponent(JComponent component,
 			QuestPoint questPoint) {
-		componentsToTrees.get(component).setRoot(questPoint);
+		PanelFactory.componentsToTrees.get(component).setRoot(questPoint);
 	}
 
 	/**
@@ -209,13 +209,13 @@ public class PanelFactory {
 	 * @return
 	 */
 	public StoryComponentPanelTree getTreeForComponent(JComponent component) {
-		return componentsToTrees.get(component);
+		return PanelFactory.componentsToTrees.get(component);
 	}
 
 	public PatternModel getModelForComponent(JComponent modelComponent) {
-		for (List<JComponent> jComponentList : modelsToComponents.getValues())
+		for (List<JComponent> jComponentList : PanelFactory.modelsToComponents.getValues())
 			if (jComponentList.contains(modelComponent))
-				return modelsToComponents.getKey(jComponentList);
+				return PanelFactory.modelsToComponents.getKey(jComponentList);
 
 		throw new IllegalStateException(
 				"Encountered null model when attempting to get model for "
@@ -230,7 +230,7 @@ public class PanelFactory {
 	 * @return
 	 */
 	public List<JComponent> getComponentsForModel(PatternModel model) {
-		final List<JComponent> panels = modelsToComponents.getValue(model);
+		final List<JComponent> panels = PanelFactory.modelsToComponents.getValue(model);
 
 		if (panels == null) {
 			System.out
@@ -254,25 +254,25 @@ public class PanelFactory {
 	public void removeComponentForModel(PatternModel model, JComponent component) {
 		final List<JComponent> components = new ArrayList<JComponent>();
 
-		if (modelsToComponents.getValue(model) == null)
+		if (PanelFactory.modelsToComponents.getValue(model) == null)
 			throw new IllegalStateException(
 					"Encountered null list of model display panels "
 							+ "when attempting to remove panels for "
 							+ model.getName());
 
-		components.addAll(modelsToComponents.getValue(model));
+		components.addAll(PanelFactory.modelsToComponents.getValue(model));
 
 		components.remove(component);
 
 		if (!components.isEmpty())
-			modelsToComponents.put(model, components);
+			PanelFactory.modelsToComponents.put(model, components);
 		else
-			modelsToComponents.removeKey(model);
+			PanelFactory.modelsToComponents.removeKey(model);
 	}
 
 	private static LibraryPanel mainLibraryPane = new LibraryPanel(true);
 
 	public LibraryPanel getMainLibraryPane() {
-		return mainLibraryPane;
+		return PanelFactory.mainLibraryPane;
 	}
 }

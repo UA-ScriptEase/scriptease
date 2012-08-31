@@ -33,7 +33,7 @@ public class QuestPointNodeGetter {
 			@Override
 			public void processQuestNode(QuestNode questNode) {
 				// recursively deal with quests
-				questPointNodes.addAll(getQuestPointNodes(questNode));
+				questPointNodes.addAll(QuestPointNodeGetter.getQuestPointNodes(questNode));
 			}
 
 			@Override
@@ -52,7 +52,7 @@ public class QuestPointNodeGetter {
 	}
 
 	public static Collection<QuestPoint> getQuestPoints(QuestNode quest) {
-		Collection<QuestPointNode> nodes = getQuestPointNodes(quest);
+		Collection<QuestPointNode> nodes = QuestPointNodeGetter.getQuestPointNodes(quest);
 		Collection<QuestPoint> questPoints = new ArrayList<QuestPoint>(
 				nodes.size());
 		for (QuestPointNode node : nodes) {

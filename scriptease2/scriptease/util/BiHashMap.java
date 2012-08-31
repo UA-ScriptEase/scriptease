@@ -51,7 +51,7 @@ public class BiHashMap<K, V> {
 	 */
 	public int size() {
 		this.checkBidirectionality();
-		return mainMap.size();
+		return this.mainMap.size();
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class BiHashMap<K, V> {
 	 */
 	public boolean isEmpty() {
 		this.checkBidirectionality();
-		return (mainMap.isEmpty());
+		return (this.mainMap.isEmpty());
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class BiHashMap<K, V> {
 	 */
 	public boolean containsKey(Object key) {
 		this.checkBidirectionality();
-		return mainMap.containsKey(key);
+		return this.mainMap.containsKey(key);
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class BiHashMap<K, V> {
 	 */
 	public boolean containsValue(Object value) {
 		this.checkBidirectionality();
-		return mainMap.containsValue(value);
+		return this.mainMap.containsValue(value);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class BiHashMap<K, V> {
 	 */
 	public V getValue(K key) {
 		if (this.containsKey(key))
-			return mainMap.get(key);
+			return this.mainMap.get(key);
 		else
 			return null;
 	}
@@ -116,7 +116,7 @@ public class BiHashMap<K, V> {
 	 */
 	public K getKey(V value) {
 		if (this.containsValue(value))
-			return (reverseMap.get(value));
+			return (this.reverseMap.get(value));
 		else
 			return null;
 	}
@@ -252,17 +252,17 @@ public class BiHashMap<K, V> {
 	 * @return
 	 */
 	private void checkBidirectionality() {
-		if (mainMap.size() != reverseMap.size())
+		if (this.mainMap.size() != this.reverseMap.size())
 			throw new BidirectionalityViolatedException(
 					"Sizes of maps in HashBiMap are not equal.");
 
-		if (mainMap.isEmpty() != reverseMap.isEmpty())
+		if (this.mainMap.isEmpty() != this.reverseMap.isEmpty())
 			throw new BidirectionalityViolatedException(
 					"One map in HashBiMap is empty while other is not.");
 
-		for (Entry<K, V> mainMapEntry : mainMap.entrySet()) {
+		for (Entry<K, V> mainMapEntry : this.mainMap.entrySet()) {
 			boolean keyFound = false;
-			for (Entry<V, K> reverseMapEntry : reverseMap.entrySet()) {
+			for (Entry<V, K> reverseMapEntry : this.reverseMap.entrySet()) {
 				if (mainMapEntry.getKey() == reverseMapEntry.getValue()) {
 					if (mainMapEntry.getValue() != reverseMapEntry.getKey())
 						throw new BidirectionalityViolatedException("Value "

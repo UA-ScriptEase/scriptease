@@ -117,7 +117,7 @@ public class CodeGenerator {
 
 		// do the first pass (semantic analysis) for the given quest
 		final SemanticAnalyzer analyzer = new SemanticAnalyzer(root,
-				translator, module.getCodeGenerationRules());
+				translator);
 
 		// check for problems
 		problems.addAll(analyzer.getProblems());

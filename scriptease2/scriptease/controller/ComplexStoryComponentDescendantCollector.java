@@ -24,18 +24,18 @@ public class ComplexStoryComponentDescendantCollector extends
 
 	public Collection<StoryComponent> collectDescendants(
 			ComplexStoryComponent complex) {
-		children = new ArrayList<StoryComponent>();
+		this.children = new ArrayList<StoryComponent>();
 		/*
 		 * process the immediate children, so that we don't add the complex as a
 		 */
 		for (StoryComponent child : complex.getChildren())
 			child.process(this);
-		return children;
+		return this.children;
 	}
 
 	@Override
 	protected void defaultProcessComplex(ComplexStoryComponent complex) {
-		children.add(complex);
+		this.children.add(complex);
 		for (StoryComponent child : complex.getChildren())
 			child.process(this);
 	}
@@ -43,12 +43,12 @@ public class ComplexStoryComponentDescendantCollector extends
 	@Override
 	public void processScriptIt(ScriptIt scriptIt) {
 		scriptIt.processParameters(this);
-		defaultProcessComplex(scriptIt);
+		this.defaultProcessComplex(scriptIt);
 	}
 
 	@Override
 	public void processKnowIt(KnowIt knowIt) {
-		children.add(knowIt);
+		this.children.add(knowIt);
 		knowIt.getBinding().process(new AbstractNoOpBindingVisitor() {
 			@Override
 			public void processDescribeIt(KnowItBindingDescribeIt described) {
@@ -75,7 +75,7 @@ public class ComplexStoryComponentDescendantCollector extends
 
 	@Override
 	public void processAskIt(AskIt questionIt) {
-		children.add(questionIt);
+		this.children.add(questionIt);
 		questionIt.getIfBlock().process(this);
 		questionIt.getElseBlock().process(this);
 	}

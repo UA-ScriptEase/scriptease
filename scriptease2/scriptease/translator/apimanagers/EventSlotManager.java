@@ -1,4 +1,4 @@
-package scriptease.controller.apimanagers;
+package scriptease.translator.apimanagers;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +15,7 @@ public class EventSlotManager {
 	private String defaultFormatKeyword;
 
 	public EventSlotManager() {
-		slots = new HashMap<String, Slot>();
+		this.slots = new HashMap<String, Slot>();
 	}
 
 	public void addEventSlot(Slot slot) {

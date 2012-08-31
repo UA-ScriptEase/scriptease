@@ -33,7 +33,7 @@ public class AskItContext extends StoryComponentContext {
 
 	public AskItContext(Context other, AskIt source) {
 		this(other);
-		component = source;
+		this.component = source;
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class AskItContext extends StoryComponentContext {
 	 */
 	@Override
 	public String getCondition() {
-		KnowIt condition = ((AskIt) component).getCondition();
+		KnowIt condition = ((AskIt) this.component).getCondition();
 		if (condition != null)
 			return this.getNameOf(condition);
 		return "";
@@ -52,7 +52,7 @@ public class AskItContext extends StoryComponentContext {
 	 */
 	@Override
 	public StoryItemSequence getIfChild() {
-		return ((AskIt) component).getIfBlock();
+		return ((AskIt) this.component).getIfBlock();
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class AskItContext extends StoryComponentContext {
 	 */
 	@Override
 	public StoryItemSequence getElseChild() {
-		return ((AskIt) component).getElseBlock();
+		return ((AskIt) this.component).getElseBlock();
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class AskItContext extends StoryComponentContext {
 	@Override
 	public Iterator<KnowIt> getVariables() {
 		VariableGetter knowItGetter = new VariableGetter();
-		((AskIt) component).process(knowItGetter); 
+		((AskIt) this.component).process(knowItGetter); 
 
 		return knowItGetter.getObjects().iterator();
 	}

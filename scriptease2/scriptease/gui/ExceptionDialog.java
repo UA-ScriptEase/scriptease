@@ -104,7 +104,7 @@ public class ExceptionDialog extends JDialog {
 
 		final JLabel messageLabel = new JLabel(
 				ExceptionDialog.EXCEPTION_MESSAGE);
-		commentLabel = new JLabel();
+		this.commentLabel = new JLabel();
 
 		buttons.add(this.reportButton);
 		buttons.add(Box.createHorizontalStrut(5));
@@ -137,10 +137,10 @@ public class ExceptionDialog extends JDialog {
 				.getHeight()));
 
 		// starts as a separator
-		separatorOrTrace = new JSeparator(SwingConstants.HORIZONTAL);
+		this.separatorOrTrace = new JSeparator(SwingConstants.HORIZONTAL);
 		// starts commentBox as hidden
-		commentBox = new JScrollPane();
-		commentBox.setVisible(false);
+		this.commentBox = new JScrollPane();
+		this.commentBox.setVisible(false);
 
 		// horizontal perspective
 		contentLayout.setHorizontalGroup(contentLayout.createSequentialGroup()
@@ -149,8 +149,8 @@ public class ExceptionDialog extends JDialog {
 						contentLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(messageLabel).addComponent(
 										this.detailsButton).addComponent(
-										separatorOrTrace).addComponent(buttons)
-								.addComponent(commentLabel).addComponent(
+										this.separatorOrTrace).addComponent(buttons)
+								.addComponent(this.commentLabel).addComponent(
 										this.commentBox)));
 
 		// vertical perspective
@@ -159,12 +159,12 @@ public class ExceptionDialog extends JDialog {
 						contentLayout.createParallelGroup().addComponent(
 								iconLabel).addComponent(messageLabel))
 				.addComponent(this.detailsButton)
-				.addComponent(separatorOrTrace)
+				.addComponent(this.separatorOrTrace)
 				// space out details from other buttons
 				.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(
 						buttons, GroupLayout.PREFERRED_SIZE,
 						GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-				.addComponent(commentLabel).addComponent(this.commentBox));
+				.addComponent(this.commentLabel).addComponent(this.commentBox));
 
 		this.setContentPane(content);
 		this.setResizable(false);
@@ -176,7 +176,7 @@ public class ExceptionDialog extends JDialog {
 		this.detailsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				showOrHideDetails();
+				ExceptionDialog.this.showOrHideDetails();
 			}
 		});
 
@@ -184,13 +184,13 @@ public class ExceptionDialog extends JDialog {
 		this.reportButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (reportButton.getText().equals("Report"))
-					showCommentBox();
+				if (ExceptionDialog.this.reportButton.getText().equals("Report"))
+					ExceptionDialog.this.showCommentBox();
 				else {
 
 					NetworkHandler.getInstance().sendBugReport(
-							commentText.getText());
-					reportButton.setText("Report");
+							ExceptionDialog.this.commentText.getText());
+					ExceptionDialog.this.reportButton.setText("Report");
 					ExceptionDialog.this.setVisible(false);
 					ExceptionDialog.this.dispose();
 				}
@@ -226,7 +226,7 @@ public class ExceptionDialog extends JDialog {
 		LayoutManager layout = this.getContentPane().getLayout();
 
 		JComponent oldComp = ExceptionDialog.this.separatorOrTrace;
-		this.setResizable(!isResizable());
+		this.setResizable(!this.isResizable());
 
 		// are we expanding or hiding the trace?
 		boolean expanding = (oldComp instanceof JSeparator);
@@ -268,10 +268,10 @@ public class ExceptionDialog extends JDialog {
 
 		this.setResizable(true);
 
-		commentLabel.setText(ExceptionDialog.COMMENT_MESSAGE);
-		commentText = new JTextArea();
-		commentText.setEditable(true);
-		this.commentBox = new JScrollPane(commentText);
+		this.commentLabel.setText(ExceptionDialog.COMMENT_MESSAGE);
+		this.commentText = new JTextArea();
+		this.commentText.setEditable(true);
+		this.commentBox = new JScrollPane(this.commentText);
 		this.commentBox.setPreferredSize(new Dimension(600, 200));
 
 		LayoutManager layout = this.getContentPane().getLayout();

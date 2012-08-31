@@ -78,19 +78,19 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 		MouseAdapter connectArrowListener = new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				oldSelectedNode = null;
+				GraphPanel.this.oldSelectedNode = null;
 				repaint();
 			}
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				mousePosition.setLocation(e.getPoint());
+				GraphPanel.this.mousePosition.setLocation(e.getPoint());
 				repaint();
 			}
 
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				mousePosition.setLocation(e.getPoint());
+				GraphPanel.this.mousePosition.setLocation(e.getPoint());
 				repaint();
 			}
 		};
@@ -118,8 +118,8 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 	 * @return
 	 */
 	private Map<GraphNode, Integer> getNodeDepthMap() {
-		if (this.nodeDepthMap == null && headNode != null)
-			this.nodeDepthMap = headNode.getNodeDepthMap();
+		if (this.nodeDepthMap == null && this.headNode != null)
+			this.nodeDepthMap = this.headNode.getNodeDepthMap();
 		return this.nodeDepthMap;
 	}
 
@@ -295,7 +295,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 						event.setShiftDown(e.isShiftDown());
 						node.notifyObservers(event);
 
-						pressComponents.remove(src);
+						GraphNodeComponentBuilder.this.pressComponents.remove(src);
 						
 						requestFocusInWindow();
 						
@@ -306,7 +306,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 					public void mousePressed(MouseEvent e) {
 						final JComponent src = (JComponent) e.getSource();
 
-						pressComponents.add(src);
+						GraphNodeComponentBuilder.this.pressComponents.add(src);
 						configureAppearance(src, node);
 					}
 
@@ -315,7 +315,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 						final JComponent nodeComponent = (JComponent) e
 								.getSource();
 
-						hoverComponents.add(nodeComponent);
+						GraphNodeComponentBuilder.this.hoverComponents.add(nodeComponent);
 						configureAppearance(nodeComponent, node);
 					}
 
@@ -324,8 +324,8 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 						final JComponent nodeComponent = (JComponent) e
 								.getSource();
 
-						hoverComponents.remove(nodeComponent);
-						pressComponents.remove(nodeComponent);
+						GraphNodeComponentBuilder.this.hoverComponents.remove(nodeComponent);
+						GraphNodeComponentBuilder.this.pressComponents.remove(nodeComponent);
 
 						configureAppearance(nodeComponent, node);
 					}
@@ -371,8 +371,8 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 			if (component == null)
 				return;
 
-			final boolean isHover = hoverComponents.contains(component);
-			final boolean isPressed = pressComponents.contains(component);
+			final boolean isHover = this.hoverComponents.contains(component);
+			final boolean isPressed = this.pressComponents.contains(component);
 
 			final Color toolColour;
 			final Color toolHighlight;
@@ -507,7 +507,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 				int yNodeSize = NODE_Y_INDENT;
 				for (GraphNode node : currentNodes) {
-					JComponent component = builder.getComponentForNode(node);
+					JComponent component = GraphPanel.this.builder.getComponentForNode(node);
 					yNodeSize += NODE_Y_INDENT
 							+ component.getPreferredSize().getHeight();
 				}
@@ -550,7 +550,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 				// Compute the number of y pixels each node is allocated
 				double pixelsPerNode = preferredSize.getHeight()
-						/ ((double) numberOfNodes);
+						/ numberOfNodes;
 
 				// For each node at that level,
 				for (int currentNode = 0; currentNode < numberOfNodes; currentNode++) {
@@ -558,11 +558,11 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 					final GraphNode node = currentNodes.get(currentNode);
 
 					// Get the JComponent associated with the node.
-					final JComponent component = builder
+					final JComponent component = GraphPanel.this.builder
 							.getComponentForNode(node);
 
 					// update the component appearence to the state of the node
-					builder.configureAppearance(component, node);
+					GraphPanel.this.builder.configureAppearance(component, node);
 
 					// Get the JComponent preferred width
 					final int nodeWidth = (int) component.getPreferredSize()
@@ -580,7 +580,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 					// Center smaller nodes according to the biggest
 					int xOffset = 0;
 					if (nodeWidth != maxWidth) {
-						xOffset = (int) ((maxWidth - nodeWidth) / 2);
+						xOffset = (maxWidth - nodeWidth) / 2;
 					}
 
 					// Set the size and location of the component
@@ -665,7 +665,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 			for (GraphNode node : nodes) {
 				// Get the component for the node.
-				JComponent component = builder.getComponentForNode(node);
+				JComponent component = GraphPanel.this.builder.getComponentForNode(node);
 
 				// Get the size of the JComponent.
 				Dimension componentSize = component.getPreferredSize();
@@ -689,24 +689,24 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 	 */
 	public class GraphPanelUI extends PanelUI {
 		protected boolean paintLines = true;
-		protected GraphNodeComponentBuilder componentBuilder = builder;
+		protected GraphNodeComponentBuilder componentBuilder = GraphPanel.this.builder;
 
 		@Override
 		public void paint(Graphics g, JComponent c) {
 
 			final Graphics2D g2 = (Graphics2D) g.create();
 
-			if (oldSelectedNode != null && mousePosition != null) {
+			if (GraphPanel.this.oldSelectedNode != null && GraphPanel.this.mousePosition != null) {
 				g2.setColor(Color.GRAY);
 				g2.setStroke(new BasicStroke(1.5f));
-				GUIOp.paintArrow(g2, GUIOp.getMidRight(componentBuilder
-						.getComponentForNode(oldSelectedNode)), mousePosition);
+				GUIOp.paintArrow(g2, GUIOp.getMidRight(this.componentBuilder
+						.getComponentForNode(GraphPanel.this.oldSelectedNode)), GraphPanel.this.mousePosition);
 			}
 
 			super.paint(g, c);
 
-			if (paintLines)
-				connectNodes(g, headNode);
+			if (this.paintLines)
+				connectNodes(g, GraphPanel.this.headNode);
 		}
 
 		private void connectNodes(Graphics g, GraphNode headNode) {
@@ -760,9 +760,9 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 						g2.setColor(lineColour);
 
 						// Draw an arrow pointing towards the child.
-						GUIOp.paintArrow(g2, GUIOp.getMidRight(componentBuilder
+						GUIOp.paintArrow(g2, GUIOp.getMidRight(this.componentBuilder
 								.getComponentForNode(parent)), GUIOp
-								.getMidLeft(componentBuilder
+								.getMidLeft(this.componentBuilder
 										.getComponentForNode(child)));
 					}
 				}

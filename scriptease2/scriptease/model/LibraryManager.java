@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.observer.LibraryEvent;
 import scriptease.controller.observer.LibraryManagerEvent;
 import scriptease.controller.observer.LibraryManagerObserver;
@@ -23,6 +22,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 
 /**
  * Manages all of the Libraries in ScriptEase.
@@ -80,7 +80,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 */
 	private void buildDefaultLibrary() {
 		final LibraryModel scriptEaseLibrary = new LibraryModel(
-				SCRIPTEASE_LIBRARY, SCRIPTEASE_LIBRARY);
+				LibraryManager.SCRIPTEASE_LIBRARY, LibraryManager.SCRIPTEASE_LIBRARY);
 		List<String> types = new ArrayList<String>(1);
 		// Add an empty askIt
 		types.add(GameTypeManager.DEFAULT_BOOL_TYPE);
@@ -96,7 +96,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 		this.masterRoot.addStoryChild(library.getRoot());
 
 		library.addLibraryChangeListener(this);
-		notifyChange(new LibraryManagerEvent(library,
+		this.notifyChange(new LibraryManagerEvent(library,
 				LibraryManagerEvent.LIBRARYMODEL_ADDED, null));
 	}
 
@@ -106,12 +106,12 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 		this.masterRoot.removeStoryChild(library.getRoot());
 
 		library.removeLibraryChangeListener(this);
-		notifyChange(new LibraryManagerEvent(library,
+		this.notifyChange(new LibraryManagerEvent(library,
 				LibraryManagerEvent.LIBRARYMODEL_REMOVED, null));
 	}
 
 	public static LibraryManager getInstance() {
-		return instance;
+		return LibraryManager.instance;
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 * @return
 	 */
 	public boolean hasLibraries() {
-		return !libraries.isEmpty();
+		return !this.libraries.isEmpty();
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 */
 	public String getLibraryNameFromComponent(StoryComponent component) {
 		String name = "";
-		for (LibraryModel library : libraries) {
+		for (LibraryModel library : this.libraries) {
 			if (library.containsStoryComponent(component))
 				name = library.getName() + ", ";
 		}
@@ -177,11 +177,11 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 * @return
 	 */
 	public Collection<LibraryModel> getUserLibraries() {
-		Collection<LibraryModel> libraries = getLibraries();
+		Collection<LibraryModel> libraries = this.getLibraries();
 		Collection<LibraryModel> userLibraries = new ArrayList<LibraryModel>();
 		for (LibraryModel library : libraries) {
-			if (!loadedTranslators.containsValue(library)
-					&& !library.getName().equals(SCRIPTEASE_LIBRARY))
+			if (!this.loadedTranslators.containsValue(library)
+					&& !library.getName().equals(LibraryManager.SCRIPTEASE_LIBRARY))
 				userLibraries.add(library);
 		}
 		return userLibraries;
@@ -260,7 +260,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 			for (LibraryModel model : this.loadedTranslators.values()) {
 				this.remove(model);
 			}
-			loadedTranslators.clear();
+			this.loadedTranslators.clear();
 		}
 	}
 
@@ -269,7 +269,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 */
 	@Override
 	public void modelChanged(LibraryModel changed, LibraryEvent event) {
-		notifyChange(new LibraryManagerEvent(changed,
+		this.notifyChange(new LibraryManagerEvent(changed,
 				LibraryManagerEvent.LIBRARYMODEL_CHANGED, event));
 	}
 
@@ -294,7 +294,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 				if (!PatternModelManager.getInstance().usingTranslator(
 						translator)) {
 					// this.remove(loadedTranslators.get(translator));
-					loadedTranslators.remove(translator);
+					this.loadedTranslators.remove(translator);
 					break;
 				}
 			}

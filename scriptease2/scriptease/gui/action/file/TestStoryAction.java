@@ -29,8 +29,8 @@ import scriptease.util.StringOp;
  * translator, if there is much a method available. Otherwise, it will be
  * disabled.
  * 
- * TODO Illegalize actions and disable scriptease while game is playing. TODO
- * Illegalize action when a LibraryModel is open instead of a StoryModel
+ * TODO Illegalize actions and disable scriptease while game is playing. 
+ * TODO Illegalize action when a LibraryModel is open instead of a StoryModel
  * 
  * @author lari
  * @author remiller

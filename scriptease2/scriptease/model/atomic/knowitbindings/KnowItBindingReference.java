@@ -84,7 +84,7 @@ public class KnowItBindingReference extends KnowItBinding {
 	@Override
 	protected boolean typeMatches(Collection<String> knowItTypes) {
 		if (super.typeMatches(knowItTypes)) {
-			KnowIt value = ((KnowIt) this.getValue());
+			KnowIt value = this.getValue();
 			if (value != null) {
 				Collection<String> types = value.getAcceptableTypes();
 				// return true if they share at least one matching type
@@ -118,7 +118,7 @@ public class KnowItBindingReference extends KnowItBinding {
 	 * @return
 	 */
 	private boolean hasBindingLoop(KnowIt knowIt) {
-		KnowIt value = (KnowIt) this.getValue();
+		KnowIt value = this.getValue();
 		KnowItBinding binding = value.getBinding();
 		while (binding instanceof KnowItBindingReference) {
 			if (value.equals(knowIt)) {

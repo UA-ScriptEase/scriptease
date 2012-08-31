@@ -1,6 +1,7 @@
 package scriptease.gui;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -84,7 +85,7 @@ public final class SEFrame implements PatternModelObserver {
 		final int MIN_WIDTH = 640;
 
 		this.seFrame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
-		this.seFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.seFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
 
 		// Register a change listener
 		this.storyTabs.addChangeListener(new ChangeListener() {
@@ -105,7 +106,7 @@ public final class SEFrame implements PatternModelObserver {
 		});
 
 		this.middlePane.setLayout(new GridLayout(1, 1));
-		this.middlePane.add(storyTabs);
+		this.middlePane.add(this.storyTabs);
 
 		this.populate();
 
@@ -118,7 +119,7 @@ public final class SEFrame implements PatternModelObserver {
 	 * @return
 	 */
 	public JFrame getFrame() {
-		return seFrame;
+		return this.seFrame;
 	}
 
 	/**
@@ -143,22 +144,22 @@ public final class SEFrame implements PatternModelObserver {
 
 		// Compressed Layout
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
-			leftSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, PanelFactory
+			this.leftSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, PanelFactory
 					.getInstance().getMainLibraryPane(), objectPane);
-			rightSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftSplit,
+			this.rightSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.leftSplit,
 					this.middlePane);
 
-			content.add(rightSplit);
+			content.add(this.rightSplit);
 			content.add(statusBar);
 
-			leftSplit.setResizeWeight(0.5);
+			this.leftSplit.setResizeWeight(0.5);
 
 			layout.setHorizontalGroup(layout.createParallelGroup()
-					.addComponent(rightSplit).addComponent(statusBar));
+					.addComponent(this.rightSplit).addComponent(statusBar));
 
 			layout.setVerticalGroup(layout
 					.createSequentialGroup()
-					.addComponent(rightSplit)
+					.addComponent(this.rightSplit)
 					.addComponent(statusBar, GroupLayout.PREFERRED_SIZE,
 							GroupLayout.PREFERRED_SIZE,
 							GroupLayout.PREFERRED_SIZE));
@@ -167,29 +168,29 @@ public final class SEFrame implements PatternModelObserver {
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
 			final int dir = JSplitPane.HORIZONTAL_SPLIT;
 
-			leftSplit = new JSplitPane(dir, PanelFactory.getInstance()
+			this.leftSplit = new JSplitPane(dir, PanelFactory.getInstance()
 					.getMainLibraryPane(), this.middlePane);
-			rightSplit = new JSplitPane(dir, leftSplit, objectPane);
+			this.rightSplit = new JSplitPane(dir, this.leftSplit, objectPane);
 
-			content.add(rightSplit);
+			content.add(this.rightSplit);
 			content.add(statusBar);
 
 			// stretch the split panels
 			layout.setHorizontalGroup(layout.createParallelGroup()
-					.addComponent(rightSplit).addComponent(statusBar));
+					.addComponent(this.rightSplit).addComponent(statusBar));
 
 			// status label is at the bottom
 			layout.setVerticalGroup(layout
 					.createSequentialGroup()
-					.addComponent(rightSplit)
+					.addComponent(this.rightSplit)
 					.addComponent(statusBar, GroupLayout.PREFERRED_SIZE,
 							GroupLayout.PREFERRED_SIZE,
 							GroupLayout.PREFERRED_SIZE));
 
 		}
 
-		seFrame.getContentPane().removeAll();
-		seFrame.getContentPane().add(content);
+		this.seFrame.getContentPane().removeAll();
+		this.seFrame.getContentPane().add(content);
 	}
 
 	/**
@@ -249,7 +250,7 @@ public final class SEFrame implements PatternModelObserver {
 
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
 			this.leftSplit.setBottomComponent(newGameObjectPane);
-			leftSplit.setDividerLocation(this.getFrame().getHeight() / 2);
+			this.leftSplit.setDividerLocation(this.getFrame().getHeight() / 2);
 			this.leftSplit.revalidate();
 		} else if (preferredLayout
 				.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
@@ -426,7 +427,7 @@ public final class SEFrame implements PatternModelObserver {
 
 					newTitle += ScriptEase.TITLE;
 
-					seFrame.setTitle(newTitle);
+					SEFrame.this.seFrame.setTitle(newTitle);
 				}
 
 				@Override
@@ -458,8 +459,8 @@ public final class SEFrame implements PatternModelObserver {
 			// This sucks, but we need to revalidate the menu bar.
 			// http://bugs.sun.com/view_bug.do?bug_id=4949810
 			final JMenuBar bar = MenuFactory.createMainMenuBar(false);
-			seFrame.setJMenuBar(bar);
-			seFrame.setTitle(ScriptEase.TITLE);
+			this.seFrame.setJMenuBar(bar);
+			this.seFrame.setTitle(ScriptEase.TITLE);
 			bar.revalidate();
 		}
 	}
@@ -473,36 +474,36 @@ public final class SEFrame implements PatternModelObserver {
 
 		public TimedLabel(int QueueTimer, int ClearTimer) {
 			super();
-			messages = new LinkedList<String>();
-			textQueue = new Timer(QueueTimer, new ActionListener() {
+			this.messages = new LinkedList<String>();
+			this.textQueue = new Timer(QueueTimer, new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					if (!messages.isEmpty())
-						setText(messages.poll());
+					if (!TimedLabel.this.messages.isEmpty())
+						TimedLabel.this.setText(TimedLabel.this.messages.poll());
 				};
 			});
-			textClear = new Timer(ClearTimer, new ActionListener() {
+			this.textClear = new Timer(ClearTimer, new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					TimedLabel.super.setText("");
-					messages.clear();
+					TimedLabel.this.messages.clear();
 				};
 			});
 
-			textQueue.setRepeats(false);
-			textClear.setRepeats(false);
+			this.textQueue.setRepeats(false);
+			this.textClear.setRepeats(false);
 		}
 
 		public void setText(String text) {
 			super.setText(text);
-			if (textQueue != null)
-				textQueue.restart();
-			if (textClear != null)
-				textClear.restart();
+			if (this.textQueue != null)
+				this.textQueue.restart();
+			if (this.textClear != null)
+				this.textClear.restart();
 		};
 
 		public void queueText(String text) {
-			messages.add(text);
+			this.messages.add(text);
 			if (this.getText().isEmpty())
-				setText(text);
+				this.setText(text);
 		}
 	}
 
@@ -516,7 +517,7 @@ public final class SEFrame implements PatternModelObserver {
 		private final static String noTransText = "-None-";
 
 		public GameLabel() {
-			super(noTransText);
+			super(GameLabel.noTransText);
 
 			TranslatorManager.getInstance().addTranslatorObserver(this);
 		}
@@ -528,7 +529,7 @@ public final class SEFrame implements PatternModelObserver {
 				this.setEnabled(true);
 				this.setIcon(newTranslator.getIcon());
 			} else {
-				this.setText(noTransText);
+				this.setText(GameLabel.noTransText);
 				this.setEnabled(false);
 				this.setIcon(null);
 			}

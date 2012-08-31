@@ -16,9 +16,10 @@ public class SameNameGroupVisitor extends GroupVisitor {
 	 */
 	@Override
 	protected boolean isPartOfGroup(KnowIt knowIt) {
-		if (original != null && original instanceof KnowIt) {
-			return original.getDisplayText().equals(knowIt.getDisplayText())
-					&& original != knowIt;
+		if (this.original != null) {
+			return this.original.getDisplayText().equals(
+					knowIt.getDisplayText())
+					&& this.original != knowIt;
 		}
 		return false;
 	}

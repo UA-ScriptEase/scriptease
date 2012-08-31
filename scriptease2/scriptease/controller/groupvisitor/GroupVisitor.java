@@ -22,13 +22,13 @@ public abstract class GroupVisitor extends AbstractNoOpStoryVisitor {
 	protected KnowIt original;
 
 	public List<KnowIt> getGroup() {
-		return group;
+		return this.group;
 	}
 
 	public GroupVisitor(KnowIt component) {
 		this.group = new ArrayList<KnowIt>();
 		this.original = component;
-		final ScriptIt scriptIt = getParentCause(component);
+		final ScriptIt scriptIt = this.getParentCause(component);
 		if (scriptIt != null)
 			scriptIt.process(this);
 	}
@@ -58,8 +58,8 @@ public abstract class GroupVisitor extends AbstractNoOpStoryVisitor {
 
 	@Override
 	public void processKnowIt(KnowIt knowIt) {
-		if (isPartOfGroup(knowIt))
-			group.add(knowIt);
+		if (this.isPartOfGroup(knowIt))
+			this.group.add(knowIt);
 
 		// Handle the knowIt's resolved binding
 		KnowItBinding binding = knowIt.getBinding();

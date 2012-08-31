@@ -131,7 +131,7 @@ public final class AskIt extends ComplexStoryComponent {
 	 */
 	public void setCondition(KnowIt newCondition) {
 		this.condition = newCondition;
-		if (condition != null) {
+		if (this.condition != null) {
 			this.condition.setOwner(this);
 		}
 		this.notifyObservers(new StoryComponentEvent(this,

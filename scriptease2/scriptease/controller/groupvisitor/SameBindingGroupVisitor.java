@@ -19,14 +19,14 @@ public class SameBindingGroupVisitor extends GroupVisitor {
 	@Override
 	protected boolean isPartOfGroup(KnowIt knowIt) {
 		final KnowItBinding comparingBinding = knowIt.getBinding();
-		if (original != null && original instanceof KnowIt) {
+		if (this.original != null) {
 			// Don't group constants
 			if (comparingBinding instanceof KnowItBindingConstant
 					&& !((KnowItBindingConstant) comparingBinding)
 							.isIdentifiableGameConstant())
 				return false;
 			else
-				return comparingBinding.equals((original).getBinding());
+				return comparingBinding.equals((this.original).getBinding());
 		}
 		return false;
 	}

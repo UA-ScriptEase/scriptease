@@ -17,7 +17,6 @@ import javax.swing.border.Border;
 
 import scriptease.controller.AbstractNoOpBindingVisitor;
 import scriptease.controller.MouseForwardingAdapter;
-import scriptease.controller.apimanagers.GameTypeManager;
 import scriptease.controller.groupvisitor.SameBindingGroupVisitor;
 import scriptease.gui.SETree.transfer.ProxyTransferHandler;
 import scriptease.model.atomic.KnowIt;
@@ -29,6 +28,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
 import scriptease.translator.io.model.IdentifiableGameConstant;
