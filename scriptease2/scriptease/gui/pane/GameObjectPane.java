@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpringLayout;
 import javax.swing.ToolTipManager;
 import javax.swing.border.TitledBorder;
@@ -23,7 +24,6 @@ import scriptease.gui.SETree.GameObjectPanelTree;
 import scriptease.gui.SETree.GameObjectTree;
 import scriptease.gui.SETree.cell.BindingWidget;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.model.StoryModel;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.translator.codegenerator.GameObjectPicker;
 
@@ -38,15 +38,15 @@ public class GameObjectPane implements GameObjectPicker {
 	private JTextField searchField;
 	private GameObjectPanelTree tree;
 
-	public GameObjectPane(StoryModel storyModel) {
-		this.tree = new GameObjectPanelTree(storyModel);
+	public GameObjectPane() {
+		this.tree = new GameObjectPanelTree();
 	}
 
 	// TODO Combine parts of this with configurePane() in LibraryPane.java.
 	private JPanel buildFilterPane(GameObjectTree model) {
 		final JPanel filterPane;
 
-		searchField = new JTextField(20);
+		this.searchField = new JTextField(20);
 		//TODO Search Field does zip, zilch, nada
 		
 		filterPane = new JPanel();
@@ -59,7 +59,7 @@ public class GameObjectPane implements GameObjectPicker {
 		JComponent searchFilterPane = new JPanel();
 
 		// Sets up the type filter.
-		searchFilterPane.add(searchField);
+		searchFilterPane.add(this.searchField);
 		//TODO Make types work!
 		searchFilterPane.add(new JButton("Types"));
 		BoxLayout searchFilterPaneLayout = new BoxLayout(searchFilterPane,
@@ -80,24 +80,24 @@ public class GameObjectPane implements GameObjectPicker {
 		final JPanel objectPickerPane = new JPanel();
 
 		// Register for tool tips
-		ToolTipManager.sharedInstance().registerComponent(tree);
+		ToolTipManager.sharedInstance().registerComponent(this.tree);
 
-		tree.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		tree.setBackground(Color.WHITE);
+		this.tree.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		this.tree.setBackground(Color.WHITE);
 
 		// Add the tree to the pane.
-		JScrollPane treeScrollPane = new JScrollPane(tree,
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane treeScrollPane = new JScrollPane(this.tree,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		treeScrollPane.setBackground(Color.WHITE);
 		treeScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
 
 		// build the filter
-		JComponent filterPane = this.buildFilterPane(tree.getTreeModel());
+		JComponent filterPane = this.buildFilterPane(this.tree.getTreeModel());
 
 		objectPickerPane.setPreferredSize(new Dimension(
-				tree.getPreferredSize().width, 0));
+				this.tree.getPreferredSize().width, 0));
 
 		SpringLayout pickerPaneLayout = new SpringLayout();
 

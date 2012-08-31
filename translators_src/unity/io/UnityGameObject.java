@@ -68,7 +68,7 @@ public final class UnityGameObject implements GameObject{
 	}
 
 	@Override
-	public String getResolutionText() {
+	public String getCodeText() {
 		switch(this.resolutionMethod){
 			case 0:
 				return this.codeFindByName + "(\"" + this.name + "\");";

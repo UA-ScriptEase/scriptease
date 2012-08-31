@@ -6,6 +6,7 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 import scriptease.gui.SETree.filters.Filter;
 import scriptease.gui.SETree.filters.Filterable;
@@ -40,8 +41,8 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * @param settings
 	 */
 	public StoryComponentPanelTree(QuestPoint root) {
-		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		super(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 		this.selectionManager = new StoryComponentPanelManager();
 		this.root = root;
@@ -61,14 +62,14 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 *            The root StoryComponent for the tree.
 	 */
 	public void setRoot(QuestPoint root) {
-		if(this.rootPanel != null)
+		if (this.rootPanel != null)
 			this.selectionManager.cleanUpPanel(this.rootPanel);
-		
+
 		this.rootPanel = StoryComponentPanelFactory.getInstance()
 				.buildStoryComponentPanel(root);
 		this.rootPanel.updateComplexSettings();
 		this.selectionManager.clearSelection();
-		this.selectionManager.addComplexPanel(rootPanel, false);
+		this.selectionManager.addComplexPanel(this.rootPanel, false);
 
 		this.filterTree(this.rootPanel);
 
@@ -167,7 +168,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 
 	@Override
 	public String toString() {
-		return "StoryComponentPanelTree [" + rootPanel.getStoryComponent()
+		return "StoryComponentPanelTree [" + this.rootPanel.getStoryComponent()
 				+ "]";
 	}
 }
