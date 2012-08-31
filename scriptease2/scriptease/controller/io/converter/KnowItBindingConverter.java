@@ -149,7 +149,7 @@ public class KnowItBindingConverter implements Converter {
 		writer.endNode();
 
 		writer.startNode(TAG_VALUE);
-		writer.setValue(constant.getResolutionText());
+		writer.setValue(constant.getCodeText());
 		writer.endNode();
 	}
 
@@ -247,7 +247,7 @@ public class KnowItBindingConverter implements Converter {
 		// Let's figure out which subtype of KnowItBinding we want.
 		if (flavour == null
 				|| flavour.equalsIgnoreCase(ATTRIBUTE_VALUE_NULL_FLAVOUR))
-			binding = new KnowItBindingNull();
+			binding = null;
 		else {
 			reader.getNodeName();
 
@@ -275,7 +275,10 @@ public class KnowItBindingConverter implements Converter {
 						+ flavour);
 		}
 
-		return binding;
+		if (binding == null)
+			return new KnowItBindingNull();
+		else
+			return binding;
 	}
 
 	private KnowItBindingConstant unmarshallConstantBinding(
@@ -330,10 +333,13 @@ public class KnowItBindingConverter implements Converter {
 
 		gameObject = currentModule.getInstanceForObjectIdentifier(id);
 
-		if (gameObject != null)
+		if (gameObject != null) {
 			return new KnowItBindingConstant(gameObject);
-		else
+		} else {
+			System.err.println("Binding lookup failed for id " + id
+					+ ", assigning null instead.");
 			return null;
+		}
 	}
 
 	private KnowItBindingFunction unmarshallFunctionBinding(
@@ -355,14 +361,14 @@ public class KnowItBindingConverter implements Converter {
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
 		final KnowIt referent;
 		KnowItBindingReference binding = new KnowItBindingReference(null);
-		
+
 		// move down and read as a knowIt
 		reader.moveDown();
 		referent = (KnowIt) context.convertAnother(binding, KnowIt.class);
 		reader.moveUp();
-		
+
 		binding = new KnowItBindingReference(referent);
-		
+
 		return binding;
 	}
 

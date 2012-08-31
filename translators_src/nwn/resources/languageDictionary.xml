@@ -258,7 +258,7 @@
 				<Literal>}</Literal>
 			</Line>
 		</Format>
-		
+
 		<!-- Used in the Active slot on Dialogue Lines -->
 		<Format id="conversation_conditional">
 			<!-- include files first -->
@@ -372,8 +372,11 @@
 				<FormatRef ref="functionDefinition" />
 			</Series>
 			<Line />
+			<!-- NWN likes a blank line all by itself . I think it's a C-ism that 
+				they seem to want to keep? -->
+			<Line />
 		</Format>
-		
+
 		<Format id="include">
 			<Line>
 				<Literal>#include "</Literal>
@@ -381,7 +384,7 @@
 				<Literal>"</Literal>
 			</Line>
 		</Format>
-		
+
 		<Format id="includes">
 			<Line>
 				<Literal>// Includes</Literal>

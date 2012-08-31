@@ -1,9 +1,9 @@
-﻿// ScriptEase general auxiliary include file
+// ScriptEase general auxiliary include file
 
 // Gets the nearest object to target, including target itself.
 object SE_AUX_GetNearestObjectByTagIncludeSelf(string tag, object target=OBJECT_SELF){
   object oFound = OBJECT_INVALID;
-  
+
   if(GetTag(GetModule()) == tag) {
   	oFound = GetModule();
   }
@@ -12,12 +12,12 @@ object SE_AUX_GetNearestObjectByTagIncludeSelf(string tag, object target=OBJECT_
   }
   else {
     oFound = GetNearestObjectByTag(tag, target);
-    
+
     if(oFound == OBJECT_INVALID){
       oFound = GetObjectByTag(tag);
     }
   }
-  
+
   return oFound;
 }
 
@@ -494,15 +494,15 @@ object SE_AUX_GetNearestCreature() {
   object creature = GetNearestCreature(
                       CREATURE_TYPE_PLAYER_CHAR,
                       PLAYER_CHAR_NOT_PC);
-  
+
   return creature;
-  
+
 }
 
 /**
  * Get a random creature
  */
- 
+
 object SE_AUX_GetRandomCreature() {
 
   int i = 1;
@@ -516,11 +516,11 @@ object SE_AUX_GetRandomCreature() {
                  CREATURE_TYPE_PLAYER_CHAR,
                  PLAYER_CHAR_NOT_PC,
                  OBJECT_SELF,
-                 i);    
+                 i);
   }
-  
+
   int rand = Random(i-1) + 1;
-  
+
   creature = GetNearestCreature(
                CREATURE_TYPE_PLAYER_CHAR,
                PLAYER_CHAR_NOT_PC,
@@ -540,17 +540,17 @@ object SE_AUX_GetNearestPC() {
   /*object creature = GetNearestCreature(
                       CREATURE_TYPE_PLAYER_CHAR,
                       PLAYER_CHAR_IS_PC);
-  
+
   return creature;*/
-  
+
   return GetFirstPC();
-  
+
 }
 
 /**
  * Get a random PC
  */
- 
+
 object SE_AUX_GetRandomPC() {
 
   /*int i = 1;
@@ -564,17 +564,17 @@ object SE_AUX_GetRandomPC() {
                  CREATURE_TYPE_PLAYER_CHAR,
                  PLAYER_CHAR_IS_PC,
                  OBJECT_SELF,
-                 i);    
+                 i);
   }
-  
+
   int rand = Random(i-1) + 1;
-  
+
   creature = GetNearestCreature(
                CREATURE_TYPE_PLAYER_CHAR,
                PLAYER_CHAR_IS_PC,
                OBJECT_SELF,
                rand);
-               
+
   return creature;*/
 
   return GetFirstPC();
@@ -613,7 +613,7 @@ void SE_AUX_SetTimerEvent(object actor)
 void SE_AUX_RunTimer(string timer_name, int interval, int countdown_threshold)
 {
     object oModule = GetModule();
-    
+
     //Check whether the timer has aborted.
     //If it has then do not generate any events, do any calculations,
     //or continue the recursive method calls. The timer has
@@ -628,20 +628,20 @@ void SE_AUX_RunTimer(string timer_name, int interval, int countdown_threshold)
         int iCurrentDay = GetCalendarDay();
         int iCurrentMonth = GetCalendarMonth();
         int iCurrentYear = GetCalendarYear();
-    
-        int iExpirationYear = GetLocalInt(oModule, timer_name + 
+
+        int iExpirationYear = GetLocalInt(oModule, timer_name +
             "ExpirationYear");
-        int iExpirationMonth = GetLocalInt(oModule, timer_name + 
+        int iExpirationMonth = GetLocalInt(oModule, timer_name +
             "ExpirationMonth");
-        int iExpirationDay = GetLocalInt(oModule, timer_name + 
+        int iExpirationDay = GetLocalInt(oModule, timer_name +
             "ExpirationDay");
-        int iExpirationHour = GetLocalInt(oModule, timer_name + 
+        int iExpirationHour = GetLocalInt(oModule, timer_name +
             "ExpirationHour");
-        int iExpirationMinute = GetLocalInt(oModule, timer_name + 
+        int iExpirationMinute = GetLocalInt(oModule, timer_name +
             "ExpirationMinute");
-        int iExpirationSecond = GetLocalInt(oModule, timer_name + 
+        int iExpirationSecond = GetLocalInt(oModule, timer_name +
             "ExpirationSecond");
-        
+
         //Calculate the remaining time in seconds and store it. This time is
         //not used in this event but could be used in another encounter, for
         //example one that displays the remaining time above the PC in periodic
@@ -652,17 +652,17 @@ void SE_AUX_RunTimer(string timer_name, int interval, int countdown_threshold)
         int iRemainingHours = iExpirationHour - iCurrentHour;
         int iRemainingMinutes = iExpirationMinute - iCurrentMinute;
         int iRemainingSeconds = iExpirationSecond - iCurrentSecond +
-        iRemainingMinutes*60 + iRemainingHours*60*60 + 
+        iRemainingMinutes*60 + iRemainingHours*60*60 +
         iRemainingDays*60*60*24 + iRemainingMonths*60*60*24*28 +
         iRemainingYears*60*60*24*28*12;
-        SetLocalInt(oModule, timer_name + "RemainingSeconds", 
+        SetLocalInt(oModule, timer_name + "RemainingSeconds",
             iRemainingSeconds);
-        
+
         //Calculate the normal remaining seconds before the next interval event.
         int iNextIntervalSeconds = interval;
-        
-        //Calculate the real remaining seconds before the next interval 
-        //event taking into account the final 10 seconds are always counted 
+
+        //Calculate the real remaining seconds before the next interval
+        //event taking into account the final 10 seconds are always counted
         //down second by second regardless of the stated interval.
         if(iRemainingSeconds <= countdown_threshold)
         {
@@ -672,12 +672,12 @@ void SE_AUX_RunTimer(string timer_name, int interval, int countdown_threshold)
         {
             iNextIntervalSeconds = iRemainingSeconds - countdown_threshold;
         }
-        
+
         //Since the remaining time could be so huge as to exceed the maximum
-        //size of an integer it is safer to check whether the time has 
+        //size of an integer it is safer to check whether the time has
         //elapsed unit by unit.
         int iTimeExpired = 0;
-    
+
         if(iCurrentYear > iExpirationYear) {
             iTimeExpired = 1;
         }
@@ -706,21 +706,21 @@ void SE_AUX_RunTimer(string timer_name, int interval, int countdown_threshold)
                   }
             }
         }
-        
+
         //Calculate the user defined event number for this timer.
         int iTimerNumber = GetLocalInt(oModule, timer_name + "TimerNumber");
         int iEventNumber;
-      
+
         //If there is time remaining ...
         if(iTimeExpired == 0)
         {
-            //Fire an interval event and call this method recusively, 
+            //Fire an interval event and call this method recusively,
             //delaying until the next interval event.
             iEventNumber = iTimerNumber * 2 + 1000;
             SignalEvent(oModule, EventUserDefined(iEventNumber));
-            
+
             //Recursively call the method.
-            DelayCommand(IntToFloat(iNextIntervalSeconds), 
+            DelayCommand(IntToFloat(iNextIntervalSeconds),
                 SE_AUX_RunTimer(timer_name, interval, countdown_threshold));
         }
         else
@@ -738,3 +738,4 @@ void SCEZ_Behaviour_SignalStartCue(object actor) {
   // signal the start cue
   SignalEvent(actor, EventUserDefined(31416));
 }
+

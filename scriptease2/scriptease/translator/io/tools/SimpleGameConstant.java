@@ -26,7 +26,7 @@ public class SimpleGameConstant implements GameConstant {
 	}
 
 	@Override
-	public String getResolutionText() {
+	public String getCodeText() {
 		return this.codeValue;
 	}
 
