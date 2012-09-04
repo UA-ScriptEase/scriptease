@@ -37,7 +37,7 @@ public class SETreeModelGameObject extends SETreeModel {
 	}
 
 	public void setFilter(Filter addFilter) {
-		filter = addFilter;
+		this.filter = addFilter;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -56,7 +56,7 @@ public class SETreeModelGameObject extends SETreeModel {
 		}
 
 		for (GameConversationNode a : getChildren) {
-			treeModel.addLeaf(parent, a);
+			this.treeModel.addLeaf(parent, a);
 		}
 
 		for (GameConversationNode a : getChildren) {
@@ -70,7 +70,7 @@ public class SETreeModelGameObject extends SETreeModel {
 		conversationRoots = parent.getConversationRoots();
 
 		for (GameConversationNode root : conversationRoots) {
-			treeModel.addLeaf(parent, root);
+			this.treeModel.addLeaf(parent, root);
 		}
 
 		for (GameConversationNode childrenRoots : conversationRoots) {
@@ -88,7 +88,7 @@ public class SETreeModelGameObject extends SETreeModel {
 		// Build the tree:
 		// Make a node for the root of the tree.
 		String availObjects = "Available Game Objects";
-		treeModel = new Tree<Object>(availObjects);
+		this.treeModel = new Tree<Object>(availObjects);
 
 		// For each type in the translator.
 		typeManager = TranslatorManager.getInstance().getActiveTranslator()
@@ -111,10 +111,10 @@ public class SETreeModelGameObject extends SETreeModel {
 				continue;
 
 			// List<GameConversationNode> conversationRoots;
-			if (typeName.equals(DIALOGUE_TAG)) {
+			if (typeName.equals(this.DIALOGUE_TAG)) {
 				for (GameConstant convo : gameObjs) {
 					GameConversation dialogue = (GameConversation) convo;
-					treeModel.addLeaf(typeName, dialogue);
+					this.treeModel.addLeaf(typeName, dialogue);
 					addAllChildren(dialogue);
 				}
 
@@ -123,9 +123,9 @@ public class SETreeModelGameObject extends SETreeModel {
 			// NWNObject pc = new NWNObject();
 
 			else {
-				treeModel.addLeaf(treeModel.getHead(), typeName);
+				this.treeModel.addLeaf(this.treeModel.getHead(), typeName);
 				for (GameConstant obj : gameObjs) {
-					treeModel.addLeaf(typeName, obj);
+					this.treeModel.addLeaf(typeName, obj);
 				}
 			}
 
@@ -135,7 +135,7 @@ public class SETreeModelGameObject extends SETreeModel {
 	private Collection<GameConstant> getAllObjectsOfType(String type) {
 		List<GameConstant> allGameObjects;
 
-		allGameObjects = storyModel.getModule()
+		allGameObjects = this.storyModel.getModule()
 				.getResourcesOfType(type);
 		allGameObjects = new ArrayList<GameConstant>(
 				this.filterGameObjects(allGameObjects));
@@ -161,12 +161,12 @@ public class SETreeModelGameObject extends SETreeModel {
 			Collection<GameConstant> gameObjects) {
 		Collection<GameConstant> filteredObjects = new ArrayList<GameConstant>();
 
-		if (filter == null || gameObjects == null)
+		if (this.filter == null || gameObjects == null)
 			return gameObjects;
 
 		for (GameConstant gameObject : gameObjects) {
 			// If the child was accepted by the filter
-			boolean accepted = filter.isAcceptable(gameObject);
+			boolean accepted = this.filter.isAcceptable(gameObject);
 
 			if (accepted)
 				filteredObjects.add(gameObject);

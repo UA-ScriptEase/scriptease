@@ -43,9 +43,9 @@ public abstract class GraphNodeEditor extends JComponent {
 	public void setNode(GraphNode node) {
 		System.out.println("Setting the node" + node.toString());
 		this.node = node;
-		this.remove(field);
+		this.remove(this.field);
 		this.field = buildField("Name", getNameField());
-		this.add(field);
+		this.add(this.field);
 
 		this.repaint();
 		this.revalidate();

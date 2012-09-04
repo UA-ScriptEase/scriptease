@@ -30,9 +30,9 @@ public class ParameterBoundRule extends AbstractNoOpStoryVisitor implements
 	@Override
 	public Collection<StoryProblem> validate(ComplexStoryComponent root,
 			StoryComponent source) {
-		problems = new ArrayList<StoryProblem>();
+		this.problems = new ArrayList<StoryProblem>();
 		source.process(this);
-		return problems;
+		return this.problems;
 	}
 
 	private void processCodeBlockStoryComponent(ScriptIt component) {
@@ -79,7 +79,7 @@ public class ParameterBoundRule extends AbstractNoOpStoryVisitor implements
 	private void addProblem(final KnowIt component) {
 		final String description = "Parameter is unbound";
 		StoryProblem problem = new StoryProblem(component, description);
-		problems.add(problem);
+		this.problems.add(problem);
 	}
 
 	@Override

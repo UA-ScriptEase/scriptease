@@ -17,12 +17,12 @@ public class Tree<T> {
 
   public Tree(T root) {
     this.root = root;
-    find.put(root, this);
+    this.find.put(root, this);
   }
 
   public void addLeaf(T root, T leaf) {
-    if (find.containsKey(root)) {
-      find.get(root).addLeaf(leaf);
+    if (this.find.containsKey(root)) {
+      this.find.get(root).addLeaf(leaf);
     } else {
       addLeaf(root).addLeaf(leaf);
     }
@@ -30,10 +30,10 @@ public class Tree<T> {
 
   public Tree<T> addLeaf(T leaf) {
     Tree<T> t = new Tree<T>(leaf);
-    leafs.add(t);
+    this.leafs.add(t);
     t.parent = this;
     t.find = this.find;
-    find.put(leaf, t);
+    this.find.put(leaf, t);
     return t;
   }
 
@@ -42,21 +42,21 @@ public class Tree<T> {
     t.leafs.add(this);
     this.parent = t;
     t.find = this.find;
-    t.find.put(root, this);
+    t.find.put(this.root, this);
     t.find.put(parentRoot, t);
     return t;
   }
 
   public T getHead() {
-    return root;
+    return this.root;
   }
 
   public Tree<T> getTree(T element) {
-    return find.get(element);
+    return this.find.get(element);
   }
 
   public Tree<T> getParent() {
-    return parent;
+    return this.parent;
   }
 
   public Collection<T> getSuccessors(T root) {
@@ -71,7 +71,7 @@ public class Tree<T> {
   }
 
   public Collection<Tree<T>> getSubTrees() {
-    return leafs;
+    return this.leafs;
   }
 
   public static <T> Collection<T> getSuccessors(T of, Collection<Tree<T>> in) {

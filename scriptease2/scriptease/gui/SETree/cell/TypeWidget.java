@@ -103,6 +103,6 @@ public class TypeWidget extends JToggleButton implements TranslatorObserver {
 
 	@Override
 	public String toString() {
-		return "TypeWidget [" + type + "]";
+		return "TypeWidget [" + this.type + "]";
 	}
 }

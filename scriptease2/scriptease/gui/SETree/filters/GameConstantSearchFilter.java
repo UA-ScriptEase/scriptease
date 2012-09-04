@@ -69,6 +69,6 @@ public class GameConstantSearchFilter extends GameConstantFilter {
 
 	@Override
 	protected int getMatchCount(GameConstant object) {
-		return this.search(object, searchText);
+		return this.search(object, this.searchText);
 	}
 }

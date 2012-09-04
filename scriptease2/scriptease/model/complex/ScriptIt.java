@@ -94,10 +94,10 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	 * 
 	 */
 	public boolean isCause() {
-		if (codeBlocks.size() == 0)
+		if (this.codeBlocks.size() == 0)
 			return false;
 
-		for (CodeBlock codeBlock : codeBlocks) {
+		for (CodeBlock codeBlock : this.codeBlocks) {
 			if (!codeBlock.hasSubject() || !codeBlock.hasSlot())
 				return false;
 		}

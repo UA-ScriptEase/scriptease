@@ -36,9 +36,9 @@ public class FileContext extends Context {
 		super(model, indent, existingNames, translator);
 		this.setLocationInfo(locationInfo);
 
-		includeFiles = new HashSet<String>();
+		this.includeFiles = new HashSet<String>();
 
-		includeFilesIterator = includeFiles.iterator();
+		this.includeFilesIterator = this.includeFiles.iterator();
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class FileContext extends Context {
 			this.includeFiles.addAll(bindingCodeBlock.getIncludes());
 		}
 
-		this.includeFilesIterator = includeFiles.iterator();
+		this.includeFilesIterator = this.includeFiles.iterator();
 
 		return this.includeFiles;
 	}

@@ -50,8 +50,8 @@ public abstract class AbstractNoOpGraphNodeVisitor implements GraphNodeVisitor {
 	 * for every non-overridden process<i>Z</i> method. Unless it is overridden,
 	 * it does nothing.
 	 * 
-	 * @param binding
-	 *            The KnowItBinding to process with a default behaviour.
+	 * @param node
+	 *            The GraphNode to process with a default behaviour.
 	 */
 	protected void defaultProcess(GraphNode node) {
 	}

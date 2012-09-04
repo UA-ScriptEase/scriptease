@@ -32,12 +32,12 @@ public class TextNodeEditor extends GraphNodeEditor {
 	protected JTextField getNameField() {
 		final JTextField nullField = new JTextField("");
 		nullField.setVisible(false);
-		if (node == null) {
+		if (this.node == null) {
 			return nullField;
 		}
 
 		final JTextField nameField = new JTextField(FIELD_SIZE);
-		nameField.setText(((TextNode) node).getText());
+		nameField.setText(((TextNode) this.node).getText());
 		nameField.addCaretListener(new CaretListener() {
 
 			@Override
@@ -54,7 +54,7 @@ public class TextNodeEditor extends GraphNodeEditor {
 	 * @param newText
 	 */
 	private void updateText(String newText) {
-		TextNode textNode = (TextNode) node;
+		TextNode textNode = (TextNode) this.node;
 		if (!newText.equals(textNode.getText())) {
 			// TODO Undo/Redo capture
 			textNode.setText(newText);

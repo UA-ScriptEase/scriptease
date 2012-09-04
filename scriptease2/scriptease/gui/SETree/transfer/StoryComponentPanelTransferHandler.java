@@ -469,7 +469,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		@Override
 		public String toString() {
-			return "StoryComponentPanelTransferable [" + data + "]";
+			return "StoryComponentPanelTransferable [" + this.data + "]";
 		}
 	}
 }

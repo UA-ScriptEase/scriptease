@@ -22,7 +22,7 @@ public class TranslatorFilter extends StoryComponentFilter {
 	public int getMatchCount(StoryComponent component) {
 		final TranslatorFilterVisitor visitor = new TranslatorFilterVisitor();
 
-		if (translator != null)
+		if (this.translator != null)
 			component.process(visitor);
 
 		return visitor.acceptable ? 1 : 0;
@@ -46,7 +46,7 @@ public class TranslatorFilter extends StoryComponentFilter {
 		 */
 		@Override
 		public void processScriptIt(ScriptIt scriptIt) {
-			this.acceptable = (translator.getApiDictionary().getLibrary()
+			this.acceptable = (TranslatorFilter.this.translator.getApiDictionary().getLibrary()
 					.retrieveScriptIt(scriptIt.getDisplayText()) != null);
 		}
 
@@ -69,13 +69,13 @@ public class TranslatorFilter extends StoryComponentFilter {
 					for (final ScriptIt doIt : describeIt.getScriptIts()) {
 						// process the DoIt to determine if it is valid
 						doIt.process(TranslatorFilterVisitor.this);
-						isValid &= acceptable;
+						isValid &= TranslatorFilterVisitor.this.acceptable;
 
 						// no need to continue if there exists an un supported
 						// DoIt
 						if (!isValid)
 							break;
-						acceptable = isValid;
+						TranslatorFilterVisitor.this.acceptable = isValid;
 					}
 				}
 			});
@@ -89,9 +89,9 @@ public class TranslatorFilter extends StoryComponentFilter {
 	
 	@Override
 	public String toString(){ 
-		if(translator == null)
+		if(this.translator == null)
 			return "TranslatorFilter for null Translator";
 		else
-			return "TranslatorFilter ["+translator.getName()+"]";
+			return "TranslatorFilter ["+this.translator.getName()+"]";
 	}
 }

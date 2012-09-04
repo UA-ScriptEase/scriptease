@@ -31,7 +31,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 
 	@Override
 	public int getMatchCount(StoryComponent component) {
-		return this.search(component, searchText);
+		return this.search(component, this.searchText);
 	}
 
 	@Override
@@ -146,21 +146,21 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 		private Collection<String> searchData;
 
 		private SearchDataCompiler() {
-			searchData = new CopyOnWriteArraySet<String>();
+			this.searchData = new CopyOnWriteArraySet<String>();
 		}
 
 		private void compile(StoryComponent component) {
-			searchData.add(component.getDisplayText());
+			this.searchData.add(component.getDisplayText());
 			component.process(this);
 		}
 
 		private Collection<String> getData() {
-			return searchData;
+			return this.searchData;
 		}
 
 		@Override
 		protected void defaultProcess(StoryComponent component) {
-			searchData.addAll(component.getLabels());
+			this.searchData.addAll(component.getLabels());
 		}
 
 		@Override
@@ -176,7 +176,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 				KnowItBinding binding = parameter.getBinding();
 				if (binding.isBound())
 					// allow searching of bound values
-					searchData.add(binding.getScriptValue());
+					this.searchData.add(binding.getScriptValue());
 				this.compile(parameter);
 			}
 			// searchable by implicit
@@ -195,13 +195,13 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 				if (codeBlock.hasSlot())
 					this.searchData.add(codeBlock.getSlot());
 			}
-			searchData.addAll(scriptIt.getTypes());
+			this.searchData.addAll(scriptIt.getTypes());
 		}
 
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
 			defaultProcess(knowIt);
-			searchData.addAll(knowIt.getTypes());
+			this.searchData.addAll(knowIt.getTypes());
 
 			/*
 			 * XXX What is this stuff? Remove it or make it work!

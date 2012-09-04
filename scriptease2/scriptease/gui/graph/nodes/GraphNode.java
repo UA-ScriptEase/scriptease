@@ -81,8 +81,8 @@ public abstract class GraphNode implements Cloneable {
 	}
 
 	private void init() {
-		this.parents = new IdentityArrayList<GraphNode>(INIT_CAPACITY);
-		this.children = new IdentityArrayList<GraphNode>(INIT_CAPACITY);
+		this.parents = new IdentityArrayList<GraphNode>(this.INIT_CAPACITY);
+		this.children = new IdentityArrayList<GraphNode>(this.INIT_CAPACITY);
 		this.observers = new ArrayList<WeakGraphNodeObserverReference<GraphNodeObserver>>();
 	}
 
@@ -119,7 +119,7 @@ public abstract class GraphNode implements Cloneable {
 	public void addGraphNodeObserver(GraphNodeObserver observer) {
 		Collection<WeakGraphNodeObserverReference<GraphNodeObserver>> observersCopy = new ArrayList<WeakGraphNodeObserverReference<GraphNodeObserver>>(
 				this.observers);
-		
+
 		for (WeakGraphNodeObserverReference<GraphNodeObserver> observerRef : observersCopy) {
 			GraphNodeObserver graphNodeObserver = observerRef.get();
 			if (graphNodeObserver != null && graphNodeObserver == observer)
@@ -128,9 +128,11 @@ public abstract class GraphNode implements Cloneable {
 				this.observers.remove(observerRef);
 		}
 
-		this.observers.add(new WeakGraphNodeObserverReference<GraphNodeObserver>(observer));
+		this.observers
+				.add(new WeakGraphNodeObserverReference<GraphNodeObserver>(
+						observer));
 	}
-	
+
 	public void removeGraphNodeObserver(GraphNodeObserver observer) {
 		for (WeakGraphNodeObserverReference<GraphNodeObserver> reference : this.observers) {
 			if (reference.get() == observer) {
@@ -506,7 +508,7 @@ public abstract class GraphNode implements Cloneable {
 			}
 			// if nothing was found, pick the shortest path
 			if (bestPath.isEmpty() && !paths.isEmpty()) {
-				int shortestPath = INF_PATH_LENGTH;
+				int shortestPath = this.INF_PATH_LENGTH;
 				for (List<GraphNode> path : paths) {
 					final int size = path.size();
 					if (size < shortestPath) {
@@ -613,7 +615,7 @@ public abstract class GraphNode implements Cloneable {
 			childNode.addGraphNodeObserver(observer);
 		}
 	}
-	
+
 	/**
 	 * WeakReference wrapper used to track how many WeakReferences of each type
 	 * are generated. This class provides no functionality, but it does make it

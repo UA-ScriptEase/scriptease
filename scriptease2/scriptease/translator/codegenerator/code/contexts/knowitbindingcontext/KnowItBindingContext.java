@@ -40,12 +40,12 @@ public class KnowItBindingContext extends Context {
 	@Override
 	public String getType() {
 		return this.getTranslator().getApiDictionary().getGameTypeManager()
-				.getCodeSymbol(binding.getFirstType());
+				.getCodeSymbol(this.binding.getFirstType());
 	}
 
 	@Override
 	public String getValue() {
-		return binding.getScriptValue();
+		return this.binding.getScriptValue();
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public class KnowItBindingQuestPointContext extends KnowItBindingContext {
 
 	public KnowItBindingQuestPointContext(Context other, KnowItBinding source) {
 		this(other);
-		binding = source;
+		this.binding = source;
 	}
 	
 	@Override

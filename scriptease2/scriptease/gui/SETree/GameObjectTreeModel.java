@@ -138,10 +138,10 @@ public class GameObjectTreeModel extends DefaultTreeModel implements Filterable 
 			List<GameConstant> gameObjects;
 
 			// Get all GameObjects of the type.
-			if (storyModel == null) {
+			if (this.storyModel == null) {
 				gameObjects = new ArrayList<GameConstant>(0);
 			} else {
-				gameObjects = storyModel.getModule().getResourcesOfType(type);
+				gameObjects = this.storyModel.getModule().getResourcesOfType(type);
 
 				gameObjects = new ArrayList<GameConstant>(
 						this.filterGameObjects(gameObjects));
@@ -177,7 +177,7 @@ public class GameObjectTreeModel extends DefaultTreeModel implements Filterable 
 		this.setRoot(root);
 
 		// if the model has a tree, expand all rows.. HACK
-		if (tree != null) {
+		if (this.tree != null) {
 			// expand the tree
 			// TODO bug where this will cause an infinite loop when trying to
 			// expand dialogues

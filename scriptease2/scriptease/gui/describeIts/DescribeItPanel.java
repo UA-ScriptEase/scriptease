@@ -74,10 +74,10 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			this.expandedPanel = new GraphPanel(headNode);
 
 			// expansion button
-			expansionButton = ScriptWidgetFactory
+			this.expansionButton = ScriptWidgetFactory
 					.buildExpansionButton(this.collapsed);
 
-			expansionButton.addActionListener(new ActionListener() {
+			this.expansionButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// toggle
@@ -95,18 +95,18 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 						if (!commited) {
 							// if the path was incomplete, revert to the current
 							// selected path
-							describeIt.selectPath(describeIt.getSelectedPath());
+							DescribeItPanel.this.describeIt.selectPath(DescribeItPanel.this.describeIt.getSelectedPath());
 						}
 					}
-					expansionButton.setCollapsed(shouldCollapse);
+					DescribeItPanelLayoutManager.this.expansionButton.setCollapsed(shouldCollapse);
 					DescribeItPanel.this.revalidate();
 				}
 			});
 
 			// add the components so they display
-			DescribeItPanel.this.add(expansionButton);
-			DescribeItPanel.this.add(collapsedPanel);
-			DescribeItPanel.this.add(expandedPanel);
+			DescribeItPanel.this.add(this.expansionButton);
+			DescribeItPanel.this.add(this.collapsedPanel);
+			DescribeItPanel.this.add(this.expandedPanel);
 		}
 
 		@Override
@@ -114,14 +114,14 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			final Insets insets = parent.getInsets();
 
 			// only show expansion if more than a single path exists
-			final boolean moreThanOnePath = describeIt.getPaths().size() > 1;
+			final boolean moreThanOnePath = DescribeItPanel.this.describeIt.getPaths().size() > 1;
 			this.expansionButton.setVisible(moreThanOnePath);
 
 			// update the visibility
-			collapsedPanel.setVisible(collapsed);
-			expandedPanel.setVisible(!collapsed);
+			this.collapsedPanel.setVisible(this.collapsed);
+			this.expandedPanel.setVisible(!this.collapsed);
 
-			if (collapsed) {
+			if (this.collapsed) {
 				layoutCollapsed(insets.left + insets.right, insets.top
 						+ insets.bottom);
 			} else {
@@ -133,7 +133,7 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 		@Override
 		public Dimension minimumLayoutSize(Container parent) {
 			final Insets insets = parent.getInsets();
-			if (collapsed)
+			if (this.collapsed)
 				return minimumCollapsedLayoutSize(insets.left + insets.right,
 						insets.top + insets.bottom);
 			else
@@ -151,10 +151,10 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			int buttonHeight = 0;
 			int buttonWidth = 0;
 			// Expansion button
-			if (expansionButton.isVisible()) {
-				buttonHeight += (int) expansionButton.getPreferredSize()
+			if (this.expansionButton.isVisible()) {
+				buttonHeight += (int) this.expansionButton.getPreferredSize()
 						.getHeight();
-				buttonWidth += (int) expansionButton.getPreferredSize()
+				buttonWidth += (int) this.expansionButton.getPreferredSize()
 						.getWidth();
 			}
 
@@ -163,14 +163,14 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			ySize = Math.max(ySize, buttonHeight);
 
 			// Resolve the displayNamePanel's size
-			ScriptIt resolvedDoIt = describeIt.getResolvedScriptIt();
+			ScriptIt resolvedDoIt = DescribeItPanel.this.describeIt.getResolvedScriptIt();
 
 			if (resolvedDoIt != null) {
 				StoryComponentPanelFactory.getInstance().parseDisplayText(
-						collapsedPanel, resolvedDoIt);
+						this.collapsedPanel, resolvedDoIt);
 
-				xSize += collapsedPanel.getPreferredSize().getWidth();
-				ySize = Math.max(ySize, (int) collapsedPanel.getPreferredSize()
+				xSize += this.collapsedPanel.getPreferredSize().getWidth();
+				ySize = Math.max(ySize, (int) this.collapsedPanel.getPreferredSize()
 						.getHeight());
 			}
 
@@ -185,13 +185,13 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 		private void layoutCollapsed(int xLocation, int yLocation) {
 			int buttonHeight = 0;
 			int buttonWidth = 0;
-			if (expansionButton.isVisible()) {
+			if (this.expansionButton.isVisible()) {
 				// Expansion button
-				buttonHeight += (int) expansionButton.getPreferredSize()
+				buttonHeight += (int) this.expansionButton.getPreferredSize()
 						.getHeight();
-				buttonWidth += (int) expansionButton.getPreferredSize()
+				buttonWidth += (int) this.expansionButton.getPreferredSize()
 						.getWidth();
-				expansionButton.setBounds(xLocation,
+				this.expansionButton.setBounds(xLocation,
 						((int) DescribeItPanel.this.getPreferredSize()
 								.getHeight() - buttonHeight) / 2, buttonWidth,
 						buttonHeight);
@@ -200,15 +200,15 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			xLocation += buttonWidth + BUTTON_X_INDENT;
 
 			// Resolve the displayNamePanel size
-			final ScriptIt resolvedDoIt = describeIt.getResolvedScriptIt();
+			final ScriptIt resolvedDoIt = DescribeItPanel.this.describeIt.getResolvedScriptIt();
 
 			if (resolvedDoIt != null) {
 				StoryComponentPanelFactory.getInstance().parseDisplayText(
-						collapsedPanel, resolvedDoIt);
+						this.collapsedPanel, resolvedDoIt);
 
-				collapsedPanel.setBounds(xLocation, yLocation,
-						(int) collapsedPanel.getPreferredSize().getWidth(),
-						(int) collapsedPanel.getPreferredSize().getHeight());
+				this.collapsedPanel.setBounds(xLocation, yLocation,
+						(int) this.collapsedPanel.getPreferredSize().getWidth(),
+						(int) this.collapsedPanel.getPreferredSize().getHeight());
 			}
 		}
 
@@ -221,11 +221,11 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 		protected Dimension minimumExpandedLayoutSize(int xSize, int ySize) {
 			int buttonHeight = 0;
 			int buttonWidth = 0;
-			if (expansionButton.isVisible()) {
+			if (this.expansionButton.isVisible()) {
 				// Expansion button
-				buttonHeight += (int) expansionButton.getPreferredSize()
+				buttonHeight += (int) this.expansionButton.getPreferredSize()
 						.getHeight();
-				buttonWidth += (int) expansionButton.getPreferredSize()
+				buttonWidth += (int) this.expansionButton.getPreferredSize()
 						.getWidth();
 			}
 
@@ -234,7 +234,7 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			ySize = Math.max(buttonHeight, ySize);
 
 			// calculate the minimum size with the graphPanel
-			Dimension minimumSize = expandedPanel.getMinimumSize();
+			Dimension minimumSize = this.expandedPanel.getMinimumSize();
 			minimumSize.setSize(minimumSize.getWidth() + xSize,
 					Math.max(minimumSize.getHeight(), ySize));
 
@@ -250,13 +250,13 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 		protected void layoutExpanded(int xLocation, int yLocation) {
 			int buttonHeight = 0;
 			int buttonWidth = 0;
-			if (expansionButton.isVisible()) {
+			if (this.expansionButton.isVisible()) {
 				// Expansion button
-				buttonHeight = (int) expansionButton.getPreferredSize()
+				buttonHeight = (int) this.expansionButton.getPreferredSize()
 						.getHeight();
-				buttonWidth = (int) expansionButton.getPreferredSize()
+				buttonWidth = (int) this.expansionButton.getPreferredSize()
 						.getWidth();
-				expansionButton.setBounds(xLocation,
+				this.expansionButton.setBounds(xLocation,
 						(((int) DescribeItPanel.this.getPreferredSize()
 								.getHeight() - buttonHeight) / 2), buttonWidth,
 						buttonHeight);
@@ -265,8 +265,8 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			xLocation += buttonWidth;
 
 			// graphPanel does the rest
-			expandedPanel.setBounds(xLocation, yLocation, (int) expandedPanel
-					.getPreferredSize().getWidth(), (int) expandedPanel
+			this.expandedPanel.setBounds(xLocation, yLocation, (int) this.expandedPanel
+					.getPreferredSize().getWidth(), (int) this.expandedPanel
 					.getPreferredSize().getHeight());
 		}
 

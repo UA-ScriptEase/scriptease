@@ -31,16 +31,16 @@ public class GraphNodeContext extends Context {
 
 	public GraphNodeContext(Context other, GraphNode source) {
 		this(other);
-		node = source;
+		this.node = source;
 	}
 
 	@Override
 	public Iterator<GraphNode> getChildrenNodes() {
-		return node.getChildren().iterator();
+		return this.node.getChildren().iterator();
 	}
 
 	@Override
 	public Iterator<GraphNode> getParentNodes() {
-		return node.getParents().iterator();
+		return this.node.getParents().iterator();
 	}
 }

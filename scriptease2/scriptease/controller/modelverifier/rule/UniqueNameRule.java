@@ -23,7 +23,7 @@ public class UniqueNameRule implements StoryRule {
 	@Override
 	public Collection<StoryProblem> validate(ComplexStoryComponent root,
 			final StoryComponent source) {
-		problems = new ArrayList<StoryProblem>();
+		this.problems = new ArrayList<StoryProblem>();
 		source.process(new AbstractNoOpStoryVisitor() {
 			@Override
 			public void processKnowIt(KnowIt knowIt) {
@@ -33,7 +33,7 @@ public class UniqueNameRule implements StoryRule {
 					addProblem(sameName);
 			}
 		});
-		return problems;
+		return this.problems;
 	}
 
 	/**
@@ -61,6 +61,6 @@ public class UniqueNameRule implements StoryRule {
 		};
 		ModelProblem problem = new ModelProblem(component, description,
 				solution, priority);
-		problems.add(problem);
+		this.problems.add(problem);
 	}
 }

@@ -15,25 +15,29 @@ import scriptease.gui.SETree.ui.ScriptEaseUI;
  */
 @SuppressWarnings("serial")
 public class ExpansionButton extends JButton {
-	private Icon collapse;
-	private Icon expand;
+	private final Icon collapse;
+	private final Icon expand;
 
 	public ExpansionButton(boolean isCollapsed) {
-		expand = ScriptEaseUI.COLLAPSE_ICON;
-		collapse = ScriptEaseUI.EXPAND_ICON;
-		Dimension maxSize = new Dimension(Math.max(collapse.getIconWidth(),
-				expand.getIconWidth()) + 1, Math.max(collapse.getIconHeight(),
-				expand.getIconHeight()) + 1);
-		this.setPreferredSize(maxSize);
+		this.expand = ScriptEaseUI.COLLAPSE_ICON;
+		this.collapse = ScriptEaseUI.EXPAND_ICON;
+
+		final Dimension MAX_SIZE;
+
+		MAX_SIZE = new Dimension(Math.max(this.collapse.getIconWidth(),
+				this.expand.getIconWidth()) + 1, Math.max(
+				this.collapse.getIconHeight(), this.expand.getIconHeight()) + 1);
+
+		this.setPreferredSize(MAX_SIZE);
 		this.setFocusable(false);
 		this.setOpaque(true);
-		this.setCollapsed(isCollapsed); 
+		this.setCollapsed(isCollapsed);
 	}
 
 	public void setCollapsed(boolean isCollapsed) {
 		if (isCollapsed)
-			this.setIcon(collapse);
+			this.setIcon(this.collapse);
 		else
-			this.setIcon(expand);
+			this.setIcon(this.expand);
 	}
 }

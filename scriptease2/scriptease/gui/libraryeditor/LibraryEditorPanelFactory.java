@@ -2010,7 +2010,7 @@ public class LibraryEditorPanelFactory {
 
 					panel.add(fragmentPanel);
 					this.panelToFragmentMap.put(fragmentPanel,
-							(LineFragment) codeFragment);
+							codeFragment);
 				} else if (codeFragment instanceof IndentFragment) {
 					fragmentPanel = indentPanel((IndentFragment) codeFragment);
 
@@ -2020,7 +2020,7 @@ public class LibraryEditorPanelFactory {
 
 					panel.add(fragmentPanel);
 					this.panelToFragmentMap.put(fragmentPanel,
-							(IndentFragment) codeFragment);
+							codeFragment);
 				} else if (codeFragment instanceof LiteralFragment) {
 					fragmentPanel = literalPanel((LiteralFragment) codeFragment);
 
@@ -2030,7 +2030,7 @@ public class LibraryEditorPanelFactory {
 
 					panel.add(fragmentPanel);
 					this.panelToFragmentMap.put(fragmentPanel,
-							(LiteralFragment) codeFragment);
+							codeFragment);
 				} else if (codeFragment instanceof ScopeFragment) {
 					fragmentPanel = scopePanel((ScopeFragment) codeFragment);
 
@@ -2042,7 +2042,7 @@ public class LibraryEditorPanelFactory {
 							((ScopeFragment) codeFragment).getSubFragments());
 					panel.add(fragmentPanel);
 					this.panelToFragmentMap.put(fragmentPanel,
-							(ScopeFragment) codeFragment);
+							codeFragment);
 				} else if (codeFragment instanceof SeriesFragment) {
 					fragmentPanel = seriesPanel((SeriesFragment) codeFragment);
 
@@ -2054,7 +2054,7 @@ public class LibraryEditorPanelFactory {
 							((SeriesFragment) codeFragment).getSubFragments());
 					panel.add(fragmentPanel);
 					this.panelToFragmentMap.put(fragmentPanel,
-							(SeriesFragment) codeFragment);
+							codeFragment);
 				} else if (codeFragment instanceof FormatReferenceFragment) {
 					fragmentPanel = referencePanel((FormatReferenceFragment) codeFragment);
 
@@ -2064,7 +2064,7 @@ public class LibraryEditorPanelFactory {
 
 					panel.add(fragmentPanel);
 					this.panelToFragmentMap.put(fragmentPanel,
-							(FormatReferenceFragment) codeFragment);
+							codeFragment);
 				} else if (codeFragment instanceof SimpleDataFragment) {
 					fragmentPanel = simplePanel((SimpleDataFragment) codeFragment);
 
@@ -2074,7 +2074,7 @@ public class LibraryEditorPanelFactory {
 
 					panel.add(fragmentPanel);
 					this.panelToFragmentMap.put(fragmentPanel,
-							(SimpleDataFragment) codeFragment);
+							codeFragment);
 				}
 
 				if (selectedFragment == null)

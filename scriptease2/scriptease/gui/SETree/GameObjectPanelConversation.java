@@ -1,7 +1,7 @@
 package scriptease.gui.SETree;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -16,36 +16,36 @@ import scriptease.translator.io.model.GameConstant;
  * instead of wherever it is now.
  * 
  */
-public class GameObjectPanelConversation extends GameObjectPanel implements MouseListener {
+public class GameObjectPanelConversation extends GameObjectPanel {
 	private boolean isViewShortText;
 	
 	public GameObjectPanelConversation(GameConstant gameObject, int horStrut) {
 		super(gameObject, horStrut);
-		isViewShortText = true;
+		this.isViewShortText = true;
 	}
 	
 	private void setText(){
 		String set;
-		if(isViewShortText)
-			set = shortViewText;
+		if(this.isViewShortText)
+			set = this.shortViewText;
 		else
-			set = regularText;
+			set = this.regularText;
 		
-		for(Object jcomponent : gameObjectBindingWidget.getComponents()){
+		for(Object jcomponent : this.gameObjectBindingWidget.getComponents()){
 			if (jcomponent instanceof JLabel){
-				gameObjectBindingWidget.remove((JComponent)jcomponent);
+				this.gameObjectBindingWidget.remove((JComponent)jcomponent);
 			}
 		}
-		gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(set,
+		this.gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(set,
 				Color.WHITE));
 		
-		gameObjectBindingWidget.setBorder(BorderFactory.createEmptyBorder(
+		this.gameObjectBindingWidget.setBorder(BorderFactory.createEmptyBorder(
 				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
 				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
 				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
 				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE));
 		
-		gameObjectBindingWidget.revalidate();
+		this.gameObjectBindingWidget.revalidate();
 	}
 	
 	@Override
@@ -53,11 +53,11 @@ public class GameObjectPanelConversation extends GameObjectPanel implements Mous
 		//setChanged();
 		//notifyObservers();
 				
-		isViewShortText = !isViewShortText;
-		if(regularText != shortViewText){
+		this.isViewShortText = !this.isViewShortText;
+		if(this.regularText != this.shortViewText){
 			setText();
 		}
-		backgroundPanel.setBackground(SELECTED_COLOUR);
+		this.backgroundPanel.setBackground(SELECTED_COLOUR);
 		e.consume();
 	}
 	

@@ -18,7 +18,7 @@ public class VisibilityFilter extends StoryComponentFilter {
 
 	@Override
 	public int getMatchCount(StoryComponent component) {
-		if (hideInvisible)
+		if (this.hideInvisible)
 			return component.isVisible() ? 1 : 0;
 		else
 			return 1;

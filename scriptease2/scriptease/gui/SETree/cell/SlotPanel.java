@@ -76,27 +76,26 @@ public class SlotPanel extends JPanel {
 		 */
 
 		// 1. add and maintain the types list
-		this.add(
-				ScriptWidgetFactory.populateLegalTypesPanel(typesPanel, knowIt),
-				0);
+		this.add(ScriptWidgetFactory.populateLegalTypesPanel(this.typesPanel,
+				knowIt), 0);
 
 		slotBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED);
 		this.setBorder(slotBorder);
 
 		// 2. now handle the binding portion
-		bindingWidget = this.buildBindingWidget(knowIt);
-		this.add(bindingWidget);
+		this.bindingWidget = this.buildBindingWidget(knowIt);
+		this.add(this.bindingWidget);
 
 		enableTransferHandler();
 
-		this.setBackground(GUIOp.scaleColour(bindingWidget.getBackground(),
-				0.95));
+		this.setBackground(GUIOp.scaleColour(
+				this.bindingWidget.getBackground(), 0.95));
 	}
 
 	private void enableTransferHandler() {
 		// Make it think you are dropping bindings on the widget
 		ProxyTransferHandler proxyHandler = new ProxyTransferHandler(
-				bindingWidget);
+				this.bindingWidget);
 		this.setTransferHandler(proxyHandler);
 		this.typesPanel.setTransferHandler(proxyHandler);
 		this.inputComponent.setTransferHandler(proxyHandler);
@@ -129,8 +128,8 @@ public class SlotPanel extends JPanel {
 		binding.process(new AbstractNoOpBindingVisitor() {
 			Translator translator = TranslatorManager.getInstance()
 					.getActiveTranslator();
-			GameTypeManager typeManager = translator == null ? null
-					: translator.getGameTypeManager();
+			GameTypeManager typeManager = this.translator == null ? null
+					: this.translator.getGameTypeManager();
 
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
@@ -165,8 +164,8 @@ public class SlotPanel extends JPanel {
 							.buildLabel(name, Color.WHITE);
 				} else {
 					final String bindingType = binding.getFirstType();
-					TypeValueWidgets widgetName = typeManager == null ? null
-							: typeManager.getGui(bindingType);
+					TypeValueWidgets widgetName = this.typeManager == null ? null
+							: this.typeManager.getGui(bindingType);
 
 					if (widgetName == null)
 						SlotPanel.this.inputComponent = ScriptWidgetFactory
@@ -207,7 +206,7 @@ public class SlotPanel extends JPanel {
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				setGroupBorder(border);
+				setGroupBorder(this.border);
 			}
 
 			private void setGroupBorder(final Border aBoder) {

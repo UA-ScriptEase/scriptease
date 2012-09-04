@@ -40,7 +40,7 @@ public class KnowItContext extends StoryComponentContext {
 
 	public KnowItContext(Context other, KnowIt source) {
 		this(other);
-		component = source;
+		this.component = source;
 	}
 
 	/**
@@ -48,13 +48,13 @@ public class KnowItContext extends StoryComponentContext {
 	 */
 	@Override
 	public KnowItBinding getBinding() {
-		return ((KnowIt) component).getBinding();
+		return ((KnowIt) this.component).getBinding();
 	}
 
 	@Override
 	public String getValue() {
 		Context binding = ContextFactory.getInstance().createContext(this,
-				((KnowIt) component).getBinding());
+				((KnowIt) this.component).getBinding());
 		return binding.getValue();
 	}
 	
@@ -62,7 +62,7 @@ public class KnowItContext extends StoryComponentContext {
 	public String getTemplateID() {
 		String templateID = "Error when generating Template ID in "
 				+ this.getClass().toString();
-		final KnowIt knowIt = (KnowIt) component;
+		final KnowIt knowIt = (KnowIt) this.component;
 		final KnowItBinding binding = knowIt.getBinding();
 		if(binding instanceof KnowItBindingConstant) {
 			templateID = ((KnowItBindingConstant) binding).getTemplateID();
@@ -72,7 +72,7 @@ public class KnowItContext extends StoryComponentContext {
 
 	@Override
 	public String getFormattedValue() {
-		final KnowIt knowIt = (KnowIt) component;
+		final KnowIt knowIt = (KnowIt) this.component;
 		final KnowItBinding binding = knowIt.getBinding();
 		final Collection<String> types = knowIt.getTypes();
 		final Context bindingContext = ContextFactory.getInstance()
@@ -80,7 +80,7 @@ public class KnowItContext extends StoryComponentContext {
 
 		final String formattedValue = bindingContext.getFormattedValue();
 
-		if (binding.explicitlyCompatibleWith((KnowIt) component)) {
+		if (binding.explicitlyCompatibleWith((KnowIt) this.component)) {
 			return formattedValue;
 		} else {
 			// the binding type isn't a listed type for this KnowIt, so try to
@@ -108,7 +108,7 @@ public class KnowItContext extends StoryComponentContext {
 	public String getType() {
 		final APIDictionary apiDictionary = this.translator.getApiDictionary();
 		return apiDictionary.getGameTypeManager().getCodeSymbol(
-				((KnowIt) component).getDefaultType());
+				((KnowIt) this.component).getDefaultType());
 	}
 
 	@Override
@@ -124,6 +124,6 @@ public class KnowItContext extends StoryComponentContext {
 
 	@Override
 	public String toString() {
-		return "KnowItContext [" + component + "]";
+		return "KnowItContext [" + this.component + "]";
 	}
 }

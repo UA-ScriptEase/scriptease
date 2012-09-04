@@ -32,9 +32,9 @@ public class ReferenceRule extends AbstractNoOpStoryVisitor implements
 	@Override
 	public Collection<StoryProblem> validate(ComplexStoryComponent root,
 			StoryComponent source) {
-		rebindings = new ArrayList<StoryProblem>();
+		this.rebindings = new ArrayList<StoryProblem>();
 		root.process(this);
-		return rebindings;
+		return this.rebindings;
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public class ReferenceRule extends AbstractNoOpStoryVisitor implements
 		 * scenes
 		 */
 		problem.setNotify(false);
-		rebindings.add(problem);
+		this.rebindings.add(problem);
 	}
 
 	@Override

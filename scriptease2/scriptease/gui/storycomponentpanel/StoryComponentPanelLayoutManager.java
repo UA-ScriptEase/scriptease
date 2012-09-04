@@ -38,7 +38,7 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 	private JButton button;
 
 	public JPanel getMainPanel() {
-		return mainPanel;
+		return this.mainPanel;
 	}
 
 	// we need to be able to add components. if two components are added
@@ -46,7 +46,7 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 	@Override
 	public void addLayoutComponent(String name, Component comp) {
 		if (MAIN.equals(name) && comp instanceof JPanel) {
-			mainPanel = (JPanel) comp;
+			this.mainPanel = (JPanel) comp;
 		} else if (CHILD.equals(name)) {
 			// Reflect the ordering of the model
 			final StoryComponentPanel childPanel = (StoryComponentPanel) comp;
@@ -54,9 +54,9 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 			final ComplexStoryComponent parent = (ComplexStoryComponent) child
 					.getOwner();
 			int index = parent.getChildIndex(child);
-			children.add(index, childPanel);
+			this.children.add(index, childPanel);
 		} else if (BUTTON.equals(name) && comp instanceof JButton) {
-			button = (JButton) comp;
+			this.button = (JButton) comp;
 		} else {
 			throw new IllegalArgumentException(
 					"cannot add to StoryComponentPanelLayoutManager: unknown constraint "
@@ -65,7 +65,7 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 	}
 
 	public boolean showChildren() {
-		return showChildren;
+		return this.showChildren;
 	}
 
 	public void setShowChildren(boolean showChildren) {
@@ -73,15 +73,15 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 	}
 
 	public List<StoryComponentPanel> getChildrenPanels() {
-		return children;
+		return this.children;
 	}
 
 	// here we remove the component - first find it!
 	public void removeLayoutComponent(Component comp) {
-		if (comp == mainPanel) {
-			mainPanel = null;
+		if (comp == this.mainPanel) {
+			this.mainPanel = null;
 		} else {
-			children.remove(comp);
+			this.children.remove(comp);
 		}
 	}
 
@@ -97,39 +97,39 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 	@Override
 	public Dimension preferredLayoutSize(Container container) {
 		// Determine if the expansion button is needed
-		if (button != null)
-			button.setVisible(!children.isEmpty());
+		if (this.button != null)
+			this.button.setVisible(!this.children.isEmpty());
 
 		Dimension dim = new Dimension(0, 0);
 
 		int widestWidth = 0;
 		int sumHeight = 0;
-		if ((mainPanel != null) && mainPanel.isVisible()) {
-			int width = mainPanel.getPreferredSize().width + MAIN_INDENT;
-			if (button != null && button.isVisible()) {
-				widestWidth = width + button.getPreferredSize().width
-						+ BUTTON_GAP;
-				sumHeight += Math.max(mainPanel.getPreferredSize().height
-						+ TOP_GAP, button.getPreferredSize().height / 2
-						+ TOP_GAP + mainPanel.getPreferredSize().height / 2);
+		if ((this.mainPanel != null) && this.mainPanel.isVisible()) {
+			int width = this.mainPanel.getPreferredSize().width + this.MAIN_INDENT;
+			if (this.button != null && this.button.isVisible()) {
+				widestWidth = width + this.button.getPreferredSize().width
+						+ this.BUTTON_GAP;
+				sumHeight += Math.max(this.mainPanel.getPreferredSize().height
+						+ this.TOP_GAP, this.button.getPreferredSize().height / 2
+						+ this.TOP_GAP + this.mainPanel.getPreferredSize().height / 2);
 			} else {
 				widestWidth = width;
-				sumHeight += mainPanel.getPreferredSize().height + TOP_GAP;
+				sumHeight += this.mainPanel.getPreferredSize().height + this.TOP_GAP;
 			}
 		}
-		if (showChildren) {
-			if (!children.isEmpty())
-				sumHeight += PARENT_CHILD_GAP;
-			for (Component child : children) {
+		if (this.showChildren) {
+			if (!this.children.isEmpty())
+				sumHeight += this.PARENT_CHILD_GAP;
+			for (Component child : this.children) {
 				if (child.isVisible()) {
-					widestWidth = Math.max(widestWidth, PRE_CHILD_INDENT
+					widestWidth = Math.max(widestWidth, this.PRE_CHILD_INDENT
 							+ child.getPreferredSize().width
-							+ POST_CHILD_INDENT);
-					sumHeight += child.getPreferredSize().height + CHILD_VGAP;
+							+ this.POST_CHILD_INDENT);
+					sumHeight += child.getPreferredSize().height + this.CHILD_VGAP;
 				}
 			}
 		}
-		sumHeight += BOTTOM_GAP;
+		sumHeight += this.BOTTOM_GAP;
 
 		Insets insets = container.getInsets();
 		dim.width += insets.left + widestWidth + insets.right;
@@ -148,43 +148,43 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 
 		int sumHeight = 0;
 		// parent
-		if (mainPanel != null && mainPanel.isVisible()) {
-			final int parentHeight = mainPanel.getPreferredSize().height
-					+ TOP_GAP;
-			final int vertIndent = north + TOP_GAP;
-			int horIndent = west + MAIN_INDENT;
-			if (button != null && button.isVisible()) {
-				final int buttonWidth = button.getPreferredSize().width;
-				final int buttonHeight = button.getPreferredSize().height;
-				button.setBounds(horIndent,
-						vertIndent + mainPanel.getPreferredSize().height / 2
+		if (this.mainPanel != null && this.mainPanel.isVisible()) {
+			final int parentHeight = this.mainPanel.getPreferredSize().height
+					+ this.TOP_GAP;
+			final int vertIndent = north + this.TOP_GAP;
+			int horIndent = west + this.MAIN_INDENT;
+			if (this.button != null && this.button.isVisible()) {
+				final int buttonWidth = this.button.getPreferredSize().width;
+				final int buttonHeight = this.button.getPreferredSize().height;
+				this.button.setBounds(horIndent,
+						vertIndent + this.mainPanel.getPreferredSize().height / 2
 								- buttonHeight / 2, buttonWidth, buttonHeight);
-				horIndent += buttonWidth + BUTTON_GAP;
+				horIndent += buttonWidth + this.BUTTON_GAP;
 				sumHeight += Math.max(parentHeight,
-						vertIndent + mainPanel.getPreferredSize().height / 2
+						vertIndent + this.mainPanel.getPreferredSize().height / 2
 								+ buttonHeight / 2);
 			} else
 				sumHeight += parentHeight;
-			mainPanel.setBounds(horIndent, vertIndent,
-					mainPanel.getPreferredSize().width,
-					mainPanel.getPreferredSize().height);
+			this.mainPanel.setBounds(horIndent, vertIndent,
+					this.mainPanel.getPreferredSize().width,
+					this.mainPanel.getPreferredSize().height);
 		}
 
-		if (showChildren) {
+		if (this.showChildren) {
 			// children
-			if (!children.isEmpty())
-				sumHeight += PARENT_CHILD_GAP;
-			for (Component child : children) {
+			if (!this.children.isEmpty())
+				sumHeight += this.PARENT_CHILD_GAP;
+			for (Component child : this.children) {
 				if (child.isVisible()) {
 					final int childHeight = child.getPreferredSize().height;
-					child.setBounds(west + PRE_CHILD_INDENT, sumHeight,
-							child.getPreferredSize().width + POST_CHILD_INDENT,
+					child.setBounds(west + this.PRE_CHILD_INDENT, sumHeight,
+							child.getPreferredSize().width + this.POST_CHILD_INDENT,
 							childHeight);
-					sumHeight += childHeight + CHILD_VGAP;
+					sumHeight += childHeight + this.CHILD_VGAP;
 				}
 			}
 		} else {
-			for (Component child : children) {
+			for (Component child : this.children) {
 				child.setBounds(0, 0, 0, 0);
 			}
 		}
@@ -192,7 +192,7 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 
 	@Override
 	public String toString() {
-		return "StoryComponentPanelLayoutManager [" + mainPanel + ", "
-				+ children + "]";
+		return "StoryComponentPanelLayoutManager [" + this.mainPanel + ", "
+				+ this.children + "]";
 	}
 }

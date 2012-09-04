@@ -26,7 +26,7 @@ public class GameObjectTree extends SETreeModel {
 	}
 
 	public void setFilter(Filter addFilter) {
-		filter = addFilter;
+		this.filter = addFilter;
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class GameObjectTree extends SETreeModel {
 
 		for (GameConversationNode a : getChildren) {
 			if (!a.isLink())
-				treeModel.addLeaf(parent, a);
+				this.treeModel.addLeaf(parent, a);
 		}
 		for (GameConversationNode a : getChildren) {
 			if (!a.isLink())
@@ -61,7 +61,7 @@ public class GameObjectTree extends SETreeModel {
 		conversationRoots = parent.getConversationRoots();
 
 		for (GameConversationNode root : conversationRoots) {
-			treeModel.addLeaf(parent, root);
+			this.treeModel.addLeaf(parent, root);
 		}
 
 		for (GameConversationNode childrenRoots : conversationRoots) {
@@ -79,7 +79,7 @@ public class GameObjectTree extends SETreeModel {
 		// Build the tree:
 		// Make a node for the root of the tree.
 		String availObjects = "Available Game Objects";
-		treeModel = new Tree<Object>(availObjects);
+		this.treeModel = new Tree<Object>(availObjects);
 
 		// For each type in the translator.
 		typeManager = TranslatorManager.getInstance().getActiveTranslator()
@@ -101,16 +101,16 @@ public class GameObjectTree extends SETreeModel {
 			if (gameObjs.size() <= 0)
 				continue;
 
-			if (typeName.equals(DIALOGUE_TAG)) {
+			if (typeName.equals(this.DIALOGUE_TAG)) {
 				for (GameConstant convo : gameObjs) {
 					GameConversation dialogue = (GameConversation) convo;
-					treeModel.addLeaf(typeName, dialogue);
+					this.treeModel.addLeaf(typeName, dialogue);
 					addAllChildren(dialogue);
 				}
 			} else {
-				treeModel.addLeaf(treeModel.getHead(), typeName);
+				this.treeModel.addLeaf(this.treeModel.getHead(), typeName);
 				for (GameConstant obj : gameObjs) {
-					treeModel.addLeaf(typeName, obj);
+					this.treeModel.addLeaf(typeName, obj);
 					// if(((GameObject)obj).getAttributes().size() > 0){
 					// for(GameObject attributes :
 					// ((GameObject)obj).getAttributes()){
@@ -126,7 +126,7 @@ public class GameObjectTree extends SETreeModel {
 	private Collection<GameConstant> getAllObjectsOfType(String type) {
 		List<GameConstant> allGameObjects;
 
-		allGameObjects = storyModel.getModule().getResourcesOfType(type);
+		allGameObjects = this.storyModel.getModule().getResourcesOfType(type);
 		allGameObjects = new ArrayList<GameConstant>(
 				this.filterGameObjects(allGameObjects));
 
@@ -151,7 +151,7 @@ public class GameObjectTree extends SETreeModel {
 			Collection<GameConstant> gameObjects) {
 		Collection<GameConstant> filteredObjects = new ArrayList<GameConstant>();
 
-		if (filter == null)
+		if (this.filter == null)
 			if (gameObjects == null)
 				return filteredObjects;
 			else
@@ -159,7 +159,7 @@ public class GameObjectTree extends SETreeModel {
 
 		for (GameConstant gameObject : gameObjects) {
 			// If the child was accepted by the filter
-			boolean accepted = filter.isAcceptable(gameObject);
+			boolean accepted = this.filter.isAcceptable(gameObject);
 
 			if (accepted)
 				filteredObjects.add(gameObject);

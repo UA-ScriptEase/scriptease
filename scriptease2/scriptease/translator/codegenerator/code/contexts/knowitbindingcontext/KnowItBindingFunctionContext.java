@@ -34,7 +34,7 @@ public class KnowItBindingFunctionContext extends KnowItBindingContext {
 
 	public KnowItBindingFunctionContext(Context other, KnowItBinding source) {
 		this(other);
-		binding = source;
+		this.binding = source;
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class KnowItBindingFunctionContext extends KnowItBindingContext {
 	public String getValue() {
 		final Context scriptItContext = ContextFactory.getInstance()
 				.createContext(this,
-						((KnowItBindingFunction) binding).getValue());
+						((KnowItBindingFunction) this.binding).getValue());
 		final LanguageDictionary languageDictionary = this.getTranslator()
 				.getLanguageDictionary();
 		// TODO 'functionHeader' should not be hardcoded here. Figure out

@@ -31,16 +31,16 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 
 	public GameObjectPanelTree(StoryModel storyModel) {
 		super();
-		treeModel = new GameObjectTree(storyModel);
-		gameObjectPanel = new ArrayList<GameObjectPanel>();
-		gameObjectLabels = new ArrayList<GameObjectPanelTree.GameObjectLabel>();
+		this.treeModel = new GameObjectTree(storyModel);
+		this.gameObjectPanel = new ArrayList<GameObjectPanel>();
+		this.gameObjectLabels = new ArrayList<GameObjectPanelTree.GameObjectLabel>();
 		expandTree();
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setVisible(true);
 	}
 
 	public GameObjectTree getTreeModel() {
-		return treeModel;
+		return this.treeModel;
 	}
 
 	private void addChildrenRoots(GameConversationNode parent) {
@@ -48,7 +48,7 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 			return;
 		}
 
-		Collection<Object> getChildren = treeModel.getTree().getSuccessors(
+		Collection<Object> getChildren = this.treeModel.getTree().getSuccessors(
 				parent);
 
 		if (getChildren.size() == 0) {
@@ -57,7 +57,7 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 
 		for (Object a : getChildren) {
 			GameObjectPanelConversation newObjPanel = new GameObjectPanelConversation(
-					(GameConversationNode) a, CONSTANT_OFFSET * 2);
+					(GameConversationNode) a, this.CONSTANT_OFFSET * 2);
 			this.gameObjectPanel.add(newObjPanel);
 			this.add(newObjPanel.getGameObjectPane());
 		}
@@ -74,8 +74,8 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 	}
 
 	private void expandTree() {
-		ArrayList<Object> firstRowExpansion = (ArrayList<Object>) treeModel
-				.getTree().getSuccessors(treeModel.getTree().getHead());
+		ArrayList<Object> firstRowExpansion = (ArrayList<Object>) this.treeModel
+				.getTree().getSuccessors(this.treeModel.getTree().getHead());
 		int size = firstRowExpansion.size();
 		for (int i = 0; i < size; i++) {
 			if (firstRowExpansion.get(i) instanceof String) {
@@ -83,35 +83,35 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 						.get(i).toString());
 				label.addObserver(this);
 				this.add(label.getLabelPanel());
-				gameObjectLabels.add(label);
+				this.gameObjectLabels.add(label);
 
 				if (!firstRowExpansion.get(i).equals("dialogue")) {
-					Collection<Object> categoryExpansion = treeModel.getTree()
+					Collection<Object> categoryExpansion = this.treeModel.getTree()
 							.getSuccessors(firstRowExpansion.get(i));
 					for (Object getGameObject : categoryExpansion) {
 						GameObjectPanel newObjPanel = new GameObjectPanel(
-								(GameObject) getGameObject, CONSTANT_OFFSET);
+								(GameObject) getGameObject, this.CONSTANT_OFFSET);
 						this.addGameObjectPanelToTree(newObjPanel);
 					}
 				}
 
 				// The dialogue adding code goes here
 				else if (firstRowExpansion.get(i).equals("dialogue")) {
-					Collection<Object> diagExpansion = treeModel.getTree()
+					Collection<Object> diagExpansion = this.treeModel.getTree()
 							.getSuccessors(firstRowExpansion.get(i));
 					for (Object dialogueExpansionNode : diagExpansion) {
 						GameObjectPanel newObjPanel = new GameObjectPanel(
 								(GameConversation) dialogueExpansionNode,
-								CONSTANT_OFFSET);
+								this.CONSTANT_OFFSET);
 						this.gameObjectPanel.add(newObjPanel);
 						this.add(newObjPanel.getGameObjectPane());
 
-						Collection<Object> convExpansion = treeModel.getTree()
+						Collection<Object> convExpansion = this.treeModel.getTree()
 								.getSuccessors(dialogueExpansionNode);
 						for (Object gameConversation : convExpansion) {
 							GameObjectPanelConversation newObjPanel2 = new GameObjectPanelConversation(
 									(GameConversationNode) gameConversation,
-									CONSTANT_OFFSET * 2);
+									this.CONSTANT_OFFSET * 2);
 							this.gameObjectPanel.add(newObjPanel2);
 							this.add(newObjPanel2.getGameObjectPane());
 							addChildrenRoots((GameConversationNode) gameConversation);
@@ -125,13 +125,13 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 	// TODO: Refactor, code is very similar to above method :(
 	private void reDrawTree() {
 		this.removeAll();
-		int size = gameObjectLabels.size();
+		int size = this.gameObjectLabels.size();
 		for (int i = 0; i < size; i++) {
-			Collection<Object> srExp = treeModel.getTree().getSuccessors(
-					gameObjectLabels.get(i).getLabel());
-			if (gameObjectLabels.get(i).getVisbile()) {
-				this.add(gameObjectLabels.get(i).getLabelPanel());
-				if (!gameObjectLabels.get(i).collapsed) {
+			Collection<Object> srExp = this.treeModel.getTree().getSuccessors(
+					this.gameObjectLabels.get(i).getLabel());
+			if (this.gameObjectLabels.get(i).getVisbile()) {
+				this.add(this.gameObjectLabels.get(i).getLabelPanel());
+				if (!this.gameObjectLabels.get(i).collapsed) {
 					ArrayList<Object> z = (ArrayList<Object>) srExp;
 					for (int j = 0; j < srExp.size(); j++) {
 						if (z.get(j) instanceof GameObject) {
@@ -144,18 +144,18 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 						if (z.get(j) instanceof GameConversation) {
 							GameObjectPanel newObjPanel = new GameObjectPanel(
 									(GameConversation) z.get(j),
-									CONSTANT_OFFSET);
+									this.CONSTANT_OFFSET);
 							this.gameObjectPanel.add(newObjPanel);
 							this.add(newObjPanel.getGameObjectPane());
 
-							Collection<Object> convExpansion = treeModel
+							Collection<Object> convExpansion = this.treeModel
 									.getTree().getSuccessors(z.get(j));
 							ArrayList<Object> bees3 = (ArrayList<Object>) convExpansion;
 							
 							for (int zl = 0; zl < convExpansion.size(); zl++) {
 								GameObjectPanel newObjPanel2 = new GameObjectPanel(
 										(GameConversationNode) bees3.get(zl),
-										CONSTANT_OFFSET * 2);
+										this.CONSTANT_OFFSET * 2);
 								this.gameObjectPanel.add(newObjPanel2);
 								this.add(newObjPanel2.getGameObjectPane());
 								addChildrenRoots((GameConversationNode) bees3
@@ -178,8 +178,8 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 
 	public ArrayList<String> getStringTypes() {
 		ArrayList<String> returnMe = new ArrayList<String>();
-		for (int i = 0; i < gameObjectLabels.size(); i++) {
-			returnMe.add(gameObjectLabels.get(i).labelName);
+		for (int i = 0; i < this.gameObjectLabels.size(); i++) {
+			returnMe.add(this.gameObjectLabels.get(i).labelName);
 		}
 		return returnMe;
 	}
@@ -193,14 +193,14 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 		private String labelName;
 
 		public GameObjectLabel(String label) {
-			visible = true;
-			collapsed = false;
-			labelPanel = new JPanel();
-			labelName = label;
+			this.visible = true;
+			this.collapsed = false;
+			this.labelPanel = new JPanel();
+			this.labelName = label;
 
-			labelPanel.addMouseListener(this);
-			labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
-			labelPanel.setBackground(Color.WHITE);
+			this.labelPanel.addMouseListener(this);
+			this.labelPanel.setLayout(new BoxLayout(this.labelPanel, BoxLayout.X_AXIS));
+			this.labelPanel.setBackground(Color.WHITE);
 
 			reDrawLabel();
 
@@ -208,43 +208,39 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 
 		// YOUR SPELLING IS BAD AND YOU SHOULD FEEL BAD
 		public boolean getVisbile() {
-			return visible;
-		}
-
-		public void setVisible(boolean set) {
-			visible = set;
+			return this.visible;
 		}
 
 		public String getLabel() {
-			return labelName;
+			return this.labelName;
 		}
 
 		public JPanel getLabelPanel() {
-			return labelPanel;
+			return this.labelPanel;
 		}
 
 		private String convertToLabelViewFormat() {
-			String labelView = labelName.substring(0, 1).toUpperCase();
-			labelView += labelName.substring(1);
+			String labelView = this.labelName.substring(0, 1).toUpperCase();
+			labelView += this.labelName.substring(1);
 			return labelView;
 		}
 
 		private void reDrawLabel() {
-			labelPanel.removeAll();
+			this.labelPanel.removeAll();
 
-			if (collapsed)
-				labelPanel.add(new JLabel(convertToLabelViewFormat(),
-						expandIcon, JLabel.CENTER));
+			if (this.collapsed)
+				this.labelPanel.add(new JLabel(convertToLabelViewFormat(),
+						this.expandIcon, JLabel.CENTER));
 			else
-				labelPanel.add(new JLabel(convertToLabelViewFormat(),
-						collapseIcon, JLabel.CENTER));
-			labelPanel.add(Box.createHorizontalGlue());
-			labelPanel.revalidate();
+				this.labelPanel.add(new JLabel(convertToLabelViewFormat(),
+						this.collapseIcon, JLabel.CENTER));
+			this.labelPanel.add(Box.createHorizontalGlue());
+			this.labelPanel.revalidate();
 		}
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			collapsed = !collapsed;
+			this.collapsed = !this.collapsed;
 			reDrawLabel();
 			setChanged();
 			notifyObservers();

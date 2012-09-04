@@ -40,7 +40,7 @@ public class PathAssigner extends JPanel implements StoryComponentObserver {
 		this.path = null;
 		this.tree = new StoryComponentPanelTree();
 
-		this.add(tree);
+		this.add(this.tree);
 	}
 
 	/**
@@ -56,9 +56,9 @@ public class PathAssigner extends JPanel implements StoryComponentObserver {
 
 		final ScriptIt scriptIt = describeIt.getScriptItForPath(this.path);
 
-		this.remove(tree);
+		this.remove(this.tree);
 		// TODO Need to reimplement this! tree = new StoryComponentPanelTree(scriptIt);
-		this.add(tree);
+		this.add(this.tree);
 		this.setOpaque(true);
 
 		// listen for changes to the container
@@ -76,9 +76,9 @@ public class PathAssigner extends JPanel implements StoryComponentObserver {
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
 				if (type == StoryComponentChangeEnum.CHANGE_CHILD_ADDED)
-					describeIt.assignScriptItToPath(path, scriptIt);
+					PathAssigner.this.describeIt.assignScriptItToPath(PathAssigner.this.path, scriptIt);
 				else if (type == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED)
-					describeIt.assignScriptItToPath(path, null);
+					PathAssigner.this.describeIt.assignScriptItToPath(PathAssigner.this.path, null);
 			}
 		});
 	}

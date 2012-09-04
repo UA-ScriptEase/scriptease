@@ -97,7 +97,7 @@ public class GradientLineBorder extends AbstractBorder {
 		final Paint oldPaint = g2d.getPaint();
 		final Object oldHint = g2d
 				.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
-		
+
 		g2d.setStroke(this.stroke);
 		g2d.setPaint(this.gradient);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -119,7 +119,8 @@ public class GradientLineBorder extends AbstractBorder {
 	 */
 	@Override
 	public Insets getBorderInsets(Component comp) {
-		return new Insets(thickness, thickness, thickness, thickness);
+		return new Insets(this.thickness, this.thickness, this.thickness,
+				this.thickness);
 	}
 
 	/**
@@ -127,7 +128,7 @@ public class GradientLineBorder extends AbstractBorder {
 	 */
 	@Override
 	public Insets getBorderInsets(Component c, Insets insets) {
-		insets.left = insets.top = insets.right = insets.bottom = thickness;
+		insets.left = insets.top = insets.right = insets.bottom = this.thickness;
 		return insets;
 	}
 

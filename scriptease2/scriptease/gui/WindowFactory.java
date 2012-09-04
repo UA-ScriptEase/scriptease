@@ -249,7 +249,7 @@ public final class WindowFactory {
 		}
 		options[libraries.size()] = "New Library...";
 		// libraries.add("test");
-		return (Object) JOptionPane.showInputDialog(this.currentFrame,
+		return JOptionPane.showInputDialog(this.currentFrame,
 				"Select a Library: ", "Library Selector",
 				JOptionPane.PLAIN_MESSAGE, null, options, null);
 	}

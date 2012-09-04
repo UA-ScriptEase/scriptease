@@ -30,7 +30,7 @@ public class KnowItBindingFunction extends KnowItBinding {
 
 	@Override
 	public Collection<String> getTypes() {
-		return functionValue.getTypes();
+		return this.functionValue.getTypes();
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class KnowItBindingFunction extends KnowItBinding {
 	 */
 	@Override
 	public KnowItBinding clone() {
-		return new KnowItBindingFunction((ScriptIt) this.functionValue.clone());
+		return new KnowItBindingFunction(this.functionValue.clone());
 	}
 
 	@Override
