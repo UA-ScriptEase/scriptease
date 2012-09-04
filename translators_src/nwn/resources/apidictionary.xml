@@ -170,7 +170,7 @@
       <Name>VisualEffectImpact</Name>
       <Keyword>visual_effect_impact</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>VFX_IMP_FLAME_M&lt;Imp Flame M&gt;|VFX_IMP_PULSE_NEGATIVE&lt;Imp Pulse Negative&gt;|VFX_IMP_AURA_FEAR&lt;Imp Aura Fear&gt;|VFX_IMP_RESTORATION&lt;Imp Restoration&gt;|VFX_IMP_FLAME_S&lt;Imp Flame S&gt;|VFX_IMP_LIGHTNING_M&lt;Imp Lightning M&gt;|VFX_IMP_ELEMENTAL_PROTECTION&lt;Imp Elemental Protection&gt;|VFX_IMP_POISON_S&lt;Imp Poison S&gt;|VFX_IMP_DESTRUCTION&lt;Imp Destruction&gt;|VFX_IMP_SPELL_MANTLE_USE&lt;Imp Spell Mantle Use&gt;|VFX_IMP_HEAD_ELECTRICITY&lt;Imp Head Electricity&gt;|VFX_IMP_SPIKE_TRAP&lt;Imp Spike Trap&gt;|VFX_IMP_LIGHTNING_S&lt;Imp Lightning S&gt;|VFX_IMP_SILENCE&lt;Imp Silence&gt;|VFX_IMP_HEAD_MIND&lt;Imp Head Mind&gt;|VFX_IMP_HEAD_HOLY&lt;Imp Head Holy&gt;|VFX_IMP_NEGATIVE_ENERGY&lt;Imp Negative Energy&gt;|VFX_IMP_PULSE_COLD&lt;Imp Pulse Cold&gt;|VFX_IMP_DISPEL&lt;Imp Dispel&gt;|VFX_IMP_MIRV_FLAME&lt;Imp Mirv Flame&gt;|VFX_IMP_HEALING_G&lt;Imp Healing G&gt;|VFX_IMP_BREACH&lt;Imp Breach&gt;|VFX_IMP_RAISE_DEAD&lt;Imp Raise Dead&gt;|VFX_IMP_HEAD_EVIL&lt;Imp Head Evil&gt;|VFX_IMP_DEATH&lt;Imp Death&gt;|VFX_IMP_FROST_S&lt;Imp Frost S&gt;|VFX_IMP_HEALING_L&lt;Imp Healing L&gt;|VFX_IMP_GOOD_HELP&lt;Imp Good Help&gt;|VFX_IMP_HEALING_M&lt;Imp Healing M&gt;|VFX_IMP_DEATH_L&lt;Imp Death L&gt;|VFX_IMP_DOMINATE_S&lt;Imp Dominate S&gt;|VFX_IMP_FROST_L&lt;Imp Frost L&gt;|VFX_IMP_DISPEL_DISJUNCTION&lt;Imp Dispel Disjunction&gt;|VFX_IMP_DOOM&lt;Imp Doom&gt;|VFX_IMP_AURA_HOLY&lt;Imp Aura Holy&gt;|VFX_IMP_FORTITUDE_SAVING_THROW_USE&lt;Imp Fortitude Saving Throw Use&gt;|VFX_IMP_DEATH_WARD&lt;Imp Death Ward&gt;|VFX_IMP_UNSUMMON&lt;Imp Unsummon&gt;|VFX_IMP_HEAD_ODD&lt;Imp Head Odd&gt;|VFX_IMP_SUPER_HEROISM&lt;Imp Super Heroism&gt;|VFX_IMP_IMPROVE_ABILITY_SCORE&lt;Imp Improve Ability Score&gt;|VFX_IMP_GLOBE_USE&lt;Imp Globe Use&gt;|VFX_IMP_HEAD_COLD&lt;Imp Head Cold&gt;|VFX_IMP_MAGBLUE&lt;Imp Magblue&gt;|VFX_IMP_HEALING_S&lt;Imp Healing S&gt;|VFX_IMP_CHARM&lt;Imp Charm&gt;|VFX_IMP_DIVINE_STRIKE_FIRE&lt;Imp Divine Strike Fire&gt;|VFX_IMP_HASTE&lt;Imp Haste&gt;|VFX_IMP_STUN&lt;Imp Stun&gt;|VFX_IMP_RESTORATION_GREATER&lt;Imp Restoration Greater&gt;|VFX_IMP_HEALING_X&lt;Imp Healing X&gt;|VFX_IMP_DISEASE_S&lt;Imp Disease S&gt;|VFX_IMP_HEAD_FIRE&lt;Imp Head Fire&gt;|VFX_IMP_CONFUSION_S&lt;Imp Confusion S&gt;|VFX_IMP_PULSE_HOLY&lt;Imp Pulse Holy&gt;|VFX_IMP_DAZED_S&lt;Imp Dazed S&gt;|VFX_IMP_HEAD_ACID&lt;Imp Head Acid&gt;|VFX_IMP_KNOCK&lt;Imp Knock&gt;|VFX_IMP_HEAD_SONIC&lt;Imp Head Sonic&gt;|VFX_IMP_PULSE_WIND&lt;Imp Pulse Wind&gt;|VFX_IMP_HEAD_NATURE&lt;Imp Head Nature&gt;|VFX_IMP_REDUCE_ABILITY_SCORE&lt;Imp Reduce Ability Score&gt;|VFX_IMP_MAGICAL_VISION&lt;Imp Magical Vision&gt;|VFX_IMP_REMOVE_CONDITION&lt;Imp Remove Condition&gt;|VFX_IMP_SLOW&lt;Imp Slow&gt;|VFX_IMP_MIRV&lt;Imp Mirv&gt;|VFX_IMP_HEAD_HEAL&lt;Imp Head Heal&gt;|VFX_IMP_GREASE&lt;Imp Grease&gt;|VFX_IMP_ACID_L&lt;Imp Acid L&gt;|VFX_IMP_WILL_SAVING_THROW_USE&lt;Imp Will Saving Throw Use&gt;|VFX_IMP_POLYMORPH&lt;Imp Polymorph&gt;|VFX_IMP_SLEEP&lt;Imp Sleep&gt;|VFX_IMP_PULSE_WATER&lt;Imp Pulse Water&gt;|VFX_IMP_REFLEX_SAVE_THROW_USE&lt;Imp Reflex Save Throw Use&gt;|VFX_IMP_SUNSTRIKE&lt;Imp Sunstrike&gt;|VFX_IMP_AURA_UNEARTHLY&lt;Imp Aura Unearthly&gt;|VFX_IMP_ACID_S&lt;Imp Acid S&gt;|VFX_IMP_MAGIC_PROTECTION&lt;Imp Magic Protection&gt;|VFX_IMP_FEAR_S&lt;Imp Fear S&gt;|VFX_IMP_PULSE_NATURE&lt;Imp Pulse Nature&gt;|VFX_IMP_PULSE_FIRE&lt;Imp Pulse Fire&gt;|VFX_IMP_EVIL_HELP&lt;Imp Evil Help&gt;|VFX_IMP_BLIND_DEAF_M&lt;Imp Blind Deaf M&gt;|VFX_IMP_POISON_L&lt;Imp Poison L&gt;|VFX_IMP_RESTORATION_LESSER&lt;Imp Restoration Lesser&gt;|VFX_IMP_AURA_NEGATIVE_ENERGY&lt;Imp Aura Negative Energy&gt;|VFX_IMP_AC_BONUS&lt;Imp Ac Bonus&gt;|VFX_IMP_SONIC&lt;Imp Sonic&gt;|VFX_IMP_HOLY_AID&lt;Imp Holy Aid&gt;|VFX_IMP_MAGIC_RESISTANCE_USE&lt;Imp Magic Resistance Use&gt;|VFX_IMP_HARM&lt;Imp Harm&gt;</Enum>
+      <Enum>VFX_IMP_FLAME_M&lt;Imp Flame M&gt;|VFX_IMP_PULSE_NEGATIVE&lt;Imp Pulse Negative&gt;|VFX_IMP_AURA_FEAR&lt;Imp Aura Fear&gt;|VFX_IMP_RESTORATION&lt;Imp Restoration&gt;|VFX_IMP_FLAME_S&lt;Imp Flame S&gt;|VFX_IMP_LIGHTNING_M&lt;Imp Lightning M&gt;|VFX_IMP_ELEMENTAL_PROTECTION&lt;Imp Elemental Protection&gt;|VFX_IMP_POISON_S&lt;Imp Poison S&gt;|VFX_IMP_DESTRUCTION&lt;Imp Destruction&gt;|VFX_IMP_SPELL_MANTLE_USE&lt;Imp Spell Mantle Use&gt;|VFX_IMP_HEAD_ELECTRICITY&lt;Imp Head Electricity&gt;|VFX_IMP_SPIKE_TRAP&lt;Imp Spike Trap&gt;|VFX_IMP_LIGHTNING_S&lt;Imp Lightning S&gt;|VFX_IMP_SILENCE&lt;Imp Silence&gt;|VFX_IMP_HEAD_MIND&lt;Imp Head Mind&gt;|VFX_IMP_HEAD_HOLY&lt;Imp Head Holy&gt;|VFX_IMP_NEGATIVE_ENERGY&lt;Imp Negative Energy&gt;|VFX_IMP_PULSE_COLD&lt;Imp Pulse Cold&gt;|VFX_IMP_DISPEL&lt;Imp Dispel&gt;|VFX_IMP_MIRV_FLAME&lt;Imp Mirv Flame&gt;|VFX_IMP_HEALING_G&lt;Imp Healing G&gt;|VFX_IMP_BREACH&lt;Imp Breach&gt;|VFX_IMP_RAISE_DEAD&lt;Imp Raise Dead&gt;|VFX_IMP_HEAD_EVIL&lt;Imp Head Evil&gt;|VFX_IMP_DEATH&lt;Imp Death&gt;|VFX_IMP_FROST_S&lt;Imp Frost S&gt;|VFX_IMP_HEALING_L&lt;Imp Healing L&gt;|VFX_IMP_GOOD_HELP&lt;Imp Good Help&gt;|VFX_IMP_HEALING_M&lt;Imp Healing M&gt;|VFX_IMP_DEATH_L&lt;Imp Death L&gt;|VFX_IMP_DOMINATE_S&lt;Imp Dominate S&gt;|VFX_IMP_FROST_L&lt;Imp Frost L&gt;|VFX_IMP_DISPEL_DISJUNCTION&lt;Imp Dispel Disjunction&gt;|VFX_IMP_DOOM&lt;Imp Doom&gt;|VFX_IMP_AURA_HOLY&lt;Imp Aura Holy&gt;|VFX_IMP_FORTITUDE_SAVING_THROW_USE&lt;Imp Fortitude Saving Throw Use&gt;|VFX_IMP_DEATH_WARD&lt;Imp Death Ward&gt;|VFX_IMP_UNSUMMON&lt;Imp Unsummon&gt;|VFX_IMP_HEAD_ODD&lt;Imp Head Odd&gt;|VFX_IMP_SUPER_HEROISM&lt;Imp Super Heroism&gt;|VFX_IMP_IMPROVE_ABILITY_SCORE&lt;Imp Improve Ability Score&gt;|VFX_IMP_GLOBE_USE&lt;Imp Globe Use&gt;|VFX_IMP_HEAD_COLD&lt;Imp Head Cold&gt;|VFX_IMP_MAGBLUE&lt;Imp Magblue&gt;|VFX_IMP_HEALING_S&lt;Imp Healing S&gt;|VFX_IMP_CHARM&lt;Imp Charm&gt;|VFX_IMP_DIVINE_STRIKE_FIRE&lt;Imp Divine Strike Fire&gt;|VFX_IMP_RESTORATION_GREATER&lt;Imp Restoration Greater&gt;|VFX_IMP_HASTE&lt;Imp Haste&gt;|VFX_IMP_STUN&lt;Imp Stun&gt;|VFX_IMP_HEALING_X&lt;Imp Healing X&gt;|VFX_IMP_DISEASE_S&lt;Imp Disease S&gt;|VFX_IMP_HEAD_FIRE&lt;Imp Head Fire&gt;|VFX_IMP_CONFUSION_S&lt;Imp Confusion S&gt;|VFX_IMP_PULSE_HOLY&lt;Imp Pulse Holy&gt;|VFX_IMP_DAZED_S&lt;Imp Dazed S&gt;|VFX_IMP_HEAD_ACID&lt;Imp Head Acid&gt;|VFX_IMP_KNOCK&lt;Imp Knock&gt;|VFX_IMP_HEAD_SONIC&lt;Imp Head Sonic&gt;|VFX_IMP_PULSE_WIND&lt;Imp Pulse Wind&gt;|VFX_IMP_HEAD_NATURE&lt;Imp Head Nature&gt;|VFX_IMP_REDUCE_ABILITY_SCORE&lt;Imp Reduce Ability Score&gt;|VFX_IMP_MAGICAL_VISION&lt;Imp Magical Vision&gt;|VFX_IMP_REMOVE_CONDITION&lt;Imp Remove Condition&gt;|VFX_IMP_SLOW&lt;Imp Slow&gt;|VFX_IMP_MIRV&lt;Imp Mirv&gt;|VFX_IMP_HEAD_HEAL&lt;Imp Head Heal&gt;|VFX_IMP_GREASE&lt;Imp Grease&gt;|VFX_IMP_ACID_L&lt;Imp Acid L&gt;|VFX_IMP_WILL_SAVING_THROW_USE&lt;Imp Will Saving Throw Use&gt;|VFX_IMP_POLYMORPH&lt;Imp Polymorph&gt;|VFX_IMP_SLEEP&lt;Imp Sleep&gt;|VFX_IMP_PULSE_WATER&lt;Imp Pulse Water&gt;|VFX_IMP_REFLEX_SAVE_THROW_USE&lt;Imp Reflex Save Throw Use&gt;|VFX_IMP_SUNSTRIKE&lt;Imp Sunstrike&gt;|VFX_IMP_AURA_UNEARTHLY&lt;Imp Aura Unearthly&gt;|VFX_IMP_ACID_S&lt;Imp Acid S&gt;|VFX_IMP_MAGIC_PROTECTION&lt;Imp Magic Protection&gt;|VFX_IMP_FEAR_S&lt;Imp Fear S&gt;|VFX_IMP_PULSE_NATURE&lt;Imp Pulse Nature&gt;|VFX_IMP_PULSE_FIRE&lt;Imp Pulse Fire&gt;|VFX_IMP_EVIL_HELP&lt;Imp Evil Help&gt;|VFX_IMP_BLIND_DEAF_M&lt;Imp Blind Deaf M&gt;|VFX_IMP_POISON_L&lt;Imp Poison L&gt;|VFX_IMP_RESTORATION_LESSER&lt;Imp Restoration Lesser&gt;|VFX_IMP_AURA_NEGATIVE_ENERGY&lt;Imp Aura Negative Energy&gt;|VFX_IMP_AC_BONUS&lt;Imp Ac Bonus&gt;|VFX_IMP_SONIC&lt;Imp Sonic&gt;|VFX_IMP_HOLY_AID&lt;Imp Holy Aid&gt;|VFX_IMP_MAGIC_RESISTANCE_USE&lt;Imp Magic Resistance Use&gt;|VFX_IMP_HARM&lt;Imp Harm&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -220,6 +220,7 @@
       <Keyword>placeable</Keyword>
       <CodeSymbol>object</CodeSymbol>
       <Slots>
+        <Slot>OnClick</Slot>
         <Slot>OnClosed</Slot>
         <Slot>OnDamaged</Slot>
         <Slot>OnDeath</Slot>
@@ -829,7 +830,7 @@
       <Parameters/>
       <Implicits>
         <KnowIt>
-          <Name>The Blocker</Name>
+          <Name>The Blocking Door</Name>
           <Visible>true</Visible>
           <Labels/>
           <Types>
@@ -838,13 +839,13 @@
           </Types>
           <Binding flavour="function">
             <ScriptIt>
-              <Name>The Blocker</Name>
+              <Name>The Blocking Door</Name>
               <Visible>true</Visible>
               <Labels/>
               <Children/>
               <CodeBlocks>
                 <CodeBlockSource>
-                  <Name>The Blocker</Name>
+                  <Name>The Blocking Door</Name>
                   <Visible>true</Visible>
                   <Labels/>
                   <Id>7</Id>
@@ -945,7 +946,7 @@
       </Implicits>
     </Slot>
     <Slot>
-      <Name>OnSpellCastAt</Name>
+      <Name>ScriptSpellAt</Name>
       <Keyword>ScriptSpellAt</Keyword>
       <Parameters/>
       <Implicits>
@@ -2732,7 +2733,7 @@
       <Parameters/>
       <Implicits>
         <KnowIt>
-          <Name>The Disturber</Name>
+          <Name>Last Disturber</Name>
           <Visible>true</Visible>
           <Labels/>
           <Types>
@@ -3002,7 +3003,7 @@
           <Labels/>
           <Types>
             <Type>creature</Type>
-            <Type>trigger</Type>
+            <Type>door</Type>
             <Type>placeable</Type>
           </Types>
           <Binding flavour="function">
@@ -3019,6 +3020,7 @@
                   <Id>62</Id>
                   <Types>
                     <Type>creature</Type>
+                    <Type>door</Type>
                     <Type>placeable</Type>
                   </Types>
                   <Code>
@@ -3465,7 +3467,7 @@
           </Binding>
         </KnowIt>
         <KnowIt>
-          <Name>Item Lost By</Name>
+          <Name>Item Loser</Name>
           <Visible>true</Visible>
           <Labels/>
           <Types>
@@ -3474,13 +3476,13 @@
           </Types>
           <Binding flavour="function">
             <ScriptIt>
-              <Name>Item Lost By</Name>
+              <Name>Item Loser</Name>
               <Visible>true</Visible>
               <Labels/>
               <Children/>
               <CodeBlocks>
                 <CodeBlockSource>
-                  <Name>Item Lost By</Name>
+                  <Name>Item Loser</Name>
                   <Visible>true</Visible>
                   <Labels/>
                   <Id>73</Id>
@@ -4073,7 +4075,32 @@
       <Name>When &lt;subject&gt; is attacked by &lt;the attacker&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is attacked by &lt;the attacker&gt;</Name>
@@ -4096,7 +4123,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4105,7 +4132,32 @@
       <Name>When &lt;subject&gt; is damaged by &lt;the damager&gt; for &lt;damage amount&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is damaged by &lt;the damager&gt; for &lt;damage amount&gt;</Name>
@@ -4128,7 +4180,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4137,7 +4189,32 @@
       <Name>When &lt;subject&gt; is killed by &lt;the killer&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is killed by &lt;the killer&gt;</Name>
@@ -4160,7 +4237,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4169,7 +4246,32 @@
       <Name>When &lt;subject&gt; converses with &lt;the speaker&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; converses with &lt;the speaker&gt;</Name>
@@ -4192,19 +4294,44 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When the item &lt;disturbed item&gt; in the inventory of &lt;subject&gt; is &lt;disturbance type&gt; by &lt;the disturber&gt;</Name>
+      <Name>When &lt;subject&gt;&apos;s inventory is disturbed by &lt;last disturber&gt; disturbing &lt;disturbed item&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When the item &lt;disturbed item&gt; in the inventory of &lt;subject&gt; is &lt;disturbance type&gt; by &lt;the disturber&gt;</Name>
+          <Name>When &lt;subject&gt;&apos;s inventory is disturbed by &lt;last disturber&gt; disturbing &lt;disturbed item&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -4224,19 +4351,44 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;subject&gt;&apos;s round ends</Name>
+      <Name>When &lt;subject&gt;&apos;s combat round ends</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt;&apos;s round ends</Name>
+          <Name>When &lt;subject&gt;&apos;s combat round ends</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -4256,7 +4408,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4265,7 +4417,32 @@
       <Name>When &lt;subject&gt;&apos;s heart beats</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt;&apos;s heart beats</Name>
@@ -4288,19 +4465,44 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;subject&gt; is blocked by &lt;the blocker&gt;</Name>
+      <Name>When &lt;subject&gt; is blocked by &lt;the blocking door&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt; is blocked by &lt;the blocker&gt;</Name>
+          <Name>When &lt;subject&gt; is blocked by &lt;the blocking door&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -4320,7 +4522,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4329,7 +4531,32 @@
       <Name>When &lt;subject&gt; perceives &lt;last perceived&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; perceives &lt;last perceived&gt;</Name>
@@ -4352,39 +4579,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
-          </Code>
-        </CodeBlockSource>
-      </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
-      <Name>When &lt;subject&gt; perceives &lt;last perceived heard&gt;</Name>
-      <Visible>true</Visible>
-      <Labels/>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>When &lt;subject&gt; perceives &lt;last perceived heard&gt;</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Subject>subject</Subject>
-          <Slot>ScriptOnNotice</Slot>
-          <Id>95</Id>
-          <Types>
-            <Type>void</Type>
-          </Types>
-          <Parameters>
-            <KnowIt>
-              <Name>subject</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
-          </Parameters>
-          <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4393,7 +4588,32 @@
       <Name>When &lt;Subject&gt; becomes rested</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;Subject&gt; becomes rested</Name>
@@ -4416,7 +4636,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4425,7 +4645,32 @@
       <Name>When &lt;subject&gt; is spawned</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is spawned</Name>
@@ -4448,7 +4693,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4457,7 +4702,32 @@
       <Name>When &lt;subject&gt; becomes the target of &lt;spell&gt; cast by &lt;spell caster&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; becomes the target of &lt;spell&gt; cast by &lt;spell caster&gt;</Name>
@@ -4480,19 +4750,44 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When a user-defined event occurs in &lt;subject&gt;</Name>
+      <Name>When &lt;subject&gt;&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When a user-defined event occurs in &lt;subject&gt;</Name>
+          <Name>When &lt;subject&gt;&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -4513,7 +4808,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4522,7 +4817,32 @@
       <Name>When &lt;subject&gt; is closed by &lt;last closer&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is closed by &lt;last closer&gt;</Name>
@@ -4546,7 +4866,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4555,7 +4875,32 @@
       <Name>When &lt;subject&gt; is damaged by &lt;the damager&gt; for &lt;damage amount&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is damaged by &lt;the damager&gt; for &lt;damage amount&gt;</Name>
@@ -4579,7 +4924,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4588,7 +4933,32 @@
       <Name>When &lt;subject&gt; is killed by &lt;the killer&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is killed by &lt;the killer&gt;</Name>
@@ -4612,7 +4982,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4621,7 +4991,32 @@
       <Name>When &lt;subject&gt; is disarmed by &lt;disarmer&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is disarmed by &lt;disarmer&gt;</Name>
@@ -4646,7 +5041,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4655,7 +5050,32 @@
       <Name>When &lt;Subject&gt;&apos;s heart beats</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;Subject&gt;&apos;s heart beats</Name>
@@ -4681,7 +5101,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4690,7 +5110,32 @@
       <Name>When &lt;subject&gt; is locked with &lt;lock DC&gt; by &lt;locker&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is locked with &lt;lock DC&gt; by &lt;locker&gt;</Name>
@@ -4714,7 +5159,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4723,7 +5168,32 @@
       <Name>When &lt;subject&gt; is melee attacked with &lt;weapon used&gt; by &lt;the attacker&gt; in &lt;attack mode&gt; with &lt;attack type&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is melee attacked with &lt;weapon used&gt; by &lt;the attacker&gt; in &lt;attack mode&gt; with &lt;attack type&gt;</Name>
@@ -4747,7 +5217,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4756,7 +5226,32 @@
       <Name>When &lt;subject&gt; is opened by &lt;last opener&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is opened by &lt;last opener&gt;</Name>
@@ -4780,7 +5275,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4789,7 +5284,32 @@
       <Name>When &lt;Subject&gt; becomes the target of &lt;spell&gt; cast by &lt;spell caster&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;Subject&gt; becomes the target of &lt;spell&gt; cast by &lt;spell caster&gt;</Name>
@@ -4807,13 +5327,13 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>creature</Type>
                 <Type>placeable</Type>
+                <Type>door</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4822,7 +5342,32 @@
       <Name>When &lt;Subject&gt;&apos;s trap is triggered by &lt;entering creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;Subject&gt;&apos;s trap is triggered by &lt;entering creature&gt;</Name>
@@ -4847,7 +5392,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4856,7 +5401,32 @@
       <Name>When &lt;subject&gt; is unlocked by &lt;unlocker&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is unlocked by &lt;unlocker&gt;</Name>
@@ -4880,19 +5450,44 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When a user-defined event occurs</Name>
+      <Name>When &lt;subject&gt;&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When a user-defined event occurs</Name>
+          <Name>When &lt;subject&gt;&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -4915,19 +5510,44 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;disturbed item&gt; in the inventory of &lt;subject&gt; is &lt;disturbance type&gt; by &lt;last disturber&gt;</Name>
+      <Name>When &lt;subject&gt;&apos;s inventory is disturbed by &lt;last disturber&gt; disturbing &lt;disturbed item&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;disturbed item&gt; in the inventory of &lt;subject&gt; is &lt;disturbance type&gt; by &lt;last disturber&gt;</Name>
+          <Name>When &lt;subject&gt;&apos;s inventory is disturbed by &lt;last disturber&gt; disturbing &lt;disturbed item&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -4947,7 +5567,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4956,7 +5576,32 @@
       <Name>When &lt;subject&gt; is used by &lt;last user&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is used by &lt;last user&gt;</Name>
@@ -4979,7 +5624,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -4988,7 +5633,32 @@
       <Name>When &lt;subject&gt; is clicked by &lt;clicking creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is clicked by &lt;clicking creature&gt;</Name>
@@ -5006,13 +5676,14 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
+                <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>trigger</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5021,7 +5692,32 @@
       <Name>When &lt;subject&gt; fails to open for &lt;last clicker&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; fails to open for &lt;last clicker&gt;</Name>
@@ -5044,7 +5740,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5053,7 +5749,32 @@
       <Name>When &lt;subject&gt; is entered by &lt;entering creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is entered by &lt;entering creature&gt;</Name>
@@ -5076,7 +5797,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5085,7 +5806,32 @@
       <Name>When &lt;subject&gt; is exited by &lt;exiting creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is exited by &lt;exiting creature&gt;</Name>
@@ -5108,7 +5854,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5117,7 +5863,32 @@
       <Name>When &lt;subject&gt; is entered by &lt;entering creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is entered by &lt;entering creature&gt;</Name>
@@ -5140,7 +5911,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5149,7 +5920,32 @@
       <Name>When &lt;subject&gt; is exited by &lt;exiting creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is exited by &lt;exiting creature&gt;</Name>
@@ -5173,7 +5969,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5182,7 +5978,32 @@
       <Name>When &lt;subject&gt; is exhausted</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is exhausted</Name>
@@ -5205,22 +6026,47 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;dialogue&gt; is ended</Name>
+      <Name>When &lt;subject&gt; is ended</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>When &lt;dialogue&gt; is ended</Name>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
           <Visible>true</Visible>
           <Labels/>
-          <Subject>dialogue</Subject>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>When &lt;subject&gt; is ended</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Subject>subject</Subject>
           <Slot>EndConversation</Slot>
           <Id>121</Id>
           <Types>
@@ -5228,7 +6074,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>dialogue</Name>
+              <Name>subject</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -5237,22 +6083,47 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;dialogue&gt; is aborted</Name>
+      <Name>When &lt;subject&gt; is aborted</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>When &lt;dialogue&gt; is aborted</Name>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
           <Visible>true</Visible>
           <Labels/>
-          <Subject>dialogue</Subject>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>When &lt;subject&gt; is aborted</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Subject>subject</Subject>
           <Slot>EndConverAbort</Slot>
           <Id>122</Id>
           <Types>
@@ -5260,7 +6131,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>dialogue</Name>
+              <Name>subject</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -5269,7 +6140,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5278,7 +6149,32 @@
       <Name>When &lt;subject&gt;&apos;s heart beats</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt;&apos;s heart beats</Name>
@@ -5301,7 +6197,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5310,7 +6206,32 @@
       <Name>When &lt;subject&gt; loads</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; loads</Name>
@@ -5333,7 +6254,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5342,7 +6263,32 @@
       <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;</Name>
@@ -5365,7 +6311,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5374,7 +6320,32 @@
       <Name>When &lt;subject&gt; is exited by &lt;exiting client&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is exited by &lt;exiting client&gt;</Name>
@@ -5397,19 +6368,44 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>In &lt;subject&gt;, when a user-defined event occurs</Name>
+      <Name>When &lt;subject&gt;&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>In &lt;subject&gt;, when a user-defined event occurs</Name>
+          <Name>When &lt;subject&gt;&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -5429,19 +6425,44 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>In &lt;subject&gt;, when &lt;item lost by&gt; loses &lt;item lost&gt;</Name>
+      <Name>In &lt;subject&gt;, when &lt;item loser&gt; loses &lt;item lost&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>In &lt;subject&gt;, when &lt;item lost by&gt; loses &lt;item lost&gt;</Name>
+          <Name>In &lt;subject&gt;, when &lt;item loser&gt; loses &lt;item lost&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -5461,7 +6482,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5470,7 +6491,32 @@
       <Name>In &lt;subject&gt;, when &lt;dead player&gt; is killed by &lt;last hostile actor&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;dead player&gt; is killed by &lt;last hostile actor&gt;</Name>
@@ -5493,7 +6539,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5502,7 +6548,32 @@
       <Name>In &lt;subject&gt;, when &lt;dying player&gt;&apos;s health reaches zero</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;dying player&gt;&apos;s health reaches zero</Name>
@@ -5525,19 +6596,44 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>In &lt;subject&gt;, when &lt;levelling PC&gt;&apos;s health reaches zero</Name>
+      <Name>In &lt;subject&gt;, when &lt;levelling PC&gt; levels up</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>In &lt;subject&gt;, when &lt;levelling PC&gt;&apos;s health reaches zero</Name>
+          <Name>In &lt;subject&gt;, when &lt;levelling PC&gt; levels up</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -5557,7 +6653,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5566,7 +6662,32 @@
       <Name>In &lt;subject&gt;, when &lt;respawning player&gt; presses the respawn button</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;respawning player&gt; presses the respawn button</Name>
@@ -5589,7 +6710,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5598,7 +6719,32 @@
       <Name>In &lt;subject&gt;, when &lt;last PC rested&gt; rests &lt;rest type&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;last PC rested&gt; rests &lt;rest type&gt;</Name>
@@ -5621,7 +6767,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5630,7 +6776,32 @@
       <Name>In &lt;subject&gt;, when &lt;cutscene aborter&gt; aborts a cutscene</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;cutscene aborter&gt; aborts a cutscene</Name>
@@ -5653,7 +6824,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5662,7 +6833,32 @@
       <Name>In &lt;subject&gt;, when &lt;activator&gt; activates &lt;activated item&gt; on &lt;activated item target&gt; at &lt;activated item target location&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;activator&gt; activates &lt;activated item&gt; on &lt;activated item target&gt; at &lt;activated item target location&gt;</Name>
@@ -5685,7 +6881,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5694,7 +6890,32 @@
       <Name>In &lt;subject&gt;, when &lt;acquirer&gt; acquires &lt;acquired item&gt; from &lt;object item was acquired from&gt; with &lt;stack size&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;acquirer&gt; acquires &lt;acquired item&gt; from &lt;object item was acquired from&gt; with &lt;stack size&gt;</Name>
@@ -5717,7 +6938,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5726,7 +6947,32 @@
       <Name>In &lt;subject&gt;, when &lt;equipper&gt; equips &lt;last item equipped&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;equipper&gt; equips &lt;last item equipped&gt;</Name>
@@ -5749,7 +6995,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5758,7 +7004,32 @@
       <Name>In &lt;subject&gt;, when &lt;unequipper&gt; unequips &lt;unequipped item&gt; from &lt;possessor&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;unequipper&gt; unequips &lt;unequipped item&gt; from &lt;possessor&gt;</Name>
@@ -5781,7 +7052,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -5790,7 +7061,32 @@
       <Name>When &lt;subject&gt; is entered by &lt;Entering Creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is entered by &lt;Entering Creature&gt;</Name>
@@ -5813,22 +7109,47 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;dialogue line&gt; is reached</Name>
+      <Name>When &lt;subject&gt; is reached</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>When &lt;dialogue line&gt; is reached</Name>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
           <Visible>true</Visible>
           <Labels/>
-          <Subject>dialogue line</Subject>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>When &lt;subject&gt; is reached</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Subject>subject</Subject>
           <Slot>Script</Slot>
           <Id>140</Id>
           <Types>
@@ -5836,7 +7157,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>dialogue line</Name>
+              <Name>subject</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -5845,22 +7166,47 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef ref="children"/>
+            <FormatRef data="NONE" ref="children"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;quest point&gt; is enabled in &lt;module&gt;</Name>
+      <Name>In &lt;subject&gt;, when &lt;quest point&gt; is enabled</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>When &lt;quest point&gt; is enabled in &lt;module&gt;</Name>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
           <Visible>true</Visible>
           <Labels/>
-          <Subject>module</Subject>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>In &lt;subject&gt;, when &lt;quest point&gt; is enabled</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Subject>subject</Subject>
           <Slot>Mod_OnUsrDefined</Slot>
           <Id>141</Id>
           <Types>
@@ -5876,7 +7222,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>module</Name>
+              <Name>subject</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -5908,7 +7254,7 @@
               <Literal>)!= &quot;&quot;) {</Literal>
             </Line>
             <Indent>
-              <FormatRef ref="children"/>
+              <FormatRef data="NONE" ref="children"/>
             </Indent>
             <Line>
               <Literal>}</Literal>
@@ -5918,16 +7264,41 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Initialize Quest System for &lt;module&gt;</Name>
+      <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;, initialize Quest System and</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>Initialize Quest System for &lt;module&gt;</Name>
+      <Children>
+        <StoryItemSequence>
+          <Name>Story:</Name>
           <Visible>true</Visible>
           <Labels/>
-          <Subject>module</Subject>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+          <ValidTypes>
+            <Value>ScriptIt</Value>
+            <Value>AskIt</Value>
+            <Value>StoryComponentContainer</Value>
+            <Value>KnowIt</Value>
+          </ValidTypes>
+        </StoryItemSequence>
+      </Children>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;, initialize Quest System and</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Subject>subject</Subject>
           <Slot>Mod_OnClientEntr</Slot>
           <Id>434</Id>
           <Types>
@@ -5935,7 +7306,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>module</Name>
+              <Name>subject</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -23905,92 +25276,92 @@
             </KnowIt>
           </Parameters>
           <Code>
-			<Line>
-				<Literal>string templateID = &quot;</Literal>
-				<Scope data="argument" ref="Object">
-					<Fragment data="templateID" />
-				</Scope>
-				<Literal>&quot;;</Literal>
-			</Line>
-			<Line>
-				<Literal>int dotLoc = FindSubString(templateID, &quot;.&quot;);</Literal>
-			</Line>
-			<Line>
-				<Literal>string resref = GetStringLeft(templateID, dotLoc);</Literal>
-			</Line>
-			<Line>
-				<Literal>string typeExt = GetStringRight(templateID, dotLoc);</Literal>
-			</Line>
-			<Line>
-				<Literal>int type;</Literal>
-			</Line>
-			<Line>
-				<Literal>// Cleverly determine that pesky constant from the template id (resref) extension.</Literal>
-			</Line> 
-			<Line>
-				<Literal>if(typeExt == "utc"){</Literal>
-			</Line>
-			<Indent>
-				<Line>
-					<Literal>// this little piggy was a piggy</Literal>
-				</Line>
-				<Line>
-					<Literal>type = OBJECT_TYPE_CREATURE;</Literal>
-				</Line>
-			</Indent>
-			<Line>
-				<Literal>} else if(typeExt == "uti"){</Literal>
-			</Line>
-			<Indent>
-				<Line>
-					<Literal>// this little piggy was a meal</Literal>
-				</Line>
-				<Line>
-					<Literal>type = OBJECT_TYPE_ITEM;</Literal>
-				</Line>
-			</Indent>
-			<Line>
-				<Literal>} else if(typeExt == "utp"){</Literal>
-			</Line>
-			<Indent>
-				<Line>
-					<Literal>// this little piggy was a statue</Literal>
-				</Line>
-				<Line>
-					<Literal>type = OBJECT_TYPE_PLACEABLE;</Literal>
-				</Line>
-			</Indent>
-			<Line>
-				<Literal>} else if(typeExt == "uts"){</Literal>
-			</Line>
-			<Indent>
-				<Line>
-					<Literal>// this little piggy was a butcher's shop</Literal>
-				</Line>
-				<Line>
-					<Literal>type = OBJECT_TYPE_STORE;</Literal>
-				</Line>
-			</Indent>
-			<Line>
-				<Literal>} else if(typeExt == "utw"){</Literal>
-			</Line>
-			<Indent>
-				<Line>
-					<Literal>// and this little piggy went wee wee wee, all the way home.</Literal>
-				</Line> 
-				<Line>
-					<Literal>// Because it knows where that is.</Literal>
-				</Line>
-				<Line>
-					<Literal>type = OBJECT_TYPE_WAYPOINT;</Literal>
-				</Line>
-			</Indent>
-			<Line>
-				<Literal>}</Literal>
-			</Line>
-			<Line>
-				<Literal>// Now we can actually do the thing with the stuff.</Literal>
-			</Line>
+            <Line>
+              <Literal>string templateID = &quot;</Literal>
+              <Scope data="argument" ref="Object">
+                <Fragment data="templateID"/>
+              </Scope>
+              <Literal>&quot;;</Literal>
+            </Line>
+            <Line>
+              <Literal>int dotLoc = FindSubString(templateID, &quot;.&quot;);</Literal>
+            </Line>
+            <Line>
+              <Literal>string resref = GetStringLeft(templateID, dotLoc);</Literal>
+            </Line>
+            <Line>
+              <Literal>string typeExt = GetStringRight(templateID, dotLoc);</Literal>
+            </Line>
+            <Line>
+              <Literal>int type;</Literal>
+            </Line>
+            <Line>
+              <Literal>// Cleverly determine that pesky constant from the template id (resref) extension.</Literal>
+            </Line>
+            <Line>
+              <Literal>if(typeExt == &quot;utc&quot;){</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>// this little piggy was a piggy</Literal>
+              </Line>
+              <Line>
+                <Literal>type = OBJECT_TYPE_CREATURE;</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>} else if(typeExt == &quot;uti&quot;){</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>// this little piggy was a meal</Literal>
+              </Line>
+              <Line>
+                <Literal>type = OBJECT_TYPE_ITEM;</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>} else if(typeExt == &quot;utp&quot;){</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>// this little piggy was a statue</Literal>
+              </Line>
+              <Line>
+                <Literal>type = OBJECT_TYPE_PLACEABLE;</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>} else if(typeExt == &quot;uts&quot;){</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>// this little piggy was a butcher&apos;s shop</Literal>
+              </Line>
+              <Line>
+                <Literal>type = OBJECT_TYPE_STORE;</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>} else if(typeExt == &quot;utw&quot;){</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>// and this little piggy went wee wee wee, all the way home.</Literal>
+              </Line>
+              <Line>
+                <Literal>// Because it knows where that is.</Literal>
+              </Line>
+              <Line>
+                <Literal>type = OBJECT_TYPE_WAYPOINT;</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>}</Literal>
+            </Line>
+            <Line>
+              <Literal>// Now we can actually do the thing with the stuff.</Literal>
+            </Line>
             <Line>
               <Literal>CreateObject(</Literal>
               <Scope data="argument" ref="Object Type">
@@ -24037,7 +25408,7 @@
             <Line>
               <Literal>SE2_Quest_ResetAtQuestPoint(GetFirstPC(), </Literal>
               <Scope data="argument" ref="Quest Point">
-                <Fragment data="name" />
+                <Fragment data="name"/>
               </Scope>
               <Literal>);</Literal>
             </Line>
