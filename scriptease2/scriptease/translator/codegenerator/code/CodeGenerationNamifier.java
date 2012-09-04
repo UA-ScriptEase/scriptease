@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import scriptease.gui.WindowFactory;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.translator.LanguageDictionary;
@@ -118,6 +119,9 @@ public class CodeGenerationNamifier {
 
 		// there isn't already a name, we need to generate one.
 		counter = 0;
+		
+		if(component instanceof QuestPoint)
+			System.out.println("brekapoint");
 
 		name = StringOp.removeIllegalCharacters(component.getDisplayText(),
 				legalFormat);

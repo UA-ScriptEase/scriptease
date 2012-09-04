@@ -104,7 +104,7 @@ public class SimpleDataFragment extends AbstractFragment {
 			else if (dataLabel
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.CURRENTQUESTPOINT
 							.name()))
-				resolveString = context.getQuestPoint().getDisplayText();
+				resolveString = context.getQuestPointName();
 			else if (dataLabel
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.FORMATTEDVALUE
 							.name()))
