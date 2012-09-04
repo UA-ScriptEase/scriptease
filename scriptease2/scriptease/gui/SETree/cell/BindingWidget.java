@@ -24,7 +24,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
-import scriptease.translator.io.model.IdentifiableGameConstant;
+import scriptease.translator.io.tools.SimpleGameConstant;
 
 /**
  * Represents a binding or binding slot that can be dropped onto slots via drag
@@ -70,8 +70,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 			@Override
 			public void processConstant(KnowItBindingConstant constant) {
 				if (constant.isIdentifiableGameConstant()) {
-					String blueprint = ((IdentifiableGameConstant) constant
-							.getValue()).getTemplateID();
+					String blueprint = constant.getValue().getTemplateID();
 					if (blueprint != null && !blueprint.isEmpty())
 						BindingWidget.this.setToolTipText(blueprint);
 				}
@@ -138,10 +137,10 @@ public class BindingWidget extends JPanel implements Cloneable {
 		binding.process(new BindingVisitor() {
 			@Override
 			public void processConstant(KnowItBindingConstant constant) {
-				if (constant.getValue() instanceof IdentifiableGameConstant)
-					updateBackground(ScriptEaseUI.COLOUR_GAME_OBJECT);
-				else
+				if (constant.getValue() instanceof SimpleGameConstant)
 					updateBackground(ScriptEaseUI.COLOUR_SIMPLE);
+				else
+					updateBackground(ScriptEaseUI.COLOUR_GAME_OBJECT);
 			}
 
 			@Override

@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
 import scriptease.translator.io.model.GameConstant;
-import scriptease.translator.io.model.IdentifiableGameConstant;
+import scriptease.translator.io.tools.SimpleGameConstant;
 
 /**
  * This class represents a <b>Constant</b> binding for a <code>KnowIt</code>.
@@ -22,18 +22,15 @@ public class KnowItBindingConstant extends KnowItBinding {
 		this.constantValue = value;
 	}
 
-
-	
 	@Override
 	public String getScriptValue() {
 		return this.constantValue.getResolutionText();
 	}
-	
-	
+
 	public String getTag() {
 		return this.constantValue.getTag();
 	}
-	
+
 	public String getTemplateID() {
 		return this.constantValue.getTemplateID();
 	}
@@ -47,12 +44,11 @@ public class KnowItBindingConstant extends KnowItBinding {
 	public Collection<String> getTypes() {
 		return this.constantValue.getTypes();
 	}
-	
+
 	@Override
 	public String toString() {
 		if (this.isIdentifiableGameConstant())
-			return ((IdentifiableGameConstant) (this.getValue()))
-					.getTemplateID();
+			return this.getValue().getTemplateID();
 		return this.getValue().getTypes().iterator().next();
 	}
 
@@ -64,7 +60,7 @@ public class KnowItBindingConstant extends KnowItBinding {
 	 *         <code>false</code> otherwise.
 	 */
 	public boolean isIdentifiableGameConstant() {
-		return this.constantValue instanceof IdentifiableGameConstant;
+		return !(this.constantValue instanceof SimpleGameConstant);
 	}
 
 	@Override

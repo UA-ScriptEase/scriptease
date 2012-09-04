@@ -140,6 +140,7 @@ public interface GameModule {
 	 * @param template
 	 *            The template whose data must be written to memory.
 	 * @see #addScripts(Collection)
+	 * @see GameObject
 	 */
 	public void addGameObject(GameObject object);
 
@@ -151,6 +152,7 @@ public interface GameModule {
 	 * 
 	 * @param scripts
 	 *            A list of scripts to be written to file.
+	 * @see ScriptInfo
 	 */
 	public void addScripts(Collection<ScriptInfo> scripts);
 
@@ -164,6 +166,8 @@ public interface GameModule {
 	 *            The root of the tree to aggregate from.
 	 * @return The collection of StartItOwner objects that should all be
 	 *         generating into the same file.
+	 * @see CodeBlock
+	 * @see StoryComponent
 	 */
 	public Collection<Set<CodeBlock>> aggregateScripts(
 			Collection<StoryComponent> root);
