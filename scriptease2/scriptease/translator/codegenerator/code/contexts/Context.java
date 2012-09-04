@@ -319,11 +319,6 @@ public class Context {
 		return null;
 	}
 	
-	public QuestPoint getQuestPoint() {
-		unimplemented("getQuestPoint");
-		return null;
-	}
-
 	public Iterator<KnowIt> getParameters() {
 		unimplemented("getParameters");
 		return new ArrayList<KnowIt>().iterator();
@@ -471,6 +466,11 @@ public class Context {
 
 	public Set<String> getIncludeFiles() {
 		unimplemented("getIncludeFiles");
+		return null;
+	}
+	
+	public String getQuestPointName() {
+		unimplemented("getQuestPointName");
 		return null;
 	}
 
