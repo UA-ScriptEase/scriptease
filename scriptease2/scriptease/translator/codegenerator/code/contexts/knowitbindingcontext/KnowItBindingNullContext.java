@@ -30,7 +30,7 @@ public class KnowItBindingNullContext extends KnowItBindingContext {
 
 	public KnowItBindingNullContext(Context other, KnowItBinding source) {
 		this(other);
-		binding = source;
+		this.binding = source;
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class KnowItBindingNullContext extends KnowItBindingContext {
 	 */
 	@Override
 	public String getValue() {
-		return ((KnowItBindingNull) binding).getScriptValue();
+		return ((KnowItBindingNull) this.binding).getScriptValue();
 	}
 
 }

@@ -41,7 +41,7 @@ public class WizardDialog extends JDialog implements ActionListener {
 		this.title = title;
 		this.pages = pages;
 		this.finish = finish;
-		currentPage = 0;
+		this.currentPage = 0;
 	}
 
 	/**
@@ -79,29 +79,29 @@ public class WizardDialog extends JDialog implements ActionListener {
 		cardPanel.setLayout(cardLayout);
 
 		// Add buttons and listeners
-		backButton = new JButton("Back");
-		nextButton = new JButton("Next");
-		finishButton = new JButton("Finish");
-		cancelButton = new JButton("Cancel");
+		this.backButton = new JButton("Back");
+		this.nextButton = new JButton("Next");
+		this.finishButton = new JButton("Finish");
+		this.cancelButton = new JButton("Cancel");
 
-		backButton.addActionListener(new ActionListener() {
+		this.backButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Show the next page
 				cardLayout.previous(cardPanel);
-				currentPage--;
+				WizardDialog.this.currentPage--;
 				if (WizardDialog.this.currentPage == 0)
 					WizardDialog.this.backButton.setEnabled(false);
 				WizardDialog.this.nextButton.setEnabled(true);
 			}
 		});
 
-		nextButton.addActionListener(new ActionListener() {
+		this.nextButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Show the next page
 				cardLayout.next(cardPanel);
-				currentPage++;
+				WizardDialog.this.currentPage++;
 				if (WizardDialog.this.currentPage == WizardDialog.this.pages
 						.size() - 1)
 					WizardDialog.this.nextButton.setEnabled(false);
@@ -109,7 +109,7 @@ public class WizardDialog extends JDialog implements ActionListener {
 			}
 		});
 
-		cancelButton.addActionListener(new ActionListener() {
+		this.cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
@@ -118,20 +118,20 @@ public class WizardDialog extends JDialog implements ActionListener {
 			}
 		});
 
-		finishButton.addActionListener(this);
+		this.finishButton.addActionListener(this);
 
 		// Finalize the layout
 		buttonPanel.setLayout(new BorderLayout());
 		buttonPanel.add(new JSeparator(), BorderLayout.NORTH);
 
 		buttonBox.setBorder(new EmptyBorder(new Insets(5, 10, 5, 10)));
-		buttonBox.add(backButton);
+		buttonBox.add(this.backButton);
 		buttonBox.add(Box.createHorizontalStrut(10));
-		buttonBox.add(nextButton);
+		buttonBox.add(this.nextButton);
 		buttonBox.add(Box.createHorizontalStrut(30));
-		buttonBox.add(finishButton);
+		buttonBox.add(this.finishButton);
 		buttonBox.add(Box.createHorizontalStrut(10));
-		buttonBox.add(cancelButton);
+		buttonBox.add(this.cancelButton);
 		buttonPanel.add(buttonBox, BorderLayout.EAST);
 
 		this.add(cardPanel, BorderLayout.NORTH);
@@ -139,11 +139,11 @@ public class WizardDialog extends JDialog implements ActionListener {
 
 		// Hide back and next if there is less than 2 pages
 		if (this.pages.size() < 2) {
-			backButton.setVisible(false);
-			nextButton.setVisible(false);
+			this.backButton.setVisible(false);
+			this.nextButton.setVisible(false);
 		}
-		finishButton.setEnabled(false);
-		backButton.setEnabled(false);
+		this.finishButton.setEnabled(false);
+		this.backButton.setEnabled(false);
 
 		this.setResizable(false);
 		this.pack();

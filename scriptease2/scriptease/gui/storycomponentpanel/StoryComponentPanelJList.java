@@ -66,7 +66,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 		this.setModel(listModel);
 
-		filterRule = new VisibilityFilter(hideInvisible);
+		this.filterRule = new VisibilityFilter(hideInvisible);
 
 		if (filter != null)
 			this.updateFilter(filter);
@@ -102,8 +102,8 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		listModel.removeElement(noResultsPanel);
 
 		for (StoryComponent component : storyComponentList) {
-			if (!(filterRule == null)) {
-				if (!filterRule.isAcceptable(component))
+			if (!(this.filterRule == null)) {
+				if (!this.filterRule.isAcceptable(component))
 					continue;
 			}
 

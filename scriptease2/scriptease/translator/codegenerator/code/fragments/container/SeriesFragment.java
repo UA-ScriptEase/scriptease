@@ -105,7 +105,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 
 	public void setFilterType(SeriesFilterType filterType) {
 		this.filterType = filterType;
-		this.seriesFilter = new SeriesFilter(filter, this.filterType);
+		this.seriesFilter = new SeriesFilter(this.filter, this.filterType);
 	}
 	
 	public boolean isUnique() {
@@ -138,7 +138,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 			next = it.next();
 
 			newContext = contextFactory.createContext(context, next);
-			code.append(AbstractFragment.resolveFormat(subFragments, newContext));
+			code.append(AbstractFragment.resolveFormat(this.subFragments, newContext));
 
 			if (it.hasNext())
 				code.append(this.separator);
@@ -261,8 +261,8 @@ public class SeriesFragment extends AbstractContainerFragment {
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() + subFragments.hashCode() + separator.hashCode()
-				+ seriesFilter.hashCode();
+		return super.hashCode() + this.subFragments.hashCode() + this.separator.hashCode()
+				+ this.seriesFilter.hashCode();
 	}
 
 	@Override
@@ -319,7 +319,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 					this.filtered.add(object);
 				}
 			}
-			return filtered.iterator();
+			return this.filtered.iterator();
 		}
 
 		/**
@@ -340,7 +340,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 		private void processStoryComponent(StoryComponent component) {
 			if (this.type.equals(SeriesFilterType.NAME))
 				if (passesFilter(component.getDisplayText()))
-					filtered.add(component);
+					this.filtered.add(component);
 		}
 
 		@Override
@@ -354,7 +354,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 			if (this.type.equals(SeriesFilterType.SLOT)) {
 				for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
 					if (passesFilter(codeBlock.getSlot())) {
-						filtered.add(scriptIt);
+						this.filtered.add(scriptIt);
 						return;
 					}
 				}

@@ -185,7 +185,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 		 * All types default to on. Future feature: this could potentially be
 		 * saved to the user preferences file for reloading. - remiller
 		 */
-		this.typeBuilder = new TypeSelectionDialogBuilder(action);
+		this.typeBuilder = new TypeSelectionDialogBuilder(this.action);
 		this.updateName();
 	}
 }

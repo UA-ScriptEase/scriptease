@@ -81,7 +81,7 @@ public class StoryComponentPanel extends JPanel implements
 		adder.observeRelated(this, this.component);
 
 		// Layout
-		this.setLayout(layout);
+		this.setLayout(this.layout);
 
 		this.addFocusListener(ComponentFocusManager.getInstance()
 				.defaultFocusListener(this));
@@ -91,15 +91,15 @@ public class StoryComponentPanel extends JPanel implements
 
 	@Override
 	public StoryComponentPanelLayoutManager getLayout() {
-		return layout;
+		return this.layout;
 	}
 
 	public boolean showChildren() {
-		return layout.showChildren();
+		return this.layout.showChildren();
 	}
 
 	public void setShowChildren(boolean showChildren) {
-		layout.setShowChildren(showChildren);
+		this.layout.setShowChildren(showChildren);
 	}
 
 	public boolean isEditable() {
@@ -146,7 +146,7 @@ public class StoryComponentPanel extends JPanel implements
 	 * @return
 	 */
 	public StoryComponent getStoryComponent() {
-		return component;
+		return this.component;
 	}
 
 	/**

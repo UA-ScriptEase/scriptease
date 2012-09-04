@@ -33,7 +33,7 @@ public class StoryComponentContext extends Context {
 
 	public StoryComponentContext(Context other, StoryComponent source) {
 		this(other);
-		component = source;
+		this.component = source;
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class StoryComponentContext extends Context {
 	 */
 	@Override
 	public String getName() {
-		return this.getNameOf(component);
+		return this.getNameOf(this.component);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class StoryComponentContext extends Context {
 	 */
 	@Override
 	public StoryComponent getOwner() {
-		return component.getOwner();
+		return this.component.getOwner();
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class StoryComponentContext extends Context {
 	 */
 	@Override
 	public String getUniqueName(Pattern legalFormat) {
-		return this.getNamifier().getUniqueName(component, legalFormat);
+		return this.getNamifier().getUniqueName(this.component, legalFormat);
 	}
 
 	/**

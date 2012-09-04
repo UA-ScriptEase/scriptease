@@ -31,7 +31,7 @@ public class KnowItBindingReferenceContext extends KnowItBindingContext {
 
 	public KnowItBindingReferenceContext(Context other, KnowItBinding source) {
 		this(other);
-		binding = source;
+		this.binding = source;
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class KnowItBindingReferenceContext extends KnowItBindingContext {
 	@Override
 	public String getValue() {
 		Context knowItContext = ContextFactory.getInstance().createContext(
-				this, ((KnowItBindingReference) binding).getValue());
+				this, ((KnowItBindingReference) this.binding).getValue());
 		return knowItContext.getName();
 	}
 }

@@ -31,7 +31,7 @@ public class KnowItNodeEditor extends GraphNodeEditor {
 	public KnowItNodeEditor() {
 		super();
 		this.typeField = new JButton();
-		this.add(typeField);
+		this.add(this.typeField);
 	}
 
 	/**
@@ -44,16 +44,18 @@ public class KnowItNodeEditor extends GraphNodeEditor {
 		super.setNode(node);
 		final TypeSelectionAction typeFilter = new TypeSelectionAction();
 		final KnowIt knowIt = ((KnowItNode) node).getKnowIt();
-		typeFilter.getTypeSelectionDialogBuilder().selectTypes(knowIt.getTypes(), true);
+		typeFilter.getTypeSelectionDialogBuilder().selectTypes(
+				knowIt.getTypes(), true);
 		typeFilter.setAction(new Runnable() {
 			@Override
 			public void run() {
-				updateKnowItTypes(typeFilter.getTypeSelectionDialogBuilder().getSelectedTypes());
+				updateKnowItTypes(typeFilter.getTypeSelectionDialogBuilder()
+						.getSelectedTypes());
 			}
 		});
-		this.remove(typeField);
+		this.remove(this.typeField);
 		this.typeField = buildField("Types", new JButton(typeFilter));
-		this.add(typeField);
+		this.add(this.typeField);
 	}
 
 	/**
@@ -65,13 +67,15 @@ public class KnowItNodeEditor extends GraphNodeEditor {
 	protected JTextField getNameField() {
 		JTextField nullField = new JTextField("");
 		nullField.setVisible(false);
-		if (node == null) {
+		if (this.node == null) {
+
 			System.out.println("Node is null");
 
 			return nullField;
 		}
 		final JTextField nameField = new JTextField(FIELD_SIZE);
-		nameField.setText(((KnowItNode) node).getKnowIt().getDisplayText());
+		nameField
+				.setText(((KnowItNode) this.node).getKnowIt().getDisplayText());
 		nameField.addCaretListener(new CaretListener() {
 
 			@Override
@@ -88,7 +92,7 @@ public class KnowItNodeEditor extends GraphNodeEditor {
 	 * @param newText
 	 */
 	private void updateKnowItName(String newText) {
-		KnowItNode knowItNode = (KnowItNode) node;
+		KnowItNode knowItNode = (KnowItNode) this.node;
 		KnowIt knowIt = knowItNode.getKnowIt();
 		if (!newText.equals(knowIt.getDisplayText())) {
 			// TODO: Undo/Redo
@@ -102,7 +106,7 @@ public class KnowItNodeEditor extends GraphNodeEditor {
 	 * @param types
 	 */
 	private void updateKnowItTypes(Collection<String> types) {
-		KnowItNode knowItNode = (KnowItNode) node;
+		KnowItNode knowItNode = (KnowItNode) this.node;
 		KnowIt knowIt = knowItNode.getKnowIt();
 		if (!knowIt.getTypes().equals(types)) {
 			// TODO: Undo/Redo

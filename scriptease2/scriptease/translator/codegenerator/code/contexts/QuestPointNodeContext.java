@@ -33,12 +33,12 @@ public class QuestPointNodeContext extends GraphNodeContext {
 
 	public QuestPointNodeContext(Context other, QuestPointNode source) {
 		this(other);
-		node = source;
+		this.node = source;
 	}
 
 	@Override
 	public String getName() {
-		QuestPoint questPoint = ((QuestPointNode) node).getQuestPoint();
+		QuestPoint questPoint = ((QuestPointNode) this.node).getQuestPoint();
 		return this.getNameOf(questPoint);
 	}
 
@@ -49,7 +49,7 @@ public class QuestPointNodeContext extends GraphNodeContext {
 
 	@Override
 	public String getUniqueName(Pattern legalFormat) {
-		QuestPoint questPoint = ((QuestPointNode) node).getQuestPoint();
+		QuestPoint questPoint = ((QuestPointNode) this.node).getQuestPoint();
 		return this.getNamifier().getUniqueName(questPoint, legalFormat);
 	}
 
@@ -72,13 +72,13 @@ public class QuestPointNodeContext extends GraphNodeContext {
 
 	@Override
 	public String getFanIn() {
-		QuestPoint questPoint = ((QuestPointNode) node).getQuestPoint();
+		QuestPoint questPoint = ((QuestPointNode) this.node).getQuestPoint();
 		return questPoint.getFanIn().toString();
 	}
 
 	@Override
 	public String getQuestContainer() {
-		QuestPoint questPoint = ((QuestPointNode) node).getQuestPoint();
+		QuestPoint questPoint = ((QuestPointNode) this.node).getQuestPoint();
 		return questPoint.getQuestContainer().getName();
 	}
 }

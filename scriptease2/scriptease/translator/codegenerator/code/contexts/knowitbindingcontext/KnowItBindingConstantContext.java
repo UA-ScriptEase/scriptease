@@ -39,7 +39,7 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 
 	public KnowItBindingConstantContext(Context other, KnowItBinding source) {
 		this(other);
-		binding = source;
+		this.binding = source;
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 		final Collection<AbstractFragment> typeFormat;
 
 		typeFormat = this.translator.getGameTypeManager().getFormat(
-				((KnowItBindingConstant) binding).getFirstType());
+				((KnowItBindingConstant) this.binding).getFirstType());
 
 		if (typeFormat == null || typeFormat.isEmpty()
 				&& this.binding instanceof KnowItBindingConstant) {
@@ -81,7 +81,7 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 
 	@Override
 	public KnowIt getParameter(String parameter) {
-		return new KnowIt(((KnowItBindingConstant) binding).getTag());
+		return new KnowIt(((KnowItBindingConstant) this.binding).getTag());
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 	 */
 	@Override
 	public String getValue() {
-		return ((KnowItBindingConstant) binding).getScriptValue();
+		return ((KnowItBindingConstant) this.binding).getScriptValue();
 	}
 
 	/**
@@ -97,6 +97,6 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 	 */
 	@Override
 	public String getUniqueName(Pattern legalFormat) {
-		return ((KnowItBindingConstant) binding).getValue().getName();
+		return ((KnowItBindingConstant) this.binding).getValue().getName();
 	}
 }

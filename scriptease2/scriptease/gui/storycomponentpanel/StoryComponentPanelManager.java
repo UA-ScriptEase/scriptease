@@ -115,8 +115,7 @@ public class StoryComponentPanelManager {
 			// only delete removable panels
 			if (panel.isRemovable()) {
 				final StoryComponent child = panel.getStoryComponent();
-				final StoryComponent owner = (ComplexStoryComponent) child
-						.getOwner();
+				final StoryComponent owner = child.getOwner();
 				// if the owner is its parent, remove the child
 				if (owner instanceof ComplexStoryComponent
 						&& ((ComplexStoryComponent) owner).hasChild(child)){
@@ -212,7 +211,7 @@ public class StoryComponentPanelManager {
 		final boolean shiftPressed = e.isShiftDown();
 		// if shift is pressed
 		if (shiftPressed) {
-			shiftSelection(lastSelected, panel);
+			shiftSelection(this.lastSelected, panel);
 		}
 		// otherwise worry about ctrl and single selection
 		else {

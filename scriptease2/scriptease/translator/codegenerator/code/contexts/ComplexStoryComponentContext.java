@@ -40,7 +40,7 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	public ComplexStoryComponentContext(Context other,
 			ComplexStoryComponent source) {
 		this(other);
-		component = source;
+		this.component = source;
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	@Override
 	public Iterator<ScriptIt> getScriptIts() {
 		final Collection<ScriptIt> scriptIts = new ArrayList<ScriptIt>();
-		for (StoryComponent child : ((ComplexStoryComponent) component)
+		for (StoryComponent child : ((ComplexStoryComponent) this.component)
 				.getChildren()) {
 			child.process(new AbstractNoOpStoryVisitor() {
 				@Override
@@ -67,7 +67,7 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	@Override
 	public Iterator<KnowIt> getVariables() {
 		VariableGetter variableGetter = new VariableGetter();
-		Collection<StoryComponent> children = ((ComplexStoryComponent) component)
+		Collection<StoryComponent> children = ((ComplexStoryComponent) this.component)
 				.getChildren();
 		for (StoryComponent child : children) {
 			child.process(variableGetter);
@@ -78,7 +78,7 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	@Override
 	public Iterator<KnowIt> getImplicits() {
 		ImplicitGetter implicitGetter = new ImplicitGetter();
-		Collection<StoryComponent> children = ((ComplexStoryComponent) component)
+		Collection<StoryComponent> children = ((ComplexStoryComponent) this.component)
 				.getChildren();
 		for (StoryComponent child : children) {
 			child.process(implicitGetter);
@@ -91,7 +91,7 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	 */
 	@Override
 	public Iterator<StoryComponent> getChildren() {
-		return ((ComplexStoryComponent) component).getChildren().iterator();
+		return ((ComplexStoryComponent) this.component).getChildren().iterator();
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	@Override
 	public Iterator<AskIt> getAskIts() {
 		AskItGetter askItGetter = new AskItGetter();
-		Collection<StoryComponent> children = ((ComplexStoryComponent) component)
+		Collection<StoryComponent> children = ((ComplexStoryComponent) this.component)
 				.getChildren();
 		for (StoryComponent child : children) {
 			child.process(askItGetter);

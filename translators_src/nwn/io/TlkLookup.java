@@ -95,7 +95,7 @@ public class TlkLookup {
 	public String lookup(long stringRef) throws IOException {
 		String result = null;
 
-		if(customTLK == null || defaultTLK == null) {
+		if(this.customTLK == null || this.defaultTLK == null) {
 			return "";
 		}
 		// first, check if it is a valid String Ref, as per documentation
@@ -106,9 +106,9 @@ public class TlkLookup {
 
 		// then, we check stringRef's custom tlk bit
 		if ((stringRef & CUSTOM_TLK_BIT) != 0) {
-			result = customTLK.get(stringRef);
+			result = this.customTLK.get(stringRef);
 		} else {
-			result = defaultTLK.get(stringRef);
+			result = this.defaultTLK.get(stringRef);
 		}
 
 		return result;

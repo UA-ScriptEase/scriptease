@@ -130,8 +130,8 @@ public class TypeSelectionDialogBuilder {
 		closeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (closeAction != null)
-					closeAction.run();
+				if (TypeSelectionDialogBuilder.this.closeAction != null)
+					TypeSelectionDialogBuilder.this.closeAction.run();
 				typeDialog.setVisible(false);
 			}
 		});
@@ -139,8 +139,8 @@ public class TypeSelectionDialogBuilder {
 		typeDialog.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				if (closeAction != null)
-					closeAction.run();
+				if (TypeSelectionDialogBuilder.this.closeAction != null)
+					TypeSelectionDialogBuilder.this.closeAction.run();
 				typeDialog.setVisible(false);
 			}
 		});
@@ -152,7 +152,7 @@ public class TypeSelectionDialogBuilder {
 		this.allButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selectTypes(typesToSelected.keySet(), !isAllSelected());
+				selectTypes(TypeSelectionDialogBuilder.this.typesToSelected.keySet(), !isAllSelected());
 				updateAllButton();
 			}
 		});
@@ -286,9 +286,9 @@ public class TypeSelectionDialogBuilder {
 	 * @param isSelected
 	 */
 	public void selectType(String type, boolean isSelected) {
-		typesToSelected.put(type, Boolean.valueOf(isSelected));
+		this.typesToSelected.put(type, Boolean.valueOf(isSelected));
 
-		for (CheckBoxPanel panel : checkBoxPanels) {
+		for (CheckBoxPanel panel : this.checkBoxPanels) {
 			if (panel.getTypeText().equals(type))
 				panel.setSelected(isSelected);
 		}
@@ -323,7 +323,7 @@ public class TypeSelectionDialogBuilder {
 		public void mouseClicked(MouseEvent e) {
 			final String typeText = this.checkPanel.getTypeText();
 
-			boolean selected = typesToSelected.get(typeText);
+			boolean selected = TypeSelectionDialogBuilder.this.typesToSelected.get(typeText);
 
 			selectType(typeText, !selected);
 		}
@@ -372,7 +372,7 @@ public class TypeSelectionDialogBuilder {
 
 			this.add(this.checkBox, BorderLayout.EAST);
 
-			this.add(typeLabel, BorderLayout.WEST);
+			this.add(this.typeLabel, BorderLayout.WEST);
 
 			this.setBorder(BorderFactory.createEtchedBorder());
 

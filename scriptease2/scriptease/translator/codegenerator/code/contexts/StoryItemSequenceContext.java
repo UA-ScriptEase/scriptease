@@ -28,6 +28,6 @@ public class StoryItemSequenceContext extends ComplexStoryComponentContext {
 
 	public StoryItemSequenceContext(Context other, StoryItemSequence source) {
 		this(other);
-		component = source;
+		this.component = source;
 	}
 }

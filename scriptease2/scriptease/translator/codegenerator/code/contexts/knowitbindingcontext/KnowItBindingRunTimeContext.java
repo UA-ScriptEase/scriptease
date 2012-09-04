@@ -29,6 +29,6 @@ public class KnowItBindingRunTimeContext extends KnowItBindingContext {
 
 	public KnowItBindingRunTimeContext(Context other, KnowItBinding source) {
 		this(other);
-		binding = source;
+		this.binding = source;
 	}
 }

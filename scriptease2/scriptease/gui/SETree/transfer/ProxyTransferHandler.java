@@ -25,30 +25,30 @@ public class ProxyTransferHandler extends TransferHandler {
 		if (object.getTransferHandler() == null)
 			throw new IllegalArgumentException(
 					"object must have a transfer handler");
-		proxy = object;
+		this.proxy = object;
 	}
 
 	@Override
 	public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
-		return proxy.getTransferHandler().canImport(comp, transferFlavors);
+		return this.proxy.getTransferHandler().canImport(comp, transferFlavors);
 	}
 
 	@Override
 	public boolean importData(JComponent comp, Transferable t) {
-		return proxy.getTransferHandler().importData(comp, t);
+		return this.proxy.getTransferHandler().importData(comp, t);
 	}
 
 	@Override
 	public boolean canImport(TransferSupport support) {
-		TransferSupport proxySupport = new TransferSupport(proxy,
+		TransferSupport proxySupport = new TransferSupport(this.proxy,
 				support.getTransferable());
-		return proxy.getTransferHandler().canImport(proxySupport);
+		return this.proxy.getTransferHandler().canImport(proxySupport);
 	}
 
 	@Override
 	public boolean importData(TransferSupport support) {
-		TransferSupport proxySupport = new TransferSupport(proxy,
+		TransferSupport proxySupport = new TransferSupport(this.proxy,
 				support.getTransferable());
-		return proxy.getTransferHandler().importData(proxySupport);
+		return this.proxy.getTransferHandler().importData(proxySupport);
 	}
 }

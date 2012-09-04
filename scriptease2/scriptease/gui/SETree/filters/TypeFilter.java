@@ -54,7 +54,7 @@ public class TypeFilter extends StoryComponentFilter {
 				String nextType = typeIterator.next();
 
 				// If the type matches, accept it.
-				if (types.contains(nextType)) {
+				if (TypeFilter.this.types.contains(nextType)) {
 					this.acceptable = true;
 					return;
 				}

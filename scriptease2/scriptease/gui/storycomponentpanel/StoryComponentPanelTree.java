@@ -68,7 +68,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 				.buildStoryComponentPanel(root);
 		this.rootPanel.updateComplexSettings();
 		this.selectionManager.clearSelection();
-		this.selectionManager.addComplexPanel(rootPanel, false);
+		this.selectionManager.addComplexPanel(this.rootPanel, false);
 
 		this.filterTree(this.rootPanel);
 
@@ -167,7 +167,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 
 	@Override
 	public String toString() {
-		return "StoryComponentPanelTree [" + rootPanel.getStoryComponent()
+		return "StoryComponentPanelTree [" + this.rootPanel.getStoryComponent()
 				+ "]";
 	}
 }

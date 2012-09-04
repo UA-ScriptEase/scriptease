@@ -30,17 +30,17 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 
 	public ScriptItContext(Context other, ScriptIt source) {
 		this(other);
-		component = source;
+		this.component = source;
 	}
 
 	@Override
 	public CodeBlock getMainCodeBlock() {
-		return ((ScriptIt) component).getMainCodeBlock();
+		return ((ScriptIt) this.component).getMainCodeBlock();
 	}
 
 	@Override
 	public Iterator<CodeBlock> getCodeBlocks() {
-		return ((ScriptIt) component).getCodeBlocksForLocation(
+		return ((ScriptIt) this.component).getCodeBlocksForLocation(
 				this.locationInfo).iterator();
 	}
 
@@ -72,7 +72,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 
 	@Override
 	public Iterator<String> getIncludes() {
-		final Collection<CodeBlock> codeBlocks = ((ScriptIt) component)
+		final Collection<CodeBlock> codeBlocks = ((ScriptIt) this.component)
 				.getCodeBlocksForLocation(this.locationInfo);
 
 		final List<String> includes = new ArrayList<String>();
@@ -90,7 +90,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	@Override
 	public String getCode() {
 		final Collection<AbstractFragment> code = new ArrayList<AbstractFragment>();
-		final Collection<CodeBlock> codeBlocks = ((ScriptIt) component)
+		final Collection<CodeBlock> codeBlocks = ((ScriptIt) this.component)
 				.getCodeBlocksForLocation(this.locationInfo);
 
 		// Combine codeBlocks with the same slot
@@ -103,7 +103,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 
 	@Override
 	public Iterator<KnowIt> getVariables() {
-		final ScriptIt scriptIt = (ScriptIt) component;
+		final ScriptIt scriptIt = (ScriptIt) this.component;
 		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
 		for (CodeBlock codeBlock : scriptIt
 				.getCodeBlocksForLocation(this.locationInfo)) {
@@ -118,11 +118,11 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	 */
 	@Override
 	public KnowIt getParameter(String displayName) {
-		return ((ScriptIt) component).getParameter(displayName);
+		return ((ScriptIt) this.component).getParameter(displayName);
 	}
 
 	@Override
 	public Iterator<KnowIt> getParameters() {
-		return ((ScriptIt) component).getParameters().iterator();
+		return ((ScriptIt) this.component).getParameters().iterator();
 	}
 }

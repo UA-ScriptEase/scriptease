@@ -230,7 +230,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 					if (translator != null && translator.loadedAPIDictionary()) {
 						GameTypeManager typeManager = translator
 								.getApiDictionary().getGameTypeManager();
-						for (String type : types) {
+						for (String type : KnowIt.this.types) {
 							if (typeManager.hasGUI(type)) {
 								KnowItBindingConstant bindingValue = new KnowItBindingConstant(
 										GameConstantFactory.getInstance()
@@ -283,7 +283,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				 * StoryComponent, unregister it so we don't receive updates
 				 * from it anymore
 				 */
-				knowItBinding.process(new AbstractNoOpBindingVisitor() {
+				KnowIt.this.knowItBinding.process(new AbstractNoOpBindingVisitor() {
 					@Override
 					public void processFunction(KnowItBindingFunction function) {
 						removeObservers(function.getValue());
@@ -309,7 +309,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 						removeObservers(questPoint.getValue());
 					}
 				});
-				knowItBinding = newBinding;
+				KnowIt.this.knowItBinding = newBinding;
 				notifyObservers(new StoryComponentEvent(KnowIt.this,
 						StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND));
 			}

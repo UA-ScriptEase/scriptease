@@ -80,8 +80,8 @@ public class SimpleDataFragment extends AbstractFragment {
 				try {
 					resolveString = context.getType();
 				} catch (CodeGenerationException e) {
-					if (!defaultText.isEmpty())
-						return defaultText;
+					if (!this.defaultText.isEmpty())
+						return this.defaultText;
 					else
 						throw e;
 				}

@@ -44,20 +44,20 @@ public class GameObjectPanel extends Observable implements MouseMotionListener, 
 
 	
 	public GameObjectPanel(GameConstant gameObject, int horStrut){
-		regularText = gameObject.getName();
+		this.regularText = gameObject.getName();
 		
-		if(StringOp.wordCount(regularText) > 5)
-			shortViewText = createShortHandViewofText();
+		if(StringOp.wordCount(this.regularText) > 5)
+			this.shortViewText = createShortHandViewofText();
 		else
-			shortViewText = regularText;
+			this.shortViewText = this.regularText;
 		
 		
-		HORIZONTAL_STRUT = horStrut;
+		this.HORIZONTAL_STRUT = horStrut;
 		
 		this.gameObject = gameObject;
 		
-		backgroundPanel = new JPanel();
-		backgroundPanel.setOpaque(true);
+		this.backgroundPanel = new JPanel();
+		this.backgroundPanel.setOpaque(true);
 		
 		
 		this.backgroundPanel.addMouseListener(this);
@@ -74,48 +74,48 @@ public class GameObjectPanel extends Observable implements MouseMotionListener, 
 	}
 	
 	public int getHorStrut(){
-		return HORIZONTAL_STRUT;
+		return this.HORIZONTAL_STRUT;
 	}
 	
 	public GameConstant getGameObject(){
-		return gameObject;
+		return this.gameObject;
 	}
 	
 	//private void buildGameObjectPane(){
 	protected void buildGameObjectPane(){	
-		gameObjectBindingWidget = new BindingWidget(
-				new KnowItBindingConstant(gameObject));
+		this.gameObjectBindingWidget = new BindingWidget(
+				new KnowItBindingConstant(this.gameObject));
 		//String name = gameObject.getName();
-		gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(shortViewText,
+		this.gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(this.shortViewText,
 				Color.WHITE));
 		
-		gameObjectBindingWidget.setBorder(BorderFactory.createEmptyBorder(
+		this.gameObjectBindingWidget.setBorder(BorderFactory.createEmptyBorder(
 				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
 				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
 				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
 				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE));
 		
-		gameObjectBindingWidget.addMouseMotionListener(this);
-		gameObjectBindingWidget.addMouseListener(this);
+		this.gameObjectBindingWidget.addMouseMotionListener(this);
+		this.gameObjectBindingWidget.addMouseListener(this);
 		
-		this.backgroundPanel.add(gameObjectBindingWidget);
+		this.backgroundPanel.add(this.gameObjectBindingWidget);
 		this.backgroundPanel.add(Box.createHorizontalGlue());
 		
-		gameObjectPanel2 = new JPanel();
-		gameObjectPanel2.setBackground(Color.WHITE);
-		BoxLayout layout = new BoxLayout(gameObjectPanel2, BoxLayout.X_AXIS);
-		gameObjectPanel2.setLayout(layout);
-		gameObjectPanel2.add(Box.createHorizontalStrut(HORIZONTAL_STRUT));
+		this.gameObjectPanel2 = new JPanel();
+		this.gameObjectPanel2.setBackground(Color.WHITE);
+		BoxLayout layout = new BoxLayout(this.gameObjectPanel2, BoxLayout.X_AXIS);
+		this.gameObjectPanel2.setLayout(layout);
+		this.gameObjectPanel2.add(Box.createHorizontalStrut(this.HORIZONTAL_STRUT));
 				
-		gameObjectPanel2.add(backgroundPanel);
+		this.gameObjectPanel2.add(this.backgroundPanel);
 		
-		gameObjectPanel3 = new JPanel();
-		gameObjectPanel3.setBackground(Color.WHITE);
+		this.gameObjectPanel3 = new JPanel();
+		this.gameObjectPanel3.setBackground(Color.WHITE);
 		
-		BoxLayout layout2 = new BoxLayout(gameObjectPanel3, BoxLayout.Y_AXIS);
-		gameObjectPanel3.setLayout(layout2);
-		gameObjectPanel3.add(Box.createVerticalStrut(5));
-		gameObjectPanel3.add(gameObjectPanel2);
+		BoxLayout layout2 = new BoxLayout(this.gameObjectPanel3, BoxLayout.Y_AXIS);
+		this.gameObjectPanel3.setLayout(layout2);
+		this.gameObjectPanel3.add(Box.createVerticalStrut(5));
+		this.gameObjectPanel3.add(this.gameObjectPanel2);
 	}
 	
 	private String createShortHandViewofText(){
@@ -129,7 +129,7 @@ public class GameObjectPanel extends Observable implements MouseMotionListener, 
 		int lastSpace = this.regularText.lastIndexOf(" ");
 		int penultimateSpace = this.regularText.substring(0, lastSpace-1).lastIndexOf(" ");
 		
-		truncatedVersion = regularText.substring(0, secondSpace + 1) + " ... " + regularText.substring(penultimateSpace, regularText.length());
+		truncatedVersion = this.regularText.substring(0, secondSpace + 1) + " ... " + this.regularText.substring(penultimateSpace, this.regularText.length());
 		
 		return truncatedVersion;
 	}

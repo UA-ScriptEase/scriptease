@@ -77,7 +77,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		final StoryComponentPanelJList descriptionsList;
 		final StoryComponentPanelJList controllersList;
 
-		listTabs = new JTabbedPane();
+		this.listTabs = new JTabbedPane();
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
 		searchField = new JTextField(20);
@@ -103,7 +103,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				for (StoryComponentPanelJList list : storyComponentPanelJLists)
+				for (StoryComponentPanelJList list : LibraryPanel.this.storyComponentPanelJLists)
 					list.updateFilter(new StoryComponentSearchFilter(
 							searchField.getText()));
 				updateLists();
@@ -122,7 +122,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		typeFilter.setAction(new Runnable() {
 			@Override
 			public void run() {
-				for (StoryComponentPanelJList list : storyComponentPanelJLists)
+				for (StoryComponentPanelJList list : LibraryPanel.this.storyComponentPanelJLists)
 					list.updateFilter(new TypeFilter(typeFilter
 							.getTypeSelectionDialogBuilder().getSelectedTypes()));
 				updateLists();
@@ -135,10 +135,10 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
 						"SansSerif", Font.PLAIN, 12), Color.black));
 
-		listTabs.add("Causes", new JScrollPane(causesList));
-		listTabs.add("Effects", new JScrollPane(effectsList));
-		listTabs.add("Descriptions", new JScrollPane(descriptionsList));
-		listTabs.add("Controllers", new JScrollPane(controllersList));
+		this.listTabs.add("Causes", new JScrollPane(causesList));
+		this.listTabs.add("Effects", new JScrollPane(effectsList));
+		this.listTabs.add("Descriptions", new JScrollPane(descriptionsList));
+		this.listTabs.add("Controllers", new JScrollPane(controllersList));
 
 		// SearchFilterPane
 		searchFilterPane.add(searchField);
@@ -154,7 +154,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.add(filterPane);
 		this.add(Box.createVerticalStrut(5));
-		this.add(listTabs);
+		this.add(this.listTabs);
 
 		// Configure the displaying of the pane
 		this.updateLists();

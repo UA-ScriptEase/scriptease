@@ -79,10 +79,10 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 	 * Initialization method for cloning the DescribeIt
 	 */
 	private void init() {
-		headNode = null;
-		defaultPath = null;
-		selectedPath = null;
-		paths = new HashMap<List<GraphNode>, ScriptIt>();
+		this.headNode = null;
+		this.defaultPath = null;
+		this.selectedPath = null;
+		this.paths = new HashMap<List<GraphNode>, ScriptIt>();
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 	 */
 	public ScriptIt getResolvedScriptIt() {
 		if (this.selectedPath != null && this.containsPath(this.selectedPath))
-			return paths.get(selectedPath);
+			return this.paths.get(this.selectedPath);
 		else
 			return null;
 	}
@@ -289,7 +289,7 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 	}
 
 	public List<GraphNode> getDefaultPath() {
-		return defaultPath;
+		return this.defaultPath;
 	}
 
 	/**
@@ -300,7 +300,7 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 	 */
 	private List<GraphNode> getShortestPath() {
 		List<GraphNode> shortestPath = new IdentityArrayList<GraphNode>();
-		int shortestPathSize = INF_PATH_LENGTH;
+		int shortestPathSize = this.INF_PATH_LENGTH;
 		for (List<GraphNode> path : this.paths.keySet()) {
 			int size = path.size();
 			if (size < shortestPathSize) {
@@ -345,7 +345,7 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 			for (List<GraphNode> newPath : newPaths) {
 				// if the path is already in the map, keep it's assigned
 				// scriptIt
-				boolean contains = ListOp.identityContains(paths.keySet(),
+				boolean contains = ListOp.identityContains(this.paths.keySet(),
 						newPath);
 				if (!contains)
 					this.paths.put(newPath, null);
@@ -357,7 +357,7 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 				// clear each path
 				setBoldPath(path, false);  
 			}
-			setBoldPath(getPathBeforeBranch(headNode), true);
+			setBoldPath(getPathBeforeBranch(this.headNode), true);
 		}
 	} 
 
@@ -469,7 +469,7 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 				for (List<GraphNode> cloneKey : clone.paths.keySet()) {
 					if (cloneKey.equals(key)) {
 						clone.assignScriptItToPath(cloneKey,
-								(ScriptIt) scriptIt.clone());
+								scriptIt.clone());
 						break;
 					}
 				}
@@ -477,9 +477,9 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 		}
 
 		// set the default path
-		if (defaultPath != null && !defaultPath.isEmpty()) {
+		if (this.defaultPath != null && !this.defaultPath.isEmpty()) {
 			for (List<GraphNode> cloneKey : clone.paths.keySet()) {
-				if (cloneKey.equals(defaultPath)) {
+				if (cloneKey.equals(this.defaultPath)) {
 					clone.defaultPath = cloneKey;
 					break;
 				}
@@ -487,9 +487,9 @@ public class DescribeIt implements Cloneable, GraphNodeObserver {
 		}
 
 		// set the selected path
-		if (selectedPath != null && !selectedPath.isEmpty()) {
+		if (this.selectedPath != null && !this.selectedPath.isEmpty()) {
 			for (List<GraphNode> cloneKey : clone.paths.keySet()) {
-				if (cloneKey.equals(selectedPath)) {
+				if (cloneKey.equals(this.selectedPath)) {
 					clone.selectedPath = cloneKey;
 					break;
 				}
