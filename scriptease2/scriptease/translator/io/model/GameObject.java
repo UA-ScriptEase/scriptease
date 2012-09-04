@@ -12,7 +12,7 @@ package scriptease.translator.io.model;
  * 
  * @author remiller
  */
-public interface GameObject extends IdentifiableGameConstant {
+public interface GameObject extends GameConstant {
 
 	/**
 	 * Sets the style of object resolution that will be used to get the object

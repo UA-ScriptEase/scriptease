@@ -7,7 +7,7 @@ import java.util.List;
  * 
  * @author mfchurch
  */
-public interface GameConversationNode extends IdentifiableGameConstant {
+public interface GameConversationNode extends GameConstant {
 	/**
 	 * Get the children (replies) to this conversation node
 	 */

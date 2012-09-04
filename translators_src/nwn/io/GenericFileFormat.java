@@ -15,7 +15,6 @@ import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
-import scriptease.translator.io.model.IdentifiableGameConstant;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
 
 /**
@@ -243,7 +242,7 @@ public class GenericFileFormat {
 	 * @throws IOException
 	 */
 	private void buildObject(ScriptEaseFileAccess reader) throws IOException {
-		final IdentifiableGameConstant representation;
+		final GameConstant representation;
 		final String name;
 
 		if (this.isValuable()) {

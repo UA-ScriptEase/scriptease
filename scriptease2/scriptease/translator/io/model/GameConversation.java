@@ -8,7 +8,7 @@ import java.util.List;
  * @author mfchurch
  * 
  */
-public interface GameConversation extends IdentifiableGameConstant {
+public interface GameConversation extends GameConstant {
 
 	/**
 	 * Returns a list of all the possible conversation roots

@@ -39,7 +39,6 @@ import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.GameObject;
-import scriptease.translator.io.model.IdentifiableGameConstant;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
 import scriptease.util.FileOp;
 
@@ -360,7 +359,7 @@ public final class ErfFile implements GameModule {
 				this.uncompiledScripts.add(scriptResource);
 
 				// Manage the script slot references
-				final IdentifiableGameConstant object = scriptInfo.getSubject();
+				final GameConstant object = scriptInfo.getSubject();
 
 				final String receiverResRef;
 				final NWNResource receiverResource;

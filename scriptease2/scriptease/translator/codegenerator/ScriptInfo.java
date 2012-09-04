@@ -1,6 +1,6 @@
 package scriptease.translator.codegenerator;
 
-import scriptease.translator.io.model.IdentifiableGameConstant;
+import scriptease.translator.io.model.GameConstant;
 
 /**
  * Simple metadata class for scripts and their slots.
@@ -36,7 +36,7 @@ public final class ScriptInfo {
 		return this.locationInfo.getSlot();
 	}
 
-	public IdentifiableGameConstant getSubject() {
+	public GameConstant getSubject() {
 		return this.locationInfo.getSubject();
 	}
 }

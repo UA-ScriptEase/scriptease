@@ -31,7 +31,7 @@ import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
-import scriptease.translator.io.model.IdentifiableGameConstant;
+import scriptease.translator.io.tools.SimpleGameConstant;
 import scriptease.util.GUIOp;
 
 /**
@@ -159,10 +159,7 @@ public class SlotPanel extends JPanel {
 			public void processConstant(KnowItBindingConstant constant) {
 				GameConstant constantValue = constant.getValue();
 				String name = constantValue.getName();
-				if (constantValue instanceof IdentifiableGameConstant) {
-					SlotPanel.this.inputComponent = ScriptWidgetFactory
-							.buildLabel(name, Color.WHITE);
-				} else {
+				if (constantValue instanceof SimpleGameConstant) {
 					final String bindingType = binding.getFirstType();
 					TypeValueWidgets widgetName = this.typeManager == null ? null
 							: this.typeManager.getGui(bindingType);
@@ -181,6 +178,9 @@ public class SlotPanel extends JPanel {
 						SlotPanel.this.inputComponent = ScriptWidgetFactory
 								.buildValueEditor(knowIt);
 					}
+				} else {
+					SlotPanel.this.inputComponent = ScriptWidgetFactory
+							.buildLabel(name, Color.WHITE);
 				}
 			}
 

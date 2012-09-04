@@ -22,7 +22,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameModule;
-import scriptease.translator.io.model.IdentifiableGameConstant;
 import scriptease.translator.io.tools.GameConstantFactory;
 
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -182,8 +181,7 @@ public class KnowItBindingConverter implements Converter {
 	 */
 	private void marshallIdentifiableGameConstantBinding(
 			KnowItBindingConstant binding, HierarchicalStreamWriter writer) {
-		final IdentifiableGameConstant gameObject = (IdentifiableGameConstant) binding
-				.getValue();
+		final GameConstant gameObject = binding.getValue();
 
 		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
 				ATTRIBUTE_VALUE_GAME_OBJECT_FLAVOUR);
@@ -355,14 +353,14 @@ public class KnowItBindingConverter implements Converter {
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
 		final KnowIt referent;
 		KnowItBindingReference binding = new KnowItBindingReference(null);
-		
+
 		// move down and read as a knowIt
 		reader.moveDown();
 		referent = (KnowIt) context.convertAnother(binding, KnowIt.class);
 		reader.moveUp();
-		
+
 		binding = new KnowItBindingReference(referent);
-		
+
 		return binding;
 	}
 
