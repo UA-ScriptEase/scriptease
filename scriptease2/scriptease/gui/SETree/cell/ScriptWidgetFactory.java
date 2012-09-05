@@ -23,6 +23,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.NumberEditor;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
@@ -110,7 +111,8 @@ public class ScriptWidgetFactory {
 		return jPanels;
 	}
 
-//	private static Map<String, TypeWidget> typeWidgets = new HashMap<String, TypeWidget>();
+	// private static Map<String, TypeWidget> typeWidgets = new HashMap<String,
+	// TypeWidget>();
 
 	/**
 	 * Builds a button for displaying a particular game type. The created button
@@ -374,9 +376,12 @@ public class ScriptWidgetFactory {
 	 */
 	public static JComponent buildSpinnerEditor(final KnowIt knowIt,
 			final GameConstant constantValue, final String bindingType) {
+		boolean isFloat = false;
+
 		final JComponent comp;
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
+		final NumberEditor numberEditor;
 		final JFormattedTextField spinnerTextEditor;
 		float initVal;
 
@@ -403,14 +408,20 @@ public class ScriptWidgetFactory {
 			if (!regex.startsWith("[-]"))
 				min = 0;
 			// if regex specifies \. it wants a floating point
-			if (regex.contains("\\."))
+			if (regex.contains("\\.")) {
 				stepSize = 0.1;
+				isFloat = true;
+			}
 		}
 
 		model = new SpinnerNumberModel(initVal, min, max, stepSize);
 		spinner = new JSpinner(model);
-		spinnerTextEditor = ((JSpinner.NumberEditor) spinner.getEditor())
-				.getTextField();
+		numberEditor = (NumberEditor) spinner.getEditor();
+		spinnerTextEditor = numberEditor.getTextField();
+
+		if (isFloat) {
+			numberEditor.getFormat().setMinimumFractionDigits(1);
+		}
 
 		// Handle the initial value case
 		final String scriptValue = knowIt.getBinding().getScriptValue();
@@ -486,7 +497,6 @@ public class ScriptWidgetFactory {
 		Collections.sort(list);
 		combo = new JComboBox(list.toArray());
 
-		
 		String scriptValue = knowIt.getBinding().getScriptValue();
 		if (scriptValue != null && !scriptValue.isEmpty())
 			combo.setSelectedItem(enumMap.get(scriptValue));

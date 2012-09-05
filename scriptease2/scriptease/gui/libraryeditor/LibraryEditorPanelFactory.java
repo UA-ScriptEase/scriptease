@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -30,8 +31,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.NumberEditor;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
@@ -1196,31 +1199,63 @@ public class LibraryEditorPanelFactory {
 					break;
 				case JSPINNER:
 					final JSpinner bindingSpinner;
-					final int bindingInt;
+					boolean isFloat = false;
 
-					bindingSpinner = new JSpinner();
+					final SpinnerNumberModel model;
+					final NumberEditor numberEditor;
+					float initVal;
+
+					Comparable<?> min = null; // default to no min limit
+					Comparable<?> max = null; // default to no max limit
+					Number stepSize = 1; // default to int step size
+					String regex = TranslatorManager.getInstance()
+							.getActiveTranslator().getGameTypeManager()
+							.getReg(this.knowIt.getDefaultType());
+
+					final Pattern regexPattern = Pattern.compile(regex);
+					if (regex != null && !regex.isEmpty()) {
+						// if regex doesn't specify negative numbers, make min 0
+						if (!regex.startsWith("[-]"))
+							min = 0;
+						// if regex specifies \. it wants a floating point
+						if (regex.contains("\\.")) {
+							stepSize = 0.1;
+							isFloat = true;
+						}
+					}
 
 					if (bindingText.equals("<unbound!>"))
-						bindingSpinner.setValue(0);
+						initVal = 0;
 					else {
-						bindingInt = Integer.parseInt(bindingText);
-						bindingSpinner.setValue(bindingInt);
+						initVal = Float.parseFloat(bindingText);
 					}
+
+					model = new SpinnerNumberModel(initVal, min, max, stepSize);
+					bindingSpinner = new JSpinner(model);
+					numberEditor = (NumberEditor) bindingSpinner.getEditor();
+
+					if (isFloat) {
+						numberEditor.getFormat().setMinimumFractionDigits(1);
+					}
+
 					bindingSpinner.addChangeListener(new ChangeListener() {
 						@Override
 						public void stateChanged(ChangeEvent e) {
 							final Object bindingFieldValue;
 							bindingFieldValue = bindingSpinner.getValue();
 
+							String safeValue = StringOp.convertNumberToPattern(
+									bindingFieldValue.toString(), regexPattern);
+
 							GameConstant newConstant = GameConstantFactory
 									.getInstance().getConstant(
 											ParameterPanel.this.knowIt
-													.getTypes(),
-											bindingFieldValue.toString());
+													.getTypes(), safeValue);
 							ParameterPanel.this.knowIt.setBinding(newConstant);
 						}
 					});
 					bindingConstantComponent.add(bindingSpinner);
+
 					break;
 				case JCOMBOBOX:
 					final Map<String, String> map;
