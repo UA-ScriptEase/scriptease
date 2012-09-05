@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -1059,25 +1060,28 @@ public class LibraryEditorPanelFactory {
 
 					selectedItem = (String) defaultTypeBox.getSelectedItem();
 
-					selectedType = selectedItem.split(" - ")[1];
+					if (selectedItem != null) {
 
-					types.addAll(knowIt.getTypes());
+						selectedType = selectedItem.split(" - ")[1];
 
-					if (selectedType != null)
-						newTypeList.add(selectedType);
+						types.addAll(knowIt.getTypes());
 
-					for (String type : types) {
-						if (!type.equals(selectedType))
-							newTypeList.add(type);
+						if (selectedType != null)
+							newTypeList.add(selectedType);
+
+						for (String type : types) {
+							if (!type.equals(selectedType))
+								newTypeList.add(type);
+						}
+
+						knowIt.setTypes(newTypeList);
+
+						updateBindingConstantComponent(bindingConstantComponent);
+
+						scriptIt.notifyObservers(new StoryComponentEvent(
+								scriptIt,
+								StoryComponentChangeEnum.CHANGE_PARAMETER_DEFAULT_TYPE_SET));
 					}
-
-					knowIt.setTypes(newTypeList);
-
-					updateBindingConstantComponent(bindingConstantComponent);
-
-					scriptIt.notifyObservers(new StoryComponentEvent(
-							scriptIt,
-							StoryComponentChangeEnum.CHANGE_PARAMETER_DEFAULT_TYPE_SET));
 				}
 			});
 
@@ -1234,20 +1238,38 @@ public class LibraryEditorPanelFactory {
 					if (bindingText.equals("<unbound!>"))
 						bindingBox.setSelectedItem(null);
 					else
-						bindingBox.setSelectedItem(bindingText);
+						bindingBox.setSelectedItem(map.get(bindingText));
 
 					bindingBox.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							final Object bindingBoxValue;
+
+							String defaultBindingName = "";
+
 							bindingBoxValue = bindingBox.getSelectedItem();
 
-							GameConstant newConstant = GameConstantFactory
-									.getInstance().getConstant(
-											ParameterPanel.this.knowIt
-													.getTypes(),
-											bindingBoxValue.toString());
-							ParameterPanel.this.knowIt.setBinding(newConstant);
+							if (bindingBoxValue == null)
+								ParameterPanel.this.knowIt.clearBinding();
+							else {
+								for (Entry<String, String> entry : map
+										.entrySet()) {
+									if (entry.getValue()
+											.equals(bindingBoxValue)) {
+										defaultBindingName = entry.getKey();
+										break;
+									}
+								}
+
+								GameConstant newConstant = GameConstantFactory
+										.getInstance().getConstant(
+												ParameterPanel.this.knowIt
+														.getTypes(),
+												defaultBindingName);
+								ParameterPanel.this.knowIt
+										.setBinding(newConstant);
+							}
+
 						}
 					});
 
@@ -2009,8 +2031,7 @@ public class LibraryEditorPanelFactory {
 					fragmentPanel.add(lineLabel);
 
 					panel.add(fragmentPanel);
-					this.panelToFragmentMap.put(fragmentPanel,
-							codeFragment);
+					this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 				} else if (codeFragment instanceof IndentFragment) {
 					fragmentPanel = indentPanel((IndentFragment) codeFragment);
 
@@ -2019,8 +2040,7 @@ public class LibraryEditorPanelFactory {
 								ScriptEaseUI.INDENT_FRAGMENT_COLOR, 1.2));
 
 					panel.add(fragmentPanel);
-					this.panelToFragmentMap.put(fragmentPanel,
-							codeFragment);
+					this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 				} else if (codeFragment instanceof LiteralFragment) {
 					fragmentPanel = literalPanel((LiteralFragment) codeFragment);
 
@@ -2029,8 +2049,7 @@ public class LibraryEditorPanelFactory {
 								ScriptEaseUI.LITERAL_FRAGMENT_COLOR, 1.7));
 
 					panel.add(fragmentPanel);
-					this.panelToFragmentMap.put(fragmentPanel,
-							codeFragment);
+					this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 				} else if (codeFragment instanceof ScopeFragment) {
 					fragmentPanel = scopePanel((ScopeFragment) codeFragment);
 
@@ -2041,8 +2060,7 @@ public class LibraryEditorPanelFactory {
 					buildDefaultPanes(fragmentPanel,
 							((ScopeFragment) codeFragment).getSubFragments());
 					panel.add(fragmentPanel);
-					this.panelToFragmentMap.put(fragmentPanel,
-							codeFragment);
+					this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 				} else if (codeFragment instanceof SeriesFragment) {
 					fragmentPanel = seriesPanel((SeriesFragment) codeFragment);
 
@@ -2053,8 +2071,7 @@ public class LibraryEditorPanelFactory {
 					buildDefaultPanes(fragmentPanel,
 							((SeriesFragment) codeFragment).getSubFragments());
 					panel.add(fragmentPanel);
-					this.panelToFragmentMap.put(fragmentPanel,
-							codeFragment);
+					this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 				} else if (codeFragment instanceof FormatReferenceFragment) {
 					fragmentPanel = referencePanel((FormatReferenceFragment) codeFragment);
 
@@ -2063,8 +2080,7 @@ public class LibraryEditorPanelFactory {
 								ScriptEaseUI.REFERENCE_FRAGMENT_COLOR, 3.0));
 
 					panel.add(fragmentPanel);
-					this.panelToFragmentMap.put(fragmentPanel,
-							codeFragment);
+					this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 				} else if (codeFragment instanceof SimpleDataFragment) {
 					fragmentPanel = simplePanel((SimpleDataFragment) codeFragment);
 
@@ -2073,8 +2089,7 @@ public class LibraryEditorPanelFactory {
 								ScriptEaseUI.SIMPLE_FRAGMENT_COLOR, 3.5));
 
 					panel.add(fragmentPanel);
-					this.panelToFragmentMap.put(fragmentPanel,
-							codeFragment);
+					this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 				}
 
 				if (selectedFragment == null)
