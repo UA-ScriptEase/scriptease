@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
+import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
@@ -182,7 +182,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	 * Shortcut for setting the KnowIt's binding to KnowItBindingNull
 	 */
 	public void clearBinding() {
-		this.knowItBinding.process(new AbstractNoOpBindingVisitor() {
+		this.knowItBinding.process(new BindingAdapter() {
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
 				// do nothing if already null
@@ -219,7 +219,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			return;
 		}
 
-		value.process(new AbstractNoOpBindingVisitor() {
+		value.process(new BindingAdapter() {
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
 				// Find an appropriate Default binding for the type.
@@ -283,7 +283,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				 * StoryComponent, unregister it so we don't receive updates
 				 * from it anymore
 				 */
-				KnowIt.this.knowItBinding.process(new AbstractNoOpBindingVisitor() {
+				KnowIt.this.knowItBinding.process(new BindingAdapter() {
 					@Override
 					public void processFunction(KnowItBindingFunction function) {
 						removeObservers(function.getValue());
@@ -471,7 +471,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			this.clearBinding();
 		} else {
 			// Forward reference updates to this KnowIt's observers
-			this.knowItBinding.process(new AbstractNoOpBindingVisitor() {
+			this.knowItBinding.process(new BindingAdapter() {
 				@Override
 				public void processReference(KnowItBindingReference reference) {
 					KnowIt.this.notifyObservers(event);

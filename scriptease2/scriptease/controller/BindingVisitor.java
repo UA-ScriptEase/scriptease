@@ -17,14 +17,14 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
  * <br>
  * Classes should not implement this interface directly since it is strongly
  * recommended (and stylistically required) that they subclass
- * {@link AbstractNoOpBindingVisitor}. <br>
+ * {@link BindingAdapter}. <br>
  * <br>
  * <code>BindingVisitor</code> is an implementation of the Visitor design
  * pattern - Adapted from the implementation of StoryVisitor.
  * 
  * @author mfchurch
  * 
- * @see AbstractNoOpStoryVisitor
+ * @see StoryAdapter
  */
 public interface BindingVisitor { 
 	public void processConstant(KnowItBindingConstant constant);

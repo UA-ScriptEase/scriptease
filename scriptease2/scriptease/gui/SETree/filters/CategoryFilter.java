@@ -1,6 +1,6 @@
 package scriptease.gui.SETree.filters;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
@@ -58,7 +58,7 @@ public class CategoryFilter extends StoryComponentFilter {
 		return visitor.acceptable ? 1 : 0;
 	}
 
-	private class CategoryFilterVisitor extends AbstractNoOpStoryVisitor {
+	private class CategoryFilterVisitor extends StoryAdapter {
 		public boolean acceptable = false;
 
 		@Override

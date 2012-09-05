@@ -17,7 +17,7 @@ import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputListener;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.ContainerCollector;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
@@ -284,7 +284,7 @@ public class StoryComponentPanel extends JPanel implements
 	}
 
 	private void updateSettings(final StoryComponentPanel panel) {
-		panel.getStoryComponent().process(new AbstractNoOpStoryVisitor() {
+		panel.getStoryComponent().process(new StoryAdapter() {
 			@Override
 			protected void defaultProcess(StoryComponent component) {
 				panel.setSelectable(true);

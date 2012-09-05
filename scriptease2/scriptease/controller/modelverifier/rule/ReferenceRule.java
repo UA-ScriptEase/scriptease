@@ -3,8 +3,8 @@ package scriptease.controller.modelverifier.rule;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.ScopeVisitor;
 import scriptease.controller.modelverifier.problem.ModelProblem;
 import scriptease.controller.modelverifier.problem.StoryProblem;
@@ -25,7 +25,7 @@ import scriptease.model.complex.StoryItemSequence;
  * @author mfchurch
  * 
  */
-public class ReferenceRule extends AbstractNoOpStoryVisitor implements
+public class ReferenceRule extends StoryAdapter implements
 		StoryRule {
 	Collection<StoryProblem> rebindings;
 
@@ -64,7 +64,7 @@ public class ReferenceRule extends AbstractNoOpStoryVisitor implements
 
 		// Check the knowIt's binding to see if it has an equivalent reference
 		// in scope
-		binding.process(new AbstractNoOpBindingVisitor() {
+		binding.process(new BindingAdapter() {
 
 			@Override
 			public void processReference(KnowItBindingReference reference) {

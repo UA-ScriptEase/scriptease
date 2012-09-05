@@ -3,7 +3,7 @@ package scriptease.controller.modelverifier.rule;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.groupvisitor.SameNameGroupVisitor;
 import scriptease.controller.modelverifier.problem.ModelProblem;
 import scriptease.controller.modelverifier.problem.StoryProblem;
@@ -24,7 +24,7 @@ public class UniqueNameRule implements StoryRule {
 	public Collection<StoryProblem> validate(ComplexStoryComponent root,
 			final StoryComponent source) {
 		this.problems = new ArrayList<StoryProblem>();
-		source.process(new AbstractNoOpStoryVisitor() {
+		source.process(new StoryAdapter() {
 			@Override
 			public void processKnowIt(KnowIt knowIt) {
 				SameNameGroupVisitor groupVisitor = new SameNameGroupVisitor(

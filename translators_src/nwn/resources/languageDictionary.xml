@@ -188,11 +188,6 @@
 				<Scope data="storyChild">
 					<FormatRef ref="childrenWithoutImplicits" />
 				</Scope>
-				<Line>
-					<Literal>SE2_Quest_SetState(GetFirstPC(), "</Literal>
-					<Fragment data="currentquestpoint" />
-					<Literal>", QUEST_POINT_STATE_SUCCESS);</Literal>
-				</Line>
 			</Indent>
 			<Line>
 				<Literal>}</Literal>

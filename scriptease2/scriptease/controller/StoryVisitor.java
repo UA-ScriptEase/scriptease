@@ -18,7 +18,7 @@ import scriptease.model.complex.StoryItemSequence;
  * <br>
  * Classes should not implement this interface directly since it is strongly
  * recommended (and stylistically required) that they subclass
- * {@link AbstractNoOpStoryVisitor}. <br>
+ * {@link StoryAdapter}. <br>
  * <br>
  * <code>StoryVisitor</code> is an implementation of the Visitor design pattern.
  * 
@@ -26,7 +26,7 @@ import scriptease.model.complex.StoryItemSequence;
  * @author friesen
  * @author remiller
  * 
- * @see AbstractNoOpStoryVisitor
+ * @see StoryAdapter
  */
 public interface StoryVisitor {
 	/** COMPLEX TYPES **/

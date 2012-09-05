@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.TransferHandler;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
+import scriptease.controller.BindingAdapter;
 import scriptease.controller.BindingVisitor;
 import scriptease.controller.MouseForwardingAdapter;
 import scriptease.gui.SETree.transfer.BindingWidgetTransferHandler;
@@ -66,7 +66,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 	 * @param binding
 	 */
 	private void updateToolTip(KnowItBinding binding) {
-		binding.process(new AbstractNoOpBindingVisitor() {
+		binding.process(new BindingAdapter() {
 			@Override
 			public void processConstant(KnowItBindingConstant constant) {
 				if (constant.isIdentifiableGameConstant()) {

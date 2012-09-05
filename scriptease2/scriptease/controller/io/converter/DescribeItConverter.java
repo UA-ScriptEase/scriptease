@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import scriptease.controller.AbstractNoOpGraphNodeVisitor;
+import scriptease.controller.GraphNodeAdapter;
 import scriptease.controller.io.converter.graphnode.KnowItNodeConverter;
 import scriptease.controller.io.converter.graphnode.TextNodeConverter;
 import scriptease.gui.graph.nodes.GraphNode;
@@ -44,7 +44,7 @@ public class DescribeItConverter implements Converter {
 		// head node
 		final GraphNode headNode = describeIt.getHeadNode();
 		writer.startNode(TAG_HEAD);
-		headNode.process(new AbstractNoOpGraphNodeVisitor() {
+		headNode.process(new GraphNodeAdapter() {
 			
 			@Override
 			public void processTextNode(TextNode textNode) {

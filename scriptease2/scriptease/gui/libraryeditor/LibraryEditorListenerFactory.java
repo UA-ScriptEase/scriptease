@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
@@ -140,7 +140,7 @@ public class LibraryEditorListenerFactory {
 				type = event.getType();
 				component = event.getSource();
 
-				storyVisitor = new AbstractNoOpStoryVisitor() {
+				storyVisitor = new StoryAdapter() {
 					@Override
 					public void processScriptIt(ScriptIt scriptIt) {
 						switch (type) {
@@ -252,7 +252,7 @@ public class LibraryEditorListenerFactory {
 
 				type = event.getType();
 				component = event.getSource();
-				storyVisitor = new AbstractNoOpStoryVisitor() {
+				storyVisitor = new StoryAdapter() {
 					@Override
 					public void processScriptIt(ScriptIt scriptIt) {
 						if (type == StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET) {
@@ -315,7 +315,7 @@ public class LibraryEditorListenerFactory {
 
 				type = event.getType();
 				component = event.getSource();
-				storyVisitor = new AbstractNoOpStoryVisitor() {
+				storyVisitor = new StoryAdapter() {
 					@Override
 					public void processScriptIt(ScriptIt scriptIt) {
 						if (type == StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET) {
@@ -361,7 +361,7 @@ public class LibraryEditorListenerFactory {
 
 				type = event.getType();
 				component = event.getSource();
-				storyVisitor = new AbstractNoOpStoryVisitor() {
+				storyVisitor = new StoryAdapter() {
 					@Override
 					public void processScriptIt(ScriptIt scriptIt) {
 						switch (type) {
@@ -406,7 +406,7 @@ public class LibraryEditorListenerFactory {
 				type = event.getType();
 				component = event.getSource();
 
-				storyVisitor = new AbstractNoOpStoryVisitor() {
+				storyVisitor = new StoryAdapter() {
 					@Override
 					public void processScriptIt(ScriptIt scriptIt) {
 						switch (type) {
@@ -500,7 +500,7 @@ public class LibraryEditorListenerFactory {
 
 				type = event.getType();
 				component = event.getSource();
-				storyVisitor = new AbstractNoOpStoryVisitor() {
+				storyVisitor = new StoryAdapter() {
 					@Override
 					public void processScriptIt(ScriptIt ScriptIt) {
 						switch (type) {
@@ -551,7 +551,7 @@ public class LibraryEditorListenerFactory {
 
 				type = event.getType();
 				component = event.getSource();
-				storyVisitor = new AbstractNoOpStoryVisitor() {
+				storyVisitor = new StoryAdapter() {
 					@Override
 					public void processScriptIt(ScriptIt scriptIt) {
 						switch (type) {

@@ -11,8 +11,8 @@ import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.SETree.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.control.ExpansionButton;
@@ -170,7 +170,7 @@ public class StoryComponentPanelFactory {
 				// clear the panel
 				mainPanel.removeAll();
 				// rebuild the panel according to it's storycomponent type
-				storyComponent.process(new AbstractNoOpStoryVisitor() {
+				storyComponent.process(new StoryAdapter() {
 					@Override
 					protected void defaultProcessComplex(
 							ComplexStoryComponent complex) {
@@ -314,7 +314,7 @@ public class StoryComponentPanelFactory {
 	private void addWidget(final JPanel displayNamePanel, final KnowIt knowIt,
 			final boolean editable) {
 		final KnowItBinding binding = knowIt.getBinding();
-		binding.process(new AbstractNoOpBindingVisitor() {
+		binding.process(new BindingAdapter() {
 			// functions, descriptions and runTimes all get a draggable bubble
 			// with no slot
 			@Override
@@ -343,9 +343,9 @@ public class StoryComponentPanelFactory {
 		});
 	}
 
-	private AbstractNoOpStoryVisitor componentProcessor(
+	private StoryAdapter componentProcessor(
 			final StoryComponentPanel panel) {
-		return new AbstractNoOpStoryVisitor() {
+		return new StoryAdapter() {
 			@Override
 			public void processQuestPoint(QuestPoint questPoint) {
 				// Add an expansion button
@@ -436,7 +436,7 @@ public class StoryComponentPanelFactory {
 		addWidget(mainPanel, knowIt, true);
 		final KnowItBinding binding = knowIt.getBinding().resolveBinding();
 
-		binding.process(new AbstractNoOpBindingVisitor() {
+		binding.process(new BindingAdapter() {
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
 				// do nothing for KnowItBindingNull. Not even the default.

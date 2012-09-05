@@ -1,6 +1,6 @@
 package scriptease.gui.graph.nodes;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.GraphNodeVisitor;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentObserver;
@@ -57,7 +57,7 @@ public class KnowItNode extends GraphNode implements StoryComponentObserver {
 	@Override
 	public void componentChanged(StoryComponentEvent event) {
 		StoryComponent source = event.getSource();
-		source.process(new AbstractNoOpStoryVisitor() {
+		source.process(new StoryAdapter() {
 			@Override
 			public void processKnowIt(KnowIt knowIt) {
 				setKnowIt(knowIt);

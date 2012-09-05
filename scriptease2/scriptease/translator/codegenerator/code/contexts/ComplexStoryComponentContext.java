@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.get.AskItGetter;
 import scriptease.controller.get.ImplicitGetter;
 import scriptease.controller.get.VariableGetter;
@@ -51,7 +51,7 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 		final Collection<ScriptIt> scriptIts = new ArrayList<ScriptIt>();
 		for (StoryComponent child : ((ComplexStoryComponent) this.component)
 				.getChildren()) {
-			child.process(new AbstractNoOpStoryVisitor() {
+			child.process(new StoryAdapter() {
 				@Override
 				public void processScriptIt(ScriptIt scriptIt) {
 					scriptIts.add(scriptIt);

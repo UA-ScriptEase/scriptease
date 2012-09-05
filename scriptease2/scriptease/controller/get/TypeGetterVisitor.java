@@ -3,7 +3,7 @@ package scriptease.controller.get;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.model.complex.ComplexStoryComponent;
 
 /**
@@ -22,7 +22,7 @@ import scriptease.model.complex.ComplexStoryComponent;
  * @param <T>
  *            the type of StoryComponent that is collected
  */
-public abstract class TypeGetterVisitor<T> extends AbstractNoOpStoryVisitor {
+public abstract class TypeGetterVisitor<T> extends StoryAdapter {
 	/**
 	 * A generic definition of the list that will be used by the extending
 	 * getter to store it's results.

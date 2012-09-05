@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -142,7 +142,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	 * @author mfchurch
 	 * 
 	 */
-	private class SearchDataCompiler extends AbstractNoOpStoryVisitor {
+	private class SearchDataCompiler extends StoryAdapter {
 		private Collection<String> searchData;
 
 		private SearchDataCompiler() {

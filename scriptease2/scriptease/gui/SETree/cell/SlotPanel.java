@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
+import scriptease.controller.BindingAdapter;
 import scriptease.controller.MouseForwardingAdapter;
 import scriptease.controller.groupvisitor.SameBindingGroupVisitor;
 import scriptease.gui.SETree.transfer.ProxyTransferHandler;
@@ -125,7 +125,7 @@ public class SlotPanel extends JPanel {
 				});
 
 		// Build the input component
-		binding.process(new AbstractNoOpBindingVisitor() {
+		binding.process(new BindingAdapter() {
 			Translator translator = TranslatorManager.getInstance()
 					.getActiveTranslator();
 			GameTypeManager typeManager = this.translator == null ? null
@@ -210,7 +210,7 @@ public class SlotPanel extends JPanel {
 			}
 
 			private void setGroupBorder(final Border aBoder) {
-				knowIt.getBinding().process(new AbstractNoOpBindingVisitor() {
+				knowIt.getBinding().process(new BindingAdapter() {
 					@Override
 					public void processNull(KnowItBindingNull nullBinding) {
 						// do nothing for null, not even default

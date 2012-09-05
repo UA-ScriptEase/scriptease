@@ -23,7 +23,7 @@ import scriptease.gui.quests.QuestPointNode;
  * @author mfchurch
  * 
  */
-public abstract class AbstractNoOpGraphNodeVisitor implements GraphNodeVisitor {
+public abstract class GraphNodeAdapter implements GraphNodeVisitor {
 
 	public void processTextNode(TextNode textNode) {
 		this.defaultProcess(textNode);

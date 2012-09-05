@@ -43,7 +43,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import scriptease.ScriptEase;
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
@@ -247,7 +247,7 @@ public class LibraryEditorPanelFactory {
 		 * editorPanel. This is used as a sort of Command Pattern with
 		 * UIListenerFactory.
 		 */
-		storyVisitor = new AbstractNoOpStoryVisitor() {
+		storyVisitor = new StoryAdapter() {
 			private DocumentListener nameFieldListener;
 			private DocumentListener labelFieldListener;
 			private ActionListener visibleBoxListener;

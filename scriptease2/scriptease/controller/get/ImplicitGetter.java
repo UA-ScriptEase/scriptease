@@ -1,6 +1,6 @@
 package scriptease.controller.get;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
+import scriptease.controller.BindingAdapter;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.ScriptIt;
@@ -12,7 +12,7 @@ public class ImplicitGetter extends TypeGetterVisitor<KnowIt> {
 	 */
 	@Override
 	public void processKnowIt(KnowIt knowIt) {
-		knowIt.getBinding().process(new AbstractNoOpBindingVisitor() {
+		knowIt.getBinding().process(new BindingAdapter() {
 
 			@Override
 			public void processReference(KnowItBindingReference reference) {

@@ -1,7 +1,7 @@
 package scriptease.gui.SETree.filters;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
@@ -37,7 +37,7 @@ public class TranslatorFilter extends StoryComponentFilter {
 			super.addRule(newFilter);
 	}
 
-	private class TranslatorFilterVisitor extends AbstractNoOpStoryVisitor {
+	private class TranslatorFilterVisitor extends StoryAdapter {
 		public boolean acceptable = false;
 
 		/**
@@ -55,7 +55,7 @@ public class TranslatorFilter extends StoryComponentFilter {
 			final KnowItBinding binding = knowIt.getBinding();
 			// If the describeIt is bound to a DoIt, we can rely on the DoIt to
 			// check if the describeIt is acceptable for this Translator.
-			binding.process(new AbstractNoOpBindingVisitor() {
+			binding.process(new BindingAdapter() {
 				@Override
 				public void processFunction(KnowItBindingFunction function) {
 					final ScriptIt doIt = function.getValue();

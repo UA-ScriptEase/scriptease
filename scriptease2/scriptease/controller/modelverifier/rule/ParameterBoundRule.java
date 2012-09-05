@@ -3,8 +3,8 @@ package scriptease.controller.modelverifier.rule;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -23,7 +23,7 @@ import scriptease.model.complex.StoryComponentContainer;
  * @author mfchurch
  * 
  */
-public class ParameterBoundRule extends AbstractNoOpStoryVisitor implements
+public class ParameterBoundRule extends StoryAdapter implements
 		StoryRule {
 	private Collection<StoryProblem> problems;
 
@@ -52,7 +52,7 @@ public class ParameterBoundRule extends AbstractNoOpStoryVisitor implements
 	@Override
 	public void processKnowIt(final KnowIt knowIt) {
 		KnowItBinding binding = knowIt.getBinding();
-		binding.process(new AbstractNoOpBindingVisitor() {
+		binding.process(new BindingAdapter() {
 
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
