@@ -476,7 +476,6 @@ public class ScriptWidgetFactory {
 
 	public static JComponent buildComboEditor(final KnowIt knowIt,
 			final String bindingType) {
-		final JComponent comp;
 		final JComboBox combo;
 		final Map<String, String> enumMap = TranslatorManager.getInstance()
 				.getActiveTranslator().getGameTypeManager()
@@ -487,9 +486,10 @@ public class ScriptWidgetFactory {
 		Collections.sort(list);
 		combo = new JComboBox(list.toArray());
 
+		
 		String scriptValue = knowIt.getBinding().getScriptValue();
 		if (scriptValue != null && !scriptValue.isEmpty())
-			combo.setSelectedItem(scriptValue);
+			combo.setSelectedItem(enumMap.get(scriptValue));
 		else
 			combo.setSelectedIndex(-1);
 
@@ -536,9 +536,8 @@ public class ScriptWidgetFactory {
 			}
 		});
 
-		comp = combo;
-		widgetsToStoryComponents.put(comp, knowIt);
-		return comp;
+		widgetsToStoryComponents.put(combo, knowIt);
+		return combo;
 	}
 
 	/**

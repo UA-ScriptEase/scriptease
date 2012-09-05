@@ -119,9 +119,6 @@ public class CodeGenerationNamifier {
 
 		// there isn't already a name, we need to generate one.
 		counter = 0;
-		
-		if(component instanceof QuestPoint)
-			System.out.println("brekapoint");
 
 		name = StringOp.removeIllegalCharacters(component.getDisplayText(),
 				legalFormat);
