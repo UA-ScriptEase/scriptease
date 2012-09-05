@@ -31,7 +31,7 @@ import scriptease.model.complex.StoryItemSequence;
  * @author jtduncan
  * @author remiller
  */
-public abstract class AbstractNoOpStoryVisitor implements StoryVisitor {
+public abstract class StoryAdapter implements StoryVisitor {
 	/*
 	 * ============ COMPLEX TYPES ============
 	 */

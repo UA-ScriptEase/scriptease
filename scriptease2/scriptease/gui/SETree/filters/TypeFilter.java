@@ -3,7 +3,7 @@ package scriptease.gui.SETree.filters;
 import java.util.Collection;
 import java.util.Iterator;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
@@ -41,7 +41,7 @@ public class TypeFilter extends StoryComponentFilter {
 			super.addRule(newFilter);
 	}
 
-	private class TypeFilterVisitor extends AbstractNoOpStoryVisitor {
+	private class TypeFilterVisitor extends StoryAdapter {
 		private boolean acceptable = false;
 
 		@Override

@@ -21,7 +21,7 @@ import scriptease.model.StoryModel;
  * @author kschenk
  * @see ModelVisitor
  */
-public abstract class AbstractNoOpModelVisitor implements ModelVisitor {
+public abstract class ModelAdapter implements ModelVisitor {
 	@Override
 	public void processStoryModel(StoryModel storyModel) {
 		this.defaultProcess(storyModel);

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
@@ -172,7 +172,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 			return success;
 
 		// Do StoryComponent specific tasks before removal
-		child.process(new AbstractNoOpStoryVisitor() {
+		child.process(new StoryAdapter() {
 			// Notify observers that the component has been removed
 			@Override
 			protected void defaultProcess(StoryComponent component) {

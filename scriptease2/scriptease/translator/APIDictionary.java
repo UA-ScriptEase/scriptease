@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.BindingVisitor;
 import scriptease.controller.observer.LibraryEvent;
 import scriptease.controller.observer.LibraryObserver;
@@ -171,7 +171,7 @@ public class APIDictionary implements LibraryObserver {
 		return found;
 	}
 
-	private class CodeBlockFinder extends AbstractNoOpStoryVisitor {
+	private class CodeBlockFinder extends StoryAdapter {
 		private CodeBlockSource found = null;
 		private int targetId;
 
@@ -243,7 +243,7 @@ public class APIDictionary implements LibraryObserver {
 			final CodeBlockFinder searcher = this;
 			final BindingVisitor bindingSearcher;
 
-			bindingSearcher = new AbstractNoOpBindingVisitor() {
+			bindingSearcher = new BindingAdapter() {
 				@Override
 				public void processFunction(KnowItBindingFunction function) {
 					function.getValue().process(searcher);

@@ -1,6 +1,6 @@
 package scriptease.controller.observer;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
@@ -16,7 +16,7 @@ import scriptease.model.complex.StoryItemSequence;
  * @author mfchurch
  *****************************************************/
 
-public class StoryComponentObserverRemover extends AbstractNoOpStoryVisitor {
+public class StoryComponentObserverRemover extends StoryAdapter {
 	private StoryComponentObserver observer; 
 
 	public static void removeObservers(StoryComponentObserver observer,

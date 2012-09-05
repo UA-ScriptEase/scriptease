@@ -11,7 +11,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
+import scriptease.controller.BindingAdapter;
 import scriptease.controller.groupvisitor.SameBindingGroupVisitor;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.cell.BindingWidget;
@@ -242,7 +242,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 	private void setGroupBindings(final KnowItBinding sourceBinding,
 			final KnowIt destinationKnowIt, KnowItBinding binding) {
 		destinationKnowIt.getBinding().process(
-				new AbstractNoOpBindingVisitor(){
+				new BindingAdapter(){
 					@Override
 					public void processNull(KnowItBindingNull nullBinding) {
 						// do nothing for nulls, not even the default.

@@ -1,6 +1,6 @@
 package scriptease.translator.codegenerator.code.contexts;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.BindingVisitor;
 import scriptease.gui.quests.QuestPointNode;
 import scriptease.model.CodeBlock;
@@ -167,7 +167,7 @@ public class ContextFactory {
 	 */
 	private Context createContext(final Context pastContext,
 			final StoryComponent source) {
-		source.process(new AbstractNoOpStoryVisitor() {
+		source.process(new StoryAdapter() {
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
 				ContextFactory.this.activeContext = new ComplexStoryComponentContext(pastContext,
 						complex);

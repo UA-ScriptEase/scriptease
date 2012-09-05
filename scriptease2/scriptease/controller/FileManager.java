@@ -189,7 +189,7 @@ public final class FileManager {
 	 */
 	public void save(PatternModel model) {
 
-		model.process(new AbstractNoOpModelVisitor() {
+		model.process(new ModelAdapter() {
 			@Override
 			public void processLibraryModel(LibraryModel libraryModel) {
 				final Translator active;
@@ -236,7 +236,7 @@ public final class FileManager {
 	 * @see #save(PatternModel)
 	 */
 	public void saveAs(PatternModel model) {
-		model.process(new AbstractNoOpModelVisitor() {
+		model.process(new ModelAdapter() {
 			@Override
 			public void processLibraryModel(LibraryModel libraryModel) {
 				final WindowFactory windowManager = WindowFactory.getInstance();
@@ -649,7 +649,7 @@ public final class FileManager {
 		if (model == null)
 			return false;
 
-		model.process(new AbstractNoOpModelVisitor() {
+		model.process(new ModelAdapter() {
 			@Override
 			public void processLibraryModel(LibraryModel libraryModel) {
 				// TODO Possibly add functionality to close translators.

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.io.converter.APIDictionaryConverter;
 import scriptease.controller.io.converter.AskItConverter;
 import scriptease.controller.io.converter.CodeBlockReferenceConverter;
@@ -504,7 +504,7 @@ public class FileIO {
 	 * 
 	 * - remiller
 	 */
-	private static class BindingFixer extends AbstractNoOpStoryVisitor {
+	private static class BindingFixer extends StoryAdapter {
 		public static void fixBindings(StoryComponent root) {
 			final BindingFixer fixer = new BindingFixer();
 

@@ -19,7 +19,7 @@ import scriptease.model.complex.ScriptIt;
  * 
  */
 public class ComplexStoryComponentDescendantCollector extends
-		AbstractNoOpStoryVisitor {
+		StoryAdapter {
 	private Collection<StoryComponent> children;
 
 	public Collection<StoryComponent> collectDescendants(
@@ -49,7 +49,7 @@ public class ComplexStoryComponentDescendantCollector extends
 	@Override
 	public void processKnowIt(KnowIt knowIt) {
 		this.children.add(knowIt);
-		knowIt.getBinding().process(new AbstractNoOpBindingVisitor() {
+		knowIt.getBinding().process(new BindingAdapter() {
 			@Override
 			public void processDescribeIt(KnowItBindingDescribeIt described) {
 				ScriptIt resolvedScriptIt = described.getValue()

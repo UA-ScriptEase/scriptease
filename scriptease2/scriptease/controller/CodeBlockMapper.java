@@ -10,7 +10,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 
-public class CodeBlockMapper extends AbstractNoOpStoryVisitor {
+public class CodeBlockMapper extends StoryAdapter {
 	private Map<String, List<CodeBlock>> codeBlocks = new HashMap<String, List<CodeBlock>>();
 
 	@Override

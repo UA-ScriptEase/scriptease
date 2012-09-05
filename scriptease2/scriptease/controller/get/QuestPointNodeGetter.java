@@ -3,7 +3,7 @@ package scriptease.controller.get;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.AbstractNoOpGraphNodeVisitor;
+import scriptease.controller.GraphNodeAdapter;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
@@ -28,7 +28,7 @@ public class QuestPointNodeGetter {
 		final Collection<QuestPointNode> questPointNodes = new ArrayList<QuestPointNode>();
 		final GraphNode startPoint = quest.getStartPoint();
 		final GraphNode endPoint = quest.getEndPoint();
-		startPoint.process(new AbstractNoOpGraphNodeVisitor() {
+		startPoint.process(new GraphNodeAdapter() {
 
 			@Override
 			public void processQuestNode(QuestNode questNode) {

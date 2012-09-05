@@ -3,8 +3,8 @@ package scriptease.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.ModelVisitor;
 import scriptease.controller.observer.LibraryEvent;
 import scriptease.controller.observer.LibraryObserver;
@@ -222,7 +222,7 @@ public class LibraryModel extends PatternModel implements
 	}
 
 	public void remove(StoryComponent component) {
-		component.process(new AbstractNoOpStoryVisitor() {
+		component.process(new StoryAdapter() {
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
 				final boolean success;
@@ -338,7 +338,7 @@ public class LibraryModel extends PatternModel implements
 		// Get the implicit and parameters of the binding scriptIts
 		final Collection<StoryComponent> implicitsAndParameters = new ArrayList<StoryComponent>();
 		for (StoryComponent component : components) {
-			component.process(new AbstractNoOpStoryVisitor() {
+			component.process(new StoryAdapter() {
 				@Override
 				public void processScriptIt(ScriptIt scriptIt) {
 					Collection<KnowIt> implicits = scriptIt.getImplicits();
@@ -360,7 +360,7 @@ public class LibraryModel extends PatternModel implements
 				@Override
 				public void processKnowIt(KnowIt knowIt) {
 					knowIt.getBinding().process(
-							new AbstractNoOpBindingVisitor() {
+							new BindingAdapter() {
 								@Override
 								public void processFunction(
 										KnowItBindingFunction function) {
@@ -413,7 +413,7 @@ public class LibraryModel extends PatternModel implements
 	 * @author mfchurch
 	 * 
 	 */
-	private class CategoryAdder extends AbstractNoOpStoryVisitor {
+	private class CategoryAdder extends StoryAdapter {
 		@Override
 		public void processScriptIt(ScriptIt scriptIt) {
 			final boolean success;
@@ -446,7 +446,7 @@ public class LibraryModel extends PatternModel implements
 				knowIt.addStoryComponentObserver(LibraryModel.this);
 
 				final KnowItBinding binding = knowIt.getBinding();
-				binding.process(new AbstractNoOpBindingVisitor() {
+				binding.process(new BindingAdapter() {
 					@Override
 					public void processFunction(KnowItBindingFunction function) {
 						final ScriptIt doIt = function.getValue();
@@ -482,7 +482,7 @@ public class LibraryModel extends PatternModel implements
 	 * @author mfchurch
 	 * 
 	 */
-	private class ScriptItRetriever extends AbstractNoOpStoryVisitor {
+	private class ScriptItRetriever extends StoryAdapter {
 		private String displayName;
 		private ScriptIt scriptIt;
 
@@ -545,7 +545,7 @@ public class LibraryModel extends PatternModel implements
 
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
-			knowIt.getBinding().process(new AbstractNoOpBindingVisitor() {
+			knowIt.getBinding().process(new BindingAdapter() {
 				@Override
 				public void processFunction(KnowItBindingFunction function) {
 					final ScriptIt scriptIt = function.getValue();

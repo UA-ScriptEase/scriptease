@@ -28,7 +28,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
 import scriptease.ScriptEase;
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.ObservedJPanel;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
@@ -176,7 +176,7 @@ public class ScriptWidgetFactory {
 	 * @author mfchurch
 	 * @author remiller
 	 */
-	private static class BindingWidgetBuilder extends AbstractNoOpStoryVisitor {
+	private static class BindingWidgetBuilder extends StoryAdapter {
 		private BindingWidget bindingWidget;
 
 		/**

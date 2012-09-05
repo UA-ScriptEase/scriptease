@@ -1,6 +1,6 @@
 package scriptease.gui.quests;
 
-import scriptease.controller.AbstractNoOpGraphNodeVisitor;
+import scriptease.controller.GraphNodeAdapter;
 import scriptease.controller.io.converter.graphnode.GraphNodeConverter;
 import scriptease.gui.graph.nodes.GraphNode;
 
@@ -43,7 +43,7 @@ public class QuestNodeConverter extends GraphNodeConverter {
 		// StartPoint
 		writer.startNode(TAG_START);
 		final GraphNode startNode = questNode.getStartPoint();
-		startNode.process(new AbstractNoOpGraphNodeVisitor() {
+		startNode.process(new GraphNodeAdapter() {
 
 			@Override
 			public void processQuestPointNode(QuestPointNode questPointNode) {
@@ -64,7 +64,7 @@ public class QuestNodeConverter extends GraphNodeConverter {
 		// EndPoint
 		writer.startNode(TAG_END);
 		final GraphNode endNode = questNode.getEndPoint();
-		endNode.process(new AbstractNoOpGraphNodeVisitor() {
+		endNode.process(new GraphNodeAdapter() {
 
 			@Override
 			public void processQuestPointNode(QuestPointNode questPointNode) {

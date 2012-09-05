@@ -27,7 +27,7 @@ import scriptease.model.complex.ScriptIt;
  * @author mfchurch
  * @author remiller
  */
-public class ScopeVisitor extends AbstractNoOpStoryVisitor {
+public class ScopeVisitor extends StoryAdapter {
 	private final List<KnowIt> scope;
 	private final StoryComponent targetComponent;
 

@@ -23,7 +23,7 @@ import javax.swing.SwingWorker.StateValue;
 import javax.swing.filechooser.FileFilter;
 
 import scriptease.ScriptEase;
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.internationalization.Il8nResources;
@@ -323,7 +323,7 @@ public final class WindowFactory {
 
 			// if available, show the panel being changed, otherwise use the
 			// display text
-			component.process(new AbstractNoOpStoryVisitor() {
+			component.process(new StoryAdapter() {
 				@Override
 				public void processKnowIt(final KnowIt knowIt) {
 

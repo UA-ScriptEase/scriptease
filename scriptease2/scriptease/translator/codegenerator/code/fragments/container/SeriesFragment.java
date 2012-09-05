@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.regex.PatternSyntaxException;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -274,7 +274,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 	 * A filter for series.
 	 * 
 	 */
-	public class SeriesFilter extends AbstractNoOpStoryVisitor {
+	public class SeriesFilter extends StoryAdapter {
 		private final String value;
 		private final SeriesFilterType type;
 		private ArrayList<Object> filtered;

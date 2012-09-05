@@ -25,7 +25,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
 
-import scriptease.controller.AbstractNoOpGraphNodeVisitor;
+import scriptease.controller.GraphNodeAdapter;
 import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.GraphNodeObserver;
@@ -206,7 +206,7 @@ public class ToolBarFactory {
 		final JSpinner fanInSpinner = this.buildFanInSpinner(new Dimension(
 				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT), fanInLabel);
 
-		gPanel.getHeadNode().process(new AbstractNoOpGraphNodeVisitor() {
+		gPanel.getHeadNode().process(new GraphNodeAdapter() {
 			public void processQuestPointNode(QuestPointNode questPointNode) {
 				ToolBarFactory.this.updateQuestToolBar(nameField, fanInSpinner, nameLabel,
 						fanInLabel, questPointNode);
@@ -665,7 +665,7 @@ public class ToolBarFactory {
 				QuestPointNode questPointNode) {
 			if (sourceNode.isDeletable()) {
 				List<GraphNode> children = questPointNode.getChildren();
-				sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
+				sourceNode.process(new GraphNodeAdapter() {
 					@Override
 					public void processQuestNode(QuestNode questNode) {
 						// Remove the Quest
@@ -717,7 +717,7 @@ public class ToolBarFactory {
 				});
 				// Subtracts 1 from fan in of all children.
 				for (GraphNode child : children) {
-					child.process(new AbstractNoOpGraphNodeVisitor() {
+					child.process(new GraphNodeAdapter() {
 						public void processQuestPointNode(
 								QuestPointNode questPointNode) {
 
@@ -732,7 +732,7 @@ public class ToolBarFactory {
 				}
 			}
 
-			this.previousNode.process(new AbstractNoOpGraphNodeVisitor() {
+			this.previousNode.process(new GraphNodeAdapter() {
 				public void processQuestPointNode(QuestPointNode questPointNode) {
 					ToolBarFactory.this.updateQuestToolBar(QuestToolBarObserver.this.nameField, QuestToolBarObserver.this.fanInSpinner, QuestToolBarObserver.this.nameLabel,
 							QuestToolBarObserver.this.fanInLabel, questPointNode);
@@ -840,7 +840,7 @@ public class ToolBarFactory {
 					this.previousNode = sourceNode;
 				}
 
-				sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
+				sourceNode.process(new GraphNodeAdapter() {
 					@Override
 					public void processQuestPointNode(
 							QuestPointNode questPointNode) {
@@ -861,7 +861,7 @@ public class ToolBarFactory {
 
 							if (model != null && model instanceof StoryModel) {
 								sourceNode
-										.process(new AbstractNoOpGraphNodeVisitor() {
+										.process(new GraphNodeAdapter() {
 											@Override
 											public void processQuestPointNode(
 													QuestPointNode questPointNode) {
@@ -976,7 +976,7 @@ public class ToolBarFactory {
 					} else {
 						this.editedDescribeIt.clearSelection();
 						sourceNode.setSelected(true);
-						sourceNode.process(new AbstractNoOpGraphNodeVisitor() {
+						sourceNode.process(new GraphNodeAdapter() {
 
 							@Override
 							public void processTextNode(TextNode textNode) {

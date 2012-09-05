@@ -12,14 +12,14 @@ import scriptease.model.StoryModel;
  * <br>
  * Classes should not implement this interface directly since it is strongly
  * recommended (and stylistically required) that they subclass
- * {@link AbstractNoOpModelVisitor}. <br>
+ * {@link ModelAdapter}. <br>
  * <br>
  * <code>ModelVisitor</code> is an implementation of the Visitor design pattern.
  * 
  * @author kschenk
  * 
  * @see StoryVisitor
- * @see AbstractNoOpModelVisitor
+ * @see ModelAdapter
  */
 public interface ModelVisitor {
 	public void processStoryModel(StoryModel storyModel);

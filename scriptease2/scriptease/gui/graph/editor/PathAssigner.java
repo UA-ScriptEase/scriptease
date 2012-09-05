@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
@@ -72,7 +72,7 @@ public class PathAssigner extends JPanel implements StoryComponentObserver {
 	public void componentChanged(StoryComponentEvent event) {
 		final StoryComponent source = event.getSource();
 		final StoryComponentChangeEnum type = event.getType();
-		source.process(new AbstractNoOpStoryVisitor() {
+		source.process(new StoryAdapter() {
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
 				if (type == StoryComponentChangeEnum.CHANGE_CHILD_ADDED)

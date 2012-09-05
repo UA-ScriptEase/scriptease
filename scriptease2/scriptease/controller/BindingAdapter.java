@@ -26,7 +26,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
  * @author mfchurch
  * 
  */
-public abstract class AbstractNoOpBindingVisitor implements BindingVisitor {
+public abstract class BindingAdapter implements BindingVisitor {
 	@Override
 	public void processConstant(KnowItBindingConstant constant) {
 		this.defaultProcess(constant);

@@ -24,8 +24,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 
 import scriptease.ScriptEase;
-import scriptease.controller.AbstractNoOpBindingVisitor;
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.FileManager;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
@@ -500,10 +500,10 @@ public class MenuFactory {
 
 				LibraryModel model = nwn.getApiDictionary().getLibrary();
 				for (StoryComponent component : model.getAllStoryComponents()) {
-					component.process(new AbstractNoOpStoryVisitor() {
+					component.process(new StoryAdapter() {
 						public void processKnowIt(final KnowIt knowIt) {
 							knowIt.getBinding().process(
-									new AbstractNoOpBindingVisitor() {
+									new BindingAdapter() {
 										public void processDescribeIt(
 												KnowItBindingDescribeIt described) {
 											JFrame frame = new JFrame(

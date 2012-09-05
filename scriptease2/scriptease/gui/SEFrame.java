@@ -25,8 +25,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import scriptease.ScriptEase;
-import scriptease.controller.AbstractNoOpGraphNodeVisitor;
-import scriptease.controller.AbstractNoOpModelVisitor;
+import scriptease.controller.GraphNodeAdapter;
+import scriptease.controller.ModelAdapter;
 import scriptease.controller.FileManager;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
@@ -294,7 +294,7 @@ public final class SEFrame implements PatternModelObserver {
 		else
 			icon = null;
 
-		model.process(new AbstractNoOpModelVisitor() {
+		model.process(new ModelAdapter() {
 			@Override
 			public void processLibraryModel(LibraryModel libraryModel) {
 				// Creates a Library Editor panel
@@ -320,7 +320,7 @@ public final class SEFrame implements PatternModelObserver {
 			public void processStoryModel(final StoryModel storyModel) {
 				// Creates a story editor panel with a quest graph
 				storyModel.getRoot().getStartPoint()
-						.process(new AbstractNoOpGraphNodeVisitor() {
+						.process(new GraphNodeAdapter() {
 							@Override
 							public void processQuestPointNode(
 									QuestPointNode questPointNode) {
@@ -389,7 +389,7 @@ public final class SEFrame implements PatternModelObserver {
 		if (FileManager.getInstance().hasUnsavedChanges(model)) {
 			// otherwise, close the StoryModel
 
-			model.process(new AbstractNoOpModelVisitor() {
+			model.process(new ModelAdapter() {
 				@Override
 				public void processLibraryModel(LibraryModel libraryModel) {
 					// TODO Should close the translator if it's not open
@@ -412,7 +412,7 @@ public final class SEFrame implements PatternModelObserver {
 
 		if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
 
-			model.process(new AbstractNoOpModelVisitor() {
+			model.process(new ModelAdapter() {
 
 				/**
 				 * Sets the ScriptEase title based on the model selected.

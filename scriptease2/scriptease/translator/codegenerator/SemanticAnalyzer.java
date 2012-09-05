@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.get.QuestPointNodeGetter;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.modelverifier.rule.ParameterBoundRule;
@@ -41,7 +41,7 @@ import scriptease.translator.codegenerator.code.contexts.FileContext;
  * @author remiller
  * @author mfchurch
  */
-public class SemanticAnalyzer extends AbstractNoOpStoryVisitor {
+public class SemanticAnalyzer extends StoryAdapter {
 	private final QuestNode model;
 	private final Translator translator;
 	private final Collection<StoryRule> rules;
@@ -111,7 +111,7 @@ public class SemanticAnalyzer extends AbstractNoOpStoryVisitor {
 	@Override
 	public void processKnowIt(final KnowIt knowIt) {
 		final KnowItBinding binding = knowIt.getBinding();
-		binding.process(new AbstractNoOpBindingVisitor() {
+		binding.process(new BindingAdapter() {
 			@Override
 			public void processReference(KnowItBindingReference reference) {
 				final KnowIt referenced = reference.getValue();

@@ -3,8 +3,8 @@ package scriptease.controller.groupvisitor;
 import java.util.ArrayList;
 import java.util.List;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
-import scriptease.controller.AbstractNoOpStoryVisitor;
+import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
@@ -16,7 +16,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 
-public abstract class GroupVisitor extends AbstractNoOpStoryVisitor {
+public abstract class GroupVisitor extends StoryAdapter {
 
 	private List<KnowIt> group;
 	protected KnowIt original;
@@ -64,7 +64,7 @@ public abstract class GroupVisitor extends AbstractNoOpStoryVisitor {
 		// Handle the knowIt's resolved binding
 		KnowItBinding binding = knowIt.getBinding();
 
-		binding.process(new AbstractNoOpBindingVisitor() {
+		binding.process(new BindingAdapter() {
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
 				ScriptIt referenced = function.getValue();

@@ -1,6 +1,6 @@
 package scriptease.gui.control.editor;
 
-import scriptease.controller.AbstractNoOpBindingVisitor;
+import scriptease.controller.BindingAdapter;
 import scriptease.controller.undo.UndoManager;
 import scriptease.model.PatternModelManager;
 import scriptease.model.atomic.KnowIt;
@@ -33,7 +33,7 @@ public class ValueEditor extends NameEditor {
 	@Override
 	protected void setupTextField() {
 		final KnowItBinding binding = this.getComponent().getBinding();
-		binding.process(new AbstractNoOpBindingVisitor() {
+		binding.process(new BindingAdapter() {
 			@Override
 			public void processConstant(KnowItBindingConstant constant) {
 				ValueEditor.this.setText(constant.getScriptValue());
@@ -48,7 +48,7 @@ public class ValueEditor extends NameEditor {
 		if (PatternModelManager.getInstance().hasActiveModel()) {
 			final KnowIt knowIt = this.getComponent();
 			final KnowItBinding binding = knowIt.getBinding();
-			binding.process(new AbstractNoOpBindingVisitor() {
+			binding.process(new BindingAdapter() {
 				@Override
 				public void processConstant(KnowItBindingConstant constant) {
 					final String oldValue = constant.getScriptValue();
