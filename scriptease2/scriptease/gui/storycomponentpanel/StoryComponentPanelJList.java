@@ -126,14 +126,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 		listModel = (DefaultListModel) this.getModel();
 
-		/*
-		 * for (Object object : listModel.toArray()) { if (object instanceof
-		 * StoryComponentPanel) { StoryComponentPanel panel =
-		 * (StoryComponentPanel) object;
-		 * StoryComponentObserverRemover.removeObservers(panel,
-		 * panel.getStoryComponent()); } }
-		 */
-
 		listModel.clear();
 	}
 
