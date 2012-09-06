@@ -23695,13 +23695,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Create a &lt;Object Type&gt; &lt;Object&gt; at &lt;Location&gt;</Name>
+      <Name>Create a new &lt;Object&gt; at &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Create a &lt;Object Type&gt; &lt;Object&gt; at &lt;Location&gt;</Name>
+          <Name>Create a new &lt;Object&gt; at &lt;Location&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>447</Id>
@@ -23710,20 +23710,15 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Object Type</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>create_object_type</Type>
-              </Types>
-            </KnowIt>
-            <KnowIt>
               <Name>Object</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
+              	<Type>item</Type>
                 <Type>creature</Type>
                 <Type>placeable</Type>
+              	<Type>store</Type>
+              	<Type>waypoint</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -23750,7 +23745,7 @@
 				<Literal>string resref = GetStringLeft(templateID, dotLoc);</Literal>
 			</Line>
 			<Line>
-				<Literal>string typeExt = GetStringRight(templateID, dotLoc);</Literal>
+				<Literal>string typeExt = GetStringRight(templateID, GetStringLength(templateID) - (dotLoc + 1));</Literal>
 			</Line>
 			<Line>
 				<Literal>int type;</Literal>
@@ -23759,7 +23754,7 @@
 				<Literal>// Cleverly determine that pesky constant from the template id (resref) extension.</Literal>
 			</Line> 
 			<Line>
-				<Literal>if(typeExt == "utc"){</Literal>
+				<Literal>if(typeExt == "utc" || typeExt == "UTC"){</Literal>
 			</Line>
 			<Indent>
 				<Line>
@@ -23770,7 +23765,7 @@
 				</Line>
 			</Indent>
 			<Line>
-				<Literal>} else if(typeExt == "uti"){</Literal>
+				<Literal>} else if(typeExt == "uti" || typeExt == "UTI"){</Literal>
 			</Line>
 			<Indent>
 				<Line>
@@ -23781,7 +23776,7 @@
 				</Line>
 			</Indent>
 			<Line>
-				<Literal>} else if(typeExt == "utp"){</Literal>
+				<Literal>} else if(typeExt == "utp" || typeExt == "UTP"){</Literal>
 			</Line>
 			<Indent>
 				<Line>
@@ -23792,7 +23787,7 @@
 				</Line>
 			</Indent>
 			<Line>
-				<Literal>} else if(typeExt == "uts"){</Literal>
+				<Literal>} else if(typeExt == "uts" || typeExt == "UTS"){</Literal>
 			</Line>
 			<Indent>
 				<Line>
@@ -23803,15 +23798,12 @@
 				</Line>
 			</Indent>
 			<Line>
-				<Literal>} else if(typeExt == "utw"){</Literal>
+				<Literal>} else if(typeExt == "utw" || typeExt == "UTW"){</Literal>
 			</Line>
 			<Indent>
 				<Line>
-					<Literal>// and this little piggy went wee wee wee, all the way home.</Literal>
+					<Literal>// and this little piggy went wee wee wee, to the waypoint home.</Literal>
 				</Line> 
-				<Line>
-					<Literal>// Because it knows where that is.</Literal>
-				</Line>
 				<Line>
 					<Literal>type = OBJECT_TYPE_WAYPOINT;</Literal>
 				</Line>

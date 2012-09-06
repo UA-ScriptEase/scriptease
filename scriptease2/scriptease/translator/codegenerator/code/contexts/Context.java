@@ -103,7 +103,7 @@ public class Context {
 	}
 
 	public final CodeGenerationNamifier getNamifier() {
-		return namifier;
+		return this.namifier;
 	}
 
 	/**
