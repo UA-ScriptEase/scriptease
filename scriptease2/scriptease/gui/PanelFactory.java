@@ -16,7 +16,10 @@ import javax.swing.JToolBar;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.GraphPanel;
+import scriptease.gui.graph.SEGraph;
+import scriptease.gui.graph.SEGraphNodeRenderer;
 import scriptease.gui.graph.nodes.GraphNode;
+import scriptease.gui.graph.nodes.QuestPointNodeRenderer;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.pane.GameObjectPane;
 import scriptease.gui.pane.LibraryPanel;
@@ -52,20 +55,22 @@ public class PanelFactory {
 	 *            Start Point of the graph.
 	 * @return
 	 */
-	public JPanel buildQuestPanel(final GraphNode start) {
+	public JPanel buildQuestPanel(final QuestPoint start) {
 		final JPanel questPanel = new JPanel(new BorderLayout(), true);
-		final GraphPanel graphPanel = new GraphPanel(start);
+
+		final SEGraph<QuestPoint> graphPanel = new SEGraph<QuestPoint>(start,
+				new QuestPointNodeRenderer());
 
 		ToolBarButtonAction.addJComponent(graphPanel);
 
-		final JToolBar graphToolBar = ToolBarFactory.getInstance()
-				.buildGraphEditorToolBar(graphPanel);
-		final JToolBar questToolBar = ToolBarFactory.getInstance()
-				.buildQuestEditorToolBar(graphPanel);
-
-		questPanel.add(graphToolBar.add(questToolBar), BorderLayout.PAGE_START);
-
-		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
+		/*
+		 * final JToolBar graphToolBar = ToolBarFactory.getInstance()
+		 * .buildGraphEditorToolBar(graphPanel); final JToolBar questToolBar =
+		 * ToolBarFactory.getInstance() .buildQuestEditorToolBar(graphPanel);
+		 * 
+		 * questPanel.add(graphToolBar.add(questToolBar),
+		 * BorderLayout.PAGE_START);
+		 */ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
 
 		questPanel.add(new JScrollPane(graphPanel), BorderLayout.CENTER);
 
@@ -140,13 +145,13 @@ public class PanelFactory {
 	public JPanel buildStoryPanel(StoryModel model, QuestPoint questPoint) {
 		final JPanel storyPanel;
 		final JPanel questPanel;
-		 final StoryComponentPanelTree storyComponentTree;
+		final StoryComponentPanelTree storyComponentTree;
 
 		List<JComponent> panes;
 
 		storyPanel = new JPanel(new GridLayout(0, 1));
 		questPanel = PanelFactory.getInstance().buildQuestPanel(
-				model.getRoot().getStartPoint());
+				model.getStartNode().getQuestPoint());
 		storyComponentTree = new StoryComponentPanelTree(questPoint);
 
 		panes = PanelFactory.modelsToComponents.getValue(model);
@@ -213,7 +218,8 @@ public class PanelFactory {
 	}
 
 	public PatternModel getModelForComponent(JComponent modelComponent) {
-		for (List<JComponent> jComponentList : PanelFactory.modelsToComponents.getValues())
+		for (List<JComponent> jComponentList : PanelFactory.modelsToComponents
+				.getValues())
 			if (jComponentList.contains(modelComponent))
 				return PanelFactory.modelsToComponents.getKey(jComponentList);
 
@@ -230,7 +236,8 @@ public class PanelFactory {
 	 * @return
 	 */
 	public List<JComponent> getComponentsForModel(PatternModel model) {
-		final List<JComponent> panels = PanelFactory.modelsToComponents.getValue(model);
+		final List<JComponent> panels = PanelFactory.modelsToComponents
+				.getValue(model);
 
 		if (panels == null) {
 			System.out

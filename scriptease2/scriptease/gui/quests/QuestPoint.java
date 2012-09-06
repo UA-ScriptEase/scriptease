@@ -1,5 +1,8 @@
 package scriptease.gui.quests;
 
+import java.util.Collection;
+import java.util.Set;
+
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -23,6 +26,9 @@ public class QuestPoint extends ComplexStoryComponent {
 	private static final int DEFAULT_FAN_IN = 1;
 	private static final String NEW_QUEST_POINT = "New Quest Point";
 	private static int questPointCounter = 1;
+
+	// TODO Implement zis
+	private Set<QuestPoint> successors;
 
 	/**
 	 * Creates a new Quest Point with the given name and a default fan-in value.
@@ -83,12 +89,17 @@ public class QuestPoint extends ComplexStoryComponent {
 	}
 
 	public QuestNode getQuestContainer() {
-		// TODO get the quest which contains this questpoint
+		// TODO get the quest which contains this questpoint. Or remove quest
+		// containers entirely
 		return new QuestNode();
 	}
 
 	@Override
 	public String toString() {
 		return "QuestPoint (\"" + this.getDisplayText() + "\")";
+	}
+
+	public Collection<QuestPoint> getSuccessors() {
+		return this.successors;
 	}
 }
