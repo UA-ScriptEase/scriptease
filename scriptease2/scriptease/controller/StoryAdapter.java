@@ -37,7 +37,7 @@ public abstract class StoryAdapter implements StoryVisitor {
 	 */
 	@Override
 	public void processQuestPoint(QuestPoint questPoint) {
-		this.processStoryComponentContainer(questPoint);
+		this.defaultProcessComplex(questPoint);
 	}
 
 	@Override

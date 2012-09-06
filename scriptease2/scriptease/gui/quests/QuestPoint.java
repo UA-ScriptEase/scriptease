@@ -4,7 +4,6 @@ import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 
 /**
  * QuestPoints are the basic units used to build stories. Each QuestPoint holds
@@ -17,7 +16,7 @@ import scriptease.model.complex.StoryComponentContainer;
  * @author mfchurch
  * @author graves
  */
-public class QuestPoint extends StoryComponentContainer {
+public class QuestPoint extends ComplexStoryComponent {
 	public static String QUEST_POINT_TYPE = "questPoint";
 	private int fanIn;
 
