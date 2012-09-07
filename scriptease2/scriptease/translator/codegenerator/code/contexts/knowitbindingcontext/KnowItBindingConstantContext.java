@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import scriptease.gui.quests.QuestNode;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
@@ -26,7 +26,7 @@ import scriptease.translator.io.model.GameObject;
  */
 public class KnowItBindingConstantContext extends KnowItBindingContext {
 
-	public KnowItBindingConstantContext(QuestNode model, String indent,
+	public KnowItBindingConstantContext(QuestPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInformation) {
 		super(model, indent, existingNames, translator, locationInformation);

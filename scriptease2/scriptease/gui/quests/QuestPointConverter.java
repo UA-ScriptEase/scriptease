@@ -15,8 +15,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class QuestPointConverter extends ComplexStoryComponentConverter {
 	public static final String TAG_QUESTPOINT = "QuestPoint";
-	public static final String TAG_COMMITING = "Commiting";
 	public static final String TAG_FAN_IN = "FanIn";
+	public static final String TAG_SUCCESSORS = "Successors";
 
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
@@ -43,15 +43,9 @@ public class QuestPointConverter extends ComplexStoryComponentConverter {
 
 			if (nodeName.equals(TAG_FAN_IN)) {
 				fanIn = reader.getValue();
-			} else if (nodeName.equals(TAG_COMMITING)) {
-				/*
-				 * This check left in for legacy file support. "Committing"
-				 * used to be a property of quest points, where they would
-				 * disable all of their sibling branches, but we've dumped that
-				 * in favour of explicitly failing a quest point.
-				 * 
-				 * -remiller
-				 */
+			}
+			else if (nodeName.equals(TAG_SUCCESSORS)) {
+				//TODO Handle successors
 			}
 			reader.moveUp();
 		}

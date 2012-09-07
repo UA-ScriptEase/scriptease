@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import scriptease.gui.quests.QuestNode;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
@@ -17,7 +17,7 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 public class ScriptItContext extends ComplexStoryComponentContext {
 
-	public ScriptItContext(QuestNode model, String indent,
+	public ScriptItContext(QuestPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInfo) {
 		super(model, indent, existingNames, translator, locationInfo);

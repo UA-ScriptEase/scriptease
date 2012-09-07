@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import scriptease.controller.get.VariableGetter;
-import scriptease.gui.quests.QuestNode;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
@@ -27,7 +27,7 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  */
 public class KnowItContext extends StoryComponentContext {
 
-	public KnowItContext(QuestNode model, String indent,
+	public KnowItContext(QuestPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInformation) {
 		super(model, indent, existingNames, translator, locationInformation);

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import scriptease.gui.quests.QuestNode;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.model.CodeBlock;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.LocationInformation;
@@ -30,7 +30,7 @@ public class FileContext extends Context {
 	private Set<String> includeFiles;
 	private Iterator<String> includeFilesIterator;
 
-	public FileContext(QuestNode model, String indent,
+	public FileContext(QuestPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInfo) {
 		super(model, indent, existingNames, translator);

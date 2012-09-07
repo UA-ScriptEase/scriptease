@@ -40,12 +40,8 @@ import scriptease.gui.WindowFactory;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.gui.graph.nodes.TextNode;
-import scriptease.gui.quests.QuestNode;
-import scriptease.gui.quests.QuestNodeConverter;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.gui.quests.QuestPointConverter;
-import scriptease.gui.quests.QuestPointNode;
-import scriptease.gui.quests.QuestPointNodeConverter;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
@@ -103,7 +99,11 @@ public class FileIO {
 	 * @author remiller
 	 */
 	public enum IoMode {
-		API_DICTIONARY, LANGUAGE_DICTIONARY, STORY, LIBRARY, NONE;
+		API_DICTIONARY,
+		LANGUAGE_DICTIONARY,
+		STORY,
+		LIBRARY,
+		NONE;
 	}
 
 	private static FileIO instance;
@@ -135,8 +135,8 @@ public class FileIO {
 
 		if (story != null) {
 			// Why are quests so bloody messy? - remiller
-			rootQP = ((QuestPointNode) story.getRoot().getStartPoint())
-					.getQuestPoint();
+			// Not anymore! They've been RECTIFIED! - kschenk
+			rootQP = story.getRoot();
 
 			BindingFixer.fixBindings(rootQP);
 		}
@@ -181,7 +181,7 @@ public class FileIO {
 
 		APIDictionary apiDictionary = (APIDictionary) this.readData(location,
 				IoMode.API_DICTIONARY);
-		
+
 		apiDictionary.setTranslator(translator);
 
 		BindingFixer.fixBindings(apiDictionary.getLibrary().getRoot());
@@ -391,9 +391,7 @@ public class FileIO {
 		stream.alias("CodeBlockSource", CodeBlockSource.class);
 		stream.alias("CodeBlockReference", CodeBlockReference.class);
 		stream.alias("ScriptIt", ScriptIt.class);
-		stream.alias("QuestNode", QuestNode.class);
 		stream.alias("QuestPoint", QuestPoint.class);
-		stream.alias("QuestPointNode", QuestPointNode.class);
 
 		// the below are aliased for backwards compatibility
 
@@ -428,10 +426,9 @@ public class FileIO {
 		stream.registerConverter(new CodeBlockReferenceConverter());
 		stream.registerConverter(new ScriptItConverter());
 		stream.registerConverter(new QuestPointConverter());
-		stream.registerConverter(new QuestNodeConverter());
-		stream.registerConverter(new QuestPointNodeConverter());
-		
-		stream.registerConverter(new IdentityArrayListConverter(stream.getMapper()));
+
+		stream.registerConverter(new IdentityArrayListConverter(stream
+				.getMapper()));
 
 		return stream;
 	}

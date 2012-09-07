@@ -17,9 +17,9 @@ import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.SEGraph;
-import scriptease.gui.graph.SEGraphNodeRenderer;
+import scriptease.gui.graph.builders.QuestPointBuilder;
 import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.graph.nodes.QuestPointNodeRenderer;
+import scriptease.gui.graph.renderers.QuestPointNodeRenderer;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.pane.GameObjectPane;
 import scriptease.gui.pane.LibraryPanel;
@@ -58,19 +58,23 @@ public class PanelFactory {
 	public JPanel buildQuestPanel(final QuestPoint start) {
 		final JPanel questPanel = new JPanel(new BorderLayout(), true);
 
-		final SEGraph<QuestPoint> graphPanel = new SEGraph<QuestPoint>(start,
-				new QuestPointNodeRenderer());
-
+		final SEGraph<QuestPoint> graphPanel = new SEGraph<QuestPoint>(start);
+		graphPanel.setRenderer(new QuestPointNodeRenderer(graphPanel));
+		graphPanel.setBuilder(new QuestPointBuilder());
+		
+		
 		ToolBarButtonAction.addJComponent(graphPanel);
 
+		final JToolBar graphToolBar = ToolBarFactory.getInstance()
+				.buildGraphEditorToolBar(graphPanel);
+
 		/*
-		 * final JToolBar graphToolBar = ToolBarFactory.getInstance()
-		 * .buildGraphEditorToolBar(graphPanel); final JToolBar questToolBar =
-		 * ToolBarFactory.getInstance() .buildQuestEditorToolBar(graphPanel);
-		 * 
-		 * questPanel.add(graphToolBar.add(questToolBar),
-		 * BorderLayout.PAGE_START);
-		 */ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
+		 * final JToolBar questToolBar = ToolBarFactory.getInstance()
+		 * .buildQuestEditorToolBar(graphPanel);
+		 */
+
+		questPanel.add(graphToolBar, BorderLayout.PAGE_START);
+		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
 
 		questPanel.add(new JScrollPane(graphPanel), BorderLayout.CENTER);
 
@@ -95,16 +99,18 @@ public class PanelFactory {
 		graphPanel.setHeadNode(editedDescribeIt.getHeadNode());
 
 		ToolBarButtonAction.addJComponent(graphPanel);
-
-		final JToolBar graphToolBar = ToolBarFactory.getInstance()
-				.buildGraphEditorToolBar(graphPanel);
-
-		final JToolBar describeItToolBar = ToolBarFactory.getInstance()
-				.buildDescribeItToolBar(editedDescribeIt, graphPanel);
-
-		describeItPanel.add(graphToolBar.add(describeItToolBar),
-				BorderLayout.PAGE_START);
-
+		/*
+		 * final JToolBar graphToolBar = ToolBarFactory.getInstance()
+		 * .buildGraphEditorToolBar(graphPanel);
+		 */
+		/*
+		 * final JToolBar describeItToolBar = ToolBarFactory.getInstance()
+		 * .buildDescribeItToolBar(editedDescribeIt, graphPanel);
+		 */
+		/*
+		 * describeItPanel.add(graphToolBar.add(describeItToolBar),
+		 * BorderLayout.PAGE_START);
+		 */
 		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
 
 		describeItPanel.add(new JScrollPane(graphPanel), BorderLayout.CENTER);
@@ -150,8 +156,8 @@ public class PanelFactory {
 		List<JComponent> panes;
 
 		storyPanel = new JPanel(new GridLayout(0, 1));
-		questPanel = PanelFactory.getInstance().buildQuestPanel(
-				model.getStartNode().getQuestPoint());
+		questPanel = PanelFactory.getInstance()
+				.buildQuestPanel(model.getRoot());
 		storyComponentTree = new StoryComponentPanelTree(questPoint);
 
 		panes = PanelFactory.modelsToComponents.getValue(model);

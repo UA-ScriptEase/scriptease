@@ -9,8 +9,6 @@ import java.util.Set;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.gui.graph.nodes.TextNode;
-import scriptease.gui.quests.QuestNode;
-import scriptease.gui.quests.QuestPointNode;
 
 /**
  * GraphNodeVisitor used to resolve referencing problems created when cloning
@@ -67,15 +65,5 @@ public class GraphNodeReferenceResolver implements GraphNodeVisitor {
 			if (!replaced)
 				child.process(this);
 		}
-	}
-
-	@Override
-	public void processQuestPointNode(QuestPointNode questPointNode) {
-		this.processDefault(questPointNode);
-	}
-
-	@Override
-	public void processQuestNode(QuestNode questNode) {
-		this.processDefault(questNode);
 	}
 }

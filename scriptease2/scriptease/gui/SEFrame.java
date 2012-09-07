@@ -25,16 +25,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import scriptease.ScriptEase;
-import scriptease.controller.GraphNodeAdapter;
-import scriptease.controller.ModelAdapter;
 import scriptease.controller.FileManager;
+import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.pane.CloseableModelTab;
 import scriptease.gui.quests.QuestPoint;
-import scriptease.gui.quests.QuestPointNode;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
@@ -144,10 +142,10 @@ public final class SEFrame implements PatternModelObserver {
 
 		// Compressed Layout
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
-			this.leftSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, PanelFactory
-					.getInstance().getMainLibraryPane(), objectPane);
-			this.rightSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.leftSplit,
-					this.middlePane);
+			this.leftSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+					PanelFactory.getInstance().getMainLibraryPane(), objectPane);
+			this.rightSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+					this.leftSplit, this.middlePane);
 
 			content.add(this.rightSplit);
 			content.add(statusBar);
@@ -319,45 +317,30 @@ public final class SEFrame implements PatternModelObserver {
 			@Override
 			public void processStoryModel(final StoryModel storyModel) {
 				// Creates a story editor panel with a quest graph
-				storyModel.getRoot().getStartPoint()
-						.process(new GraphNodeAdapter() {
-							@Override
-							public void processQuestPointNode(
-									QuestPointNode questPointNode) {
-								final QuestPoint startQuestPoint;
-								final JPanel newPanel;
-								final CloseableModelTab newTab;
-								String modelTitle;
-								final String title;
+				final QuestPoint startQuestPoint;
+				final JPanel newPanel;
+				final CloseableModelTab newTab;
+				final String title;
+				String modelTitle;
 
-								startQuestPoint = questPointNode
-										.getQuestPoint();
-								newPanel = PanelFactory.getInstance()
-										.buildStoryPanel(storyModel,
-												startQuestPoint);
-								newTab = new CloseableModelTab(
-										SEFrame.this.storyTabs, newPanel,
-										storyModel, icon);
-								modelTitle = storyModel.getTitle();
+				startQuestPoint = storyModel.getRoot();
+				newPanel = PanelFactory.getInstance().buildStoryPanel(
+						storyModel, startQuestPoint);
+				newTab = new CloseableModelTab(SEFrame.this.storyTabs,
+						newPanel, storyModel, icon);
+				modelTitle = storyModel.getTitle();
 
-								if (modelTitle == null || modelTitle.equals(""))
-									modelTitle = "<Untitled>";
+				if (modelTitle == null || modelTitle.equals(""))
+					modelTitle = "<Untitled>";
 
-								title = modelTitle
-										+ "("
-										+ storyModel.getModule().getLocation()
-												.getName() + ")";
+				title = modelTitle + "("
+						+ storyModel.getModule().getLocation().getName() + ")";
 
-								SEFrame.this.storyTabs.addTab(title, icon,
-										newPanel);
-								SEFrame.this.storyTabs.setTabComponentAt(
-										SEFrame.this.storyTabs
-												.indexOfComponent(newPanel),
-										newTab);
-								SEFrame.this.storyTabs
-										.setSelectedComponent(newPanel);
-							}
-						});
+				SEFrame.this.storyTabs.addTab(title, icon, newPanel);
+				SEFrame.this.storyTabs.setTabComponentAt(
+						SEFrame.this.storyTabs.indexOfComponent(newPanel),
+						newTab);
+				SEFrame.this.storyTabs.setSelectedComponent(newPanel);
 			}
 		});
 	}

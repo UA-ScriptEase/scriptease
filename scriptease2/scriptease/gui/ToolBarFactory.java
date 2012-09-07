@@ -3,6 +3,7 @@ package scriptease.gui;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ import scriptease.gui.action.story.graphs.DisconnectGraphPointAction;
 import scriptease.gui.action.story.graphs.InsertGraphNodeAction;
 import scriptease.gui.action.story.graphs.SelectGraphNodeAction;
 import scriptease.gui.graph.GraphPanel;
+import scriptease.gui.graph.SEGraph;
 import scriptease.gui.graph.editor.KnowItNodeEditor;
 import scriptease.gui.graph.editor.PathAssigner;
 import scriptease.gui.graph.editor.TextNodeEditor;
@@ -44,11 +46,9 @@ import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.gui.graph.nodes.TextNode;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
-import scriptease.gui.quests.QuestPointNode;
-import scriptease.model.PatternModelManager;
 import scriptease.model.PatternModel;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
@@ -99,7 +99,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	public JToolBar buildGraphEditorToolBar(GraphPanel gPanel) {
+	public JToolBar buildGraphEditorToolBar(SEGraph seGraph) {
 		final JToolBar graphEditorToolBar = new JToolBar();
 
 		final ButtonGroup graphEditorButtonGroup = new ButtonGroup();
@@ -172,11 +172,11 @@ public class ToolBarFactory {
 		SEFrame.getInstance().getStoryTabPane()
 				.addChangeListener(graphEditorListener);
 
-		GraphNodeObserver graphBarObserver = new GraphToolBarObserver(gPanel);
+		/*GraphNodeObserver graphBarObserver = new GraphToolBarObserver(gPanel);
 
 		GraphNode.observeDepthMap(graphBarObserver, gPanel.getHeadNode());
 
-		this.observerMap.put(graphEditorToolBar, graphBarObserver);
+		this.observerMap.put(graphEditorToolBar, graphBarObserver);*/
 
 		return graphEditorToolBar;
 	}
@@ -188,9 +188,10 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	public JToolBar buildQuestEditorToolBar(GraphPanel gPanel) {
+	public JToolBar buildQuestEditorToolBar(SEGraph<QuestPoint> gPanel) {
 
-		final JToolBar questEditorToolBar = this.buildGraphEditorToolBar(gPanel);
+		final JToolBar questEditorToolBar = this
+				.buildGraphEditorToolBar(gPanel);
 
 		final int TOOL_BAR_HEIGHT = 32;
 		final int FAN_IN_SPINNER_LENGTH = 50;
@@ -206,12 +207,8 @@ public class ToolBarFactory {
 		final JSpinner fanInSpinner = this.buildFanInSpinner(new Dimension(
 				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT), fanInLabel);
 
-		gPanel.getHeadNode().process(new GraphNodeAdapter() {
-			public void processQuestPointNode(QuestPointNode questPointNode) {
-				ToolBarFactory.this.updateQuestToolBar(nameField, fanInSpinner, nameLabel,
-						fanInLabel, questPointNode);
-			}
-		});
+		this.updateQuestToolBar(nameField, fanInSpinner, nameLabel, fanInLabel,
+				gPanel.getStartNode());
 
 		final Dimension minSize = new Dimension(15, TOOL_BAR_HEIGHT);
 		final Dimension prefSize = new Dimension(15, TOOL_BAR_HEIGHT);
@@ -310,7 +307,7 @@ public class ToolBarFactory {
 	 */
 	private void updateQuestToolBar(JTextField nameField,
 			JSpinner fanInSpinner, JLabel nameLabel, JLabel fanInLabel,
-			QuestPointNode questNode) {
+			QuestPoint questNode) {
 
 		this.updateFanInSpinner(fanInSpinner, fanInLabel, questNode);
 		this.updateNameField(nameField, nameLabel, questNode);
@@ -335,17 +332,15 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	private DocumentListener nameFieldListener(JTextField nameField,
-			QuestPointNode questNode) {
-		final JTextField nField = nameField;
-		final QuestPointNode qNode = questNode;
+	private DocumentListener nameFieldListener(final JTextField nameField,
+			final QuestPoint questNode) {
 
 		DocumentListener nameFieldListener = new DocumentListener() {
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				String text = nField.getText();
-				qNode.getQuestPoint().setDisplayText(text);
+				String text = nameField.getText();
+				questNode.setDisplayText(text);
 			}
 
 			@Override
@@ -369,17 +364,18 @@ public class ToolBarFactory {
 	 * @param questNode
 	 */
 	private void updateNameField(JTextField nameField, JLabel nameLabel,
-			QuestPointNode questNode) {
+			QuestPoint questNode) {
 		if (questNode != null) {
 
-			String displayText = questNode.getQuestPoint().getDisplayText();
+			String displayText = questNode.getDisplayText();
 
 			nameField.setDocument(new PlainDocument());
 			nameField.getDocument().addDocumentListener(
 					this.nameFieldListener(nameField, questNode));
 
 			nameField.setText(displayText);
-			if (questNode.isDeletable()) {
+			if (((StoryModel) PatternModelManager.getInstance()
+					.getActiveModel()).getRoot() != questNode) {
 				nameLabel.setEnabled(true);
 				nameField.setEnabled(true);
 
@@ -423,21 +419,17 @@ public class ToolBarFactory {
 	 * @param questPoint
 	 * @return
 	 */
-	private ChangeListener fanInSpinnerListener(JSpinner fanInSpinner,
-			QuestPointNode questNode) {
-		final JSpinner fanInSpin = fanInSpinner;
-		final QuestPointNode questN = questNode;
+	private ChangeListener fanInSpinnerListener(final JSpinner fanInSpinner,
+			final QuestPoint questNode) {
 
 		ChangeListener fanInSpinnerListener = new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				SpinnerModel spinnerModel = fanInSpin.getModel();
+				SpinnerModel spinnerModel = fanInSpinner.getModel();
 				Integer spinnerValue = (Integer) spinnerModel.getValue();
 
-				questN.getQuestPoint().setFanIn(spinnerValue);
-
-				// updateFanInSpinner(fanInSpin, questN);
+				questNode.setFanIn(spinnerValue);
 			}
 		};
 
@@ -459,8 +451,8 @@ public class ToolBarFactory {
 	 * 
 	 * @return The SpinnerModel
 	 */
-	private void updateFanInSpinner(JSpinner fanInSpinner,
-			JLabel fanInLabel, QuestPointNode questNode) {
+	private void updateFanInSpinner(JSpinner fanInSpinner, JLabel fanInLabel,
+			QuestPoint questNode) {
 
 		if (questNode != null) {
 			int maxFanIn = questNode.getParents().size();
@@ -468,12 +460,12 @@ public class ToolBarFactory {
 			// If maxFanIn >1, maxFanIn. Otherwise, 1.
 			maxFanIn = maxFanIn > 1 ? maxFanIn : 1;
 
-			if (questNode.getQuestPoint().getFanIn() > maxFanIn) {
-				questNode.getQuestPoint().setFanIn(1);
+			if (questNode.getFanIn() > maxFanIn) {
+				questNode.setFanIn(1);
 			}
 
 			final SpinnerModel fanInSpinnerModel = new SpinnerNumberModel(
-					questNode.getQuestPoint().getFanIn(), new Integer(1),
+					questNode.getFanIn(), new Integer(1),
 					new Integer(maxFanIn), new Integer(1));
 
 			fanInSpinner.setModel(fanInSpinnerModel);
@@ -483,8 +475,8 @@ public class ToolBarFactory {
 						.getChangeListeners()[1]);
 			}
 
-			fanInSpinner.addChangeListener(this.fanInSpinnerListener(fanInSpinner,
-					questNode));
+			fanInSpinner.addChangeListener(this.fanInSpinnerListener(
+					fanInSpinner, questNode));
 
 			if (!questNode.isStartNode()) {
 				fanInLabel.setEnabled(true);
@@ -662,82 +654,46 @@ public class ToolBarFactory {
 		 * @param questPointNode
 		 */
 		private void deleteQuestNode(final GraphNode sourceNode,
-				QuestPointNode questPointNode) {
+				QuestPoint questPoint) {
+
 			if (sourceNode.isDeletable()) {
-				List<GraphNode> children = questPointNode.getChildren();
-				sourceNode.process(new GraphNodeAdapter() {
-					@Override
-					public void processQuestNode(QuestNode questNode) {
-						// Remove the Quest
+				Collection<QuestPoint> successors = questPoint.getSuccessors();
+				 List<GraphNode> parents = questPoint.getParents();
 
-						List<GraphNode> parents = questNode.getParents();
-						List<GraphNode> children = questNode.getChildren();
+				// Only delete the node if there are parents and
+				// children to repair the graph with.
+				if (!parents.isEmpty() && !successors.isEmpty()) {
 
-						if (!parents.isEmpty() && !children.isEmpty()) {
+					
+					// Remove the node from its parents.
+					questPoint.removeParents();
 
-							questNode.removeParents();
+					// Remove the node from its children.
+					questPoint.removeChildren();
 
-							// Add startPoint to parents of QuestNode
-							GraphNode startPoint = questNode.getStartPoint();
-							List<GraphNode> parentsx = sourceNode.getParents();
-							for (GraphNode parent : parentsx) {
-								parent.addChild(startPoint);
-							}
-
-							// Add children of QuestNode to endPoint
-							GraphNode endPoint = questNode.getEndPoint();
-							endPoint.addChildren(questNode.getChildren());
+					// Re-connect each parent with each child.
+					for (QuestPoint parent : parents) {
+						for (QuestPoint child : children) {
+							parent.addSuccessor(child);
 						}
 					}
-
-					@Override
-					public void processQuestPointNode(
-							QuestPointNode questPointNode) {
-						List<GraphNode> parents = questPointNode.getParents();
-						List<GraphNode> children = questPointNode.getChildren();
-
-						// Only delete the node if there are parents and
-						// children to repair the graph with.
-						if (!parents.isEmpty() && !children.isEmpty()) {
-
-							// Remove the node from its parents.
-							questPointNode.removeParents();
-
-							// Remove the node from its children.
-							questPointNode.removeChildren();
-
-							// Re-connect each parent with each child.
-							for (GraphNode parent : parents) {
-								for (GraphNode child : children) {
-									parent.addChild(child);
-								}
-							}
-						}
-					}
-				});
+				}
 				// Subtracts 1 from fan in of all children.
-				for (GraphNode child : children) {
-					child.process(new GraphNodeAdapter() {
-						public void processQuestPointNode(
-								QuestPointNode questPointNode) {
+				for (QuestPoint child : successors) {
 
-							QuestPoint questPoint = questPointNode
-									.getQuestPoint();
-							int fanIn = questPoint.getFanIn();
+					int fanIn = questPoint.getFanIn();
 
-							if (fanIn > 1)
-								questPoint.setFanIn(fanIn - 1);
-						}
-					});
+					if (fanIn > 1)
+						questPoint.setFanIn(fanIn - 1);
 				}
 			}
 
-			this.previousNode.process(new GraphNodeAdapter() {
-				public void processQuestPointNode(QuestPointNode questPointNode) {
-					ToolBarFactory.this.updateQuestToolBar(QuestToolBarObserver.this.nameField, QuestToolBarObserver.this.fanInSpinner, QuestToolBarObserver.this.nameLabel,
-							QuestToolBarObserver.this.fanInLabel, questPointNode);
-				}
-			});
+			ToolBarFactory.this.updateQuestToolBar(
+					QuestToolBarObserver.this.nameField,
+					QuestToolBarObserver.this.fanInSpinner,
+					QuestToolBarObserver.this.nameLabel,
+					QuestToolBarObserver.this.fanInLabel, questPoint);
+
 		}
 
 		/**
@@ -860,45 +816,56 @@ public class ToolBarFactory {
 									.getInstance().getActiveModel();
 
 							if (model != null && model instanceof StoryModel) {
-								sourceNode
-										.process(new GraphNodeAdapter() {
-											@Override
-											public void processQuestPointNode(
-													QuestPointNode questPointNode) {
+								sourceNode.process(new GraphNodeAdapter() {
+									@Override
+									public void processQuestPointNode(
+											QuestPointNode questPointNode) {
 
-												QuestPoint questPoint = questPointNode
-														.getQuestPoint();
+										QuestPoint questPoint = questPointNode
+												.getQuestPoint();
 
-												List<JComponent> components = PanelFactory
-														.getInstance()
-														.getComponentsForModel(
-																model);
+										List<JComponent> components = PanelFactory
+												.getInstance()
+												.getComponentsForModel(model);
 
-												for (JComponent component : components)
-													PanelFactory
-															.getInstance()
-															.setRootForTreeInComponent(
-																	component,
-																	questPoint);
-											}
-										});
+										for (JComponent component : components)
+											PanelFactory.getInstance()
+													.setRootForTreeInComponent(
+															component,
+															questPoint);
+									}
+								});
 							}
-							ToolBarFactory.this.updateQuestToolBar(QuestToolBarObserver.this.nameField, QuestToolBarObserver.this.fanInSpinner,
-									QuestToolBarObserver.this.nameLabel, QuestToolBarObserver.this.fanInLabel, questPointNode);
+							ToolBarFactory.this.updateQuestToolBar(
+									QuestToolBarObserver.this.nameField,
+									QuestToolBarObserver.this.fanInSpinner,
+									QuestToolBarObserver.this.nameLabel,
+									QuestToolBarObserver.this.fanInLabel,
+									questPointNode);
 							break;
 						case INSERT_GRAPH_NODE:
-							QuestToolBarObserver.this.insertQuestPoint(sourceNode);
-							ToolBarFactory.this.updateQuestToolBar(QuestToolBarObserver.this.nameField, QuestToolBarObserver.this.fanInSpinner,
-									QuestToolBarObserver.this.nameLabel, QuestToolBarObserver.this.fanInLabel, questPointNode);
+							QuestToolBarObserver.this
+									.insertQuestPoint(sourceNode);
+							ToolBarFactory.this.updateQuestToolBar(
+									QuestToolBarObserver.this.nameField,
+									QuestToolBarObserver.this.fanInSpinner,
+									QuestToolBarObserver.this.nameLabel,
+									QuestToolBarObserver.this.fanInLabel,
+									questPointNode);
 							break;
 						case CONNECT_GRAPH_NODE:
-							ToolBarFactory.this.updateQuestToolBar(QuestToolBarObserver.this.nameField, QuestToolBarObserver.this.fanInSpinner,
-									QuestToolBarObserver.this.nameLabel, QuestToolBarObserver.this.fanInLabel, questPointNode);
+							ToolBarFactory.this.updateQuestToolBar(
+									QuestToolBarObserver.this.nameField,
+									QuestToolBarObserver.this.fanInSpinner,
+									QuestToolBarObserver.this.nameLabel,
+									QuestToolBarObserver.this.fanInLabel,
+									questPointNode);
 							QuestToolBarObserver.this.previousNode = sourceNode;
 							break;
 
 						case DELETE_GRAPH_NODE:
-							QuestToolBarObserver.this.deleteQuestNode(sourceNode, questPointNode);
+							QuestToolBarObserver.this.deleteQuestNode(
+									sourceNode, questPointNode);
 							break;
 						}
 					}
@@ -969,9 +936,11 @@ public class ToolBarFactory {
 
 							System.out.println("Path Editor");
 							this.pathEditor.setNode(this.editedDescribeIt);
-							this.cardLayout.show(this.describeItEditBar, ToolBarFactory.PATH_EDITOR);
+							this.cardLayout.show(this.describeItEditBar,
+									ToolBarFactory.PATH_EDITOR);
 						} else {
-							this.cardLayout.show(this.describeItEditBar, ToolBarFactory.NO_EDITOR);
+							this.cardLayout.show(this.describeItEditBar,
+									ToolBarFactory.NO_EDITOR);
 						}
 					} else {
 						this.editedDescribeIt.clearSelection();
@@ -980,17 +949,21 @@ public class ToolBarFactory {
 
 							@Override
 							public void processTextNode(TextNode textNode) {
-								DescribeItToolBarObserver.this.textNodeEditor.setNode(textNode);
-								DescribeItToolBarObserver.this.cardLayout.show(DescribeItToolBarObserver.this.describeItEditBar,
-										ToolBarFactory.TEXT_NODE_EDITOR);
+								DescribeItToolBarObserver.this.textNodeEditor
+										.setNode(textNode);
+								DescribeItToolBarObserver.this.cardLayout
+										.show(DescribeItToolBarObserver.this.describeItEditBar,
+												ToolBarFactory.TEXT_NODE_EDITOR);
 
 							}
 
 							@Override
 							public void processKnowItNode(KnowItNode knowItNode) {
-								DescribeItToolBarObserver.this.knowItEditor.setNode(knowItNode);
-								DescribeItToolBarObserver.this.cardLayout.show(DescribeItToolBarObserver.this.describeItEditBar,
-										ToolBarFactory.KNOW_IT_EDITOR);
+								DescribeItToolBarObserver.this.knowItEditor
+										.setNode(knowItNode);
+								DescribeItToolBarObserver.this.cardLayout
+										.show(DescribeItToolBarObserver.this.describeItEditBar,
+												ToolBarFactory.KNOW_IT_EDITOR);
 							}
 						});
 					}

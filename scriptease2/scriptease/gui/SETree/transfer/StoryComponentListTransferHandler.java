@@ -56,33 +56,6 @@ public class StoryComponentListTransferHandler extends TransferHandler {
 		}
 	}
 
-/*	*//**
-	 * Creates a transferable from the given component. Returns null if
-	 * selectedNodes is null since calling control-x without a selected node
-	 * will still fire this.
-	 *//*
-	@Override
-	protected Transferable createTransferable(JComponent source) {
-
-		final List<StoryComponent> data;
-
-		data = new ArrayList<StoryComponent>();
-
-		if (source instanceof JList) {
-			for (Object panelObject : ((JList) source).getSelectedValues()) {
-				if (panelObject instanceof StoryComponentPanel)
-					data.add(((StoryComponentPanel) panelObject)
-							.getStoryComponent());
-			}
-		} else
-			return null;
-
-		// Create a Transferable with those StoryComponents
-		StoryComponentPanelTransferable storyComponentPanelTransferable = new StoryComponentPanelTransferable(
-				data);
-		return storyComponentPanelTransferable;
-	}*/
-
 	@Override
 	public boolean canImport(TransferSupport support) {
 		// Handles the case where the user drags a Binding (delete)

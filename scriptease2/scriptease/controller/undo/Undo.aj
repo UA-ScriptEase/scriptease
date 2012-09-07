@@ -5,12 +5,10 @@ import java.util.List;
 import scriptease.controller.observer.GraphNodeObserver;
 import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.quests.QuestNode;
 import scriptease.model.CodeBlock;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.StoryComponent;
-import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
@@ -174,12 +172,6 @@ public aspect Undo {
 	 */
 	public pointcut settingLibraryModelRoot():
 		within(LibraryModel+) && execution(* setRoot(StoryComponent+));
-
-	/**
-	 * Defines the Set Root operation in StoryModels.
-	 */
-	public pointcut settingStoryModelRoot():
-		within(StoryModel+) && execution(* setRoot(QuestNode+));
 
 	/**
 	 * Defines the Set Selection operation in GraphNodes.
@@ -549,22 +541,6 @@ public aspect Undo {
 				newRoot, owner.getRoot()) {
 			@Override
 			public void setOp(StoryComponentContainer value) {
-				owner.setRoot(value);
-			}
-
-			@Override
-			public String toString() {
-				return "setting " + owner + "'s root to" + newRoot;
-			}
-		};
-		this.addModification(mod);
-	}
-
-	before(final StoryModel owner, final QuestNode newRoot): settingStoryModelRoot() && args(newRoot) && this(owner) {
-		Modification mod = new FieldModification<QuestNode>(newRoot,
-				owner.getRoot()) {
-			@Override
-			public void setOp(QuestNode value) {
 				owner.setRoot(value);
 			}
 

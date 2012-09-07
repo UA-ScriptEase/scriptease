@@ -7,10 +7,9 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import scriptease.controller.get.QuestPointNodeGetter;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.WindowFactory;
-import scriptease.gui.quests.QuestNode;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
@@ -113,11 +112,10 @@ public class CodeGenerator {
 		final GameModule module = model.getModule();
 		final Translator translator = model.getTranslator();
 		final Collection<ScriptInfo> scriptInfos = new ArrayList<ScriptInfo>();
-		final QuestNode root = model.getRoot();
+		final QuestPoint root = model.getRoot();
 
 		// do the first pass (semantic analysis) for the given quest
-		final SemanticAnalyzer analyzer = new SemanticAnalyzer(root,
-				translator);
+		final SemanticAnalyzer analyzer = new SemanticAnalyzer(root, translator);
 
 		// check for problems
 		problems.addAll(analyzer.getProblems());
@@ -126,8 +124,8 @@ public class CodeGenerator {
 		if (problems.isEmpty()) {
 			// aggregate the scripts based on the questPoints
 			final Collection<Set<CodeBlock>> scriptBuckets = module
-					.aggregateScripts(new ArrayList<StoryComponent>(
-							QuestPointNodeGetter.getQuestPoints(root)));
+					.aggregateScripts(new ArrayList<StoryComponent>(root
+							.getDescendants()));
 
 			// Multithreaded
 			final ExecutorService executor = Executors

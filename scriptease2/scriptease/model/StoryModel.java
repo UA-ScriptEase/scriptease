@@ -1,9 +1,7 @@
 package scriptease.model;
 
 import scriptease.controller.ModelVisitor;
-import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
-import scriptease.gui.quests.QuestPointNode;
 import scriptease.translator.Translator;
 import scriptease.translator.io.model.GameModule;
 
@@ -19,8 +17,7 @@ public final class StoryModel extends PatternModel {
 	private final GameModule module;
 	private final Translator translator;
 //	private final ModelVerifier modelVerifier;
-	private QuestNode modelRoot;
-	private QuestPointNode startNode;
+	private QuestPoint startPoint;
 
 	/**
 	 * Builds a StoryModel with the supplied module and translator, and defaults
@@ -59,31 +56,21 @@ public final class StoryModel extends PatternModel {
 		super(title, author);
 
 		// Temporary code to make a new quest model with a start and end node.
-		this.startNode = new QuestPointNode(new QuestPoint(
-				"Start"));
-		QuestPointNode endNode = new QuestPointNode(new QuestPoint(
-				"End", 1));
-		this.startNode.addChild(endNode);
-		
-		this.modelRoot = new QuestNode(title, this.startNode, endNode, false);
+		this.startPoint = new QuestPoint("Start");
 		this.module = module;
 		this.translator = translator;
 //		this.modelVerifier = new ModelVerifier(this.modelRoot);
 //		this.createModelRules();
 	}
 	
-	public void setRoot(QuestNode root){
-		if(root == null)
+	public void setStartPoint(QuestPoint startPoint){
+		if(startPoint == null)
 			throw new IllegalArgumentException("Cannot give StoryModel a null tree root.");
-		this.modelRoot = root;
+		this.startPoint = startPoint;
 	}
 	
-	public QuestNode getRoot(){
-		return this.modelRoot;
-	}
-	
-	public QuestPointNode getStartNode(){
-		return this.startNode;
+	public QuestPoint getRoot(){
+		return this.startPoint;
 	}
 
 	/**

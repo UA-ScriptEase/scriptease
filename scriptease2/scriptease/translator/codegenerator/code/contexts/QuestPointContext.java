@@ -3,9 +3,7 @@ package scriptease.translator.codegenerator.code.contexts;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
-import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
-import scriptease.gui.quests.QuestPointNode;
 import scriptease.model.StoryComponent;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.LocationInformation;
@@ -13,33 +11,33 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
- * Context representing a QuestPointNode (also QuestPoint)
+ * Context representing a QuestPoint
  * 
  * @author mfchurch
+ * @author kschenk
  * 
  */
-public class QuestPointNodeContext extends GraphNodeContext {
+public class QuestPointContext extends ComplexStoryComponentContext {
 
-	public QuestPointNodeContext(QuestNode model, String indent,
+	public QuestPointContext(QuestPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInfo) {
 		super(model, indent, existingNames, translator, locationInfo);
 	}
 
-	public QuestPointNodeContext(Context other) {
+	public QuestPointContext(Context other) {
 		this(other.getModel(), other.getIndent(), other.getNamifier(), other
 				.getTranslator(), other.getLocationInfo());
 	}
 
-	public QuestPointNodeContext(Context other, QuestPointNode source) {
+	public QuestPointContext(Context other, QuestPoint source) {
 		this(other);
-		this.node = source;
+		this.component = source;
 	}
 
 	@Override
 	public String getName() {
-		QuestPoint questPoint = ((QuestPointNode) this.node).getQuestPoint();
-		return this.getNameOf(questPoint);
+		return this.getNameOf(this.component);
 	}
 
 	@Override
@@ -49,14 +47,14 @@ public class QuestPointNodeContext extends GraphNodeContext {
 
 	@Override
 	public String getUniqueName(Pattern legalFormat) {
-		QuestPoint questPoint = ((QuestPointNode) this.node).getQuestPoint();
-		return this.getNamifier().getUniqueName(questPoint, legalFormat);
+		return this.getNamifier().getUniqueName(this.component,
+				legalFormat);
 	}
 
 	@Override
 	public String getFormattedValue() {
 		final Collection<AbstractFragment> typeFormat;
-		
+
 		typeFormat = this.translator.getGameTypeManager().getFormat(
 				QuestPoint.QUEST_POINT_TYPE);
 		if (typeFormat == null || typeFormat.isEmpty())
@@ -72,13 +70,6 @@ public class QuestPointNodeContext extends GraphNodeContext {
 
 	@Override
 	public String getFanIn() {
-		QuestPoint questPoint = ((QuestPointNode) this.node).getQuestPoint();
-		return questPoint.getFanIn().toString();
-	}
-
-	@Override
-	public String getQuestContainer() {
-		QuestPoint questPoint = ((QuestPointNode) this.node).getQuestPoint();
-		return questPoint.getQuestContainer().getName();
+		return ((QuestPoint) this.component).getFanIn().toString();
 	}
 }
