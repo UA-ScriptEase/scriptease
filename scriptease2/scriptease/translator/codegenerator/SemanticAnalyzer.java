@@ -6,11 +6,9 @@ import java.util.List;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
-import scriptease.controller.get.QuestPointNodeGetter;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.modelverifier.rule.ParameterBoundRule;
 import scriptease.controller.modelverifier.rule.StoryRule;
-import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -42,7 +40,7 @@ import scriptease.translator.codegenerator.code.contexts.FileContext;
  * @author mfchurch
  */
 public class SemanticAnalyzer extends StoryAdapter {
-	private final QuestNode model;
+	private final QuestPoint root;
 	private final Translator translator;
 	private final Collection<StoryRule> rules;
 
@@ -55,17 +53,16 @@ public class SemanticAnalyzer extends StoryAdapter {
 	 * Creates a new instance that will recursively analyze the StoryComponent
 	 * tree.
 	 */
-	public SemanticAnalyzer(QuestNode model, Translator translator) {
+	public SemanticAnalyzer(QuestPoint root, Translator translator) {
 		this.problems = new ArrayList<StoryProblem>();
 		this.translator = translator;
 		this.rules = new ArrayList<StoryRule>();
-		this.model = model;
+		this.root = root;
 
 		// Make sure all parameters are bound before generating code
 		this.rules.add(new ParameterBoundRule());
 		// Get all the QuestPoints in the model
-		Collection<QuestPoint> questPoints = QuestPointNodeGetter
-				.getQuestPoints(this.model);
+		Collection<QuestPoint> questPoints = this.root.getDescendants();
 		for (QuestPoint questPoint : questPoints) {
 			// Process all the components from each QuestPoint
 			for (StoryComponent child : questPoint.getChildren()) {
@@ -75,7 +72,7 @@ public class SemanticAnalyzer extends StoryAdapter {
 	}
 
 	public Context buildContext(LocationInformation locationInfo) {
-		return new FileContext(this.model, "", new CodeGenerationNamifier(
+		return new FileContext(this.root, "", new CodeGenerationNamifier(
 				this.translator.getLanguageDictionary()), this.translator, locationInfo);
 	}
 

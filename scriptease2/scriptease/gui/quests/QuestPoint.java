@@ -1,6 +1,7 @@
 package scriptease.gui.quests;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import scriptease.controller.StoryVisitor;
@@ -21,14 +22,13 @@ import scriptease.model.complex.ScriptIt;
  */
 public class QuestPoint extends ComplexStoryComponent {
 	public static String QUEST_POINT_TYPE = "questPoint";
-	private int fanIn;
 
 	private static final int DEFAULT_FAN_IN = 1;
 	private static final String NEW_QUEST_POINT = "New Quest Point";
 	private static int questPointCounter = 1;
 
-	// TODO Implement zis
-	private Set<QuestPoint> successors;
+	private int fanIn;
+	private final Set<QuestPoint> successors;
 
 	/**
 	 * Creates a new Quest Point with the given name and a default fan-in value.
@@ -60,6 +60,7 @@ public class QuestPoint extends ComplexStoryComponent {
 
 		this.setDisplayText(name);
 		this.fanIn = fanIn;
+		this.successors = new HashSet<QuestPoint>();
 	}
 
 	/**
@@ -75,10 +76,20 @@ public class QuestPoint extends ComplexStoryComponent {
 		return false;
 	}
 
+	/**
+	 * Returns the Fan In for the QuestPoint.
+	 * 
+	 * @return
+	 */
 	public Integer getFanIn() {
 		return this.fanIn;
 	}
 
+	/**
+	 * Sets the Fan In for the QuestPoint.
+	 * 
+	 * @param fanIn
+	 */
 	public void setFanIn(Integer fanIn) {
 		this.fanIn = fanIn;
 	}
@@ -88,18 +99,54 @@ public class QuestPoint extends ComplexStoryComponent {
 		visitor.processQuestPoint(this);
 	}
 
-	public QuestNode getQuestContainer() {
-		// TODO get the quest which contains this questpoint. Or remove quest
-		// containers entirely
-		return new QuestNode();
-	}
-
 	@Override
 	public String toString() {
 		return "QuestPoint (\"" + this.getDisplayText() + "\")";
 	}
 
+	/**
+	 * Gets the immediate successors of the QuestPoint.
+	 * 
+	 * @return
+	 */
 	public Collection<QuestPoint> getSuccessors() {
 		return this.successors;
+	}
+
+	/**
+	 * Adds a successor to the QuestPoint.
+	 * 
+	 * @param successor
+	 */
+	public void addSuccessor(QuestPoint successor) {
+		this.successors.add(successor);
+	}
+
+	/**
+	 * Removes a successor from the QuestPoint.
+	 * 
+	 * @param successor
+	 */
+	public void removeSuccessor(QuestPoint successor) {
+		this.successors.remove(successor);
+	}
+
+	/**
+	 * Gets all descendants of the QuestPoint, including the Quest Point itself.
+	 * That is, the successors, the successors of the successors, etc.
+	 * 
+	 * @return
+	 */
+	public Set<QuestPoint> getDescendants() {
+		Set<QuestPoint> descendants;
+		descendants = new HashSet<QuestPoint>();
+
+		descendants.add(this);
+		for (QuestPoint successor : this.successors) {
+			descendants.add(successor);
+			descendants.addAll(successor.getDescendants());
+		}
+
+		return descendants;
 	}
 }

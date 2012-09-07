@@ -2,7 +2,7 @@ package scriptease.translator.codegenerator.code.contexts;
 
 import java.util.regex.Pattern;
 
-import scriptease.gui.quests.QuestNode;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.model.StoryComponent;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.LocationInformation;
@@ -19,7 +19,7 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 public class StoryComponentContext extends Context {
 	protected StoryComponent component;
 
-	public StoryComponentContext(QuestNode model, String indent,
+	public StoryComponentContext(QuestPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInfo) {
 		super(model, indent, existingNames, translator);

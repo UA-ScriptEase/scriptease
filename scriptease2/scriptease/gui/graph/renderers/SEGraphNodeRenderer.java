@@ -1,4 +1,4 @@
-package scriptease.gui.graph;
+package scriptease.gui.graph.renderers;
 
 import java.awt.Color;
 import java.awt.MouseInfo;
@@ -10,31 +10,71 @@ import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
-import scriptease.controller.observer.GraphNodeEvent;
-import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
+import scriptease.gui.graph.SEGraph;
+import scriptease.util.BiHashMap;
 import scriptease.util.GUIOp;
 
-public abstract class SEGraphNodeRenderer<E> {
+public class SEGraphNodeRenderer<E> {
+	private final SEGraph<E> graph;
 	// This is such a weird hack. I apologize. - remiller
 	private Set<JComponent> hoverComponents = new HashSet<JComponent>();
 	private Set<JComponent> pressComponents = new HashSet<JComponent>();
 
-	
-	public abstract JComponent getComponentForNode(E node);
+	private BiHashMap<E, JComponent> componentMap = new BiHashMap<E, JComponent>();
+
+	public SEGraphNodeRenderer(SEGraph<E> graph) {
+		this.graph = graph;
+	}
+
+	public final JComponent getComponentForNode(E node) {
+		final JComponent component;
+		// check if the node already has a component
+		final JComponent storedComponent = this.componentMap.getValue(node);
+		if (storedComponent != null) {
+			component = storedComponent;
+		} else {
+			// otherwise build it and store it
+			component = new JPanel();
+			this.configureAppearance(component, node);
+			this.configureListeners(component, node);
+			this.configureInternalComponents(component, node);
+			this.componentMap.put(node, component);
+		}
+		// return the component for the node
+		return component;
+	}
+
+	public E getNodeForComponent(JComponent component) {
+		return this.componentMap.getKey(component);
+	}
 
 	/**
-	 * Sets up the listeners.
+	 * By default, this does nothing.
 	 * 
-	 * @param node
+	 * It can be used by subclasses to add any special components inside of the
+	 * component representing the node. For example, QuestPoint nodes add Fan In
+	 * panels and binding widgets for the Quest Point.
+	 * 
 	 * @param component
+	 * @param node
 	 */
-	public void configureListeners(final E node, final JComponent component) {
+	protected void configureInternalComponents(JComponent component, E node) {
+	}
+
+	/**
+	 * Sets up the listeners for appearance.
+	 * 
+	 * @param component
+	 * @param node
+	 */
+	private void configureListeners(final JComponent component, final E node) {
 		if (component != null) {
 			/*
 			 * When a component is clicked, forward the click to the GraphNode,
@@ -58,12 +98,6 @@ public abstract class SEGraphNodeRenderer<E> {
 							mouseLoc.y - src.getLocationOnScreen().y))
 						return;
 
-				/*	GraphNodeEvent event = new GraphNodeEvent(node,
-							GraphNodeEventType.SELECTED);
-
-					event.setShiftDown(e.isShiftDown());
-					node.notifyObservers(event);*/
-
 					SEGraphNodeRenderer.this.pressComponents.remove(src);
 
 					configureAppearance(src, node);
@@ -81,8 +115,7 @@ public abstract class SEGraphNodeRenderer<E> {
 				public void mouseEntered(MouseEvent e) {
 					final JComponent nodeComponent = (JComponent) e.getSource();
 
-					SEGraphNodeRenderer.this.hoverComponents
-							.add(nodeComponent);
+					SEGraphNodeRenderer.this.hoverComponents.add(nodeComponent);
 					configureAppearance(nodeComponent, node);
 				}
 
@@ -100,7 +133,6 @@ public abstract class SEGraphNodeRenderer<E> {
 			};
 
 			component.addMouseListener(mouseAdapter);
-			component.addMouseMotionListener(mouseAdapter);
 		}
 	}
 
@@ -112,12 +144,9 @@ public abstract class SEGraphNodeRenderer<E> {
 	 * @param node
 	 *            The graph node to configure based on.
 	 */
-	public void configureAppearance(final JComponent component, E node) {
+	private void configureAppearance(final JComponent component, E node) {
 		if (component == null)
 			return;
-
-		final boolean isHover = this.hoverComponents.contains(component);
-		final boolean isPressed = this.pressComponents.contains(component);
 
 		final Color toolColour;
 		final Color toolHighlight;
@@ -152,18 +181,22 @@ public abstract class SEGraphNodeRenderer<E> {
 		 * hovered over, use gold if its selected and not hovered, white/gray
 		 * otherwise.
 		 */
-		if (isHover) {
-			if (isPressed) {
+		if (this.hoverComponents.contains(component)) {
+			if (this.pressComponents.contains(component)) {
+				// If pressed while being hovered over
 				backgroundColour = toolPress;
 			} else {
+				// If hovered over
 				backgroundColour = toolHighlight;
 			}
 			borderColour = GUIOp.scaleColour(toolColour, 0.7);
-		} /*else if (node == SEGraph.this.getSelectedNode()) {
+		} else if (this.graph.getSelectedNode() == node) {
+			// If nothing and selected
 			backgroundColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
 			borderColour = GUIOp.scaleColour(ScriptEaseUI.SELECTED_GRAPH_NODE,
 					0.6);
-		}*/ else {
+		} else {
+			// If nothing
 			backgroundColour = Color.white;
 			borderColour = Color.GRAY;
 		}
@@ -178,5 +211,4 @@ public abstract class SEGraphNodeRenderer<E> {
 		component.setBackground(backgroundColour);
 		component.setOpaque(true);
 	}
-
 }

@@ -8,7 +8,7 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.get.AskItGetter;
 import scriptease.controller.get.ImplicitGetter;
 import scriptease.controller.get.VariableGetter;
-import scriptease.gui.quests.QuestNode;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
@@ -26,7 +26,7 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  */
 public class ComplexStoryComponentContext extends StoryComponentContext {
 
-	public ComplexStoryComponentContext(QuestNode model, String indent,
+	public ComplexStoryComponentContext(QuestPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInfo) {
 		super(model, indent, existingNames, translator, locationInfo);

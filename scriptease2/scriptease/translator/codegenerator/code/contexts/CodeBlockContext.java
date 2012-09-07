@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import scriptease.controller.get.VariableGetter;
-import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
@@ -29,7 +28,7 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 public class CodeBlockContext extends Context {
 	private CodeBlock codeBlock;
 
-	public CodeBlockContext(QuestNode model, String indent,
+	public CodeBlockContext(QuestPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInfo) {
 		super(model, indent, existingNames, translator);

@@ -1,9 +1,12 @@
 package scriptease.gui.graph;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -18,6 +21,14 @@ import java.util.Set;
  */
 public class SEGraphModel<E> {
 	private final Node start;
+	private final List<WeakReference<SEGraphModelObserver<E>>> observers;
+
+	private static enum GraphEvent {
+		CHILD_ADDED,
+		CHILD_REMOVED,
+		PARENT_ADDED,
+		PARENT_REMOVED
+	}
 
 	/**
 	 * Creates a new model for an SEGraph with the passed in node as the start
@@ -27,21 +38,23 @@ public class SEGraphModel<E> {
 	 */
 	public SEGraphModel(E start) {
 		this.start = new Node(start);
+		this.observers = new ArrayList<WeakReference<SEGraphModelObserver<E>>>();
+
 	}
 
 	/**
 	 * Adds a new node onto an existing node.
 	 * 
-	 * @param node
+	 * @param newNode
 	 *            The new node to add
 	 * @param existingNode
 	 *            The existing node
 	 * @return true if the addition was successful
 	 */
-	public boolean addNodeTo(E node, E existingNode) {
-		for (Node descendant : this.start.getDescendantGraph()) {
-			if (descendant.getObject() == existingNode) {
-				descendant.addChild(new Node(node));
+	public boolean addNodeTo(E newNode, E existingNode) {
+		for (Node node : this.getGraphNodes()) {
+			if (node.getObject() == existingNode) {
+				node.addChild(new Node(newNode));
 				return true;
 			}
 		}
@@ -53,7 +66,7 @@ public class SEGraphModel<E> {
 	 * Adds a new node between two existing nodes. Order of the two nodes does
 	 * not matter; this method figures out which node is above the other.
 	 * 
-	 * @param node
+	 * @param newNode
 	 *            The new node.
 	 * @param existingNode1
 	 *            The first selected existing node.
@@ -61,19 +74,19 @@ public class SEGraphModel<E> {
 	 *            The second selected existing node.
 	 * @return true if the addition was successful
 	 */
-	public boolean addNodeBetween(E node, E existingNode1, E existingNode2) {
-		final Node newNode;
+	public boolean addNodeBetween(E newNode, E existingNode1, E existingNode2) {
+		final Node newGraphNode;
 
 		Node firstNode = null;
 		Node secondNode = null;
 
-		newNode = new Node(node);
+		newGraphNode = new Node(newNode);
 
-		for (Node descendant : this.start.getDescendantGraph()) {
-			if (descendant.getObject() == existingNode1) {
-				firstNode = descendant;
-			} else if (descendant.getObject() == existingNode2) {
-				secondNode = descendant;
+		for (Node node : this.getGraphNodes()) {
+			if (node.getObject() == existingNode1) {
+				firstNode = node;
+			} else if (node.getObject() == existingNode2) {
+				secondNode = node;
 			}
 		}
 
@@ -81,18 +94,32 @@ public class SEGraphModel<E> {
 			return false;
 
 		if (firstNode.getDescendantGraph().contains(secondNode)) {
-			firstNode.addChild(newNode);
-			secondNode.addParent(newNode);
+			firstNode.addChild(newGraphNode);
+			secondNode.addParent(newGraphNode);
 
 			return true;
 		} else if (firstNode.getAncestorGraph().contains(secondNode)) {
-			secondNode.addChild(newNode);
-			firstNode.addParent(newNode);
+			secondNode.addChild(newGraphNode);
+			firstNode.addParent(newGraphNode);
 
 			return true;
-		}
+		} else {
+			final Map<Node, Integer> depthMap = this.start.getDepthMap();
+			final int firstNodeDepth = depthMap.get(firstNode);
+			final int secondNodeDepth = depthMap.get(secondNode);
 
-		return false;
+			if (firstNodeDepth > secondNodeDepth) {
+				secondNode.addChild(newGraphNode);
+				firstNode.addParent(newGraphNode);
+
+				return true;
+			} else {
+				firstNode.addChild(newGraphNode);
+				secondNode.addParent(newGraphNode);
+
+				return true;
+			}
+		}
 	}
 
 	/**
@@ -102,11 +129,18 @@ public class SEGraphModel<E> {
 	 *            The node to be removed.
 	 */
 	public void removeNode(E node) {
-		for (Node descendant : this.start.getDescendantGraph()) {
+		for (Node descendant : this.getGraphNodes()) {
 			if (descendant.getObject() == node) {
-				for (Node child : descendant.getChildren())
+				// We need to work with copies to avoid concurrent modifications
+				final Collection<Node> childrenCopy;
+				final Collection<Node> parentsCopy;
+
+				childrenCopy = new HashSet<Node>(descendant.getChildren());
+				parentsCopy = new HashSet<Node>(descendant.getParents());
+
+				for (Node child : childrenCopy)
 					child.removeParent(descendant);
-				for (Node parent : descendant.getParents())
+				for (Node parent : parentsCopy)
 					parent.removeChild(descendant);
 				break;
 			}
@@ -132,11 +166,24 @@ public class SEGraphModel<E> {
 		final Collection<E> nodes;
 		nodes = new HashSet<E>();
 
-		nodes.add(this.start.getObject());
-
-		for (Node child : this.start.getDescendantGraph()) {
+		for (Node child : this.getGraphNodes()) {
 			nodes.add(child.getObject());
 		}
+
+		return nodes;
+	}
+
+	/**
+	 * Gets all graph nodes.
+	 * 
+	 * @return
+	 */
+	private Collection<Node> getGraphNodes() {
+		final Collection<Node> nodes;
+		nodes = new HashSet<Node>();
+
+		nodes.add(this.start);
+		nodes.addAll(this.start.getDescendantGraph());
 
 		return nodes;
 	}
@@ -151,7 +198,7 @@ public class SEGraphModel<E> {
 		final Collection<E> children;
 		children = new HashSet<E>();
 
-		for (Node descendant : this.start.getDescendantGraph()) {
+		for (Node descendant : this.getGraphNodes()) {
 			if (descendant.getObject() == node) {
 				for (Node child : descendant.getChildren()) {
 					children.add(child.getObject());
@@ -172,7 +219,7 @@ public class SEGraphModel<E> {
 		final Collection<E> parents;
 		parents = new HashSet<E>();
 
-		for (Node descendant : this.start.getDescendantGraph()) {
+		for (Node descendant : this.getGraphNodes()) {
 			if (descendant.getObject() == node) {
 				for (Node parent : descendant.getParents()) {
 					parents.add(parent.getObject());
@@ -184,6 +231,8 @@ public class SEGraphModel<E> {
 	}
 
 	/**
+	 * Returns a mapping of nodes with how deep they are in the graph.
+	 * 
 	 * @return
 	 */
 	public Map<E, Integer> getDepthMap() {
@@ -191,13 +240,87 @@ public class SEGraphModel<E> {
 
 		depthMap = new HashMap<E, Integer>();
 
-		for (Entry<Node, Integer> entry : this.start.getDepthMap()
-				.entrySet()) {
+		for (Entry<Node, Integer> entry : this.start.getDepthMap().entrySet()) {
 
 			depthMap.put(entry.getKey().getObject(), entry.getValue());
 		}
 
 		return depthMap;
+	}
+
+	public E getStartNode() {
+		return this.start.getObject();
+	}
+
+	/**
+	 * Registers an observer to be notified when a graph node is changed.
+	 * 
+	 * @param observer
+	 *            the observer to register
+	 */
+	public void addSEGraphNodeObserver(SEGraphModelObserver<E> observer) {
+		Collection<WeakReference<SEGraphModelObserver<E>>> observersCopy = new ArrayList<WeakReference<SEGraphModelObserver<E>>>(
+				this.observers);
+
+		for (WeakReference<SEGraphModelObserver<E>> observerRef : observersCopy) {
+			SEGraphModelObserver<E> storyComponentObserver = observerRef.get();
+			if (storyComponentObserver != null
+					&& storyComponentObserver == observer)
+				return;
+			else if (storyComponentObserver == null)
+				this.observers.remove(observerRef);
+		}
+
+		this.observers
+				.add(new WeakReference<SEGraphModelObserver<E>>(observer));
+	}
+
+	/**
+	 * Unregisters an observer to be notified when the Graph Node is changed.
+	 * 
+	 * @param observer
+	 *            the observer to register
+	 */
+	public void removeSEGraphNodeObserver(SEGraphModelObserver<E> observer) {
+		for (WeakReference<SEGraphModelObserver<E>> reference : this.observers) {
+			if (reference.get() == observer) {
+				this.observers.remove(reference);
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Notifies the observers about a change to two of the nodes.
+	 * 
+	 * @param event
+	 * @param child
+	 * @param parent
+	 */
+	private void notifyObservers(GraphEvent event, E parent, E child) {
+		Collection<WeakReference<SEGraphModelObserver<E>>> observersCopy = new ArrayList<WeakReference<SEGraphModelObserver<E>>>(
+				this.observers);
+
+		for (WeakReference<SEGraphModelObserver<E>> observerRef : observersCopy) {
+			SEGraphModelObserver<E> graphNodeObserver = observerRef.get();
+			if (graphNodeObserver != null)
+				switch (event) {
+				case CHILD_ADDED:
+					graphNodeObserver.childAdded(child, parent);
+					break;
+				case CHILD_REMOVED:
+					graphNodeObserver.childRemoved(child, parent);
+					break;
+				case PARENT_ADDED:
+					graphNodeObserver.parentAdded(child, parent);
+					break;
+				case PARENT_REMOVED:
+					graphNodeObserver.parentRemoved(child, parent);
+					break;
+				}
+			else
+				this.observers.remove(observerRef);
+		}
 	}
 
 	/**
@@ -224,8 +347,12 @@ public class SEGraphModel<E> {
 		 *            The new parent to add to this node.
 		 */
 		private void addParent(Node parent) {
-			this.parents.add(parent);
-			parent.children.add(this);
+			if (this.parents.add(parent)) {
+				SEGraphModel.this.notifyObservers(GraphEvent.PARENT_ADDED,
+						parent.getObject(), this.getObject());
+
+				parent.addChild(this);
+			}
 		}
 
 		/**
@@ -235,7 +362,12 @@ public class SEGraphModel<E> {
 		 *            The parent to remove from this node.
 		 */
 		private void removeParent(Node parent) {
-			this.parents.remove(parent);
+			if (this.parents.remove(parent)) {
+				SEGraphModel.this.notifyObservers(GraphEvent.PARENT_REMOVED,
+						parent.getObject(), this.getObject());
+
+				parent.removeChild(this);
+			}
 		}
 
 		/**
@@ -245,8 +377,12 @@ public class SEGraphModel<E> {
 		 *            The new child to add to this node.
 		 */
 		private void addChild(Node child) {
-			this.children.add(child);
-			child.parents.add(this);
+			if (this.children.add(child)) {
+				SEGraphModel.this.notifyObservers(GraphEvent.CHILD_ADDED,
+						this.getObject(), child.getObject());
+
+				child.addParent(this);
+			}
 		}
 
 		/**
@@ -256,7 +392,12 @@ public class SEGraphModel<E> {
 		 *            The child to remove from this node.
 		 */
 		private void removeChild(Node child) {
-			this.children.remove(child);
+			if (this.children.remove(child)) {
+				SEGraphModel.this.notifyObservers(GraphEvent.CHILD_REMOVED,
+						this.getObject(), child.getObject());
+
+				child.removeParent(this);
+			}
 		}
 
 		/**
@@ -269,9 +410,11 @@ public class SEGraphModel<E> {
 			Set<Node> childGraph;
 			childGraph = new HashSet<Node>();
 
-			for (Node child : this.children)
-				childGraph.addAll(child.getDescendantGraph());
+			childGraph.addAll(this.children);
 
+			for (Node child : this.children) {
+				childGraph.addAll(child.getDescendantGraph());
+			}
 			return childGraph;
 		}
 
@@ -284,6 +427,8 @@ public class SEGraphModel<E> {
 		private Set<Node> getAncestorGraph() {
 			Set<Node> parentGraph;
 			parentGraph = new HashSet<Node>();
+
+			parentGraph.addAll(this.parents);
 
 			for (Node parent : this.parents)
 				parentGraph.addAll(parent.getAncestorGraph());

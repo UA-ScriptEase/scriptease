@@ -3,9 +3,9 @@
 import java.io.File;
 
 import scriptease.controller.io.FileIO;
-import scriptease.gui.quests.QuestNode;
-import scriptease.model.StoryModel;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.model.PatternModelManager;
+import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameModule;
@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class StoryModelConverter implements Converter{
 	private static final String TAG_TITLE = "Title";
 	private static final String TAG_AUTHOR = "Author";
-	private static final String TAG_ROOT = "StoryRoot";
+	private static final String TAG_STORY_START_POINT = "StoryStartPoint";
 	private static final String TAG_TRANSLATOR = "Translator";
 	private static final String TAG_GAME_MODULE = "GameModule";
 
@@ -54,7 +54,7 @@ public class StoryModelConverter implements Converter{
 		writer.endNode();
 
 		// write out the story's pattern instances
-		writer.startNode(TAG_ROOT);
+		writer.startNode(TAG_STORY_START_POINT);
 		context.convertAnother(model.getRoot());
 		writer.endNode();
 	}
@@ -67,7 +67,7 @@ public class StoryModelConverter implements Converter{
 		final String author;
 		final Translator translator;
 		final GameModule module;
-		final QuestNode newRoot;
+		final QuestPoint newRoot;
 
 		title = FileIO.readValue(reader, TAG_TITLE);
 
@@ -99,13 +99,13 @@ public class StoryModelConverter implements Converter{
 
 			reader.moveDown();
 			
-			newRoot = (QuestNode) context.convertAnother(
-					model, QuestNode.class);
+			newRoot = (QuestPoint) context.convertAnother(model, QuestPoint.class);
+
 			if (newRoot == null)
 				throw new IllegalStateException(
 						"Model root could not be loaded.");
 
-			model.setRoot(newRoot);
+			model.setStartPoint(newRoot);
 
 			System.out.println(model + " loaded");
 

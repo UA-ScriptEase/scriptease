@@ -1,8 +1,8 @@
 package scriptease.translator.codegenerator.code.contexts;
 
-import scriptease.controller.StoryAdapter;
 import scriptease.controller.BindingVisitor;
-import scriptease.gui.quests.QuestPointNode;
+import scriptease.controller.StoryAdapter;
+import scriptease.gui.quests.QuestPoint;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -69,8 +69,8 @@ public class ContextFactory {
 			created = this.createContext(context, (CodeBlock) source);
 		} else if (source instanceof KnowItBinding) {
 			created = this.createContext(context, (KnowItBinding) source);
-		} else if (source instanceof QuestPointNode) {
-			created = this.createContext(context, (QuestPointNode) source);
+		} else if (source instanceof QuestPoint) {
+			created = this.createContext(context, (QuestPoint) source);
 		}
 		// this should get checked last, otherwise the ones above can get caught
 		// by it because they're subclasses.
@@ -229,8 +229,8 @@ public class ContextFactory {
 	 * @return
 	 */
 	private Context createContext(final Context pastContext,
-			final QuestPointNode source) {
-		this.activeContext = new QuestPointNodeContext(pastContext,
+			final QuestPoint source) {
+		this.activeContext = new QuestPointContext(pastContext,
 				source);
 		return this.activeContext;
 	}

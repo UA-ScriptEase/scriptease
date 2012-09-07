@@ -42,13 +42,14 @@ public class SeriesFragment extends AbstractContainerFragment {
 	private String filter;
 	private SeriesFilterType filterType;
 
-
 	public SeriesFragment() {
-		this("", "", new ArrayList<AbstractFragment>(), "", SeriesFilterType.NONE, false);
+		this("", "", new ArrayList<AbstractFragment>(), "",
+				SeriesFilterType.NONE, false);
 	}
-	
+
 	/**
-	 * See: {@link AbstractFragment#FormatFragment(String, CharacterRange, char[])}
+	 * See:
+	 * {@link AbstractFragment#FormatFragment(String, CharacterRange, char[])}
 	 * 
 	 * @param data
 	 *            The specific data list label.
@@ -61,8 +62,9 @@ public class SeriesFragment extends AbstractContainerFragment {
 	 * @param isUnique
 	 *            Sets whether the SeriesFragment is unique.
 	 */
-	public SeriesFragment(String data, String separator, List<AbstractFragment> format,
-			String filter, SeriesFilterType filterType, boolean isUnique) {
+	public SeriesFragment(String data, String separator,
+			List<AbstractFragment> format, String filter,
+			SeriesFilterType filterType, boolean isUnique) {
 		super(data);
 		this.separator = separator;
 		this.subFragments = format;
@@ -76,7 +78,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 	public Collection<AbstractFragment> getSubFragments() {
 		return this.subFragments;
 	}
-	
+
 	@Override
 	public void setSubFragments(List<AbstractFragment> subFragments) {
 		this.subFragments = subFragments;
@@ -85,7 +87,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 	public String getSeparator() {
 		return this.separator;
 	}
-	
+
 	public void setSeparator(String separator) {
 		this.separator = separator;
 	}
@@ -93,12 +95,12 @@ public class SeriesFragment extends AbstractContainerFragment {
 	public String getFilter() {
 		return this.filter;
 	}
-	
+
 	public void setFilter(String filter) {
 		this.filter = filter;
 		this.seriesFilter = new SeriesFilter(filter, this.filterType);
 	}
-	
+
 	public SeriesFilterType getFilterType() {
 		return this.filterType;
 	}
@@ -107,15 +109,15 @@ public class SeriesFragment extends AbstractContainerFragment {
 		this.filterType = filterType;
 		this.seriesFilter = new SeriesFilter(this.filter, this.filterType);
 	}
-	
+
 	public boolean isUnique() {
 		return this.isUnique;
 	}
-	
+
 	public void setUnique(boolean isUnique) {
 		this.isUnique = isUnique;
 	}
-	
+
 	public SeriesFilter getSeriesFilter() {
 		return this.seriesFilter;
 	}
@@ -138,7 +140,8 @@ public class SeriesFragment extends AbstractContainerFragment {
 			next = it.next();
 
 			newContext = contextFactory.createContext(context, next);
-			code.append(AbstractFragment.resolveFormat(this.subFragments, newContext));
+			code.append(AbstractFragment.resolveFormat(this.subFragments,
+					newContext));
 
 			if (it.hasNext())
 				code.append(this.separator);
@@ -205,21 +208,9 @@ public class SeriesFragment extends AbstractContainerFragment {
 						.name()))
 			it = context.getChildren();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.QUESTNODES
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.QUESTPOINTS
 						.name()))
-			it = context.getQuestNodes();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.QUESTPOINTNODES
-						.name()))
-			it = context.getQuestPointNodes();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.PARENTNODES
-						.name())) {
-			it = context.getParentNodes();
-		} else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.CHILDRENNODES
-						.name()))
-			it = context.getChildrenNodes();
+			it = context.getQuestPoints();
 		else {
 			// Default return 'cuz they didn't tell us a real label!
 			System.err.println("Series was unable to be resolved for data: "
@@ -261,8 +252,8 @@ public class SeriesFragment extends AbstractContainerFragment {
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() + this.subFragments.hashCode() + this.separator.hashCode()
-				+ this.seriesFilter.hashCode();
+		return super.hashCode() + this.subFragments.hashCode()
+				+ this.separator.hashCode() + this.seriesFilter.hashCode();
 	}
 
 	@Override

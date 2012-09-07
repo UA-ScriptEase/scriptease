@@ -3,8 +3,6 @@ package scriptease.controller;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.gui.graph.nodes.TextNode;
-import scriptease.gui.quests.QuestNode;
-import scriptease.gui.quests.QuestPointNode;
 
 /**
  * Default implementation of BindingVisitor that does nothing. Ever. <br>
@@ -31,14 +29,6 @@ public abstract class GraphNodeAdapter implements GraphNodeVisitor {
 
 	public void processKnowItNode(KnowItNode knowItNode) {
 		this.defaultProcess(knowItNode);
-	}
-
-	public void processQuestPointNode(QuestPointNode questPointNode) {
-		this.defaultProcess(questPointNode);
-	}
-
-	public void processQuestNode(QuestNode questNode) {
-		this.defaultProcess(questNode);
 	}
 
 	/**

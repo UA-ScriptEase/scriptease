@@ -8,11 +8,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import scriptease.controller.ComplexStoryComponentDescendantCollector;
-import scriptease.controller.get.QuestPointNodeGetter;
-import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.quests.QuestNode;
 import scriptease.gui.quests.QuestPoint;
-import scriptease.gui.quests.QuestPointNode;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -50,14 +46,14 @@ import scriptease.translator.io.model.GameObject;
  */
 public class Context {
 	private String indent = "";
-	private final QuestNode model;
+	private final QuestPoint model;
 	protected final Translator translator;
 	private CodeGenerationNamifier namifier;
 	protected LocationInformation locationInfo;
 
 	private static final String UNIMPLEMENTED = "<unimplemented in context>";
 
-	public Context(QuestNode model, String indent,
+	public Context(QuestPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator) {
 
 		this.translator = translator;
@@ -94,7 +90,7 @@ public class Context {
 	/**
 	 * @return the Context's model
 	 */
-	public final QuestNode getModel() {
+	public final QuestPoint getModel() {
 		return this.model;
 	}
 
@@ -143,7 +139,7 @@ public class Context {
 		final Collection<QuestPoint> questPoints;
 
 		// Get all the QuestPoints from the model
-		questPoints = QuestPointNodeGetter.getQuestPoints(this.model);
+		questPoints = this.model.getDescendants();
 
 		// for each quest point
 		for (QuestPoint questPoint : questPoints) {
@@ -350,6 +346,10 @@ public class Context {
 		}
 		return effects.iterator();
 	}
+	
+	public Iterator<QuestPoint> getQuestPoints() {
+		return this.model.getDescendants().iterator();
+	}
 
 	public KnowIt getSubject() {
 		unimplemented("getSubject");
@@ -363,39 +363,6 @@ public class Context {
 
 	public AskIt getAskIt() {
 		unimplemented("getAskIt");
-		return null;
-	}
-
-	public Iterator<QuestNode> getQuestNodes() {
-		unimplemented("getQuests");
-		return new ArrayList<QuestNode>().iterator();
-	}
-
-	public Iterator<QuestPointNode> getQuestPointNodes() {
-		return QuestPointNodeGetter.getQuestPointNodes(this.model).iterator();
-	}
-
-	public GraphNode getEndPoint() {
-		unimplemented("getEndPoint");
-		return null;
-	}
-
-	/**
-	 * Default to the first QuestPoint in the model's Quest Graph
-	 * 
-	 * @return
-	 */
-	public GraphNode getStartPoint() {
-		return this.model.getStartPoint();
-	}
-
-	public Iterator<GraphNode> getChildrenNodes() {
-		unimplemented("getChildrenNodes");
-		return null;
-	}
-
-	public Iterator<GraphNode> getParentNodes() {
-		unimplemented("getParentNodes");
 		return null;
 	}
 
@@ -436,11 +403,6 @@ public class Context {
 
 	protected String getNameOf(StoryComponent component) {
 		unimplemented("getNameOf(" + component + ")");
-		return null;
-	}
-
-	public String getQuestContainer() {
-		unimplemented("getQuestContainer");
 		return null;
 	}
 
