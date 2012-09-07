@@ -1,6 +1,6 @@
 package scriptease.controller;
 
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
@@ -36,8 +36,8 @@ public abstract class StoryAdapter implements StoryVisitor {
 	 * ============ COMPLEX TYPES ============
 	 */
 	@Override
-	public void processQuestPoint(QuestPoint questPoint) {
-		this.defaultProcessComplex(questPoint);
+	public void processStoryPoint(StoryPoint storyPoint) {
+		this.defaultProcessComplex(storyPoint);
 	}
 
 	@Override

@@ -10,25 +10,26 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 
 /**
- * QuestPoints are the basic units used to build stories. Each QuestPoint holds
+ * QuestPoints are the basic units used to build stories. Each StoryPoint holds
  * the StoryComponents that dictate the behaviour of the game world in the
  * current state of the game.
  * 
- * QuestPoints also have a fanIn property, which is the number of parent
- * QuestPoints which must have succeeded before this point can become active.
+ * StoryPoints also have a fanIn property, which is the number of parent
+ * StoryPoints which must have succeeded before this point can become active.
  * 
  * @author mfchurch
  * @author graves
+ * @author kschenk
  */
-public class QuestPoint extends ComplexStoryComponent {
-	public static String QUEST_POINT_TYPE = "questPoint";
+public class StoryPoint extends ComplexStoryComponent {
+	public static String QUEST_POINT_TYPE = "storyPoint";
 
 	private static final int DEFAULT_FAN_IN = 1;
-	private static final String NEW_QUEST_POINT = "New Quest Point";
-	private static int questPointCounter = 1;
+	private static final String NEW_STORY_POINT = "New Story Point";
+	private static int storyPointCounter = 1;
 
 	private int fanIn;
-	private final Set<QuestPoint> successors;
+	private final Set<StoryPoint> successors;
 
 	/**
 	 * Creates a new Quest Point with the given name and a default fan-in value.
@@ -36,12 +37,12 @@ public class QuestPoint extends ComplexStoryComponent {
 	 * @param name
 	 *            The name for this quest point.
 	 */
-	public QuestPoint(String name) {
-		this(name, QuestPoint.DEFAULT_FAN_IN);
+	public StoryPoint(String name) {
+		this(name, StoryPoint.DEFAULT_FAN_IN);
 	}
 
 	/**
-	 * Creates a new QuestPoint.
+	 * Creates a new StoryPoint.
 	 * 
 	 * @param name
 	 *            If name is null or empty string, it gives a default name of
@@ -49,18 +50,18 @@ public class QuestPoint extends ComplexStoryComponent {
 	 * @param fanIn
 	 *            The fan-in value to use.
 	 */
-	public QuestPoint(String name, int fanIn) {
+	public StoryPoint(String name, int fanIn) {
 		super();
 		this.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
 		if ((name.equals("")) || (name == null)) {
-			name = NEW_QUEST_POINT + " " + questPointCounter++;
+			name = NEW_STORY_POINT + " " + storyPointCounter++;
 		}
 
 		this.setDisplayText(name);
 		this.fanIn = fanIn;
-		this.successors = new HashSet<QuestPoint>();
+		this.successors = new HashSet<StoryPoint>();
 	}
 
 	/**
@@ -77,7 +78,7 @@ public class QuestPoint extends ComplexStoryComponent {
 	}
 
 	/**
-	 * Returns the Fan In for the QuestPoint.
+	 * Returns the Fan In for the StoryPoint.
 	 * 
 	 * @return
 	 */
@@ -86,7 +87,7 @@ public class QuestPoint extends ComplexStoryComponent {
 	}
 
 	/**
-	 * Sets the Fan In for the QuestPoint.
+	 * Sets the Fan In for the StoryPoint.
 	 * 
 	 * @param fanIn
 	 */
@@ -96,53 +97,53 @@ public class QuestPoint extends ComplexStoryComponent {
 
 	@Override
 	public void process(StoryVisitor visitor) {
-		visitor.processQuestPoint(this);
+		visitor.processStoryPoint(this);
 	}
 
 	@Override
 	public String toString() {
-		return "QuestPoint (\"" + this.getDisplayText() + "\")";
+		return "StoryPoint (\"" + this.getDisplayText() + "\")";
 	}
 
 	/**
-	 * Gets the immediate successors of the QuestPoint.
+	 * Gets the immediate successors of the StoryPoint.
 	 * 
 	 * @return
 	 */
-	public Collection<QuestPoint> getSuccessors() {
+	public Collection<StoryPoint> getSuccessors() {
 		return this.successors;
 	}
 
 	/**
-	 * Adds a successor to the QuestPoint.
+	 * Adds a successor to the StoryPoint.
 	 * 
 	 * @param successor
 	 */
-	public void addSuccessor(QuestPoint successor) {
+	public void addSuccessor(StoryPoint successor) {
 		this.successors.add(successor);
 	}
 
 	/**
-	 * Removes a successor from the QuestPoint.
+	 * Removes a successor from the StoryPoint.
 	 * 
 	 * @param successor
 	 */
-	public void removeSuccessor(QuestPoint successor) {
+	public void removeSuccessor(StoryPoint successor) {
 		this.successors.remove(successor);
 	}
 
 	/**
-	 * Gets all descendants of the QuestPoint, including the Quest Point itself.
+	 * Gets all descendants of the StoryPoint, including the Quest Point itself.
 	 * That is, the successors, the successors of the successors, etc.
 	 * 
 	 * @return
 	 */
-	public Set<QuestPoint> getDescendants() {
-		Set<QuestPoint> descendants;
-		descendants = new HashSet<QuestPoint>();
+	public Set<StoryPoint> getDescendants() {
+		Set<StoryPoint> descendants;
+		descendants = new HashSet<StoryPoint>();
 
 		descendants.add(this);
-		for (QuestPoint successor : this.successors) {
+		for (StoryPoint successor : this.successors) {
 			descendants.add(successor);
 			descendants.addAll(successor.getDescendants());
 		}

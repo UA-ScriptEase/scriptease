@@ -10,7 +10,7 @@ import scriptease.controller.observer.StoryComponentEvent;
 import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
@@ -20,7 +20,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
@@ -169,11 +169,11 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	 * @param value
 	 *            The QuestPoint to be known by this KnowIt
 	 */
-	public void setBinding(QuestPoint value) {
+	public void setBinding(StoryPoint value) {
 		if (value == null)
 			throw new IllegalArgumentException(
 					"KnowIt cannot be bound to ScriptIt null");
-		KnowItBindingQuestPoint bindingValue = new KnowItBindingQuestPoint(
+		KnowItBindingStoryPoint bindingValue = new KnowItBindingStoryPoint(
 				value);
 		this.setBinding(bindingValue);
 	}
@@ -204,7 +204,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	 * @see #setBinding(DescribeIt)
 	 * @see #setBinding(GameConstant)
 	 * @see #setBinding(KnowIt)
-	 * @see #setBinding(QuestPoint)
+	 * @see #setBinding(StoryPoint)
 	 * @see #setBinding(ScriptIt)
 	 */
 	public void setBinding(KnowItBinding value) {
@@ -304,8 +304,8 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 					}
 
 					@Override
-					public void processQuestPoint(
-							KnowItBindingQuestPoint questPoint) {
+					public void processStoryPoint(
+							KnowItBindingStoryPoint questPoint) {
 						removeObservers(questPoint.getValue());
 					}
 				});
@@ -488,7 +488,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				}
 
 				@Override
-				public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+				public void processStoryPoint(KnowItBindingStoryPoint questPoint) {
 					KnowIt.this.notifyObservers(event);
 				}
 			});

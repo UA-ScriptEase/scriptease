@@ -2,7 +2,7 @@ package scriptease.translator.codegenerator.code.contexts;
 
 import scriptease.controller.BindingVisitor;
 import scriptease.controller.StoryAdapter;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -11,7 +11,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.AskIt;
@@ -69,8 +69,8 @@ public class ContextFactory {
 			created = this.createContext(context, (CodeBlock) source);
 		} else if (source instanceof KnowItBinding) {
 			created = this.createContext(context, (KnowItBinding) source);
-		} else if (source instanceof QuestPoint) {
-			created = this.createContext(context, (QuestPoint) source);
+		} else if (source instanceof StoryPoint) {
+			created = this.createContext(context, (StoryPoint) source);
 		}
 		// this should get checked last, otherwise the ones above can get caught
 		// by it because they're subclasses.
@@ -148,7 +148,7 @@ public class ContextFactory {
 			}
 
 			@Override
-			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+			public void processStoryPoint(KnowItBindingStoryPoint questPoint) {
 				ContextFactory.this.activeContext = new KnowItBindingQuestPointContext(pastContext,
 						questPoint);
 
@@ -229,8 +229,8 @@ public class ContextFactory {
 	 * @return
 	 */
 	private Context createContext(final Context pastContext,
-			final QuestPoint source) {
-		this.activeContext = new QuestPointContext(pastContext,
+			final StoryPoint source) {
+		this.activeContext = new StoryPointContext(pastContext,
 				source);
 		return this.activeContext;
 	}

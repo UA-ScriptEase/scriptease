@@ -44,7 +44,7 @@ import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.gui.graph.nodes.TextNode;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
@@ -189,7 +189,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	public JToolBar buildQuestEditorToolBar(SEGraph<QuestPoint> gPanel) {
+	public JToolBar buildQuestEditorToolBar(SEGraph<StoryPoint> gPanel) {
 
 		final JToolBar questEditorToolBar = this.buildGraphEditorToolBar();
 
@@ -304,7 +304,7 @@ public class ToolBarFactory {
 	 */
 	private void updateQuestToolBar(JTextField nameField,
 			JSpinner fanInSpinner, JLabel nameLabel, JLabel fanInLabel,
-			QuestPoint questNode) {
+			StoryPoint questNode) {
 
 		this.updateFanInSpinner(fanInSpinner, fanInLabel, questNode);
 		this.updateNameField(nameField, nameLabel, questNode);
@@ -330,7 +330,7 @@ public class ToolBarFactory {
 	 * @return
 	 */
 	private DocumentListener nameFieldListener(final JTextField nameField,
-			final QuestPoint questNode) {
+			final StoryPoint questNode) {
 
 		DocumentListener nameFieldListener = new DocumentListener() {
 
@@ -361,7 +361,7 @@ public class ToolBarFactory {
 	 * @param questNode
 	 */
 	private void updateNameField(JTextField nameField, JLabel nameLabel,
-			QuestPoint questNode) {
+			StoryPoint questNode) {
 		if (questNode != null) {
 
 			String displayText = questNode.getDisplayText();
@@ -417,7 +417,7 @@ public class ToolBarFactory {
 	 * @return
 	 */
 	private ChangeListener fanInSpinnerListener(final JSpinner fanInSpinner,
-			final QuestPoint questNode) {
+			final StoryPoint questNode) {
 
 		ChangeListener fanInSpinnerListener = new ChangeListener() {
 
@@ -449,7 +449,7 @@ public class ToolBarFactory {
 	 * @return The SpinnerModel
 	 */
 	private void updateFanInSpinner(JSpinner fanInSpinner, JLabel fanInLabel,
-			QuestPoint questNode) {
+			StoryPoint questNode) {
 
 		if (questNode != null) {
 			// XXX Max Fan In = questPoint parents size!
@@ -534,7 +534,7 @@ public class ToolBarFactory {
 
 			// XXX Temporary Quest Point so this class doesn't generate a
 			// billion errors. XXX
-			QuestPoint questPoint = new QuestPoint("");
+			StoryPoint questPoint = new StoryPoint("");
 
 			if (type == GraphNodeEventType.SELECTED) {
 				switch (ToolBarButtonAction.getMode()) {

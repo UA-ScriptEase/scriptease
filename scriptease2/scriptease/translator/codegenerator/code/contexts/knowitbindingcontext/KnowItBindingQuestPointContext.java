@@ -2,9 +2,9 @@ package scriptease.translator.codegenerator.code.contexts.knowitbindingcontext;
 
 import java.util.Collection;
 
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
@@ -21,7 +21,7 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  */
 public class KnowItBindingQuestPointContext extends KnowItBindingContext {
 
-	public KnowItBindingQuestPointContext(QuestPoint model, String indent,
+	public KnowItBindingQuestPointContext(StoryPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInfo) {
 		super(model, indent, existingNames, translator, locationInfo);
@@ -41,7 +41,7 @@ public class KnowItBindingQuestPointContext extends KnowItBindingContext {
 		final Collection<AbstractFragment> typeFormat;
 		
 		typeFormat = this.translator.getGameTypeManager().getFormat(
-				QuestPoint.QUEST_POINT_TYPE);
+				StoryPoint.QUEST_POINT_TYPE);
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();
 
@@ -53,7 +53,7 @@ public class KnowItBindingQuestPointContext extends KnowItBindingContext {
 	 */
 	@Override
 	public String getValue() {
-		final QuestPoint qp = ((KnowItBindingQuestPoint) this.binding)
+		final StoryPoint qp = ((KnowItBindingStoryPoint) this.binding)
 				.getValue();
 		final Context knowItContext;
 

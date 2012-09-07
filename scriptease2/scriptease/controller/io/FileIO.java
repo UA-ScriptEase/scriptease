@@ -40,8 +40,8 @@ import scriptease.gui.WindowFactory;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.gui.graph.nodes.TextNode;
-import scriptease.gui.quests.QuestPoint;
-import scriptease.gui.quests.QuestPointConverter;
+import scriptease.gui.quests.StoryPoint;
+import scriptease.gui.quests.StoryPointConverter;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
@@ -129,7 +129,7 @@ public class FileIO {
 	 */
 	public StoryModel readStory(File location) {
 		final StoryModel story;
-		final QuestPoint rootQP;
+		final StoryPoint rootQP;
 
 		story = (StoryModel) this.readData(location, IoMode.STORY);
 
@@ -391,7 +391,7 @@ public class FileIO {
 		stream.alias("CodeBlockSource", CodeBlockSource.class);
 		stream.alias("CodeBlockReference", CodeBlockReference.class);
 		stream.alias("ScriptIt", ScriptIt.class);
-		stream.alias("QuestPoint", QuestPoint.class);
+		stream.alias("StoryPoint", StoryPoint.class);
 
 		// the below are aliased for backwards compatibility
 
@@ -425,7 +425,7 @@ public class FileIO {
 		stream.registerConverter(new CodeBlockSourceConverter());
 		stream.registerConverter(new CodeBlockReferenceConverter());
 		stream.registerConverter(new ScriptItConverter());
-		stream.registerConverter(new QuestPointConverter());
+		stream.registerConverter(new StoryPointConverter());
 
 		stream.registerConverter(new IdentityArrayListConverter(stream
 				.getMapper()));

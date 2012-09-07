@@ -3,7 +3,7 @@ package scriptease.translator.codegenerator.code.contexts;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.StoryComponent;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.LocationInformation;
@@ -11,26 +11,26 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
- * Context representing a QuestPoint
+ * Context representing a StoryPoint
  * 
  * @author mfchurch
  * @author kschenk
  * 
  */
-public class QuestPointContext extends ComplexStoryComponentContext {
+public class StoryPointContext extends ComplexStoryComponentContext {
 
-	public QuestPointContext(QuestPoint model, String indent,
+	public StoryPointContext(StoryPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInfo) {
 		super(model, indent, existingNames, translator, locationInfo);
 	}
 
-	public QuestPointContext(Context other) {
+	public StoryPointContext(Context other) {
 		this(other.getModel(), other.getIndent(), other.getNamifier(), other
 				.getTranslator(), other.getLocationInfo());
 	}
 
-	public QuestPointContext(Context other, QuestPoint source) {
+	public StoryPointContext(Context other, StoryPoint source) {
 		this(other);
 		this.component = source;
 	}
@@ -56,7 +56,7 @@ public class QuestPointContext extends ComplexStoryComponentContext {
 		final Collection<AbstractFragment> typeFormat;
 
 		typeFormat = this.translator.getGameTypeManager().getFormat(
-				QuestPoint.QUEST_POINT_TYPE);
+				StoryPoint.QUEST_POINT_TYPE);
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();
 
@@ -70,6 +70,6 @@ public class QuestPointContext extends ComplexStoryComponentContext {
 
 	@Override
 	public String getFanIn() {
-		return ((QuestPoint) this.component).getFanIn().toString();
+		return ((StoryPoint) this.component).getFanIn().toString();
 	}
 }

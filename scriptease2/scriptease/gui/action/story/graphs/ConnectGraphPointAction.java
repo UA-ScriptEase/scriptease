@@ -19,7 +19,7 @@ public final class ConnectGraphPointAction extends ToolBarButtonAction {
 	private static final ConnectGraphPointAction instance = new ConnectGraphPointAction();
 
 	/**
-	 * Defines a <code>InsertQuestPointAction</code> object with an icon.
+	 * Defines a <code>InsertGraphPointAction</code> object with an icon.
 	 */
 	protected ConnectGraphPointAction() {
 		super(ConnectGraphPointAction.CONNECT_TEXT,

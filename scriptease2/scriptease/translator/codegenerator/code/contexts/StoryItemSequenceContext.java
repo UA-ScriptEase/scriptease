@@ -1,6 +1,6 @@
 package scriptease.translator.codegenerator.code.contexts;
 
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.LocationInformation;
@@ -15,7 +15,7 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  */
 public class StoryItemSequenceContext extends ComplexStoryComponentContext {
 
-	public StoryItemSequenceContext(QuestPoint model, String indent,
+	public StoryItemSequenceContext(StoryPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInformation) {
 		super(model, indent, existingNames, translator, locationInformation);

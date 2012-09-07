@@ -39,11 +39,11 @@ import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.control.editor.NameEditor;
 import scriptease.gui.control.editor.ValueEditor;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
@@ -144,7 +144,7 @@ public class ScriptWidgetFactory {
 	 *            <code>false</code> otherwise.
 	 * @return The binding widget for displaying the given StoryComponent
 	 */
-	public static BindingWidget buildBindingWidget(QuestPoint component,
+	public static BindingWidget buildBindingWidget(StoryPoint component,
 			boolean editable) {
 		return BindingWidgetBuilder.buildBindingWidget(component, editable);
 	}
@@ -241,8 +241,8 @@ public class ScriptWidgetFactory {
 		}
 
 		@Override
-		public void processQuestPoint(QuestPoint questPoint) {
-			this.bindingWidget = new BindingWidget(new KnowItBindingQuestPoint(
+		public void processStoryPoint(StoryPoint questPoint) {
+			this.bindingWidget = new BindingWidget(new KnowItBindingStoryPoint(
 					questPoint));
 		}
 	}

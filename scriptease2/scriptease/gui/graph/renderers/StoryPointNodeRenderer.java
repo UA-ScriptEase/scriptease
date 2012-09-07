@@ -6,24 +6,24 @@ import javax.swing.JComponent;
 
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.graph.SEGraph;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 
 /**
- * Special renderer for nodes representing Quest Points. These components also
- * contain Fan In panels and Binding Widgets representing the Quest Point.
+ * Special renderer for nodes representing StoryPoints. These components also
+ * contain Fan In panels and Binding Widgets.
  * 
  * @author kschenk
  * 
  */
-public class QuestPointNodeRenderer extends SEGraphNodeRenderer<QuestPoint> {
+public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 
-	public QuestPointNodeRenderer(SEGraph<QuestPoint> graph) {
+	public StoryPointNodeRenderer(SEGraph<StoryPoint> graph) {
 		super(graph);
 	}
 
 	@Override
 	protected void configureInternalComponents(JComponent component,
-			QuestPoint node) {
+			StoryPoint node) {
 		component.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
 		component.add(ScriptWidgetFactory.buildFanInPanel(node.getFanIn()));
 		component.add(ScriptWidgetFactory.buildBindingWidget(node, false));

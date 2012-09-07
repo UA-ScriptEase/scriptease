@@ -3,7 +3,7 @@
 import java.io.File;
 
 import scriptease.controller.io.FileIO;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
@@ -67,7 +67,7 @@ public class StoryModelConverter implements Converter{
 		final String author;
 		final Translator translator;
 		final GameModule module;
-		final QuestPoint newRoot;
+		final StoryPoint newRoot;
 
 		title = FileIO.readValue(reader, TAG_TITLE);
 
@@ -99,7 +99,7 @@ public class StoryModelConverter implements Converter{
 
 			reader.moveDown();
 			
-			newRoot = (QuestPoint) context.convertAnother(model, QuestPoint.class);
+			newRoot = (StoryPoint) context.convertAnother(model, StoryPoint.class);
 
 			if (newRoot == null)
 				throw new IllegalStateException(

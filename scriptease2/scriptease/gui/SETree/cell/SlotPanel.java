@@ -24,7 +24,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -150,9 +150,9 @@ public class SlotPanel extends JPanel {
 			}
 
 			@Override
-			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
 				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
-						questPoint.getValue().getDisplayText(), Color.WHITE);
+						storyPoint.getValue().getDisplayText(), Color.WHITE);
 			}
 
 			@Override

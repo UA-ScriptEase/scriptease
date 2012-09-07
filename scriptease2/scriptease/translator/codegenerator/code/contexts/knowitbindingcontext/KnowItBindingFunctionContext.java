@@ -1,6 +1,6 @@
 package scriptease.translator.codegenerator.code.contexts.knowitbindingcontext;
 
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.translator.LanguageDictionary;
@@ -21,7 +21,7 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  */
 public class KnowItBindingFunctionContext extends KnowItBindingContext {
 
-	public KnowItBindingFunctionContext(QuestPoint model,
+	public KnowItBindingFunctionContext(StoryPoint model,
 			String indent, CodeGenerationNamifier existingNames,
 			Translator translator, LocationInformation locationInfo) {
 		super(model, indent, existingNames, translator, locationInfo);

@@ -17,7 +17,7 @@ import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.SETree.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.describeIts.DescribeItPanel;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
@@ -178,7 +178,7 @@ public class StoryComponentPanelFactory {
 					}
 
 					@Override
-					public void processQuestPoint(QuestPoint questPoint) {
+					public void processStoryPoint(StoryPoint questPoint) {
 						buildMainQuestPointPanel(questPoint, mainPanel);
 					}
 
@@ -347,7 +347,7 @@ public class StoryComponentPanelFactory {
 			final StoryComponentPanel panel) {
 		return new StoryAdapter() {
 			@Override
-			public void processQuestPoint(QuestPoint questPoint) {
+			public void processStoryPoint(StoryPoint questPoint) {
 				// Add an expansion button
 				addExpansionButton(questPoint, panel);
 
@@ -419,7 +419,7 @@ public class StoryComponentPanelFactory {
 		}
 	}
 
-	private void buildMainQuestPointPanel(QuestPoint questPoint,
+	private void buildMainQuestPointPanel(StoryPoint questPoint,
 			JPanel mainPanel) {
 		// Add a BindingWidget for the QuestPoint
 		mainPanel

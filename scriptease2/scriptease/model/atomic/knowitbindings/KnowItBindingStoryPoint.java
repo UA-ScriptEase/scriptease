@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.BindingVisitor;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 
 /**
  * This class represents a <b>Quest Point</b> binding for a <code>KnowIt</code>.
@@ -13,8 +13,8 @@ import scriptease.gui.quests.QuestPoint;
  * @author remiller
  * @see {@link scriptease.model.atomic.KnowIt}
  */
-public class KnowItBindingQuestPoint extends KnowItBinding {
-	private final QuestPoint point;
+public class KnowItBindingStoryPoint extends KnowItBinding {
+	private final StoryPoint point;
 
 	/**
 	 * Creates a new binding that wraps the given quest point.
@@ -22,7 +22,7 @@ public class KnowItBindingQuestPoint extends KnowItBinding {
 	 * @param point
 	 *            The quest point to wrap.
 	 */
-	public KnowItBindingQuestPoint(QuestPoint point) {
+	public KnowItBindingStoryPoint(StoryPoint point) {
 		this.point = point;
 	}
 
@@ -32,7 +32,7 @@ public class KnowItBindingQuestPoint extends KnowItBinding {
 	 * @param other
 	 *            The binding to mimic.
 	 */
-	public KnowItBindingQuestPoint(KnowItBindingQuestPoint other) {
+	public KnowItBindingStoryPoint(KnowItBindingStoryPoint other) {
 		this.point = other.point;
 	}
 
@@ -42,14 +42,14 @@ public class KnowItBindingQuestPoint extends KnowItBinding {
 	}
 
 	@Override
-	public QuestPoint getValue() {
+	public StoryPoint getValue() {
 		return this.point;
 	}
 
 	@Override
 	public Collection<String> getTypes() {
 		List<String> types = new ArrayList<String>();
-		types.add(QuestPoint.QUEST_POINT_TYPE);
+		types.add(StoryPoint.QUEST_POINT_TYPE);
 		return types;
 	}
 
@@ -60,8 +60,8 @@ public class KnowItBindingQuestPoint extends KnowItBinding {
 
 	@Override
 	public boolean equals(Object other) {
-		return (other instanceof KnowItBindingQuestPoint)
-				&& ((KnowItBindingQuestPoint) other).point.equals(this.point);
+		return (other instanceof KnowItBindingStoryPoint)
+				&& ((KnowItBindingStoryPoint) other).point.equals(this.point);
 	}
 
 	@Override
@@ -71,13 +71,13 @@ public class KnowItBindingQuestPoint extends KnowItBinding {
 
 	@Override
 	public KnowItBinding clone() {
-		KnowItBindingQuestPoint clone = new KnowItBindingQuestPoint(this);
+		KnowItBindingStoryPoint clone = new KnowItBindingStoryPoint(this);
 
 		return clone;
 	}
 
 	@Override
 	public void process(BindingVisitor processController) {
-		processController.processQuestPoint(this);
+		processController.processStoryPoint(this);
 	}
 }
