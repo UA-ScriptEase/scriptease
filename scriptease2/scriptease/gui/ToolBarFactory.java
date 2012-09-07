@@ -3,7 +3,6 @@ package scriptease.gui;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,6 @@ import scriptease.controller.observer.GraphNodeEvent;
 import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.GraphNodeObserver;
 import scriptease.gui.action.ToolBarButtonAction;
-import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.action.story.graphs.ConnectGraphPointAction;
 import scriptease.gui.action.story.graphs.DeleteGraphNodeAction;
 import scriptease.gui.action.story.graphs.DisconnectGraphPointAction;
@@ -99,7 +97,7 @@ public class ToolBarFactory {
 	 * 
 	 * @return
 	 */
-	public JToolBar buildGraphEditorToolBar(SEGraph seGraph) {
+	public JToolBar buildGraphEditorToolBar() {
 		final JToolBar graphEditorToolBar = new JToolBar();
 
 		final ButtonGroup graphEditorButtonGroup = new ButtonGroup();
@@ -172,11 +170,14 @@ public class ToolBarFactory {
 		SEFrame.getInstance().getStoryTabPane()
 				.addChangeListener(graphEditorListener);
 
-		/*GraphNodeObserver graphBarObserver = new GraphToolBarObserver(gPanel);
-
-		GraphNode.observeDepthMap(graphBarObserver, gPanel.getHeadNode());
-
-		this.observerMap.put(graphEditorToolBar, graphBarObserver);*/
+		/*
+		 * GraphNodeObserver graphBarObserver = new
+		 * GraphToolBarObserver(gPanel);
+		 * 
+		 * GraphNode.observeDepthMap(graphBarObserver, gPanel.getHeadNode());
+		 * 
+		 * this.observerMap.put(graphEditorToolBar, graphBarObserver);
+		 */
 
 		return graphEditorToolBar;
 	}
@@ -190,8 +191,7 @@ public class ToolBarFactory {
 	 */
 	public JToolBar buildQuestEditorToolBar(SEGraph<QuestPoint> gPanel) {
 
-		final JToolBar questEditorToolBar = this
-				.buildGraphEditorToolBar(gPanel);
+		final JToolBar questEditorToolBar = this.buildGraphEditorToolBar();
 
 		final int TOOL_BAR_HEIGHT = 32;
 		final int FAN_IN_SPINNER_LENGTH = 50;
@@ -227,11 +227,8 @@ public class ToolBarFactory {
 		questEditorToolBar.add(nameField);
 
 		GraphNodeObserver questBarObserver = new QuestToolBarObserver(
-				nameField, fanInSpinner, nameLabel, fanInLabel, gPanel);
+				nameField, fanInSpinner, nameLabel, fanInLabel);
 
-		GraphNode.observeDepthMap(questBarObserver, gPanel.getHeadNode());
-
-		this.observerMap.put(questEditorToolBar, questBarObserver);
 
 		return questEditorToolBar;
 	}
@@ -245,7 +242,7 @@ public class ToolBarFactory {
 	 */
 	public JToolBar buildDescribeItToolBar(DescribeIt editedDescribeIt,
 			GraphPanel gPanel) {
-		final JToolBar describeItToolBar = this.buildGraphEditorToolBar(gPanel);
+		final JToolBar describeItToolBar = this.buildGraphEditorToolBar();
 		// final GraphNode headNode = gPanel.getHeadNode();
 
 		final int TOOL_BAR_HEIGHT = 32;
@@ -455,7 +452,10 @@ public class ToolBarFactory {
 			QuestPoint questNode) {
 
 		if (questNode != null) {
-			int maxFanIn = questNode.getParents().size();
+			// XXX Max Fan In = questPoint parents size!
+
+			int maxFanIn = 0;
+			// questNode.getParents().size();
 
 			// If maxFanIn >1, maxFanIn. Otherwise, 1.
 			maxFanIn = maxFanIn > 1 ? maxFanIn : 1;
@@ -478,7 +478,8 @@ public class ToolBarFactory {
 			fanInSpinner.addChangeListener(this.fanInSpinnerListener(
 					fanInSpinner, questNode));
 
-			if (!questNode.isStartNode()) {
+			// if (!questNode.isStartNode()) {
+			if (true) {
 				fanInLabel.setEnabled(true);
 				fanInSpinner.setEnabled(true);
 			} else {
@@ -498,106 +499,6 @@ public class ToolBarFactory {
 	}
 
 	/**
-	 * Private observer for the Graph ToolBar
-	 * 
-	 * @author kschenk
-	 * 
-	 */
-	private class GraphToolBarObserver implements GraphNodeObserver {
-		/**
-		 * Adds the node to the graph bar observer if a new one is added.
-		 */
-		GraphPanel gPanel;
-
-		public GraphToolBarObserver(GraphPanel gPanel) {
-			this.gPanel = gPanel;
-		}
-
-		@Override
-		public void nodeChanged(GraphNodeEvent event) {
-			final GraphNode sourceNode = event.getSource();
-			final GraphNodeEventType type = event.getEventType();
-
-			GraphNode oldSelectedNode = this.gPanel.getOldSelectedNode();
-
-			if (type == GraphNodeEventType.SELECTED) {
-				switch (ToolBarButtonAction.getMode()) {
-				case DELETE_GRAPH_NODE:
-					if (sourceNode.isDeletable()) {
-						List<GraphNode> parents = sourceNode.getParents();
-						List<GraphNode> children = sourceNode.getChildren();
-
-						sourceNode.removeParents();
-
-						sourceNode.removeChildren();
-
-						// Re-connect each parent with each child.
-						for (GraphNode parent : parents) {
-							for (GraphNode child : children) {
-								parent.addChild(child);
-							}
-						}
-					}
-					break;
-
-				case CONNECT_GRAPH_NODE:
-					if (oldSelectedNode != null) {
-						// Determine which node is shallower in the graph, and
-						// which
-						// is deeper.
-						GraphNode shallowerNode = sourceNode
-								.isDescendant(oldSelectedNode) ? oldSelectedNode
-								: sourceNode;
-						GraphNode deeperNode = sourceNode
-								.isDescendant(oldSelectedNode) ? sourceNode
-								: oldSelectedNode;
-
-						// connect the nodes if not connected
-						shallowerNode.addChild(deeperNode);
-
-						// Reset the tool.
-						this.gPanel.setOldSelectedNode(null);
-					}
-					// update the last selected node
-					else
-						this.gPanel.setOldSelectedNode(sourceNode);
-					break;
-
-				case DISCONNECT_GRAPH_NODE:
-					if (oldSelectedNode != null) {
-						// Determine which node is shallower in the graph, and
-						// which
-						// is deeper.
-						GraphNode shallowerNode = sourceNode
-								.isDescendant(oldSelectedNode) ? oldSelectedNode
-								: sourceNode;
-						GraphNode deeperNode = sourceNode
-								.isDescendant(oldSelectedNode) ? sourceNode
-								: oldSelectedNode;
-
-						// Check that both nodes will still have at least one
-						// parent and one child after the disconnect.
-						if (shallowerNode.getChildren().size() > 1
-								&& deeperNode.getParents().size() > 1) {
-							shallowerNode.removeChild(deeperNode, false);
-						}
-
-						// Reset the tool.
-						this.gPanel.setOldSelectedNode(null);
-					}
-					// update the last selected node
-					else
-						this.gPanel.setOldSelectedNode(sourceNode);
-					break;
-				}
-
-			} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
-				GraphNode.observeDepthMap(this, sourceNode);
-			}
-		}
-	}
-
-	/**
 	 * Private observer for the QuestToolBar. Also provides quest specific
 	 * actions for the graph editor toolbar buttons.
 	 * 
@@ -608,9 +509,6 @@ public class ToolBarFactory {
 		final private JSpinner fanInSpinner;
 		final private JLabel nameLabel;
 		final private JLabel fanInLabel;
-
-		private GraphNode previousNode;
-		final private GraphPanel gPanel;
 
 		/**
 		 * Creates the observer for the quest toolbar. It requires the name
@@ -623,256 +521,53 @@ public class ToolBarFactory {
 		 * @param editor
 		 */
 		public QuestToolBarObserver(JTextField nameField,
-				JSpinner fanInSpinner, JLabel nameLabel, JLabel fanInLabel,
-				GraphPanel gPanel) {
+				JSpinner fanInSpinner, JLabel nameLabel, JLabel fanInLabel) {
 			this.nameField = nameField;
 			this.fanInSpinner = fanInSpinner;
 			this.nameLabel = nameLabel;
 			this.fanInLabel = fanInLabel;
-			this.previousNode = gPanel.getHeadNode();
-			this.gPanel = gPanel;
-		}
-
-		/**
-		 * Swaps the selected state of the newly selected node.
-		 * 
-		 * @param previousNode
-		 * @param currentNode
-		 */
-		protected void swapSelected(GraphNode previousNode,
-				GraphNode currentNode) {
-			if (previousNode != null)
-				previousNode.setSelected(false);
-			currentNode.setSelected(true);
-		}
-
-		/**
-		 * Specialty method for deleting the quest node, rather than just a
-		 * graph node.
-		 * 
-		 * @param sourceNode
-		 * @param questPointNode
-		 */
-		private void deleteQuestNode(final GraphNode sourceNode,
-				QuestPoint questPoint) {
-
-			if (sourceNode.isDeletable()) {
-				Collection<QuestPoint> successors = questPoint.getSuccessors();
-				 List<GraphNode> parents = questPoint.getParents();
-
-				// Only delete the node if there are parents and
-				// children to repair the graph with.
-				if (!parents.isEmpty() && !successors.isEmpty()) {
-
-					
-					// Remove the node from its parents.
-					questPoint.removeParents();
-
-					// Remove the node from its children.
-					questPoint.removeChildren();
-
-					// Re-connect each parent with each child.
-					for (QuestPoint parent : parents) {
-						for (QuestPoint child : children) {
-							parent.addSuccessor(child);
-						}
-					}
-				}
-				// Subtracts 1 from fan in of all children.
-				for (QuestPoint child : successors) {
-
-					int fanIn = questPoint.getFanIn();
-
-					if (fanIn > 1)
-						questPoint.setFanIn(fanIn - 1);
-				}
-			}
-
-			ToolBarFactory.this.updateQuestToolBar(
-					QuestToolBarObserver.this.nameField,
-					QuestToolBarObserver.this.fanInSpinner,
-					QuestToolBarObserver.this.nameLabel,
-					QuestToolBarObserver.this.fanInLabel, questPoint);
-
-		}
-
-		/**
-		 * Method to abstract commonalities from the Insert QuestPoint between
-		 * and alternate tools.
-		 * 
-		 * @param node
-		 * 
-		 * @author graves
-		 */
-		private void insertQuestPoint(GraphNode node) {
-			// if this is the second click,
-			GraphNode oldSelectedNode = this.gPanel.getOldSelectedNode();
-
-			if (oldSelectedNode != null) {
-
-				// create a new node to insert:
-				QuestPoint newQuestPoint = new QuestPoint("");
-				QuestPointNode newQuestPointNode = new QuestPointNode(
-						newQuestPoint);
-
-				// Cases for clicking the same node.
-				if (oldSelectedNode == node) {
-
-					if (oldSelectedNode == this.gPanel.getHeadNode()) {
-						// Get the children of the start node.
-						List<GraphNode> startNodeChildren = oldSelectedNode
-								.getChildren();
-
-						// Remove them all.
-						oldSelectedNode.removeChildren();
-
-						// Add the new node to the start node as a child.
-						oldSelectedNode.addChild(newQuestPointNode);
-
-						// Add the old children to the new node.
-						newQuestPointNode.addChildren(startNodeChildren);
-					}
-
-					else if (oldSelectedNode.isTerminalNode()) {
-						// Get the parents of the end node.
-						List<GraphNode> endNodeParents = oldSelectedNode
-								.getParents();
-
-						// Remove them all.
-						oldSelectedNode.removeParents();
-
-						// Add the end node to the new node as a child.
-						newQuestPointNode.addChild(oldSelectedNode);
-
-						// Add the old parents to the new node.
-						for (GraphNode parent : endNodeParents) {
-							parent.addChild(newQuestPointNode);
-						}
-					}
-					// double clicking any other node does nothing.
-
-					// Cases for clicking a new node
-				} else {
-					// determine which node is closer to the startNode in the
-					// graph
-					// (the parent) and which is further from the startNode (the
-					// child).
-					GraphNode closerToStartNode = node
-							.isDescendant(oldSelectedNode) ? oldSelectedNode
-							: node;
-					GraphNode furtherFromStartNode = node
-							.isDescendant(oldSelectedNode) ? node
-							: oldSelectedNode;
-
-					// Remove the old connection between the parent and child:
-					closerToStartNode.removeChild(furtherFromStartNode, false);
-
-					// Add the new node to the shallower node as a child
-					// (addChild
-					// automatically adds shallower as parent):
-					closerToStartNode.addChild(newQuestPointNode);
-
-					// Add the deeper node to the new node as a child.
-					newQuestPointNode.addChild(furtherFromStartNode);
-				}
-				// Reset the tool:
-				this.gPanel.setOldSelectedNode(null);
-
-			} else {
-				// otherwise this is the first click, so store the node for
-				// later:
-				this.gPanel.setOldSelectedNode(node);
-			}
 		}
 
 		@Override
 		public void nodeChanged(GraphNodeEvent event) {
-			final GraphNode sourceNode = event.getSource();
 			final GraphNodeEventType type = event.getEventType();
 
+			// XXX Temporary Quest Point so this class doesn't generate a
+			// billion errors. XXX
+			QuestPoint questPoint = new QuestPoint("");
+
 			if (type == GraphNodeEventType.SELECTED) {
-				if (ToolBarButtonAction.getMode() != ToolBarButtonMode.DELETE_GRAPH_NODE) {
-					this.swapSelected(this.previousNode, sourceNode);
-					this.previousNode = sourceNode;
-				}
+				switch (ToolBarButtonAction.getMode()) {
 
-				sourceNode.process(new GraphNodeAdapter() {
-					@Override
-					public void processQuestPointNode(
-							QuestPointNode questPointNode) {
-						switch (ToolBarButtonAction.getMode()) {
+				case DISCONNECT_GRAPH_NODE:
+					int fanIn = questPoint.getFanIn();
 
-						case DISCONNECT_GRAPH_NODE:
-							QuestPoint questPoint = questPointNode
-									.getQuestPoint();
-							int fanIn = questPoint.getFanIn();
+					if (fanIn > 1)
+						questPoint.setFanIn(fanIn - 1);
 
-							if (fanIn > 1)
-								questPoint.setFanIn(fanIn - 1);
+				case SELECT_GRAPH_NODE:
 
-						case SELECT_GRAPH_NODE:
+					final PatternModel model = PatternModelManager
+							.getInstance().getActiveModel();
 
-							final PatternModel model = PatternModelManager
-									.getInstance().getActiveModel();
+					if (model != null && model instanceof StoryModel) {
 
-							if (model != null && model instanceof StoryModel) {
-								sourceNode.process(new GraphNodeAdapter() {
-									@Override
-									public void processQuestPointNode(
-											QuestPointNode questPointNode) {
+						List<JComponent> components = PanelFactory
+								.getInstance().getComponentsForModel(model);
 
-										QuestPoint questPoint = questPointNode
-												.getQuestPoint();
-
-										List<JComponent> components = PanelFactory
-												.getInstance()
-												.getComponentsForModel(model);
-
-										for (JComponent component : components)
-											PanelFactory.getInstance()
-													.setRootForTreeInComponent(
-															component,
-															questPoint);
-									}
-								});
-							}
-							ToolBarFactory.this.updateQuestToolBar(
-									QuestToolBarObserver.this.nameField,
-									QuestToolBarObserver.this.fanInSpinner,
-									QuestToolBarObserver.this.nameLabel,
-									QuestToolBarObserver.this.fanInLabel,
-									questPointNode);
-							break;
-						case INSERT_GRAPH_NODE:
-							QuestToolBarObserver.this
-									.insertQuestPoint(sourceNode);
-							ToolBarFactory.this.updateQuestToolBar(
-									QuestToolBarObserver.this.nameField,
-									QuestToolBarObserver.this.fanInSpinner,
-									QuestToolBarObserver.this.nameLabel,
-									QuestToolBarObserver.this.fanInLabel,
-									questPointNode);
-							break;
-						case CONNECT_GRAPH_NODE:
-							ToolBarFactory.this.updateQuestToolBar(
-									QuestToolBarObserver.this.nameField,
-									QuestToolBarObserver.this.fanInSpinner,
-									QuestToolBarObserver.this.nameLabel,
-									QuestToolBarObserver.this.fanInLabel,
-									questPointNode);
-							QuestToolBarObserver.this.previousNode = sourceNode;
-							break;
-
-						case DELETE_GRAPH_NODE:
-							QuestToolBarObserver.this.deleteQuestNode(
-									sourceNode, questPointNode);
-							break;
-						}
+						for (JComponent component : components)
+							// XXX This is important.
+							PanelFactory.getInstance()
+									.setRootForTreeInComponent(component,
+											questPoint);
 					}
-				});
-
-			} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
-				GraphNode.observeDepthMap(this, sourceNode);
+					ToolBarFactory.this.updateQuestToolBar(
+							QuestToolBarObserver.this.nameField,
+							QuestToolBarObserver.this.fanInSpinner,
+							QuestToolBarObserver.this.nameLabel,
+							QuestToolBarObserver.this.fanInLabel, questPoint);
+					break;
+				}
 			}
 		}
 	}

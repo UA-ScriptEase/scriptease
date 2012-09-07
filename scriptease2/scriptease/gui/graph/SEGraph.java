@@ -9,7 +9,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.LayoutManager;
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -46,7 +45,6 @@ public class SEGraph<E> extends JComponent {
 	private SEGraphNodeBuilder<E> builder;
 
 	private E selectedNode;
-	private E previousSelectedNode;
 
 	private Point mousePosition;
 
@@ -59,7 +57,6 @@ public class SEGraph<E> extends JComponent {
 		this.model = new SEGraphModel<E>(start);
 
 		this.selectedNode = start;
-		this.previousSelectedNode = null;
 		this.renderer = new SEGraphNodeRenderer<E>(this);
 		this.builder = new SEGraphNodeBuilder<E>();
 		this.mousePosition = new Point();
@@ -128,11 +125,25 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	public boolean connectNodes(E node1, E node2) {
-		return this.model.connectNodes(node1, node2);
+		final boolean result;
+
+		result = this.model.connectNodes(node1, node2);
+
+		this.repaint();
+		this.revalidate();
+
+		return result;
 	}
 
 	public boolean disconnectNodes(E node1, E node2) {
-		return this.model.disconnectNodes(node1, node2);
+		final boolean result;
+
+		result = this.model.disconnectNodes(node1, node2);
+
+		this.repaint();
+		this.revalidate();
+
+		return result;
 	}
 
 	public void setSelectedNode(E node) {
@@ -381,18 +392,14 @@ public class SEGraph<E> extends JComponent {
 			g.fillRect(0, 0, SEGraph.this.getWidth(), SEGraph.this.getHeight());
 
 			final Graphics2D g2 = (Graphics2D) g.create();
-/*
-			if (SEGraph.this.previousSelectedNode != null
-					&& SEGraph.this.mousePosition != null) {
-				g2.setColor(Color.gray);
-				g2.setStroke(new BasicStroke(1.5f));
-				GUIOp.paintArrow(
-						g2,
-						GUIOp.getMidRight(SEGraph.this.renderer
-								.getComponentForNode(SEGraph.this.previousSelectedNode)),
-						SEGraph.this.mousePosition);
-			}
-*/
+			/*
+			 * if (SEGraph.this.previousSelectedNode != null &&
+			 * SEGraph.this.mousePosition != null) { g2.setColor(Color.gray);
+			 * g2.setStroke(new BasicStroke(1.5f)); GUIOp.paintArrow( g2,
+			 * GUIOp.getMidRight(SEGraph.this.renderer
+			 * .getComponentForNode(SEGraph.this.previousSelectedNode)),
+			 * SEGraph.this.mousePosition); }
+			 */
 			connectNodes(g);
 		}
 
@@ -462,11 +469,6 @@ public class SEGraph<E> extends JComponent {
 		}
 
 		@Override
-		public void mousePressed(MouseEvent e) {
-			SEGraph.this.previousSelectedNode = this.node;
-		}
-
-		@Override
 		public void mouseReleased(MouseEvent e) {
 			switch (ToolBarButtonAction.getMode()) {
 
@@ -482,22 +484,24 @@ public class SEGraph<E> extends JComponent {
 							SEGraph.this.addNodeTo(newNode, this.node);
 						else
 							SEGraph.this.addNodeBetween(newNode,
-									SEGraph.this.lastEnteredNode,
-									this.node);
+									SEGraph.this.lastEnteredNode, this.node);
 				}
 				break;
 			case DELETE_GRAPH_NODE:
 				SEGraph.this.removeNode(this.node);
 				break;
 			case CONNECT_GRAPH_NODE:
-				if (SEGraph.this.previousSelectedNode != null)
-					SEGraph.this.connectNodes(this.node,
-							SEGraph.this.previousSelectedNode);
+				if (SEGraph.this.lastEnteredNode != null
+						&& SEGraph.this.lastEnteredNode != this.node)
+					SEGraph.this.connectNodes(SEGraph.this.lastEnteredNode,
+							this.node);
 				break;
 			case DISCONNECT_GRAPH_NODE:
-				if (SEGraph.this.previousSelectedNode != null)
-					SEGraph.this.disconnectNodes(this.node,
-							SEGraph.this.previousSelectedNode);
+				if (SEGraph.this.lastEnteredNode != null
+						&& SEGraph.this.lastEnteredNode != this.node)
+					SEGraph.this.disconnectNodes(SEGraph.this.lastEnteredNode,
+							this.node);
+				break;
 			}
 		}
 	}

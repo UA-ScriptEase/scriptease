@@ -61,12 +61,11 @@ public class PanelFactory {
 		final SEGraph<QuestPoint> graphPanel = new SEGraph<QuestPoint>(start);
 		graphPanel.setRenderer(new QuestPointNodeRenderer(graphPanel));
 		graphPanel.setBuilder(new QuestPointBuilder());
-		
-		
+
 		ToolBarButtonAction.addJComponent(graphPanel);
 
 		final JToolBar graphToolBar = ToolBarFactory.getInstance()
-				.buildGraphEditorToolBar(graphPanel);
+				.buildGraphEditorToolBar();
 
 		/*
 		 * final JToolBar questToolBar = ToolBarFactory.getInstance()

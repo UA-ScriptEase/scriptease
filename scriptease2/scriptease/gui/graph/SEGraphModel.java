@@ -129,6 +129,9 @@ public class SEGraphModel<E> {
 	 *            The node to be removed.
 	 */
 	public void removeNode(E node) {
+		if (node == this.start.getObject())
+			return;
+
 		for (Node descendant : this.getGraphNodes()) {
 			if (descendant.getObject() == node) {
 				// We need to work with copies to avoid concurrent modifications
@@ -147,14 +150,89 @@ public class SEGraphModel<E> {
 		}
 	}
 
+	/**
+	 * Connects two nodes together. This method checks which node is further
+	 * from the other, and adds the appropriate node as a parent or a child.
+	 * 
+	 * @param node1
+	 * @param node2
+	 * @return
+	 */
 	public boolean connectNodes(E node1, E node2) {
-		// TODO Add child to node1 or node2
-		return false;
+		Node firstNode = null;
+		Node secondNode = null;
+
+		for (Node node : this.getGraphNodes()) {
+			if (node.getObject() == node1) {
+				firstNode = node;
+			} else if (node.getObject() == node2) {
+				secondNode = node;
+			}
+		}
+
+		if (firstNode == null || secondNode == null)
+			return false;
+
+		if (firstNode.getDescendantGraph().contains(secondNode)) {
+			firstNode.addChild(secondNode);
+
+			return true;
+		} else if (firstNode.getAncestorGraph().contains(secondNode)) {
+			firstNode.addParent(secondNode);
+
+			return true;
+		} else {
+			final Map<Node, Integer> depthMap = this.start.getDepthMap();
+			final int firstNodeDepth = depthMap.get(firstNode);
+			final int secondNodeDepth = depthMap.get(secondNode);
+
+			if (firstNodeDepth > secondNodeDepth) {
+				firstNode.addParent(secondNode);
+
+				return true;
+			} else {
+				firstNode.addChild(secondNode);
+
+				return true;
+			}
+		}
 	}
 
+	/**
+	 * Disconnects two nodes. If the node had no other connections, this will
+	 * result in a deletion.
+	 * 
+	 * @param node1
+	 * @param node2
+	 * @return
+	 */
 	public boolean disconnectNodes(E node1, E node2) {
-		// TODO Remove child from node1 or node2
-		return false;
+		Node firstNode = null;
+		Node secondNode = null;
+
+		for (Node node : this.getGraphNodes()) {
+			if (node.getObject() == node1) {
+				firstNode = node;
+			} else if (node.getObject() == node2) {
+				secondNode = node;
+			}
+		}
+
+		if (firstNode == null || secondNode == null)
+			return false;
+
+		if (firstNode.getChildren().contains(secondNode)) {
+			firstNode.removeChild(secondNode);
+
+			return true;
+		} else if (firstNode.getParents().contains(secondNode)) {
+			firstNode.removeParent(secondNode);
+
+			return true;
+		} else {
+			// This means the two nodes weren't connected at all.
+			return false;
+		}
 	}
 
 	/**
@@ -464,9 +542,8 @@ public class SEGraphModel<E> {
 		}
 
 		/**
-		 * Returns a map containing each sub node and the distance from this
-		 * node. This can be computational expensive on large graphs, recommend
-		 * storing when the graph isn't changing
+		 * Returns a map containing all descendants and the distance of each
+		 * from this node.
 		 * 
 		 * @return
 		 */
