@@ -3,7 +3,7 @@ package scriptease.translator.codegenerator.code.contexts;
 import java.util.Iterator;
 
 import scriptease.controller.get.VariableGetter;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.StoryItemSequence;
@@ -20,7 +20,7 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  */
 public class AskItContext extends StoryComponentContext {
 
-	public AskItContext(QuestPoint model, String indent,
+	public AskItContext(StoryPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInfo) {
 		super(model, indent, existingNames, translator, locationInfo);

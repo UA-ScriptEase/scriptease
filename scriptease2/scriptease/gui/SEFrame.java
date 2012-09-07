@@ -32,7 +32,7 @@ import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.pane.CloseableModelTab;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
@@ -317,7 +317,7 @@ public final class SEFrame implements PatternModelObserver {
 			@Override
 			public void processStoryModel(final StoryModel storyModel) {
 				// Creates a story editor panel with a quest graph
-				final QuestPoint startQuestPoint;
+				final StoryPoint startQuestPoint;
 				final JPanel newPanel;
 				final CloseableModelTab newTab;
 				final String title;

@@ -6,8 +6,8 @@ import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
 import scriptease.controller.io.FileIO;
-import scriptease.gui.quests.QuestPoint;
-import scriptease.gui.quests.QuestPointConverter;
+import scriptease.gui.quests.StoryPoint;
+import scriptease.gui.quests.StoryPointConverter;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
@@ -16,7 +16,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.ScriptIt;
@@ -82,7 +82,7 @@ public class KnowItBindingConverter implements Converter {
 		// redirect to the appropriate writing method.
 		binding.process(new BindingVisitor() {
 			public void processConstant(KnowItBindingConstant constant) {
-				if (constant.getFirstType().equals(QuestPoint.QUEST_POINT_TYPE)) {
+				if (constant.getFirstType().equals(StoryPoint.QUEST_POINT_TYPE)) {
 					// deal with it B-->:)
 					KnowItBindingConverter.this.marshallConstantBinding(
 							constant, writer);
@@ -126,9 +126,9 @@ public class KnowItBindingConverter implements Converter {
 			}
 
 			@Override
-			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
-				KnowItBindingConverter.this.marshallQuestPointBinding(
-						questPoint, writer, context);
+			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
+				KnowItBindingConverter.this.marshallStoryPointBinding(
+						storyPoint, writer, context);
 			}
 		});
 	}
@@ -218,12 +218,12 @@ public class KnowItBindingConverter implements Converter {
 	/*
 	 * Converts a Quest Point reference to XML
 	 */
-	private void marshallQuestPointBinding(KnowItBindingQuestPoint binding,
+	private void marshallStoryPointBinding(KnowItBindingStoryPoint binding,
 			HierarchicalStreamWriter writer, MarshallingContext context) {
 		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
 				ATTRIBUTE_VALUE_QUEST_POINT_FLAVOUR);
 
-		writer.startNode(QuestPointConverter.TAG_QUESTPOINT);
+		writer.startNode(StoryPointConverter.TAG_STORYPOINT);
 		context.convertAnother(binding.getValue());
 		writer.endNode();
 	}
@@ -266,7 +266,7 @@ public class KnowItBindingConverter implements Converter {
 				binding = this.unmarshallDescribeItBinding(reader, context);
 			else if (flavour
 					.equalsIgnoreCase(ATTRIBUTE_VALUE_QUEST_POINT_FLAVOUR))
-				binding = this.unmarshallQuestPointBinding(reader, context);
+				binding = this.unmarshallStoryPointBinding(reader, context);
 			else
 				// VizziniAmazementException - remiller
 				throw new ConversionException("Inconceivable binding type: "
@@ -376,18 +376,18 @@ public class KnowItBindingConverter implements Converter {
 		return knowItBindingDescribeIt;
 	}
 
-	private KnowItBindingQuestPoint unmarshallQuestPointBinding(
+	private KnowItBindingStoryPoint unmarshallStoryPointBinding(
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
-		QuestPoint questPoint = null;
-		final KnowItBindingQuestPoint binding = new KnowItBindingQuestPoint(
-				questPoint);
+		StoryPoint storyPoint = null;
+		final KnowItBindingStoryPoint binding = new KnowItBindingStoryPoint(
+				storyPoint);
 
 		// move down and read as a describeIt
 		reader.moveDown();
-		questPoint = (QuestPoint) context.convertAnother(binding,
-				QuestPoint.class);
+		storyPoint = (StoryPoint) context.convertAnother(binding,
+				StoryPoint.class);
 		reader.moveUp();
 
-		return new KnowItBindingQuestPoint(questPoint);
+		return new KnowItBindingStoryPoint(storyPoint);
 	}
 }

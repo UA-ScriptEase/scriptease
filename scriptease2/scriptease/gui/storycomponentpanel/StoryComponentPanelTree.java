@@ -10,7 +10,7 @@ import javax.swing.JScrollPane;
 import scriptease.gui.SETree.filters.Filter;
 import scriptease.gui.SETree.filters.Filterable;
 import scriptease.gui.SETree.filters.StoryComponentFilter;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.complex.ComplexStoryComponent;
 
 /**
@@ -26,7 +26,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	private StoryComponentPanelManager selectionManager;
 	private StoryComponentPanel rootPanel;
-	private QuestPoint root;
+	private StoryPoint root;
 	private Filter filterRule;
 
 	public StoryComponentPanelTree() {
@@ -39,7 +39,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * @param root
 	 * @param settings
 	 */
-	public StoryComponentPanelTree(QuestPoint root) {
+	public StoryComponentPanelTree(StoryPoint root) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -60,7 +60,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * @param root
 	 *            The root StoryComponent for the tree.
 	 */
-	public void setRoot(QuestPoint root) {
+	public void setRoot(StoryPoint root) {
 		if(this.rootPanel != null)
 			this.selectionManager.cleanUpPanel(this.rootPanel);
 		

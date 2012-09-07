@@ -9,7 +9,7 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.modelverifier.rule.ParameterBoundRule;
 import scriptease.controller.modelverifier.rule.StoryRule;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
@@ -40,7 +40,7 @@ import scriptease.translator.codegenerator.code.contexts.FileContext;
  * @author mfchurch
  */
 public class SemanticAnalyzer extends StoryAdapter {
-	private final QuestPoint root;
+	private final StoryPoint root;
 	private final Translator translator;
 	private final Collection<StoryRule> rules;
 
@@ -53,7 +53,7 @@ public class SemanticAnalyzer extends StoryAdapter {
 	 * Creates a new instance that will recursively analyze the StoryComponent
 	 * tree.
 	 */
-	public SemanticAnalyzer(QuestPoint root, Translator translator) {
+	public SemanticAnalyzer(StoryPoint root, Translator translator) {
 		this.problems = new ArrayList<StoryProblem>();
 		this.translator = translator;
 		this.rules = new ArrayList<StoryRule>();
@@ -62,8 +62,8 @@ public class SemanticAnalyzer extends StoryAdapter {
 		// Make sure all parameters are bound before generating code
 		this.rules.add(new ParameterBoundRule());
 		// Get all the QuestPoints in the model
-		Collection<QuestPoint> questPoints = this.root.getDescendants();
-		for (QuestPoint questPoint : questPoints) {
+		Collection<StoryPoint> questPoints = this.root.getDescendants();
+		for (StoryPoint questPoint : questPoints) {
 			// Process all the components from each QuestPoint
 			for (StoryComponent child : questPoint.getChildren()) {
 				child.process(this);

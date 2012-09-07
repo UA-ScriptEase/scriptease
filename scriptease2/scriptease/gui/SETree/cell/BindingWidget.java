@@ -21,7 +21,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.translator.io.tools.SimpleGameConstant;
@@ -172,7 +172,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 			}
 
 			@Override
-			public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+			public void processStoryPoint(KnowItBindingStoryPoint questPoint) {
 				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
 			}
 

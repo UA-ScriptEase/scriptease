@@ -1,6 +1,6 @@
 package scriptease.controller;
 
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
@@ -30,7 +30,7 @@ import scriptease.model.complex.StoryItemSequence;
  */
 public interface StoryVisitor {
 	/** COMPLEX TYPES **/
-	public void processQuestPoint(QuestPoint questPoint);
+	public void processStoryPoint(StoryPoint storyPoint);
 	
 	public void processScriptIt(ScriptIt scriptIt);
 

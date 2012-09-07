@@ -15,7 +15,7 @@ import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
@@ -255,7 +255,7 @@ public class APIDictionary implements LibraryObserver {
 				}
 
 				@Override
-				public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
+				public void processStoryPoint(KnowItBindingStoryPoint questPoint) {
 					questPoint.getValue().process(searcher);
 				}
 			};

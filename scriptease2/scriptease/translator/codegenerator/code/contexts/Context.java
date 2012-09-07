@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import scriptease.controller.ComplexStoryComponentDescendantCollector;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -46,14 +46,14 @@ import scriptease.translator.io.model.GameObject;
  */
 public class Context {
 	private String indent = "";
-	private final QuestPoint model;
+	private final StoryPoint model;
 	protected final Translator translator;
 	private CodeGenerationNamifier namifier;
 	protected LocationInformation locationInfo;
 
 	private static final String UNIMPLEMENTED = "<unimplemented in context>";
 
-	public Context(QuestPoint model, String indent,
+	public Context(StoryPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator) {
 
 		this.translator = translator;
@@ -90,7 +90,7 @@ public class Context {
 	/**
 	 * @return the Context's model
 	 */
-	public final QuestPoint getModel() {
+	public final StoryPoint getModel() {
 		return this.model;
 	}
 
@@ -136,13 +136,13 @@ public class Context {
 	 */
 	protected Collection<StoryComponent> getComponents() {
 		final Collection<StoryComponent> components = new ArrayList<StoryComponent>();
-		final Collection<QuestPoint> questPoints;
+		final Collection<StoryPoint> questPoints;
 
 		// Get all the QuestPoints from the model
 		questPoints = this.model.getDescendants();
 
 		// for each quest point
-		for (QuestPoint questPoint : questPoints) {
+		for (StoryPoint questPoint : questPoints) {
 			// Get all the components from each QuestPoint
 			ComplexStoryComponentDescendantCollector getter = new ComplexStoryComponentDescendantCollector();
 			components.addAll(getter.collectDescendants(questPoint));
@@ -347,7 +347,7 @@ public class Context {
 		return effects.iterator();
 	}
 	
-	public Iterator<QuestPoint> getQuestPoints() {
+	public Iterator<StoryPoint> getQuestPoints() {
 		return this.model.getDescendants().iterator();
 	}
 

@@ -17,13 +17,13 @@ import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.SEGraph;
-import scriptease.gui.graph.builders.QuestPointBuilder;
+import scriptease.gui.graph.builders.StoryPointBuilder;
 import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.graph.renderers.QuestPointNodeRenderer;
+import scriptease.gui.graph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.pane.GameObjectPane;
 import scriptease.gui.pane.LibraryPanel;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
@@ -55,12 +55,12 @@ public class PanelFactory {
 	 *            Start Point of the graph.
 	 * @return
 	 */
-	public JPanel buildQuestPanel(final QuestPoint start) {
+	public JPanel buildQuestPanel(final StoryPoint start) {
 		final JPanel questPanel = new JPanel(new BorderLayout(), true);
 
-		final SEGraph<QuestPoint> graphPanel = new SEGraph<QuestPoint>(start);
-		graphPanel.setRenderer(new QuestPointNodeRenderer(graphPanel));
-		graphPanel.setBuilder(new QuestPointBuilder());
+		final SEGraph<StoryPoint> graphPanel = new SEGraph<StoryPoint>(start);
+		graphPanel.setRenderer(new StoryPointNodeRenderer(graphPanel));
+		graphPanel.setBuilder(new StoryPointBuilder());
 
 		ToolBarButtonAction.addJComponent(graphPanel);
 
@@ -147,7 +147,7 @@ public class PanelFactory {
 
 	private final static Map<JComponent, StoryComponentPanelTree> componentsToTrees = new IdentityHashMap<JComponent, StoryComponentPanelTree>();
 
-	public JPanel buildStoryPanel(StoryModel model, QuestPoint questPoint) {
+	public JPanel buildStoryPanel(StoryModel model, StoryPoint questPoint) {
 		final JPanel storyPanel;
 		final JPanel questPanel;
 		final StoryComponentPanelTree storyComponentTree;
@@ -204,7 +204,7 @@ public class PanelFactory {
 	}
 
 	public void setRootForTreeInComponent(JComponent component,
-			QuestPoint questPoint) {
+			StoryPoint questPoint) {
 		PanelFactory.componentsToTrees.get(component).setRoot(questPoint);
 	}
 

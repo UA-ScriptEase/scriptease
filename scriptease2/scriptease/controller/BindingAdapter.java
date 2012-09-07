@@ -5,7 +5,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.atomic.knowitbindings.KnowItBindingQuestPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 
@@ -58,8 +58,8 @@ public abstract class BindingAdapter implements BindingVisitor {
 	}
 
 	@Override
-	public void processQuestPoint(KnowItBindingQuestPoint questPoint) {
-		this.defaultProcess(questPoint);
+	public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
+		this.defaultProcess(storyPoint);
 	}
 
 	/**

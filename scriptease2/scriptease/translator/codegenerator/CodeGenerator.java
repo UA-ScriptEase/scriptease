@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.WindowFactory;
-import scriptease.gui.quests.QuestPoint;
+import scriptease.gui.quests.StoryPoint;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
@@ -112,7 +112,7 @@ public class CodeGenerator {
 		final GameModule module = model.getModule();
 		final Translator translator = model.getTranslator();
 		final Collection<ScriptInfo> scriptInfos = new ArrayList<ScriptInfo>();
-		final QuestPoint root = model.getRoot();
+		final StoryPoint root = model.getRoot();
 
 		// do the first pass (semantic analysis) for the given quest
 		final SemanticAnalyzer analyzer = new SemanticAnalyzer(root, translator);
