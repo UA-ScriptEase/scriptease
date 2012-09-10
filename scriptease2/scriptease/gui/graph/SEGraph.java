@@ -12,7 +12,6 @@ import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,6 +26,7 @@ import javax.swing.plaf.ComponentUI;
 import scriptease.controller.observer.graph.SEGraphObserver;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.ToolBarButtonAction;
+import scriptease.gui.graph.SEGraphModel.GraphEvent;
 import scriptease.gui.graph.builders.SEGraphNodeBuilder;
 import scriptease.gui.graph.renderers.SEGraphNodeRenderer;
 import scriptease.util.GUIOp;
@@ -61,8 +61,11 @@ public class SEGraph<E> extends JComponent {
 	 * Builds a new graph with the passed in start point, builder, and renderer.
 	 * 
 	 * @param start
+	 *            The start point of the graph. Graphs must have a start point.
 	 * @param builder
+	 *            The node builder for the graph.
 	 * @param renderer
+	 *            The renderer for the graph.
 	 */
 	public SEGraph(E start, SEGraphNodeBuilder<E> builder,
 			SEGraphNodeRenderer<E> renderer) {
@@ -207,20 +210,13 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
-	 * 
-	 * @param listener
-	 */
-	public void addNodeMouseListener(MouseListener listener) {
-		// TODO Add mouse listeners to nodes.
-	}
-
-	/**
 	 * Sets the current selected node.
 	 * 
 	 * @param node
 	 */
 	public void setSelectedNode(E node) {
 		this.selectedNode = node;
+		this.model.notifyObservers(GraphEvent.NODE_SELECTED, node);
 	}
 
 	/**
@@ -361,8 +357,9 @@ public class SEGraph<E> extends JComponent {
 					final JComponent component = SEGraph.this.renderer
 							.getComponentForNode(node, SEGraph.this);
 
-					if (component.getMouseListeners().length <= 1)
+					if (component.getMouseListeners().length <= 1) {
 						component.addMouseListener(new NodeMouseAdapter(node));
+					}
 
 					// Get the JComponent preferred width
 					final int nodeWidth = (int) component.getPreferredSize()
@@ -472,8 +469,13 @@ public class SEGraph<E> extends JComponent {
 		}
 	}
 
+	/**
+	 * UI used to draw lines between each node.
+	 * 
+	 * @author kschenk
+	 * 
+	 */
 	public class SEGraphUI extends ComponentUI {
-
 		@Override
 		public void paint(Graphics g, JComponent c) {
 			g.setColor(SEGraph.this.getBackground());
@@ -546,6 +548,15 @@ public class SEGraph<E> extends JComponent {
 
 	private E lastEnteredNode = null;
 
+	/**
+	 * Mouse adapter that gets added to every node. This is where the model gets
+	 * updated based on the current tool selected in the Tool Bar.<br>
+	 * <br>
+	 * For graphical changes, see {@link SEGraphNodeRenderer}.
+	 * 
+	 * @author kschenk
+	 * 
+	 */
 	private class NodeMouseAdapter extends MouseAdapter {
 		private final E node;
 

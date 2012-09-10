@@ -10,6 +10,14 @@ package scriptease.controller.observer.graph;
 public interface SEGraphObserver<E> {
 
 	/**
+	 * Called when a node has been selected.
+	 * 
+	 * @param node
+	 *            The selected node.
+	 */
+	public void nodeSelected(E node);
+
+	/**
 	 * Called when a child has been added to a node.
 	 * 
 	 * @param child

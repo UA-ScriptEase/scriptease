@@ -21,6 +21,16 @@ import scriptease.gui.graph.SEGraph;
 import scriptease.util.BiHashMap;
 import scriptease.util.GUIOp;
 
+/**
+ * Renders individual components as graph nodes. There is some default
+ * behaviour, but most will have to be implemented in a sub class that overrides
+ * the {@link #configureInternalComponents(JComponent, Object)} method.
+ * 
+ * @author remiller
+ * @author kschenk
+ * 
+ * @param <E>
+ */
 public class SEGraphNodeRenderer<E> {
 	// This is such a weird hack. I apologize. - remiller
 	private Set<JComponent> hoverComponents = new HashSet<JComponent>();
@@ -51,8 +61,8 @@ public class SEGraphNodeRenderer<E> {
 	}
 
 	/**
-	 * By default, this does nothing.
-	 * 
+	 * By default, this does nothing.<br>
+	 * <br>
 	 * It can be used by subclasses to add any special components inside of the
 	 * component representing the node. For example, QuestPoint nodes add Fan In
 	 * panels and binding widgets for the Quest Point.
@@ -64,7 +74,8 @@ public class SEGraphNodeRenderer<E> {
 	}
 
 	/**
-	 * Sets up the listeners for appearance.
+	 * Sets up the listeners for appearance. For mouse listeners on components
+	 * that act on the model, see {@link SEGraph}.
 	 * 
 	 * @param component
 	 * @param node
@@ -133,7 +144,8 @@ public class SEGraphNodeRenderer<E> {
 	}
 
 	/**
-	 * Method to configure the component's appearance.
+	 * Method to configure the component's appearance based on the current mode
+	 * of the ToolBar.
 	 * 
 	 * @param component
 	 *            The display component to configure.
@@ -208,4 +220,20 @@ public class SEGraphNodeRenderer<E> {
 		component.setBackground(backgroundColour);
 		component.setOpaque(true);
 	}
+
+	// TODO
+	/*
+	 * 
+	 * 
+	 * 
+	 * private void resetAppearance :D
+	 * 
+	 * 
+	 * reset the appearance to a regular look, with white background and default
+	 * border and such!
+	 * 
+	 * Should happen on press.
+	 * 
+	 */
+
 }
