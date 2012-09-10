@@ -26,9 +26,9 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
 
 import scriptease.controller.GraphNodeAdapter;
-import scriptease.controller.observer.GraphNodeEvent;
-import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
-import scriptease.controller.observer.GraphNodeObserver;
+import scriptease.controller.observer.graph.GraphNodeEvent;
+import scriptease.controller.observer.graph.GraphNodeObserver;
+import scriptease.controller.observer.graph.GraphNodeEvent.GraphNodeEventType;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.story.graphs.ConnectGraphPointAction;
 import scriptease.gui.action.story.graphs.DeleteGraphNodeAction;

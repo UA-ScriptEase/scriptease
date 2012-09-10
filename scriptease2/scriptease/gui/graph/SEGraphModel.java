@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import scriptease.controller.observer.graph.SEGraphObserver;
+import scriptease.gui.graph.builders.SEGraphNodeBuilder;
+
 /**
  * Model class for SEGraph. This stores and handles all of the nodes in the
  * Graph.
@@ -21,7 +24,8 @@ import java.util.Set;
  */
 public class SEGraphModel<E> {
 	private final Node start;
-	private final List<WeakReference<SEGraphModelObserver<E>>> observers;
+	private final SEGraphNodeBuilder<E> builder;
+	private final List<WeakReference<SEGraphObserver<E>>> observers;
 
 	private static enum GraphEvent {
 		CHILD_ADDED,
@@ -36,14 +40,18 @@ public class SEGraphModel<E> {
 	 * 
 	 * @param start
 	 */
-	public SEGraphModel(E start) {
+	public SEGraphModel(E start, SEGraphNodeBuilder<E> builder) {
+		this.observers = new ArrayList<WeakReference<SEGraphObserver<E>>>();
 		this.start = new Node(start);
-		this.observers = new ArrayList<WeakReference<SEGraphModelObserver<E>>>();
+		this.builder = builder;
 
+		for (E child : builder.getChildren(start)) {
+			this.addNodeTo(child, start);
+		}
 	}
 
 	/**
-	 * Adds a new node onto an existing node.
+	 * Adds a node onto an existing node.
 	 * 
 	 * @param newNode
 	 *            The new node to add
@@ -55,6 +63,10 @@ public class SEGraphModel<E> {
 		for (Node node : this.getGraphNodes()) {
 			if (node.getObject() == existingNode) {
 				node.addChild(new Node(newNode));
+
+				for (E child : this.builder.getChildren(newNode)) {
+					this.addNodeTo(child, newNode);
+				}
 				return true;
 			}
 		}
@@ -336,12 +348,12 @@ public class SEGraphModel<E> {
 	 * @param observer
 	 *            the observer to register
 	 */
-	public void addSEGraphNodeObserver(SEGraphModelObserver<E> observer) {
-		Collection<WeakReference<SEGraphModelObserver<E>>> observersCopy = new ArrayList<WeakReference<SEGraphModelObserver<E>>>(
+	public void addSEGraphObserver(SEGraphObserver<E> observer) {
+		Collection<WeakReference<SEGraphObserver<E>>> observersCopy = new ArrayList<WeakReference<SEGraphObserver<E>>>(
 				this.observers);
 
-		for (WeakReference<SEGraphModelObserver<E>> observerRef : observersCopy) {
-			SEGraphModelObserver<E> storyComponentObserver = observerRef.get();
+		for (WeakReference<SEGraphObserver<E>> observerRef : observersCopy) {
+			SEGraphObserver<E> storyComponentObserver = observerRef.get();
 			if (storyComponentObserver != null
 					&& storyComponentObserver == observer)
 				return;
@@ -349,8 +361,7 @@ public class SEGraphModel<E> {
 				this.observers.remove(observerRef);
 		}
 
-		this.observers
-				.add(new WeakReference<SEGraphModelObserver<E>>(observer));
+		this.observers.add(new WeakReference<SEGraphObserver<E>>(observer));
 	}
 
 	/**
@@ -359,8 +370,8 @@ public class SEGraphModel<E> {
 	 * @param observer
 	 *            the observer to register
 	 */
-	public void removeSEGraphNodeObserver(SEGraphModelObserver<E> observer) {
-		for (WeakReference<SEGraphModelObserver<E>> reference : this.observers) {
+	public void removeSEGraphObserver(SEGraphObserver<E> observer) {
+		for (WeakReference<SEGraphObserver<E>> reference : this.observers) {
 			if (reference.get() == observer) {
 				this.observers.remove(reference);
 				return;
@@ -376,11 +387,11 @@ public class SEGraphModel<E> {
 	 * @param parent
 	 */
 	private void notifyObservers(GraphEvent event, E parent, E child) {
-		Collection<WeakReference<SEGraphModelObserver<E>>> observersCopy = new ArrayList<WeakReference<SEGraphModelObserver<E>>>(
+		Collection<WeakReference<SEGraphObserver<E>>> observersCopy = new ArrayList<WeakReference<SEGraphObserver<E>>>(
 				this.observers);
 
-		for (WeakReference<SEGraphModelObserver<E>> observerRef : observersCopy) {
-			SEGraphModelObserver<E> graphNodeObserver = observerRef.get();
+		for (WeakReference<SEGraphObserver<E>> observerRef : observersCopy) {
+			SEGraphObserver<E> graphNodeObserver = observerRef.get();
 			if (graphNodeObserver != null)
 				switch (event) {
 				case CHILD_ADDED:

@@ -9,8 +9,8 @@ import java.util.Set;
 
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
-import scriptease.controller.observer.StoryComponentEvent;
-import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
 import sun.awt.util.IdentityArrayList;
 

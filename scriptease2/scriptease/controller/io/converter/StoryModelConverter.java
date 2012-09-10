@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class StoryModelConverter implements Converter{
 	private static final String TAG_TITLE = "Title";
 	private static final String TAG_AUTHOR = "Author";
-	private static final String TAG_STORY_START_POINT = "StoryStartPoint";
+	private static final String TAG_STORY_START_POINT = "StartStoryPoint";
 	private static final String TAG_TRANSLATOR = "Translator";
 	private static final String TAG_GAME_MODULE = "GameModule";
 

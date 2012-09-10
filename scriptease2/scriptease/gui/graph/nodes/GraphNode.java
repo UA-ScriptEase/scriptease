@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import scriptease.controller.GraphNodeVisitor;
-import scriptease.controller.observer.GraphNodeEvent;
-import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
-import scriptease.controller.observer.GraphNodeObserver;
+import scriptease.controller.observer.graph.GraphNodeEvent;
+import scriptease.controller.observer.graph.GraphNodeObserver;
+import scriptease.controller.observer.graph.GraphNodeEvent.GraphNodeEventType;
 import sun.awt.util.IdentityArrayList;
 
 /**

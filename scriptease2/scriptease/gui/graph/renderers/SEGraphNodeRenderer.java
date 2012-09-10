@@ -22,18 +22,13 @@ import scriptease.util.BiHashMap;
 import scriptease.util.GUIOp;
 
 public class SEGraphNodeRenderer<E> {
-	private final SEGraph<E> graph;
 	// This is such a weird hack. I apologize. - remiller
 	private Set<JComponent> hoverComponents = new HashSet<JComponent>();
 	private Set<JComponent> pressComponents = new HashSet<JComponent>();
 
 	private BiHashMap<E, JComponent> componentMap = new BiHashMap<E, JComponent>();
 
-	public SEGraphNodeRenderer(SEGraph<E> graph) {
-		this.graph = graph;
-	}
-
-	public final JComponent getComponentForNode(E node) {
+	public final JComponent getComponentForNode(E node, SEGraph<E> graph) {
 		final JComponent component;
 		// check if the node already has a component
 		final JComponent storedComponent = this.componentMap.getValue(node);
@@ -42,8 +37,8 @@ public class SEGraphNodeRenderer<E> {
 		} else {
 			// otherwise build it and store it
 			component = new JPanel();
-			this.configureAppearance(component, node);
-			this.configureListeners(component, node);
+			this.configureAppearance(component, node, graph);
+			this.configureListeners(component, node, graph);
 			this.configureInternalComponents(component, node);
 			this.componentMap.put(node, component);
 		}
@@ -74,7 +69,8 @@ public class SEGraphNodeRenderer<E> {
 	 * @param component
 	 * @param node
 	 */
-	private void configureListeners(final JComponent component, final E node) {
+	private void configureListeners(final JComponent component, final E node,
+			final SEGraph<E> graph) {
 		if (component != null) {
 			/*
 			 * When a component is clicked, forward the click to the GraphNode,
@@ -100,7 +96,7 @@ public class SEGraphNodeRenderer<E> {
 
 					SEGraphNodeRenderer.this.pressComponents.remove(src);
 
-					configureAppearance(src, node);
+					configureAppearance(src, node, graph);
 				}
 
 				@Override
@@ -108,7 +104,7 @@ public class SEGraphNodeRenderer<E> {
 					final JComponent src = (JComponent) e.getSource();
 
 					SEGraphNodeRenderer.this.pressComponents.add(src);
-					configureAppearance(src, node);
+					configureAppearance(src, node, graph);
 				}
 
 				@Override
@@ -116,7 +112,7 @@ public class SEGraphNodeRenderer<E> {
 					final JComponent nodeComponent = (JComponent) e.getSource();
 
 					SEGraphNodeRenderer.this.hoverComponents.add(nodeComponent);
-					configureAppearance(nodeComponent, node);
+					configureAppearance(nodeComponent, node, graph);
 				}
 
 				@Override
@@ -128,7 +124,7 @@ public class SEGraphNodeRenderer<E> {
 					SEGraphNodeRenderer.this.pressComponents
 							.remove(nodeComponent);
 
-					configureAppearance(nodeComponent, node);
+					configureAppearance(nodeComponent, node, graph);
 				}
 			};
 
@@ -144,7 +140,8 @@ public class SEGraphNodeRenderer<E> {
 	 * @param node
 	 *            The graph node to configure based on.
 	 */
-	private void configureAppearance(final JComponent component, E node) {
+	private void configureAppearance(final JComponent component, E node,
+			SEGraph<E> graph) {
 		if (component == null)
 			return;
 
@@ -190,7 +187,7 @@ public class SEGraphNodeRenderer<E> {
 				backgroundColour = toolHighlight;
 			}
 			borderColour = GUIOp.scaleColour(toolColour, 0.7);
-		} else if (this.graph.getSelectedNode() == node) {
+		} else if (graph.getSelectedNode() == node) {
 			// If nothing and selected
 			backgroundColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
 			borderColour = GUIOp.scaleColour(ScriptEaseUI.SELECTED_GRAPH_NODE,

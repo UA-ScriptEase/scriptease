@@ -2,8 +2,8 @@ package scriptease.gui.graph.nodes;
 
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.GraphNodeVisitor;
-import scriptease.controller.observer.StoryComponentEvent;
-import scriptease.controller.observer.StoryComponentObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 

@@ -1,5 +1,10 @@
 package scriptease.gui.quests;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import scriptease.controller.io.converter.ComplexStoryComponentConverter;
 import scriptease.model.StoryComponent;
 
@@ -29,14 +34,22 @@ public class StoryPointConverter extends ComplexStoryComponentConverter {
 		writer.startNode(TAG_FAN_IN);
 		writer.setValue(storyPoint.getFanIn().toString());
 		writer.endNode();
+
+		writer.startNode(TAG_SUCCESSORS);
+		context.convertAnother(storyPoint.getSuccessors());
+		writer.endNode();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final StoryPoint storyPoint = (StoryPoint) super.unmarshal(reader,
 				context);
+		final Set<StoryPoint> successors;
+
 		String fanIn = null;
+		successors = new HashSet<StoryPoint>();
 
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
@@ -44,14 +57,16 @@ public class StoryPointConverter extends ComplexStoryComponentConverter {
 
 			if (nodeName.equals(TAG_FAN_IN)) {
 				fanIn = reader.getValue();
-			}
-			else if (nodeName.equals(TAG_SUCCESSORS)) {
-				//TODO Handle successors
+			} else if (nodeName.equals(TAG_SUCCESSORS)) {
+				successors.addAll((Collection<StoryPoint>) context
+						.convertAnother(storyPoint, ArrayList.class));
 			}
 			reader.moveUp();
 		}
 
 		storyPoint.setFanIn(new Integer(fanIn));
+		storyPoint.addSuccessors(successors);
+
 		return storyPoint;
 	}
 

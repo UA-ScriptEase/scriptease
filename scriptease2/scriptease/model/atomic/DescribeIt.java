@@ -9,9 +9,9 @@ import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.GraphNodeReferenceResolver;
-import scriptease.controller.observer.GraphNodeEvent;
-import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
-import scriptease.controller.observer.GraphNodeObserver;
+import scriptease.controller.observer.graph.GraphNodeEvent;
+import scriptease.controller.observer.graph.GraphNodeObserver;
+import scriptease.controller.observer.graph.GraphNodeEvent.GraphNodeEventType;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.TextNode;
 import scriptease.model.complex.ScriptIt;

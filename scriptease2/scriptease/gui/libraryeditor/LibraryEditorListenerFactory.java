@@ -15,9 +15,9 @@ import javax.swing.JPanel;
 
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
-import scriptease.controller.observer.StoryComponentEvent;
-import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
-import scriptease.controller.observer.StoryComponentObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.LibraryModel;

@@ -20,10 +20,10 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import scriptease.controller.observer.LibraryManagerEvent;
-import scriptease.controller.observer.LibraryManagerObserver;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.library.LibraryManagerEvent;
+import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.gui.SETree.filters.CategoryFilter;
 import scriptease.gui.SETree.filters.CategoryFilter.Category;
 import scriptease.gui.SETree.filters.StoryComponentSearchFilter;

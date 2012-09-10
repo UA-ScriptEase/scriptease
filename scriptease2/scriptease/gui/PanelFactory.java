@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
+import scriptease.controller.observer.graph.StoryPointGraphObserver;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.GraphPanel;
@@ -46,38 +48,6 @@ public class PanelFactory {
 
 	public static PanelFactory getInstance() {
 		return PanelFactory.instance;
-	}
-
-	/**
-	 * Creates a panel for editing Quests.
-	 * 
-	 * @param start
-	 *            Start Point of the graph.
-	 * @return
-	 */
-	public JPanel buildQuestPanel(final StoryPoint start) {
-		final JPanel questPanel = new JPanel(new BorderLayout(), true);
-
-		final SEGraph<StoryPoint> graphPanel = new SEGraph<StoryPoint>(start);
-		graphPanel.setRenderer(new StoryPointNodeRenderer(graphPanel));
-		graphPanel.setBuilder(new StoryPointBuilder());
-
-		ToolBarButtonAction.addJComponent(graphPanel);
-
-		final JToolBar graphToolBar = ToolBarFactory.getInstance()
-				.buildGraphEditorToolBar();
-
-		/*
-		 * final JToolBar questToolBar = ToolBarFactory.getInstance()
-		 * .buildQuestEditorToolBar(graphPanel);
-		 */
-
-		questPanel.add(graphToolBar, BorderLayout.PAGE_START);
-		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
-
-		questPanel.add(new JScrollPane(graphPanel), BorderLayout.CENTER);
-
-		return questPanel;
 	}
 
 	/**
@@ -147,32 +117,48 @@ public class PanelFactory {
 
 	private final static Map<JComponent, StoryComponentPanelTree> componentsToTrees = new IdentityHashMap<JComponent, StoryComponentPanelTree>();
 
-	public JPanel buildStoryPanel(StoryModel model, StoryPoint questPoint) {
+	private final static Map<JComponent, StoryPointGraphObserver> weakComponentToGraphObservers = new WeakHashMap<JComponent, StoryPointGraphObserver>();
+
+	public JPanel buildStoryPanel(StoryModel model, StoryPoint start) {
 		final JPanel storyPanel;
 		final JPanel questPanel;
+		final JToolBar graphToolBar;
+		final SEGraph<StoryPoint> storyGraph;
+		final StoryPointGraphObserver storyGraphObserver;
 		final StoryComponentPanelTree storyComponentTree;
 
-		List<JComponent> panes;
-
 		storyPanel = new JPanel(new GridLayout(0, 1));
-		questPanel = PanelFactory.getInstance()
-				.buildQuestPanel(model.getRoot());
-		storyComponentTree = new StoryComponentPanelTree(questPoint);
+		questPanel = new JPanel(new BorderLayout(), true);
+		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
+		storyGraph = new SEGraph<StoryPoint>(start,
+				new StoryPointBuilder(start), new StoryPointNodeRenderer());
+		storyGraphObserver = new StoryPointGraphObserver(start);
+		storyComponentTree = new StoryComponentPanelTree(start);
 
+		// Put the new pane to the map
+		List<JComponent> panes;
 		panes = PanelFactory.modelsToComponents.getValue(model);
-
 		if (panes == null) {
 			panes = new ArrayList<JComponent>();
 		}
-
-		storyPanel.setOpaque(false);
-
 		panes.add(storyPanel);
-
 		PanelFactory.modelsToComponents.put(model, panes);
 
-		storyPanel.add(questPanel);
+		// Set up the Story Graph
+		storyGraph.addSEGraphObserver(storyGraphObserver);
 
+		PanelFactory.weakComponentToGraphObservers.put(storyPanel,
+				storyGraphObserver);
+
+		// Reset the ToolBar to select and add the Story Graph to it.
+		ToolBarButtonAction.addJComponent(storyGraph);
+		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
+
+		questPanel.add(graphToolBar, BorderLayout.PAGE_START);
+		questPanel.add(new JScrollPane(storyGraph), BorderLayout.CENTER);
+
+		storyPanel.setOpaque(false);
+		storyPanel.add(questPanel);
 		storyPanel.add(storyComponentTree);
 
 		PanelFactory.componentsToTrees.put(storyPanel, storyComponentTree);

@@ -5,9 +5,9 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import scriptease.controller.StoryAdapter;
-import scriptease.controller.observer.StoryComponentEvent;
-import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
-import scriptease.controller.observer.StoryComponentObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.StoryComponent;

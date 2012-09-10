@@ -120,7 +120,18 @@ public class StoryPoint extends ComplexStoryComponent {
 	 * @param successor
 	 */
 	public void addSuccessor(StoryPoint successor) {
-		this.successors.add(successor);
+		if (successor != this)
+			this.successors.add(successor);
+	}
+
+	/**
+	 * Adds multiple successors to the StoryPoint.
+	 * 
+	 * @param successors
+	 */
+	public void addSuccessors(Collection<StoryPoint> successors) {
+		for (StoryPoint successor : successors)
+			this.addSuccessor(successor);
 	}
 
 	/**
@@ -133,12 +144,17 @@ public class StoryPoint extends ComplexStoryComponent {
 	}
 
 	/**
-	 * Gets all descendants of the StoryPoint, including the Quest Point itself.
+	 * Gets all descendants of the StoryPoint, including the StoryPoint itself.
 	 * That is, the successors, the successors of the successors, etc.
 	 * 
 	 * @return
 	 */
 	public Set<StoryPoint> getDescendants() {
+		if (this.successors.contains(this)) {
+			throw new IllegalStateException(
+					"Story Point contains itself as a child!");
+		}
+
 		Set<StoryPoint> descendants;
 		descendants = new HashSet<StoryPoint>();
 

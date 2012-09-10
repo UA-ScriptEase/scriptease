@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import scriptease.controller.observer.StoryComponentObserverRemover;
+import scriptease.controller.observer.storycomponent.StoryComponentObserverRemover;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;

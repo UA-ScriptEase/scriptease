@@ -21,6 +21,11 @@ import scriptease.gui.graph.nodes.GraphNode;
  */
 @SuppressWarnings("serial")
 public abstract class GraphNodeEditor extends JComponent {
+	
+	/*
+	 * TODO This could likely all go into the specific "Renderers"!
+	 */
+	
 	protected static int FIELD_SIZE = 30;
 	protected GraphNode node;
 	private JComponent field;
