@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import scriptease.controller.observer.storycomponent.StoryComponentObserverRemover;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
@@ -59,8 +58,7 @@ public class StoryComponentPanelManager {
 	 * @param aPanel
 	 */
 	public void cleanUpPanel(StoryComponentPanel aPanel) {
-		StoryComponentObserverRemover.removeObservers(aPanel,
-				aPanel.getStoryComponent());
+		aPanel.getStoryComponent().removeStoryComponentObserverFromChildren(aPanel);
 		Collection<StoryComponentPanel> descendantPanels = aPanel
 				.getDescendantStoryComponentPanels();
 		this.selected.remove(aPanel);

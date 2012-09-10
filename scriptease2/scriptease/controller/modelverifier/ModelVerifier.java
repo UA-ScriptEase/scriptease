@@ -14,10 +14,8 @@ import scriptease.controller.modelverifier.problem.ModelProblem;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.modelverifier.rule.StoryRule;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.controller.observer.storycomponent.StoryComponentObserverAdder;
-import scriptease.controller.observer.storycomponent.StoryComponentObserverRemover;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
@@ -55,8 +53,7 @@ public class ModelVerifier implements StoryComponentObserver {
 				ModelVerifier.INITIAL_CAPACITY);
 		this.isSolving = false;
 		// observe changes to the model
-		StoryComponentObserverAdder adder = new StoryComponentObserverAdder();
-		adder.observeEverything(this, this.root); 
+		this.root.observeEverything(this); 
 	}
 
 	/**
@@ -94,10 +91,9 @@ public class ModelVerifier implements StoryComponentObserver {
 
 		// process addition, removal from the model
 		if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
-			StoryComponentObserverAdder adder = new StoryComponentObserverAdder();
-			adder.observeEverything(this, source);
+			source.observeEverything(this);
 		} else if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED)
-			StoryComponentObserverRemover.removeObservers(this, source);
+			source.removeStoryComponentObserverFromChildren(this);
 
 		// ignore changes to the model while solving problems,
 		// Undodoing/Redoing, or if there is no active translator
