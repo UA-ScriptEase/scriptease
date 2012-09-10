@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import scriptease.controller.observer.LibraryEvent;
-import scriptease.controller.observer.LibraryManagerEvent;
-import scriptease.controller.observer.LibraryManagerObserver;
-import scriptease.controller.observer.LibraryObserver;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
+import scriptease.controller.observer.library.LibraryEvent;
+import scriptease.controller.observer.library.LibraryManagerEvent;
+import scriptease.controller.observer.library.LibraryManagerObserver;
+import scriptease.controller.observer.library.LibraryObserver;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;

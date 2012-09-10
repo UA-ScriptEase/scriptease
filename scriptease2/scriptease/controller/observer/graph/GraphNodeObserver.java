@@ -1,4 +1,4 @@
-package scriptease.controller.observer;
+package scriptease.controller.observer.graph;
 
 
 /**

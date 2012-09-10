@@ -10,9 +10,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
-import scriptease.controller.observer.GraphNodeEvent;
-import scriptease.controller.observer.GraphNodeEvent.GraphNodeEventType;
-import scriptease.controller.observer.GraphNodeObserver;
+import scriptease.controller.observer.graph.GraphNodeEvent;
+import scriptease.controller.observer.graph.GraphNodeObserver;
+import scriptease.controller.observer.graph.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;

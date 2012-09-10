@@ -1,5 +1,6 @@
-package scriptease.controller.observer;
+package scriptease.controller.observer.library;
 
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.model.LibraryModel;
 
 /**

@@ -1,4 +1,4 @@
-package scriptease.gui.graph;
+package scriptease.controller.observer.graph;
 
 /**
  * Allows implementers to be notified of changes to Graph NOdes.
@@ -7,7 +7,7 @@ package scriptease.gui.graph;
  * 
  * @param <E>
  */
-public interface SEGraphModelObserver<E> {
+public interface SEGraphObserver<E> {
 
 	/**
 	 * Called when a child has been added to a node.

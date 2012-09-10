@@ -1,4 +1,4 @@
-package scriptease.controller.observer;
+package scriptease.controller.observer.library;
 
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
@@ -9,12 +9,12 @@ import scriptease.model.LibraryModel;
  * 
  * @author mfchurch
  */
-public interface LibraryManagerObserver {	
+public interface LibraryObserver {
 	/**
 	 * Notifies the receiver that the model pool has changed.
 	 * 
 	 * @param event
-	 *            The {@link LibraryModel} that was modified.
+	 *            The {@link LibraryModel} that was added.
 	 */
-	public void modelChanged(LibraryManagerEvent event);
+	public void modelChanged(LibraryModel changed, LibraryEvent event);
 }

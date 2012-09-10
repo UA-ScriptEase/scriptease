@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.StoryVisitor;
-import scriptease.controller.observer.StoryComponentEvent;
-import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;

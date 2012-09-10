@@ -30,9 +30,9 @@ import javax.swing.SwingUtilities;
 import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.ObservedJPanel;
-import scriptease.controller.observer.StoryComponentEvent;
-import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
-import scriptease.controller.observer.StoryComponentObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.transfer.BindingTransferHandlerExportOnly;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
@@ -111,9 +111,6 @@ public class ScriptWidgetFactory {
 		return jPanels;
 	}
 
-	// private static Map<String, TypeWidget> typeWidgets = new HashMap<String,
-	// TypeWidget>();
-
 	/**
 	 * Builds a button for displaying a particular game type. The created button
 	 * will be round and appear mildly convex.
@@ -124,14 +121,9 @@ public class ScriptWidgetFactory {
 	 * @return A button that displays a type.
 	 */
 	public static TypeWidget getTypeWidget(final String type) {
-		// if (typeWidgets.get(type) == null) {
 		final TypeWidget typeWidget = new TypeWidget(type);
 		typeWidget.setSize(typeWidget.getPreferredSize());
 		return typeWidget;
-		// typeWidgets.put(type, typeWidget);
-		// }
-
-		// return typeWidgets.get(type);
 	}
 
 	/**

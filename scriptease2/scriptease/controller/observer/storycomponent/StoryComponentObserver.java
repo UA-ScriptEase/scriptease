@@ -1,4 +1,5 @@
-package scriptease.controller.observer;
+package scriptease.controller.observer.storycomponent;
+
 
 
 /**

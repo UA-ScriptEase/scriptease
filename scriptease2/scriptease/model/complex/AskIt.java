@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import scriptease.controller.StoryVisitor;
-import scriptease.controller.observer.StoryComponentEvent;
-import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 

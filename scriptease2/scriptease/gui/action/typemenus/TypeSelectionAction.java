@@ -6,10 +6,10 @@ import javax.swing.AbstractAction;
 import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 
-import scriptease.controller.observer.LibraryEvent;
-import scriptease.controller.observer.LibraryManagerEvent;
-import scriptease.controller.observer.LibraryManagerObserver;
 import scriptease.controller.observer.TranslatorObserver;
+import scriptease.controller.observer.library.LibraryEvent;
+import scriptease.controller.observer.library.LibraryManagerEvent;
+import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.gui.dialog.TypeSelectionDialogBuilder;
 import scriptease.model.LibraryManager;
 import scriptease.translator.Translator;

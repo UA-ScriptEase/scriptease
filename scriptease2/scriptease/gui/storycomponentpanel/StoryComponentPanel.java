@@ -19,11 +19,11 @@ import javax.swing.event.MouseInputListener;
 
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.ContainerCollector;
-import scriptease.controller.observer.StoryComponentEvent;
-import scriptease.controller.observer.StoryComponentEvent.StoryComponentChangeEnum;
-import scriptease.controller.observer.StoryComponentObserver;
-import scriptease.controller.observer.StoryComponentObserverAdder;
-import scriptease.controller.observer.StoryComponentObserverRemover;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentObserverAdder;
+import scriptease.controller.observer.storycomponent.StoryComponentObserverRemover;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.gui.ComponentFocusManager;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.model.StoryComponent;

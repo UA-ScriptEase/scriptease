@@ -12,6 +12,7 @@ import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,6 +24,7 @@ import java.util.Map.Entry;
 import javax.swing.JComponent;
 import javax.swing.plaf.ComponentUI;
 
+import scriptease.controller.observer.graph.SEGraphObserver;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.graph.builders.SEGraphNodeBuilder;
@@ -41,25 +43,35 @@ import sun.awt.util.IdentityArrayList;
 public class SEGraph<E> extends JComponent {
 	private final SEGraphModel<E> model;
 
-	private SEGraphNodeRenderer<E> renderer;
-	private SEGraphNodeBuilder<E> builder;
+	/*
+	 * Note: If we ever have to set builders and renderers, just remove the
+	 * final modifier from these, build a new constructor that builds default
+	 * builders/renderers, and create setters. Note that the setters will have
+	 * to redraw the graph (which should be as simple as calling repaint and
+	 * revalidate).
+	 */
+	private final SEGraphNodeBuilder<E> builder;
+	private final SEGraphNodeRenderer<E> renderer;
 
 	private E selectedNode;
 
 	private Point mousePosition;
 
 	/**
-	 * Builds a new SEGraph.
+	 * Builds a new graph with the passed in start point, builder, and renderer.
 	 * 
 	 * @param start
+	 * @param builder
+	 * @param renderer
 	 */
-	public SEGraph(E start) {
-		this.model = new SEGraphModel<E>(start);
+	public SEGraph(E start, SEGraphNodeBuilder<E> builder,
+			SEGraphNodeRenderer<E> renderer) {
 
 		this.selectedNode = start;
-		this.renderer = new SEGraphNodeRenderer<E>(this);
-		this.builder = new SEGraphNodeBuilder<E>();
+		this.renderer = renderer;
+		this.builder = builder;
 		this.mousePosition = new Point();
+		this.model = new SEGraphModel<E>(start, builder);
 
 		this.setLayout(new SEGraphLayoutManager());
 
@@ -78,29 +90,6 @@ public class SEGraph<E> extends JComponent {
 				SEGraph.this.mousePosition.setLocation(e.getPoint());
 			}
 		});
-	}
-
-	/**
-	 * Set the node renderer.
-	 * 
-	 * @param renderer
-	 *            The node renderer.
-	 * @see SEGraphNodeRenderer
-	 */
-	public void setRenderer(SEGraphNodeRenderer<E> renderer) {
-		this.renderer = renderer;
-	}
-
-	/**
-	 * Sets the node builder. This must be set in order for new nodes to be
-	 * added.
-	 * 
-	 * @param builder
-	 *            The node builder.
-	 * @see SEGraphNodeBuilder
-	 */
-	public void setBuilder(SEGraphNodeBuilder<E> builder) {
-		this.builder = builder;
 	}
 
 	public void addNodeTo(E node, E existingNode) {
@@ -144,6 +133,37 @@ public class SEGraph<E> extends JComponent {
 		this.revalidate();
 
 		return result;
+	}
+
+	/**
+	 * Adds an observer to the Graph to observe changes to the children and
+	 * parents of nodes.
+	 * 
+	 * @param observer
+	 *            The observer to be added
+	 * @see SEGraphObserver
+	 */
+	public void addSEGraphObserver(SEGraphObserver<E> observer) {
+		this.model.addSEGraphObserver(observer);
+	}
+
+	/**
+	 * Removes an observer from the Graph.
+	 * 
+	 * @param observer
+	 *            The observer to be removed
+	 * @see SEGraphObserver
+	 */
+	public void removeSEGraphObserver(SEGraphObserver<E> observer) {
+		this.model.removeSEGraphObserver(observer);
+	}
+
+	/**
+	 * 
+	 * @param listener
+	 */
+	public void addNodeMouseListener(MouseListener listener) {
+		// TODO Add mouse listeners to nodes.
 	}
 
 	public void setSelectedNode(E node) {
@@ -219,7 +239,7 @@ public class SEGraph<E> extends JComponent {
 				int yNodeSize = NODE_Y_INDENT;
 				for (E node : currentNodes) {
 					JComponent component = SEGraph.this.renderer
-							.getComponentForNode(node);
+							.getComponentForNode(node, SEGraph.this);
 					yNodeSize += NODE_Y_INDENT
 							+ component.getPreferredSize().getHeight();
 				}
@@ -271,7 +291,7 @@ public class SEGraph<E> extends JComponent {
 
 					// Get the JComponent associated with the node.
 					final JComponent component = SEGraph.this.renderer
-							.getComponentForNode(node);
+							.getComponentForNode(node, SEGraph.this);
 
 					if (component.getMouseListeners().length <= 1)
 						component.addMouseListener(new NodeMouseAdapter(node));
@@ -369,7 +389,7 @@ public class SEGraph<E> extends JComponent {
 			for (E node : nodes) {
 				// Get the component for the node.
 				JComponent component = SEGraph.this.renderer
-						.getComponentForNode(node);
+						.getComponentForNode(node, SEGraph.this);
 
 				// Get the size of the JComponent.
 				Dimension componentSize = component.getPreferredSize();
@@ -391,7 +411,7 @@ public class SEGraph<E> extends JComponent {
 			g.setColor(SEGraph.this.getBackground());
 			g.fillRect(0, 0, SEGraph.this.getWidth(), SEGraph.this.getHeight());
 
-			final Graphics2D g2 = (Graphics2D) g.create();
+			// final Graphics2D g2 = (Graphics2D) g.create();
 			/*
 			 * if (SEGraph.this.previousSelectedNode != null &&
 			 * SEGraph.this.mousePosition != null) { g2.setColor(Color.gray);
@@ -443,9 +463,11 @@ public class SEGraph<E> extends JComponent {
 						// Draw an arrow pointing towards the child.
 						GUIOp.paintArrow(g2, GUIOp
 								.getMidRight(SEGraph.this.renderer
-										.getComponentForNode(parent)), GUIOp
+										.getComponentForNode(parent,
+												SEGraph.this)), GUIOp
 								.getMidLeft(SEGraph.this.renderer
-										.getComponentForNode(child)));
+										.getComponentForNode(child,
+												SEGraph.this)));
 					}
 				}
 			}
@@ -478,14 +500,12 @@ public class SEGraph<E> extends JComponent {
 			case INSERT_GRAPH_NODE:
 				E newNode = SEGraph.this.builder.buildNewNode();
 
-				if (newNode != null) {
-					if (SEGraph.this.lastEnteredNode != null)
-						if (SEGraph.this.lastEnteredNode == this.node)
-							SEGraph.this.addNodeTo(newNode, this.node);
-						else
-							SEGraph.this.addNodeBetween(newNode,
-									SEGraph.this.lastEnteredNode, this.node);
-				}
+				if (SEGraph.this.lastEnteredNode != null)
+					if (SEGraph.this.lastEnteredNode == this.node)
+						SEGraph.this.addNodeTo(newNode, this.node);
+					else
+						SEGraph.this.addNodeBetween(newNode,
+								SEGraph.this.lastEnteredNode, this.node);
 				break;
 			case DELETE_GRAPH_NODE:
 				SEGraph.this.removeNode(this.node);

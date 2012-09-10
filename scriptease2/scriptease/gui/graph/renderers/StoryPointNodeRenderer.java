@@ -5,7 +5,6 @@ import java.awt.FlowLayout;
 import javax.swing.JComponent;
 
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
-import scriptease.gui.graph.SEGraph;
 import scriptease.gui.quests.StoryPoint;
 
 /**
@@ -16,11 +15,6 @@ import scriptease.gui.quests.StoryPoint;
  * 
  */
 public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
-
-	public StoryPointNodeRenderer(SEGraph<StoryPoint> graph) {
-		super(graph);
-	}
-
 	@Override
 	protected void configureInternalComponents(JComponent component,
 			StoryPoint node) {

@@ -9,15 +9,10 @@ import javax.swing.JPanel;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.SETree.cell.TypeWidget;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
-import scriptease.gui.graph.SEGraph;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.model.atomic.KnowIt;
 
 public class KnowItNodeRenderer extends SEGraphNodeRenderer<KnowItNode> {
-	public KnowItNodeRenderer(SEGraph<KnowItNode> graph) {
-		super(graph);
-	}
-
 	@Override
 	protected void configureInternalComponents(JComponent component,
 			KnowItNode node) {

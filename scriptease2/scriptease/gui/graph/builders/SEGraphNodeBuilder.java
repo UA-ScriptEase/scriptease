@@ -1,21 +1,38 @@
 package scriptease.gui.graph.builders;
 
+import java.util.Collection;
+
 /**
- * Builds a new node for the SEGraph. This class must be subclassed, and the
- * {@link #buildNewNode()} method overidden for new nodes to properly be added
- * to the graph.
+ * Abstract class to implement a builder that can build new nodes and get
+ * children and parents of nodes.
  * 
  * @author kschenk
  * 
  * @param <E>
  */
-public class SEGraphNodeBuilder<E> {
-	
+public abstract class SEGraphNodeBuilder<E> {
+
 	/**
-	 * Builds a new node. By default, this returns null and must be overidden.
+	 * Builds a new node.
+	 * 
 	 * @return
 	 */
-	public E buildNewNode() {
-		return null;
-	}
+	public abstract E buildNewNode();
+
+	/**
+	 * Gets the node's children.
+	 * 
+	 * @param node
+	 * @return The node's children
+	 */
+	public abstract Collection<E> getChildren(E node);
+
+	/**
+	 * Gets the node's parents.
+	 * 
+	 * @param node
+	 * @return The node's parents
+	 */
+	public abstract Collection<E> getParents(E node);
+
 }
