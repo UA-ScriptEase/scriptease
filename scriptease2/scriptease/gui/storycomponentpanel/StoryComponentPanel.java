@@ -17,13 +17,11 @@ import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputListener;
 
-import scriptease.controller.StoryAdapter;
 import scriptease.controller.ContainerCollector;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.controller.observer.storycomponent.StoryComponentObserverAdder;
-import scriptease.controller.observer.storycomponent.StoryComponentObserverRemover;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.ComponentFocusManager;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.model.StoryComponent;
@@ -77,8 +75,7 @@ public class StoryComponentPanel extends JPanel implements
 		this.setActionMap(am);
 
 		// Observer the panel and its children
-		StoryComponentObserverAdder adder = new StoryComponentObserverAdder();
-		adder.observeRelated(this, this.component);
+		this.component.observeRelated(this);
 
 		// Layout
 		this.setLayout(this.layout);
@@ -229,14 +226,13 @@ public class StoryComponentPanel extends JPanel implements
 		final StoryComponent component = event.getSource();
 
 		if (type.equals(StoryComponentChangeEnum.CHANGE_CHILD_ADDED)) {
-			StoryComponentObserverAdder adder = new StoryComponentObserverAdder();
-			adder.observeRelated(this, component);
+			component.observeRelated(this);
 			if (component.getOwner() == this.component) {
 				StoryComponentPanelFactory.getInstance().addChild(this,
 						component);
 			}
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_CHILD_REMOVED)) {
-			StoryComponentObserverRemover.removeObservers(this, component);
+			component.removeStoryComponentObserverFromChildren(this);
 			if (component.getOwner() == null
 					|| component.getOwner() == this.component) {
 				StoryComponentPanelFactory.getInstance().removeChild(this,

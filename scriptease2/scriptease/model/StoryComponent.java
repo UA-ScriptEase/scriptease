@@ -6,12 +6,21 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryItemSequence;
 
 /**
  * Abstract Class that defines all pattern-related model components in
@@ -132,7 +141,8 @@ public abstract class StoryComponent implements Cloneable {
 	 *         StoryComponent
 	 */
 	public Set<Class<? extends StoryComponent>> getValidChildTypes() {
-		return new HashSet<Class<? extends StoryComponent>>(StoryComponent.noValidChildren);
+		return new HashSet<Class<? extends StoryComponent>>(
+				StoryComponent.noValidChildren);
 	}
 
 	/**
@@ -257,7 +267,9 @@ public abstract class StoryComponent implements Cloneable {
 				this.observers.remove(observerRef);
 		}
 
-		this.observers.add(new WeakStoryComponentObserverReference<StoryComponentObserver>(observer));
+		this.observers
+				.add(new WeakStoryComponentObserverReference<StoryComponentObserver>(
+						observer));
 	}
 
 	/**
@@ -349,7 +361,7 @@ public abstract class StoryComponent implements Cloneable {
 
 		return equal;
 	}
-	
+
 	/**
 	 * WeakReference wrapper used to track how many WeakReferences of each type
 	 * are generated. This class provides no functionality, but it does make it
@@ -359,10 +371,177 @@ public abstract class StoryComponent implements Cloneable {
 	 * 
 	 * @param <T>
 	 */
-	private class WeakStoryComponentObserverReference<T> extends WeakReference<T> {
+	private class WeakStoryComponentObserverReference<T> extends
+			WeakReference<T> {
 		public WeakStoryComponentObserverReference(T referent) {
 			super(referent);
 		}
+	}
+
+	/**
+	 * Removes the observer from the Story Component and all of its children.
+	 * 
+	 * @param observer
+	 */
+	public void removeStoryComponentObserverFromChildren(
+			final StoryComponentObserver observer) {
+		this.process(new StoryAdapter() {
+			@Override
+			protected void defaultProcessComplex(ComplexStoryComponent complex) {
+				complex.removeStoryComponentObserver(observer);
+				for (StoryComponent child : complex.getChildren()) {
+					child.process(this);
+				}
+			}
+
+			@Override
+			public void processStoryComponentContainer(
+					StoryComponentContainer storyComponentContainer) {
+				storyComponentContainer.removeStoryComponentObserver(observer);
+				this.defaultProcessComplex(storyComponentContainer);
+			}
+
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				scriptIt.removeStoryComponentObserver(observer);
+				scriptIt.processParameters(this);
+				scriptIt.processChildren(this);
+				scriptIt.processSubjects(this);
+			}
+
+			@Override
+			public void processKnowIt(KnowIt knowIt) {
+				knowIt.removeStoryComponentObserver(observer);
+			}
+
+			@Override
+			public void processAskIt(AskIt askIt) {
+				askIt.removeStoryComponentObserver(observer);
+				askIt.getCondition().process(this);
+				this.defaultProcessComplex(askIt);
+			}
+
+			@Override
+			public void processStoryItemSequence(StoryItemSequence sequence) {
+				sequence.removeStoryComponentObserver(observer);
+				this.defaultProcessComplex(sequence);
+			}
+		});
+	}
+
+	/**
+	 * Adds the observer to the Story Component, it's immediate components, and
+	 * it's children.
+	 * 
+	 * @param observer
+	 */
+	public void observeEverything(final StoryComponentObserver observer) {
+		final StoryAdapter adapter;
+
+		adapter = new StoryAdapter() {
+			@Override
+			protected void defaultProcessComplex(ComplexStoryComponent complex) {
+				complex.addStoryComponentObserver(observer);
+				for (StoryComponent child : complex.getChildren()) {
+					child.process(this);
+				}
+			}
+
+			@Override
+			public void processStoryComponentContainer(
+					StoryComponentContainer storyComponentContainer) {
+				storyComponentContainer.addStoryComponentObserver(observer);
+				this.defaultProcessComplex(storyComponentContainer);
+			}
+
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				scriptIt.addStoryComponentObserver(observer);
+				scriptIt.processSubjects(this);
+				scriptIt.processParameters(this);
+				this.defaultProcessComplex(scriptIt);
+			}
+
+			@Override
+			public void processKnowIt(KnowIt knowIt) {
+				knowIt.addStoryComponentObserver(observer);
+				KnowItBinding binding = knowIt.getBinding();
+				final StoryAdapter outerAnonInnerClass = this;
+				binding.process(new BindingAdapter() {
+					@Override
+					public void processReference(
+							KnowItBindingReference reference) {
+						KnowIt referenced = reference.getValue();
+						referenced.process(outerAnonInnerClass);
+					}
+
+					@Override
+					public void processFunction(KnowItBindingFunction function) {
+						ScriptIt referenced = function.getValue();
+						referenced.process(outerAnonInnerClass);
+					}
+				});
+			}
+
+			@Override
+			public void processAskIt(AskIt askIt) {
+				askIt.addStoryComponentObserver(observer);
+				askIt.getCondition().process(this);
+				this.defaultProcessComplex(askIt);
+			}
+
+			@Override
+			public void processStoryItemSequence(StoryItemSequence sequence) {
+				sequence.addStoryComponentObserver(observer);
+				this.defaultProcessComplex(sequence);
+			}
+		};
+		this.process(adapter);
+	}
+
+	/**
+	 * Adds the observer to the Story Component and it's immediate parameters
+	 * and children.
+	 * 
+	 * @param observer
+	 */
+	public void observeRelated(final StoryComponentObserver observer) {
+		this.process(new StoryAdapter() {
+			@Override
+			public void processStoryComponentContainer(
+					StoryComponentContainer storyComponentContainer) {
+				storyComponentContainer.addStoryComponentObserver(observer);
+			}
+
+			@Override
+			protected void defaultProcessComplex(ComplexStoryComponent complex) {
+				complex.addStoryComponentObserver(observer);
+			}
+
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				scriptIt.addStoryComponentObserver(observer);
+				scriptIt.processParameters(this);
+				scriptIt.processSubjects(this);
+				scriptIt.processChildren(this);
+			}
+
+			@Override
+			public void processKnowIt(KnowIt knowIt) {
+				knowIt.addStoryComponentObserver(observer);
+			}
+
+			@Override
+			public void processAskIt(AskIt askIt) {
+				askIt.addStoryComponentObserver(observer);
+				askIt.getCondition().process(this);
+			}
+
+			@Override
+			public void processStoryItemSequence(StoryItemSequence sequence) {
+				sequence.addStoryComponentObserver(observer);
+			}
+		});
 	}
 
 	/************** Abstract Methods ******************/
