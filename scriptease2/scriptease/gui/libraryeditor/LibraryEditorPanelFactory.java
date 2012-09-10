@@ -46,8 +46,8 @@ import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.libraryeditor.codeeditor.DeleteFragmentAction;
@@ -68,7 +68,6 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
@@ -324,12 +323,6 @@ public class LibraryEditorPanelFactory {
 			@Override
 			public void processAskIt(AskIt questionIt) {
 				this.defaultProcess(questionIt);
-			}
-
-			@Override
-			public void processStoryComponentContainer(
-					StoryComponentContainer container) {
-				this.defaultProcess(container);
 			}
 
 			@Override
