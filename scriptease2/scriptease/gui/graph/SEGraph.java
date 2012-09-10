@@ -92,6 +92,16 @@ public class SEGraph<E> extends JComponent {
 		});
 	}
 
+	/**
+	 * Adds a node onto an existing node.
+	 * 
+	 * @param node
+	 *            The node to add
+	 * @param existingNode
+	 *            The existing node
+	 * @return true if the addition was successful
+	 * @see SEGraphModel#addNodeTo(Object, Object)
+	 */
 	public void addNodeTo(E node, E existingNode) {
 		this.model.addNodeTo(node, existingNode);
 
@@ -99,6 +109,19 @@ public class SEGraph<E> extends JComponent {
 		this.revalidate();
 	}
 
+	/**
+	 * Adds a node between two existing nodes. Order of the two nodes does not
+	 * matter; this method figures out which node is above the other.
+	 * 
+	 * @param node
+	 *            The new node.
+	 * @param existingNode1
+	 *            The first selected existing node.
+	 * @param existingNode2
+	 *            The second selected existing node.
+	 * @return true if the addition was successful
+	 * @see SEGraphModel#addNodeBetween(Object, Object, Object)
+	 */
 	public void addNodeBetween(E node, E existingNode1, E existingNode2) {
 		this.model.addNodeBetween(node, existingNode1, existingNode2);
 
@@ -106,6 +129,13 @@ public class SEGraph<E> extends JComponent {
 		this.revalidate();
 	}
 
+	/**
+	 * Removes the node from the graph.
+	 * 
+	 * @param node
+	 *            The node to be removed.
+	 * @see SEGraphModel#removeNode(Object)
+	 */
 	public void removeNode(E node) {
 		this.model.removeNode(node);
 
@@ -113,6 +143,15 @@ public class SEGraph<E> extends JComponent {
 		this.revalidate();
 	}
 
+	/**
+	 * Connects two nodes together. This method checks which node is further
+	 * from the other and adds the appropriate node as a parent or a child.
+	 * 
+	 * @param node1
+	 * @param node2
+	 * @return True if the nodes were successfully connected.
+	 * @see SEGraphModel#connectNodes(Object, Object)
+	 */
 	public boolean connectNodes(E node1, E node2) {
 		final boolean result;
 
@@ -124,6 +163,15 @@ public class SEGraph<E> extends JComponent {
 		return result;
 	}
 
+	/**
+	 * Disconnects two nodes. If the node had no other connections, this will
+	 * result in a deletion.
+	 * 
+	 * @param node1
+	 * @param node2
+	 * @return True if the nodes were successfully disconnected.
+	 * @see SEGraphModel#disconnectNodes(Object, Object)
+	 */
 	public boolean disconnectNodes(E node1, E node2) {
 		final boolean result;
 
@@ -166,18 +214,38 @@ public class SEGraph<E> extends JComponent {
 		// TODO Add mouse listeners to nodes.
 	}
 
+	/**
+	 * Sets the current selected node.
+	 * 
+	 * @param node
+	 */
 	public void setSelectedNode(E node) {
 		this.selectedNode = node;
 	}
 
+	/**
+	 * Returns the current selected node.
+	 * 
+	 * @return
+	 */
 	public E getSelectedNode() {
 		return this.selectedNode;
 	}
 
+	/**
+	 * Returns all nodes in the graph after and including the start node.
+	 * 
+	 * @return
+	 */
 	public Collection<E> getNodes() {
 		return this.model.getNodes();
 	}
 
+	/**
+	 * Returns the start node.
+	 * 
+	 * @return
+	 */
 	public E getStartNode() {
 		return this.model.getStartNode();
 	}
@@ -197,14 +265,14 @@ public class SEGraph<E> extends JComponent {
 			SEGraph.this.removeAll();
 		}
 
-		// No extra registration of components is needed.
 		@Override
 		public void addLayoutComponent(String name, Component comp) {
+			// No extra registration of components is needed.
 		}
 
-		// No extra de-registration of components is needed.
 		@Override
 		public void removeLayoutComponent(Component comp) {
+			// No extra de-registration of components is needed.
 		}
 
 		@Override
@@ -214,7 +282,7 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public Dimension minimumLayoutSize(Container parent) {
-			// TODO THIS SEEMS WRONG. It's duplicate!
+			// TODO THIS SEEMS WRONG? It's duplicate!
 			final Insets insets = parent.getInsets();
 			int xSize = insets.left + insets.right;
 			int ySize = insets.top + insets.bottom; // Get the nodes level map

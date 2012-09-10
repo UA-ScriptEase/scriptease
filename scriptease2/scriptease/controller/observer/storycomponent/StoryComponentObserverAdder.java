@@ -55,9 +55,10 @@ public class StoryComponentObserverAdder {
 			this.observer = observer;
 		}
 
-		private void processComplexStoryComponent(
-				ComplexStoryComponent component) {
-			for (StoryComponent child : component.getChildren()) {
+		@Override
+		protected void defaultProcessComplex(ComplexStoryComponent complex) {
+			complex.addStoryComponentObserver(this.observer);
+			for (StoryComponent child : complex.getChildren()) {
 				child.process(this);
 			}
 		}
@@ -66,7 +67,7 @@ public class StoryComponentObserverAdder {
 		public void processStoryComponentContainer(
 				StoryComponentContainer storyComponentContainer) {
 			storyComponentContainer.addStoryComponentObserver(this.observer);
-			this.processComplexStoryComponent(storyComponentContainer);
+			this.defaultProcessComplex(storyComponentContainer);
 		}
 
 		@Override
@@ -74,7 +75,7 @@ public class StoryComponentObserverAdder {
 			scriptIt.addStoryComponentObserver(this.observer);
 			scriptIt.processSubjects(this);
 			scriptIt.processParameters(this);
-			this.processComplexStoryComponent(scriptIt);
+			this.defaultProcessComplex(scriptIt);
 		}
 
 		@Override
@@ -100,13 +101,13 @@ public class StoryComponentObserverAdder {
 		public void processAskIt(AskIt askIt) {
 			askIt.addStoryComponentObserver(this.observer);
 			askIt.getCondition().process(this);
-			this.processComplexStoryComponent(askIt);
+			this.defaultProcessComplex(askIt);
 		}
 
 		@Override
 		public void processStoryItemSequence(StoryItemSequence sequence) {
 			sequence.addStoryComponentObserver(this.observer);
-			this.processComplexStoryComponent(sequence);
+			this.defaultProcessComplex(sequence);
 		}
 	}
 
@@ -121,6 +122,11 @@ public class StoryComponentObserverAdder {
 		public void processStoryComponentContainer(
 				StoryComponentContainer storyComponentContainer) {
 			storyComponentContainer.addStoryComponentObserver(this.observer);
+		}
+		
+		@Override
+		protected void defaultProcessComplex(ComplexStoryComponent complex) {
+			complex.addStoryComponentObserver(this.observer);
 		}
 
 		@Override

@@ -30,8 +30,10 @@ public class StoryComponentObserverRemover extends StoryAdapter {
 		this.observer = observer;
 	}
 
-	private void processComplexStoryComponent(ComplexStoryComponent component) {
-		for (StoryComponent child : component.getChildren()) {
+	@Override
+	protected void defaultProcessComplex(ComplexStoryComponent complex) {
+		complex.removeStoryComponentObserver(this.observer);
+		for (StoryComponent child : complex.getChildren()) {
 			child.process(this);
 		}
 	}
@@ -40,7 +42,7 @@ public class StoryComponentObserverRemover extends StoryAdapter {
 	public void processStoryComponentContainer(
 			StoryComponentContainer storyComponentContainer) {
 		storyComponentContainer.removeStoryComponentObserver(this.observer);
-		this.processComplexStoryComponent(storyComponentContainer);
+		this.defaultProcessComplex(storyComponentContainer);
 	}
 
 	@Override
@@ -60,12 +62,12 @@ public class StoryComponentObserverRemover extends StoryAdapter {
 	public void processAskIt(AskIt askIt) {
 		askIt.removeStoryComponentObserver(this.observer);
 		askIt.getCondition().process(this);
-		this.processComplexStoryComponent(askIt);
+		this.defaultProcessComplex(askIt);
 	}
 
 	@Override
 	public void processStoryItemSequence(StoryItemSequence sequence) {
 		sequence.removeStoryComponentObserver(this.observer);
-		this.processComplexStoryComponent(sequence);
+		this.defaultProcessComplex(sequence);
 	}
 }
