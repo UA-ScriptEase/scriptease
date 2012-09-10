@@ -132,7 +132,7 @@ public class PanelFactory {
 		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
 		storyGraph = new SEGraph<StoryPoint>(start,
 				new StoryPointBuilder(start), new StoryPointNodeRenderer());
-		storyGraphObserver = new StoryPointGraphObserver(start);
+		storyGraphObserver = new StoryPointGraphObserver();
 		storyComponentTree = new StoryComponentPanelTree(start);
 
 		// Put the new pane to the map
