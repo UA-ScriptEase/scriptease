@@ -27,11 +27,12 @@ public class SEGraphModel<E> {
 	private final SEGraphNodeBuilder<E> builder;
 	private final List<WeakReference<SEGraphObserver<E>>> observers;
 
-	private static enum GraphEvent {
+	protected static enum GraphEvent {
 		CHILD_ADDED,
 		CHILD_REMOVED,
 		PARENT_ADDED,
-		PARENT_REMOVED
+		PARENT_REMOVED,
+		NODE_SELECTED
 	}
 
 	/**
@@ -386,6 +387,29 @@ public class SEGraphModel<E> {
 				this.observers.remove(reference);
 				return;
 			}
+		}
+	}
+
+	/**
+	 * Notifies the observers about a change to one of the nodes.
+	 * 
+	 * @param event
+	 * @param node
+	 */
+	protected void notifyObservers(GraphEvent event, E node) {
+		Collection<WeakReference<SEGraphObserver<E>>> observersCopy = new ArrayList<WeakReference<SEGraphObserver<E>>>(
+				this.observers);
+
+		for (WeakReference<SEGraphObserver<E>> observerRef : observersCopy) {
+			SEGraphObserver<E> graphNodeObserver = observerRef.get();
+			if (graphNodeObserver != null)
+				switch (event) {
+				case NODE_SELECTED:
+					graphNodeObserver.nodeSelected(node);
+					break;
+				}
+			else
+				this.observers.remove(observerRef);
 		}
 	}
 

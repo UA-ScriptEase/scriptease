@@ -68,18 +68,16 @@ public class PanelFactory {
 		graphPanel.setHeadNode(editedDescribeIt.getHeadNode());
 
 		ToolBarButtonAction.addJComponent(graphPanel);
-		/*
-		 * final JToolBar graphToolBar = ToolBarFactory.getInstance()
-		 * .buildGraphEditorToolBar(graphPanel);
-		 */
-		/*
-		 * final JToolBar describeItToolBar = ToolBarFactory.getInstance()
-		 * .buildDescribeItToolBar(editedDescribeIt, graphPanel);
-		 */
-		/*
-		 * describeItPanel.add(graphToolBar.add(describeItToolBar),
-		 * BorderLayout.PAGE_START);
-		 */
+
+		final JToolBar graphToolBar = ToolBarFactory.getInstance()
+				.buildGraphEditorToolBar();
+
+		final JToolBar describeItToolBar = ToolBarFactory.getInstance()
+				.buildDescribeItToolBar(editedDescribeIt, graphPanel);
+
+		describeItPanel.add(graphToolBar.add(describeItToolBar),
+				BorderLayout.PAGE_START);
+		
 		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
 
 		describeItPanel.add(new JScrollPane(graphPanel), BorderLayout.CENTER);

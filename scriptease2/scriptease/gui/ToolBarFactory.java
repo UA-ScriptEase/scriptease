@@ -226,10 +226,6 @@ public class ToolBarFactory {
 		nameLabel.setLabelFor(nameField);
 		questEditorToolBar.add(nameField);
 
-		GraphNodeObserver questBarObserver = new QuestToolBarObserver(
-				nameField, fanInSpinner, nameLabel, fanInLabel);
-
-
 		return questEditorToolBar;
 	}
 
@@ -478,15 +474,6 @@ public class ToolBarFactory {
 			fanInSpinner.addChangeListener(this.fanInSpinnerListener(
 					fanInSpinner, questNode));
 
-			// if (!questNode.isStartNode()) {
-			if (true) {
-				fanInLabel.setEnabled(true);
-				fanInSpinner.setEnabled(true);
-			} else {
-				fanInLabel.setEnabled(false);
-				fanInSpinner.setEnabled(false);
-			}
-
 		} else {
 			final SpinnerModel fanInSpinnerModel = new SpinnerNumberModel(
 					new Integer(1), new Integer(1), new Integer(1),
@@ -505,29 +492,6 @@ public class ToolBarFactory {
 	 * @author kschenk
 	 */
 	private class QuestToolBarObserver implements GraphNodeObserver {
-		final private JTextField nameField;
-		final private JSpinner fanInSpinner;
-		final private JLabel nameLabel;
-		final private JLabel fanInLabel;
-
-		/**
-		 * Creates the observer for the quest toolbar. It requires the name
-		 * textfield, a fan in spinner, and a quest editor.
-		 * 
-		 * @param nameField
-		 *            The text field that edits the quest point's name.
-		 * @param fanInSpinner
-		 *            The spinner to edit the fan-in value.
-		 * @param editor
-		 */
-		public QuestToolBarObserver(JTextField nameField,
-				JSpinner fanInSpinner, JLabel nameLabel, JLabel fanInLabel) {
-			this.nameField = nameField;
-			this.fanInSpinner = fanInSpinner;
-			this.nameLabel = nameLabel;
-			this.fanInLabel = fanInLabel;
-		}
-
 		@Override
 		public void nodeChanged(GraphNodeEvent event) {
 			final GraphNodeEventType type = event.getEventType();
@@ -544,29 +508,6 @@ public class ToolBarFactory {
 
 					if (fanIn > 1)
 						questPoint.setFanIn(fanIn - 1);
-
-				case SELECT_GRAPH_NODE:
-
-					final PatternModel model = PatternModelManager
-							.getInstance().getActiveModel();
-
-					if (model != null && model instanceof StoryModel) {
-
-						List<JComponent> components = PanelFactory
-								.getInstance().getComponentsForModel(model);
-
-						for (JComponent component : components)
-							// XXX This is important.
-							PanelFactory.getInstance()
-									.setRootForTreeInComponent(component,
-											questPoint);
-					}
-					ToolBarFactory.this.updateQuestToolBar(
-							QuestToolBarObserver.this.nameField,
-							QuestToolBarObserver.this.fanInSpinner,
-							QuestToolBarObserver.this.nameLabel,
-							QuestToolBarObserver.this.fanInLabel, questPoint);
-					break;
 				}
 			}
 		}
