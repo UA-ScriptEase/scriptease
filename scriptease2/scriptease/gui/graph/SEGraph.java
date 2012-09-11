@@ -17,11 +17,13 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.plaf.ComponentUI;
 
 import scriptease.controller.observer.graph.SEGraphObserver;
@@ -43,6 +45,7 @@ import sun.awt.util.IdentityArrayList;
 @SuppressWarnings("serial")
 public class SEGraph<E> extends JComponent {
 	private final SEGraphModel<E> model;
+	private final SEGraphObserver<E> modelObserver;
 
 	/*
 	 * Note: If we ever have to set builders and renderers, just remove the
@@ -52,8 +55,9 @@ public class SEGraph<E> extends JComponent {
 	 * revalidate).
 	 */
 	private final SEGraphNodeBuilder<E> builder;
-	private final SEGraphNodeRenderer<E> renderer;
+	private final Map<E, JComponent> nodesToComponents;
 
+	private SEGraphNodeRenderer<E> renderer;
 	private E selectedNode;
 
 	private Point mousePosition;
@@ -68,14 +72,15 @@ public class SEGraph<E> extends JComponent {
 	 * @param renderer
 	 *            The renderer for the graph.
 	 */
-	public SEGraph(E start, SEGraphNodeBuilder<E> builder,
-			SEGraphNodeRenderer<E> renderer) {
-
+	public SEGraph(E start, SEGraphNodeBuilder<E> builder) {
 		this.selectedNode = start;
-		this.renderer = renderer;
 		this.builder = builder;
 		this.mousePosition = new Point();
 		this.model = new SEGraphModel<E>(start, builder);
+		this.nodesToComponents = new HashMap<E, JComponent>();
+		this.modelObserver = new ModelCleaner();
+
+		this.model.addSEGraphObserver(this.modelObserver);
 
 		this.setLayout(new SEGraphLayoutManager());
 
@@ -94,6 +99,10 @@ public class SEGraph<E> extends JComponent {
 				SEGraph.this.mousePosition.setLocation(e.getPoint());
 			}
 		});
+	}
+
+	public void setNodeRenderer(SEGraphNodeRenderer<E> renderer) {
+		this.renderer = renderer;
 	}
 
 	/**
@@ -143,6 +152,7 @@ public class SEGraph<E> extends JComponent {
 	public void removeNode(E node) {
 		this.model.removeNode(node);
 
+		this.cleanup(node);
 		this.repaint();
 		this.revalidate();
 	}
@@ -181,6 +191,9 @@ public class SEGraph<E> extends JComponent {
 
 		result = this.model.disconnectNodes(node1, node2);
 
+		this.cleanup(node1);
+		this.cleanup(node2);
+
 		this.repaint();
 		this.revalidate();
 
@@ -217,7 +230,6 @@ public class SEGraph<E> extends JComponent {
 	 */
 	public void setSelectedNode(E node) {
 		this.selectedNode = node;
-		this.renderer.setSelectedNode(node);
 		this.model.notifyObservers(GraphEvent.NODE_SELECTED, node);
 	}
 
@@ -228,6 +240,15 @@ public class SEGraph<E> extends JComponent {
 	 */
 	public E getSelectedNode() {
 		return this.selectedNode;
+	}
+
+	/**
+	 * Returns the current selected component.
+	 * 
+	 * @return
+	 */
+	public JComponent getSelectedComponent() {
+		return this.nodesToComponents.get(this.selectedNode);
 	}
 
 	/**
@@ -246,6 +267,64 @@ public class SEGraph<E> extends JComponent {
 	 */
 	public E getStartNode() {
 		return this.model.getStartNode();
+	}
+
+	/**
+	 * Destroys the node completely from memory. This should be called when we
+	 * disconnect a node, as that alone will not delete its children from
+	 * memory.
+	 * 
+	 * @param node
+	 */
+	private void cleanup(E node) {
+
+		for (E child : this.builder.getChildren(node)) {
+			if (this.builder.getParents(child).isEmpty()) {
+				final JComponent component;
+				component = this.nodesToComponents.get(child);
+				if (component != null)
+					this.remove(component);
+				this.nodesToComponents.remove(child);
+			}
+		}
+
+		if (this.builder.getParents(node).isEmpty()) {
+			final JComponent component;
+			component = this.nodesToComponents.get(node);
+			if (component != null)
+				this.remove(component);
+			this.nodesToComponents.remove(node);
+		}
+	}
+
+	/**
+	 * Returns all node components in the graph.
+	 * 
+	 * @return
+	 */
+	public Collection<JComponent> getNodeComponents() {
+		return this.nodesToComponents.values();
+	}
+
+	/**
+	 * Gets a component for the passed in node.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	private JComponent getComponentForNode(E node) {
+		final JComponent component;
+
+		final JComponent storedComponent = this.nodesToComponents.get(node);
+
+		if (storedComponent != null) {
+			component = storedComponent;
+		} else if (this.renderer != null) {
+			component = this.renderer.getComponentForNode(node);
+		} else {
+			component = new JLabel(node.toString());
+		}
+		return component;
 	}
 
 	/**
@@ -280,7 +359,6 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public Dimension minimumLayoutSize(Container parent) {
-			// TODO THIS SEEMS WRONG? It's duplicate!
 			final Insets insets = parent.getInsets();
 			int xSize = insets.left + insets.right;
 			int ySize = insets.top + insets.bottom; // Get the nodes level map
@@ -304,7 +382,7 @@ public class SEGraph<E> extends JComponent {
 
 				int yNodeSize = NODE_Y_INDENT;
 				for (E node : currentNodes) {
-					JComponent component = SEGraph.this.renderer
+					JComponent component = SEGraph.this
 							.getComponentForNode(node);
 					yNodeSize += NODE_Y_INDENT
 							+ component.getPreferredSize().getHeight();
@@ -356,7 +434,7 @@ public class SEGraph<E> extends JComponent {
 					final E node = currentNodes.get(currentNode);
 
 					// Get the JComponent associated with the node.
-					final JComponent component = SEGraph.this.renderer
+					final JComponent component = SEGraph.this
 							.getComponentForNode(node);
 
 					if (component.getMouseListeners().length <= 1) {
@@ -375,6 +453,7 @@ public class SEGraph<E> extends JComponent {
 
 					// Add the component to the panel, so it will draw
 					SEGraph.this.add(component);
+					SEGraph.this.nodesToComponents.put(node, component);
 
 					// Center smaller nodes according to the biggest
 					int xOffset = 0;
@@ -455,8 +534,7 @@ public class SEGraph<E> extends JComponent {
 
 			for (E node : nodes) {
 				// Get the component for the node.
-				JComponent component = SEGraph.this.renderer
-						.getComponentForNode(node);
+				JComponent component = SEGraph.this.getComponentForNode(node);
 
 				// Get the size of the JComponent.
 				Dimension componentSize = component.getPreferredSize();
@@ -533,10 +611,9 @@ public class SEGraph<E> extends JComponent {
 						g2.setColor(lineColour);
 
 						// Draw an arrow pointing towards the child.
-						GUIOp.paintArrow(g2, GUIOp
-								.getMidRight(SEGraph.this.renderer
-										.getComponentForNode(parent)), GUIOp
-								.getMidLeft(SEGraph.this.renderer
+						GUIOp.paintArrow(g2, GUIOp.getMidRight(SEGraph.this
+								.getComponentForNode(parent)), GUIOp
+								.getMidLeft(SEGraph.this
 										.getComponentForNode(child)));
 					}
 				}
@@ -604,7 +681,7 @@ public class SEGraph<E> extends JComponent {
 				break;
 			case DELETE_GRAPH_NODE:
 				SEGraph.this.removeNode(this.node);
-				SEGraph.this.validateSelectedNode();
+				this.validateSelectedNode();
 				break;
 			case CONNECT_GRAPH_NODE:
 				if (SEGraph.this.lastEnteredNode != null
@@ -617,20 +694,53 @@ public class SEGraph<E> extends JComponent {
 						&& SEGraph.this.lastEnteredNode != this.node) {
 					SEGraph.this.disconnectNodes(SEGraph.this.lastEnteredNode,
 							this.node);
-					SEGraph.this.validateSelectedNode();
+					this.validateSelectedNode();
 				}
 				break;
 			}
 		}
+
+		private void validateSelectedNode() {
+			if (SEGraph.this.model.getStartNode() == SEGraph.this
+					.getSelectedNode())
+				return;
+
+			if (SEGraph.this.model.getParents(SEGraph.this.getSelectedNode())
+					.size() == 0)
+				SEGraph.this.setSelectedNode(null);
+		}
 	}
 
-	private void validateSelectedNode() {
-		if (this.model.getStartNode() == this.getSelectedNode())
-			return;
+	/**
+	 * Cleans up the model when children and parents are removed.
+	 * 
+	 * @author kschenk
+	 * 
+	 */
+	private class ModelCleaner implements SEGraphObserver<E> {
 
-		if (this.model.getParents(this.getSelectedNode()).size() == 0)
-			this.setSelectedNode(null);
-		else
-			this.renderer.setSelectedNode(this.getSelectedNode());
+		@Override
+		public void nodeSelected(E node) {
+		}
+
+		@Override
+		public void childAdded(E child, E parent) {
+		}
+
+		@Override
+		public void childRemoved(E child, E parent) {
+			SEGraph.this.cleanup(parent);
+			SEGraph.this.cleanup(child);
+		}
+
+		@Override
+		public void parentAdded(E child, E parent) {
+		}
+
+		@Override
+		public void parentRemoved(E child, E parent) {
+			SEGraph.this.cleanup(parent);
+			SEGraph.this.cleanup(child);
+		}
 	}
 }
