@@ -14,11 +14,11 @@ import scriptease.model.atomic.KnowIt;
 
 public class KnowItNodeRenderer extends SEGraphNodeRenderer<KnowItNode> {
 	@Override
-	protected void configureInternalComponents(JComponent component,
-			KnowItNode node) {
+	protected void configureInternalComponents(JComponent component) {
 		component.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 0));
 
-		KnowIt knowIt = node.getKnowIt();
+		final KnowIt knowIt = this.getNodeForComponent(component).getKnowIt();
+		
 		if (knowIt != null) {
 			JPanel typePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0,
 					0));

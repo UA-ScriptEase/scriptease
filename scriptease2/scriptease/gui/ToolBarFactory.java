@@ -4,7 +4,6 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.Box;
@@ -14,21 +13,17 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.PlainDocument;
 
 import scriptease.controller.GraphNodeAdapter;
 import scriptease.controller.observer.graph.GraphNodeEvent;
-import scriptease.controller.observer.graph.GraphNodeObserver;
 import scriptease.controller.observer.graph.GraphNodeEvent.GraphNodeEventType;
+import scriptease.controller.observer.graph.GraphNodeObserver;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.story.graphs.ConnectGraphPointAction;
 import scriptease.gui.action.story.graphs.DeleteGraphNodeAction;
@@ -36,18 +31,13 @@ import scriptease.gui.action.story.graphs.DisconnectGraphPointAction;
 import scriptease.gui.action.story.graphs.InsertGraphNodeAction;
 import scriptease.gui.action.story.graphs.SelectGraphNodeAction;
 import scriptease.gui.graph.GraphPanel;
-import scriptease.gui.graph.SEGraph;
 import scriptease.gui.graph.editor.KnowItNodeEditor;
 import scriptease.gui.graph.editor.PathAssigner;
 import scriptease.gui.graph.editor.TextNodeEditor;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.gui.graph.nodes.TextNode;
-import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.quests.StoryPoint;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
-import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
 
@@ -167,66 +157,10 @@ public class ToolBarFactory {
 			}
 		};
 
-		SEFrame.getInstance().getStoryTabPane()
+		SEFrame.getInstance().getModelTabPane()
 				.addChangeListener(graphEditorListener);
 
-		/*
-		 * GraphNodeObserver graphBarObserver = new
-		 * GraphToolBarObserver(gPanel);
-		 * 
-		 * GraphNode.observeDepthMap(graphBarObserver, gPanel.getHeadNode());
-		 * 
-		 * this.observerMap.put(graphEditorToolBar, graphBarObserver);
-		 */
-
 		return graphEditorToolBar;
-	}
-
-	/**
-	 * Creates a JToolBar for the quest editor. It adds all of the graph editor
-	 * buttons from the GraphEditorToolbar, and then adds Quest specific options
-	 * for the user after a separator.
-	 * 
-	 * @return
-	 */
-	public JToolBar buildQuestEditorToolBar(SEGraph<StoryPoint> gPanel) {
-
-		final JToolBar questEditorToolBar = this.buildGraphEditorToolBar();
-
-		final int TOOL_BAR_HEIGHT = 32;
-		final int FAN_IN_SPINNER_LENGTH = 50;
-		final int NAME_FIELD_LENGTH = 150;
-
-		final JLabel nameLabel = new JLabel(Il8nResources.getString("Name")
-				+ ":");
-		final JLabel fanInLabel = new JLabel("Fan In:");
-
-		final JTextField nameField = this.buildNameField(new Dimension(
-				NAME_FIELD_LENGTH, TOOL_BAR_HEIGHT));
-
-		final JSpinner fanInSpinner = this.buildFanInSpinner(new Dimension(
-				FAN_IN_SPINNER_LENGTH, TOOL_BAR_HEIGHT), fanInLabel);
-
-		this.updateQuestToolBar(nameField, fanInSpinner, nameLabel, fanInLabel,
-				gPanel.getStartNode());
-
-		final Dimension minSize = new Dimension(15, TOOL_BAR_HEIGHT);
-		final Dimension prefSize = new Dimension(15, TOOL_BAR_HEIGHT);
-		final Dimension maxSize = new Dimension(15, TOOL_BAR_HEIGHT);
-
-		questEditorToolBar.add(new Box.Filler(minSize, prefSize, maxSize));
-		questEditorToolBar.addSeparator();
-		questEditorToolBar.add(new Box.Filler(minSize, prefSize, maxSize));
-
-		questEditorToolBar.add(fanInLabel);
-		fanInLabel.setLabelFor(fanInSpinner);
-		questEditorToolBar.add(fanInSpinner);
-
-		questEditorToolBar.add(nameLabel);
-		nameLabel.setLabelFor(nameField);
-		questEditorToolBar.add(nameField);
-
-		return questEditorToolBar;
 	}
 
 	/**
@@ -284,152 +218,6 @@ public class ToolBarFactory {
 	}
 
 	/**
-	 * Updates the entire quest tool bar, including the name field, the fan in
-	 * spinner, and both of the labels.
-	 * 
-	 * @param nameField
-	 *            The field for editing the quest point name.
-	 * @param fanInSpinner
-	 *            The spinner for editing the fan in value.
-	 * @param nameLabel
-	 *            The JLabel associated with the nameField
-	 * @param fanInLabel
-	 *            The JLabel associated with the fanInSpinner
-	 * @param questNode
-	 *            The quest node to edit.
-	 */
-	private void updateQuestToolBar(JTextField nameField,
-			JSpinner fanInSpinner, JLabel nameLabel, JLabel fanInLabel,
-			StoryPoint questNode) {
-
-		this.updateFanInSpinner(fanInSpinner, fanInLabel, questNode);
-		this.updateNameField(nameField, nameLabel, questNode);
-
-	}
-
-	/**
-	 * Returns a name field JTextField with the proper appearance.
-	 * 
-	 * @param maxSize
-	 * @return
-	 */
-	private JTextField buildNameField(final Dimension maxSize) {
-		JTextField nameField = new JTextField(10);
-		nameField.setMaximumSize(maxSize);
-
-		return nameField;
-	}
-
-	/**
-	 * Creates an DocumentListener for the TextField.
-	 * 
-	 * @return
-	 */
-	private DocumentListener nameFieldListener(final JTextField nameField,
-			final StoryPoint questNode) {
-
-		DocumentListener nameFieldListener = new DocumentListener() {
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				String text = nameField.getText();
-				questNode.setDisplayText(text);
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				this.insertUpdate(e);
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				this.insertUpdate(e);
-			}
-		};
-
-		return nameFieldListener;
-	}
-
-	/**
-	 * Updates the name field for the quest node passed in.
-	 * 
-	 * @param nameField
-	 * @param questNode
-	 */
-	private void updateNameField(JTextField nameField, JLabel nameLabel,
-			StoryPoint questNode) {
-		if (questNode != null) {
-
-			String displayText = questNode.getDisplayText();
-
-			nameField.setDocument(new PlainDocument());
-			nameField.getDocument().addDocumentListener(
-					this.nameFieldListener(nameField, questNode));
-
-			nameField.setText(displayText);
-			if (((StoryModel) PatternModelManager.getInstance()
-					.getActiveModel()).getRoot() != questNode) {
-				nameLabel.setEnabled(true);
-				nameField.setEnabled(true);
-
-			} else {
-				nameLabel.setEnabled(false);
-				nameField.setEnabled(false);
-			}
-
-		} else {
-			nameField.setText("");
-			nameLabel.setEnabled(false);
-			nameField.setEnabled(false);
-		}
-	}
-
-	/**
-	 * Returns a fanInSpinner, which has an attached listener that updates the
-	 * model if its value is changed. This is used for quest fan in, i.e. how
-	 * many preceding tests need to be finished before starting the selected
-	 * one.
-	 * 
-	 * @return
-	 */
-	private JSpinner buildFanInSpinner(final Dimension maxSize,
-			final JLabel fanInLabel) {
-		final JSpinner fanInSpinner = new JSpinner();
-		fanInSpinner.setMaximumSize(maxSize);
-
-		fanInSpinner.setEnabled(false);
-		fanInLabel.setEnabled(false);
-
-		return fanInSpinner;
-	}
-
-	/**
-	 * Creates a ChangeListener for a JSpinner. Returns listener. When the
-	 * Spinner value changes, the listener updates the model and updates the fan
-	 * in spinner itself to show the change.
-	 * 
-	 * @param fanInSpinner
-	 * @param questPoint
-	 * @return
-	 */
-	private ChangeListener fanInSpinnerListener(final JSpinner fanInSpinner,
-			final StoryPoint questNode) {
-
-		ChangeListener fanInSpinnerListener = new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				SpinnerModel spinnerModel = fanInSpinner.getModel();
-				Integer spinnerValue = (Integer) spinnerModel.getValue();
-
-				questNode.setFanIn(spinnerValue);
-			}
-		};
-
-		return fanInSpinnerListener;
-	}
-
-	/**
 	 * Creates a SpinnerModel for the FanIn function based on the current quest
 	 * point, then sets the FanIn Spinner Model to it.
 	 * 
@@ -470,9 +258,6 @@ public class ToolBarFactory {
 				fanInSpinner.removeChangeListener(fanInSpinner
 						.getChangeListeners()[1]);
 			}
-
-			fanInSpinner.addChangeListener(this.fanInSpinnerListener(
-					fanInSpinner, questNode));
 
 		} else {
 			final SpinnerModel fanInSpinnerModel = new SpinnerNumberModel(

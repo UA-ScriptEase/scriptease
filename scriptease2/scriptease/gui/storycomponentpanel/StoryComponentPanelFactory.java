@@ -37,8 +37,9 @@ import scriptease.model.complex.ScriptIt;
  * It is a StoryVisitor which is what allows it to build GUI for any Story
  * Component.<br>
  * <br>
- * Use {@link StoryComponentPanelFactory#buildStoryComponentPanel(StoryComponent, boolean)} to
- * have a GUIComponent Builder build a JPanel to represent the StoryComponent
+ * Use
+ * {@link StoryComponentPanelFactory#buildStoryComponentPanel(StoryComponent, boolean)}
+ * to have a GUIComponent Builder build a JPanel to represent the StoryComponent
  * supplied.
  * 
  * @author graves
@@ -64,15 +65,14 @@ public class StoryComponentPanelFactory {
 	 * @return
 	 */
 	public StoryComponentPanel buildStoryComponentPanel(StoryComponent component) {
-		if (component == null)
-			throw new IllegalArgumentException(
-					"Cannot build a StoryComponentPanel for a null StoryComponent");
 
 		StoryComponentPanel panel = new StoryComponentPanel(component);
 
-		component.process(componentProcessor(panel));
-		panel.setTransferHandler(StoryComponentPanelTransferHandler
-				.getInstance());
+		if (component != null) {
+			component.process(componentProcessor(panel));
+			panel.setTransferHandler(StoryComponentPanelTransferHandler
+					.getInstance());
+		}
 
 		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -343,8 +343,7 @@ public class StoryComponentPanelFactory {
 		});
 	}
 
-	private StoryAdapter componentProcessor(
-			final StoryComponentPanel panel) {
+	private StoryAdapter componentProcessor(final StoryComponentPanel panel) {
 		return new StoryAdapter() {
 			@Override
 			public void processStoryPoint(StoryPoint questPoint) {
@@ -400,7 +399,7 @@ public class StoryComponentPanelFactory {
 					panel.revalidate();
 				}
 			});
-			
+
 			panel.setExpansionButton(expansionButton);
 			panel.add(expansionButton, StoryComponentPanelLayoutManager.BUTTON);
 		}

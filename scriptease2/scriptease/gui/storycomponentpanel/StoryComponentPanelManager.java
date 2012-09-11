@@ -58,12 +58,15 @@ public class StoryComponentPanelManager {
 	 * @param aPanel
 	 */
 	public void cleanUpPanel(StoryComponentPanel aPanel) {
-		aPanel.getStoryComponent().removeStoryComponentObserverFromChildren(aPanel);
-		Collection<StoryComponentPanel> descendantPanels = aPanel
-				.getDescendantStoryComponentPanels();
-		this.selected.remove(aPanel);
-		for (StoryComponentPanel child : descendantPanels) {
-			cleanUpPanel(child);
+		if (aPanel.getStoryComponent() != null) {
+			aPanel.getStoryComponent()
+					.removeStoryComponentObserverFromChildren(aPanel);
+			Collection<StoryComponentPanel> descendantPanels = aPanel
+					.getDescendantStoryComponentPanels();
+			this.selected.remove(aPanel);
+			for (StoryComponentPanel child : descendantPanels) {
+				cleanUpPanel(child);
+			}
 		}
 	}
 
@@ -116,7 +119,7 @@ public class StoryComponentPanelManager {
 				final StoryComponent owner = child.getOwner();
 				// if the owner is its parent, remove the child
 				if (owner instanceof ComplexStoryComponent
-						&& ((ComplexStoryComponent) owner).hasChild(child)){
+						&& ((ComplexStoryComponent) owner).hasChild(child)) {
 					((ComplexStoryComponent) owner).removeStoryChild(child);
 					this.setSelection(panel, false, false);
 				}

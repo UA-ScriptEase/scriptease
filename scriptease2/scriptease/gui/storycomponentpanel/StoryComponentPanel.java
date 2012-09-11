@@ -54,6 +54,9 @@ public class StoryComponentPanel extends JPanel implements
 		this.setOpaque(true);
 		this.component = component;
 
+		if (this.component == null)
+			return;
+
 		// Action Listeners
 		this.addMouseMotionListener(this);
 		this.addMouseListener(this);
@@ -272,10 +275,12 @@ public class StoryComponentPanel extends JPanel implements
 	 * StoryComponentPanels selectable and removable
 	 */
 	public void updateComplexSettings() {
-		updateSettings(this);
-		for (StoryComponentPanel panel : this
-				.getDescendantStoryComponentPanels()) {
-			updateSettings(panel);
+		if (this.component != null) {
+			updateSettings(this);
+			for (StoryComponentPanel panel : this
+					.getDescendantStoryComponentPanels()) {
+				updateSettings(panel);
+			}
 		}
 	}
 

@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.LayoutManager;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -216,6 +217,7 @@ public class SEGraph<E> extends JComponent {
 	 */
 	public void setSelectedNode(E node) {
 		this.selectedNode = node;
+		this.renderer.setSelectedNode(node);
 		this.model.notifyObservers(GraphEvent.NODE_SELECTED, node);
 	}
 
@@ -303,7 +305,7 @@ public class SEGraph<E> extends JComponent {
 				int yNodeSize = NODE_Y_INDENT;
 				for (E node : currentNodes) {
 					JComponent component = SEGraph.this.renderer
-							.getComponentForNode(node, SEGraph.this);
+							.getComponentForNode(node);
 					yNodeSize += NODE_Y_INDENT
 							+ component.getPreferredSize().getHeight();
 				}
@@ -355,7 +357,7 @@ public class SEGraph<E> extends JComponent {
 
 					// Get the JComponent associated with the node.
 					final JComponent component = SEGraph.this.renderer
-							.getComponentForNode(node, SEGraph.this);
+							.getComponentForNode(node);
 
 					if (component.getMouseListeners().length <= 1) {
 						component.addMouseListener(new NodeMouseAdapter(node));
@@ -454,7 +456,7 @@ public class SEGraph<E> extends JComponent {
 			for (E node : nodes) {
 				// Get the component for the node.
 				JComponent component = SEGraph.this.renderer
-						.getComponentForNode(node, SEGraph.this);
+						.getComponentForNode(node);
 
 				// Get the size of the JComponent.
 				Dimension componentSize = component.getPreferredSize();
@@ -533,11 +535,9 @@ public class SEGraph<E> extends JComponent {
 						// Draw an arrow pointing towards the child.
 						GUIOp.paintArrow(g2, GUIOp
 								.getMidRight(SEGraph.this.renderer
-										.getComponentForNode(parent,
-												SEGraph.this)), GUIOp
+										.getComponentForNode(parent)), GUIOp
 								.getMidLeft(SEGraph.this.renderer
-										.getComponentForNode(child,
-												SEGraph.this)));
+										.getComponentForNode(child)));
 					}
 				}
 			}
@@ -571,6 +571,20 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			final JComponent src = (JComponent) e.getSource();
+			final Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
+
+			/*
+			 * Only respond to releases that happen over this component. The
+			 * default is to respond to releases if the press occurred in this
+			 * component. This seems to be a Java bug, but I can't find any kind
+			 * of complaint for it. Either way, we want this behaviour, not the
+			 * default. - remiller
+			 */
+			if (!src.contains(mouseLoc.x - src.getLocationOnScreen().x,
+					mouseLoc.y - src.getLocationOnScreen().y))
+				return;
+
 			switch (ToolBarButtonAction.getMode()) {
 
 			case SELECT_GRAPH_NODE:
@@ -588,6 +602,7 @@ public class SEGraph<E> extends JComponent {
 				break;
 			case DELETE_GRAPH_NODE:
 				SEGraph.this.removeNode(this.node);
+				SEGraph.this.validateSelectedNode();
 				break;
 			case CONNECT_GRAPH_NODE:
 				if (SEGraph.this.lastEnteredNode != null
@@ -597,11 +612,23 @@ public class SEGraph<E> extends JComponent {
 				break;
 			case DISCONNECT_GRAPH_NODE:
 				if (SEGraph.this.lastEnteredNode != null
-						&& SEGraph.this.lastEnteredNode != this.node)
+						&& SEGraph.this.lastEnteredNode != this.node) {
 					SEGraph.this.disconnectNodes(SEGraph.this.lastEnteredNode,
 							this.node);
+					SEGraph.this.validateSelectedNode();
+				}
 				break;
 			}
 		}
+	}
+
+	private void validateSelectedNode() {
+		if (this.model.getStartNode() == this.getSelectedNode())
+			return;
+
+		if (this.model.getParents(this.getSelectedNode()).size() == 0)
+			this.setSelectedNode(null);
+		else
+			this.renderer.setSelectedNode(this.getSelectedNode());
 	}
 }

@@ -185,7 +185,6 @@ public class TypeSelectionDialogBuilder {
 		typeDialog.pack();
 		typeDialog.setResizable(false);
 		typeDialog.setLocationRelativeTo(typeDialog.getParent());
-		typeDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		return typeDialog;
 	}
 

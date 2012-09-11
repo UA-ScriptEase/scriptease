@@ -616,6 +616,8 @@ public final class WindowFactory {
 	public JDialog buildDialog(String title) {
 		final JDialog dialog = new JDialog(this.currentFrame, title,
 				Dialog.ModalityType.DOCUMENT_MODAL);
+		
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		return dialog;
 	}
 

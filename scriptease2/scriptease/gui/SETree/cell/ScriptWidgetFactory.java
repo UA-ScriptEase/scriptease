@@ -23,16 +23,19 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
 import javax.swing.JSpinner.NumberEditor;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import scriptease.ScriptEase;
-import scriptease.controller.StoryAdapter;
 import scriptease.controller.ObservedJPanel;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SETree.transfer.BindingTransferHandlerExportOnly;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
@@ -43,8 +46,8 @@ import scriptease.gui.quests.StoryPoint;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.tools.GameConstantFactory;
@@ -581,13 +584,39 @@ public class ScriptWidgetFactory {
 	 * Builds a stylized JPanel to represent the given fanIn.
 	 * 
 	 * @param fanIn
+	 * @param editable
 	 * @return
 	 */
-	public static JPanel buildFanInPanel(Integer fanIn) {
-		JPanel fanInPanel = new JPanel();
+	public static JPanel buildFanInPanel(final StoryPoint storyPoint,
+			Comparable<?> max, boolean editable) {
+		final JPanel fanInPanel;
+
+		fanInPanel = new JPanel();
+
 		fanInPanel.setOpaque(false);
 		fanInPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-		fanInPanel.add(new JLabel(fanIn.toString()));
+		if (editable) {
+
+			final SpinnerNumberModel model;
+			final JSpinner fanInSpinner;
+
+			model = new SpinnerNumberModel(storyPoint.getFanIn(), 0, max, 1);
+			fanInSpinner = new JSpinner(model);
+
+			fanInSpinner.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					SpinnerModel spinnerModel = fanInSpinner.getModel();
+					Integer spinnerValue = (Integer) spinnerModel.getValue();
+
+					storyPoint.setFanIn(spinnerValue);
+				}
+			});
+
+			fanInPanel.add(fanInSpinner);
+		} else {
+			fanInPanel.add(new JLabel(storyPoint.getFanIn().toString()));
+		}
 		return fanInPanel;
 	}
 }

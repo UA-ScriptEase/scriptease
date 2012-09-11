@@ -54,7 +54,7 @@ import scriptease.translator.TranslatorManager;
 
 @SuppressWarnings("serial")
 public final class SEFrame implements PatternModelObserver {
-	private final JTabbedPane storyTabs;
+	private final JTabbedPane modelTabs;
 	private final JComponent middlePane;
 	private JSplitPane rightSplit;
 	private JSplitPane leftSplit;
@@ -76,7 +76,7 @@ public final class SEFrame implements PatternModelObserver {
 	private SEFrame() {
 		this.seFrame = WindowFactory.getInstance().buildScriptEaseFrame(
 				ScriptEase.TITLE);
-		this.storyTabs = new JTabbedPane();
+		this.modelTabs = new JTabbedPane();
 		this.middlePane = new JPanel();
 
 		final int MIN_HEIGHT = 480;
@@ -86,7 +86,7 @@ public final class SEFrame implements PatternModelObserver {
 		this.seFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
 
 		// Register a change listener
-		this.storyTabs.addChangeListener(new ChangeListener() {
+		this.modelTabs.addChangeListener(new ChangeListener() {
 			// This method is called whenever the selected tab changes
 			public void stateChanged(ChangeEvent evt) {
 				final JComponent tab;
@@ -104,7 +104,7 @@ public final class SEFrame implements PatternModelObserver {
 		});
 
 		this.middlePane.setLayout(new GridLayout(1, 1));
-		this.middlePane.add(this.storyTabs);
+		this.middlePane.add(this.modelTabs);
 
 		this.populate();
 
@@ -301,16 +301,16 @@ public final class SEFrame implements PatternModelObserver {
 
 				scbScrollPane = PanelFactory.getInstance()
 						.buildLibraryEditorPanel(libraryModel);
-				newTab = new CloseableModelTab(SEFrame.this.storyTabs,
+				newTab = new CloseableModelTab(SEFrame.this.modelTabs,
 						scbScrollPane, libraryModel, icon);
 
 				scbScrollPane.getVerticalScrollBar().setUnitIncrement(
 						ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
-				SEFrame.this.storyTabs.addTab(libraryModel.getName()
+				SEFrame.this.modelTabs.addTab(libraryModel.getName()
 						+ "[Editor]", icon, scbScrollPane);
-				SEFrame.this.storyTabs.setTabComponentAt(
-						SEFrame.this.storyTabs.indexOfComponent(scbScrollPane),
+				SEFrame.this.modelTabs.setTabComponentAt(
+						SEFrame.this.modelTabs.indexOfComponent(scbScrollPane),
 						newTab);
 			}
 
@@ -326,7 +326,7 @@ public final class SEFrame implements PatternModelObserver {
 				startQuestPoint = storyModel.getRoot();
 				newPanel = PanelFactory.getInstance().buildStoryPanel(
 						storyModel, startQuestPoint);
-				newTab = new CloseableModelTab(SEFrame.this.storyTabs,
+				newTab = new CloseableModelTab(SEFrame.this.modelTabs,
 						newPanel, storyModel, icon);
 				modelTitle = storyModel.getTitle();
 
@@ -336,28 +336,28 @@ public final class SEFrame implements PatternModelObserver {
 				title = modelTitle + "("
 						+ storyModel.getModule().getLocation().getName() + ")";
 
-				SEFrame.this.storyTabs.addTab(title, icon, newPanel);
-				SEFrame.this.storyTabs.setTabComponentAt(
-						SEFrame.this.storyTabs.indexOfComponent(newPanel),
+				SEFrame.this.modelTabs.addTab(title, icon, newPanel);
+				SEFrame.this.modelTabs.setTabComponentAt(
+						SEFrame.this.modelTabs.indexOfComponent(newPanel),
 						newTab);
-				SEFrame.this.storyTabs.setSelectedComponent(newPanel);
+				SEFrame.this.modelTabs.setSelectedComponent(newPanel);
 			}
 		});
 	}
 
 	/**
-	 * Gets the tab pane for displaying all Stories;
+	 * Gets the tab pane for displaying all models.
 	 * 
 	 * @return The tab pane for the Stories;
 	 */
-	public JTabbedPane getStoryTabPane() {
-		return this.storyTabs;
+	public JTabbedPane getModelTabPane() {
+		return this.modelTabs;
 	}
 
 	/**
-	 * Removes the given StoryPanel from list of StoryTabs and the list of
-	 * StoryPanels for the given model. storyTabs.remove should not be called
-	 * outside of this method.
+	 * Removes the given model component from list of ModelTabs and the list of
+	 * model components for the given model. modelTabs.remove should not be
+	 * called outside of this method.
 	 * 
 	 * @param component
 	 * @param model
@@ -366,7 +366,7 @@ public final class SEFrame implements PatternModelObserver {
 		// remove the panel
 		PanelFactory.getInstance().removeComponentForModel(model, component);
 
-		this.storyTabs.remove(component);
+		this.modelTabs.remove(component);
 
 		// check if there are any unsaved changes
 		if (FileManager.getInstance().hasUnsavedChanges(model)) {

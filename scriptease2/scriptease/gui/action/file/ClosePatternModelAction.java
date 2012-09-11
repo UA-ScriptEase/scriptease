@@ -67,7 +67,7 @@ public final class ClosePatternModelAction extends ActiveModelSensitiveAction {
 
 		if (activeModel != null) {
 			SEFrame.getInstance().removeModelComponent(
-					(JComponent) SEFrame.getInstance().getStoryTabPane()
+					(JComponent) SEFrame.getInstance().getModelTabPane()
 							.getSelectedComponent(), activeModel);
 
 		}
