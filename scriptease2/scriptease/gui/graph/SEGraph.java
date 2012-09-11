@@ -571,22 +571,24 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			final JComponent src = (JComponent) e.getSource();
-			final Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
-
-			/*
-			 * Only respond to releases that happen over this component. The
-			 * default is to respond to releases if the press occurred in this
-			 * component. This seems to be a Java bug, but I can't find any kind
-			 * of complaint for it. Either way, we want this behaviour, not the
-			 * default. - remiller
-			 */
-			if (!src.contains(mouseLoc.x - src.getLocationOnScreen().x,
-					mouseLoc.y - src.getLocationOnScreen().y))
-				return;
-
 			switch (ToolBarButtonAction.getMode()) {
+			case SELECT_GRAPH_NODE:
+			case DELETE_GRAPH_NODE:
+				final JComponent src = (JComponent) e.getSource();
+				final Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
 
+				/*
+				 * Only respond to releases that happen over this component. The
+				 * default is to respond to releases if the press occurred in
+				 * this component. This seems to be a Java bug, but I can't find
+				 * any kind of complaint for it. Either way, we want this
+				 * behaviour, not the default. - remiller
+				 */
+				if (!src.contains(mouseLoc.x - src.getLocationOnScreen().x,
+						mouseLoc.y - src.getLocationOnScreen().y))
+					return;
+			}
+			switch (ToolBarButtonAction.getMode()) {
 			case SELECT_GRAPH_NODE:
 				SEGraph.this.setSelectedNode(this.node);
 				break;

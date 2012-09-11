@@ -129,7 +129,7 @@ public class PanelFactory {
 		questPanel = new JPanel(new BorderLayout(), true);
 		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
 		storyGraph = new SEGraph<StoryPoint>(start,
-				new StoryPointBuilder(start), new StoryPointNodeRenderer());
+				new StoryPointBuilder(start), new StoryPointNodeRenderer(start));
 		storyGraphObserver = new StoryPointGraphObserver();
 		storyComponentTree = new StoryComponentPanelTree(start);
 

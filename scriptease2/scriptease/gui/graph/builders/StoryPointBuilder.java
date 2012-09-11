@@ -7,7 +7,8 @@ import java.util.Set;
 import scriptease.gui.quests.StoryPoint;
 
 /**
- * Builds a new StoryPoint in the SEGraph.
+ * Builds a new StoryPoint in the SEGraph and contains methods to get the
+ * parents and children.
  * 
  * @author kschenk
  * 

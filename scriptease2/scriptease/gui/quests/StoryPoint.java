@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import scriptease.controller.StoryVisitor;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
@@ -35,22 +37,10 @@ public class StoryPoint extends ComplexStoryComponent {
 	 * Creates a new Quest Point with the given name and a default fan-in value.
 	 * 
 	 * @param name
-	 *            The name for this quest point.
-	 */
-	public StoryPoint(String name) {
-		this(name, StoryPoint.DEFAULT_FAN_IN);
-	}
-
-	/**
-	 * Creates a new StoryPoint.
-	 * 
-	 * @param name
 	 *            If name is null or empty string, it gives a default name of
 	 *            NEW_QUEST_POINT and the current quest point count.
-	 * @param fanIn
-	 *            The fan-in value to use.
 	 */
-	public StoryPoint(String name, int fanIn) {
+	public StoryPoint(String name) {
 		super();
 		this.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
@@ -60,7 +50,7 @@ public class StoryPoint extends ComplexStoryComponent {
 		}
 
 		this.setDisplayText(name);
-		this.fanIn = fanIn;
+		this.fanIn = DEFAULT_FAN_IN;
 		this.successors = new HashSet<StoryPoint>();
 	}
 
@@ -93,6 +83,9 @@ public class StoryPoint extends ComplexStoryComponent {
 	 */
 	public void setFanIn(Integer fanIn) {
 		this.fanIn = fanIn;
+		
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_FAN_IN));
 	}
 
 	@Override
