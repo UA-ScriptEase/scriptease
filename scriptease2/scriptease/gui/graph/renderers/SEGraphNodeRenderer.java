@@ -22,9 +22,12 @@ import scriptease.util.BiHashMap;
 import scriptease.util.GUIOp;
 
 /**
- * Renders individual components as graph nodes. There is some default
- * behaviour, but most will have to be implemented in a sub class that overrides
- * the {@link #configureInternalComponents(JComponent, Object)} method.
+ * Renders individual components as graph nodes. The default behaviour sets the
+ * background and border of the JComponent depending on the current tool
+ * selected and the actions of the user.<br>
+ * <br>
+ * To add internal components to the JComponent, override the
+ * {@link #configureInternalComponents(JComponent, Object)} method.
  * 
  * @author remiller
  * @author kschenk
@@ -32,13 +35,15 @@ import scriptease.util.GUIOp;
  * @param <E>
  */
 public class SEGraphNodeRenderer<E> {
+
+	private JComponent selectedComponent;
 	// This is such a weird hack. I apologize. - remiller
 	private Set<JComponent> hoverComponents = new HashSet<JComponent>();
 	private Set<JComponent> pressComponents = new HashSet<JComponent>();
 
 	private BiHashMap<E, JComponent> componentMap = new BiHashMap<E, JComponent>();
 
-	public final JComponent getComponentForNode(E node, SEGraph<E> graph) {
+	public final JComponent getComponentForNode(E node) {
 		final JComponent component;
 		// check if the node already has a component
 		final JComponent storedComponent = this.componentMap.getValue(node);
@@ -47,16 +52,24 @@ public class SEGraphNodeRenderer<E> {
 		} else {
 			// otherwise build it and store it
 			component = new JPanel();
-			this.configureAppearance(component, node, graph);
-			this.configureListeners(component, node, graph);
-			this.configureInternalComponents(component, node);
 			this.componentMap.put(node, component);
+
+			component.setOpaque(true);
+			this.configureAppearance(component);
+			component.addMouseListener(this.componentAppearanceMouseListener());
+			this.configureInternalComponents(component);
 		}
 		// return the component for the node
 		return component;
 	}
 
-	public E getNodeForComponent(JComponent component) {
+	/**
+	 * Returns the node represented by a component.
+	 * 
+	 * @param component
+	 * @return
+	 */
+	protected E getNodeForComponent(JComponent component) {
 		return this.componentMap.getKey(component);
 	}
 
@@ -68,79 +81,127 @@ public class SEGraphNodeRenderer<E> {
 	 * panels and binding widgets for the Quest Point.
 	 * 
 	 * @param component
-	 * @param node
 	 */
-	protected void configureInternalComponents(JComponent component, E node) {
+	protected void configureInternalComponents(JComponent component) {
 	}
 
 	/**
-	 * Sets up the listeners for appearance. For mouse listeners on components
+	 * Creates a mouse adapter for appearance. For mouse listeners on components
 	 * that act on the model, see {@link SEGraph}.
+	 */
+	private MouseAdapter componentAppearanceMouseListener() {
+		return new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				final JComponent component = (JComponent) e.getSource();
+				final Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
+
+				/*
+				 * Only respond to releases that happen over this component. The
+				 * default is to respond to releases if the press occurred in
+				 * this component. This seems to be a Java bug, but I can't find
+				 * any kind of complaint for it. Either way, we want this
+				 * behaviour, not the default. - remiller
+				 */
+				if (!component.contains(
+						mouseLoc.x - component.getLocationOnScreen().x,
+						mouseLoc.y - component.getLocationOnScreen().y))
+					return;
+
+				SEGraphNodeRenderer.this.pressComponents.remove(component);
+
+				resetAppearance();
+				configureAppearance(component);
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				final JComponent component = (JComponent) e.getSource();
+
+				SEGraphNodeRenderer.this.pressComponents.add(component);
+				configureAppearance(component);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				final JComponent component = (JComponent) e.getSource();
+
+				SEGraphNodeRenderer.this.hoverComponents.add(component);
+				configureAppearance(component);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				final JComponent component = (JComponent) e.getSource();
+
+				SEGraphNodeRenderer.this.hoverComponents.remove(component);
+				SEGraphNodeRenderer.this.pressComponents.remove(component);
+
+				configureAppearance(component);
+			}
+		};
+	}
+
+	/**
+	 * Sets the selected node and updates its appearance.
+	 * 
+	 * @param node
+	 *            The new selected node.
+	 */
+	public void setSelectedNode(E node) {
+		final JComponent component;
+
+		final Color backgroundColour;
+		final Color borderColour;
+
+		component = this.getComponentForNode(node);
+		this.selectedComponent = component;
+
+		backgroundColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
+		borderColour = GUIOp.scaleColour(ScriptEaseUI.SELECTED_GRAPH_NODE, 0.6);
+
+		this.setComponentAppearance(component, borderColour, backgroundColour);
+	}
+
+	/**
+	 * Resets the appearance of all components to the default white colour.
+	 */
+	private void resetAppearance() {
+		final Color backgroundColour;
+		final Color borderColour;
+
+		backgroundColour = Color.white;
+		borderColour = Color.GRAY;
+
+		for (JComponent component : this.componentMap.getValues()) {
+			this.setComponentAppearance(component, borderColour,
+					backgroundColour);
+		}
+	}
+
+	/**
+	 * Sets the appearance of the passed in node to the background colour and
+	 * border colour passed in.
 	 * 
 	 * @param component
-	 * @param node
+	 *            The component to set the appearance for.
+	 * @param borderColour
+	 *            The border colour to set on the component.
+	 * @param backgroundColour
+	 *            The background colour to set for the component.
 	 */
-	private void configureListeners(final JComponent component, final E node,
-			final SEGraph<E> graph) {
-		if (component != null) {
-			/*
-			 * When a component is clicked, forward the click to the GraphNode,
-			 * and its observers.
-			 */
-			final MouseAdapter mouseAdapter = new MouseAdapter() {
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					final JComponent src = (JComponent) e.getSource();
-					final Point mouseLoc = MouseInfo.getPointerInfo()
-							.getLocation();
+	private void setComponentAppearance(JComponent component,
+			Color borderColour, Color backgroundColour) {
+		final Border lineBorder;
+		final Border lineSpaceBorder;
 
-					/*
-					 * Only respond to releases that happen over this component.
-					 * The default is to respond to releases if the press
-					 * occurred in this component. This seems to be a Java bug,
-					 * but I can't find any kind of complaint for it. Either
-					 * way, we want this behaviour, not the default. - remiller
-					 */
-					if (!src.contains(mouseLoc.x - src.getLocationOnScreen().x,
-							mouseLoc.y - src.getLocationOnScreen().y))
-						return;
+		lineBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED,
+				borderColour, borderColour.darker());
+		lineSpaceBorder = BorderFactory.createCompoundBorder(lineBorder,
+				BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
-					SEGraphNodeRenderer.this.pressComponents.remove(src);
-
-					configureAppearance(src, node, graph);
-				}
-
-				@Override
-				public void mousePressed(MouseEvent e) {
-					final JComponent src = (JComponent) e.getSource();
-
-					SEGraphNodeRenderer.this.pressComponents.add(src);
-					configureAppearance(src, node, graph);
-				}
-
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					final JComponent nodeComponent = (JComponent) e.getSource();
-
-					SEGraphNodeRenderer.this.hoverComponents.add(nodeComponent);
-					configureAppearance(nodeComponent, node, graph);
-				}
-
-				@Override
-				public void mouseExited(MouseEvent e) {
-					final JComponent nodeComponent = (JComponent) e.getSource();
-
-					SEGraphNodeRenderer.this.hoverComponents
-							.remove(nodeComponent);
-					SEGraphNodeRenderer.this.pressComponents
-							.remove(nodeComponent);
-
-					configureAppearance(nodeComponent, node, graph);
-				}
-			};
-
-			component.addMouseListener(mouseAdapter);
-		}
+		component.setBorder(lineSpaceBorder);
+		component.setBackground(backgroundColour);
 	}
 
 	/**
@@ -152,17 +213,15 @@ public class SEGraphNodeRenderer<E> {
 	 * @param node
 	 *            The graph node to configure based on.
 	 */
-	private void configureAppearance(final JComponent component, E node,
-			SEGraph<E> graph) {
+	private void configureAppearance(final JComponent component) {
 		if (component == null)
 			return;
-
 		final Color toolColour;
 		final Color toolHighlight;
 		final Color toolPress;
 
-		Color borderColour;
-		Color backgroundColour;
+		final Color borderColour;
+		final Color backgroundColour;
 
 		// first, determine the tool colour and highlight.
 		/*
@@ -170,27 +229,22 @@ public class SEGraphNodeRenderer<E> {
 		 * and close enough. Feel free to add colours to ScriptEaseUI if you
 		 * want other colours. - remiller
 		 */
-		if (ToolBarButtonAction.getMode() == ToolBarButtonMode.INSERT_GRAPH_NODE) {
-			toolColour = ScriptEaseUI.COLOUR_KNOWN_OBJECT;
-			toolHighlight = GUIOp.scaleWhite(toolColour, 1.6);
-			toolPress = GUIOp.scaleWhite(toolHighlight, 1.8);
-		} else if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DELETE_GRAPH_NODE) {
-			toolColour = ScriptEaseUI.COLOUR_UNBOUND;
-			toolHighlight = GUIOp.scaleWhite(toolColour, 1.3);
-			toolPress = GUIOp.scaleWhite(toolHighlight, 1.8);
-		} else {
-			toolColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
-			toolHighlight = GUIOp.scaleColour(ScriptEaseUI.SELECTED_GRAPH_NODE,
-					1.05);
-			toolPress = GUIOp.scaleColour(toolHighlight, 1.6);
-		}
-
-		/*
-		 * Use a bright tool colour if its pressed, use the tool colour if it's
-		 * hovered over, use gold if its selected and not hovered, white/gray
-		 * otherwise.
-		 */
 		if (this.hoverComponents.contains(component)) {
+			if (ToolBarButtonAction.getMode() == ToolBarButtonMode.INSERT_GRAPH_NODE) {
+				toolColour = ScriptEaseUI.COLOUR_KNOWN_OBJECT;
+				toolHighlight = GUIOp.scaleWhite(toolColour, 1.6);
+				toolPress = GUIOp.scaleWhite(toolHighlight, 1.8);
+			} else if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DELETE_GRAPH_NODE) {
+				toolColour = ScriptEaseUI.COLOUR_UNBOUND;
+				toolHighlight = GUIOp.scaleWhite(toolColour, 1.3);
+				toolPress = GUIOp.scaleWhite(toolHighlight, 1.8);
+			} else {
+				toolColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
+				toolHighlight = GUIOp.scaleColour(
+						ScriptEaseUI.SELECTED_GRAPH_NODE, 1.05);
+				toolPress = GUIOp.scaleColour(toolHighlight, 1.6);
+			}
+
 			if (this.pressComponents.contains(component)) {
 				// If pressed while being hovered over
 				backgroundColour = toolPress;
@@ -199,41 +253,23 @@ public class SEGraphNodeRenderer<E> {
 				backgroundColour = toolHighlight;
 			}
 			borderColour = GUIOp.scaleColour(toolColour, 0.7);
-		} else if (graph.getSelectedNode() == node) {
-			// If nothing and selected
-			backgroundColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
-			borderColour = GUIOp.scaleColour(ScriptEaseUI.SELECTED_GRAPH_NODE,
-					0.6);
-		} else {
-			// If nothing
-			backgroundColour = Color.white;
-			borderColour = Color.GRAY;
+
+			this.setComponentAppearance(component, borderColour,
+					backgroundColour);
 		}
 
-		// Double lined border on terminal nodes
-		Border lineBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED,
-				borderColour, borderColour.darker());
-		Border lineSpaceBorder = BorderFactory.createCompoundBorder(lineBorder,
-				BorderFactory.createEmptyBorder(3, 3, 3, 3));
-
-		component.setBorder(lineSpaceBorder);
-		component.setBackground(backgroundColour);
-		component.setOpaque(true);
+		/*
+		 * Use a bright tool colour if its pressed, use the tool colour if it's
+		 * hovered over, use gold if its selected and not hovered, white/gray
+		 * otherwise.
+		 */
+		else if (this.selectedComponent == component) {
+			// If nothing and selected
+			this.setSelectedNode(this
+					.getNodeForComponent(this.selectedComponent));
+		} else {
+			// If nothing
+			this.setComponentAppearance(component, Color.gray, Color.white);
+		}
 	}
-
-	// TODO
-	/*
-	 * 
-	 * 
-	 * 
-	 * private void resetAppearance :D
-	 * 
-	 * 
-	 * reset the appearance to a regular look, with white background and default
-	 * border and such!
-	 * 
-	 * Should happen on press.
-	 * 
-	 */
-
 }

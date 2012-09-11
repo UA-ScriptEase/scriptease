@@ -106,12 +106,12 @@ public class SEGraphModel<E> {
 		if (firstNode == null || secondNode == null)
 			return false;
 
-		if (firstNode.getDescendantGraph().contains(secondNode)) {
+		if (firstNode.getDescendants().contains(secondNode)) {
 			firstNode.addChild(newReferenceNode);
 			secondNode.addParent(newReferenceNode);
 
 			return true;
-		} else if (firstNode.getAncestorGraph().contains(secondNode)) {
+		} else if (firstNode.getAncestors().contains(secondNode)) {
 			secondNode.addChild(newReferenceNode);
 			firstNode.addParent(newReferenceNode);
 
@@ -189,11 +189,11 @@ public class SEGraphModel<E> {
 		if (firstNode == null || secondNode == null)
 			return false;
 
-		if (firstNode.getDescendantGraph().contains(secondNode)) {
+		if (firstNode.getDescendants().contains(secondNode)) {
 			firstNode.addChild(secondNode);
 
 			return true;
-		} else if (firstNode.getAncestorGraph().contains(secondNode)) {
+		} else if (firstNode.getAncestors().contains(secondNode)) {
 			firstNode.addParent(secondNode);
 
 			return true;
@@ -269,7 +269,7 @@ public class SEGraphModel<E> {
 	}
 
 	/**
-	 * Gets all graph nodes.
+	 * Returns all graph nodes in the graph including the start node.
 	 * 
 	 * @return All Node nodes in the graph.
 	 */
@@ -278,13 +278,13 @@ public class SEGraphModel<E> {
 		nodes = new HashSet<ReferenceNode>();
 
 		nodes.add(this.start);
-		nodes.addAll(this.start.getDescendantGraph());
+		nodes.addAll(this.start.getDescendants());
 
 		return nodes;
 	}
 
 	/**
-	 * Gets the children for the passed in node.
+	 * Returns the children for the passed in node.
 	 * 
 	 * @param node
 	 * @return
@@ -293,9 +293,9 @@ public class SEGraphModel<E> {
 		final Collection<E> children;
 		children = new HashSet<E>();
 
-		for (ReferenceNode descendant : this.getReferenceNodes()) {
-			if (descendant.getObject() == node) {
-				for (ReferenceNode child : descendant.getChildren()) {
+		for (ReferenceNode referenceNode : this.getReferenceNodes()) {
+			if (referenceNode.getObject() == node) {
+				for (ReferenceNode child : referenceNode.getChildren()) {
 					children.add(child.getObject());
 				}
 				break;
@@ -305,7 +305,7 @@ public class SEGraphModel<E> {
 	}
 
 	/**
-	 * Gets the parents for the passed in node.
+	 * Returns the parents for the passed in node.
 	 * 
 	 * @param node
 	 * @return
@@ -314,15 +314,61 @@ public class SEGraphModel<E> {
 		final Collection<E> parents;
 		parents = new HashSet<E>();
 
-		for (ReferenceNode descendant : this.getReferenceNodes()) {
-			if (descendant.getObject() == node) {
-				for (ReferenceNode parent : descendant.getParents()) {
+		for (ReferenceNode referenceNode : this.getReferenceNodes()) {
+			if (referenceNode.getObject() == node) {
+				for (ReferenceNode parent : referenceNode.getParents()) {
 					parents.add(parent.getObject());
 				}
 				break;
 			}
 		}
 		return parents;
+	}
+
+	/**
+	 * Returns all ancestors for the passed in node, with ancestors being the
+	 * node's parents, the parents' parents, and so forth.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public Collection<E> getAncestors(E node) {
+		final Collection<E> ancestors;
+		ancestors = new HashSet<E>();
+
+		for (ReferenceNode referenceNode : this.getReferenceNodes()) {
+			if (referenceNode.getObject() == node) {
+				for (ReferenceNode ancestor : referenceNode.getAncestors()) {
+					ancestors.add(ancestor.getObject());
+				}
+				break;
+			}
+		}
+
+		return ancestors;
+	}
+
+	/**
+	 * Returns all descendants for the passed in node, with descendants being
+	 * the node's children, the children's children, and so forth.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public Collection<E> getDescendants(E node) {
+		final Collection<E> descendants;
+		descendants = new HashSet<E>();
+
+		for (ReferenceNode referenceNode : this.getReferenceNodes()) {
+			if (referenceNode.getObject() == node) {
+				for (ReferenceNode descendant : referenceNode.getDescendants()) {
+					descendants.add(descendant.getObject());
+				}
+				break;
+			}
+		}
+
+		return descendants;
 	}
 
 	/**
@@ -447,7 +493,8 @@ public class SEGraphModel<E> {
 	}
 
 	/**
-	 * Class for nodes in a graph which may have children.
+	 * A class for nodes in the graph that know about their parents, children,
+	 * and reference some object that is used as the node in the graph.
 	 * 
 	 * @author kschenk
 	 * 
@@ -457,6 +504,11 @@ public class SEGraphModel<E> {
 		private final Set<ReferenceNode> parents;
 		private final Set<ReferenceNode> children;
 
+		/**
+		 * Creates a new reference node with the passed in object.
+		 * 
+		 * @param object
+		 */
 		private ReferenceNode(E object) {
 			this.object = object;
 			this.parents = new HashSet<ReferenceNode>();
@@ -529,14 +581,14 @@ public class SEGraphModel<E> {
 		 * 
 		 * @return The child graph
 		 */
-		private Set<ReferenceNode> getDescendantGraph() {
+		private Set<ReferenceNode> getDescendants() {
 			Set<ReferenceNode> childGraph;
 			childGraph = new HashSet<ReferenceNode>();
 
 			childGraph.addAll(this.children);
 
 			for (ReferenceNode child : this.children) {
-				childGraph.addAll(child.getDescendantGraph());
+				childGraph.addAll(child.getDescendants());
 			}
 			return childGraph;
 		}
@@ -547,14 +599,14 @@ public class SEGraphModel<E> {
 		 * 
 		 * @return The parent graph
 		 */
-		private Set<ReferenceNode> getAncestorGraph() {
+		private Set<ReferenceNode> getAncestors() {
 			Set<ReferenceNode> parentGraph;
 			parentGraph = new HashSet<ReferenceNode>();
 
 			parentGraph.addAll(this.parents);
 
 			for (ReferenceNode parent : this.parents)
-				parentGraph.addAll(parent.getAncestorGraph());
+				parentGraph.addAll(parent.getAncestors());
 
 			return parentGraph;
 		}

@@ -77,7 +77,7 @@ public class PanelFactory {
 
 		describeItPanel.add(graphToolBar.add(describeItToolBar),
 				BorderLayout.PAGE_START);
-		
+
 		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
 
 		describeItPanel.add(new JScrollPane(graphPanel), BorderLayout.CENTER);
