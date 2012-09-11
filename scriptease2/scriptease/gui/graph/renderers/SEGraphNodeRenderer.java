@@ -18,7 +18,6 @@ import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.ToolBarButtonAction;
 import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
 import scriptease.gui.graph.SEGraph;
-import scriptease.util.BiHashMap;
 import scriptease.util.GUIOp;
 
 /**
@@ -35,42 +34,28 @@ import scriptease.util.GUIOp;
  * @param <E>
  */
 public class SEGraphNodeRenderer<E> {
+	private final SEGraph<E> graph;
 
-	private JComponent selectedComponent;
 	// This is such a weird hack. I apologize. - remiller
 	private Set<JComponent> hoverComponents = new HashSet<JComponent>();
 	private Set<JComponent> pressComponents = new HashSet<JComponent>();
 
-	private BiHashMap<E, JComponent> componentMap = new BiHashMap<E, JComponent>();
+	public SEGraphNodeRenderer(SEGraph<E> graph) {
+		this.graph = graph;
+	}
 
 	public final JComponent getComponentForNode(E node) {
 		final JComponent component;
 		// check if the node already has a component
-		final JComponent storedComponent = this.componentMap.getValue(node);
-		if (storedComponent != null) {
-			component = storedComponent;
-		} else {
-			// otherwise build it and store it
-			component = new JPanel();
-			this.componentMap.put(node, component);
+		// otherwise build it and store it
+		component = new JPanel();
 
-			component.setOpaque(true);
-			this.configureAppearance(component);
-			component.addMouseListener(this.componentAppearanceMouseListener());
-			this.configureInternalComponents(component);
-		}
+		component.setOpaque(true);
+		this.configureAppearance(component, node);
+		component.addMouseListener(this.componentAppearanceMouseListener(node));
+		this.configureInternalComponents(component, node);
 		// return the component for the node
 		return component;
-	}
-
-	/**
-	 * Returns the node represented by a component.
-	 * 
-	 * @param component
-	 * @return
-	 */
-	protected E getNodeForComponent(JComponent component) {
-		return this.componentMap.getKey(component);
 	}
 
 	/**
@@ -81,15 +66,20 @@ public class SEGraphNodeRenderer<E> {
 	 * panels and binding widgets for the Quest Point.
 	 * 
 	 * @param component
+	 * @param node
 	 */
-	protected void configureInternalComponents(JComponent component) {
+	protected void configureInternalComponents(JComponent component, E node) {
+	}
+
+	protected E getStartNode() {
+		return this.graph.getStartNode();
 	}
 
 	/**
 	 * Creates a mouse adapter for appearance. For mouse listeners on components
 	 * that act on the model, see {@link SEGraph}.
 	 */
-	private MouseAdapter componentAppearanceMouseListener() {
+	private MouseAdapter componentAppearanceMouseListener(final E node) {
 		return new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -111,7 +101,7 @@ public class SEGraphNodeRenderer<E> {
 				SEGraphNodeRenderer.this.pressComponents.remove(component);
 
 				resetAppearance();
-				configureAppearance(component);
+				configureAppearance(component, node);
 			}
 
 			@Override
@@ -119,7 +109,7 @@ public class SEGraphNodeRenderer<E> {
 				final JComponent component = (JComponent) e.getSource();
 
 				SEGraphNodeRenderer.this.pressComponents.add(component);
-				configureAppearance(component);
+				configureAppearance(component, node);
 			}
 
 			@Override
@@ -127,7 +117,7 @@ public class SEGraphNodeRenderer<E> {
 				final JComponent component = (JComponent) e.getSource();
 
 				SEGraphNodeRenderer.this.hoverComponents.add(component);
-				configureAppearance(component);
+				configureAppearance(component, node);
 			}
 
 			@Override
@@ -137,30 +127,9 @@ public class SEGraphNodeRenderer<E> {
 				SEGraphNodeRenderer.this.hoverComponents.remove(component);
 				SEGraphNodeRenderer.this.pressComponents.remove(component);
 
-				configureAppearance(component);
+				configureAppearance(component, node);
 			}
 		};
-	}
-
-	/**
-	 * Sets the selected node and updates its appearance.
-	 * 
-	 * @param node
-	 *            The new selected node.
-	 */
-	public void setSelectedNode(E node) {
-		final JComponent component;
-
-		final Color backgroundColour;
-		final Color borderColour;
-
-		component = this.getComponentForNode(node);
-		this.selectedComponent = component;
-
-		backgroundColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
-		borderColour = GUIOp.scaleColour(ScriptEaseUI.SELECTED_GRAPH_NODE, 0.6);
-
-		this.setComponentAppearance(component, borderColour, backgroundColour);
 	}
 
 	/**
@@ -173,7 +142,11 @@ public class SEGraphNodeRenderer<E> {
 		backgroundColour = Color.white;
 		borderColour = Color.GRAY;
 
-		for (JComponent component : this.componentMap.getValues()) {
+		for (JComponent component : this.graph.getNodeComponents()) {
+			if (ToolBarButtonAction.getMode() != ToolBarButtonMode.SELECT_GRAPH_NODE) {
+				if (component == this.graph.getSelectedComponent())
+					continue;
+			}
 			this.setComponentAppearance(component, borderColour,
 					backgroundColour);
 		}
@@ -213,7 +186,7 @@ public class SEGraphNodeRenderer<E> {
 	 * @param node
 	 *            The graph node to configure based on.
 	 */
-	private void configureAppearance(final JComponent component) {
+	private void configureAppearance(final JComponent component, final E node) {
 		if (component == null)
 			return;
 		final Color toolColour;
@@ -254,8 +227,6 @@ public class SEGraphNodeRenderer<E> {
 			}
 			borderColour = GUIOp.scaleColour(toolColour, 0.7);
 
-			this.setComponentAppearance(component, borderColour,
-					backgroundColour);
 		}
 
 		/*
@@ -263,13 +234,17 @@ public class SEGraphNodeRenderer<E> {
 		 * hovered over, use gold if its selected and not hovered, white/gray
 		 * otherwise.
 		 */
-		else if (this.selectedComponent == component) {
+		else if (this.graph.getSelectedNode() == node) {
+			borderColour = GUIOp.scaleColour(ScriptEaseUI.SELECTED_GRAPH_NODE,
+					0.6);
+			backgroundColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
 			// If nothing and selected
-			this.setSelectedNode(this
-					.getNodeForComponent(this.selectedComponent));
 		} else {
+			borderColour = Color.gray;
+			backgroundColour = Color.white;
 			// If nothing
-			this.setComponentAppearance(component, Color.gray, Color.white);
 		}
+
+		this.setComponentAppearance(component, borderColour, backgroundColour);
 	}
 }

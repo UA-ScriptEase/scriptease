@@ -20,6 +20,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SETree.cell.BindingWidget;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
+import scriptease.gui.graph.SEGraph;
 import scriptease.gui.quests.StoryPoint;
 
 /**
@@ -30,35 +31,32 @@ import scriptease.gui.quests.StoryPoint;
  * 
  */
 public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
-	private final StoryPoint start;
+	private final Map<StoryPoint, StoryComponentObserver> weakComponentsToObservers = new WeakHashMap<StoryPoint, StoryComponentObserver>();
 	private boolean inEditingMode = false;
 
-	private final static Map<JComponent, StoryComponentObserver> weakComponentsToObservers = new WeakHashMap<JComponent, StoryComponentObserver>();
-
-	public StoryPointNodeRenderer(StoryPoint start) {
-		this.start = start;
+	public StoryPointNodeRenderer(SEGraph<StoryPoint> graph) {
+		super(graph);
 	}
 
 	@Override
-	protected void configureInternalComponents(final JComponent component) {
-		final StoryPoint node;
+	protected void configureInternalComponents(final JComponent component,
+			final StoryPoint node) {
 		final JButton editButton;
 		final StoryComponentObserver fanInObserver;
 
-		node = this.getNodeForComponent(component);
 		editButton = new JButton();
 		fanInObserver = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
 				if (event.getType() == StoryComponentChangeEnum.CHANGE_FAN_IN) {
 					StoryPointNodeRenderer.this.updateComponents(component,
-							editButton);
+							editButton, node);
 				}
 			}
 		};
 
 		if (node != null) {
-			weakComponentsToObservers.put(component, fanInObserver);
+			this.weakComponentsToObservers.put(node, fanInObserver);
 			node.addStoryComponentObserver(fanInObserver);
 		}
 
@@ -78,13 +76,13 @@ public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 				StoryPointNodeRenderer.this.inEditingMode = !StoryPointNodeRenderer.this.inEditingMode;
 
 				StoryPointNodeRenderer.this.updateComponents(component,
-						editButton);
+						editButton, node);
 			}
 		});
 
 		component.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
 
-		this.updateComponents(component, editButton);
+		this.updateComponents(component, editButton, node);
 	}
 
 	/**
@@ -93,13 +91,12 @@ public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 	 * @param component
 	 * @param editButton
 	 */
-	private void updateComponents(JComponent component, JButton editButton) {
+	private void updateComponents(JComponent component, JButton editButton,
+			StoryPoint node) {
 		component.removeAll();
 		final BindingWidget editableWidget;
 		final BindingWidget uneditableWidget;
-		final StoryPoint node;
 
-		node = this.getNodeForComponent(component);
 		if (node != null) {
 
 			editableWidget = ScriptWidgetFactory.buildBindingWidget(node, true);
@@ -120,7 +117,7 @@ public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 				component.add(uneditableWidget);
 			}
 
-			if (node != this.start)
+			if (node != this.getStartNode())
 				component.add(editButton);
 
 			component.revalidate();
@@ -138,7 +135,7 @@ public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 
 		parents = new HashSet<StoryPoint>();
 
-		for (StoryPoint descendant : this.start.getDescendants()) {
+		for (StoryPoint descendant : this.getStartNode().getDescendants()) {
 			for (StoryPoint successor : descendant.getSuccessors())
 				if (successor == node) {
 					parents.add(descendant);

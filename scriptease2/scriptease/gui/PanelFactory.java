@@ -124,12 +124,14 @@ public class PanelFactory {
 		final SEGraph<StoryPoint> storyGraph;
 		final StoryPointGraphObserver storyGraphObserver;
 		final StoryComponentPanelTree storyComponentTree;
+		final StoryPointNodeRenderer storyNodeRenderer;
 
 		storyPanel = new JPanel(new GridLayout(0, 1));
 		questPanel = new JPanel(new BorderLayout(), true);
 		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
 		storyGraph = new SEGraph<StoryPoint>(start,
-				new StoryPointBuilder(start), new StoryPointNodeRenderer(start));
+				new StoryPointBuilder(start));
+		storyNodeRenderer = new StoryPointNodeRenderer(storyGraph);
 		storyGraphObserver = new StoryPointGraphObserver();
 		storyComponentTree = new StoryComponentPanelTree(start);
 
@@ -144,6 +146,7 @@ public class PanelFactory {
 
 		// Set up the Story Graph
 		storyGraph.addSEGraphObserver(storyGraphObserver);
+		storyGraph.setNodeRenderer(storyNodeRenderer);
 
 		PanelFactory.weakComponentToGraphObservers.put(storyPanel,
 				storyGraphObserver);

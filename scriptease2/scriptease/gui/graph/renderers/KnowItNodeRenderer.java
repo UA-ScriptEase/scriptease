@@ -9,16 +9,22 @@ import javax.swing.JPanel;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.SETree.cell.TypeWidget;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
+import scriptease.gui.graph.SEGraph;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.model.atomic.KnowIt;
 
 public class KnowItNodeRenderer extends SEGraphNodeRenderer<KnowItNode> {
+	public KnowItNodeRenderer(SEGraph<KnowItNode> graph) {
+		super(graph);
+	}
+
 	@Override
-	protected void configureInternalComponents(JComponent component) {
+	protected void configureInternalComponents(JComponent component,
+			KnowItNode node) {
 		component.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 0));
 
-		final KnowIt knowIt = this.getNodeForComponent(component).getKnowIt();
-		
+		final KnowIt knowIt = node.getKnowIt();
+
 		if (knowIt != null) {
 			JPanel typePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0,
 					0));
