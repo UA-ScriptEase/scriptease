@@ -37,6 +37,13 @@ public class StoryPointGraphObserver implements SEGraphObserver<StoryPoint> {
 
 	@Override
 	public void parentRemoved(StoryPoint child, StoryPoint parent) {
+		final int initialFanIn;
+
+		initialFanIn = child.getFanIn();
+
+		if (initialFanIn > 1)
+			child.setFanIn(initialFanIn - 1);
+
 		parent.removeSuccessor(child);
 	}
 
