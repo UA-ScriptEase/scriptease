@@ -44,17 +44,19 @@ public class SEGraphNodeRenderer<E> {
 		this.graph = graph;
 	}
 
-	public final JComponent getComponentForNode(E node) {
+	public final JComponent createComponentForNode(E node) {
 		final JComponent component;
 		// check if the node already has a component
 		// otherwise build it and store it
 		component = new JPanel();
 
 		component.setOpaque(true);
+		
 		this.configureAppearance(component, node);
-		component.addMouseListener(this.componentAppearanceMouseListener(node));
 		this.configureInternalComponents(component, node);
-		// return the component for the node
+		
+		component.addMouseListener(this.componentAppearanceMouseListener(node));
+		
 		return component;
 	}
 

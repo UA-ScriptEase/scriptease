@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,11 +14,9 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,11 +26,14 @@ import javax.swing.JLabel;
 import javax.swing.plaf.ComponentUI;
 
 import scriptease.controller.observer.graph.SEGraphObserver;
+import scriptease.gui.ComponentFocusManager;
 import scriptease.gui.SEGraph.SEGraphModel.GraphEvent;
 import scriptease.gui.SEGraph.builders.SEGraphNodeBuilder;
 import scriptease.gui.SEGraph.renderers.SEGraphNodeRenderer;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
+import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
+import scriptease.util.BiHashMap;
 import scriptease.util.GUIOp;
 import sun.awt.util.IdentityArrayList;
 
@@ -46,14 +48,15 @@ import sun.awt.util.IdentityArrayList;
 @SuppressWarnings("serial")
 public class SEGraph<E> extends JComponent {
 	private final SEGraphModel<E> model;
+	private final SEGraphNodeBuilder<E> builder;
 	private final SEGraphObserver<E> modelObserver;
 
-	private final SEGraphNodeBuilder<E> builder;
-	private final Map<E, JComponent> nodesToComponents;
-
 	private SEGraphNodeRenderer<E> renderer;
-	private E selectedNode;
 
+	private final BiHashMap<E, JComponent> nodesToComponents;
+	private final NodeMouseAdapter mouseAdapter;
+
+	private E selectedNode;
 	private Point mousePosition;
 
 	/**
@@ -67,10 +70,12 @@ public class SEGraph<E> extends JComponent {
 	public SEGraph(E start, SEGraphNodeBuilder<E> builder) {
 		this.selectedNode = start;
 		this.builder = builder;
-		this.mousePosition = new Point();
+
 		this.model = new SEGraphModel<E>(start, builder);
-		this.nodesToComponents = new HashMap<E, JComponent>();
+		this.mousePosition = new Point();
+		this.nodesToComponents = new BiHashMap<E, JComponent>();
 		this.modelObserver = new ModelCleaner();
+		this.mouseAdapter = new NodeMouseAdapter();
 
 		this.model.addSEGraphObserver(this.modelObserver);
 
@@ -79,18 +84,6 @@ public class SEGraph<E> extends JComponent {
 		this.setUI(new SEGraphUI());
 		this.setOpaque(true);
 		this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
-
-		this.addMouseMotionListener(new MouseMotionListener() {
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				SEGraph.this.mousePosition.setLocation(e.getPoint());
-			}
-
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				SEGraph.this.mousePosition.setLocation(e.getPoint());
-			}
-		});
 	}
 
 	/**
@@ -154,6 +147,7 @@ public class SEGraph<E> extends JComponent {
 		this.model.removeNode(node);
 
 		this.cleanup(node);
+		this.validateSelectedNode();
 		this.repaint();
 		this.revalidate();
 	}
@@ -194,6 +188,8 @@ public class SEGraph<E> extends JComponent {
 
 		this.cleanup(node1);
 		this.cleanup(node2);
+
+		this.validateSelectedNode();
 
 		this.repaint();
 		this.revalidate();
@@ -249,7 +245,7 @@ public class SEGraph<E> extends JComponent {
 	 * @return
 	 */
 	public JComponent getSelectedComponent() {
-		return this.nodesToComponents.get(this.selectedNode);
+		return this.nodesToComponents.getValue(this.selectedNode);
 	}
 
 	/**
@@ -271,6 +267,19 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
+	 * Makes sure the selected node is still in the graph. Otherwise, it sets it
+	 * to null.
+	 */
+	private void validateSelectedNode() {
+		if (SEGraph.this.model.getStartNode() == SEGraph.this.getSelectedNode())
+			return;
+
+		if (SEGraph.this.model.getParents(SEGraph.this.getSelectedNode())
+				.size() == 0)
+			SEGraph.this.setSelectedNode(null);
+	}
+
+	/**
 	 * Removes the node from the graph's memory. This should be called when we
 	 * disconnect a node, as that alone will not delete its children from
 	 * memory. They might still be referenced by the graph. <br>
@@ -280,23 +289,25 @@ public class SEGraph<E> extends JComponent {
 	 * @param node
 	 */
 	private void cleanup(E node) {
+		if (node == null)
+			return;
 
 		for (E child : this.builder.getChildren(node)) {
 			if (this.builder.getParents(child).isEmpty()) {
 				final JComponent component;
-				component = this.nodesToComponents.get(child);
+				component = this.nodesToComponents.getValue(child);
 				if (component != null)
 					this.remove(component);
-				this.nodesToComponents.remove(child);
+				this.nodesToComponents.removeKey(child);
 			}
 		}
 
 		if (this.builder.getParents(node).isEmpty()) {
 			final JComponent component;
-			component = this.nodesToComponents.get(node);
+			component = this.nodesToComponents.getValue(node);
 			if (component != null)
 				this.remove(component);
-			this.nodesToComponents.remove(node);
+			this.nodesToComponents.removeKey(node);
 		}
 	}
 
@@ -306,7 +317,7 @@ public class SEGraph<E> extends JComponent {
 	 * @return
 	 */
 	public Collection<JComponent> getNodeComponents() {
-		return this.nodesToComponents.values();
+		return this.nodesToComponents.getValues();
 	}
 
 	/**
@@ -318,12 +329,13 @@ public class SEGraph<E> extends JComponent {
 	private JComponent getComponentForNode(E node) {
 		final JComponent component;
 
-		final JComponent storedComponent = this.nodesToComponents.get(node);
+		final JComponent storedComponent = this.nodesToComponents
+				.getValue(node);
 
 		if (storedComponent != null) {
 			component = storedComponent;
 		} else if (this.renderer != null) {
-			component = this.renderer.getComponentForNode(node);
+			component = this.renderer.createComponentForNode(node);
 		} else {
 			component = new JLabel(node.toString());
 		}
@@ -441,7 +453,9 @@ public class SEGraph<E> extends JComponent {
 							.getComponentForNode(node);
 
 					if (component.getMouseListeners().length <= 1) {
-						component.addMouseListener(new NodeMouseAdapter(node));
+						component.addMouseListener(SEGraph.this.mouseAdapter);
+						component
+								.addMouseMotionListener(SEGraph.this.mouseAdapter);
 					}
 
 					// Get the JComponent preferred width
@@ -564,15 +578,26 @@ public class SEGraph<E> extends JComponent {
 			g.setColor(SEGraph.this.getBackground());
 			g.fillRect(0, 0, SEGraph.this.getWidth(), SEGraph.this.getHeight());
 
-			// final Graphics2D g2 = (Graphics2D) g.create();
-			/*
-			 * if (SEGraph.this.previousSelectedNode != null &&
-			 * SEGraph.this.mousePosition != null) { g2.setColor(Color.gray);
-			 * g2.setStroke(new BasicStroke(1.5f)); GUIOp.paintArrow( g2,
-			 * GUIOp.getMidRight(SEGraph.this.renderer
-			 * .getComponentForNode(SEGraph.this.previousSelectedNode)),
-			 * SEGraph.this.mousePosition); }
-			 */
+			final Graphics2D g2 = (Graphics2D) g.create();
+
+			if (SEGraph.this.draggedFromNode != null
+					&& SEGraph.this.mousePosition != null) {
+				final ToolBarMode mode = GraphToolBarModeAction.getMode();
+
+				// TODO These colours should be their own colours, linked to the
+				// colours used in SEGraphNodeRenderer.
+				if (mode == ToolBarMode.INSERT || mode == ToolBarMode.CONNECT)
+					g2.setColor(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
+				else if (mode == ToolBarMode.DISCONNECT)
+					g2.setColor(ScriptEaseUI.COLOUR_UNBOUND);
+
+				g2.setStroke(new BasicStroke(1.5f));
+				GUIOp.paintArrow(g2, GUIOp.getMidRight(SEGraph.this
+						.getComponentForNode(SEGraph.this.draggedFromNode)),
+						SEGraph.this.mousePosition);
+
+			}
+
 			connectNodes(g);
 		}
 
@@ -626,7 +651,7 @@ public class SEGraph<E> extends JComponent {
 		}
 	}
 
-	private E lastEnteredNode = null;
+	private E draggedFromNode = null;
 
 	/**
 	 * Mouse adapter that gets added to every node. This is where the model gets
@@ -638,23 +663,63 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 */
 	private class NodeMouseAdapter extends MouseAdapter {
-		private final E node;
+		private E lastEnteredNode = null;
 
-		private NodeMouseAdapter(E node) {
-			this.node = node;
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			SEGraph.this.mousePosition.setLocation(SEGraph.this
+					.getMousePosition());
+			SEGraph.this.repaint();
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			switch (GraphToolBarModeAction.getMode()) {
+			case INSERT:
+			case CONNECT:
+			case DISCONNECT:
+				SEGraph.this.draggedFromNode = SEGraph.this.nodesToComponents
+						.getKey((JComponent) e.getSource());
+				break;
+			default:
+				SEGraph.this.draggedFromNode = null;
+				break;
+			}
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			SEGraph.this.lastEnteredNode = this.node;
+			final JComponent entered;
+
+			entered = (JComponent) e.getSource();
+
+			this.lastEnteredNode = SEGraph.this.nodesToComponents
+					.getKey(entered);
+
+			if (this.lastEnteredNode == SEGraph.this.getStartNode())
+				if (GraphToolBarModeAction.getMode() == ToolBarMode.DELETE) {
+					// TODO This cursor should be an "Unavailable" cursor
+					// instead of the default.
+					entered.setCursor(Cursor
+							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				} else
+					entered.setCursor(null);
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			final JComponent source;
+			final E node;
+
+			source = (JComponent) e.getSource();
+			node = SEGraph.this.nodesToComponents.getKey((JComponent) e
+					.getSource());
+
+			ComponentFocusManager.getInstance().setFocus(SEGraph.this);
+
 			switch (GraphToolBarModeAction.getMode()) {
 			case SELECT:
 			case DELETE:
-				final JComponent src = (JComponent) e.getSource();
 				final Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
 
 				/*
@@ -664,53 +729,44 @@ public class SEGraph<E> extends JComponent {
 				 * any kind of complaint for it. Either way, we want this
 				 * behaviour, not the default. - remiller
 				 */
-				if (!src.contains(mouseLoc.x - src.getLocationOnScreen().x,
-						mouseLoc.y - src.getLocationOnScreen().y))
+				if (!source.contains(mouseLoc.x
+						- source.getLocationOnScreen().x,
+						mouseLoc.y - source.getLocationOnScreen().y))
 					return;
 			}
+
 			switch (GraphToolBarModeAction.getMode()) {
 			case SELECT:
-				SEGraph.this.setSelectedNode(this.node);
+				SEGraph.this.setSelectedNode(node);
+				source.requestFocusInWindow();
 				break;
 			case INSERT:
 				E newNode = SEGraph.this.builder.buildNewNode();
 
-				if (SEGraph.this.lastEnteredNode != null)
-					if (SEGraph.this.lastEnteredNode == this.node)
-						SEGraph.this.addNodeTo(newNode, this.node);
+				if (this.lastEnteredNode != null)
+					if (this.lastEnteredNode == node)
+						SEGraph.this.addNodeTo(newNode, node);
 					else
 						SEGraph.this.addNodeBetween(newNode,
-								SEGraph.this.lastEnteredNode, this.node);
+								this.lastEnteredNode, node);
 				break;
 			case DELETE:
-				SEGraph.this.removeNode(this.node);
-				this.validateSelectedNode();
+				SEGraph.this.removeNode(node);
 				break;
 			case CONNECT:
-				if (SEGraph.this.lastEnteredNode != null
-						&& SEGraph.this.lastEnteredNode != this.node)
-					SEGraph.this.connectNodes(SEGraph.this.lastEnteredNode,
-							this.node);
+				if (this.lastEnteredNode != null
+						&& this.lastEnteredNode != node)
+					SEGraph.this.connectNodes(this.lastEnteredNode, node);
+
 				break;
 			case DISCONNECT:
-				if (SEGraph.this.lastEnteredNode != null
-						&& SEGraph.this.lastEnteredNode != this.node) {
-					SEGraph.this.disconnectNodes(SEGraph.this.lastEnteredNode,
-							this.node);
-					this.validateSelectedNode();
-				}
+				if (this.lastEnteredNode != null
+						&& this.lastEnteredNode != node)
+					SEGraph.this.disconnectNodes(this.lastEnteredNode, node);
 				break;
 			}
-		}
 
-		private void validateSelectedNode() {
-			if (SEGraph.this.model.getStartNode() == SEGraph.this
-					.getSelectedNode())
-				return;
-
-			if (SEGraph.this.model.getParents(SEGraph.this.getSelectedNode())
-					.size() == 0)
-				SEGraph.this.setSelectedNode(null);
+			SEGraph.this.draggedFromNode = null;
 		}
 	}
 
