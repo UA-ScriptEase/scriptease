@@ -12,11 +12,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.SpinnerModel;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -24,31 +21,24 @@ import scriptease.controller.GraphNodeAdapter;
 import scriptease.controller.observer.graph.GraphNodeEvent;
 import scriptease.controller.observer.graph.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.graph.GraphNodeObserver;
+import scriptease.gui.SEGraph.GraphPanel;
+import scriptease.gui.SEGraph.editor.KnowItNodeEditor;
+import scriptease.gui.SEGraph.editor.PathAssigner;
+import scriptease.gui.SEGraph.editor.TextNodeEditor;
+import scriptease.gui.SEGraph.nodes.GraphNode;
+import scriptease.gui.SEGraph.nodes.KnowItNode;
+import scriptease.gui.SEGraph.nodes.TextNode;
 import scriptease.gui.action.graphs.ConnectModeAction;
+import scriptease.gui.action.graphs.DeleteModeAction;
 import scriptease.gui.action.graphs.DisconnectModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.InsertModeAction;
 import scriptease.gui.action.graphs.SelectModeAction;
-import scriptease.gui.action.graphs.DeleteModeAction;
-import scriptease.gui.graph.GraphPanel;
-import scriptease.gui.graph.editor.KnowItNodeEditor;
-import scriptease.gui.graph.editor.PathAssigner;
-import scriptease.gui.graph.editor.TextNodeEditor;
-import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.graph.nodes.KnowItNode;
-import scriptease.gui.graph.nodes.TextNode;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.complex.StoryPoint;
 
 /**
- * ToolBarFactory is responsible for creating JToolBars, most importantly the
- * toolbars for editing graphs. A specialized Quest Editor Toolbar can also be
- * created.<br>
- * <br>
- * The class also determines toolbar functionality. These toolbars are used to
- * act upon Graph Panels, whether they be general Graph functions, Quest
- * functions, or DescribeIts.
+ * ToolBarFactory is responsible for creating all JToolBars.
  * 
  * @author kschenk
  * 
@@ -77,13 +67,17 @@ public class ToolBarFactory {
 	 * 
 	 * Also, this is an ugly hack while we figure out a better way to keep
 	 * strong references. - remiller
+	 * 
+	 * @deprecated Once we move DescribeIt stuff out of this factory, we will be
+	 *             able to delete this, too.
 	 */
-	@Deprecated
 	private Map<JToolBar, GraphNodeObserver> observerMap = new LinkedHashMap<JToolBar, GraphNodeObserver>();
 
 	/**
-	 * Builds a toolbar to edit graphs with. Includes buttons for selecting
-	 * nodes, adding and deleting nodes, and adding and deleting paths.
+	 * Builds a ToolBar to edit graphs with. Includes buttons for selecting
+	 * nodes, adding and deleting nodes, and adding and deleting paths. The
+	 * ToolBar buttons only set the mode; the graph itself contains the specific
+	 * actions that should happen.
 	 * 
 	 * @return
 	 */
@@ -168,6 +162,7 @@ public class ToolBarFactory {
 	 * graph editor toolbar.
 	 * 
 	 * @param gPanel
+	 * @deprecated This needs to be refactored to work with SEGraph instead.
 	 * @return
 	 */
 	public JToolBar buildDescribeItToolBar(DescribeIt editedDescribeIt,
@@ -218,91 +213,10 @@ public class ToolBarFactory {
 	}
 
 	/**
-	 * Creates a SpinnerModel for the FanIn function based on the current quest
-	 * point, then sets the FanIn Spinner Model to it.
-	 * 
-	 * If there is no Quest Point selected, the SpinnerModel is a spinner set to
-	 * 1.
-	 * 
-	 * @param fanInSpinner
-	 *            FanInSpinner to be passed
-	 * @param questNode
-	 *            QuestPointNode that the spinner is operating on. Pass in null
-	 *            if there is none.
-	 * 
-	 * @return The SpinnerModel
-	 */
-	private void updateFanInSpinner(JSpinner fanInSpinner, JLabel fanInLabel,
-			StoryPoint questNode) {
-
-		if (questNode != null) {
-			// XXX Max Fan In = questPoint parents size!
-
-			int maxFanIn = 0;
-			// questNode.getParents().size();
-
-			// If maxFanIn >1, maxFanIn. Otherwise, 1.
-			maxFanIn = maxFanIn > 1 ? maxFanIn : 1;
-
-			if (questNode.getFanIn() > maxFanIn) {
-				questNode.setFanIn(1);
-			}
-
-			final SpinnerModel fanInSpinnerModel = new SpinnerNumberModel(
-					questNode.getFanIn(), new Integer(1),
-					new Integer(maxFanIn), new Integer(1));
-
-			fanInSpinner.setModel(fanInSpinnerModel);
-
-			if (fanInSpinner.getChangeListeners().length > 1) {
-				fanInSpinner.removeChangeListener(fanInSpinner
-						.getChangeListeners()[1]);
-			}
-
-		} else {
-			final SpinnerModel fanInSpinnerModel = new SpinnerNumberModel(
-					new Integer(1), new Integer(1), new Integer(1),
-					new Integer(1));
-
-			fanInSpinner.setModel(fanInSpinnerModel);
-			fanInLabel.setEnabled(false);
-			fanInSpinner.setEnabled(false);
-		}
-	}
-
-	/**
-	 * Private observer for the QuestToolBar. Also provides quest specific
-	 * actions for the graph editor toolbar buttons.
-	 * 
-	 * @author kschenk
-	 */
-	private class QuestToolBarObserver implements GraphNodeObserver {
-		@Override
-		public void nodeChanged(GraphNodeEvent event) {
-			final GraphNodeEventType type = event.getEventType();
-
-			// XXX Temporary Quest Point so this class doesn't generate a
-			// billion errors. XXX
-			StoryPoint questPoint = new StoryPoint("");
-
-			if (type == GraphNodeEventType.SELECTED) {
-				switch (GraphToolBarModeAction.getMode()) {
-
-				case DISCONNECT:
-					int fanIn = questPoint.getFanIn();
-
-					if (fanIn > 1)
-						questPoint.setFanIn(fanIn - 1);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Private observer for the DescribeIt ToolBar
 	 * 
 	 * @author kschenk
-	 * 
+	 * @deprecated We need to get rid of this class.
 	 */
 	private static class DescribeItToolBarObserver implements GraphNodeObserver {
 		/**

@@ -172,7 +172,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 			}
 
 			@Override
-			public void processStoryPoint(KnowItBindingStoryPoint questPoint) {
+			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
 				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
 			}
 

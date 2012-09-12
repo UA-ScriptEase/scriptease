@@ -23,7 +23,7 @@ import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingConstantContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingFunctionContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingNullContext;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingQuestPointContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingStoryPointContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingReferenceContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingRunTimeContext;
 
@@ -148,9 +148,9 @@ public class ContextFactory {
 			}
 
 			@Override
-			public void processStoryPoint(KnowItBindingStoryPoint questPoint) {
-				ContextFactory.this.activeContext = new KnowItBindingQuestPointContext(pastContext,
-						questPoint);
+			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
+				ContextFactory.this.activeContext = new KnowItBindingStoryPointContext(pastContext,
+						storyPoint);
 
 			}
 		});

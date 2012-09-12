@@ -136,16 +136,16 @@ public class Context {
 	 */
 	protected Collection<StoryComponent> getComponents() {
 		final Collection<StoryComponent> components = new ArrayList<StoryComponent>();
-		final Collection<StoryPoint> questPoints;
+		final Collection<StoryPoint> storyPoints;
 
-		// Get all the QuestPoints from the model
-		questPoints = this.model.getDescendants();
+		// Get all the StoryPoints from the model
+		storyPoints = this.model.getDescendants();
 
 		// for each quest point
-		for (StoryPoint questPoint : questPoints) {
-			// Get all the components from each QuestPoint
+		for (StoryPoint storyPoint : storyPoints) {
+			// Get all the components from each StoryPoint
 			ComplexStoryComponentDescendantCollector getter = new ComplexStoryComponentDescendantCollector();
-			components.addAll(getter.collectDescendants(questPoint));
+			components.addAll(getter.collectDescendants(storyPoint));
 		}
 
 		return components;
@@ -347,7 +347,7 @@ public class Context {
 		return effects.iterator();
 	}
 	
-	public Iterator<StoryPoint> getQuestPoints() {
+	public Iterator<StoryPoint> getStoryPoints() {
 		return this.model.getDescendants().iterator();
 	}
 
@@ -431,8 +431,8 @@ public class Context {
 		return null;
 	}
 	
-	public String getQuestPointName() {
-		unimplemented("getQuestPointName");
+	public String getStoryPointName() {
+		unimplemented("getStoryPointName");
 		return null;
 	}
 

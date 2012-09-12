@@ -255,8 +255,8 @@ public class APIDictionary implements LibraryObserver {
 				}
 
 				@Override
-				public void processStoryPoint(KnowItBindingStoryPoint questPoint) {
-					questPoint.getValue().process(searcher);
+				public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
+					storyPoint.getValue().process(searcher);
 				}
 			};
 

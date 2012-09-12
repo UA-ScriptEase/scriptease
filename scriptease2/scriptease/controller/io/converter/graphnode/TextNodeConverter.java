@@ -1,14 +1,18 @@
 package scriptease.controller.io.converter.graphnode;
 
 import scriptease.controller.io.FileIO;
-import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.graph.nodes.TextNode;
+import scriptease.gui.SEGraph.nodes.GraphNode;
+import scriptease.gui.SEGraph.nodes.TextNode;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+/**
+ * @deprecated This needs to be removed. We have SEGraph now, which is more
+ *             coder-friendly and does more things.
+ */
 public class TextNodeConverter extends GraphNodeConverter {
 	public static final String TAG_TEXT_NODE = "TextNode";
 	private static final String TAG_TEXT = "Text";

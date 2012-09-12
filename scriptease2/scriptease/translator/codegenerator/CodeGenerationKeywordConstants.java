@@ -50,7 +50,7 @@ public interface CodeGenerationKeywordConstants {
 		TEMPLATEID,
 		TYPE,
 		VALUE,
-		CURRENTQUESTPOINT
+		CURRENTSTORYPOINT
 	}
 
 	// Used in SeriesFragment
@@ -79,7 +79,7 @@ public interface CodeGenerationKeywordConstants {
 		INCLUDES,
 		PARAMETERS,
 		PARENTNODES,
-		QUESTPOINTS,
+		STORYPOINTS,
 		SCRIPTITEFFECTS,
 		SCRIPTITS,
 		VARIABLES

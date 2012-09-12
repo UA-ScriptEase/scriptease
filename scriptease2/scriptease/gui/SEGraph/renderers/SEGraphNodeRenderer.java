@@ -1,4 +1,4 @@
-package scriptease.gui.graph.renderers;
+package scriptease.gui.SEGraph.renderers;
 
 import java.awt.Color;
 import java.awt.MouseInfo;
@@ -14,10 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
+import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
-import scriptease.gui.graph.SEGraph;
 import scriptease.util.GUIOp;
 
 /**
@@ -62,8 +62,8 @@ public class SEGraphNodeRenderer<E> {
 	 * By default, this does nothing.<br>
 	 * <br>
 	 * It can be used by subclasses to add any special components inside of the
-	 * component representing the node. For example, QuestPoint nodes add Fan In
-	 * panels and binding widgets for the Quest Point.
+	 * component representing the node. For example, StoryPoint nodes add Fan In
+	 * panels and binding widgets for the StoryPoint.
 	 * 
 	 * @param component
 	 * @param node

@@ -1,4 +1,4 @@
-package scriptease.gui.graph.editor;
+package scriptease.gui.SEGraph.editor;
 
 import java.util.Collection;
 
@@ -8,9 +8,9 @@ import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
+import scriptease.gui.SEGraph.nodes.GraphNode;
+import scriptease.gui.SEGraph.nodes.KnowItNode;
 import scriptease.gui.action.typemenus.TypeSelectionAction;
-import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.model.atomic.KnowIt;
 
 /**

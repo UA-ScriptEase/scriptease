@@ -8,9 +8,9 @@ import scriptease.model.StoryComponent;
  * <br>
  * When a new subclass of StoryComponent is created, this event should be
  * expanded to be able to represent a change in the new properties defined in
- * that new class. For example, when defining Quest Points, expand
- * {@link StoryComponentChangeEnum} to be able to represent changes in a Quest
- * Point's <i>Journal Entry</i> property.
+ * that new class. For example, when defining StoryPoints, expand
+ * {@link StoryComponentChangeEnum} to be able to represent changes in a
+ * StoryPoint's <i>Journal Entry</i> property.
  * 
  * @author remiller
  */

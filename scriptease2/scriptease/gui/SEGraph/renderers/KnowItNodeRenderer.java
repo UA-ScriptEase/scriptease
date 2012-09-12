@@ -1,4 +1,4 @@
-package scriptease.gui.graph.renderers;
+package scriptease.gui.SEGraph.renderers;
 
 import java.awt.FlowLayout;
 
@@ -6,11 +6,11 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.SEGraph.nodes.KnowItNode;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.SETree.cell.TypeWidget;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
-import scriptease.gui.graph.SEGraph;
-import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.model.atomic.KnowIt;
 
 public class KnowItNodeRenderer extends SEGraphNodeRenderer<KnowItNode> {

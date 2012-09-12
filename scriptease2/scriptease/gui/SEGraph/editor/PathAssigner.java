@@ -1,4 +1,4 @@
-package scriptease.gui.graph.editor;
+package scriptease.gui.SEGraph.editor;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
-import scriptease.gui.graph.nodes.GraphNode;
+import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.DescribeIt;

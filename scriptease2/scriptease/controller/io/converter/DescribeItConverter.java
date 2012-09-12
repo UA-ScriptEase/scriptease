@@ -9,9 +9,9 @@ import java.util.Map;
 import scriptease.controller.GraphNodeAdapter;
 import scriptease.controller.io.converter.graphnode.KnowItNodeConverter;
 import scriptease.controller.io.converter.graphnode.TextNodeConverter;
-import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.graph.nodes.KnowItNode;
-import scriptease.gui.graph.nodes.TextNode;
+import scriptease.gui.SEGraph.nodes.GraphNode;
+import scriptease.gui.SEGraph.nodes.KnowItNode;
+import scriptease.gui.SEGraph.nodes.TextNode;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.complex.ScriptIt;
 

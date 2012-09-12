@@ -1,4 +1,4 @@
-package scriptease.gui.graph.nodes;
+package scriptease.gui.SEGraph.nodes;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import java.util.Map.Entry;
 
 import scriptease.controller.GraphNodeVisitor;
 import scriptease.controller.observer.graph.GraphNodeEvent;
-import scriptease.controller.observer.graph.GraphNodeObserver;
 import scriptease.controller.observer.graph.GraphNodeEvent.GraphNodeEventType;
+import scriptease.controller.observer.graph.GraphNodeObserver;
 import sun.awt.util.IdentityArrayList;
 
 /**
@@ -22,11 +22,14 @@ import sun.awt.util.IdentityArrayList;
  * 
  * @author mfchurch
  * @author graves (refactored)
+ * 
+ * @deprecated GraphNode needs to be removed. We have SEGraph now, which is more
+ *             coder-friendly and does more things.
  */
 public abstract class GraphNode implements Cloneable {
 	protected IdentityArrayList<GraphNode> parents;
 	protected IdentityArrayList<GraphNode> children;
-	protected Collection<WeakGraphNodeObserverReference<GraphNodeObserver>> observers;
+	protected Collection<WeakReference<GraphNodeObserver>> observers;
 
 	protected boolean isBeingUsed;
 	protected boolean selected;
@@ -41,49 +44,10 @@ public abstract class GraphNode implements Cloneable {
 		this.init();
 	}
 
-	public GraphNode(List<GraphNode> children, boolean isTerminal) {
-		this.init();
-		if (children != null && !children.isEmpty())
-			this.children.addAll(children);
-		this.terminal = isTerminal;
-	}
-
-	/**
-	 * Returns if the GraphNode represents the given object. Must be implemented
-	 * by subclass
-	 * 
-	 * @param object
-	 * @return
-	 */
-	public abstract boolean represents(Object object);
-
-	/**
-	 * Checks descendants for a GraphNode which represents the given Object.
-	 * Returns null if not found.
-	 * 
-	 * @param object
-	 * @return
-	 */
-	public GraphNode getRepresentingGraphNode(Object object) {
-		// check if you represent the object
-		if (this.represents(object))
-			return this;
-		else {
-			// otherwise check the children
-			for (GraphNode child : this.children) {
-				if (child.represents(object))
-					return child;
-				else
-					return child.getRepresentingGraphNode(object);
-			}
-		}
-		return null;
-	}
-
 	private void init() {
 		this.parents = new IdentityArrayList<GraphNode>(this.INIT_CAPACITY);
 		this.children = new IdentityArrayList<GraphNode>(this.INIT_CAPACITY);
-		this.observers = new ArrayList<WeakGraphNodeObserverReference<GraphNodeObserver>>();
+		this.observers = new ArrayList<WeakReference<GraphNodeObserver>>();
 	}
 
 	/**
@@ -117,10 +81,10 @@ public abstract class GraphNode implements Cloneable {
 	}
 
 	public void addGraphNodeObserver(GraphNodeObserver observer) {
-		Collection<WeakGraphNodeObserverReference<GraphNodeObserver>> observersCopy = new ArrayList<WeakGraphNodeObserverReference<GraphNodeObserver>>(
+		Collection<WeakReference<GraphNodeObserver>> observersCopy = new ArrayList<WeakReference<GraphNodeObserver>>(
 				this.observers);
 
-		for (WeakGraphNodeObserverReference<GraphNodeObserver> observerRef : observersCopy) {
+		for (WeakReference<GraphNodeObserver> observerRef : observersCopy) {
 			GraphNodeObserver graphNodeObserver = observerRef.get();
 			if (graphNodeObserver != null && graphNodeObserver == observer)
 				return;
@@ -129,12 +93,12 @@ public abstract class GraphNode implements Cloneable {
 		}
 
 		this.observers
-				.add(new WeakGraphNodeObserverReference<GraphNodeObserver>(
+				.add(new WeakReference<GraphNodeObserver>(
 						observer));
 	}
 
 	public void removeGraphNodeObserver(GraphNodeObserver observer) {
-		for (WeakGraphNodeObserverReference<GraphNodeObserver> reference : this.observers) {
+		for (WeakReference<GraphNodeObserver> reference : this.observers) {
 			if (reference.get() == observer) {
 				this.observers.remove(reference);
 				return;
@@ -145,10 +109,10 @@ public abstract class GraphNode implements Cloneable {
 	// Note: This is public so that the mouseListener attached to the JComponent
 	// that represents the GraphNode can call it. TODO: refactor this.
 	public void notifyObservers(final GraphNodeEvent event) {
-		Collection<WeakGraphNodeObserverReference<GraphNodeObserver>> observersCopy = new ArrayList<WeakGraphNodeObserverReference<GraphNodeObserver>>(
+		Collection<WeakReference<GraphNodeObserver>> observersCopy = new ArrayList<WeakReference<GraphNodeObserver>>(
 				this.observers);
 
-		for (WeakGraphNodeObserverReference<GraphNodeObserver> observerRef : observersCopy) {
+		for (WeakReference<GraphNodeObserver> observerRef : observersCopy) {
 			GraphNodeObserver graphNodeObserver = observerRef.get();
 			if (graphNodeObserver != null)
 				graphNodeObserver.nodeChanged(event);
@@ -184,50 +148,6 @@ public abstract class GraphNode implements Cloneable {
 		return this.selected;
 	}
 
-	/**
-	 * Returns whether the GraphNode is deletable or not. Determined by if the
-	 * GraphNode is a start or end node. Does not need to be called in order to
-	 * delete the node, but it is useful if you need to check both.
-	 * 
-	 * @return
-	 */
-	public boolean isDeletable() {
-		if (this.isEndNode() || this.isStartNode())
-			return false;
-		else
-			return true;
-	}
-
-	/**
-	 * Returns true if the current node is the start node. Otherwise, returns
-	 * false.
-	 * 
-	 * @return
-	 */
-	public boolean isStartNode() {
-		List<GraphNode> parents = this.getParents();
-
-		if (parents.size() > 0)
-			return false;
-		else
-			return true;
-	}
-
-	/**
-	 * Returns true if the current node is the end node. Otherwise, returns
-	 * false.
-	 * 
-	 * @return
-	 */
-
-	public boolean isEndNode() {
-		List<GraphNode> children = this.getChildren();
-
-		if (children.size() > 0)
-			return false;
-		else
-			return true;
-	}
 
 	/**
 	 * Get a copy of the children of the GraphNode. Returning a copy of the List
@@ -307,22 +227,6 @@ public abstract class GraphNode implements Cloneable {
 	}
 
 	/**
-	 * Removes this GraphNode from its parents.
-	 * 
-	 * @return
-	 */
-	public boolean removeParents() {
-		boolean success = true;
-
-		// Remove this node from each parent.
-		List<GraphNode> parents = this.getParents();
-		for (GraphNode parent : parents) {
-			success &= this.removeFromParent(parent, false);
-		}
-		return success;
-	}
-
-	/**
 	 * Removes each child from this GraphNode.
 	 * 
 	 * @return
@@ -398,29 +302,6 @@ public abstract class GraphNode implements Cloneable {
 				parent.addChildren(oldChildren);
 			}
 			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Removes the given descendant GraphNode from the GraphNode, and optionally
-	 * reparents it's children to the descendant's parent. Returns if the
-	 * descendant was removed.
-	 * 
-	 * @param descendant
-	 * @param reparentChildren
-	 * @return
-	 */
-	public boolean removeDescendant(GraphNode descendant,
-			boolean reparentChildren) {
-		List<GraphNode> children = this.getChildren();
-		for (GraphNode child : children) {
-			if (child == descendant) {
-				return removeChild(child, reparentChildren);
-			} else {
-				if (child.removeDescendant(descendant, reparentChildren))
-					return true;
-			}
 		}
 		return false;
 	}
@@ -613,21 +494,6 @@ public abstract class GraphNode implements Cloneable {
 		Collection<GraphNode> nodes = observable.getNodeDepthMap().keySet();
 		for (GraphNode childNode : nodes) {
 			childNode.addGraphNodeObserver(observer);
-		}
-	}
-
-	/**
-	 * WeakReference wrapper used to track how many WeakReferences of each type
-	 * are generated. This class provides no functionality, but it does make it
-	 * easier for us to see where memory leaks may be occuring.
-	 * 
-	 * @author kschenk
-	 * 
-	 * @param <T>
-	 */
-	private class WeakGraphNodeObserverReference<T> extends WeakReference<T> {
-		public WeakGraphNodeObserverReference(T referent) {
-			super(referent);
 		}
 	}
 }

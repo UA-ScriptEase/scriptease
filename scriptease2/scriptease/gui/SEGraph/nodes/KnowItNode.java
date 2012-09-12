@@ -1,12 +1,17 @@
-package scriptease.gui.graph.nodes;
+package scriptease.gui.SEGraph.nodes;
 
-import scriptease.controller.StoryAdapter;
 import scriptease.controller.GraphNodeVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 
+/**
+ * 
+ * @deprecated This needs to be removed. We have SEGraph now, which is more
+ *             coder-friendly and does more things.
+ */
 public class KnowItNode extends GraphNode implements StoryComponentObserver {
 	private KnowIt knowIt;
 
@@ -63,10 +68,5 @@ public class KnowItNode extends GraphNode implements StoryComponentObserver {
 				setKnowIt(knowIt);
 			}
 		});
-	}
-
-	@Override
-	public boolean represents(Object object) {
-		return object == this.knowIt;
 	}
 }

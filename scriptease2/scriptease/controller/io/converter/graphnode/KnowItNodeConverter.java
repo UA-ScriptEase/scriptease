@@ -1,8 +1,8 @@
 package scriptease.controller.io.converter.graphnode;
 
 import scriptease.controller.io.converter.KnowItConverter;
-import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.graph.nodes.KnowItNode;
+import scriptease.gui.SEGraph.nodes.GraphNode;
+import scriptease.gui.SEGraph.nodes.KnowItNode;
 import scriptease.model.atomic.KnowIt;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -10,6 +10,10 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+/**
+ * @deprecated This needs to be removed. We have SEGraph now, which is more
+ *             coder-friendly and does more things.
+ */
 public class KnowItNodeConverter extends GraphNodeConverter {
 	public static final String TAG_KNOWIT_NODE = "KnowItNode";
 

@@ -1,4 +1,4 @@
-package scriptease.gui.graph.renderers;
+package scriptease.gui.SEGraph.renderers;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -18,9 +18,9 @@ import javax.swing.border.LineBorder;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
+import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SETree.cell.BindingWidget;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
-import scriptease.gui.graph.SEGraph;
 import scriptease.model.complex.StoryPoint;
 
 /**

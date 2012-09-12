@@ -8,7 +8,7 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.gui.ComponentFocusManager;
-import scriptease.gui.graph.GraphPanel;
+import scriptease.gui.SEGraph.GraphPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.model.LibraryModel;

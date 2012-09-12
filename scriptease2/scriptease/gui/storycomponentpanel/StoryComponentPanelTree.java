@@ -55,7 +55,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 
 	/**
 	 * Sets the root of the StoryComponentPanelTree. For individual stories,
-	 * this will be the start point of the current quest point.
+	 * this will be the start point of the current story point.
 	 * 
 	 * @param root
 	 *            The root StoryComponent for the tree.

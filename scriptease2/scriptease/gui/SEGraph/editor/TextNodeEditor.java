@@ -1,10 +1,10 @@
-package scriptease.gui.graph.editor;
+package scriptease.gui.SEGraph.editor;
 
 import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-import scriptease.gui.graph.nodes.TextNode;
+import scriptease.gui.SEGraph.nodes.TextNode;
 
 /**
  * JPanel made for editing the fields of a TextNode. Used by DescribeIts.

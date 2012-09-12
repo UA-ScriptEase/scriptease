@@ -122,7 +122,7 @@ public class CodeGenerator {
 
 		// If no problems were detected, generate the scripts
 		if (problems.isEmpty()) {
-			// aggregate the scripts based on the questPoints
+			// aggregate the scripts based on the storyPoints
 			final Collection<Set<CodeBlock>> scriptBuckets = module
 					.aggregateScripts(new ArrayList<StoryComponent>(root
 							.getDescendants()));

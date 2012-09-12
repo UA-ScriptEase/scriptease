@@ -1,4 +1,4 @@
-package scriptease.gui.graph.builders;
+package scriptease.gui.SEGraph.builders;
 
 import java.util.Collection;
 import java.util.HashSet;

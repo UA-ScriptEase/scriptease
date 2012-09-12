@@ -1,4 +1,4 @@
-package scriptease.gui.graph;
+package scriptease.gui.SEGraph;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -38,14 +38,14 @@ import scriptease.controller.GraphNodeVisitor;
 import scriptease.controller.observer.graph.GraphNodeEvent;
 import scriptease.controller.observer.graph.GraphNodeObserver;
 import scriptease.controller.observer.graph.GraphNodeEvent.GraphNodeEventType;
+import scriptease.gui.SEGraph.nodes.GraphNode;
+import scriptease.gui.SEGraph.nodes.KnowItNode;
+import scriptease.gui.SEGraph.nodes.TextNode;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.SETree.cell.TypeWidget;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
-import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.graph.nodes.KnowItNode;
-import scriptease.gui.graph.nodes.TextNode;
 import scriptease.model.atomic.KnowIt;
 import scriptease.util.GUIOp;
 import sun.awt.util.IdentityArrayList;
@@ -58,6 +58,9 @@ import sun.awt.util.IdentityArrayList;
  * @author mfchurch
  * @author graves (refactored)
  * @author kschenk
+ * 
+ * @deprecated GraphPanel needs to be removed. We have SEGraph now, which is
+ *             more coder-friendly and does more things. 
  */
 @SuppressWarnings("serial")
 public class GraphPanel extends JPanel implements GraphNodeObserver {
@@ -70,6 +73,10 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 
 	private GraphNode oldSelectedNode;
 
+	/**
+	 * @deprecated GraphPanel needs to be removed. We have SEGraph now, which is
+	 *             more coder-friendly and does more things.
+	 */
 	public GraphPanel(GraphNode headNode) {
 		this.setHeadNode(headNode);
 
@@ -143,6 +150,9 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 	 * Sets the head node for the graph panel.
 	 * 
 	 * @param graphNode
+	 * 
+	 * @deprecated GraphPanel needs to be removed. We have SEGraph now, which is
+	 *             more coder-friendly and does more things.
 	 */
 	public void setHeadNode(GraphNode graphNode) {
 		if (graphNode == null)
@@ -158,27 +168,11 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 	 * Returns the head node of the graph.
 	 * 
 	 * @return
+	 * @deprecated GraphPanel needs to be removed. We have SEGraph now, which is
+	 *             more coder-friendly and does more things.
 	 */
 	public GraphNode getHeadNode() {
 		return this.headNode;
-	}
-
-	/**
-	 * Returns the old selected node, which is used to draw paths between nodes.
-	 * 
-	 * @return
-	 */
-	public GraphNode getOldSelectedNode() {
-		return this.oldSelectedNode;
-	}
-
-	/**
-	 * Sets the old selected node, which is used to draw paths between nodes.
-	 * 
-	 * @param oldNode
-	 */
-	public void setOldSelectedNode(GraphNode oldNode) {
-		this.oldSelectedNode = oldNode;
 	}
 
 	/**
@@ -188,6 +182,9 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 	 * 
 	 * @author Graves
 	 * @author mfchurch
+	 * 
+	 * @deprecated GraphPanel needs to be removed. We have SEGraph now, which is
+	 *             more coder-friendly and does more things.
 	 */
 	private class GraphNodeComponentBuilder implements GraphNodeVisitor {
 		private Map<GraphNode, JComponent> componentMap = new IdentityHashMap<GraphNode, JComponent>();

@@ -15,13 +15,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
 import scriptease.controller.observer.graph.StoryPointGraphObserver;
+import scriptease.gui.SEGraph.GraphPanel;
+import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.SEGraph.builders.StoryPointBuilder;
+import scriptease.gui.SEGraph.nodes.GraphNode;
+import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
-import scriptease.gui.graph.GraphPanel;
-import scriptease.gui.graph.SEGraph;
-import scriptease.gui.graph.builders.StoryPointBuilder;
-import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.graph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.pane.GameObjectPane;
 import scriptease.gui.pane.LibraryPanel;
@@ -119,7 +119,7 @@ public class PanelFactory {
 
 	public JPanel buildStoryPanel(StoryModel model, StoryPoint start) {
 		final JPanel storyPanel;
-		final JPanel questPanel;
+		final JPanel storyGraphPanel;
 		final JToolBar graphToolBar;
 		final SEGraph<StoryPoint> storyGraph;
 		final StoryPointGraphObserver storyGraphObserver;
@@ -127,7 +127,7 @@ public class PanelFactory {
 		final StoryPointNodeRenderer storyNodeRenderer;
 
 		storyPanel = new JPanel(new GridLayout(0, 1));
-		questPanel = new JPanel(new BorderLayout(), true);
+		storyGraphPanel = new JPanel(new BorderLayout(), true);
 		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
 		storyGraph = new SEGraph<StoryPoint>(start,
 				new StoryPointBuilder(start));
@@ -155,11 +155,11 @@ public class PanelFactory {
 		GraphToolBarModeAction.addJComponent(storyGraph);
 		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
 
-		questPanel.add(graphToolBar, BorderLayout.PAGE_START);
-		questPanel.add(new JScrollPane(storyGraph), BorderLayout.CENTER);
+		storyGraphPanel.add(graphToolBar, BorderLayout.PAGE_START);
+		storyGraphPanel.add(new JScrollPane(storyGraph), BorderLayout.CENTER);
 
 		storyPanel.setOpaque(false);
-		storyPanel.add(questPanel);
+		storyPanel.add(storyGraphPanel);
 		storyPanel.add(storyComponentTree);
 
 		PanelFactory.componentsToTrees.put(storyPanel, storyComponentTree);
@@ -191,8 +191,8 @@ public class PanelFactory {
 	}
 
 	public void setRootForTreeInComponent(JComponent component,
-			StoryPoint questPoint) {
-		PanelFactory.componentsToTrees.get(component).setRoot(questPoint);
+			StoryPoint storyPoint) {
+		PanelFactory.componentsToTrees.get(component).setRoot(storyPoint);
 	}
 
 	/**
