@@ -1,12 +1,12 @@
-package scriptease.gui.graph.renderers;
+package scriptease.gui.SEGraph.renderers;
 
 import java.awt.Font;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
-import scriptease.gui.graph.SEGraph;
-import scriptease.gui.graph.nodes.TextNode;
+import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.SEGraph.nodes.TextNode;
 
 public class TextNodeRenderer extends SEGraphNodeRenderer<TextNode> {
 

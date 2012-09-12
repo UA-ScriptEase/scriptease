@@ -61,11 +61,11 @@ public class SemanticAnalyzer extends StoryAdapter {
 
 		// Make sure all parameters are bound before generating code
 		this.rules.add(new ParameterBoundRule());
-		// Get all the QuestPoints in the model
-		Collection<StoryPoint> questPoints = this.root.getDescendants();
-		for (StoryPoint questPoint : questPoints) {
-			// Process all the components from each QuestPoint
-			for (StoryComponent child : questPoint.getChildren()) {
+		// Get all the StoryPoints in the model
+		Collection<StoryPoint> storyPoints = this.root.getDescendants();
+		for (StoryPoint storyPoint : storyPoints) {
+			// Process all the components from each StoryPoint
+			for (StoryComponent child : storyPoint.getChildren()) {
 				child.process(this);
 			}
 		}

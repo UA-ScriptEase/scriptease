@@ -6,9 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.graph.nodes.KnowItNode;
-import scriptease.gui.graph.nodes.TextNode;
+import scriptease.gui.SEGraph.nodes.GraphNode;
+import scriptease.gui.SEGraph.nodes.KnowItNode;
+import scriptease.gui.SEGraph.nodes.TextNode;
 
 /**
  * GraphNodeVisitor used to resolve referencing problems created when cloning
@@ -16,6 +16,10 @@ import scriptease.gui.graph.nodes.TextNode;
  * first found equal GraphNode.
  * 
  * @author mfchurch
+ * 
+ * @deprecated This needs to be removed. We have SEGraph now, which is more
+ *             coder-friendly and does more things. This also shouldn't be its
+ *             own class.
  * 
  */
 public class GraphNodeReferenceResolver implements GraphNodeVisitor {

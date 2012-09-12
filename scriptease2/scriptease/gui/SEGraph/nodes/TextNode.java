@@ -1,9 +1,13 @@
-package scriptease.gui.graph.nodes;
+package scriptease.gui.SEGraph.nodes;
 
 import java.awt.Font;
 
 import scriptease.controller.GraphNodeVisitor;
 
+/**
+ * @deprecated This needs to be removed. We have SEGraph now, which is more
+ *             coder-friendly and does more things.
+ */
 public class TextNode extends GraphNode {
 	protected String text;
 	protected int bolded;
@@ -32,8 +36,8 @@ public class TextNode extends GraphNode {
 		else
 			this.bolded = Font.PLAIN;
 	}
-	
-	public int getBoldStatus(){
+
+	public int getBoldStatus() {
 		return this.bolded;
 	}
 
@@ -62,9 +66,5 @@ public class TextNode extends GraphNode {
 	public void process(GraphNodeVisitor processController) {
 		processController.processTextNode(this);
 	}
-	
-	@Override
-	public boolean represents(Object object) {
-		return object.equals(this.text);
-	}
+
 }

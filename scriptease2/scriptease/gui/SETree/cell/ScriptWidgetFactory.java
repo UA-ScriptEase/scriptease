@@ -130,10 +130,10 @@ public class ScriptWidgetFactory {
 	}
 
 	/**
-	 * Builds a BindingWidget from the given QuestPoint.
+	 * Builds a BindingWidget from the given StoryPoint.
 	 * 
 	 * @param component
-	 *            The quest to build a binding widget for.
+	 *            The story to build a binding widget for.
 	 * @param editable
 	 *            <code>true</code> means that the name is editable
 	 *            <code>false</code> otherwise.
@@ -145,10 +145,10 @@ public class ScriptWidgetFactory {
 	}
 
 	/**
-	 * Builds a BindingWidget from the given QuestPoint.
+	 * Builds a BindingWidget from the given StoryPoint.
 	 * 
 	 * @param component
-	 *            The quest to build a binding widget for.
+	 *            The story to build a binding widget for.
 	 * @param editable
 	 *            <code>true</code> means that the name is editable
 	 *            <code>false</code> otherwise.
@@ -236,9 +236,9 @@ public class ScriptWidgetFactory {
 		}
 
 		@Override
-		public void processStoryPoint(StoryPoint questPoint) {
+		public void processStoryPoint(StoryPoint storyPoint) {
 			this.bindingWidget = new BindingWidget(new KnowItBindingStoryPoint(
-					questPoint));
+					storyPoint));
 		}
 	}
 

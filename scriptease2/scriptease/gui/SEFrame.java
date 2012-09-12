@@ -316,16 +316,16 @@ public final class SEFrame implements PatternModelObserver {
 
 			@Override
 			public void processStoryModel(final StoryModel storyModel) {
-				// Creates a story editor panel with a quest graph
-				final StoryPoint startQuestPoint;
+				// Creates a story editor panel with a story graph
+				final StoryPoint startStoryPoint;
 				final JPanel newPanel;
 				final CloseableModelTab newTab;
 				final String title;
 				String modelTitle;
 
-				startQuestPoint = storyModel.getRoot();
+				startStoryPoint = storyModel.getRoot();
 				newPanel = PanelFactory.getInstance().buildStoryPanel(
-						storyModel, startQuestPoint);
+						storyModel, startStoryPoint);
 				newTab = new CloseableModelTab(SEFrame.this.modelTabs,
 						newPanel, storyModel, icon);
 				modelTitle = storyModel.getTitle();

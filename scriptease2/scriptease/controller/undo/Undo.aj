@@ -4,7 +4,7 @@ import java.util.List;
 
 import scriptease.controller.observer.graph.GraphNodeObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.gui.graph.nodes.GraphNode;
+import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.model.CodeBlock;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;

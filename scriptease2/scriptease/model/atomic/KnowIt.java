@@ -164,10 +164,10 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 	/**
 	 * Change the <code>KnowIt</code>'s binding to the given
-	 * <code>QuestPoint</code>.
+	 * <code>StoryPoint</code>.
 	 * 
 	 * @param value
-	 *            The QuestPoint to be known by this KnowIt
+	 *            The StoryPoint to be known by this KnowIt
 	 */
 	public void setBinding(StoryPoint value) {
 		if (value == null)
@@ -223,8 +223,8 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
 				// Find an appropriate Default binding for the type.
-				final PatternModel activeModel = PatternModelManager.getInstance()
-						.getActiveModel();
+				final PatternModel activeModel = PatternModelManager
+						.getInstance().getActiveModel();
 				if (activeModel != null) {
 					final Translator translator = activeModel.getTranslator();
 					if (translator != null && translator.loadedAPIDictionary()) {
@@ -305,8 +305,8 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 					@Override
 					public void processStoryPoint(
-							KnowItBindingStoryPoint questPoint) {
-						removeObservers(questPoint.getValue());
+							KnowItBindingStoryPoint storyPoint) {
+						removeObservers(storyPoint.getValue());
 					}
 				});
 				KnowIt.this.knowItBinding = newBinding;
@@ -488,7 +488,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				}
 
 				@Override
-				public void processStoryPoint(KnowItBindingStoryPoint questPoint) {
+				public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
 					KnowIt.this.notifyObservers(event);
 				}
 			});

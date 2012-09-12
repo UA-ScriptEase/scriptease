@@ -1,4 +1,4 @@
-package scriptease.gui.graph;
+package scriptease.gui.SEGraph;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import scriptease.controller.observer.graph.SEGraphObserver;
-import scriptease.gui.graph.builders.SEGraphNodeBuilder;
+import scriptease.gui.SEGraph.builders.SEGraphNodeBuilder;
 
 /**
  * Model class for SEGraph. This stores and handles all of the nodes in the

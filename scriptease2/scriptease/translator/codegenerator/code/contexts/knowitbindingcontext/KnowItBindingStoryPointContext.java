@@ -13,25 +13,25 @@ import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
- * Code generation Context for a KnowItBindingQuestPoint object.
+ * Code generation Context for a KnowItBindingStoryPoint object.
  * 
  * @see Context
  * @see KnowItBindingContext
  * @author remiller
  */
-public class KnowItBindingQuestPointContext extends KnowItBindingContext {
+public class KnowItBindingStoryPointContext extends KnowItBindingContext {
 
-	public KnowItBindingQuestPointContext(StoryPoint model, String indent,
+	public KnowItBindingStoryPointContext(StoryPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInfo) {
 		super(model, indent, existingNames, translator, locationInfo);
 	}
 
-	public KnowItBindingQuestPointContext(Context other) {
+	public KnowItBindingStoryPointContext(Context other) {
 		super(other);
 	}
 
-	public KnowItBindingQuestPointContext(Context other, KnowItBinding source) {
+	public KnowItBindingStoryPointContext(Context other, KnowItBinding source) {
 		this(other);
 		this.binding = source;
 	}
@@ -49,7 +49,7 @@ public class KnowItBindingQuestPointContext extends KnowItBindingContext {
 	}
 
 	/**
-	 * Get the KnowItBinding's QuestPoint Name
+	 * Get the KnowItBinding's StoryPoint Name
 	 */
 	@Override
 	public String getValue() {

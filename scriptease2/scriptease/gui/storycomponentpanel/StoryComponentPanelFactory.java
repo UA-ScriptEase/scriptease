@@ -178,8 +178,8 @@ public class StoryComponentPanelFactory {
 					}
 
 					@Override
-					public void processStoryPoint(StoryPoint questPoint) {
-						buildMainQuestPointPanel(questPoint, mainPanel);
+					public void processStoryPoint(StoryPoint storyPoint) {
+						buildMainStoryPointPanel(storyPoint, mainPanel);
 					}
 
 					@Override
@@ -346,18 +346,18 @@ public class StoryComponentPanelFactory {
 	private StoryAdapter componentProcessor(final StoryComponentPanel panel) {
 		return new StoryAdapter() {
 			@Override
-			public void processStoryPoint(StoryPoint questPoint) {
+			public void processStoryPoint(StoryPoint storyPoint) {
 				// Add an expansion button
-				addExpansionButton(questPoint, panel);
+				addExpansionButton(storyPoint, panel);
 
 				JPanel mainPanel = new JPanel();
-				buildMainQuestPointPanel(questPoint, mainPanel);
+				buildMainStoryPointPanel(storyPoint, mainPanel);
 
-				// Add a BindingWidget for the QuestPoint
+				// Add a BindingWidget for the StoryPoint
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
 
 				// Add the children panels
-				addChildrenPanels(questPoint, panel);
+				addChildrenPanels(storyPoint, panel);
 			}
 
 			@Override
@@ -418,11 +418,11 @@ public class StoryComponentPanelFactory {
 		}
 	}
 
-	private void buildMainQuestPointPanel(StoryPoint questPoint,
+	private void buildMainStoryPointPanel(StoryPoint storyPoint,
 			JPanel mainPanel) {
-		// Add a BindingWidget for the QuestPoint
+		// Add a BindingWidget for the StoryPoint
 		mainPanel
-				.add(ScriptWidgetFactory.buildBindingWidget(questPoint, false));
+				.add(ScriptWidgetFactory.buildBindingWidget(storyPoint, false));
 		mainPanel.setOpaque(false);
 	}
 

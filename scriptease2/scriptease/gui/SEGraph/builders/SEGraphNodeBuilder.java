@@ -1,10 +1,9 @@
-package scriptease.gui.graph.builders;
+package scriptease.gui.SEGraph.builders;
 
 import java.util.Collection;
 
 /**
- * Abstract class to implement a builder that can build new nodes and get
- * children and parents of nodes.
+ * A builder can build new nodes and get the children and parents of nodes.
  * 
  * @author kschenk
  * 

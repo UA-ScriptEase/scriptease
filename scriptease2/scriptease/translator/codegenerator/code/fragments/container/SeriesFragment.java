@@ -208,9 +208,9 @@ public class SeriesFragment extends AbstractContainerFragment {
 						.name()))
 			it = context.getChildren();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.QUESTPOINTS
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.STORYPOINTS
 						.name()))
-			it = context.getQuestPoints();
+			it = context.getStoryPoints();
 		else {
 			// Default return 'cuz they didn't tell us a real label!
 			System.err.println("Series was unable to be resolved for data: "

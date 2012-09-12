@@ -1,7 +1,7 @@
 package scriptease.controller;
 
-import scriptease.gui.graph.nodes.KnowItNode;
-import scriptease.gui.graph.nodes.TextNode;
+import scriptease.gui.SEGraph.nodes.KnowItNode;
+import scriptease.gui.SEGraph.nodes.TextNode;
 
 /**
  * Visitor for GraphNodes

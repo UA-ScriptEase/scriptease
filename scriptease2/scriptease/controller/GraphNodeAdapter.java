@@ -1,8 +1,8 @@
 package scriptease.controller;
 
-import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.graph.nodes.KnowItNode;
-import scriptease.gui.graph.nodes.TextNode;
+import scriptease.gui.SEGraph.nodes.GraphNode;
+import scriptease.gui.SEGraph.nodes.KnowItNode;
+import scriptease.gui.SEGraph.nodes.TextNode;
 
 /**
  * Default implementation of BindingVisitor that does nothing. Ever. <br>

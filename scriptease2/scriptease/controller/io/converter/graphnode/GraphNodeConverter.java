@@ -3,7 +3,7 @@ package scriptease.controller.io.converter.graphnode;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.gui.graph.nodes.GraphNode;
+import scriptease.gui.SEGraph.nodes.GraphNode;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -13,8 +13,12 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
  * GraphNodeConverter converts GraphNodes to/from XML
+ * 
  * @author mfchurch
- *
+ * 
+ * 
+ * @deprecated GraphNodeConverter needs to be removed. We have SEGraph now,
+ *             which is more coder-friendly and does more things.
  */
 public abstract class GraphNodeConverter implements Converter {
 	public static final String TAG_GRAPH_NODE = "GraphNode";
@@ -37,7 +41,7 @@ public abstract class GraphNodeConverter implements Converter {
 		writer.endNode();
 	}
 
-	@SuppressWarnings("unchecked") 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {

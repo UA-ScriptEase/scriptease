@@ -1,4 +1,4 @@
-package scriptease.gui.graph;
+package scriptease.gui.SEGraph;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -27,16 +27,17 @@ import javax.swing.JLabel;
 import javax.swing.plaf.ComponentUI;
 
 import scriptease.controller.observer.graph.SEGraphObserver;
+import scriptease.gui.SEGraph.SEGraphModel.GraphEvent;
+import scriptease.gui.SEGraph.builders.SEGraphNodeBuilder;
+import scriptease.gui.SEGraph.renderers.SEGraphNodeRenderer;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
-import scriptease.gui.graph.SEGraphModel.GraphEvent;
-import scriptease.gui.graph.builders.SEGraphNodeBuilder;
-import scriptease.gui.graph.renderers.SEGraphNodeRenderer;
 import scriptease.util.GUIOp;
 import sun.awt.util.IdentityArrayList;
 
 /**
- * Builds a directed, acyclic graph that must have a start node.
+ * Builds a directed, acyclic graph that must have a start node. Each graph must
+ * be created with an {@link SEGraphNodeBuilder}.
  * 
  * @author kschenk
  * 
@@ -47,13 +48,6 @@ public class SEGraph<E> extends JComponent {
 	private final SEGraphModel<E> model;
 	private final SEGraphObserver<E> modelObserver;
 
-	/*
-	 * Note: If we ever have to set builders and renderers, just remove the
-	 * final modifier from these, build a new constructor that builds default
-	 * builders/renderers, and create setters. Note that the setters will have
-	 * to redraw the graph (which should be as simple as calling repaint and
-	 * revalidate).
-	 */
 	private final SEGraphNodeBuilder<E> builder;
 	private final Map<E, JComponent> nodesToComponents;
 
@@ -63,14 +57,12 @@ public class SEGraph<E> extends JComponent {
 	private Point mousePosition;
 
 	/**
-	 * Builds a new graph with the passed in start point, builder, and renderer.
+	 * Builds a new graph with the passed in start point and a builder.
 	 * 
 	 * @param start
 	 *            The start point of the graph. Graphs must have a start point.
 	 * @param builder
-	 *            The node builder for the graph.
-	 * @param renderer
-	 *            The renderer for the graph.
+	 *            The {@link SEGraphNodeBuilder} for the graph.
 	 */
 	public SEGraph(E start, SEGraphNodeBuilder<E> builder) {
 		this.selectedNode = start;
@@ -101,8 +93,17 @@ public class SEGraph<E> extends JComponent {
 		});
 	}
 
+	/**
+	 * Sets the node renderer to the passed in renderer. This will redraw the
+	 * graph.
+	 * 
+	 * @param renderer
+	 */
 	public void setNodeRenderer(SEGraphNodeRenderer<E> renderer) {
 		this.renderer = renderer;
+
+		this.repaint();
+		this.revalidate();
 	}
 
 	/**

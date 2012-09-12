@@ -46,7 +46,7 @@ public class CodeBlockContext extends Context {
 	}
 
 	@Override
-	public String getQuestPointName() {
+	public String getStoryPointName() {
 		StoryComponent component = this.codeBlock.getOwner();
 		
 		while (!(component instanceof StoryPoint) && component != null)
@@ -56,7 +56,7 @@ public class CodeBlockContext extends Context {
 			return this.getNamifier().getUniqueName(component, null);
 		else
 			throw new CodeGenerationException(
-					"Failed to find a Quest Point parent for CodeBlock: "
+					"Failed to find a Story Point parent for CodeBlock: "
 							+ this.codeBlock);
 	}
 

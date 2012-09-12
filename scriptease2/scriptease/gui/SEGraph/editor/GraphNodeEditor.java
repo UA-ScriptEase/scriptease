@@ -1,4 +1,4 @@
-package scriptease.gui.graph.editor;
+package scriptease.gui.SEGraph.editor;
 
 import java.awt.Component;
 
@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import scriptease.gui.graph.nodes.GraphNode;
+import scriptease.gui.SEGraph.nodes.GraphNode;
 
 /**
  * Abstract JComponent made for editing the fields of a GraphNode. As of right

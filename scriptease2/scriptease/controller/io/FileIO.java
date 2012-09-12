@@ -38,9 +38,9 @@ import scriptease.controller.io.converter.fragment.SimpleDataFragmentConverter;
 import scriptease.controller.io.converter.graphnode.KnowItNodeConverter;
 import scriptease.controller.io.converter.graphnode.TextNodeConverter;
 import scriptease.gui.WindowFactory;
-import scriptease.gui.graph.nodes.GraphNode;
-import scriptease.gui.graph.nodes.KnowItNode;
-import scriptease.gui.graph.nodes.TextNode;
+import scriptease.gui.SEGraph.nodes.GraphNode;
+import scriptease.gui.SEGraph.nodes.KnowItNode;
+import scriptease.gui.SEGraph.nodes.TextNode;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
@@ -136,6 +136,7 @@ public class FileIO {
 		if (story != null) {
 			// Why are quests so bloody messy? - remiller
 			// Not anymore! They've been RECTIFIED! - kschenk
+			// And they're now known as stories. -kschenk
 			rootQP = story.getRoot();
 
 			BindingFixer.fixBindings(rootQP);
