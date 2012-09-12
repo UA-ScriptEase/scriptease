@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.complex.StoryPoint;
 
 /**
@@ -45,5 +46,17 @@ public class StoryPointNodeBuilder implements SEGraphNodeBuilder<StoryPoint> {
 		}
 
 		return parents;
+	}
+
+	@Override
+	public void addNodeObserver(StoryPoint node, Object observer) {
+		if(observer instanceof StoryComponentObserver)
+			node.addStoryComponentObserver((StoryComponentObserver) observer);
+	}
+
+	@Override
+	public void removeNodeObserver(StoryPoint node, Object observer) {
+		if(observer instanceof StoryComponentObserver)
+			node.removeStoryComponentObserver((StoryComponentObserver) observer);		
 	}
 }
