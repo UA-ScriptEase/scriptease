@@ -15,8 +15,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
 import scriptease.gui.SETree.ui.ScriptEaseUI;
-import scriptease.gui.action.ToolBarButtonAction;
-import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
+import scriptease.gui.action.graphs.GraphToolBarModeAction;
+import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.graph.SEGraph;
 import scriptease.util.GUIOp;
 
@@ -143,7 +143,7 @@ public class SEGraphNodeRenderer<E> {
 		borderColour = Color.GRAY;
 
 		for (JComponent component : this.graph.getNodeComponents()) {
-			if (ToolBarButtonAction.getMode() != ToolBarButtonMode.SELECT_GRAPH_NODE) {
+			if (GraphToolBarModeAction.getMode() != ToolBarMode.SELECT) {
 				if (component == this.graph.getSelectedComponent())
 					continue;
 			}
@@ -203,11 +203,11 @@ public class SEGraphNodeRenderer<E> {
 		 * want other colours. - remiller
 		 */
 		if (this.hoverComponents.contains(component)) {
-			if (ToolBarButtonAction.getMode() == ToolBarButtonMode.INSERT_GRAPH_NODE) {
+			if (GraphToolBarModeAction.getMode() == ToolBarMode.INSERT) {
 				toolColour = ScriptEaseUI.COLOUR_KNOWN_OBJECT;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.6);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.8);
-			} else if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DELETE_GRAPH_NODE) {
+			} else if (GraphToolBarModeAction.getMode() == ToolBarMode.DELETE) {
 				toolColour = ScriptEaseUI.COLOUR_UNBOUND;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.3);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.8);

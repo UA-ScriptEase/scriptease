@@ -17,7 +17,6 @@ import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.SETree.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.describeIts.DescribeItPanel;
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
@@ -29,6 +28,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * Builds a pane filled with ScriptEase Pattern Constructor GUI widgets for

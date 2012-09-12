@@ -41,8 +41,8 @@ import scriptease.controller.observer.graph.GraphNodeEvent.GraphNodeEventType;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.SETree.cell.TypeWidget;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
-import scriptease.gui.action.ToolBarButtonAction;
-import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
+import scriptease.gui.action.graphs.GraphToolBarModeAction;
+import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.gui.graph.nodes.TextNode;
@@ -373,11 +373,11 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 			 * convenient and close enough. Feel free to add colours to
 			 * ScriptEaseUI if you want other colours. - remiller
 			 */
-			if (ToolBarButtonAction.getMode() == ToolBarButtonMode.INSERT_GRAPH_NODE) {
+			if (GraphToolBarModeAction.getMode() == ToolBarMode.INSERT) {
 				toolColour = ScriptEaseUI.COLOUR_KNOWN_OBJECT;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.6);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.8);
-			} else if (ToolBarButtonAction.getMode() == ToolBarButtonMode.DELETE_GRAPH_NODE) {
+			} else if (GraphToolBarModeAction.getMode() == ToolBarMode.DELETE) {
 				toolColour = ScriptEaseUI.COLOUR_UNBOUND;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.3);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.8);

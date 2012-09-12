@@ -6,13 +6,13 @@ import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import scriptease.controller.get.VariableGetter;
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerationException;

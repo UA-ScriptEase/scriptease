@@ -1,12 +1,12 @@
-package scriptease.gui.quests;
+package scriptease.controller.io.converter;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import scriptease.controller.io.converter.ComplexStoryComponentConverter;
 import scriptease.model.StoryComponent;
+import scriptease.model.complex.StoryPoint;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;

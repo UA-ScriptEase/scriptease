@@ -3,9 +3,9 @@
 import java.io.File;
 
 import scriptease.controller.io.FileIO;
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameModule;

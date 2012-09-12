@@ -1,8 +1,8 @@
 package scriptease.translator.codegenerator.code.contexts.knowitbindingcontext;
 
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.LanguageDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;

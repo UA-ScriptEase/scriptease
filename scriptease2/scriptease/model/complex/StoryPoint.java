@@ -1,4 +1,4 @@
-package scriptease.gui.quests;
+package scriptease.model.complex;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -8,11 +8,9 @@ import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.ScriptIt;
 
 /**
- * QuestPoints are the basic units used to build stories. Each StoryPoint holds
+ * StoryPoints are the basic units used to build stories. Each StoryPoint holds
  * the StoryComponents that dictate the behaviour of the game world in the
  * current state of the game.
  * 
@@ -24,7 +22,7 @@ import scriptease.model.complex.ScriptIt;
  * @author kschenk
  */
 public class StoryPoint extends ComplexStoryComponent {
-	public static String QUEST_POINT_TYPE = "storyPoint";
+	public static String STORY_POINT_TYPE = "storyPoint";
 
 	private static final int DEFAULT_FAN_IN = 1;
 	private static final String NEW_STORY_POINT = "New Story Point";

@@ -2,9 +2,9 @@ package scriptease.translator.codegenerator.code.contexts.knowitbindingcontext;
 
 import java.util.Collection;
 
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
@@ -41,7 +41,7 @@ public class KnowItBindingQuestPointContext extends KnowItBindingContext {
 		final Collection<AbstractFragment> typeFormat;
 		
 		typeFormat = this.translator.getGameTypeManager().getFormat(
-				StoryPoint.QUEST_POINT_TYPE);
+				StoryPoint.STORY_POINT_TYPE);
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();
 

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import scriptease.gui.quests.StoryPoint;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * Builds a new StoryPoint in the SEGraph and contains methods to get the

@@ -28,7 +28,7 @@ import javax.swing.plaf.ComponentUI;
 
 import scriptease.controller.observer.graph.SEGraphObserver;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
-import scriptease.gui.action.ToolBarButtonAction;
+import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.graph.SEGraphModel.GraphEvent;
 import scriptease.gui.graph.builders.SEGraphNodeBuilder;
 import scriptease.gui.graph.renderers.SEGraphNodeRenderer;
@@ -270,9 +270,11 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
-	 * Destroys the node completely from memory. This should be called when we
+	 * Removes the node from the graph's memory. This should be called when we
 	 * disconnect a node, as that alone will not delete its children from
-	 * memory.
+	 * memory. They might still be referenced by the graph. <br>
+	 * <br>
+	 * Note that this does not mean the node is not referenced somewhere else.
 	 * 
 	 * @param node
 	 */
@@ -648,9 +650,9 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			switch (ToolBarButtonAction.getMode()) {
-			case SELECT_GRAPH_NODE:
-			case DELETE_GRAPH_NODE:
+			switch (GraphToolBarModeAction.getMode()) {
+			case SELECT:
+			case DELETE:
 				final JComponent src = (JComponent) e.getSource();
 				final Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
 
@@ -665,11 +667,11 @@ public class SEGraph<E> extends JComponent {
 						mouseLoc.y - src.getLocationOnScreen().y))
 					return;
 			}
-			switch (ToolBarButtonAction.getMode()) {
-			case SELECT_GRAPH_NODE:
+			switch (GraphToolBarModeAction.getMode()) {
+			case SELECT:
 				SEGraph.this.setSelectedNode(this.node);
 				break;
-			case INSERT_GRAPH_NODE:
+			case INSERT:
 				E newNode = SEGraph.this.builder.buildNewNode();
 
 				if (SEGraph.this.lastEnteredNode != null)
@@ -679,17 +681,17 @@ public class SEGraph<E> extends JComponent {
 						SEGraph.this.addNodeBetween(newNode,
 								SEGraph.this.lastEnteredNode, this.node);
 				break;
-			case DELETE_GRAPH_NODE:
+			case DELETE:
 				SEGraph.this.removeNode(this.node);
 				this.validateSelectedNode();
 				break;
-			case CONNECT_GRAPH_NODE:
+			case CONNECT:
 				if (SEGraph.this.lastEnteredNode != null
 						&& SEGraph.this.lastEnteredNode != this.node)
 					SEGraph.this.connectNodes(SEGraph.this.lastEnteredNode,
 							this.node);
 				break;
-			case DISCONNECT_GRAPH_NODE:
+			case DISCONNECT:
 				if (SEGraph.this.lastEnteredNode != null
 						&& SEGraph.this.lastEnteredNode != this.node) {
 					SEGraph.this.disconnectNodes(SEGraph.this.lastEnteredNode,

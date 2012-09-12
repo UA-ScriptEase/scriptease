@@ -1,6 +1,5 @@
 package scriptease.controller;
 
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
@@ -10,6 +9,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * Default implementation of StoryVisitor that does nothing. Ever. <br>

@@ -3,10 +3,10 @@ package scriptease.translator.codegenerator.code.contexts;
 import java.util.Iterator;
 
 import scriptease.controller.get.VariableGetter;
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
