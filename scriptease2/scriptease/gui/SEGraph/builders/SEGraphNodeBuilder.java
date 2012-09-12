@@ -19,6 +19,16 @@ public interface SEGraphNodeBuilder<E> {
 	public E buildNewNode();
 
 	/**
+	 * Adds a listener to the node. Be sure to check types before casting.
+	 */
+	public void addNodeObserver(E node, Object observer);
+
+	/**
+	 * Removes a listener from the node. Be sure to check types before casting.
+	 */
+	public void removeNodeObserver(E node, Object observer);
+
+	/**
 	 * Gets the node's children.
 	 * 
 	 * @param node

@@ -55,6 +55,7 @@ public class SEGraph<E> extends JComponent {
 
 	private final BiHashMap<E, JComponent> nodesToComponents;
 	private final NodeMouseAdapter mouseAdapter;
+	private final Collection<Object> individualNodeObservers;
 
 	private E selectedNode;
 	private Point mousePosition;
@@ -76,6 +77,7 @@ public class SEGraph<E> extends JComponent {
 		this.nodesToComponents = new BiHashMap<E, JComponent>();
 		this.modelObserver = new ModelCleaner();
 		this.mouseAdapter = new NodeMouseAdapter();
+		this.individualNodeObservers = new ArrayList<Object>();
 
 		this.model.addSEGraphObserver(this.modelObserver);
 
@@ -218,6 +220,34 @@ public class SEGraph<E> extends JComponent {
 	 */
 	public void removeSEGraphObserver(SEGraphObserver<E> observer) {
 		this.model.removeSEGraphObserver(observer);
+	}
+
+	/**
+	 * Adds an individual node observer to the Graph. These are added to each
+	 * Node that gets created and must be dealt with in the
+	 * {@link SEGraphNodeBuilder#addNodeObserver(Object, Object)} method in the
+	 * builder.
+	 * 
+	 * @param observer
+	 */
+	public void addIndividualNodeObserver(Object observer) {
+		for (E node : this.getNodes())
+			this.builder.addNodeObserver(node, observer);
+		this.individualNodeObservers.add(observer);
+	}
+
+	/**
+	 * Removes an individual node observer to the Graph. These are removed from
+	 * each Node that gets created and must be dealt with in the
+	 * {@link SEGraphNodeBuilder#addNodeObserver(Object, Object)} method in the
+	 * builder.
+	 * 
+	 * @param observer
+	 */
+	public void removeIndividualNodeObserver(Object observer) {
+		for (E node : this.getNodes())
+			this.builder.removeNodeObserver(node, observer);
+		this.individualNodeObservers.remove(observer);
 	}
 
 	/**
@@ -742,6 +772,8 @@ public class SEGraph<E> extends JComponent {
 				break;
 			case INSERT:
 				E newNode = SEGraph.this.builder.buildNewNode();
+				for (Object observer : SEGraph.this.individualNodeObservers)
+					SEGraph.this.builder.addNodeObserver(newNode, observer);
 
 				if (this.lastEnteredNode != null)
 					if (this.lastEnteredNode == node)

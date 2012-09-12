@@ -15,6 +15,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
 import scriptease.controller.observer.graph.StoryPointGraphObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEGraph.GraphPanel;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.builders.StoryPointNodeBuilder;
@@ -121,19 +123,42 @@ public class PanelFactory {
 		final JPanel storyPanel;
 		final JPanel storyGraphPanel;
 		final JToolBar graphToolBar;
+
 		final SEGraph<StoryPoint> storyGraph;
 		final StoryPointGraphObserver storyGraphObserver;
 		final StoryComponentPanelTree storyComponentTree;
 		final StoryPointNodeRenderer storyNodeRenderer;
 
+		final StoryComponentObserver nodeObserver;
+
 		storyPanel = new JPanel(new GridLayout(0, 1));
 		storyGraphPanel = new JPanel(new BorderLayout(), true);
 		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
+
 		storyGraph = new SEGraph<StoryPoint>(start, new StoryPointNodeBuilder(
 				start));
 		storyNodeRenderer = new StoryPointNodeRenderer(storyGraph);
 		storyGraphObserver = new StoryPointGraphObserver();
 		storyComponentTree = new StoryComponentPanelTree(start);
+
+		nodeObserver = new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				// TODO Need to do stuff if child added, etc!
+				// But beware infiniloops.......
+
+				/*
+				 * You know what, maybe I did this wrong. Instead of adding
+				 * nodes to the GraphModel and updating QuestPoints, we should
+				 * really be adding nodes to QuestPoints and updating the
+				 * GraphModel based on that. :|
+				 * 
+				 * So that will be the task for tomorrow then.
+				 */
+				storyGraph.repaint();
+				storyGraph.revalidate();
+			}
+		};
 
 		// Put the new pane to the map
 		List<JComponent> panes;
@@ -147,6 +172,7 @@ public class PanelFactory {
 		// Set up the Story Graph
 		storyGraph.setNodeRenderer(storyNodeRenderer);
 		storyGraph.addSEGraphObserver(storyGraphObserver);
+		storyGraph.addIndividualNodeObserver(nodeObserver);
 
 		PanelFactory.weakComponentToGraphObservers.put(storyPanel,
 				storyGraphObserver);
