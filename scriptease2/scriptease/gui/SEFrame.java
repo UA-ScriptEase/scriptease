@@ -32,11 +32,11 @@ import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.pane.CloseableModelTab;
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 

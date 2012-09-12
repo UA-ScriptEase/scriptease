@@ -1,7 +1,7 @@
 package scriptease.translator.codegenerator.code.contexts;
 
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;

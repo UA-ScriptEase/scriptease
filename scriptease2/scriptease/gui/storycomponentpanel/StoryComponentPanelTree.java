@@ -10,8 +10,8 @@ import javax.swing.JScrollPane;
 import scriptease.gui.SETree.filters.Filter;
 import scriptease.gui.SETree.filters.Filterable;
 import scriptease.gui.SETree.filters.StoryComponentFilter;
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * Tree which contains a root StoryComponentPanel, a StoryComponentPanelManager

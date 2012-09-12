@@ -6,10 +6,10 @@ import javax.swing.JComponent;
 
 import scriptease.controller.ModelAdapter;
 import scriptease.gui.PanelFactory;
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * Observer for graphs that acts on Story Points when they have children or

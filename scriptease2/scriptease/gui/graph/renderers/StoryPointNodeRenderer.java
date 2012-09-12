@@ -21,7 +21,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SETree.cell.BindingWidget;
 import scriptease.gui.SETree.cell.ScriptWidgetFactory;
 import scriptease.gui.graph.SEGraph;
-import scriptease.gui.quests.StoryPoint;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * Special renderer for nodes representing StoryPoints. These components also

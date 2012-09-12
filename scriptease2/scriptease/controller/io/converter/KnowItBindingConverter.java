@@ -6,8 +6,6 @@ import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
 import scriptease.controller.io.FileIO;
-import scriptease.gui.quests.StoryPoint;
-import scriptease.gui.quests.StoryPointConverter;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
@@ -20,6 +18,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.tools.GameConstantFactory;
@@ -48,7 +47,7 @@ public class KnowItBindingConverter implements Converter {
 	private static final String ATTRIBUTE_VALUE_RUNTIME_FLAVOUR = "runTime";
 	private static final String ATTRIBUTE_VALUE_NULL_FLAVOUR = "null";
 	private static final String ATTRIBUTE_VALUE_DESCRIBEIT_FLAVOUR = "describeIt";
-	private static final String ATTRIBUTE_VALUE_QUEST_POINT_FLAVOUR = "questPoint";
+	private static final String ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR = "storyPoint";
 
 	/**
 	 * Can convert any subclass of KnowItBinding
@@ -82,7 +81,7 @@ public class KnowItBindingConverter implements Converter {
 		// redirect to the appropriate writing method.
 		binding.process(new BindingVisitor() {
 			public void processConstant(KnowItBindingConstant constant) {
-				if (constant.getFirstType().equals(StoryPoint.QUEST_POINT_TYPE)) {
+				if (constant.getFirstType().equals(StoryPoint.STORY_POINT_TYPE)) {
 					// deal with it B-->:)
 					KnowItBindingConverter.this.marshallConstantBinding(
 							constant, writer);
@@ -216,12 +215,12 @@ public class KnowItBindingConverter implements Converter {
 	}
 
 	/*
-	 * Converts a Quest Point reference to XML
+	 * Converts a Story Point reference to XML
 	 */
 	private void marshallStoryPointBinding(KnowItBindingStoryPoint binding,
 			HierarchicalStreamWriter writer, MarshallingContext context) {
 		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
-				ATTRIBUTE_VALUE_QUEST_POINT_FLAVOUR);
+				ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR);
 
 		writer.startNode(StoryPointConverter.TAG_STORYPOINT);
 		context.convertAnother(binding.getValue());
@@ -265,7 +264,7 @@ public class KnowItBindingConverter implements Converter {
 					.equalsIgnoreCase(ATTRIBUTE_VALUE_DESCRIBEIT_FLAVOUR))
 				binding = this.unmarshallDescribeItBinding(reader, context);
 			else if (flavour
-					.equalsIgnoreCase(ATTRIBUTE_VALUE_QUEST_POINT_FLAVOUR))
+					.equalsIgnoreCase(ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR))
 				binding = this.unmarshallStoryPointBinding(reader, context);
 			else
 				// VizziniAmazementException - remiller

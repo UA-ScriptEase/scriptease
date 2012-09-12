@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.BindingVisitor;
-import scriptease.gui.quests.StoryPoint;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * This class represents a <b>Quest Point</b> binding for a <code>KnowIt</code>.
@@ -49,7 +49,7 @@ public class KnowItBindingStoryPoint extends KnowItBinding {
 	@Override
 	public Collection<String> getTypes() {
 		List<String> types = new ArrayList<String>();
-		types.add(StoryPoint.QUEST_POINT_TYPE);
+		types.add(StoryPoint.STORY_POINT_TYPE);
 		return types;
 	}
 

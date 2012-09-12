@@ -2,7 +2,6 @@ package scriptease.translator.codegenerator.code.contexts;
 
 import scriptease.controller.BindingVisitor;
 import scriptease.controller.StoryAdapter;
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -19,6 +18,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingConstantContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingFunctionContext;

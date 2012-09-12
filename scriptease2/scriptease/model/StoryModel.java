@@ -1,7 +1,7 @@
 package scriptease.model;
 
 import scriptease.controller.ModelVisitor;
-import scriptease.gui.quests.StoryPoint;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.io.model.GameModule;
 

@@ -1,6 +1,5 @@
 package scriptease.controller;
 
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
@@ -9,6 +8,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * Generic controller object that is a collection of double dispatch methods to

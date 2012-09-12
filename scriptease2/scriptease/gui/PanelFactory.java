@@ -15,8 +15,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
 import scriptease.controller.observer.graph.StoryPointGraphObserver;
-import scriptease.gui.action.ToolBarButtonAction;
-import scriptease.gui.action.ToolBarButtonAction.ToolBarButtonMode;
+import scriptease.gui.action.graphs.GraphToolBarModeAction;
+import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.SEGraph;
 import scriptease.gui.graph.builders.StoryPointBuilder;
@@ -25,13 +25,13 @@ import scriptease.gui.graph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.pane.GameObjectPane;
 import scriptease.gui.pane.LibraryPanel;
-import scriptease.gui.quests.StoryPoint;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.GameObjectPicker;
 import scriptease.util.BiHashMap;
@@ -67,7 +67,7 @@ public class PanelFactory {
 
 		graphPanel.setHeadNode(editedDescribeIt.getHeadNode());
 
-		ToolBarButtonAction.addJComponent(graphPanel);
+		GraphToolBarModeAction.addJComponent(graphPanel);
 
 		final JToolBar graphToolBar = ToolBarFactory.getInstance()
 				.buildGraphEditorToolBar();
@@ -78,7 +78,7 @@ public class PanelFactory {
 		describeItPanel.add(graphToolBar.add(describeItToolBar),
 				BorderLayout.PAGE_START);
 
-		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
+		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
 
 		describeItPanel.add(new JScrollPane(graphPanel), BorderLayout.CENTER);
 
@@ -152,8 +152,8 @@ public class PanelFactory {
 				storyGraphObserver);
 
 		// Reset the ToolBar to select and add the Story Graph to it.
-		ToolBarButtonAction.addJComponent(storyGraph);
-		ToolBarButtonAction.setMode(ToolBarButtonMode.SELECT_GRAPH_NODE);
+		GraphToolBarModeAction.addJComponent(storyGraph);
+		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
 
 		questPanel.add(graphToolBar, BorderLayout.PAGE_START);
 		questPanel.add(new JScrollPane(storyGraph), BorderLayout.CENTER);

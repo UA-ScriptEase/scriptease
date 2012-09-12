@@ -24,12 +24,12 @@ import scriptease.controller.GraphNodeAdapter;
 import scriptease.controller.observer.graph.GraphNodeEvent;
 import scriptease.controller.observer.graph.GraphNodeEvent.GraphNodeEventType;
 import scriptease.controller.observer.graph.GraphNodeObserver;
-import scriptease.gui.action.ToolBarButtonAction;
-import scriptease.gui.action.story.graphs.ConnectGraphPointAction;
-import scriptease.gui.action.story.graphs.DeleteGraphNodeAction;
-import scriptease.gui.action.story.graphs.DisconnectGraphPointAction;
-import scriptease.gui.action.story.graphs.InsertGraphNodeAction;
-import scriptease.gui.action.story.graphs.SelectGraphNodeAction;
+import scriptease.gui.action.graphs.ConnectModeAction;
+import scriptease.gui.action.graphs.DisconnectModeAction;
+import scriptease.gui.action.graphs.GraphToolBarModeAction;
+import scriptease.gui.action.graphs.InsertModeAction;
+import scriptease.gui.action.graphs.SelectModeAction;
+import scriptease.gui.action.graphs.DeleteModeAction;
 import scriptease.gui.graph.GraphPanel;
 import scriptease.gui.graph.editor.KnowItNodeEditor;
 import scriptease.gui.graph.editor.PathAssigner;
@@ -37,9 +37,9 @@ import scriptease.gui.graph.editor.TextNodeEditor;
 import scriptease.gui.graph.nodes.GraphNode;
 import scriptease.gui.graph.nodes.KnowItNode;
 import scriptease.gui.graph.nodes.TextNode;
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * ToolBarFactory is responsible for creating JToolBars, most importantly the
@@ -95,19 +95,19 @@ public class ToolBarFactory {
 		final ArrayList<JToggleButton> buttonList = new ArrayList<JToggleButton>();
 
 		final JToggleButton selectNodeButton = new JToggleButton(
-				SelectGraphNodeAction.getInstance());
+				SelectModeAction.getInstance());
 
 		final JToggleButton insertNodeButton = new JToggleButton(
-				InsertGraphNodeAction.getInstance());
+				InsertModeAction.getInstance());
 
 		final JToggleButton deleteNodeButton = new JToggleButton(
-				DeleteGraphNodeAction.getInstance());
+				DeleteModeAction.getInstance());
 
 		final JToggleButton connectNodeButton = new JToggleButton(
-				ConnectGraphPointAction.getInstance());
+				ConnectModeAction.getInstance());
 
 		final JToggleButton disconnectNodeButton = new JToggleButton(
-				DisconnectGraphPointAction.getInstance());
+				DisconnectModeAction.getInstance());
 
 		graphEditorToolBar.setLayout(new BoxLayout(graphEditorToolBar,
 				BoxLayout.LINE_AXIS));
@@ -131,25 +131,25 @@ public class ToolBarFactory {
 
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				switch (ToolBarButtonAction.getMode()) {
+				switch (GraphToolBarModeAction.getMode()) {
 
-				case SELECT_GRAPH_NODE:
+				case SELECT:
 					graphEditorButtonGroup.setSelected(
 							selectNodeButton.getModel(), true);
 					break;
-				case DELETE_GRAPH_NODE:
+				case DELETE:
 					graphEditorButtonGroup.setSelected(
 							deleteNodeButton.getModel(), true);
 					break;
-				case INSERT_GRAPH_NODE:
+				case INSERT:
 					graphEditorButtonGroup.setSelected(
 							insertNodeButton.getModel(), true);
 					break;
-				case CONNECT_GRAPH_NODE:
+				case CONNECT:
 					graphEditorButtonGroup.setSelected(
 							connectNodeButton.getModel(), true);
 					break;
-				case DISCONNECT_GRAPH_NODE:
+				case DISCONNECT:
 					graphEditorButtonGroup.setSelected(
 							disconnectNodeButton.getModel(), true);
 					break;
@@ -286,9 +286,9 @@ public class ToolBarFactory {
 			StoryPoint questPoint = new StoryPoint("");
 
 			if (type == GraphNodeEventType.SELECTED) {
-				switch (ToolBarButtonAction.getMode()) {
+				switch (GraphToolBarModeAction.getMode()) {
 
-				case DISCONNECT_GRAPH_NODE:
+				case DISCONNECT:
 					int fanIn = questPoint.getFanIn();
 
 					if (fanIn > 1)
@@ -333,8 +333,8 @@ public class ToolBarFactory {
 			final GraphNodeEventType type = event.getEventType();
 
 			if (type == GraphNodeEventType.SELECTED) {
-				switch (ToolBarButtonAction.getMode()) {
-				case INSERT_GRAPH_NODE:
+				switch (GraphToolBarModeAction.getMode()) {
+				case INSERT:
 					if (event.isShiftDown()) {
 						TextNode textNode = new TextNode("New Text Node");
 						sourceNode.addChild(textNode);
@@ -345,7 +345,7 @@ public class ToolBarFactory {
 						break;
 					}
 					break;
-				case SELECT_GRAPH_NODE:
+				case SELECT:
 
 					if (event.isShiftDown()) {
 						this.editedDescribeIt.selectFromHeadToNode(sourceNode);

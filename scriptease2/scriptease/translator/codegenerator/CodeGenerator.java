@@ -9,10 +9,10 @@ import java.util.concurrent.Executors;
 
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.WindowFactory;
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.LanguageDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.contexts.Context;

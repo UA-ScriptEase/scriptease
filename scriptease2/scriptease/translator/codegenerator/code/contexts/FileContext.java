@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.CodeBlock;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;

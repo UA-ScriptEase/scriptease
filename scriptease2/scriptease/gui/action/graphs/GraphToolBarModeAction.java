@@ -1,4 +1,4 @@
-package scriptease.gui.action;
+package scriptease.gui.action.graphs;
 
 import java.awt.Cursor;
 import java.awt.Point;
@@ -14,23 +14,29 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
+import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.util.FileOp;
 
 /**
  * Abstract class for ToolBar buttons. Adds an image for the button. The name of
- * the image must be the same as the tool name.
+ * the image must be the same as the tool name. GraphToolBarModeActions should
+ * only set the mode of the ToolBar and not act on the graph itself.
  * 
  * @author kschenk
  * 
  */
 @SuppressWarnings("serial")
-public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
+public abstract class GraphToolBarModeAction extends ActiveModelSensitiveAction {
 
-	public static enum ToolBarButtonMode {
-		INSERT_GRAPH_NODE, SELECT_GRAPH_NODE, DELETE_GRAPH_NODE, CONNECT_GRAPH_NODE, DISCONNECT_GRAPH_NODE
+	public static enum ToolBarMode {
+		INSERT,
+		SELECT,
+		DELETE,
+		CONNECT,
+		DISCONNECT
 	}
 
-	private static ToolBarButtonMode selectedMode;
+	private static ToolBarMode selectedMode;
 
 	private String actionName;
 
@@ -42,7 +48,7 @@ public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 	 * @param name
 	 *            The file name for the icon and name of the action.
 	 */
-	protected ToolBarButtonAction(String name, String iconName) {
+	protected GraphToolBarModeAction(String name, String iconName) {
 		super(name);
 		this.actionName = name;
 		this.putValue(Action.LARGE_ICON_KEY,
@@ -88,12 +94,12 @@ public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 	 * @param newMode
 	 *            The ToolBarButtonMode associated with the tool.
 	 */
-	public static void setMode(ToolBarButtonMode newMode) {
-		ToolBarButtonAction.selectedMode = newMode;
+	public static void setMode(ToolBarMode newMode) {
+		GraphToolBarModeAction.selectedMode = newMode;
 	}
 
 	public static void addJComponent(JComponent component) {
-		ToolBarButtonAction.activeComponents.add(component);
+		GraphToolBarModeAction.activeComponents.add(component);
 	}
 
 	/**
@@ -101,8 +107,8 @@ public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @return The current mode for the ToolBar.
 	 */
-	public static ToolBarButtonMode getMode() {
-		return ToolBarButtonAction.selectedMode;
+	public static ToolBarMode getMode() {
+		return GraphToolBarModeAction.selectedMode;
 	}
 
 	/**
@@ -112,28 +118,34 @@ public abstract class ToolBarButtonAction extends ActiveModelSensitiveAction {
 	 * @param cursorPath
 	 */
 	public void setCursorToImageFromPath(String cursorPath) {
-		final File file;
-		final String resultingCursorPath;
-		final Toolkit toolkit = Toolkit.getDefaultToolkit();
-		final Point CURSOR_HOTSPOT = new Point(0, 0);
-		BufferedImage cursorImage;
+		// Setting a cursor to null sets it to its parent, which is the default
+		// cursor in this case.
 		Cursor customCursor = null;
 
-		resultingCursorPath = "scriptease/resources/icons/cursors/"
-				+ cursorPath + ".png";
+		if (cursorPath != null) {
+			final File file;
+			final String resultingCursorPath;
+			final Toolkit toolkit = Toolkit.getDefaultToolkit();
+			final Point CURSOR_HOTSPOT = new Point(0, 0);
+			BufferedImage cursorImage;
 
-		file = FileOp.getFileResource(resultingCursorPath);
+			resultingCursorPath = "scriptease/resources/icons/cursors/"
+					+ cursorPath + ".png";
 
-		if (file == null)
-			customCursor = null;
-		else {
-			try {
-				cursorImage = ImageIO.read(file);
+			file = FileOp.getFileResource(resultingCursorPath);
 
-				customCursor = toolkit.createCustomCursor(cursorImage,
-						CURSOR_HOTSPOT, resultingCursorPath);
-			} catch (IOException e) {
+			if (file == null)
 				customCursor = null;
+			else {
+				try {
+					cursorImage = ImageIO.read(file);
+
+					customCursor = toolkit.createCustomCursor(cursorImage,
+							CURSOR_HOTSPOT, resultingCursorPath);
+				} catch (IOException e) {
+					System.err.println("Failed to read cursor file at " + file
+							+ ". Setting cursor to default.");
+				}
 			}
 		}
 

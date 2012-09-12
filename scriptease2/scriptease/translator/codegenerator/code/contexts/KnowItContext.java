@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import scriptease.controller.get.VariableGetter;
-import scriptease.gui.quests.StoryPoint;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
