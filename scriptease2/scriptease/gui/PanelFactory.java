@@ -17,7 +17,7 @@ import javax.swing.JToolBar;
 import scriptease.controller.observer.graph.StoryPointGraphObserver;
 import scriptease.gui.SEGraph.GraphPanel;
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.SEGraph.builders.StoryPointBuilder;
+import scriptease.gui.SEGraph.builders.StoryPointNodeBuilder;
 import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
@@ -129,8 +129,8 @@ public class PanelFactory {
 		storyPanel = new JPanel(new GridLayout(0, 1));
 		storyGraphPanel = new JPanel(new BorderLayout(), true);
 		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
-		storyGraph = new SEGraph<StoryPoint>(start,
-				new StoryPointBuilder(start));
+		storyGraph = new SEGraph<StoryPoint>(start, new StoryPointNodeBuilder(
+				start));
 		storyNodeRenderer = new StoryPointNodeRenderer(storyGraph);
 		storyGraphObserver = new StoryPointGraphObserver();
 		storyComponentTree = new StoryComponentPanelTree(start);
@@ -145,8 +145,8 @@ public class PanelFactory {
 		PanelFactory.modelsToComponents.put(model, panes);
 
 		// Set up the Story Graph
-		storyGraph.addSEGraphObserver(storyGraphObserver);
 		storyGraph.setNodeRenderer(storyNodeRenderer);
+		storyGraph.addSEGraphObserver(storyGraphObserver);
 
 		PanelFactory.weakComponentToGraphObservers.put(storyPanel,
 				storyGraphObserver);

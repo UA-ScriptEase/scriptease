@@ -13,10 +13,10 @@ import scriptease.model.complex.StoryPoint;
  * @author kschenk
  * 
  */
-public class StoryPointBuilder extends SEGraphNodeBuilder<StoryPoint> {
+public class StoryPointNodeBuilder implements SEGraphNodeBuilder<StoryPoint> {
 	private final StoryPoint start;
 
-	public StoryPointBuilder(StoryPoint start) {
+	public StoryPointNodeBuilder(StoryPoint start) {
 		super();
 		this.start = start;
 	}

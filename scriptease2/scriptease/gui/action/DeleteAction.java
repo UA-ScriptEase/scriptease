@@ -8,7 +8,7 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.gui.ComponentFocusManager;
-import scriptease.gui.SEGraph.GraphPanel;
+import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.model.LibraryModel;
@@ -65,6 +65,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 		PatternModelManager.getInstance().addPatternModelObserver(this);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;
@@ -98,21 +99,12 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 
 				libraryModel.remove(selectedPanel.getStoryComponent());
 			}
-		} else if (focusOwner instanceof GraphPanel) {
-			//Delete QuestNode
-			
-			// final GraphPanel graphPanel;
-			// graphPanel = (GraphPanel) focusOwner;
+		} else if (focusOwner instanceof SEGraph) {
+			// Raw types here, but the way Graphs are set up, these should work
+			final SEGraph graph;
+			graph = (SEGraph) focusOwner;
 
-			/*
-			 * TODO Since graph points, quest points, quest point nodes,
-			 * listeners, etc are wiggidy-wack, we can't implement this right
-			 * now. Once we are able to get the currently selected quest node,
-			 * though, we'll be able to.
-			 * 
-			 * We really need to implement better listeners for our graphs, and
-			 * a better way of managing them.
-			 */
+			graph.removeNode(graph.getSelectedNode());
 		}
 	}
 }

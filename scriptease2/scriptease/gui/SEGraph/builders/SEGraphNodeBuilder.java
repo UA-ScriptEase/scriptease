@@ -9,14 +9,14 @@ import java.util.Collection;
  * 
  * @param <E>
  */
-public abstract class SEGraphNodeBuilder<E> {
+public interface SEGraphNodeBuilder<E> {
 
 	/**
 	 * Builds a new node.
 	 * 
 	 * @return
 	 */
-	public abstract E buildNewNode();
+	public E buildNewNode();
 
 	/**
 	 * Gets the node's children.
@@ -24,7 +24,7 @@ public abstract class SEGraphNodeBuilder<E> {
 	 * @param node
 	 * @return The node's children
 	 */
-	public abstract Collection<E> getChildren(E node);
+	public Collection<E> getChildren(E node);
 
 	/**
 	 * Gets the node's parents.
@@ -32,6 +32,6 @@ public abstract class SEGraphNodeBuilder<E> {
 	 * @param node
 	 * @return The node's parents
 	 */
-	public abstract Collection<E> getParents(E node);
+	public Collection<E> getParents(E node);
 
 }
