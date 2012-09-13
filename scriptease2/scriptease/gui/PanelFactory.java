@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import javax.swing.JToolBar;
 
 import scriptease.controller.observer.graph.StoryPointGraphObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEGraph.GraphPanel;
 import scriptease.gui.SEGraph.SEGraph;
@@ -47,6 +49,7 @@ import scriptease.util.BiHashMap;
  */
 public class PanelFactory {
 	private static PanelFactory instance = new PanelFactory();
+	private final static BiHashMap<PatternModel, List<JComponent>> modelsToComponents = new BiHashMap<PatternModel, List<JComponent>>();
 
 	public static PanelFactory getInstance() {
 		return PanelFactory.instance;
@@ -113,12 +116,14 @@ public class PanelFactory {
 		return jPanel;
 	}
 
-	private final static BiHashMap<PatternModel, List<JComponent>> modelsToComponents = new BiHashMap<PatternModel, List<JComponent>>();
-
-	private final static Map<JComponent, StoryComponentPanelTree> componentsToTrees = new IdentityHashMap<JComponent, StoryComponentPanelTree>();
-
-	private final static Map<JComponent, StoryPointGraphObserver> weakComponentToGraphObservers = new WeakHashMap<JComponent, StoryPointGraphObserver>();
-
+	/**
+	 * Builds a panel for a StoryModel. This panel includes an {@link SEGraph}
+	 * and a {@link StoryComponentPanelTree}.
+	 * 
+	 * @param model
+	 * @param start
+	 * @return
+	 */
 	public JPanel buildStoryPanel(StoryModel model, StoryPoint start) {
 		final JPanel storyPanel;
 		final JPanel storyGraphPanel;
@@ -144,19 +149,32 @@ public class PanelFactory {
 		nodeObserver = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
-				// TODO Need to do stuff if child added, etc!
-				// But beware infiniloops.......
+				if (!(event.getSource() instanceof StoryPoint))
+					return;
 
-				/*
-				 * You know what, maybe I did this wrong. Instead of adding
-				 * nodes to the GraphModel and updating QuestPoints, we should
-				 * really be adding nodes to QuestPoints and updating the
-				 * GraphModel based on that. :|
-				 * 
-				 * So that will be the task for tomorrow then.
-				 */
-				storyGraph.repaint();
-				storyGraph.revalidate();
+				final StoryPoint source;
+
+				source = (StoryPoint) event.getSource();
+
+				if (event.getType() == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED) {
+					for (StoryPoint child : source.getSuccessors()) {
+						if (!storyGraph.getNodes().contains(child))
+							storyGraph.addNodeTo(child, source);
+					}
+				} else if (event.getType() == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED) {
+					final Collection<StoryPoint> children;
+
+					// We make a new collection to avoid concurrent
+					// modifications
+					children = new ArrayList<StoryPoint>(
+							storyGraph.getChildren(source));
+
+					for (StoryPoint child : children) {
+						if (!source.getSuccessors().contains(child)) {
+							storyGraph.removeNode(child);
+						}
+					}
+				}
 			}
 		};
 
@@ -174,9 +192,6 @@ public class PanelFactory {
 		storyGraph.addSEGraphObserver(storyGraphObserver);
 		storyGraph.addIndividualNodeObserver(nodeObserver);
 
-		PanelFactory.weakComponentToGraphObservers.put(storyPanel,
-				storyGraphObserver);
-
 		// Reset the ToolBar to select and add the Story Graph to it.
 		GraphToolBarModeAction.addJComponent(storyGraph);
 		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
@@ -193,6 +208,13 @@ public class PanelFactory {
 		return storyPanel;
 	}
 
+	/**
+	 * Builds a panel for a LibraryModel. This panel allows one to edit the
+	 * Library.
+	 * 
+	 * @param model
+	 * @return
+	 */
 	public JScrollPane buildLibraryEditorPanel(LibraryModel model) {
 		final JPanel scbPanel;
 		final JScrollPane scbScrollPane;
@@ -216,8 +238,26 @@ public class PanelFactory {
 		return scbScrollPane;
 	}
 
+	/*
+	 * TODO See notes in individual methods, but I think we should get rid of
+	 * this somehow. I just haven't thought of a better way to do it yet.
+	 */
+	private final static Map<JComponent, StoryComponentPanelTree> componentsToTrees = new IdentityHashMap<JComponent, StoryComponentPanelTree>();
+
+	/**
+	 * Sets the root for a StoryComponentPanelTree that was created from
+	 * {@link PanelFactory#buildStoryPanel(StoryModel, StoryPoint)}.
+	 * 
+	 * TODO I still feel like this is hackish, not to mention we could get an
+	 * eventual memory leak if someone keeps closing and opening stories... We
+	 * should have some other way of doing this. -kschenk
+	 * 
+	 * @param component
+	 * @param storyPoint
+	 */
 	public void setRootForTreeInComponent(JComponent component,
 			StoryPoint storyPoint) {
+
 		PanelFactory.componentsToTrees.get(component).setRoot(storyPoint);
 	}
 
@@ -228,6 +268,9 @@ public class PanelFactory {
 	 * added to the map, so if you attempt to use a different kind of
 	 * PatternModel, this method will just return null.
 	 * 
+	 * TODO Again, this seems hackish and if we need a note like the above,
+	 * we're just asking for future problems. -kschenk
+	 * 
 	 * @param component
 	 * @return
 	 */
@@ -235,6 +278,12 @@ public class PanelFactory {
 		return PanelFactory.componentsToTrees.get(component);
 	}
 
+	/**
+	 * Returns the model represented by the passed in component.
+	 * 
+	 * @param modelComponent
+	 * @return
+	 */
 	public PatternModel getModelForComponent(JComponent modelComponent) {
 		for (List<JComponent> jComponentList : PanelFactory.modelsToComponents
 				.getValues())
