@@ -79,7 +79,7 @@ public class SEGraph<E> extends JComponent {
 		this.mouseAdapter = new NodeMouseAdapter();
 		this.individualNodeObservers = new ArrayList<Object>();
 
-		this.model.addSEGraphObserver(this.modelObserver);
+		this.addSEGraphObserver(this.modelObserver);
 
 		this.setLayout(new SEGraphLayoutManager());
 
@@ -237,9 +237,9 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
-	 * Removes an individual node observer to the Graph. These are removed from
-	 * each Node that gets created and must be dealt with in the
-	 * {@link SEGraphNodeBuilder#addNodeObserver(Object, Object)} method in the
+	 * Removes an individual node observer from the Graph. These are removed
+	 * from each Node that was created and must be dealt with in the
+	 * {@link SEGraphNodeBuilder#removeNodeObserver(Object, Object)} method in the
 	 * builder.
 	 * 
 	 * @param observer
@@ -294,6 +294,26 @@ public class SEGraph<E> extends JComponent {
 	 */
 	public E getStartNode() {
 		return this.model.getStartNode();
+	}
+
+	/**
+	 * Returns the children of the node.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public Collection<E> getChildren(E node) {
+		return this.model.getChildren(node);
+	}
+
+	/**
+	 * Returns the parents of the node.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public Collection<E> getParents(E node) {
+		return this.model.getParents(node);
 	}
 
 	/**

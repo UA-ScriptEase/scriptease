@@ -1,6 +1,5 @@
 package scriptease.gui.SEGraph;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,7 +24,7 @@ import scriptease.gui.SEGraph.builders.SEGraphNodeBuilder;
 public class SEGraphModel<E> {
 	private final ReferenceNode start;
 	private final SEGraphNodeBuilder<E> builder;
-	private final List<WeakReference<SEGraphObserver<E>>> observers;
+	private final List<SEGraphObserver<E>> observers;
 
 	protected static enum GraphEvent {
 		CHILD_ADDED,
@@ -42,7 +41,7 @@ public class SEGraphModel<E> {
 	 * @param start
 	 */
 	public SEGraphModel(E start, SEGraphNodeBuilder<E> builder) {
-		this.observers = new ArrayList<WeakReference<SEGraphObserver<E>>>();
+		this.observers = new ArrayList<SEGraphObserver<E>>();
 		this.start = new ReferenceNode(start);
 		this.builder = builder;
 
@@ -406,19 +405,7 @@ public class SEGraphModel<E> {
 	 *            the observer to register
 	 */
 	public void addSEGraphObserver(SEGraphObserver<E> observer) {
-		Collection<WeakReference<SEGraphObserver<E>>> observersCopy = new ArrayList<WeakReference<SEGraphObserver<E>>>(
-				this.observers);
-
-		for (WeakReference<SEGraphObserver<E>> observerRef : observersCopy) {
-			SEGraphObserver<E> storyComponentObserver = observerRef.get();
-			if (storyComponentObserver != null
-					&& storyComponentObserver == observer)
-				return;
-			else if (storyComponentObserver == null)
-				this.observers.remove(observerRef);
-		}
-
-		this.observers.add(new WeakReference<SEGraphObserver<E>>(observer));
+		this.observers.add(observer);
 	}
 
 	/**
@@ -428,12 +415,7 @@ public class SEGraphModel<E> {
 	 *            the observer to register
 	 */
 	public void removeSEGraphObserver(SEGraphObserver<E> observer) {
-		for (WeakReference<SEGraphObserver<E>> reference : this.observers) {
-			if (reference.get() == observer) {
-				this.observers.remove(reference);
-				return;
-			}
-		}
+		this.observers.remove(observer);
 	}
 
 	/**
@@ -443,19 +425,11 @@ public class SEGraphModel<E> {
 	 * @param node
 	 */
 	protected void notifyObservers(GraphEvent event, E node) {
-		Collection<WeakReference<SEGraphObserver<E>>> observersCopy = new ArrayList<WeakReference<SEGraphObserver<E>>>(
-				this.observers);
-
-		for (WeakReference<SEGraphObserver<E>> observerRef : observersCopy) {
-			SEGraphObserver<E> graphNodeObserver = observerRef.get();
-			if (graphNodeObserver != null)
-				switch (event) {
-				case NODE_SELECTED:
-					graphNodeObserver.nodeSelected(node);
-					break;
-				}
-			else
-				this.observers.remove(observerRef);
+		for (SEGraphObserver<E> observer : this.observers) {
+			switch (event) {
+			case NODE_SELECTED:
+				observer.nodeSelected(node);
+			}
 		}
 	}
 
@@ -467,28 +441,21 @@ public class SEGraphModel<E> {
 	 * @param parent
 	 */
 	private void notifyObservers(GraphEvent event, E parent, E child) {
-		Collection<WeakReference<SEGraphObserver<E>>> observersCopy = new ArrayList<WeakReference<SEGraphObserver<E>>>(
-				this.observers);
-
-		for (WeakReference<SEGraphObserver<E>> observerRef : observersCopy) {
-			SEGraphObserver<E> graphNodeObserver = observerRef.get();
-			if (graphNodeObserver != null)
-				switch (event) {
-				case CHILD_ADDED:
-					graphNodeObserver.childAdded(child, parent);
-					break;
-				case CHILD_REMOVED:
-					graphNodeObserver.childRemoved(child, parent);
-					break;
-				case PARENT_ADDED:
-					graphNodeObserver.parentAdded(child, parent);
-					break;
-				case PARENT_REMOVED:
-					graphNodeObserver.parentRemoved(child, parent);
-					break;
-				}
-			else
-				this.observers.remove(observerRef);
+		for (SEGraphObserver<E> observer : this.observers) {
+			switch (event) {
+			case CHILD_ADDED:
+				observer.childAdded(child, parent);
+				break;
+			case CHILD_REMOVED:
+				observer.childRemoved(child, parent);
+				break;
+			case PARENT_ADDED:
+				observer.parentAdded(child, parent);
+				break;
+			case PARENT_REMOVED:
+				observer.parentRemoved(child, parent);
+				break;
+			}
 		}
 	}
 

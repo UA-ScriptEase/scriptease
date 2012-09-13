@@ -81,7 +81,7 @@ public class StoryPoint extends ComplexStoryComponent {
 	 */
 	public void setFanIn(Integer fanIn) {
 		this.fanIn = fanIn;
-		
+
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_FAN_IN));
 	}
@@ -111,8 +111,12 @@ public class StoryPoint extends ComplexStoryComponent {
 	 * @param successor
 	 */
 	public void addSuccessor(StoryPoint successor) {
-		if (successor != this)
+		if (successor != this) {
 			this.successors.add(successor);
+
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED));
+		}
 	}
 
 	/**
@@ -121,8 +125,14 @@ public class StoryPoint extends ComplexStoryComponent {
 	 * @param successors
 	 */
 	public void addSuccessors(Collection<StoryPoint> successors) {
-		for (StoryPoint successor : successors)
-			this.addSuccessor(successor);
+		for (StoryPoint successor : successors) {
+			if (successor != this) {
+				this.addSuccessor(successor);
+
+				this.notifyObservers(new StoryComponentEvent(this,
+						StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED));
+			}
+		}
 	}
 
 	/**
@@ -132,6 +142,9 @@ public class StoryPoint extends ComplexStoryComponent {
 	 */
 	public void removeSuccessor(StoryPoint successor) {
 		this.successors.remove(successor);
+		
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED));
 	}
 
 	/**
