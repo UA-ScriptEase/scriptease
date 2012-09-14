@@ -15,7 +15,7 @@ public interface GameConversationNode extends GameConstant {
 
 	/**
 	 * Determines if this node is a terminal node. This is identical to
-	 * <code>{@link #getChildren()} == 0</code>
+	 * <code>{@link #getChildren()}.size() == 0</code>
 	 * 
 	 * @return <code>true</code> if the node is terminal.
 	 */

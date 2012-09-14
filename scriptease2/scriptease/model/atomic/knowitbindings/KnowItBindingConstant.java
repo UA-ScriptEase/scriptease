@@ -24,7 +24,7 @@ public class KnowItBindingConstant extends KnowItBinding {
 
 	@Override
 	public String getScriptValue() {
-		return this.constantValue.getResolutionText();
+		return this.constantValue.getCodeText();
 	}
 
 	public String getTag() {
@@ -65,7 +65,7 @@ public class KnowItBindingConstant extends KnowItBinding {
 
 	@Override
 	public boolean equals(Object other) {
-		if (this.constantValue.getResolutionText() != null)
+		if (this.constantValue.getCodeText() != null)
 			return (other instanceof KnowItBindingConstant)
 					&& ((KnowItBindingConstant) other).constantValue
 							.equals(this.constantValue);

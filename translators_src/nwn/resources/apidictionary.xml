@@ -321,7 +321,7 @@
       <Name>Object</Name>
       <Keyword>object</Keyword>
       <CodeSymbol>object</CodeSymbol>
-      <LegalValues>journal|creature|placeable|door|item|trigger|</LegalValues>
+      <LegalValues>creature|placeable|door|item|trigger|</LegalValues>
     </Type>
     <Type>
       <Name>Journal</Name>
@@ -883,7 +883,6 @@
                   <Labels/>
                   <Id>8</Id>
                   <Types>
-                    <Type>journal</Type>
                     <Type>creature</Type>
                     <Type>placeable</Type>
                     <Type>door</Type>
@@ -1839,45 +1838,6 @@
       </Implicits>
     </Slot>
     <Slot>
-      <Name>OnDisarm</Name>
-      <Keyword>OnDisarm</Keyword>
-      <Parameters/>
-      <Implicits>
-        <KnowIt>
-          <Name>Disarmer</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>creature</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt>
-              <Name>Disarmer</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Children/>
-              <CodeBlocks>
-                <CodeBlockSource>
-                  <Name>Disarmer</Name>
-                  <Visible>true</Visible>
-                  <Labels/>
-                  <Id>32</Id>
-                  <Types>
-                    <Type>creature</Type>
-                  </Types>
-                  <Code>
-                    <Line>
-                      <Literal>return GetLastDisarmed();</Literal>
-                    </Line>
-                  </Code>
-                </CodeBlockSource>
-              </CodeBlocks>
-            </ScriptIt>
-          </Binding>
-        </KnowIt>
-      </Implicits>
-    </Slot>
-    <Slot>
       <Name>OnFailToOpen</Name>
       <Keyword>OnFailToOpen</Keyword>
       <Parameters/>
@@ -1907,6 +1867,45 @@
                   <Code>
                     <Line>
                       <Literal>return GetClickingObject();</Literal>
+                    </Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+      </Implicits>
+    </Slot>
+    <Slot>
+      <Name>OnDisarm</Name>
+      <Keyword>OnDisarm</Keyword>
+      <Parameters/>
+      <Implicits>
+        <KnowIt>
+          <Name>Disarmer</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>creature</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Disarmer</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Disarmer</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Id>32</Id>
+                  <Types>
+                    <Type>creature</Type>
+                  </Types>
+                  <Code>
+                    <Line>
+                      <Literal>return GetLastDisarmed();</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -3908,45 +3907,6 @@
       </Implicits>
     </Slot>
     <Slot>
-      <Name>OnExit</Name>
-      <Keyword>ScriptOnExit</Keyword>
-      <Parameters/>
-      <Implicits>
-        <KnowIt>
-          <Name>Exiting Creature</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>creature</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt>
-              <Name>Exiting Object</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Children/>
-              <CodeBlocks>
-                <CodeBlockSource>
-                  <Name>Exiting Object</Name>
-                  <Visible>true</Visible>
-                  <Labels/>
-                  <Id>83</Id>
-                  <Types>
-                    <Type>creature</Type>
-                  </Types>
-                  <Code>
-                    <Line>
-                      <Literal>return GetExitingObject();</Literal>
-                    </Line>
-                  </Code>
-                </CodeBlockSource>
-              </CodeBlocks>
-            </ScriptIt>
-          </Binding>
-        </KnowIt>
-      </Implicits>
-    </Slot>
-    <Slot>
       <Name>OnUserDefined</Name>
       <Keyword>Mod_OnUsrDefined</Keyword>
       <Parameters/>
@@ -3976,6 +3936,45 @@
                   <Code>
                     <Line>
                       <Literal>return GetUserDefinedEventNumber();</Literal>
+                    </Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+      </Implicits>
+    </Slot>
+    <Slot>
+      <Name>OnExit</Name>
+      <Keyword>ScriptOnExit</Keyword>
+      <Parameters/>
+      <Implicits>
+        <KnowIt>
+          <Name>Exiting Creature</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>creature</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Exiting Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Exiting Object</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Id>83</Id>
+                  <Types>
+                    <Type>creature</Type>
+                  </Types>
+                  <Code>
+                    <Line>
+                      <Literal>return GetExitingObject();</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -5327,6 +5326,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
+                <Type>creature</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
               </Types>
@@ -8246,7 +8246,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -8293,7 +8292,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -8671,7 +8669,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -8730,7 +8727,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -8751,7 +8747,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -8814,7 +8809,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -8835,7 +8829,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -8886,7 +8879,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -8953,7 +8945,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -8974,7 +8965,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -9025,7 +9015,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -9092,7 +9081,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -9113,7 +9101,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -9164,7 +9151,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -9471,7 +9457,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -9538,7 +9523,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -9639,7 +9623,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -9706,7 +9689,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -9731,7 +9713,21 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <Line reference="/APIDictionary/Effects/ScriptIt[40]/CodeBlocks/CodeBlockSource/Code/Line"/>
+            <Line>
+              <Literal>AssignCommand(</Literal>
+              <Scope data="argument" ref="Speaker">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, SpeakString(</Literal>
+              <Scope data="argument" ref="Speak">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="argument" ref="Text">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>));</Literal>
+            </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -9767,7 +9763,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -9826,7 +9821,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -9905,7 +9899,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -10108,7 +10101,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -10219,7 +10211,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -10387,7 +10378,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -10622,7 +10612,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -10739,7 +10728,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -10856,7 +10844,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -10965,7 +10952,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11032,7 +11018,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11045,7 +11030,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11104,7 +11088,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11167,7 +11150,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11331,7 +11313,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11487,7 +11468,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11508,7 +11488,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11565,7 +11544,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11643,7 +11621,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11799,7 +11776,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11820,7 +11796,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11874,7 +11849,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11952,7 +11926,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -11965,7 +11938,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -12027,7 +11999,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -12097,7 +12068,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -12110,7 +12080,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -12184,7 +12153,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -12258,7 +12226,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -12271,7 +12238,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -12324,7 +12290,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -12337,7 +12302,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -12387,7 +12351,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -12400,7 +12363,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -12576,7 +12538,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -12776,7 +12737,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13092,7 +13052,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13147,7 +13106,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13200,7 +13158,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13258,7 +13215,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13296,7 +13252,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13386,7 +13341,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13444,7 +13398,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13457,7 +13410,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13504,7 +13456,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13517,7 +13468,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13554,7 +13504,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13609,7 +13558,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13654,7 +13602,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13770,7 +13717,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13838,7 +13784,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13859,7 +13804,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13959,7 +13903,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -13980,7 +13923,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -14108,7 +14050,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -14251,7 +14192,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -14466,7 +14406,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -14534,7 +14473,6 @@
               <Types>
                 <Type>creature</Type>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -14563,7 +14501,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -14619,7 +14556,6 @@
               <Types>
                 <Type>creature</Type>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -14640,7 +14576,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -14691,7 +14626,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -14803,7 +14737,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -14832,7 +14765,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -14921,7 +14853,6 @@
               <Types>
                 <Type>creature</Type>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -15050,7 +14981,6 @@
               <Types>
                 <Type>creature</Type>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -15079,7 +15009,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -15245,7 +15174,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -15365,7 +15293,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -15408,7 +15335,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -15421,7 +15347,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -15468,7 +15393,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -15481,7 +15405,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -15518,7 +15441,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -15531,7 +15453,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -15834,7 +15755,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -15901,7 +15821,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -15956,7 +15875,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16009,7 +15927,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16056,7 +15973,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16111,7 +16027,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16154,7 +16069,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16167,7 +16081,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16214,7 +16127,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16260,7 +16172,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16273,7 +16184,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16323,7 +16233,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16428,7 +16337,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16549,7 +16457,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16628,7 +16535,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16678,7 +16584,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16699,7 +16604,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16806,7 +16710,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16884,7 +16787,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16934,7 +16836,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -16955,7 +16856,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -17103,7 +17003,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -17184,7 +17083,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -17234,7 +17132,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -17255,7 +17152,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -17342,7 +17238,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -17355,7 +17250,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -17414,7 +17308,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -17469,7 +17362,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -17482,7 +17374,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -17596,6 +17487,9 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
+                <Type>placeable</Type>
+                <Type>door</Type>
+                <Type>trigger</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -17663,6 +17557,9 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
+                <Type>placeable</Type>
+                <Type>door</Type>
+                <Type>trigger</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -17826,7 +17723,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -17910,7 +17806,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -18044,7 +17939,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -18137,7 +18031,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -18245,7 +18138,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -18296,7 +18188,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -18359,7 +18250,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -18413,7 +18303,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -18442,7 +18331,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -18538,7 +18426,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -18596,7 +18483,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -18609,7 +18495,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -18877,7 +18762,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -18932,7 +18816,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -18987,7 +18870,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -19401,7 +19283,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -19456,7 +19337,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -19561,7 +19441,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -19616,7 +19495,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -19771,7 +19649,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -19826,7 +19703,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -19893,7 +19769,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -19936,7 +19811,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -19979,7 +19853,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -20046,7 +19919,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -20113,7 +19985,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -20168,7 +20039,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -20347,7 +20217,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -20410,7 +20279,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -20473,7 +20341,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -20572,7 +20439,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -20677,7 +20543,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -21092,7 +20957,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -21105,7 +20969,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -21510,7 +21373,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -22068,7 +21930,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -22979,7 +22840,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -23118,7 +22978,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -23292,7 +23151,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -23362,7 +23220,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -23456,7 +23313,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -23529,7 +23385,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -23845,7 +23700,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>journal</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
                 <Type>item</Type>
@@ -24966,7 +24820,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Create a &lt;Object Type&gt; &lt;Object&gt; at &lt;Location&gt;</Name>
+      <Name>Create a new &lt;Object&gt; at &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -24974,7 +24828,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Create a &lt;Object Type&gt; &lt;Object&gt; at &lt;Location&gt;</Name>
+          <Name>Create a new &lt;Object&gt; at &lt;Location&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>447</Id>
@@ -24983,20 +24837,15 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Object Type</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>create_object_type</Type>
-              </Types>
-            </KnowIt>
-            <KnowIt>
               <Name>Object</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
+              	<Type>item</Type>
                 <Type>creature</Type>
                 <Type>placeable</Type>
+              	<Type>store</Type>
+              	<Type>waypoint</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -25009,98 +24858,91 @@
             </KnowIt>
           </Parameters>
           <Code>
+			<Line>
+				<Literal>string templateID = &quot;</Literal>
+				<Scope data="argument" ref="Object">
+					<Fragment data="templateID" />
+				</Scope>
+				<Literal>&quot;;</Literal>
+			</Line>
+			<Line>
+				<Literal>int dotLoc = FindSubString(templateID, &quot;.&quot;);</Literal>
+			</Line>
+			<Line>
+				<Literal>string resref = GetStringLeft(templateID, dotLoc);</Literal>
+			</Line>
+			<Line>
+				<Literal>string typeExt = GetStringRight(templateID, GetStringLength(templateID) - (dotLoc + 1));</Literal>
+			</Line>
+			<Line>
+				<Literal>int type;</Literal>
+			</Line>
+			<Line>
+				<Literal>// Cleverly determine that pesky constant from the template id (resref) extension.</Literal>
+			</Line> 
+			<Line>
+				<Literal>if(typeExt == "utc" || typeExt == "UTC"){</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>// this little piggy was a piggy</Literal>
+				</Line>
+				<Line>
+					<Literal>type = OBJECT_TYPE_CREATURE;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>} else if(typeExt == "uti" || typeExt == "UTI"){</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>// this little piggy was a meal</Literal>
+				</Line>
+				<Line>
+					<Literal>type = OBJECT_TYPE_ITEM;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>} else if(typeExt == "utp" || typeExt == "UTP"){</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>// this little piggy was a statue</Literal>
+				</Line>
+				<Line>
+					<Literal>type = OBJECT_TYPE_PLACEABLE;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>} else if(typeExt == "uts" || typeExt == "UTS"){</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>// this little piggy was a butcher's shop</Literal>
+				</Line>
+				<Line>
+					<Literal>type = OBJECT_TYPE_STORE;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>} else if(typeExt == "utw" || typeExt == "UTW"){</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>// and this little piggy went wee wee wee, to the waypoint home.</Literal>
+				</Line> 
+				<Line>
+					<Literal>type = OBJECT_TYPE_WAYPOINT;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+			<Line>
+				<Literal>// Now we can actually do the thing with the stuff.</Literal>
+			</Line>
             <Line>
-              <Literal>string templateID = &quot;</Literal>
-              <Scope data="argument" ref="Object">
-                <Fragment data="templateID"/>
-              </Scope>
-              <Literal>&quot;;</Literal>
-            </Line>
-            <Line>
-              <Literal>int dotLoc = FindSubString(templateID, &quot;.&quot;);</Literal>
-            </Line>
-            <Line>
-              <Literal>string resref = GetStringLeft(templateID, dotLoc);</Literal>
-            </Line>
-            <Line>
-              <Literal>string typeExt = GetStringRight(templateID, dotLoc);</Literal>
-            </Line>
-            <Line>
-              <Literal>int type;</Literal>
-            </Line>
-            <Line>
-              <Literal>// Cleverly determine that pesky constant from the template id (resref) extension.</Literal>
-            </Line>
-            <Line>
-              <Literal>if(typeExt == &quot;utc&quot;){</Literal>
-            </Line>
-            <Indent>
-              <Line>
-                <Literal>// this little piggy was a piggy</Literal>
-              </Line>
-              <Line>
-                <Literal>type = OBJECT_TYPE_CREATURE;</Literal>
-              </Line>
-            </Indent>
-            <Line>
-              <Literal>} else if(typeExt == &quot;uti&quot;){</Literal>
-            </Line>
-            <Indent>
-              <Line>
-                <Literal>// this little piggy was a meal</Literal>
-              </Line>
-              <Line>
-                <Literal>type = OBJECT_TYPE_ITEM;</Literal>
-              </Line>
-            </Indent>
-            <Line>
-              <Literal>} else if(typeExt == &quot;utp&quot;){</Literal>
-            </Line>
-            <Indent>
-              <Line>
-                <Literal>// this little piggy was a statue</Literal>
-              </Line>
-              <Line>
-                <Literal>type = OBJECT_TYPE_PLACEABLE;</Literal>
-              </Line>
-            </Indent>
-            <Line>
-              <Literal>} else if(typeExt == &quot;uts&quot;){</Literal>
-            </Line>
-            <Indent>
-              <Line>
-                <Literal>// this little piggy was a butcher&apos;s shop</Literal>
-              </Line>
-              <Line>
-                <Literal>type = OBJECT_TYPE_STORE;</Literal>
-              </Line>
-            </Indent>
-            <Line>
-              <Literal>} else if(typeExt == &quot;utw&quot;){</Literal>
-            </Line>
-            <Indent>
-              <Line>
-                <Literal>// and this little piggy went wee wee wee, all the way home.</Literal>
-              </Line>
-              <Line>
-                <Literal>// Because it knows where that is.</Literal>
-              </Line>
-              <Line>
-                <Literal>type = OBJECT_TYPE_WAYPOINT;</Literal>
-              </Line>
-            </Indent>
-            <Line>
-              <Literal>}</Literal>
-            </Line>
-            <Line>
-              <Literal>// Now we can actually do the thing with the stuff.</Literal>
-            </Line>
-            <Line>
-              <Literal>CreateObject(</Literal>
-              <Scope data="argument" ref="Object Type">
-                <Fragment data="name"/>
-              </Scope>
-              <Literal>, resref, </Literal>
+              <Literal>CreateObject(type, resref, </Literal>
               <Scope data="argument" ref="Location">
                 <Fragment data="name"/>
               </Scope>
@@ -25279,23 +25121,6 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[271]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[272]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[273]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[274]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[275]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[276]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[277]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[278]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[279]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[280]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[281]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[299]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[300]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[301]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[289]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[295]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[296]"/>
   </Effects>
   <DescribeIts>
     <KnowIt>
