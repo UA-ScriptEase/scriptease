@@ -1,13 +1,15 @@
 package scriptease.gui.SEGraph.renderers;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -57,7 +59,7 @@ public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 			node.addStoryComponentObserver(fanInObserver);
 		}
 
-		component.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
+		component.setLayout(new BoxLayout(component, BoxLayout.LINE_AXIS));
 
 		this.updateComponents(component, node);
 	}
@@ -74,30 +76,34 @@ public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 		final BindingWidget uneditableWidget;
 
 		if (node != null) {
+			final int VERTICAL_MARGIN = 40;
+			final int HORIZONTAL_MARGIN = 10;
 
 			editableWidget = ScriptWidgetFactory.buildBindingWidget(node, true);
 			uneditableWidget = ScriptWidgetFactory.buildBindingWidget(node,
 					false);
 
-			if (this.graph.getStartNode() != node) {
-				final JPanel fanInPanel;
-				final JSpinner fanInSpinner;
+			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
+			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
 
-				fanInPanel = new JPanel();
+			if (this.graph.getStartNode() != node) {
+				final JSpinner fanInSpinner;
+				final int SPACE_BETWEEN_COMPONENTS = 5;
+
 				fanInSpinner = ScriptWidgetFactory.buildFanInSpinner(node,
 						getMaxFanIn(node));
 
-				fanInPanel.setOpaque(false);
-				fanInPanel.setBorder(BorderFactory.createLineBorder(
-						Color.black, 1));
+				fanInSpinner.setMaximumSize(fanInSpinner.getPreferredSize());
 
-				fanInPanel.add(fanInSpinner);
-
-				component.add(fanInPanel);
+				component.add(fanInSpinner);
+				component.add(Box
+						.createHorizontalStrut(SPACE_BETWEEN_COMPONENTS));
 				component.add(editableWidget);
 			} else {
 				component.add(uneditableWidget);
 			}
+			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
+			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
 
 			component.revalidate();
 		}

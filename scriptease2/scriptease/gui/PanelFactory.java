@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,13 +13,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
-import scriptease.controller.observer.graph.StoryPointGraphObserver;
+import scriptease.controller.ModelAdapter;
+import scriptease.controller.ObservedJPanel;
+import scriptease.controller.observer.graph.SEGraphSelectionObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEGraph.GraphPanel;
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.SEGraph.builders.StoryPointNodeBuilder;
+import scriptease.gui.SEGraph.StoryPointGraphModel;
 import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
@@ -125,57 +126,44 @@ public class PanelFactory {
 	 */
 	public JPanel buildStoryPanel(StoryModel model, StoryPoint start) {
 		final JPanel storyPanel;
-		final JPanel storyGraphPanel;
 		final JToolBar graphToolBar;
 
 		final SEGraph<StoryPoint> storyGraph;
-		final StoryPointGraphObserver storyGraphObserver;
-		final StoryComponentPanelTree storyComponentTree;
+		final StoryPointGraphModel storyGraphModel;
 		final StoryPointNodeRenderer storyNodeRenderer;
 
-		final StoryComponentObserver nodeObserver;
+		final StoryComponentPanelTree storyComponentTree;
+		final StoryComponentObserver graphRedrawer;
+		final ObservedJPanel storyGraphPanel;
 
 		storyPanel = new JPanel(new GridLayout(0, 1));
-		storyGraphPanel = new JPanel(new BorderLayout(), true);
 		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
 
-		storyGraph = new SEGraph<StoryPoint>(start, new StoryPointNodeBuilder(
-				start));
+		storyGraphModel = new StoryPointGraphModel(start);
+		storyGraph = new SEGraph<StoryPoint>(storyGraphModel);
 		storyNodeRenderer = new StoryPointNodeRenderer(storyGraph);
-		storyGraphObserver = new StoryPointGraphObserver();
-		storyComponentTree = new StoryComponentPanelTree(start);
 
-		nodeObserver = new StoryComponentObserver() {
+		storyComponentTree = new StoryComponentPanelTree(start);
+		graphRedrawer = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
-				if (!(event.getSource() instanceof StoryPoint))
-					return;
-
-				final StoryPoint source;
-
-				source = (StoryPoint) event.getSource();
-
 				if (event.getType() == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED) {
-					for (StoryPoint successor : source.getSuccessors()) {
-						if(!storyGraph.getChildren(source).contains(successor))
-							storyGraph.addNodeToParent(successor, source);
-					}
-				} else if (event.getType() == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED) {
-					final Collection<StoryPoint> successors;
-
-					// We make a new collection to avoid concurrent
-					// modifications
-					successors = new ArrayList<StoryPoint>(
-							storyGraph.getChildren(source));
-
-					for (StoryPoint successor : successors) {
-						if (!source.getSuccessors().contains(successor)) {
-							storyGraph.disconnectNodes(successor, source);
-						}
-					}
+					event.getSource().addStoryComponentObserver(this);
+					storyGraph.repaint();
+					storyGraph.revalidate();
+				} else if (event.getType() == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED
+						|| event.getType() == StoryComponentChangeEnum.CHANGE_FAN_IN
+						|| event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+					storyGraph.repaint();
+					storyGraph.revalidate();
 				}
 			}
 		};
+		storyGraphPanel = new ObservedJPanel(storyGraph, graphRedrawer);
+
+		for (StoryPoint point : start.getDescendants()) {
+			point.addStoryComponentObserver(graphRedrawer);
+		}
 
 		// Put the new pane to the map
 		List<JComponent> panes;
@@ -188,13 +176,41 @@ public class PanelFactory {
 
 		// Set up the Story Graph
 		storyGraph.setNodeRenderer(storyNodeRenderer);
-		storyGraph.addSEGraphObserver(storyGraphObserver);
-		storyGraph.addIndividualNodeObserver(nodeObserver);
+		storyGraph.addSEGraphObserver(new SEGraphSelectionObserver() {
+
+			@Override
+			public void nodeSelected(final Object node) {
+				if (!(node instanceof StoryPoint))
+					return;
+
+				final PatternModel activeModel;
+
+				activeModel = PatternModelManager.getInstance()
+						.getActiveModel();
+
+				activeModel.process(new ModelAdapter() {
+					@Override
+					public void processStoryModel(StoryModel storyModel) {
+						List<JComponent> components = PanelFactory
+								.getInstance()
+								.getComponentsForModel(storyModel);
+
+						for (JComponent component : components)
+							PanelFactory.getInstance()
+									.setRootForTreeInComponent(component,
+											(StoryPoint) node);
+					}
+				});
+			}
+		});
+
+		start.addStoryComponentObserver(graphRedrawer);
 
 		// Reset the ToolBar to select and add the Story Graph to it.
 		GraphToolBarModeAction.addJComponent(storyGraph);
 		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
 
+		storyGraphPanel.setLayout(new BorderLayout());
 		storyGraphPanel.add(graphToolBar, BorderLayout.PAGE_START);
 		storyGraphPanel.add(new JScrollPane(storyGraph), BorderLayout.CENTER);
 

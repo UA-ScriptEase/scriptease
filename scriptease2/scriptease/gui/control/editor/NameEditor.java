@@ -12,9 +12,12 @@ import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.undo.UndoManager;
-import scriptease.model.StoryComponent;
 import scriptease.model.PatternModelManager;
+import scriptease.model.StoryComponent;
 
 /**
  * NameEditor is a modified textfield that is attached to a KnowIt and updates
@@ -27,24 +30,22 @@ import scriptease.model.PatternModelManager;
  */
 @SuppressWarnings("serial")
 public class NameEditor extends JTextField {
-	protected StoryComponent storyComponent;
+	protected final StoryComponent storyComponent;
+	private final StoryComponentObserver observer;
 
 	public NameEditor(final StoryComponent component) {
 		super();
 		this.storyComponent = component;
-		initialize();
-		setupTextField();
-	}
-	
-	protected StoryComponent getComponent() {
-		return this.storyComponent;
-	}
+		this.observer = new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME)
+					NameEditor.this.setupTextField();
+			}
+		};
 
-	protected void setupTextField() {
-		this.setText(this.storyComponent.getDisplayText());
-	}
+		component.addStoryComponentObserver(this.observer);
 
-	private void initialize() {
 		this.setBackground(Color.white);
 		this.resizeForText();
 
@@ -70,6 +71,16 @@ public class NameEditor extends JTextField {
 				resizeForText();
 			}
 		});
+		
+		setupTextField();
+	}
+
+	protected StoryComponent getComponent() {
+		return this.storyComponent;
+	}
+
+	protected void setupTextField() {
+		this.setText(this.storyComponent.getDisplayText());
 	}
 
 	private void resizeForText() {

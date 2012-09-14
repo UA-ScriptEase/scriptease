@@ -114,7 +114,7 @@ public class StoryPoint extends ComplexStoryComponent {
 		if (successor != this && !successor.getSuccessors().contains(this)) {
 			this.successors.add(successor);
 
-			this.notifyObservers(new StoryComponentEvent(this,
+			this.notifyObservers(new StoryComponentEvent(successor,
 					StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED));
 		}
 	}
@@ -140,7 +140,7 @@ public class StoryPoint extends ComplexStoryComponent {
 	public void removeSuccessor(StoryPoint successor) {
 		this.successors.remove(successor);
 
-		this.notifyObservers(new StoryComponentEvent(this,
+		this.notifyObservers(new StoryComponentEvent(successor,
 				StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED));
 	}
 

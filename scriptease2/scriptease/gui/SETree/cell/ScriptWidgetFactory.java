@@ -591,7 +591,7 @@ public class ScriptWidgetFactory {
 		final SpinnerNumberModel model;
 		final JSpinner fanInSpinner;
 
-		model = new SpinnerNumberModel(storyPoint.getFanIn(), 0, max, 1);
+		model = new SpinnerNumberModel(storyPoint.getFanIn(), 1, max, 1);
 		fanInSpinner = new JSpinner(model);
 
 		fanInSpinner.addChangeListener(new ChangeListener() {
