@@ -25,11 +25,9 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.plaf.ComponentUI;
 
-import scriptease.controller.observer.graph.SEGraphObserver;
+import scriptease.controller.observer.graph.SEGraphSelectionObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.ComponentFocusManager;
-import scriptease.gui.SEGraph.SEGraphModel.GraphEvent;
-import scriptease.gui.SEGraph.builders.SEGraphNodeBuilder;
 import scriptease.gui.SEGraph.renderers.SEGraphNodeRenderer;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
@@ -49,13 +47,12 @@ import sun.awt.util.IdentityArrayList;
 @SuppressWarnings("serial")
 public class SEGraph<E> extends JComponent {
 	private final SEGraphModel<E> model;
-	private final SEGraphNodeBuilder<E> builder;
 
 	private SEGraphNodeRenderer<E> renderer;
 
 	private final BiHashMap<E, JComponent> nodesToComponents;
 	private final NodeMouseAdapter mouseAdapter;
-	private final Collection<Object> individualNodeObservers;
+	private final List<SEGraphSelectionObserver> selectionObservers;
 
 	private E selectedNode;
 	private Point mousePosition;
@@ -63,26 +60,23 @@ public class SEGraph<E> extends JComponent {
 	/**
 	 * Builds a new graph with the passed in start point and a builder.
 	 * 
-	 * @param start
-	 *            The start point of the graph. Graphs must have a start point.
-	 * @param builder
-	 *            The {@link SEGraphNodeBuilder} for the graph.
+	 * @param model
+	 *            The model used for the Graph.
 	 */
-	public SEGraph(E start, SEGraphNodeBuilder<E> builder) {
-		this.selectedNode = start;
-		this.builder = builder;
+	public SEGraph(SEGraphModel<E> model) {
+		this.selectedNode = model.getStartNode();
 
-		this.model = new SEGraphModel<E>(start, builder);
+		this.model = model;
 		this.mousePosition = new Point();
 		this.nodesToComponents = new BiHashMap<E, JComponent>();
 		this.mouseAdapter = new NodeMouseAdapter();
-		this.individualNodeObservers = new ArrayList<Object>();
+		this.selectionObservers = new ArrayList<SEGraphSelectionObserver>();
 
 		this.setLayout(new SEGraphLayoutManager());
 
 		this.setUI(new SEGraphUI());
 		this.setOpaque(true);
-		this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
+		this.setBackground(Color.white);
 	}
 
 	/**
@@ -106,10 +100,10 @@ public class SEGraph<E> extends JComponent {
 	 * @param parent
 	 *            The existing node
 	 * @return true if the addition was successful
-	 * @see SEGraphModel#addNodeTo(Object, Object)
+	 * @see SEGraphModel#addNode(Object, Object)
 	 */
-	public void addNodeToParent(E node, E parent) {
-		this.model.addNodeTo(node, parent);
+	public void addChild(E node, E parent) {
+		this.model.addChild(node, parent);
 
 		this.repaint();
 		this.revalidate();
@@ -129,7 +123,6 @@ public class SEGraph<E> extends JComponent {
 	 * @see SEGraphModel#addNodeBetween(Object, Object, Object)
 	 */
 	public void addNodeBetween(E node, E existingNode1, E existingNode2) {
-
 		this.model.addNodeBetween(node, existingNode1, existingNode2);
 
 		this.repaint();
@@ -199,10 +192,10 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 * @param observer
 	 *            The observer to be added
-	 * @see SEGraphObserver
+	 * @see SEGraphSelectionObserver
 	 */
-	public void addSEGraphObserver(SEGraphObserver<E> observer) {
-		this.model.addSEGraphObserver(observer);
+	public void addSEGraphObserver(SEGraphSelectionObserver observer) {
+		this.selectionObservers.add(observer);
 	}
 
 	/**
@@ -210,38 +203,10 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 * @param observer
 	 *            The observer to be removed
-	 * @see SEGraphObserver
+	 * @see SEGraphSelectionObserver
 	 */
-	public void removeSEGraphObserver(SEGraphObserver<E> observer) {
-		this.model.removeSEGraphObserver(observer);
-	}
-
-	/**
-	 * Adds an individual node observer to the Graph. These are added to each
-	 * Node that gets created and must be dealt with in the
-	 * {@link SEGraphNodeBuilder#addNodeObserver(Object, Object)} method in the
-	 * builder.
-	 * 
-	 * @param observer
-	 */
-	public void addIndividualNodeObserver(Object observer) {
-		for (E node : this.getNodes())
-			this.builder.addNodeObserver(node, observer);
-		this.individualNodeObservers.add(observer);
-	}
-
-	/**
-	 * Removes an individual node observer from the Graph. These are removed
-	 * from each Node that was created and must be dealt with in the
-	 * {@link SEGraphNodeBuilder#removeNodeObserver(Object, Object)} method in
-	 * the builder.
-	 * 
-	 * @param observer
-	 */
-	public void removeIndividualNodeObserver(Object observer) {
-		for (E node : this.getNodes())
-			this.builder.removeNodeObserver(node, observer);
-		this.individualNodeObservers.remove(observer);
+	public void removeSEGraphObserver(SEGraphSelectionObserver observer) {
+		this.selectionObservers.remove(observer);
 	}
 
 	/**
@@ -251,7 +216,10 @@ public class SEGraph<E> extends JComponent {
 	 */
 	public void setSelectedNode(E node) {
 		this.selectedNode = node;
-		this.model.notifyObservers(GraphEvent.NODE_SELECTED, node);
+
+		for (SEGraphSelectionObserver observer : this.selectionObservers) {
+			observer.nodeSelected(node);
+		}
 	}
 
 	/**
@@ -385,7 +353,8 @@ public class SEGraph<E> extends JComponent {
 			final Insets insets = parent.getInsets();
 			int xSize = insets.left + insets.right;
 			int ySize = insets.top + insets.bottom; // Get the nodes level map
-			Map<E, Integer> nodeMap = SEGraph.this.model.getDepthMap();
+			Map<E, Integer> nodeMap = SEGraph.this.model
+					.getDepthMap(SEGraph.this.getStartNode());
 
 			// Get the number of levels in the graph.
 			int numberOfLevels = Collections.max(nodeMap.values());
@@ -420,13 +389,14 @@ public class SEGraph<E> extends JComponent {
 		public void layoutContainer(Container parent) {
 			// Remove the current contents of the panel.
 			SEGraph.this.removeAll();
-		//	SEGraph.this.nodesToComponents.clear();
+			// SEGraph.this.nodesToComponents.clear();
 
 			int xLocation = HORIZONTAL_INDENT;
 			int yLocation = 0;
 
 			// Get the nodes level map
-			Map<E, Integer> nodeMap = SEGraph.this.model.getDepthMap();
+			Map<E, Integer> nodeMap = SEGraph.this.model
+					.getDepthMap(SEGraph.this.getStartNode());
 
 			// Get the number of levels in the graph.
 			int numberOfLevels = Collections.max(nodeMap.values());
@@ -499,25 +469,20 @@ public class SEGraph<E> extends JComponent {
 				previousNodes = currentNodes;
 			}
 		}
-		
-		/*private void drawNode(E node, int depth) {
-			draw the node at depth;
-			
-			for(E child : SEGraph.this.getChildren(node)) {
 
-				for(E child2 : SEGraph.this.getChildren(node)) {
-					
-					
-					if(SEGraph.this.getChildren(child2).contains(child)) {
-						
-					}
-				}
-			}
-		}
-		Draw Start
-		for child in start's children
-		   if child not a child of one of start's children
-		      draw child*/
+		/*
+		 * private void drawNode(E node, int depth) { draw the node at depth;
+		 * 
+		 * for(E child : SEGraph.this.getChildren(node)) {
+		 * 
+		 * for(E child2 : SEGraph.this.getChildren(node)) {
+		 * 
+		 * 
+		 * if(SEGraph.this.getChildren(child2).contains(child)) {
+		 * 
+		 * } } } } Draw Start for child in start's children if child not a child
+		 * of one of start's children draw child
+		 */
 
 		/**
 		 * Sorts the given children in a fashion that has overlapping lines
@@ -631,7 +596,8 @@ public class SEGraph<E> extends JComponent {
 
 		private void connectNodes(Graphics g) {
 			// Get the nodes level map
-			Map<E, Integer> nodeMap = SEGraph.this.model.getDepthMap();
+			Map<E, Integer> nodeMap = SEGraph.this.model
+					.getDepthMap(SEGraph.this.getStartNode());
 
 			// Clone the graphics context.
 			final Graphics2D g2 = (Graphics2D) g.create();
@@ -770,16 +736,13 @@ public class SEGraph<E> extends JComponent {
 				source.requestFocusInWindow();
 				break;
 			case INSERT:
-				E newNode = SEGraph.this.builder.buildNewNode();
-				for (Object observer : SEGraph.this.individualNodeObservers)
-					SEGraph.this.builder.addNodeObserver(newNode, observer);
-
+				E newNode = SEGraph.this.model.createNewNode();
 				if (this.lastEnteredNode != null)
 					if (this.lastEnteredNode == node) {
 						if (!UndoManager.getInstance().hasOpenUndoableAction())
 							UndoManager.getInstance().startUndoableAction(
 									"Add " + newNode + " to " + node);
-						SEGraph.this.addNodeToParent(newNode, node);
+						SEGraph.this.addChild(newNode, node);
 
 						UndoManager.getInstance().endUndoableAction();
 					} else {
