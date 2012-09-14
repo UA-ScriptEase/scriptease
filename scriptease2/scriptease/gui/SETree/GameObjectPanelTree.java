@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -13,9 +14,9 @@ import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import scriptease.gui.SETree.ui.ScriptEaseUI;
-import scriptease.model.StoryModel;
 import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
 import scriptease.translator.io.model.GameObject;
@@ -29,9 +30,9 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 
 	private final int CONSTANT_OFFSET = 10;
 
-	public GameObjectPanelTree(StoryModel storyModel) {
+	public GameObjectPanelTree() {
 		super();
-		this.treeModel = new GameObjectTree(storyModel);
+		this.treeModel = new GameObjectTree();
 		this.gameObjectPanel = new ArrayList<GameObjectPanel>();
 		this.gameObjectLabels = new ArrayList<GameObjectPanelTree.GameObjectLabel>();
 		expandTree();
@@ -48,8 +49,8 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 			return;
 		}
 
-		Collection<Object> getChildren = this.treeModel.getTree().getSuccessors(
-				parent);
+		Collection<Object> getChildren = this.treeModel.getTree()
+				.getSuccessors(parent);
 
 		if (getChildren.size() == 0) {
 			return;
@@ -65,7 +66,6 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 		for (Object a : getChildren) {
 			addChildrenRoots((GameConversationNode) a);
 		}
-
 	}
 
 	private void addGameObjectPanelToTree(GameObjectPanel addObject) {
@@ -74,48 +74,47 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 	}
 
 	private void expandTree() {
-		ArrayList<Object> firstRowExpansion = (ArrayList<Object>) this.treeModel
+		List<Object> firstRowExpansion = (List<Object>) this.treeModel
 				.getTree().getSuccessors(this.treeModel.getTree().getHead());
-		int size = firstRowExpansion.size();
-		for (int i = 0; i < size; i++) {
-			if (firstRowExpansion.get(i) instanceof String) {
-				GameObjectLabel label = new GameObjectLabel(firstRowExpansion
-						.get(i).toString());
-				label.addObserver(this);
-				this.add(label.getLabelPanel());
-				this.gameObjectLabels.add(label);
+		for (int i = 0; i < firstRowExpansion.size(); i++) {
+			if (!(firstRowExpansion.get(i) instanceof String)) {
+				continue;
+			}
+			GameObjectLabel label = new GameObjectLabel(firstRowExpansion
+					.get(i).toString());
+			label.addObserver(this);
+			this.add(label.getLabelPanel());
+			this.gameObjectLabels.add(label);
 
-				if (!firstRowExpansion.get(i).equals("dialogue")) {
-					Collection<Object> categoryExpansion = this.treeModel.getTree()
-							.getSuccessors(firstRowExpansion.get(i));
-					for (Object getGameObject : categoryExpansion) {
-						GameObjectPanel newObjPanel = new GameObjectPanel(
-								(GameObject) getGameObject, this.CONSTANT_OFFSET);
-						this.addGameObjectPanelToTree(newObjPanel);
-					}
+			if (!firstRowExpansion.get(i).equals("dialogue")) {
+				Collection<Object> categoryExpansion = this.treeModel.getTree()
+						.getSuccessors(firstRowExpansion.get(i));
+				for (Object getGameObject : categoryExpansion) {
+					GameObjectPanel newObjPanel = new GameObjectPanel(
+							(GameObject) getGameObject, this.CONSTANT_OFFSET);
+					this.addGameObjectPanelToTree(newObjPanel);
 				}
+			}
+			// The dialogue adding code goes here
+			else if (firstRowExpansion.get(i).equals("dialogue")) {
+				Collection<Object> diagExpansion = this.treeModel.getTree()
+						.getSuccessors(firstRowExpansion.get(i));
+				for (Object dialogueExpansionNode : diagExpansion) {
+					GameObjectPanel newObjPanel = new GameObjectPanel(
+							(GameConversation) dialogueExpansionNode,
+							this.CONSTANT_OFFSET);
+					this.gameObjectPanel.add(newObjPanel);
+					this.add(newObjPanel.getGameObjectPane());
 
-				// The dialogue adding code goes here
-				else if (firstRowExpansion.get(i).equals("dialogue")) {
-					Collection<Object> diagExpansion = this.treeModel.getTree()
-							.getSuccessors(firstRowExpansion.get(i));
-					for (Object dialogueExpansionNode : diagExpansion) {
-						GameObjectPanel newObjPanel = new GameObjectPanel(
-								(GameConversation) dialogueExpansionNode,
-								this.CONSTANT_OFFSET);
-						this.gameObjectPanel.add(newObjPanel);
-						this.add(newObjPanel.getGameObjectPane());
-
-						Collection<Object> convExpansion = this.treeModel.getTree()
-								.getSuccessors(dialogueExpansionNode);
-						for (Object gameConversation : convExpansion) {
-							GameObjectPanelConversation newObjPanel2 = new GameObjectPanelConversation(
-									(GameConversationNode) gameConversation,
-									this.CONSTANT_OFFSET * 2);
-							this.gameObjectPanel.add(newObjPanel2);
-							this.add(newObjPanel2.getGameObjectPane());
-							addChildrenRoots((GameConversationNode) gameConversation);
-						}
+					Collection<Object> convExpansion = this.treeModel.getTree()
+							.getSuccessors(dialogueExpansionNode);
+					for (Object gameConversation : convExpansion) {
+						GameObjectPanelConversation newObjPanel2 = new GameObjectPanelConversation(
+								(GameConversationNode) gameConversation,
+								this.CONSTANT_OFFSET * 5);
+						this.gameObjectPanel.add(newObjPanel2);
+						this.add(newObjPanel2.getGameObjectPane());
+						addChildrenRoots((GameConversationNode) gameConversation);
 					}
 				}
 			}
@@ -151,7 +150,7 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 							Collection<Object> convExpansion = this.treeModel
 									.getTree().getSuccessors(z.get(j));
 							ArrayList<Object> bees3 = (ArrayList<Object>) convExpansion;
-							
+
 							for (int zl = 0; zl < convExpansion.size(); zl++) {
 								GameObjectPanel newObjPanel2 = new GameObjectPanel(
 										(GameConversationNode) bees3.get(zl),
@@ -199,7 +198,8 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 			this.labelName = label;
 
 			this.labelPanel.addMouseListener(this);
-			this.labelPanel.setLayout(new BoxLayout(this.labelPanel, BoxLayout.X_AXIS));
+			this.labelPanel.setLayout(new BoxLayout(this.labelPanel,
+					BoxLayout.X_AXIS));
 			this.labelPanel.setBackground(Color.WHITE);
 
 			reDrawLabel();
@@ -228,12 +228,14 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 		private void reDrawLabel() {
 			this.labelPanel.removeAll();
 
-			if (this.collapsed)
+			if (this.collapsed) {
 				this.labelPanel.add(new JLabel(convertToLabelViewFormat(),
-						this.expandIcon, JLabel.CENTER));
-			else
+						this.expandIcon, SwingConstants.CENTER));
+			} else {
 				this.labelPanel.add(new JLabel(convertToLabelViewFormat(),
-						this.collapseIcon, JLabel.CENTER));
+						this.collapseIcon, SwingConstants.CENTER));
+			}
+
 			this.labelPanel.add(Box.createHorizontalGlue());
 			this.labelPanel.revalidate();
 		}

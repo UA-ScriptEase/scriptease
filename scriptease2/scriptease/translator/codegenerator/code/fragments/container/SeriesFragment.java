@@ -42,13 +42,14 @@ public class SeriesFragment extends AbstractContainerFragment {
 	private String filter;
 	private SeriesFilterType filterType;
 
-
 	public SeriesFragment() {
-		this("", "", new ArrayList<AbstractFragment>(), "", SeriesFilterType.NONE, false);
+		this("", "", new ArrayList<AbstractFragment>(), "",
+				SeriesFilterType.NONE, false);
 	}
-	
+
 	/**
-	 * See: {@link AbstractFragment#FormatFragment(String, CharacterRange, char[])}
+	 * See:
+	 * {@link AbstractFragment#FormatFragment(String, CharacterRange, char[])}
 	 * 
 	 * @param data
 	 *            The specific data list label.
@@ -61,8 +62,9 @@ public class SeriesFragment extends AbstractContainerFragment {
 	 * @param isUnique
 	 *            Sets whether the SeriesFragment is unique.
 	 */
-	public SeriesFragment(String data, String separator, List<AbstractFragment> format,
-			String filter, SeriesFilterType filterType, boolean isUnique) {
+	public SeriesFragment(String data, String separator,
+			List<AbstractFragment> format, String filter,
+			SeriesFilterType filterType, boolean isUnique) {
 		super(data);
 		this.separator = separator;
 		this.subFragments = format;
@@ -76,7 +78,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 	public Collection<AbstractFragment> getSubFragments() {
 		return this.subFragments;
 	}
-	
+
 	@Override
 	public void setSubFragments(List<AbstractFragment> subFragments) {
 		this.subFragments = subFragments;
@@ -85,7 +87,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 	public String getSeparator() {
 		return this.separator;
 	}
-	
+
 	public void setSeparator(String separator) {
 		this.separator = separator;
 	}
@@ -93,12 +95,12 @@ public class SeriesFragment extends AbstractContainerFragment {
 	public String getFilter() {
 		return this.filter;
 	}
-	
+
 	public void setFilter(String filter) {
 		this.filter = filter;
 		this.seriesFilter = new SeriesFilter(filter, this.filterType);
 	}
-	
+
 	public SeriesFilterType getFilterType() {
 		return this.filterType;
 	}
@@ -107,15 +109,15 @@ public class SeriesFragment extends AbstractContainerFragment {
 		this.filterType = filterType;
 		this.seriesFilter = new SeriesFilter(this.filter, this.filterType);
 	}
-	
+
 	public boolean isUnique() {
 		return this.isUnique;
 	}
-	
+
 	public void setUnique(boolean isUnique) {
 		this.isUnique = isUnique;
 	}
-	
+
 	public SeriesFilter getSeriesFilter() {
 		return this.seriesFilter;
 	}
@@ -138,6 +140,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 			next = it.next();
 
 			newContext = contextFactory.createContext(context, next);
+			
 			code.append(AbstractFragment.resolveFormat(this.subFragments, newContext));
 
 			if (it.hasNext())
@@ -157,7 +160,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 	 */
 	private Iterator<? extends Object> buildDataIterator(Context context) {
 		final String dataLabel = this.getDirectiveText();
-		final Iterator<? extends Object> it;
+		Iterator<? extends Object> it;
 
 		// IF+ELSE BLOCK ( series ... data= <dataLabel> )
 		if (dataLabel
@@ -227,29 +230,19 @@ public class SeriesFragment extends AbstractContainerFragment {
 			return new ArrayList<String>().iterator();
 		}
 
-		return this.seriesFilter.applyFilter(handle(it));
-	}
-
-	/**
-	 * Double dispatch for the appropriate handling of series filtering and
-	 * uniquifying
-	 * 
-	 * @param <T>
-	 * @param iterator
-	 * @return
-	 */
-	public <T> Iterator<T> handle(Iterator<T> iterator) {
-		if (this.isUnique)
-			return iterator;
-		else {
-			Collection<T> unique = new CopyOnWriteArraySet<T>();
-			while (iterator.hasNext()) {
-				T object = iterator.next();
-
-				unique.add(object);
-			}
-			return unique.iterator();
+		if (this.isUnique) {
+			it = uniquify(it);
 		}
+
+		return this.seriesFilter.applyFilter(it);
+	}
+	
+	private <T> Iterator<T> uniquify(Iterator<T> iterator) {
+		final Collection<T> unique = new CopyOnWriteArraySet<T>();
+		while (iterator.hasNext()) {
+			unique.add(iterator.next());
+		}
+		return unique.iterator();
 	}
 
 	@Override
@@ -261,7 +254,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() + this.subFragments.hashCode() + this.separator.hashCode()
+		return super.hashCode() + this.subFragments.hashCode() + this.separator.hashCode() 
 				+ this.seriesFilter.hashCode();
 	}
 

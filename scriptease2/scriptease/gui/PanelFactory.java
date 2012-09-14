@@ -121,7 +121,7 @@ public class PanelFactory {
 			if (translator != null) {
 				// Get the picker
 				if ((picker = translator.getCustomGameObjectPicker()) == null) {
-					picker = new GameObjectPane(storyModel);
+					picker = new GameObjectPane();
 				}
 				return picker.getPickerPanel();
 			}
