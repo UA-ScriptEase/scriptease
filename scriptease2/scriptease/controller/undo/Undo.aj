@@ -1,21 +1,17 @@
 package scriptease.controller.undo;
 
-import java.util.List;
-
-import scriptease.controller.observer.graph.GraphNodeObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.model.CodeBlock;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.StoryComponent;
-import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryPoint;
 
 /*
  * This aspect inserts Undo-specific code into any model object that must
@@ -96,18 +92,6 @@ public aspect Undo {
 		within(StoryComponent+) && execution(* removeStoryComponentObserver(StoryComponentObserver+));
 
 	/**
-	 * Defines the Add Observer operation in GraphNode.
-	 */
-	public pointcut addingGraphNodeObserver():
-		within(GraphNode+) && execution(* addGraphNodeObserver(GraphNodeObserver+));
-
-	/**
-	 * Defines the Add Observer operation in GraphNode.
-	 */
-	public pointcut removingGraphNodeObserver():
-		within(GraphNode+) && execution(* removeGraphNodeObserver(GraphNodeObserver+));
-
-	/**
 	 * Defines the Set Keyword operation in DoIts.
 	 */
 	public pointcut settingKeyword():
@@ -174,28 +158,34 @@ public aspect Undo {
 		within(LibraryModel+) && execution(* setRoot(StoryComponent+));
 
 	/**
-	 * Defines the Set Selection operation in GraphNodes.
+	 * Defines the Set Fan In operation in StoryPoints.
 	 */
-	public pointcut selectingGraphNode():
-		within(GraphNode+) && execution(* setSelected(Boolean));
-
-	/**
-	 * Defines the Set SelectedPath operation in DescribeIts.
-	 */
-	public pointcut selectingDescribeItPath():
-		within(DescribeIt+) && execution(* setSelectedPath(List<GraphNode>));
+	public pointcut settingFanIn():
+		within(StoryPoint+) && execution(* setFanIn(Integer+));
 
 	/**
 	 * Defines the AddCodeBlock operation in ScriptIts.
 	 */
 	public pointcut addingCodeBlock():
-		within(ScriptIt+) && execution(* addCodeBlock(CodeBlock));
+		within(ScriptIt+) && execution(* addCodeBlock(CodeBlock+));
 
 	/**
 	 * Defines the RemoveCodeBlock operation in ScriptIts.
 	 */
 	public pointcut removingCodeBlock():
-		within(ScriptIt+) && execution(* removeCodeBlock(CodeBlock));
+		within(ScriptIt+) && execution(* removeCodeBlock(CodeBlock+));
+	
+	/**
+	 * Defines the Add Successor operation in StoryPoints.
+	 */
+	public pointcut addingSuccessor():
+		within(StoryPoint+) && execution(* addSuccessor(StoryPoint+));
+	
+	/**
+	 * Defines the Remove Successor operation in StoryPoints.
+	 */
+	public pointcut removingSuccessor():
+		within(StoryPoint+) && execution(* removeSuccessor(StoryPoint+));
 
 	/*
 	 * ====================== ADVICE ======================
@@ -333,47 +323,6 @@ public aspect Undo {
 			@Override
 			public void undo() {
 				owner.addStoryComponentObserver(removedObserver);
-			}
-
-			@Override
-			public String toString() {
-				return "removing observer " + removedObserver + " from "
-						+ owner;
-			}
-		};
-		this.addModification(mod);
-	}
-
-	before(final GraphNode owner, final GraphNodeObserver addedObserver): addingGraphNodeObserver() && args(addedObserver) && this(owner){
-		Modification mod = new Modification() {
-			@Override
-			public void redo() {
-				owner.addGraphNodeObserver(addedObserver);
-			}
-
-			@Override
-			public void undo() {
-				owner.removeGraphNodeObserver(addedObserver);
-			}
-
-			@Override
-			public String toString() {
-				return "adding observer " + addedObserver + " to " + owner;
-			}
-		};
-		this.addModification(mod);
-	}
-
-	before(final GraphNode owner, final GraphNodeObserver removedObserver): removingGraphNodeObserver() && args(removedObserver) && this(owner){
-		Modification mod = new Modification() {
-			@Override
-			public void redo() {
-				owner.removeGraphNodeObserver(removedObserver);
-			}
-
-			@Override
-			public void undo() {
-				owner.addGraphNodeObserver(removedObserver);
 			}
 
 			@Override
@@ -552,35 +501,19 @@ public aspect Undo {
 		this.addModification(mod);
 	}
 
-	before(final GraphNode owner, final Boolean selection): selectingGraphNode() && args(selection) && this(owner){
-		Modification mod = new FieldModification<Boolean>(selection,
-				owner.isSelected()) {
-			@Override
-			public void setOp(Boolean value) {
-				owner.setSelected(value);
-			}
+	before(final StoryPoint storyPoint, final Integer fanIn): settingFanIn() && args(fanIn) && this(storyPoint) {
+		Modification mod = new FieldModification<Integer>(fanIn,
+				storyPoint.getFanIn()) {
+			public void setOp(Integer value) {
+				storyPoint.setFanIn(value);
+			};
 
 			@Override
 			public String toString() {
-				return "setting " + owner + "'s selection to" + selection;
+				return "setting " + storyPoint + "'s fanin to " + fanIn;
 			}
 		};
-		this.addModification(mod);
-	}
 
-	before(final DescribeIt describeIt, final List<GraphNode> path): selectingDescribeItPath() && args(path) && this(describeIt){
-		Modification mod = new FieldModification<List<GraphNode>>(path,
-				describeIt.getSelectedPath()) {
-			@Override
-			public void setOp(List<GraphNode> value) {
-				describeIt.setSelectedPath(value);
-			}
-
-			@Override
-			public String toString() {
-				return "setting " + describeIt + "'s selectedPath to" + path;
-			}
-		};
 		this.addModification(mod);
 	}
 
@@ -621,6 +554,48 @@ public aspect Undo {
 			@Override
 			public String toString() {
 				return "removing " + codeBlock + " to " + scriptIt;
+			}
+		};
+		this.addModification(mod);
+	}
+	
+	before(final StoryPoint storyPoint, final StoryPoint successor): addingSuccessor() && args(successor) && this(storyPoint) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				storyPoint.addSuccessor(successor);
+			}
+
+			@Override
+			public void undo() {
+				storyPoint.removeSuccessor(successor);
+			}
+
+			@Override
+			public String toString() {
+				return "adding " + successor + " to " + storyPoint;
+			}
+		};
+		this.addModification(mod);
+	}
+	
+	before(final StoryPoint storyPoint, final StoryPoint successor): removingSuccessor() && args(successor) && this(storyPoint) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				storyPoint.removeSuccessor(successor);
+			}
+
+			@Override
+			public void undo() {
+				storyPoint.addSuccessor(successor);
+			}
+
+			@Override
+			public String toString() {
+				return "removing " + successor + " to " + storyPoint;
 			}
 		};
 		this.addModification(mod);

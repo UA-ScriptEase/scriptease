@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -157,21 +156,21 @@ public class PanelFactory {
 				source = (StoryPoint) event.getSource();
 
 				if (event.getType() == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED) {
-					for (StoryPoint child : source.getSuccessors()) {
-						if (!storyGraph.getNodes().contains(child))
-							storyGraph.addNodeTo(child, source);
+					for (StoryPoint successor : source.getSuccessors()) {
+						if(!storyGraph.getChildren(source).contains(successor))
+							storyGraph.addNodeToParent(successor, source);
 					}
 				} else if (event.getType() == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED) {
-					final Collection<StoryPoint> children;
+					final Collection<StoryPoint> successors;
 
 					// We make a new collection to avoid concurrent
 					// modifications
-					children = new ArrayList<StoryPoint>(
+					successors = new ArrayList<StoryPoint>(
 							storyGraph.getChildren(source));
 
-					for (StoryPoint child : children) {
-						if (!source.getSuccessors().contains(child)) {
-							storyGraph.removeNode(child);
+					for (StoryPoint successor : successors) {
+						if (!source.getSuccessors().contains(successor)) {
+							storyGraph.disconnectNodes(successor, source);
 						}
 					}
 				}

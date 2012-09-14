@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.JComponent;
 
 import scriptease.controller.ModelAdapter;
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.PanelFactory;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
@@ -43,7 +44,6 @@ public class StoryPointGraphObserver implements SEGraphObserver<StoryPoint> {
 
 		if (initialFanIn > 1)
 			child.setFanIn(initialFanIn - 1);
-
 		parent.removeSuccessor(child);
 	}
 

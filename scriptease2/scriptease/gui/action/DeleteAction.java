@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.ComponentFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
@@ -102,9 +103,19 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 		} else if (focusOwner instanceof SEGraph) {
 			// Raw types here, but the way Graphs are set up, these should work
 			final SEGraph graph;
-			graph = (SEGraph) focusOwner;
+			final Object selectedNode;
 
-			graph.removeNode(graph.getSelectedNode());
+			graph = (SEGraph) focusOwner;
+			selectedNode = graph.getSelectedNode();
+
+			if (!UndoManager.getInstance().hasOpenUndoableAction())
+				UndoManager.getInstance().startUndoableAction(
+						"Remove " + selectedNode);
+
+			graph.removeNode(selectedNode);
+
+			UndoManager.getInstance().endUndoableAction();
+
 		}
 	}
 }

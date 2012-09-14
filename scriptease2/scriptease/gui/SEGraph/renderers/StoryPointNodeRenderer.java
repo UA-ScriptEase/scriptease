@@ -1,19 +1,16 @@
 package scriptease.gui.SEGraph.renderers;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import javax.swing.JButton;
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
-import javax.swing.border.LineBorder;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
 
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
@@ -31,58 +28,38 @@ import scriptease.model.complex.StoryPoint;
  * 
  */
 public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
-	private final Map<StoryPoint, StoryComponentObserver> weakComponentsToObservers = new WeakHashMap<StoryPoint, StoryComponentObserver>();
-	private boolean inEditingMode = false;
+	private final Map<StoryPoint, StoryComponentObserver> weakStoryPointsToObservers = new WeakHashMap<StoryPoint, StoryComponentObserver>();
+
+	private SEGraph<StoryPoint> graph;
 
 	public StoryPointNodeRenderer(SEGraph<StoryPoint> graph) {
 		super(graph);
+		this.graph = graph;
 	}
 
 	@Override
 	protected void configureInternalComponents(final JComponent component,
 			final StoryPoint node) {
-		final JButton editButton;
 		final StoryComponentObserver fanInObserver;
 
-		editButton = new JButton();
 		fanInObserver = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
 				if (event.getType() == StoryComponentChangeEnum.CHANGE_FAN_IN) {
 					StoryPointNodeRenderer.this.updateComponents(component,
-							editButton, node);
+							node);
 				}
 			}
 		};
 
 		if (node != null) {
-			this.weakComponentsToObservers.put(node, fanInObserver);
+			this.weakStoryPointsToObservers.put(node, fanInObserver);
 			node.addStoryComponentObserver(fanInObserver);
 		}
 
-		editButton.setFocusable(false);
-		editButton.setContentAreaFilled(false);
-		editButton.setOpaque(true);
-
-		editButton.setBackground(new Color(222, 222, 222));
-		editButton.setBorder(new LineBorder(Color.GRAY, 1, true));
-		editButton.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		editButton.setPreferredSize(new Dimension(35, 20));
-
-		editButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				StoryPointNodeRenderer.this.inEditingMode = !StoryPointNodeRenderer.this.inEditingMode;
-
-				StoryPointNodeRenderer.this.updateComponents(component,
-						editButton, node);
-			}
-		});
-
 		component.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
 
-		this.updateComponents(component, editButton, node);
+		this.updateComponents(component, node);
 	}
 
 	/**
@@ -91,8 +68,7 @@ public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 	 * @param component
 	 * @param editButton
 	 */
-	private void updateComponents(JComponent component, JButton editButton,
-			StoryPoint node) {
+	private void updateComponents(JComponent component, StoryPoint node) {
 		component.removeAll();
 		final BindingWidget editableWidget;
 		final BindingWidget uneditableWidget;
@@ -103,22 +79,25 @@ public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 			uneditableWidget = ScriptWidgetFactory.buildBindingWidget(node,
 					false);
 
-			if (this.inEditingMode) {
-				editButton.setText("Done");
-				editButton.setBackground(new Color(222, 250, 222));
-				component.add(ScriptWidgetFactory.buildFanInPanel(node,
-						getMaxFanIn(node), true));
+			if (this.graph.getStartNode() != node) {
+				final JPanel fanInPanel;
+				final JSpinner fanInSpinner;
+
+				fanInPanel = new JPanel();
+				fanInSpinner = ScriptWidgetFactory.buildFanInSpinner(node,
+						getMaxFanIn(node));
+
+				fanInPanel.setOpaque(false);
+				fanInPanel.setBorder(BorderFactory.createLineBorder(
+						Color.black, 1));
+
+				fanInPanel.add(fanInSpinner);
+
+				component.add(fanInPanel);
 				component.add(editableWidget);
 			} else {
-				editButton.setText("Edit");
-				editButton.setBackground(new Color(222, 222, 222));
-				component.add(ScriptWidgetFactory.buildFanInPanel(node, 0,
-						false));
 				component.add(uneditableWidget);
 			}
-
-			if (node != this.getStartNode())
-				component.add(editButton);
 
 			component.revalidate();
 		}

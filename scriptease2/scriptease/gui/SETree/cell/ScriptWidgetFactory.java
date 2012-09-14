@@ -460,13 +460,12 @@ public class ScriptWidgetFactory {
 					return;
 
 				if (!knowIt.getBinding().getValue().equals(newBinding)) {
-					if (!UndoManager.getInstance().hasOpenUndoableAction()) {
+					if (!UndoManager.getInstance().hasOpenUndoableAction())
 						UndoManager.getInstance().startUndoableAction(
 								"Set " + knowIt.getDisplayText()
 										+ "'s value to [" + safeValue + "]");
-						knowIt.setBinding(newBinding);
-						UndoManager.getInstance().endUndoableAction();
-					}
+					knowIt.setBinding(newBinding);
+					UndoManager.getInstance().endUndoableAction();
 				}
 			}
 
@@ -581,42 +580,35 @@ public class ScriptWidgetFactory {
 	}
 
 	/**
-	 * Builds a stylized JPanel to represent the given fanIn.
+	 * Builds a JSpinner to represent and edit the given fanIn.
 	 * 
 	 * @param fanIn
 	 * @param editable
 	 * @return
 	 */
-	public static JPanel buildFanInPanel(final StoryPoint storyPoint,
-			Comparable<?> max, boolean editable) {
-		final JPanel fanInPanel;
+	public static JSpinner buildFanInSpinner(final StoryPoint storyPoint,
+			Comparable<?> max) {
+		final SpinnerNumberModel model;
+		final JSpinner fanInSpinner;
 
-		fanInPanel = new JPanel();
+		model = new SpinnerNumberModel(storyPoint.getFanIn(), 0, max, 1);
+		fanInSpinner = new JSpinner(model);
 
-		fanInPanel.setOpaque(false);
-		fanInPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-		if (editable) {
+		fanInSpinner.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				SpinnerModel spinnerModel = fanInSpinner.getModel();
+				Integer spinnerValue = (Integer) spinnerModel.getValue();
 
-			final SpinnerNumberModel model;
-			final JSpinner fanInSpinner;
+				if (!UndoManager.getInstance().hasOpenUndoableAction())
+					UndoManager.getInstance().startUndoableAction(
+							"Change " + storyPoint.getFanIn() + " to "
+									+ spinnerValue);
+				storyPoint.setFanIn(spinnerValue);
+				UndoManager.getInstance().endUndoableAction();
+			}
+		});
 
-			model = new SpinnerNumberModel(storyPoint.getFanIn(), 0, max, 1);
-			fanInSpinner = new JSpinner(model);
-
-			fanInSpinner.addChangeListener(new ChangeListener() {
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					SpinnerModel spinnerModel = fanInSpinner.getModel();
-					Integer spinnerValue = (Integer) spinnerModel.getValue();
-
-					storyPoint.setFanIn(spinnerValue);
-				}
-			});
-
-			fanInPanel.add(fanInSpinner);
-		} else {
-			fanInPanel.add(new JLabel(storyPoint.getFanIn().toString()));
-		}
-		return fanInPanel;
+		return fanInSpinner;
 	}
 }

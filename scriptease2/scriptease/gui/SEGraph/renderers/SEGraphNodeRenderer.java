@@ -51,12 +51,12 @@ public class SEGraphNodeRenderer<E> {
 		component = new JPanel();
 
 		component.setOpaque(true);
-		
+
 		this.configureAppearance(component, node);
 		this.configureInternalComponents(component, node);
-		
+
 		component.addMouseListener(this.componentAppearanceMouseListener(node));
-		
+
 		return component;
 	}
 
