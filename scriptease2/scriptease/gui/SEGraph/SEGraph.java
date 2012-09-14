@@ -26,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.plaf.ComponentUI;
 
 import scriptease.controller.observer.graph.SEGraphObserver;
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.ComponentFocusManager;
 import scriptease.gui.SEGraph.SEGraphModel.GraphEvent;
 import scriptease.gui.SEGraph.builders.SEGraphNodeBuilder;
@@ -49,7 +50,6 @@ import sun.awt.util.IdentityArrayList;
 public class SEGraph<E> extends JComponent {
 	private final SEGraphModel<E> model;
 	private final SEGraphNodeBuilder<E> builder;
-	private final SEGraphObserver<E> modelObserver;
 
 	private SEGraphNodeRenderer<E> renderer;
 
@@ -75,11 +75,8 @@ public class SEGraph<E> extends JComponent {
 		this.model = new SEGraphModel<E>(start, builder);
 		this.mousePosition = new Point();
 		this.nodesToComponents = new BiHashMap<E, JComponent>();
-		this.modelObserver = new ModelCleaner();
 		this.mouseAdapter = new NodeMouseAdapter();
 		this.individualNodeObservers = new ArrayList<Object>();
-
-		this.addSEGraphObserver(this.modelObserver);
 
 		this.setLayout(new SEGraphLayoutManager());
 
@@ -106,13 +103,13 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 * @param node
 	 *            The node to add
-	 * @param existingNode
+	 * @param parent
 	 *            The existing node
 	 * @return true if the addition was successful
 	 * @see SEGraphModel#addNodeTo(Object, Object)
 	 */
-	public void addNodeTo(E node, E existingNode) {
-		this.model.addNodeTo(node, existingNode);
+	public void addNodeToParent(E node, E parent) {
+		this.model.addNodeTo(node, parent);
 
 		this.repaint();
 		this.revalidate();
@@ -132,6 +129,7 @@ public class SEGraph<E> extends JComponent {
 	 * @see SEGraphModel#addNodeBetween(Object, Object, Object)
 	 */
 	public void addNodeBetween(E node, E existingNode1, E existingNode2) {
+
 		this.model.addNodeBetween(node, existingNode1, existingNode2);
 
 		this.repaint();
@@ -148,7 +146,6 @@ public class SEGraph<E> extends JComponent {
 	public void removeNode(E node) {
 		this.model.removeNode(node);
 
-		this.cleanup(node);
 		this.validateSelectedNode();
 		this.repaint();
 		this.revalidate();
@@ -187,9 +184,6 @@ public class SEGraph<E> extends JComponent {
 		final boolean result;
 
 		result = this.model.disconnectNodes(node1, node2);
-
-		this.cleanup(node1);
-		this.cleanup(node2);
 
 		this.validateSelectedNode();
 
@@ -239,8 +233,8 @@ public class SEGraph<E> extends JComponent {
 	/**
 	 * Removes an individual node observer from the Graph. These are removed
 	 * from each Node that was created and must be dealt with in the
-	 * {@link SEGraphNodeBuilder#removeNodeObserver(Object, Object)} method in the
-	 * builder.
+	 * {@link SEGraphNodeBuilder#removeNodeObserver(Object, Object)} method in
+	 * the builder.
 	 * 
 	 * @param observer
 	 */
@@ -321,43 +315,11 @@ public class SEGraph<E> extends JComponent {
 	 * to null.
 	 */
 	private void validateSelectedNode() {
-		if (SEGraph.this.model.getStartNode() == SEGraph.this.getSelectedNode())
+		if (this.model.getStartNode() == this.getSelectedNode())
 			return;
 
-		if (SEGraph.this.model.getParents(SEGraph.this.getSelectedNode())
-				.size() == 0)
-			SEGraph.this.setSelectedNode(null);
-	}
-
-	/**
-	 * Removes the node from the graph's memory. This should be called when we
-	 * disconnect a node, as that alone will not delete its children from
-	 * memory. They might still be referenced by the graph. <br>
-	 * <br>
-	 * Note that this does not mean the node is not referenced somewhere else.
-	 * 
-	 * @param node
-	 */
-	private void cleanup(E node) {
-		if (node == null)
-			return;
-
-		for (E child : this.builder.getChildren(node)) {
-			if (this.builder.getParents(child).isEmpty()) {
-				final JComponent component;
-				component = this.nodesToComponents.getValue(child);
-				if (component != null)
-					this.remove(component);
-				this.nodesToComponents.removeKey(child);
-			}
-		}
-
-		if (this.builder.getParents(node).isEmpty()) {
-			final JComponent component;
-			component = this.nodesToComponents.getValue(node);
-			if (component != null)
-				this.remove(component);
-			this.nodesToComponents.removeKey(node);
+		if (this.model.getParents(this.getSelectedNode()).size() == 0) {
+			this.setSelectedNode(this.getStartNode());
 		}
 	}
 
@@ -402,10 +364,6 @@ public class SEGraph<E> extends JComponent {
 	private class SEGraphLayoutManager implements LayoutManager {
 		private static final int HORIZONTAL_INDENT = 20;
 		private static final int NODE_Y_INDENT = 10;
-
-		protected void clearDisplayPanel() {
-			SEGraph.this.removeAll();
-		}
 
 		@Override
 		public void addLayoutComponent(String name, Component comp) {
@@ -461,7 +419,8 @@ public class SEGraph<E> extends JComponent {
 		@Override
 		public void layoutContainer(Container parent) {
 			// Remove the current contents of the panel.
-			clearDisplayPanel();
+			SEGraph.this.removeAll();
+		//	SEGraph.this.nodesToComponents.clear();
 
 			int xLocation = HORIZONTAL_INDENT;
 			int yLocation = 0;
@@ -540,6 +499,25 @@ public class SEGraph<E> extends JComponent {
 				previousNodes = currentNodes;
 			}
 		}
+		
+		/*private void drawNode(E node, int depth) {
+			draw the node at depth;
+			
+			for(E child : SEGraph.this.getChildren(node)) {
+
+				for(E child2 : SEGraph.this.getChildren(node)) {
+					
+					
+					if(SEGraph.this.getChildren(child2).contains(child)) {
+						
+					}
+				}
+			}
+		}
+		Draw Start
+		for child in start's children
+		   if child not a child of one of start's children
+		      draw child*/
 
 		/**
 		 * Sorts the given children in a fashion that has overlapping lines
@@ -717,8 +695,9 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			SEGraph.this.mousePosition.setLocation(SEGraph.this
-					.getMousePosition());
+			if (SEGraph.this.getMousePosition() != null)
+				SEGraph.this.mousePosition.setLocation(SEGraph.this
+						.getMousePosition());
 			SEGraph.this.repaint();
 		}
 
@@ -796,62 +775,66 @@ public class SEGraph<E> extends JComponent {
 					SEGraph.this.builder.addNodeObserver(newNode, observer);
 
 				if (this.lastEnteredNode != null)
-					if (this.lastEnteredNode == node)
-						SEGraph.this.addNodeTo(newNode, node);
-					else
+					if (this.lastEnteredNode == node) {
+						if (!UndoManager.getInstance().hasOpenUndoableAction())
+							UndoManager.getInstance().startUndoableAction(
+									"Add " + newNode + " to " + node);
+						SEGraph.this.addNodeToParent(newNode, node);
+
+						UndoManager.getInstance().endUndoableAction();
+					} else {
+						if (!UndoManager.getInstance().hasOpenUndoableAction())
+							UndoManager.getInstance().startUndoableAction(
+									"Add " + node + " between "
+											+ this.lastEnteredNode + " and "
+											+ node);
+
 						SEGraph.this.addNodeBetween(newNode,
 								this.lastEnteredNode, node);
+
+						UndoManager.getInstance().endUndoableAction();
+					}
 				break;
 			case DELETE:
+				if (!UndoManager.getInstance().hasOpenUndoableAction())
+					UndoManager.getInstance().startUndoableAction(
+							"Remove " + node);
+
 				SEGraph.this.removeNode(node);
+
+				UndoManager.getInstance().endUndoableAction();
+
 				break;
 			case CONNECT:
 				if (this.lastEnteredNode != null
-						&& this.lastEnteredNode != node)
+						&& this.lastEnteredNode != node) {
+					if (!UndoManager.getInstance().hasOpenUndoableAction())
+						UndoManager.getInstance().startUndoableAction(
+								"Connect " + this.lastEnteredNode + " to "
+										+ node);
+
 					SEGraph.this.connectNodes(this.lastEnteredNode, node);
 
+					UndoManager.getInstance().endUndoableAction();
+				}
 				break;
 			case DISCONNECT:
 				if (this.lastEnteredNode != null
-						&& this.lastEnteredNode != node)
+						&& this.lastEnteredNode != node) {
+					if (!UndoManager.getInstance().hasOpenUndoableAction())
+						UndoManager.getInstance().startUndoableAction(
+								"Disconnect " + this.lastEnteredNode + " from "
+										+ node);
+
 					SEGraph.this.disconnectNodes(this.lastEnteredNode, node);
+
+					UndoManager.getInstance().endUndoableAction();
+				}
 				break;
 			}
 
 			SEGraph.this.draggedFromNode = null;
-		}
-	}
-
-	/**
-	 * Cleans up the model when children and parents are removed.
-	 * 
-	 * @author kschenk
-	 * 
-	 */
-	private class ModelCleaner implements SEGraphObserver<E> {
-
-		@Override
-		public void nodeSelected(E node) {
-		}
-
-		@Override
-		public void childAdded(E child, E parent) {
-		}
-
-		@Override
-		public void childRemoved(E child, E parent) {
-			SEGraph.this.cleanup(parent);
-			SEGraph.this.cleanup(child);
-		}
-
-		@Override
-		public void parentAdded(E child, E parent) {
-		}
-
-		@Override
-		public void parentRemoved(E child, E parent) {
-			SEGraph.this.cleanup(parent);
-			SEGraph.this.cleanup(child);
+			SEGraph.this.repaint();
 		}
 	}
 }

@@ -148,16 +148,11 @@ public class SEGraphModel<E> {
 		for (ReferenceNode descendant : this.getReferenceNodes()) {
 			if (descendant.getObject() == node) {
 				// We need to work with copies to avoid concurrent modifications
-				final Collection<ReferenceNode> childrenCopy;
 				final Collection<ReferenceNode> parentsCopy;
 
-				childrenCopy = new HashSet<ReferenceNode>(
-						descendant.getChildren());
 				parentsCopy = new HashSet<ReferenceNode>(
 						descendant.getParents());
 
-				for (ReferenceNode child : childrenCopy)
-					child.removeParent(descendant);
 				for (ReferenceNode parent : parentsCopy)
 					parent.removeChild(descendant);
 				break;
@@ -227,7 +222,9 @@ public class SEGraphModel<E> {
 		ReferenceNode secondNode = null;
 
 		for (ReferenceNode referenceNode : this.getReferenceNodes()) {
-			if (referenceNode.getObject() == node1) {
+			if (firstNode != null && secondNode != null)
+				break;
+			else if (referenceNode.getObject() == node1) {
 				firstNode = referenceNode;
 			} else if (referenceNode.getObject() == node2) {
 				secondNode = referenceNode;
@@ -236,14 +233,11 @@ public class SEGraphModel<E> {
 
 		if (firstNode == null || secondNode == null)
 			return false;
-
 		if (firstNode.getChildren().contains(secondNode)) {
 			firstNode.removeChild(secondNode);
-
 			return true;
 		} else if (firstNode.getParents().contains(secondNode)) {
 			firstNode.removeParent(secondNode);
-
 			return true;
 		} else {
 			// This means the two nodes weren't connected at all.
