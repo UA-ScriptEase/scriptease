@@ -55,7 +55,7 @@ public final class StoryModel extends PatternModel {
 			Translator translator) {
 		super(title, author);
 
-		// Temporary code to make a new quest model with a start and end node.
+		// Temporary code to make a new story model with a start and end node.
 		this.startPoint = new StoryPoint("Start");
 		this.module = module;
 		this.translator = translator;

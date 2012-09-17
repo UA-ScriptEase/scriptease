@@ -114,7 +114,7 @@ public class CodeGenerator {
 		final Collection<ScriptInfo> scriptInfos = new ArrayList<ScriptInfo>();
 		final StoryPoint root = model.getRoot();
 
-		// do the first pass (semantic analysis) for the given quest
+		// do the first pass (semantic analysis) for the given story
 		final SemanticAnalyzer analyzer = new SemanticAnalyzer(root, translator);
 
 		// check for problems

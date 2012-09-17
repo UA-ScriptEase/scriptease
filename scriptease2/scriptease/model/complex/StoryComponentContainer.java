@@ -16,7 +16,7 @@ import scriptease.controller.StoryVisitor;
  * StoryComponentContainer. <br>
  * <br>
  * If there are any major new ScriptEase pattern types, ie. on the level of
- * behaviours, encounters, quests, etc, they should be registered here.
+ * behaviours, encounters, stories, etc, they should be registered here.
  * 
  * @author remiller
  * @author mfchurch

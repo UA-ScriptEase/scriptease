@@ -453,8 +453,8 @@
       </Slots>
     </Type>
     <Type>
-      <Name>Quest Point</Name>
-      <Keyword>questPoint</Keyword>
+      <Name>Story Point</Name>
+      <Keyword>storyPoint</Keyword>
       <CodeSymbol>string</CodeSymbol>
       <Format>
         <Literal>&quot;</Literal>
@@ -7172,7 +7172,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>In &lt;subject&gt;, when &lt;quest point&gt; is enabled</Name>
+      <Name>In &lt;subject&gt;, when &lt;story point&gt; is enabled</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -7203,7 +7203,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>In &lt;subject&gt;, when &lt;quest point&gt; is enabled</Name>
+          <Name>In &lt;subject&gt;, when &lt;story point&gt; is enabled</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -7214,11 +7214,11 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>quest point</Name>
+              <Name>story point</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>questPoint</Type>
+                <Type>storyPoint</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -7230,12 +7230,10 @@
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_quest2</Include>
-          </Includes>
+          <Includes />
           <Code>
             <Line>
-              <Literal>if(GetUserDefinedEventNumber() != SE2_QUEST_ENABLED_EVENT) {</Literal>
+              <Literal>if(GetUserDefinedEventNumber() != SE2_STORY_ENABLED_EVENT) {</Literal>
             </Line>
             <Indent>
               <Line>
@@ -7247,8 +7245,8 @@
             </Line>
             <Line/>
             <Line>
-              <Literal>if(SCEZ_Struct_ArrayRemoveElement(GetModule(), QUEST_POINTS_ENABLED_LIST, </Literal>
-              <Scope data="argument" ref="quest point">
+              <Literal>if(SCEZ_Struct_ArrayRemoveElement(GetModule(), STORY_POINTS_ENABLED_LIST, </Literal>
+              <Scope data="argument" ref="story point">
                 <Fragment data="name"/>
               </Scope>
               <Literal>)!= &quot;&quot;) {</Literal>
@@ -7264,7 +7262,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;, initialize Quest System and</Name>
+      <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;, initialize Story System and</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -7295,7 +7293,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;, initialize Quest System and</Name>
+          <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;, initialize Story System and</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -7314,27 +7312,25 @@
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_quest2</Include>
-          </Includes>
+          <Includes/>
           <Code>
             <Line>
               <Literal>string name;</Literal>
             </Line>
-            <Series data="questPointNodes" unique="true">
+            <Series data="storyPointNodes" unique="true">
               <Line>
                 <Literal>name=</Literal>
                 <Fragment data="formattedValue"/>
                 <Literal>;</Literal>
               </Line>
               <Line>
-                <Literal>SE2_Quest_RegisterQuestPoint(GetFirstPC(), name, </Literal>
+                <Literal>SE2_Story_RegisterStoryPoint(GetFirstPC(), name, </Literal>
                 <Fragment data="fanIn"/>
                 <Literal>);</Literal>
               </Line>
               <Series data="parentNodes" unique="true">
                 <Line>
-                  <Literal>SE2_Quest_RegisterQuestPointParent(</Literal>
+                  <Literal>SE2_Story_RegisterStoryPointParent(</Literal>
                   <Literal>name, </Literal>
                   <Fragment data="formattedValue"/>
                   <Literal>, GetFirstPC());</Literal>
@@ -7342,7 +7338,7 @@
               </Series>
               <Series data="childrenNodes" unique="true">
                 <Line>
-                  <Literal>SE2_Quest_RegisterQuestPointChild(</Literal>
+                  <Literal>SE2_Story_RegisterStoryPointChild(</Literal>
                   <Literal>name, </Literal>
                   <Fragment data="formattedValue"/>
                   <Literal>, GetFirstPC());</Literal>
@@ -7350,14 +7346,14 @@
               </Series>
             </Series>
             <Line>
-              <Literal>//enable the starting quest point</Literal>
+              <Literal>//enable the starting story point</Literal>
             </Line>
             <Line>
-              <Literal>SE2_Quest_SetState(GetFirstPC(), </Literal>
+              <Literal>SE2_Story_SetState(GetFirstPC(), </Literal>
               <Scope data="start">
                 <Fragment data="formattedValue"/>
               </Scope>
-              <Literal>, QUEST_POINT_STATE_ENABLED);</Literal>
+              <Literal>, STORY_POINT_STATE_ENABLED);</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -24194,7 +24190,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Succeed &lt;QuestPoint&gt;</Name>
+      <Name>Succeed &lt;Story Point&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -24202,7 +24198,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Succeed &lt;QuestPoint&gt;</Name>
+          <Name>Succeed &lt;Story Point&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>432</Id>
@@ -24211,31 +24207,29 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>QuestPoint</Name>
+              <Name>Story Point</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>questPoint</Type>
+                <Type>storyPoint</Type>
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_quest2</Include>
-          </Includes>
+          <Includes/>
           <Code>
             <Line>
-              <Literal>SE2_Quest_SetState(GetFirstPC(),</Literal>
-              <Scope data="argument" ref="QuestPoint">
+              <Literal>SE2_Story_SetState(GetFirstPC(),</Literal>
+              <Scope data="argument" ref="Story Point">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
               </Scope>
-              <Literal>, QUEST_POINT_STATE_SUCCESS);</Literal>
+              <Literal>, STORY_POINT_STATE_SUCCESS);</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Fail &lt;QuestPoint&gt;</Name>
+      <Name>Fail &lt;Story Point&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -24243,7 +24237,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Fail &lt;QuestPoint&gt;</Name>
+          <Name>Fail &lt;Story Point&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>433</Id>
@@ -24252,24 +24246,22 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>QuestPoint</Name>
+              <Name>Story Point</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>questPoint</Type>
+                <Type>storyPoint</Type>
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_quest2</Include>
-          </Includes>
+          <Includes/>
           <Code>
             <Line>
-              <Literal>SE2_Quest_SetState(GetFirstPC(), </Literal>
-              <Scope data="argument" ref="QuestPoint">
+              <Literal>SE2_Story_SetState(GetFirstPC(), </Literal>
+              <Scope data="argument" ref="Story Point">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
               </Scope>
-              <Literal>, QUEST_POINT_STATE_FAIL);</Literal>
+              <Literal>, STORY_POINT_STATE_FAIL);</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -24953,7 +24945,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Continue quest at &lt;Quest Point&gt;</Name>
+      <Name>Continue story at &lt;Story Point&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -24961,7 +24953,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Continue quest at &lt;Quest Point&gt;</Name>
+          <Name>Continue story at &lt;Story Point&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>448</Id>
@@ -24970,21 +24962,19 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Quest Point</Name>
+              <Name>Story Point</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>questPoint</Type>
+                <Type>storyPoint</Type>
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_quest2</Include>
-          </Includes>
+          <Includes/>
           <Code>
             <Line>
-              <Literal>SE2_Quest_ResetAtQuestPoint(GetFirstPC(), </Literal>
-              <Scope data="argument" ref="Quest Point">
+              <Literal>SE2_Story_ResetAtStoryPoint(GetFirstPC(), </Literal>
+              <Scope data="argument" ref="Story Point">
                 <Fragment data="name"/>
               </Scope>
               <Literal>);</Literal>
@@ -24994,13 +24984,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;QuestPoint&gt; is active</Name>
+      <Name>if &lt;Story Point&gt; is active</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;QuestPoint&gt; is active</Name>
+          <Name>if &lt;Story Point&gt; is active</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>455</Id>
@@ -25009,37 +24999,35 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>QuestPoint</Name>
+              <Name>Story Point</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>questPoint</Type>
+                <Type>storyPoint</Type>
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_quest2</Include>
-          </Includes>
+          <Includes/>
           <Code>
             <Line>
-              <Literal>return SE2_Quest_GetState(GetFirstPC(), </Literal>
-              <Scope data="argument" ref="QuestPoint">
+              <Literal>return SE2_Story_GetState(GetFirstPC(), </Literal>
+              <Scope data="argument" ref="Story Point">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
               </Scope>
-              <Literal>) == QUEST_POINT_STATE_ENABLED;</Literal>
+              <Literal>) == STORY_POINT_STATE_ENABLED;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;QuestPoint&gt; has succeeded</Name>
+      <Name>if &lt;Story Point&gt; has succeeded</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;QuestPoint&gt; has succeeded</Name>
+          <Name>if &lt;Story Point&gt; has succeeded</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>456</Id>
@@ -25048,24 +25036,22 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>QuestPoint</Name>
+              <Name>Story Point</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>questPoint</Type>
+                <Type>storyPoint</Type>
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_quest2</Include>
-          </Includes>
+          <Includes/>
           <Code>
             <Line>
-              <Literal>return SE2_Quest_GetState(GetFirstPC(), </Literal>
-              <Scope data="argument" ref="QuestPoint">
+              <Literal>return SE2_Story_GetState(GetFirstPC(), </Literal>
+              <Scope data="argument" ref="Story Point">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
               </Scope>
-              <Literal>) == QUEST_POINT_STATE_SUCCESS;</Literal>
+              <Literal>) == STORY_POINT_STATE_SUCCESS;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
