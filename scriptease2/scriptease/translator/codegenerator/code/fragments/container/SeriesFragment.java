@@ -140,6 +140,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 			next = it.next();
 
 			newContext = contextFactory.createContext(context, next);
+
 			code.append(AbstractFragment.resolveFormat(this.subFragments,
 					newContext));
 
@@ -160,7 +161,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 	 */
 	private Iterator<? extends Object> buildDataIterator(Context context) {
 		final String dataLabel = this.getDirectiveText();
-		final Iterator<? extends Object> it;
+		Iterator<? extends Object> it;
 
 		// IF+ELSE BLOCK ( series ... data= <dataLabel> )
 		if (dataLabel
@@ -218,29 +219,19 @@ public class SeriesFragment extends AbstractContainerFragment {
 			return new ArrayList<String>().iterator();
 		}
 
-		return this.seriesFilter.applyFilter(handle(it));
+		if (this.isUnique) {
+			it = uniquify(it);
+		}
+
+		return this.seriesFilter.applyFilter(it);
 	}
 
-	/**
-	 * Double dispatch for the appropriate handling of series filtering and
-	 * uniquifying
-	 * 
-	 * @param <T>
-	 * @param iterator
-	 * @return
-	 */
-	public <T> Iterator<T> handle(Iterator<T> iterator) {
-		if (this.isUnique)
-			return iterator;
-		else {
-			Collection<T> unique = new CopyOnWriteArraySet<T>();
-			while (iterator.hasNext()) {
-				T object = iterator.next();
-
-				unique.add(object);
-			}
-			return unique.iterator();
+	private <T> Iterator<T> uniquify(Iterator<T> iterator) {
+		final Collection<T> unique = new CopyOnWriteArraySet<T>();
+		while (iterator.hasNext()) {
+			unique.add(iterator.next());
 		}
+		return unique.iterator();
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package scriptease.util;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -223,7 +224,7 @@ public class StringOp {
 	}
 
 	public static int wordCount(String source) {
-		String wordArray[] = source.split(" ");
+		String wordArray[] = source.split("\\w+");
 		return wordArray.length;
 	}
 
@@ -238,7 +239,6 @@ public class StringOp {
 	 * <code>String seperator = ", "</code><br>
 	 * then<br>
 	 * <code>getCollectionAsString(collection) returns "First, Second, Third"</code>
-	 * 
 	 * 
 	 * @param strings
 	 *            The collection of strings
@@ -262,4 +262,19 @@ public class StringOp {
 			return "";
 	}
 
+	public static String join(Collection<String> items, String separator) {
+		final StringBuilder builder = new StringBuilder();
+		for (String item : items) {
+			builder.append(item);
+			builder.append(separator);
+		}
+
+		builder.delete(builder.length() - separator.length(), builder.length());
+
+		return builder.toString();
+	}
+
+	public static String join(String[] items, String separator) {
+		return StringOp.join(Arrays.asList(items), separator);
+	}
 }

@@ -365,6 +365,9 @@
 				<FormatRef ref="functionDefinition" />
 			</Series>
 			<Line />
+			<!-- NWN likes a blank line all by itself . I think it's a C-ism that 
+				they seem to want to keep? -->
+			<Line />
 		</Format>
 
 		<Format id="include">

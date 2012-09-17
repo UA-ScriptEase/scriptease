@@ -27,9 +27,9 @@ public abstract class SETreeModel extends Observable implements Filterable {
 	protected SETreeModel() {
 
 	}
-
-	protected abstract void createAndPopulateTree();
-
+	
+	protected abstract void populate();
+	
 	@Override
 	public void updateFilter(Filter newFilter) {
 		// TODO Auto-generated method stub

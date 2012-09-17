@@ -2,19 +2,15 @@ package io;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameConstant;
-import scriptease.translator.io.model.GameConversation;
-import scriptease.translator.io.model.GameConversationNode;
+import scriptease.translator.io.model.Slot;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
 
 /**
@@ -31,6 +27,7 @@ import scriptease.translator.io.tools.ScriptEaseFileAccess;
  * 
  */
 public class GenericFileFormat {
+	private static final String GFF_VERSION = "V3.2";
 	private static final String TYPE_SOUND_BP = "UTS";
 	private static final String TYPE_WAYPOINT_BP = "UTW";
 	private static final String TYPE_TRIGGER_BP = "UTT";
@@ -40,138 +37,154 @@ public class GenericFileFormat {
 	private static final String TYPE_PLACEABLE_BP = "UTP";
 	private static final String TYPE_ITEM_BP = "UTI";
 	private static final String TYPE_DOOR_BP = "UTD";
-	public static final String TYPE_DIALOGUE_BP = "DLG";
+	private static final String TYPE_DIALOGUE_BP = "DLG";
 	private static final String TYPE_JOURNAL_BP = "JRL";
-	private static final String TYPE_MODULE_BP = "IFO";
-	public static final String TYPE_GAME_INSTANCE_FILE = "GIT";
-	private final String resRef;
-	private final String fileType;
-	private final String version;
-	private final long structOffset;
-	private final long structCount;
-	private final long fieldOffset;
-	private final long fieldCount;
-	private final long labelOffset;
-	private final long labelCount;
-	private final long fieldDataOffset;
-	private long fieldDataCount;
-	private long fieldIndicesOffset;
-	private final long fieldIndicesCount;
-	private long listIndicesOffset;
-	private final long listIndicesCount;
-
-	private GenericFileFormat genericFileFormat = this;
+	private static final String TYPE_MODULE_INFO = "IFO";
+	private static final String TYPE_AREA_GAME_INSTANCE_FILE = "GIT";
+	private static final String TYPE_AREA_FILE = "ARE";
 
 	/**
-	 * location of this GFF from the start of the parent ERF file. This is reset
-	 * upon writing.
+	 * Separator used when indexing occurs. The left hand side of the separator
+	 * is the resref, and to the right is the index information. It is a
+	 * character that cannot naturally occur within a resref.
 	 */
-	private long gffOffset;
+	// this must never be set to an alphanumeric character or "_" or "."
+	// This gets used in regex searches, so try to avoid regular expression
+	// special characters, too. Anything else should be fine. - remiller
+	protected static final String RESREF_SEPARATOR = "#";
 
+	// these are the specific fields for conversations that are used in dialogue
+	// line indexing
+	protected final static String DIALOGUE_PLAYER_REPLY_LIST = "ReplyList";
+	protected final static String DIALOGUE_NPC_ENTRY_LIST = "EntryList";
+
+	// header data
+	private final String fileType;
+	// end header data
+
+	// file data
 	private final List<GffStruct> structArray;
 	private final List<GffField> fieldArray;
 	private final List<String> labelArray;
-	/**
-	 * Maps the field label to the new data for that field
-	 */
-	private final Map<GffField, String> changedFieldMap;
+	private List<Long> fieldIndicesArray;
+	private List<List<Long>> listIndicesArray;
+	// end file data
 
-	private byte[] beforeFieldIndicesArray;
-	private byte[] afterFieldIndicesArray;
-
-	private GameConstant objectRepresentation;
+	// added by us for convenience. This isn't actually stored within a GFF on
+	// disk.
+	private final String resRef;
 
 	/**
 	 * Length of the Labels in the GFF, from GFF documentation section 3.5
 	 */
 	private static final int LABEL_BYTE_LENGTH = 16;
 
-	public GenericFileFormat(String resRef, ScriptEaseFileAccess reader,
-			long filePosition) throws IOException {
-		this.resRef = resRef;
-		this.gffOffset = filePosition;
+	/**
+	 * Internationalization table for GFFField data.
+	 */
+	private static final TlkManager stringTable = TlkManager.getInstance();
 
+	protected GenericFileFormat(String resRef, ScriptEaseFileAccess reader,
+			long filePosition) throws IOException {
+		final String version;
+		final long structOffset;
+		final long structCount;
+		final long fieldOffset;
+		final long fieldCount;
+		final long labelOffset;
+		final long labelCount;
+		final long fieldDataOffset;
+		// final long fieldDataCount; // nothing actually uses field data count
+		final long fieldIndicesOffset;
+		final long fieldIndicesCount;
+		final long listIndicesOffset;
+		final long listIndicesCount;
+
+		this.resRef = resRef;
+
+		// read GFF Header Data, as from GFF doc 3.2
 		reader.seek(filePosition);
 
-		// read GFF HEADER DATA
 		this.fileType = reader.readString(4);
-		this.version = reader.readString(4);
-		this.structOffset = reader.readUnsignedInt(true);
-		this.structCount = reader.readUnsignedInt(true);
-		this.fieldOffset = reader.readUnsignedInt(true);
-		this.fieldCount = reader.readUnsignedInt(true);
-		this.labelOffset = reader.readUnsignedInt(true);
-		this.labelCount = reader.readUnsignedInt(true);
-		this.fieldDataOffset = reader.readUnsignedInt(true);
-		this.fieldDataCount = reader.readUnsignedInt(true);
-		this.fieldIndicesOffset = reader.readUnsignedInt(true);
-		this.fieldIndicesCount = reader.readUnsignedInt(true);
-		this.listIndicesOffset = reader.readUnsignedInt(true);
-		this.listIndicesCount = reader.readUnsignedInt(true);
-		// end HEADER DATA
+		version = reader.readString(4);
+		structOffset = reader.readUnsignedInt(true) + filePosition;
+		structCount = reader.readUnsignedInt(true);
+		fieldOffset = reader.readUnsignedInt(true) + filePosition;
+		fieldCount = reader.readUnsignedInt(true);
+		labelOffset = reader.readUnsignedInt(true) + filePosition;
+		labelCount = reader.readUnsignedInt(true);
+		fieldDataOffset = reader.readUnsignedInt(true) + filePosition;
+		// 4 bytes of fieldDataCount, which we don't use and re-calculate in
+		// writeHeader(). - remiller
+		reader.skipBytes(4);
+		fieldIndicesOffset = reader.readUnsignedInt(true) + filePosition;
+		fieldIndicesCount = reader.readUnsignedInt(true);
+		listIndicesOffset = reader.readUnsignedInt(true) + filePosition;
+		listIndicesCount = reader.readUnsignedInt(true);
 
-		this.structArray = new ArrayList<GffStruct>((int) this.structCount);
-		this.fieldArray = new ArrayList<GffField>((int) this.fieldCount);
-		this.labelArray = new ArrayList<String>((int) this.labelCount);
-		this.changedFieldMap = new HashMap<GffField, String>();
+		this.structArray = new ArrayList<GffStruct>((int) structCount);
+		this.fieldArray = new ArrayList<GffField>((int) fieldCount);
+		this.labelArray = new ArrayList<String>((int) labelCount);
 
-		if (!this.version.equals("V3.2"))
+		this.fieldIndicesArray = new ArrayList<Long>((int) fieldIndicesCount);
+		this.listIndicesArray = new ArrayList<List<Long>>(
+				(int) listIndicesCount);
+
+		if (!version.equals(GFF_VERSION))
 			throw new IOException(
 					"NWN GFF: Cannot read a GFF whose version is not V3.2.");
 
-		this.readStructs(reader);
-		this.readFields(reader);
-		this.readLabels(reader);
-
-		this.buildObject(reader);
+		// need to read labels first to make debugging easier
+		this.readLabels(reader, labelOffset, labelCount);
+		this.readStructs(reader, structOffset, structCount, fieldIndicesOffset);
+		this.readFields(reader, fieldOffset, fieldCount, fieldDataOffset);
+		this.readFieldIndices(reader, fieldIndicesOffset, fieldIndicesCount);
+		this.readListIndices(reader, listIndicesOffset, listIndicesCount);
 	}
 
-	public long getFieldIndicesOffset() {
-		return this.fieldIndicesOffset;
-	}
-
-	public long getListIndicesOffset() {
-		return this.listIndicesOffset;
-	}
-
-	public void setFieldIndicesOffset(long fieldIndicesOffset) {
-		this.fieldIndicesOffset = fieldIndicesOffset;
-	}
-
-	public void setFieldDataCount(long fieldDataCount) {
-		this.fieldDataCount = fieldDataCount;
-	}
-
-	public long getFieldDataCount() {
-		return this.fieldDataCount;
-	}
-
-	public String getFileType() {
+	protected String getFileType() {
 		return this.fileType;
 	}
 
-	public void setListIndicesOffset(long listIndicesOffset) {
-		this.listIndicesOffset = listIndicesOffset;
-	}
-
-	public List<GffField> getFieldArray() {
-		return this.fieldArray;
-	}
-
-	public List<String> getLabelArray() {
-		return this.labelArray;
-	}
-
-	public String getResRef() {
+	protected String getResRef() {
 		return this.resRef;
 	}
 
 	/**
-	 * Returns the git list label that corresponds to the filetype.
+	 * Retrieves the Dialogue struct (as in conversations docs 2.2) that the
+	 * given Dialogue Sync Struct (2.3) is pointing to.
 	 * 
-	 * @return
+	 * @param syncStruct
+	 *            The sync struct to resolve.
+	 * @param isPlayerLine
+	 *            whether the sync struct is for a player line or an NPC line.
+	 * @return The Dialogue Struct
 	 */
-	public String getGITListLabel() {
+	protected GffStruct resolveSyncStruct(GffStruct syncStruct,
+			boolean isPlayerLine) {
+		final String listLabel;
+		final int index;
+		final List<GffStruct> dialogueStructList;
+
+		if (isPlayerLine)
+			listLabel = GenericFileFormat.DIALOGUE_PLAYER_REPLY_LIST;
+		else
+			listLabel = GenericFileFormat.DIALOGUE_NPC_ENTRY_LIST;
+
+		dialogueStructList = this.getList(listLabel);
+
+		index = new Integer(syncStruct.getString("Index"));
+
+		return dialogueStructList.get(index);
+	}
+
+	/**
+	 * Gets the label for the git list that this GFF's instances would live in.
+	 * 
+	 * @return the appropriate label for the list to store this giff's
+	 *         instances.
+	 */
+	private String getGITListLabel() {
 		String gitLabel;
 		String fileType = this.fileType.trim();
 
@@ -200,94 +213,12 @@ public class GenericFileFormat {
 	}
 
 	/**
-	 * Returns true if fields in the GFF have changed
-	 * 
-	 * @return
-	 */
-	public boolean hasChanges() {
-		return !this.changedFieldMap.isEmpty();
-	}
-
-	/**
-	 * Calculates the size difference in bytes of the changed gff compared to
-	 * the original. Used to make sure the GFF file is not made smaller by
-	 * ScriptEase 2.
-	 * 
-	 * @param reader
-	 * @return
-	 */
-	public int calculateSizeDifference(ScriptEaseFileAccess reader) {
-		int sizeDifference = 0;
-		for (Entry<GffField, String> entry : this.changedFieldMap.entrySet()) {
-			final GffField key = entry.getKey();
-			final String newValue = entry.getValue();
-			final String oldValue;
-			try {
-				oldValue = key.readString(reader);
-			} catch (IOException e) {
-				System.err.println("Unable to read " + key);
-				e.printStackTrace();
-				continue;
-			}
-			// add the byte array length difference to the sizeDifference
-			sizeDifference += (newValue.getBytes().length - oldValue.getBytes().length);
-		}
-		return sizeDifference;
-	}
-
-	/**
-	 * Builds the game objects based on their specific NWN type
-	 * 
-	 * @param reader
-	 * @throws IOException
-	 */
-	private void buildObject(ScriptEaseFileAccess reader) throws IOException {
-		final GameConstant representation;
-		final String name;
-
-		if (this.isValuable()) {
-			// read the object name
-			name = this.readName(reader);
-
-			// conversations
-			if (this.fileType.trim().equalsIgnoreCase(
-					GenericFileFormat.TYPE_DIALOGUE_BP)) {
-				// get the top level struct
-				final GffStruct topLevel = this.getTopLevelStruct();
-
-				representation = new NWNConversation(reader, name, topLevel);
-			}
-			// other types
-			else {
-				final String tag;
-				// get the object tag
-				tag = this.readTag(reader);
-
-				// get the object type
-				String type = this.getScriptEaseType();
-
-				ArrayList<String> objectTypes = new ArrayList<String>(1);
-				objectTypes.add(type);
-
-				representation = new NWNObject(this.resRef, objectTypes, name,
-						tag);
-			}
-			// clean up
-			this.removeGeneratedReferences(reader);
-		} else {
-			representation = null;
-		}
-
-		this.objectRepresentation = representation;
-	}
-
-	/**
 	 * Gets the top level struct from the struct array, returns null if nothing
 	 * is found
 	 * 
 	 * @return
 	 */
-	public GffStruct getTopLevelStruct() {
+	protected GffStruct getTopLevelStruct() {
 		for (GffStruct struct : this.structArray)
 			if (struct.isTopLevelStruct())
 				return struct;
@@ -295,15 +226,17 @@ public class GenericFileFormat {
 	}
 
 	/**
-	 * Reads the name field of the GFF. The actual field(s) that are relevant
-	 * can change from type to type.
+	 * Gets the value of the name field of the GFF. The actual field(s) that are
+	 * relevant can change from type to type.
+	 * 
+	 * @param index
 	 * 
 	 * @param reader
 	 *            the Stream to read from.
 	 * @return
 	 * @throws IOException
 	 */
-	private String readName(ScriptEaseFileAccess reader) throws IOException {
+	private String getName(String index) {
 		final String type = this.fileType.trim();
 		String name;
 
@@ -311,35 +244,40 @@ public class GenericFileFormat {
 		if (type.equalsIgnoreCase(GenericFileFormat.TYPE_CREATURE_BP)) {
 			final String lastName;
 
-			name = this.readField(reader, "FirstName");
-			lastName = this.readField(reader, "LastName");
+			name = this.getFieldByLabel("FirstName").getStringData();
+			lastName = this.getFieldByLabel("LastName").getStringData();
 
 			name += lastName == null ? "" : " " + lastName;
 		}
-		// door, placeable, item, merchant/store blueprints
+		// door, placeable, item, sound, merchant/store blueprints
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_DOOR_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_PLACEABLE_BP)
-				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_MERCHANT_BP)) {
-			name = this.readField(reader, "LocName");
+				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_MERCHANT_BP)
+				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_SOUND_BP)) {
+			name = this.getFieldByLabel("LocName").getStringData();
 		}
 		// item, encounter, trigger, waypoint blueprints
 		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_ITEM_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_ENCOUNTER_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_TRIGGER_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)) {
-			name = this.readField(reader, "LocalizedName");
+			name = this.getFieldByLabel("LocalizedName").getStringData();
 		}
 		// module blueprints
-		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_BP)) {
-			name = this.readField(reader, "Mod_Name");
+		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_INFO)) {
+			name = this.getFieldByLabel("Mod_Name").getStringData();
 		}
-		//TODO The journal blueprints have been disabled due to Quests not working properly with them.
-//		// journal blueprints
-//		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
-//			name = this.readField(reader, "Name");
-//		}
-		// sound, conversation and other blueprints 
-		//TODO These should have their specific names.
+		// areas
+		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_AREA_FILE)) {
+			name = this.getFieldByLabel("Name").getStringData();
+		}
+		// journal blueprints
+		else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+			final GffStruct category = getJournalCategory(index);
+
+			name = category.getFieldByLabel("Name").getStringData();
+		}
+		// other blueprints don't have a display name, just a resref.
 		else {
 			name = this.resRef;
 		}
@@ -347,20 +285,27 @@ public class GenericFileFormat {
 		return name;
 	}
 
-	/**
-	 * Reads the tag from this GFF, if it has one. Otherwise, it returns an
-	 * empty string.
-	 * 
-	 * @param reader
-	 *            The reader to read from.
-	 * @return The tag of this GFF, or an empty string.
-	 * @throws IOException
-	 */
-	private String readTag(ScriptEaseFileAccess reader) throws IOException {
-		final String tag;
-		final String type = this.fileType.trim();
+	private GffStruct getJournalCategory(String index) {
+		final List<GffStruct> categories;
+		final GffStruct category;
 
-		if (type.equalsIgnoreCase("ARE")
+		categories = this.getFieldByLabel("Categories").getListData();
+
+		category = categories.get(Integer.valueOf(index));
+		return category;
+	}
+
+	/**
+	 * Gets the tag from this GFF, if it has one. Otherwise, it returns an empty
+	 * string.
+	 * 
+	 * @return The tag of this GFF, or an empty string.
+	 */
+	private String getTag(String index) {
+		final String type = this.fileType.trim();
+		final GffField field;
+
+		if (type.equalsIgnoreCase(GenericFileFormat.TYPE_AREA_FILE)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_CREATURE_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_DOOR_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_ENCOUNTER_BP)
@@ -369,40 +314,46 @@ public class GenericFileFormat {
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_PLACEABLE_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_SOUND_BP)
 				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_TRIGGER_BP)
-				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)
-//				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)
-				) {
-			tag = this.readField(reader, "Tag");
-		} else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_BP)) {
-			tag = this.readField(reader, "Mod_Tag");
-		} else
-			tag = "";
-		return tag;
+				|| type.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)) {
+			field = this.getFieldByLabel("Tag");
+		} else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_INFO)) {
+			// BioWare, why you no consistent?
+			field = this.getFieldByLabel("Mod_Tag");
+		} else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+			final GffStruct category;
+			final List<GffStruct> categories;
+
+			categories = this.getFieldByLabel("Categories").getListData();
+
+			category = categories.get(Integer.valueOf(index));
+
+			field = category.getFieldByLabel("Tag");
+		} else {
+			field = null;
+		}
+
+		return field == null ? "" : field.getStringData();
 	}
 
 	/**
 	 * Remove generated references when we read it in, so that when we write it
 	 * out, the naming and references are correct.
-	 * 
-	 * @param reader
-	 * @throws IOException
 	 */
-	private void removeGeneratedReferences(ScriptEaseFileAccess reader)
-			throws IOException {
-		final GameTypeManager typeManager = TranslatorManager.getInstance()
-				.getTranslator(ErfFile.NEVERWINTER_NIGHTS).getGameTypeManager();
+	private void removeGeneratedReferences() {
+		final GameTypeManager typeManager;
 		final Collection<String> scriptSlots;
 		String reference;
 
-		// remove all generates script referencesd
+		typeManager = ErfFile.getTranslator().getGameTypeManager();
+		scriptSlots = typeManager.getSlots(this.getScriptEaseType());
 
-		scriptSlots = typeManager.getSlots(getScriptEaseType());
+		// remove all generated script references
 		for (String slotName : scriptSlots) {
-			reference = this.readField(reader, slotName);
+			reference = this.getFieldByLabel(slotName).getStringData();
 
-			// don't keep references to ScriptEase-generated files
 			if (ErfFile.isScriptEaseGenerated(reference)) {
-				// TODO: get the default script for the patterns file
+				// TODO: get the default script from the patterns file or
+				// something
 				final String originalScript = "";
 
 				this.setField(slotName, originalScript);
@@ -411,10 +362,165 @@ public class GenericFileFormat {
 	}
 
 	/**
-	 * @return the objectRepresentation
+	 * 
+	 * @return The ScriptEase notion of this game object.
 	 */
-	public final GameConstant getObjectRepresentation() {
-		return this.objectRepresentation;
+	protected GameConstant getObjectRepresentation() {
+		return this.getObjectRepresentation(null);
+	}
+
+	/**
+	 * Extracts a ScriptEase representation of this GFF. <code>index</code> is a
+	 * string that is used by GFFs that aren't directly game objects themselves,
+	 * but are instead containers. These GFFs use the given string as indexing
+	 * information to determine which of their contents to get a game object
+	 * representation for.
+	 * 
+	 * @param index
+	 *            Data used to resolve which internal part of this GFF to return
+	 *            the game object for. May be <code>null</code> or
+	 *            <code>""</code> if the GFF isn't a blueprint wrapper.
+	 * 
+	 * @return The ScriptEase version of this GFF object that matches the
+	 *         indexing information.
+	 */
+	protected GameConstant getObjectRepresentation(String index) {
+		final GameConstant representation;
+		final String name;
+		final String fileType = this.getFileType().trim();
+		String templateId = this.getResRef() + "." + fileType;
+
+		if (!this.generatesObject()) {
+			throw new UnsupportedOperationException(fileType
+					+ " does not generate an object representation.");
+		}
+
+		if (index == null)
+			index = "";
+
+		if (index.isEmpty()
+				&& fileType.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+			throw new IllegalArgumentException("Journals require an indexer.");
+		}
+
+		// conversations
+		if (fileType.equalsIgnoreCase(GenericFileFormat.TYPE_DIALOGUE_BP)) {
+			if (index.isEmpty()) {
+				return new NWNConversation(templateId, this);
+			} else {
+				return this.getDialogLine(Arrays.asList(index
+						.split(NWNDialogueLine.INDEXER_SEPARATOR)));
+			}
+		}
+		// other types
+		else {
+			if (fileType.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+				templateId += GenericFileFormat.RESREF_SEPARATOR + index;
+			}
+
+			name = this.getName(index);
+			final String tag;
+			final String type;
+
+			tag = this.getTag(index);
+			type = this.getScriptEaseType();
+
+			representation = new NWNObject(templateId, type, name, tag);
+		}
+
+		// clean up
+		this.removeGeneratedReferences();
+
+		return representation;
+	}
+
+	/**
+	 * Finds the dialogue line with the given indexing information.
+	 * 
+	 * @param indexes
+	 *            The list of indexes
+	 * @return
+	 */
+	private GameConstant getDialogLine(List<String> indexes) {
+		final GffStruct syncStruct;
+		final boolean isPlayerLine;
+
+		syncStruct = this.getDialogueLineStruct(indexes);
+
+		if (syncStruct == null)
+			return null;
+
+		/*
+		 * Because dialogue lines must go [NPC->PC->NPC->PC->...], an even
+		 * number of indexes must be referencing a player line, odd is NPC.
+		 */
+		isPlayerLine = indexes.size() % 2 == 0;
+
+		return new NWNDialogueLine(this, syncStruct, isPlayerLine, indexes);
+	}
+
+	private GffStruct getDialogueLineStruct(List<String> indexes) {
+		boolean isPlayerLine;
+		final List<GffStruct> startingList;
+		String childListLabel;
+		List<GffStruct> children;
+		int index;
+		GffStruct syncStruct;
+
+		startingList = this.getTopLevelStruct().getFieldByLabel("StartingList")
+				.getListData();
+
+		// trace the index trail until we get to the appropriate struct.
+		try {
+			syncStruct = startingList.get(new Integer(indexes.get(0)));
+		} catch (NumberFormatException e) {
+			return null;
+		}
+
+		for (int i = 1; i < indexes.size(); i++) {
+			index = new Integer(indexes.get(i));
+
+			isPlayerLine = i % 2 == 0;
+
+			if (isPlayerLine)
+				childListLabel = "EntriesList";
+			else
+				childListLabel = "RepliesList";
+
+			children = this.resolveSyncStruct(syncStruct, isPlayerLine)
+					.getFieldByLabel(childListLabel).getListData();
+
+			syncStruct = children.get(index);
+		}
+		return syncStruct;
+	}
+
+	/**
+	 * Gets the object representations for the items contained <i>within</i>
+	 * this GFF. For example, Journals contain their quests which need Game
+	 * Objects.
+	 * 
+	 * @return
+	 */
+	protected Collection<GameConstant> getInternalObjectRepresentations() {
+		final Collection<GameConstant> reps;
+		final List<GffStruct> categories;
+
+		categories = this.getFieldByLabel("Categories").getListData();
+
+		if (!this.getFileType().trim()
+				.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+			throw new IllegalStateException(
+					"Can only get internal object reps from Journals.");
+		}
+
+		reps = new ArrayList<GameConstant>();
+
+		for (int i = 0; i < categories.size(); i++) {
+			reps.add(this.getObjectRepresentation(Integer.toString(i)));
+		}
+
+		return reps;
 	}
 
 	/**
@@ -423,7 +529,7 @@ public class GenericFileFormat {
 	 * 
 	 * @return a GameType representing the NWN type.
 	 */
-	public String getScriptEaseType() {
+	protected String getScriptEaseType() {
 		String type = null;
 		final String typeString = this.fileType.trim();
 		if (typeString.equalsIgnoreCase(GenericFileFormat.TYPE_CREATURE_BP)) {
@@ -451,165 +557,240 @@ public class GenericFileFormat {
 			type = "waypoint";
 		} else if (typeString
 				.equalsIgnoreCase(GenericFileFormat.TYPE_DIALOGUE_BP)) {
-			type = NWNConversation.DIALOGUE;
+			type = NWNConversation.TYPE_DIALOGUE;
 		} else if (typeString
 				.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
 			type = "journal";
 		} else if (typeString
-				.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_BP)) {
+				.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_INFO)) {
 			type = "module";
+		} else if (typeString
+				.equalsIgnoreCase(GenericFileFormat.TYPE_AREA_FILE)) {
+			type = "area";
 		}
+
 		if (type == null) {
 			System.err
 					.println("NWN GFF: Could not convert NWN type \""
-							+ type
+							+ typeString
 							+ "\" to ScriptEase type. Defaulting type to first available");
 			type = GameTypeManager.DEFAULT_VOID_TYPE;
 		}
 		return type;
 	}
 
-	private String readField(ScriptEaseFileAccess reader, String label)
+	/**
+	 * Determines if this GFF is of a type that can generate a ScriptEase
+	 * object.
+	 * 
+	 * @return if this GFF can be translated into something important to
+	 *         ScriptEase
+	 */
+	protected boolean generatesObject() {
+		final String typeString = this.fileType.trim();
+		final ArrayList<String> importantTypes = new ArrayList<String>();
+
+		importantTypes.add(GenericFileFormat.TYPE_CREATURE_BP);
+		importantTypes.add(GenericFileFormat.TYPE_DOOR_BP);
+		importantTypes.add(GenericFileFormat.TYPE_ENCOUNTER_BP);
+		importantTypes.add(GenericFileFormat.TYPE_ITEM_BP);
+		importantTypes.add(GenericFileFormat.TYPE_MERCHANT_BP);
+		importantTypes.add(GenericFileFormat.TYPE_PLACEABLE_BP);
+		importantTypes.add(GenericFileFormat.TYPE_SOUND_BP);
+		importantTypes.add(GenericFileFormat.TYPE_TRIGGER_BP);
+		importantTypes.add(GenericFileFormat.TYPE_WAYPOINT_BP);
+		importantTypes.add(GenericFileFormat.TYPE_DIALOGUE_BP);
+		importantTypes.add(GenericFileFormat.TYPE_AREA_FILE);
+		importantTypes.add(GenericFileFormat.TYPE_MODULE_INFO);
+		importantTypes.add(GenericFileFormat.TYPE_JOURNAL_BP);
+
+		return importantTypes.contains(typeString);
+	}
+
+	private final void readFields(ScriptEaseFileAccess reader,
+			long fieldOffset, long fieldCount, long fieldDataOffset)
 			throws IOException {
-		String fieldData = null;
+		for (int i = 0; i < (int) fieldCount; i++) {
+			reader.seek(fieldOffset + (i * GffField.BYTE_LENGTH));
+			this.fieldArray.add(new GffField(reader, fieldDataOffset));
+		}
+	}
 
-		// find the field with the supplied label
-		GffField field = findFieldForLabel(label);
+	private final void readStructs(ScriptEaseFileAccess reader,
+			long structOffset, long structCount, long fieldIndicesOffset)
+			throws IOException {
+		for (long i = 0; i < structCount; i++) {
+			reader.seek(structOffset + (i * GffStruct.BYTE_LENGTH));
+			this.structArray.add(new GffStruct(reader, fieldIndicesOffset));
+		}
+	}
 
-		fieldData = field.readString(reader);
+	private final void readLabels(ScriptEaseFileAccess reader,
+			long labelOffset, long labelCount) throws IOException {
+		reader.seek(labelOffset);
 
-		return fieldData;
+		for (long i = 0; i < labelCount; i++) {
+			this.labelArray.add(reader
+					.readString(GenericFileFormat.LABEL_BYTE_LENGTH));
+		}
+	}
+
+	private final void readFieldIndices(ScriptEaseFileAccess reader,
+			long fieldIndicesOffset, long fieldIndicesSize) throws IOException {
+		reader.seek(fieldIndicesOffset);
+
+		int bytesRead = 0;
+		while (bytesRead < fieldIndicesSize) {
+			this.fieldIndicesArray.add(reader.readUnsignedInt(true));
+			bytesRead += 4;
+		}
+	}
+
+	private final void readListIndices(ScriptEaseFileAccess reader,
+			long listIndicesOffset, long listIndicesSize) throws IOException {
+		reader.seek(listIndicesOffset);
+
+		// for each list, load the elements of that list
+		long bytesRead = 0;
+		while (bytesRead < listIndicesSize) {
+			final long numElements = reader.readUnsignedInt(true);
+			final List<Long> indexList = new ArrayList<Long>((int) numElements);
+
+			bytesRead += 4;
+
+			for (long j = 0; j < numElements; j++) {
+				indexList.add(reader.readUnsignedInt(true));
+				bytesRead += 4;
+			}
+
+			// ... and add that list like a boss.
+			this.listIndicesArray.add(indexList);
+		}
 	}
 
 	/**
 	 * Searches this GFF's field list for the field that matches the supplied
 	 * label.
 	 * 
+	 * @param fieldList
+	 *            the list to search in.
 	 * @param label
 	 *            The label to search by.
-	 * @return The field that matches the given label, or <code>null</code> if
-	 *         the field
+	 * @return The field that matches the given label
 	 */
-	protected GffField findFieldForLabel(String label) {
+	private static GffField getFieldByLabel(Collection<GffField> fieldList,
+			String label) {
 		String searchLabel;
-		for (GffField field : this.fieldArray) {
-			searchLabel = this.labelArray.get((int) field.getLabelIndex());
+		for (GffField field : fieldList) {
+			searchLabel = field.getLabel();
 
 			if (searchLabel.equalsIgnoreCase(label)) {
 				return field;
 			}
 		}
 
-		throw new IllegalStateException(
-				"Tried to read a field from a GFF type (" + this.getFileType()
-						+ ") that does not include the field " + label);
+		// this can happen if it is called on the incorrect list, or with a
+		// label that doens't exist.
+		throw new IllegalStateException("Failed to locate field " + label);
+	}
+
+	// this is for convenience. It's ugly to always pass this stuff around
+	private GffField getFieldByLabel(String label) {
+		return GenericFileFormat.getFieldByLabel(this.fieldArray, label);
 	}
 
 	/**
-	 * Determines if this GFF is of a type that is useful to ScriptEase. If
-	 * ScriptEase needs to be able to read new types, they should be added here. <br>
-	 * <br>
-	 * A potential future improvement could be to take the list of important
-	 * data types and store them in a file as part of a data-driven approach.
+	 * Gets the string data for the field with the givne label in this GFF file.
 	 * 
-	 * @return if this GFF is important to ScriptEase
+	 * @param label
+	 *            The field's label.
+	 * @return the data contained in that field.
 	 */
-	private boolean isValuable() {
-		String typeString = this.fileType.trim();
-
-		ArrayList<String> importantTypes = new ArrayList<String>();
-		importantTypes.add(GenericFileFormat.TYPE_DIALOGUE_BP); 
-		importantTypes.add(GenericFileFormat.TYPE_MODULE_BP);
-		importantTypes.add(GenericFileFormat.TYPE_JOURNAL_BP); 
-		importantTypes.add(GenericFileFormat.TYPE_CREATURE_BP);
-		importantTypes.add(GenericFileFormat.TYPE_DOOR_BP);  
-		importantTypes.add(GenericFileFormat.TYPE_ENCOUNTER_BP);
-		importantTypes.add(GenericFileFormat.TYPE_ITEM_BP);    
-		importantTypes.add(GenericFileFormat.TYPE_MERCHANT_BP);
-		importantTypes.add(GenericFileFormat.TYPE_PLACEABLE_BP);
-		importantTypes.add(GenericFileFormat.TYPE_SOUND_BP); 
-		importantTypes.add(GenericFileFormat.TYPE_TRIGGER_BP); 
-		importantTypes.add(GenericFileFormat.TYPE_WAYPOINT_BP);
-		importantTypes.add(GenericFileFormat.TYPE_GAME_INSTANCE_FILE);
-
-		return importantTypes.contains(typeString);
+	protected List<GffStruct> getList(String label) {
+		return this.getFieldByLabel(label).getListData();
 	}
 
-	private final void readFields(ScriptEaseFileAccess reader)
-			throws IOException {
-		reader.seek(this.gffOffset + this.fieldOffset);
-
-		int numFields = (int) this.fieldCount;
-
-		for (int i = 0; i < numFields; i++) {
-			this.fieldArray.add(new GffField(reader, i));
-		}
+	/**
+	 * Gets the string data for the field with the givne label in this GFF file.
+	 * 
+	 * @param label
+	 *            The field's label.
+	 * @return the data contained in that field.
+	 */
+	protected String getString(String label) {
+		return this.getFieldByLabel(label).getStringData();
 	}
 
-	private final void readStructs(ScriptEaseFileAccess reader)
-			throws IOException {
-		reader.seek(this.gffOffset + this.structOffset);
-
-		int numFields = (int) this.structCount;
-
-		for (int i = 0; i < numFields; i++) {
-			this.structArray.add(new GffStruct(reader));
-		}
+	/**
+	 * Sets the field with the given label to the given data string.
+	 * 
+	 * @param fieldLabel
+	 *            The field's label.
+	 * @param newData
+	 *            The new data value.
+	 */
+	protected void setField(String fieldLabel, String newData) {
+		this.setField(null, fieldLabel, newData);
 	}
 
-	private final void readLabels(ScriptEaseFileAccess reader)
-			throws IOException {
-		reader.seek(this.gffOffset + this.labelOffset);
+	/**
+	 * Sets the field with the given label to the given data string.
+	 * 
+	 * @param index
+	 *            The indexing information into this GFF file. Used for
+	 *            conversations and journals.
+	 * @param fieldLabel
+	 *            The field's label.
+	 * @param newData
+	 *            The new data value.
+	 */
+	protected void setField(String index, String fieldLabel, String newData) {
+		final String type = this.fileType.trim();
+		final GffField field;
 
-		int numLabels = (int) this.labelCount;
+		if (type.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+			if (index == null)
+				throw new IllegalArgumentException(
+						"Journals require indexing information to assign fields.");
 
-		for (int i = 0; i < numLabels; i++) {
-			this.labelArray.add(reader
-					.readString(GenericFileFormat.LABEL_BYTE_LENGTH));
+			field = this.getJournalCategory(index).getFieldByLabel(fieldLabel);
+		} else if (type.equalsIgnoreCase(GenericFileFormat.TYPE_DIALOGUE_BP)
+				&& index != null) {
+			final GffStruct lineStruct;
+			final List<String> indexes;
+
+			indexes = Arrays.asList(index
+					.split(NWNDialogueLine.INDEXER_SEPARATOR));
+			lineStruct = this.getDialogueLineStruct(indexes);
+
+			// even # of indexes means player line.
+			final boolean isPlayerLine = indexes.size() % 2 == 0;
+
+			field = this.resolveSyncStruct(lineStruct, isPlayerLine)
+					.getFieldByLabel(fieldLabel);
+		} else {
+			field = this.getFieldByLabel(fieldLabel);
 		}
+
+		if (field == null)
+			throw new NullPointerException(
+					"Null GffField given when setting field value.");
+
+		field.setData(newData);
 	}
 
 	@Override
 	public String toString() {
 		String stringRep = "";
 
-		stringRep += "GFF [Type:" + this.fileType + "](" + this.resRef
-				+ this.fieldCount + ", " + this.fieldOffset + ", "
-				+ this.fieldDataCount + ", " + this.fieldDataOffset + ", "
-				+ this.fieldIndicesCount + ", " + this.fieldIndicesOffset
-				+ ", " + this.listIndicesCount + ", " + this.listIndicesOffset
-				+ ", " + this.structCount + ", " + this.structOffset + ")\n";
+		stringRep += "GFF [\"" + this.resRef + "\" Type:" + this.fileType
+				+ "]\n";
 
 		for (GffField field : this.fieldArray) {
-			stringRep += "  - FieldTypeID: " + field.typeNumber + "\n";
+			stringRep += field.toString() + "\n";
 		}
 
 		return stringRep;
-	}
-
-	/**
-	 * Caches this GFF directly to memory.
-	 * 
-	 * @param reader
-	 *            The file to cache from.
-	 * @param gffSize
-	 *            The length of this GFF in bytes.
-	 * @throws IOException
-	 */
-	public void cacheData(ScriptEaseFileAccess reader, int gffSize)
-			throws IOException {
-		reader.seek(this.gffOffset);
-		// this.dataCache = reader.readBytes(gffSize);
-
-		final long bytesBeforeFieldIndicesOffset = this.fieldIndicesOffset;
-		this.beforeFieldIndicesArray = reader
-				.readBytes((int) bytesBeforeFieldIndicesOffset);
-
-		final long bytesAfterFieldIndicesOffset = gffSize
-				- bytesBeforeFieldIndicesOffset;
-		reader.seek(this.gffOffset + this.fieldIndicesOffset);
-		this.afterFieldIndicesArray = reader
-				.readBytes((int) bytesAfterFieldIndicesOffset);
 	}
 
 	/**
@@ -617,140 +798,166 @@ public class GenericFileFormat {
 	 * 
 	 * @param writer
 	 *            The file to write to.
+	 * @return the number of bytes written.
 	 * @throws IOException
 	 */
-	public void write(ScriptEaseFileAccess writer, long filePosition)
+	protected long write(ScriptEaseFileAccess writer, long filePosition)
 			throws IOException {
-		// update the filePosition for future writes
-		this.gffOffset = filePosition;
+		final int headerSize = 4 * 14; // 14 header entries, 4 bytes each
+		final long structsOffset = headerSize;
+		final long fieldsOffset;
+		final long labelsOffset;
+		final long fieldDataOffset;
+		final long fieldIndicesArrayOffset;
+		final long listIndicesArrayOffset;
+		final long fileSize;
 
-		// write up to the FieldIndicesArray
-		writer.seek(this.gffOffset);
-		writer.writeBytes(this.beforeFieldIndicesArray, false);
+		// Write file's data before header. Each of these return values is the
+		// size of the chunk it just wrote.
+		fieldsOffset = structsOffset
+				+ this.writeStructs(writer, filePosition + structsOffset);
+		labelsOffset = fieldsOffset
+				+ this.writeFields(writer, filePosition + fieldsOffset);
+		fieldDataOffset = labelsOffset
+				+ this.writeLabels(writer, filePosition + labelsOffset);
+		fieldIndicesArrayOffset = fieldDataOffset
+				+ this.writeFieldDataBlock(writer, filePosition
+						+ fieldDataOffset);
+		listIndicesArrayOffset = fieldIndicesArrayOffset
+				+ this.writeFieldIndices(writer, filePosition
+						+ fieldIndicesArrayOffset);
+		fileSize = listIndicesArrayOffset
+				+ this.writeListIndices(writer, filePosition
+						+ listIndicesArrayOffset);
 
-		// now we update the file's data.
-		// write the updated header
-		writer.seek(this.gffOffset);
-		this.writeHeader(writer);
+		// write the now fully-known header data
+		this.writeHeader(writer, filePosition, structsOffset, fieldsOffset,
+				labelsOffset, fieldDataOffset, fieldIndicesArrayOffset,
+				listIndicesArrayOffset, fileSize);
 
-		List<Entry<GffField, String>> activeList = writeDLGFile(writer);
-
-		for (Entry<GffField, String> entry : this.changedFieldMap.entrySet()) {
-			if (activeList.contains(entry)) {
-				continue;
-			}
-			final GffField changedField = entry.getKey();
-			// Only updates script slots
-			if (!changedField.isResRefType())
-				throw new RuntimeException(
-						"Can't write anything but slot refs. The module is probably corrupted now. Oops.");
-
-			changedField.writeFieldData(writer, this.gffOffset
-					+ this.fieldDataOffset,
-					this.changedFieldMap.get(changedField));
-		}
-
-		// write the FieldIndiciesArray and whatever is below it
-		writer.seek(this.gffOffset + this.fieldIndicesOffset);
-		writer.writeBytes(this.afterFieldIndicesArray, false);
-
-		this.beforeFieldIndicesArray = null;
-		this.afterFieldIndicesArray = null;
+		return fileSize;
 	}
-	
-	/**
-	 * DLG file specific writing code. Called in
-	 * {@link #write(ScriptEaseFileAccess, long)}.
-	 * 
-	 * @param writer
-	 * @return List of all entries that were written to the DLG file.
-	 * @throws IOException
-	 */
-	private List<Entry<GffField, String>> writeDLGFile(
-			ScriptEaseFileAccess writer) throws IOException {
-		List<Entry<GffField, String>> activeList = new ArrayList<Entry<GffField, String>>();
-		List<Long> dataOffsetList = new ArrayList<Long>();
-		for (Entry<GffField, String> entry : this.changedFieldMap.entrySet()) {
-			GffField key = entry.getKey();
-			if (key.getGFF().getLabelArray().get((int) key.getLabelIndex())
-					.equals("Active")) {
-				activeList.add(entry);
-				dataOffsetList.add(Long.valueOf(key.getDataOrDataOffset()));
+
+	private long writeStructs(ScriptEaseFileAccess writer, long offset)
+			throws IOException {
+		writer.seek(offset);
+
+		for (GffStruct struct : this.structArray) {
+			struct.write(writer);
+		}
+
+		return writer.getFilePointer() - offset;
+	}
+
+	private long writeFields(ScriptEaseFileAccess writer, long offset)
+			throws IOException {
+		writer.seek(offset);
+
+		for (GffField field : this.fieldArray) {
+			field.write(writer);
+		}
+
+		return writer.getFilePointer() - offset;
+	}
+
+	private long writeLabels(ScriptEaseFileAccess writer, long offset)
+			throws IOException {
+		writer.seek(offset);
+
+		for (String label : this.labelArray) {
+			writer.writeString(label, GenericFileFormat.LABEL_BYTE_LENGTH);
+		}
+
+		return writer.getFilePointer() - offset;
+	}
+
+	private long writeFieldDataBlock(ScriptEaseFileAccess writer, long offset)
+			throws IOException {
+		int written = 0;
+
+		// complex types that are not lists or structs get written to the field
+		// data block. They do their own seek()-ing.
+		for (GffField field : this.fieldArray) {
+			if (field.isNormalComplexType()) {
+				written += field.writeFieldData(writer, offset, written);
 			}
 		}
 
-		Comparator<Entry<GffField, String>> entryComparator = new Comparator<Entry<GffField, String>>() {
+		return written;
+	}
 
-			@Override
-			public int compare(Entry<GffField, String> entry1,
-					Entry<GffField, String> entry2) {
+	private long writeFieldIndices(ScriptEaseFileAccess writer, long offset)
+			throws IOException {
+		writer.seek(offset);
 
-				String entryString1 = entry1.getValue();
+		for (Long index : this.fieldIndicesArray) {
+			writer.writeUnsignedInt(index, true);
+		}
 
-				String entryString2 = entry2.getValue();
+		return writer.getFilePointer() - offset;
+	}
 
-				int resRefComparison = entryString1.compareTo(entryString2);
-				// BioWare reverses the order of these, so we need to, too.
-				return -resRefComparison;
+	private long writeListIndices(ScriptEaseFileAccess writer, long offset)
+			throws IOException {
+		writer.seek(offset);
 
-			}
-		};
-		Collections.sort(activeList, entryComparator);
+		// each list is size followed by the list of indexes, as per
+		// GFF docs 3.8
+		for (List<Long> indexList : this.listIndicesArray) {
+			writer.writeUnsignedInt(indexList.size(), true);
 
-		// Required Variables for DLG File Specific Code
-		if (dataOffsetList.size() > 0) {
-			long firstOffset = Collections.min(dataOffsetList).longValue();
-			// Write out the fields in the "Active" list
-			for (Entry<GffField, String> entry : activeList) {
-				final GffField changedField = entry.getKey();
-				// DLG File Specific Code:
-				// write out the field data again because it may have updated
-				writer.seek(this.gffOffset + this.fieldOffset
-						+ changedField.getFieldOffset());
-
-				final String newValue = entry.getValue();
-				System.out.println("Old Offset Value: "
-						+ changedField.dataOrDataOffset);
-				changedField.setDataOrDataOffset(firstOffset);
-				changedField.write(writer);
-				firstOffset += newValue.getBytes().length + 1;
-
-				System.out.println("New Offset Value: "
-						+ changedField.dataOrDataOffset);
-
-				// Only updates script slots
-				if (!changedField.isResRefType())
-					throw new RuntimeException(
-							"Can't write anything but slot refs. The module is probably corrupted now. Oops.");
-
-				changedField.writeFieldData(writer, this.gffOffset
-						+ this.fieldDataOffset,
-						this.changedFieldMap.get(changedField));
+			for (Long index : indexList) {
+				writer.writeUnsignedInt(index, true);
 			}
 		}
-		return activeList;
+
+		return writer.getFilePointer() - offset;
 	}
 
 	/**
 	 * Writes this GFF's header information to disk.
 	 * 
+	 * @param filePosition
+	 *            The byte address of the GFF file within the given writer.
+	 * @param listIndicesArrayOffset
+	 * @param fieldIndicesArrayOffset
+	 * @param fieldDataOffset
+	 * @param labelsOffset
+	 * @param fieldsOffset
+	 * @param structsOffset
+	 * 
 	 * @throws IOException
 	 */
-	private void writeHeader(ScriptEaseFileAccess writer) throws IOException {
+	private void writeHeader(ScriptEaseFileAccess writer, long filePosition,
+			long structOffset, long fieldsOffset, long labelsOffset,
+			long fieldDataOffset, long fieldIndicesArrayOffset,
+			long listIndicesArrayOffset, long fileSize) throws IOException {
+		final long fieldDataCount;
+		final long fieldIndicesCount;
+		final long listIndicesCount;
+
+		// these counts are calculated because they are byte lengths, not
+		// logical size.
+		fieldDataCount = fieldIndicesArrayOffset - fieldDataOffset;
+		fieldIndicesCount = listIndicesArrayOffset - fieldIndicesArrayOffset;
+		listIndicesCount = fileSize - listIndicesArrayOffset;
+
+		writer.seek(filePosition);
+
 		writer.writeString(this.fileType, 4);
-		writer.writeString(this.version, 4);
-		writer.writeUnsignedInt(this.structOffset, true);
-		writer.writeUnsignedInt(this.structCount, true);
-		writer.writeUnsignedInt(this.fieldOffset, true);
-		writer.writeUnsignedInt(this.fieldCount, true);
-		writer.writeUnsignedInt(this.labelOffset, true);
-		writer.writeUnsignedInt(this.labelCount, true);
-		writer.writeUnsignedInt(this.fieldDataOffset, true);
-		writer.writeUnsignedInt(this.fieldDataCount, true);
-		writer.writeUnsignedInt(this.fieldIndicesOffset, true);
-		writer.writeUnsignedInt(this.fieldIndicesCount, true);
-		writer.writeUnsignedInt(this.listIndicesOffset, true);
-		writer.writeUnsignedInt(this.listIndicesCount, true);
+		writer.writeString(GFF_VERSION, 4);
+		writer.writeUnsignedInt(structOffset, true);
+		writer.writeUnsignedInt(this.structArray.size(), true);
+		writer.writeUnsignedInt(fieldsOffset, true);
+		writer.writeUnsignedInt(this.fieldArray.size(), true);
+		writer.writeUnsignedInt(labelsOffset, true);
+		writer.writeUnsignedInt(this.labelArray.size(), true);
+		writer.writeUnsignedInt(fieldDataOffset, true);
+		writer.writeUnsignedInt(fieldDataCount, true);
+		writer.writeUnsignedInt(fieldIndicesArrayOffset, true);
+		writer.writeUnsignedInt(fieldIndicesCount, true);
+		writer.writeUnsignedInt(listIndicesArrayOffset, true);
+		writer.writeUnsignedInt(listIndicesCount, true);
 	}
 
 	/**
@@ -773,12 +980,26 @@ public class GenericFileFormat {
 	 * @author mfchurch
 	 * 
 	 */
-	public class GffStruct {
+	protected class GffStruct {
+		public static final long BYTE_LENGTH = 12;
+
 		private final long typeNumber;
 		private final long dataOrDataOffset;
 		private final long fieldCount;
 
-		public GffStruct(ScriptEaseFileAccess reader) throws IOException {
+		/**
+		 * Builds a new GFF struct that is read from the given reader, and whose
+		 * fields are to be located at <code>fieldIndicesOffset</code>
+		 * 
+		 * @param reader
+		 *            The reader to read from.
+		 * @param fieldIndicesOffset
+		 *            The offset in the GFF file to the
+		 * @throws IOException
+		 *             if the cat came back the very next day.
+		 */
+		private GffStruct(ScriptEaseFileAccess reader, long fieldIndicesOffset)
+				throws IOException {
 			this.typeNumber = reader.readUnsignedInt(true);
 			this.dataOrDataOffset = reader.readUnsignedInt(true);
 			this.fieldCount = reader.readUnsignedInt(true);
@@ -786,24 +1007,34 @@ public class GenericFileFormat {
 
 		@Override
 		public String toString() {
-			return "GffStruct [" + this.typeNumber + ", " + this.dataOrDataOffset + ", "
-					+ this.fieldCount + "]";
+			return "GffStruct [" + this.typeNumber + ", "
+					+ this.dataOrDataOffset + ", " + this.fieldCount + "]";
 		}
 
-		public GenericFileFormat getGFF() {
-			return GenericFileFormat.this.genericFileFormat;
+		private GffField getFieldByLabel(String label) {
+			return GenericFileFormat
+					.getFieldByLabel(this.getGffFields(), label);
 		}
 
 		/**
-		 * Reads the fields from the given GffStruct and returns them in a List.
+		 * Writes this struct to disk at the location that the given writer is
+		 * currently pointing to.
 		 * 
-		 * @param reader
-		 * @param struct
-		 * @return
+		 * @param writer
 		 * @throws IOException
 		 */
-		protected List<GffField> readGffFields(ScriptEaseFileAccess reader)
-				throws IOException {
+		private void write(ScriptEaseFileAccess writer) throws IOException {
+			writer.writeUnsignedInt(this.typeNumber, true);
+			writer.writeUnsignedInt(this.dataOrDataOffset, true);
+			writer.writeUnsignedInt(this.fieldCount, true);
+		}
+
+		/**
+		 * Gets the fields that this struct logically contains.
+		 * 
+		 * @return this struct's fields.
+		 */
+		private List<GffField> getGffFields() {
 			final int fieldCount = (int) this.fieldCount;
 			final int dataOrDataOffset = (int) this.dataOrDataOffset;
 			final List<GffField> fields = new ArrayList<GffField>(fieldCount);
@@ -813,7 +1044,8 @@ public class GenericFileFormat {
 			 * Field Array.
 			 */
 			if (fieldCount == 1) {
-				final GffField field = GenericFileFormat.this.fieldArray.get(dataOrDataOffset);
+				final GffField field = GenericFileFormat.this.fieldArray
+						.get(dataOrDataOffset);
 				fields.add(field);
 			}
 			/*
@@ -823,17 +1055,17 @@ public class GenericFileFormat {
 			 * these DWORDs is an index into the Field Array.
 			 */
 			else {
-				reader.seek(GenericFileFormat.this.gffOffset + GenericFileFormat.this.fieldIndicesOffset + dataOrDataOffset);
-
-				List<Long> indices = new ArrayList<Long>(fieldCount);
+				// div 4 because each index is DWORD (4 bytes)
+				final long fieldIndicesStart = dataOrDataOffset / 4;
+				long index;
 				for (long i = 0; i < fieldCount; i++) {
-					long index = reader.readUnsignedInt(true);
-					indices.add(index);
-				}
+					// get the index from the Field Indices
+					index = GenericFileFormat.this.fieldIndicesArray
+							.get((int) (fieldIndicesStart + i));
 
-				for (long index : indices) {
-					final GffField field = GenericFileFormat.this.fieldArray.get((int) index);
-					fields.add(field);
+					// resolve the index to an actual field.
+					fields.add(GenericFileFormat.this.fieldArray
+							.get((int) index));
 				}
 			}
 			return fields;
@@ -844,582 +1076,74 @@ public class GenericFileFormat {
 		 * 
 		 * @return Whether this is the top level struct
 		 */
-		public final boolean isTopLevelStruct() {
+		private boolean isTopLevelStruct() {
 			// documentation states the top level struct always has a type
 			// number of 0xFFFFFFFF, which is -1 when considered signed
 			return this.typeNumber == 0xFFFFFFFF;
 		}
-	}
 
-	/**
-	 * Conversation Struct as defined in Table 2.1 of the Conversation
-	 * documentation
-	 * 
-	 * @author mfchurch
-	 * 
-	 */
-	public class NWNConversation implements GameConversation {
-		public static final String DIALOGUE = "dialogue";
-		// ResRef of script to run when the conversation is aborted, such as by
-		// combat, hitting the ESC key, or saving a game in the middle of
-		// conversation.
-		private String endConverAbort;
-		// ResRef of script to run when the conversation ends normally.
-		private String endConversation;
-		// List of NPC Dialog Structs. StructID = list index.
-		private List<NPCEntryDialogue> entryList;
-		// The startingList is the list of all lines of dialog that appear at
-		// the root level of the conversation tree.
-		private List<EntriesSyncStruct> startingList;
-		// List of Player Dialog Structs. StructID = list index.
-		private List<PlayerReplyDialogue> replyList;
-		private String resRef;
+		private void removeScriptEaseReferences() {
+			final List<GffField> fields = this.getGffFields();
+			final Collection<Slot> slots;
+			final Collection<String> slotNames = new ArrayList<String>();
 
-		public NWNConversation(ScriptEaseFileAccess reader, String resRef,
-				GffStruct struct) throws IOException {
-			this.resRef = resRef;
-			// parse the important conversation fields
-			this.build(reader, struct);
-		}
+			slots = ErfFile.getTranslator().getSlotManager().getEventSlots();
 
-		/**
-		 * Gets the NWNDialog specified by the given resRef. Assumes the resRef
-		 * is in the format: list_index
-		 * 
-		 * @param resRef
-		 * @return
-		 */
-		public DialogueLine getDialogLine(String resRef) {
-			final String[] split = resRef.split("#");
-			final String list = split[0];
-			final Integer index = new Integer(split[1]);
-			if (list.equalsIgnoreCase(PlayerReplyDialogue.PLAYER_REPLY_LIST)) {
-				return this.replyList.get(index);
-			} else if (list.equalsIgnoreCase(NPCEntryDialogue.NPC_ENTRY_LIST)) {
-				return this.entryList.get(index);
-			} else
-				throw new IllegalArgumentException("Invalid NWNDialog resRef");
-		}
+			for (Slot slot : slots) {
+				slotNames.add(slot.getKeyword());
+			}
+			String fieldValue;
 
-		/**
-		 * Parse the conversation fields we care about from the stored fields.
-		 * 
-		 * @param reader
-		 */
-		private void build(ScriptEaseFileAccess reader, GffStruct struct)
-				throws IOException {
-			final List<GffField> fields = struct.readGffFields(reader);
-
-			// parse the fields that we care about
+			// go through each script field and fix the reference
 			for (GffField field : fields) {
-				final String label = GenericFileFormat.this.labelArray
-						.get((int) field.getLabelIndex());
-
-				// Conversation Fields
-				if (label.equals("EndConverAbort")) {
-					this.endConverAbort = field.readString(reader);
-				} else if (label.equals("EndConversation")) {
-					this.endConversation = field.readString(reader);
-				} else if (label.equals("EntryList")) {
-					this.entryList = new ArrayList<NPCEntryDialogue>();
-					List<GffStruct> readList = field.readList(reader);
-					for (GffStruct aStruct : readList) {
-						this.entryList.add(new NPCEntryDialogue(reader, aStruct));
-					}
-				} else if (label.equals("ReplyList")) {
-					this.replyList = new ArrayList<PlayerReplyDialogue>();
-					List<GffStruct> readList = field.readList(reader);
-					for (GffStruct aStruct : readList) {
-						this.replyList.add(new PlayerReplyDialogue(reader, aStruct));
-					}
-				} else if (label.equals("StartingList")) {
-					this.startingList = new ArrayList<EntriesSyncStruct>();
-					List<GffStruct> readList = field.readList(reader);
-					for (GffStruct aStruct : readList) {
-						this.startingList
-								.add(new EntriesSyncStruct(reader, aStruct));
+				if (field.isStructType()) {
+					field.getGffStruct().removeScriptEaseReferences();
+				} else if (field.isListType()) {
+					for (GffStruct struct : field.getListData()) {
+						struct.removeScriptEaseReferences();
 					}
 				}
+				// only bother looking at script slot fields.
+				else if (slotNames.contains(field.getLabel())) {
+					fieldValue = field.getStringData();
 
-			}
-			for (NPCEntryDialogue entry : this.entryList) {
-				entry.resolveReplies();
-			}
-
-			for (PlayerReplyDialogue reply : this.replyList) {
-				reply.resolveEntries();
-			}
-
-			for (EntriesSyncStruct entry : this.startingList) {
-				entry.updateReference();
+					if (ErfFile.isScriptEaseGenerated(fieldValue)) {
+						field.setData("");
+					}
+				}
 			}
 		}
 
-		private NPCEntryDialogue getElementFromEntryList(int index) {
-			if (this.entryList != null && index >= 0
-					&& index < this.entryList.size()) {
-				return this.entryList.get(index);
+		protected boolean hasField(String label) {
+			for (GffField field : this.getGffFields()) {
+				if (field.getLabel().equals(label)) {
+					return true;
+				}
 			}
-			return null;
-		}
 
-		private PlayerReplyDialogue getElementFromReplyList(int index) {
-			if (this.replyList != null && index >= 0
-					&& index < this.replyList.size()) {
-				return this.replyList.get(index);
-			}
-			throw new IllegalStateException("Invalid Reply Reference");
-		}
-
-		@Override
-		public String getResolutionText() {
-			return this.resRef;
-		}
-		
-		@Override
-		public String getName() {
-			return this.resRef;
-		}
-
-		@Override
-		public String toString() {
-			return this.getName();
-		}
-
-		@Override
-		public Collection<String> getTypes() {
-			ArrayList<String> types = new ArrayList<String>();
-			types.add(DIALOGUE);
-			return types;
-		}
-
-		@Override
-		public List<GameConversationNode> getConversationRoots() {
-			List<GameConversationNode> list = new ArrayList<GameConversationNode>(
-					this.startingList.size());
-			for (EntriesSyncStruct entry : this.startingList) {
-				list.add(entry.getReference());
-			}
-			return list;
-		}
-
-		@Override
-		public String getTemplateID() {
-			return this.resRef;
+			return false;
 		}
 
 		/**
-		 * SyncStruct as defined in section 2.3 of the Conversation
-		 * documentation.
+		 * Gets the list stored in the field with the given label.
 		 * 
-		 * @author mfchurch
-		 * 
+		 * @param label
+		 *            the field's name.
+		 * @return The data stored in that field.
 		 */
-		public abstract class DialogSyncStruct {
-			protected int index;
-			protected GffField active;
-			private boolean isLink;
-
-			public DialogSyncStruct(ScriptEaseFileAccess reader,
-					GffStruct struct) throws IOException {
-				// parse the important dialog fields
-				this.build(reader, struct);
-			}
-
-			private void build(ScriptEaseFileAccess reader, GffStruct struct)
-					throws IOException {
-				final List<GffField> fields = struct.readGffFields(reader);
-
-				// Read the reference fields
-				for (GffField field : fields) {
-					final String label = GenericFileFormat.this.labelArray.get((int) field
-							.getLabelIndex());
-
-					// Dialog Fields
-					if (label.equals("Active")) {
-						this.active = field;
-					}
-					// Index into the Top-Level Struct EntryList
-					else if (label.equals("Index")) {
-						this.index = new Integer(field.readString(reader));
-					}
-					// Field 'IsChild' is 1 when it is a link. Because that
-					// totally makes sense, BioWare.
-					else if (label.equals("IsChild")) {
-						this.isLink = field.readString(reader).equals("1");
-					}
-				}
-			}
-
-			protected abstract void updateReference();
-
-			public abstract DialogueLine getReference();
-
-			public boolean isLink() {
-				return this.isLink;
-			}
+		protected List<GffStruct> getList(String label) {
+			return this.getFieldByLabel(label).getListData();
 		}
 
 		/**
-		 * Represents a EntriesList Sync Struct as detailed in Table 2.3.3 of
-		 * the Conversation documentation.
+		 * Gets the string stored in the field with the given label.
 		 * 
-		 * @author mfchurch
-		 * 
+		 * @param label
+		 *            the field's name.
+		 * @return The data stored in that field.
 		 */
-		public class EntriesSyncStruct extends DialogSyncStruct {
-
-			public EntriesSyncStruct(ScriptEaseFileAccess reader,
-					GffStruct struct) throws IOException {
-				super(reader, struct);
-			}
-
-			@Override
-			protected void updateReference() {
-				// append the data to the existing entry
-				final NPCEntryDialogue entry = this.getReference();
-				if (this.active != null && entry != null) {
-					entry.active = this.active;
-					entry.index = this.index;
-					entry.isLink = this.isLink();
-				} else
-					throw new IllegalStateException("Invalid EntriesSyncStruct");
-			}
-
-			@Override
-			public NPCEntryDialogue getReference() {
-				return getElementFromEntryList(this.index);
-			}
-		}
-
-		/**
-		 * Represents a RepliesList Sync Struct as detailed in Table 2.3.2 of
-		 * the Conversation documentation.
-		 * 
-		 * @author mfchurch
-		 * 
-		 */
-		public class RepliesSyncStruct extends DialogSyncStruct {
-
-			public RepliesSyncStruct(ScriptEaseFileAccess reader,
-					GffStruct struct) throws IOException {
-				super(reader, struct);
-			}
-
-			@Override
-			protected void updateReference() {
-				// append the data to the existing entry
-				final PlayerReplyDialogue reply = getReference();
-				if (this.active != null && reply != null) {
-					reply.active = this.active;
-					reply.index = this.index;
-					reply.isLink = this.isLink();
-				} else
-					throw new IllegalStateException("Invalid RepliesSyncStruct");
-			}
-
-			@Override
-			public PlayerReplyDialogue getReference() {
-				return getElementFromReplyList(this.index);
-			}
-		}
-
-		/**
-		 * Dialog Struct as defined in Table 2.2.1 of the Conversation
-		 * documentation.
-		 * 
-		 * @author mfchurch
-		 * 
-		 */
-		public abstract class DialogueLine implements GameConversationNode {
-			// Dialog line resref format: dialogResRef_list_index
-			public static final String DIALOG_LINE_REF_REGEX = "[a-zA-Z0-9_]+#[a-zA-Z]+#[0-9]+";
-			private static final String DIALOG_LINE = "dialogue_line";
-			// ResRef of conditional script to run to determine if this line of
-			// conversation appears to the player.
-			protected GffField active;
-			// ResRef of script to run when showing this line
-			protected GffField script;
-			// Localized text to display to the user for this line of dialog
-			protected String text;
-			// Index representing the location of the Dialog in the conversation
-			protected int index;
-
-			protected GffStruct struct;
-			
-			protected boolean isLink;
-
-			public DialogueLine(ScriptEaseFileAccess reader, GffStruct struct)
-					throws IOException {
-				
-				this.struct = struct;
-				// parse the important dialog fields
-				this.build(reader, struct);
-			}
-			
-			public GffStruct getStruct() {
-				return this.struct;
-			}
-
-			public String getConversationResRef() {
-				return NWNConversation.this.resRef;
-			}
-
-			/**
-			 * Parse the dialog fields we care about from the stored fields
-			 * 
-			 * @param reader
-			 */
-			protected void build(ScriptEaseFileAccess reader, GffStruct struct)
-					throws IOException {
-				final List<GffField> fields = struct.readGffFields(reader);
-
-				for (GffField field : fields) {
-					final String label = GenericFileFormat.this.labelArray.get((int) field
-							.getLabelIndex());
-
-					// Dialog Fields
-					if (label.equals("Text")) {
-						this.text = field.readString(reader);
-					}
-					// 'script' = when dialogue line is reached
-					else if (label.equals("Script")) {
-						this.script = field;
-					}
-				}
-			}
-
-			@Override
-			public Collection<String> getTypes() {
-				ArrayList<String> arrayList = new ArrayList<String>(1);
-				arrayList.add(DIALOG_LINE);
-				return arrayList;
-			}
-
-			@Override
-			public String getResolutionText() {
-				return getTemplateID();
-			}
-
-			@Override
-			public String getName() {
-				return this.text;
-			}
-
-			public GffField getField(String field) {
-				// 'active' = Should dialogue line be displayed (filter)
-				if (field.equalsIgnoreCase("Active")) {
-					return this.active;
-				}
-				// 'script' = When dialogue line is displayed
-				else if (field.equalsIgnoreCase("Script")) {
-					return this.script;
-				} else
-					throw new IllegalArgumentException(
-							"Dialog does not have the field " + field);
-			}
-
-			@Override
-			public boolean isLink() {
-				return false;
-			}
-
-			@Override
-			public boolean isTerminal() {
-				return this.getChildren().size() == 0;
-			}
-		}
-
-		/**
-		 * A Dialog Struct contained in the Player ReplyList contains all the
-		 * Fields listed in Table 2.2.1, plus those Fields listed in Table 2.2.2
-		 * of the Conversation documentation
-		 * 
-		 * @author mfchurch
-		 * 
-		 */
-		public class PlayerReplyDialogue extends DialogueLine {
-			// List of Sync Structs describing the list of possible NPC replies
-			// to this line of player dialog.. Struct ID = list index.
-			private List<EntriesSyncStruct> entryPointers;
-
-			public final static String PLAYER_REPLY_LIST = "replylist";
-
-			public PlayerReplyDialogue(ScriptEaseFileAccess reader,
-					GffStruct struct) throws IOException {
-				super(reader, struct);
-			}
-
-			public void resolveEntries() {
-				if (this.entryPointers == null)
-					throw new IllegalStateException(
-							"EntryList has not been initialized yet!");
-				for (EntriesSyncStruct entry : this.entryPointers) {
-					entry.updateReference();
-				}
-			}
-
-			@Override
-			protected void build(ScriptEaseFileAccess reader, GffStruct struct)
-					throws IOException {
-				super.build(reader, struct);
-
-				final List<GffField> fields = struct.readGffFields(reader);
-
-				this.entryPointers = new ArrayList<EntriesSyncStruct>();
-
-				for (GffField field : fields) {
-					final String label = GenericFileFormat.this.labelArray.get((int) field
-							.getLabelIndex());
-
-					// List of Sync Structs describing the list of possible NPC
-					// replies to this line of player dialog
-					if (label.equals("EntriesList")) {
-						List<GffStruct> readList = field.readList(reader);
-						for (GffStruct aStruct : readList) {
-							final EntriesSyncStruct sync = new EntriesSyncStruct(
-									reader, aStruct);
-							this.entryPointers.add(sync);
-						}
-					}
-				}
-			}
-
-			@Override
-			public String toString() {
-				return "PlayerReplyDialog [" + this.text + "]";
-			}
-
-			/**
-			 * Returns a copy of the npc entry list
-			 */
-			@Override
-			public List<NPCEntryDialogue> getChildren() {
-				final List<NPCEntryDialogue> list = new ArrayList<NPCEntryDialogue>(
-						this.entryPointers.size());
-				for (EntriesSyncStruct entry : this.entryPointers) {
-					list.add(entry.getReference());
-				}
-				return list;
-			}
-
-			/**
-			 * Resref for the dialog line since they don't actually have one
-			 * 
-			 * @see DIALOG_LINE_REF_REGEX
-			 */
-			@Override
-			public String getTemplateID() {
-				return NWNConversation.this.resRef + "#" + PLAYER_REPLY_LIST + "#" + this.index;
-			}
-
-			@Override
-			public String getTag() {
-				return NWNConversation.this.resRef;
-			}
-		}
-
-		/**
-		 * An NPC Entry Dialog Struct contained in the NPC EntryList. It
-		 * contains all of the Fields found in a Dialog Struct as detailed in
-		 * Table 2.2.1, plus those Fields listed in Table 2.2.3 of the
-		 * Conversation documentation.
-		 * 
-		 * @author mfchurch
-		 * 
-		 */
-		public class NPCEntryDialogue extends DialogueLine {
-			// List of Sync Structs describing the list of possible Player
-			// replies to this line of NPC dialog. 
-			// Struct ID = list index.
-			private List<RepliesSyncStruct> replyPointers;
-			
-			public final static String NPC_ENTRY_LIST = "entrylist";
-
-			public NPCEntryDialogue(ScriptEaseFileAccess reader,
-					GffStruct struct) throws IOException {
-				super(reader, struct);
-			}
-
-			/**
-			 * Triggers all of the replyList Pointers to push their Active and
-			 * Index values to what they are referencing. This should be done
-			 * _after_ the EntryList and ReplyList have been read in, otherwise
-			 * we cannot guarantee the index is valid.
-			 */
-			public void resolveReplies() {
-				if (this.replyPointers == null)
-					throw new IllegalStateException(
-							"ReplyList has not been initialized yet!");
-				for (RepliesSyncStruct reply : this.replyPointers) {
-					reply.updateReference();
-				}
-			}
-
-			@Override
-			protected void build(ScriptEaseFileAccess reader, GffStruct struct)
-					throws IOException {
-				super.build(reader, struct);
-
-				this.replyPointers = new ArrayList<RepliesSyncStruct>();
-
-				final List<GffField> fields = struct.readGffFields(reader);
-
-				for (GffField field : fields) {
-					final String label = GenericFileFormat.this.labelArray.get((int) field
-							.getLabelIndex());
-
-					// List of Sync Structs describing the list of possible
-					// Player replies to this line of NPC dialog.
-					if (label.equals("RepliesList")) {
-						List<GffStruct> readList = field.readList(reader);
-						for (GffStruct aStruct : readList) {
-							final RepliesSyncStruct sync = new RepliesSyncStruct(
-									reader, aStruct);
-							this.replyPointers.add(sync);
-						}
-					} 
-					//lable could also equal "Speaker", which may be important.
-				}
-			}
-
-			@Override
-			public String toString() {
-				return "NPCEntryDialog [" + getName() + "]";
-			}
-
-			/**
-			 * Returns a copy of the player replies list
-			 */
-			@Override
-			public List<PlayerReplyDialogue> getChildren() {
-				final List<PlayerReplyDialogue> list = new ArrayList<PlayerReplyDialogue>(
-						this.replyPointers.size());
-				for (RepliesSyncStruct reply : this.replyPointers) {
-					list.add(reply.getReference());
-				}
-				return list;
-			}
-
-			/**
-			 * Resref for the dialog line since they don't actually have one
-			 * 
-			 * @see DIALOG_LINE_REF_REGEX
-			 */
-			@Override
-			public String getTemplateID() {
-				return NWNConversation.this.resRef + "#" + NPC_ENTRY_LIST + "#" + this.index;
-			}
-
-			@Override
-			public String getTag() {
-				return NWNConversation.this.resRef;
-			}
-		}
-
-		@Override
-		public String getTag() {
-			return this.resRef;
+		protected String getString(String label) {
+			return this.getFieldByLabel(label).getStringData();
 		}
 	}
 
@@ -1430,33 +1154,66 @@ public class GenericFileFormat {
 	 * @author remiller
 	 * 
 	 */
-	public class GffField {
+	private class GffField {
+
+		public static final int BYTE_LENGTH = 12;
+
 		private static final int MAX_RESREF_LENGTH = 16;
-		private static final int TYPE_NUM_CEXOLOCSTRING = 12;
-		private static final int TYPE_NUM_RESREF = 11;
-		private static final int TYPE_NUM_CEXOSTRING = 10;
-		private static final int TYPE_NUM_DOUBLE = 9;
-		private static final int TYPE_NUM_INT64 = 7;
+
+		private static final int TYPE_NUM_INT = 5;
 		private static final int TYPE_NUM_DWORD64 = 6;
+		private static final int TYPE_NUM_INT64 = 7;
+		private static final int TYPE_NUM_FLOAT = 8;
+		private static final int TYPE_NUM_DOUBLE = 9;
+		private static final int TYPE_NUM_CEXOSTRING = 10;
+		private static final int TYPE_NUM_RESREF = 11;
+		private static final int TYPE_NUM_CEXOLOCSTRING = 12;
+		private static final int TYPE_NUM_VOID = 13;
+		private static final int TYPE_NUM_STRUCT = 14;
+		private static final int TYPE_NUM_LIST = 15;
+
+		// max length is defined in GFF doc page 4
+		private static final int EXO_STRING_MAX_LENGTH = 1024;
+
 		private final long typeNumber;
 		private final long labelIndex;
-		private long dataOrDataOffset; // this can increase if its an offset
+		private long dataOrDataOffset;
 
-		// this isn't part of the original struct. Added so that field knows
-		// where it lives within the Field Array. - remiller
-		private long fieldIndex;
+		private class CExoLocString {
+			public long strRef;
+			public final Map<Long, String> strings = new HashMap<Long, String>();
 
-		private GffField(ScriptEaseFileAccess reader, long index)
+			public int getByteSize() {
+				// start with 4 + 4 = 8 for the StringRef + StringCount
+				int size = 8;
+
+				for (Long id : this.strings.keySet()) {
+					size += 8; // id and length storage
+					size += this.strings.get(id).length();
+				}
+
+				return size;
+			}
+		}
+
+		// Field data variables that store the field's data for "complex types"
+		// (see isComplex() for more)
+		private CExoLocString fieldDataLocString;
+		private String fieldDataString;
+		private double fieldDataDouble;
+		private long fieldDataDWord64;
+		private long fieldDataInt64;
+		private byte[] fieldDataBytes;
+
+		// end field data variables
+
+		private GffField(ScriptEaseFileAccess reader, long fieldDataOffset)
 				throws IOException {
 			this.typeNumber = reader.readUnsignedInt(true);
 			this.labelIndex = reader.readUnsignedInt(true);
 			this.dataOrDataOffset = reader.readUnsignedInt(true);
-			this.fieldIndex = index;
-		}
 
-		@Override
-		public String toString() {
-			return "GffField [" + GenericFileFormat.this.labelArray.get((int) this.labelIndex) + "]";
+			this.readData(reader, fieldDataOffset);
 		}
 
 		/**
@@ -1465,109 +1222,289 @@ public class GenericFileFormat {
 		 * @param writer
 		 * @throws IOException
 		 */
-		public void write(ScriptEaseFileAccess writer) throws IOException {
+		private void write(ScriptEaseFileAccess writer) throws IOException {
 			writer.writeUnsignedInt(this.typeNumber, true);
 			writer.writeUnsignedInt(this.labelIndex, true);
 			writer.writeUnsignedInt(this.dataOrDataOffset, true);
 		}
 
-		public GenericFileFormat getGFF() {
-			return GenericFileFormat.this.genericFileFormat;
+		@Override
+		public String toString() {
+			return "GffField [" + this.getName() + ", type: " + this.typeNumber
+					+ "]";
 		}
 
 		/**
 		 * @return Unsigned int in a long representing the type.
 		 */
-		public long getType() {
+		private long getType() {
 			return this.typeNumber;
 		}
 
 		/**
 		 * @return the labelIndex
 		 */
-		public long getLabelIndex() {
+		private long getLabelIndex() {
 			return this.labelIndex;
 		}
 
 		/**
-		 * @return the dataOrDataOffset
-		 */
-		protected long getDataOrDataOffset() {
-			return this.dataOrDataOffset;
-		}
-		
-		/**
-		 * Sets the DataOrDataOffset to the passed long.
-		 * @param offset
-		 */
-		protected void setDataOrDataOffset(long offset) {
-			this.dataOrDataOffset = offset;
-		}
-
-		/**
-		 * Sums the data offset with the given delta.
+		 * Finds the GFFStruct that this field points to.
 		 * 
-		 * @param delta
+		 * @return the struct pointed to by this field.
 		 */
-		protected void increaseOffset(int delta) {
-			this.dataOrDataOffset += delta;
-		}
-
-		/**
-		 * Gets the offset of this field within the Field Array.
-		 * 
-		 * @return the offset of this field within the Field Array.
-		 */
-		protected long getFieldOffset() {
-			// 4 * 3 is for the three unsigned int (4-byte) data members
-			int size = (4 * 3);
-			return this.fieldIndex * size;
-		}
-
-		public GffStruct readGffStruct(ScriptEaseFileAccess reader)
-				throws IOException {
-			// Normally, a Field's DataOrDataOffset value would be a byte offset
-			// into the Field Data Block, but for a Struct, it is an index into
-			// the Struct Array.
-			if (this.isStructType()) {
-				return GenericFileFormat.this.structArray.get((int) this.dataOrDataOffset);
-			} else
+		private GffStruct getGffStruct() {
+			if (!this.isStructType()) {
 				throw new IllegalStateException(
 						"GffField does not contain a GffStruct.");
+			}
+
+			/*
+			 * Normally, a Field's DataOrDataOffset value would be a byte offset
+			 * into the Field Data Block, but for a Struct, it is an index into
+			 * the Struct Array.
+			 */
+			return GenericFileFormat.this.structArray
+					.get((int) this.dataOrDataOffset);
 		}
 
-		public List<GffStruct> readList(ScriptEaseFileAccess reader)
-				throws IOException {
-			if (this.isListType()) {
-				List<GffStruct> list = new ArrayList<GffStruct>();
-
-				// The starting address of a List is specified in its Field's
-				// DataOrDataOffset value as a byte offset into the Field
-				// Indices Array, at which is located a List element.
-				reader.seek(GenericFileFormat.this.gffOffset + GenericFileFormat.this.listIndicesOffset
-						+ this.dataOrDataOffset);
-
-				// The first DWORD is the Size of the List, and it specifies how
-				// many Struct elements the List contains.
-				long size = reader.readUnsignedInt(true);
-
-				// There are Size DWORDS after that, each one an index into the
-				// Struct Array.
-				List<Long> indices = new ArrayList<Long>((int) size);
-				for (long i = 0; i < size; i++) {
-					long index = reader.readUnsignedInt(true);
-					indices.add(index);
-				}
-				// Resolve the indices
-				for (long index : indices) {
-					final GffStruct struct = GenericFileFormat.this.structArray.get((int) index);
-					list.add(struct);
-				}
-
-				return list;
-			} else
+		/**
+		 * Finds the list of GFFStructs that this field points to.<br>
+		 * <br>
+		 * The list is a list in the List Indices Array, and those lists are
+		 * lists of indexes into the Struct Array. The struct array is queried
+		 * by this method to resolve the list and it's those structs that get
+		 * returned (in the same order as the indexes).
+		 * 
+		 * @return the resolved list of GFFStructs that this field is a list of.
+		 * @throws IllegalStateException
+		 *             if the stored dataOrDataOffset doesn't point to a list in
+		 *             the List Indices Array.
+		 */
+		private List<GffStruct> getListData() {
+			if (!this.isListType()) {
 				throw new IllegalStateException(
 						"GffField does not contain a GffList.");
+			}
+
+			final List<GffStruct> structs = new ArrayList<GffStruct>();
+
+			// this is the offset in bytes into the list array
+			int countedOffset = 0;
+
+			for (List<Long> list : GenericFileFormat.this.listIndicesArray) {
+				if (countedOffset == this.dataOrDataOffset) {
+					// Found it. Resolve the indices.
+					for (long index : list) {
+						final GffStruct struct = GenericFileFormat.this.structArray
+								.get((int) index);
+						structs.add(struct);
+					}
+
+					return structs;
+				} else if (countedOffset > this.dataOrDataOffset) {
+					break;
+				}
+
+				countedOffset += calculateListByteSize(list);
+			}
+
+			throw new IllegalStateException(
+					"ERF list "
+							+ this.getName()
+							+ " could not be located. This is either because the stored offset is wrong, or the stored lists are wrong.");
+		}
+
+		private String getName() {
+			return GenericFileFormat.this.labelArray.get((int) this.labelIndex);
+		}
+
+		/**
+		 * Gets this field's label as stored in the label arrays indexed by
+		 * {@link #getLabelIndex()}.
+		 * 
+		 * @return the field's label.
+		 */
+		private String getLabel() {
+			return GenericFileFormat.this.labelArray.get((int) this
+					.getLabelIndex());
+		}
+
+		/**
+		 * Reads and stores the data of this field.
+		 * 
+		 * @param reader
+		 * @return
+		 * @throws IOException
+		 *             if everything goes to hell.
+		 */
+		private void readData(ScriptEaseFileAccess reader, long fieldDataOffset)
+				throws IOException {
+			if (!this.isNormalComplexType()) {
+				// if simple type, we already have the data in dataOrDataOffset
+				// if list or struct, data is loaded into the structArray or
+				// listIndicesArray
+				return;
+			}
+
+			// get to the data
+			reader.seek(fieldDataOffset + this.dataOrDataOffset);
+
+			long length;
+
+			switch ((int) this.getType()) {
+			case GffField.TYPE_NUM_DWORD64:
+				this.fieldDataDWord64 = reader.readUnsignedInt(true);
+				break;
+			case GffField.TYPE_NUM_INT64:
+				this.fieldDataInt64 = reader.readLong(true);
+				break;
+			case GffField.TYPE_NUM_DOUBLE:
+				// this.fieldDataDouble = reader.readDouble(true);
+				// break;
+
+				throw new UnsupportedOperationException(
+						"I can't read a Double yet!");
+			case GffField.TYPE_NUM_CEXOSTRING:
+				length = reader.readUnsignedInt(true);
+
+				this.fieldDataString = reader.readString((int) length);
+				break;
+			case GffField.TYPE_NUM_RESREF:
+				length = reader.readByte();
+
+				this.fieldDataString = reader.readString((int) length);
+
+				break;
+			case GffField.TYPE_NUM_CEXOLOCSTRING:
+				// This is annoyingly complicated. See CExoLocString in GFF doc,
+				// page 3, and 4.6 for details. - remiller
+
+				// length here means length in bytes of this total structure
+				// after the length int
+				length = reader.readUnsignedInt(true);
+				long stringRef = reader.readUnsignedInt(true);
+				long stringCount = reader.readUnsignedInt(true);
+
+				this.fieldDataLocString = new CExoLocString();
+				this.fieldDataLocString.strRef = stringRef;
+
+				// Store all the ones saved within this file. If it's in the
+				// internationalization (TLK) file, then we'll look that up
+				// separately.
+				int stringLen;
+
+				for (int i = 0; i < stringCount; i++) {
+					long id = reader.readUnsignedInt(true);
+
+					stringLen = reader.readInt(true);
+					if (stringLen > 0) {
+						String value = reader.readString(stringLen);
+
+						this.fieldDataLocString.strings.put(id, value);
+					}
+				}
+
+				break;
+			case GffField.TYPE_NUM_VOID:
+				// voids are arbitrary binary data. Hopefully that doesn't cause
+				// us nightmares. - remiller
+				long numBytes = reader.readUnsignedInt(true);
+				this.fieldDataBytes = reader.readBytes((int) numBytes);
+				break;
+			default:
+				this.dieUnknownType();
+			}
+		}
+
+		private IllegalStateException dieUnknownType() {
+			// This should never happen, unless we missed a type or we
+			// somehow hit a snag while reading unsigned ints and
+			// casting them?
+			throw new IllegalStateException("I don't know what type this is: "
+					+ this.getType() + " for field " + this.getLabel());
+		}
+
+		/**
+		 * Sets this field's data to the value contained in the given string (to
+		 * be converted to whatever type is expected).
+		 * 
+		 * @param value
+		 *            The string containing the value to be used.
+		 */
+		private void setData(String value) {
+			String oldVal = null;
+
+			if (!this.isComplexType()) { // just data
+				this.dataOrDataOffset = Long.valueOf(value);
+			} else if (this.isListType() || this.isStructType()) {
+				throw new IllegalStateException("GffField " + this.getName()
+						+ " cannot be set to value" + value
+						+ " because is a Struct (" + this.isStructType()
+						+ ") or List (" + this.isListType() + ") type.");
+			} else {
+				switch ((int) this.getType()) {
+				case GffField.TYPE_NUM_DWORD64:
+					this.fieldDataDWord64 = Long.valueOf(value);
+					break;
+				case GffField.TYPE_NUM_INT64:
+					this.fieldDataInt64 = Long.valueOf(value);
+					break;
+				case GffField.TYPE_NUM_DOUBLE:
+					this.fieldDataDouble = Double.valueOf(value);
+					break;
+				case GffField.TYPE_NUM_CEXOSTRING:
+				case GffField.TYPE_NUM_RESREF:
+					oldVal = this.fieldDataString;
+					this.fieldDataString = value;
+					break;
+				case GffField.TYPE_NUM_CEXOLOCSTRING:
+					if (this.fieldDataLocString.strRef == -1) {
+						oldVal = this.fieldDataLocString.strings.put(0L, value);
+					} else {
+						throw new UnsupportedOperationException(
+								"Cannot set data on CExoLocStrings that exist in the TLK file.");
+					}
+
+					break;
+				case GffField.TYPE_NUM_VOID:
+					this.fieldDataBytes = value.getBytes();
+					break;
+				default:
+					this.dieUnknownType();
+				}
+
+				/*
+				 * It annoys me that I have to do this, but it's required since
+				 * we need to write fields before their data sections, and the
+				 * only way to know the offsets otherwise is to actually write
+				 * them. - remiller
+				 */
+				// if our size changed, update all of the following neighbours'
+				// offsets.
+				if (oldVal != null) {
+					long offsetDelta = 0;
+					boolean found = false;
+
+					offsetDelta = value.length() - oldVal.length();
+
+					// we can use the enclosing GFF's field array because
+					// structs store their fields there too.
+					for (GffField field : GenericFileFormat.this.fieldArray) {
+						// find myself (but not in a become-a-monk way)
+						if (field == this) {
+							found = true;
+						} else {
+							if (found && field.isNormalComplexType()) {
+								// adding the delta will work if its positive of
+								// negative.
+								field.dataOrDataOffset += offsetDelta;
+							}
+						}
+					}
+				}
+			}
+
 		}
 
 		/**
@@ -1576,144 +1513,163 @@ public class GenericFileFormat {
 		 * @param reader
 		 *            The reader to read from.
 		 * @return The field data as a string.
-		 * @throws IOException
-		 *             If everything goes to hell.
+		 * @throws IllegalStateException
+		 *             if the field is a Struct or a List.
 		 */
-		public String readString(ScriptEaseFileAccess reader)
-				throws IOException {
-			String fieldData = null;
-
+		private String getStringData() {
 			if (!this.isComplexType()) { // just data
-				fieldData = Long.toString(this.dataOrDataOffset);
-			} else if (!this.isListType() && !this.isStructType()) {
-				// get to the data
-				reader.seek(GenericFileFormat.this.gffOffset + GenericFileFormat.this.fieldDataOffset + this.dataOrDataOffset);
-
-				long length;
-
-				switch ((int) this.getType()) {
-				case GffField.TYPE_NUM_DWORD64:
-					fieldData = Long.toString(reader.readUnsignedInt(true));
-					break;
-				case GffField.TYPE_NUM_INT64:
-					fieldData = Integer.toString(reader.readInt(true));
-					break;
-				case GffField.TYPE_NUM_DOUBLE:
-					fieldData = Double.toString(reader.readDouble());
-					break;
-				case GffField.TYPE_NUM_CEXOSTRING:
-					length = reader.readUnsignedInt(true);
-
-					fieldData = reader.readString((int) length);
-					break;
-				case GffField.TYPE_NUM_RESREF:
-					length = reader.readByte();
-
-					fieldData = reader.readString((int) length);
-
-					break;
-				case GffField.TYPE_NUM_CEXOLOCSTRING:
-					length = reader.readUnsignedInt(true);
-					long stringRef = reader.readUnsignedInt(true);
-
-					long stringCount = reader.readUnsignedInt(true);
-
-					// internationalization
-					if (stringCount == 0) {
-						TlkLookup stringTable = TlkLookup.getInstance();
-
-						fieldData = stringTable.lookup(stringRef);
-					}
-					// Always take the english version of the string,
-					// because. 8--> :) -mfchurch
-					else {
-						for (int i = 0; i < stringCount; i++) {
-							/* int stringID = */reader.readInt(true);
-							int stringLen = reader.readInt(true);
-							fieldData = reader.readString(stringLen);
-						}
-					}
-					break;
-				}
-			} else
+				return Long.toString(this.dataOrDataOffset);
+			} else if (this.isListType() || this.isStructType()) {
 				throw new IllegalStateException(
-						"GffField does not contain a String.");
-
-			return fieldData;
-		}
-
-		public void writeFieldData(ScriptEaseFileAccess writer,
-				long fieldDataOffset, String newData) throws IOException {
-			// non-complex types are inherently handled by writing the field
-			// itself, since that's where they are stored, so we just deal with
-			// complex types here.
-			if (!this.isComplexType()) {
-				return;
-			}
-
-			// a bunch of stuff is disabled in this control flow. I just need to
-			// get script slots working, and I don't have the time to make
-			// everything else work, especially since we may not need much else.
-			// --remiller
-			if (this.isStructType()) {
-				System.err.println("I can't write a struct yet!");
-			} else if (this.isListType()) {
-				System.err.println("I can't write a list yet!");
+						"GffField "
+								+ this.getName()
+								+ " does not contain a String. It contains a struct or a list.");
 			} else {
-				// get to the data location
-				writer.seek(fieldDataOffset + this.getDataOrDataOffset());
-
-				// long length;
-
 				switch ((int) this.getType()) {
 				case GffField.TYPE_NUM_DWORD64:
-					// Long.toString(reader.writeUnsignedInt(true));
-					System.err.println("I can't write a DWord64 yet!");
-					break;
+					return Long.toString(this.fieldDataDWord64);
 				case GffField.TYPE_NUM_INT64:
-					// Integer.toString(reader.writeInt(true));
-					System.err.println("I can't write an Int64 yet!");
-					break;
+					return Long.toString(this.fieldDataInt64);
 				case GffField.TYPE_NUM_DOUBLE:
-					// Double.toString(reader.writeDouble());
-					System.err.println("I can't write a Double yet!");
-					break;
+					return Double.toString(this.fieldDataDouble);
 				case GffField.TYPE_NUM_CEXOSTRING:
-					// length = reader.readUnsignedInt(true);
-
-					// fieldData = reader.readString((int) length);
-					System.err.println("I can't write a CExoString yet!");
-
-					break;
 				case GffField.TYPE_NUM_RESREF:
-					if (newData.length() > GffField.MAX_RESREF_LENGTH)
-						newData = newData.substring(0,
-								GffField.MAX_RESREF_LENGTH);
-
-					newData = newData.toLowerCase();
-
-					writer.writeByte(newData.length());
-
-					writer.writeString(newData, newData.length());
-
-					break;
+					return this.fieldDataString;
 				case GffField.TYPE_NUM_CEXOLOCSTRING:
-					// length = reader.readUnsignedInt(true);
-					// long stringRef = reader.writeUnsignedInt(true);
+					String value;
+					// we prioritize strings stored in the file over external
+					// ones, like the toolset does (as described in GFF
+					// documentation).
 
-					// TlkLookup stringTable = TlkLookup.getInstance();
+					// 0 for the English version. We're not interested in
+					// supporting internationalization yet.
+					value = this.fieldDataLocString.strings.get(0L);
 
-					// stringTable.lookup(stringRef);
+					if (value == null) {
+						value = GenericFileFormat.stringTable
+								.lookup(this.fieldDataLocString.strRef);
+					}
 
-					System.err.println("I can't write a CExoLocString yet!");
-
-					break;
+					return value;
+				case GffField.TYPE_NUM_VOID:
+					return new String(this.fieldDataBytes);
+				default:
+					this.dieUnknownType();
+					return null;
 				}
 			}
 		}
 
-		public final boolean isResRefType() {
-			return this.typeNumber == GffField.TYPE_NUM_RESREF;
+		/**
+		 * Writes fields whose data ends up in the Field Data Block. If this is
+		 * called on a field that does not have data that belongs in the Field
+		 * Data Block, IOException is thrown and you should be ashamed of
+		 * yourself. Bad programmer! Bad!
+		 * 
+		 * @param writer
+		 *            the writer to write to.
+		 * @param fieldDataBlockOffset
+		 *            the offset to the Field Data Block.
+		 * @param dataOffset
+		 *            the offset for this field's data within the field data
+		 *            block.
+		 * @return the number of bytes written
+		 * @throws IOException
+		 *             if monkeys start wearing rubber pants.
+		 */
+		private long writeFieldData(ScriptEaseFileAccess writer,
+				long fieldDataBlockOffset, long dataOffset) throws IOException {
+			String strValue;
+			final long startByte;
+
+			/*
+			 * Non-complex types are inherently handled by writing the field
+			 * itself, since that's where they are stored, so we just deal with
+			 * complex types here. Similar deal with structs and lists - they're
+			 * stored separately.
+			 */
+			if (!this.isNormalComplexType()) {
+				throw new IllegalStateException(
+						"Can't write simple types, lists, or structs in GFF files with writeFieldData(...).");
+			}
+
+			this.dataOrDataOffset = dataOffset;
+
+			// get to the data location
+			writer.seek(fieldDataBlockOffset + this.dataOrDataOffset);
+
+			startByte = writer.getFilePointer();
+
+			switch ((int) this.getType()) {
+			case GffField.TYPE_NUM_DWORD64:
+				writer.writeUnsignedLong(this.fieldDataDWord64, true);
+				break;
+			case GffField.TYPE_NUM_INT64:
+				writer.writeLong(this.fieldDataInt64, true);
+				break;
+			case GffField.TYPE_NUM_DOUBLE:
+				// writer.writeDouble(this.fieldDataDouble, true);
+				// break;
+
+				throw new IllegalStateException("I can't write a Double yet!");
+			case GffField.TYPE_NUM_CEXOSTRING:
+				strValue = this.fieldDataString;
+
+				if (strValue.length() > EXO_STRING_MAX_LENGTH)
+					strValue.substring(0, EXO_STRING_MAX_LENGTH);
+
+				writer.writeUnsignedInt(strValue.length(), true);
+
+				writer.writeString(strValue, strValue.length());
+
+				break;
+			case GffField.TYPE_NUM_RESREF:
+				String newData = this.fieldDataString.toLowerCase();
+
+				if (newData.length() > GffField.MAX_RESREF_LENGTH)
+					newData = newData.substring(0, GffField.MAX_RESREF_LENGTH);
+
+				writer.writeByte(newData.length());
+
+				writer.writeString(newData, newData.length());
+
+				break;
+			case GffField.TYPE_NUM_CEXOLOCSTRING:
+				final Map<Long, String> strings = this.fieldDataLocString.strings;
+				final long strRef = this.fieldDataLocString.strRef;
+
+				// byteSize does not include itself in the size calculation
+				int byteSize = this.fieldDataLocString.getByteSize();
+
+				writer.writeUnsignedInt(byteSize, true);
+				writer.writeUnsignedInt(strRef, true);
+				writer.writeUnsignedInt(strings.size(), true);
+
+				// Write the value to the ERF file, even if it's already in the
+				// TLK file. The toolset does this when you run a Build on the
+				// module, so it can't be that bad. - remiller
+				for (long id : strings.keySet()) {
+					writer.writeUnsignedInt(id, true);
+					strValue = strings.get(id);
+
+					if (strValue.length() > EXO_STRING_MAX_LENGTH)
+						strValue.substring(0, EXO_STRING_MAX_LENGTH);
+
+					writer.writeUnsignedInt(strValue.length(), true);
+					writer.writeString(strValue);
+				}
+
+				break;
+			case GffField.TYPE_NUM_VOID:
+				writer.writeUnsignedInt(this.fieldDataBytes.length, true);
+				writer.writeBytes(this.fieldDataBytes);
+
+				break;
+			default:
+				this.dieUnknownType();
+			}
+
+			return writer.getFilePointer() - startByte;
 		}
 
 		/**
@@ -1723,11 +1679,30 @@ public class GenericFileFormat {
 		 * the GFF documentation.
 		 * 
 		 * @return Whether this field is a complex type or not.
+		 * @see #isNormalComplexType()
 		 */
-		public final boolean isComplexType() {
+		private boolean isComplexType() {
 			long type = this.getType();
 
-			return (type > 5) && (type != 8);
+			return (type > GffField.TYPE_NUM_INT)
+					&& (type != GffField.TYPE_NUM_FLOAT);
+		}
+
+		/**
+		 * Determines if the type is a normal complex type (meaning the field
+		 * data is located in the field data block of the GFF). That is, a
+		 * Regular Complex Type is a Complex Type but not a struct or a list.<br>
+		 * <br>
+		 * This check is based on table 3.4b in the GFF documentation. Any thing
+		 * listed as <code>Complex? yes</code> without asterisks is considered
+		 * Normal Complex.
+		 * 
+		 * @return whether this field is a normal complex type or not.
+		 * @see #isComplexType()
+		 */
+		private boolean isNormalComplexType() {
+			return this.isComplexType() && !this.isListType()
+					&& !this.isStructType();
 		}
 
 		/**
@@ -1737,10 +1712,10 @@ public class GenericFileFormat {
 		 * 
 		 * @return Whether this field is a complex type or not.
 		 */
-		public final boolean isStructType() {
+		private final boolean isStructType() {
 			long type = this.getType();
 
-			return (type == 14);
+			return (type == GffField.TYPE_NUM_STRUCT);
 		}
 
 		/**
@@ -1751,32 +1726,117 @@ public class GenericFileFormat {
 		 * 
 		 * @return Whether this field is a complex type or not.
 		 */
-		public final boolean isListType() {
+		private final boolean isListType() {
 			long type = this.getType();
 
-			return (type == 15);
+			return (type == GffField.TYPE_NUM_LIST);
 		}
 	}
 
-	public void setField(GffField field, String newData) {
-		if (field == null)
-			throw new IllegalStateException("Invalid GffField");
+	protected void removeScriptEaseReferences() {
+		GffStruct gitFileStruct = this.getTopLevelStruct();
 
-		this.changedFieldMap.put(field, newData);
-	}
-
-	public void setField(String fieldLabel, String newData) {
-		GffField field = this.findFieldForLabel(fieldLabel);
-		this.setField(field, newData);
+		gitFileStruct.removeScriptEaseReferences();
 	}
 
 	/**
-	 * Calculates and returns the number of bytes required to store this GFF.
+	 * Updates all instances that are from the given source GFF.<br>
+	 * <br>
+	 * This method assumes it is being called on an Area GIT file, so if that
+	 * ever becomes untrue, this method will need to be altered to match.
 	 * 
-	 * @return The number of bytes required to store this GFF.
+	 * @param sourceGFF
+	 *            The GFF that is the template for the instances to update.
+	 * @param slot
+	 *            The slot id to update.
+	 * @param scriptResRef
+	 *            The new data to live in the given slot.
 	 */
-	public int getByteLength() {
-		System.err.println("Not calculating GFF size yet!");
-		return 0;
+	protected void updateAllInstances(GenericFileFormat sourceGFF, String slot,
+			String scriptResRef) {
+		if (!this.isInstanceUpdatable()) {
+			throw new IllegalStateException(
+					"Cannot update instances in anything but a GIT file. This is a "
+							+ this.getFileType() + " file.");
+		}
+
+		final GffStruct gitFileStruct = this.getTopLevelStruct();
+		final String sourceResRef = sourceGFF.getResRef();
+
+		// Go through the lists of lists in a GIT File. (e.g. Creature List,
+		// etc). The rest of the comments will use the creature list as an
+		// example.
+		for (GffField gitFileField : gitFileStruct.getGffFields()) {
+			// Find the appropriate list.
+			if (!gitFileField.getLabel().equals(sourceGFF.getGITListLabel())) {
+				continue;
+			}
+
+			// List of all (e.g.) creature structs in creature list.
+			List<GffStruct> instances = gitFileField.getListData();
+
+			// Parses the individual creatures from the list.
+			for (GffStruct instance : instances) {
+
+				List<GffField> instanceFields = instance.getGffFields();
+
+				boolean shouldUpdate = false;
+				GffField toUpdate = null;
+
+				// Search the individual creature fields to see if this is an
+				// instance to update and to find the field to edit.
+				for (GffField instanceField : instanceFields) {
+					// Checks if the field equals TemplateResRef. This means the
+					// individualFieldStruct creature is the same as the
+					// individualFieldStructField creature.
+
+					// is this an instance from our source?
+					if (instanceField.getLabel().equals("TemplateResRef")
+							&& instanceField.getStringData().equals(
+									sourceResRef)) {
+						shouldUpdate = true;
+					}
+					// is this the slot or droid that we're looking for?
+					else if (instanceField.getLabel().equals(slot)) {
+						toUpdate = instanceField;
+					}
+				}
+
+				if (shouldUpdate) {
+					if (toUpdate != null) {
+						toUpdate.setData(scriptResRef);
+					} else {
+						System.err.println("Could not find and update slot "
+								+ slot + " on instances of " + sourceResRef
+								+ " in the area " + this.getName(""));
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Determines whether this GFF may have
+	 * {@link #updateAllInstances(GenericFileFormat, String, String)} called
+	 * upon it.
+	 * 
+	 * @return <code>true</code> if this GFF supports updating instances.
+	 */
+	protected boolean isInstanceUpdatable() {
+		String fileType = this.getFileType().trim();
+		return fileType
+				.equalsIgnoreCase(GenericFileFormat.TYPE_AREA_GAME_INSTANCE_FILE);
+	}
+
+	/**
+	 * Calculates the size in bytes of an List Indices Array list.
+	 * 
+	 * @param list
+	 * @return
+	 */
+	private static int calculateListByteSize(List<Long> list) {
+		// size+1 because they store the size as a DWORD before the
+		// elements, * 4 because DWORDs are 4 bytes each
+		return (list.size() + 1) * 4;
 	}
 }

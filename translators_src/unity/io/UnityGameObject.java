@@ -34,12 +34,6 @@ public final class UnityGameObject implements GameObject{
 		return this.childrenComponents;
 	}
 	
-	@Override
-	public int getObjectID() {
-		// TODO Auto-generated method stub
-		return fileID;
-	}
-	
 	public GameObject getParentObject(){
 		return prefabParentObject;
 	}
@@ -68,7 +62,7 @@ public final class UnityGameObject implements GameObject{
 	}
 
 	@Override
-	public String getResolutionText() {
+	public String getCodeText() {
 		switch(this.resolutionMethod){
 			case 0:
 				return this.codeFindByName + "(\"" + this.name + "\");";
