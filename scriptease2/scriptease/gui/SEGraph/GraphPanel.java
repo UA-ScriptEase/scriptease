@@ -379,9 +379,9 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.3);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.8);
 			} else {
-				toolColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
+				toolColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
 				toolHighlight = GUIOp.scaleColour(
-						ScriptEaseUI.SELECTED_GRAPH_NODE, 1.05);
+						ScriptEaseUI.COLOUR_SELECTED_NODE, 1.05);
 				toolPress = GUIOp.scaleColour(toolHighlight, 1.6);
 			}
 
@@ -398,9 +398,9 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 				}
 				borderColour = GUIOp.scaleColour(toolColour, 0.7);
 			} else if (node.isSelected()) {
-				backgroundColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
+				backgroundColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
 				borderColour = GUIOp.scaleColour(
-						ScriptEaseUI.SELECTED_GRAPH_NODE, 0.6);
+						ScriptEaseUI.COLOUR_SELECTED_NODE, 0.6);
 			} else {
 				backgroundColour = Color.white;
 				borderColour = Color.GRAY;
@@ -740,7 +740,7 @@ public class GraphPanel extends JPanel implements GraphNodeObserver {
 						Color lineColour;
 						if (isLineSelected)
 							lineColour = GUIOp.scaleColour(
-									ScriptEaseUI.SELECTED_GRAPH_NODE, 0.7);
+									ScriptEaseUI.COLOUR_SELECTED_NODE, 0.7);
 						else
 							lineColour = Color.GRAY;
 						g2.setColor(lineColour);
