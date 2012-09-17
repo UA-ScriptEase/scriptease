@@ -567,14 +567,14 @@ public class SEGraph<E> extends JComponent {
 
 			if (SEGraph.this.draggedFromNode != null
 					&& SEGraph.this.mousePosition != null) {
+				System.out.println("Draggin from node!");
 				final ToolBarMode mode = GraphToolBarModeAction.getMode();
 
-				// TODO These colours should be their own colours, linked to the
-				// colours used in SEGraphNodeRenderer.
 				if (mode == ToolBarMode.INSERT || mode == ToolBarMode.CONNECT)
-					g2.setColor(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
+					g2.setColor(GUIOp.scaleColour(
+							ScriptEaseUI.COLOUR_INSERT_NODE, 0.8));
 				else if (mode == ToolBarMode.DISCONNECT)
-					g2.setColor(ScriptEaseUI.COLOUR_UNBOUND);
+					g2.setColor(ScriptEaseUI.COLOUR_DELETE_NODE);
 
 				g2.setStroke(new BasicStroke(1.5f));
 				GUIOp.paintArrow(g2, GUIOp.getMidRight(SEGraph.this
@@ -667,9 +667,9 @@ public class SEGraph<E> extends JComponent {
 			case DISCONNECT:
 				SEGraph.this.draggedFromNode = SEGraph.this.nodesToComponents
 						.getKey((JComponent) e.getSource());
-				SEGraph.this.draggedFromNode = null;
 				break;
 			default:
+				SEGraph.this.draggedFromNode = null;
 				break;
 			}
 		}

@@ -5,8 +5,6 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -37,8 +35,8 @@ public class SEGraphNodeRenderer<E> {
 	private final SEGraph<E> graph;
 
 	// This is such a weird hack. I apologize. - remiller
-	private Set<JComponent> hoverComponents = new HashSet<JComponent>();
-	private Set<JComponent> pressComponents = new HashSet<JComponent>();
+	private JComponent hoveredComponent = null;
+	private JComponent pressedComponent = null;
 
 	public SEGraphNodeRenderer(SEGraph<E> graph) {
 		this.graph = graph;
@@ -100,7 +98,7 @@ public class SEGraphNodeRenderer<E> {
 						mouseLoc.y - component.getLocationOnScreen().y))
 					return;
 
-				SEGraphNodeRenderer.this.pressComponents.remove(component);
+				SEGraphNodeRenderer.this.pressedComponent = null;
 
 				resetAppearance();
 				configureAppearance(component, node);
@@ -110,7 +108,7 @@ public class SEGraphNodeRenderer<E> {
 			public void mousePressed(MouseEvent e) {
 				final JComponent component = (JComponent) e.getSource();
 
-				SEGraphNodeRenderer.this.pressComponents.add(component);
+				SEGraphNodeRenderer.this.pressedComponent = component;
 				configureAppearance(component, node);
 			}
 
@@ -118,7 +116,7 @@ public class SEGraphNodeRenderer<E> {
 			public void mouseEntered(MouseEvent e) {
 				final JComponent component = (JComponent) e.getSource();
 
-				SEGraphNodeRenderer.this.hoverComponents.add(component);
+				SEGraphNodeRenderer.this.hoveredComponent = component;
 				configureAppearance(component, node);
 			}
 
@@ -126,8 +124,8 @@ public class SEGraphNodeRenderer<E> {
 			public void mouseExited(MouseEvent e) {
 				final JComponent component = (JComponent) e.getSource();
 
-				SEGraphNodeRenderer.this.hoverComponents.remove(component);
-				SEGraphNodeRenderer.this.pressComponents.remove(component);
+				SEGraphNodeRenderer.this.hoveredComponent = null;
+				SEGraphNodeRenderer.this.pressedComponent = null;
 
 				configureAppearance(component, node);
 			}
@@ -204,23 +202,23 @@ public class SEGraphNodeRenderer<E> {
 		 * and close enough. Feel free to add colours to ScriptEaseUI if you
 		 * want other colours. - remiller
 		 */
-		if (this.hoverComponents.contains(component)) {
+		if (this.hoveredComponent == component) {
 			if (GraphToolBarModeAction.getMode() == ToolBarMode.INSERT) {
-				toolColour = ScriptEaseUI.COLOUR_KNOWN_OBJECT;
-				toolHighlight = GUIOp.scaleWhite(toolColour, 1.6);
-				toolPress = GUIOp.scaleWhite(toolHighlight, 1.8);
+				toolColour = ScriptEaseUI.COLOUR_INSERT_NODE;
+				toolHighlight = GUIOp.scaleWhite(toolColour, 1.1);
+				toolPress = GUIOp.scaleWhite(toolHighlight, 1.1);
 			} else if (GraphToolBarModeAction.getMode() == ToolBarMode.DELETE) {
-				toolColour = ScriptEaseUI.COLOUR_UNBOUND;
-				toolHighlight = GUIOp.scaleWhite(toolColour, 1.3);
-				toolPress = GUIOp.scaleWhite(toolHighlight, 1.8);
+				toolColour = ScriptEaseUI.COLOUR_DELETE_NODE;
+				toolHighlight = GUIOp.scaleWhite(toolColour, 1.2);
+				toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);
 			} else {
-				toolColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
+				toolColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
 				toolHighlight = GUIOp.scaleColour(
-						ScriptEaseUI.SELECTED_GRAPH_NODE, 1.05);
-				toolPress = GUIOp.scaleColour(toolHighlight, 1.6);
+						ScriptEaseUI.COLOUR_SELECTED_NODE, 1.1);
+				toolPress = GUIOp.scaleColour(toolHighlight, 1.1);
 			}
 
-			if (this.pressComponents.contains(component)) {
+			if (this.pressedComponent == component) {
 				// If pressed while being hovered over
 				backgroundColour = toolPress;
 			} else {
@@ -237,9 +235,9 @@ public class SEGraphNodeRenderer<E> {
 		 * otherwise.
 		 */
 		else if (this.graph.getSelectedNode() == node) {
-			borderColour = GUIOp.scaleColour(ScriptEaseUI.SELECTED_GRAPH_NODE,
+			borderColour = GUIOp.scaleColour(ScriptEaseUI.COLOUR_SELECTED_NODE,
 					0.6);
-			backgroundColour = ScriptEaseUI.SELECTED_GRAPH_NODE;
+			backgroundColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
 			// If nothing and selected
 		} else {
 			borderColour = Color.gray;

@@ -53,7 +53,17 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (gold) used for selected graph nodes
 	 */
-	public static final Color SELECTED_GRAPH_NODE = new Color(255, 234, 67);
+	public static final Color COLOUR_SELECTED_NODE = new Color(222, 171, 78);
+
+	/**
+	 * The colour (red) used for the delete node tool
+	 */
+	public static final Color COLOUR_DELETE_NODE = new Color(255, 97, 97);
+	
+	/**
+	 * The colour (green) used for the insert node tool
+	 */
+	public static final Color COLOUR_INSERT_NODE = new Color(176, 255, 97);
 
 	/**
 	 * The colour (White) used by Fragments by default Story Component Builder.
