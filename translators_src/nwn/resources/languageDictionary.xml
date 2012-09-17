@@ -180,9 +180,9 @@
 		<!-- Conditionals for ScriptIts -->
 		<Format id="scriptItConditional">
 			<Line>
-				<Literal>if(SE2_Quest_GetState(GetFirstPC(), "</Literal>
-				<Fragment data="currentquestpoint" />
-				<Literal>") == QUEST_POINT_STATE_ENABLED){</Literal>
+				<Literal>if(SE2_Story_GetState(GetFirstPC(), "</Literal>
+				<Fragment data="currentstorypoint" />
+				<Literal>") == STORY_POINT_STATE_ENABLED){</Literal>
 			</Line>
 			<Indent>
 				<Scope data="storyChild">
@@ -383,7 +383,7 @@
 				<Literal>// Includes</Literal>
 			</Line>
 			<Line>
-				<Literal>#include "i_se_quest2"</Literal>
+				<Literal>#include "i_se_story"</Literal>
 			</Line>
 			<Series data="includes" unique="true">
 				<FormatRef ref="include" />

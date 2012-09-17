@@ -497,7 +497,7 @@ public class GenericFileFormat {
 
 	/**
 	 * Gets the object representations for the items contained <i>within</i>
-	 * this GFF. For example, Journals contain their quests which need Game
+	 * this GFF. For example, Journals contain their stories which need Game
 	 * Objects.
 	 * 
 	 * @return

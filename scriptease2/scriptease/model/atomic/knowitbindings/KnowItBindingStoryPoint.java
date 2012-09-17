@@ -8,7 +8,7 @@ import scriptease.controller.BindingVisitor;
 import scriptease.model.complex.StoryPoint;
 
 /**
- * This class represents a <b>Quest Point</b> binding for a <code>KnowIt</code>.
+ * This class represents a <b>Story Point</b> binding for a <code>KnowIt</code>.
  * 
  * @author remiller
  * @see {@link scriptease.model.atomic.KnowIt}
@@ -17,17 +17,17 @@ public class KnowItBindingStoryPoint extends KnowItBinding {
 	private final StoryPoint point;
 
 	/**
-	 * Creates a new binding that wraps the given quest point.
+	 * Creates a new binding that wraps the given story point.
 	 * 
 	 * @param point
-	 *            The quest point to wrap.
+	 *            The story point to wrap.
 	 */
 	public KnowItBindingStoryPoint(StoryPoint point) {
 		this.point = point;
 	}
 
 	/**
-	 * Creates a new binding based on the given quest point.
+	 * Creates a new binding based on the given story point.
 	 * 
 	 * @param other
 	 *            The binding to mimic.

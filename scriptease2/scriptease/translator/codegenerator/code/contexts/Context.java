@@ -141,7 +141,7 @@ public class Context {
 		// Get all the StoryPoints from the model
 		storyPoints = this.model.getDescendants();
 
-		// for each quest point
+		// for each story point
 		for (StoryPoint storyPoint : storyPoints) {
 			// Get all the components from each StoryPoint
 			ComplexStoryComponentDescendantCollector getter = new ComplexStoryComponentDescendantCollector();

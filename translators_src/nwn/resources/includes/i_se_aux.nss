@@ -604,7 +604,7 @@ void SE_AUX_SetTimerEvent(object actor)
 }*/
 
 
-//This method is the core of the timer used in quests. It periodicly
+//This method is the core of the timer used in stories. It periodicly
 //creates interval events and only once creates an expiration event
 //for each timer. This design relies using user defined events use
 //numbers starting at 1002. Each timer uses 2 user defined event numbers.

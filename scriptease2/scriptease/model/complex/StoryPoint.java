@@ -32,11 +32,11 @@ public class StoryPoint extends ComplexStoryComponent {
 	private final Set<StoryPoint> successors;
 
 	/**
-	 * Creates a new Quest Point with the given name and a default fan-in value.
+	 * Creates a new Story Point with the given name and a default fan-in value.
 	 * 
 	 * @param name
 	 *            If name is null or empty string, it gives a default name of
-	 *            NEW_QUEST_POINT and the current quest point count.
+	 *            NEW_STORY_POINT and the current story point count.
 	 */
 	public StoryPoint(String name) {
 		super();

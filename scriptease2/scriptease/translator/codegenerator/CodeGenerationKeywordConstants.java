@@ -45,7 +45,6 @@ public interface CodeGenerationKeywordConstants {
 		FORMATTEDVALUE,
 		INCLUDE,
 		NAME,
-		QUESTCONTAINER,
 		SUBJECT,
 		TEMPLATEID,
 		TYPE,
