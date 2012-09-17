@@ -21,13 +21,14 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 	public static final int SHORT_BYTE_LENGTH = 2;
 	public static final int INT_BYTE_LENGTH = 4;
 	public static final int LONG_BYTE_LENGTH = 8;
+	public static final int DOUBLE_BYTE_LENGTH = 8;
 
 	private boolean readOnly = false;
 
 	public ScriptEaseFileAccess(File file, String mode)
 			throws FileNotFoundException {
 		super(file, mode);
-		
+
 		if (mode.equals("r")) {
 			this.readOnly = true;
 		}
@@ -83,12 +84,14 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 	 * @throws IOException
 	 */
 	public void writeString(String text, int length) throws IOException {
-		// append nulls until we hit the length quota
-		while (text.length() < length) {
-			text += "\0";
-		}
+		this.writeBytes(text);
 
-		this.writeBytes(text.getBytes());
+		int written = text.length();
+		// append nulls until we hit the length quota
+		while (written < length) {
+			this.writeByte('\0');
+			written++;
+		}
 	}
 
 	/**
@@ -193,7 +196,7 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 	 *            Reverse the endianness of the result.
 	 * @throws IOException
 	 */
-	public void writeLong(int value, boolean reverseEndianess)
+	public void writeLong(long value, boolean reverseEndianess)
 			throws IOException {
 		byte[] bytes = BitwiseConverter.longToByteArray(value);
 
@@ -202,6 +205,48 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 		}
 
 		this.writeBytes(bytes);
+	}
+
+	/**
+	 * Reads a double in either big or little endian formats.
+	 * 
+	 * @param reverseEndianess
+	 *            Reverse the endianness of the result.
+	 * @throws IOException
+	 */
+
+	// this doesn't do anything because it's not important to implement now.
+	@Deprecated
+	public double readDouble(boolean reverseEndianess) {
+		// byte[] bytes = readBytes(LONG_BYTE_LENGTH);
+		//
+		// if (reverseEndianess) {
+		// bytes = BitwiseConverter.reverseEndian(bytes, LONG_BYTE_LENGTH);
+		// }
+		//
+		// return BitwiseConverter.byteArrToDouble(bytes);
+		return -1;
+	}
+
+	/**
+	 * Writes a double in either big or little endian formats.
+	 * 
+	 * @param value
+	 *            The value to write.
+	 * @param reverseEndianess
+	 *            Reverse the endianness of the result.
+	 * @throws IOException
+	 */
+	// this doesn't do anything because it's not important to implement now.
+	@Deprecated
+	public void writeDouble(double value, boolean reverseEndianess) {
+		// byte[] bytes = BitwiseConverter.doubleToByteArray(value);
+		//
+		// if (reverseEndianess) {
+		// bytes = BitwiseConverter.reverseEndian(bytes, INT_BYTE_LENGTH);
+		// }
+		//
+		// this.writeBytes(bytes);
 	}
 
 	/**
@@ -276,8 +321,11 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 		ByteBuffer bytes = ByteBuffer.allocate(numBytes);
 		int readLength = super.read(bytes.array());
 
-		if (numBytes != readLength)
-			throw new IOException("Tried to read more bytes than were read.");
+		if (readLength < 0)
+			throw new IOException("Tried to read past the end of the file.");
+		if (readLength > numBytes)
+			throw new IOException(
+					"Tried to read more bytes than was supposed to.");
 
 		return bytes.array();
 	}
@@ -337,6 +385,18 @@ public class ScriptEaseFileAccess extends RandomAccessFile {
 
 		if (reverseEndianess) {
 			bytes = BitwiseConverter.reverseEndian(bytes, ScriptEaseFileAccess.INT_BYTE_LENGTH);
+		}
+
+		this.writeBytes(bytes);
+	}
+
+	public void writeUnsignedLong(long value, boolean reverseEndianess)
+			throws IOException {
+		byte[] bytes = BitwiseConverter
+				.longToByteArray(value & 0xFFFFFFFFL);
+
+		if (reverseEndianess) {
+			bytes = BitwiseConverter.reverseEndian(bytes, INT_BYTE_LENGTH);
 		}
 
 		this.writeBytes(bytes);

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import scriptease.controller.modelverifier.rule.StoryRule;
+
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.translator.codegenerator.ScriptInfo;
@@ -44,12 +44,6 @@ public final class UnityProject implements GameModule {
 	public void close() throws IOException {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public Collection<StoryRule> getCodeGenerationRules() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
