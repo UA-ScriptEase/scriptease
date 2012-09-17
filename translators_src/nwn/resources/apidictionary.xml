@@ -7317,7 +7317,7 @@
             <Line>
               <Literal>string name;</Literal>
             </Line>
-            <Series data="storyPointNodes" unique="true">
+            <Series data="storyPoints" unique="true">
               <Line>
                 <Literal>name=</Literal>
                 <Fragment data="formattedValue"/>

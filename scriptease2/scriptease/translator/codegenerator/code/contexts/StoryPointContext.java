@@ -1,6 +1,8 @@
 package scriptease.translator.codegenerator.code.contexts;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import scriptease.model.StoryComponent;
@@ -36,6 +38,26 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 	}
 
 	@Override
+	public Iterator<StoryPoint> getStoryPointChildren() {
+		return ((StoryPoint) this.component).getSuccessors().iterator();
+	}
+
+	@Override
+	public Iterator<StoryPoint> getStoryPointParents() {
+		final Collection<StoryPoint> parents;
+
+		parents = new ArrayList<StoryPoint>();
+
+		for (StoryPoint point : this.getModel().getDescendants()) {
+			if (point.getSuccessors().contains(this.component)) {
+				parents.add(point);
+			}
+		}
+
+		return parents.iterator();
+	}
+
+	@Override
 	public String getName() {
 		return this.getNameOf(this.component);
 	}
@@ -47,8 +69,7 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 
 	@Override
 	public String getUniqueName(Pattern legalFormat) {
-		return this.getNamifier().getUniqueName(this.component,
-				legalFormat);
+		return this.getNamifier().getUniqueName(this.component, legalFormat);
 	}
 
 	@Override

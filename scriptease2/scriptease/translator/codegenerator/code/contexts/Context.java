@@ -350,7 +350,17 @@ public class Context {
 	public Iterator<StoryPoint> getStoryPoints() {
 		return this.model.getDescendants().iterator();
 	}
-
+	
+	public Iterator<StoryPoint> getStoryPointChildren() {
+		this.unimplemented("getStoryPointChildren");
+		return null;
+	}
+	
+	public Iterator<StoryPoint> getStoryPointParents() {
+		this.unimplemented("getStoryPointParents");
+		return null;
+	}
+	
 	public KnowIt getSubject() {
 		unimplemented("getSubject");
 		return null;

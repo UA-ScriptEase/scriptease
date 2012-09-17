@@ -212,7 +212,15 @@ public class SeriesFragment extends AbstractContainerFragment {
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.STORYPOINTS
 						.name()))
 			it = context.getStoryPoints();
-		else {
+		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.PARENTNODES
+						.name())) {
+			it = context.getStoryPointParents();
+		} else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.CHILDRENNODES
+						.name())) {
+			it = context.getStoryPointChildren();
+		} else {
 			// Default return 'cuz they didn't tell us a real label!
 			System.err.println("Series was unable to be resolved for data: "
 					+ dataLabel + " >");
