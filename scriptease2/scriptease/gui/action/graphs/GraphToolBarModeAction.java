@@ -125,20 +125,22 @@ public abstract class GraphToolBarModeAction extends ActiveModelSensitiveAction 
 		if (cursorPath != null) {
 			final File file;
 			final String resultingCursorPath;
-			final Toolkit toolkit = Toolkit.getDefaultToolkit();
-			final Point CURSOR_HOTSPOT = new Point(0, 0);
-			BufferedImage cursorImage;
 
 			resultingCursorPath = "scriptease/resources/icons/cursors/"
 					+ cursorPath + ".png";
-
 			file = FileOp.getFileResource(resultingCursorPath);
 
 			if (file == null)
 				customCursor = null;
 			else {
 				try {
+					final Point CURSOR_HOTSPOT = new Point(0, 0);
+
+					final BufferedImage cursorImage;
+					final Toolkit toolkit;
+
 					cursorImage = ImageIO.read(file);
+					toolkit = Toolkit.getDefaultToolkit();
 
 					customCursor = toolkit.createCustomCursor(cursorImage,
 							CURSOR_HOTSPOT, resultingCursorPath);

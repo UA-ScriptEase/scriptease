@@ -12,8 +12,12 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.plaf.ComponentUI;
@@ -33,6 +38,7 @@ import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.util.BiHashMap;
+import scriptease.util.FileOp;
 import scriptease.util.GUIOp;
 import sun.awt.util.IdentityArrayList;
 
@@ -470,20 +476,6 @@ public class SEGraph<E> extends JComponent {
 			}
 		}
 
-		/*
-		 * private void drawNode(E node, int depth) { draw the node at depth;
-		 * 
-		 * for(E child : SEGraph.this.getChildren(node)) {
-		 * 
-		 * for(E child2 : SEGraph.this.getChildren(node)) {
-		 * 
-		 * 
-		 * if(SEGraph.this.getChildren(child2).contains(child)) {
-		 * 
-		 * } } } } Draw Start for child in start's children if child not a child
-		 * of one of start's children draw child
-		 */
-
 		/**
 		 * Sorts the given children in a fashion that has overlapping lines
 		 * 
@@ -675,9 +667,9 @@ public class SEGraph<E> extends JComponent {
 			case DISCONNECT:
 				SEGraph.this.draggedFromNode = SEGraph.this.nodesToComponents
 						.getKey((JComponent) e.getSource());
+				SEGraph.this.draggedFromNode = null;
 				break;
 			default:
-				SEGraph.this.draggedFromNode = null;
 				break;
 			}
 		}
@@ -693,10 +685,33 @@ public class SEGraph<E> extends JComponent {
 
 			if (this.lastEnteredNode == SEGraph.this.getStartNode())
 				if (GraphToolBarModeAction.getMode() == ToolBarMode.DELETE) {
-					// TODO This cursor should be an "Unavailable" cursor
-					// instead of the default.
-					entered.setCursor(Cursor
-							.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					final String resultingCursorPath;
+					final File file;
+
+					resultingCursorPath = "scriptease/resources/icons/cursors/unavailable.png";
+					file = FileOp.getFileResource(resultingCursorPath);
+
+					if (file != null) {
+						try {
+							final Point CURSOR_HOTSPOT = new Point(15, 15);
+
+							final BufferedImage cursorImage;
+							final Toolkit toolkit;
+							final Cursor customCursor;
+
+							cursorImage = ImageIO.read(file);
+							toolkit = Toolkit.getDefaultToolkit();
+							customCursor = toolkit.createCustomCursor(
+									cursorImage, CURSOR_HOTSPOT,
+									resultingCursorPath);
+
+							entered.setCursor(customCursor);
+
+						} catch (IOException exception) {
+							System.err.println("Failed to read cursor file at "
+									+ file + ". Setting cursor to default.");
+						}
+					}
 				} else
 					entered.setCursor(null);
 		}

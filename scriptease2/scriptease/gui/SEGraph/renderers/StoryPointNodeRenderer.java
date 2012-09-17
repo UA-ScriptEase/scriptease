@@ -1,17 +1,13 @@
 package scriptease.gui.SEGraph.renderers;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
@@ -65,10 +61,11 @@ public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 	}
 
 	/**
-	 * Updates the components.
+	 * Updates the components in the passed in component to represent the passed
+	 * in node.
 	 * 
 	 * @param component
-	 * @param editButton
+	 * @param node
 	 */
 	private void updateComponents(JComponent component, StoryPoint node) {
 		component.removeAll();
