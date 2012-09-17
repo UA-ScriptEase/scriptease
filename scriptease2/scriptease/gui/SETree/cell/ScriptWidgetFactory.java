@@ -393,9 +393,9 @@ public class ScriptWidgetFactory {
 		 * @author mfchurch
 		 */
 		Comparable<?> min = null; // default to no min limit
-		Comparable<?> max = null; // default to no max limit
-		Number stepSize = 1; // default to int step size
-		String regex = TranslatorManager.getInstance().getActiveTranslator()
+		final Comparable<?> max = null; // default to no max limit
+		final Number stepSize = 1; // default to int step size
+		final String regex = TranslatorManager.getInstance().getActiveTranslator()
 				.getGameTypeManager().getReg(bindingType);
 		final Pattern regexPattern = Pattern.compile(regex);
 		if (regex != null && !regex.isEmpty()) {
@@ -404,7 +404,6 @@ public class ScriptWidgetFactory {
 				min = 0;
 			// if regex specifies \. it wants a floating point
 			if (regex.contains("\\.")) {
-				stepSize = 0.1;
 				isFloat = true;
 			}
 		}

@@ -85,11 +85,18 @@
       </Slots>
     </Type>
     <Type>
-      <Name>Decimal</Name>
+      <Name>Number</Name>
       <Keyword>float</Keyword>
       <CodeSymbol>float</CodeSymbol>
       <LegalValues>[-]?[0-9]*\.?[0-9]+</LegalValues>
       <GUI>JSPINNER</GUI>
+    </Type>
+    <Type>
+    <Name>Integer</Name>
+    <Keyword>int</Keyword>
+    <CodeSymbol>int</CodeSymbol>
+    <LegalValues>0</LegalValues>
+    <GUI>JSPINNER</GUI>
     </Type>
     <Type>
       <Name>EffectType</Name>
@@ -207,13 +214,6 @@
       <CodeSymbol>int</CodeSymbol>
       <Enum>SPELLABILITY_AS_INVISIBILITY&lt;Spellability As Invisibility&gt;|SPELLABILITY_AURA_OF_COURAGE&lt;Spellability Aura Of Courage&gt;|SPELLABILITY_AURA_MENACE&lt;Spellability Aura Menace&gt;|SPELLABILITY_TURN_UNDEAD&lt;Spellability Turn Undead&gt;|SPELLABILITY_AS_DARKNESS&lt;Spellability As Darkness&gt;|SPELLABILITY_AS_IMPROVED_INVISIBLITY&lt;Spellability As Improved Invisiblity&gt;|SPELLABILITY_AA_HAIL_OF_ARROWS&lt;Spellability Aa Hail Of Arrows&gt;|SPELLABILITY_ACTIVATE_ITEM&lt;Spellability Activate Item&gt;|SPELLABILITY_AA_SEEKER_ARROW_2&lt;Spellability Aa Seeker Arrow 2&gt;|SPELLABILITY_AA_SEEKER_ARROW_1&lt;Spellability Aa Seeker Arrow 1&gt;|SPELLABILITY_AURA_FIRE&lt;Spellability Aura Fire&gt;|SPELLABILITY_AA_ARROW_OF_DEATH&lt;Spellability Aa Arrow Of Death&gt;|SPELLABILITY_AURA_ELECTRICITY&lt;Spellability Aura Electricity&gt;|SPELLABILITY_AS_GHOSTLY_VISAGE&lt;Spellability As Ghostly Visage&gt;|SPELLABILITY_AURA_FEAR&lt;Spellability Aura Fear&gt;|SPELLABILITY_AURA_BLINDING&lt;Spellability Aura Blinding&gt;|SPELLABILITY_AURA_COLD&lt;Spellability Aura Cold&gt;|SPELLABILITY_AA_IMBUE_ARROW&lt;Spellability Aa Imbue Arrow&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
-    </Type>
-    <Type>
-      <Name>Integer</Name>
-      <Keyword>int</Keyword>
-      <CodeSymbol>int</CodeSymbol>
-      <LegalValues>[-]?[0-9]+</LegalValues>
-      <GUI>JSPINNER</GUI>
     </Type>
     <Type>
       <Name>Placeable</Name>
@@ -1450,7 +1450,7 @@
           <Visible>true</Visible>
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>float</Type>
           </Types>
           <Binding flavour="function">
             <ScriptIt>
@@ -1465,11 +1465,11 @@
                   <Labels/>
                   <Id>22</Id>
                   <Types>
-                    <Type>int</Type>
+                    <Type>float</Type>
                   </Types>
                   <Code>
                     <Line>
-                      <Literal>return GetModuleItemAcquiredStackSize();</Literal>
+                      <Literal>return IntToFloat(GetModuleItemAcquiredStackSize());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -1566,7 +1566,7 @@
           <Visible>true</Visible>
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>float</Type>
           </Types>
           <Binding flavour="function">
             <ScriptIt>
@@ -1582,11 +1582,11 @@
                   <Slot>OnDamaged</Slot>
                   <Id>25</Id>
                   <Types>
-                    <Type>int</Type>
+                    <Type>float</Type>
                   </Types>
                   <Code>
                     <Line>
-                      <Literal>return GetTotalDamageDealt();</Literal>
+                      <Literal>return IntToFloat(GetTotalDamageDealt());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -1599,7 +1599,7 @@
           <Visible>true</Visible>
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>float</Type>
           </Types>
           <Binding flavour="function">
             <ScriptIt>
@@ -1615,11 +1615,11 @@
                   <Slot>OnDamaged</Slot>
                   <Id>26</Id>
                   <Types>
-                    <Type>int</Type>
+                    <Type>float</Type>
                   </Types>
                   <Code>
                     <Line>
-                      <Literal>return GetCurrentHitPoints(OBJECT_SELF);</Literal>
+                      <Literal>return IntToFloat(GetCurrentHitPoints(OBJECT_SELF));</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -1632,7 +1632,7 @@
           <Visible>true</Visible>
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>float</Type>
           </Types>
           <Binding flavour="function">
             <ScriptIt>
@@ -1648,7 +1648,7 @@
                   <Slot>OnDamaged</Slot>
                   <Id>27</Id>
                   <Types>
-                    <Type>int</Type>
+                    <Type>float</Type>
                   </Types>
                   <Parameters>
                     <KnowIt>
@@ -1671,11 +1671,11 @@
                   </Parameters>
                   <Code>
                     <Line>
-                      <Literal>return GetMaxHitPoints(</Literal>
+                      <Literal>return IntToFloat(GetMaxHitPoints(</Literal>
                       <Scope data="argument" ref="Object">
                         <Fragment data="name"/>
                       </Scope>
-                      <Literal>);</Literal>
+                      <Literal>));</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -2443,7 +2443,7 @@
           <Visible>true</Visible>
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>float</Type>
           </Types>
           <Binding flavour="function">
             <ScriptIt>
@@ -2458,11 +2458,11 @@
                   <Labels/>
                   <Id>47</Id>
                   <Types>
-                    <Type>int</Type>
+                    <Type>float</Type>
                   </Types>
                   <Code>
                     <Line>
-                      <Literal>return GetUserDefinedEventNumber();</Literal>
+                      <Literal>return IntToFloat(GetUserDefinedEventNumber());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -2878,7 +2878,7 @@
           <Visible>true</Visible>
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>float</Type>
           </Types>
           <Binding flavour="function">
             <ScriptIt>
@@ -2893,11 +2893,11 @@
                   <Labels/>
                   <Id>59</Id>
                   <Types>
-                    <Type>int</Type>
+                    <Type>float</Type>
                   </Types>
                   <Code>
                     <Line>
-                      <Literal>return GetLockLockDC();</Literal>
+                      <Literal>return IntToFloat(GetLockLockDC());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -3037,7 +3037,7 @@
           <Visible>true</Visible>
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>float</Type>
           </Types>
           <Binding flavour="function">
             <ScriptIt>
@@ -3052,11 +3052,11 @@
                   <Labels/>
                   <Id>63</Id>
                   <Types>
-                    <Type>int</Type>
+                    <Type>float</Type>
                   </Types>
                   <Code>
                     <Line>
-                      <Literal>return GetTotalDamageDealt();</Literal>
+                      <Literal>return IntToFloat(GetTotalDamageDealt());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -3069,7 +3069,7 @@
           <Visible>true</Visible>
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>float</Type>
           </Types>
           <Binding flavour="function">
             <ScriptIt>
@@ -3084,7 +3084,7 @@
                   <Labels/>
                   <Id>64</Id>
                   <Types>
-                    <Type>int</Type>
+                    <Type>float</Type>
                   </Types>
                   <Parameters>
                     <KnowIt>
@@ -3916,7 +3916,7 @@
           <Visible>true</Visible>
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>float</Type>
           </Types>
           <Binding flavour="function">
             <ScriptIt>
@@ -3931,11 +3931,11 @@
                   <Labels/>
                   <Id>82</Id>
                   <Types>
-                    <Type>int</Type>
+                    <Type>float</Type>
                   </Types>
                   <Code>
                     <Line>
-                      <Literal>return GetUserDefinedEventNumber();</Literal>
+                      <Literal>return IntToFloat(GetUserDefinedEventNumber());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -4033,7 +4033,7 @@
           <Visible>true</Visible>
           <Labels/>
           <Types>
-            <Type>int</Type>
+            <Type>float</Type>
           </Types>
           <Binding flavour="function">
             <ScriptIt>
@@ -4048,11 +4048,11 @@
                   <Labels/>
                   <Id>84</Id>
                   <Types>
-                    <Type>int</Type>
+                    <Type>float</Type>
                   </Types>
                   <Code>
                     <Line>
-                      <Literal>return GetUserDefinedEventNumber();</Literal>
+                      <Literal>return IntToFloat(GetUserDefinedEventNumber());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -8233,7 +8233,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -8249,6 +8249,9 @@
               </Types>
             </KnowIt>
           </Parameters>
+          <Includes>
+          <Include>nw_i0_plot</Include>
+          </Includes>
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
@@ -8375,7 +8378,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -8392,11 +8395,11 @@
               <Scope data="argument" ref="(Are">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>a,</Literal>
-              <Scope data="argument" ref=" Daytime Trac">
+              <Literal>a,FloatToInt(</Literal>
+              <Scope data="argument" ref=" Daytime Track">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>k);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -8432,7 +8435,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -8446,14 +8449,14 @@
             </Line>
             <Line>
               <Literal>MusicBackgroundChangeNight(</Literal>
-              <Scope data="argument" ref="Are">
+              <Scope data="argument" ref="Area">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>,</Literal>
+              <Literal>,FloatToInt(</Literal>
               <Scope data="argument" ref=" Nighttime Track">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
             <Line>
               <Literal>MusicBackgroundPlay(</Literal>
@@ -8496,7 +8499,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -8506,11 +8509,11 @@
               <Scope data="argument" ref="Area">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>,</Literal>
+              <Literal>,FloatToInt(</Literal>
               <Scope data="argument" ref="Battle Track">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -8622,7 +8625,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -9249,7 +9252,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Give &lt;Target&gt; &lt;Negative Levels&gt; for &lt;Time&gt; seconds</Name>
+          <Name>Subtract &lt;Levels&gt; levels from &lt;Target&gt; for &lt;Time&gt; seconds</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>177</Id>
@@ -9266,11 +9269,11 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Negative Levels</Name>
+              <Name>Levels</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -9278,25 +9281,25 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectNegativeLevel(</Literal>
-              <Scope data="argument" ref="Negative Levels">
+              <Literal>ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectNegativeLevel(FloatToInt(</Literal>
+              <Scope data="argument" ref="Levels">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>), </Literal>
+              <Literal>)), </Literal>
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Time">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -9729,7 +9732,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Assign &lt;Integer Value&gt; to &lt;Target&gt;&apos;s variable labelled &lt;Label&gt;</Name>
+      <Name>Assign &lt;Number&gt; to &lt;Target&gt;&apos;s variable labelled &lt;Label&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -9737,7 +9740,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Assign &lt;Integer Value&gt; to &lt;Target&gt;&apos;s variable labelled &lt;Label&gt;</Name>
+          <Name>Assign &lt;Number&gt; to &lt;Target&gt;&apos;s variable labelled &lt;Label&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>186</Id>
@@ -9746,11 +9749,11 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Integer Value</Name>
+              <Name>Number</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -9776,11 +9779,11 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetLocalInt(</Literal>
-              <Scope data="argument" ref="Integer Value">
+              <Literal>SetLocalInt(FloatToInt(</Literal>
+              <Scope data="argument" ref="Number">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -9828,7 +9831,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -9844,17 +9847,17 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectAbilityDecrease(</Literal>
+              <Literal>ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectAbilityDecrease(FloatToInt(</Literal>
               <Scope data="argument" ref="Ability Decrease">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="Ability">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -9906,7 +9909,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -9922,17 +9925,17 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectAbilityIncrease(</Literal>
+              <Literal>ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectAbilityIncrease(FloatToInt(</Literal>
               <Scope data="argument" ref="Ability Increase">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="Ability">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -9980,7 +9983,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -9988,17 +9991,17 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectACDecrease(</Literal>
+              <Literal>ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectACDecrease(FloatToInt(</Literal>
               <Scope data="argument" ref="AC Decrease">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>), </Literal>
+              <Literal>)), </Literal>
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -10042,7 +10045,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10050,17 +10053,17 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectACIncrease(</Literal>
+              <Literal>ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectACIncrease(FloatToInt(</Literal>
               <Scope data="argument" ref="AC Increase">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>), </Literal>
+              <Literal>)), </Literal>
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -10153,7 +10156,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -10171,11 +10174,11 @@
               <Literal>int nMillisecond = 0;</Literal>
             </Line>
             <Line>
-              <Literal>nHour += </Literal>
+              <Literal>nHour += FloatToInt(</Literal>
               <Scope data="argument" ref="The Hours">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>;</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
               <Literal>SetTime(nHour, nMinute, nSecond, nMillisecond);</Literal>
@@ -10218,7 +10221,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -10236,11 +10239,11 @@
               <Literal>int nMillisecond = 0;</Literal>
             </Line>
             <Line>
-              <Literal>nHour += </Literal>
+              <Literal>nHour += FloatToInt(</Literal>
               <Scope data="argument" ref="The Hours">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>;</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
               <Literal>AssignCommand(</Literal>
@@ -10275,7 +10278,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10283,7 +10286,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10291,7 +10294,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10299,7 +10302,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -10317,32 +10320,32 @@
               <Literal>int nMillisecond = GetTimeMillisecond();</Literal>
             </Line>
             <Line>
-              <Literal>nHour += </Literal>
+              <Literal>nHour += FloatToInt(</Literal>
               <Scope data="argument" ref="The Hours">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>;</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
-              <Literal>nMinute += </Literal>
+              <Literal>nMinute += FloatToInt(</Literal>
               <Scope data="argument" ref="The Minutes">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>;</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
-              <Literal>nSecond += </Literal>
+              <Literal>nSecond += FloatToInt(</Literal>
               <Scope data="argument" ref="The Seconds">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>;</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
-              <Literal>nMillisecond += </Literal>
+              <Literal>nMillisecond += FloatToInt(</Literal>
               <Scope data="argument" ref="The Milliseconds">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>;</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
               <Literal>SetTime(nHour, nMinute, nSecond, nMillisecond);</Literal>
@@ -10385,7 +10388,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10393,7 +10396,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10401,7 +10404,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10409,7 +10412,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -10427,32 +10430,32 @@
               <Literal>int nMillisecond = GetTimeMillisecond();</Literal>
             </Line>
             <Line>
-              <Literal>nHour += </Literal>
+              <Literal>nHour += FloatToInt(</Literal>
               <Scope data="argument" ref="The Hours">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>;</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
-              <Literal>nMinute += </Literal>
+              <Literal>nMinute += FloatToInt(</Literal>
               <Scope data="argument" ref="The Minutes">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>;</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
-              <Literal>nSecond += </Literal>
+              <Literal>nSecond += FloatToInt(</Literal>
               <Scope data="argument" ref="The Seconds">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>;</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
-              <Literal>nMillisecond += </Literal>
+              <Literal>nMillisecond += FloatToInt(</Literal>
               <Scope data="argument" ref="The Milliseconds">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>;</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
               <Literal>AssignCommand(</Literal>
@@ -10487,7 +10490,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10495,7 +10498,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10503,25 +10506,25 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetCalendar(</Literal>
+              <Literal>SetCalendar(FloatToInt(</Literal>
               <Scope data="argument" ref="Year">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), FloatToInt(</Literal>
               <Scope data="argument" ref="Month">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), FloatToInt(</Literal>
               <Scope data="argument" ref="Day">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -10549,7 +10552,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10563,11 +10566,11 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetLocalInt(GetModule(), </Literal>
+              <Literal>SetLocalInt(GetModule(), FloatToInt(</Literal>
               <Scope data="argument" ref="Integer Value">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="Label">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -10599,7 +10602,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10665,7 +10668,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10831,7 +10834,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10857,11 +10860,11 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetLocalInt(</Literal>
+              <Literal>SetLocalInt(FloatToInt(</Literal>
               <Scope data="argument" ref="Binary Value">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -10897,7 +10900,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10911,11 +10914,11 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetLocalInt(GetModule(), </Literal>
+              <Literal>SetLocalInt(GetModule(), FloatToInt(</Literal>
               <Scope data="argument" ref="Binary Value">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="Label">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -10959,7 +10962,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -10977,11 +10980,11 @@
               <Scope data="argument" ref="Assigner">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionDoCommand(SetLocalInt(GetModule(), </Literal>
+              <Literal>, ActionDoCommand(SetLocalInt(GetModule(), FloatToInt(</Literal>
               <Scope data="argument" ref="Binary Value">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="Label">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -12087,7 +12090,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -12168,7 +12171,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -12370,7 +12373,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -12545,7 +12548,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -12610,7 +12613,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -12675,7 +12678,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -12744,7 +12747,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -13059,7 +13062,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -13113,7 +13116,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -13259,7 +13262,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -13267,7 +13270,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -13348,7 +13351,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -13356,7 +13359,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -13609,7 +13612,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -13724,7 +13727,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -13791,7 +13794,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -13910,7 +13913,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -14097,7 +14100,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -14105,7 +14108,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -14171,7 +14174,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -14179,7 +14182,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -14265,7 +14268,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -14393,7 +14396,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -14413,7 +14416,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -14488,7 +14491,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -14641,7 +14644,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -14752,7 +14755,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -14868,7 +14871,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -14988,7 +14991,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -14996,7 +14999,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -15123,7 +15126,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -15137,11 +15140,11 @@
               <Scope data="argument" ref="Alignment Type">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Alignment Shift">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -15197,7 +15200,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -15215,11 +15218,11 @@
               <Scope data="argument" ref="Alignment Type">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Alignment Shift">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>)));</Literal>
+              <Literal>))));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -15247,7 +15250,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -15605,7 +15608,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -15613,21 +15616,21 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>effect eImmunity = EffectDamageImmunityDecrease(</Literal>
+              <Literal>effect eImmunity = EffectDamageImmunityDecrease(FloatToInt(</Literal>
               <Scope data="argument" ref="Immunity Percentage">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), FloatToInt(</Literal>
               <Scope data="argument" ref="Immunity Type">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
             <Line>
               <Literal>ApplyEffectToObject(DURATION_TYPE_PERMANENT, eImmunity, </Literal>
@@ -15828,7 +15831,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -15838,11 +15841,11 @@
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, SetCommandable(</Literal>
+              <Literal>, SetCommandable(FloatToInt(</Literal>
               <Scope data="argument" ref="refuse">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -15882,7 +15885,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -15980,7 +15983,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -16240,7 +16243,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -16250,11 +16253,11 @@
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, SetIsDestroyable(</Literal>
+              <Literal>, SetIsDestroyable(FloatToInt(</Literal>
               <Scope data="argument" ref="Undestroyable">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -17191,7 +17194,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -17201,11 +17204,11 @@
               <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Immortal">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -17257,7 +17260,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -17271,11 +17274,11 @@
               <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Immortal">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>)));</Literal>
+              <Literal>))));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -17315,7 +17318,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -17325,11 +17328,11 @@
               <Scope data="argument" ref="Object">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Plot">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -17381,7 +17384,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -17395,11 +17398,11 @@
               <Scope data="argument" ref="Object">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Plot">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>)));</Literal>
+              <Literal>))));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -17584,7 +17587,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -17730,7 +17733,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -17755,11 +17758,11 @@
               <Scope data="argument" ref="User">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionOpenDoor(</Literal>
+              <Literal>, ActionOpenDoor(FloatToInt(</Literal>
               <Scope data="argument" ref="close">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>)));</Literal>
             </Line>
             <Line>
               <Literal>  else</Literal>
@@ -17813,7 +17816,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -17846,11 +17849,11 @@
               <Scope data="argument" ref="User">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionOpenDoor(</Literal>
+              <Literal>, ActionOpenDoor(FloatToInt(</Literal>
               <Scope data="argument" ref="close">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>)));</Literal>
+              <Literal>))));</Literal>
             </Line>
             <Line>
               <Literal>	else</Literal>
@@ -18079,7 +18082,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -18097,11 +18100,11 @@
               <Scope data="argument" ref="The Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionDoCommand(DoDoorAction(</Literal>
+              <Literal>, ActionDoCommand(DoDoorAction(FloatToInt(</Literal>
               <Scope data="argument" ref="Door Action">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="The Door">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -18229,7 +18232,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -18237,7 +18240,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -18255,19 +18258,19 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>effect dEff = EffectDamage(</Literal>
-              <Scope data="argument" ref="Target">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              <Literal>effect dEff = EffectDamage(FloatToInt(</Literal>
+              <Scope data="argument" ref="Amount">
+              	<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), FloatToInt(</Literal>
               <Scope data="argument" ref="Damage Type">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
             <Line>
               <Literal>ApplyEffectToObject(DURATION_TYPE_INSTANT, dEff, </Literal>
-              <Scope data="argument" ref="Amount">
+                <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -18310,7 +18313,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -18318,7 +18321,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -18340,22 +18343,22 @@
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Damage Type">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
             <Line>
               <Literal>AssignCommand(</Literal>
               <Scope data="argument" ref="Damager">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionDoCommand(ApplyEffectToObject(DURATION_TYPE_INSTANT, dEff, </Literal>
+              <Literal>, ActionDoCommand(ApplyEffectToObject(DURATION_TYPE_INSTANT, dEff, FloatToInt(</Literal>
               <Scope data="argument" ref="Amount">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>)));</Literal>
+              <Literal>))));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -18433,17 +18436,17 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>effect hEff = EffectHeal(</Literal>
+              <Literal>effect hEff = EffectHeal(FloatToInt(</Literal>
               <Scope data="argument" ref="Amount">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
             <Line>
               <Literal>ApplyEffectToObject(DURATION_TYPE_INSTANT, hEff, </Literal>
@@ -18502,17 +18505,17 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>effect hEff = EffectHeal(</Literal>
+              <Literal>effect hEff = EffectHeal(FloatToInt(</Literal>
               <Scope data="argument" ref="Amount">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
             <Line>
               <Literal>AssignCommand(</Literal>
@@ -18551,7 +18554,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -18573,11 +18576,11 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetActionMode(</Literal>
+              <Literal>SetActionMode(FloatToInt(</Literal>
               <Scope data="argument" ref="Deactivate">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -18621,7 +18624,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -18647,11 +18650,11 @@
               <Scope data="argument" ref="Action Mode Setter">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, SetActionMode(</Literal>
+              <Literal>, SetActionMode(FloatToInt(</Literal>
               <Scope data="argument" ref="deactivate">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -18769,7 +18772,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -18779,11 +18782,11 @@
               <Scope data="argument" ref="Speaker">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionDoCommand(PlayVoiceChat(</Literal>
+              <Literal>, ActionDoCommand(PlayVoiceChat(FloatToInt(</Literal>
               <Scope data="argument" ref="Voice Chat">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>)));</Literal>
+              <Literal>))));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -18877,7 +18880,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -18887,11 +18890,11 @@
               <Scope data="argument" ref="Speaker">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionSpeakStringByStrRef(</Literal>
+              <Literal>, ActionSpeakStringByStrRef(FloatToInt(</Literal>
               <Scope data="argument" ref="String Reference Number">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -19136,7 +19139,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>creature</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -19144,22 +19147,22 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetCreatureBodyPart(</Literal>
+              <Literal>SetCreatureBodyPart(FloatToInt(</Literal>
               <Scope data="argument" ref="Body Part">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), FloatToInt(</Literal>
               <Scope data="argument" ref="Model Number">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
-              <Scope data="argument" ref="Model Number">
+              <Literal>), </Literal>
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -19236,7 +19239,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -19352,7 +19355,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -19510,7 +19513,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -19602,7 +19605,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -19718,7 +19721,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -19868,7 +19871,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -19934,7 +19937,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -20054,7 +20057,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -20232,7 +20235,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -20390,7 +20393,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -20446,7 +20449,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -20494,7 +20497,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -20550,7 +20553,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -20794,7 +20797,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -20808,11 +20811,11 @@
               <Scope data="argument" ref="Faction Member">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Change">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -20856,7 +20859,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -20910,7 +20913,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -21162,7 +21165,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>void</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -21281,7 +21284,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set the PC&apos;s camera facing to be &lt;Direction&gt; &lt;Distance&gt; at &lt;Pitch&gt; at &lt;Speed&gt;</Name>
+          <Name>Set the PC&apos;s camera facing to be &lt;Direction&gt; &lt;Distance&gt; at &lt;Pitch&gt; with &lt;Transition Type&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>378</Id>
@@ -21294,7 +21297,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -21302,7 +21305,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -21310,11 +21313,11 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Speed</Name>
+              <Name>Transition Type</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -21337,7 +21340,7 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Speed">
+              <Scope data="argument" ref="Transition Type">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -21355,7 +21358,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;The Activator&gt; triggers a set PC&apos;s camera facing to be &lt;Direction&gt; &lt;Distance&gt; at &lt;Pitch&gt; at &lt;Speed&gt;</Name>
+          <Name>&lt;The Activator&gt; triggers a set PC&apos;s camera facing to be &lt;Direction&gt; &lt;Distance&gt; at &lt;Pitch&gt; with &lt;Transition Type&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>379</Id>
@@ -21380,7 +21383,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -21388,7 +21391,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -21396,11 +21399,11 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Speed</Name>
+              <Name>Transition Type</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -21427,7 +21430,7 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Speed">
+              <Scope data="argument" ref="Transition Type">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>)));</Literal>
@@ -21496,7 +21499,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -21512,18 +21515,18 @@
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
-              <Scope data="argument" ref="Amount">
+              <Scope data="argument" ref="Recipient">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, GiveGoldToCreature(</Literal>
               <Scope data="argument" ref="Recipient">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Amount">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -21551,7 +21554,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -21565,11 +21568,11 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>GiveXPToCreature(</Literal>
+              <Literal>GiveXPToCreature(FloatToInt(</Literal>
               <Scope data="argument" ref="Amount">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="Recipient">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -21671,7 +21674,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -21681,11 +21684,11 @@
               <Scope data="argument" ref="Recipient">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="XP Amount">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -21713,7 +21716,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -21731,11 +21734,11 @@
               <Scope data="argument" ref="Player">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, TakeGoldFromCreature(</Literal>
+              <Literal>, TakeGoldFromCreature(FloatToInt(</Literal>
               <Scope data="argument" ref="Amount">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="Player">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -21813,7 +21816,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -21835,11 +21838,11 @@
               <Scope data="argument" ref="Player">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>) - </Literal>
+              <Literal>) - FloatToInt(</Literal>
               <Scope data="argument" ref="Amount">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -21937,7 +21940,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -22033,17 +22036,17 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetMaxHenchmen(</Literal>
+              <Literal>SetMaxHenchmen(FloatToInt(</Literal>
               <Scope data="argument" ref="Number of Henchmen">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -22071,7 +22074,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -22096,7 +22099,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -22109,11 +22112,11 @@
               <Literal>;</Literal>
             </Line>
             <Line>
-              <Literal>object owner = </Literal>
+              <Literal>object owner = FloatToInt(</Literal>
               <Scope data="argument" ref="The Number">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>;</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
               <Literal>string resref = </Literal>
@@ -22173,11 +22176,11 @@
             </Line>
             <Line/>
             <Line>
-              <Literal> if(</Literal>
+              <Literal> if(FloatToInt(</Literal>
               <Scope data="argument" ref="not including its equipped items">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>)</Literal>
+              <Literal>))</Literal>
             </Line>
             <Line>
               <Literal>    {</Literal>
@@ -22287,7 +22290,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -22301,11 +22304,11 @@
               <Scope data="argument" ref="Equipment">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Slot">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -22693,7 +22696,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>question</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -22743,7 +22746,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -22753,11 +22756,11 @@
               <Scope data="argument" ref="The Item">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="The Stack Size">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -22793,7 +22796,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -22803,11 +22806,11 @@
               <Scope data="argument" ref="The Item">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Charges">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -22855,7 +22858,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -22869,11 +22872,11 @@
               <Scope data="argument" ref="The Item">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Charges">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -23769,7 +23772,7 @@
           <Labels/>
           <Id>419</Id>
           <Types>
-            <Type>int</Type>
+            <Type>float</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -23785,11 +23788,11 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>return GetCurrentHitPoints(</Literal>
+              <Literal>return IntToFloat(GetCurrentHitPoints(</Literal>
               <Scope data="argument" ref="Object">
                 <Fragment data="name"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -23807,7 +23810,7 @@
           <Labels/>
           <Id>420</Id>
           <Types>
-            <Type>int</Type>
+            <Type>float</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -23823,11 +23826,11 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>return GetMaxHitPoints(</Literal>
+              <Literal>return IntToFloat(GetMaxHitPoints(</Literal>
               <Scope data="argument" ref="Object">
                 <Fragment data="name"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -23853,7 +23856,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -23861,7 +23864,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -24417,7 +24420,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -24441,7 +24444,7 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>ActionDoCommand(SetLocalInt(</Literal>
+              <Literal>ActionDoCommand(SetLocalFloat(</Literal>
               <Scope data="argument" ref="Object">
                 <Fragment data="name"/>
               </Scope>
@@ -24497,7 +24500,7 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>ActionDoCommand(SetLocalInt(</Literal>
+              <Literal>ActionDoCommand(SetLocalFloat(</Literal>
               <Scope data="argument" ref="Object">
                 <Fragment data="name"/>
               </Scope>
@@ -24505,7 +24508,7 @@
               <Scope data="argument" ref="Named">
                 <Fragment data="name"/>
               </Scope>
-              <Literal>, !getLocalInt(</Literal>
+              <Literal>, !GetLocalFloat(</Literal>
               <Scope data="argument" ref="Object">
                 <Fragment data="name"/>
               </Scope>
@@ -25069,7 +25072,7 @@
           <Labels/>
           <Id>457</Id>
           <Types>
-            <Type>int</Type>
+            <Type>float</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -25093,7 +25096,7 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>return GetLocalInt(</Literal>
+              <Literal>return GetLocalFloat(</Literal>
               <Scope data="argument" ref="Object">
                 <Fragment data="name"/>
               </Scope>
@@ -25114,7 +25117,7 @@
       <Visible>true</Visible>
       <Labels/>
       <Types>
-        <Type>int</Type>
+        <Type>float</Type>
       </Types>
       <Binding flavour="function">
         <ScriptIt reference="/APIDictionary/Effects/ScriptIt[271]"/>
@@ -25125,7 +25128,7 @@
       <Visible>true</Visible>
       <Labels/>
       <Types>
-        <Type>int</Type>
+        <Type>float</Type>
       </Types>
       <Binding flavour="function">
         <ScriptIt reference="/APIDictionary/Effects/ScriptIt[272]"/>
@@ -25285,7 +25288,7 @@
                     <Visible>true</Visible>
                     <Labels/>
                     <Types>
-                      <Type>int</Type>
+                      <Type>float</Type>
                     </Types>
                   </KnowIt>
                 </KnowItNode>
@@ -25330,7 +25333,7 @@
                         <Visible>true</Visible>
                         <Labels/>
                         <Types>
-                          <Type>int</Type>
+                          <Type>float</Type>
                         </Types>
                       </KnowIt>
                       <KnowIt>
@@ -25362,11 +25365,11 @@
                         <Scope data="argument" ref="object">
                           <Fragment data="name"/>
                         </Scope>
-                        <Literal>, </Literal>
+                        <Literal>, FloatToInt(</Literal>
                         <Scope data="argument" ref="nth">
                           <Fragment data="name"/>
                         </Scope>
-                        <Literal>);</Literal>
+                        <Literal>));</Literal>
                       </Line>
                     </Code>
                   </CodeBlockSource>
@@ -25461,7 +25464,7 @@
                         <Visible>true</Visible>
                         <Labels/>
                         <Types>
-                          <Type>int</Type>
+                          <Type>float</Type>
                         </Types>
                       </KnowIt>
                       <KnowIt>
@@ -25481,11 +25484,11 @@
                         <Scope data="argument" ref="object">
                           <Fragment data="name"/>
                         </Scope>
-                        <Literal>, </Literal>
+                        <Literal>, FloatToInt(</Literal>
                         <Scope data="argument" ref="nth">
                           <Fragment data="name"/>
                         </Scope>
-                        <Literal>);</Literal>
+                        <Literal>));</Literal>
                       </Line>
                     </Code>
                   </CodeBlockSource>
@@ -25716,7 +25719,7 @@
       <Visible>true</Visible>
       <Labels/>
       <Types>
-        <Type>int</Type>
+        <Type>float</Type>
       </Types>
       <Binding flavour="function">
         <ScriptIt reference="/APIDictionary/Effects/ScriptIt[301]"/>
@@ -25756,47 +25759,5 @@
       </Binding>
     </KnowIt>
   </DescribeIts>
-  <TypeConverters>
-    <ScriptIt>
-      <Name>Convert item &lt;value&gt; to string</Name>
-      <Visible>true</Visible>
-      <Labels/>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>Convert item &lt;value&gt; to string</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Id>458</Id>
-          <Types>
-            <Type>string</Type>
-          </Types>
-          <Parameters>
-            <KnowIt>
-              <Name>value</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>item</Type>
-              </Types>
-              <Binding flavour="runTime">
-                <Types>
-                  <Type>item</Type>
-                </Types>
-              </Binding>
-            </KnowIt>
-          </Parameters>
-          <Code>
-            <Line>
-              <Literal>return GetTag(</Literal>
-              <Scope data="argument" ref="value">
-                <Fragment data="name"/>
-              </Scope>
-              <Literal>);</Literal>
-            </Line>
-          </Code>
-        </CodeBlockSource>
-      </CodeBlocks>
-    </ScriptIt>
-  </TypeConverters>
+  <TypeConverters/>
 </APIDictionary>
