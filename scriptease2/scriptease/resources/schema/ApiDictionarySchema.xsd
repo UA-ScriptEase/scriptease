@@ -62,7 +62,7 @@
 	<!-- Defines a list of TypeConverter definitions -->
 	<xsd:complexType name="TypeConverterList_Type">
 		<xsd:sequence>
-			<xsd:element maxOccurs="unbounded" name="ScriptIt" type="ScriptIt_Type" />
+			<xsd:element minOccurs ="0" maxOccurs="unbounded" name="ScriptIt" type="ScriptIt_Type" />
 		</xsd:sequence>
 	</xsd:complexType>
 
