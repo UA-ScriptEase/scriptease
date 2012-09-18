@@ -106,6 +106,13 @@
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
+    	<Name>MusicTrack</Name>
+    	<Keyword>music_track</Keyword>
+    	<CodeSymbol>int</CodeSymbol>
+    	<Enum>TRACK_BATTLE_ARIBETH&lt;Combat Aribeth&gt;|TRACK_BATTLE_CITY1&lt;City Combat 1&gt;|TRACK_BATTLE_CITY2&lt;City Combat 2&gt;|TRACK_BATTLE_CITY3&lt;City Combat 3&gt;|TRACK_BATTLE_CITYBOSS&lt;City Boss Combat&gt;|TRACK_BATTLE_DESERT&lt;Desert Combat&gt;|TRACK_BATTLE_DRAGON&lt;Dragon Combat&gt;|TRACK_BATTLE_DUNGEON1&lt;Dungeon Combat 1&gt;|TRACK_BATTLE_DUNGEON2&lt;Dungeon Combat 2&gt;|TRACK_BATTLE_DUNGEON3&lt;Dungeon Combat 3&gt;|TRACK_BATTLE_ENDBOSS&lt;Final Boss Combat&gt;|TRACK_BATTLE_FOREST1&lt;Forest Combat 1&gt;|TRACK_BATTLE_FOREST2&lt;Forest Combat 2&gt;|TRACK_BATTLE_FORESTBOSS&lt;Forest Boss Combat&gt;|TRACK_BATTLE_LIZARDBOSS&lt;Lizardfolk Boss Combat&gt;|TRACK_BATTLE_RURAL1&lt;Rural Combat&gt;|TRACK_BATTLE_WINTER&lt;Winter Combat&gt;|TRACK_CASTLE&lt;Generic Castle Interior&gt;|TRACK_CITYDOCKDAY&lt;City Docks Day&gt;|TRACK_CITYDOCKNIGHT&lt;City Docks Night&gt;|TRACK_CITYMARKET&lt;City Marketplace&gt;|TRACK_CITYNIGHT&lt;City Night&gt;|TRACK_CITYSLUMDAY&lt;City Slum Day&gt;|TRACK_CITYSLUMNIGHT&lt;City Slum Night&gt;|TRACK_CITYWEALTHY&lt;City Wealthy&gt;|TRACK_CRYPT1&lt;Crypt 1&gt;|TRACK_CRYPT2&lt;Crypt 2&gt;|TRACK_DESERT_DAY&lt;Desert Day&gt;|TRACK_DESERT_NIGHT&lt;Desert Night&gt;|TRACK_DUNGEON1&lt;Generic Dungeon&gt;|TRACK_EVILDUNGEON1&lt;Evil Dungeon 1&gt;|TRACK_EVILDUNGEON2&lt;Evil Dungeon 2&gt;|TRACK_FORESTDAY1&lt;Forest Day 1&gt;|TRACK_FORESTDAY2&lt;Forest Day 2&gt;|TRACK_FORESTNIGHT&lt;Forest Night&gt;|TRACK_HOTU_BATTLE_BOSS1&lt;XP2 - Battle, Matron&gt;|TRACK_HOTU_BATTLE_BOSS2&lt;XP2 - Battle, Final&gt;|TRACK_HOTU_BATTLE_HELL&lt;XP2 - Battle, Chapter 3&gt;|TRACK_HOTU_BATTLE_LARGE&lt;XP2 - Battle, Large&gt;|TRACK_HOTU_BATTLE_MED&lt;XP2 - Battle, Medium&gt;|TRACK_HOTU_BATTLE_SMALL&lt;XP2 - Battle, Small&gt;|TRACK_HOTU_DRACOLICH&lt;XP2 - Dracolich&gt;|TRACK_HOTU_FIREPLANE&lt;XP2 - Beholder Caves&gt;|TRACK_HOTU_HELLFROZEOVER&lt;XP2 - Chapter 3&gt;|TRACK_HOTU_QUEEN&lt;XP2 - Queen of the Shattered Mirror&gt;|TRACK_HOTU_REBELCAMP&lt;XP2 - Rebel Camp&gt;|TRACK_HOTU_THEME&lt;XP2 - Theme&gt;|TRACK_HOTU_UNDERMOUNTAIN&lt;XP2 - Undermountain&gt;|TRACK_HOTU_WATERDEEP&lt;XP2 - Waterdeep&gt;|TRACK_MINES1&lt;Mines 1&gt;|TRACK_MINES2&lt;Mines 2&gt;|TRACK_RICHHOUSE&lt;Generic Wealthy House&gt;|TRACK_RURALDAY1&lt;Rural Day 1&gt;|TRACK_RURALDAY2&lt;Rural Day 2&gt;|TRACK_RURALNIGHT&lt;Rural Night&gt;|TRACK_SEWER&lt;Sewer&gt;|TRACK_STORE&lt;Generic Store&gt;|TRACK_TAVERN1&lt;Tavern 1&gt;|TRACK_TAVERN2&lt;Tavern 2&gt;|TRACK_TAVERN3&lt;Tavern 3&gt;|TRACK_TAVERN4&lt;Tavern 4&gt;|TRACK_TEMPLEEVIL&lt;Evil Temple&gt;|TRACK_TEMPLEGOOD&lt;Good Temple&gt;|TRACK_TEMPLEGOOD2&lt;Good Temple 2&gt;|TRACK_THEME_ARIBETH1&lt;Aribeth Theme 1&gt;|TRACK_THEME_ARIBETH2&lt;Aribeth Theme 2&gt;|TRACK_THEME_CHAPTER1&lt;NWN Chapter 1&gt;|TRACK_THEME_CHAPTER2&lt;NWN Chapter 2&gt;|TRACK_THEME_CHAPTER3&lt;NWN Chapter 3&gt;|TRACK_THEME_CHAPTER4&lt;NWN Chapter 4&gt;|TRACK_THEME_GEND&lt;Theme Aarin Gend&gt;|TRACK_THEME_MAUGRIM&lt;Theme Maugrim&gt;|TRACK_THEME_MORAG&lt;Theme Morag&gt;|TRACK_THEME_NWN&lt;NWN City Theme&gt;|TRACK_WINTER_DAY&lt;Winter Day&gt;</Enum>
+    	<GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
       <Name>LockModify</Name>
       <Keyword>lock_modify</Keyword>
       <CodeSymbol>int</CodeSymbol>
@@ -192,13 +199,6 @@
       <Keyword>spell_visual_effect</Keyword>
       <CodeSymbol>int</CodeSymbol>
       <Enum>VFX_DUR_LIGHT_PURPLE_20&lt;Dur Light Purple 20&gt;|VFX_DUR_GHOSTLY_PULSE&lt;Dur Ghostly Pulse&gt;|VFX_DUR_LIGHT_YELLOW_15&lt;Dur Light Yellow 15&gt;|VFX_DUR_CESSATE_NEGATIVE&lt;Dur Cessate Negative&gt;|VFX_DUR_LIGHT_YELLOW_5&lt;Dur Light Yellow 5&gt;|VFX_DUR_LIGHT_RED_5&lt;Dur Light Red 5&gt;|VFX_DUR_CALTROPS&lt;Dur Caltrops&gt;|VFX_DUR_AURA_DISEASE&lt;Dur Aura Disease&gt;|VFX_DUR_LIGHT_PURPLE_5&lt;Dur Light Purple 5&gt;|VFX_DUR_AURA_POISON&lt;Dur Aura Poison&gt;|VFX_DUR_LIGHT_BLUE_5&lt;Dur Light Blue 5&gt;|VFX_DUR_DARKVISION&lt;Dur Darkvision&gt;|VFX_DUR_FLAG_YELLOW&lt;Dur Flag Yellow&gt;|VFX_DUR_LIGHT_BLUE_20&lt;Dur Light Blue 20&gt;|VFX_DUR_LIGHT_YELLOW_10&lt;Dur Light Yellow 10&gt;|VFX_DUR_MIND_AFFECTING_POSITIVE&lt;Dur Mind Affecting Positive&gt;|VFX_DUR_FLAG_PURPLE&lt;Dur Flag Purple&gt;|VFX_DUR_MIND_AFFECTING_NEGATIVE&lt;Dur Mind Affecting Negative&gt;|VFX_DUR_ULTRAVISION&lt;Dur Ultravision&gt;|VFX_DUR_LIGHT_ORANGE_20&lt;Dur Light Orange 20&gt;|VFX_DUR_GLOBE_MINOR&lt;Dur Globe Minor&gt;|VFX_DUR_PROTECTION_EVIL_MAJOR&lt;Dur Protection Evil Major&gt;|VFX_DUR_AURA_FIRE&lt;Dur Aura Fire&gt;|VFX_DUR_ETHEREAL_VISAGE&lt;Dur Ethereal Visage&gt;|VFX_DUR_LIGHT_PURPLE_10&lt;Dur Light Purple 10&gt;|VFX_DUR_LIGHT_PURPLE_15&lt;Dur Light Purple 15&gt;|VFX_DUR_MIRV_ACID&lt;Dur Mirv Acid&gt;|VFX_DUR_GHOSTLY_VISAGE&lt;Dur Ghostly Visage&gt;|VFX_DUR_PROT_SHADOW_ARMOR&lt;Dur Prot Shadow Armor&gt;|VFX_DUR_AURA_DRAGON_FEAR&lt;Dur Aura Dragon Fear&gt;|VFX_DUR_LIGHT_ORANGE_15&lt;Dur Light Orange 15&gt;|VFX_DUR_PROT_BARKSKIN&lt;Dur Prot Barkskin&gt;|VFX_DUR_LIGHT_RED_20&lt;Dur Light Red 20&gt;|VFX_DUR_AURA_SILENCE&lt;Dur Aura Silence&gt;|VFX_DUR_BLIND&lt;Dur Blind&gt;|VFX_DUR_LIGHT_YELLOW_20&lt;Dur Light Yellow 20&gt;|VFX_DUR_CUTSCENE_INVISIBILITY&lt;Dur Cutscene Invisibility&gt;|VFX_DUR_LIGHT_ORANGE_10&lt;Dur Light Orange 10&gt;|VFX_DUR_FLAG_RED&lt;Dur Flag Red&gt;|VFX_DUR_FREEDOM_OF_MOVEMENT&lt;Dur Freedom Of Movement&gt;|VFX_DUR_SANCTUARY&lt;Dur Sanctuary&gt;|VFX_DUR_WEB&lt;Dur Web&gt;|VFX_DUR_BIGBYS_CLENCHED_FIST&lt;Dur Bigbys Clenched Fist&gt;|VFX_DUR_PROTECTION_EVIL_MINOR&lt;Dur Protection Evil Minor&gt;|VFX_DUR_MAGICAL_SIGHT&lt;Dur Magical Sight&gt;|VFX_DUR_LIGHT_ORANGE_5&lt;Dur Light Orange 5&gt;|VFX_DUR_LIGHT_WHITE_20&lt;Dur Light White 20&gt;|VFX_DUR_LIGHT_RED_15&lt;Dur Light Red 15&gt;|VFX_DUR_MIND_AFFECTING_DISABLED&lt;Dur Mind Affecting Disabled&gt;|VFX_DUR_FLAG_BLUE&lt;Dur Flag Blue&gt;|VFX_DUR_LOWLIGHTVISION&lt;Dur Lowlightvision&gt;|VFX_DUR_LIGHT_RED_10&lt;Dur Light Red 10&gt;|VFX_DUR_MAGIC_RESISTANCE&lt;Dur Magic Resistance&gt;|VFX_DUR_LIGHT&lt;Dur Light&gt;|VFX_DUR_LIGHT_GREY_20&lt;Dur Light Grey 20&gt;|VFX_DUR_DARKNESS&lt;Dur Darkness&gt;|VFX_DUR_SPELLTURNING&lt;Dur Spellturning&gt;|VFX_DUR_PARALYZE_HOLD&lt;Dur Paralyze Hold&gt;|VFX_DUR_AURA_COLD&lt;Dur Aura Cold&gt;|VFX_DUR_ENTANGLE&lt;Dur Entangle&gt;|VFX_DUR_PROT_PREMONITION&lt;Dur Prot Premonition&gt;|VFX_DUR_LIGHT_WHITE_15&lt;Dur Light White 15&gt;|VFX_DUR_PROT_GREATER_STONESKIN&lt;Dur Prot Greater Stoneskin&gt;|VFX_DUR_LIGHT_WHITE_5&lt;Dur Light White 5&gt;|VFX_DUR_FREEZE_ANIMATION&lt;Dur Freeze Animation&gt;|VFX_DUR_PARALYZED&lt;Dur Paralyzed&gt;|VFX_DUR_INVISIBILITY&lt;Dur Invisibility&gt;|VFX_DUR_AURA_ODD&lt;Dur Aura Odd&gt;|VFX_DUR_BLACKOUT&lt;Dur Blackout&gt;|VFX_DUR_BARD_SONG&lt;Dur Bard Song&gt;|VFX_DUR_PROTECTION_GOOD_MINOR&lt;Dur Protection Good Minor&gt;|VFX_DUR_PETRIFY&lt;Dur Petrify&gt;|VFX_DUR_MIND_AFFECTING_FEAR&lt;Dur Mind Affecting Fear&gt;|VFX_DUR_MIND_AFFECTING_DOMINATED&lt;Dur Mind Affecting Dominated&gt;|VFX_DUR_LIGHT_WHITE_10&lt;Dur Light White 10&gt;|VFX_DUR_BIGBYS_GRASPING_HAND&lt;Dur Bigbys Grasping Hand&gt;|VFX_DUR_WEB_MASS&lt;Dur Web Mass&gt;|VFX_DUR_BLUR&lt;Dur Blur&gt;|VFX_DUR_LIGHT_BLUE_10&lt;Dur Light Blue 10&gt;|VFX_DUR_CESSATE_POSITIVE&lt;Dur Cessate Positive&gt;|VFX_DUR_LIGHT_GREY_5&lt;Dur Light Grey 5&gt;|VFX_DUR_BIGBYS_CRUSHING_HAND&lt;Dur Bigbys Crushing Hand&gt;|VFX_DUR_ANTI_LIGHT_10&lt;Dur Anti Light 10&gt;|VFX_DUR_LIGHT_GREY_15&lt;Dur Light Grey 15&gt;|VFX_DUR_CESSATE_NEUTRAL&lt;Dur Cessate Neutral&gt;|VFX_DUR_ELEMENTAL_SHIELD&lt;Dur Elemental Shield&gt;|VFX_DUR_PROT_STONESKIN&lt;Dur Prot Stoneskin&gt;|VFX_DUR_GLOBE_INVULNERABILITY&lt;Dur Globe Invulnerability&gt;|VFX_DUR_LIGHT_BLUE_15&lt;Dur Light Blue 15&gt;|VFX_DUR_PROTECTION_GOOD_MAJOR&lt;Dur Protection Good Major&gt;|VFX_DUR_BIGBYS_INTERPOSING_HAND&lt;Dur Bigbys Interposing Hand&gt;|VFX_DUR_LIGHT_GREY_10&lt;Dur Light Grey 10&gt;</Enum>
-      <GUI>JCOMBOBOX</GUI>
-    </Type>
-    <Type>
-      <Name>Cheat</Name>
-      <Keyword>cheat</Keyword>
-      <CodeSymbol>int</CodeSymbol>
-      <Enum>FALSE&lt;No&gt;|TRUE&lt;Yes&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -372,6 +372,13 @@
       <Keyword>question</Keyword>
       <CodeSymbol>int</CodeSymbol>
       <Enum>FALSE&lt;No&gt;|TRUE&lt;Yes&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
+    </Type>
+     <Type>
+      <Name>Immortal</Name>
+      <Keyword>immortal</Keyword>
+      <CodeSymbol>int</CodeSymbol>
+      <Enum>FALSE&lt;Mortal&gt;|TRUE&lt;Immortal&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -7262,7 +7269,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;, initialize Story System and</Name>
+      <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;, start the Story and</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -7293,7 +7300,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;, initialize Story System and</Name>
+          <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;, start the Story and</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -7355,6 +7362,9 @@
               </Scope>
               <Literal>, STORY_POINT_STATE_ENABLED);</Literal>
             </Line>
+            <Line>
+              <FormatRef data="NONE" ref="children"/>
+            </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -7365,7 +7375,7 @@
       <Name>Play &lt;Sound&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -7747,7 +7757,7 @@
       <Name>&lt;Creature&gt; jumps &lt;Distance&gt; meters towards &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -8215,7 +8225,7 @@
       <Name>Play a &lt;Character Theme&gt; for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -8272,7 +8282,7 @@
       <Name>Play an old theme for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -8311,7 +8321,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Play &lt;Sound Object&gt;</Name>
+      <Name>Play &lt;Sound&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -8319,7 +8329,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Play &lt;Sound Object&gt;</Name>
+          <Name>Play &lt;Sound&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>161</Id>
@@ -8328,7 +8338,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Sound Object</Name>
+              <Name>Sound</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -8339,7 +8349,7 @@
           <Code>
             <Line>
               <Literal>SoundObjectPlay(</Literal>
-              <Scope data="argument" ref="Sound Object">
+              <Scope data="argument" ref="Sound">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -8349,7 +8359,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set &lt;Area&gt;&apos;s day background music to &lt;Daytime Track&gt;</Name>
+      <Name>Set &lt;Area&gt;&apos;s day background music to &lt;Music Track&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -8357,7 +8367,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;Area&gt;&apos;s day background music to &lt;Daytime Track&gt;</Name>
+          <Name>Set &lt;Area&gt;&apos;s day background music to &lt;Music Track&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>162</Id>
@@ -8374,11 +8384,11 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Daytime Track</Name>
+              <Name>Music Track</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>music_track</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -8391,22 +8401,22 @@
               <Literal>);</Literal>
             </Line>
             <Line>
-              <Literal>MusicBackgroundChangeDay</Literal>
-              <Scope data="argument" ref="(Are">
+              <Literal>MusicBackgroundChangeDay(</Literal>
+              <Scope data="argument" ref="Area">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>a,FloatToInt(</Literal>
-              <Scope data="argument" ref=" Daytime Track">
+              <Literal>, </Literal>
+              <Scope data="argument" ref="Music Track">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>);</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set &lt;Area&gt;&apos;s night background music to &lt;Nighttime Track&gt;</Name>
+      <Name>Set &lt;Area&gt;&apos;s night background music to &lt;Music Track&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -8414,7 +8424,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;Area&gt;&apos;s night background music to &lt;Nighttime Track&gt;</Name>
+          <Name>Set &lt;Area&gt;&apos;s night background music to &lt;Music Track&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>163</Id>
@@ -8431,11 +8441,11 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Nighttime Track</Name>
+              <Name>Music Track</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>music_track</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -8452,15 +8462,8 @@
               <Scope data="argument" ref="Area">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>,FloatToInt(</Literal>
-              <Scope data="argument" ref=" Nighttime Track">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>));</Literal>
-            </Line>
-            <Line>
-              <Literal>MusicBackgroundPlay(</Literal>
-              <Scope data="argument" ref="Area">
+              <Literal>, </Literal>
+              <Scope data="argument" ref="Music Track">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -8470,7 +8473,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set &lt;Area&gt;&apos;s battle music to &lt;Battle Track&gt;</Name>
+      <Name>Set &lt;Area&gt;&apos;s battle music to &lt;Music Track&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -8478,7 +8481,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;Area&gt;&apos;s battle music to &lt;Battle Track&gt;</Name>
+          <Name>Set &lt;Area&gt;&apos;s battle music to &lt;Music Track&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>164</Id>
@@ -8495,11 +8498,11 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Battle Track</Name>
+              <Name>Music Track</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>music_track</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -8509,11 +8512,11 @@
               <Scope data="argument" ref="Area">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>,FloatToInt(</Literal>
-              <Scope data="argument" ref="Battle Track">
+              <Literal>, </Literal>
+              <Scope data="argument" ref="Music Track">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>);</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -8599,7 +8602,7 @@
       <Name>&lt;Bufferer&gt; buffs itself if an enemy PC is within a distance of &lt;Buff Distance&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -8638,15 +8641,15 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Cast a cheat spell &lt;Spell&gt; on &lt;Target&gt; with cheat &lt;Cheat&gt;</Name>
+      <Name>Subject casts &lt;Spell&gt; on &lt;Target&gt; even if the spell is not known</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Cast a cheat spell &lt;Spell&gt; on &lt;Target&gt; with cheat &lt;Cheat&gt;</Name>
+          <Name>Subject casts &lt;Spell&gt; on &lt;Target&gt; even if the spell is not known</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>168</Id>
@@ -8674,14 +8677,6 @@
                 <Type>trigger</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
-              <Name>Cheat</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>cheat</Type>
-              </Types>
-            </KnowIt>
           </Parameters>
           <Code>
             <Line>
@@ -8693,26 +8688,22 @@
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, METAMAGIC_ANY, </Literal>
-              <Scope data="argument" ref="Cheat">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>);</Literal>
+              <Literal>, METAMAGIC_ANY, TRUE);</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Caster&gt; casts a cheat spell &lt;Spell&gt; on &lt;Target&gt; with cheat &lt;Cheat&gt;</Name>
+      <Name>&lt;Caster&gt; casts &lt;Spell&gt; on &lt;Target&gt; even if the spell is unknown</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Caster&gt; casts a cheat spell &lt;Spell&gt; on &lt;Target&gt; with cheat &lt;Cheat&gt;</Name>
+          <Name>&lt;Caster&gt; casts &lt;Spell&gt; on &lt;Target&gt; even if the spell is unknown</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>169</Id>
@@ -8752,14 +8743,6 @@
                 <Type>trigger</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
-              <Name>Cheat</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>cheat</Type>
-              </Types>
-            </KnowIt>
           </Parameters>
           <Code>
             <Line>
@@ -8775,18 +8758,14 @@
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, METAMAGIC_ANY, </Literal>
-              <Scope data="argument" ref="Cheat">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>));</Literal>
+              <Literal>, METAMAGIC_ANY, TRUE));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Caster&gt; casts a fake &lt;Spell&gt; on &lt;Target&gt;</Name>
+      <Name>&lt;Caster&gt; casts a fake &lt;Spell&gt; at &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -8794,7 +8773,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Caster&gt; casts a fake &lt;Spell&gt; on &lt;Target&gt;</Name>
+          <Name>&lt;Caster&gt; casts a fake &lt;Spell&gt; at &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>170</Id>
@@ -8907,7 +8886,7 @@
               <Scope data="argument" ref="Caster">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionCastFakeSpellAtObject(</Literal>
+              <Literal>, ActionCastFakeSpellAtLocation(</Literal>
               <Scope data="argument" ref="Spell">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -8922,7 +8901,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Caster&gt; casts a known &lt;Spell&gt; on &lt;Target&gt;</Name>
+      <Name>&lt;Caster&gt; casts a known &lt;Spell&gt; at &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -8930,7 +8909,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Caster&gt; casts a known &lt;Spell&gt; on &lt;Target&gt;</Name>
+          <Name>&lt;Caster&gt; casts a known &lt;Spell&gt; at &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>172</Id>
@@ -9058,7 +9037,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Caster&gt; force casts &lt;Spell&gt; on &lt;Target&gt;</Name>
+      <Name>&lt;Caster&gt; force casts &lt;Spell&gt; at &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -9066,7 +9045,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Caster&gt; force casts &lt;Spell&gt; on &lt;Target&gt;</Name>
+          <Name>&lt;Caster&gt; force casts &lt;Spell&gt; at &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>174</Id>
@@ -9244,7 +9223,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Give &lt;Target&gt; &lt;Negative Levels&gt; for &lt;Time&gt; seconds</Name>
+      <Name>Subtract &lt;Levels&gt; levels from &lt;Target&gt; for &lt;Time&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -9306,7 +9285,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Remove effect &lt;The Effect&gt; from &lt;The Target&gt;</Name>
+      <Name>Remove &lt;Effect&gt; from &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -9314,7 +9293,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Remove effect &lt;The Effect&gt; from &lt;The Target&gt;</Name>
+          <Name>Remove &lt;Effect&gt; from &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>178</Id>
@@ -9323,7 +9302,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>The Effect</Name>
+              <Name>Effect</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -9331,7 +9310,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>The Target</Name>
+              <Name>Target</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -9342,11 +9321,11 @@
           <Code>
             <Line>
               <Literal>RemoveSpecificEffect(</Literal>
-              <Scope data="argument" ref="The Effect">
+              <Scope data="argument" ref="Effect">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="The Target">
+              <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -9356,7 +9335,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;The Activator&gt; removes effect &lt;The Effect&gt; from &lt;The Target&gt;</Name>
+      <Name>&lt;Remover&gt; removes &lt;Effect&gt; from &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -9364,7 +9343,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;The Activator&gt; removes effect &lt;The Effect&gt; from &lt;The Target&gt;</Name>
+          <Name>&lt;Remover&gt; removes effect &lt;Effect&gt; from &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>179</Id>
@@ -9373,7 +9352,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>The Activator</Name>
+              <Name>Remover</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -9381,7 +9360,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>The Effect</Name>
+              <Name>Effect</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -9389,7 +9368,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>The Target</Name>
+              <Name>Target</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -9400,15 +9379,15 @@
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
-              <Scope data="argument" ref="The Activator">
+              <Scope data="argument" ref="Remover">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionDoCommand(RemoveSpecificEffect(</Literal>
-              <Scope data="argument" ref="The Effect">
+              <Scope data="argument" ref="Effect">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="The Target">
+              <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>)));</Literal>
@@ -9550,7 +9529,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Show &lt;The Text&gt; in the chat window of &lt;The PC&gt;</Name>
+      <Name>Show &lt;Text&gt; in the chat window of the Player Character</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -9558,7 +9537,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Show &lt;The Text&gt; in the chat window of &lt;The PC&gt;</Name>
+          <Name>Show &lt;Text&gt; in the chat window of the Player Character</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>183</Id>
@@ -9567,29 +9546,17 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>The Text</Name>
+              <Name>Text</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
                 <Type>string</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
-              <Name>The PC</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>SendMessageToPC(</Literal>
-              <Scope data="argument" ref="The PC">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
+              <Literal>SendMessageToPC(GetFirstPC(), </Literal>
               <Scope data="argument" ref="The Text">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -9600,7 +9567,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Speaker&gt; &lt;Speak&gt;s &lt;Text&gt;</Name>
+      <Name>&lt;Speaker&gt; speaks &lt;Text&gt; at &lt;Volume&gt; volume</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -9608,7 +9575,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Speaker&gt; &lt;Speak&gt;s &lt;Text&gt;</Name>
+          <Name>&lt;Speaker&gt; speaks &lt;Text&gt; at &lt;Volume&gt; volume</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>184</Id>
@@ -9628,13 +9595,17 @@
                 <Type>trigger</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
-              <Name>Speak</Name>
+             <KnowIt>
+              <Name>Volume</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>dialogue</Type>
+                <Type>talk_volume</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>talk_volume</Type>
+                <Value>TALKVOLUME_TALK</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Text</Name>
@@ -9652,11 +9623,11 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, SpeakString(</Literal>
-              <Scope data="argument" ref="Speak">
+              <Scope data="argument" ref="Text">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Text">
+              <Scope data="argument" ref="Volume">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>));</Literal>
@@ -9669,7 +9640,7 @@
       <Name>&lt;Speaker&gt; &lt;Speak&gt;s &lt;Text&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -9798,7 +9769,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Give &lt;Target&gt;-&lt;Ability Decrease&gt; &lt;Ability&gt; for &lt;Time&gt; seconds</Name>
+      <Name>Decrease &lt;Target&gt;'s &lt;Ability&gt; by &lt;Ability Decrease&gt; for &lt;Time&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -9806,7 +9777,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Give &lt;Target&gt;-&lt;Ability Decrease&gt; &lt;Ability&gt; for &lt;Time&gt; seconds</Name>
+          <Name>Decrease &lt;Target&gt;'s &lt;Ability&gt; by &lt;Ability Decrease&gt; for &lt;Time&gt; seconds</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>187</Id>
@@ -9820,10 +9791,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>placeable</Type>
-                <Type>door</Type>
-                <Type>item</Type>
-                <Type>trigger</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -9839,7 +9806,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>ability</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -9876,7 +9843,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Give &lt;Target&gt; &lt;Ability Increase&gt; &lt;Ability&gt; for &lt;Time&gt; seconds</Name>
+      <Name>Increase &lt;Target&gt;'s &lt;Ability&gt; by &lt;Ability Increase&gt; for &lt;Time&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -9884,7 +9851,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Give &lt;Target&gt; &lt;Ability Increase&gt; &lt;Ability&gt; for &lt;Time&gt; seconds</Name>
+          <Name>Increase &lt;Target&gt;'s &lt;Ability&gt; by &lt;Ability Increase&gt; for &lt;Time&gt; seconds</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>188</Id>
@@ -9898,10 +9865,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>placeable</Type>
-                <Type>door</Type>
-                <Type>item</Type>
-                <Type>trigger</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -9944,7 +9907,7 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Seconds">
+              <Scope data="argument" ref="Time">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -9954,7 +9917,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Give &lt;Target&gt; &lt;AC Decrease&gt; AC for &lt;Time&gt; seconds</Name>
+      <Name>Decrease &lt;Target&gt;'s armor class by &lt;AC Decrease&gt; for &lt;Time&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -9962,7 +9925,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Give &lt;Target&gt; &lt;AC Decrease&gt; AC for &lt;Time&gt; seconds</Name>
+          <Name>Decrease &lt;Target&gt;'s armor class by &lt;AC Decrease&gt; for &lt;Time&gt; seconds</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>189</Id>
@@ -10016,7 +9979,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Give &lt;Target&gt; &lt;AC Increase&gt; AC for &lt;Time&gt; seconds</Name>
+      <Name>Increase &lt;Target&gt;'s armor class by &lt;AC Increase&gt; for &lt;Time&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -10024,7 +9987,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Give &lt;Target&gt; &lt;AC Increase&gt; AC for &lt;Time&gt; seconds</Name>
+          <Name>Increase &lt;Target&gt;'s armor class by &lt;AC Increase&gt; for &lt;Time&gt; seconds</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>190</Id>
@@ -11179,7 +11142,7 @@
       <Name>Show the &lt;Combat Effect&gt; combat visual effect on &lt;Creature&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -11342,7 +11305,7 @@
       <Name>Show the &lt;Fired Effect&gt; fired visual effect on &lt;Creature&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -11971,7 +11934,7 @@
       <Name>Show the &lt;Beam Effect&gt; beam visual effect between &lt;Source&gt; and &lt;Creature&gt; permanently</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -12125,14 +12088,14 @@
       <Name>Show the &lt;Beam Effect&gt; beam visual effect between &lt;Source&gt; and &lt;Creature&gt; for &lt;Duration&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>Show the &lt;Beam Effect&gt; beam visual effect between &lt;Source&gt; and &lt;Creature&gt; for &lt;Duration&gt; seconds</Name>
           <Visible>true</Visible>
-          <Labels/>
+          <Labels/>	
           <Id>223</Id>
           <Types>
             <Type>void</Type>
@@ -12256,7 +12219,11 @@
               <Literal>, ActionDoCommand(SetIsDestroyable(FALSE)));</Literal>
             </Line>
             <Line>
-              <Literal>AssignCommand(param_1_object, ActionDoCommand(ApplyEffectToObject(DURATION_TYPE_INSTANT, veffect, </Literal>
+              <Literal>AssignCommand(</Literal>
+              <Scope data="argument" ref="Shower">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, ActionDoCommand(ApplyEffectToObject(DURATION_TYPE_INSTANT, veffect, </Literal>
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -12579,7 +12546,7 @@
       <Name>Show the &lt;Spell Effect&gt; spell visual effect on &lt;Creature&gt; for &lt;Duration&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -13989,7 +13956,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Walker&gt; walks waypoints</Name>
+      <Name>&lt;Walker&gt; walks its waypoints</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -13997,7 +13964,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Walker&gt; walks waypoints</Name>
+          <Name>&lt;Walker&gt; walks its waypoints</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>255</Id>
@@ -14014,13 +13981,16 @@
               </Types>
             </KnowIt>
           </Parameters>
+          <Includes>
+            <Include>x0_i0_walkway</Include>
+          </Includes>
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
               <Scope data="argument" ref="Walker">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionDoCommand(WalkWayPoints()));</Literal>
+              <Literal>, WalkWayPoints());</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -14100,7 +14070,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>walk_speed</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -14174,7 +14144,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>walk_speed</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -14987,11 +14957,11 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>walk_speed</Name>
+              <Name>walk</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>walk_speed</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -15052,7 +15022,7 @@
             </Line>
             <Line>
               <Literal>targetPosition = GetPositionFromLocation(GetLocation(</Literal>
-              <Scope data="argument" ref="walk">
+              <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>));</Literal>
@@ -15079,7 +15049,7 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionMoveToLocation(moverLocation, </Literal>
-              <Scope data="argument" ref="Target">
+                <Scope data="argument" ref="walk">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>));</Literal>
@@ -15089,7 +15059,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Adjust &lt;Creature&gt;&apos;s alignment towards &lt;Alignment Type&gt; by &lt;Alignment Shift&gt;</Name>
+      <Name>Shift &lt;Creature&gt;&apos;s alignment towards &lt;Alignment Type&gt; by &lt;Alignment Shift&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -15097,7 +15067,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Adjust &lt;Creature&gt;&apos;s alignment towards &lt;Alignment Type&gt; by &lt;Alignment Shift&gt;</Name>
+          <Name>Shift &lt;Creature&gt;&apos;s alignment towards &lt;Alignment Type&gt; by &lt;Alignment Shift&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>268</Id>
@@ -15151,7 +15121,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Adjuster&gt; adjusts &lt;Creature&gt;&apos;s alignment towards &lt;Alignment Type&gt; by &lt;Alignment Shift&gt;</Name>
+      <Name>&lt;Adjuster&gt; shifts &lt;Creature&gt;&apos;s alignment towards &lt;Alignment Type&gt; by &lt;Alignment Shift&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -15468,7 +15438,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Resurrect &lt;PC&gt;</Name>
+      <Name>Resurrect the Player Character</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -15476,30 +15446,16 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Resurrect &lt;PC&gt;</Name>
+          <Name>Resurrect the Player Character</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>275</Id>
           <Types>
             <Type>void</Type>
           </Types>
-          <Parameters>
-            <KnowIt>
-              <Name>PC</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
-          </Parameters>
           <Code>
             <Line>
-              <Literal>object oPlayer = </Literal>
-              <Scope data="argument" ref="PC">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>;</Literal>
+              <Literal>object oPlayer = GetFirstPC();</Literal>
             </Line>
             <Line>
               <Literal>effect eVisual = EffectVisualEffect(VFX_IMP_RESTORATION);</Literal>
@@ -15570,9 +15526,13 @@
             <Line>
               <Literal>SignalEvent(oPlayer, EventSpellCastAt(OBJECT_SELF, SPELL_RESTORATION, FALSE));</Literal>
             </Line>
-            <Line>
-              <Literal>ApplyEffectToObject(DURATION_TYPE_INSTANT, eVisual, oPlayer);</Literal>
-            </Line>
+	<Line>
+		<Literal>ApplyEffectToObject(DURATION_TYPE_INSTANT, eVisual, oPlayer);
+		</Literal>
+	</Line>
+	<Line>
+		<Literal>}</Literal>
+	</Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -16267,7 +16227,7 @@
       <Name>Create &apos;label&apos; from &lt;Item Blueprint&gt; at &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -16317,7 +16277,7 @@
       <Name>&lt;Creator&gt; creates an item from &lt;Item Blueprint&gt; at &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -16507,7 +16467,7 @@
       <Name>Create &apos;label&apos; from &lt;Item Blueprint&gt; near &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -16564,7 +16524,7 @@
       <Name>&lt;Creator&gt; creates an item from &lt;Item Blueprint&gt; near &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -16640,7 +16600,7 @@
       <Name>Create &apos;label&apos; from &lt;Placeable Blueprint&gt; at &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -16690,7 +16650,7 @@
       <Name>&lt;Creator&gt; creates a placeable from &lt;Placeable Blueprint&gt; at &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -16759,7 +16719,7 @@
       <Name>Create &apos;label&apos; from &lt;Placeable Blueprint&gt; near &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -16816,7 +16776,7 @@
       <Name>&lt;Creator&gt; creates a placeable from &lt;Placeable Blueprint&gt; near &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -16930,7 +16890,7 @@
       <Name>Spawn &apos;label&apos; from &lt;Creature Blueprint&gt; at &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -16983,7 +16943,7 @@
       <Name>&lt;Creator&gt; spawns a creature from &lt;Creature Blueprint&gt; at &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -17055,7 +17015,7 @@
       <Name>Spawn &apos;label&apos; from &lt;Creature Blueprint&gt; near &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -17165,7 +17125,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set immortal property of &lt;Creature&gt; to &lt;Immortal&gt;</Name>
+      <Name>Turn &lt;Creature&gt; &lt;Immortal&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -17173,7 +17133,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set immortal property of &lt;Creature&gt; to &lt;Immortal&gt;</Name>
+          <Name>Turn &lt;Creature&gt; &lt;Immortal&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>304</Id>
@@ -17194,7 +17154,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>immortal</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -17204,18 +17164,18 @@
               <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, FloatToInt(</Literal>
+              <Literal>, </Literal>
               <Scope data="argument" ref="Immortal">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>);</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Property Setter&gt; sets Immortal property of &lt;Creature&gt; to &lt;Immortal&gt;</Name>
+      <Name>&lt;Property Setter&gt; turns &lt;Creature&gt; &lt;Immortal&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -17223,7 +17183,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Property Setter&gt; sets Immortal property of &lt;Creature&gt; to &lt;Immortal&gt;</Name>
+          <Name>&lt;Property Setter&gt; turns &lt;Creature&gt; &lt;Immortal&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>305</Id>
@@ -17249,10 +17209,6 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>placeable</Type>
-                <Type>door</Type>
-                <Type>item</Type>
-                <Type>trigger</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -17260,7 +17216,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>immortal</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -17274,11 +17230,11 @@
               <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, FloatToInt(</Literal>
+              <Literal>, </Literal>
               <Scope data="argument" ref="Immortal">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>))));</Literal>
+              <Literal>)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -18977,7 +18933,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -18987,11 +18943,11 @@
               <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Appearance">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -21478,7 +21434,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Assign &lt;Amount&gt; GP to &lt;Recipient&gt;</Name>
+      <Name>Give &lt;Amount&gt; gold pieces to &lt;Recipient&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -21486,7 +21442,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Assign &lt;Amount&gt; GP to &lt;Recipient&gt;</Name>
+          <Name>Give &lt;Amount&gt; gold pieces to &lt;Recipient&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>381</Id>
@@ -21533,7 +21489,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Assign &lt;Amount&gt; XP to &lt;Recipient&gt;</Name>
+      <Name>Give &lt;Amount&gt; XP to &lt;Recipient&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -21541,7 +21497,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Assign &lt;Amount&gt; XP to &lt;Recipient&gt;</Name>
+          <Name>Give &lt;Amount&gt; XP to &lt;Recipient&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>382</Id>
@@ -21568,15 +21524,15 @@
           </Parameters>
           <Code>
             <Line>
+               <Scope data="argument" ref="Recipient">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, </Literal>
               <Literal>GiveXPToCreature(FloatToInt(</Literal>
               <Scope data="argument" ref="Amount">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>), </Literal>
-              <Scope data="argument" ref="Recipient">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -21849,7 +21805,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Make &lt;The Henchmen&gt; become the henchman of &lt;The PC&gt;</Name>
+      <Name>Make &lt;Creature&gt; become the Player Character's henchman</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -21857,7 +21813,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Make &lt;The Henchmen&gt; become the henchman of &lt;The PC&gt;</Name>
+          <Name>Make &lt;Creature&gt; become the Player Character's henchman</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>388</Id>
@@ -21866,15 +21822,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>The Henchmen</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
-            <KnowIt>
-              <Name>The PC</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -21884,12 +21832,8 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>AddHenchman(</Literal>
-              <Scope data="argument" ref="The Henchmen">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
-              <Scope data="argument" ref="The PC">
+              <Literal>AddHenchman(GetFirstPC(), </Literal>
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -21899,7 +21843,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Follower&gt; follows &lt;Followed&gt; at distance &lt;Distance&gt;</Name>
+      <Name>&lt;Follower&gt; follows &lt;Followed&gt; from &lt;Distance&gt; meters away</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -21907,7 +21851,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Follower&gt; follows &lt;Followed&gt; at distance &lt;Distance&gt;</Name>
+          <Name>&lt;Follower&gt; follows &lt;Followed&gt; from &lt;Distance&gt; meters away</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>389</Id>
@@ -24799,6 +24743,9 @@
                 <Type>creature</Type>
                 <Type>placeable</Type>
                 <Type>waypoint</Type>
+                <Type>item</Type>
+                <Type>trigger</Type>
+                <Type>door</Type>
               </Types>
             </KnowIt>
           </Parameters>
