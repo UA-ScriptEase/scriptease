@@ -205,8 +205,15 @@
       <Name>DoorAction</Name>
       <Keyword>door_action</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>DOOR_ACTION_KNOCK&lt;Door Action Knock&gt;|DOOR_ACTION_BASH&lt;Door Action Bash&gt;|DOOR_ACTION_OPEN&lt;Door Action Open&gt;|DOOR_ACTION_IGNORE&lt;Door Action Ignore&gt;|DOOR_ACTION_UNLOCK&lt;Door Action Unlock&gt;</Enum>
+      <Enum>DOOR_ACTION_KNOCK&lt;Knock&gt;|DOOR_ACTION_BASH&lt;Bash&gt;|DOOR_ACTION_OPEN&lt;Open&gt;|DOOR_ACTION_IGNORE&lt;Ignore&gt;|DOOR_ACTION_UNLOCK&lt;Unlock&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
+    	<Name>PlaceableAction</Name>
+    	<Keyword>placeable_action</Keyword>
+    	<CodeSymbol>int</CodeSymbol>
+    	<Enum>PLACEABLE_ACTION_KNOCK&lt;Knock&gt;|PLACEABLE_ACTION_BASH&lt;Bash&gt;|PLACEABLE_ACTION_USE&lt;Use&gt;|PLACEABLE_ACTION_UNLOCK&lt;Unlock&gt;</Enum>
+    	<GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
       <Name>SpellAbility</Name>
@@ -373,6 +380,20 @@
       <CodeSymbol>int</CodeSymbol>
       <Enum>FALSE&lt;No&gt;|TRUE&lt;Yes&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
+    </Type>
+        <Type>
+      <Name>OnOrOff</Name>
+      <Keyword>onoroff</Keyword>
+      <CodeSymbol>int</CodeSymbol>
+      <Enum>FALSE&lt;Off&gt;|TRUE&lt;On&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
+    	<Name>Destroyablee</Name>
+    	<Keyword>destroyable</Keyword>
+    	<CodeSymbol>int</CodeSymbol>
+    	<Enum>FALSE&lt;Destroyable&gt;|TRUE&lt;Undestroyable&gt;</Enum>
+    	<GUI>JCOMBOBOX</GUI>
     </Type>
      <Type>
       <Name>Immortal</Name>
@@ -7754,7 +7775,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Creature&gt; jumps &lt;Distance&gt; meters towards &lt;Location&gt;</Name>
+      <Name>&lt;Creature&gt; jumps &lt;Distance&gt; metres towards &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>DELETE</Label>
@@ -7762,7 +7783,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Creature&gt; jumps &lt;Distance&gt; meters towards &lt;Location&gt;</Name>
+          <Name>&lt;Creature&gt; jumps &lt;Distance&gt; metres towards &lt;Location&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>152</Id>
@@ -9750,11 +9771,8 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetLocalInt(FloatToInt(</Literal>
-              <Scope data="argument" ref="Number">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>), </Literal>
+              <Literal>SetLocalInt(</Literal>
+          
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -9762,7 +9780,12 @@
               <Scope data="argument" ref="Label">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+                            <Literal>, FloatToInt(</Literal>
+              
+                  <Scope data="argument" ref="Number">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -12769,7 +12792,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;User&gt; bashes &lt;Placeable&gt;</Name>
+      <Name>&lt;Creature&gt; &lt;Placeable Action&gt;s &lt;Placeable&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -12786,12 +12809,20 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>User</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
                 <Type>creature</Type>
               </Types>
+            </KnowIt>
+            <KnowIt>
+            	<Name>Placeable Action</Name>
+            	<Visible>true</Visible>
+            	<Labels/>
+            	<Types>
+            		<Type>placeable_action</Type>
+            	</Types>
             </KnowIt>
             <KnowIt>
               <Name>Placeable</Name>
@@ -12805,14 +12836,18 @@
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
-              <Scope data="argument" ref="User">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionDoCommand(DoPlaceableObjectAction(</Literal>
               <Scope data="argument" ref="Placeable">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, PLACEABLE_ACTION_BASH)));</Literal>
+              <Literal>, </Literal>
+              <Scope data="argument" ref="Placeable">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -12822,7 +12857,7 @@
       <Name>&lt;User&gt; knocks &lt;Placeable&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -12872,7 +12907,7 @@
       <Name>&lt;User&gt; uses &lt;Placeable&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -12919,7 +12954,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Assign original facing of &lt;Actor&gt; to itself</Name>
+      <Name>Save original facing of &lt;Actor&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -12927,7 +12962,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Assign original facing of &lt;Actor&gt; to itself</Name>
+          <Name>Save original facing of &lt;Actor&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>238</Id>
@@ -12970,7 +13005,7 @@
       <Name>Assign original facing of &lt;Actor&gt; to itself</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -13000,7 +13035,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Facer&gt; faces &lt;Direction&gt; degrees counterclockwise from East</Name>
+      <Name>&lt;Facer&gt; turns &lt;Degrees&gt; degrees counterclockwise from East</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -13008,7 +13043,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Facer&gt; faces &lt;Direction&gt; degrees counterclockwise from East</Name>
+          <Name>&lt;Facer&gt; turns &lt;Degrees&gt; degrees counterclockwise from East</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>240</Id>
@@ -13029,7 +13064,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Direction</Name>
+              <Name>Degrees</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -13044,7 +13079,7 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, SetFacing(</Literal>
-              <Scope data="argument" ref="Direction">
+              <Scope data="argument" ref="Degrees">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>));</Literal>
@@ -13054,7 +13089,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Facer&gt; faces &lt;Direction&gt; degrees counterclockwise from East</Name>
+      <Name>&lt;Facer&gt; turns &lt;Degrees&gt; degrees counterclockwise from East</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -13062,7 +13097,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Facer&gt; faces &lt;Direction&gt; degrees counterclockwise from East</Name>
+          <Name>&lt;Facer&gt; faces &lt;Degrees&gt; degrees counterclockwise from East</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>241</Id>
@@ -13083,7 +13118,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Direction</Name>
+              <Name>Degrees</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -13092,7 +13127,17 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <Line reference="/APIDictionary/Effects/ScriptIt[95]/CodeBlocks/CodeBlockSource/Code/Line"/>
+            <Line>
+              <Literal>AssignCommand(</Literal>
+              <Scope data="argument" ref="Face">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, SetFacing(</Literal>
+              <Scope data="argument" ref="Degrees">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>));</Literal>
+            </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -13212,7 +13257,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Jumper&gt; jumps &lt;Direction&gt; in direction &lt;Distance&gt; degrees counterclockwise from East</Name>
+      <Name>&lt;Jumper&gt; jumps &lt;Direction&gt; metres in direction &lt;Distance&gt; degrees counterclockwise from East</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -13220,7 +13265,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Jumper&gt; jumps &lt;Direction&gt; in direction &lt;Distance&gt; degrees counterclockwise from East</Name>
+          <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; metres in direction &lt;Degrees&gt; degrees counterclockwise from East</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>244</Id>
@@ -13241,7 +13286,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Direction</Name>
+              <Name>Degrees</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -13277,14 +13322,14 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>*AngleToVector(</Literal>
-              <Scope data="argument" ref="Direction">
+              <Scope data="argument" ref="Degrees">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>) + jumperPosition;</Literal>
             </Line>
             <Line>
               <Literal>location targetLocation = Location(area, targetPosition, </Literal>
-              <Scope data="argument" ref="Direction">
+              <Scope data="argument" ref="Degrees">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -13301,7 +13346,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Jumper&gt; jumps &lt;Direction&gt; in direction &lt;Distance&gt; degrees counterclockwise from East</Name>
+      <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; metres in direction &lt;Degrees&gt; degrees counterclockwise from East</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -13309,7 +13354,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Jumper&gt; jumps &lt;Direction&gt; in direction &lt;Distance&gt; degrees counterclockwise from East</Name>
+          <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; metres in direction &lt;Degrees&gt; degrees counterclockwise from East</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>245</Id>
@@ -13330,7 +13375,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Direction</Name>
+              <Name>Degrees</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -13358,7 +13403,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Jumper&gt; jumps near &lt;Target&gt;</Name>
+      <Name>&lt;Jumper&gt; jumps to &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -13366,7 +13411,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Jumper&gt; jumps near &lt;Target&gt;</Name>
+          <Name>&lt;Jumper&gt; jumps to &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>246</Id>
@@ -13416,7 +13461,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Jumper&gt; jumps near &lt;Target&gt;</Name>
+      <Name>&lt;Jumper&gt; jumps to &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -13424,7 +13469,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Jumper&gt; jumps near &lt;Target&gt;</Name>
+          <Name>&lt;Jumper&gt; jumps to &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>247</Id>
@@ -13562,7 +13607,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; meters towards &lt;Location&gt;</Name>
+      <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; metres towards &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -13570,7 +13615,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; meters towards &lt;Location&gt;</Name>
+          <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; metres towards &lt;Location&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>250</Id>
@@ -13677,7 +13722,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; meters towards &lt;Location&gt;</Name>
+      <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; metres towards &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -13685,7 +13730,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; meters towards &lt;Location&gt;</Name>
+          <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; metres towards &lt;Location&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>251</Id>
@@ -13744,7 +13789,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; meters towards &lt;Target&gt;</Name>
+      <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; metres towards &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -13752,7 +13797,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; meters towards &lt;Target&gt;</Name>
+          <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; metres towards &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>252</Id>
@@ -13863,7 +13908,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; meters towards &lt;Target&gt;</Name>
+      <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; metres towards &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -13871,7 +13916,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; meters towards &lt;Target&gt;</Name>
+          <Name>&lt;Jumper&gt; jumps &lt;Distance&gt; metres towards &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>253</Id>
@@ -14057,7 +14102,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Fleeing Creature&gt; &lt;walk&gt;s to &lt;Range&gt; meters from &lt;Location&gt;</Name>
+      <Name>&lt;Fleeing Creature&gt; &lt;walk&gt;s &lt;Range&gt; metres away from &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -14065,7 +14110,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Fleeing Creature&gt; &lt;walk&gt;s to &lt;Range&gt; meters from &lt;Location&gt;</Name>
+          <Name>&lt;Fleeing Creature&gt; &lt;walk&gt;s &lt;Range&gt; metres away from &lt;Location&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>257</Id>
@@ -14113,11 +14158,11 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionMoveAwayFromLocation(</Literal>
-              <Scope data="argument" ref="Walk">
+                        <Scope data="argument" ref="Location">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Location">
+   			<Scope data="argument" ref="Walk">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
@@ -14131,7 +14176,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Fleeing Creature&gt; &lt;walk&gt;s to &lt;Range&gt; meters from &lt;Repeller&gt;</Name>
+      <Name>&lt;Fleeing Creature&gt; &lt;walk&gt;s &lt;Range&gt; metres away from &lt;Repeller&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -14139,7 +14184,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Fleeing Creature&gt; &lt;walk&gt;s to &lt;Range&gt; meters from &lt;Repeller&gt;</Name>
+          <Name>&lt;Fleeing Creature&gt; &lt;walk&gt;s &lt;Range&gt; metres away from &lt;Repeller&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>258</Id>
@@ -14191,11 +14236,11 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionMoveAwayFromObject(</Literal>
-              <Scope data="argument" ref="walk">
+               <Scope data="argument" ref="Repeller">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Repeller">
+             <Scope data="argument" ref="walk">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
@@ -14345,7 +14390,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Mover&gt; &lt;walk&gt;s within &lt;Distance&gt; meters of &lt;Target&gt; for &lt;Timeout&gt; seconds</Name>
+      <Name>&lt;Mover&gt; &lt;walk&gt;s within &lt;Distance&gt; metres of &lt;Target&gt; for &lt;Timeout&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -14353,7 +14398,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Mover&gt; &lt;walk&gt;s within &lt;Distance&gt; meters of &lt;Target&gt; for &lt;Timeout&gt; seconds</Name>
+          <Name>&lt;Mover&gt; &lt;walk&gt;s within &lt;Distance&gt; metres of &lt;Target&gt; for &lt;Timeout&gt; seconds</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>261</Id>
@@ -14435,7 +14480,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Mover&gt; &lt;walk&gt;s within &lt;Distance&gt; meters of &lt;Target&gt;</Name>
+      <Name>&lt;Mover&gt; &lt;walk&gt;s within &lt;Distance&gt; metres of &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -14443,7 +14488,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Mover&gt; &lt;walk&gt;s within &lt;Distance&gt; meters of &lt;Target&gt;</Name>
+          <Name>&lt;Mover&gt; &lt;walk&gt;s within &lt;Distance&gt; metres of &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>262</Id>
@@ -14456,7 +14501,6 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>creature</Type>
                 <Type>creature</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
@@ -14518,7 +14562,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Mover&gt; &lt;walk&gt;s near &lt;Target&gt;</Name>
+      <Name>&lt;Mover&gt; &lt;walk&gt;s to &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -14526,7 +14570,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Mover&gt; &lt;walk&gt;s near &lt;Target&gt;</Name>
+          <Name>&lt;Mover&gt; &lt;walk&gt;s to &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>263</Id>
@@ -14539,7 +14583,6 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>creature</Type>
                 <Type>creature</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
@@ -14589,7 +14632,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Mover&gt; &lt;walk&gt;s randomly within &lt;Distance&gt; meters of &lt;Location&gt;</Name>
+      <Name>&lt;Mover&gt; &lt;walk&gt;s randomly within &lt;Distance&gt; metres of &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -14597,7 +14640,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Mover&gt; &lt;walk&gt;s randomly within &lt;Distance&gt; meters of &lt;Location&gt;</Name>
+          <Name>&lt;Mover&gt; &lt;walk&gt;s randomly within &lt;Distance&gt; metres of &lt;Location&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>264</Id>
@@ -14700,7 +14743,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Mover&gt; &lt;walk&gt;s randomly within &lt;Distance&gt; meters of &lt;Source Object&gt;</Name>
+      <Name>&lt;Mover&gt; &lt;walk&gt;s randomly within &lt;Distance&gt; metres of &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -14708,7 +14751,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Mover&gt; &lt;walk&gt;s randomly within &lt;Distance&gt; meters of &lt;Source Object&gt;</Name>
+          <Name>&lt;Mover&gt; &lt;walk&gt;s randomly within &lt;Distance&gt; metres of &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>265</Id>
@@ -14745,7 +14788,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Source Object</Name>
+              <Name>Target</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -14760,7 +14803,7 @@
           <Code>
             <Line>
               <Literal>location aLocation = GetLocation(</Literal>
-              <Scope data="argument" ref="Source Object">
+              <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -14815,7 +14858,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Mover&gt; &lt;walk&gt;s &lt;Distance&gt; meters towards &lt;Location&gt;</Name>
+      <Name>&lt;Mover&gt; &lt;walk&gt;s &lt;Distance&gt; metres towards &lt;Location&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -14823,7 +14866,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Mover&gt; &lt;walk&gt;s &lt;Distance&gt; meters towards &lt;Location&gt;</Name>
+          <Name>&lt;Mover&gt; &lt;walk&gt;s &lt;Distance&gt; metres towards &lt;Location&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>266</Id>
@@ -14836,7 +14879,6 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>creature</Type>
                 <Type>creature</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
@@ -14943,7 +14985,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Mover&gt; &lt;walk&gt;s &lt;Distance&gt; meters towards &lt;Target&gt;</Name>
+      <Name>&lt;Mover&gt; &lt;walk&gt;s &lt;Distance&gt; metres towards &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -14951,7 +14993,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Mover&gt; &lt;walk&gt;s &lt;Distance&gt; meters towards &lt;Target&gt;</Name>
+          <Name>&lt;Mover&gt; &lt;walk&gt;s &lt;Distance&gt; metres towards &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>267</Id>
@@ -14964,7 +15006,6 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>creature</Type>
                 <Type>creature</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
@@ -15359,7 +15400,7 @@
       <Name>&lt;Actor&gt; knows &lt;Partner&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -15407,7 +15448,7 @@
       <Name>&lt;Actor&gt; knows &lt;Partner&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -15872,7 +15913,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Creature&gt; sits on &lt;Target&gt; (Note: No (TODO) actions can follow)</Name>
+      <Name>&lt;Creature&gt; sits on &lt;Placeable&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -15880,7 +15921,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Creature&gt; sits on &lt;Target&gt; (Note: No (TODO) actions can follow)</Name>
+          <Name>&lt;Creature&gt; sits on &lt;Placeable&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>282</Id>
@@ -15897,15 +15938,11 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Target</Name>
+              <Name>Placeable</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>creature</Type>
                 <Type>placeable</Type>
-                <Type>door</Type>
-                <Type>item</Type>
-                <Type>trigger</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -15916,7 +15953,7 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionSit(</Literal>
-              <Scope data="argument" ref="Target">
+              <Scope data="argument" ref="Placeable">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>));</Literal>
@@ -16219,7 +16256,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>destroyable</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -16229,11 +16266,11 @@
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, SetIsDestroyable(FloatToInt(</Literal>
+              <Literal>, SetIsDestroyable(</Literal>
               <Scope data="argument" ref="Undestroyable">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>)));</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -16359,15 +16396,15 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Create &apos;label&apos; from &lt;Item Blueprint&gt; and place it in &lt;Container&gt;</Name>
+      <Name>Create &apos;Item&apos; from &lt;Item Blueprint&gt; and place it in &lt;Container&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>NEEDSWORK</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Create &apos;label&apos; from &lt;Item Blueprint&gt; and place it in &lt;Container&gt;</Name>
+          <Name>Create &apos;Item&apos; from &lt;Item Blueprint&gt; and place it in &lt;Container&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>291</Id>
@@ -16413,7 +16450,7 @@
       <Name>&lt;Creator&gt; creates an item from &lt;Item Blueprint&gt; and places it in &lt;Container&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>NEEDSWORK</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -16480,7 +16517,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Create &apos;label&apos; from &lt;Item Blueprint&gt; near &lt;Target&gt;</Name>
+      <Name>Create &apos;label&apos; from &lt;Item Blueprint&gt; beside &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>DELETE</Label>
@@ -16488,7 +16525,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Create &apos;label&apos; from &lt;Item Blueprint&gt; near &lt;Target&gt;</Name>
+          <Name>Create &apos;label&apos; from &lt;Item Blueprint&gt; beside &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>293</Id>
@@ -16537,7 +16574,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Creator&gt; creates an item from &lt;Item Blueprint&gt; near &lt;Target&gt;</Name>
+      <Name>&lt;Creator&gt; creates an item from &lt;Item Blueprint&gt; beside &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>DELETE</Label>
@@ -16545,7 +16582,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Creator&gt; creates an item from &lt;Item Blueprint&gt; near &lt;Target&gt;</Name>
+          <Name>&lt;Creator&gt; creates an item from &lt;Item Blueprint&gt; beside &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>294</Id>
@@ -16868,7 +16905,7 @@
       <Name>Give monk treasure to &lt;Monk&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -17085,7 +17122,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Creator&gt; spawns a creature from &lt;Creature Blueprint&gt; near &lt;Target&gt;</Name>
+      <Name>&lt;Creator&gt; spawns a creature from &lt;Creature Blueprint&gt; beside &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -17093,7 +17130,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Creator&gt; spawns a creature from &lt;Creature Blueprint&gt; near &lt;Target&gt;</Name>
+          <Name>&lt;Creator&gt; spawns a creature from &lt;Creature Blueprint&gt; beside &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>303</Id>
@@ -17853,7 +17890,7 @@
       <Name>Disable a trap on &lt;Trapped Door&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -17891,7 +17928,7 @@
       <Name>&lt;Disarmer&gt; disables a trap on &lt;Trapped Door&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -17942,7 +17979,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Disable a trap on &lt;Trapped Placeable&gt;</Name>
+      <Name>Disarm a trap on &lt;Trapped Object&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -17950,7 +17987,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Disable a trap on &lt;Trapped Placeable&gt;</Name>
+          <Name>Disarm a trap on &lt;Trapped Object&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>319</Id>
@@ -17959,18 +17996,19 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Trapped Placeable</Name>
+              <Name>Trapped Object</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
                 <Type>placeable</Type>
+              <Type>door</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
               <Literal>SetTrapDisabled(</Literal>
-              <Scope data="argument" ref="Trapped Placeable">
+              <Scope data="argument" ref="Trapped Object">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -17980,7 +18018,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Disarmer&gt; disables a trap on &lt;Trapped Door&gt;</Name>
+      <Name>&lt;Disarmer&gt; disarms a trap on &lt;Trapped Object&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -17988,7 +18026,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Disarmer&gt; disables a trap on &lt;Trapped Door&gt;</Name>
+          <Name>&lt;Disarmer&gt; disables a trap on &lt;Trapped Object&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>320</Id>
@@ -18009,7 +18047,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Trapped Door</Name>
+              <Name>Trapped Object</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -18019,7 +18057,17 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <Line reference="/APIDictionary/Effects/ScriptIt[170]/CodeBlocks/CodeBlockSource/Code/Line"/>
+           <Line>
+              <Literal>AssignCommand(</Literal>
+              <Scope data="argument" ref="Disarmer">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, ActionDoCommand(SetTrapDisabled(</Literal>
+              <Scope data="argument" ref="Trapped Object">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>)));</Literal>
+            </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -18208,13 +18256,18 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Damage Type</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>float</Type>
-              </Types>
-            </KnowIt>
+                      <Name>Damage Type</Name>
+                      <Visible>true</Visible>
+                      <Labels/>
+                      <Types>
+                        <Type>damage_type</Type>
+                      </Types>
+                      <Binding flavour="runTime">
+                        <Types>
+                          <Type>damage_type</Type>
+                        </Types>
+                      </Binding>
+                    </KnowIt>
             <KnowIt>
               <Name>Target</Name>
               <Visible>true</Visible>
@@ -18234,11 +18287,11 @@
               <Scope data="argument" ref="Amount">
               	<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>), FloatToInt(</Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="Damage Type">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
               <Literal>ApplyEffectToObject(DURATION_TYPE_INSTANT, dEff, </Literal>
@@ -18288,14 +18341,19 @@
                 <Type>float</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
-              <Name>Damage Type</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>float</Type>
-              </Types>
-            </KnowIt>
+           <KnowIt>
+                      <Name>Damage Type</Name>
+                      <Visible>true</Visible>
+                      <Labels/>
+                      <Types>
+                        <Type>damage_type</Type>
+                      </Types>
+                      <Binding flavour="runTime">
+                        <Types>
+                          <Type>damage_type</Type>
+                        </Types>
+                      </Binding>
+                    </KnowIt>
             <KnowIt>
               <Name>Target</Name>
               <Visible>true</Visible>
@@ -20648,7 +20706,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Turn &lt;Light Source&gt; &lt;off&gt;</Name>
+      <Name>Turn &lt;Placeable&gt;'s illumination &lt;off&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -20656,7 +20714,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Turn &lt;Light Source&gt; &lt;off&gt;</Name>
+          <Name>Turn &lt;Placeable&gt;'s illumination &lt;off&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>369</Id>
@@ -20665,7 +20723,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Light Source</Name>
+              <Name>Placeable</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -20677,7 +20735,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>onoroff</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -20709,11 +20767,15 @@
               <Literal>  }</Literal>
             </Line>
             <Line>
-              <Literal>AssignCommand(param_1_object, PlayAnimation(anim));</Literal>
+              <Literal>AssignCommand(</Literal>
+                <Scope data="argument" ref="Placeable">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, PlayAnimation(anim));</Literal>
             </Line>
             <Line>
               <Literal>SetPlaceableIllumination(</Literal>
-              <Scope data="argument" ref="Light Source">
+              <Scope data="argument" ref="Placeable">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
@@ -20724,7 +20786,7 @@
             </Line>
             <Line>
               <Literal>RecomputeStaticLighting(GetArea(</Literal>
-              <Scope data="argument" ref="Light Source">
+              <Scope data="argument" ref="Placeable">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>));</Literal>
@@ -21102,7 +21164,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Make &lt;Creature&gt; drunk losing &lt;Intelligence Lost&gt; points for &lt;Duration&gt;</Name>
+      <Name>Make &lt;Creature&gt; drunk losing &lt;Intelligence Lost&gt; points for &lt;Duration&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -21110,7 +21172,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Make &lt;Creature&gt; drunk losing &lt;Intelligence Lost&gt; points for &lt;Duration&gt;</Name>
+          <Name>Make &lt;Creature&gt; drunk losing &lt;Intelligence Lost&gt; points for &lt;Duration&gt; seconds</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>376</Id>
@@ -21131,7 +21193,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>void</Type>
+                <Type>float</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -21669,7 +21731,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Take &lt;Amount&gt; GP from &lt;Payer&gt;</Name>
+      <Name>Take &lt;Amount&gt; GP from &lt;Creature&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -21677,7 +21739,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Take &lt;Amount&gt; GP from &lt;Payer&gt;</Name>
+          <Name>Take &lt;Amount&gt; GP from &lt;Creature&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>385</Id>
@@ -21694,7 +21756,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Payer</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -21705,7 +21767,7 @@
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
-              <Scope data="argument" ref="Player">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, TakeGoldFromCreature(FloatToInt(</Literal>
@@ -21713,7 +21775,7 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>), </Literal>
-              <Scope data="argument" ref="Player">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, TRUE));</Literal>
@@ -21723,7 +21785,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Take all gold from &lt;Payer&gt;</Name>
+      <Name>Take all gold from &lt;Creature&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -21731,7 +21793,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Take all gold from &lt;Payer&gt;</Name>
+          <Name>Take all gold from &lt;Creature&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>386</Id>
@@ -21740,7 +21802,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Payer</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -21751,15 +21813,15 @@
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
-              <Scope data="argument" ref="Player">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, TakeGoldFromCreature(GetGold(</Literal>
-              <Scope data="argument" ref="Player">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>), </Literal>
-              <Scope data="argument" ref="Player">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, TRUE));</Literal>
@@ -21769,7 +21831,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Take &lt;Amount&gt; XP from &lt;Payer&gt;</Name>
+      <Name>Take &lt;Amount&gt; XP from &lt;Creature&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -21777,7 +21839,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Take &lt;Amount&gt; XP from &lt;Payer&gt;</Name>
+          <Name>Take &lt;Amount&gt; XP from &lt;Creature&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>387</Id>
@@ -21794,7 +21856,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Payer</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -21805,11 +21867,11 @@
           <Code>
             <Line>
               <Literal>SetXP(</Literal>
-              <Scope data="argument" ref="Player">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, GetXP(</Literal>
-              <Scope data="argument" ref="Player">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>) - FloatToInt(</Literal>
@@ -21861,7 +21923,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Follower&gt; follows &lt;Followed&gt; from &lt;Distance&gt; meters away</Name>
+      <Name>&lt;Follower&gt; follows &lt;Followed&gt; from &lt;Distance&gt; metres away</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -21869,7 +21931,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Follower&gt; follows &lt;Followed&gt; from &lt;Distance&gt; meters away</Name>
+          <Name>&lt;Follower&gt; follows &lt;Followed&gt; from &lt;Distance&gt; metres away</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>389</Id>
@@ -23324,7 +23386,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Move all items from &lt;The Object&gt;&apos;s inventory to &lt;Container&gt;</Name>
+      <Name>Move all items from &lt;Object&gt;&apos;s inventory to &lt;Container&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -23332,7 +23394,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Move all items from &lt;The Object&gt;&apos;s inventory to &lt;Container&gt;</Name>
+          <Name>Move all items from &lt;Object&gt;&apos;s inventory to &lt;Receiver&gt;&apos;s</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>413</Id>
@@ -23341,7 +23403,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>The Object</Name>
+              <Name>Object</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -23353,19 +23415,19 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Container</Name>
+              <Name>Receiver</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>placeable</Type>
                 <Type>creature</Type>
+                <Type>placeable</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
               <Literal>  object oitem = GetFirstItemInInventory(</Literal>
-              <Scope data="argument" ref="The Object">
+              <Scope data="argument" ref="Object">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -23375,18 +23437,18 @@
             </Line>
             <Line>
               <Literal>    AssignCommand(</Literal>
-              <Scope data="argument" ref="The Object">
+              <Scope data="argument" ref="Object">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionGiveItem(oitem, </Literal>
-              <Scope data="argument" ref="Container">
+              <Scope data="argument" ref="Receiver">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>));</Literal>
             </Line>
             <Line>
               <Literal>    oitem = GetNextItemInInventory(</Literal>
-              <Scope data="argument" ref="The Object">
+              <Scope data="argument" ref="Object">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
