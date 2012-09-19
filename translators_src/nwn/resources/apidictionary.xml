@@ -29,13 +29,6 @@
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
-      <Name>SkyBox</Name>
-      <Keyword>sky_box</Keyword>
-      <CodeSymbol>int</CodeSymbol>
-      <Enum>SKYBOX_DESERT_CLEAR&lt;Skybox Desert Clear&gt;|SKYBOX_ICY&lt;Skybox Icy&gt;|SKYBOX_WINTER_CLEAR&lt;Skybox Winter Clear&gt;|SKYBOX_GRASS_CLEAR&lt;Skybox Grass Clear&gt;|SKYBOX_NONE&lt;Skybox None&gt;|SKYBOX_GRASS_STORM&lt;Skybox Grass Storm&gt;</Enum>
-      <GUI>JCOMBOBOX</GUI>
-    </Type>
-    <Type>
       <Name>Door</Name>
       <Keyword>door</Keyword>
       <CodeSymbol>object</CodeSymbol>
@@ -163,7 +156,7 @@
       <Name>Weather</Name>
       <Keyword>weather</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>WEATHER_USE_AREA_SETTINGS&lt;Weather Use Area Settings&gt;|WEATHER_RAIN&lt;Weather Rain&gt;|WEATHER_SNOW&lt;Weather Snow&gt;|WEATHER_CLEAR&lt;Weather Clear&gt;</Enum>
+      <Enum>WEATHER_USE_AREA_SETTINGS&lt;Use Area Settings&gt;|WEATHER_RAIN&lt;Rain&gt;|WEATHER_SNOW&lt;Snow&gt;|WEATHER_CLEAR&lt;Clear&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -172,6 +165,13 @@
       <CodeSymbol>int</CodeSymbol>
       <Enum>GENDER_BOTH&lt;Gender Both&gt;|GENDER_OTHER&lt;Gender Other&gt;|GENDER_NONE&lt;Gender None&gt;|GENDER_MALE&lt;Gender Male&gt;|GENDER_FEMALE&lt;Gender Female&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
+    	<Name>Skybox</Name>
+    	<Keyword>skybox</Keyword>
+    	<CodeSymbol>int</CodeSymbol>
+    	<Enum>SKYBOX_DESERT_CLEAR&lt;Desert Clear&gt;|SKYBOX_GRASS_CLEAR&lt;Grass Clear&gt;|SKYBOX_GRASS_STORM&lt;Grass Storm&gt;|SKYBOX_ICY&lt;Icy&gt;|SKYBOX_WINTER_CLEAR&lt;Winter Clear&gt;|SKYBOX_NONE&lt;None&gt;</Enum>
+    	<GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
       <Name>VisualEffectImpact</Name>
@@ -9173,7 +9173,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Decrement &lt;Target&gt;&apos;s remaining uses of &lt;Feat&gt;</Name>
+      <Name>Decrement &lt;Target&gt;&apos;s remaining uses per day of &lt;Feat&gt; by one</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -9181,7 +9181,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Decrement &lt;Target&gt;&apos;s remaining uses of &lt;Feat&gt;</Name>
+          <Name>Decrement &lt;Target&gt;&apos;s remaining uses per day of &lt;Feat&gt; by one</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>176</Id>
@@ -12368,7 +12368,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Show the &lt;Spell Effect&gt; spell visual effect on &lt;Creature&gt; permanently</Name>
+      <Name>Show the &lt;Spell Effect&gt; spell visual effect on &lt;Target&gt; permanently</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -12376,7 +12376,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Show the &lt;Spell Effect&gt; spell visual effect on &lt;Creature&gt; permanently</Name>
+          <Name>Show the &lt;Spell Effect&gt; spell visual effect on &lt;Target&gt; permanently</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>227</Id>
@@ -12393,11 +12393,15 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Creature</Name>
+              <Name>Target</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
                 <Type>creature</Type>
+				<Type>placeable</Type>
+                <Type>door</Type>
+                <Type>item</Type>
+                <Type>trigger</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -12411,7 +12415,7 @@
             </Line>
             <Line>
               <Literal>ApplyEffectAtLocation(DURATION_TYPE_PERMANENT, veffect, GetLocation(</Literal>
-              <Scope data="argument" ref="Creature">
+              <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>));</Literal>
@@ -13188,9 +13192,21 @@
               </Types>
             </KnowIt>
           </Parameters>
-          <Code>
-            <Line reference="/APIDictionary/Effects/ScriptIt[97]/CodeBlocks/CodeBlockSource/Code/Line"/>
-            <Line reference="/APIDictionary/Effects/ScriptIt[97]/CodeBlocks/CodeBlockSource/Code/Line[2]"/>
+         <Code>
+            <Line>
+              <Literal>vector vFacing = GetPosition(</Literal>
+              <Scope data="argument" ref="Object To Face">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+            <Line>
+              <Literal>AssignCommand(</Literal>
+              <Scope data="argument" ref="Facing Creature">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, SetFacingPoint(vFacing));</Literal>
+            </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -20559,18 +20575,19 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>skybox</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
               <Literal>SetSkyBox(</Literal>
-              <Scope data="argument" ref="Area">
+                   <Scope data="argument" ref="Sky">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
+            
               <Literal>, </Literal>
-              <Scope data="argument" ref="Sky">
+           <Scope data="argument" ref="Area">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -20601,6 +20618,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
+              	<Type>module</Type>
                 <Type>area</Type>
               </Types>
             </KnowIt>
@@ -20609,7 +20627,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>weather</Type>
               </Types>
             </KnowIt>
           </Parameters>

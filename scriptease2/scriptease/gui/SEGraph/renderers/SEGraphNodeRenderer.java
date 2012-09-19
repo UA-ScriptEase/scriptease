@@ -5,6 +5,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -142,14 +143,28 @@ public class SEGraphNodeRenderer<E> {
 		backgroundColour = Color.white;
 		borderColour = Color.GRAY;
 
-		for (JComponent component : this.graph.getNodeComponents()) {
+
+		for (Entry<E, JComponent> entry : this.graph.getNodesToComponentsMap()
+				.getEntrySet()) {
+			if (GraphToolBarModeAction.getMode() != ToolBarMode.SELECT) {
+				if (entry.getValue() == this.graph.getSelectedComponent())
+					continue;
+			}
+			this.setComponentAppearance(entry.getValue(), entry.getKey(),
+					borderColour, backgroundColour);
+
+		}
+
+	/*	for (JComponent component : this.graph.getNodeComponents()) {
 			if (GraphToolBarModeAction.getMode() != ToolBarMode.SELECT) {
 				if (component == this.graph.getSelectedComponent())
 					continue;
 			}
-			this.setComponentAppearance(component, borderColour,
+			this.setComponentAppearance(component, null, borderColour,
 					backgroundColour);
-		}
+
+		}*/
+
 	}
 
 	/**
@@ -163,15 +178,26 @@ public class SEGraphNodeRenderer<E> {
 	 * @param backgroundColour
 	 *            The background colour to set for the component.
 	 */
-	private void setComponentAppearance(JComponent component,
+	private void setComponentAppearance(JComponent component, E node,
 			Color borderColour, Color backgroundColour) {
 		final Border lineBorder;
 		final Border lineSpaceBorder;
 
 		lineBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED,
 				borderColour, borderColour.darker());
-		lineSpaceBorder = BorderFactory.createCompoundBorder(lineBorder,
-				BorderFactory.createEmptyBorder(3, 3, 3, 3));
+
+		if (node != this.graph.getStartNode())
+			lineSpaceBorder = BorderFactory.createCompoundBorder(lineBorder,
+					BorderFactory.createEmptyBorder(3, 3, 3, 3));
+		else {
+			final Border secondLineBorder;
+
+			secondLineBorder = BorderFactory.createCompoundBorder(lineBorder,
+					BorderFactory.createEmptyBorder(3, 3, 3, 3));
+			lineSpaceBorder = BorderFactory.createCompoundBorder(
+					secondLineBorder,
+					BorderFactory.createLineBorder(borderColour));
+		}
 
 		component.setBorder(lineSpaceBorder);
 		component.setBackground(backgroundColour);
@@ -245,6 +271,7 @@ public class SEGraphNodeRenderer<E> {
 			// If nothing
 		}
 
-		this.setComponentAppearance(component, borderColour, backgroundColour);
+		this.setComponentAppearance(component, node, borderColour,
+				backgroundColour);
 	}
 }
