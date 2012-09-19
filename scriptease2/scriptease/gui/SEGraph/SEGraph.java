@@ -306,17 +306,22 @@ public class SEGraph<E> extends JComponent {
 		return this.nodesToComponents.getValues();
 	}
 
+	public BiHashMap<E, JComponent> getNodesToComponentsMap() {
+		return this.nodesToComponents;
+	}
+
 	/**
-	 * Gets a component for the passed in node.
+	 * Returns a component for the passed in node. This method creates a
+	 * component for the node if none is found.
 	 * 
 	 * @param node
 	 * @return
 	 */
-	private JComponent getComponentForNode(E node) {
+	private JComponent createComponentForNode(E node) {
 		final JComponent component;
+		final JComponent storedComponent;
 
-		final JComponent storedComponent = this.nodesToComponents
-				.getValue(node);
+		storedComponent = this.nodesToComponents.getValue(node);
 
 		if (storedComponent != null) {
 			component = storedComponent;
@@ -381,7 +386,7 @@ public class SEGraph<E> extends JComponent {
 				int yNodeSize = NODE_Y_INDENT;
 				for (E node : currentNodes) {
 					JComponent component = SEGraph.this
-							.getComponentForNode(node);
+							.createComponentForNode(node);
 					yNodeSize += NODE_Y_INDENT
 							+ component.getPreferredSize().getHeight();
 				}
@@ -435,7 +440,7 @@ public class SEGraph<E> extends JComponent {
 
 					// Get the JComponent associated with the node.
 					final JComponent component = SEGraph.this
-							.getComponentForNode(node);
+							.createComponentForNode(node);
 
 					if (component.getMouseListeners().length <= 1) {
 						component.addMouseListener(SEGraph.this.mouseAdapter);
@@ -536,7 +541,8 @@ public class SEGraph<E> extends JComponent {
 
 			for (E node : nodes) {
 				// Get the component for the node.
-				JComponent component = SEGraph.this.getComponentForNode(node);
+				JComponent component = SEGraph.this
+						.createComponentForNode(node);
 
 				// Get the size of the JComponent.
 				Dimension componentSize = component.getPreferredSize();
@@ -578,7 +584,7 @@ public class SEGraph<E> extends JComponent {
 
 				g2.setStroke(new BasicStroke(1.5f));
 				GUIOp.paintArrow(g2, GUIOp.getMidRight(SEGraph.this
-						.getComponentForNode(SEGraph.this.draggedFromNode)),
+						.createComponentForNode(SEGraph.this.draggedFromNode)),
 						SEGraph.this.mousePosition);
 
 			}
@@ -626,9 +632,9 @@ public class SEGraph<E> extends JComponent {
 
 						// Draw an arrow pointing towards the child.
 						GUIOp.paintArrow(g2, GUIOp.getMidRight(SEGraph.this
-								.getComponentForNode(parent)), GUIOp
+								.createComponentForNode(parent)), GUIOp
 								.getMidLeft(SEGraph.this
-										.getComponentForNode(child)));
+										.createComponentForNode(child)));
 					}
 				}
 			}

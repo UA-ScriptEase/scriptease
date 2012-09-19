@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-
 /**
  * A class that creates a bidirectional hash map. Since it uses hash maps, core
  * functionality should be roughly the same as in <tt>HashMap</tt>.<br>
@@ -228,17 +227,58 @@ public class BiHashMap<K, V> {
 	 * modifications to it will not affect the map. If we returned pointers like
 	 * a regular map, then modifications to the list would only apply to the
 	 * reverse map list, eventually leading to a
-	 * BidirectionalityViolatedException.
+	 * BidirectionalityViolatedException. Since it's a cloned map, using
+	 * "SetValue" on any Entry will not do anything and just return null.
 	 * 
 	 * @return
 	 */
-	public Set<java.util.Map.Entry<K, V>> getEntrySet() {
+	public Set<Entry<K, V>> getEntrySet() {
 		this.checkBidirectionality();
 
-		final Set<java.util.Map.Entry<K, V>> entrySet;
-		entrySet = new HashSet<java.util.Map.Entry<K, V>>();
+		final Set<Entry<K, V>> entrySet;
 
-		entrySet.addAll(this.mainMap.entrySet());
+		entrySet = new HashSet<Entry<K, V>>();
+
+		/*
+		 * I know what you're thinking. Why didn't Kevin just write
+		 * "entrySet.addAll(this.mainMap.entrySet();"? Well, it doesn't work.
+		 * I'm not sure if it's a bug with entries, or if it's some unintended
+		 * behaviour.
+		 * 
+		 * Say the mainMap.entrySet() had three entries, <A, 1>, <B, 2>, and <C,
+		 * 3>. AddAll iterates over all of these entries and adds each one.
+		 * 
+		 * The first iteration would return a Set with <A, 1>. But the second
+		 * set returns a Set containing <B, 2> and <B, 2>! The final result will
+		 * be a set with 3 <C, 3>s. I can't find anything on Google about this,
+		 * but our workaround works.
+		 */
+		for (Entry<K, V> entry : this.mainMap.entrySet()) {
+			final K key;
+			final V value;
+
+			key = entry.getKey();
+			value = entry.getValue();
+
+			entrySet.add(new Entry<K, V>() {
+				@Override
+				public K getKey() {
+					return key;
+				}
+
+				@Override
+				public V getValue() {
+					return value;
+				}
+
+				@Deprecated
+				@Override
+				public V setValue(V value) {
+					// Does nothing because it would be pointless.
+					return null;
+				}
+			});
+		}
 
 		return entrySet;
 	}
