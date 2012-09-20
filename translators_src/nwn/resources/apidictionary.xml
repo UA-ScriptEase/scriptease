@@ -20923,7 +20923,7 @@
           <Code>
             <Line>
               <Literal>DelayCommand(</Literal>
-              <Scope data="argument" ref="Delay Time>
+              <Scope data="argument" ref="Delay Time">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, EndGame(</Literal>
