@@ -116,7 +116,7 @@
       <Name>EffectType</Name>
       <Keyword>effect_type</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>EFFECT_TYPE_CONCEALMENT&lt;Effect Type Concealment&gt;|EFFECT_TYPE_RESURRECTION&lt;Effect Type Resurrection&gt;|EFFECT_TYPE_DAZED&lt;Effect Type Dazed&gt;|EFFECT_TYPE_CONFUSED&lt;Effect Type Confused&gt;|EFFECT_TYPE_DAMAGE_IMMUNITY_INCREASE&lt;Effect Type Damage Immunity Increase&gt;|EFFECT_TYPE_AC_DECREASE&lt;Effect Type Ac Decrease&gt;|EFFECT_TYPE_DAMAGE_INCREASE&lt;Effect Type Damage Increase&gt;|EFFECT_TYPE_CUTSCENE_PARALYZE&lt;Effect Type Cutscene Paralyze&gt;|EFFECT_TYPE_ULTRAVISION&lt;Effect Type Ultravision&gt;|EFFECT_TYPE_CHARMED&lt;Effect Type Charmed&gt;|EFFECT_TYPE_SANCTUARY&lt;Effect Type Sanctuary&gt;|EFFECT_TYPE_DAMAGE_DECREASE&lt;Effect Type Damage Decrease&gt;|EFFECT_TYPE_TURNED&lt;Effect Type Turned&gt;|EFFECT_TYPE_TRUESEEING&lt;Effect Type Trueseeing&gt;|EFFECT_TYPE_SPELLLEVELABSORPTION&lt;Effect Type Spelllevelabsorption&gt;|EFFECT_TYPE_DOMINATED&lt;Effect Type Dominated&gt;|EFFECT_TYPE_SPELL_RESISTANCE_DECREASE&lt;Effect Type Spell Resistance Decrease&gt;|EFFECT_TYPE_MOVEMENT_SPEED_DECREASE&lt;Effect Type Movement Speed Decrease&gt;|EFFECT_TYPE_SKILL_DECREASE&lt;Effect Type Skill Decrease&gt;|EFFECT_TYPE_BLINDNESS&lt;Effect Type Blindness&gt;|EFFECT_TYPE_DISPELMAGICBEST&lt;Effect Type Dispelmagicbest&gt;|EFFECT_TYPE_SWARM&lt;Effect Type Swarm&gt;|EFFECT_TYPE_DISPELMAGICALL&lt;Effect Type Dispelmagicall&gt;|EFFECT_TYPE_ELEMENTALSHIELD&lt;Effect Type Elementalshield&gt;|EFFECT_TYPE_SLOW&lt;Effect Type Slow&gt;|EFFECT_TYPE_SEEINVISIBLE&lt;Effect Type Seeinvisible&gt;|EFFECT_TYPE_ARCANE_SPELL_FAILURE&lt;Effect Type Arcane Spell Failure&gt;|EFFECT_TYPE_PETRIFY&lt;Effect Type Petrify&gt;|EFFECT_TYPE_ABILITY_INCREASE&lt;Effect Type Ability Increase&gt;|EFFECT_TYPE_ENTANGLE&lt;Effect Type Entangle&gt;|EFFECT_TYPE_DAMAGE_IMMUNITY_DECREASE&lt;Effect Type Damage Immunity Decrease&gt;|EFFECT_TYPE_INVULNERABLE&lt;Effect Type Invulnerable&gt;|EFFECT_TYPE_ATTACK_DECREASE&lt;Effect Type Attack Decrease&gt;|EFFECT_TYPE_DEAF&lt;Effect Type Deaf&gt;|EFFECT_TYPE_REGENERATE&lt;Effect Type Regenerate&gt;|EFFECT_TYPE_DARKNESS&lt;Effect Type Darkness&gt;|EFFECT_TYPE_AREA_OF_EFFECT&lt;Effect Type Area Of Effect&gt;|EFFECT_TYPE_TIMESTOP&lt;Effect Type Timestop&gt;|EFFECT_TYPE_CUTSCENEGHOST&lt;Effect Type Cutsceneghost&gt;|EFFECT_TYPE_SPELL_RESISTANCE_INCREASE&lt;Effect Type Spell Resistance Increase&gt;|EFFECT_TYPE_CURSE&lt;Effect Type Curse&gt;|EFFECT_TYPE_SLEEP&lt;Effect Type Sleep&gt;|EFFECT_TYPE_SPELL_FAILURE&lt;Effect Type Spell Failure&gt;|EFFECT_TYPE_HASTE&lt;Effect Type Haste&gt;|EFFECT_TYPE_SKILL_INCREASE&lt;Effect Type Skill Increase&gt;|EFFECT_TYPE_ATTACK_INCREASE&lt;Effect Type Attack Increase&gt;|EFFECT_TYPE_STUNNED&lt;Effect Type Stunned&gt;|EFFECT_TYPE_MOVEMENT_SPEED_INCREASE&lt;Effect Type Movement Speed Increase&gt;|EFFECT_TYPE_ABILITY_DECREASE&lt;Effect Type Ability Decrease&gt;|EFFECT_TYPE_PARALYZE&lt;Effect Type Paralyze&gt;|EFFECT_TYPE_ETHEREAL&lt;Effect Type Ethereal&gt;|EFFECT_TYPE_MISS_CHANCE&lt;Effect Type Miss Chance&gt;|EFFECT_TYPE_VISUALEFFECT&lt;Effect Type Visualeffect&gt;|EFFECT_TYPE_DISEASE&lt;Effect Type Disease&gt;|EFFECT_TYPE_BEAM&lt;Effect Type Beam&gt;|EFFECT_TYPE_SAVING_THROW_DECREASE&lt;Effect Type Saving Throw Decrease&gt;|EFFECT_TYPE_DAMAGE_REDUCTION&lt;Effect Type Damage Reduction&gt;|EFFECT_TYPE_DAMAGE_RESISTANCE&lt;Effect Type Damage Resistance&gt;|EFFECT_TYPE_FRIGHTENED&lt;Effect Type Frightened&gt;|EFFECT_TYPE_CUTSCENEIMMOBILIZE&lt;Effect Type Cutsceneimmobilize&gt;|EFFECT_TYPE_SILENCE&lt;Effect Type Silence&gt;|EFFECT_TYPE_TEMPORARY_HITPOINTS&lt;Effect Type Temporary Hitpoints&gt;|EFFECT_TYPE_POLYMORPH&lt;Effect Type Polymorph&gt;|EFFECT_TYPE_DISAPPEARAPPEAR&lt;Effect Type Disappearappear&gt;|EFFECT_TYPE_INVALIDEFFECT&lt;Effect Type Invalideffect&gt;|EFFECT_TYPE_TURN_RESISTANCE_DECREASE&lt;Effect Type Turn Resistance Decrease&gt;|EFFECT_TYPE_AC_INCREASE&lt;Effect Type Ac Increase&gt;|EFFECT_TYPE_IMMUNITY&lt;Effect Type Immunity&gt;|EFFECT_TYPE_POISON&lt;Effect Type Poison&gt;|EFFECT_TYPE_NEGATIVELEVEL&lt;Effect Type Negativelevel&gt;|EFFECT_TYPE_IMPROVEDINVISIBILITY&lt;Effect Type Improvedinvisibility&gt;|EFFECT_TYPE_SPELL_IMMUNITY&lt;Effect Type Spell Immunity&gt;|EFFECT_TYPE_SAVING_THROW_INCREASE&lt;Effect Type Saving Throw Increase&gt;|EFFECT_TYPE_INVISIBILITY&lt;Effect Type Invisibility&gt;|EFFECT_TYPE_TURN_RESISTANCE_INCREASE&lt;Effect Type Turn Resistance Increase&gt;|EFFECT_TYPE_ENEMY_ATTACK_BONUS&lt;Effect Type Enemy Attack Bonus&gt;</Enum>
+      <Enum>EFFECT_TYPE_CONCEALMENT&lt;Effect Type Concealment&gt;|EFFECT_TYPE_RESURRECTION&lt;Effect Type Resurrection&gt;|EFFECT_TYPE_DAZED&lt;Effect Type Dazed&gt;|EFFECT_TYPE_CONFUSED&lt;Effect Type Confused&gt;|EFFECT_TYPE_DAMAGE_IMMUNITY_INCREASE&lt;Effect Type Damage Immunity Increase&gt;|EFFECT_TYPE_AC_DECREASE&lt;Effect Type Ac Decrease&gt;|EFFECT_TYPE_DAMAGE_INCREASE&lt;Effect Type Damage Increase&gt;|EFFECT_TYPE_CUTSCENE_PARALYZE&lt;Effect Type Cutscene Paralyze&gt;|EFFECT_TYPE_ULTRAVISION&lt;Effect Type Ultravision&gt;|EFFECT_TYPE_CHARMED&lt;Effect Type Charmed&gt;|EFFECT_TYPE_SANCTUARY&lt;Effect Type Sanctuary&gt;|EFFECT_TYPE_DAMAGE_DECREASE&lt;Effect Type Damage Decrease&gt;|EFFECT_TYPE_TURNED&lt;Effect Type Turned&gt;|EFFECT_TYPE_TRUESEEING&lt;Effect Type Trueseeing&gt;|EFFECT_TYPE_SPELLLEVELABSORPTION&lt;Effect Type Spelllevelabsorption&gt;|EFFECT_TYPE_DOMINATED&lt;Effect Type Dominated&gt;|EFFECT_TYPE_SPELL_RESISTANCE_DECREASE&lt;Effect Type Spell Resistance Decrease&gt;|EFFECT_TYPE_MOVEMENT_SPEED_DECREASE&lt;Effect Type Movement Speed Decrease&gt;|EFFECT_TYPE_SKILL_DECREASE&lt;Effect Type Skill Decrease&gt;|EFFECT_TYPE_BLINDNESS&lt;Effect Type Blindness&gt;|EFFECT_TYPE_DISPELMAGICBEST&lt;Effect Type Dispelmagicbest&gt;|EFFECT_TYPE_SWARM&lt;Effect Type Swarm&gt;|EFFECT_TYPE_DISPELMAGICALL&lt;Effect Type Dispelmagicall&gt;|EFFECT_TYPE_ELEMENTALSHIELD&lt;Effect Type Elementalshield&gt;|EFFECT_TYPE_SLOW&lt;Effect Type Slow&gt;|EFFECT_TYPE_SEEINVISIBLE&lt;Effect Type Seeinvisible&gt;|EFFECT_TYPE_ARCANE_SPELL_FAILURE&lt;Effect Type Arcane Spell Failure&gt;|EFFECT_TYPE_PETRIFY&lt;Effect Type Petrify&gt;|EFFECT_TYPE_ABILITY_INCREASE&lt;Effect Type Ability Increase&gt;|EFFECT_TYPE_ENTANGLE&lt;Effect Type Entangle&gt;|EFFECT_TYPE_DAMAGE_IMMUNITY_DECREASE&lt;Effect Type Damage Immunity Decrease&gt;|EFFECT_TYPE_INVULNERABLE&lt;Effect Type Invulnerable&gt;|EFFECT_TYPE_ATTACK_DECREASE&lt;Effect Type Attack Decrease&gt;|EFFECT_TYPE_DEAF&lt;Effect Type Deaf&gt;|EFFECT_TYPE_REGENERATE&lt;Effect Type Regenerate&gt;|EFFECT_TYPE_DARKNESS&lt;Effect Type Darkness&gt;|EFFECT_TYPE_AREA_OF_EFFECT&lt;Effect Type Area Of Effect&gt;|EFFECT_TYPE_TIMESTOP&lt;Effect Type Timestop&gt;|EFFECT_TYPE_CUTSCENEGHOST&lt;Effect Type Cutsceneghost&gt;|EFFECT_TYPE_SPELL_RESISTANCE_INCREASE&lt;Effect Type Spell Resistance Increase&gt;|EFFECT_TYPE_CURSE&lt;Effect Type Curse&gt;|EFFECT_TYPE_SLEEP&lt;Effect Type Sleep&gt;|EFFECT_TYPE_SPELL_FAILURE&lt;Effect Type Spell Failure&gt;|EFFECT_TYPE_HASTE&lt;Effect Type Haste&gt;|EFFECT_TYPE_SKILL_INCREASE&lt;Effect Type Skill Increase&gt;|EFFECT_TYPE_ATTACK_INCREASE&lt;Effect Type Attack Increase&gt;|EFFECT_TYPE_STUNNED&lt;Effect Type Stunned&gt;|EFFECT_TYPE_MOVEMENT_SPEED_INCREASE&lt;Effect Type Movement Speed Increase&gt;|EFFECT_TYPE_ABILITY_DECREASE&lt;Effect Type Ability Decrease&gt;|EFFECT_TYPE_PARALYZE&lt;Effect Type Paralyze&gt;|EFFECT_TYPE_ETHEREAL&lt;Effect Type Ethereal&gt;|EFFECT_TYPE_MISS_CHANCE&lt;Effect Type Miss Chance&gt;|EFFECT_TYPE_VISUALEFFECT&lt;Effect Type Visualeffect&gt;|EFFECT_TYPE_DISEASE&lt;Effect Type Disease&gt;|EFFECT_TYPE_BEAM&lt;Effect Type Beam&gt;|EFFECT_TYPE_SAVING_THROW_DECREASE&lt;Effect Type Saving Throw Decrease&gt;|EFFECT_TYPE_DAMAGE_REDUCTION&lt;Effect Type Damage Reduction&gt;|EFFECT_TYPE_DAMAGE_RESISTANCE&lt;Effect Type Damage Resistance&gt;|EFFECT_TYPE_FRIGHTENED&lt;Effect Type Frightened&gt;|EFFECT_TYPE_CUTSCENEIMMOBILIZE&lt;Effect Type Cutsceneimmobilize&gt;|EFFECT_TYPE_SILENCE&lt;Effect Type Silence&gt;|EFFECT_TYPE_TEMPORARY_HITPOINTS&lt;Effect Type Temporary Hit Points&gt;|EFFECT_TYPE_POLYMORPH&lt;Effect Type Polymorph&gt;|EFFECT_TYPE_DISAPPEARAPPEAR&lt;Effect Type Disappearappear&gt;|EFFECT_TYPE_INVALIDEFFECT&lt;Effect Type Invalideffect&gt;|EFFECT_TYPE_TURN_RESISTANCE_DECREASE&lt;Effect Type Turn Resistance Decrease&gt;|EFFECT_TYPE_AC_INCREASE&lt;Effect Type Ac Increase&gt;|EFFECT_TYPE_IMMUNITY&lt;Effect Type Immunity&gt;|EFFECT_TYPE_POISON&lt;Effect Type Poison&gt;|EFFECT_TYPE_NEGATIVELEVEL&lt;Effect Type Negativelevel&gt;|EFFECT_TYPE_IMPROVEDINVISIBILITY&lt;Effect Type Improvedinvisibility&gt;|EFFECT_TYPE_SPELL_IMMUNITY&lt;Effect Type Spell Immunity&gt;|EFFECT_TYPE_SAVING_THROW_INCREASE&lt;Effect Type Saving Throw Increase&gt;|EFFECT_TYPE_INVISIBILITY&lt;Effect Type Invisibility&gt;|EFFECT_TYPE_TURN_RESISTANCE_INCREASE&lt;Effect Type Turn Resistance Increase&gt;|EFFECT_TYPE_ENEMY_ATTACK_BONUS&lt;Effect Type Enemy Attack Bonus&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -157,7 +157,7 @@
       <Name>ActionMode</Name>
       <Keyword>action_mode</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>ACTION_MODE_STEALTH&lt;Action Mode Stealth&gt;|ACTION_MODE_POWER_ATTACK&lt;Action Mode Power Attack&gt;|ACTION_MODE_IMPROVED_EXPERTISE&lt;Action Mode Improved Expertise&gt;|ACTION_MODE_DETECT&lt;Action Mode Detect&gt;|ACTION_MODE_FLURRY_OF_BLOWS&lt;Action Mode Flurry Of Blows&gt;|ACTION_MODE_EXPERTISE&lt;Action Mode Expertise&gt;|ACTION_MODE_DEFENSIVE_CAST&lt;Action Mode Defensive Cast&gt;|ACTION_MODE_RAPID_SHOT&lt;Action Mode Rapid Shot&gt;|ACTION_MODE_IMPROVED_POWER_ATTACK&lt;Action Mode Improved Power Attack&gt;|ACTION_MODE_COUNTERSPELL&lt;Action Mode Counterspell&gt;|ACTION_MODE_DIRTY_FIGHTING&lt;Action Mode Dirty Fighting&gt;|ACTION_MODE_PARRY&lt;Action Mode Parry&gt;</Enum>
+      <Enum>ACTION_MODE_STEALTH&lt;Stealth&gt;|ACTION_MODE_POWER_ATTACK&lt;Power Attack&gt;|ACTION_MODE_IMPROVED_EXPERTISE&lt;Improved Expertise&gt;|ACTION_MODE_DETECT&lt;Detect&gt;|ACTION_MODE_FLURRY_OF_BLOWS&lt;Flurry Of Blows&gt;|ACTION_MODE_EXPERTISE&lt;Expertise&gt;|ACTION_MODE_DEFENSIVE_CAST&lt;Defensive Cast&gt;|ACTION_MODE_RAPID_SHOT&lt;Rapid Shot&gt;|ACTION_MODE_IMPROVED_POWER_ATTACK&lt;Improved Power Attack&gt;|ACTION_MODE_COUNTERSPELL&lt;Counterspell&gt;|ACTION_MODE_DIRTY_FIGHTING&lt;Dirty Fighting&gt;|ACTION_MODE_PARRY&lt;Parry&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -1650,7 +1650,7 @@
           </Binding>
         </KnowIt>
         <KnowIt>
-          <Name>Current Hitpoints</Name>
+          <Name>Current Hit Points</Name>
           <Visible>true</Visible>
           <Labels/>
           <Types>
@@ -1658,13 +1658,13 @@
           </Types>
           <Binding flavour="function">
             <ScriptIt>
-              <Name>Current Hitpoints</Name>
+              <Name>Current Hit Points</Name>
               <Visible>true</Visible>
               <Labels/>
               <Children/>
               <CodeBlocks>
                 <CodeBlockSource>
-                  <Name>Current Hitpoints</Name>
+                  <Name>Current Hit Points</Name>
                   <Visible>true</Visible>
                   <Labels/>
                   <Slot>OnDamaged</Slot>
@@ -1683,7 +1683,7 @@
           </Binding>
         </KnowIt>
         <KnowIt>
-          <Name>Maximum Hitpoints</Name>
+          <Name>Maximum Hit Points</Name>
           <Visible>true</Visible>
           <Labels/>
           <Types>
@@ -1691,13 +1691,13 @@
           </Types>
           <Binding flavour="function">
             <ScriptIt>
-              <Name>Max Hitpoints for Object &lt;object&gt;</Name>
+              <Name>Max Hit Points for Object &lt;object&gt;</Name>
               <Visible>true</Visible>
               <Labels/>
               <Children/>
               <CodeBlocks>
                 <CodeBlockSource>
-                  <Name>Max Hitpoints for Object &lt;object&gt;</Name>
+                  <Name>Max Hit Points for Object &lt;object&gt;</Name>
                   <Visible>true</Visible>
                   <Labels/>
                   <Slot>OnDamaged</Slot>
@@ -9582,7 +9582,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Show &lt;Text&gt; in the chat window of the Player Character</Name>
+      <Name>Show &lt;Text&gt; in the chat window</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -9590,7 +9590,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Show &lt;Text&gt; in the chat window of the Player Character</Name>
+          <Name>Show &lt;Text&gt; in the chat window</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>183</Id>
@@ -9610,7 +9610,7 @@
           <Code>
             <Line>
               <Literal>SendMessageToPC(GetFirstPC(), </Literal>
-              <Scope data="argument" ref="The Text">
+              <Scope data="argument" ref="Text">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -15646,7 +15646,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Remove from &lt;Creature/Placeable&gt;&lt;Immunity Percentage&gt; % damage immunity to &lt;Immunity Type&gt;</Name>
+      <Name>Decrease &lt;Target&gt;'s immunity to &lt;Damage Type&gt; by &lt;Amount&gt;%</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -15654,7 +15654,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Remove from &lt;Creature/Placeable&gt;&lt;Immunity Percentage&gt; % damage immunity to &lt;Immunity Type&gt;</Name>
+     	 <Name>Decrease &lt;Target&gt;'s immunity to &lt;Damage Type&gt; by &lt;Amount&gt;%</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>276</Id>
@@ -15663,7 +15663,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Creature/Placeable</Name>
+              <Name>Target</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -15672,7 +15672,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Immunity Percentage</Name>
+              <Name>Amount</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -15680,29 +15680,29 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Immunity Type</Name>
+              <Name>Damage Type</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>damage_type</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>effect eImmunity = EffectDamageImmunityDecrease(FloatToInt(</Literal>
-              <Scope data="argument" ref="Immunity Percentage">
+              <Literal>effect eImmunity = EffectDamageImmunityDecrease(</Literal>
+              <Scope data="argument" ref="Damage Type">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>), FloatToInt(</Literal>
-              <Scope data="argument" ref="Immunity Type">
+              <Literal>, FloatToInt(</Literal>
+              <Scope data="argument" ref="Amount">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>));</Literal>
             </Line>
             <Line>
               <Literal>ApplyEffectToObject(DURATION_TYPE_PERMANENT, eImmunity, </Literal>
-              <Scope data="argument" ref="Creature/Placeable">
+              <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -15866,7 +15866,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Target&gt; &lt;refuse&gt;s action commands</Name>
+      <Name>&lt;Allow&gt; &lt;Target&gt; to recieve commands</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -15874,7 +15874,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Target&gt; &lt;refuse&gt;s action commands</Name>
+          <Name>&lt;Allow&gt; &lt;Target&gt; to recieve commands</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>280</Id>
@@ -15895,11 +15895,11 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>refuse</Name>
+              <Name>Allow</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>allow</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -15910,7 +15910,7 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, SetCommandable(FloatToInt(</Literal>
-              <Scope data="argument" ref="refuse">
+              <Scope data="argument" ref="Allow">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>)));</Literal>
@@ -15920,7 +15920,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Target&gt; &lt;refuse&gt;s action commands</Name>
+      <Name>&lt;Allow&gt; &lt;Target&gt; to recieve commands</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -15928,7 +15928,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Target&gt; &lt;refuse&gt;s action commands</Name>
+          <Name>&lt;Allow&gt; &lt;Target&gt; to recieve commands</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>281</Id>
@@ -15949,11 +15949,11 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>refuse</Name>
+              <Name>Allow</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>allow</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -16274,7 +16274,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set &lt;Target&gt; as &lt;Undestroyable&gt;</Name>
+      <Name>&lt;Allow&gt; &lt;Target&gt; to be destroyed</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -18614,7 +18614,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Deactivate&gt; &lt;Target&gt;&apos;s &lt;Action Mode&gt; mode</Name>
+      <Name>&lt;Disable&gt; &lt;Target&gt;&apos;s &lt;Action Mode&gt; mode</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -18622,7 +18622,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Deactivate&gt; &lt;Target&gt;&apos;s &lt;Action Mode&gt; mode</Name>
+          <Name>&lt;Disable&gt; &lt;Target&gt;&apos;s &lt;Action Mode&gt; mode</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>329</Id>
@@ -18631,11 +18631,11 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Deactivate</Name>
+              <Name>Disable</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>enable_disable</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -18651,22 +18651,22 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>action_mode</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetActionMode(FloatToInt(</Literal>
-              <Scope data="argument" ref="Deactivate">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>), </Literal>
+              <Literal>SetActionMode(</Literal>
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
               <Scope data="argument" ref="Action Mode">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="argument" ref="Disable">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -18676,7 +18676,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Action Mode Settler&gt; &lt;deactivate&gt;s &lt;Target&gt;&apos;s &lt;Action Mode&gt; mode</Name>
+      <Name>&lt;Action Mode Setter&gt; &lt;Disable&gt;s &lt;Target&gt;&apos;s &lt;Action Mode&gt; mode</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -18684,7 +18684,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Action Mode Settler&gt; &lt;deactivate&gt;s &lt;Target&gt;&apos;s &lt;Action Mode&gt; mode</Name>
+          <Name>&lt;Action Mode Setter&gt; &lt;Disable&gt;s &lt;Target&gt;&apos;s &lt;Action Mode&gt; mode</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>330</Id>
@@ -18693,7 +18693,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Action Mode Settler</Name>
+              <Name>Action Mode Setter</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -18701,11 +18701,11 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>deactivate</Name>
+              <Name>Disable</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>enable_disable</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -18721,7 +18721,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>action_mode</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -18731,16 +18731,16 @@
               <Scope data="argument" ref="Action Mode Setter">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, SetActionMode(FloatToInt(</Literal>
-              <Scope data="argument" ref="deactivate">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>), </Literal>
+              <Literal>, SetActionMode(</Literal>
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
               <Scope data="argument" ref="Action Mode">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="argument" ref="Disable">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>));</Literal>
@@ -21353,7 +21353,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;The Activator&gt; triggers a set PC&apos;s camera facing to be &lt;Direction&gt; &lt;Distance&gt; at &lt;Pitch&gt; at &lt;Speed&gt;</Name>
+      <Name>&lt;The Activator&gt; faces the camera to &lt;Direction&gt; degrees from the East and &lt;Distance&gt; metres from the character at a &lt;Pitch&gt; degree angle with &lt;Transition Type&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -21361,7 +21361,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;The Activator&gt; triggers a set PC&apos;s camera facing to be &lt;Direction&gt; &lt;Distance&gt; at &lt;Pitch&gt; with &lt;Transition Type&gt;</Name>
+          <Name>&lt;The Activator&gt; faces the camera to &lt;Direction&gt; degrees from the East and &lt;Distance&gt; metres from the character at a &lt;Pitch&gt; degree angle with &lt;Transition Type&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>379</Id>
@@ -23251,7 +23251,7 @@
       <Name>Apply the death effect to all creatures of racial type &lt;Racial Type&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -23751,13 +23751,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Current Hitpoints of Object &lt;Object&gt;</Name>
+      <Name>Current Hit Points of Object &lt;Object&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Current Hitpoints of Object &lt;Object&gt;</Name>
+          <Name>Current Hit Points of Object &lt;Object&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>419</Id>
@@ -23789,13 +23789,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Maximum Hitpoints for Object &lt;Object&gt;</Name>
+      <Name>Maximum Hit Points for Object &lt;Object&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Maximum Hitpoints for Object &lt;Object&gt;</Name>
+          <Name>Maximum Hit Points for Object &lt;Object&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>420</Id>
@@ -24077,7 +24077,9 @@
     <ScriptIt>
       <Name>the opposite of &lt;Number&gt;</Name>
       <Visible>false</Visible>
-      <Labels/>
+      <Labels>
+      <Label>DELETE</Label>
+      </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
@@ -25106,7 +25108,7 @@
   </Effects>
   <DescribeIts>
     <KnowIt>
-      <Name>Current Hitpoints</Name>
+      <Name>Current Hit Points</Name>
       <Visible>true</Visible>
       <Labels/>
       <Types>
@@ -25117,7 +25119,7 @@
       </Binding>
     </KnowIt>
     <KnowIt>
-      <Name>Maximum Hitpoints</Name>
+      <Name>Maximum Hit Points</Name>
       <Visible>true</Visible>
       <Labels/>
       <Types>
