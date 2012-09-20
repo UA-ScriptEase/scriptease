@@ -21279,7 +21279,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set the PC&apos;s camera facing to be &lt;Direction&gt; &lt;Distance&gt; at &lt;Pitch&gt; at &lt;Speed&gt;</Name>
+      <Name>Face the camera to &lt;Direction&gt; degrees from the East and &lt;Distance&gt; metres from the character at a &lt;Pitch&gt; degree angle with &lt;Transition Type&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -21287,7 +21287,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set the PC&apos;s camera facing to be &lt;Direction&gt; &lt;Distance&gt; at &lt;Pitch&gt; with &lt;Transition Type&gt;</Name>
+      <Name>Face the camera to &lt;Direction&gt; degrees from the East and &lt;Distance&gt; metres from the character at a &lt;Pitch&gt; degree angle with &lt;Transition Type&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>378</Id>
