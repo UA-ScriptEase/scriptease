@@ -394,14 +394,14 @@ public class ScriptWidgetFactory {
 		 */
 		Comparable<?> min = null; // default to no min limit
 		final Comparable<?> max = null; // default to no max limit
-		final Number stepSize = 1; // default to int step size
+		final Float stepSize = 1.0f; // default to int step size
 		final String regex = TranslatorManager.getInstance().getActiveTranslator()
 				.getGameTypeManager().getReg(bindingType);
 		final Pattern regexPattern = Pattern.compile(regex);
 		if (regex != null && !regex.isEmpty()) {
 			// if regex doesn't specify negative numbers, make min 0
 			if (!regex.startsWith("[-]"))
-				min = 0;
+				min = 0.0f;
 			// if regex specifies \. it wants a floating point
 			if (regex.contains("\\.")) {
 				isFloat = true;

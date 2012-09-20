@@ -4,7 +4,14 @@
       <Name>CameraMode</Name>
       <Keyword>camera_mode</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>CAMERA_TRANSITION_TYPE_VERY_FAST&lt;Camera Transition Type Very Fast&gt;|CAMERA_TRANSITION_TYPE_VERY_SLOW&lt;Camera Transition Type Very Slow&gt;|CAMERA_MODE_TOP_DOWN&lt;Camera Mode Top Down&gt;|CAMERA_TRANSITION_TYPE_SNAP&lt;Camera Transition Type Snap&gt;|CAMERA_TRANSITION_TYPE_FAST&lt;Camera Transition Type Fast&gt;|CAMERA_MODE_CHASE_CAMERA&lt;Camera Mode Chase Camera&gt;|CAMERA_TRANSITION_TYPE_MEDIUM&lt;Camera Transition Type Medium&gt;|CAMERA_TRANSITION_TYPE_SLOW&lt;Camera Transition Type Slow&gt;|CAMERA_TRANSITION_TYPE_CRAWL&lt;Camera Transition Type Crawl&gt;|CAMERA_MODE_STIFF_CHASE_CAMERA&lt;Camera Mode Stiff Chase Camera&gt;</Enum>
+      <Enum>CAMERA_MODE_TOP_DOWN&lt;Top Down&gt;|CAMERA_MODE_CHASE_CAMERA&lt;Chase Camera&gt;|CAMERA_MODE_STIFF_CHASE_CAMERA&lt;Stiff Chase Camera&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
+    </Type>
+       <Type>
+      <Name>CameraTransition</Name>
+      <Keyword>camera_transition</Keyword>
+      <CodeSymbol>int</CodeSymbol>
+      <Enum>CAMERA_TRANSITION_TYPE_VERY_FAST&lt;Very Fast&gt;|CAMERA_TRANSITION_TYPE_VERY_SLOW&lt;Very Slow&gt;|CAMERA_TRANSITION_TYPE_SNAP&lt;Snap&gt;|CAMERA_TRANSITION_TYPE_FAST&lt;Fast&gt;|CAMERA_TRANSITION_TYPE_MEDIUM&lt;Medium&gt;|CAMERA_TRANSITION_TYPE_SLOW&lt;Slow&gt;|CAMERA_TRANSITION_TYPE_CRAWL&lt;Crawl&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -66,6 +73,20 @@
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
+    	<Name>BodyPart</Name>
+    	<Keyword>body_part</Keyword>
+    	<CodeSymbol>int</CodeSymbol>
+    	<Enum>CREATURE_PART_BELT&lt;Belt&gt;|CREATURE_PART_HEAD&lt;Head&gt;|CREATURE_PART_LEFT_BICEP&lt;Left Bicep&gt;|CREATURE_PART_LEFT_FOOT&lt;Left Foot&gt;|CREATURE_PART_LEFT_FOREARM&lt;Left Forearm&gt;|CREATURE_PART_LEFT_HAND&lt;Left Hand&gt;|CREATURE_PART_LEFT_SHIN&lt;Left Shin&gt;|CREATURE_PART_LEFT_SHOULDER&lt;Left Shoulder&gt;|CREATURE_PART_LEFT_THIGH&lt;Left Thigh&gt;|CREATURE_PART_NECK&lt;Neck&gt;|CREATURE_PART_PELVIS&lt;Pelvis&gt;|CREATURE_PART_RIGHT_BICEP&lt;Right Bicep&gt;|CREATURE_PART_RIGHT_FOOT&lt;Right Foot&gt;|CREATURE_PART_RIGHT_FOREARM&lt;Right Forearm&gt;|CREATURE_PART_RIGHT_HAND&lt;Right Hand&gt;|CREATURE_PART_RIGHT_SHIN&lt;Right Shin&gt;|CREATURE_PART_RIGHT_SHOULDER&lt;Right Shoulder&gt;|CREATURE_PART_RIGHT_THIGH&lt;Right Thigh&gt;|CREATURE_PART_TORSO&lt;Torso&gt;</Enum>
+    	<GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
+    	<Name>ModelType</Name>
+    	<Keyword>model_type</Keyword>
+    	<CodeSymbol>int</CodeSymbol>
+    	<Enum>CREATURE_MODEL_TYPE_NONE&lt;None&gt;|CREATURE_MODEL_TYPE_SKIN&lt;Skin&gt;|CREATURE_MODEL_TYPE_TATTOO&lt;Tattoo&gt;|CREATURE_MODEL_TYPE_UNDEAD&lt;Undead&gt;</Enum>
+   		<GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
       <Name>Encounter</Name>
       <Keyword>encounter</Keyword>
       <CodeSymbol>object</CodeSymbol>
@@ -112,12 +133,18 @@
       <Enum>FALSE&lt;Unlock&gt;|TRUE&lt;Lock&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
+      <Type>
+      <Name>LockClose</Name>
+      <Keyword>lock_close</Keyword>
+      <CodeSymbol>int</CodeSymbol>
+      <Enum>FALSE&lt;Unlock and Open&gt;|TRUE&lt;Lock and Close&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
+    </Type>
     <Type>
       <Name>InventorySlot</Name>
       <Keyword>inventory_slot</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>INVENTORY_SLOT_RIGHTHAND&lt;Inventory Slot Righthand&gt;|INVENTORY_SLOT_NECK&lt;Inventory Slot Neck&gt;|INVENTORY_SLOT_CHEST&lt;Inventory Slot Chest&gt;|INVENTORY_SLOT_BOLTS&lt;Inventory Slot Bolts&gt;|INVENTORY_SLOT_BOOTS&lt;Inventory Slot Boots&gt;|INVENTORY_SLOT_CWEAPON_B&lt;Inventory Slot Cweapon B&gt;|INVENTORY_SLOT_LEFTRING&lt;Inventory Slot Leftring&gt;|INVENTORY_SLOT_CARMOUR&lt;Inventory Slot Carmour&gt;|INVENTORY_SLOT_HEAD&lt;Inventory Slot Head&gt;|INVENTORY_SLOT_ARMS&lt;Inventory Slot Arms&gt;|INVENTORY_SLOT_CWEAPON_L&lt;Inventory Slot Cweapon L&gt;|INVENTORY_SLOT_CWEAPON_R&lt;Inventory Slot Cweapon R&gt;|INVENTORY_SLOT_ARROWS&lt;Inventory Slot Arrows&gt;|INVENTORY_SLOT_BULLETS&lt;Inventory Slot Bullets&gt;|INVENTORY_SLOT_RIGHTRING&lt;Inventory Slot Rightring&gt;|INVENTORY_SLOT_LEFTHAND&lt;Inventory Slot Lefthand&gt;|INVENTORY_SLOT_BELT&lt;Inventory Slot Belt&gt;|INVENTORY_SLOT_CLOAK&lt;Inventory Slot Cloak&gt;</Enum>
-      <GUI>JCOMBOBOX</GUI>
+<Enum>INVENTORY_SLOT_HEAD&lt;Head&gt;|INVENTORY_SLOT_CHEST&lt;Chest&gt;|INVENTORY_SLOT_ARMS&lt;Arms&gt;|INVENTORY_SLOT_BELT&lt;Belt&gt;|INVENTORY_SLOT_BOOTS&lt;Boots&gt;|INVENTORY_SLOT_LEFTHAND&lt;Left Hand&gt;|INVENTORY_SLOT_RIGHTHAND&lt;Right Hand&gt;|INVENTORY_SLOT_ARROWS&lt;Arrows&gt;|INVENTORY_SLOT_BOLTS&lt;Bolts&gt;|INVENTORY_SLOT_BULLETS&lt;Bullets&gt;|INVENTORY_SLOT_CLOAK&lt;Cloak&gt;|INVENTORY_SLOT_NECK&lt;Neck&gt;|INVENTORY_SLOT_LEFTRING&lt;Left Ring&gt;|INVENTORY_SLOT_RIGHTRING&lt;Right Ring&gt;|INVENTORY_SLOT_CARMOUR&lt;Creature Armour&gt;|INVENTORY_SLOT_CWEAPON_L&lt;Creature Left Attack&gt;|INVENTORY_SLOT_CWEAPON_R&lt;Creature Right Attack&gt;|INVENTORY_SLOT_CWEAPON_B&lt;Creature Special Attack&gt;</Enum>      <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
       <Name>ObjectType</Name>
@@ -255,7 +282,7 @@
       <Name>Skill</Name>
       <Keyword>skill</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>SKILL_SPELLCRAFT&lt;Skill Spellcraft&gt;|SKILL_LISTEN&lt;Skill Listen&gt;|SKILL_MOVE_SILENTLY&lt;Skill Move Silently&gt;|SKILL_DISABLE_TRAP&lt;Skill Disable Trap&gt;|SKILL_HEAL&lt;Skill Heal&gt;|SKILL_ALL_SKILLS&lt;Skill All Skills&gt;|SKILL_PERFORM&lt;Skill Perform&gt;|SKILL_SEARCH&lt;Skill Search&gt;|SKILL_SET_TRAP&lt;Skill Set Trap&gt;|SKILL_ANIMAL_EMPATHY&lt;Skill Animal Empathy&gt;|SKILL_PARRY&lt;Skill Parry&gt;|SKILL_USE_MAGIC_DEVICE&lt;Skill Use Magic Device&gt;|SKILL_SPOT&lt;Skill Spot&gt;|SKILL_CONCENTRATION&lt;Skill Concentration&gt;|SKILL_PERSUADE&lt;Skill Persuade&gt;|SKILL_PICK_POCKET&lt;Skill Pick Pocket&gt;|SKILL_OPEN_LOCK&lt;Skill Open Lock&gt;|SKILL_TAUNT&lt;Skill Taunt&gt;|SKILL_LORE&lt;Skill Lore&gt;|SKILL_DISCIPLINE&lt;Skill Discipline&gt;</Enum>
+      <Enum>SKILL_SPELLCRAFT&lt;Spellcraft&gt;|SKILL_LISTEN&lt;Listen&gt;|SKILL_MOVE_SILENTLY&lt;Move Silently&gt;|SKILL_DISABLE_TRAP&lt;Disable Trap&gt;|SKILL_HEAL&lt;Heal&gt;|SKILL_ALL_SKILLS&lt;All Skills&gt;|SKILL_PERFORM&lt;Perform&gt;|SKILL_SEARCH&lt;Search&gt;|SKILL_SET_TRAP&lt;Set Trap&gt;|SKILL_ANIMAL_EMPATHY&lt;Animal Empathy&gt;|SKILL_PARRY&lt;Parry&gt;|SKILL_USE_MAGIC_DEVICE&lt;Use Magic Device&gt;|SKILL_SPOT&lt;Spot&gt;|SKILL_CONCENTRATION&lt;Concentration&gt;|SKILL_PERSUADE&lt;Persuade&gt;|SKILL_PICK_POCKET&lt;Pick Pocket&gt;|SKILL_OPEN_LOCK&lt;Open Lock&gt;|SKILL_TAUNT&lt;Taunt&gt;|SKILL_LORE&lt;Lore&gt;|SKILL_DISCIPLINE&lt;Discipline&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -363,8 +390,8 @@
     <Type>
       <Name>FadeSpeed</Name>
       <Keyword>fade_speed</Keyword>
-      <CodeSymbol>int</CodeSymbol>
-      <Enum>FADE_SPEED_SLOW&lt;Fade Speed Slow&gt;|FADE_SPEED_MEDIUM&lt;Fade Speed Medium&gt;|FADE_SPEED_SLOWEST&lt;Fade Speed Slowest&gt;|FADE_SPEED_FAST&lt;Fade Speed Fast&gt;|FADE_SPEED_FASTEST&lt;Fade Speed Fastest&gt;</Enum>
+      <CodeSymbol>float</CodeSymbol>
+      <Enum>FADE_SPEED_SLOW&lt;Slow&gt;|FADE_SPEED_MEDIUM&lt;Medium&gt;|FADE_SPEED_SLOWEST&lt;Slowest&gt;|FADE_SPEED_FAST&lt;Fast&gt;|FADE_SPEED_FASTEST&lt;Fastest&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -381,19 +408,19 @@
       <Enum>FALSE&lt;No&gt;|TRUE&lt;Yes&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
+     <Type>
+      <Name>Allow</Name>
+      <Keyword>allow</Keyword>
+      <CodeSymbol>int</CodeSymbol>
+      <Enum>FALSE&lt;Do not allow&gt;|TRUE&lt;Allow&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
+    </Type>
         <Type>
       <Name>OnOrOff</Name>
       <Keyword>onoroff</Keyword>
       <CodeSymbol>int</CodeSymbol>
       <Enum>FALSE&lt;Off&gt;|TRUE&lt;On&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
-    </Type>
-    <Type>
-    	<Name>Destroyablee</Name>
-    	<Keyword>destroyable</Keyword>
-    	<CodeSymbol>int</CodeSymbol>
-    	<Enum>FALSE&lt;Destroyable&gt;|TRUE&lt;Undestroyable&gt;</Enum>
-    	<GUI>JCOMBOBOX</GUI>
     </Type>
      <Type>
       <Name>Immortal</Name>
@@ -527,7 +554,7 @@
       <Name>VoiceChat</Name>
       <Keyword>voice_chat</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>VOICE_CHAT_LOOKHERE&lt;Voice Chat Lookhere&gt;|VOICE_CHAT_POISONED&lt;Voice Chat Poisoned&gt;|VOICE_CHAT_ENCUMBERED&lt;Voice Chat Encumbered&gt;|VOICE_CHAT_HIDE&lt;Voice Chat Hide&gt;|VOICE_CHAT_BATTLECRY3&lt;Voice Chat Battlecry3&gt;|VOICE_CHAT_BATTLECRY2&lt;Voice Chat Battlecry2&gt;|VOICE_CHAT_FLEE&lt;Voice Chat Flee&gt;|VOICE_CHAT_BATTLECRY1&lt;Voice Chat Battlecry1&gt;|VOICE_CHAT_GOODBYE&lt;Voice Chat Goodbye&gt;|VOICE_CHAT_SELECTED&lt;Voice Chat Selected&gt;|VOICE_CHAT_HELLO&lt;Voice Chat Hello&gt;|VOICE_CHAT_MOVEOVER&lt;Voice Chat Moveover&gt;|VOICE_CHAT_HOLD&lt;Voice Chat Hold&gt;|VOICE_CHAT_BADIDEA&lt;Voice Chat Badidea&gt;|VOICE_CHAT_LAUGH&lt;Voice Chat Laugh&gt;|VOICE_CHAT_WEAPONSUCKS&lt;Voice Chat Weaponsucks&gt;|VOICE_CHAT_TASKCOMPLETE&lt;Voice Chat Taskcomplete&gt;|VOICE_CHAT_GROUP&lt;Voice Chat Group&gt;|VOICE_CHAT_ENEMIES&lt;Voice Chat Enemies&gt;|VOICE_CHAT_HEALME&lt;Voice Chat Healme&gt;|VOICE_CHAT_CHEER&lt;Voice Chat Cheer&gt;|VOICE_CHAT_GUARDME&lt;Voice Chat Guardme&gt;|VOICE_CHAT_REST&lt;Voice Chat Rest&gt;|VOICE_CHAT_PICKLOCK&lt;Voice Chat Picklock&gt;|VOICE_CHAT_PAIN1&lt;Voice Chat Pain1&gt;|VOICE_CHAT_CANTDO&lt;Voice Chat Cantdo&gt;|VOICE_CHAT_ATTACK&lt;Voice Chat Attack&gt;|VOICE_CHAT_PAIN3&lt;Voice Chat Pain3&gt;|VOICE_CHAT_PAIN2&lt;Voice Chat Pain2&gt;|VOICE_CHAT_TALKTOME&lt;Voice Chat Talktome&gt;|VOICE_CHAT_CANDO&lt;Voice Chat Cando&gt;|VOICE_CHAT_THANKS&lt;Voice Chat Thanks&gt;|VOICE_CHAT_NEARDEATH&lt;Voice Chat Neardeath&gt;|VOICE_CHAT_YES&lt;Voice Chat Yes&gt;|VOICE_CHAT_SEARCH&lt;Voice Chat Search&gt;|VOICE_CHAT_GATTACK1&lt;Voice Chat Gattack1&gt;|VOICE_CHAT_GATTACK2&lt;Voice Chat Gattack2&gt;|VOICE_CHAT_GATTACK3&lt;Voice Chat Gattack3&gt;|VOICE_CHAT_CUSS&lt;Voice Chat Cuss&gt;|VOICE_CHAT_SPELLFAILED&lt;Voice Chat Spellfailed&gt;|VOICE_CHAT_TAUNT&lt;Voice Chat Taunt&gt;|VOICE_CHAT_HELP&lt;Voice Chat Help&gt;|VOICE_CHAT_THREATEN&lt;Voice Chat Threaten&gt;|VOICE_CHAT_DEATH&lt;Voice Chat Death&gt;|VOICE_CHAT_FOLLOWME&lt;Voice Chat Followme&gt;|VOICE_CHAT_STOP&lt;Voice Chat Stop&gt;|VOICE_CHAT_NO&lt;Voice Chat No&gt;|VOICE_CHAT_BORED&lt;Voice Chat Bored&gt;</Enum>
+      <Enum>VOICE_CHAT_LOOKHERE&lt;Look Here&gt;|VOICE_CHAT_POISONED&lt;Poisoned&gt;|VOICE_CHAT_ENCUMBERED&lt;Encumbered&gt;|VOICE_CHAT_HIDE&lt;Hide&gt;|VOICE_CHAT_BATTLECRY3&lt;Battlecry 3&gt;|VOICE_CHAT_BATTLECRY2&lt;Battlecry 2&gt;|VOICE_CHAT_FLEE&lt;Flee&gt;|VOICE_CHAT_BATTLECRY1&lt;Battlecry 1&gt;|VOICE_CHAT_GOODBYE&lt;Goodbye&gt;|VOICE_CHAT_SELECTED&lt;Selected&gt;|VOICE_CHAT_HELLO&lt;Hello&gt;|VOICE_CHAT_MOVEOVER&lt;Move Over&gt;|VOICE_CHAT_HOLD&lt;Hold&gt;|VOICE_CHAT_BADIDEA&lt;Bad Idea&gt;|VOICE_CHAT_LAUGH&lt;Laugh&gt;|VOICE_CHAT_WEAPONSUCKS&lt;Weapon Sucks&gt;|VOICE_CHAT_TASKCOMPLETE&lt;Task Complete&gt;|VOICE_CHAT_GROUP&lt;Group&gt;|VOICE_CHAT_ENEMIES&lt;Enemies&gt;|VOICE_CHAT_HEALME&lt;Heal Me&gt;|VOICE_CHAT_CHEER&lt;Cheer&gt;|VOICE_CHAT_GUARDME&lt;Guard Me&gt;|VOICE_CHAT_REST&lt;Rest&gt;|VOICE_CHAT_PICKLOCK&lt;Pick Lock&gt;|VOICE_CHAT_PAIN1&lt;Pain 1&gt;|VOICE_CHAT_CANTDO&lt;Cannot Do&gt;|VOICE_CHAT_ATTACK&lt;Attack&gt;|VOICE_CHAT_PAIN3&lt;Pain 3&gt;|VOICE_CHAT_PAIN2&lt;Pain 2&gt;|VOICE_CHAT_TALKTOME&lt;Talk To Me&gt;|VOICE_CHAT_CANDO&lt;Can Do&gt;|VOICE_CHAT_THANKS&lt;Thanks&gt;|VOICE_CHAT_NEARDEATH&lt;Near Death&gt;|VOICE_CHAT_YES&lt;Yes&gt;|VOICE_CHAT_SEARCH&lt;Search&gt;|VOICE_CHAT_GATTACK1&lt;Attack 1&gt;|VOICE_CHAT_GATTACK2&lt;Attack 2&gt;|VOICE_CHAT_GATTACK3&lt;Attack 3&gt;|VOICE_CHAT_CUSS&lt;Cuss&gt;|VOICE_CHAT_SPELLFAILED&lt;Spell Failed&gt;|VOICE_CHAT_TAUNT&lt;Taunt&gt;|VOICE_CHAT_HELP&lt;Help&gt;|VOICE_CHAT_THREATEN&lt;Threaten&gt;|VOICE_CHAT_DEATH&lt;Death&gt;|VOICE_CHAT_FOLLOWME&lt;Follow Me&gt;|VOICE_CHAT_STOP&lt;Stop&gt;|VOICE_CHAT_NO&lt;No&gt;|VOICE_CHAT_BORED&lt;Bored&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -5354,7 +5381,6 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>creature</Type>
                 <Type>placeable</Type>
                 <Type>door</Type>
               </Types>
@@ -9327,7 +9353,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>disturbance_type</Type>
+                <Type>effect_type</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -9339,6 +9365,9 @@
               </Types>
             </KnowIt>
           </Parameters>
+          <Includes>
+          <Include>nw_i0_spells</Include>
+          </Includes>
           <Code>
             <Line>
               <Literal>RemoveSpecificEffect(</Literal>
@@ -9385,7 +9414,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>disturbance_type</Type>
+                <Type>effect_type</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -9397,6 +9426,9 @@
               </Types>
             </KnowIt>
           </Parameters>
+          <Includes>
+          <Include>nw_i0_spells</Include>
+          </Includes>
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
@@ -12746,15 +12778,31 @@
             </KnowIt>
           </Parameters>
           <Code>
+            
+              <Line>
+              <Literal>effect veffect = EffectVisualEffect(</Literal>
+              <Scope data="argument" ref="Area of Effect">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
             <Line>
-              <Literal></Literal>
+              <Literal>ApplyEffectToObject(DURATION_TYPE_TEMPORARY, veffect, </Literal>
+              <Scope data="argument" ref="Target">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="argument" ref="Duration">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>);</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;The Placeable&gt; alerts nearby creatures from its faction.</Name>
+      <Name>Turn &lt;Placeable&gt;'s faction against the Player Character that opened or destroyed it</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -12762,7 +12810,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;The Placeable&gt; alerts nearby creatures from its faction.</Name>
+          <Name>Turn &lt;Placeable&gt;'s faction against the Player Character that opened or destroyed it</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>233</Id>
@@ -12771,7 +12819,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>The Placeable</Name>
+              <Name>Placeable</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -12779,10 +12827,13 @@
               </Types>
             </KnowIt>
           </Parameters>
+          <Includes>
+          <Include>nw_o2_coninclude</Include>
+          </Includes>
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
-              <Scope data="argument" ref="The Placeable">
+              <Scope data="argument" ref="Placeable">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ShoutDisturbed());</Literal>
@@ -15971,7 +16022,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Waiter&gt; waits for &lt;Waiting Time&gt; seconds</Name>
+          <Name>&lt;Waiter&gt; waits for &lt;Duration&gt; seconds</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>283</Id>
@@ -15992,7 +16043,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Waiting Time</Name>
+              <Name>Duration</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -16007,7 +16058,7 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionWait(</Literal>
-              <Scope data="argument" ref="Waiting Time">
+              <Scope data="argument" ref="Duration">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>));</Literal>
@@ -16231,7 +16282,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;Target&gt; as &lt;Undestroyable&gt;</Name>
+          <Name>&lt;Allow&gt; &lt;Target&gt; to be destroyed</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>288</Id>
@@ -16252,11 +16303,11 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Undestroyable</Name>
+              <Name>Allow</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>destroyable</Type>
+                <Type>allow</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -16267,7 +16318,7 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, SetIsDestroyable(</Literal>
-              <Scope data="argument" ref="Undestroyable">
+              <Scope data="argument" ref="Allow">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>));</Literal>
@@ -18398,7 +18449,7 @@
       <Name>&lt;Creature&gt; determines its combat round</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>TODO</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -18802,7 +18853,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>voice_chat</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -18812,11 +18863,11 @@
               <Scope data="argument" ref="Speaker">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionDoCommand(PlayVoiceChat(FloatToInt(</Literal>
+              <Literal>, ActionDoCommand(PlayVoiceChat(</Literal>
               <Scope data="argument" ref="Voice Chat">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>))));</Literal>
+              <Literal>)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -19140,7 +19191,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set &lt;Creature&gt;&apos;s &lt;Body Part&gt; to model number &lt;Model Number&gt;</Name>
+      <Name>Set &lt;Creature&gt;&apos;s &lt;Body Part&gt;'s model to &lt;Model Type&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -19148,7 +19199,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;Creature&gt;&apos;s &lt;Body Part&gt; to model number &lt;Model Number&gt;</Name>
+          <Name>Set &lt;Creature&gt;&apos;s &lt;Body Part&gt;'s model to &lt;Model Type&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>340</Id>
@@ -19169,29 +19220,29 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>body_part</Type>
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Model Number</Name>
+              <Name>Model Type</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>model_type</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetCreatureBodyPart(FloatToInt(</Literal>
+              <Literal>SetCreatureBodyPart(</Literal>
               <Scope data="argument" ref="Body Part">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>), FloatToInt(</Literal>
-              <Scope data="argument" ref="Model Number">
+              <Literal>, </Literal>
+              <Scope data="argument" ref="Model Type">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>), </Literal>
+              <Literal>, </Literal>
               <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -19769,7 +19820,7 @@
               <Scope data="argument" ref="The Duration">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>)))</Literal>
+              <Literal>)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -19818,7 +19869,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;The Activator&gt; triggers a restores the PC&apos;s camera facing</Name>
+      <Name>&lt;The Activator&gt; triggers a restores the Player Character&apos;s camera facing</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -19826,7 +19877,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;The Activator&gt; triggers a restores the PC&apos;s camera facing</Name>
+          <Name>&lt;The Activator&gt; triggers a restores the Player Character&apos;s camera facing</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>353</Id>
@@ -19860,7 +19911,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;The Activator&gt; triggers a fade from black on &lt;The Target&gt;&apos;s screen at &lt;Fade Speed&gt; speed</Name>
+      <Name>&lt;The Activator&gt; triggers a fade from black at &lt;Fade Speed&gt; speed</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -19868,7 +19919,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;The Activator&gt; triggers a fade from black on &lt;The Target&gt;&apos;s screen at &lt;Fade Speed&gt; speed</Name>
+          <Name>&lt;The Activator&gt; triggers a fade from black at &lt;Fade Speed&gt; speed</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>354</Id>
@@ -19889,19 +19940,11 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>The Target</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
-            <KnowIt>
               <Name>Fade Speed</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>fade_speed</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -19911,22 +19954,18 @@
               <Scope data="argument" ref="The Activator">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionDoCommand(FadeFromBlack(</Literal>
-              <Scope data="argument" ref="The Target">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
+              <Literal>, ActionDoCommand(FadeFromBlack(GetFirstPC(), </Literal>
               <Scope data="argument" ref="Fade Speed">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>)))</Literal>
+              <Literal>)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;The Activator&gt; triggers a fade to black on &lt;The Target&gt;&apos;s screen at &lt;Fade Speed&gt; speed</Name>
+      <Name>&lt;The Activator&gt; triggers a fade to black at &lt;Fade Speed&gt; speed</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -19934,7 +19973,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;The Activator&gt; triggers a fade to black on &lt;The Target&gt;&apos;s screen at &lt;Fade Speed&gt; speed</Name>
+          <Name>&lt;The Activator&gt; triggers a fade to black at &lt;Fade Speed&gt; speed</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>355</Id>
@@ -19955,19 +19994,11 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>The Target</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
-            <KnowIt>
               <Name>Fade Speed</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>fade_speed</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -19977,22 +20008,18 @@
               <Scope data="argument" ref="The Activator">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionDoCommand(FadeToBlack(</Literal>
-              <Scope data="argument" ref="The Target">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
+              <Literal>, ActionDoCommand(FadeToBlack(GetFirstPC(), </Literal>
               <Scope data="argument" ref="Fade Speed">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>)))</Literal>
+              <Literal>)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;The Activator&gt; triggers a set black screen on &lt;The Target&gt;</Name>
+      <Name>&lt;The Activator&gt; triggers a set black screen</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -20000,7 +20027,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;The Activator&gt; triggers a set black screen on &lt;The Target&gt;</Name>
+          <Name>&lt;The Activator&gt; triggers a set black screen</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>356</Id>
@@ -20020,14 +20047,6 @@
                 <Type>trigger</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
-              <Name>The Target</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
           </Parameters>
           <Code>
             <Line>
@@ -20035,18 +20054,14 @@
               <Scope data="argument" ref="The Activator">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionDoCommand(BlackScreen(</Literal>
-              <Scope data="argument" ref="The Target">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>)));</Literal>
+              <Literal>, ActionDoCommand(BlackScreen(GetFirstPC())));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;The Activator&gt; triggers a set height of &lt;Target Camera Owner&gt;&apos;s camera to &lt;Height&gt;</Name>
+      <Name>&lt;The Activator&gt; triggers a set height of the camera to &lt;Height&gt; metres</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -20054,7 +20069,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;The Activator&gt; triggers a set height of &lt;Target Camera Owner&gt;&apos;s camera to &lt;Height&gt;</Name>
+          <Name>&lt;The Activator&gt; triggers a set height of the camera to &lt;Height&gt; metres</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>357</Id>
@@ -20075,14 +20090,6 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Target Camera Owner</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
-            <KnowIt>
               <Name>Height</Name>
               <Visible>true</Visible>
               <Labels/>
@@ -20097,11 +20104,7 @@
               <Scope data="argument" ref="The Activator">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionDoCommand(SetCameraHeight(</Literal>
-              <Scope data="argument" ref="Target Camera Owner">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
+              <Literal>, ActionDoCommand(SetCameraHeight(GetFirstPC(), </Literal>
               <Scope data="argument" ref="Height">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -20112,7 +20115,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set &lt;Target PC&gt;&apos;s camera mode to &lt;Camera Mode&gt;</Name>
+      <Name>Set Player Character's camera mode to &lt;Camera Mode&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -20120,7 +20123,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;Target PC&gt;&apos;s camera mode to &lt;Camera Mode&gt;</Name>
+          <Name>Set Player Character's camera mode to &lt;Camera Mode&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>358</Id>
@@ -20129,29 +20132,17 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Target PC</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
-            <KnowIt>
               <Name>Camera Mode</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>camera_mode</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetCameraMode(</Literal>
-              <Scope data="argument" ref="Target PC">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
+              <Literal>SetCameraMode(GetFirstPC(), </Literal>
               <Scope data="argument" ref="Camera Mode">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -20162,7 +20153,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;The Activator&gt; triggers a set &lt;Target PC&gt;&apos;s camera mode to &lt;Camera Mode&gt;</Name>
+      <Name>&lt;The Activator&gt; triggers a set Player Character's camera mode to &lt;Camera Mode&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -20170,72 +20161,10 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;The Activator&gt; triggers a set &lt;Target PC&gt;&apos;s camera mode to &lt;Camera Mode&gt;</Name>
+          <Name>&lt;The Activator&gt; triggers a set Player Character's camera mode to &lt;Camera Mode&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>359</Id>
-          <Types>
-            <Type>void</Type>
-          </Types>
-          <Parameters>
-            <KnowIt>
-              <Name>The Activator</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>void</Type>
-              </Types>
-            </KnowIt>
-            <KnowIt>
-              <Name>Target PC</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
-            <KnowIt>
-              <Name>Camera Mode</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>int</Type>
-              </Types>
-            </KnowIt>
-          </Parameters>
-          <Code>
-            <Line>
-              <Literal>AssignCommand(</Literal>
-              <Scope data="argument" ref="The Activator">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, ActionDoCommand(SetCameraMode(</Literal>
-              <Scope data="argument" ref="Target PC">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
-              <Scope data="argument" ref="Camera Mode">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>)));</Literal>
-            </Line>
-          </Code>
-        </CodeBlockSource>
-      </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
-      <Name>&lt;The Activator&gt; triggers a set the cutscene movement rate of &lt;The Camera Owner&gt; to &lt;Movement speed&gt;</Name>
-      <Visible>true</Visible>
-      <Labels>
-        <Label>TODO</Label>
-      </Labels>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>&lt;The Activator&gt; triggers a set the cutscene movement rate of &lt;The Camera Owner&gt; to &lt;Movement speed&gt;</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Id>360</Id>
           <Types>
             <Type>void</Type>
           </Types>
@@ -20253,11 +20182,57 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>The Camera Owner</Name>
+              <Name>Camera Mode</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>camera_mode</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>AssignCommand(</Literal>
+              <Scope data="argument" ref="The Activator">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, ActionDoCommand(SetCameraMode(GetFirstPC(), </Literal>
+              <Scope data="argument" ref="Camera Mode">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>)));</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>&lt;Activator&gt; sets the cutscene movement rate to &lt;Movement speed&gt; between 0.1 to 2.0</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>TODO</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Activator&gt; sets the cutscene movement rate to &lt;Movement speed&gt; between 0.1 to 2.0</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>360</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Activator</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
                 <Type>creature</Type>
+                <Type>placeable</Type>
+                <Type>door</Type>
+                <Type>item</Type>
+                <Type>trigger</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -20271,22 +20246,22 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetCutsceneCameraMoveRate(</Literal>
-              <Scope data="argument" ref="The Activator">
+              <Literal>AssignCommand(</Literal>
+			<Scope data="argument" ref="Activator">
+				<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+			</Scope>
+			<Literal>, SetCutsceneCameraMoveRate(GetFirstPC(), </Literal>
+              <Scope data="argument" ref="Movement speed">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
-              <Scope data="argument" ref="The Camera Owner">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;The Activator&gt; triggers a set cutscene mode of &lt;The Creature&gt; to &lt;Cutscene Mode&gt;</Name>
+      <Name>&lt;Activator&gt; triggers an &lt;Enable&gt; cutscene mode with left-clicking &lt;Disable&gt;d</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -20294,7 +20269,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;The Activator&gt; triggers a set cutscene mode of &lt;The Creature&gt; to &lt;Cutscene Mode&gt;</Name>
+          <Name>&lt;Activator&gt; triggers an &lt;Enable&gt; cutscene mode with left-clicking &lt;Disable&gt;d</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>361</Id>
@@ -20303,7 +20278,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>The Activator</Name>
+              <Name>Activator</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -20315,40 +20290,44 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>The Creature</Name>
+              <Name>Enable</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>creature</Type>
+                <Type>enable_disable</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
-              <Name>Cutscene Mode</Name>
+             <KnowIt>
+              <Name>Disable</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>enable_disable</Type>
               </Types>
             </KnowIt>
           </Parameters>
-          <Code>
-            <Line>
-              <Literal>SetCutsceneMode(</Literal>
-              <Scope data="argument" ref="The Activator">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
-              <Scope data="argument" ref="Cutscene Mode">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>);</Literal>
-            </Line>
-          </Code>
+	<Code>
+		<Line>
+			<Literal>AssignCommand(</Literal>
+			<Scope data="argument" ref="Activator">
+				<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+			</Scope>
+			<Literal>, SetCutsceneMode(GetFirstPC(), </Literal>
+			<Scope data="argument" ref="Enable">
+				<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+			</Scope>
+			<Literal>, </Literal>
+			<Scope data="argument" ref="Disable">
+				<Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*" />
+			</Scope>
+			<Literal>));</Literal>
+		</Line>
+	</Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;The Activator&gt; triggers a stop all fade effects on &lt;The Target&gt;</Name>
+      <Name>&lt;The Activator&gt; triggers a stop all fade effects</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -20356,7 +20335,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;The Activator&gt; triggers a stop all fade effects on &lt;The Target&gt;</Name>
+          <Name>&lt;The Activator&gt; triggers a stop all fade effects</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>362</Id>
@@ -20376,14 +20355,6 @@
                 <Type>trigger</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
-              <Name>The Target</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
           </Parameters>
           <Code>
             <Line>
@@ -20391,11 +20362,7 @@
               <Scope data="argument" ref="The Activator">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionDoCommand(StopFade(</Literal>
-              <Scope data="argument" ref="The Target">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>)));</Literal>
+              <Literal>, ActionDoCommand(StopFade(GetFirstPC())));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -20858,7 +20825,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set &lt;The Enemy&gt; as an enemy of &lt;The Creature&gt; for &lt;Duration&gt; seconds</Name>
+      <Name>Set &lt;Enemy&gt; as an enemy of &lt;Creature&gt; for &lt;Duration&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -20866,7 +20833,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;The Enemy&gt; as an enemy of &lt;The Creature&gt; for &lt;Duration&gt; seconds</Name>
+          <Name>Set &lt;Enemy&gt; as an enemy of &lt;Creature&gt; for &lt;Duration&gt; seconds</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>371</Id>
@@ -20875,7 +20842,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>The Enemy</Name>
+              <Name>Enemy</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -20883,7 +20850,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>The Creature</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -20902,14 +20869,14 @@
           <Code>
             <Line>
               <Literal>SetIsTemporaryEnemy(</Literal>
-              <Scope data="argument" ref="The Enemy">
+              <Scope data="argument" ref="Enemy">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="The Creature">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, FALSE, </Literal>
+              <Literal>, TRUE, </Literal>
               <Scope data="argument" ref="Duration">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -20956,11 +20923,11 @@
           <Code>
             <Line>
               <Literal>DelayCommand(</Literal>
-              <Scope data="argument" ref="End Movie">
+              <Scope data="argument" ref="Delay Time>
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, EndGame(</Literal>
-              <Scope data="argument" ref="Delay Time">
+              <Scope data="argument" ref="End Movie">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>));</Literal>
@@ -21357,7 +21324,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>camera_transition</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -21443,7 +21410,7 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>camera_transition</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -22277,7 +22244,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Equipping creature&gt; equips &lt;Equipment&gt; on &lt;Slot&gt;</Name>
+      <Name>&lt;Creature&gt; equips &lt;Equipment&gt; on &lt;Slot&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -22285,7 +22252,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Equipping creature&gt; equips &lt;Equipment&gt; on &lt;Slot&gt;</Name>
+          <Name>&lt;Creature&gt; equips &lt;Equipment&gt; on &lt;Slot&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>393</Id>
@@ -22294,7 +22261,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Equipping creature</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -22314,32 +22281,32 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>inventory_slot</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
-              <Scope data="argument" ref="Equipping creature">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionEquipItem(</Literal>
               <Scope data="argument" ref="Equipment">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, FloatToInt(</Literal>
+              <Literal>, </Literal>
               <Scope data="argument" ref="Slot">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>)));</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Equipping creature&gt; equips its most effective melee weapon against &lt;Target&gt;</Name>
+      <Name>&lt;Creature&gt; equips its most effective melee weapon against &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -22347,7 +22314,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Equipping creature&gt; equips its most effective melee weapon against &lt;Target&gt;</Name>
+          <Name>&lt;Creature&gt; equips its most effective melee weapon against &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>394</Id>
@@ -22356,7 +22323,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Equipping creature</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -22375,7 +22342,7 @@
           <Code>
             <Line>
               <Literal> AssignCommand(</Literal>
-              <Scope data="argument" ref="Equipping Creature">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionEquipMostDamagingMelee(</Literal>
@@ -22389,7 +22356,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Equipping creature&gt; equips its most effective armor</Name>
+      <Name>&lt;Creature&gt; equips its most effective armor</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -22397,7 +22364,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Equipping creature&gt; equips its most effective armor</Name>
+          <Name>&lt;Creature&gt; equips its most effective armor</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>395</Id>
@@ -22406,7 +22373,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Equipping creature</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -22417,7 +22384,7 @@
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
-              <Scope data="argument" ref="Equipping creature">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionEquipMostEffectiveArmor());</Literal>
@@ -22427,7 +22394,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Equipping creature&gt; equips its most effective ranged weapon against &lt;Target&gt;</Name>
+      <Name>&lt;Creature&gt; equips its most effective ranged weapon against &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -22435,7 +22402,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Equipping creature&gt; equips its most effective ranged weapon against &lt;Target&gt;</Name>
+          <Name>&lt;Creature&gt; equips its most effective ranged weapon against &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>396</Id>
@@ -22444,7 +22411,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Equipping creature</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -22463,7 +22430,7 @@
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
-              <Scope data="argument" ref="Equipping creature">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionEquipMostDamagingRanged(</Literal>
@@ -22477,7 +22444,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Equipping creature&gt; equips its most effective weapons against &lt;Target&gt;</Name>
+      <Name>&lt;Creature&gt; equips its most effective weapons against &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -22485,7 +22452,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Equipping creature&gt; equips its most effective weapons against &lt;Target&gt;</Name>
+          <Name>&lt;Creature&gt; equips its most effective weapons against &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>397</Id>
@@ -22494,7 +22461,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Equipping creature</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -22510,10 +22477,13 @@
               </Types>
             </KnowIt>
           </Parameters>
+          <Includes>
+          	<Include>x0_i0_equip</Include>
+          </Includes>
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
-              <Scope data="argument" ref="Equipping Creature">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, EquipAppropriateWeapons(</Literal>
@@ -22691,7 +22661,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set &lt;The Item&gt;&apos;s droppable property to &lt;Droppable&gt;</Name>
+      <Name>&lt;Allow&gt; &lt;Item&gt;&apos; to be dropped</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -22699,7 +22669,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;The Item&gt;&apos;s droppable property to &lt;Droppable&gt;</Name>
+          <Name>&lt;Allow&gt; &lt;Item&gt;&apos; to be dropped</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>401</Id>
@@ -22708,7 +22678,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>The Item</Name>
+              <Name>Item</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -22716,22 +22686,22 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Droppable</Name>
+              <Name>Allow</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>question</Type>
+                <Type>allow</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
               <Literal>SetDroppableFlag(</Literal>
-              <Scope data="argument" ref="The Item">
+              <Scope data="argument" ref="Item">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Droppable">
+              <Scope data="argument" ref="Allow">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -22971,7 +22941,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Unequipping creature&gt; unequips &lt;Equipment&gt;</Name>
+      <Name>&lt;Creature&gt; unequips &lt;Equipment&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -22979,7 +22949,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Unequipping creature&gt; unequips &lt;Equipment&gt;</Name>
+          <Name>&lt;Creature&gt; unequips &lt;Equipment&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>406</Id>
@@ -22988,7 +22958,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Unequipping creature</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -23000,18 +22970,14 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>creature</Type>
-                <Type>placeable</Type>
-                <Type>door</Type>
                 <Type>item</Type>
-                <Type>trigger</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
-              <Scope data="argument" ref="Unequipping creature">
+              <Scope data="argument" ref="Creature">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, ActionUnequipItem(</Literal>
@@ -23527,7 +23493,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;lock and close&gt; all doors with same tag as &lt;The Door&gt;</Name>
+      <Name>&lt;lock and close&gt; all doors with same tag as &lt;Door&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -23535,7 +23501,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;lock and close&gt; all doors with same tag as &lt;The Door&gt;</Name>
+          <Name>&lt;lock and close&gt; all doors with same tag as &lt;Door&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>415</Id>
@@ -23548,11 +23514,11 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>int</Type>
+                <Type>lock_close</Type>
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>The Door</Name>
+              <Name>Door</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -23565,15 +23531,15 @@
               <Literal>int nth = 0;</Literal>
             </Line>
             <Line>
-              <Literal>int lock = ! </Literal>
-              <Scope data="argument" ref="The Door">
+              <Literal>int lock = !</Literal>
+              <Scope data="argument" ref="lock and close">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>;</Literal>
             </Line>
             <Line>
               <Literal>string tag = GetTag(</Literal>
-              <Scope data="argument" ref="lock and close">
+              <Scope data="argument" ref="Door">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -23616,7 +23582,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Toggle all doors with same tag as &lt;The Door&gt;</Name>
+      <Name>Toggle all doors with same tag as &lt;Door&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -23624,7 +23590,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Toggle all doors with same tag as &lt;The Door&gt;</Name>
+          <Name>Toggle all doors with same tag as &lt;Door&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>416</Id>
@@ -23633,7 +23599,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>The Door</Name>
+              <Name>Door</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
