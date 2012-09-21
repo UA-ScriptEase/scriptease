@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
-import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
@@ -141,7 +140,7 @@ public class PanelFactory {
 		final StoryComponentPanelTree storyComponentTree;
 		final StoryComponentObserver graphRedrawer;
 		final ObservedJPanel storyGraphPanel;
-		
+
 		final JScrollPane storyGraphScrollPane;
 
 		storyPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -168,7 +167,7 @@ public class PanelFactory {
 			}
 		};
 		storyGraphPanel = new ObservedJPanel(storyGraph, graphRedrawer);
-		
+
 		storyGraphScrollPane = new JScrollPane(storyGraph);
 
 		for (StoryPoint point : start.getDescendants()) {
@@ -216,10 +215,11 @@ public class PanelFactory {
 
 		start.addStoryComponentObserver(graphRedrawer);
 
-		storyGraphScrollPane.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		
+		storyGraphScrollPane.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.LOWERED));
+
 		storyGraph.setBackground(Color.WHITE);
-		
+
 		// Reset the ToolBar to select and add the Story Graph to it.
 		GraphToolBarModeAction.addJComponent(storyGraph);
 		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
@@ -230,7 +230,7 @@ public class PanelFactory {
 		storyGraphPanel.add(storyGraphScrollPane, BorderLayout.CENTER);
 
 		storyComponentTree.setBorder(null);
-		
+
 		// Set up the split pane
 		storyPanel.setBorder(null);
 		storyPanel.setOpaque(true);
@@ -245,7 +245,7 @@ public class PanelFactory {
 				divider = (BasicSplitPaneDivider) component;
 				divider.setBackground(Color.WHITE);
 				divider.setBorder(null);
-				
+
 				break;
 			}
 		}
