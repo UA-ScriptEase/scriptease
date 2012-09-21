@@ -30,7 +30,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.plaf.ComponentUI;
 
-import scriptease.controller.observer.graph.SEGraphSelectionObserver;
+import scriptease.controller.observer.graph.SEGraphObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.ComponentFocusManager;
 import scriptease.gui.SEGraph.renderers.SEGraphNodeRenderer;
@@ -58,7 +58,8 @@ public class SEGraph<E> extends JComponent {
 
 	private final BiHashMap<E, JComponent> nodesToComponents;
 	private final NodeMouseAdapter mouseAdapter;
-	private final List<SEGraphSelectionObserver> selectionObservers;
+
+	private final List<SEGraphObserver> observers;
 
 	private E selectedNode;
 	private Point mousePosition;
@@ -76,7 +77,7 @@ public class SEGraph<E> extends JComponent {
 		this.mousePosition = new Point();
 		this.nodesToComponents = new BiHashMap<E, JComponent>();
 		this.mouseAdapter = new NodeMouseAdapter();
-		this.selectionObservers = new ArrayList<SEGraphSelectionObserver>();
+		this.observers = new ArrayList<SEGraphObserver>();
 
 		this.setLayout(new SEGraphLayoutManager());
 
@@ -99,7 +100,9 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
-	 * Adds a node onto an existing node.
+	 * Adds a node onto an existing node. Fires a
+	 * {@link SEGraphObserver#nodeAdded(Object, Collection, Collection)} event
+	 * if the addition was successful.
 	 * 
 	 * @param node
 	 *            The node to add
@@ -108,16 +111,36 @@ public class SEGraph<E> extends JComponent {
 	 * @return true if the addition was successful
 	 * @see SEGraphModel#addNode(Object, Object)
 	 */
-	public void addChild(E node, E parent) {
-		this.model.addChild(node, parent);
+	public boolean addNewNodeTo(E parent) {
+		final E newNode;
 
-		this.repaint();
-		this.revalidate();
+		newNode = this.model.createNewNode();
+
+		if (this.model.addChild(newNode, parent)) {
+			final Collection<E> parents;
+			final Collection<E> children;
+
+			parents = this.model.getParents(newNode);
+			children = this.model.getChildren(newNode);
+
+			for (SEGraphObserver observer : this.observers) {
+				observer.nodeAdded(newNode, children, parents);
+			}
+
+			this.repaint();
+			this.revalidate();
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
 	 * Adds a node between two existing nodes. Order of the two nodes does not
-	 * matter; this method figures out which node is above the other.
+	 * matter; this method figures out which node is above the other. Fires a
+	 * {@link SEGraphObserver#nodeAdded(Object, Collection, Collection)} event
+	 * if the addition was successful.
 	 * 
 	 * @param node
 	 *            The new node.
@@ -128,80 +151,118 @@ public class SEGraph<E> extends JComponent {
 	 * @return true if the addition was successful
 	 * @see SEGraphModel#addNodeBetween(Object, Object, Object)
 	 */
-	public void addNodeBetween(E node, E existingNode1, E existingNode2) {
-		this.model.addNodeBetween(node, existingNode1, existingNode2);
+	public boolean addNewNodeBetween(E existingNode1, E existingNode2) {
+		final E newNode;
 
-		this.repaint();
-		this.revalidate();
+		newNode = this.model.createNewNode();
+
+		if (this.model.addNodeBetween(newNode, existingNode1, existingNode2)) {
+			final Collection<E> parents;
+			final Collection<E> children;
+
+			parents = this.model.getParents(newNode);
+			children = this.model.getChildren(newNode);
+
+			for (SEGraphObserver observer : this.observers) {
+				observer.nodeAdded(newNode, children, parents);
+			}
+
+			this.repaint();
+			this.revalidate();
+
+			return true;
+		}
+		return false;
 	}
 
 	/**
-	 * Removes the node from the graph.
+	 * Removes the node from the graph. Fires a
+	 * {@link SEGraphObserver#nodeRemoved(Object)} event if the removal was
+	 * successful.
 	 * 
 	 * @param node
 	 *            The node to be removed.
+	 * @return true if the removal was successful
 	 * @see SEGraphModel#removeNode(Object)
 	 */
-	public void removeNode(E node) {
-		this.model.removeNode(node);
+	public boolean removeNode(E node) {
+		if (this.model.removeNode(node)) {
+			for (SEGraphObserver observer : this.observers)
+				observer.nodeRemoved(node);
 
-		this.validateSelectedNode();
-		this.repaint();
-		this.revalidate();
+			this.validateSelectedNode();
+			this.repaint();
+			this.revalidate();
+
+			return true;
+		}
+		return false;
 	}
 
 	/**
-	 * Connects two nodes together. This method checks which node is further
-	 * from the other and adds the appropriate node as a parent or a child.
+	 * Connects two nodes together. Fires a
+	 * {@link SEGraphObserver#nodesConnected(Object, Object)} event if the
+	 * connection was successful.
 	 * 
-	 * @param node1
-	 * @param node2
+	 * @param child
+	 * @param parent
 	 * @return True if the nodes were successfully connected.
 	 * @see SEGraphModel#connectNodes(Object, Object)
 	 */
-	public boolean connectNodes(E node1, E node2) {
-		final boolean result;
+	public boolean connectNodes(E child, E parent) {
+		if (this.model.connectNodes(child, parent)) {
+			for (SEGraphObserver observer : this.observers) {
+				observer.nodesConnected(child, parent);
+			}
 
-		result = this.model.connectNodes(node1, node2);
+			this.repaint();
+			this.revalidate();
 
-		this.repaint();
-		this.revalidate();
-
-		return result;
+			return true;
+		}
+		return false;
 	}
 
 	/**
 	 * Disconnects two nodes. If the node had no other connections, this will
-	 * result in a deletion.
+	 * result in the node getting removed from the graph. Always fires a
+	 * {@link SEGraphObserver#nodesDisconnected(Object, Object)} event if the
+	 * disconnection was successful.
 	 * 
-	 * @param node1
-	 * @param node2
+	 * @param child
+	 * @param parent
 	 * @return True if the nodes were successfully disconnected.
 	 * @see SEGraphModel#disconnectNodes(Object, Object)
 	 */
-	public boolean disconnectNodes(E node1, E node2) {
-		final boolean result;
+	public boolean disconnectNodes(E child, E parent) {
+		if (this.model.disconnectNodes(child, parent)) {
+			for (SEGraphObserver observer : this.observers) {
+				observer.nodesDisconnected(child, parent);
+			}
 
-		result = this.model.disconnectNodes(node1, node2);
+			this.validateSelectedNode();
 
-		this.validateSelectedNode();
+			this.repaint();
+			this.revalidate();
 
-		this.repaint();
-		this.revalidate();
-
-		return result;
+			return true;
+		}
+		return false;
 	}
 
 	/**
 	 * Adds an observer to the Graph to observe changes to the children and
-	 * parents of nodes.
+	 * parents of nodes. Note that these observers are strongly referenced. One
+	 * does not simply get garbage collected when the caller is removed. They
+	 * must be removed manually with
+	 * {@link #removeSEGraphObserver(SEGraphObserver)}. 
 	 * 
 	 * @param observer
 	 *            The observer to be added
-	 * @see SEGraphSelectionObserver
+	 * @see SEGraphObserver
 	 */
-	public void addSEGraphObserver(SEGraphSelectionObserver observer) {
-		this.selectionObservers.add(observer);
+	public void addSEGraphObserver(SEGraphObserver observer) {
+		this.observers.add(observer);
 	}
 
 	/**
@@ -209,22 +270,35 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 * @param observer
 	 *            The observer to be removed
-	 * @see SEGraphSelectionObserver
+	 * @see SEGraphObserver
 	 */
-	public void removeSEGraphObserver(SEGraphSelectionObserver observer) {
-		this.selectionObservers.remove(observer);
+	public void removeSEGraphObserver(SEGraphObserver observer) {
+		this.observers.remove(observer);
 	}
 
 	/**
-	 * Sets the current selected node.
+	 * Returns a collection of all SEGraphObservers attached to the graph.
+	 * 
+	 * @return
+	 */
+	public Collection<SEGraphObserver> getSEGraphObservers() {
+		return this.observers;
+	}
+
+	/**
+	 * Sets the current selected node. Fires a
+	 * {@link SEGraphObserver#nodeSelected(Object)} event if the selection was
+	 * successful.
 	 * 
 	 * @param node
 	 */
 	public void setSelectedNode(E node) {
-		this.selectedNode = node;
+		if (this.selectedNode != node) {
+			this.selectedNode = node;
 
-		for (SEGraphSelectionObserver observer : this.selectionObservers) {
-			observer.nodeSelected(node);
+			for (SEGraphObserver observer : this.observers) {
+				observer.nodeSelected(node);
+			}
 		}
 	}
 
@@ -757,13 +831,12 @@ public class SEGraph<E> extends JComponent {
 				source.requestFocusInWindow();
 				break;
 			case INSERT:
-				E newNode = SEGraph.this.model.createNewNode();
 				if (this.lastEnteredNode != null)
 					if (this.lastEnteredNode == node) {
 						if (!UndoManager.getInstance().hasOpenUndoableAction())
 							UndoManager.getInstance().startUndoableAction(
-									"Add " + newNode + " to " + node);
-						SEGraph.this.addChild(newNode, node);
+									"Add new node to " + node);
+						SEGraph.this.addNewNodeTo(node);
 
 						UndoManager.getInstance().endUndoableAction();
 					} else {
@@ -773,8 +846,8 @@ public class SEGraph<E> extends JComponent {
 											+ this.lastEnteredNode + " and "
 											+ node);
 
-						SEGraph.this.addNodeBetween(newNode,
-								this.lastEnteredNode, node);
+						SEGraph.this.addNewNodeBetween(this.lastEnteredNode,
+								node);
 
 						UndoManager.getInstance().endUndoableAction();
 					}
