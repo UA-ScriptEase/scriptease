@@ -69,24 +69,21 @@ public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 	 */
 	private void updateComponents(JComponent component, StoryPoint node) {
 		component.removeAll();
-		final BindingWidget editableWidget;
-		final BindingWidget uneditableWidget;
 
 		if (node != null) {
 			final int VERTICAL_MARGIN = 40;
 			final int HORIZONTAL_MARGIN = 10;
 
-			editableWidget = ScriptWidgetFactory.buildBindingWidget(node, true);
-			uneditableWidget = ScriptWidgetFactory.buildBindingWidget(node,
-					false);
-
 			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
 			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
 
 			if (this.graph.getStartNode() != node) {
+				final BindingWidget editableWidget;
 				final JSpinner fanInSpinner;
 				final int SPACE_BETWEEN_COMPONENTS = 5;
 
+				editableWidget = ScriptWidgetFactory.buildBindingWidget(node,
+						true);
 				fanInSpinner = ScriptWidgetFactory.buildFanInSpinner(node,
 						getMaxFanIn(node));
 
@@ -97,6 +94,9 @@ public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 						.createHorizontalStrut(SPACE_BETWEEN_COMPONENTS));
 				component.add(editableWidget);
 			} else {
+				final BindingWidget uneditableWidget;
+				uneditableWidget = ScriptWidgetFactory.buildBindingWidget(node,
+						false);
 				component.add(uneditableWidget);
 			}
 			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));

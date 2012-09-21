@@ -15,7 +15,7 @@ import javax.swing.JToolBar;
 
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.ObservedJPanel;
-import scriptease.controller.observer.graph.SEGraphSelectionObserver;
+import scriptease.controller.observer.graph.SEGraphAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
@@ -176,7 +176,7 @@ public class PanelFactory {
 
 		// Set up the Story Graph
 		storyGraph.setNodeRenderer(storyNodeRenderer);
-		storyGraph.addSEGraphObserver(new SEGraphSelectionObserver() {
+		storyGraph.addSEGraphObserver(new SEGraphAdapter() {
 
 			@Override
 			public void nodeSelected(final Object node) {

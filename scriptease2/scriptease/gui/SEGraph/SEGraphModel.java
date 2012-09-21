@@ -43,7 +43,7 @@ public abstract class SEGraphModel<E> {
 	 * @param existingNode
 	 *            The existing node that will receive the child
 	 */
-	public abstract void addChild(E child, E existingNode);
+	public abstract boolean addChild(E child, E existingNode);
 
 	/**
 	 * Removes an existing child from an existing node.
@@ -53,7 +53,7 @@ public abstract class SEGraphModel<E> {
 	 * @param existingNode
 	 *            The existing node that the child will be removed from
 	 */
-	public abstract void removeChild(E child, E existingNode);
+	public abstract boolean removeChild(E child, E existingNode);
 
 	/**
 	 * Returns the children for the passed in node.
@@ -119,9 +119,9 @@ public abstract class SEGraphModel<E> {
 	 * @param node
 	 *            The node to be removed.
 	 */
-	public final void removeNode(E node) {
+	public final boolean removeNode(E node) {
 		if (node == this.start)
-			return;
+			return false;
 
 		for (E nodeInModel : this.getNodes()) {
 			if (nodeInModel == node) {
@@ -132,40 +132,42 @@ public abstract class SEGraphModel<E> {
 
 				for (E parent : parentsCopy)
 					this.removeChild(nodeInModel, parent);
+
+				return true;
 			}
 		}
+
+		return false;
 	}
 
 	/**
-	 * Connects two nodes together. This method checks which node is further
-	 * from the other, and adds the appropriate node as a parent or a child.
+	 * Connects two nodes together if the child is further down the graph from
+	 * the parent.
 	 * 
-	 * @param node1
-	 * @param node2
+	 * @param child
+	 * @param parent
 	 * @return True if the nodes were successfully connected.
 	 */
-	public final boolean connectNodes(E firstNode, E secondNode) {
-		if (firstNode == null || secondNode == null)
+	public final boolean connectNodes(E child, E parent) {
+		if (child == null || parent == null)
 			return false;
 
-		if (this.getDescendants(firstNode).contains(secondNode)) {
-			this.addChild(secondNode, firstNode);
-			return true;
-		} else if (this.getDescendants(secondNode).contains(firstNode)) {
-			this.addChild(firstNode, secondNode);
+		if (this.getDescendants(child).contains(parent)) {
+			return false;
+		} else if (this.getDescendants(parent).contains(child)) {
+			this.addChild(child, parent);
 			return true;
 		} else {
 			final Map<E, Integer> depthMap = this.getDepthMap(this.start);
 
-			final int firstNodeDepth = depthMap.get(firstNode);
-			final int secondNodeDepth = depthMap.get(secondNode);
+			final int childDepth = depthMap.get(child);
+			final int parentDepth = depthMap.get(parent);
 
-			if (firstNodeDepth > secondNodeDepth) {
-				this.addChild(firstNode, secondNode);
+			if (childDepth >= parentDepth) {
+				this.addChild(child, parent);
 				return true;
 			} else {
-				this.addChild(secondNode, firstNode);
-				return true;
+				return false;
 			}
 		}
 	}
@@ -174,23 +176,15 @@ public abstract class SEGraphModel<E> {
 	 * Disconnects two nodes. If the node had no other connections, this will
 	 * result in a deletion.
 	 * 
-	 * @param node1
-	 * @param node2
+	 * @param child
+	 * @param parent
 	 * @return True if the nodes were successfully disconnected.
 	 */
-	public final boolean disconnectNodes(E firstNode, E secondNode) {
-		if (firstNode == null || secondNode == null)
+	public final boolean disconnectNodes(E child, E parent) {
+		if (child == null || parent == null)
 			return false;
-		if (this.getChildren(firstNode).contains(secondNode)) {
-			this.removeChild(secondNode, firstNode);
-			return true;
-		} else if (this.getChildren(secondNode).contains(firstNode)) {
-			this.removeChild(firstNode, secondNode);
-			return true;
-		} else {
-			// This means the two nodes weren't connected at all.
-			return false;
-		}
+		else
+			return this.removeChild(child, parent);
 	}
 
 	/**
