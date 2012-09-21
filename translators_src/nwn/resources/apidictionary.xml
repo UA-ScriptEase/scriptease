@@ -1346,7 +1346,7 @@
       <Parameters/>
       <Implicits>
         <KnowIt>
-          <Name>Entering Creature</Name>
+          <Name>Triggering Creature</Name>
           <Visible>true</Visible>
           <Labels/>
           <Types>
@@ -1354,13 +1354,13 @@
           </Types>
           <Binding flavour="function">
             <ScriptIt>
-              <Name>Entering Creature</Name>
+              <Name>Triggering Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Children/>
               <CodeBlocks>
                 <CodeBlockSource>
-                  <Name>Entering Creature</Name>
+                  <Name>Triggering Creature</Name>
                   <Visible>true</Visible>
                   <Labels/>
                   <Slot>OnTrapTriggered</Slot>
@@ -5393,7 +5393,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;Subject&gt;&apos;s trap is triggered by &lt;entering creature&gt;</Name>
+      <Name>When &lt;Subject&gt;&apos;s trap is triggered by &lt;triggering creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -5424,7 +5424,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;Subject&gt;&apos;s trap is triggered by &lt;entering creature&gt;</Name>
+          <Name>When &lt;Subject&gt;&apos;s trap is triggered by &lt;triggering creature&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -16014,7 +16014,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Waiter&gt; waits for &lt;Waiting Time&gt; seconds</Name>
+      <Name>&lt;Waiter&gt; waits for &lt;Duration&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>TODO</Label>
@@ -23916,7 +23916,8 @@
     <ScriptIt>
       <Name>Last Perceived</Name>
       <Visible>false</Visible>
-      <Labels/>
+      <Labels>
+      <Label>DELETE</Label></Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
@@ -23938,7 +23939,8 @@
     <ScriptIt>
       <Name>Was Last Perceived Heard</Name>
       <Visible>false</Visible>
-      <Labels/>
+       <Labels>
+      <Label>DELETE</Label></Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
@@ -23960,7 +23962,8 @@
     <ScriptIt>
       <Name>Was Last Perceived Inaudible</Name>
       <Visible>false</Visible>
-      <Labels/>
+       <Labels>
+      <Label>DELETE</Label></Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
@@ -23982,7 +23985,8 @@
     <ScriptIt>
       <Name>Was Last Perceived Seen</Name>
       <Visible>false</Visible>
-      <Labels/>
+       <Labels>
+      <Label>DELETE</Label></Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
@@ -24004,7 +24008,8 @@
     <ScriptIt>
       <Name>Has Last Perceived Vanished</Name>
       <Visible>false</Visible>
-      <Labels/>
+       <Labels>
+      <Label>DELETE</Label></Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
@@ -24024,13 +24029,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;Creature&gt; has &lt;Item Tag&gt;</Name>
+      <Name>if &lt;Creature&gt; has &lt;Item&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;Creature&gt; has &lt;Item Tag&gt;</Name>
+          <Name>if &lt;Creature&gt; has &lt;Item&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>428</Id>
@@ -24047,7 +24052,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Item Tag</Name>
+              <Name>Item</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -24065,7 +24070,7 @@
                 <Fragment data="name"/>
               </Scope>
               <Literal>, GetTag( </Literal>
-              <Scope data="argument" ref="Item Tag">
+              <Scope data="argument" ref="Item">
                 <Fragment data="name"/>
               </Scope>
               <Literal>));</Literal>
