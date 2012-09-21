@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -56,8 +57,8 @@ import scriptease.translator.TranslatorManager;
 public final class SEFrame implements PatternModelObserver {
 	private final JTabbedPane modelTabs;
 	private final JComponent middlePane;
-	private JSplitPane rightSplit;
-	private JSplitPane leftSplit;
+	private JSplitPane middleSplit;
+	private JSplitPane libraryGameObjectPaneSplit;
 	private TimedLabel statusLabel;
 
 	private final JFrame seFrame;
@@ -142,22 +143,23 @@ public final class SEFrame implements PatternModelObserver {
 
 		// Compressed Layout
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
-			this.leftSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-					PanelFactory.getInstance().getMainLibraryPane(), objectPane);
-			this.rightSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-					this.leftSplit, this.middlePane);
+			this.libraryGameObjectPaneSplit = new JSplitPane(
+					JSplitPane.VERTICAL_SPLIT, PanelFactory.getInstance()
+							.getMainLibraryPane(), objectPane);
+			this.middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+					this.libraryGameObjectPaneSplit, this.middlePane);
 
-			content.add(this.rightSplit);
+			content.add(this.middleSplit);
 			content.add(statusBar);
 
-			this.leftSplit.setResizeWeight(0.5);
+			this.libraryGameObjectPaneSplit.setResizeWeight(0.5);
 
 			layout.setHorizontalGroup(layout.createParallelGroup()
-					.addComponent(this.rightSplit).addComponent(statusBar));
+					.addComponent(this.middleSplit).addComponent(statusBar));
 
 			layout.setVerticalGroup(layout
 					.createSequentialGroup()
-					.addComponent(this.rightSplit)
+					.addComponent(this.middleSplit)
 					.addComponent(statusBar, GroupLayout.PREFERRED_SIZE,
 							GroupLayout.PREFERRED_SIZE,
 							GroupLayout.PREFERRED_SIZE));
@@ -166,21 +168,22 @@ public final class SEFrame implements PatternModelObserver {
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
 			final int dir = JSplitPane.HORIZONTAL_SPLIT;
 
-			this.leftSplit = new JSplitPane(dir, PanelFactory.getInstance()
-					.getMainLibraryPane(), this.middlePane);
-			this.rightSplit = new JSplitPane(dir, this.leftSplit, objectPane);
+			this.libraryGameObjectPaneSplit = new JSplitPane(dir, PanelFactory
+					.getInstance().getMainLibraryPane(), this.middlePane);
+			this.middleSplit = new JSplitPane(dir,
+					this.libraryGameObjectPaneSplit, objectPane);
 
-			content.add(this.rightSplit);
+			content.add(this.middleSplit);
 			content.add(statusBar);
 
 			// stretch the split panels
 			layout.setHorizontalGroup(layout.createParallelGroup()
-					.addComponent(this.rightSplit).addComponent(statusBar));
+					.addComponent(this.middleSplit).addComponent(statusBar));
 
 			// status label is at the bottom
 			layout.setVerticalGroup(layout
 					.createSequentialGroup()
-					.addComponent(this.rightSplit)
+					.addComponent(this.middleSplit)
 					.addComponent(statusBar, GroupLayout.PREFERRED_SIZE,
 							GroupLayout.PREFERRED_SIZE,
 							GroupLayout.PREFERRED_SIZE));
@@ -247,13 +250,28 @@ public final class SEFrame implements PatternModelObserver {
 				ScriptEase.PREFERRED_LAYOUT_KEY);
 
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
-			this.leftSplit.setBottomComponent(newGameObjectPane);
-			this.leftSplit.setDividerLocation(this.getFrame().getHeight() / 2);
-			this.leftSplit.revalidate();
+			this.libraryGameObjectPaneSplit
+					.setBottomComponent(newGameObjectPane);
+			this.libraryGameObjectPaneSplit.revalidate();
+
+			/*
+			 * Setting the divider needs to occur here because the JSplitPane
+			 * needs to actually be drawn before this works. According to Sun,
+			 * this is WAD. I would tend to disagree, but at least this is nicer
+			 * than subclassing JSplitPane.
+			 */
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					SEFrame.this.libraryGameObjectPaneSplit
+							.setDividerLocation(0.5);
+				}
+			});
+
 		} else if (preferredLayout
 				.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
-			this.rightSplit.setRightComponent(newGameObjectPane);
-			this.rightSplit.revalidate();
+			this.middleSplit.setRightComponent(newGameObjectPane);
+			this.middleSplit.revalidate();
 		}
 	}
 
@@ -270,12 +288,12 @@ public final class SEFrame implements PatternModelObserver {
 		newPanel.setVisible(false);
 
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
-			this.leftSplit.setBottomComponent(newPanel);
-			this.leftSplit.revalidate();
+			this.libraryGameObjectPaneSplit.setBottomComponent(newPanel);
+			this.libraryGameObjectPaneSplit.revalidate();
 		} else if (preferredLayout
 				.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
-			this.rightSplit.setRightComponent(newPanel);
-			this.rightSplit.revalidate();
+			this.middleSplit.setRightComponent(newPanel);
+			this.middleSplit.revalidate();
 		}
 	}
 
@@ -318,7 +336,7 @@ public final class SEFrame implements PatternModelObserver {
 			public void processStoryModel(final StoryModel storyModel) {
 				// Creates a story editor panel with a story graph
 				final StoryPoint startStoryPoint;
-				final JPanel newPanel;
+				final JSplitPane newPanel;
 				final CloseableModelTab newTab;
 				final String title;
 				String modelTitle;
@@ -341,6 +359,19 @@ public final class SEFrame implements PatternModelObserver {
 						SEFrame.this.modelTabs.indexOfComponent(newPanel),
 						newTab);
 				SEFrame.this.modelTabs.setSelectedComponent(newPanel);
+
+				/*
+				 * Setting the divider needs to occur here because the
+				 * JSplitPane needs to actually be drawn before this works.
+				 * According to Sun, this is WAD. I would tend to disagree, but
+				 * at least this is nicer than subclassing JSplitPane.
+				 */
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						newPanel.setDividerLocation(0.3);
+					}
+				});
 			}
 		});
 	}
