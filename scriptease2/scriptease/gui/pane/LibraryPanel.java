@@ -75,7 +75,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		final StoryComponentPanelJList causesList;
 		final StoryComponentPanelJList effectsList;
 		final StoryComponentPanelJList descriptionsList;
-		final StoryComponentPanelJList controllersList;
+		final StoryComponentPanelJList controlsList;
 
 		this.listTabs = new JTabbedPane();
 		filterPane = new JPanel();
@@ -91,13 +91,13 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 				Category.EFFECTS), hideInvisible);
 		descriptionsList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.DESCRIPTIONS), hideInvisible);
-		controllersList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.CONTROLLERS), hideInvisible);
+		controlsList = new StoryComponentPanelJList(new CategoryFilter(
+				Category.CONTROLS), hideInvisible);
 
 		this.storyComponentPanelJLists.add(causesList);
 		this.storyComponentPanelJLists.add(effectsList);
 		this.storyComponentPanelJLists.add(descriptionsList);
-		this.storyComponentPanelJLists.add(controllersList);
+		this.storyComponentPanelJLists.add(controlsList);
 
 		// Set up the listeners
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
@@ -138,7 +138,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		this.listTabs.add("Causes", new JScrollPane(causesList));
 		this.listTabs.add("Effects", new JScrollPane(effectsList));
 		this.listTabs.add("Descriptions", new JScrollPane(descriptionsList));
-		this.listTabs.add("Controllers", new JScrollPane(controllersList));
+		this.listTabs.add("Controls", new JScrollPane(controlsList));
 
 		// SearchFilterPane
 		searchFilterPane.add(searchField);
