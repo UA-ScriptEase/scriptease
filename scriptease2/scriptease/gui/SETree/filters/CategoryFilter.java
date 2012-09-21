@@ -24,7 +24,7 @@ public class CategoryFilter extends StoryComponentFilter {
 		EFFECTS,
 		DESCRIPTIONS,
 		CAUSES,
-		CONTROLLERS;
+		CONTROLS;
 	}
 
 	private Category category;
@@ -64,13 +64,13 @@ public class CategoryFilter extends StoryComponentFilter {
 		@Override
 		public void processStoryComponentContainer(
 				StoryComponentContainer container) {
-			if (CategoryFilter.this.category.equals(Category.CONTROLLERS))
+			if (CategoryFilter.this.category.equals(Category.CONTROLS))
 				this.acceptable = true;
 		}
 
 		@Override
 		public void processStoryItemSequence(StoryItemSequence sequence) {
-			if (CategoryFilter.this.category.equals(Category.CONTROLLERS))
+			if (CategoryFilter.this.category.equals(Category.CONTROLS))
 				this.acceptable = true;
 		}
 
@@ -85,7 +85,7 @@ public class CategoryFilter extends StoryComponentFilter {
 		@Override
 		public void processAskIt(AskIt questionIt) {
 			this.acceptable = CategoryFilter.this.category
-					.equals(Category.CONTROLLERS);
+					.equals(Category.CONTROLS);
 		}
 
 		@Override
