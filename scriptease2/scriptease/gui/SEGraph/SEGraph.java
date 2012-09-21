@@ -255,7 +255,7 @@ public class SEGraph<E> extends JComponent {
 	 * parents of nodes. Note that these observers are strongly referenced. One
 	 * does not simply get garbage collected when the caller is removed. They
 	 * must be removed manually with
-	 * {@link #removeSEGraphObserver(SEGraphObserver)}. 
+	 * {@link #removeSEGraphObserver(SEGraphObserver)}.
 	 * 
 	 * @param observer
 	 *            The observer to be added
@@ -647,7 +647,6 @@ public class SEGraph<E> extends JComponent {
 
 			if (SEGraph.this.draggedFromNode != null
 					&& SEGraph.this.mousePosition != null) {
-				System.out.println("Draggin from node!");
 				final ToolBarMode mode = GraphToolBarModeAction.getMode();
 
 				if (mode == ToolBarMode.INSERT || mode == ToolBarMode.CONNECT)
@@ -662,7 +661,6 @@ public class SEGraph<E> extends JComponent {
 						SEGraph.this.mousePosition);
 
 			}
-
 			connectNodes(g);
 		}
 
