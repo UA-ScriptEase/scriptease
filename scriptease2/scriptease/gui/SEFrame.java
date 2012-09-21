@@ -58,7 +58,6 @@ public final class SEFrame implements PatternModelObserver {
 	private final JTabbedPane modelTabs;
 	private final JComponent middlePane;
 	private JSplitPane middleSplit;
-	private JSplitPane libraryGameObjectPaneSplit;
 	private TimedLabel statusLabel;
 
 	private final JFrame seFrame;
@@ -146,6 +145,8 @@ public final class SEFrame implements PatternModelObserver {
 			this.libraryGameObjectPaneSplit = new JSplitPane(
 					JSplitPane.VERTICAL_SPLIT, PanelFactory.getInstance()
 							.getMainLibraryPane(), objectPane);
+			
+			
 			this.middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 					this.libraryGameObjectPaneSplit, this.middlePane);
 
@@ -166,11 +167,13 @@ public final class SEFrame implements PatternModelObserver {
 		} else
 		// Uncompressed Layout.
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
-			final int dir = JSplitPane.HORIZONTAL_SPLIT;
 
-			this.libraryGameObjectPaneSplit = new JSplitPane(dir, PanelFactory
-					.getInstance().getMainLibraryPane(), this.middlePane);
-			this.middleSplit = new JSplitPane(dir,
+			this.libraryGameObjectPaneSplit = new JSplitPane(
+					JSplitPane.HORIZONTAL_SPLIT, PanelFactory.getInstance()
+							.getMainLibraryPane(), this.middlePane);
+			
+			
+			this.middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 					this.libraryGameObjectPaneSplit, objectPane);
 
 			content.add(this.middleSplit);

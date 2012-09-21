@@ -54,6 +54,22 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * 
 	 * @param storyComponentList
 	 *            The list of StoryComponents to display in the list.
+	 */
+	public StoryComponentPanelJList(StoryComponentFilter filter) {
+		this(filter, true);
+	}
+
+	/**
+	 * Creates a JList that is able to render Story Component Panels as items.
+	 * The JList also has a transfer handler attached that gives the ability to
+	 * drag and drop the Panels. <br>
+	 * <br>
+	 * Panels should be added using {@link #addStoryComponents(Collection)}
+	 * 
+	 * @param filter
+	 * 
+	 * @param storyComponentList
+	 *            The list of StoryComponents to display in the list.
 	 * 
 	 * @param hideInvisible
 	 *            If true, invisible components will be shown as well.

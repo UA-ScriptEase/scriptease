@@ -4,6 +4,7 @@ import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -47,4 +48,6 @@ public interface StoryVisitor {
 	public void processCodeBlockSource(CodeBlockSource codeBlockSource);
 	
 	public void processCodeBlockReference(CodeBlockReference codeBlockReference);
+
+	public void processNote(Note note);
 }

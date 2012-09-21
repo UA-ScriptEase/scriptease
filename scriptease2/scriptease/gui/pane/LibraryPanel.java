@@ -60,10 +60,8 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 	 * Creates a new LibraryPane with default filters, and configures its
 	 * display.
 	 * 
-	 * @param hideInvisible
-	 *            Whether to show invisible story components or not.
 	 */
-	public LibraryPanel(boolean hideInvisible) {
+	public LibraryPanel() {
 		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
 
 		final JComponent filterPane;
@@ -86,13 +84,13 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 
 		// Create the Tree with the root and the default filter
 		causesList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.CAUSES), hideInvisible);
+				Category.CAUSES));
 		effectsList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.EFFECTS), hideInvisible);
+				Category.EFFECTS));
 		descriptionsList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.DESCRIPTIONS), hideInvisible);
+				Category.DESCRIPTIONS));
 		controlsList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.CONTROLS), hideInvisible);
+				Category.CONTROLS));
 
 		this.storyComponentPanelJLists.add(causesList);
 		this.storyComponentPanelJLists.add(effectsList);

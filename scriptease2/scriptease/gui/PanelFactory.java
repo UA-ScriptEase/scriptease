@@ -391,9 +391,24 @@ public class PanelFactory {
 			PanelFactory.modelsToComponents.removeKey(model);
 	}
 
-	private static LibraryPanel mainLibraryPane = new LibraryPanel(true);
+	private static LibraryPanel mainLibraryPane = new LibraryPanel();
 
+	/**
+	 * Returns the main library pane.
+	 * 
+	 * @return
+	 */
 	public LibraryPanel getMainLibraryPane() {
 		return PanelFactory.mainLibraryPane;
+	}
+
+	//TODO This will basically be the "LibraryGameObjectPane Split" from SEFrame.
+	public JSplitPane buildStoryLibraryPane() {
+		final JSplitPane storyLibraryPane;
+
+		storyLibraryPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		
+		
+		return storyLibraryPane;
 	}
 }
