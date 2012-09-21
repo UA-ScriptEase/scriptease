@@ -4,6 +4,7 @@ import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
@@ -77,6 +78,11 @@ public abstract class StoryAdapter implements StoryVisitor {
 	@Override
 	public void processCodeBlockReference(CodeBlockReference codeBlockReference) {
 		this.defaultProcessAtomic(codeBlockReference);
+	}
+	
+	@Override
+	public void processNote(Note note) {
+		this.defaultProcessAtomic(note);
 	}
 
 	/*
