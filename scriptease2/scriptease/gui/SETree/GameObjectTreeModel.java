@@ -13,11 +13,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
-import scriptease.gui.SETree.cell.BindingWidget;
-import scriptease.gui.SETree.cell.ScriptWidgetFactory;
-import scriptease.gui.SETree.filters.Filter;
-import scriptease.gui.SETree.filters.Filterable;
-import scriptease.gui.SETree.filters.GameConstantFilter;
+import scriptease.gui.cell.BindingWidget;
+import scriptease.gui.cell.ScriptWidgetFactory;
+import scriptease.gui.filters.Filter;
+import scriptease.gui.filters.Filterable;
+import scriptease.gui.filters.GameConstantFilter;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;

@@ -16,14 +16,14 @@ public class Tree<T> {
 	private final List<Tree<T>> children;
 	private Map<T, Tree<T>> find = new HashMap<T, Tree<T>>();
 	private Tree<T> parent = null;
-	
+
 	public Tree(T root) {
 		this.root = root;
 		this.find.put(root, this);
 
 		this.children = new ArrayList<Tree<T>>();
 	}
-	
+
 	public void addChild(T root, T leaf) {
 		if (this.find.containsKey(root)) {
 			this.find.get(root).addLeaf(leaf);
@@ -31,7 +31,7 @@ public class Tree<T> {
 			addLeaf(root).addLeaf(leaf);
 		}
 	}
-	
+
 	public Tree<T> addLeaf(T leaf) {
 		Tree<T> t = new Tree<T>(leaf);
 		this.children.add(t);
@@ -40,7 +40,7 @@ public class Tree<T> {
 		this.find.put(leaf, t);
 		return t;
 	}
-	
+
 	public Tree<T> setAsParent(T parentRoot) {
 		Tree<T> t = new Tree<T>(parentRoot);
 		t.children.add(this);
@@ -50,7 +50,17 @@ public class Tree<T> {
 		t.find.put(parentRoot, t);
 		return t;
 	}
-	
+
+	public void clear() {
+		this.children.clear();
+		this.find.clear();
+
+		if (this.parent != null)
+			this.parent.clear();
+
+		this.find.put(root, this);
+	}
+
 	public T getHead() {
 		return this.root;
 	}
@@ -73,7 +83,7 @@ public class Tree<T> {
 		}
 		return successors;
 	}
-	
+
 	public Collection<Tree<T>> getSubTrees() {
 		return this.children;
 	}
@@ -86,14 +96,13 @@ public class Tree<T> {
 		}
 		return new ArrayList<T>();
 	}
-	
+
 	@Override
 	public String toString() {
 		String str = this.root.toString();
 
 		if (this.children.size() > 0)
 			str += " < " + this.children.toString();
-
 
 		return str;
 	}

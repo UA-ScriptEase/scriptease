@@ -24,13 +24,13 @@ import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
-import scriptease.gui.SETree.filters.CategoryFilter;
-import scriptease.gui.SETree.filters.CategoryFilter.Category;
-import scriptease.gui.SETree.filters.StoryComponentSearchFilter;
-import scriptease.gui.SETree.filters.TranslatorFilter;
-import scriptease.gui.SETree.filters.TypeFilter;
-import scriptease.gui.SETree.filters.VisibilityFilter;
 import scriptease.gui.action.typemenus.TypeSelectionAction;
+import scriptease.gui.filters.CategoryFilter;
+import scriptease.gui.filters.CategoryFilter.Category;
+import scriptease.gui.filters.StoryComponentSearchFilter;
+import scriptease.gui.filters.TranslatorFilter;
+import scriptease.gui.filters.TypeFilter;
+import scriptease.gui.filters.VisibilityFilter;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.model.LibraryManager;
@@ -58,7 +58,6 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
 
-	
 	public static LibraryPanel getInstance() {
 		return instance;
 	}

@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
-import scriptease.gui.SETree.ui.ScriptEaseUI;
+import scriptease.gui.ui.ScriptEaseUI;
 
 /**
  * JButton used for toggling between expanded and collapsed states.

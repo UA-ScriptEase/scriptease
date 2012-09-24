@@ -7,9 +7,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import scriptease.gui.SETree.filters.Filter;
-import scriptease.gui.SETree.filters.Filterable;
-import scriptease.gui.SETree.filters.StoryComponentFilter;
+import scriptease.gui.filters.Filter;
+import scriptease.gui.filters.Filterable;
+import scriptease.gui.filters.StoryComponentFilter;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.StoryPoint;
 

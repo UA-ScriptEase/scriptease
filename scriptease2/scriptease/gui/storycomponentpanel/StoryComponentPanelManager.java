@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.SETree.ui.ScriptEaseUI;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 

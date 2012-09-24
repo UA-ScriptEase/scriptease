@@ -11,12 +11,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 
 import scriptease.controller.observer.graph.GraphNodeEvent;
-import scriptease.controller.observer.graph.GraphNodeObserver;
 import scriptease.controller.observer.graph.GraphNodeEvent.GraphNodeEventType;
+import scriptease.controller.observer.graph.GraphNodeObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEGraph.GraphPanel;
 import scriptease.gui.SEGraph.nodes.GraphNode;
-import scriptease.gui.SETree.cell.ScriptWidgetFactory;
+import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.atomic.DescribeIt;
