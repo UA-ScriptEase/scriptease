@@ -20,9 +20,15 @@ import javax.swing.border.TitledBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+import scriptease.controller.observer.PatternModelEvent;
+import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.library.LibraryManagerEvent;
+import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.gui.SETree.GameObjectPanelTree;
 import scriptease.gui.SETree.cell.BindingWidget;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.model.LibraryManager;
+import scriptease.model.PatternModelManager;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.translator.codegenerator.GameObjectPicker;
 
@@ -31,7 +37,9 @@ import scriptease.translator.codegenerator.GameObjectPicker;
  * in stories.
  * 
  */
-public class GameObjectPane implements GameObjectPicker {
+@SuppressWarnings("serial")
+public class GameObjectPane extends JPanel implements GameObjectPicker,
+		LibraryManagerObserver, PatternModelObserver {
 	// Although the default picker will be used, a customPicker can define
 	// certain behavior of the default one.
 	private JTextField searchField;
@@ -39,6 +47,51 @@ public class GameObjectPane implements GameObjectPicker {
 
 	public GameObjectPane() {
 		this.tree = new GameObjectPanelTree();
+
+		// Register for tool tips
+		ToolTipManager.sharedInstance().registerComponent(this.tree);
+
+		this.tree.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		this.tree.setBackground(Color.WHITE);
+
+		// Add the tree to the pane.
+		JScrollPane treeScrollPane = new JScrollPane(this.tree,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		treeScrollPane.setBackground(Color.WHITE);
+		treeScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+		// build the filter
+		JComponent filterPane = this.buildFilterPane();
+
+		this.setPreferredSize(new Dimension(this.tree.getPreferredSize().width,
+				0));
+
+		SpringLayout pickerPaneLayout = new SpringLayout();
+
+		// Spring filterPane
+		pickerPaneLayout.putConstraint(SpringLayout.WEST, filterPane, 5,
+				SpringLayout.WEST, this);
+		pickerPaneLayout.putConstraint(SpringLayout.NORTH, filterPane, 5,
+				SpringLayout.NORTH, this);
+		pickerPaneLayout.putConstraint(SpringLayout.EAST, filterPane, -5,
+				SpringLayout.EAST, this);
+		// Spring pickerTree
+		pickerPaneLayout.putConstraint(SpringLayout.WEST, treeScrollPane, 5,
+				SpringLayout.WEST, this);
+		pickerPaneLayout.putConstraint(SpringLayout.EAST, treeScrollPane, -5,
+				SpringLayout.EAST, this);
+		pickerPaneLayout.putConstraint(SpringLayout.SOUTH, treeScrollPane, -5,
+				SpringLayout.SOUTH, this);
+		pickerPaneLayout.putConstraint(SpringLayout.NORTH, treeScrollPane, 5,
+				SpringLayout.SOUTH, filterPane);
+		this.setLayout(pickerPaneLayout);
+
+		this.add(filterPane);
+		this.add(treeScrollPane);
+
+		LibraryManager.getInstance().addLibraryManagerObserver(this);
+		PatternModelManager.getInstance().addPatternModelObserver(this);
 	}
 
 	// TODO Combine parts of this with configurePane() in LibraryPane.java.
@@ -75,52 +128,7 @@ public class GameObjectPane implements GameObjectPicker {
 	}
 
 	public JPanel getPickerPanel() {
-		// Configure the panel.
-		final JPanel objectPickerPane = new JPanel();
-
-		// Register for tool tips
-		ToolTipManager.sharedInstance().registerComponent(this.tree);
-
-		this.tree.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		this.tree.setBackground(Color.WHITE);
-
-		// Add the tree to the pane.
-		JScrollPane treeScrollPane = new JScrollPane(this.tree,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		treeScrollPane.setBackground(Color.WHITE);
-		treeScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
-		// build the filter
-		JComponent filterPane = this.buildFilterPane();
-
-		objectPickerPane.setPreferredSize(new Dimension(this.tree
-				.getPreferredSize().width, 0));
-
-		SpringLayout pickerPaneLayout = new SpringLayout();
-
-		// Spring filterPane
-		pickerPaneLayout.putConstraint(SpringLayout.WEST, filterPane, 5,
-				SpringLayout.WEST, objectPickerPane);
-		pickerPaneLayout.putConstraint(SpringLayout.NORTH, filterPane, 5,
-				SpringLayout.NORTH, objectPickerPane);
-		pickerPaneLayout.putConstraint(SpringLayout.EAST, filterPane, -5,
-				SpringLayout.EAST, objectPickerPane);
-		// Spring pickerTree
-		pickerPaneLayout.putConstraint(SpringLayout.WEST, treeScrollPane, 5,
-				SpringLayout.WEST, objectPickerPane);
-		pickerPaneLayout.putConstraint(SpringLayout.EAST, treeScrollPane, -5,
-				SpringLayout.EAST, objectPickerPane);
-		pickerPaneLayout.putConstraint(SpringLayout.SOUTH, treeScrollPane, -5,
-				SpringLayout.SOUTH, objectPickerPane);
-		pickerPaneLayout.putConstraint(SpringLayout.NORTH, treeScrollPane, 5,
-				SpringLayout.SOUTH, filterPane);
-		objectPickerPane.setLayout(pickerPaneLayout);
-
-		objectPickerPane.add(filterPane);
-		objectPickerPane.add(treeScrollPane);
-
-		return objectPickerPane;
+		return this;
 	}
 
 	public void onWidgetClicked(KnowItBindingConstant object) {
@@ -134,6 +142,31 @@ public class GameObjectPane implements GameObjectPicker {
 
 	@Override
 	public void onWidgetUnHovered() {
+	}
+
+	/**
+	 * This listener checks for when the model is changed. This usually happens
+	 * when you load a model, or when you switch them by switching tabs.
+	 */
+	@Override
+	public void modelChanged(PatternModelEvent event) {
+		if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
+			this.tree = new GameObjectPanelTree();
+			this.buildFilterPane();
+		}
+	}
+
+	/**
+	 * Keep the display of the library up to date with the changes to Libraries.
+	 * This listener is important for the Story Component Builder, so that
+	 * changes made there will apply to the library view as well.
+	 */
+	@Override
+	public void modelChanged(LibraryManagerEvent event) {
+		if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
+			this.tree = new GameObjectPanelTree();
+			this.buildFilterPane();
+		}
 	}
 }
 

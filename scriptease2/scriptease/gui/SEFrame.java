@@ -33,6 +33,7 @@ import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.pane.CloseableModelTab;
+import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
@@ -57,7 +58,7 @@ import scriptease.translator.TranslatorManager;
 public final class SEFrame implements PatternModelObserver {
 	private final JTabbedPane modelTabs;
 	private final JComponent middlePane;
-	private JSplitPane middleSplit;
+	private final JSplitPane middleSplit;
 	private TimedLabel statusLabel;
 
 	private final JFrame seFrame;
@@ -78,6 +79,7 @@ public final class SEFrame implements PatternModelObserver {
 				ScriptEase.TITLE);
 		this.modelTabs = new JTabbedPane();
 		this.middlePane = new JPanel();
+		this.middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
 		final int MIN_HEIGHT = 480;
 		final int MIN_WIDTH = 640;
@@ -139,8 +141,9 @@ public final class SEFrame implements PatternModelObserver {
 				ScriptEase.PREFERRED_LAYOUT_KEY);
 
 		// Compressed Layout
-		this.middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
+		SEFrame.this.middleSplit.setTopComponent(PanelFactory.getInstance()
+				.buildStoryLibraryPane());
 		this.middleSplit.setBottomComponent(this.middlePane);
 		content.add(this.middleSplit);
 		content.add(statusBar);
@@ -356,12 +359,25 @@ public final class SEFrame implements PatternModelObserver {
 
 				@Override
 				public void processLibraryModel(LibraryModel libraryModel) {
+					final int prevLocation;
 					// This sucks, but we need to revalidate the menu bar.
 					// http://bugs.sun.com/view_bug.do?bug_id=4949810
-					final JMenuBar bar = MenuFactory.createMainMenuBar(true);
+					final JMenuBar bar;
+					
+					prevLocation = SEFrame.this.middleSplit
+							.getDividerLocation();
+					bar = MenuFactory.createMainMenuBar(true);
+					
 					SEFrame.this.getFrame().setJMenuBar(bar);
-					SEFrame.this.middleSplit.setTopComponent(PanelFactory
-							.getInstance().getMainLibraryPane());
+					
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							SEFrame.this.middleSplit
+									.setDividerLocation(prevLocation);
+						}
+					});
+					
 					this.setScriptEaseTitle();
 					bar.revalidate();
 
@@ -369,21 +385,36 @@ public final class SEFrame implements PatternModelObserver {
 
 				@Override
 				public void processStoryModel(StoryModel storyModel) {
+					final int prevLocation;
 					// This sucks, but we need to revalidate the menu bar.
 					// http://bugs.sun.com/view_bug.do?bug_id=4949810
-					final JMenuBar bar = MenuFactory.createMainMenuBar(false);
+					final JMenuBar bar;
+					
+					prevLocation = SEFrame.this.middleSplit
+							.getDividerLocation();
+					bar = MenuFactory.createMainMenuBar(false);
 					SEFrame.this.getFrame().setJMenuBar(bar);
 
-					SEFrame.this.middleSplit.setTopComponent(PanelFactory
-							.getInstance().buildStoryLibraryPane(storyModel));
+					/*
+					 * Setting the divider needs to occur here because the
+					 * JSplitPane needs to actually be drawn before this works.
+					 * According to Sun, this is WAD. I would tend to disagree,
+					 * but at least this is nicer than subclassing JSplitPane.
+					 */
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							SEFrame.this.middleSplit
+									.setDividerLocation(prevLocation);
+						}
+					});
+
 					this.setScriptEaseTitle();
 					bar.revalidate();
 				}
 			});
 		} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED
 				&& PatternModelManager.getInstance().getActiveModel() == null) {
-			this.middleSplit.setTopComponent(new JPanel());
-			
 			// This sucks, but we need to revalidate the menu bar.
 			// http://bugs.sun.com/view_bug.do?bug_id=4949810
 			final JMenuBar bar = MenuFactory.createMainMenuBar(false);
