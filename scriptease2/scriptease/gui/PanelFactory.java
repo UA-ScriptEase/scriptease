@@ -3,7 +3,6 @@ package scriptease.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -41,8 +40,6 @@ import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.complex.StoryPoint;
-import scriptease.translator.Translator;
-import scriptease.translator.codegenerator.GameObjectPicker;
 import scriptease.util.BiHashMap;
 
 /**
@@ -93,26 +90,6 @@ public class PanelFactory {
 		describeItPanel.add(new JScrollPane(graphPanel), BorderLayout.CENTER);
 
 		return describeItPanel;
-	}
-
-	/**
-	 * Builds a pane containing all game objects in the active module, organized
-	 * by category, allowing the user to drag them onto bindings in a Story.
-	 * 
-	 * @return A JPanel GameObject picker.
-	 */
-	public JPanel buildGameObjectPane(PatternModel patternModel) {
-		GameObjectPicker picker;
-
-		//Translator translator = patternModel.getTranslator();
-	/*	if (translator != null) {
-			// Get the picker
-			if ((picker = translator.getCustomGameObjectPicker()) != null) {
-				return picker.getPickerPanel();
-			}
-		}*/
-		picker = new GameObjectPane();
-		return picker.getPickerPanel();
 	}
 
 	/**
@@ -405,11 +382,9 @@ public class PanelFactory {
 		final JPanel gameObjectPane;
 
 		storyLibraryPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		gameObjectPane = this.buildGameObjectPane(PatternModelManager
-				.getInstance().getActiveModel());
 
 		storyLibraryPane.setTopComponent(LibraryPanel.getInstance());
-		storyLibraryPane.setBottomComponent(gameObjectPane);
+		storyLibraryPane.setBottomComponent(GameObjectPane.getInstance());
 
 		storyLibraryPane.setResizeWeight(0.5);
 

@@ -24,7 +24,6 @@ import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.translator.apimanagers.EventSlotManager;
 import scriptease.translator.apimanagers.GameTypeManager;
-import scriptease.translator.codegenerator.GameObjectPicker;
 import scriptease.translator.io.model.GameModule;
 import scriptease.util.FileOp;
 
@@ -103,7 +102,6 @@ public class Translator {
 	private LanguageDictionary languageDictionary;
 
 	private final Collection<String> legalExtensions;
-	private GameObjectPicker customGameObjectPicker;
 
 	final GameModuleClassLoader loader;
 
@@ -658,57 +656,6 @@ public class Translator {
 				filter, this.getLocation());
 
 		return newLocation;
-	}
-
-	/**
-	 * Loads a java class file which holds the code for a custom picker
-	 * interface.
-	 * 
-	 * @param location
-	 * @return The java-based picker described by the translator author
-	 */
-	@SuppressWarnings("unchecked")
-	private GameObjectPicker loadCustomGameObjectPicker(File location) {
-		// Get the name of the .class file that implements the objPicker
-		// interface, and load it.
-		GameObjectPicker objPicker = null;
-
-		try {
-			// must use Binary Name. Ex: "translators.NWN.data.ErfFile"
-			// this.customPicker
-			Class<GameObjectPicker> pickerClass = (Class<GameObjectPicker>) this.loader
-					.loadClass(this.loader.getBinaryNameForClassFile(location));
-			objPicker = (pickerClass).newInstance();
-		} catch (ClassNotFoundException e) {
-			System.err.println("The file: " + location.getAbsolutePath()
-					+ " does not appear to be a valid picker.");
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			System.err.println("The picker at: " + location.getAbsolutePath()
-					+ " could not be instantiated.");
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			System.err
-					.println("ScriptEase 2 does not have permission to access the file at: "
-							+ location.getAbsolutePath()
-							+ ", picker could not be loaded.");
-			e.printStackTrace();
-		}
-
-		return objPicker;
-	}
-
-	public GameObjectPicker getCustomGameObjectPicker() {
-		final File customPickerPath;
-
-		customPickerPath = this
-				.getPathProperty(DescriptionKeys.CUSTOM_PICKER_PATH);
-
-		// Look for a custom picker class.
-		if (this.customGameObjectPicker == null && customPickerPath != null)
-			this.customGameObjectPicker = this.loadCustomGameObjectPicker(customPickerPath);
-
-		return this.customGameObjectPicker;
 	}
 
 	/**
