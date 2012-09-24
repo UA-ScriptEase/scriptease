@@ -15,11 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
-import scriptease.ScriptEase;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.ObservedJPanel;
 import scriptease.controller.observer.graph.SEGraphAdapter;
@@ -103,24 +101,18 @@ public class PanelFactory {
 	 * 
 	 * @return A JPanel GameObject picker.
 	 */
-	public JPanel buildGameObjectPane(StoryModel storyModel) {
+	public JPanel buildGameObjectPane(PatternModel patternModel) {
 		GameObjectPicker picker;
 
-		if (storyModel != null) {
-			Translator translator = storyModel.getTranslator();
-			if (translator != null) {
-				// Get the picker
-				if ((picker = translator.getCustomGameObjectPicker()) == null) {
-					picker = new GameObjectPane();
-				}
+		//Translator translator = patternModel.getTranslator();
+	/*	if (translator != null) {
+			// Get the picker
+			if ((picker = translator.getCustomGameObjectPicker()) != null) {
 				return picker.getPickerPanel();
 			}
-		}
-		// otherwise return an empty hidden JPanel
-		JPanel jPanel = new JPanel();
-		jPanel.setVisible(false);
-		jPanel.setSize(new Dimension(0, 0));
-		return jPanel;
+		}*/
+		picker = new GameObjectPane();
+		return picker.getPickerPanel();
 	}
 
 	/**
@@ -272,8 +264,7 @@ public class PanelFactory {
 
 		components = PanelFactory.modelsToComponents.getValue(model);
 		scbPanel = LibraryEditorPanelFactory.getInstance()
-				.buildLibraryEditorPanel(
-						PanelFactory.getInstance().getMainLibraryPane());
+				.buildLibraryEditorPanel(LibraryPanel.getInstance());
 		scbScrollPane = new JScrollPane(scbPanel);
 
 		if (components == null) {
@@ -393,48 +384,34 @@ public class PanelFactory {
 			PanelFactory.modelsToComponents.removeKey(model);
 	}
 
-	private static LibraryPanel mainLibraryPane = new LibraryPanel();
+	// private static LibraryPanel mainLibraryPane = new LibraryPanel();
 
 	/**
 	 * Returns the main library pane.
 	 * 
 	 * @return
 	 */
-	public LibraryPanel getMainLibraryPane() {
-		return PanelFactory.mainLibraryPane;
-	}
-
+	/*
+	 * public LibraryPanel getMainLibraryPane() { return
+	 * PanelFactory.mainLibraryPane; }
+	 */
 	/**
 	 * 
 	 * @param storyModel
 	 * @return
 	 */
-	public JSplitPane buildStoryLibraryPane(StoryModel storyModel) {
+	public JSplitPane buildStoryLibraryPane() {
 		final JSplitPane storyLibraryPane;
 		final JPanel gameObjectPane;
 
 		storyLibraryPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		gameObjectPane = this.buildGameObjectPane(storyModel);
+		gameObjectPane = this.buildGameObjectPane(PatternModelManager
+				.getInstance().getActiveModel());
 
-		storyLibraryPane.setTopComponent(this.getMainLibraryPane());
+		storyLibraryPane.setTopComponent(LibraryPanel.getInstance());
 		storyLibraryPane.setBottomComponent(gameObjectPane);
 
 		storyLibraryPane.setResizeWeight(0.5);
-
-		// TODO Move this to wherever buildStoryLibraryPane is called if it
-		// doesnt work
-		/*
-		 * Setting the divider needs to occur here because the JSplitPane needs
-		 * to actually be drawn before this works. According to Sun, this is
-		 * WAD. I would tend to disagree, but at least this is nicer than
-		 * subclassing JSplitPane.
-		 */
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				storyLibraryPane.setDividerLocation(0.5);
-			}
-		});
 
 		return storyLibraryPane;
 	}

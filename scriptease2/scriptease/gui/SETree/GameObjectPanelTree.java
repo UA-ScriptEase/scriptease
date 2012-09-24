@@ -23,7 +23,7 @@ import scriptease.translator.io.model.GameObject;
 
 //TODO This class looks awful and needs a heavy refactoring. -kschenk
 @SuppressWarnings("serial")
-public class GameObjectPanelTree extends JPanel implements Observer {
+public class GameObjectPanelTree extends JPanel {
 	private GameObjectTree treeModel;
 	private ArrayList<GameObjectPanel> gameObjectPanel;
 	private ArrayList<GameObjectLabel> gameObjectLabels;
@@ -82,7 +82,6 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 			}
 			GameObjectLabel label = new GameObjectLabel(firstRowExpansion
 					.get(i).toString());
-			label.addObserver(this);
 			this.add(label.getLabelPanel());
 			this.gameObjectLabels.add(label);
 
@@ -122,8 +121,9 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 	}
 
 	// TODO: Refactor, code is very similar to above method :(
-	private void reDrawTree() {
+	public void reDrawTree() {
 		this.removeAll();
+		
 		int size = this.gameObjectLabels.size();
 		for (int i = 0; i < size; i++) {
 			Collection<Object> srExp = this.treeModel.getTree().getSuccessors(
@@ -166,13 +166,6 @@ public class GameObjectPanelTree extends JPanel implements Observer {
 			}
 		}
 		this.revalidate();
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		if (o instanceof GameObjectLabel) {
-			reDrawTree();
-		}
 	}
 
 	public ArrayList<String> getStringTypes() {

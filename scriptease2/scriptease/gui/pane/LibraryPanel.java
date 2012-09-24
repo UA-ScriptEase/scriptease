@@ -51,17 +51,24 @@ import scriptease.translator.TranslatorManager;
  */
 public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		PatternModelObserver {
-
+	
+	private static LibraryPanel instance = new LibraryPanel();
+	
 	private final JTabbedPane listTabs;
 
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
 
+	
+	public static LibraryPanel getInstance() {
+		return instance;
+	}
+	
 	/**
 	 * Creates a new LibraryPane with default filters, and configures its
 	 * display.
 	 * 
 	 */
-	public LibraryPanel() {
+	private LibraryPanel() {
 		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
 
 		final JComponent filterPane;
@@ -179,7 +186,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 	 * Updates the lists based on their filters. Works by removing and adding
 	 * back all components in the list panes.
 	 */
-	private void updateLists() {
+	public void updateLists() {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
 			final PatternModel model;
 			final Translator activeTranslator;

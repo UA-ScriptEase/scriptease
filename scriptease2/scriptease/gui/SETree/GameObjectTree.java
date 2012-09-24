@@ -20,7 +20,9 @@ import scriptease.translator.io.model.GameConversationNode;
 public class GameObjectTree extends SETreeModel {
 	public GameObjectTree() {
 		this.treeModel = new Tree<Object>("Available Game Objects");
-		this.populate();
+
+		if (PatternModelManager.getInstance().getActiveModel() != null)
+			this.populate();
 	}
 
 	public void setFilter(Filter filter) {
