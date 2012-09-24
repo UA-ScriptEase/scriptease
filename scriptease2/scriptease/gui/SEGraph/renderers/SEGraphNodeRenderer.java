@@ -14,9 +14,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.SETree.ui.ScriptEaseUI;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.util.GUIOp;
 
 /**
@@ -154,17 +154,6 @@ public class SEGraphNodeRenderer<E> {
 					borderColour, backgroundColour);
 
 		}
-
-	/*	for (JComponent component : this.graph.getNodeComponents()) {
-			if (GraphToolBarModeAction.getMode() != ToolBarMode.SELECT) {
-				if (component == this.graph.getSelectedComponent())
-					continue;
-			}
-			this.setComponentAppearance(component, null, borderColour,
-					backgroundColour);
-
-		}*/
-
 	}
 
 	/**

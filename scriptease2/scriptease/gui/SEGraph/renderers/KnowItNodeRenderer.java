@@ -8,9 +8,9 @@ import javax.swing.JPanel;
 
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.nodes.KnowItNode;
-import scriptease.gui.SETree.cell.ScriptWidgetFactory;
-import scriptease.gui.SETree.cell.TypeWidget;
-import scriptease.gui.SETree.ui.ScriptEaseUI;
+import scriptease.gui.cell.ScriptWidgetFactory;
+import scriptease.gui.cell.TypeWidget;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.KnowIt;
 
 public class KnowItNodeRenderer extends SEGraphNodeRenderer<KnowItNode> {

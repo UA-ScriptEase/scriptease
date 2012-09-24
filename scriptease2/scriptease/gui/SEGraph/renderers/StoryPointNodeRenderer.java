@@ -14,8 +14,8 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.SETree.cell.BindingWidget;
-import scriptease.gui.SETree.cell.ScriptWidgetFactory;
+import scriptease.gui.cell.BindingWidget;
+import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.model.complex.StoryPoint;
 
 /**

@@ -13,11 +13,11 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 
 import scriptease.gui.ComponentFocusManager;
-import scriptease.gui.SETree.filters.Filter;
-import scriptease.gui.SETree.filters.Filterable;
-import scriptease.gui.SETree.filters.StoryComponentFilter;
-import scriptease.gui.SETree.filters.VisibilityFilter;
-import scriptease.gui.SETree.transfer.StoryComponentPanelTransferHandler;
+import scriptease.gui.filters.Filter;
+import scriptease.gui.filters.Filterable;
+import scriptease.gui.filters.StoryComponentFilter;
+import scriptease.gui.filters.VisibilityFilter;
+import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ScriptIt;
 
@@ -34,7 +34,8 @@ import scriptease.model.complex.ScriptIt;
  * 
  */
 @SuppressWarnings("serial")
-public class StoryComponentPanelJList extends JList implements Filterable {
+public class StoryComponentPanelJList extends JList<JPanel> implements
+		Filterable {
 	private Filter filterRule;
 
 	private static final JPanel noResultsPanel = new JPanel();
@@ -78,7 +79,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 			boolean hideInvisible) {
 		super();
 
-		DefaultListModel listModel = new DefaultListModel();
+		DefaultListModel<JPanel> listModel = new DefaultListModel<JPanel>();
 
 		this.setModel(listModel);
 
@@ -111,9 +112,9 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * @param storyComponentList
 	 */
 	public void addStoryComponents(Collection<StoryComponent> storyComponentList) {
-		final DefaultListModel listModel;
+		final DefaultListModel<JPanel> listModel;
 
-		listModel = (DefaultListModel) this.getModel();
+		listModel = (DefaultListModel<JPanel>) this.getModel();
 
 		listModel.removeElement(noResultsPanel);
 
@@ -138,9 +139,9 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * Removes all Story Components from the list.
 	 */
 	public void removeAllStoryComponents() {
-		final DefaultListModel listModel;
+		final DefaultListModel<JPanel> listModel;
 
-		listModel = (DefaultListModel) this.getModel();
+		listModel = (DefaultListModel<JPanel>) this.getModel();
 
 		listModel.clear();
 	}
@@ -176,7 +177,8 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 */
 	private class StoryComponentListRenderer extends DefaultListCellRenderer {
 		@Override
-		public Component getListCellRendererComponent(JList list, Object value,
+		public Component getListCellRendererComponent(
+				@SuppressWarnings("rawtypes") JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
 
 			if (value instanceof StoryComponentPanel) {
