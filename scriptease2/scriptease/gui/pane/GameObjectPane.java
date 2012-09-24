@@ -25,12 +25,9 @@ import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.gui.SETree.GameObjectPanelTree;
-import scriptease.gui.SETree.cell.BindingWidget;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.LibraryManager;
 import scriptease.model.PatternModelManager;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
-import scriptease.translator.codegenerator.GameObjectPicker;
 
 /**
  * The pane containing game objects, such as objects, sounds, etc. that are used
@@ -38,14 +35,21 @@ import scriptease.translator.codegenerator.GameObjectPicker;
  * 
  */
 @SuppressWarnings("serial")
-public class GameObjectPane extends JPanel implements GameObjectPicker,
-		LibraryManagerObserver, PatternModelObserver {
+public class GameObjectPane extends JPanel implements LibraryManagerObserver,
+		PatternModelObserver {
+
+	private static GameObjectPane instance = new GameObjectPane();
+
+	public static GameObjectPane getInstance() {
+		return instance;
+	}
+
 	// Although the default picker will be used, a customPicker can define
 	// certain behavior of the default one.
 	private JTextField searchField;
 	private GameObjectPanelTree tree;
 
-	public GameObjectPane() {
+	private GameObjectPane() {
 		this.tree = new GameObjectPanelTree();
 
 		// Register for tool tips
@@ -125,23 +129,6 @@ public class GameObjectPane extends JPanel implements GameObjectPicker,
 		filterPane.setMinimumSize(searchFilterPane.getPreferredSize());
 
 		return filterPane;
-	}
-
-	public JPanel getPickerPanel() {
-		return this;
-	}
-
-	public void onWidgetClicked(KnowItBindingConstant object) {
-		// Not used here. The custom picker, if it exists, handles this.
-	}
-
-	@Override
-	public void onWidgetHovered(BindingWidget widget) {
-
-	}
-
-	@Override
-	public void onWidgetUnHovered() {
 	}
 
 	/**

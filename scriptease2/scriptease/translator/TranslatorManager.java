@@ -19,7 +19,6 @@ import scriptease.gui.SEFrame;
 import scriptease.gui.WindowFactory;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
-import scriptease.translator.codegenerator.GameObjectPicker;
 
 /**
  * Singleton class that manages the available translators for different games.
@@ -42,8 +41,6 @@ public class TranslatorManager implements PatternModelObserver {
 	private Set<Translator> translatorPool;
 
 	private Translator activeTranslator;
-
-	private GameObjectPicker customPicker;
 
 	private static TranslatorManager instance = new TranslatorManager();
 
@@ -301,10 +298,6 @@ public class TranslatorManager implements PatternModelObserver {
 		}
 
 		return null;
-	}
-
-	public GameObjectPicker getCustomPicker() {
-		return this.customPicker;
 	}
 
 	public void setActiveTranslator(Translator translator) {
