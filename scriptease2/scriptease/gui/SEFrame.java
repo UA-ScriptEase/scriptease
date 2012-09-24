@@ -127,8 +127,6 @@ public final class SEFrame implements PatternModelObserver {
 	public void populate() {
 		final JPanel content = new JPanel();
 
-		final JComponent objectPane = PanelFactory.getInstance()
-				.buildGameObjectPane(null);
 		final JComponent statusBar = this.buildStatusBar();
 
 		final GroupLayout layout = new GroupLayout(content);
@@ -141,56 +139,25 @@ public final class SEFrame implements PatternModelObserver {
 				ScriptEase.PREFERRED_LAYOUT_KEY);
 
 		// Compressed Layout
-		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
-			this.libraryGameObjectPaneSplit = new JSplitPane(
-					JSplitPane.VERTICAL_SPLIT, PanelFactory.getInstance()
-							.getMainLibraryPane(), objectPane);
-			
-			
-			this.middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-					this.libraryGameObjectPaneSplit, this.middlePane);
+		this.middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
-			content.add(this.middleSplit);
-			content.add(statusBar);
+		this.middleSplit.setBottomComponent(this.middlePane);
+		content.add(this.middleSplit);
+		content.add(statusBar);
 
-			this.libraryGameObjectPaneSplit.setResizeWeight(0.5);
+		layout.setHorizontalGroup(layout.createParallelGroup()
+				.addComponent(this.middleSplit).addComponent(statusBar));
 
-			layout.setHorizontalGroup(layout.createParallelGroup()
-					.addComponent(this.middleSplit).addComponent(statusBar));
-
-			layout.setVerticalGroup(layout
-					.createSequentialGroup()
-					.addComponent(this.middleSplit)
-					.addComponent(statusBar, GroupLayout.PREFERRED_SIZE,
-							GroupLayout.PREFERRED_SIZE,
-							GroupLayout.PREFERRED_SIZE));
-		} else
-		// Uncompressed Layout.
+		layout.setVerticalGroup(layout
+				.createSequentialGroup()
+				.addComponent(this.middleSplit)
+				.addComponent(statusBar, GroupLayout.PREFERRED_SIZE,
+						GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE));
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
+			// Uncompressed Layout.
 
-			this.libraryGameObjectPaneSplit = new JSplitPane(
-					JSplitPane.HORIZONTAL_SPLIT, PanelFactory.getInstance()
-							.getMainLibraryPane(), this.middlePane);
-			
-			
-			this.middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-					this.libraryGameObjectPaneSplit, objectPane);
-
-			content.add(this.middleSplit);
-			content.add(statusBar);
-
-			// stretch the split panels
-			layout.setHorizontalGroup(layout.createParallelGroup()
-					.addComponent(this.middleSplit).addComponent(statusBar));
-
-			// status label is at the bottom
-			layout.setVerticalGroup(layout
-					.createSequentialGroup()
-					.addComponent(this.middleSplit)
-					.addComponent(statusBar, GroupLayout.PREFERRED_SIZE,
-							GroupLayout.PREFERRED_SIZE,
-							GroupLayout.PREFERRED_SIZE));
-
+			// TODO Do something special if layout is uncompressed. Removed this
+			// when building the Library Pane was moved to panelfactory.
 		}
 
 		this.seFrame.getContentPane().removeAll();
@@ -238,66 +205,6 @@ public final class SEFrame implements PatternModelObserver {
 		statusBar.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
 		return statusBar;
-	}
-
-	/**
-	 * Updates the game object pane based on the passed in model.
-	 * 
-	 * @param model
-	 */
-	private void updateGameObjectPane(StoryModel model) {
-		final JPanel newGameObjectPane = PanelFactory.getInstance()
-				.buildGameObjectPane(model);
-		final String preferredLayout;
-		preferredLayout = ScriptEase.getInstance().getPreference(
-				ScriptEase.PREFERRED_LAYOUT_KEY);
-
-		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
-			this.libraryGameObjectPaneSplit
-					.setBottomComponent(newGameObjectPane);
-			this.libraryGameObjectPaneSplit.revalidate();
-
-			/*
-			 * Setting the divider needs to occur here because the JSplitPane
-			 * needs to actually be drawn before this works. According to Sun,
-			 * this is WAD. I would tend to disagree, but at least this is nicer
-			 * than subclassing JSplitPane.
-			 */
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					SEFrame.this.libraryGameObjectPaneSplit
-							.setDividerLocation(0.5);
-				}
-			});
-
-		} else if (preferredLayout
-				.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
-			this.middleSplit.setRightComponent(newGameObjectPane);
-			this.middleSplit.revalidate();
-		}
-	}
-
-	/**
-	 * Hides the game object pane from view.
-	 */
-	private void hideGameObjectPane() {
-		final JPanel newPanel;
-		final String preferredLayout;
-		preferredLayout = ScriptEase.getInstance().getPreference(
-				ScriptEase.PREFERRED_LAYOUT_KEY);
-
-		newPanel = new JPanel();
-		newPanel.setVisible(false);
-
-		if (preferredLayout.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
-			this.libraryGameObjectPaneSplit.setBottomComponent(newPanel);
-			this.libraryGameObjectPaneSplit.revalidate();
-		} else if (preferredLayout
-				.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
-			this.middleSplit.setRightComponent(newPanel);
-			this.middleSplit.revalidate();
-		}
 	}
 
 	/**
@@ -453,7 +360,8 @@ public final class SEFrame implements PatternModelObserver {
 					// http://bugs.sun.com/view_bug.do?bug_id=4949810
 					final JMenuBar bar = MenuFactory.createMainMenuBar(true);
 					SEFrame.this.getFrame().setJMenuBar(bar);
-					SEFrame.this.hideGameObjectPane();
+					SEFrame.this.middleSplit.setTopComponent(PanelFactory
+							.getInstance().getMainLibraryPane());
 					this.setScriptEaseTitle();
 					bar.revalidate();
 
@@ -465,14 +373,17 @@ public final class SEFrame implements PatternModelObserver {
 					// http://bugs.sun.com/view_bug.do?bug_id=4949810
 					final JMenuBar bar = MenuFactory.createMainMenuBar(false);
 					SEFrame.this.getFrame().setJMenuBar(bar);
-					SEFrame.this.updateGameObjectPane(storyModel);
+
+					SEFrame.this.middleSplit.setTopComponent(PanelFactory
+							.getInstance().buildStoryLibraryPane(storyModel));
 					this.setScriptEaseTitle();
 					bar.revalidate();
 				}
 			});
 		} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED
 				&& PatternModelManager.getInstance().getActiveModel() == null) {
-			this.hideGameObjectPane();
+			this.middleSplit.setTopComponent(new JPanel());
+			
 			// This sucks, but we need to revalidate the menu bar.
 			// http://bugs.sun.com/view_bug.do?bug_id=4949810
 			final JMenuBar bar = MenuFactory.createMainMenuBar(false);
