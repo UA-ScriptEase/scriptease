@@ -129,7 +129,7 @@ public class CloseableModelTab extends JPanel {
 	 */
 	private class TabButton extends JButton {
 
-		public TabButton(Action action) {
+		private TabButton(Action action) {
 			super(action);
 
 			int size = 17;
@@ -182,6 +182,8 @@ public class CloseableModelTab extends JPanel {
 	 * button on mouse enter/exit.
 	 */
 	private static final MouseListener tabButtonMouseListener = new MouseAdapter() {
+		
+		@Override
 		public void mouseEntered(MouseEvent e) {
 			Component component = e.getComponent();
 			if (component instanceof AbstractButton) {
@@ -189,7 +191,8 @@ public class CloseableModelTab extends JPanel {
 				button.setBorderPainted(true);
 			}
 		}
-
+		
+		@Override
 		public void mouseExited(MouseEvent e) {
 			Component component = e.getComponent();
 			if (component instanceof AbstractButton) {

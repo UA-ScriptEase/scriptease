@@ -210,7 +210,8 @@ public class ScriptWidgetFactory {
 					}
 				};
 
-				observedLabel = new ObservedJPanel(nameLabel, observer);
+				observedLabel = new ObservedJPanel(nameLabel);
+				observedLabel.addObserver(observer);
 
 				storyComponent.addStoryComponentObserver(observer);
 
@@ -395,8 +396,8 @@ public class ScriptWidgetFactory {
 		Comparable<?> min = null; // default to no min limit
 		final Comparable<?> max = null; // default to no max limit
 		final Float stepSize = 1.0f; // default to int step size
-		final String regex = TranslatorManager.getInstance().getActiveTranslator()
-				.getGameTypeManager().getReg(bindingType);
+		final String regex = TranslatorManager.getInstance()
+				.getActiveTranslator().getGameTypeManager().getReg(bindingType);
 		final Pattern regexPattern = Pattern.compile(regex);
 		if (regex != null && !regex.isEmpty()) {
 			// if regex doesn't specify negative numbers, make min 0

@@ -1,4 +1,4 @@
-package scriptease.gui.SETree;
+package scriptease.gui.pane;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -14,17 +14,13 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import scriptease.controller.ModelAdapter;
 import scriptease.gui.cell.BindingWidget;
 import scriptease.gui.cell.ScriptWidgetFactory;
-import scriptease.gui.filters.Filter;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.translator.TranslatorManager;
@@ -36,58 +32,29 @@ import scriptease.translator.io.model.GameObject;
 import scriptease.util.StringOp;
 
 /**
- * Model side of the Game Object Panel Tree
+ * Draws a Game Constant Tree for the passed in StoryModel.
  * 
  * @author kschenk
  * 
  */
 @SuppressWarnings("serial")
-public class GameObjectPanelTree extends JPanel {
-	final Tree<Object> treeModel;
-
-	Filter filter;
-
-	public GameObjectPanelTree() {
-		super();
-		this.treeModel = new Tree<Object>("Available Game Objects");
-
-		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		this.setVisible(true);
-
-		if (PatternModelManager.getInstance().getActiveModel() != null)
-			this.drawTree();
-	}
-
-	public void setFilter(Filter filter) {
-		this.filter = filter;
-	}
+public class GameConstantTree extends JPanel {
 
 	/**
-	 * Filter the StoryComponentPanelTree immediate children. Does nothing if no
-	 * filter is applied
+	 * Creates a new GameConstantTree with the passed in model.
 	 * 
-	 * @return
+	 * @param model
+	 *            Creates a new GameConstantTree with the passed in model. If
+	 *            the passed in model is null or not a StoryModel, then nothing
+	 *            is drawn. Use {@link #drawTree(StoryModel)} to draw the tree
+	 *            later with a StoryModel.
 	 */
-	private List<GameConstant> filterGameObjects(List<GameConstant> gameObjects) {
-		final List<GameConstant> filteredObjects;
+	public GameConstantTree(PatternModel model) {
+		super();
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-		filteredObjects = new ArrayList<GameConstant>();
-
-		if (this.filter == null)
-			if (gameObjects == null)
-				return filteredObjects;
-			else
-				return gameObjects;
-
-		for (GameConstant gameObject : gameObjects) {
-			// If the child was accepted by the filter
-			boolean accepted = this.filter.isAcceptable(gameObject);
-
-			if (accepted)
-				filteredObjects.add(gameObject);
-		}
-
-		return filteredObjects;
+		if (model != null && model instanceof StoryModel)
+			this.drawTree((StoryModel) model);
 	}
 
 	/**
@@ -96,27 +63,17 @@ public class GameObjectPanelTree extends JPanel {
 	 * @param type
 	 * @return
 	 */
-	private Collection<GameConstant> getObjectsOfType(final String type) {
-		final PatternModel activeModel;
+	private Collection<GameConstant> getObjectsOfType(StoryModel model,
+			final String type) {
 		final List<GameConstant> allGameObjects = new ArrayList<GameConstant>();
 
-		activeModel = PatternModelManager.getInstance().getActiveModel();
+		allGameObjects.addAll(model.getModule().getResourcesOfType(type));
 
-		activeModel.process(new ModelAdapter() {
+		Collections.sort(allGameObjects, new Comparator<GameConstant>() {
 			@Override
-			public void processStoryModel(StoryModel storyModel) {
-				allGameObjects.addAll(GameObjectPanelTree.this
-						.filterGameObjects(storyModel.getModule()
-								.getResourcesOfType(type)));
-
-				Collections.sort(allGameObjects,
-						new Comparator<GameConstant>() {
-							@Override
-							public int compare(GameConstant o1, GameConstant o2) {
-								return String.CASE_INSENSITIVE_ORDER.compare(
-										o1.getName(), o2.getName());
-							}
-						});
+			public int compare(GameConstant o1, GameConstant o2) {
+				return String.CASE_INSENSITIVE_ORDER.compare(o1.getName(),
+						o2.getName());
 			}
 		});
 
@@ -126,9 +83,12 @@ public class GameObjectPanelTree extends JPanel {
 	/**
 	 * Draws the tree.
 	 */
-	public void drawTree() {
+	public void drawTree(PatternModel model) {
 		this.removeAll();
-		this.treeModel.clear();
+
+		if (model == null || !(model instanceof StoryModel)) {
+			return;
+		}
 
 		final GameTypeManager typeManager;
 		final List<String> types;
@@ -151,76 +111,13 @@ public class GameObjectPanelTree extends JPanel {
 		for (String typeName : types) {
 			final Collection<GameConstant> gameObjects;
 
-			gameObjects = this.getObjectsOfType(typeName);
+			gameObjects = this.getObjectsOfType((StoryModel) model, typeName);
 
 			// Ignore empty categories because they're confusing.
 			if (gameObjects.size() <= 0)
 				continue;
-
-			this.treeModel.addChild(this.treeModel.getHead(), typeName);
-
-			for (GameConstant object : gameObjects) {
-				this.treeModel.addChild(typeName, object);
-
-				// Add dialogue lines
-				if (object instanceof GameConversation) {
-					final GameConversation parent;
-					final List<GameConversationNode> roots;
-
-					parent = (GameConversation) object;
-					roots = parent.getConversationRoots();
-
-					for (GameConversationNode root : roots) {
-						this.treeModel.addChild(parent, root);
-						this.addLines(root);
-					}
-				}
-			}
-		}
-
-		final List<Object> firstRowExpansion;
-
-		firstRowExpansion = (List<Object>) this.treeModel
-				.getSuccessors(this.treeModel.getHead());
-
-		// Add the game objects to the tree
-		for (int i = 0; i < firstRowExpansion.size(); i++) {
-			if (!(firstRowExpansion.get(i) instanceof String)) {
-				continue;
-			}
-
-			final String typeName;
-
-			typeName = (String) firstRowExpansion.get(i);
-
-			this.add(new GameObjectContainer(typeName));
-		}
-	}
-
-	/**
-	 * Recursively adds all nodes from a conversation tree as types.
-	 * 
-	 * @param parent
-	 */
-	private void addLines(GameConversationNode parent) {
-
-		if (parent.isTerminal()) {
-			return;
-		}
-
-		final List<? extends GameConversationNode> children;
-
-		children = parent.getChildren();
-
-		if (children.size() == 0) {
-			return;
-		}
-
-		for (GameConversationNode child : children) {
-			if (!child.isLink()) {
-				this.treeModel.addChild(parent, child);
-				addLines(child);
-			}
+			else
+				this.add(new GameObjectContainer(typeName, gameObjects));
 		}
 	}
 
@@ -232,43 +129,51 @@ public class GameObjectPanelTree extends JPanel {
 	 * 
 	 */
 	private class GameObjectContainer extends JPanel {
-		private final String label;
-
 		private boolean collapsed;
 
 		/**
-		 * Creates a new game object container with the passed in name.
+		 * Creates a new game object container with the passed in name and
+		 * collection of GameObjects.
 		 * 
 		 * @param label
+		 *            The name of the container
+		 * @param gameConstants
+		 *            The list of GameConstants in the container
 		 */
-		public GameObjectContainer(String label) {
+		private GameObjectContainer(String label,
+				final Collection<GameConstant> gameConstants) {
 			this.collapsed = false;
-			this.label = label;
 
 			this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 			this.setBackground(Color.WHITE);
 
-			redrawContainer();
+			redrawContainer(label, gameConstants);
 		}
 
 		/**
 		 * Redraws the container. This also fires whenever the container is
 		 * collapsed or expanded.
+		 * 
+		 * @param label
+		 *            The name of the container
+		 * @param gameConstants
+		 *            The list of GameConstants in the container
 		 */
-		private void redrawContainer() {
+		private void redrawContainer(final String label,
+				final Collection<GameConstant> gameConstants) {
 			this.removeAll();
 
 			final JLabel categoryLabel;
 
-			categoryLabel = new JLabel(StringOp.toProperCase(this.label));
+			categoryLabel = new JLabel(StringOp.toProperCase(label));
 
 			categoryLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 			categoryLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					GameObjectContainer.this.collapsed = !GameObjectContainer.this.collapsed;
-					redrawContainer();
+					GameObjectContainer.this.collapsed ^= true;
+					redrawContainer(label, gameConstants);
 				}
 			});
 
@@ -279,12 +184,7 @@ public class GameObjectPanelTree extends JPanel {
 				categoryLabel.setIcon(ScriptEaseUI.COLLAPSE_ICON);
 				this.add(categoryLabel);
 
-				final Collection<Object> successors;
-
-				successors = GameObjectPanelTree.this.treeModel
-						.getSuccessors(label);
-
-				for (Object successor : successors) {
+				for (GameConstant successor : gameConstants) {
 					if (successor instanceof GameObject)
 						this.add(createGameConstantPanel((GameObject) successor));
 					else if (successor instanceof GameConversation)
@@ -298,60 +198,21 @@ public class GameObjectPanelTree extends JPanel {
 		}
 
 		/**
-		 * Creates a game conversation panel using the passed in game
-		 * conversation. This adds all of the game conversation's successors to
-		 * the list as well.
-		 * 
-		 * @param gameConversation
-		 * @return
-		 */
-		private JPanel createGameConversationPanel(
-				GameConversation gameConversation) {
-			final JPanel convoPanel;
-
-			convoPanel = new JPanel();
-			convoPanel.setOpaque(false);
-
-			convoPanel
-					.setLayout(new BoxLayout(convoPanel, BoxLayout.PAGE_AXIS));
-
-			convoPanel.add(createGameConstantPanel(gameConversation));
-
-			for (Object gameConversationNode : GameObjectPanelTree.this.treeModel
-					.getSuccessors(gameConversation)) {
-
-				int indent;
-
-				indent = 1;
-
-				convoPanel.add(createIndentedPanel(
-						(GameConversationNode) gameConversationNode, indent));
-
-				this.addConversationRoots(
-						(GameConversationNode) gameConversationNode,
-						convoPanel, indent + 1);
-			}
-
-			convoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-			return convoPanel;
-		}
-
-		/**
 		 * Creates a JPanel for the passed in GameConstant. This panel contains
 		 * a binding widget that the user can then drag and drop into the
 		 * appropriate slots.
 		 * 
-		 * @param gameObject
+		 * @param gameConstant
+		 *            The GameConstant to create a panel for
 		 * @return
 		 */
-		private JPanel createGameConstantPanel(GameConstant gameObject) {
+		private JPanel createGameConstantPanel(GameConstant gameConstant) {
 			final JPanel objectPanel;
 			final BindingWidget gameObjectBindingWidget;
 			final String regularText;
 
 			objectPanel = new JPanel();
-			regularText = gameObject.getName();
+			regularText = gameConstant.getName();
 
 			objectPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -363,7 +224,7 @@ public class GameObjectPanelTree extends JPanel {
 			objectPanel.setLayout(new BoxLayout(objectPanel, BoxLayout.X_AXIS));
 
 			gameObjectBindingWidget = new BindingWidget(
-					new KnowItBindingConstant(gameObject));
+					new KnowItBindingConstant(gameConstant));
 
 			// If the name is longer than 5 characters, shorten it and add a
 			// MouseListener to display longer name when clicked
@@ -419,39 +280,73 @@ public class GameObjectPanelTree extends JPanel {
 		}
 
 		/**
-		 * Recursively adds all successors of the passed in GameConversationNode
-		 * to the passed in JPanel.
+		 * Creates a game conversation panel using the passed in game
+		 * conversation. This adds all of the game conversation's successors to
+		 * the list as well.
 		 * 
-		 * @param parent
-		 * @param convoPanel
-		 * @param indent
+		 * @param gameConversation
+		 *            The GameConversation to make a panel for
+		 * @return
 		 */
-		private void addConversationRoots(GameConversationNode parent,
-				JPanel convoPanel, int indent) {
-			if (parent.isTerminal()) {
+		private JPanel createGameConversationPanel(
+				GameConversation gameConversation) {
+			final JPanel convoPanel;
+
+			convoPanel = new JPanel();
+			convoPanel.setOpaque(false);
+
+			convoPanel
+					.setLayout(new BoxLayout(convoPanel, BoxLayout.PAGE_AXIS));
+
+			convoPanel.add(createGameConstantPanel(gameConversation));
+
+			for (GameConversationNode gameConversationNode : gameConversation
+					.getConversationRoots()) {
+
+				int indent;
+
+				indent = 1;
+
+				convoPanel
+						.add(createIndentedPanel(gameConversationNode, indent));
+
+				this.addConversationRoots(gameConversationNode.getChildren(),
+						convoPanel, indent + 1);
+			}
+
+			convoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+			return convoPanel;
+		}
+
+		/**
+		 * Recursively adds all passed in roots to the passed in JPanel.
+		 * 
+		 * @param roots
+		 *            The roots to add to the JPanel. Recursively adds these
+		 *            roots' roots and so forth.
+		 * @param convoPanel
+		 *            The panel to add the roots to.
+		 * @param indent
+		 *            The amount to indent as defined in
+		 *            {@link #createIndentedPanel(GameConstant, int)}.
+		 *            Incremented for each level.
+		 */
+		private void addConversationRoots(
+				List<? extends GameConversationNode> roots, JPanel convoPanel,
+				int indent) {
+			if (roots.isEmpty()) {
 				return;
 			}
 
-			final Collection<Object> successors;
+			for (GameConversationNode root : roots) {
+				// TODO We still need to implement linked conversations.
+				if (root.isLink())
+					continue;
 
-			successors = GameObjectPanelTree.this.treeModel
-					.getSuccessors(parent);
-
-			if (successors.size() == 0) {
-				return;
-			}
-
-			for (Object successor : successors) {
-				if (successor instanceof GameConversation) {
-					convoPanel.add(createIndentedPanel(
-							(GameConversation) successor, indent));
-				} else if (successor instanceof GameConversationNode) {
-					convoPanel.add(createIndentedPanel(
-							(GameConversationNode) successor, indent));
-					this.addConversationRoots((GameConversationNode) successor,
-							convoPanel, indent + 1);
-
-				}
+				convoPanel.add(createIndentedPanel(root, indent));
+				this.addConversationRoots(root.getChildren(), convoPanel,
+						indent + 1);
 			}
 		}
 
@@ -462,7 +357,9 @@ public class GameObjectPanelTree extends JPanel {
 		 * (5*indent, 0).
 		 * 
 		 * @param gameConstant
+		 *            The constant to create a panel for
 		 * @param indent
+		 *            The indent
 		 * @return
 		 */
 		private JPanel createIndentedPanel(GameConstant gameConstant, int indent) {
@@ -488,6 +385,7 @@ public class GameObjectPanelTree extends JPanel {
 		 * Shortens the text to fit on the binding widget.
 		 * 
 		 * @param text
+		 *            The text to shorten
 		 * @return
 		 */
 		private String shortenText(final String text) {
