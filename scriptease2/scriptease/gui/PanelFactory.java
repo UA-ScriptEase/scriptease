@@ -3,23 +3,36 @@ package scriptease.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.ObservedJPanel;
+import scriptease.controller.observer.PatternModelEvent;
+import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.graph.SEGraphAdapter;
+import scriptease.controller.observer.library.LibraryManagerEvent;
+import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
@@ -30,10 +43,13 @@ import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
+import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
-import scriptease.gui.pane.GameObjectPane;
+import scriptease.gui.pane.GameConstantTree;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
+import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
@@ -137,7 +153,8 @@ public class PanelFactory {
 				}
 			}
 		};
-		storyGraphPanel = new ObservedJPanel(storyGraph, graphRedrawer);
+		storyGraphPanel = new ObservedJPanel(storyGraph);
+		storyGraphPanel.addObserver(graphRedrawer);
 
 		storyGraphScrollPane = new JScrollPane(storyGraph);
 
@@ -361,33 +378,167 @@ public class PanelFactory {
 			PanelFactory.modelsToComponents.removeKey(model);
 	}
 
-	// private static LibraryPanel mainLibraryPane = new LibraryPanel();
+	private PatternModelObserver storyLibraryPaneObserver;
 
 	/**
-	 * Returns the main library pane.
+	 * Builds a JSplitPane that is used for pattern models which contains a
+	 * LibraryPanel and a GameConstatPanel. The GameConstantPanel is hidden when
+	 * a non-StoryModel PatternModel is opened up.
 	 * 
 	 * @return
 	 */
-	/*
-	 * public LibraryPanel getMainLibraryPane() { return
-	 * PanelFactory.mainLibraryPane; }
-	 */
+	public JSplitPane buildLibrarySplitPane() {
+		final JSplitPane librarySplitPane;
+		final JPanel gameConstantPane;
+
+		librarySplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		gameConstantPane = this.buildGameConstantPane();
+
+		librarySplitPane.setTopComponent(LibraryPanel.getInstance());
+
+		if (PatternModelManager.getInstance().getActiveModel() instanceof StoryModel)
+			librarySplitPane.setBottomComponent(gameConstantPane);
+		else
+			librarySplitPane.setBottomComponent(null);
+
+		librarySplitPane.setResizeWeight(0.5);
+
+		this.storyLibraryPaneObserver = new PatternModelObserver() {
+			public void modelChanged(PatternModelEvent event) {
+
+				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
+					event.getPatternModel().process(new ModelAdapter() {
+
+						@Override
+						public void processLibraryModel(
+								LibraryModel libraryModel) {
+							librarySplitPane.setBottomComponent(null);
+						}
+
+						@Override
+						public void processStoryModel(StoryModel storyModel) {
+							if (librarySplitPane.getBottomComponent() == null) {
+								librarySplitPane
+										.setBottomComponent(gameConstantPane);
+
+								librarySplitPane.setDividerLocation(0.5);
+							}
+						}
+					});
+				}
+			}
+		};
+
+		PatternModelManager.getInstance().addPatternModelObserver(
+				this.storyLibraryPaneObserver);
+
+		return librarySplitPane;
+	}
+
 	/**
+	 * Builds a pane containing game objects that are used in stories. These can
+	 * be dragged into story components as parameters. This pane is based on the
+	 * active story and gets updated accordingly.
 	 * 
-	 * @param storyModel
 	 * @return
 	 */
-	public JSplitPane buildStoryLibraryPane() {
-		final JSplitPane storyLibraryPane;
-		final JPanel gameObjectPane;
+	public JPanel buildGameConstantPane() {
+		final JPanel gameConstantPane;
+		final JPanel filterPane;
+		final JPanel searchFilterPane;
 
-		storyLibraryPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		final ObservedJPanel observedPanel;
 
-		storyLibraryPane.setTopComponent(LibraryPanel.getInstance());
-		storyLibraryPane.setBottomComponent(GameObjectPane.getInstance());
+		final GameConstantTree tree;
+		// TODO Search Field does nothing right now. Implement it.
+		final JTextField searchField = new JTextField(20);
 
-		storyLibraryPane.setResizeWeight(0.5);
+		final PatternModelObserver modelObserver;
+		final LibraryManagerObserver libraryObserver;
 
-		return storyLibraryPane;
+		gameConstantPane = new JPanel();
+		filterPane = new JPanel();
+		searchFilterPane = new JPanel();
+
+		tree = new GameConstantTree(PatternModelManager.getInstance()
+				.getActiveModel());
+
+		tree.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		tree.setBackground(Color.WHITE);
+
+		// Add the tree to the pane.
+		JScrollPane treeScrollPane = new JScrollPane(tree,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		treeScrollPane.setBackground(Color.WHITE);
+		treeScrollPane.getVerticalScrollBar().setUnitIncrement(
+				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+
+		filterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
+				.createLineBorder(Color.gray), Il8nResources
+				.getString("Search_Filter_"),
+				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
+						"SansSerif", Font.PLAIN, 12), Color.black));
+
+		// Sets up the type filter.
+		// TODO Make types work!
+		searchFilterPane.add(searchField);
+		searchFilterPane.add(new JButton("Types"));
+		searchFilterPane.setLayout(new BoxLayout(searchFilterPane,
+				BoxLayout.LINE_AXIS));
+
+		// FilterPane Layout
+		BoxLayout filterPaneLayout = new BoxLayout(filterPane, BoxLayout.Y_AXIS);
+		filterPane.setLayout(filterPaneLayout);
+		filterPane.add(searchFilterPane);
+		filterPane.setMaximumSize(new Dimension(2400, 50));
+
+		gameConstantPane.setPreferredSize(new Dimension(
+				tree.getPreferredSize().width, 0));
+
+		gameConstantPane.setLayout(new BoxLayout(gameConstantPane,
+				BoxLayout.PAGE_AXIS));
+
+		gameConstantPane.add(filterPane);
+		gameConstantPane.add(Box.createVerticalStrut(5));
+		gameConstantPane.add(treeScrollPane);
+
+		libraryObserver = new LibraryManagerObserver() {
+			@Override
+			public void modelChanged(LibraryManagerEvent event) {
+				/*
+				 * Keep the display of the library up to date with the changes
+				 * to Libraries. This listener is important for the Story
+				 * Component Builder, so that changes made there will apply to
+				 * the library view as well.
+				 */
+				if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
+					tree.drawTree(event.getSource());
+				}
+			}
+		};
+
+		modelObserver = new PatternModelObserver() {
+			public void modelChanged(PatternModelEvent event) {
+				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
+					tree.drawTree(event.getPatternModel());
+				}
+			}
+		};
+
+		LibraryManager.getInstance().addLibraryManagerObserver(libraryObserver);
+		PatternModelManager.getInstance()
+				.addPatternModelObserver(modelObserver);
+
+		// This is very, very hack. But it's the only way our observers are
+		// stored for the lifetime of the game constant pane. The sizes get
+		// messed up if we just add gameConstantPane to observedPanel and that
+		observedPanel = new ObservedJPanel(new JPanel());
+		observedPanel.addObserver(libraryObserver);
+		observedPanel.addObserver(modelObserver);
+		observedPanel.setVisible(false);
+		gameConstantPane.add(observedPanel);
+
+		return gameConstantPane;
 	}
 }

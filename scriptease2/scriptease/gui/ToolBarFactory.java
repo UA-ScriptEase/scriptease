@@ -1,6 +1,7 @@
 package scriptease.gui;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -107,6 +108,7 @@ public class ToolBarFactory {
 				BoxLayout.LINE_AXIS));
 		graphEditorToolBar.setRollover(true);
 		graphEditorToolBar.setFloatable(false);
+		graphEditorToolBar.setBackground(Color.WHITE);
 
 		buttonList.add(selectNodeButton);
 		buttonList.add(insertNodeButton);

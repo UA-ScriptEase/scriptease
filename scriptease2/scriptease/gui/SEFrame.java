@@ -107,7 +107,44 @@ public final class SEFrame implements PatternModelObserver {
 		this.middlePane.setLayout(new GridLayout(1, 1));
 		this.middlePane.add(this.modelTabs);
 
-		this.populate();
+		final JPanel content;
+		final JComponent statusBar;
+		final GroupLayout contentLayout;
+		final String preferredLayout;
+
+		content = new JPanel();
+		statusBar = this.buildStatusBar();
+
+		contentLayout = new GroupLayout(content);
+
+		content.setLayout(contentLayout);
+
+		// Get the preferred layout.
+		preferredLayout = ScriptEase.getInstance().getPreference(
+				ScriptEase.PREFERRED_LAYOUT_KEY);
+
+		// Compressed Layout
+		SEFrame.this.middleSplit.setTopComponent(PanelFactory.getInstance()
+				.buildLibrarySplitPane());
+		this.middleSplit.setBottomComponent(this.middlePane);
+		content.add(this.middleSplit);
+		content.add(statusBar);
+
+		contentLayout.setHorizontalGroup(contentLayout.createParallelGroup()
+				.addComponent(this.middleSplit).addComponent(statusBar));
+
+		contentLayout.setVerticalGroup(contentLayout
+				.createSequentialGroup()
+				.addComponent(this.middleSplit)
+				.addComponent(statusBar, GroupLayout.PREFERRED_SIZE,
+						GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE));
+		if (preferredLayout.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
+			// Uncompressed Layout.
+			// TODO Do something special if layout is uncompressed. Removed this
+			// when building of the Library Pane was moved to panelfactory.
+		}
+
+		this.seFrame.getContentPane().add(content);
 
 		PatternModelManager.getInstance().addPatternModelObserver(this);
 	}
@@ -119,51 +156,6 @@ public final class SEFrame implements PatternModelObserver {
 	 */
 	public JFrame getFrame() {
 		return this.seFrame;
-	}
-
-	/**
-	 * Used by the constructor to set up and lay out the frame's internals. Also
-	 * used to rebuild the frame's internals when the preferred layout changes.
-	 */
-	public void populate() {
-		final JPanel content = new JPanel();
-
-		final JComponent statusBar = this.buildStatusBar();
-
-		final GroupLayout layout = new GroupLayout(content);
-		final String preferredLayout;
-
-		content.setLayout(layout);
-
-		// Get the preferred layout.
-		preferredLayout = ScriptEase.getInstance().getPreference(
-				ScriptEase.PREFERRED_LAYOUT_KEY);
-
-		// Compressed Layout
-
-		SEFrame.this.middleSplit.setTopComponent(PanelFactory.getInstance()
-				.buildStoryLibraryPane());
-		this.middleSplit.setBottomComponent(this.middlePane);
-		content.add(this.middleSplit);
-		content.add(statusBar);
-
-		layout.setHorizontalGroup(layout.createParallelGroup()
-				.addComponent(this.middleSplit).addComponent(statusBar));
-
-		layout.setVerticalGroup(layout
-				.createSequentialGroup()
-				.addComponent(this.middleSplit)
-				.addComponent(statusBar, GroupLayout.PREFERRED_SIZE,
-						GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE));
-		if (preferredLayout.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
-			// Uncompressed Layout.
-
-			// TODO Do something special if layout is uncompressed. Removed this
-			// when building the Library Pane was moved to panelfactory.
-		}
-
-		this.seFrame.getContentPane().removeAll();
-		this.seFrame.getContentPane().add(content);
 	}
 
 	/**
@@ -362,13 +354,13 @@ public final class SEFrame implements PatternModelObserver {
 					// This sucks, but we need to revalidate the menu bar.
 					// http://bugs.sun.com/view_bug.do?bug_id=4949810
 					final JMenuBar bar;
-					
+
 					prevLocation = SEFrame.this.middleSplit
 							.getDividerLocation();
 					bar = MenuFactory.createMainMenuBar(true);
-					
+
 					SEFrame.this.getFrame().setJMenuBar(bar);
-					
+
 					SwingUtilities.invokeLater(new Runnable() {
 						@Override
 						public void run() {
@@ -376,7 +368,7 @@ public final class SEFrame implements PatternModelObserver {
 									.setDividerLocation(prevLocation);
 						}
 					});
-					
+
 					this.setScriptEaseTitle();
 					bar.revalidate();
 
@@ -388,7 +380,7 @@ public final class SEFrame implements PatternModelObserver {
 					// This sucks, but we need to revalidate the menu bar.
 					// http://bugs.sun.com/view_bug.do?bug_id=4949810
 					final JMenuBar bar;
-					
+
 					prevLocation = SEFrame.this.middleSplit
 							.getDividerLocation();
 					bar = MenuFactory.createMainMenuBar(false);
