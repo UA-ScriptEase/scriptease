@@ -305,6 +305,8 @@ public class ToolBarFactory {
 						});
 					}
 					break;
+				default:
+					break;
 				}
 			} else if (type == GraphNodeEventType.CONNECTION_ADDED) {
 				GraphNode.observeDepthMap(this, sourceNode);
