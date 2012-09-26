@@ -3,6 +3,7 @@ package scriptease.gui.filters;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -21,10 +22,7 @@ public class CategoryFilter extends StoryComponentFilter {
 	 * @author remiller
 	 */
 	public enum Category {
-		EFFECTS,
-		DESCRIPTIONS,
-		CAUSES,
-		CONTROLS;
+		EFFECTS, DESCRIPTIONS, CAUSES, CONTROLS, NOTE;
 	}
 
 	private Category category;
@@ -86,6 +84,12 @@ public class CategoryFilter extends StoryComponentFilter {
 		public void processAskIt(AskIt questionIt) {
 			this.acceptable = CategoryFilter.this.category
 					.equals(Category.CONTROLS);
+		}
+
+		@Override
+		public void processNote(Note note) {
+			this.acceptable = CategoryFilter.this.category
+					.equals(Category.NOTE);
 		}
 
 		@Override

@@ -12,6 +12,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.translator.codegenerator.LocationInformation;
 
 /**
@@ -51,6 +52,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		validTypes.add(KnowIt.class);
 		validTypes.add(AskIt.class);
 		validTypes.add(StoryComponentContainer.class);
+		validTypes.add(Note.class);
 
 		this.storyBlock = new StoryItemSequence(validTypes);
 		this.storyBlock.setDisplayText("Story:");

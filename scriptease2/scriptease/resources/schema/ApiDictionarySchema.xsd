@@ -141,7 +141,6 @@
 		<xsd:sequence minOccurs="0" maxOccurs="2">
 			<xsd:group ref="StoryComponentDataGroup" />
 			<xsd:element name="Children" type="xsd:string" />
-			<xsd:element name="ValidTypes" type="ValidList_Type" />
 		</xsd:sequence>
 	</xsd:complexType>
 

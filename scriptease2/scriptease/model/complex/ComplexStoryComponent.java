@@ -105,7 +105,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 		if (!this.canAcceptChild(newChild)) {
 			System.err.println("ComplexStoryComponent '"
 					+ this.getDisplayText() + "' has rejected '" + newChild
-					+ "' because it is not a acceptable child type.");
+					+ "' because it is not an acceptable child type.");
 			return false;
 		}
 
@@ -387,6 +387,8 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 		if (newChild instanceof StoryComponentContainer) {
 			for (StoryComponent child : ((StoryComponentContainer) newChild)
 					.getChildren()) {
+				if(isValidChild(child) == false)
+					isValidChild(child);
 				isValid &= isValidChild(child);
 			}
 		}

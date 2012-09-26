@@ -5,8 +5,8 @@ import java.util.Collection;
 
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
-import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
@@ -24,31 +24,11 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @see StoryComponentConverter
  */
 public class StoryItemSequenceConverter extends ComplexStoryComponentConverter {
-	private static final String TAG_VALID_TYPES = "ValidTypes";
 
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
-		final StoryItemSequence storyItemSequence = (StoryItemSequence) source;
 		super.marshal(source, writer, context);
-
-		Collection<Class<? extends StoryComponent>> validTypes = new ArrayList<Class<? extends StoryComponent>>(
-				storyItemSequence.getValidChildTypes());
-		writer.startNode(TAG_VALID_TYPES);
-		context.convertAnother(classToName(validTypes));
-		writer.endNode();
-
-	}
-
-	private Collection<String> classToName(
-			Collection<Class<? extends StoryComponent>> classes) {
-		Collection<String> names = new ArrayList<String>();
-
-		for (Class<? extends StoryComponent> aClass : classes) {
-			String name = aClass.getSimpleName();
-			names.add(name);
-		}
-		return names;
 	}
 
 	/**
@@ -63,38 +43,18 @@ public class StoryItemSequenceConverter extends ComplexStoryComponentConverter {
 		validTypes.add(KnowIt.class);
 		validTypes.add(StoryComponentContainer.class);
 		validTypes.add(AskIt.class);
+		validTypes.add(Note.class);
 		return validTypes;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		StoryItemSequence storyItemSequence = null;
 
-		// reading data
+		// read data
 		storyItemSequence = (StoryItemSequence) super
 				.unmarshal(reader, context);
-
-		/*
-		 * clear default of all class types as children @see
-		 * populateValidTypes(), the read in the real allowable children
-		 */
-		storyItemSequence.clearAllowableChildren();
-
-		reader.moveDown();
-		if (!reader.getNodeName().equalsIgnoreCase(TAG_VALID_TYPES))
-			System.err
-					.println("Failed to read valid type list for StoryItemSequence ");
-		else {
-			for (String name : (Collection<String>) context.convertAnother(
-					storyItemSequence, ArrayList.class)) {
-				storyItemSequence.registerChildType(
-						this.convertToModelClass(name),
-						ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-			}
-		}
-		reader.moveUp();
 
 		return storyItemSequence;
 	}
@@ -115,22 +75,4 @@ public class StoryItemSequenceConverter extends ComplexStoryComponentConverter {
 
 		return storyItemSequence;
 	}
-
-	private Class<? extends StoryComponent> convertToModelClass(String name) {
-
-		if (name.equals("ScriptIt")) {
-			return ScriptIt.class;
-		} else if (name.equals("KnowIt")) {
-			return KnowIt.class;
-		} else if (name.equals("StoryComponentContainer")) {
-			return StoryComponentContainer.class;
-		} else if (name.equals("AskIt")) {
-			return AskIt.class;
-		} else if (name.equals("StoryItemSequence")) {
-			return StoryItemSequence.class;
-		} else
-			throw new IllegalStateException("Unable to convert between Name ["
-					+ name + "] and a valid model class");
-	}
-
 }

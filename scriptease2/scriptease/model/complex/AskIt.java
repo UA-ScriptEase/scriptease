@@ -8,6 +8,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 
 /**
  * Represents the "if/else" programming construct.<br>
@@ -81,6 +82,7 @@ public final class AskIt extends ComplexStoryComponent {
 		ifElseValidTypes.add(ScriptIt.class);
 		ifElseValidTypes.add(KnowIt.class);
 		ifElseValidTypes.add(StoryComponentContainer.class);
+		ifElseValidTypes.add(Note.class);
 
 		// now we can Initialize the StoryItemSequences
 		this.ifBlock = new StoryItemSequence(ifElseValidTypes);

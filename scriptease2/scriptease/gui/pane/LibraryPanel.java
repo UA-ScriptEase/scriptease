@@ -200,8 +200,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 			else
 				hideInvisible = true;
 
-			list.updateFilter(new TranslatorFilter(TranslatorManager
-					.getInstance().getActiveTranslator()));
+			list.updateFilter(new TranslatorFilter(activeTranslator));
 			list.updateFilter(new VisibilityFilter(hideInvisible));
 
 			list.removeAllStoryComponents();

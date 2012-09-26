@@ -16,6 +16,7 @@ import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.controller.observer.library.LibraryObserver;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
@@ -68,6 +69,8 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		this.masterRoot.registerChildType(StoryComponentContainer.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		this.masterRoot.registerChildType(Note.class,
+				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
 		this.buildDefaultLibrary();
 
@@ -79,13 +82,21 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 * Builds and adds the default ScriptEaseLibrary
 	 */
 	private void buildDefaultLibrary() {
-		final LibraryModel scriptEaseLibrary = new LibraryModel(
-				LibraryManager.SCRIPTEASE_LIBRARY, LibraryManager.SCRIPTEASE_LIBRARY);
-		List<String> types = new ArrayList<String>(1);
+		final LibraryModel scriptEaseLibrary;
+		final List<String> types;
+		final AskIt conditional;
+		final Note note;
+
+		scriptEaseLibrary = new LibraryModel(LibraryManager.SCRIPTEASE_LIBRARY,
+				LibraryManager.SCRIPTEASE_LIBRARY);
+		types = new ArrayList<String>(1);
 		// Add an empty askIt
 		types.add(GameTypeManager.DEFAULT_BOOL_TYPE);
-		AskIt conditional = new AskIt(new KnowIt("question", types));
+		conditional = new AskIt(new KnowIt("question", types));
+		note = new Note("// Note");
+
 		scriptEaseLibrary.add(conditional);
+		scriptEaseLibrary.add(note);
 
 		this.add(scriptEaseLibrary);
 	}
@@ -181,7 +192,8 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 		Collection<LibraryModel> userLibraries = new ArrayList<LibraryModel>();
 		for (LibraryModel library : libraries) {
 			if (!this.loadedTranslators.containsValue(library)
-					&& !library.getName().equals(LibraryManager.SCRIPTEASE_LIBRARY))
+					&& !library.getName().equals(
+							LibraryManager.SCRIPTEASE_LIBRARY))
 				userLibraries.add(library);
 		}
 		return userLibraries;

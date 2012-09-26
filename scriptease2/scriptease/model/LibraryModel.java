@@ -12,6 +12,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -43,6 +44,7 @@ public class LibraryModel extends PatternModel implements
 	private StoryComponentContainer causesCategory;
 	private StoryComponentContainer descriptionsCategory;
 	private StoryComponentContainer controllersCategory;
+	private StoryComponentContainer noteContainer;
 	private StoryComponentContainer modelRoot;
 
 	/**
@@ -102,6 +104,7 @@ public class LibraryModel extends PatternModel implements
 		categories.add(this.causesCategory);
 		categories.add(this.descriptionsCategory);
 		categories.add(this.controllersCategory);
+		categories.add(this.noteContainer);
 
 		this.getRoot().registerChildType(StoryComponentContainer.class,
 				categories.size());
@@ -118,6 +121,7 @@ public class LibraryModel extends PatternModel implements
 		this.causesCategory.clearAllowableChildren();
 		this.descriptionsCategory.clearAllowableChildren();
 		this.controllersCategory.clearAllowableChildren();
+		this.noteContainer.clearAllowableChildren();
 
 		this.effectsCategory.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
@@ -125,7 +129,8 @@ public class LibraryModel extends PatternModel implements
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		this.descriptionsCategory.registerChildType(KnowIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.controllersCategory.registerChildType(StoryComponentContainer.class,
+		this.controllersCategory.registerChildType(
+				StoryComponentContainer.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		this.controllersCategory.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
@@ -135,6 +140,7 @@ public class LibraryModel extends PatternModel implements
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		this.controllersCategory.registerChildType(KnowIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		this.noteContainer.registerChildType(Note.class, 1);
 	}
 
 	private void registerObservers() {
@@ -142,6 +148,7 @@ public class LibraryModel extends PatternModel implements
 		this.causesCategory.addStoryComponentObserver(this);
 		this.descriptionsCategory.addStoryComponentObserver(this);
 		this.controllersCategory.addStoryComponentObserver(this);
+		this.noteContainer.addStoryComponentObserver(this);
 	}
 
 	@Override
@@ -167,6 +174,10 @@ public class LibraryModel extends PatternModel implements
 
 	public StoryComponentContainer getControllersCategory() {
 		return this.controllersCategory;
+	}
+
+	public StoryComponentContainer getNoteContainer() {
+		return this.noteContainer;
 	}
 
 	/**
@@ -195,6 +206,8 @@ public class LibraryModel extends PatternModel implements
 					this.descriptionsCategory = containerChild;
 				else if (child.getDisplayText().equalsIgnoreCase("CONTROLLERS"))
 					this.controllersCategory = containerChild;
+				else if (child.getDisplayText().equalsIgnoreCase("NOTE"))
+					this.noteContainer = containerChild;
 				else
 					System.out.println("Unimplemented Child Type: "
 							+ child.getDisplayText());
@@ -246,6 +259,13 @@ public class LibraryModel extends PatternModel implements
 				if (success)
 					askIt.removeStoryComponentObserver(LibraryModel.this);
 			}
+
+			public void processNote(Note note) {
+				final boolean success = LibraryModel.this.noteContainer
+						.removeStoryChild(note);
+				if (success)
+					note.removeStoryComponentObserver(LibraryModel.this);
+			};
 
 			@Override
 			public void processKnowIt(KnowIt knowIt) {
@@ -317,6 +337,7 @@ public class LibraryModel extends PatternModel implements
 		components.addAll(this.causesCategory.getChildren());
 		components.addAll(this.descriptionsCategory.getChildren());
 		components.addAll(this.controllersCategory.getChildren());
+		components.addAll(this.noteContainer.getChildren());
 		return components;
 	}
 
@@ -334,6 +355,7 @@ public class LibraryModel extends PatternModel implements
 		components.addAll(this.causesCategory.getChildren());
 		components.addAll(this.descriptionsCategory.getChildren());
 		components.addAll(this.controllersCategory.getChildren());
+		components.addAll(this.noteContainer.getChildren());
 
 		// Get the implicit and parameters of the binding scriptIts
 		final Collection<StoryComponent> implicitsAndParameters = new ArrayList<StoryComponent>();
@@ -359,19 +381,17 @@ public class LibraryModel extends PatternModel implements
 
 				@Override
 				public void processKnowIt(KnowIt knowIt) {
-					knowIt.getBinding().process(
-							new BindingAdapter() {
-								@Override
-								public void processFunction(
-										KnowItBindingFunction function) {
-									ScriptIt scriptIt = function.getValue();
-									if (!implicitsAndParameters
-											.contains(scriptIt)) {
-										implicitsAndParameters.add(scriptIt);
-										processScriptIt(scriptIt);
-									}
-								}
-							});
+					knowIt.getBinding().process(new BindingAdapter() {
+						@Override
+						public void processFunction(
+								KnowItBindingFunction function) {
+							ScriptIt scriptIt = function.getValue();
+							if (!implicitsAndParameters.contains(scriptIt)) {
+								implicitsAndParameters.add(scriptIt);
+								processScriptIt(scriptIt);
+							}
+						}
+					});
 				}
 			});
 		}
@@ -403,6 +423,7 @@ public class LibraryModel extends PatternModel implements
 		this.causesCategory = new StoryComponentContainer("Causes");
 		this.descriptionsCategory = new StoryComponentContainer("Descriptions");
 		this.controllersCategory = new StoryComponentContainer("Controllers");
+		this.noteContainer = new StoryComponentContainer("Note");
 		this.registerObservers();
 
 	}
@@ -436,6 +457,14 @@ public class LibraryModel extends PatternModel implements
 					.addStoryChild(askIt);
 			if (success)
 				askIt.addStoryComponentObserver(LibraryModel.this);
+		}
+
+		@Override
+		public void processNote(Note note) {
+			final boolean success = LibraryModel.this.noteContainer
+					.addStoryChild(note);
+			if (success)
+				note.addStoryComponentObserver(LibraryModel.this);
 		}
 
 		@Override

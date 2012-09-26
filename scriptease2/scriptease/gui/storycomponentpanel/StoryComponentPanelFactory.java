@@ -20,6 +20,7 @@ import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -350,7 +351,9 @@ public class StoryComponentPanelFactory {
 				// Add an expansion button
 				addExpansionButton(storyPoint, panel);
 
-				JPanel mainPanel = new JPanel();
+				final JPanel mainPanel;
+				mainPanel = new JPanel();
+
 				buildMainStoryPointPanel(storyPoint, mainPanel);
 
 				// Add a BindingWidget for the StoryPoint
@@ -365,7 +368,9 @@ public class StoryComponentPanelFactory {
 				// Add an expansion button
 				addExpansionButton(complex, panel);
 
-				JPanel mainPanel = new JPanel();
+				final JPanel mainPanel;
+				mainPanel = new JPanel();
+
 				parseDisplayText(mainPanel, complex);
 
 				// Add a label for the complex story component
@@ -377,9 +382,36 @@ public class StoryComponentPanelFactory {
 
 			@Override
 			public void processKnowIt(final KnowIt knowIt) {
-				JPanel mainPanel = new JPanel();
+				final JPanel mainPanel;
+				mainPanel = new JPanel();
+
 				buildMainKnowItPanel(knowIt, mainPanel);
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
+			}
+
+			@Override
+			public void processNote(Note note) {
+				final JPanel mainPanel;
+				mainPanel = new JPanel();
+
+				parseDisplayText(mainPanel, note);
+				
+				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
+			}
+
+			private void addChildrenPanels(ComplexStoryComponent complex,
+					StoryComponentPanel panel) {
+				final boolean hasChildren = complex.getChildCount() > 0;
+				if (hasChildren) {
+					// Add child panels
+					for (StoryComponent component : complex.getChildren()) {
+						StoryComponentPanel childPanel = StoryComponentPanelFactory
+								.getInstance().buildStoryComponentPanel(
+										component);
+						panel.add(childPanel,
+								StoryComponentPanelLayoutManager.CHILD);
+					}
+				}
 			}
 		};
 	}
@@ -402,19 +434,6 @@ public class StoryComponentPanelFactory {
 
 			panel.setExpansionButton(expansionButton);
 			panel.add(expansionButton, StoryComponentPanelLayoutManager.BUTTON);
-		}
-	}
-
-	private void addChildrenPanels(ComplexStoryComponent complex,
-			StoryComponentPanel panel) {
-		final boolean hasChildren = complex.getChildCount() > 0;
-		if (hasChildren) {
-			// Add child panels
-			for (StoryComponent component : complex.getChildren()) {
-				StoryComponentPanel childPanel = StoryComponentPanelFactory
-						.getInstance().buildStoryComponentPanel(component);
-				panel.add(childPanel, StoryComponentPanelLayoutManager.CHILD);
-			}
 		}
 	}
 
