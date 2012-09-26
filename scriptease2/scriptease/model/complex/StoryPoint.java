@@ -8,6 +8,7 @@ import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.Note;
 
 /**
  * StoryPoints are the basic units used to build stories. Each StoryPoint holds
@@ -42,6 +43,8 @@ public class StoryPoint extends ComplexStoryComponent {
 		super();
 		this.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		this.registerChildType(Note.class,
+				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
 		if ((name.equals("")) || (name == null)) {
 			name = NEW_STORY_POINT + " " + storyPointCounter++;
@@ -61,6 +64,8 @@ public class StoryPoint extends ComplexStoryComponent {
 		if (potentialChild instanceof ScriptIt) {
 			if (((ScriptIt) potentialChild).isCause())
 				return super.canAcceptChild(potentialChild);
+		} else if (potentialChild instanceof Note) {
+			return super.canAcceptChild(potentialChild);
 		}
 		return false;
 	}

@@ -12,6 +12,11 @@ import scriptease.model.StoryComponent;
  */
 public final class Note extends StoryComponent {
 
+	public Note(String string) {
+		super();
+		this.setDisplayText(string);
+	}
+
 	@Override
 	public void process(StoryVisitor visitor) {
 		visitor.processNote(this);

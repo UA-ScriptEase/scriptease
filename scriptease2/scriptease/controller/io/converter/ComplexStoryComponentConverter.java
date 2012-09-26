@@ -35,6 +35,7 @@ public abstract class ComplexStoryComponentConverter extends
 
 		writer.startNode(TAG_CHILDREN);
 		context.convertAnother(comp.getChildren());
+
 		writer.endNode();
 	}
 
@@ -54,7 +55,8 @@ public abstract class ComplexStoryComponentConverter extends
 				System.err.println("Expected child list, but found "
 						+ reader.getNodeName());
 			else {
-				children = (Collection<StoryComponent>) context.convertAnother(comp, ArrayList.class);
+				children = (Collection<StoryComponent>) context.convertAnother(
+						comp, ArrayList.class);
 
 				comp.addStoryChildren(children);
 			}

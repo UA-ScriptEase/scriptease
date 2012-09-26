@@ -15,13 +15,13 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
@@ -43,10 +43,14 @@ import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
+import scriptease.gui.filters.CategoryFilter;
+import scriptease.gui.filters.TranslatorFilter;
+import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.pane.GameConstantTree;
 import scriptease.gui.pane.LibraryPanel;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.LibraryManager;
@@ -56,6 +60,8 @@ import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.complex.StoryPoint;
+import scriptease.translator.Translator;
+import scriptease.translator.TranslatorManager;
 import scriptease.util.BiHashMap;
 
 /**
@@ -388,19 +394,35 @@ public class PanelFactory {
 	 * @return
 	 */
 	public JSplitPane buildLibrarySplitPane() {
+		final int HEIGHT_OF_NOTE = 31;
 		final JSplitPane librarySplitPane;
+		final JPanel libraryPanel;
 		final JPanel gameConstantPane;
+		final StoryComponentPanelJList noteList;
+		final JScrollPane notePane;
 
 		librarySplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		gameConstantPane = this.buildGameConstantPane();
+		libraryPanel = new JPanel();
+		noteList = new StoryComponentPanelJList(new CategoryFilter(
+				Category.NOTE));
+		notePane = new JScrollPane(noteList);
 
-		librarySplitPane.setTopComponent(LibraryPanel.getInstance());
+		notePane.setPreferredSize(new Dimension(0, HEIGHT_OF_NOTE));
 
-		if (PatternModelManager.getInstance().getActiveModel() instanceof StoryModel)
-			librarySplitPane.setBottomComponent(gameConstantPane);
-		else
-			librarySplitPane.setBottomComponent(null);
+		libraryPanel
+				.setLayout(new BoxLayout(libraryPanel, BoxLayout.PAGE_AXIS));
+		libraryPanel.add(LibraryPanel.getInstance());
 
+		libraryPanel.add(notePane);
+
+		librarySplitPane.setTopComponent(libraryPanel);
+
+		librarySplitPane.setBottomComponent(gameConstantPane);
+		if (!(PatternModelManager.getInstance().getActiveModel() instanceof StoryModel)) {
+			notePane.setVisible(false);
+			gameConstantPane.setVisible(false);
+		}
 		librarySplitPane.setResizeWeight(0.5);
 
 		this.storyLibraryPaneObserver = new PatternModelObserver() {
@@ -412,17 +434,36 @@ public class PanelFactory {
 						@Override
 						public void processLibraryModel(
 								LibraryModel libraryModel) {
-							librarySplitPane.setBottomComponent(null);
+							notePane.setVisible(false);
+							gameConstantPane.setVisible(false);
 						}
 
 						@Override
 						public void processStoryModel(StoryModel storyModel) {
-							if (librarySplitPane.getBottomComponent() == null) {
-								librarySplitPane
-										.setBottomComponent(gameConstantPane);
+							final Translator activeTranslator;
+							activeTranslator = TranslatorManager.getInstance()
+									.getActiveTranslator();
 
-								librarySplitPane.setDividerLocation(0.5);
-							}
+							noteList.updateFilter(new TranslatorFilter(
+									activeTranslator));
+
+							noteList.removeAllStoryComponents();
+
+							if (activeTranslator != null)
+								for (LibraryModel libraryModel : TranslatorManager
+										.getInstance().getActiveTranslator()
+										.getLibraries()) {
+									noteList.addStoryComponents(libraryModel
+											.getNoteContainer().getChildren());
+								}
+							notePane.setVisible(true);
+							gameConstantPane.setVisible(true);
+							SwingUtilities.invokeLater(new Runnable() {
+								@Override
+								public void run() {
+									librarySplitPane.setDividerLocation(0.5);
+								}
+							});
 						}
 					});
 				}

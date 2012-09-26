@@ -131,11 +131,18 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				if (acceptingPanel.isEditable()
 						&& acceptingStoryComponent instanceof ComplexStoryComponent) {
 
-					final Collection<StoryComponent> potentialChildren = this
-							.extractStoryComponents(support);
+					final Collection<StoryComponent> potentialChildren;
+					final boolean canAccept;
 
-					return potentialChildren != null ? this.canAcceptChildren(
-							acceptingStoryComponent, potentialChildren) : false;
+					potentialChildren = this.extractStoryComponents(support);
+
+					if (potentialChildren != null)
+						canAccept = this.canAcceptChildren(
+								acceptingStoryComponent, potentialChildren);
+					else
+						canAccept = false;
+
+					return canAccept;
 				} else
 					return false;
 			} else
@@ -390,23 +397,12 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			Transferable transferData) {
 		Collection<StoryComponent> data = null;
 		// @formatter:off
-		/* 
-		 *    FLAVA FAAVVVEE
-		 *  \\_    _____    _//
-		 *    \\_.'_____`._//
-		 *    .'.-'  12 `-.`.
-		 *   /,' 11      1 `.\
-		 *  // 10      /   2 \\
-		 * ;;         /       ::
-		 * || 9  ----O      3 ||
-		 * ::                 ;;
-		 *  \\ 8           4 //
-		 *   \`. 7       5 ,'/
-		 *    '.`-.__6__.-'.'
-		 *      `-._____.-'
-		 *
+		/*
+		 * FLAVA FAAVVVEE \\_ _____ _// \\_.'_____`._// .'.-' 12 `-.`. /,' 11 1
+		 * `.\ // 10 / 2 \\ ;; / :: || 9 ----O 3 || :: ;; \\ 8 4 // \`. 7 5 ,'/
+		 * '.`-.__6__.-'.' `-._____.-'
 		 */
-		//@formatter:on
+		// @formatter:on
 		if (transferData
 				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
 			try {
