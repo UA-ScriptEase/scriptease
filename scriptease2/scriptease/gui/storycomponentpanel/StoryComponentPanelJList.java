@@ -34,8 +34,7 @@ import scriptease.model.complex.ScriptIt;
  * 
  */
 @SuppressWarnings("serial")
-public class StoryComponentPanelJList extends JList<JPanel> implements
-		Filterable {
+public class StoryComponentPanelJList extends JList implements Filterable {
 	private Filter filterRule;
 
 	private static final JPanel noResultsPanel = new JPanel();
@@ -79,7 +78,7 @@ public class StoryComponentPanelJList extends JList<JPanel> implements
 			boolean hideInvisible) {
 		super();
 
-		DefaultListModel<JPanel> listModel = new DefaultListModel<JPanel>();
+		DefaultListModel listModel = new DefaultListModel();
 
 		this.setModel(listModel);
 
@@ -112,9 +111,9 @@ public class StoryComponentPanelJList extends JList<JPanel> implements
 	 * @param storyComponentList
 	 */
 	public void addStoryComponents(Collection<StoryComponent> storyComponentList) {
-		final DefaultListModel<JPanel> listModel;
+		final DefaultListModel listModel;
 
-		listModel = (DefaultListModel<JPanel>) this.getModel();
+		listModel = (DefaultListModel) this.getModel();
 
 		listModel.removeElement(noResultsPanel);
 
@@ -139,9 +138,9 @@ public class StoryComponentPanelJList extends JList<JPanel> implements
 	 * Removes all Story Components from the list.
 	 */
 	public void removeAllStoryComponents() {
-		final DefaultListModel<JPanel> listModel;
+		final DefaultListModel listModel;
 
-		listModel = (DefaultListModel<JPanel>) this.getModel();
+		listModel = (DefaultListModel) this.getModel();
 
 		listModel.clear();
 	}
@@ -177,8 +176,7 @@ public class StoryComponentPanelJList extends JList<JPanel> implements
 	 */
 	private class StoryComponentListRenderer extends DefaultListCellRenderer {
 		@Override
-		public Component getListCellRendererComponent(
-				@SuppressWarnings("rawtypes") JList list, Object value,
+		public Component getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
 
 			if (value instanceof StoryComponentPanel) {

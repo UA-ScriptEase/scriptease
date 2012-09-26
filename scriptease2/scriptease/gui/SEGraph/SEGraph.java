@@ -821,6 +821,8 @@ public class SEGraph<E> extends JComponent {
 						- source.getLocationOnScreen().x,
 						mouseLoc.y - source.getLocationOnScreen().y))
 					return;
+			default:
+				break;
 			}
 
 			switch (GraphToolBarModeAction.getMode()) {

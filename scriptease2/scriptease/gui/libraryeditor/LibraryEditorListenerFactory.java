@@ -219,6 +219,8 @@ public class LibraryEditorListenerFactory {
 							parameterPanel.repaint();
 							parameterPanel.revalidate();
 							break;
+						default:
+							break;
 						}
 					}
 				};
@@ -372,6 +374,8 @@ public class LibraryEditorListenerFactory {
 							else
 								deleteCodeBlockButton.setEnabled(false);
 							break;
+						default:
+							break;
 						}
 					}
 				};
@@ -461,6 +465,8 @@ public class LibraryEditorListenerFactory {
 
 							subjectBox.revalidate();
 							break;
+						default:
+							break;
 						}
 					}
 				};
@@ -519,6 +525,8 @@ public class LibraryEditorListenerFactory {
 							defaultTypeBox.setSelectedItem(initialDefaultType);
 
 							defaultTypeBox.revalidate();
+						default:
+							break;
 						}
 					}
 				};
@@ -560,6 +568,8 @@ public class LibraryEditorListenerFactory {
 							scriptIt.notifyObservers(new StoryComponentEvent(
 									scriptIt,
 									StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
+						default:
+							break;
 						}
 					}
 				};
