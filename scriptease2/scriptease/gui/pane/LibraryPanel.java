@@ -33,6 +33,7 @@ import scriptease.gui.filters.TypeFilter;
 import scriptease.gui.filters.VisibilityFilter;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
@@ -51,9 +52,9 @@ import scriptease.translator.TranslatorManager;
  */
 public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		PatternModelObserver {
-	
+
 	private static LibraryPanel instance = new LibraryPanel();
-	
+
 	private final JTabbedPane listTabs;
 
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
@@ -61,7 +62,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 	public static LibraryPanel getInstance() {
 		return instance;
 	}
-	
+
 	/**
 	 * Creates a new LibraryPane with default filters, and configures its
 	 * display.
@@ -153,7 +154,8 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		// FilterPane Layout
 		filterPane.setLayout(new BoxLayout(filterPane, BoxLayout.PAGE_AXIS));
 		filterPane.add(searchFilterPane);
-		filterPane.setMaximumSize(new Dimension(2400, 50));
+		filterPane.setMaximumSize(new Dimension(ScriptEaseUI.MAX_SCREEN_WIDTH,
+				50));
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.add(filterPane);
