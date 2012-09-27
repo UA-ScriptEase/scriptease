@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 
 import javax.swing.Box;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -17,6 +18,7 @@ import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.describeIts.DescribeItPanel;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
@@ -392,10 +394,22 @@ public class StoryComponentPanelFactory {
 			@Override
 			public void processNote(Note note) {
 				final JPanel mainPanel;
+				final JLabel noteLabel;
+				final JComponent nameEditor;
+
+				noteLabel = new JLabel("//");
 				mainPanel = new JPanel();
 
-				parseDisplayText(mainPanel, note);
-				
+				nameEditor = ScriptWidgetFactory.buildNameEditor(note);
+
+				nameEditor.setForeground(ScriptEaseUI.COLOUR_NOTE_TEXT);
+				noteLabel.setForeground(ScriptEaseUI.COLOUR_NOTE_TEXT);
+
+				mainPanel.setOpaque(false);
+
+				mainPanel.add(noteLabel);
+				mainPanel.add(nameEditor);
+
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
 			}
 

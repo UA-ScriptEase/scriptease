@@ -14,17 +14,17 @@ import java.awt.event.FocusListener;
  * 
  * @author kschenk
  */
-public class ComponentFocusManager {
+public class SEFocusManager {
 	private static Component focus;
-	private static final ComponentFocusManager instance = new ComponentFocusManager();
+	private static final SEFocusManager instance = new SEFocusManager();
 
 	/**
 	 * Gets the sole instance of the ComponentFocusManager.
 	 * 
 	 * @return
 	 */
-	public static ComponentFocusManager getInstance() {
-		return ComponentFocusManager.instance;
+	public static SEFocusManager getInstance() {
+		return SEFocusManager.instance;
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class ComponentFocusManager {
 	 * @param focus
 	 */
 	public void setFocus(Component focus) {
-		ComponentFocusManager.focus = focus;
+		SEFocusManager.focus = focus;
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class ComponentFocusManager {
 	 * @return
 	 */
 	public Component getFocus() {
-		return ComponentFocusManager.focus;
+		return SEFocusManager.focus;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class ComponentFocusManager {
 		return new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				ComponentFocusManager.getInstance().setFocus(focus);
+				SEFocusManager.getInstance().setFocus(focus);
 			}
 
 			@Override

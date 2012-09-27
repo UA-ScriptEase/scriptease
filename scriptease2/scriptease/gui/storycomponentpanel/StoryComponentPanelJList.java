@@ -2,6 +2,8 @@ package scriptease.gui.storycomponentpanel;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseListener;
 import java.util.Collection;
 
@@ -12,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import scriptease.gui.ComponentFocusManager;
+import scriptease.gui.SEFocusManager;
 import scriptease.gui.filters.Filter;
 import scriptease.gui.filters.Filterable;
 import scriptease.gui.filters.StoryComponentFilter;
@@ -37,6 +39,10 @@ import scriptease.model.complex.ScriptIt;
 public class StoryComponentPanelJList extends JList implements Filterable {
 	private Filter filterRule;
 
+	/*
+	 * We only need one no results panel instead of generating a new one each
+	 * time.
+	 */
 	private static final JPanel noResultsPanel = new JPanel();
 	static {
 		noResultsPanel.setOpaque(false);
@@ -78,7 +84,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 			boolean hideInvisible) {
 		super();
 
-		DefaultListModel listModel = new DefaultListModel();
+		final DefaultListModel listModel = new DefaultListModel();
 
 		this.setModel(listModel);
 
@@ -87,8 +93,18 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		if (filter != null)
 			this.updateFilter(filter);
 
-		this.addFocusListener(ComponentFocusManager.getInstance()
-				.defaultFocusListener(this));
+		this.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				SEFocusManager.getInstance().setFocus(
+						StoryComponentPanelJList.this);
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				StoryComponentPanelJList.this.clearSelection();
+			}
+		});
 
 		this.setCellRenderer(new StoryComponentListRenderer());
 		this.setLayoutOrientation(JList.VERTICAL);

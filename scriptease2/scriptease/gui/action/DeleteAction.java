@@ -8,7 +8,7 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.ComponentFocusManager;
+import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
@@ -71,7 +71,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;
 
-		focusOwner = ComponentFocusManager.getInstance().getFocus();
+		focusOwner = SEFocusManager.getInstance().getFocus();
 
 		if (focusOwner instanceof StoryComponentPanel) {
 			// Delete StoryComponentPanels

@@ -47,9 +47,7 @@ public class NameEditor extends JTextField {
 		component.addStoryComponentObserver(this.observer);
 
 		this.setBackground(Color.white);
-		this.resizeForText();
 
-		// this.setText(component.getDisplayText());
 		this.setHorizontalAlignment(JTextField.CENTER);
 		this.addFocusListener(new FocusListener() {
 			@Override
@@ -71,8 +69,9 @@ public class NameEditor extends JTextField {
 				resizeForText();
 			}
 		});
-		
-		setupTextField();
+
+		this.setupTextField();
+		this.resizeForText();
 	}
 
 	protected StoryComponent getComponent() {
@@ -93,9 +92,10 @@ public class NameEditor extends JTextField {
 		// get the advance of my text in this font and render context
 		int adv = metrics.stringWidth(this.getText());
 		// calculate the size of a box to hold the text with some padding.
-		Dimension newSize = new Dimension(adv + 26, hgt + 6);
+		final Dimension newSize = new Dimension(adv + 26, hgt + 6);
 		// resize
 		this.setSize(newSize);
+		this.setPreferredSize(newSize);
 
 		// Get the difference
 		int xDifference = newSize.width - oldSize.width;
@@ -131,6 +131,12 @@ public class NameEditor extends JTextField {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void setText(String t) {
+		super.setText(t);
+		this.resizeForText();
 	}
 
 	@Override

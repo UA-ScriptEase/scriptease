@@ -59,8 +59,8 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 			this.button = (JButton) comp;
 		} else {
 			throw new IllegalArgumentException(
-					"cannot add to StoryComponentPanelLayoutManager: unknown constraint "
-							+ name);
+					"Cannot add to StoryComponentPanelLayoutManager: unknown combination of constraint "
+							+ name + " with type " + comp.getClass());
 		}
 	}
 
@@ -105,16 +105,19 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 		int widestWidth = 0;
 		int sumHeight = 0;
 		if ((this.mainPanel != null) && this.mainPanel.isVisible()) {
-			int width = this.mainPanel.getPreferredSize().width + this.MAIN_INDENT;
+			int width = this.mainPanel.getPreferredSize().width
+					+ this.MAIN_INDENT;
 			if (this.button != null && this.button.isVisible()) {
 				widestWidth = width + this.button.getPreferredSize().width
 						+ this.BUTTON_GAP;
 				sumHeight += Math.max(this.mainPanel.getPreferredSize().height
-						+ this.TOP_GAP, this.button.getPreferredSize().height / 2
-						+ this.TOP_GAP + this.mainPanel.getPreferredSize().height / 2);
+						+ this.TOP_GAP, this.button.getPreferredSize().height
+						/ 2 + this.TOP_GAP
+						+ this.mainPanel.getPreferredSize().height / 2);
 			} else {
 				widestWidth = width;
-				sumHeight += this.mainPanel.getPreferredSize().height + this.TOP_GAP;
+				sumHeight += this.mainPanel.getPreferredSize().height
+						+ this.TOP_GAP;
 			}
 		}
 		if (this.showChildren) {
@@ -125,7 +128,8 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 					widestWidth = Math.max(widestWidth, this.PRE_CHILD_INDENT
 							+ child.getPreferredSize().width
 							+ this.POST_CHILD_INDENT);
-					sumHeight += child.getPreferredSize().height + this.CHILD_VGAP;
+					sumHeight += child.getPreferredSize().height
+							+ this.CHILD_VGAP;
 				}
 			}
 		}
@@ -157,12 +161,13 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 				final int buttonWidth = this.button.getPreferredSize().width;
 				final int buttonHeight = this.button.getPreferredSize().height;
 				this.button.setBounds(horIndent,
-						vertIndent + this.mainPanel.getPreferredSize().height / 2
-								- buttonHeight / 2, buttonWidth, buttonHeight);
+						vertIndent + this.mainPanel.getPreferredSize().height
+								/ 2 - buttonHeight / 2, buttonWidth,
+						buttonHeight);
 				horIndent += buttonWidth + this.BUTTON_GAP;
 				sumHeight += Math.max(parentHeight,
-						vertIndent + this.mainPanel.getPreferredSize().height / 2
-								+ buttonHeight / 2);
+						vertIndent + this.mainPanel.getPreferredSize().height
+								/ 2 + buttonHeight / 2);
 			} else
 				sumHeight += parentHeight;
 			this.mainPanel.setBounds(horIndent, vertIndent,
@@ -178,8 +183,8 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 				if (child.isVisible()) {
 					final int childHeight = child.getPreferredSize().height;
 					child.setBounds(west + this.PRE_CHILD_INDENT, sumHeight,
-							child.getPreferredSize().width + this.POST_CHILD_INDENT,
-							childHeight);
+							child.getPreferredSize().width
+									+ this.POST_CHILD_INDENT, childHeight);
 					sumHeight += childHeight + this.CHILD_VGAP;
 				}
 			}
