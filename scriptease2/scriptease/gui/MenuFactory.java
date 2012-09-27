@@ -365,7 +365,7 @@ public class MenuFactory {
 					TranslatorManager.getInstance().setActiveTranslator(
 							translator);
 
-					SEFrame.getInstance().createTabForModel(
+					PanelFactory.getInstance().createTabForModel(
 							translator.getLibrary());
 				}
 			});
@@ -502,26 +502,20 @@ public class MenuFactory {
 				for (StoryComponent component : model.getAllStoryComponents()) {
 					component.process(new StoryAdapter() {
 						public void processKnowIt(final KnowIt knowIt) {
-							knowIt.getBinding().process(
-									new BindingAdapter() {
-										public void processDescribeIt(
-												KnowItBindingDescribeIt described) {
-											JFrame frame = new JFrame(
-													"Graph Editor");
+							knowIt.getBinding().process(new BindingAdapter() {
+								public void processDescribeIt(
+										KnowItBindingDescribeIt described) {
+									JFrame frame = new JFrame("Graph Editor");
 
-											frame.add(PanelFactory
-													.getInstance()
-													.buildDescribeItPanel(
-															described
-																	.getValue()
-																	.getHeadNode(),
-															described
-																	.getValue()));
-											frame.setMinimumSize(new Dimension(
-													800, 300));
-											frame.setVisible(true);
-										};
-									});
+									frame.add(PanelFactory.getInstance()
+											.buildDescribeItPanel(
+													described.getValue()
+															.getHeadNode(),
+													described.getValue()));
+									frame.setMinimumSize(new Dimension(800, 300));
+									frame.setVisible(true);
+								};
+							});
 						}
 					});
 				}

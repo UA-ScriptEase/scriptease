@@ -573,7 +573,7 @@ public final class FileManager {
 		}
 		this.notifyObservers(model, location);
 
-		SEFrame.getInstance().createTabForModel(model);
+		PanelFactory.getInstance().createTabForModel(model);
 	}
 
 	private void updateRecentFiles(File opened) {

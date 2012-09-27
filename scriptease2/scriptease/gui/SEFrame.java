@@ -55,7 +55,6 @@ import scriptease.translator.TranslatorManager;
 
 @SuppressWarnings("serial")
 public final class SEFrame implements PatternModelObserver {
-	private final JTabbedPane modelTabs;
 	private final JComponent middlePane;
 	private final JSplitPane middleSplit;
 	private TimedLabel statusLabel;
@@ -76,7 +75,6 @@ public final class SEFrame implements PatternModelObserver {
 	private SEFrame() {
 		this.seFrame = WindowFactory.getInstance().buildScriptEaseFrame(
 				ScriptEase.TITLE);
-		this.modelTabs = new JTabbedPane();
 		this.middlePane = new JPanel();
 		this.middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
@@ -86,26 +84,8 @@ public final class SEFrame implements PatternModelObserver {
 		this.seFrame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		this.seFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
 
-		// Register a change listener
-		this.modelTabs.addChangeListener(new ChangeListener() {
-			// This method is called whenever the selected tab changes
-			public void stateChanged(ChangeEvent evt) {
-				final JComponent tab;
-
-				JTabbedPane pane = (JTabbedPane) evt.getSource();
-				// Get the activated frame
-				tab = (JComponent) pane.getSelectedComponent();
-
-				if (tab != null) {
-					PatternModel model = PanelFactory.getInstance()
-							.getModelForComponent(tab);
-					PatternModelManager.getInstance().activate(model);
-				}
-			}
-		});
-
 		this.middlePane.setLayout(new GridLayout(1, 1));
-		this.middlePane.add(this.modelTabs);
+		this.middlePane.add(PanelFactory.getInstance().getModelTabPane());
 
 		final JPanel content;
 		final JComponent statusBar;
@@ -133,11 +113,13 @@ public final class SEFrame implements PatternModelObserver {
 		contentLayout.setHorizontalGroup(contentLayout.createParallelGroup()
 				.addComponent(this.middleSplit).addComponent(statusBar));
 
-		contentLayout.setVerticalGroup(contentLayout
-				.createSequentialGroup()
-				.addComponent(this.middleSplit)
-				.addComponent(statusBar, GroupLayout.PREFERRED_SIZE,
-						GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE));
+		contentLayout
+				.setVerticalGroup(contentLayout
+						.createSequentialGroup()
+						.addComponent(this.middleSplit)
+						.addComponent(statusBar, GroupLayout.PREFERRED_SIZE,
+								GroupLayout.PREFERRED_SIZE,
+								GroupLayout.PREFERRED_SIZE));
 		if (preferredLayout.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
 			// Uncompressed Layout.
 			// TODO Do something special if layout is uncompressed. Removed this
@@ -199,128 +181,6 @@ public final class SEFrame implements PatternModelObserver {
 		statusBar.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
 		return statusBar;
-	}
-
-	/**
-	 * Creates a tab for the given model.
-	 * 
-	 * @param model
-	 */
-	public void createTabForModel(PatternModel model) {
-		final Icon icon;
-
-		if (model.getTranslator() != null)
-			icon = model.getTranslator().getIcon();
-		else
-			icon = null;
-
-		model.process(new ModelAdapter() {
-			@Override
-			public void processLibraryModel(LibraryModel libraryModel) {
-				// Creates a Library Editor panel
-				final JScrollPane scbScrollPane;
-				final CloseableModelTab newTab;
-
-				scbScrollPane = PanelFactory.getInstance()
-						.buildLibraryEditorPanel(libraryModel);
-				newTab = new CloseableModelTab(SEFrame.this.modelTabs,
-						scbScrollPane, libraryModel, icon);
-
-				scbScrollPane.getVerticalScrollBar().setUnitIncrement(
-						ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
-
-				SEFrame.this.modelTabs.addTab(libraryModel.getName()
-						+ "[Editor]", icon, scbScrollPane);
-				SEFrame.this.modelTabs.setTabComponentAt(
-						SEFrame.this.modelTabs.indexOfComponent(scbScrollPane),
-						newTab);
-			}
-
-			@Override
-			public void processStoryModel(final StoryModel storyModel) {
-				// Creates a story editor panel with a story graph
-				final StoryPoint startStoryPoint;
-				final JSplitPane newPanel;
-				final CloseableModelTab newTab;
-				final String title;
-				String modelTitle;
-
-				startStoryPoint = storyModel.getRoot();
-				newPanel = PanelFactory.getInstance().buildStoryPanel(
-						storyModel, startStoryPoint);
-				newTab = new CloseableModelTab(SEFrame.this.modelTabs,
-						newPanel, storyModel, icon);
-				modelTitle = storyModel.getTitle();
-
-				if (modelTitle == null || modelTitle.equals(""))
-					modelTitle = "<Untitled>";
-
-				title = modelTitle + "("
-						+ storyModel.getModule().getLocation().getName() + ")";
-
-				SEFrame.this.modelTabs.addTab(title, icon, newPanel);
-				SEFrame.this.modelTabs.setTabComponentAt(
-						SEFrame.this.modelTabs.indexOfComponent(newPanel),
-						newTab);
-				SEFrame.this.modelTabs.setSelectedComponent(newPanel);
-
-				/*
-				 * Setting the divider needs to occur here because the
-				 * JSplitPane needs to actually be drawn before this works.
-				 * According to Sun, this is WAD. I would tend to disagree, but
-				 * at least this is nicer than subclassing JSplitPane.
-				 */
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						newPanel.setDividerLocation(0.3);
-					}
-				});
-			}
-		});
-	}
-
-	/**
-	 * Gets the tab pane for displaying all models.
-	 * 
-	 * @return The tab pane for the Stories;
-	 */
-	public JTabbedPane getModelTabPane() {
-		return this.modelTabs;
-	}
-
-	/**
-	 * Removes the given model component from list of ModelTabs and the list of
-	 * model components for the given model. modelTabs.remove should not be
-	 * called outside of this method.
-	 * 
-	 * @param component
-	 * @param model
-	 */
-	public void removeModelComponent(JComponent component, PatternModel model) {
-		// remove the panel
-		PanelFactory.getInstance().removeComponentForModel(model, component);
-
-		this.modelTabs.remove(component);
-
-		// check if there are any unsaved changes
-		if (FileManager.getInstance().hasUnsavedChanges(model)) {
-			// otherwise, close the StoryModel
-
-			model.process(new ModelAdapter() {
-				@Override
-				public void processLibraryModel(LibraryModel libraryModel) {
-					// TODO Should close the translator if it's not open
-					// anywhere else. We can use the usingTranslator in
-					// PatternModelPool to check for this.
-				};
-
-				@Override
-				public void processStoryModel(StoryModel storyModel) {
-					FileManager.getInstance().close(storyModel);
-				}
-			});
-		}
 	}
 
 	@Override

@@ -153,7 +153,7 @@ public class ToolBarFactory {
 			}
 		};
 
-		SEFrame.getInstance().getModelTabPane()
+		PanelFactory.getInstance().getModelTabPane()
 				.addChangeListener(graphEditorListener);
 
 		return graphEditorToolBar;

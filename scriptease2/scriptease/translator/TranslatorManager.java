@@ -44,7 +44,7 @@ public class TranslatorManager implements PatternModelObserver {
 
 	private static TranslatorManager instance = new TranslatorManager();
 
-	private final List<WeakTranslatorObserverReference<TranslatorObserver>> observers;
+	private final List<WeakReference<TranslatorObserver>> observers;
 
 	/**
 	 * Returns the singleton instance of the TranslatorManager.
@@ -63,7 +63,7 @@ public class TranslatorManager implements PatternModelObserver {
 	 */
 	private TranslatorManager() {
 		this.translatorPool = new HashSet<Translator>();
-		this.observers = new ArrayList<WeakTranslatorObserverReference<TranslatorObserver>>();
+		this.observers = new ArrayList<WeakReference<TranslatorObserver>>();
 
 		// scan for translators in the translators folder
 		this.fillTranslatorPool();
@@ -208,21 +208,21 @@ public class TranslatorManager implements PatternModelObserver {
 	 *            the observer to register
 	 */
 	public void addTranslatorObserver(TranslatorObserver observer) {
-		Collection<WeakTranslatorObserverReference<TranslatorObserver>> observersCopy = new ArrayList<WeakTranslatorObserverReference<TranslatorObserver>>(
+		Collection<WeakReference<TranslatorObserver>> observersCopy = new ArrayList<WeakReference<TranslatorObserver>>(
 				this.observers);
 
-		for (WeakTranslatorObserverReference<TranslatorObserver> observerRef : observersCopy) {
-			TranslatorObserver storyComponentObserver = observerRef.get();
-			if (storyComponentObserver != null
-					&& storyComponentObserver == observer)
+		for (WeakReference<TranslatorObserver> observerRef : observersCopy) {
+			if (observerRef == null)
+				continue;
+
+			final TranslatorObserver translatorObserver = observerRef.get();
+			if (translatorObserver != null && translatorObserver == observer)
 				return;
-			else if (storyComponentObserver == null)
+			else if (translatorObserver == null)
 				this.observers.remove(observerRef);
 		}
 
-		this.observers
-				.add(new WeakTranslatorObserverReference<TranslatorObserver>(
-						observer));
+		this.observers.add(new WeakReference<TranslatorObserver>(observer));
 	}
 
 	/**
@@ -233,7 +233,7 @@ public class TranslatorManager implements PatternModelObserver {
 	 *            the observer to register
 	 */
 	public void removeTranslatorObserver(TranslatorObserver observer) {
-		for (WeakTranslatorObserverReference<TranslatorObserver> reference : this.observers) {
+		for (WeakReference<TranslatorObserver> reference : this.observers) {
 			if (reference.get() == observer) {
 				this.observers.remove(reference);
 				return;
@@ -242,10 +242,10 @@ public class TranslatorManager implements PatternModelObserver {
 	}
 
 	private void notifyObservers() {
-		Collection<WeakTranslatorObserverReference<TranslatorObserver>> observersCopy = new ArrayList<WeakTranslatorObserverReference<TranslatorObserver>>(
+		Collection<WeakReference<TranslatorObserver>> observersCopy = new ArrayList<WeakReference<TranslatorObserver>>(
 				this.observers);
 
-		for (WeakTranslatorObserverReference<TranslatorObserver> observerRef : observersCopy) {
+		for (WeakReference<TranslatorObserver> observerRef : observersCopy) {
 			TranslatorObserver graphNodeObserver = observerRef.get();
 			if (graphNodeObserver != null)
 				graphNodeObserver.translatorLoaded(this.activeTranslator);
@@ -323,22 +323,7 @@ public class TranslatorManager implements PatternModelObserver {
 			}
 		} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED) {
 			if (!PatternModelManager.getInstance().usingTranslator(translator))
-				translator.unLoadTranslator();
-		}
-	}
-
-	/**
-	 * WeakReference wrapper used to track how many WeakReferences of each type
-	 * are generated. This class provides no functionality, but it does make it
-	 * easier for us to see where memory leaks may be occuring.
-	 * 
-	 * @author kschenk
-	 * 
-	 * @param <T>
-	 */
-	private class WeakTranslatorObserverReference<T> extends WeakReference<T> {
-		public WeakTranslatorObserverReference(T referent) {
-			super(referent);
+				translator.unloadTranslator();
 		}
 	}
 }
