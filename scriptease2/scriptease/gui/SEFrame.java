@@ -11,33 +11,24 @@ import java.util.Queue;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.GroupLayout;
-import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import scriptease.ScriptEase;
-import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
-import scriptease.gui.pane.CloseableModelTab;
-import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
-import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
@@ -55,7 +46,6 @@ import scriptease.translator.TranslatorManager;
 
 @SuppressWarnings("serial")
 public final class SEFrame implements PatternModelObserver {
-	private final JComponent middlePane;
 	private final JSplitPane middleSplit;
 	private TimedLabel statusLabel;
 
@@ -75,17 +65,20 @@ public final class SEFrame implements PatternModelObserver {
 	private SEFrame() {
 		this.seFrame = WindowFactory.getInstance().buildScriptEaseFrame(
 				ScriptEase.TITLE);
-		this.middlePane = new JPanel();
 		this.middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
 		final int MIN_HEIGHT = 480;
 		final int MIN_WIDTH = 640;
 
+		final JPanel middlePane;
+
+		middlePane = new JPanel();
+
 		this.seFrame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		this.seFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
 
-		this.middlePane.setLayout(new GridLayout(1, 1));
-		this.middlePane.add(PanelFactory.getInstance().getModelTabPane());
+		middlePane.setLayout(new GridLayout(1, 1));
+		middlePane.add(PanelFactory.getInstance().getModelTabPane());
 
 		final JPanel content;
 		final JComponent statusBar;
@@ -106,7 +99,7 @@ public final class SEFrame implements PatternModelObserver {
 		// Compressed Layout
 		SEFrame.this.middleSplit.setTopComponent(PanelFactory.getInstance()
 				.buildLibrarySplitPane());
-		this.middleSplit.setBottomComponent(this.middlePane);
+		this.middleSplit.setBottomComponent(middlePane);
 		content.add(this.middleSplit);
 		content.add(statusBar);
 
