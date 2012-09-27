@@ -59,7 +59,7 @@ public interface ScriptEaseUI {
 	 * The colour (red) used for the delete node tool
 	 */
 	public static final Color COLOUR_DELETE_NODE = new Color(255, 97, 97);
-	
+
 	/**
 	 * The colour (green) used for the insert node tool
 	 */
@@ -118,6 +118,11 @@ public interface ScriptEaseUI {
 	 */
 	public static final Color REFERENCE_FRAGMENT_COLOR = GUIOp.scaleColour(
 			Color.magenta, 0.7);
+
+	/**
+	 * The text colour (Dark Grey) we use for Notes.
+	 */
+	public static final Color COLOUR_NOTE_TEXT = new Color(133, 133, 133);
 
 	/**
 	 * The standard increment that should usually be used for vertical

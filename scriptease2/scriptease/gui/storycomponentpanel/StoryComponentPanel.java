@@ -2,6 +2,8 @@ package scriptease.gui.storycomponentpanel;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.gui.ComponentFocusManager;
+import scriptease.gui.SEFocusManager;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -37,7 +39,7 @@ import scriptease.model.complex.StoryItemSequence;
  */
 @SuppressWarnings("serial")
 public class StoryComponentPanel extends JPanel implements
-		StoryComponentObserver, MouseInputListener {
+		StoryComponentObserver {
 
 	private final StoryComponentPanelLayoutManager layout = new StoryComponentPanelLayoutManager();
 	// Component
@@ -58,8 +60,8 @@ public class StoryComponentPanel extends JPanel implements
 			return;
 
 		// Action Listeners
-		this.addMouseMotionListener(this);
-		this.addMouseListener(this);
+		this.addMouseMotionListener(this.mouseListener());
+		this.addMouseListener(this.mouseListener());
 		InputMap input = this.getInputMap(WHEN_FOCUSED);
 		input.put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK),
@@ -83,8 +85,25 @@ public class StoryComponentPanel extends JPanel implements
 		// Layout
 		this.setLayout(this.layout);
 
-		this.addFocusListener(ComponentFocusManager.getInstance()
-				.defaultFocusListener(this));
+		this.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				SEFocusManager.getInstance().setFocus(StoryComponentPanel.this);
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (e.getOppositeComponent() instanceof StoryComponentPanel)
+					return;
+
+				final StoryComponentPanelManager selectionManager;
+
+				selectionManager = StoryComponentPanel.this
+						.getSelectionManager();
+				if (selectionManager != null)
+					selectionManager.clearSelection();
+			}
+		});
 
 		this.setVisible(component.isVisible());
 	}
@@ -313,66 +332,82 @@ public class StoryComponentPanel extends JPanel implements
 	}
 
 	/**
-	 * Toggle a drag event manually
+	 * Creates a new mouse input listener for the story component panel that
+	 * handles drag and click events.
+	 * 
+	 * @return
 	 */
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		StoryComponentPanelManager selectionManager = this
-				.getSelectionManager();
-		if (selectionManager != null) {
-			boolean clearSelection = !(selectionManager.getSelectedPanels()
-					.contains(this));
-			selectionManager.setSelection(this, true, clearSelection);
-			JComponent component = (JComponent) e.getSource();
+	private MouseInputListener mouseListener() {
+		return new MouseInputListener() {
+			private StoryComponentPanel panel = StoryComponentPanel.this;
 
-			// Determine the type of action
-			final int action;
-			if (this.removable)
-				action = TransferHandler.MOVE;
-			else
-				action = TransferHandler.COPY;
+			/**
+			 * Toggle a drag event manually
+			 */
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				final StoryComponentPanelManager selectionManager;
 
-			component.getTransferHandler().exportAsDrag(
-					(JComponent) e.getSource(), e, action);
-		}
-		e.consume();
-	}
+				selectionManager = panel.getSelectionManager();
 
-	/**
-	 * Toggle panel selection when clicked, then redraw with a grey selection
-	 * tint
-	 */
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		final StoryComponentPanelManager selectionManager = this
-				.getSelectionManager();
-		if (selectionManager != null)
-			selectionManager.toggleSelection(this, e);
-		e.consume();
-	}
+				if (selectionManager != null) {
+					boolean clearSelection = !(selectionManager
+							.getSelectedPanels().contains(this));
+					selectionManager.setSelection(panel, true, clearSelection);
+					JComponent component = (JComponent) e.getSource();
 
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		e.consume();
-	}
+					// Determine the type of action
+					final int action;
+					if (panel.removable)
+						action = TransferHandler.MOVE;
+					else
+						action = TransferHandler.COPY;
 
-	@Override
-	public void mousePressed(MouseEvent e) {
-		e.consume();
-	}
+					component.getTransferHandler().exportAsDrag(
+							(JComponent) e.getSource(), e, action);
+					
+					panel.requestFocusInWindow();
+				}
+				e.consume();
+			}
 
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		e.consume();
-	}
+			/**
+			 * Toggle panel selection when clicked, then redraw with a grey
+			 * selection tint
+			 */
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				final StoryComponentPanelManager selectionManager = panel
+						.getSelectionManager();
+				if (selectionManager != null)
+					selectionManager.toggleSelection(panel, e);
+				e.consume();
+			}
 
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		e.consume();
-	}
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				e.consume();
+			}
 
-	@Override
-	public void mouseExited(MouseEvent e) {
-		e.consume();
+			@Override
+			public void mousePressed(MouseEvent e) {
+				e.consume();
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				e.consume();
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				e.consume();
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				e.consume();
+			}
+		};
 	}
 }

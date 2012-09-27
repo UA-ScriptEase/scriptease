@@ -93,7 +93,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 		// Add an empty askIt
 		types.add(GameTypeManager.DEFAULT_BOOL_TYPE);
 		conditional = new AskIt(new KnowIt("question", types));
-		note = new Note("// Note");
+		note = new Note("Note");
 
 		scriptEaseLibrary.add(conditional);
 		scriptEaseLibrary.add(note);

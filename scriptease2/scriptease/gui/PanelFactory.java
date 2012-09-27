@@ -394,7 +394,7 @@ public class PanelFactory {
 	 * @return
 	 */
 	public JSplitPane buildLibrarySplitPane() {
-		final int HEIGHT_OF_NOTE = 31;
+		final int HEIGHT_OF_NOTE = 61;
 		final JSplitPane librarySplitPane;
 		final JPanel libraryPanel;
 		final JPanel gameConstantPane;

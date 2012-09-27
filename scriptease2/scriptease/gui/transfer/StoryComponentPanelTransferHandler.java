@@ -107,6 +107,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					data.add(((StoryComponentPanel) panelObject)
 							.getStoryComponent());
 			}
+
+			comp.requestFocusInWindow();
 		} else
 			return null;
 

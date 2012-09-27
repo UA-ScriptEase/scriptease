@@ -32,7 +32,7 @@ import javax.swing.plaf.ComponentUI;
 
 import scriptease.controller.observer.graph.SEGraphObserver;
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.ComponentFocusManager;
+import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.renderers.SEGraphNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
@@ -803,7 +803,7 @@ public class SEGraph<E> extends JComponent {
 			node = SEGraph.this.nodesToComponents.getKey((JComponent) e
 					.getSource());
 
-			ComponentFocusManager.getInstance().setFocus(SEGraph.this);
+			SEFocusManager.getInstance().setFocus(SEGraph.this);
 
 			switch (GraphToolBarModeAction.getMode()) {
 			case SELECT:
