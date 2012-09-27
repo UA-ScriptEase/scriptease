@@ -20,6 +20,7 @@ import scriptease.gui.filters.Filterable;
 import scriptease.gui.filters.StoryComponentFilter;
 import scriptease.gui.filters.VisibilityFilter;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ScriptIt;
 
@@ -109,8 +110,8 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		this.setCellRenderer(new StoryComponentListRenderer());
 		this.setLayoutOrientation(JList.VERTICAL);
 
-		this.setSelectionBackground(Color.LIGHT_GRAY);
-		this.setBackground(Color.WHITE);
+		this.setSelectionBackground(ScriptEaseUI.SELECTED_COLOUR);
+		this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 
 		this.setDragEnabled(true);
 		this.setTransferHandler(StoryComponentPanelTransferHandler
