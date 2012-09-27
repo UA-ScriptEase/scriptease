@@ -28,6 +28,8 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import scriptease.controller.FileManager;
@@ -49,8 +51,8 @@ import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.filters.CategoryFilter;
-import scriptease.gui.filters.TranslatorFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
+import scriptease.gui.filters.TranslatorFilter;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.pane.CloseableModelTab;
@@ -314,16 +316,16 @@ public class PanelFactory {
 	 * Sets the root for a StoryComponentPanelTree that was created from
 	 * {@link PanelFactory#buildStoryPanel(StoryModel, StoryPoint)}.
 	 * 
-	 * TODO I still feel like this is hackish, not to mention we could get an
-	 * eventual memory leak if someone keeps closing and opening stories... We
-	 * should have some other way of doing this. -kschenk
-	 * 
 	 * @param component
 	 * @param storyPoint
 	 */
 	public void setRootForTreeInComponent(JComponent component,
 			StoryPoint storyPoint) {
-
+		/*
+		 * TODO I still feel like this is hackish, not to mention we could get
+		 * an eventual memory leak if someone keeps closing and opening
+		 * stories... We should have some other way of doing this. -kschenk
+		 */
 		PanelFactory.componentsToTrees.get(component).setRoot(storyPoint);
 	}
 
@@ -334,13 +336,15 @@ public class PanelFactory {
 	 * added to the map, so if you attempt to use a different kind of
 	 * PatternModel, this method will just return null.
 	 * 
-	 * TODO Again, this seems hackish and if we need a note like the above,
-	 * we're just asking for future problems. -kschenk
 	 * 
 	 * @param component
 	 * @return
 	 */
 	public StoryComponentPanelTree getTreeForComponent(JComponent component) {
+		/*
+		 * TODO Again, this seems hackish and if we need a note like the above,
+		 * we're just asking for future problems. -kschenk
+		 */
 		return PanelFactory.componentsToTrees.get(component);
 	}
 
@@ -520,6 +524,8 @@ public class PanelFactory {
 		final JPanel filterPane;
 		final JPanel searchFilterPane;
 
+		final JScrollPane treeScrollPane;
+
 		final ObservedJPanel observedPanel;
 
 		final GameConstantTree tree;
@@ -535,14 +541,13 @@ public class PanelFactory {
 
 		tree = new GameConstantTree(PatternModelManager.getInstance()
 				.getActiveModel());
+		treeScrollPane = new JScrollPane(tree,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 		tree.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		tree.setBackground(Color.WHITE);
 
-		// Add the tree to the pane.
-		JScrollPane treeScrollPane = new JScrollPane(tree,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		treeScrollPane.setBackground(Color.WHITE);
 		treeScrollPane.getVerticalScrollBar().setUnitIncrement(
 				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
@@ -577,6 +582,24 @@ public class PanelFactory {
 		gameConstantPane.add(Box.createVerticalStrut(5));
 		gameConstantPane.add(treeScrollPane);
 
+		searchField.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				tree.drawTree(PatternModelManager.getInstance()
+						.getActiveModel(), searchField.getText());
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				insertUpdate(e);
+			}
+		});
+
 		libraryObserver = new LibraryManagerObserver() {
 			@Override
 			public void modelChanged(LibraryManagerEvent event) {
@@ -587,7 +610,7 @@ public class PanelFactory {
 				 * the library view as well.
 				 */
 				if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
-					tree.drawTree(event.getSource());
+					tree.drawTree(event.getSource(), searchField.getText());
 				}
 			}
 		};
@@ -595,7 +618,8 @@ public class PanelFactory {
 		modelObserver = new PatternModelObserver() {
 			public void modelChanged(PatternModelEvent event) {
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
-					tree.drawTree(event.getPatternModel());
+					tree.drawTree(event.getPatternModel(),
+							searchField.getText());
 				}
 			}
 		};
