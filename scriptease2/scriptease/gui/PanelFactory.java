@@ -13,19 +13,24 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
+import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.ObservedJPanel;
 import scriptease.controller.observer.PatternModelEvent;
@@ -48,6 +53,7 @@ import scriptease.gui.filters.TranslatorFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
+import scriptease.gui.pane.CloseableModelTab;
 import scriptease.gui.pane.GameConstantTree;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
@@ -77,6 +83,26 @@ public class PanelFactory {
 
 	public static PanelFactory getInstance() {
 		return PanelFactory.instance;
+	}
+
+	private PanelFactory() {
+		// Register a change listener
+		this.modelTabs.addChangeListener(new ChangeListener() {
+			// This method is called whenever the selected tab changes
+			public void stateChanged(ChangeEvent evt) {
+				final JComponent tab;
+
+				JTabbedPane pane = (JTabbedPane) evt.getSource();
+				// Get the activated frame
+				tab = (JComponent) pane.getSelectedComponent();
+
+				if (tab != null) {
+					PatternModel model = PanelFactory.getInstance()
+							.getModelForComponent(tab);
+					PatternModelManager.getInstance().activate(model);
+				}
+			}
+		});
 	}
 
 	/**
@@ -582,4 +608,124 @@ public class PanelFactory {
 
 		return gameConstantPane;
 	}
+
+	private final JTabbedPane modelTabs = new JTabbedPane();
+
+	public JTabbedPane getModelTabPane() {
+		return this.modelTabs;
+	}
+
+	/**
+	 * Creates a tab for the given model.
+	 * 
+	 * @param model
+	 */
+	public void createTabForModel(PatternModel model) {
+		final JTabbedPane modelTabs = this.modelTabs;
+
+		final Icon icon;
+
+		if (model.getTranslator() != null)
+			icon = model.getTranslator().getIcon();
+		else
+			icon = null;
+
+		model.process(new ModelAdapter() {
+			@Override
+			public void processLibraryModel(LibraryModel libraryModel) {
+				// Creates a Library Editor panel
+				final JScrollPane scbScrollPane;
+				final CloseableModelTab newTab;
+
+				scbScrollPane = PanelFactory.getInstance()
+						.buildLibraryEditorPanel(libraryModel);
+				newTab = new CloseableModelTab(modelTabs, scbScrollPane,
+						libraryModel, icon);
+
+				scbScrollPane.getVerticalScrollBar().setUnitIncrement(
+						ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+
+				modelTabs.addTab(libraryModel.getName() + "[Editor]", icon,
+						scbScrollPane);
+				modelTabs.setTabComponentAt(
+						modelTabs.indexOfComponent(scbScrollPane), newTab);
+			}
+
+			@Override
+			public void processStoryModel(final StoryModel storyModel) {
+				// Creates a story editor panel with a story graph
+				final StoryPoint startStoryPoint;
+				final JSplitPane newPanel;
+				final CloseableModelTab newTab;
+				final String title;
+				String modelTitle;
+
+				startStoryPoint = storyModel.getRoot();
+				newPanel = PanelFactory.getInstance().buildStoryPanel(
+						storyModel, startStoryPoint);
+				newTab = new CloseableModelTab(modelTabs, newPanel, storyModel,
+						icon);
+				modelTitle = storyModel.getTitle();
+
+				if (modelTitle == null || modelTitle.equals(""))
+					modelTitle = "<Untitled>";
+
+				title = modelTitle + "("
+						+ storyModel.getModule().getLocation().getName() + ")";
+
+				modelTabs.addTab(title, icon, newPanel);
+				modelTabs.setTabComponentAt(
+						modelTabs.indexOfComponent(newPanel), newTab);
+				modelTabs.setSelectedComponent(newPanel);
+
+				/*
+				 * Setting the divider needs to occur here because the
+				 * JSplitPane needs to actually be drawn before this works.
+				 * According to Sun, this is WAD. I would tend to disagree, but
+				 * at least this is nicer than subclassing JSplitPane.
+				 */
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						newPanel.setDividerLocation(0.3);
+					}
+				});
+			}
+		});
+	}
+
+	/**
+	 * Removes the given model component from list of ModelTabs and the list of
+	 * model components for the given model. modelTabs.remove should not be
+	 * called outside of this method.
+	 * 
+	 * @param component
+	 * @param model
+	 */
+	public void removeModelComponent(JComponent component, PatternModel model) {
+		// remove the panel
+		PanelFactory.getInstance().removeComponentForModel(model, component);
+
+		this.modelTabs.remove(component);
+
+		// check if there are any unsaved changes
+		if (FileManager.getInstance().hasUnsavedChanges(model)) {
+			// otherwise, close the StoryModel
+
+			model.process(new ModelAdapter() {
+				@Override
+				public void processLibraryModel(LibraryModel libraryModel) {
+					// TODO Should close the translator if it's not open
+					// anywhere else. We can use the usingTranslator in
+					// PatternModelPool to check for this.
+				};
+
+				@Override
+				public void processStoryModel(StoryModel storyModel) {
+					FileManager.getInstance().close(storyModel);
+				}
+			});
+		}
+	}
+
 }

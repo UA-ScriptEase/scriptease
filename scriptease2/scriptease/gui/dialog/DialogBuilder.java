@@ -31,6 +31,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.gui.ExceptionDialog;
+import scriptease.gui.PanelFactory;
 import scriptease.gui.SEFrame;
 import scriptease.gui.WindowFactory;
 import scriptease.model.LibraryModel;
@@ -221,7 +222,7 @@ public class DialogBuilder {
 								selectedTranslator);
 
 						PatternModelManager.getInstance().add(model, true);
-						seFrame.createTabForModel(model);
+						PanelFactory.getInstance().createTabForModel(model);
 					}
 				} catch (Throwable e) {
 					UncaughtExceptionHandler handler = Thread

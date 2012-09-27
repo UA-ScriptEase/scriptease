@@ -116,7 +116,7 @@ public class StoryModelConverter implements Converter{
 			model = null;
 			// Unload the translator if not being used.
 			if (!PatternModelManager.getInstance().usingTranslator(translator))
-				translator.unLoadTranslator();
+				translator.unloadTranslator();
 			TranslatorManager.getInstance().setActiveTranslator(null);
 			// Pass it back up
 			throw e;

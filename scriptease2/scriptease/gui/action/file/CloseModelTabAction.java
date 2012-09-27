@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JComponent;
 
-import scriptease.gui.SEFrame;
+import scriptease.gui.PanelFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.PatternModel;
@@ -27,7 +27,7 @@ public class CloseModelTabAction extends ActiveModelSensitiveAction {
 			.getString("Close_Model");
 	private final JComponent component;
 	private final PatternModel model;
-	
+
 	/**
 	 * Defines an <code>CloseModelAction</code> object with a mnemonic.
 	 */
@@ -39,6 +39,7 @@ public class CloseModelTabAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		SEFrame.getInstance().removeModelComponent(this.component, this.model);
+		PanelFactory.getInstance().removeModelComponent(this.component,
+				this.model);
 	}
 }

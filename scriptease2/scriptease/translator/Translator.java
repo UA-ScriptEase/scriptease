@@ -462,7 +462,7 @@ public class Translator {
 			throw new IllegalStateException("Unable to load the APIDictionary.");
 	}
 
-	public void unLoadTranslator() {
+	public void unloadTranslator() {
 		this.apiDictionary = null;
 		this.languageDictionary = null;
 	}
