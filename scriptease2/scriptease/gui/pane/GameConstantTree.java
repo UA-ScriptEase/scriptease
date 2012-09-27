@@ -54,7 +54,7 @@ public class GameConstantTree extends JPanel {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
 		if (model != null && model instanceof StoryModel)
-			this.drawTree((StoryModel) model);
+			this.drawTree((StoryModel) model, "");
 	}
 
 	/**
@@ -64,10 +64,16 @@ public class GameConstantTree extends JPanel {
 	 * @return
 	 */
 	private Collection<GameConstant> getObjectsOfType(StoryModel model,
-			final String type) {
-		final List<GameConstant> allGameObjects = new ArrayList<GameConstant>();
+			final String type, final String searchText) {
+		final List<GameConstant> allGameObjects;
 
-		allGameObjects.addAll(model.getModule().getResourcesOfType(type));
+		allGameObjects = new ArrayList<GameConstant>();
+
+		for (GameConstant gameConstant : model.getModule().getResourcesOfType(
+				type)) {
+			if (matchesSearchText(gameConstant, searchText))
+				allGameObjects.add(gameConstant);
+		}
 
 		Collections.sort(allGameObjects, new Comparator<GameConstant>() {
 			@Override
@@ -81,9 +87,64 @@ public class GameConstantTree extends JPanel {
 	}
 
 	/**
+	 * Determines whether any fields in the game constant match the passed in
+	 * text. Recursively searches Conversations to see if any roots contain the
+	 * text.
+	 * 
+	 * @param gameConstant
+	 * @param searchText
+	 * @return true if text is found
+	 */
+	private boolean matchesSearchText(GameConstant gameConstant,
+			final String searchText) {
+		if (searchText.length() == 0)
+			return true;
+
+		final String searchTextUpperCase;
+
+		searchTextUpperCase = searchText.toUpperCase();
+
+		if (gameConstant.getCodeText().toUpperCase()
+				.contains(searchTextUpperCase)
+				|| gameConstant.getName().toUpperCase()
+						.contains(searchTextUpperCase)
+				|| gameConstant.getTag().toUpperCase()
+						.contains(searchTextUpperCase)
+				|| gameConstant.getTemplateID().toUpperCase()
+						.contains(searchTextUpperCase)) {
+
+			return true;
+		}
+
+		if (gameConstant instanceof GameConversation) {
+			boolean nodeContainsText = false;
+
+			for (GameConversationNode child : ((GameConversation) gameConstant)
+					.getConversationRoots()) {
+				nodeContainsText = nodeContainsText
+						|| matchesSearchText(child, searchText);
+			}
+
+			return nodeContainsText;
+		} else if (gameConstant instanceof GameConversationNode) {
+			boolean nodeContainsText = false;
+
+			for (GameConstant child : ((GameConversationNode) gameConstant)
+					.getChildren()) {
+				nodeContainsText = nodeContainsText
+						|| matchesSearchText(child, searchText);
+			}
+
+			return nodeContainsText;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Draws the tree.
 	 */
-	public void drawTree(PatternModel model) {
+	public void drawTree(PatternModel model, final String searchText) {
 		this.removeAll();
 
 		if (model == null || !(model instanceof StoryModel)) {
@@ -111,7 +172,8 @@ public class GameConstantTree extends JPanel {
 		for (String typeName : types) {
 			final Collection<GameConstant> gameObjects;
 
-			gameObjects = this.getObjectsOfType((StoryModel) model, typeName);
+			gameObjects = this.getObjectsOfType((StoryModel) model, typeName,
+					searchText);
 
 			// Ignore empty categories because they're confusing.
 			if (gameObjects.size() <= 0)
@@ -119,6 +181,9 @@ public class GameConstantTree extends JPanel {
 			else
 				this.add(new GameObjectContainer(typeName, gameObjects));
 		}
+
+		this.repaint();
+		this.revalidate();
 	}
 
 	/**

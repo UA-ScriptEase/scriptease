@@ -26,10 +26,8 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.control.ExpansionButton;
-import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 
 /**
