@@ -420,7 +420,9 @@ public class PanelFactory {
 	 * @return
 	 */
 	public JSplitPane buildLibrarySplitPane() {
-		final int HEIGHT_OF_NOTE = 61;
+		final int HEIGHT_OF_NOTE = 40;
+		final Dimension notePaneSize = new Dimension(0, HEIGHT_OF_NOTE);
+
 		final JSplitPane librarySplitPane;
 		final JPanel libraryPanel;
 		final JPanel gameConstantPane;
@@ -434,7 +436,11 @@ public class PanelFactory {
 				Category.NOTE));
 		notePane = new JScrollPane(noteList);
 
-		notePane.setPreferredSize(new Dimension(0, HEIGHT_OF_NOTE));
+		notePane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		notePane.setPreferredSize(notePaneSize);
+		notePane.setMinimumSize(notePaneSize);
+		notePane.setMaximumSize(new Dimension(ScriptEaseUI.MAX_SCREEN_WIDTH,
+				HEIGHT_OF_NOTE));
 
 		libraryPanel
 				.setLayout(new BoxLayout(libraryPanel, BoxLayout.PAGE_AXIS));
@@ -558,7 +564,8 @@ public class PanelFactory {
 		BoxLayout filterPaneLayout = new BoxLayout(filterPane, BoxLayout.Y_AXIS);
 		filterPane.setLayout(filterPaneLayout);
 		filterPane.add(searchFilterPane);
-		filterPane.setMaximumSize(new Dimension(2400, 50));
+		filterPane.setMaximumSize(new Dimension(ScriptEaseUI.MAX_SCREEN_WIDTH,
+				50));
 
 		gameConstantPane.setPreferredSize(new Dimension(
 				tree.getPreferredSize().width, 0));

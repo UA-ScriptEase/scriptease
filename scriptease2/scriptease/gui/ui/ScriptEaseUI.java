@@ -143,6 +143,13 @@ public interface ScriptEaseUI {
 			.get("Tree.collapsedIcon");
 
 	/**
+	 * The maximum screen width that ScriptEase can support. Can be increased if
+	 * we encounter ridiculous situations (e.g. 15 Macbook Pros with retina
+	 * displays running ScriptEase for the entire length)
+	 */
+	public static final int MAX_SCREEN_WIDTH = 2400;
+
+	/**
 	 * The border used for selected UI components.
 	 */
 	public static final Border SELECTED_BORDER = BorderFactory
