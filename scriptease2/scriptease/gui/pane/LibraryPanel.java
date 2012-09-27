@@ -55,8 +55,6 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 
 	private static LibraryPanel instance = new LibraryPanel();
 
-	private final JTabbedPane listTabs;
-
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
 
 	public static LibraryPanel getInstance() {
@@ -71,6 +69,8 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 	private LibraryPanel() {
 		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
 
+		final JTabbedPane listTabs;
+
 		final JComponent filterPane;
 		final JComponent searchFilterPane;
 		final JTextField searchField;
@@ -82,7 +82,8 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		final StoryComponentPanelJList descriptionsList;
 		final StoryComponentPanelJList controlsList;
 
-		this.listTabs = new JTabbedPane();
+		listTabs = new JTabbedPane();
+
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
 		searchField = new JTextField(20);
@@ -140,10 +141,10 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
 						"SansSerif", Font.PLAIN, 12), Color.black));
 
-		this.listTabs.add("Causes", new JScrollPane(causesList));
-		this.listTabs.add("Effects", new JScrollPane(effectsList));
-		this.listTabs.add("Descriptions", new JScrollPane(descriptionsList));
-		this.listTabs.add("Controls", new JScrollPane(controlsList));
+		listTabs.add("Causes", new JScrollPane(causesList));
+		listTabs.add("Effects", new JScrollPane(effectsList));
+		listTabs.add("Descriptions", new JScrollPane(descriptionsList));
+		listTabs.add("Controls", new JScrollPane(controlsList));
 
 		// SearchFilterPane
 		searchFilterPane.add(searchField);
@@ -160,7 +161,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.add(filterPane);
 		this.add(Box.createVerticalStrut(5));
-		this.add(this.listTabs);
+		this.add(listTabs);
 
 		// Configure the displaying of the pane
 		this.updateLists();

@@ -6656,7 +6656,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;, start the Story and</Name>
+      <Name>When &lt;subject&gt; starts</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -6675,7 +6675,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;, start the Story and</Name>
+          <Name>When &lt;subject&gt; starts</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
