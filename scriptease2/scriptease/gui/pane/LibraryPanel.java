@@ -24,7 +24,7 @@ import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
-import scriptease.gui.action.typemenus.TypeSelectionAction;
+import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.filters.CategoryFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.filters.StoryComponentSearchFilter;
@@ -75,7 +75,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		final JComponent searchFilterPane;
 		final JTextField searchField;
 
-		final TypeSelectionAction typeFilter;
+		final TypeAction typeFilter;
 
 		final StoryComponentPanelJList causesList;
 		final StoryComponentPanelJList effectsList;
@@ -88,7 +88,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		searchFilterPane = new JPanel();
 		searchField = new JTextField(20);
 
-		typeFilter = new TypeSelectionAction();
+		typeFilter = new TypeAction();
 
 		// Create the Tree with the root and the default filter
 		causesList = new StoryComponentPanelJList(new CategoryFilter(

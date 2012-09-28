@@ -50,12 +50,12 @@ import scriptease.util.GUIOp;
  * separate from DialogFactory and WindowManager since it is a much larger class
  * than most dialogs. It also needs to take in custom actions.
  * 
- * @see {@link #ShowTypeMenuAction}
+ * @see {@link #TypeAction}
  * 
  * @author kschenk
  * 
  */
-public class TypeSelectionDialogBuilder {
+public class TypeDialogBuilder {
 	private final Map<String, Boolean> typesToSelected;
 	private final List<CheckBoxPanel> checkBoxPanels;
 	private final JButton allButton;
@@ -65,7 +65,7 @@ public class TypeSelectionDialogBuilder {
 	/**
 	 * Creates a new TypeSelectionDialogBuilder, intializing the variables.
 	 */
-	public TypeSelectionDialogBuilder() {
+	public TypeDialogBuilder() {
 		this.allButton = new JButton("Deselect All");
 		this.typesToSelected = new HashMap<String, Boolean>();
 		this.checkBoxPanels = new ArrayList<CheckBoxPanel>();
@@ -92,7 +92,7 @@ public class TypeSelectionDialogBuilder {
 	 * 
 	 * @param closeAction
 	 */
-	public TypeSelectionDialogBuilder(Runnable closeAction) {
+	public TypeDialogBuilder(Runnable closeAction) {
 		this();
 		this.closeAction = closeAction;
 	}
@@ -137,8 +137,8 @@ public class TypeSelectionDialogBuilder {
 		closeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (TypeSelectionDialogBuilder.this.closeAction != null)
-					TypeSelectionDialogBuilder.this.closeAction.run();
+				if (TypeDialogBuilder.this.closeAction != null)
+					TypeDialogBuilder.this.closeAction.run();
 				typeDialog.setVisible(false);
 			}
 		});
@@ -146,8 +146,8 @@ public class TypeSelectionDialogBuilder {
 		typeDialog.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				if (TypeSelectionDialogBuilder.this.closeAction != null)
-					TypeSelectionDialogBuilder.this.closeAction.run();
+				if (TypeDialogBuilder.this.closeAction != null)
+					TypeDialogBuilder.this.closeAction.run();
 				typeDialog.setVisible(false);
 			}
 		});
@@ -159,7 +159,7 @@ public class TypeSelectionDialogBuilder {
 		this.allButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selectTypes(TypeSelectionDialogBuilder.this.typesToSelected
+				selectTypes(TypeDialogBuilder.this.typesToSelected
 						.keySet(), !isAllSelected());
 				updateAllButton();
 			}
@@ -658,7 +658,7 @@ public class TypeSelectionDialogBuilder {
 
 			final String typeText = this.getTypeKeyword();
 
-			boolean selected = TypeSelectionDialogBuilder.this.typesToSelected
+			boolean selected = TypeDialogBuilder.this.typesToSelected
 					.get(typeText);
 
 			selectType(typeText, !selected);
