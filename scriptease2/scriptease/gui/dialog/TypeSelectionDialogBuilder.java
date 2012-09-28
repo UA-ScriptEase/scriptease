@@ -2,6 +2,7 @@ package scriptease.gui.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,12 +13,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -29,6 +32,7 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import scriptease.gui.WindowFactory;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
@@ -52,24 +56,27 @@ public class TypeSelectionDialogBuilder {
 	private Runnable closeAction;
 
 	/**
-	 * Creates a new TypeSelectionDialogueBuilder, initializing the variables.
+	 * Creates a new TypeSelectionDialogBuilder, intializing the variables.
 	 */
 	public TypeSelectionDialogBuilder() {
 		this.allButton = new JButton("Deselect All");
 		this.typesToSelected = new HashMap<String, Boolean>();
 		this.checkBoxPanels = new ArrayList<CheckBoxPanel>();
-		
-		final Translator activeTranslator;
 
+		final Translator activeTranslator;
+		final Collection<String> types;
 		// Create the translator and populate lists.
 		activeTranslator = TranslatorManager.getInstance()
 				.getActiveTranslator();
 
-		if (activeTranslator != null)
-			for (String type : activeTranslator.getGameTypeManager()
-					.getKeywords()) {
-				this.typesToSelected.put(type, Boolean.TRUE);
-			}
+		if (activeTranslator == null)
+			return;
+
+		types = activeTranslator.getGameTypeManager().getKeywords();
+
+		for (String type : types) {
+			this.typesToSelected.put(type, Boolean.TRUE);
+		}
 	}
 
 	/**
@@ -99,7 +106,6 @@ public class TypeSelectionDialogBuilder {
 	 * @return
 	 */
 	public JDialog buildTypeDialog() {
-		final JScrollPane typesScrollPane;
 		final JPanel typesPanel;
 		final JPanel content;
 		final JButton closeButton;
@@ -107,24 +113,18 @@ public class TypeSelectionDialogBuilder {
 		final JDialog typeDialog;
 
 		final GroupLayout groupLayout;
-		final GridLayout gridLayout;
 
 		typeDialog = WindowFactory.getInstance().buildDialog("Type Selection");
 
-		typesPanel = new JPanel();
-		typesScrollPane = new JScrollPane(typesPanel);
+		typesPanel = this.buildTypesPanel();
 		content = new JPanel();
 		closeButton = new JButton("Close");
 		separator = new JSeparator(SwingConstants.HORIZONTAL);
 
 		groupLayout = new GroupLayout(content);
-		gridLayout = new GridLayout(0, 3);
 
 		groupLayout.setAutoCreateGaps(true);
 		groupLayout.setAutoCreateContainerGaps(true);
-
-		gridLayout.setHgap(5);
-		gridLayout.setVgap(5);
 
 		// Set up the action listeners for the buttons.
 		closeButton.addActionListener(new ActionListener() {
@@ -144,37 +144,35 @@ public class TypeSelectionDialogBuilder {
 				typeDialog.setVisible(false);
 			}
 		});
-		
-		for(ActionListener listener : this.allButton.getActionListeners()) {
+
+		for (ActionListener listener : this.allButton.getActionListeners()) {
 			this.allButton.removeActionListener(listener);
 		}
 
 		this.allButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selectTypes(TypeSelectionDialogBuilder.this.typesToSelected.keySet(), !isAllSelected());
+				selectTypes(TypeSelectionDialogBuilder.this.typesToSelected
+						.keySet(), !isAllSelected());
 				updateAllButton();
 			}
 		});
 
-		typesPanel.setLayout(gridLayout);
 		content.setLayout(groupLayout);
-		this.populatePanel(typesPanel);
-
-		typesScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
 		groupLayout.setHorizontalGroup(groupLayout
 				.createParallelGroup()
-				.addComponent(typesScrollPane)
+				.addComponent(typesPanel)
 				.addComponent(separator)
 				.addGroup(
+						GroupLayout.Alignment.TRAILING,
 						groupLayout.createSequentialGroup()
-								.addComponent(this.allButton).addGap(325)
+								.addComponent(this.allButton)
 								.addComponent(closeButton)));
 
 		groupLayout.setVerticalGroup(groupLayout
 				.createSequentialGroup()
-				.addComponent(typesScrollPane)
+				.addComponent(typesPanel)
 				.addComponent(separator)
 				.addGroup(
 						groupLayout.createParallelGroup()
@@ -189,45 +187,193 @@ public class TypeSelectionDialogBuilder {
 	}
 
 	/**
-	 * Populates the passed in panel with types in the form of CheckBoxPanels.
+	 * Populates a panel with types in the form of CheckBoxPanels.
 	 * 
-	 * @param panel
-	 * @param activeTranslator
+	 * @return
 	 */
-	private void populatePanel(final JPanel panel) {
-		final Map<String, CheckBoxPanel> typeDisplayTextToCheckBoxPanel;
+	private JPanel buildTypesPanel() {
+		final int SCROLLPANE_HEIGHT = 250;
+
+		final Dimension MAX_SCROLLPANE_SIZE = new Dimension(500,
+				SCROLLPANE_HEIGHT);
+		final Dimension MIN_SCROLLPANE_SIZE = new Dimension(300,
+				SCROLLPANE_HEIGHT);
+
+		final JPanel typesPanel;
+
+		final JPanel gameObjectPanel;
+		final JPanel gameConstantPanel;
+		final JPanel listPanel;
+
+		final JPanel gameObjectPanel1;
+		final JPanel gameObjectPanel2;
+		final JPanel gameConstantPanel1;
+		final JPanel gameConstantPanel2;
+		final JPanel listPanel1;
+		final JPanel listPanel2;
+
+		final JScrollPane gameObjectScrollPane;
+		final JScrollPane gameConstantScrollPane;
+		final JScrollPane listScrollPane;
+
+		final GridLayout gridLayout;
+
+		final List<CheckBoxPanel> checkBoxPanels;
 		final Translator activeTranslator;
-		
-		typeDisplayTextToCheckBoxPanel = new TreeMap<String, CheckBoxPanel>();
-		activeTranslator = TranslatorManager.getInstance().getActiveTranslator();
-		
+		final GameTypeManager typeManager;
+
+		typesPanel = new JPanel();
+
+		gameObjectPanel = new JPanel();
+		gameConstantPanel = new JPanel();
+		listPanel = new JPanel();
+
+		gameObjectPanel1 = new JPanel();
+		gameObjectPanel2 = new JPanel();
+		gameConstantPanel1 = new JPanel();
+		gameConstantPanel2 = new JPanel();
+		listPanel1 = new JPanel();
+		listPanel2 = new JPanel();
+
+		gameObjectScrollPane = new JScrollPane(gameObjectPanel);
+		gameConstantScrollPane = new JScrollPane(gameConstantPanel);
+		listScrollPane = new JScrollPane(listPanel);
+
+		gridLayout = new GridLayout(0, 2);
+
+		checkBoxPanels = new ArrayList<CheckBoxPanel>();
+		activeTranslator = TranslatorManager.getInstance()
+				.getActiveTranslator();
+		typeManager = activeTranslator.getGameTypeManager();
+
 		// create a menu item for each type
 		if (activeTranslator != null) {
-			GameTypeManager typeManager = activeTranslator.getGameTypeManager();
-			for (String type : typeManager.getKeywords()) {
+			final Collection<String> types;
 
-				// TODO: icons for types in the type list
+			types = new ArrayList<String>(this.typesToSelected.keySet());
 
-				CheckBoxPanel checkBoxPanel = new CheckBoxPanel(type,
-						typeManager.getDisplayText(type));
+			for (String type : types) {
+				final CheckBoxPanel checkBoxPanel;
+				final Boolean typeBool;
+
+				checkBoxPanel = new CheckBoxPanel(type);
+				typeBool = this.typesToSelected.get(type);
 
 				this.checkBoxPanels.add(checkBoxPanel);
 
-				Boolean typeBool = this.typesToSelected.get(type);
 				if (typeBool != null)
 					checkBoxPanel.setSelected(typeBool.booleanValue());
 
-				typeDisplayTextToCheckBoxPanel.put(
-						typeManager.getDisplayText(type), checkBoxPanel);
+				checkBoxPanels.add(checkBoxPanel);
 			}
 		}
 
+		Collections.sort(checkBoxPanels, new Comparator<CheckBoxPanel>() {
+			@Override
+			public int compare(CheckBoxPanel o1, CheckBoxPanel o2) {
+				return String.CASE_INSENSITIVE_ORDER.compare(
+						typeManager.getDisplayText(o1.getTypeKeyword()),
+						typeManager.getDisplayText(o2.getTypeKeyword()));
+			}
+		});
+
+		typesPanel.setLayout(new BoxLayout(typesPanel, BoxLayout.LINE_AXIS));
+
+		gameObjectPanel1.setLayout(new BoxLayout(gameObjectPanel1,
+				BoxLayout.PAGE_AXIS));
+		gameObjectPanel2.setLayout(new BoxLayout(gameObjectPanel2,
+				BoxLayout.PAGE_AXIS));
+		gameConstantPanel1.setLayout(new BoxLayout(gameConstantPanel1,
+				BoxLayout.PAGE_AXIS));
+		gameConstantPanel2.setLayout(new BoxLayout(gameConstantPanel2,
+				BoxLayout.PAGE_AXIS));
+		listPanel1.setLayout(new BoxLayout(listPanel1, BoxLayout.PAGE_AXIS));
+		listPanel2.setLayout(new BoxLayout(listPanel2, BoxLayout.PAGE_AXIS));
+
+		gameObjectScrollPane.setMinimumSize(MIN_SCROLLPANE_SIZE);
+		gameConstantScrollPane.setMinimumSize(MIN_SCROLLPANE_SIZE);
+		listScrollPane.setMinimumSize(MIN_SCROLLPANE_SIZE);
+
+		gameObjectScrollPane.setMaximumSize(MAX_SCROLLPANE_SIZE);
+		gameConstantScrollPane.setMaximumSize(MAX_SCROLLPANE_SIZE);
+		listScrollPane.setMaximumSize(MAX_SCROLLPANE_SIZE);
+
+		gameObjectScrollPane.getVerticalScrollBar().setUnitIncrement(
+				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+		gameConstantScrollPane.getVerticalScrollBar().setUnitIncrement(
+				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+		listScrollPane.getVerticalScrollBar().setUnitIncrement(
+				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+
+		gameObjectScrollPane.setBorder(BorderFactory
+				.createTitledBorder("Game Objects"));
+		gameConstantScrollPane.setBorder(BorderFactory
+				.createTitledBorder("Game Constants"));
+		listScrollPane.setBorder(BorderFactory.createTitledBorder("Lists"));
+
+		gridLayout.setHgap(5);
+		gridLayout.setVgap(5);
+
+		gameObjectPanel.setOpaque(false);
+		gameConstantPanel.setOpaque(false);
+		listPanel.setOpaque(false);
+
+		gameObjectPanel.setLayout(gridLayout);
+		gameConstantPanel.setLayout(gridLayout);
+		listPanel.setLayout(gridLayout);
+
+		int count = 0;
+		int size = checkBoxPanels.size();
 		// fill the menu
-		for (String typeDisplayText : typeDisplayTextToCheckBoxPanel.keySet()) {
-			panel.add(typeDisplayTextToCheckBoxPanel.get(typeDisplayText));
+		for (CheckBoxPanel checkBoxPanel : checkBoxPanels) {
+			final String type;
+
+			type = checkBoxPanel.getTypeKeyword();
+
+			if (typeManager.hasEnum(type)) {
+				if (count <= size / 2)
+					listPanel1.add(checkBoxPanel);
+				else
+					listPanel2.add(checkBoxPanel);
+			} else if (typeManager.getSlots(type).size() > 0) {
+				if (count <= size / 2)
+					gameObjectPanel1.add(checkBoxPanel);
+				else
+					gameObjectPanel2.add(checkBoxPanel);
+			} else {
+				if (count <= size / 2)
+					gameConstantPanel1.add(checkBoxPanel);
+				else
+					gameConstantPanel2.add(checkBoxPanel);
+			}
+			count++;
 		}
 
+		if (gameObjectPanel1.getComponents().length > 0) {
+			gameObjectPanel.add(gameObjectPanel1);
+			gameObjectPanel.add(gameObjectPanel2);
+		}
+		if (gameConstantPanel1.getComponents().length > 0) {
+			gameConstantPanel.add(gameConstantPanel1);
+			gameConstantPanel.add(gameConstantPanel2);
+		}
+		if (listPanel1.getComponents().length > 0) {
+			listPanel.add(listPanel1);
+			listPanel.add(listPanel2);
+		}
+
+		if (gameObjectPanel.getComponents().length > 0)
+			typesPanel.add(gameObjectScrollPane);
+
+		if (gameConstantPanel.getComponents().length > 0)
+			typesPanel.add(gameConstantScrollPane);
+
+		if (listPanel.getComponents().length > 0)
+			typesPanel.add(listScrollPane);
+
 		this.updateAllButton();
+
+		return typesPanel;
 	}
 
 	/**
@@ -266,6 +412,10 @@ public class TypeSelectionDialogBuilder {
 		}
 	}
 
+	public Collection<String> getTypes() {
+		return this.typesToSelected.keySet();
+	}
+
 	/**
 	 * Selects a collection of types.
 	 * 
@@ -288,7 +438,7 @@ public class TypeSelectionDialogBuilder {
 		this.typesToSelected.put(type, Boolean.valueOf(isSelected));
 
 		for (CheckBoxPanel panel : this.checkBoxPanels) {
-			if (panel.getTypeText().equals(type))
+			if (panel.getTypeKeyword().equals(type))
 				panel.setSelected(isSelected);
 		}
 
@@ -320,9 +470,10 @@ public class TypeSelectionDialogBuilder {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			final String typeText = this.checkPanel.getTypeText();
+			final String typeText = this.checkPanel.getTypeKeyword();
 
-			boolean selected = TypeSelectionDialogBuilder.this.typesToSelected.get(typeText);
+			boolean selected = TypeSelectionDialogBuilder.this.typesToSelected
+					.get(typeText);
 
 			selectType(typeText, !selected);
 		}
@@ -353,24 +504,34 @@ public class TypeSelectionDialogBuilder {
 		private final Color selectedColour = GUIOp.scaleWhite(Color.GRAY, 1.5);
 
 		private final JCheckBox checkBox;
-		private final String typeText;
+		private final String typeKeyword;
 		private final JLabel typeLabel;
 		private final Color defaultColour;
 
 		private Color currentColour;
 
-		private CheckBoxPanel(String typeText, String typeDisplayText) {
+		private CheckBoxPanel(String typeKeyword) {
 			super();
+			final Dimension MAX_PANEL_SIZE = new Dimension(2400, 25);
+			final Dimension MIN_PANEL_SIZE = new Dimension(10, 25);
 
-			this.setLayout(new BorderLayout());
+			final String typeDisplayText;
+
+			typeDisplayText = TranslatorManager.getInstance()
+					.getActiveTranslator().getGameTypeManager()
+					.getDisplayText(typeKeyword);
 
 			this.checkBox = new JCheckBox();
-			this.typeText = typeText;
+			this.typeKeyword = typeKeyword;
 			this.typeLabel = new JLabel(" " + typeDisplayText);
 			this.defaultColour = this.getBackground();
 
-			this.add(this.checkBox, BorderLayout.EAST);
+			this.setLayout(new BorderLayout());
 
+			this.setMinimumSize(MIN_PANEL_SIZE);
+			this.setMaximumSize(MAX_PANEL_SIZE);
+
+			this.add(this.checkBox, BorderLayout.EAST);
 			this.add(this.typeLabel, BorderLayout.WEST);
 
 			this.setBorder(BorderFactory.createEtchedBorder());
@@ -408,13 +569,13 @@ public class TypeSelectionDialogBuilder {
 		}
 
 		/**
-		 * Returns the text, or code symbol of the type. This should not be
-		 * visible to the user, and should be unique.
+		 * Returns the keyword of the type. This should not be visible to the
+		 * user and should be unique.
 		 * 
 		 * @return
 		 */
-		private String getTypeText() {
-			return this.typeText;
+		private String getTypeKeyword() {
+			return this.typeKeyword;
 		}
 
 		/**
