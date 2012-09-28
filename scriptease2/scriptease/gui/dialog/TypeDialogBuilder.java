@@ -36,7 +36,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
-import javax.swing.border.EtchedBorder;
 
 import scriptease.gui.WindowFactory;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -113,7 +112,7 @@ public class TypeDialogBuilder {
 	 * @return
 	 */
 	public JDialog buildTypeDialog() {
-		final JPanel typesPanel;
+		final JScrollPane typesPanel;
 		final JPanel content;
 		final JButton closeButton;
 		final JSeparator separator;
@@ -159,8 +158,8 @@ public class TypeDialogBuilder {
 		this.allButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selectTypes(TypeDialogBuilder.this.typesToSelected
-						.keySet(), !isAllSelected());
+				selectTypes(TypeDialogBuilder.this.typesToSelected.keySet(),
+						!isAllSelected());
 				updateAllButton();
 			}
 		});
@@ -198,12 +197,12 @@ public class TypeDialogBuilder {
 	 * 
 	 * @return
 	 */
-	private JPanel buildTypesPanel() {
-		final int SCROLLPANE_WIDTH = 450;
-		final Dimension MAX_SCROLLPANE_SIZE = new Dimension(SCROLLPANE_WIDTH,
-				300);
-		final Dimension MIN_SCROLLPANE_SIZE = new Dimension(SCROLLPANE_WIDTH,
-				150);
+	private JScrollPane buildTypesPanel() {
+		final int PANEL_WIDTH = 450;
+		final Dimension MAX_PANEL_SIZE = new Dimension(PANEL_WIDTH, 5000);
+		final Dimension MIN_PANEL_SIZE = new Dimension(PANEL_WIDTH, 150);
+		final Dimension MAX_SCROLLPANE_SIZE = new Dimension(PANEL_WIDTH + 100,
+				500);
 
 		/*
 		 * Yo dawg, I heard you like panels
@@ -230,10 +229,6 @@ public class TypeDialogBuilder {
 		final JPanel listPanel2;
 		final JPanel listPanel3;
 
-		final JScrollPane gameObjectScrollPane;
-		final JScrollPane gameConstantScrollPane;
-		final JScrollPane listScrollPane;
-
 		final List<CheckBoxPanel> checkBoxPanels;
 		final Translator activeTranslator;
 		final GameTypeManager typeManager;
@@ -253,10 +248,6 @@ public class TypeDialogBuilder {
 		listPanel1 = new JPanel();
 		listPanel2 = new JPanel();
 		listPanel3 = new JPanel();
-
-		gameObjectScrollPane = new JScrollPane(gameObjectPanel);
-		gameConstantScrollPane = new JScrollPane(gameConstantPanel);
-		listScrollPane = new JScrollPane(listPanel);
 
 		checkBoxPanels = new ArrayList<CheckBoxPanel>();
 		activeTranslator = TranslatorManager.getInstance()
@@ -322,26 +313,13 @@ public class TypeDialogBuilder {
 		listPanel2.setAlignmentY(Component.TOP_ALIGNMENT);
 		listPanel3.setAlignmentY(Component.TOP_ALIGNMENT);
 
-		gameObjectScrollPane.setMinimumSize(MIN_SCROLLPANE_SIZE);
-		gameConstantScrollPane.setMinimumSize(MIN_SCROLLPANE_SIZE);
-		listScrollPane.setMinimumSize(MIN_SCROLLPANE_SIZE);
+		gameObjectPanel.setMinimumSize(MIN_PANEL_SIZE);
+		gameConstantPanel.setMinimumSize(MIN_PANEL_SIZE);
+		listPanel.setMinimumSize(MIN_PANEL_SIZE);
 
-		gameObjectScrollPane.setMaximumSize(MAX_SCROLLPANE_SIZE);
-		gameConstantScrollPane.setMaximumSize(MAX_SCROLLPANE_SIZE);
-		listScrollPane.setMaximumSize(MAX_SCROLLPANE_SIZE);
-
-		gameObjectScrollPane.getVerticalScrollBar().setUnitIncrement(
-				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
-		gameConstantScrollPane.getVerticalScrollBar().setUnitIncrement(
-				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
-		listScrollPane.getVerticalScrollBar().setUnitIncrement(
-				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
-
-		gameObjectScrollPane.setBorder(BorderFactory
-				.createTitledBorder("Game Objects"));
-		gameConstantScrollPane.setBorder(BorderFactory
-				.createTitledBorder("Game Constants"));
-		listScrollPane.setBorder(BorderFactory.createTitledBorder("Lists"));
+		gameObjectPanel.setMaximumSize(MAX_PANEL_SIZE);
+		gameConstantPanel.setMaximumSize(MAX_PANEL_SIZE);
+		listPanel.setMaximumSize(MAX_PANEL_SIZE);
 
 		gameObjectPanel.setOpaque(false);
 		gameConstantPanel.setOpaque(false);
@@ -429,18 +407,55 @@ public class TypeDialogBuilder {
 			listPanel.add(listPanel3);
 		}
 
-		if (gameObjectPanel.getComponents().length > 0)
-			typesPanel.add(gameObjectScrollPane);
+		if (gameObjectPanel.getComponents().length > 0) {
+			final JLabel label;
 
-		if (gameConstantPanel.getComponents().length > 0)
-			typesPanel.add(gameConstantScrollPane);
+			label = new JLabel("Game Objects");
 
-		if (listPanel.getComponents().length > 0)
-			typesPanel.add(listScrollPane);
+			label.setAlignmentX(Component.LEFT_ALIGNMENT);
+			gameObjectPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+			typesPanel.add(label);
+			typesPanel.add(gameObjectPanel);
+		}
+
+		if (gameConstantPanel.getComponents().length > 0) {
+			final JLabel label;
+
+			label = new JLabel("Game Constants");
+
+			label.setAlignmentX(Component.LEFT_ALIGNMENT);
+			gameConstantPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+			typesPanel.add(label);
+			typesPanel.add(gameConstantPanel);
+		}
+
+		if (listPanel.getComponents().length > 0) {
+			final JLabel label;
+
+			label = new JLabel("Lists");
+
+			label.setAlignmentX(Component.LEFT_ALIGNMENT);
+			listPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+			typesPanel.add(label);
+			typesPanel.add(listPanel);
+		}
 		this.updateAllButton();
 
-		return typesPanel;
+		final JScrollPane typeScrollPane;
+
+		typeScrollPane = new JScrollPane(typesPanel,
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+		typeScrollPane.setMaximumSize(MAX_SCROLLPANE_SIZE);
+		typeScrollPane.setBorder(BorderFactory.createEmptyBorder());
+		typeScrollPane.getVerticalScrollBar().setUnitIncrement(
+				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+
+		return typeScrollPane;
 	}
 
 	/**
