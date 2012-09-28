@@ -28,9 +28,7 @@ public class GameType {
 	 * @author remiller
 	 */
 	public enum TypeValueWidgets {
-		JTEXTFIELD,
-		JSPINNER,
-		JCOMBOBOX;
+		JTEXTFIELD, JSPINNER, JCOMBOBOX;
 	}
 
 	private String displayName;
@@ -95,7 +93,13 @@ public class GameType {
 	 * @param enums
 	 */
 	private Map<String, String> convertEnumStringToMap(String enums) {
-		Map<String, String> enumsMap = new HashMap<String, String>();
+		final Map<String, String> enumsMap;
+
+		enumsMap = new HashMap<String, String>();
+
+		if (enums.length() == 0)
+			return enumsMap;
+
 		String[] theEnums = enums.split("[|]");
 		for (int i = 0; i < theEnums.length; i++) {
 			String name = null;

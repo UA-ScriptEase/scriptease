@@ -53,8 +53,17 @@ public class GameConstantTree extends JPanel {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-		if (model != null && model instanceof StoryModel)
-			this.drawTree((StoryModel) model, "");
+		if (model != null && model instanceof StoryModel) {
+			final GameTypeManager typeManager;
+			final List<String> types;
+
+			typeManager = TranslatorManager.getInstance().getActiveTranslator()
+					.getGameTypeManager();
+
+			types = new ArrayList<String>(typeManager.getKeywords());
+
+			this.drawTree((StoryModel) model, "", types);
+		}
 	}
 
 	/**
@@ -144,24 +153,27 @@ public class GameConstantTree extends JPanel {
 	/**
 	 * Draws the tree.
 	 */
-	public void drawTree(PatternModel model, final String searchText) {
+	public void drawTree(PatternModel model, final String searchText,
+			final Collection<String> validTypes) {
 		this.removeAll();
+		
+		final List<String> types;
+		
+		types = new ArrayList<String>(validTypes);
 
 		if (model == null || !(model instanceof StoryModel)) {
 			return;
 		}
 
-		final GameTypeManager typeManager;
-		final List<String> types;
-
-		typeManager = TranslatorManager.getInstance().getActiveTranslator()
-				.getGameTypeManager();
-		types = new ArrayList<String>(typeManager.getKeywords());
-
 		// Sort the types by alphabet
 		Collections.sort(types, new Comparator<String>() {
 			@Override
 			public int compare(String o1, String o2) {
+				final GameTypeManager typeManager;
+
+				typeManager = TranslatorManager.getInstance()
+						.getActiveTranslator().getGameTypeManager();
+
 				return String.CASE_INSENSITIVE_ORDER.compare(
 						typeManager.getDisplayText(o1),
 						typeManager.getDisplayText(o2));
@@ -170,6 +182,7 @@ public class GameConstantTree extends JPanel {
 
 		// Add the game objects to the tree model.
 		for (String typeName : types) {
+
 			final Collection<GameConstant> gameObjects;
 
 			gameObjects = this.getObjectsOfType((StoryModel) model, typeName,

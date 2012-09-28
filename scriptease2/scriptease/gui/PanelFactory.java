@@ -50,6 +50,7 @@ import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
+import scriptease.gui.action.typemenus.TypeSelectionAction;
 import scriptease.gui.filters.CategoryFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.filters.TranslatorFilter;
@@ -529,8 +530,9 @@ public class PanelFactory {
 		final ObservedJPanel observedPanel;
 
 		final GameConstantTree tree;
-		// TODO Search Field does nothing right now. Implement it.
-		final JTextField searchField = new JTextField(20);
+		final JTextField searchField;
+
+		final TypeSelectionAction typeFilter;
 
 		final PatternModelObserver modelObserver;
 		final LibraryManagerObserver libraryObserver;
@@ -541,6 +543,10 @@ public class PanelFactory {
 
 		tree = new GameConstantTree(PatternModelManager.getInstance()
 				.getActiveModel());
+		searchField = new JTextField(20);
+
+		typeFilter = new TypeSelectionAction();
+
 		treeScrollPane = new JScrollPane(tree,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -558,10 +564,18 @@ public class PanelFactory {
 				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
 						"SansSerif", Font.PLAIN, 12), Color.black));
 
+		typeFilter.setAction(new Runnable() {
+			@Override
+			public void run() {
+				tree.drawTree(PatternModelManager.getInstance()
+						.getActiveModel(), searchField.getText(), typeFilter
+						.getSelectedTypes());
+			}
+		});
+
 		// Sets up the type filter.
-		// TODO Make types work!
 		searchFilterPane.add(searchField);
-		searchFilterPane.add(new JButton("Types"));
+		searchFilterPane.add(new JButton(typeFilter));
 		searchFilterPane.setLayout(new BoxLayout(searchFilterPane,
 				BoxLayout.LINE_AXIS));
 
@@ -586,7 +600,8 @@ public class PanelFactory {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				tree.drawTree(PatternModelManager.getInstance()
-						.getActiveModel(), searchField.getText());
+						.getActiveModel(), searchField.getText(), typeFilter
+						.getSelectedTypes());
 			}
 
 			@Override
@@ -610,7 +625,8 @@ public class PanelFactory {
 				 * the library view as well.
 				 */
 				if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
-					tree.drawTree(event.getSource(), searchField.getText());
+					tree.drawTree(event.getSource(), searchField.getText(),
+							typeFilter.getSelectedTypes());
 				}
 			}
 		};
@@ -619,7 +635,8 @@ public class PanelFactory {
 			public void modelChanged(PatternModelEvent event) {
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
 					tree.drawTree(event.getPatternModel(),
-							searchField.getText());
+							searchField.getText(),
+							typeFilter.getSelectedTypes());
 				}
 			}
 		};

@@ -1,6 +1,7 @@
 package scriptease.gui.action.typemenus;
 
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 
 import javax.swing.AbstractAction;
 import javax.swing.JDialog;
@@ -21,7 +22,7 @@ import scriptease.translator.TranslatorManager;
  * either in the constructor or with {@link #setAction(Runnable)} so that the
  * type dialog knows what to do when closed.
  * 
- * @see {@link #ShowTypeMenuAction}
+ * @see {@link TypeSelectionDialogBuilder}
  * 
  * @author remiller
  * @author kschenk
@@ -33,6 +34,10 @@ public final class TypeSelectionAction extends AbstractAction implements
 	private Runnable action;
 	private TypeSelectionDialogBuilder typeBuilder;
 
+	/**
+	 * Creates a new instance of the action for selecting the types.
+	 * 
+	 */
 	public TypeSelectionAction() {
 		this(null);
 	}
@@ -43,8 +48,6 @@ public final class TypeSelectionAction extends AbstractAction implements
 	 * @param action
 	 *            the runnable action to be performed when the type selection
 	 *            changes
-	 * @param libraries
-	 *            the libraries to go through.
 	 */
 	public TypeSelectionAction(Runnable action) {
 		super();
@@ -119,8 +122,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 
 		if (selectedCount <= 0) {
 			name = "No Types";
-		} else if (selectedCount >= activeTranslator.getGameTypeManager()
-				.getGameTypes().size()) {
+		} else if (selectedCount >= this.typeBuilder.getTypes().size()) {
 			name = "All Types";
 		} else if (selectedCount == 1) {
 			// show just the first one
@@ -132,6 +134,15 @@ public final class TypeSelectionAction extends AbstractAction implements
 		}
 
 		this.putValue(NAME, name);
+	}
+
+	/**
+	 * Returns the current selected types. Forwarded method to TypeBuilder.
+	 * 
+	 * @return
+	 */
+	public Collection<String> getSelectedTypes() {
+		return this.typeBuilder.getSelectedTypes();
 	}
 
 	/**
@@ -181,10 +192,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 	@Override
 	public void translatorLoaded(Translator newTranslator) {
 		this.updateEnabledState();
-		/*
-		 * All types default to on. Future feature: this could potentially be
-		 * saved to the user preferences file for reloading. - remiller
-		 */
+
 		this.typeBuilder = new TypeSelectionDialogBuilder(this.action);
 		this.updateName();
 	}

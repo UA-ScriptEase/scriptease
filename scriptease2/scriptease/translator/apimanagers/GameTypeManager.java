@@ -22,7 +22,6 @@ import scriptease.translator.io.model.GameType.TypeValueWidgets;
  * @author mfchurch
  */
 public class GameTypeManager {
-
 	public static final String DEFAULT_VOID_TYPE = "void";
 	public static final String DEFAULT_BOOL_TYPE = "question";
 
