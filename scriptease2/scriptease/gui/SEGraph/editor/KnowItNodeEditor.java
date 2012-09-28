@@ -10,7 +10,7 @@ import javax.swing.event.CaretListener;
 
 import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.gui.SEGraph.nodes.KnowItNode;
-import scriptease.gui.action.typemenus.TypeSelectionAction;
+import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.model.atomic.KnowIt;
 
 /**
@@ -42,7 +42,7 @@ public class KnowItNodeEditor extends GraphNodeEditor {
 	@Override
 	public void setNode(GraphNode node) {
 		super.setNode(node);
-		final TypeSelectionAction typeFilter = new TypeSelectionAction();
+		final TypeAction typeFilter = new TypeAction();
 		final KnowIt knowIt = ((KnowItNode) node).getKnowIt();
 		typeFilter.getTypeSelectionDialogBuilder().selectTypes(
 				knowIt.getTypes(), true);

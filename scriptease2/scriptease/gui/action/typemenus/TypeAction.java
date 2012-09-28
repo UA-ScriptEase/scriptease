@@ -11,7 +11,7 @@ import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
-import scriptease.gui.dialog.TypeSelectionDialogBuilder;
+import scriptease.gui.dialog.TypeDialogBuilder;
 import scriptease.model.LibraryManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -22,23 +22,23 @@ import scriptease.translator.TranslatorManager;
  * either in the constructor or with {@link #setAction(Runnable)} so that the
  * type dialog knows what to do when closed.
  * 
- * @see {@link TypeSelectionDialogBuilder}
+ * @see {@link TypeDialogBuilder}
  * 
  * @author remiller
  * @author kschenk
  */
 @SuppressWarnings("serial")
-public final class TypeSelectionAction extends AbstractAction implements
+public final class TypeAction extends AbstractAction implements
 		LibraryManagerObserver, TranslatorObserver {
 
 	private Runnable action;
-	private TypeSelectionDialogBuilder typeBuilder;
+	private TypeDialogBuilder typeBuilder;
 
 	/**
 	 * Creates a new instance of the action for selecting the types.
 	 * 
 	 */
-	public TypeSelectionAction() {
+	public TypeAction() {
 		this(null);
 	}
 
@@ -49,7 +49,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 	 *            the runnable action to be performed when the type selection
 	 *            changes
 	 */
-	public TypeSelectionAction(Runnable action) {
+	public TypeAction(Runnable action) {
 		super();
 
 		setAction(action);
@@ -84,7 +84,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 		if (this.typeBuilder != null)
 			this.typeBuilder.setCloseAction(newAction);
 		else {
-			this.typeBuilder = new TypeSelectionDialogBuilder(newAction);
+			this.typeBuilder = new TypeDialogBuilder(newAction);
 		}
 
 		this.updateName();
@@ -104,7 +104,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 	 * 
 	 * @return
 	 */
-	public TypeSelectionDialogBuilder getTypeSelectionDialogBuilder() {
+	public TypeDialogBuilder getTypeSelectionDialogBuilder() {
 		return this.typeBuilder;
 	}
 
@@ -182,7 +182,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 					if (event != null)
 						if (event.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED
 								|| event.getEventType() == LibraryEvent.STORYCOMPONENT_REMOVED) {
-							TypeSelectionAction.this.updateEnabledState();
+							TypeAction.this.updateEnabledState();
 						}
 				}
 			}
@@ -193,7 +193,7 @@ public final class TypeSelectionAction extends AbstractAction implements
 	public void translatorLoaded(Translator newTranslator) {
 		this.updateEnabledState();
 
-		this.typeBuilder = new TypeSelectionDialogBuilder(this.action);
+		this.typeBuilder = new TypeDialogBuilder(this.action);
 		this.updateName();
 	}
 }

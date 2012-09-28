@@ -59,7 +59,7 @@ import scriptease.gui.action.libraryeditor.codeeditor.InsertSeriesAction;
 import scriptease.gui.action.libraryeditor.codeeditor.InsertSimpleAction;
 import scriptease.gui.action.libraryeditor.codeeditor.MoveFragmentDownAction;
 import scriptease.gui.action.libraryeditor.codeeditor.MoveFragmentUpAction;
-import scriptease.gui.action.typemenus.TypeSelectionAction;
+import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.CodeBlock;
@@ -544,7 +544,7 @@ public class LibraryEditorPanelFactory {
 		final JPanel parameterPanel;
 		final JScrollPane parameterScrollPane;
 
-		final TypeSelectionAction typeAction;
+		final TypeAction typeAction;
 		final JTextField includesField;
 		final JComboBox subjectBox;
 		final JComboBox slotBox;
@@ -572,7 +572,7 @@ public class LibraryEditorPanelFactory {
 		parameterPanel = new JPanel();
 		parameterScrollPane = new JScrollPane(parameterPanel);
 
-		typeAction = new TypeSelectionAction();
+		typeAction = new TypeAction();
 		includesField = new JTextField();
 		subjectBox = new JComboBox();
 		slotBox = new JComboBox();
@@ -931,7 +931,7 @@ public class LibraryEditorPanelFactory {
 			this.knowIt = knowIt;
 
 			final JTextField nameField;
-			final TypeSelectionAction typeAction;
+			final TypeAction typeAction;
 			final ArrayList<String> types;
 			final JButton typesButton;
 			final JComboBox defaultTypeBox;
@@ -948,7 +948,7 @@ public class LibraryEditorPanelFactory {
 			final GameTypeManager gameTypeManager;
 
 			nameField = new JTextField(knowIt.getDisplayText(), 10);
-			typeAction = new TypeSelectionAction();
+			typeAction = new TypeAction();
 			types = new ArrayList<String>();
 			typesButton = new JButton(typeAction);
 			defaultTypeBox = new JComboBox();

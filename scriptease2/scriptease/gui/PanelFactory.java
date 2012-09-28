@@ -50,7 +50,7 @@ import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
-import scriptease.gui.action.typemenus.TypeSelectionAction;
+import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.filters.CategoryFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.filters.TranslatorFilter;
@@ -532,7 +532,7 @@ public class PanelFactory {
 		final GameConstantTree tree;
 		final JTextField searchField;
 
-		final TypeSelectionAction typeFilter;
+		final TypeAction typeFilter;
 
 		final PatternModelObserver modelObserver;
 		final LibraryManagerObserver libraryObserver;
@@ -545,7 +545,7 @@ public class PanelFactory {
 				.getActiveModel());
 		searchField = new JTextField(20);
 
-		typeFilter = new TypeSelectionAction();
+		typeFilter = new TypeAction();
 
 		treeScrollPane = new JScrollPane(tree,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
