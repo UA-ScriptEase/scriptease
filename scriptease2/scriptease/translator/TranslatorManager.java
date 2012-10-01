@@ -15,7 +15,7 @@ import scriptease.ScriptEase.ConfigurationKeys;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
-import scriptease.gui.StatusLabel;
+import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
@@ -314,7 +314,7 @@ public class TranslatorManager implements PatternModelObserver {
 			return;
 		this.activeTranslator = translator;
 		if (translator != null)
-			StatusLabel.getInstance().setStatus(
+			StatusManager.getInstance().setStatus(
 					translator.getName() + " translator loaded");
 
 		this.notifyObservers();

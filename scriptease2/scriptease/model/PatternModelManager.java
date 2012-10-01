@@ -7,7 +7,7 @@ import java.util.List;
 
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
-import scriptease.gui.StatusLabel;
+import scriptease.gui.StatusManager;
 import scriptease.translator.Translator;
 
 /**
@@ -148,7 +148,7 @@ public final class PatternModelManager {
 			return;
 		this.activeModel = model;
 		if (model != null)
-			StatusLabel.getInstance().setStatus(model + " activated");
+			StatusManager.getInstance().setStatus(model + " activated");
 
 		this.notifyChange(model, PatternModelEvent.PATTERN_MODEL_ACTIVATED);
 	}

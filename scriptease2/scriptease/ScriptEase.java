@@ -136,7 +136,7 @@ public final class ScriptEase implements Runnable {
 	 */
 	private static final File SCRIPTEASE_USER_DATA_DIR = new File(
 			System.getProperty("user.home"), "ScriptEase");
-
+	
 	/**
 	 * This is private because of the singleton pattern. Use getInstance()
 	 * instead.
@@ -324,7 +324,8 @@ public final class ScriptEase implements Runnable {
 	}
 
 	private void checkDebugging() {
-		ScriptEase.DEBUG_MODE = Boolean.parseBoolean(this.getPreference(ScriptEase.DEBUG_KEY));
+		ScriptEase.DEBUG_MODE = Boolean.parseBoolean(this
+				.getPreference(ScriptEase.DEBUG_KEY));
 	}
 
 	private void loadConfigurations() {
@@ -412,7 +413,8 @@ public final class ScriptEase implements Runnable {
 				if (key.equals(ConfigurationKeys.TranslatorsDirectory))
 					file = new File(".", file.getPath());
 				else
-					file = new File(ScriptEase.SCRIPTEASE_USER_DATA_DIR, file.getPath());
+					file = new File(ScriptEase.SCRIPTEASE_USER_DATA_DIR,
+							file.getPath());
 			}
 
 			if (!file.exists() && !file.mkdirs())
