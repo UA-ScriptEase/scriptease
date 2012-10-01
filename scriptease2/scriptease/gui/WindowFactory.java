@@ -2,6 +2,8 @@ package scriptease.gui;
 
 import java.awt.Color;
 import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -11,12 +13,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
+import javax.swing.GroupLayout;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.SwingWorker.StateValue;
@@ -25,6 +30,8 @@ import javax.swing.filechooser.FileFilter;
 import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.modelverifier.problem.StoryProblem;
+import scriptease.controller.observer.ObserverFactory;
+import scriptease.controller.observer.PatternModelObserver;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
@@ -32,6 +39,7 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -75,7 +83,6 @@ public final class WindowFactory {
 	private static final String TEST_STORY = Il8nResources
 			.getString("Test_Story");
 
-
 	/*
 	 * This is never actually set, so it's just null. All of these windows are
 	 * thus just created on the root pane. However, if we ever have multiple
@@ -106,9 +113,11 @@ public final class WindowFactory {
 	 * Shows the main ScriptEase frame.
 	 */
 	public void showMainFrame() {
-		JFrame frame = SEFrame.getInstance().getFrame();
+		final JFrame frame;
 
-		frame.setJMenuBar(MenuFactory.createMainMenuBar(false));
+		frame = this.buildScriptEaseFrame(ScriptEase.TITLE);
+
+		frame.setJMenuBar(MenuFactory.createMainMenuBar(null));
 
 		if (!frame.isVisible())
 			frame.setVisible(true);
@@ -215,7 +224,7 @@ public final class WindowFactory {
 				}
 			}
 		});
-		
+
 		progressBar.setVisible(true);
 	}
 
@@ -288,7 +297,8 @@ public final class WindowFactory {
 		}
 
 		JOptionPane.showMessageDialog(this.currentFrame, panel,
-				WindowFactory.CODE_GENERATION_PROBLEM, JOptionPane.WARNING_MESSAGE);
+				WindowFactory.CODE_GENERATION_PROBLEM,
+				JOptionPane.WARNING_MESSAGE);
 	}
 
 	/**
@@ -428,7 +438,8 @@ public final class WindowFactory {
 	 */
 	public void showAboutScreen() {
 		JOptionPane.showMessageDialog(this.currentFrame,
-				WindowFactory.ABOUT_SCRIPTEASE_MESSAGE, WindowFactory.ABOUT_SCRIPTEASE_TITLE,
+				WindowFactory.ABOUT_SCRIPTEASE_MESSAGE,
+				WindowFactory.ABOUT_SCRIPTEASE_TITLE,
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -483,8 +494,9 @@ public final class WindowFactory {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(WindowFactory.this.currentFrame, message,
-						"ScriptEase: " + title, JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(WindowFactory.this.currentFrame,
+						message, "ScriptEase: " + title,
+						JOptionPane.ERROR_MESSAGE);
 			}
 		});
 	}
@@ -507,8 +519,9 @@ public final class WindowFactory {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(WindowFactory.this.currentFrame, message,
-						"ScriptEase: " + title, JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(WindowFactory.this.currentFrame,
+						message, "ScriptEase: " + title,
+						JOptionPane.WARNING_MESSAGE);
 			}
 		});
 	}
@@ -527,10 +540,9 @@ public final class WindowFactory {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane
-						.showMessageDialog(WindowFactory.this.currentFrame, message,
-								"ScriptEase: " + title,
-								JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(WindowFactory.this.currentFrame,
+						message, "ScriptEase: " + title,
+						JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 	}
@@ -562,7 +574,7 @@ public final class WindowFactory {
 
 		// disable "All Files" option
 		chooser.setAcceptAllFileFilterUsed(false);
-		
+
 		final ScriptEase se = ScriptEase.getInstance();
 		final int buttonChoice;
 		final File choice;
@@ -616,7 +628,7 @@ public final class WindowFactory {
 	public JDialog buildDialog(String title) {
 		final JDialog dialog = new JDialog(this.currentFrame, title,
 				Dialog.ModalityType.DOCUMENT_MODAL);
-		
+
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		return dialog;
 	}
@@ -628,9 +640,25 @@ public final class WindowFactory {
 	 * 
 	 * @return
 	 */
-	public JFrame buildScriptEaseFrame(String title) {
-		@SuppressWarnings("serial")
-		JFrame frame = new JFrame(title) {
+	@SuppressWarnings("serial")
+	private JFrame buildScriptEaseFrame(String title) {
+		final int MIN_HEIGHT = 480;
+		final int MIN_WIDTH = 640;
+
+		final JFrame frame;
+
+		final JPanel content;
+		final JPanel middlePane;
+
+		final JSplitPane middleSplit;
+
+		final JComponent statusBar;
+		final GroupLayout contentLayout;
+		final String preferredLayout;
+
+		final PatternModelObserver modelObserver;
+
+		frame = new JFrame(title) {
 			@Override
 			protected void processWindowEvent(WindowEvent e) {
 				if (e.getID() == WindowEvent.WINDOW_CLOSING)
@@ -639,6 +667,60 @@ public final class WindowFactory {
 					super.processWindowEvent(e);
 			}
 		};
+
+		content = new JPanel();
+		middlePane = new JPanel();
+
+		middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+
+		statusBar = StatusLabel.getInstance();
+	
+		
+		contentLayout = new GroupLayout(content);
+		// Get the preferred layout.
+		preferredLayout = ScriptEase.getInstance().getPreference(
+				ScriptEase.PREFERRED_LAYOUT_KEY);
+
+		modelObserver = ObserverFactory.getInstance().buildFrameModelObserver(
+				frame);
+
+		frame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
+		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+
+		middlePane.setLayout(new GridLayout(1, 1));
+		middlePane.add(PanelFactory.getInstance().getModelTabPane());
+
+		content.setLayout(contentLayout);
+
+		// Compressed Layout
+		middleSplit.setTopComponent(PanelFactory.getInstance()
+				.buildLibrarySplitPane());
+		middleSplit.setBottomComponent(middlePane);
+
+		content.add(middleSplit);
+		content.add(statusBar);
+
+		contentLayout.setHorizontalGroup(contentLayout.createParallelGroup()
+				.addComponent(middleSplit).addComponent(statusBar));
+
+		contentLayout
+				.setVerticalGroup(contentLayout
+						.createSequentialGroup()
+						.addComponent(middleSplit)
+						.addComponent(statusBar, GroupLayout.PREFERRED_SIZE,
+								GroupLayout.PREFERRED_SIZE,
+								GroupLayout.PREFERRED_SIZE));
+		if (preferredLayout.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
+			// Uncompressed Layout.
+			// TODO Do something special if layout is uncompressed. Removed this
+			// when building of the Library Pane was moved to panelfactory.
+		}
+
+		PatternModelManager.getInstance()
+				.addPatternModelObserver(modelObserver);
+
+		frame.getContentPane().add(content);
+
 		return frame;
 	}
 }

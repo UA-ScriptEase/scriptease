@@ -21,7 +21,7 @@ import java.util.Set;
 
 import scriptease.controller.CodeBlockMapper;
 import scriptease.controller.FileManager;
-import scriptease.gui.SEFrame;
+import scriptease.gui.StatusLabel;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.translator.GameCompilerException;
@@ -605,7 +605,7 @@ public final class ErfFile implements GameModule {
 						"Compiler failed to create NCS file " + byteCodeFile
 								+ ".");
 			} else
-				SEFrame.getInstance().setStatus("Compilation Succeeded!");
+				StatusLabel.getInstance().setStatus("Compilation Succeeded!");
 
 			byteCode = FileOp.readFileAsBytes(byteCodeFile);
 

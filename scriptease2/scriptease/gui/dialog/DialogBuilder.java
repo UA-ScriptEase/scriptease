@@ -32,7 +32,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.gui.ExceptionDialog;
 import scriptease.gui.PanelFactory;
-import scriptease.gui.SEFrame;
+import scriptease.gui.StatusLabel;
 import scriptease.gui.WindowFactory;
 import scriptease.model.LibraryModel;
 import scriptease.model.StoryModel;
@@ -185,7 +185,7 @@ public class DialogBuilder {
 				final String title = titleField.getText();
 				final String author = authorField.getText();
 				final GameModule module;
-				final SEFrame seFrame = SEFrame.getInstance();
+				final StatusLabel seFrame = StatusLabel.getInstance();
 				final Translator selectedTranslator;
 				final Translator oldTranslator;
 				final StoryModel model;
