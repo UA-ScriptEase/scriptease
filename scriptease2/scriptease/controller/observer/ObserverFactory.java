@@ -3,14 +3,20 @@ package scriptease.controller.observer;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 
 import scriptease.ScriptEase;
+import scriptease.controller.ModelAdapter;
 import scriptease.gui.MenuFactory;
+import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
+import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
 
 /**
@@ -120,5 +126,51 @@ public class ObserverFactory {
 		this.constantObserverList.add(translatorObserver);
 
 		return translatorObserver;
+	}
+
+	/**
+	 * Builds an observer for the story library pane.
+	 * 
+	 * @param librarySplitPane
+	 * @param storyJComponents
+	 * @return
+	 */
+	public PatternModelObserver buildStoryLibraryPaneObserver(
+			final JSplitPane librarySplitPane,
+			final Collection<JComponent> storyJComponents) {
+		final PatternModelObserver observer;
+
+		observer = new PatternModelObserver() {
+			public void modelChanged(PatternModelEvent event) {
+
+				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
+					event.getPatternModel().process(new ModelAdapter() {
+
+						@Override
+						public void processLibraryModel(
+								LibraryModel libraryModel) {
+							for (JComponent component : storyJComponents)
+								component.setVisible(false);
+						}
+
+						@Override
+						public void processStoryModel(StoryModel storyModel) {
+							for (JComponent component : storyJComponents)
+								component.setVisible(true);
+							SwingUtilities.invokeLater(new Runnable() {
+								@Override
+								public void run() {
+									librarySplitPane.setDividerLocation(0.5);
+								}
+							});
+						}
+					});
+				}
+			}
+		};
+
+		this.constantObserverList.add(observer);
+
+		return observer;
 	}
 }

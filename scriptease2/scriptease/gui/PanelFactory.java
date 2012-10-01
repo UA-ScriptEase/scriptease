@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -55,7 +56,6 @@ import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.filters.CategoryFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
-import scriptease.gui.filters.TranslatorFilter;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.pane.CloseableModelTab;
@@ -71,7 +71,6 @@ import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.complex.StoryPoint;
-import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.util.BiHashMap;
 
@@ -374,8 +373,6 @@ public class PanelFactory {
 			this.modelsToComponents.removeKey(model);
 	}
 
-	private PatternModelObserver storyLibraryPaneObserver;
-
 	/**
 	 * Builds a JSplitPane that is used for pattern models which contains a
 	 * LibraryPanel and a GameConstatPanel. The GameConstantPanel is hidden when
@@ -393,12 +390,17 @@ public class PanelFactory {
 		final StoryComponentPanelJList noteList;
 		final JScrollPane notePane;
 
+		final PatternModelObserver storyLibraryPaneObserver;
+		final Collection<JComponent> storyJComponents;
+
 		librarySplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		gameConstantPane = this.buildGameConstantPane();
 		libraryPanel = new JPanel();
 		noteList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.NOTE));
 		notePane = new JScrollPane(noteList);
+
+		storyJComponents = new ArrayList<JComponent>();
 
 		notePane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		notePane.setPreferredSize(notePaneSize);
@@ -414,60 +416,27 @@ public class PanelFactory {
 
 		librarySplitPane.setTopComponent(libraryPanel);
 
+		storyJComponents.add(notePane);
+		storyJComponents.add(gameConstantPane);
+
 		librarySplitPane.setBottomComponent(gameConstantPane);
 		if (!(PatternModelManager.getInstance().getActiveModel() instanceof StoryModel)) {
-			notePane.setVisible(false);
-			gameConstantPane.setVisible(false);
+			for (JComponent component : storyJComponents)
+				component.setVisible(false);
 		}
 		librarySplitPane.setResizeWeight(0.5);
 
-		this.storyLibraryPaneObserver = new PatternModelObserver() {
-			public void modelChanged(PatternModelEvent event) {
+		for (LibraryModel libraryModel : LibraryManager.getInstance()
+				.getLibraries())
+			noteList.addStoryComponents(libraryModel.getNoteContainer()
+					.getChildren());
 
-				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
-					event.getPatternModel().process(new ModelAdapter() {
-
-						@Override
-						public void processLibraryModel(
-								LibraryModel libraryModel) {
-							notePane.setVisible(false);
-							gameConstantPane.setVisible(false);
-						}
-
-						@Override
-						public void processStoryModel(StoryModel storyModel) {
-							final Translator activeTranslator;
-							activeTranslator = TranslatorManager.getInstance()
-									.getActiveTranslator();
-
-							noteList.updateFilter(new TranslatorFilter(
-									activeTranslator));
-
-							noteList.removeAllStoryComponents();
-
-							if (activeTranslator != null)
-								for (LibraryModel libraryModel : TranslatorManager
-										.getInstance().getActiveTranslator()
-										.getLibraries()) {
-									noteList.addStoryComponents(libraryModel
-											.getNoteContainer().getChildren());
-								}
-							notePane.setVisible(true);
-							gameConstantPane.setVisible(true);
-							SwingUtilities.invokeLater(new Runnable() {
-								@Override
-								public void run() {
-									librarySplitPane.setDividerLocation(0.5);
-								}
-							});
-						}
-					});
-				}
-			}
-		};
+		storyLibraryPaneObserver = ObserverFactory.getInstance()
+				.buildStoryLibraryPaneObserver(librarySplitPane,
+						storyJComponents);
 
 		PatternModelManager.getInstance().addPatternModelObserver(
-				this.storyLibraryPaneObserver);
+				storyLibraryPaneObserver);
 
 		return librarySplitPane;
 	}
@@ -733,7 +702,6 @@ public class PanelFactory {
 		}
 	}
 
-
 	public JPanel buildStatusPanel() {
 		final String transPrefix = "Game: ";
 
@@ -746,24 +714,13 @@ public class PanelFactory {
 		final StatusObserver statusObserver;
 
 		statusPanel = new JPanel();
+		timedLabel = new JLabel();
 		currentTranslatorLabel = new JLabel(transPrefix);
 		currentTranslatorNameLabel = new JLabel("-None-");
 
-		timedLabel = new JLabel();/* {
-			@Override
-			public void setText(String text) {
-				super.setText(text);
-				if (textQueue != null)
-					textQueue.restart();
-				if (textClear != null)
-					textClear.restart();
-			};
-		};
-
-	*/
 		translatorObserver = ObserverFactory.getInstance()
 				.buildStatusBarTranslatorObserver(currentTranslatorLabel);
-		
+
 		statusObserver = new StatusObserver() {
 			@Override
 			public void statusChanged(String newText) {
@@ -774,7 +731,7 @@ public class PanelFactory {
 		TranslatorManager.getInstance().addTranslatorObserver(
 				translatorObserver);
 		StatusManager.getInstance().addStatusObserver(statusObserver);
-		
+
 		currentTranslatorNameLabel.setEnabled(false);
 		currentTranslatorNameLabel.setBorder(BorderFactory.createEmptyBorder(0,
 				5, 0, 5));
@@ -787,9 +744,7 @@ public class PanelFactory {
 		statusPanel.add(currentTranslatorNameLabel);
 
 		statusPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		
+
 		return statusPanel;
 	}
-
-
 }
