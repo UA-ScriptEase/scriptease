@@ -11,7 +11,7 @@ import scriptease.controller.observer.FileManagerObserver;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.UndoManagerObserver;
-import scriptease.gui.SEFrame;
+import scriptease.gui.StatusLabel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
@@ -257,7 +257,7 @@ public final class UndoManager implements PatternModelObserver,
 		command.undo();
 		history.redoStack.push(command);
 		this.performingUndoRedo = false;
-		SEFrame.getInstance().setStatus("Undo " + command.getName());
+		StatusLabel.getInstance().setStatus("Undo " + command.getName());
 		this.notifyObservers();
 	}
 
@@ -286,7 +286,7 @@ public final class UndoManager implements PatternModelObserver,
 		command.redo();
 		history.undoStack.push(command);
 		this.performingUndoRedo = false;
-		SEFrame.getInstance().setStatus("Redo " + command.getName());
+		StatusLabel.getInstance().setStatus("Redo " + command.getName());
 		this.notifyObservers();
 	}
 

@@ -98,16 +98,16 @@ public class MenuFactory {
 	/**
 	 * Creates the top level menu bar for a story.
 	 * 
-	 * @param libraryEditor
+	 * @param model
 	 *            Builds a slightly different file menu if the main menu is
 	 *            getting created for the library editor.
 	 * 
 	 * @return the top level menu bar.
 	 */
-	public static JMenuBar createMainMenuBar(boolean libraryEditor) {
+	public static JMenuBar createMainMenuBar(PatternModel model) {
 		final JMenuBar bar = new JMenuBar();
 
-		bar.add(MenuFactory.buildFileMenu(libraryEditor));
+		bar.add(MenuFactory.buildFileMenu(model));
 		bar.add(MenuFactory.buildEditMenu());
 		bar.add(MenuFactory.buildToolsMenu());
 
@@ -152,9 +152,13 @@ public class MenuFactory {
 	 * appropriate Save All command. In addition, a list of previously opened
 	 * files should also be present for ease-of-use.
 	 * 
+	 * @param model
+	 *            If the model is a LibraryModel, we add special functionality
+	 *            to the New menu.
+	 * 
 	 * @return The File menu.
 	 */
-	private static JMenu buildFileMenu(boolean libraryEditor) {
+	private static JMenu buildFileMenu(PatternModel model) {
 		final JMenu menu = new JMenu(MenuFactory.FILE);
 		menu.setMnemonic(KeyEvent.VK_F);
 
@@ -162,7 +166,7 @@ public class MenuFactory {
 		// in the menu. - remiller
 		menu.removeAll();
 
-		if (!libraryEditor)
+		if (model == null || !(model instanceof LibraryModel))
 			menu.add(NewStoryModelAction.getInstance());
 		else {
 			final JMenu newMenu;
@@ -479,8 +483,8 @@ public class MenuFactory {
 
 							JTextArea textArea = new JTextArea(code);
 							JScrollPane scrollPane = new JScrollPane(textArea);
-							JDialog dialog = new JDialog(SEFrame.getInstance()
-									.getFrame(), "Code Generation Results");
+							JDialog dialog = WindowFactory.getInstance()
+									.buildDialog("Code Generation Results");
 							dialog.add(scrollPane);
 
 							dialog.pack();

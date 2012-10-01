@@ -18,7 +18,7 @@ import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.controller.io.FileIO;
-import scriptease.gui.SEFrame;
+import scriptease.gui.StatusLabel;
 import scriptease.gui.WindowFactory;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
@@ -606,7 +606,7 @@ public class Translator {
 	 *         problem during loading.
 	 */
 	public GameModule loadModule(File location) {
-		SEFrame.getInstance().setStatus("Loading Module ...");
+		StatusLabel.getInstance().setStatus("Loading Module ...");
 		GameModule module = this.createGameModuleInstance();
 		try {
 			module.setLocation(location);

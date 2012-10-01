@@ -75,20 +75,33 @@ import scriptease.util.BiHashMap;
 
 /**
  * A factory class for different panels. All major panel construction should go
- * in here.
+ * in here. This class implements the singleton design pattern.
  * 
  * @author kschenk
  * 
  */
 public class PanelFactory {
 	private static PanelFactory instance = new PanelFactory();
-	private final static BiHashMap<PatternModel, List<JComponent>> modelsToComponents = new BiHashMap<PatternModel, List<JComponent>>();
 
+	// The tabbed pane for all of the models
+	private final JTabbedPane modelTabs;
+
+	// A mapping of models to components represented by the models
+	private final BiHashMap<PatternModel, List<JComponent>> modelsToComponents;
+
+	/**
+	 * Gets the instance of PanelFactory.
+	 * 
+	 * @return
+	 */
 	public static PanelFactory getInstance() {
 		return PanelFactory.instance;
 	}
 
 	private PanelFactory() {
+		this.modelTabs = new JTabbedPane();
+		this.modelsToComponents = new BiHashMap<PatternModel, List<JComponent>>();
+
 		// Register a change listener
 		this.modelTabs.addChangeListener(new ChangeListener() {
 			// This method is called whenever the selected tab changes
@@ -199,12 +212,12 @@ public class PanelFactory {
 
 		// Put the new pane to the map
 		List<JComponent> panes;
-		panes = PanelFactory.modelsToComponents.getValue(model);
+		panes = this.modelsToComponents.getValue(model);
 		if (panes == null) {
 			panes = new ArrayList<JComponent>();
 		}
 		panes.add(storyPanel);
-		PanelFactory.modelsToComponents.put(model, panes);
+		this.modelsToComponents.put(model, panes);
 
 		// Set up the Story Graph
 		storyGraph.setNodeRenderer(storyNodeRenderer);
@@ -215,24 +228,13 @@ public class PanelFactory {
 				if (!(node instanceof StoryPoint))
 					return;
 
-				final PatternModel activeModel;
-
-				activeModel = PatternModelManager.getInstance()
-						.getActiveModel();
-
-				activeModel.process(new ModelAdapter() {
-					@Override
-					public void processStoryModel(StoryModel storyModel) {
-						List<JComponent> components = PanelFactory
-								.getInstance()
-								.getComponentsForModel(storyModel);
-
-						for (JComponent component : components)
-							PanelFactory.getInstance()
-									.setRootForTreeInComponent(component,
-											(StoryPoint) node);
-					}
-				});
+				PatternModelManager.getInstance().getActiveModel()
+						.process(new ModelAdapter() {
+							@Override
+							public void processStoryModel(StoryModel storyModel) {
+								storyComponentTree.setRoot((StoryPoint) node);
+							}
+						});
 			}
 		});
 
@@ -273,8 +275,6 @@ public class PanelFactory {
 			}
 		}
 
-		PanelFactory.componentsToTrees.put(storyPanel, storyComponentTree);
-
 		return storyPanel;
 	}
 
@@ -291,7 +291,7 @@ public class PanelFactory {
 
 		List<JComponent> components;
 
-		components = PanelFactory.modelsToComponents.getValue(model);
+		components = this.modelsToComponents.getValue(model);
 		scbPanel = LibraryEditorPanelFactory.getInstance()
 				.buildLibraryEditorPanel(LibraryPanel.getInstance());
 		scbScrollPane = new JScrollPane(scbPanel);
@@ -299,54 +299,12 @@ public class PanelFactory {
 		if (components == null) {
 			components = new ArrayList<JComponent>();
 			components.add(scbScrollPane);
-			PanelFactory.modelsToComponents.put(model, components);
+			this.modelsToComponents.put(model, components);
 		}
 		components.add(scbScrollPane);
 		PatternModelManager.getInstance().add(model);
 
 		return scbScrollPane;
-	}
-
-	/*
-	 * TODO See notes in individual methods, but I think we should get rid of
-	 * this somehow. I just haven't thought of a better way to do it yet.
-	 */
-	private final static Map<JComponent, StoryComponentPanelTree> componentsToTrees = new IdentityHashMap<JComponent, StoryComponentPanelTree>();
-
-	/**
-	 * Sets the root for a StoryComponentPanelTree that was created from
-	 * {@link PanelFactory#buildStoryPanel(StoryModel, StoryPoint)}.
-	 * 
-	 * @param component
-	 * @param storyPoint
-	 */
-	public void setRootForTreeInComponent(JComponent component,
-			StoryPoint storyPoint) {
-		/*
-		 * TODO I still feel like this is hackish, not to mention we could get
-		 * an eventual memory leak if someone keeps closing and opening
-		 * stories... We should have some other way of doing this. -kschenk
-		 */
-		PanelFactory.componentsToTrees.get(component).setRoot(storyPoint);
-	}
-
-	/**
-	 * NOTE: Methods that call this method should always either check if null is
-	 * returned, or use {@link #getModelForPanel(JComponent)} to check if the
-	 * panel passed in represents a StoryModel. Only Story Model panels are
-	 * added to the map, so if you attempt to use a different kind of
-	 * PatternModel, this method will just return null.
-	 * 
-	 * 
-	 * @param component
-	 * @return
-	 */
-	public StoryComponentPanelTree getTreeForComponent(JComponent component) {
-		/*
-		 * TODO Again, this seems hackish and if we need a note like the above,
-		 * we're just asking for future problems. -kschenk
-		 */
-		return PanelFactory.componentsToTrees.get(component);
 	}
 
 	/**
@@ -356,10 +314,10 @@ public class PanelFactory {
 	 * @return
 	 */
 	public PatternModel getModelForComponent(JComponent modelComponent) {
-		for (List<JComponent> jComponentList : PanelFactory.modelsToComponents
+		for (List<JComponent> jComponentList : this.modelsToComponents
 				.getValues())
 			if (jComponentList.contains(modelComponent))
-				return PanelFactory.modelsToComponents.getKey(jComponentList);
+				return this.modelsToComponents.getKey(jComponentList);
 
 		throw new IllegalStateException(
 				"Encountered null model when attempting to get model for "
@@ -374,8 +332,7 @@ public class PanelFactory {
 	 * @return
 	 */
 	public List<JComponent> getComponentsForModel(PatternModel model) {
-		final List<JComponent> panels = PanelFactory.modelsToComponents
-				.getValue(model);
+		final List<JComponent> panels = this.modelsToComponents.getValue(model);
 
 		if (panels == null) {
 			System.out
@@ -399,20 +356,20 @@ public class PanelFactory {
 	public void removeComponentForModel(PatternModel model, JComponent component) {
 		final List<JComponent> components = new ArrayList<JComponent>();
 
-		if (PanelFactory.modelsToComponents.getValue(model) == null)
+		if (this.modelsToComponents.getValue(model) == null)
 			throw new IllegalStateException(
 					"Encountered null list of model display panels "
 							+ "when attempting to remove panels for "
 							+ model.getName());
 
-		components.addAll(PanelFactory.modelsToComponents.getValue(model));
+		components.addAll(this.modelsToComponents.getValue(model));
 
 		components.remove(component);
 
 		if (!components.isEmpty())
-			PanelFactory.modelsToComponents.put(model, components);
+			this.modelsToComponents.put(model, components);
 		else
-			PanelFactory.modelsToComponents.removeKey(model);
+			this.modelsToComponents.removeKey(model);
 	}
 
 	private PatternModelObserver storyLibraryPaneObserver;
@@ -656,8 +613,6 @@ public class PanelFactory {
 
 		return gameConstantPane;
 	}
-
-	private final JTabbedPane modelTabs = new JTabbedPane();
 
 	public JTabbedPane getModelTabPane() {
 		return this.modelTabs;
