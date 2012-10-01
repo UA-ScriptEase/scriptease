@@ -546,12 +546,6 @@ public class PanelFactory {
 		libraryObserver = new LibraryManagerObserver() {
 			@Override
 			public void modelChanged(LibraryManagerEvent event) {
-				/*
-				 * Keep the display of the library up to date with the changes
-				 * to Libraries. This listener is important for the Story
-				 * Component Builder, so that changes made there will apply to
-				 * the library view as well.
-				 */
 				if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
 					tree.drawTree(event.getSource(), searchField.getText(),
 							typeFilter.getSelectedTypes());

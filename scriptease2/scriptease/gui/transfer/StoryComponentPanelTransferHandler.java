@@ -112,10 +112,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		} else
 			return null;
 
-		// Create a Transferable with those StoryComponents
-		StoryComponentPanelTransferable storyComponentPanelTransferable = new StoryComponentPanelTransferable(
-				data);
-		return storyComponentPanelTransferable;
+		return new StoryComponentPanelTransferable(data);
 	}
 
 	@Override
@@ -398,13 +395,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	protected Collection<StoryComponent> extractStoryComponents(
 			Transferable transferData) {
 		Collection<StoryComponent> data = null;
-		// @formatter:off
-		/*
-		 * FLAVA FAAVVVEE \\_ _____ _// \\_.'_____`._// .'.-' 12 `-.`. /,' 11 1
-		 * `.\ // 10 / 2 \\ ;; / :: || 9 ----O 3 || :: ;; \\ 8 4 // \`. 7 5 ,'/
-		 * '.`-.__6__.-'.' `-._____.-'
-		 */
-		// @formatter:on
+
 		if (transferData
 				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
 			try {

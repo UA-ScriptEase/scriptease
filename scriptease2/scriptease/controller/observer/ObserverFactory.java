@@ -21,7 +21,8 @@ import scriptease.translator.Translator;
 
 /**
  * A factory that creates specialized observers. All observers that must exist
- * in ScriptEase should be stored in the constant observer list.
+ * for the lifetime of ScriptEase should be stored in the constant observer
+ * list.
  * 
  * @author kschenk
  * 

@@ -188,7 +188,7 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 	 * Updates the lists based on their filters. Works by removing and adding
 	 * back all components in the list panes.
 	 */
-	public void updateLists() {
+	private void updateLists() {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
 			final PatternModel model;
 			final Translator activeTranslator;

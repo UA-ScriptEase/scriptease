@@ -2,6 +2,8 @@ package scriptease.gui.storycomponentpanel;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -10,6 +12,8 @@ import javax.swing.JScrollPane;
 import scriptease.gui.filters.Filter;
 import scriptease.gui.filters.Filterable;
 import scriptease.gui.filters.StoryComponentFilter;
+import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.StoryPoint;
 
@@ -49,8 +53,28 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		if (root != null)
 			this.setRoot(root);
 
-		// Good unit for scrolling vertically using the mouse wheel
-		this.getVerticalScrollBar().setUnitIncrement(16);
+		this.addMouseMotionListener(new MouseMotionListener() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				System.out.println("Drag");
+				JScrollPane tree = StoryComponentPanelTree.this;
+				if (!tree.getBounds().contains(e.getPoint())) {
+					tree.getVerticalScrollBar()
+							.setValue(
+									tree.getVerticalScrollBar().getValue()
+											+ ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+
+				}
+
+			}
+		});
+
+		this.getVerticalScrollBar().setUnitIncrement(
+				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 	}
 
 	/**

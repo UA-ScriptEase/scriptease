@@ -58,6 +58,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		this.storyBlock.setDisplayText("Story:");
 		this.alwaysBlock = new StoryItemSequence(validTypes);
 		this.alwaysBlock.setDisplayText("Always:");
+
 	}
 
 	public Collection<CodeBlock> getCodeBlocks() {
@@ -326,5 +327,4 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		for (KnowIt implicit : this.getImplicits())
 			implicit.process(processController);
 	}
-
 }
