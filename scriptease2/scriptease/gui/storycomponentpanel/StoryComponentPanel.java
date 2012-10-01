@@ -59,9 +59,10 @@ public class StoryComponentPanel extends JPanel implements
 		if (this.component == null)
 			return;
 
+		final MouseInputListener mouseListener = this.mouseListener();
 		// Action Listeners
-		this.addMouseMotionListener(this.mouseListener());
-		this.addMouseListener(this.mouseListener());
+		this.addMouseMotionListener(mouseListener);
+		this.addMouseListener(mouseListener);
 		InputMap input = this.getInputMap(WHEN_FOCUSED);
 		input.put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK),
