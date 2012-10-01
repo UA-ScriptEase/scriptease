@@ -25,7 +25,7 @@ import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.PanelFactory;
-import scriptease.gui.StatusLabel;
+import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.LibraryManager;
@@ -214,7 +214,7 @@ public final class FileManager {
 						+ storyModel.getTitle() + " to " + location;
 
 				System.out.println(saveMessage);
-				StatusLabel.getInstance().setStatus(saveMessage + " ...");
+				StatusManager.getInstance().setStatus(saveMessage + " ...");
 				if (location == null) {
 					FileManager.this.saveAs(storyModel);
 					return;
@@ -385,11 +385,11 @@ public final class FileManager {
 
 		try {
 			if (compile)
-				StatusLabel.getInstance().setStatus(
+				StatusManager.getInstance().setStatus(
 						"Saving Story with Compiling...");
 
 			module.save(compile);
-			StatusLabel.getInstance().setStatus(
+			StatusManager.getInstance().setStatus(
 					(compile ? "Compilation and " : "")
 							+ "Story Save Sucessful!");
 		} catch (IOException e) {
@@ -399,12 +399,12 @@ public final class FileManager {
 			// file that we would ordinarily replace, but since we've failed
 			// we just delete the file we're currently writing and leave the
 			// original intact. - remiller
-			StatusLabel.getInstance().setStatus("Story Save Failed!");
+			StatusManager.getInstance().setStatus("Story Save Failed!");
 			Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
 					Thread.currentThread(), new IOError(e));
 		} catch (GameCompilerException e) {
 			if (compile) {
-				StatusLabel.getInstance().setStatus("Compilation Failed.");
+				StatusManager.getInstance().setStatus("Compilation Failed.");
 				if (WindowFactory
 						.getInstance()
 						.showRetryProblemDialog(

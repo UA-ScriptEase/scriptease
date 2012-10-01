@@ -673,8 +673,7 @@ public final class WindowFactory {
 
 		middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
-		statusBar = StatusLabel.getInstance();
-	
+		statusBar = PanelFactory.getInstance().buildStatusPanel();
 		
 		contentLayout = new GroupLayout(content);
 		// Get the preferred layout.

@@ -32,11 +32,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.gui.ExceptionDialog;
 import scriptease.gui.PanelFactory;
-import scriptease.gui.StatusLabel;
+import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.model.LibraryModel;
-import scriptease.model.StoryModel;
 import scriptease.model.PatternModelManager;
+import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.TranslatorManager;
@@ -185,7 +185,7 @@ public class DialogBuilder {
 				final String title = titleField.getText();
 				final String author = authorField.getText();
 				final GameModule module;
-				final StatusLabel seFrame = StatusLabel.getInstance();
+				final StatusManager statusManager = StatusManager.getInstance();
 				final Translator selectedTranslator;
 				final Translator oldTranslator;
 				final StoryModel model;
@@ -195,7 +195,7 @@ public class DialogBuilder {
 				// do everything in a try because otherwise the run will swallow
 				// any exceptions.
 				try {
-					seFrame.setStatus("Creating New Story ...");
+					statusManager.setStatus("Creating New Story ...");
 					selectedTranslator = (Translator) gameComboBox
 							.getSelectedItem();
 					oldTranslator = translatorMgr.getActiveTranslator();
@@ -207,14 +207,16 @@ public class DialogBuilder {
 								.getInstance()
 								.showProblemDialog("No translator",
 										"No translator was chosen. I can't make a story without it.");
-						seFrame.setStatus("Story creation aborted: no translator chosen.");
+						statusManager
+								.setStatus("Story creation aborted: no translator chosen.");
 						return;
 					}
 					module = selectedTranslator.loadModule(location);
 
 					if (module == null) {
 						translatorMgr.setActiveTranslator(oldTranslator);
-						seFrame.setStatus("Story creation aborted: module failed to load.");
+						statusManager
+								.setStatus("Story creation aborted: module failed to load.");
 
 						return;
 					} else {

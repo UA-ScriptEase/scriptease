@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.gui.StatusLabel;
+import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
@@ -83,7 +83,7 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 			public void run() {
 				final ProcessBuilder procBuilder;
 				final Process tester;
-				final StatusLabel frame = StatusLabel.getInstance();
+				final StatusManager frame = StatusManager.getInstance();
 
 				frame.setStatus("Testing " + activeModel.getTitle());
 				try {

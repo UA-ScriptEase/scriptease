@@ -6,9 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -16,6 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -35,8 +34,11 @@ import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.ObservedJPanel;
+import scriptease.controller.observer.ObserverFactory;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.StatusObserver;
+import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.graph.SEGraphAdapter;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
@@ -730,5 +732,64 @@ public class PanelFactory {
 			});
 		}
 	}
+
+
+	public JPanel buildStatusPanel() {
+		final String transPrefix = "Game: ";
+
+		final JPanel statusPanel;
+		final JLabel timedLabel;
+		final JLabel currentTranslatorLabel;
+		final JLabel currentTranslatorNameLabel;
+
+		final TranslatorObserver translatorObserver;
+		final StatusObserver statusObserver;
+
+		statusPanel = new JPanel();
+		currentTranslatorLabel = new JLabel(transPrefix);
+		currentTranslatorNameLabel = new JLabel("-None-");
+
+		timedLabel = new JLabel();/* {
+			@Override
+			public void setText(String text) {
+				super.setText(text);
+				if (textQueue != null)
+					textQueue.restart();
+				if (textClear != null)
+					textClear.restart();
+			};
+		};
+
+	*/
+		translatorObserver = ObserverFactory.getInstance()
+				.buildStatusBarTranslatorObserver(currentTranslatorLabel);
+		
+		statusObserver = new StatusObserver() {
+			@Override
+			public void statusChanged(String newText) {
+				timedLabel.setText(newText);
+			}
+		};
+
+		TranslatorManager.getInstance().addTranslatorObserver(
+				translatorObserver);
+		StatusManager.getInstance().addStatusObserver(statusObserver);
+		
+		currentTranslatorNameLabel.setEnabled(false);
+		currentTranslatorNameLabel.setBorder(BorderFactory.createEmptyBorder(0,
+				5, 0, 5));
+
+		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.LINE_AXIS));
+
+		statusPanel.add(timedLabel);
+		statusPanel.add(Box.createGlue());
+		statusPanel.add(currentTranslatorLabel);
+		statusPanel.add(currentTranslatorNameLabel);
+
+		statusPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		
+		return statusPanel;
+	}
+
 
 }
