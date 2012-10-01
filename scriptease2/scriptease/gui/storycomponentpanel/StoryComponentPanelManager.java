@@ -94,6 +94,13 @@ public class StoryComponentPanelManager {
 
 			panel.requestFocusInWindow();
 			updatePanelBackgrounds();
+		} else {
+			final StoryComponentPanel parent;
+
+			parent = panel.getParentStoryComponentPanel();
+
+			if (parent != null)
+				this.setSelection(parent, parent.isSelectable(), false);
 		}
 	}
 
