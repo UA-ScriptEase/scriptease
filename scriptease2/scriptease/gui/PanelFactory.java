@@ -696,6 +696,12 @@ public class PanelFactory {
 		}
 	}
 
+	/**
+	 * Builds a panel that displays the status of the game based on what has
+	 * been passed to the {@link StatusManager}.
+	 * 
+	 * @return
+	 */
 	public JPanel buildStatusPanel() {
 		final String transPrefix = "Game: ";
 

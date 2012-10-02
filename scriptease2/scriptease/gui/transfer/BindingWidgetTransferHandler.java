@@ -7,6 +7,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
@@ -274,6 +275,8 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		} catch (UnsupportedFlavorException e) {
 			return false;
 		} catch (IOException e) {
+			return false;
+		} catch (NoSuchElementException e) {
 			return false;
 		}
 	}

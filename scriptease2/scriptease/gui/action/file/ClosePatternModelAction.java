@@ -51,12 +51,7 @@ public final class ClosePatternModelAction extends ActiveModelSensitiveAction {
 
 	@Override
 	protected boolean isLegal() {
-		return super.isLegal()
-		// removed until we actually implement undoable commands - remiller
-		/*
-		 * && !UndoManager.getInstance().isSaved(
-		 * StoryModelPool.getInstance().getActiveModel())
-		 */;
+		return super.isLegal();
 	}
 
 	@Override
