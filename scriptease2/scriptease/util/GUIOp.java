@@ -1,10 +1,12 @@
 package scriptease.util;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 import javax.swing.SwingWorker;
@@ -220,5 +222,26 @@ public class GUIOp {
 					component.getY() + component.getHeight() / 2);
 		}
 		return point;
+	}
+
+	/**
+	 * Returns a BufferedImage representing the component.
+	 * 
+	 * @author Andrew Thompson from <a
+	 *         href=http://stackoverflow.com/questions/5853879/java-swing
+	 *         -obtain-image-of- jframe>Stack Overflow</a>
+	 * 
+	 * 
+	 * @param component
+	 * @return
+	 */
+	public static BufferedImage getScreenShot(Component component) {
+
+		BufferedImage image = new BufferedImage(component.getWidth(),
+				component.getHeight(), BufferedImage.TYPE_INT_RGB);
+		// call the Component's paint method, using
+		// the Graphics object of the image.
+		component.paint(image.getGraphics());
+		return image;
 	}
 }

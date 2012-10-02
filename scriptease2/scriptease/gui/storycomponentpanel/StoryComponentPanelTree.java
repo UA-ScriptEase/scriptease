@@ -8,6 +8,7 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 
 import scriptease.gui.filters.Filter;
 import scriptease.gui.filters.Filterable;
@@ -53,26 +54,6 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		if (root != null)
 			this.setRoot(root);
 
-		this.addMouseMotionListener(new MouseMotionListener() {
-			@Override
-			public void mouseMoved(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				System.out.println("Drag");
-				JScrollPane tree = StoryComponentPanelTree.this;
-				if (!tree.getBounds().contains(e.getPoint())) {
-					tree.getVerticalScrollBar()
-							.setValue(
-									tree.getVerticalScrollBar().getValue()
-											+ ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
-
-				}
-
-			}
-		});
-
 		this.getVerticalScrollBar().setUnitIncrement(
 				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 	}
@@ -91,6 +72,30 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		this.rootPanel = StoryComponentPanelFactory.getInstance()
 				.buildStoryComponentPanel(root);
 		this.rootPanel.updateComplexSettings();
+
+		//XXX
+/*		this.rootPanel.addMouseMotionListener(new MouseMotionListener() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				System.out.println("Moved");
+				if (SwingUtilities.isLeftMouseButton(e)) {
+					System.out.println("Drag");
+					JScrollPane tree = StoryComponentPanelTree.this;
+					if (!tree.getBounds().contains(e.getPoint())) {
+						tree.getVerticalScrollBar()
+								.setValue(
+										tree.getVerticalScrollBar().getValue()
+												+ ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+
+					}
+				}
+			}
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+			}
+		});
+*/
 		this.selectionManager.clearSelection();
 		this.selectionManager.addComplexPanel(this.rootPanel, false);
 

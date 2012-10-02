@@ -123,6 +123,8 @@ public class ToolBarFactory {
 			graphEditorToolBar.add(toolBarButton);
 		}
 
+		// TODO We may be able to switch this with a model change listener,
+		// removing the need to know about the tabbed pane.
 		ChangeListener graphEditorListener = new ChangeListener() {
 
 			@Override

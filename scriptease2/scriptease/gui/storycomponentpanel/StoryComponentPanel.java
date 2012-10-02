@@ -2,6 +2,8 @@ package scriptease.gui.storycomponentpanel;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -236,6 +238,26 @@ public class StoryComponentPanel extends JPanel implements
 
 		// Return the list of descendants.
 		return descendants;
+	}
+
+	private boolean drawLine;
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
+		if (this.drawLine) {
+			final Graphics2D g2 = (Graphics2D) g.create();
+
+			g2.drawLine(this.getX(), this.getY(),
+					this.getPreferredSize().width, this.getY());
+		}
+	}
+
+	public void setDrawLine(boolean drawLine) {
+		this.drawLine = drawLine;
+
+		this.repaint();
 	}
 
 	/**
