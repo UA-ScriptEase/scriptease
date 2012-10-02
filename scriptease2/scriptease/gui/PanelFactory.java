@@ -35,7 +35,7 @@ import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.ObservedJPanel;
-import scriptease.controller.observer.ObserverFactory;
+import scriptease.controller.observer.LifetimeObserverFactory;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.StatusObserver;
@@ -431,7 +431,7 @@ public class PanelFactory {
 			noteList.addStoryComponents(libraryModel.getNoteContainer()
 					.getChildren());
 
-		storyLibraryPaneObserver = ObserverFactory.getInstance()
+		storyLibraryPaneObserver = LifetimeObserverFactory.getInstance()
 				.buildStoryLibraryPaneObserver(librarySplitPane,
 						storyJComponents);
 
@@ -712,8 +712,8 @@ public class PanelFactory {
 		currentTranslatorLabel = new JLabel(transPrefix);
 		currentTranslatorNameLabel = new JLabel("-None-");
 
-		translatorObserver = ObserverFactory.getInstance()
-				.buildStatusBarTranslatorObserver(currentTranslatorLabel);
+		translatorObserver = LifetimeObserverFactory.getInstance()
+				.buildStatusPanelTranslatorObserver(currentTranslatorLabel);
 
 		statusObserver = new StatusObserver() {
 			@Override

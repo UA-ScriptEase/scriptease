@@ -30,7 +30,7 @@ import javax.swing.filechooser.FileFilter;
 import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.modelverifier.problem.StoryProblem;
-import scriptease.controller.observer.ObserverFactory;
+import scriptease.controller.observer.LifetimeObserverFactory;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.internationalization.Il8nResources;
@@ -680,7 +680,7 @@ public final class WindowFactory {
 		preferredLayout = ScriptEase.getInstance().getPreference(
 				ScriptEase.PREFERRED_LAYOUT_KEY);
 
-		modelObserver = ObserverFactory.getInstance().buildFrameModelObserver(
+		modelObserver = LifetimeObserverFactory.getInstance().buildFrameModelObserver(
 				frame);
 
 		frame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
