@@ -13,6 +13,7 @@ import javax.swing.SwingUtilities;
 import scriptease.ScriptEase;
 import scriptease.controller.ModelAdapter;
 import scriptease.gui.MenuFactory;
+import scriptease.gui.PanelFactory;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
@@ -20,29 +21,38 @@ import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
 
 /**
- * A factory that creates specialized observers. All observers that must exist
- * for the lifetime of ScriptEase should be stored in the constant observer
- * list.
+ * A factory that creates specialized observers and stores them in a list for
+ * the lifetime of ScriptEase. All observers that must exist for the lifetime of
+ * ScriptEase that are usually weakly referenced should be created here and
+ * stored in the constant observer list. This gets rid of a lot of hacked and
+ * unnecessary code in other classes. <br>
+ * <br>
+ * The observers returned should still be added to their managers where they are
+ * called instead of in this class, since this class is just building the
+ * observers and not actually assigning them to anything. <br>
+ * <br>
+ * Please note that this class is not related to or affiliated with the Lifetime
+ * TV network.
  * 
  * @author kschenk
  * 
  */
-public class ObserverFactory {
+public class LifetimeObserverFactory {
 	// A list of observers that do not get garbage collected
 	private final Collection<Object> constantObserverList;
 
-	private static ObserverFactory instance = new ObserverFactory();
+	private static LifetimeObserverFactory instance = new LifetimeObserverFactory();
 
 	/**
-	 * Returns the sole instance of ObserverFactory.
+	 * Returns the sole instance of {@link LifetimeObserverFactory}.
 	 * 
 	 * @return
 	 */
-	public static ObserverFactory getInstance() {
+	public static LifetimeObserverFactory getInstance() {
 		return instance;
 	}
 
-	private ObserverFactory() {
+	private LifetimeObserverFactory() {
 		this.constantObserverList = new ArrayList<Object>();
 	}
 
@@ -51,6 +61,7 @@ public class ObserverFactory {
 	 * Pattern Models and changes the title and JMenuBar of the frame
 	 * appropriately.
 	 * 
+	 * @see WindowFactory
 	 * @param frame
 	 *            The frame to act upon.
 	 * @return
@@ -100,12 +111,14 @@ public class ObserverFactory {
 	}
 
 	/**
-	 * Builds an observer for the status bar.
+	 * Builds an observer for the status panel.
 	 * 
+	 * @see PanelFactory
 	 * @param label
+	 *            The JLabel that displays the status
 	 * @return
 	 */
-	public TranslatorObserver buildStatusBarTranslatorObserver(
+	public TranslatorObserver buildStatusPanelTranslatorObserver(
 			final JLabel label) {
 		final TranslatorObserver translatorObserver;
 
@@ -132,8 +145,13 @@ public class ObserverFactory {
 	/**
 	 * Builds an observer for the story library pane.
 	 * 
+	 * @see PanelFactory
 	 * @param librarySplitPane
+	 *            The split pane containing the library pane and the Game Object
+	 *            Pane
 	 * @param storyJComponents
+	 *            Any components that should be visible when a StoryModel is
+	 *            open and invisible when not
 	 * @return
 	 */
 	public PatternModelObserver buildStoryLibraryPaneObserver(
