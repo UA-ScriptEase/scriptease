@@ -20,6 +20,7 @@ import scriptease.controller.io.converter.KnowItBindingConverter;
 import scriptease.controller.io.converter.KnowItConverter;
 import scriptease.controller.io.converter.LanguageDictionaryConverter;
 import scriptease.controller.io.converter.LibraryModelConverter;
+import scriptease.controller.io.converter.NoteConverter;
 import scriptease.controller.io.converter.ScriptItConverter;
 import scriptease.controller.io.converter.SlotConverter;
 import scriptease.controller.io.converter.StoryComponentContainerConverter;
@@ -50,6 +51,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
@@ -393,6 +395,7 @@ public class FileIO {
 		stream.alias("CodeBlockReference", CodeBlockReference.class);
 		stream.alias("ScriptIt", ScriptIt.class);
 		stream.alias("StoryPoint", StoryPoint.class);
+		stream.alias("Note", Note.class);
 
 		// the below are aliased for backwards compatibility
 
@@ -427,6 +430,7 @@ public class FileIO {
 		stream.registerConverter(new CodeBlockReferenceConverter());
 		stream.registerConverter(new ScriptItConverter());
 		stream.registerConverter(new StoryPointConverter());
+		stream.registerConverter(new NoteConverter());
 
 		stream.registerConverter(new IdentityArrayListConverter(stream
 				.getMapper()));
