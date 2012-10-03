@@ -289,56 +289,7 @@
 			</Series>
 			<Line />
 		</Format>
-
-		<!-- Used in the EndConversation and EndConverAbort slot on Dialogues -->
-		<Format id="conversation">
-			<!-- include files first -->
-			<FormatRef ref="includes" />
-			<Line />
-			<Line>
-				<Literal>// Function Declarations</Literal>
-			</Line>
-			<!-- Function declarations next -->
-			<Series data="effects" unique="true">
-				<Series data="codeBlocks" unique="true">
-					<FormatRef ref="functionDeclaration" />
-				</Series>
-			</Series>
-			<Line />
-			<Line>
-				<Literal>// Main</Literal>
-			</Line>
-			<Line>
-				<Literal>void main() {</Literal>
-			</Line>
-			<Line>
-				<Literal>// Variable Declarations</Literal>
-			</Line>
-			<Indent>
-				<Series data="effects" unique="true">
-					<Series data="variables" unique="true">
-						<FormatRef ref="variableDeclaration" />
-					</Series>
-				</Series>
-
-				<Series data="effects" unique="true">
-					<FormatRef ref="functionCall" />
-				</Series>
-			</Indent>
-			<Line>
-				<Literal>}</Literal>
-			</Line>
-			<Line />
-			<Line>
-				<Literal>// Function Definitions</Literal>
-			</Line>
-			<!-- Function definitions last -->
-			<Series data="effects" unique="true">
-				<FormatRef ref="functionDefinition" />
-			</Series>
-			<Line />
-		</Format>
-
+		
 		<!-- Default format for most files -->
 		<Format id="file">
 			<!-- include files first -->

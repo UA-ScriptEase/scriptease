@@ -116,9 +116,8 @@ public class NWNDialogueLine extends NWNGameConstant implements
 
 	@Override
 	public String getCodeText() {
-		// this shouldn't ever matter, since dialogue lines can't be referenced
-		// in scripts. Liskov would be proud.
-		return "";
+		return NWNDialogueLine.constructResRef(this.conversation,
+				this.dialogueSyncStruct, this.indexes);
 	}
 
 	@Override
