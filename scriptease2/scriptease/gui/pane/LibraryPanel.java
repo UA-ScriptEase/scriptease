@@ -50,24 +50,44 @@ import scriptease.translator.TranslatorManager;
  * @author mfchurch
  * @author kschenk
  */
-public class LibraryPanel extends JPanel implements LibraryManagerObserver,
-		PatternModelObserver {
-
-	private static LibraryPanel instance = new LibraryPanel();
-
+public class LibraryPanel extends JPanel {
+	private final LibraryManagerObserver libraryManagerObserver;
+	private final PatternModelObserver modelObserver;
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
-
-	public static LibraryPanel getInstance() {
-		return instance;
-	}
 
 	/**
 	 * Creates a new LibraryPane with default filters, and configures its
 	 * display.
 	 * 
 	 */
-	private LibraryPanel() {
+	public LibraryPanel() {
 		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
+		this.libraryManagerObserver = new LibraryManagerObserver() {
+			/**
+			 * Keep the display of the library up to date with the changes to
+			 * Libraries. This listener is important for the Story Component
+			 * Builder, so that changes made there will apply to the library
+			 * view as well.
+			 */
+			@Override
+			public void modelChanged(LibraryManagerEvent event) {
+				if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED)
+					updateLists();
+			}
+		};
+
+		this.modelObserver = new PatternModelObserver() {
+			/**
+			 * This listener checks for when the model is changed. This usually
+			 * happens when you load a model, or when you switch them by
+			 * switching tabs.
+			 */
+			@Override
+			public void modelChanged(PatternModelEvent event) {
+				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED)
+					updateLists();
+			}
+		};
 
 		final JTabbedPane listTabs;
 
@@ -166,8 +186,10 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 		// Configure the displaying of the pane
 		this.updateLists();
 
-		LibraryManager.getInstance().addLibraryManagerObserver(this);
-		PatternModelManager.getInstance().addPatternModelObserver(this);
+		LibraryManager.getInstance().addLibraryManagerObserver(
+				this.libraryManagerObserver);
+		PatternModelManager.getInstance().addPatternModelObserver(
+				this.modelObserver);
 	}
 
 	/**
@@ -214,28 +236,6 @@ public class LibraryPanel extends JPanel implements LibraryManagerObserver,
 					list.addStoryComponents(libraryModel
 							.getMainStoryComponents());
 				}
-
 		}
-	}
-
-	/**
-	 * This listener checks for when the model is changed. This usually happens
-	 * when you load a model, or when you switch them by switching tabs.
-	 */
-	@Override
-	public void modelChanged(PatternModelEvent event) {
-		if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED)
-			updateLists();
-	}
-
-	/**
-	 * Keep the display of the library up to date with the changes to Libraries.
-	 * This listener is important for the Story Component Builder, so that
-	 * changes made there will apply to the library view as well.
-	 */
-	@Override
-	public void modelChanged(LibraryManagerEvent event) {
-		if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED)
-			updateLists();
 	}
 }

@@ -76,8 +76,8 @@ public class CloseableModelTab extends JPanel {
 	 *            The icon to display in the tab. Passing <code>null</code> will
 	 *            show no icon.
 	 */
-	public CloseableModelTab(final JTabbedPane parent, final JComponent component,
-			final PatternModel model, Icon icon) {
+	public CloseableModelTab(final JTabbedPane parent,
+			JComponent component, PatternModel model, Icon icon) {
 		// unset the annoying gaps that come with default FlowLayout
 		super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
@@ -182,7 +182,7 @@ public class CloseableModelTab extends JPanel {
 	 * button on mouse enter/exit.
 	 */
 	private static final MouseListener tabButtonMouseListener = new MouseAdapter() {
-		
+
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			Component component = e.getComponent();
@@ -191,7 +191,7 @@ public class CloseableModelTab extends JPanel {
 				button.setBorderPainted(true);
 			}
 		}
-		
+
 		@Override
 		public void mouseExited(MouseEvent e) {
 			Component component = e.getComponent();

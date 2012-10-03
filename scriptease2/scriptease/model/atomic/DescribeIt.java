@@ -9,11 +9,11 @@ import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.GraphNodeReferenceResolver;
-import scriptease.controller.observer.graph.GraphNodeEvent;
-import scriptease.controller.observer.graph.GraphNodeObserver;
-import scriptease.controller.observer.graph.GraphNodeEvent.GraphNodeEventType;
 import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.gui.SEGraph.nodes.TextNode;
+import scriptease.gui.SEGraph.observers.GraphNodeEvent;
+import scriptease.gui.SEGraph.observers.GraphNodeObserver;
+import scriptease.gui.SEGraph.observers.GraphNodeEvent.GraphNodeEventType;
 import scriptease.model.complex.ScriptIt;
 import scriptease.util.ListOp;
 import sun.awt.util.IdentityArrayList;

@@ -2,18 +2,14 @@ package scriptease.gui.storycomponentpanel;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 
 import scriptease.gui.filters.Filter;
 import scriptease.gui.filters.Filterable;
 import scriptease.gui.filters.StoryComponentFilter;
-import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.StoryPoint;
@@ -73,29 +69,6 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 				.buildStoryComponentPanel(root);
 		this.rootPanel.updateComplexSettings();
 
-		//XXX
-/*		this.rootPanel.addMouseMotionListener(new MouseMotionListener() {
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				System.out.println("Moved");
-				if (SwingUtilities.isLeftMouseButton(e)) {
-					System.out.println("Drag");
-					JScrollPane tree = StoryComponentPanelTree.this;
-					if (!tree.getBounds().contains(e.getPoint())) {
-						tree.getVerticalScrollBar()
-								.setValue(
-										tree.getVerticalScrollBar().getValue()
-												+ ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
-
-					}
-				}
-			}
-
-			@Override
-			public void mouseDragged(MouseEvent e) {
-			}
-		});
-*/
 		this.selectionManager.clearSelection();
 		this.selectionManager.addComplexPanel(this.rootPanel, false);
 

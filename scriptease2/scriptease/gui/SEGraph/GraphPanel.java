@@ -35,12 +35,12 @@ import javax.swing.border.Border;
 import javax.swing.plaf.PanelUI;
 
 import scriptease.controller.GraphNodeVisitor;
-import scriptease.controller.observer.graph.GraphNodeEvent;
-import scriptease.controller.observer.graph.GraphNodeEvent.GraphNodeEventType;
-import scriptease.controller.observer.graph.GraphNodeObserver;
 import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.gui.SEGraph.nodes.KnowItNode;
 import scriptease.gui.SEGraph.nodes.TextNode;
+import scriptease.gui.SEGraph.observers.GraphNodeEvent;
+import scriptease.gui.SEGraph.observers.GraphNodeObserver;
+import scriptease.gui.SEGraph.observers.GraphNodeEvent.GraphNodeEventType;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.cell.ScriptWidgetFactory;
