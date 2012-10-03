@@ -5,6 +5,7 @@ import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.Format
 import scriptease.translator.codegenerator.code.contexts.AskItContext;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.KnowItContext;
+import scriptease.translator.codegenerator.code.contexts.NoteContext;
 import scriptease.translator.codegenerator.code.contexts.ScriptItContext;
 
 /**
@@ -31,7 +32,7 @@ public class FormatReferenceFragment extends AbstractFragment {
 		super(text);
 		this.type = type;
 	}
-	
+
 	public FormatReferenceType getType() {
 		return this.type;
 	}
@@ -47,11 +48,13 @@ public class FormatReferenceFragment extends AbstractFragment {
 		if ((this.type == FormatReferenceType.NONE)
 				|| (this.type == FormatReferenceType.ASKIT && context instanceof AskItContext)
 				|| (this.type == FormatReferenceType.SCRIPTIT && context instanceof ScriptItContext)
-				|| (this.type == FormatReferenceType.KNOWIT && context instanceof KnowItContext))
+				|| (this.type == FormatReferenceType.KNOWIT && context instanceof KnowItContext)
+				|| (this.type == FormatReferenceType.NOTE && context instanceof NoteContext)) {
+
 			return AbstractFragment.resolveFormat(context.getTranslator()
 					.getLanguageDictionary().getFormat(format.toUpperCase()),
 					context);
-		else
+		} else
 			return "";
 	}
 

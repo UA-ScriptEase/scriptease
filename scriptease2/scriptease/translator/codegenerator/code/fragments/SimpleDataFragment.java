@@ -122,9 +122,13 @@ public class SimpleDataFragment extends AbstractFragment {
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.FANIN
 							.name()))
 				resolveString = context.getFanIn();
+			else if (dataLabel
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.NOTE
+							.name()))
+				resolveString = context.getDisplayText();
 			else
 				throw (new CodeGenerationException(
-						"Simple Fragment was unable to be resolved for data: "
+						"Simple Data Fragment was unable to be resolved for data: "
 								+ dataLabel + ">"));
 
 			return resolveString;
