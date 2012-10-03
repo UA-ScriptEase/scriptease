@@ -37,7 +37,7 @@ public interface CodeGenerationKeywordConstants {
 		SUBJECT
 	}
 
-	// Used in SimpleFragment
+	// Used in SimpleDataFragment
 	public static enum DataTypes {
 		CODE,
 		CONDITION,
@@ -45,6 +45,7 @@ public interface CodeGenerationKeywordConstants {
 		FORMATTEDVALUE,
 		INCLUDE,
 		NAME,
+		NOTE,
 		SUBJECT,
 		TEMPLATEID,
 		TYPE,
@@ -63,6 +64,7 @@ public interface CodeGenerationKeywordConstants {
 		NONE,
 		ASKIT,
 		KNOWIT,
+		NOTE,
 		SCRIPTIT
 	}
 
