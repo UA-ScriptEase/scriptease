@@ -40,7 +40,6 @@ import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.StatusObserver;
 import scriptease.controller.observer.TranslatorObserver;
-import scriptease.controller.observer.graph.SEGraphAdapter;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
@@ -50,6 +49,7 @@ import scriptease.gui.SEGraph.GraphPanel;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.StoryPointGraphModel;
 import scriptease.gui.SEGraph.nodes.GraphNode;
+import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
@@ -59,7 +59,7 @@ import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.pane.CloseableModelTab;
-import scriptease.gui.pane.GameConstantTree;
+import scriptease.gui.pane.GameConstantPanel;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
@@ -84,6 +84,9 @@ import scriptease.util.BiHashMap;
 public class PanelFactory {
 	private static PanelFactory instance = new PanelFactory();
 
+	// We keep one common library panel so we do not have to load it each time.
+	private final LibraryPanel libraryPanel;
+
 	// The tabbed pane for all of the models
 	private final JTabbedPane modelTabs;
 
@@ -100,6 +103,7 @@ public class PanelFactory {
 	}
 
 	private PanelFactory() {
+		this.libraryPanel = new LibraryPanel();
 		this.modelTabs = new JTabbedPane();
 		this.modelsToComponents = new BiHashMap<PatternModel, List<JComponent>>();
 
@@ -294,7 +298,7 @@ public class PanelFactory {
 
 		components = this.modelsToComponents.getValue(model);
 		scbPanel = LibraryEditorPanelFactory.getInstance()
-				.buildLibraryEditorPanel(LibraryPanel.getInstance());
+				.buildLibraryEditorPanel(this.libraryPanel);
 		scbScrollPane = new JScrollPane(scbPanel);
 
 		if (components == null) {
@@ -410,7 +414,7 @@ public class PanelFactory {
 
 		libraryPanel
 				.setLayout(new BoxLayout(libraryPanel, BoxLayout.PAGE_AXIS));
-		libraryPanel.add(LibraryPanel.getInstance());
+		libraryPanel.add(this.libraryPanel);
 
 		libraryPanel.add(notePane);
 
@@ -457,7 +461,7 @@ public class PanelFactory {
 
 		final ObservedJPanel observedPanel;
 
-		final GameConstantTree tree;
+		final GameConstantPanel tree;
 		final JTextField searchField;
 
 		final TypeAction typeFilter;
@@ -469,7 +473,7 @@ public class PanelFactory {
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
 
-		tree = new GameConstantTree(PatternModelManager.getInstance()
+		tree = new GameConstantPanel(PatternModelManager.getInstance()
 				.getActiveModel());
 		searchField = new JTextField(20);
 
@@ -617,6 +621,8 @@ public class PanelFactory {
 						scbScrollPane);
 				modelTabs.setTabComponentAt(
 						modelTabs.indexOfComponent(scbScrollPane), newTab);
+				
+				modelTabs.setFocusable(false);
 			}
 
 			@Override
@@ -645,6 +651,8 @@ public class PanelFactory {
 				modelTabs.setTabComponentAt(
 						modelTabs.indexOfComponent(newPanel), newTab);
 				modelTabs.setSelectedComponent(newPanel);
+				
+				modelTabs.setFocusable(false);
 
 				/*
 				 * Setting the divider needs to occur here because the

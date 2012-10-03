@@ -30,9 +30,9 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.plaf.ComponentUI;
 
-import scriptease.controller.observer.graph.SEGraphObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
+import scriptease.gui.SEGraph.observers.SEGraphObserver;
 import scriptease.gui.SEGraph.renderers.SEGraphNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;

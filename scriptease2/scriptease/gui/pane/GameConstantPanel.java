@@ -32,24 +32,24 @@ import scriptease.translator.io.model.GameObject;
 import scriptease.util.StringOp;
 
 /**
- * Draws a Game Constant Tree for the passed in StoryModel.
+ * Draws a Game Constant Panel for the passed in StoryModel.
  * 
  * @author kschenk
  * 
  */
 @SuppressWarnings("serial")
-public class GameConstantTree extends JPanel {
+public class GameConstantPanel extends JPanel {
 
 	/**
-	 * Creates a new GameConstantTree with the passed in model.
+	 * Creates a new GameConstantPanel with the passed in model.
 	 * 
 	 * @param model
-	 *            Creates a new GameConstantTree with the passed in model. If
+	 *            Creates a new GameConstantPanel with the passed in model. If
 	 *            the passed in model is null or not a StoryModel, then nothing
 	 *            is drawn. Use {@link #drawTree(StoryModel)} to draw the tree
 	 *            later with a StoryModel.
 	 */
-	public GameConstantTree(PatternModel model) {
+	public GameConstantPanel(PatternModel model) {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 

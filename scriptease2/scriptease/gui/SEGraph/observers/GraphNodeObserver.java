@@ -1,4 +1,4 @@
-package scriptease.controller.observer.graph;
+package scriptease.gui.SEGraph.observers;
 
 
 /**
