@@ -766,8 +766,22 @@ public class GenericFileFormat {
 			// even # of indexes means player line.
 			final boolean isPlayerLine = indexes.size() % 2 == 0;
 
-			field = this.resolveSyncStruct(lineStruct, isPlayerLine)
-					.getFieldByLabel(fieldLabel);
+			final GffStruct resolvedSyncStruct;
+
+			// TODO We resolve the sync struct, meaning we find the
+			// dialogue struct that the sync struct belongs to. We shouldn't be
+			// doing this when we attach scripts to dialogue lines, but we were.
+			resolvedSyncStruct = this.resolveSyncStruct(lineStruct,
+					isPlayerLine);
+
+			// TODO OK! Figured it out. If it's a cause, i.e. script on Script,
+			// use ResolvedSyncStruct.
+
+			// If it's the effect, i.e. script on Active, use lineStruct.
+			if (fieldLabel.equals("Active"))
+				field = lineStruct.getFieldByLabel(fieldLabel);
+			else
+				field = resolvedSyncStruct.getFieldByLabel(fieldLabel);
 		} else {
 			field = this.getFieldByLabel(fieldLabel);
 		}
