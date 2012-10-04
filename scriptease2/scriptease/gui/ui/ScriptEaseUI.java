@@ -53,7 +53,7 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (gold) used for selected graph nodes
 	 */
-	public static final Color COLOUR_SELECTED_NODE = new Color(222, 171, 78);
+	public static final Color COLOUR_SELECTED_NODE = new Color(216, 108, 230);
 
 	/**
 	 * The colour (red) used for the delete node tool
