@@ -59,8 +59,6 @@ import scriptease.util.FileOp;
  * @author remiller
  */
 public final class FileManager {
-	private static final String SE_PATTERNS_DIR = "patterns/";
-
 	private static final String SAVE_AS = Il8nResources
 			.getString("Save_Model_As");
 
@@ -114,11 +112,8 @@ public final class FileManager {
 
 		this.observers = new ArrayList<WeakFileManagerObserverReference<FileManagerObserver>>(
 				FileManager.RECENT_FILE_MAX);
-
-		// now we load in the pattern libraries.
-		// TODO: load up the code paks.
 	}
-
+	
 	/**
 	 * @return the Singleton instance
 	 */
