@@ -189,6 +189,8 @@ public class SEGraph<E> extends JComponent {
 		if (this.model.removeNode(node)) {
 			for (SEGraphObserver observer : this.observers)
 				observer.nodeRemoved(node);
+			
+			nodesToComponents.removeKey(node);
 
 			this.validateSelectedNode();
 			this.repaint();
