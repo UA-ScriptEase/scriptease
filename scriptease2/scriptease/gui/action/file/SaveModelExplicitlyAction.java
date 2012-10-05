@@ -7,6 +7,7 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.controller.FileManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.PatternModel;
@@ -55,8 +56,10 @@ public class SaveModelExplicitlyAction extends ActiveModelSensitiveAction {
 	protected boolean isLegal() {
 		return super.isLegal()
 		// removed until we actually implement undoable commands - remiller
-		/*  	&& !UndoManager.getInstance().isSaved(
-						StoryModelPool.getInstance().getActiveModel())*/;
+		/*
+		 * && !UndoManager.getInstance().isSaved(
+		 * StoryModelPool.getInstance().getActiveModel())
+		 */;
 	}
 
 	@Override
@@ -66,6 +69,8 @@ public class SaveModelExplicitlyAction extends ActiveModelSensitiveAction {
 
 		if (activeModel == null)
 			return;
+
+		WindowFactory.getInstance().getCurrentFrame().requestFocusInWindow();
 
 		FileManager.getInstance().saveAs(activeModel);
 	}

@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -53,6 +54,18 @@ import scriptease.model.complex.StoryPoint;
 public class StoryComponentPanelFactory {
 	private static final StoryComponentPanelFactory instance = new StoryComponentPanelFactory();
 	private static final String QUESTION = "question";
+	private static final ImageIcon noteIcon;
+
+	static {
+		java.net.URL imgURL = StoryComponentPanelFactory.getInstance()
+				.getClass().getResource("/scriptease/resources/icons/noteicon.png");
+		if (imgURL != null) {
+			noteIcon = new ImageIcon(imgURL, "Note");
+		} else {
+			System.err.println("Could not find icon at " + imgURL);
+			noteIcon = new ImageIcon();
+		}
+	}
 
 	public static StoryComponentPanelFactory getInstance() {
 		return instance;
@@ -397,7 +410,10 @@ public class StoryComponentPanelFactory {
 				final JLabel noteLabel;
 				final JComponent nameEditor;
 
-				noteLabel = new JLabel("//");
+				// TODO Create static imageicon of noteicon.png that gets added
+				// to all of these so we don't load it a billion times.
+
+				noteLabel = new JLabel(StoryComponentPanelFactory.noteIcon);
 				mainPanel = new JPanel();
 
 				nameEditor = ScriptWidgetFactory.buildNameEditor(note);

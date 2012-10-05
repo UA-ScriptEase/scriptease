@@ -445,6 +445,10 @@ public class Context {
 		unimplemented("getStoryPointName");
 		return null;
 	}
+	
+	public String getDisplayText() {
+		return null;
+	}
 
 	/**
 	 * Throws a CodeGenerationException if the called method is not implemented

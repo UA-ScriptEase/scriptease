@@ -51,9 +51,14 @@ public interface ScriptEaseUI {
 	public static final Color UNSELECTED_COLOUR = Color.WHITE;
 
 	/**
-	 * The colour (gold) used for selected graph nodes
+	 * The colour (light blue) used by default for node backgrounds.
 	 */
-	public static final Color COLOUR_SELECTED_NODE = new Color(222, 171, 78);
+	public static final Color COLOUR_NODE_DEFAULT = new Color(232, 240, 255);
+	
+	/**
+	 * The colour (dark blue) used for selected graph nodes
+	 */ 
+	public static final Color COLOUR_SELECTED_NODE = new Color(89, 147, 255);
 
 	/**
 	 * The colour (red) used for the delete node tool

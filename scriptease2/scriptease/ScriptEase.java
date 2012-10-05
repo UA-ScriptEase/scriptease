@@ -273,7 +273,7 @@ public final class ScriptEase implements Runnable {
 	public void run() {
 		this.preLoadUserLibraries();
 
-		WindowFactory.getInstance().showMainFrame();
+		WindowFactory.getInstance().buildAndShowMainFrame();
 	}
 
 	/**
