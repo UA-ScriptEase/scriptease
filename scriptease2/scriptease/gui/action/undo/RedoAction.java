@@ -11,6 +11,7 @@ import javax.swing.KeyStroke;
 
 import scriptease.controller.observer.UndoManagerObserver;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 
 @SuppressWarnings("serial")
@@ -51,6 +52,8 @@ public final class RedoAction extends ActiveModelSensitiveAction implements
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		WindowFactory.getInstance().getCurrentFrame().requestFocusInWindow();
+		
 		UndoManager.getInstance().redo();
 	}
 
