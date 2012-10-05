@@ -7,6 +7,7 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.controller.FileManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.PatternModel;
@@ -44,16 +45,13 @@ public final class SaveModelAction extends ActiveModelSensitiveAction {
 		super(SaveModelAction.SAVE);
 
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
-		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-				KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+		this.putValue(Action.ACCELERATOR_KEY,
+				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 	}
 
 	@Override
 	protected boolean isLegal() {
-		return super.isLegal()
-		// removed until we actually implement undoable commands - remiller
-		/*  	&& !UndoManager.getInstance().isSaved(
-						StoryModelPool.getInstance().getActiveModel())*/;
+		return super.isLegal();
 	}
 
 	@Override
@@ -64,6 +62,8 @@ public final class SaveModelAction extends ActiveModelSensitiveAction {
 		if (activeModel == null)
 			return;
 
+		WindowFactory.getInstance().getCurrentFrame().requestFocusInWindow();
+		
 		FileManager.getInstance().save(activeModel);
 	}
 }

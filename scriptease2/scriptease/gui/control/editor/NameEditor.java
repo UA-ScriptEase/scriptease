@@ -4,18 +4,21 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.WindowFactory;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 
@@ -44,34 +47,39 @@ public class NameEditor extends JTextField {
 			}
 		};
 
+		final Border defaultBorder;
+
+		defaultBorder = this.getBorder();
+
 		component.addStoryComponentObserver(this.observer);
 
 		this.setBackground(Color.white);
-
 		this.setHorizontalAlignment(JTextField.CENTER);
+
+		this.setupTextField();
+		// this.resizeForText();
+
 		this.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				NameEditor.this.updateText();
+				NameEditor.this.setBorder(defaultBorder);
 			}
 
 			@Override
 			public void focusGained(FocusEvent e) {
+				NameEditor.this.setBorder(BorderFactory.createLineBorder(
+						Color.RED, 1));
 			}
 		});
 
-		this.addKeyListener(new KeyAdapter() {
+		this.addActionListener(new ActionListener() {
 			@Override
-			public void keyTyped(KeyEvent e) {
-				// update the text
-				super.keyTyped(e);
-				// resize the field
-				resizeForText();
+			public void actionPerformed(ActionEvent e) {
+				WindowFactory.getInstance().getCurrentFrame()
+						.requestFocusInWindow();
 			}
 		});
-
-		this.setupTextField();
-		this.resizeForText();
 	}
 
 	protected StoryComponent getComponent() {
@@ -80,9 +88,7 @@ public class NameEditor extends JTextField {
 
 	protected void setupTextField() {
 		this.setText(this.storyComponent.getDisplayText());
-	}
 
-	private void resizeForText() {
 		final Dimension oldSize = this.getSize();
 
 		// get metrics from the graphics
@@ -131,16 +137,5 @@ public class NameEditor extends JTextField {
 				}
 			}
 		}
-	}
-
-	@Override
-	public void setText(String t) {
-		super.setText(t);
-		this.resizeForText();
-	}
-
-	@Override
-	public void setEnabled(boolean enabled) {
-		this.setEditable(enabled);
 	}
 }
