@@ -284,7 +284,7 @@ public class GUIOp {
 		// Resize the next 5 levels above us. Hardcoded to work specifically for
 		// use in StoryComponentPanels.
 		Container parent = field.getParent();
-		
+
 		while (parent != null && parent instanceof JPanel) {
 			final Dimension oldParentSize = parent.getSize();
 			// Calculate the new parent size
