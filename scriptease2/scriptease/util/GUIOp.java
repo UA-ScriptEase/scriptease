@@ -2,6 +2,9 @@ package scriptease.util;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -9,6 +12,8 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
 /**
@@ -243,5 +248,52 @@ public class GUIOp {
 		// the Graphics object of the image.
 		component.paint(image.getGraphics());
 		return image;
+	}
+
+	/**
+	 * Resizes the passed in JTextField to match the length of the text.
+	 * 
+	 * @param field
+	 */
+	public static void resizeJTextField(JTextField field) {
+		final Dimension oldSize;
+		final FontMetrics metrics;
+
+		final int height;
+		final int stringWidth;
+
+		final Dimension newSize;
+		final int xDifference;
+		final int yDifference;
+
+		oldSize = field.getSize();
+		metrics = field.getFontMetrics(field.getFont());
+
+		height = metrics.getHeight();
+		stringWidth = metrics.stringWidth(field.getText());
+
+		newSize = new Dimension(stringWidth + 26, height + 6);
+		xDifference = newSize.width - oldSize.width;
+		yDifference = newSize.height - oldSize.height;
+
+		// resize
+		field.setSize(newSize);
+		field.setPreferredSize(newSize);
+
+		// Get the difference
+		// Resize the next 5 levels above us. Hardcoded to work specifically for
+		// use in StoryComponentPanels.
+		Container parent = field.getParent();
+
+		while (parent != null && parent instanceof JPanel) {
+			final Dimension oldParentSize = parent.getSize();
+			// Calculate the new parent size
+			Dimension newParentSize = new Dimension(oldParentSize.width
+					+ xDifference, oldParentSize.height + yDifference);
+			// resize
+			parent.setSize(newParentSize);
+			parent.doLayout();
+			parent = parent.getParent();
+		}
 	}
 }

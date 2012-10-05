@@ -3,8 +3,12 @@ package scriptease.gui.cell;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,33 +28,38 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JSpinner.NumberEditor;
+import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import scriptease.ScriptEase;
+import scriptease.controller.BindingAdapter;
 import scriptease.controller.ObservedJPanel;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.control.ExpansionButton;
-import scriptease.gui.control.editor.NameEditor;
-import scriptease.gui.control.editor.ValueEditor;
 import scriptease.gui.transfer.BindingTransferHandlerExportOnly;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.tools.GameConstantFactory;
+import scriptease.util.GUIOp;
 import scriptease.util.StringOp;
 
 /**
@@ -58,6 +67,7 @@ import scriptease.util.StringOp;
  * editing script patterns.
  * 
  * @author remiller
+ * @author kschenk
  */
 public class ScriptWidgetFactory {
 	/**
@@ -550,22 +560,183 @@ public class ScriptWidgetFactory {
 	 * @param storyComponent
 	 * @return
 	 */
-	public static JComponent buildNameEditor(final StoryComponent storyComponent) {
-		NameEditor nameEditor = new NameEditor(storyComponent);
-		widgetsToStoryComponents.put(nameEditor, storyComponent);
-		return nameEditor;
+	public static JComponent buildNameEditor(final StoryComponent component) {
+		final JTextField nameEditor;
+		final ObservedJPanel panel;
+		final StoryComponentObserver observer;
+
+		final Border defaultBorder;
+
+		nameEditor = new JTextField(component.getDisplayText());
+		panel = new ObservedJPanel(nameEditor);
+		observer = new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+					nameEditor.setText(component.getDisplayText());
+
+					GUIOp.resizeJTextField(nameEditor);
+				}
+			}
+		};
+
+		defaultBorder = nameEditor.getBorder();
+
+		component.addStoryComponentObserver(observer);
+		panel.addObserver(observer);
+
+		nameEditor.setBackground(Color.white);
+		nameEditor.setHorizontalAlignment(JTextField.CENTER);
+
+		nameEditor.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+
+				final String newValue = nameEditor.getText();
+				if (PatternModelManager.getInstance().hasActiveModel()) {
+					final String oldValue = component.getDisplayText();
+					if (!oldValue.equals(newValue)) {
+						if (!UndoManager.getInstance().hasOpenUndoableAction()) {
+							UndoManager.getInstance().startUndoableAction(
+									"Change " + oldValue + " to " + newValue);
+							component.setDisplayText(newValue);
+							UndoManager.getInstance().endUndoableAction();
+						}
+					}
+				}
+
+				nameEditor.setBorder(defaultBorder);
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				nameEditor.setBorder(BorderFactory.createLineBorder(Color.RED,
+						1));
+			}
+		});
+
+		nameEditor.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowFactory.getInstance().getCurrentFrame()
+						.requestFocusInWindow();
+			}
+		});
+		
+		nameEditor.addKeyListener(new KeyAdapter(){
+			@Override
+			public void keyTyped(KeyEvent e) {
+				GUIOp.resizeJTextField(nameEditor);
+			}
+		});
+
+		GUIOp.resizeJTextField(nameEditor);
+
+		widgetsToStoryComponents.put(panel, component);
+		return panel;
 	}
 
 	/**
-	 * Builds a value editor used to set the script value of a KnowIt
+	 * Builds a value editor used to set the script value of a KnowIt.
 	 * 
 	 * @param knowIt
 	 * @return
 	 */
 	public static JComponent buildValueEditor(final KnowIt knowIt) {
-		ValueEditor valueEditor = new ValueEditor(knowIt);
-		widgetsToStoryComponents.put(valueEditor, knowIt);
-		return valueEditor;
+		final KnowItBinding binding;
+
+		final JTextField valueEditor;
+		final ObservedJPanel panel;
+		final StoryComponentObserver observer;
+
+		final Border defaultBorder;
+
+		binding = knowIt.getBinding();
+		if (!(binding instanceof KnowItBindingConstant))
+			System.err
+					.println("Warning: ValueEditor currently only supports KnowItBindingConstant");
+
+		valueEditor = new JTextField(binding.getScriptValue());
+		panel = new ObservedJPanel(valueEditor);
+		observer = new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+					valueEditor.setText(binding.getScriptValue());
+
+					GUIOp.resizeJTextField(valueEditor);
+				}
+			}
+		};
+
+		knowIt.addStoryComponentObserver(observer);
+		panel.addObserver(observer);
+
+		defaultBorder = valueEditor.getBorder();
+
+		valueEditor.setBackground(Color.white);
+		valueEditor.setHorizontalAlignment(JTextField.CENTER);
+
+		valueEditor.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+
+				final String newValue = valueEditor.getText();
+				if (PatternModelManager.getInstance().hasActiveModel()) {
+					binding.process(new BindingAdapter() {
+						@Override
+						public void processConstant(
+								KnowItBindingConstant constant) {
+							final String oldValue = constant.getScriptValue();
+							if (!oldValue.equals(newValue)) {
+								if (!UndoManager.getInstance()
+										.hasOpenUndoableAction()) {
+									UndoManager
+											.getInstance()
+											.startUndoableAction(
+													"Change " + oldValue
+															+ " to " + newValue);
+									GameConstant newConstant = GameConstantFactory
+											.getInstance().getConstant(
+													constant.getTypes(),
+													newValue);
+									knowIt.setBinding(newConstant);
+									UndoManager.getInstance()
+											.endUndoableAction();
+								}
+							}
+						}
+					});
+				}
+				valueEditor.setBorder(defaultBorder);
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				valueEditor.setBorder(BorderFactory.createLineBorder(Color.RED,
+						1));
+			}
+		});
+
+		valueEditor.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowFactory.getInstance().getCurrentFrame()
+						.requestFocusInWindow();
+			}
+		});
+		
+		valueEditor.addKeyListener(new KeyAdapter(){
+			@Override
+			public void keyTyped(KeyEvent e) {
+				GUIOp.resizeJTextField(valueEditor);
+			}
+		});
+
+		GUIOp.resizeJTextField(valueEditor);
+
+		widgetsToStoryComponents.put(panel, knowIt);
+		return panel;
 	}
 
 	/**

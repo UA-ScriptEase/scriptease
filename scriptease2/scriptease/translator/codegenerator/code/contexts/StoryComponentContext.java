@@ -47,6 +47,14 @@ public class StoryComponentContext extends Context {
 	}
 
 	/**
+	 * Gets the StoryComponent's display text
+	 */
+	@Override
+	public String getDisplayText() {
+		return component.getDisplayText();
+	}
+
+	/**
 	 * Get the StoryComponent's owner returns null if no owner
 	 */
 	@Override

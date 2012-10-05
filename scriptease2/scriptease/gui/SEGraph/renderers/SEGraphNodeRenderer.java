@@ -9,10 +9,10 @@ import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
+import scriptease.gui.PanelFactory;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
@@ -43,13 +43,16 @@ public class SEGraphNodeRenderer<E> {
 		this.graph = graph;
 	}
 
+	/**
+	 * Creates a component for the passed in node.
+	 * 
+	 * @param node
+	 * @return
+	 */
 	public final JComponent createComponentForNode(E node) {
 		final JComponent component;
-		// check if the node already has a component
-		// otherwise build it and store it
-		component = new JPanel();
 
-		component.setOpaque(true);
+		component = PanelFactory.getInstance().buildGradientPanel(1.4);
 
 		this.configureAppearance(component, node);
 		this.configureInternalComponents(component, node);
@@ -101,7 +104,7 @@ public class SEGraphNodeRenderer<E> {
 
 				SEGraphNodeRenderer.this.pressedComponent = null;
 
-				resetAppearance();
+				resetAppearances();
 				configureAppearance(component, node);
 			}
 
@@ -136,13 +139,12 @@ public class SEGraphNodeRenderer<E> {
 	/**
 	 * Resets the appearance of all components to the default white colour.
 	 */
-	private void resetAppearance() {
+	public void resetAppearances() {
 		final Color backgroundColour;
 		final Color borderColour;
 
-		backgroundColour = Color.white;
+		backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
 		borderColour = Color.GRAY;
-
 
 		for (Entry<E, JComponent> entry : this.graph.getNodesToComponentsMap()
 				.getEntrySet()) {
@@ -169,20 +171,28 @@ public class SEGraphNodeRenderer<E> {
 	 */
 	private void setComponentAppearance(JComponent component, E node,
 			Color borderColour, Color backgroundColour) {
+		final int INNER_BORDER_THICKNESS = 3;
+
+		final Border EMPTY_BORDER = BorderFactory.createEmptyBorder(
+				INNER_BORDER_THICKNESS, INNER_BORDER_THICKNESS,
+				INNER_BORDER_THICKNESS, INNER_BORDER_THICKNESS);
+
+		final Border innerBorder;
 		final Border lineBorder;
 		final Border lineSpaceBorder;
 
 		lineBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED,
 				borderColour, borderColour.darker());
+		innerBorder = EMPTY_BORDER;
 
-		if (node != this.graph.getStartNode())
+		if (node != this.graph.getStartNode()) {
 			lineSpaceBorder = BorderFactory.createCompoundBorder(lineBorder,
-					BorderFactory.createEmptyBorder(3, 3, 3, 3));
-		else {
+					innerBorder);
+		} else {
 			final Border secondLineBorder;
 
 			secondLineBorder = BorderFactory.createCompoundBorder(lineBorder,
-					BorderFactory.createEmptyBorder(3, 3, 3, 3));
+					innerBorder);
 			lineSpaceBorder = BorderFactory.createCompoundBorder(
 					secondLineBorder,
 					BorderFactory.createLineBorder(borderColour));
@@ -204,8 +214,11 @@ public class SEGraphNodeRenderer<E> {
 	private void configureAppearance(final JComponent component, final E node) {
 		if (component == null)
 			return;
+		// The default colour of the tool.
 		final Color toolColour;
+		// The colour when we hover with the tool
 		final Color toolHighlight;
+		// The colour when we press with the tool
 		final Color toolPress;
 
 		final Color borderColour;
@@ -218,19 +231,23 @@ public class SEGraphNodeRenderer<E> {
 		 * want other colours. - remiller
 		 */
 		if (this.hoveredComponent == component) {
-			if (GraphToolBarModeAction.getMode() == ToolBarMode.INSERT) {
+			final ToolBarMode mode;
+
+			mode = GraphToolBarModeAction.getMode();
+
+			if (mode == ToolBarMode.INSERT || mode == ToolBarMode.CONNECT) {
 				toolColour = ScriptEaseUI.COLOUR_INSERT_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.1);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.1);
-			} else if (GraphToolBarModeAction.getMode() == ToolBarMode.DELETE) {
+			} else if (mode == ToolBarMode.DELETE
+					|| mode == ToolBarMode.DISCONNECT) {
 				toolColour = ScriptEaseUI.COLOUR_DELETE_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.2);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);
 			} else {
 				toolColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
-				toolHighlight = GUIOp.scaleColour(
-						ScriptEaseUI.COLOUR_SELECTED_NODE, 1.1);
-				toolPress = GUIOp.scaleColour(toolHighlight, 1.1);
+				toolHighlight = GUIOp.scaleWhite(toolColour, 1.1);
+				toolPress = GUIOp.scaleWhite(toolHighlight, 1.05);
 			}
 
 			if (this.pressedComponent == component) {
@@ -240,23 +257,21 @@ public class SEGraphNodeRenderer<E> {
 				// If hovered over
 				backgroundColour = toolHighlight;
 			}
+
 			borderColour = GUIOp.scaleColour(toolColour, 0.7);
-
-		}
-
-		/*
-		 * Use a bright tool colour if its pressed, use the tool colour if it's
-		 * hovered over, use gold if its selected and not hovered, white/gray
-		 * otherwise.
-		 */
-		else if (this.graph.getSelectedNode() == node) {
+		} else if (this.graph.getSelectedNode() == node) {
+			/*
+			 * Use a bright tool colour if its pressed, use the tool colour if
+			 * it's hovered over, use gold if its selected and not hovered,
+			 * white/gray otherwise.
+			 */
 			borderColour = GUIOp.scaleColour(ScriptEaseUI.COLOUR_SELECTED_NODE,
-					0.6);
+					0.7);
 			backgroundColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
 			// If nothing and selected
 		} else {
 			borderColour = Color.gray;
-			backgroundColour = Color.white;
+			backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
 			// If nothing
 		}
 

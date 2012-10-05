@@ -5,6 +5,7 @@ import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
@@ -109,32 +110,32 @@ public class ContextFactory {
 		source.process(new BindingVisitor() {
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				ContextFactory.this.activeContext = new KnowItBindingFunctionContext(pastContext,
-						function);
+				ContextFactory.this.activeContext = new KnowItBindingFunctionContext(
+						pastContext, function);
 			}
 
 			@Override
 			public void processConstant(KnowItBindingConstant constant) {
-				ContextFactory.this.activeContext = new KnowItBindingConstantContext(pastContext,
-						constant);
+				ContextFactory.this.activeContext = new KnowItBindingConstantContext(
+						pastContext, constant);
 			}
 
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
-				ContextFactory.this.activeContext = new KnowItBindingNullContext(pastContext,
-						nullBinding);
+				ContextFactory.this.activeContext = new KnowItBindingNullContext(
+						pastContext, nullBinding);
 			}
 
 			@Override
 			public void processReference(KnowItBindingReference reference) {
-				ContextFactory.this.activeContext = new KnowItBindingReferenceContext(pastContext,
-						reference);
+				ContextFactory.this.activeContext = new KnowItBindingReferenceContext(
+						pastContext, reference);
 			}
 
 			@Override
 			public void processRunTime(KnowItBindingRunTime runTime) {
-				ContextFactory.this.activeContext = new KnowItBindingRunTimeContext(pastContext,
-						runTime);
+				ContextFactory.this.activeContext = new KnowItBindingRunTimeContext(
+						pastContext, runTime);
 			}
 
 			@Override
@@ -149,8 +150,8 @@ public class ContextFactory {
 
 			@Override
 			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
-				ContextFactory.this.activeContext = new KnowItBindingStoryPointContext(pastContext,
-						storyPoint);
+				ContextFactory.this.activeContext = new KnowItBindingStoryPointContext(
+						pastContext, storyPoint);
 
 			}
 		});
@@ -169,20 +170,21 @@ public class ContextFactory {
 			final StoryComponent source) {
 		source.process(new StoryAdapter() {
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
-				ContextFactory.this.activeContext = new ComplexStoryComponentContext(pastContext,
-						complex);
+				ContextFactory.this.activeContext = new ComplexStoryComponentContext(
+						pastContext, complex);
 			}
 
 			/* COMPLEX TYPES */
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
-				ContextFactory.this.activeContext = new ScriptItContext(pastContext, scriptIt);
+				ContextFactory.this.activeContext = new ScriptItContext(
+						pastContext, scriptIt);
 			}
 
 			@Override
 			public void processStoryItemSequence(StoryItemSequence sequence) {
-				ContextFactory.this.activeContext = new StoryItemSequenceContext(pastContext,
-						sequence);
+				ContextFactory.this.activeContext = new StoryItemSequenceContext(
+						pastContext, sequence);
 			}
 
 			@Override
@@ -194,12 +196,20 @@ public class ContextFactory {
 			/* ATOMIC TYPES */
 			@Override
 			public void processAskIt(AskIt questionIt) {
-				ContextFactory.this.activeContext = new AskItContext(pastContext, questionIt);
+				ContextFactory.this.activeContext = new AskItContext(
+						pastContext, questionIt);
 			}
 
 			@Override
 			public void processKnowIt(KnowIt knowIt) {
-				ContextFactory.this.activeContext = new KnowItContext(pastContext, knowIt);
+				ContextFactory.this.activeContext = new KnowItContext(
+						pastContext, knowIt);
+			}
+
+			@Override
+			public void processNote(Note note) {
+				ContextFactory.this.activeContext = new NoteContext(
+						pastContext, note);
 			}
 		});
 
@@ -215,8 +225,7 @@ public class ContextFactory {
 	 */
 	private Context createContext(final Context pastContext,
 			final CodeBlock source) {
-		this.activeContext = new CodeBlockContext(pastContext,
-				source);
+		this.activeContext = new CodeBlockContext(pastContext, source);
 
 		return this.activeContext;
 	}
@@ -230,8 +239,7 @@ public class ContextFactory {
 	 */
 	private Context createContext(final Context pastContext,
 			final StoryPoint source) {
-		this.activeContext = new StoryPointContext(pastContext,
-				source);
+		this.activeContext = new StoryPointContext(pastContext, source);
 		return this.activeContext;
 	}
 }

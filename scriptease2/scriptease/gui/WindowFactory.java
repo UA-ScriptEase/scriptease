@@ -88,7 +88,7 @@ public final class WindowFactory {
 	 * thus just created on the root pane. However, if we ever have multiple
 	 * windows, this will be useful.
 	 */
-	private final JFrame currentFrame = null;
+	private JFrame currentFrame = null;
 
 	/**
 	 * The sole instance of this class as per the singleton pattern.
@@ -112,7 +112,7 @@ public final class WindowFactory {
 	/**
 	 * Shows the main ScriptEase frame.
 	 */
-	public void showMainFrame() {
+	public void buildAndShowMainFrame() {
 		final JFrame frame;
 
 		frame = this.buildScriptEaseFrame(ScriptEase.TITLE);
@@ -121,6 +121,8 @@ public final class WindowFactory {
 
 		if (!frame.isVisible())
 			frame.setVisible(true);
+		
+		this.currentFrame = frame;
 	}
 
 	/**
@@ -634,9 +636,16 @@ public final class WindowFactory {
 	}
 
 	/**
-	 * Creates a new SEFrame.
+	 * Returns the current focused frame.
 	 * 
-	 * TODO Add everything in SEFrame to this method.
+	 * @return
+	 */
+	public JFrame getCurrentFrame() {
+		return this.currentFrame;
+	}
+
+	/**
+	 * Creates a new SEFrame.
 	 * 
 	 * @return
 	 */
@@ -674,14 +683,14 @@ public final class WindowFactory {
 		middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
 		statusBar = PanelFactory.getInstance().buildStatusPanel();
-		
+
 		contentLayout = new GroupLayout(content);
 		// Get the preferred layout.
 		preferredLayout = ScriptEase.getInstance().getPreference(
 				ScriptEase.PREFERRED_LAYOUT_KEY);
 
-		modelObserver = LifetimeObserverFactory.getInstance().buildFrameModelObserver(
-				frame);
+		modelObserver = LifetimeObserverFactory.getInstance()
+				.buildFrameModelObserver(frame);
 
 		frame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
