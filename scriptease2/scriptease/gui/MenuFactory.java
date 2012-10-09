@@ -335,7 +335,7 @@ public class MenuFactory {
 		final JMenu menu = new JMenu(MenuFactory.HELP);
 		menu.setMnemonic(KeyEvent.VK_H);
 
-		final JMenuItem helpMenuItem = new JMenuItem("About_ScriptEase");
+		final JMenuItem helpMenuItem = new JMenuItem(Il8nResources.getString("About_ScriptEase"));
 
 		helpMenuItem.addActionListener(new ActionListener() {
 			@Override
