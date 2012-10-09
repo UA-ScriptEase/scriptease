@@ -30,6 +30,7 @@ import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.StoryItemSequence;
 
 /**
  * StoryComponentPanelTransferHandler is a more specific TransferHandler that is

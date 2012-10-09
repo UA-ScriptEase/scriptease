@@ -239,7 +239,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 
 	/**
 	 * Get the main CodeBlock for the ScriptIt. Defaults to the first CodeBlock.
-	 * TODO: is this what we want?
 	 * 
 	 * @return
 	 */
