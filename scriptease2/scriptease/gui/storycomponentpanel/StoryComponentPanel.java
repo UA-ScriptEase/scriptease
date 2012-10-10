@@ -414,6 +414,7 @@ public class StoryComponentPanel extends JPanel implements
 
 			@Override
 			public void mousePressed(MouseEvent e) {
+				StoryComponentPanel.this.requestFocusInWindow();
 				e.consume();
 			}
 

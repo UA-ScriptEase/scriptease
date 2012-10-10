@@ -369,9 +369,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			TransferSupport support) {
 		final StoryComponent parent = panel.getStoryComponent();
 		final Point mouseLocation = support.getDropLocation().getDropPoint();
-		int index = -1;
 
-		// if the mouse is within the panel's boundries
+		// if the mouse is within the panel's boundaries
 		if (mouseLocation != null && parent instanceof ComplexStoryComponent) {
 			double yMouseLocation = mouseLocation.getY();
 			if (((ComplexStoryComponent) parent).getChildCount() > 0) {
@@ -379,13 +378,12 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 						yMouseLocation, panel);
 				if (closest != null) {
 					final StoryComponent child = closest.getStoryComponent();
-					index = ((ComplexStoryComponent) parent)
-							.getChildIndex(child);
+					return ((ComplexStoryComponent) parent)
+							.getChildIndex(child) + 1;
 				}
-			} else
-				index = 0;
+			}
 		}
-		return index;
+		return 0;
 	}
 
 	/**
@@ -399,22 +397,19 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 */
 	private StoryComponentPanel findClosestChildPanel(double yLocation,
 			StoryComponentPanel parentPanel) {
-		// Don't look further than MAX_Y pixels for the closest panel
-		final int MAX_Y = 1000;
 		// tracking variables used to maintain which panel is closest
-		double closest = MAX_Y;
 		StoryComponentPanel closestPanel = null;
 
 		final Collection<StoryComponentPanel> children = parentPanel
 				.getChildrenPanels();
 		// for each child, check if it is closer than the current closest
+
 		for (StoryComponentPanel child : children) {
 			double yChildLocation = child.getLocation().getY();
-			double yDifference = Math.abs(yChildLocation - yLocation);
-			if (yDifference < closest) {
-				closest = yDifference;
+			if (yChildLocation < yLocation) {
 				closestPanel = child;
-			}
+			} else
+				break;
 		}
 		return closestPanel;
 	}
