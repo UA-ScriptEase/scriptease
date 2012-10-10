@@ -128,8 +128,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		return new StoryComponentPanelTransferable(data);
 	}
 
-	@Override
-	public boolean canImport(TransferSupport support) {
+	/**
+	 * Scrolls the story component tree if we are hovering over one.
+	 */
+	private void scrollForMousePosition() {
 		/*
 		 * Scrolls the StoryComponentTree if we are hovering over one.
 		 */
@@ -180,9 +182,15 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				}
 			}
 		}
+	}
 
-		// Handles the case where the user drags a Binding (delete)
+	@Override
+	public boolean canImport(TransferSupport support) {
+
+		this.scrollForMousePosition();
+
 		if (isBinding(support)) {
+			// Handles the case where the user drags a Binding (delete)
 			return true;
 		} else {
 			if (support.getComponent() instanceof StoryComponentPanel) {
@@ -203,6 +211,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					if (potentialChildren != null
 							&& this.canAcceptChildren(acceptingStoryComponent,
 									potentialChildren)) {
+
 						return true;
 					}
 				}
@@ -338,9 +347,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		boolean acceptable = true;
 
 		for (StoryComponent child : potentialChildren) {
-			acceptable &= (potentialParent instanceof ComplexStoryComponent)
+			acceptable &= potentialParent instanceof ComplexStoryComponent
 					&& ((ComplexStoryComponent) potentialParent)
-							.canAcceptChild(child);
+							.canAcceptChild(child)
+					&& !(child instanceof StoryItemSequence);
 		}
 
 		return acceptable;
