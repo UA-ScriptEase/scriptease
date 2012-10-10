@@ -347,7 +347,7 @@ public class StoryComponentPanel extends JPanel implements
 			@Override
 			public void processStoryItemSequence(StoryItemSequence sequence) {
 				panel.setSelectable(true);
-				panel.setRemovable(true);
+				panel.setRemovable(false);
 			}
 		});
 
