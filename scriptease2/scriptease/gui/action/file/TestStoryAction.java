@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
+import scriptease.controller.FileManager;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
@@ -29,8 +30,8 @@ import scriptease.util.StringOp;
  * translator, if there is much a method available. Otherwise, it will be
  * disabled.
  * 
- * TODO Illegalize actions and disable scriptease while game is playing. 
- * TODO Illegalize action when a LibraryModel is open instead of a StoryModel
+ * TODO Illegalize actions and disable scriptease while game is playing. TODO
+ * Illegalize action when a LibraryModel is open instead of a StoryModel
  * 
  * @author lari
  * @author remiller
@@ -72,9 +73,7 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 		final Thread testThread;
 		final Runnable testTask;
 
-		// TODO Temporarily checking instanceof. Should instead be illegal when
-		// not Story Model!
-		if (!winMan.showConfirmTestStory()
+		if (!FileManager.getInstance().hasUnsavedChanges(activeModel)
 				|| !(activeModel instanceof StoryModel))
 			return;
 
