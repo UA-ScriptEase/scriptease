@@ -5,9 +5,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
@@ -18,17 +16,16 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.cell.BindingWidget;
 import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.model.PatternModelManager;
-import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.complex.ComplexStoryComponent;
 
 /**
  * The Transfer Handler for all BindingWidgets. Performs all of the
  * BindingWidget-specific drag and drop logic. Singleton class.
  * 
  * @author graves
+ * @author kschenk
  */
 @SuppressWarnings("serial")
 public class BindingWidgetTransferHandler extends TransferHandler {
@@ -92,14 +89,14 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			// Get the KnowIt for the Widget.
 			KnowIt toRemove = (KnowIt) ScriptWidgetFactory
 					.getEditedStoryComponent(component.getParent());
-			
-			if(toRemove == null)
+
+			if (toRemove == null)
 				return;
-			
+
 			if (!UndoManager.getInstance().hasOpenUndoableAction())
 				UndoManager.getInstance().startUndoableAction(
 						"Remove " + toRemove.getBinding() + " Binding");
-			
+
 			// Set the KnowItBinding to null.
 			toRemove.clearBinding();
 			UndoManager.getInstance().endUndoableAction();
@@ -136,19 +133,6 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			if (sourceBinding.compatibleWith(destinationKnowIt)) {
 				return true;
 			}
-		} else if (this.isKnowIt(support)) {
-			final KnowIt knowIt = extractKnowIt(support);
-			final Collection<String> bindingTypes = knowIt.getAcceptableTypes();
-
-			final Collection<String> destinationTypes = destinationKnowIt
-					.getTypes();
-
-			// If any of the bindings types matchs any of the destinations
-			// types, accept the binding
-			for (String type : bindingTypes) {
-				if (destinationTypes.contains(type))
-					return true;
-			}
 		}
 		return false;
 	}
@@ -175,61 +159,28 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		destinationKnowIt = (KnowIt) ScriptWidgetFactory
 				.getEditedStoryComponent(destinationComponent.getParent());
 
-		// Switch between dropping a StoryComponent and a BindingWidget
-		if (isKnowIt(support)) {
-			StoryComponent sourceStoryComponent;
-			sourceStoryComponent = this.extractKnowIt(support);
-			// clone the describing KnowIt
-			sourceStoryComponent = sourceStoryComponent.clone();
-			addDescribeItFor(destinationKnowIt, (KnowIt) sourceStoryComponent);
-			return true;
-		} else {
-			final KnowItBinding sourceBinding;
-			// Get the source data from the Transferable.
-			sourceBinding = this.extractBinding(support);
+		final KnowItBinding sourceBinding;
+		// Get the source data from the Transferable.
+		sourceBinding = this.extractBinding(support);
 
-			// Set the history to the active model
-			UndoManager.getInstance().setActiveHistory(
-					PatternModelManager.getInstance().getActiveModel());
-			if (sourceBinding != null) {
-				// Bind the KnowIt with the source binding.
-				KnowItBinding binding = destinationKnowIt.getBinding();
-				if (binding != sourceBinding) {
-					if (!UndoManager.getInstance().hasOpenUndoableAction())
-						UndoManager.getInstance().startUndoableAction(
-								"Set Binding " + sourceBinding);
-					setGroupBindings(sourceBinding, destinationKnowIt, binding);
-					destinationKnowIt.setBinding(sourceBinding);
-				}
-				if (UndoManager.getInstance().hasOpenUndoableAction())
-					UndoManager.getInstance().endUndoableAction();
-				return true;
+		// Set the history to the active model
+		UndoManager.getInstance().setActiveHistory(
+				PatternModelManager.getInstance().getActiveModel());
+		if (sourceBinding != null) {
+			// Bind the KnowIt with the source binding.
+			KnowItBinding binding = destinationKnowIt.getBinding();
+			if (binding != sourceBinding) {
+				if (!UndoManager.getInstance().hasOpenUndoableAction())
+					UndoManager.getInstance().startUndoableAction(
+							"Set Binding " + sourceBinding);
+				setGroupBindings(sourceBinding, destinationKnowIt, binding);
+				destinationKnowIt.setBinding(sourceBinding);
 			}
+			if (UndoManager.getInstance().hasOpenUndoableAction())
+				UndoManager.getInstance().endUndoableAction();
+			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Adds a new KnowIt describer to the given knowIt's owner. returns this
-	 * knowIt bound to the given DoIt
-	 * 
-	 * @param knowIt
-	 */
-	private KnowIt addDescribeItFor(final KnowIt knowIt, final KnowIt describeIt) {
-		final ComplexStoryComponent complexStoryComponent;
-
-		// herp derp make a method for me
-		StoryComponent owner = knowIt.getOwner();
-		StoryComponent subOwner = owner;
-
-		while (!(owner instanceof ComplexStoryComponent)) {
-			subOwner = owner;
-			owner = owner.getOwner();
-		}
-		complexStoryComponent = (ComplexStoryComponent) owner;
-		complexStoryComponent.addStoryChildBefore(describeIt, subOwner);
-		knowIt.setBinding(describeIt);
-		return knowIt;
 	}
 
 	/**
@@ -242,66 +193,22 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 	 */
 	private void setGroupBindings(final KnowItBinding sourceBinding,
 			final KnowIt destinationKnowIt, KnowItBinding binding) {
-		destinationKnowIt.getBinding().process(
-				new BindingAdapter(){
-					@Override
-					public void processNull(KnowItBindingNull nullBinding) {
-						// do nothing for nulls, not even the default.
-					}
-
-					@Override
-					protected void defaultProcess(KnowItBinding binding) {
-						SameBindingGroupVisitor groupVisitor = new SameBindingGroupVisitor(
-								destinationKnowIt);
-						List<KnowIt> knowIts = groupVisitor.getGroup();
-						for (KnowIt knowIt : knowIts) {
-							knowIt.setBinding(sourceBinding);
-						}
-					}
-				});
-	}
-
-	@SuppressWarnings("unchecked")
-	private boolean isKnowIt(TransferHandler.TransferSupport support) {
-		StoryComponent component = null;
-		try {
-			component = ((Collection<StoryComponent>) support
-					.getTransferable()
-					.getTransferData(
-							StoryComponentPanelTransferHandler.storyCompFlavour))
-					.iterator().next();
-			;
-			return component != null && component instanceof KnowIt;
-		} catch (UnsupportedFlavorException e) {
-			return false;
-		} catch (IOException e) {
-			return false;
-		} catch (NoSuchElementException e) {
-			return false;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	protected KnowIt extractKnowIt(TransferHandler.TransferSupport support) {
-		KnowIt data = null;
-
-		if (support
-				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
-			try {
-				data = (KnowIt) ((Collection<StoryComponent>) support
-						.getTransferable()
-						.getTransferData(
-								StoryComponentPanelTransferHandler.storyCompFlavour))
-						.iterator().next();
-			} catch (UnsupportedFlavorException e) {
-				return null;
-			} catch (IOException e) {
-				System.err
-						.println("Augh! TransferHandler IO problem?! I don't even know what this MEANS!");
-				return null;
+		destinationKnowIt.getBinding().process(new BindingAdapter() {
+			@Override
+			public void processNull(KnowItBindingNull nullBinding) {
+				// do nothing for nulls, not even the default.
 			}
-		}
-		return data;
+
+			@Override
+			protected void defaultProcess(KnowItBinding binding) {
+				SameBindingGroupVisitor groupVisitor = new SameBindingGroupVisitor(
+						destinationKnowIt);
+				List<KnowIt> knowIts = groupVisitor.getGroup();
+				for (KnowIt knowIt : knowIts) {
+					knowIt.setBinding(sourceBinding);
+				}
+			}
+		});
 	}
 
 	/*
