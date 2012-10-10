@@ -80,18 +80,9 @@ public class Translator {
 	 */
 	public enum DescriptionKeys {
 		// Mandatory keys
-		NAME,
-		API_DICTIONARY_PATH,
-		LANGUAGE_DICTIONARY_PATH,
-		GAME_MODULE_PATH,
+		NAME, API_DICTIONARY_PATH, LANGUAGE_DICTIONARY_PATH, GAME_MODULE_PATH,
 		// Suggested keys
-		SUPPORTED_FILE_EXTENSIONS,
-		INCLUDES_PATH,
-		ICON_PATH,
-		COMPILER_PATH,
-		CUSTOM_PICKER_PATH,
-		SUPPORTS_TESTING,
-		GAME_DIRECTORY;
+		SUPPORTED_FILE_EXTENSIONS, INCLUDES_PATH, ICON_PATH, COMPILER_PATH, CUSTOM_PICKER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY;
 	}
 
 	private final Properties properties;
@@ -153,8 +144,8 @@ public class Translator {
 		}
 
 		// load the Game Module implementation (but don't create an instance)
-		this.loader = new GameModuleClassLoader(this.getClass().getClassLoader(),
-				this);
+		this.loader = new GameModuleClassLoader(this.getClass()
+				.getClassLoader(), this);
 		gameModuleClassFile = this
 				.getPathProperty(DescriptionKeys.GAME_MODULE_PATH);
 		// new
@@ -165,7 +156,8 @@ public class Translator {
 						: "could not be found") + " at "
 				+ gameModuleClassFile.getAbsolutePath());
 
-		this.gameModuleClass = this.loader.loadGameModuleClass(gameModuleClassFile);
+		this.gameModuleClass = this.loader
+				.loadGameModuleClass(gameModuleClassFile);
 	}
 
 	/**
@@ -387,15 +379,17 @@ public class Translator {
 		System.out.println("Done");
 
 		try {
-			if (!FileOp.validateXML(apiDictPath,
-					FileOp.getFileResource(Translator.API_DICT_SCHEMA_LOCATION))) {
+			if (!FileOp
+					.validateXML(
+							apiDictPath,
+							FileOp.getFileResource(Translator.API_DICT_SCHEMA_LOCATION))) {
 				System.err
 						.println("The "
 								+ this.getName()
 								+ " translator's API dictionary does not pass validation.");
 				return false;
-			} else if (!FileOp.validateXML(languageDictPath,
-					FileOp.getFileResource(Translator.LANGUAGE_DICT_SCHEMA_LOCATION))) {
+			} else if (!FileOp.validateXML(languageDictPath, FileOp
+					.getFileResource(Translator.LANGUAGE_DICT_SCHEMA_LOCATION))) {
 				System.err
 						.println("The "
 								+ this.getName()
@@ -618,6 +612,7 @@ public class Translator {
 					"Problem loading Game Module",
 					"I couldn't find a Game Module at \"" + location
 							+ "\". \n\nPlease tell me a new location to use.");
+
 			module = null;
 		} catch (IOException e) {
 			e.printStackTrace();

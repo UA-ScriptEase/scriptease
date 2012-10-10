@@ -564,6 +564,8 @@ public class PanelFactory {
 
 		modelObserver = new PatternModelObserver() {
 			public void modelChanged(PatternModelEvent event) {
+				// TODO Need to redraw this panel so that nothing is shown if no model
+				// is open.
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
 					tree.drawTree(event.getPatternModel(),
 							searchField.getText(),
@@ -683,12 +685,8 @@ public class PanelFactory {
 	 * @param component
 	 * @param model
 	 */
-	public void removeModelComponent(JComponent component, PatternModel model) {
-		// remove the panel
-		PanelFactory.getInstance().removeComponentForModel(model, component);
-
-		this.modelTabs.remove(component);
-
+	public void removeModelComponent(final JComponent component,
+			PatternModel model) {
 		// check if there are any unsaved changes
 		if (FileManager.getInstance().hasUnsavedChanges(model)) {
 			// otherwise, close the StoryModel
@@ -696,6 +694,11 @@ public class PanelFactory {
 			model.process(new ModelAdapter() {
 				@Override
 				public void processLibraryModel(LibraryModel libraryModel) {
+					PanelFactory.getInstance().removeComponentForModel(
+							libraryModel, component);
+
+					PanelFactory.this.modelTabs.remove(component);
+
 					// TODO Should close the translator if it's not open
 					// anywhere else. We can use the usingTranslator in
 					// PatternModelPool to check for this.
@@ -703,6 +706,12 @@ public class PanelFactory {
 
 				@Override
 				public void processStoryModel(StoryModel storyModel) {
+					// remove the panel
+					PanelFactory.getInstance().removeComponentForModel(
+							storyModel, component);
+
+					PanelFactory.this.modelTabs.remove(component);
+
 					FileManager.getInstance().close(storyModel);
 				}
 			});

@@ -119,31 +119,6 @@ public class MenuFactory {
 	}
 
 	/**
-	 * Builds the specific context menu that is filled with all of the
-	 * operations applicable for the given <code>StoryComponent</code>.
-	 * 
-	 * @param component
-	 *            The <code>StoryComponent</code> to be used as a reference in
-	 *            building the menu.
-	 * @return The context menu for <code>component</code>.
-	 */
-	public static JMenu buildContextMenu(StoryComponent component) {
-		JMenu contextMenu = new JMenu();
-
-		// Action action = MenuFactory.usedActions
-		// .get(DeleteStoryComponentAction.class);
-		//
-		// if (action == null) {
-		// action = new DeleteStoryComponentAction();
-		// usedActions.put(DeleteStoryComponentAction.class, action);
-		// }
-		//
-		// contextMenu.add(action);
-
-		return contextMenu;
-	}
-
-	/**
 	 * Builds the file menu. The File menu contains menu items for high-level
 	 * operations like creating a new code library or story, opening and saving
 	 * files, or exiting the application.<br>
@@ -192,8 +167,10 @@ public class MenuFactory {
 		menu.add(ClosePatternModelAction.getInstance());
 		menu.addSeparator();
 
-		menu.add(TestStoryAction.getInstance());
-		menu.addSeparator();
+		if (model == null || !(model instanceof LibraryModel)) {
+			menu.add(TestStoryAction.getInstance());
+			menu.addSeparator();
+		}
 
 		menu.add(SaveModelAction.getInstance());
 		menu.add(SaveModelExplicitlyAction.getInstance());
@@ -335,7 +312,8 @@ public class MenuFactory {
 		final JMenu menu = new JMenu(MenuFactory.HELP);
 		menu.setMnemonic(KeyEvent.VK_H);
 
-		final JMenuItem helpMenuItem = new JMenuItem(Il8nResources.getString("About_ScriptEase"));
+		final JMenuItem helpMenuItem = new JMenuItem(
+				Il8nResources.getString("About_ScriptEase"));
 
 		helpMenuItem.addActionListener(new ActionListener() {
 			@Override

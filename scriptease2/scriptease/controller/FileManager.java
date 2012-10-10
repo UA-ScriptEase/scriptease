@@ -625,8 +625,10 @@ public final class FileManager {
 
 			if (choice == JOptionPane.CANCEL_OPTION)
 				return false;
-			else if (choice == JOptionPane.YES_OPTION)
+			else if (choice == JOptionPane.YES_OPTION) {
 				this.save(model);
+				return this.hasUnsavedChanges(model);
+			}
 		}
 
 		// the only way we should get here is if the user had unsaved changes

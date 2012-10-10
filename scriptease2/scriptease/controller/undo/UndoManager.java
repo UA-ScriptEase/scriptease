@@ -53,7 +53,7 @@ import scriptease.model.StoryModel;
 public final class UndoManager implements PatternModelObserver,
 		FileManagerObserver {
 	private final static UndoManager instance = new UndoManager();
-	private ArrayList<WeakUndoManagerObserverReference<UndoManagerObserver>> observers;
+	private ArrayList<WeakReference<UndoManagerObserver>> observers;
 
 	private List<History> storyHistories = new ArrayList<History>();
 	private History activeHistory;
@@ -73,30 +73,29 @@ public final class UndoManager implements PatternModelObserver,
 	private UndoManager() {
 		PatternModelManager.getInstance().addPatternModelObserver(this);
 		FileManager.getInstance().addObserver(this);
-		this.observers = new ArrayList<WeakUndoManagerObserverReference<UndoManagerObserver>>();
+		this.observers = new ArrayList<WeakReference<UndoManagerObserver>>();
 	}
 
 	public final void addUndoManagerObserver(UndoManagerObserver observer) {
-		
-		final Collection<WeakUndoManagerObserverReference<UndoManagerObserver>> observersCopy;
 
-		observersCopy = new ArrayList<WeakUndoManagerObserverReference<UndoManagerObserver>>(
+		final Collection<WeakReference<UndoManagerObserver>> observersCopy;
+
+		observersCopy = new ArrayList<WeakReference<UndoManagerObserver>>(
 				this.observers);
 
-		for (WeakUndoManagerObserverReference<UndoManagerObserver> observerRef : observersCopy) {
+		for (WeakReference<UndoManagerObserver> observerRef : observersCopy) {
 			UndoManagerObserver undoManagerObserver = observerRef.get();
-			if (undoManagerObserver != null
-					&& undoManagerObserver == observer)
+			if (undoManagerObserver != null && undoManagerObserver == observer)
 				return;
 			else if (undoManagerObserver == null)
 				this.observers.remove(observerRef);
 		}
 
-		this.observers.add(new WeakUndoManagerObserverReference<UndoManagerObserver>(observer));
+		this.observers.add(new WeakReference<UndoManagerObserver>(observer));
 	}
 
 	public final void removeUndoManagerObserver(UndoManagerObserver observer) {
-		for (WeakUndoManagerObserverReference<UndoManagerObserver> reference : this.observers) {
+		for (WeakReference<UndoManagerObserver> reference : this.observers) {
 			if (reference.get() == observer) {
 				this.observers.remove(reference);
 				return;
@@ -105,9 +104,9 @@ public final class UndoManager implements PatternModelObserver,
 	}
 
 	protected final void notifyObservers() {
-		ArrayList<WeakUndoManagerObserverReference<UndoManagerObserver>> observersCopy = new ArrayList<WeakUndoManagerObserverReference<UndoManagerObserver>>(
+		ArrayList<WeakReference<UndoManagerObserver>> observersCopy = new ArrayList<WeakReference<UndoManagerObserver>>(
 				this.observers);
-		for (WeakUndoManagerObserverReference<UndoManagerObserver> observerRef : observersCopy) {
+		for (WeakReference<UndoManagerObserver> observerRef : observersCopy) {
 			UndoManagerObserver undoManagerObserver = observerRef.get();
 			if (undoManagerObserver != null)
 				undoManagerObserver.stackChanged();
@@ -135,7 +134,7 @@ public final class UndoManager implements PatternModelObserver,
 	 *            displayed in the view, so it should be the same name as the
 	 *            name of the operation they chose to perform.
 	 */
-	public void startUndoableAction(String name) { 
+	public void startUndoableAction(String name) {
 		if (this.hasOpenUndoableAction())
 			throw new IllegalStateException(
 					"Cannot start a new undoable action inside of undoable action '"
@@ -444,20 +443,5 @@ public final class UndoManager implements PatternModelObserver,
 		History history = this.findHistoryForModel(model);
 
 		history.markSaved();
-	}
-	
-	/**
-	 * WeakReference wrapper used to track how many WeakReferences of each type
-	 * are generated. This class provides no functionality, but it does make it
-	 * easier for us to see where memory leaks may be occuring.
-	 * 
-	 * @author kschenk
-	 * 
-	 * @param <T>
-	 */
-	private class WeakUndoManagerObserverReference<T> extends WeakReference<T> {
-		public WeakUndoManagerObserverReference(T referent) {
-			super(referent);
-		}
 	}
 }

@@ -33,7 +33,6 @@ import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.LifetimeObserverFactory;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.gui.dialog.DialogBuilder;
-import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.LibraryManager;
@@ -78,15 +77,16 @@ public final class WindowFactory {
 	private static final String CRITICAL_ERROR_TITLE = "Critical Error";
 	private static final String ERROR_MESSAGE = "ScriptEase has encountered a critical error and will now exit.\nWe apologize for this problem, but there's nothing to do but crash.";
 	private static final String RETRY_TITLE_START = "Problem with";
-	private static final String SAVE_AND_TEST = "Save and Test";
 	private static final String CANCEL = "Cancel";
-	private static final String TEST_STORY = Il8nResources
-			.getString("Test_Story");
 
 	/*
 	 * This is never actually set, so it's just null. All of these windows are
 	 * thus just created on the root pane. However, if we ever have multiple
 	 * windows, this will be useful.
+	 * 
+	 * TODO Either implmement this so it can be "useful" or get rid of it. If we
+	 * added everything that could possibly be useful in the future, ScriptEase
+	 * would be twice the size with half the functionality.
 	 */
 	private JFrame currentFrame = null;
 
@@ -121,7 +121,7 @@ public final class WindowFactory {
 
 		if (!frame.isVisible())
 			frame.setVisible(true);
-		
+
 		this.currentFrame = frame;
 	}
 
@@ -406,22 +406,6 @@ public final class WindowFactory {
 				JOptionPane.YES_NO_CANCEL_OPTION);
 
 		return choice;
-	}
-
-	/**
-	 * Shows a confirm dialog for testing a story.
-	 * 
-	 * @return <code>true</code>if the user confirmed, <code>false</code>
-	 *         otherwise.
-	 */
-	public boolean showConfirmTestStory() {
-		String[] options = { WindowFactory.SAVE_AND_TEST, WindowFactory.CANCEL };
-		int n = JOptionPane.showOptionDialog(this.currentFrame,
-				"Save and test story?", WindowFactory.TEST_STORY,
-				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-				null, options, options[1]);
-
-		return (n == 0);
 	}
 
 	/**
