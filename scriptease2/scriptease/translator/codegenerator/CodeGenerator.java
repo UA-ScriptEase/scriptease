@@ -133,32 +133,36 @@ public class CodeGenerator {
 			// scriptbuckets are empty. See what happens.
 
 			// Multithreaded
-			final ExecutorService executor = Executors
-					.newFixedThreadPool(scriptBuckets.size());
-			for (final Set<CodeBlock> bucket : scriptBuckets) {
-				// All CodeBlocks of a given bucket share slot and subject, so
-				// take the first one
-				final CodeBlock codeBlock = bucket.iterator().next();
-				final LocationInformation locationInfo = new LocationInformation(
-						codeBlock);
-				final Context context = analyzer.buildContext(locationInfo);
-				// Spawn a new thread to compile the code
-				Runnable worker = new Runnable() {
-					@Override
-					public void run() {
-						final CodeGenerator generator;
-						generator = new CodeGenerator();
-						scriptInfos.add(generator.generateScriptFile(context));
-					}
-				};
-				executor.execute(worker);
+			if (scriptBuckets.size() > 0) {
+				final ExecutorService executor = Executors
+						.newFixedThreadPool(scriptBuckets.size());
+				for (final Set<CodeBlock> bucket : scriptBuckets) {
+					// All CodeBlocks of a given bucket share slot and subject,
+					// so
+					// take the first one
+					final CodeBlock codeBlock = bucket.iterator().next();
+					final LocationInformation locationInfo = new LocationInformation(
+							codeBlock);
+					final Context context = analyzer.buildContext(locationInfo);
+					// Spawn a new thread to compile the code
+					Runnable worker = new Runnable() {
+						@Override
+						public void run() {
+							final CodeGenerator generator;
+							generator = new CodeGenerator();
+							scriptInfos.add(generator
+									.generateScriptFile(context));
+						}
+					};
+					executor.execute(worker);
+				}
+				// This will make the executor accept no new threads
+				// and finish all existing threads in the queue
+				executor.shutdown();
+				// Wait until all threads are finish
+				while (!executor.isTerminated())
+					;
 			}
-			// This will make the executor accept no new threads
-			// and finish all existing threads in the queue
-			executor.shutdown();
-			// Wait until all threads are finish
-			while (!executor.isTerminated())
-				;
 		} else {
 			WindowFactory.getInstance().showCompileProblems(problems);
 		}

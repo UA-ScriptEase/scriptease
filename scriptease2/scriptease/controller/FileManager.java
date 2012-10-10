@@ -113,7 +113,7 @@ public final class FileManager {
 		this.observers = new ArrayList<WeakFileManagerObserverReference<FileManagerObserver>>(
 				FileManager.RECENT_FILE_MAX);
 	}
-	
+
 	/**
 	 * @return the Singleton instance
 	 */
@@ -339,7 +339,9 @@ public final class FileManager {
 		this.openFiles.remove(this.reverseLookup(model));
 		this.openFiles.put(location, model);
 
-		this.writeCode(model, true);
+		// Only write the code if this isn't empty.
+		if (model.getRoot().getChildCount() > 0)
+			this.writeCode(model, true);
 
 		// update the recent files list in the preferences file.
 		this.updateRecentFiles(location);
