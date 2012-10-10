@@ -127,13 +127,8 @@ public class CodeGenerator {
 					.aggregateScripts(new ArrayList<StoryComponent>(root
 							.getDescendants()));
 
-			// TODO The problem occurs when our scriptbuckets are empty.
-			// We can't create a new fixed thread pool with int == 0.
-			// So instead, let's return the scriptInfos right here if the
-			// scriptbuckets are empty. See what happens.
-
-			// Multithreaded
 			if (scriptBuckets.size() > 0) {
+				// Multithreaded
 				final ExecutorService executor = Executors
 						.newFixedThreadPool(scriptBuckets.size());
 				for (final Set<CodeBlock> bucket : scriptBuckets) {
