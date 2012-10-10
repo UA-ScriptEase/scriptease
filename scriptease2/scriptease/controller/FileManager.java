@@ -406,7 +406,8 @@ public final class FileManager {
 						.getInstance()
 						.showRetryProblemDialog(
 								"Compiling",
-								"Game compilation failed. I can try again without compiling.",
+								"Game compilation failed. I can try to save the scripts without compiling them.\n"
+										+ "You might be able to open them in another program to see what went wrong.",
 								"Save (No Compile)")) {
 					this.writeCode(model, false);
 					return;
