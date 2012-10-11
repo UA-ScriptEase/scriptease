@@ -434,6 +434,13 @@
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
+    	<Name>NumberOperator</Name>
+    	<Keyword>number_operator</Keyword>
+    	<CodeSymbol>int</CodeSymbol>
+    	<Enum>0&lt;Greater Than&gt;|1&lt;Less Than&gt;|2&lt;Equal To&gt;|3&lt;Greater Than or Equal To&gt;|4&lt;Less Than or Equal To&gt;</Enum>
+		<GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
       <Name>Trigger</Name>
       <Keyword>trigger</Keyword>
       <CodeSymbol>object</CodeSymbol>
@@ -14849,10 +14856,6 @@
               <Types>
                 <Type>open_close</Type>
               </Types>
-              <Binding flavour="constant">
-                <Type>open_close</Type>
-                <Value>TRUE</Value>
-              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Door</Name>
@@ -15077,48 +15080,6 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Attack &lt;Target&gt;</Name>
-      <Visible>true</Visible>
-      <Labels>
-        <Label>NOW</Label>
-      </Labels>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>Attack &lt;Target&gt;</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Id>322</Id>
-          <Types>
-            <Type>void</Type>
-          </Types>
-          <Parameters>
-            <KnowIt>
-              <Name>Target</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-                <Type>placeable</Type>
-                <Type>door</Type>
-                <Type>item</Type>
-                <Type>trigger</Type>
-              </Types>
-            </KnowIt>
-          </Parameters>
-          <Code>
-            <Line>
-              <Literal>ActionAttack(</Literal>
-              <Scope data="argument" ref="Target">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>);</Literal>
-            </Line>
-          </Code>
-        </CodeBlockSource>
-      </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
       <Name>&lt;Attacker&gt; attacks &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
@@ -15149,10 +15110,8 @@
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>placeable</Type>
                 <Type>door</Type>
-                <Type>item</Type>
-                <Type>trigger</Type>
+                <Type>placeable</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -20306,13 +20265,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;X&gt; equals &lt;Y&gt;</Name>
+      <Name>&lt;X&gt; is &lt;Number Operator&gt; &lt;Y&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;X&gt; equals &lt;Y&gt;</Name>
+          <Name>&lt;X&gt; is &lt;Number Operator&gt; &lt;Y&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>421</Id>
@@ -20336,19 +20295,111 @@
                 <Type>float</Type>
               </Types>
             </KnowIt>
+                  <KnowIt>
+              <Name>Number Operator</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>number_operator</Type>
+              </Types>
+            </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>return </Literal>
-              <Scope data="argument" ref="X">
-                <Fragment data="name"/>
-              </Scope>
-              <Literal>==</Literal>
-              <Scope data="argument" ref="Y">
-                <Fragment data="name"/>
-              </Scope>
-              <Literal>;</Literal>
+            	<Literal>int numberOperator = </Literal>
+            	<Scope data="argument" ref="Number Operator">
+             	   <Fragment data="name"/>
+            	</Scope>
+             	<Literal>;</Literal>
             </Line>
+            <Line>
+           		<Literal>if(numberOperator == 0)</Literal>
+            </Line>
+            <Indent>
+            	<Line>
+					<Literal>return </Literal>
+					<Scope data="argument" ref="X">
+               			<Fragment data="name"/>
+              		</Scope>
+              		<Literal> &gt; </Literal>
+              		<Scope data="argument" ref="Y">
+               			<Fragment data="name"/>
+              		</Scope>
+              		<Literal>;</Literal>
+           		</Line>
+            </Indent>
+            <Line>
+           		<Literal>else if(numberOperator == 1)</Literal>
+            </Line>
+            <Indent>
+            	<Line>
+					<Literal>return </Literal>
+				 	<Scope data="argument" ref="X">
+                		<Fragment data="name"/>
+              		</Scope>
+              		<Literal> &lt; </Literal>
+              		<Scope data="argument" ref="Y">
+               			<Fragment data="name"/>
+          			</Scope>
+           			<Literal>;</Literal>
+           		</Line>
+           	</Indent>
+            <Line>
+           		<Literal>else if(numberOperator == 2)</Literal>
+            </Line>
+            <Indent>
+            	<Line>
+					<Literal>return </Literal>
+				 	<Scope data="argument" ref="X">
+                		<Fragment data="name"/>
+              		</Scope>
+              		<Literal> == </Literal>
+              		<Scope data="argument" ref="Y">
+                		<Fragment data="name"/>
+              		</Scope>
+              		<Literal>;</Literal>
+            	</Line>
+           	</Indent>
+            <Line>
+           		<Literal>else if(numberOperator == 3)</Literal>
+            </Line>
+            <Indent>
+            	<Line>
+					<Literal>return </Literal>
+				 	<Scope data="argument" ref="X">
+                		<Fragment data="name"/>
+              		</Scope>
+              		<Literal> &gt;= </Literal>
+              		<Scope data="argument" ref="Y">
+                		<Fragment data="name"/>
+              		</Scope>
+              		<Literal>;</Literal>
+            	</Line>
+            </Indent>
+            <Line>
+           		<Literal>else if(numberOperator == 4)</Literal>
+            </Line>
+            <Indent>
+            	<Line>
+					<Literal>return </Literal>
+				 	<Scope data="argument" ref="X">
+                		<Fragment data="name"/>
+              		</Scope>
+              		<Literal> &lt;= </Literal>
+              		<Scope data="argument" ref="Y">
+                		<Fragment data="name"/>
+              		</Scope>
+              		<Literal>;</Literal>
+            	</Line>
+            </Indent>
+            <Line>
+           		<Literal>else</Literal>
+            </Line>
+            <Indent>
+				<Line>
+					<Literal>return FALSE;</Literal>
+				</Line>            
+            </Indent>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -21367,17 +21418,6 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[225]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[226]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[227]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[228]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[229]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[246]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[247]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[248]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[236]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[242]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[243]"/>
   </Effects>
   <DescribeIts>
     <KnowIt>
@@ -21388,7 +21428,7 @@
         <Type>float</Type>
       </Types>
       <Binding flavour="function">
-        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[225]"/>
+        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[224]"/>
       </Binding>
     </KnowIt>
     <KnowIt>
@@ -21399,18 +21439,18 @@
         <Type>float</Type>
       </Types>
       <Binding flavour="function">
-        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[226]"/>
+        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[225]"/>
       </Binding>
     </KnowIt>
     <KnowIt>
-      <Name>Is Equal</Name>
+      <Name>Number Comparison</Name>
       <Visible>true</Visible>
       <Labels/>
       <Types>
         <Type>question</Type>
       </Types>
       <Binding flavour="function">
-        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[227]"/>
+        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[226]"/>
       </Binding>
     </KnowIt>
     <KnowIt>
@@ -21421,7 +21461,7 @@
         <Type>creature</Type>
       </Types>
       <Binding flavour="function">
-        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[228]"/>
+        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[227]"/>
       </Binding>
     </KnowIt>
     <KnowIt>
@@ -21432,7 +21472,7 @@
         <Type>question</Type>
       </Types>
       <Binding flavour="function">
-        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[229]"/>
+        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[228]"/>
       </Binding>
     </KnowIt>
     <KnowIt>
@@ -21902,7 +21942,7 @@
         <Type>question</Type>
       </Types>
       <Binding flavour="function">
-        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[246]"/>
+        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[245]"/>
       </Binding>
     </KnowIt>
     <KnowIt>
@@ -21913,7 +21953,7 @@
         <Type>question</Type>
       </Types>
       <Binding flavour="function">
-        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[247]"/>
+        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[246]"/>
       </Binding>
     </KnowIt>
     <KnowIt>
@@ -21924,7 +21964,7 @@
         <Type>float</Type>
       </Types>
       <Binding flavour="function">
-        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[248]"/>
+        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[247]"/>
       </Binding>
     </KnowIt>
     <KnowIt>
@@ -21935,7 +21975,7 @@
         <Type>creature</Type>
       </Types>
       <Binding flavour="function">
-        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[236]"/>
+        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[235]"/>
       </Binding>
     </KnowIt>
     <KnowIt>
@@ -21946,7 +21986,7 @@
         <Type>question</Type>
       </Types>
       <Binding flavour="function">
-        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[242]"/>
+        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[241]"/>
       </Binding>
     </KnowIt>
     <KnowIt>
@@ -21957,7 +21997,7 @@
         <Type>location</Type>
       </Types>
       <Binding flavour="function">
-        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[243]"/>
+        <ScriptIt reference="/APIDictionary/Effects/ScriptIt[242]"/>
       </Binding>
     </KnowIt>
   </DescribeIts>
