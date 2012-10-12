@@ -65,22 +65,14 @@ public class SEGraphNodeTransferHandler<E> extends TransferHandler {
 			acceptingNode = this.graph.getNodesToComponentsMap().getKey(
 					acceptingPanel);
 
-			// Only import to complex story components which are editable
-
 			if (acceptingNode != this.graph.getStartNode()) {
 
-				// final Collection<E> potentialChildren;
+				final E potentialChild;
+				potentialChild = this.extractStoryComponents(support
+						.getTransferable());
 
-				/*
-				 * potentialChildren = this.extractStoryComponents(support);
-				 * 
-				 * if (potentialChildren != null &&
-				 * this.canAcceptChildren(acceptingStoryComponent,
-				 * potentialChildren)) {
-				 */
-
-				return true;
-				// }
+				if (acceptingNode != potentialChild)
+					return true;
 			}
 		}
 		return false;

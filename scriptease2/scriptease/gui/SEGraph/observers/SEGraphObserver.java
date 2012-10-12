@@ -53,6 +53,13 @@ public interface SEGraphObserver {
 	public void nodeRemoved(Object removedNode);
 
 	/**
+	 * Called when a node has been overwritten.
+	 * 
+	 * @param overwittenNode
+	 */
+	public void nodeOverwritten(Object overwittenNode);
+
+	/**
 	 * Called when a node has been selected.
 	 * 
 	 * @param node

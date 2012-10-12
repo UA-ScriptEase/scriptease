@@ -36,14 +36,6 @@ public abstract class SEGraphModel<E> {
 	public abstract E createNewNode();
 
 	/**
-	 * Creates a new node that is a clone of the passed in node but without any
-	 * successors or parents.
-	 * 
-	 * @return the new node
-	 */
-	public abstract E createNewNode(E node);
-
-	/**
 	 * Adds a child to an existing node.
 	 * 
 	 * @param child
@@ -78,6 +70,16 @@ public abstract class SEGraphModel<E> {
 	 * @return
 	 */
 	public abstract Collection<E> getParents(E node);
+
+	/**
+	 * Replaces the existing node with a new node. The new node passed in is
+	 * cloned without any parents or successors.
+	 * 
+	 * @param existingNode
+	 * @param newNode
+	 * @return
+	 */
+	public abstract boolean overwriteNodeData(E existingNode, E node);
 
 	/**
 	 * Adds a node between two existing nodes. Order of the two nodes does not
@@ -115,31 +117,6 @@ public abstract class SEGraphModel<E> {
 				this.addChild(secondNode, node);
 			}
 		}
-		return true;
-	}
-
-	/**
-	 * Replaces the existing node with a new node. The new node passed in is
-	 * cloned without any parents or successors.
-	 * 
-	 * @param existingNode
-	 * @param newNode
-	 * @return
-	 */
-	public final boolean replaceNode(E existingNode, E newNode) {
-		if (existingNode == null || newNode == null)
-			return false;
-
-		final E newNodeClone = this.createNewNode(newNode);
-
-		for (E child : this.getChildren(existingNode))
-			this.addChild(child, newNodeClone);
-
-		for (E parent : this.getParents(existingNode))
-			this.addChild(newNodeClone, parent);
-
-		this.removeNode(existingNode);
-
 		return true;
 	}
 
