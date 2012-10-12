@@ -56,8 +56,8 @@ public class SEGraph<E> extends JComponent {
 	private final SEGraphModel<E> model;
 
 	private SEGraphNodeRenderer<E> renderer;
-	private final SEGraphNodeTransferHandler transferHandler;
-	
+	private final SEGraphNodeTransferHandler<E> transferHandler;
+
 	private final BiHashMap<E, JComponent> nodesToComponents;
 	private final NodeMouseAdapter mouseAdapter;
 
@@ -190,15 +190,9 @@ public class SEGraph<E> extends JComponent {
 	 * @return True if the replacement was successful
 	 */
 	public boolean replaceNode(E existingNode, E newNode) {
-		if (this.model.replaceNode(existingNode, newNode)) {
-			final Collection<E> parents;
-			final Collection<E> children;
-
-			parents = this.model.getParents(newNode);
-			children = this.model.getChildren(newNode);
-
+		if (this.model.overwriteNodeData(existingNode, newNode)) {
 			for (SEGraphObserver observer : this.observers) {
-				observer.nodeAdded(newNode, children, parents);
+				observer.nodeOverwritten(existingNode);
 			}
 
 			this.repaint();

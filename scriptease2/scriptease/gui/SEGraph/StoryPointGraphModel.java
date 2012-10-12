@@ -18,17 +18,18 @@ public class StoryPointGraphModel extends SEGraphModel<StoryPoint> {
 	}
 
 	@Override
-	public StoryPoint createNewNode(StoryPoint node) {
-		final StoryPoint newPoint = (StoryPoint) node.clone();
-		
-		newPoint.setOwner(null);
-		newPoint.setFanIn(1);
-		
-		for(StoryPoint successor : node.getSuccessors()) {
-			newPoint.removeSuccessor(successor);
+	public boolean overwriteNodeData(StoryPoint existingNode, StoryPoint node) {
+		if (existingNode == node)
+			return false;
+
+		existingNode.setDisplayText(node.getDisplayText());
+		existingNode.removeStoryChildren(existingNode.getChildren());
+
+		for (StoryComponent child : node.getChildren()) {
+			existingNode.addStoryChild(child.clone());
 		}
 
-		return newPoint;
+		return true;
 	}
 
 	@Override

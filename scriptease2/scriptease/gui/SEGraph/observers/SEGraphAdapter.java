@@ -20,6 +20,10 @@ public abstract class SEGraphAdapter implements SEGraphObserver {
 	}
 
 	@Override
+	public void nodeOverwritten(Object overwittenNode) {
+	}
+
+	@Override
 	public void nodeAdded(Object newNode, Collection<?> children,
 			Collection<?> parents) {
 	}
