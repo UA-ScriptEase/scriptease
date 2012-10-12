@@ -3,12 +3,17 @@ package scriptease.gui.SEGraph.renderers;
 import java.awt.Color;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Map.Entry;
 
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+import javax.swing.TransferHandler;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
@@ -53,6 +58,25 @@ public class SEGraphNodeRenderer<E> {
 		final JComponent component;
 
 		component = PanelFactory.getInstance().buildGradientPanel(1.4);
+
+		// Set up input and action maps for copy cut and paste.
+		//TODO !
+/*		final InputMap input = component.getInputMap(JComponent.WHEN_FOCUSED);
+		input.put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK),
+				"Copy");
+		input.put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_DOWN_MASK),
+				"Cut");
+		input.put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK),
+				"Paste");
+
+		final ActionMap am = new ActionMap();
+		am.put("Copy", TransferHandler.getCopyAction());
+		am.put("Cut", TransferHandler.getCutAction());
+		am.put("Paste", TransferHandler.getPasteAction());
+		component.setActionMap(am);*/
 
 		this.configureAppearance(component, node);
 		this.configureInternalComponents(component, node);

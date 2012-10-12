@@ -65,7 +65,9 @@ public class StoryComponentPanel extends JPanel implements
 		// Action Listeners
 		this.addMouseMotionListener(mouseListener);
 		this.addMouseListener(mouseListener);
-		InputMap input = this.getInputMap(WHEN_FOCUSED);
+
+		// Set up input and action maps for copy cut and paste.
+		final InputMap input = this.getInputMap(WHEN_FOCUSED);
 		input.put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK),
 				"Copy");
@@ -76,7 +78,7 @@ public class StoryComponentPanel extends JPanel implements
 				KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK),
 				"Paste");
 
-		ActionMap am = new ActionMap();
+		final ActionMap am = new ActionMap();
 		am.put("Copy", TransferHandler.getCopyAction());
 		am.put("Cut", TransferHandler.getCutAction());
 		am.put("Paste", TransferHandler.getPasteAction());
