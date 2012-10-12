@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryPoint;
 
 public class StoryPointGraphModel extends SEGraphModel<StoryPoint> {
@@ -14,6 +15,20 @@ public class StoryPointGraphModel extends SEGraphModel<StoryPoint> {
 	@Override
 	public StoryPoint createNewNode() {
 		return new StoryPoint("");
+	}
+
+	@Override
+	public StoryPoint createNewNode(StoryPoint node) {
+		final StoryPoint newPoint = (StoryPoint) node.clone();
+		
+		newPoint.setOwner(null);
+		newPoint.setFanIn(1);
+		
+		for(StoryPoint successor : node.getSuccessors()) {
+			newPoint.removeSuccessor(successor);
+		}
+
+		return newPoint;
 	}
 
 	@Override
@@ -59,5 +74,4 @@ public class StoryPointGraphModel extends SEGraphModel<StoryPoint> {
 		}
 		return parents;
 	}
-
 }
