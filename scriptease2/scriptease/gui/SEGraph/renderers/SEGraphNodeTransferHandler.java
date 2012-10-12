@@ -13,9 +13,16 @@ import javax.swing.TransferHandler;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEGraph.SEGraph;
 
+/**
+ * Creates a new TransferHandler for the passed in graph.
+ * 
+ * @author kschenk
+ * 
+ * @param <E>
+ */
 @SuppressWarnings("serial")
 public class SEGraphNodeTransferHandler<E> extends TransferHandler {
-	protected static DataFlavor nodeFlavour;
+	private static DataFlavor nodeFlavour;
 
 	private final SEGraph<E> graph;
 
@@ -24,14 +31,15 @@ public class SEGraphNodeTransferHandler<E> extends TransferHandler {
 
 		final E startNode = graph.getStartNode();
 
-		try {
-			String storyComponentFlavour = DataFlavor.javaJVMLocalObjectMimeType
-					+ ";class=" + startNode.getClass().getCanonicalName();
-			SEGraphNodeTransferHandler.nodeFlavour = new DataFlavor(
-					storyComponentFlavour);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		if (nodeFlavour == null)
+			try {
+				String seGraphNodeFlavour = DataFlavor.javaJVMLocalObjectMimeType
+						+ ";class=" + startNode.getClass().getCanonicalName();
+				SEGraphNodeTransferHandler.nodeFlavour = new DataFlavor(
+						seGraphNodeFlavour);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 	}
 
 	@Override
@@ -68,8 +76,7 @@ public class SEGraphNodeTransferHandler<E> extends TransferHandler {
 			if (acceptingNode != this.graph.getStartNode()) {
 
 				final E potentialChild;
-				potentialChild = this.extractStoryComponents(support
-						.getTransferable());
+				potentialChild = this.extractNode(support.getTransferable());
 
 				if (acceptingNode != potentialChild)
 					return true;
@@ -91,7 +98,7 @@ public class SEGraphNodeTransferHandler<E> extends TransferHandler {
 
 		boolean success = false;
 
-		newNode = this.extractStoryComponents(support.getTransferable());
+		newNode = this.extractNode(support.getTransferable());
 
 		if (newNode == null)
 			return false;
@@ -135,32 +142,15 @@ public class SEGraphNodeTransferHandler<E> extends TransferHandler {
 		super.exportAsDrag(comp, e, action);
 	}
 
-	@Override
-	protected void exportDone(JComponent source, Transferable data, int action) {
-		/*
-		 * final E removedComponent;
-		 * 
-		 * if (data != null) { // if we're moving, we need to clean up the old
-		 * nodes from the model if (action == TransferHandler.MOVE) {
-		 * removedComponent = this.extractStoryComponents(data); if
-		 * (child.getOwner() != null) { ((ComplexStoryComponent)
-		 * child.getOwner()) .removeStoryChild(child); } } }
-		 * 
-		 * // Close any open UndoableActions. if
-		 * (UndoManager.getInstance().hasOpenUndoableAction()) {
-		 * UndoManager.getInstance().endUndoableAction(); } }
-		 */
-	}
-
 	/**
-	 * Attempts to extract StoryComponents from the Transferable. Returns null
-	 * on failure.
+	 * Attempts to extract a node from the Transferable. Returns null on
+	 * failure.
 	 * 
 	 * @param transferData
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	protected E extractStoryComponents(Transferable transferData) {
+	protected E extractNode(Transferable transferData) {
 		E data = null;
 
 		if (transferData
@@ -203,13 +193,9 @@ public class SEGraphNodeTransferHandler<E> extends TransferHandler {
 		}
 
 		/**
-		 * Returns the data flavours that a StoryComponentPanelTransferable
-		 * supports. A flavour is just an interpretation of the data that this
-		 * object contains. <BR>
-		 * <BR>
-		 * Currently, only the StoryComponent flavour is supported, but could
-		 * potentially be expanded to include other flavours, like a string
-		 * flavour for example.
+		 * Returns the data flavours that a SEGraphNodeTransferable supports. A
+		 * flavour is just an interpretation of the data that this object
+		 * contains.
 		 */
 		@Override
 		public DataFlavor[] getTransferDataFlavors() {
@@ -223,7 +209,7 @@ public class SEGraphNodeTransferHandler<E> extends TransferHandler {
 
 		@Override
 		public String toString() {
-			return "StoryComponentPanelTransferable [" + this.node + "]";
+			return "SEGraphNodeTransferable [" + this.node + "]";
 		}
 	}
 }
