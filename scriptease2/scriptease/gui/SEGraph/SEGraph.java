@@ -34,6 +34,7 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.observers.SEGraphObserver;
 import scriptease.gui.SEGraph.renderers.SEGraphNodeRenderer;
+import scriptease.gui.SEGraph.renderers.SEGraphNodeTransferHandler;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -44,7 +45,7 @@ import sun.awt.util.IdentityArrayList;
 
 /**
  * Builds a directed, acyclic graph that must have a start node. Each graph must
- * be created with an {@link SEGraphNodeBuilder}.
+ * be created with a model.
  * 
  * @author kschenk
  * 
@@ -55,7 +56,8 @@ public class SEGraph<E> extends JComponent {
 	private final SEGraphModel<E> model;
 
 	private SEGraphNodeRenderer<E> renderer;
-
+	private final SEGraphNodeTransferHandler transferHandler;
+	
 	private final BiHashMap<E, JComponent> nodesToComponents;
 	private final NodeMouseAdapter mouseAdapter;
 
@@ -78,6 +80,8 @@ public class SEGraph<E> extends JComponent {
 		this.nodesToComponents = new BiHashMap<E, JComponent>();
 		this.mouseAdapter = new NodeMouseAdapter();
 		this.observers = new ArrayList<SEGraphObserver>();
+
+		this.transferHandler = new SEGraphNodeTransferHandler<E>(this);
 
 		this.setLayout(new SEGraphLayoutManager());
 
@@ -176,6 +180,36 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
+	 * Replaces an existing node with a new node. The new node is actually
+	 * cloned without any of its parents or successors, only its data.
+	 * 
+	 * @param existingNode
+	 *            The node that already existed.
+	 * @param newNode
+	 *            The new node
+	 * @return True if the replacement was successful
+	 */
+	public boolean replaceNode(E existingNode, E newNode) {
+		if (this.model.replaceNode(existingNode, newNode)) {
+			final Collection<E> parents;
+			final Collection<E> children;
+
+			parents = this.model.getParents(newNode);
+			children = this.model.getChildren(newNode);
+
+			for (SEGraphObserver observer : this.observers) {
+				observer.nodeAdded(newNode, children, parents);
+			}
+
+			this.repaint();
+			this.revalidate();
+
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Removes the node from the graph. Fires a
 	 * {@link SEGraphObserver#nodeRemoved(Object)} event if the removal was
 	 * successful.
@@ -189,7 +223,7 @@ public class SEGraph<E> extends JComponent {
 		if (this.model.removeNode(node)) {
 			for (SEGraphObserver observer : this.observers)
 				observer.nodeRemoved(node);
-			
+
 			nodesToComponents.removeKey(node);
 
 			this.validateSelectedNode();
@@ -403,6 +437,7 @@ public class SEGraph<E> extends JComponent {
 			component = storedComponent;
 		} else if (this.renderer != null) {
 			component = this.renderer.createComponentForNode(node);
+			component.setTransferHandler(this.transferHandler);
 		} else {
 			component = new JLabel(node.toString());
 		}
