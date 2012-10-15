@@ -9,7 +9,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,16 +17,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.JSpinner.NumberEditor;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
@@ -60,7 +56,6 @@ import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.tools.GameConstantFactory;
 import scriptease.util.GUIOp;
-import scriptease.util.StringOp;
 
 /**
  * Simple Factory that constructs the various GUI components required for
@@ -382,60 +377,33 @@ public class ScriptWidgetFactory {
 	 */
 	public static JComponent buildSpinnerEditor(final KnowIt knowIt,
 			final GameConstant constantValue, final String bindingType) {
-		boolean isFloat = false;
+		
+		final Comparable<?> MIN = null; // default to no min limit
+		final Comparable<?> MAX = null; // default to no max limit
+		final Float STEP_SIZE = 1.0f; // default to int step size
 
-		final JComponent comp;
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
-		final NumberEditor numberEditor;
-		float initVal;
+		final String scriptValue;
 
+		float initVal;
 		try {
 			initVal = Float.parseFloat(constantValue.getCodeText());
 		} catch (NumberFormatException e) {
 			initVal = 0;
 		}
 
-		/*
-		 * extremly naive regex parsing since I'm unsure of a better way to
-		 * determine the max, min value the spinner should have
-		 * 
-		 * @author mfchurch
-		 */
-		Comparable<?> min = null; // default to no min limit
-		final Comparable<?> max = null; // default to no max limit
-		final Float stepSize = 1.0f; // default to int step size
-		final String regex = TranslatorManager.getInstance()
-				.getActiveTranslator().getGameTypeManager().getReg(bindingType);
-		final Pattern regexPattern = Pattern.compile(regex);
-		if (regex != null && !regex.isEmpty()) {
-			// if regex doesn't specify negative numbers, make min 0
-			if (!regex.startsWith("[-]"))
-				min = 0.0f;
-			// if regex specifies \. it wants a floating point
-			if (regex.contains("\\.")) {
-				isFloat = true;
-			}
-		}
-
-		model = new SpinnerNumberModel(initVal, min, max, stepSize);
+		model = new SpinnerNumberModel(initVal, MIN, MAX, STEP_SIZE);
 		spinner = new JSpinner(model);
-		numberEditor = (NumberEditor) spinner.getEditor();
-
-		if (isFloat) {
-			numberEditor.getFormat().setMinimumFractionDigits(1);
-		}
+		scriptValue = knowIt.getBinding().getScriptValue();
 
 		// Handle the initial value case
-		final String scriptValue = knowIt.getBinding().getScriptValue();
 		if (scriptValue == null || scriptValue.isEmpty()) {
 			// Set the initial value
 			final Float value = (Float) spinner.getValue();
 			final GameConstant newBinding;
-			String safeValue = StringOp.convertNumberToPattern(
-					value.toString(), regexPattern);
 			newBinding = GameConstantFactory.getInstance().getConstant(
-					bindingType, safeValue);
+					bindingType, value.toString());
 			SwingUtilities.invokeLater(new Runnable() {
 
 				@Override
@@ -448,21 +416,14 @@ public class ScriptWidgetFactory {
 		spinner.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-			/*	try {
-					// Commit changes to the model first because JSpinners suck
-					spinner.commitEdit();
-				} catch (ParseException pe) {
-					return;
-				}*/
-				final JSpinner spinner = (JSpinner) e.getSource();
-				final Float value = (Float) spinner.getValue();
+				final JSpinner spinner;
+				final Float value;
 				final GameConstant newBinding;
 
-				String safeValue = StringOp.convertNumberToPattern(
-						value.toString(), regexPattern);
+				spinner = (JSpinner) e.getSource();
+				value = (Float) spinner.getValue();
 				newBinding = GameConstantFactory.getInstance().getConstant(
-						bindingType, safeValue);
-				spinner.setValue(Float.valueOf(safeValue));
+						bindingType, value.toString());
 
 				// null check
 				if (newBinding == null)
@@ -472,16 +433,15 @@ public class ScriptWidgetFactory {
 					if (!UndoManager.getInstance().hasOpenUndoableAction())
 						UndoManager.getInstance().startUndoableAction(
 								"Set " + knowIt.getDisplayText()
-										+ "'s value to [" + safeValue + "]");
+										+ "'s value to [" + value + "]");
 					knowIt.setBinding(newBinding);
 					UndoManager.getInstance().endUndoableAction();
 				}
 			}
 		});
 
-		comp = spinner;
-		widgetsToStoryComponents.put(comp, knowIt);
-		return comp;
+		widgetsToStoryComponents.put(spinner, knowIt);
+		return spinner;
 	}
 
 	public static JComponent buildComboEditor(final KnowIt knowIt,
