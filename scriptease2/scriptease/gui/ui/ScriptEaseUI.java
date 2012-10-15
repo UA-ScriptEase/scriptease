@@ -53,7 +53,7 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (light blue) used by default for node backgrounds.
 	 */
-	public static final Color COLOUR_NODE_DEFAULT = new Color(232, 240, 255);
+	public static final Color COLOUR_NODE_DEFAULT = new Color(205, 221, 250);
 	
 	/**
 	 * The colour (dark blue) used for selected graph nodes
