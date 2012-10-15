@@ -388,7 +388,6 @@ public class ScriptWidgetFactory {
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
 		final NumberEditor numberEditor;
-		final JFormattedTextField spinnerTextEditor;
 		float initVal;
 
 		try {
@@ -422,7 +421,6 @@ public class ScriptWidgetFactory {
 		model = new SpinnerNumberModel(initVal, min, max, stepSize);
 		spinner = new JSpinner(model);
 		numberEditor = (NumberEditor) spinner.getEditor();
-		spinnerTextEditor = numberEditor.getTextField();
 
 		if (isFloat) {
 			numberEditor.getFormat().setMinimumFractionDigits(1);
@@ -447,15 +445,16 @@ public class ScriptWidgetFactory {
 			});
 		}
 
-		spinnerTextEditor.addFocusListener(new FocusListener() {
+		spinner.addChangeListener(new ChangeListener() {
 			@Override
-			public void focusLost(FocusEvent e) {
-				try {
+			public void stateChanged(ChangeEvent e) {
+			/*	try {
 					// Commit changes to the model first because JSpinners suck
 					spinner.commitEdit();
 				} catch (ParseException pe) {
 					return;
-				}
+				}*/
+				final JSpinner spinner = (JSpinner) e.getSource();
 				final Float value = (Float) spinner.getValue();
 				final GameConstant newBinding;
 
@@ -477,10 +476,6 @@ public class ScriptWidgetFactory {
 					knowIt.setBinding(newBinding);
 					UndoManager.getInstance().endUndoableAction();
 				}
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
 			}
 		});
 
@@ -622,8 +617,8 @@ public class ScriptWidgetFactory {
 						.requestFocusInWindow();
 			}
 		});
-		
-		nameEditor.addKeyListener(new KeyAdapter(){
+
+		nameEditor.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				GUIOp.resizeJTextField(nameEditor);
@@ -725,8 +720,8 @@ public class ScriptWidgetFactory {
 						.requestFocusInWindow();
 			}
 		});
-		
-		valueEditor.addKeyListener(new KeyAdapter(){
+
+		valueEditor.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				GUIOp.resizeJTextField(valueEditor);
