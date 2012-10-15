@@ -58,7 +58,8 @@ public class StoryComponentPanelFactory {
 
 	static {
 		java.net.URL imgURL = StoryComponentPanelFactory.getInstance()
-				.getClass().getResource("/scriptease/resources/icons/noteicon.png");
+				.getClass()
+				.getResource("/scriptease/resources/icons/noteicon.png");
 		if (imgURL != null) {
 			noteIcon = new ImageIcon(imgURL, "Note");
 		} else {
@@ -183,24 +184,11 @@ public class StoryComponentPanelFactory {
 		if (layout != null) {
 			final JPanel mainPanel = layout.getMainPanel();
 			if (mainPanel != null) {
-				// clear the panel
-				mainPanel.removeAll();
-				// rebuild the panel according to it's storycomponent type
 				storyComponent.process(new StoryAdapter() {
 					@Override
 					protected void defaultProcessComplex(
 							ComplexStoryComponent complex) {
 						parseDisplayText(mainPanel, complex);
-					}
-
-					@Override
-					public void processStoryPoint(StoryPoint storyPoint) {
-						buildMainStoryPointPanel(storyPoint, mainPanel);
-					}
-
-					@Override
-					public void processKnowIt(KnowIt knowIt) {
-						buildMainKnowItPanel(knowIt, mainPanel);
 					}
 				});
 			} else
@@ -226,7 +214,9 @@ public class StoryComponentPanelFactory {
 		JLabel plainTextLabel;
 		String plainText;
 		KnowIt knowIt = null;
+	
 		displayNamePanel.removeAll();
+	
 		displayNamePanel.setOpaque(false);
 		displayNamePanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 
@@ -329,7 +319,7 @@ public class StoryComponentPanelFactory {
 	 */
 	private void addWidget(final JPanel displayNamePanel, final KnowIt knowIt,
 			final boolean editable) {
-		
+
 		final KnowItBinding binding = knowIt.getBinding();
 		binding.process(new BindingAdapter() {
 			// functions, descriptions and runTimes all get a draggable bubble
@@ -411,9 +401,6 @@ public class StoryComponentPanelFactory {
 				final JLabel noteLabel;
 				final JComponent nameEditor;
 
-				// TODO Create static imageicon of noteicon.png that gets added
-				// to all of these so we don't load it a billion times.
-
 				noteLabel = new JLabel(StoryComponentPanelFactory.noteIcon);
 				mainPanel = new JPanel();
 
@@ -478,7 +465,8 @@ public class StoryComponentPanelFactory {
 
 	private void buildMainKnowItPanel(KnowIt knowIt, final JPanel mainPanel) {
 		// Add displayName panel
-		mainPanel.removeAll();
+		
+		//mainPanel.removeAll();
 		mainPanel.setOpaque(false);
 		mainPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 

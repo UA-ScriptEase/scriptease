@@ -287,7 +287,7 @@ public class StoryComponentPanel extends JPanel implements
 			}
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_VISIBILITY)) {
 			this.setVisible(component.isVisible());
-		} else {
+		} else if (type.equals(StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND)) {
 			StoryComponentPanelFactory.getInstance()
 					.refreshStoryComponentPanel(this);
 		}
