@@ -14,7 +14,6 @@ import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
 import scriptease.gui.PanelFactory;

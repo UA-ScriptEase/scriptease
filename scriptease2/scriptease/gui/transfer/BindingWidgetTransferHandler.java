@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.InputEvent;
 import java.io.IOException;
 import java.util.List;
 
@@ -137,6 +138,14 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		return false;
 	}
 
+	private static boolean lastDragShiftDown = false;
+
+	@Override
+	public void exportAsDrag(JComponent comp, InputEvent e, int action) {
+		super.exportAsDrag(comp, e, action);
+		BindingWidgetTransferHandler.lastDragShiftDown = e.isShiftDown();
+	}
+
 	/**
 	 * Called when a drop is detected on a component that has
 	 * BindingTransferHandler set as its TransferHandler. NOTE: The component
@@ -173,7 +182,8 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
 					UndoManager.getInstance().startUndoableAction(
 							"Set Binding " + sourceBinding);
-				setGroupBindings(sourceBinding, destinationKnowIt, binding);
+				if (BindingWidgetTransferHandler.lastDragShiftDown)
+					setGroupBindings(sourceBinding, destinationKnowIt, binding);
 				destinationKnowIt.setBinding(sourceBinding);
 			}
 			if (UndoManager.getInstance().hasOpenUndoableAction())

@@ -3,20 +3,15 @@ package scriptease.gui.cell;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.MouseForwardingAdapter;
-import scriptease.controller.groupvisitor.SameBindingGroupVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
@@ -174,49 +169,6 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 			protected void defaultProcess(KnowItBinding binding) {
 				bindingWidget.add(ScriptWidgetFactory.buildLabel(
 						knowIt.getDisplayText(), Color.WHITE));
-			}
-		});
-
-		/**
-		 * Mouse Listener for group highlighting
-		 */
-		bindingWidget.addMouseListener(new MouseAdapter() {
-			final Border border = SlotPanel.this.getBorder();
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				setGroupBorder(BorderFactory.createLineBorder(Color.CYAN, 2));
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				setGroupBorder(this.border);
-			}
-
-			private void setGroupBorder(final Border aBoder) {
-				knowIt.getBinding().process(new BindingAdapter() {
-					@Override
-					public void processNull(KnowItBindingNull nullBinding) {
-						// do nothing for null, not even default
-					}
-
-					@Override
-					protected void defaultProcess(KnowItBinding binding) {
-						SameBindingGroupVisitor groupVisitor = new SameBindingGroupVisitor(
-								knowIt);
-						Collection<KnowIt> group = groupVisitor.getGroup();
-						if (group.size() > 0) {
-							for (KnowIt knowIt : group) {
-								Collection<JPanel> panels = ScriptWidgetFactory
-										.getEditedJPanel(knowIt);
-								for (JPanel panel : panels) {
-									panel.setBorder(aBoder);
-									panel.repaint();
-								}
-							}
-						}
-					}
-				});
 			}
 		});
 
