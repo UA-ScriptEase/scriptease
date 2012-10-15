@@ -285,12 +285,9 @@ public class StoryComponentPanel extends JPanel implements
 				StoryComponentPanelFactory.getInstance().removeChild(this,
 						component);
 			}
-		} else if (type.equals(StoryComponentChangeEnum.CHANGE_VISIBILITY)) {
+		} else if (type.equals(StoryComponentChangeEnum.CHANGE_VISIBILITY))
 			this.setVisible(component.isVisible());
-		} else if (type.equals(StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND)) {
-			StoryComponentPanelFactory.getInstance()
-					.refreshStoryComponentPanel(this);
-		}
+
 		// revalidate the panel
 		this.revalidate();
 		this.repaint();

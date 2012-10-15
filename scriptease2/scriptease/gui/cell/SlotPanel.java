@@ -10,7 +10,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
@@ -18,6 +17,9 @@ import javax.swing.border.Border;
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.MouseForwardingAdapter;
 import scriptease.controller.groupvisitor.SameBindingGroupVisitor;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.transfer.ProxyTransferHandler;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
@@ -38,78 +40,62 @@ import scriptease.util.GUIOp;
  * SlotPanel is a GUI slot which accepts KnowIt Bindings (binding slot). It
  * displays all of its acceptable types as well as a hint that the user can drop
  * 
- * @author mfchurch
+ * Slot panels have three functions: display the legal types for the slot,
+ * display the current binding, and provide an interface for rebinding/unbinding
+ * knowIts.
  * 
+ * @author mfchurch
+ * @author kschenk
  */
 @SuppressWarnings("serial")
-public class SlotPanel extends JPanel {
-	private static final Color GROUP_HIGHLIGHT_COLOUR = Color.CYAN;
-	private static final Border GROUP_HIGHLIGHT_BORDER = BorderFactory
-			.createLineBorder(GROUP_HIGHLIGHT_COLOUR, 2);
-	private JPanel typesPanel;
-	private JComponent inputComponent;
+public class SlotPanel extends JPanel implements StoryComponentObserver {
 	private BindingWidget bindingWidget;
+	private final KnowIt knowIt;
 
 	public SlotPanel(final KnowIt knowIt) {
 		if (knowIt == null)
 			throw new IllegalStateException(
 					"Cannot build a SlotPanel with a null KnowIt");
 
+		this.knowIt = knowIt;
+
 		// Set a border of 2 pixels around the slot.
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
 
-		final Border slotBorder;
-		// Set the layout for this panel.
 		this.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 2));
+		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+
+		this.populate();
+
+		this.setEnabled(true);
+		this.knowIt.addStoryComponentObserver(this);
+	}
+
+	private void populate() {
+		// Set the layout for this panel.
+		final JPanel typesPanel;
 
 		// Set the layout for the types panel.
-		this.typesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-		this.inputComponent = null;
-		this.bindingWidget = null;
+		typesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 
-		this.typesPanel.setOpaque(false);
+		typesPanel.setOpaque(false);
 
-		/*
-		 * Slot panels have three functions: 1 is to display the legal types for
-		 * the slot, 2 is to display the current binding, and 3 to provide an
-		 * interface for rebinding/unbinding knowIts
-		 */
+		this.add(ScriptWidgetFactory.populateLegalTypesPanel(typesPanel,
+				this.knowIt));
 
-		// 1. add and maintain the types list
-		this.add(ScriptWidgetFactory.populateLegalTypesPanel(this.typesPanel,
-				knowIt), 0);
+		this.bindingWidget = this.buildBindingWidget(this.knowIt);
 
-		slotBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED);
-		this.setBorder(slotBorder);
-
-		// 2. now handle the binding portion
-		this.bindingWidget = this.buildBindingWidget(knowIt);
 		this.add(this.bindingWidget);
-
-		enableTransferHandler();
 
 		this.setBackground(GUIOp.scaleColour(
 				this.bindingWidget.getBackground(), 0.95));
 	}
 
-	private void enableTransferHandler() {
-		// Make it think you are dropping bindings on the widget
-		ProxyTransferHandler proxyHandler = new ProxyTransferHandler(
-				this.bindingWidget);
-		this.setTransferHandler(proxyHandler);
-		this.typesPanel.setTransferHandler(proxyHandler);
-		this.inputComponent.setTransferHandler(proxyHandler);
-	}
-
-	private void disableTransferHandler() {
-		this.setTransferHandler(null);
-		this.typesPanel.setTransferHandler(null);
-		this.inputComponent.setTransferHandler(null);
-	}
-
 	private BindingWidget buildBindingWidget(final KnowIt knowIt) {
+		final KnowItBinding binding;
 		final BindingWidget bindingWidget;
-		final KnowItBinding binding = knowIt.getBinding();
+
+		binding = knowIt.getBinding();
 		bindingWidget = new BindingWidget(binding);
 
 		// The slotPanel inherits the colour of its binding.
@@ -133,26 +119,26 @@ public class SlotPanel extends JPanel {
 
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
-				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
-						knowIt.getDisplayText(), Color.WHITE);
+				bindingWidget.add(ScriptWidgetFactory.buildLabel(
+						knowIt.getDisplayText(), Color.WHITE));
 			}
 
 			@Override
 			public void processReference(KnowItBindingReference reference) {
-				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
-						reference.getValue().getDisplayText(), Color.WHITE);
+				bindingWidget.add(ScriptWidgetFactory.buildLabel(reference
+						.getValue().getDisplayText(), Color.WHITE));
 			}
 
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
-						function.getValue().getDisplayText(), Color.WHITE);
+				bindingWidget.add(ScriptWidgetFactory.buildLabel(function
+						.getValue().getDisplayText(), Color.WHITE));
 			}
 
 			@Override
 			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
-				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
-						storyPoint.getValue().getDisplayText(), Color.WHITE);
+				bindingWidget.add(ScriptWidgetFactory.buildLabel(storyPoint
+						.getValue().getDisplayText(), Color.WHITE));
 			}
 
 			@Override
@@ -165,33 +151,31 @@ public class SlotPanel extends JPanel {
 							: this.typeManager.getGui(bindingType);
 
 					if (widgetName == null)
-						SlotPanel.this.inputComponent = ScriptWidgetFactory
-								.buildLabel(name, Color.WHITE);
+						bindingWidget.add(ScriptWidgetFactory.buildLabel(name,
+								Color.WHITE));
 					else if (widgetName.equals(TypeValueWidgets.JSPINNER)) {
-						SlotPanel.this.inputComponent = ScriptWidgetFactory
-								.buildSpinnerEditor(knowIt, constantValue,
-										bindingType);
+						bindingWidget.add(ScriptWidgetFactory
+								.buildSpinnerEditor(knowIt, bindingWidget,
+										constantValue, bindingType));
 					} else if (widgetName.equals(TypeValueWidgets.JCOMBOBOX)) {
-						SlotPanel.this.inputComponent = ScriptWidgetFactory
-								.buildComboEditor(knowIt, bindingType);
+						bindingWidget.add(ScriptWidgetFactory.buildComboEditor(
+								knowIt, bindingWidget, bindingType));
 					} else {
-						SlotPanel.this.inputComponent = ScriptWidgetFactory
-								.buildValueEditor(knowIt);
+						bindingWidget.add(ScriptWidgetFactory.buildValueEditor(
+								knowIt, bindingWidget));
 					}
 				} else {
-					SlotPanel.this.inputComponent = ScriptWidgetFactory
-							.buildLabel(name, Color.WHITE);
+					bindingWidget.add(ScriptWidgetFactory.buildLabel(name,
+							Color.WHITE));
 				}
 			}
 
 			@Override
 			protected void defaultProcess(KnowItBinding binding) {
-				SlotPanel.this.inputComponent = ScriptWidgetFactory.buildLabel(
-						knowIt.getDisplayText(), Color.WHITE);
+				bindingWidget.add(ScriptWidgetFactory.buildLabel(
+						knowIt.getDisplayText(), Color.WHITE));
 			}
 		});
-
-		bindingWidget.add(this.inputComponent);
 
 		/**
 		 * Mouse Listener for group highlighting
@@ -201,7 +185,7 @@ public class SlotPanel extends JPanel {
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				setGroupBorder(GROUP_HIGHLIGHT_BORDER);
+				setGroupBorder(BorderFactory.createLineBorder(Color.CYAN, 2));
 			}
 
 			@Override
@@ -247,13 +231,28 @@ public class SlotPanel extends JPanel {
 		}
 
 		if (enabled) {
-			enableTransferHandler();
+			this.setTransferHandler(new ProxyTransferHandler(this.bindingWidget));
 			this.removeMouseListener(MouseForwardingAdapter.getInstance());
 			this.removeMouseMotionListener(MouseForwardingAdapter.getInstance());
 		} else {
-			disableTransferHandler();
+			this.setTransferHandler(null);
 			this.addMouseListener(MouseForwardingAdapter.getInstance());
 			this.addMouseMotionListener(MouseForwardingAdapter.getInstance());
+		}
+	}
+
+	@Override
+	public void componentChanged(StoryComponentEvent event) {
+		if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
+			this.bindingWidget.getBinding().process(new BindingAdapter() {
+				@Override
+				public void processConstant(KnowItBindingConstant constant) {
+					if (!(constant.getValue() instanceof SimpleGameConstant)) {
+						SlotPanel.this.removeAll();
+						SlotPanel.this.populate();
+					}
+				}
+			});
 		}
 	}
 }

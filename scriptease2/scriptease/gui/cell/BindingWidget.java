@@ -38,7 +38,7 @@ import scriptease.translator.io.tools.SimpleGameConstant;
  */
 @SuppressWarnings("serial")
 public class BindingWidget extends JPanel implements Cloneable {
-	private final KnowItBinding binding;
+	private KnowItBinding binding;
 	/*
 	 * this transfer handler isn't redundantly stored: we remove the super
 	 * version in setEnable(false) - remiller
@@ -49,8 +49,8 @@ public class BindingWidget extends JPanel implements Cloneable {
 		this.binding = binding;
 		// we don't want horizontal/vertical gaps, so make FlowLayout do this
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-		this.updateToolTip(binding);
-		this.updateBackgroundColour(binding);
+		this.updateToolTip(this.binding);
+		this.updateBackgroundColour(this.binding);
 		this.setOpaque(false);
 		this.setUI(new BindingWidgetUI());
 
@@ -60,6 +60,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 		this.setTransferHandler(transferHandler);
 	}
 
+	
 	/**
 	 * Updates the tooltip to reflect the current binding
 	 * 
@@ -90,6 +91,10 @@ public class BindingWidget extends JPanel implements Cloneable {
 		return clone;
 	}
 
+	public void setBinding(KnowItBinding binding) {
+		this.binding = binding;
+	}
+	
 	/**
 	 * Gets the binding that this widget currently represents.
 	 * 
