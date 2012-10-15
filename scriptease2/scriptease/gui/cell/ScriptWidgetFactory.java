@@ -260,15 +260,15 @@ public class ScriptWidgetFactory {
 	public static JComponent populateLegalTypesPanel(JPanel typePanel,
 			KnowIt knowIt) {
 		typePanel.removeAll();
-		TypeWidget slotTypeWidget;
 		final KnowItBinding binding = knowIt.getBinding();
 
 		final Collection<String> types = knowIt.getAcceptableTypes();
 
 		// for each type the KnowIt can accept
 		// This is types for the other thing
-		/*************************************************************************/
 		for (String type : types) {
+			final TypeWidget slotTypeWidget;
+
 			slotTypeWidget = ScriptWidgetFactory.getTypeWidget(type);
 			slotTypeWidget.setSelected(true);
 
@@ -283,7 +283,6 @@ public class ScriptWidgetFactory {
 				typePanel.add(slotTypeWidget);
 			}
 		}
-		/*************************************************************************/
 		return typePanel;
 	}
 
@@ -376,15 +375,21 @@ public class ScriptWidgetFactory {
 	 * @return
 	 */
 	public static JComponent buildSpinnerEditor(final KnowIt knowIt,
-			final GameConstant constantValue, final String bindingType) {
-		
+			final BindingWidget widget, final GameConstant constantValue,
+			final String bindingType) {
+
 		final Comparable<?> MIN = null; // default to no min limit
 		final Comparable<?> MAX = null; // default to no max limit
 		final Float STEP_SIZE = 1.0f; // default to int step size
 
+		final ObservedJPanel observedPanel;
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
+
 		final String scriptValue;
+
+		final StoryComponentObserver observer;
+		final ChangeListener changeListener;
 
 		float initVal;
 		try {
@@ -396,6 +401,8 @@ public class ScriptWidgetFactory {
 		model = new SpinnerNumberModel(initVal, MIN, MAX, STEP_SIZE);
 		spinner = new JSpinner(model);
 		scriptValue = knowIt.getBinding().getScriptValue();
+
+		observedPanel = new ObservedJPanel(spinner);
 
 		// Handle the initial value case
 		if (scriptValue == null || scriptValue.isEmpty()) {
@@ -413,7 +420,7 @@ public class ScriptWidgetFactory {
 			});
 		}
 
-		spinner.addChangeListener(new ChangeListener() {
+		changeListener = new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				final JSpinner spinner;
@@ -438,34 +445,76 @@ public class ScriptWidgetFactory {
 					UndoManager.getInstance().endUndoableAction();
 				}
 			}
-		});
+		};
+
+		observer = new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
+					final Object value;
+					value = knowIt.getBinding().getValue();
+					if (value instanceof GameConstant) {
+						float newBinding = 0;
+
+						try {
+							newBinding = Float
+									.parseFloat(((GameConstant) value)
+											.getCodeText());
+						} catch (NumberFormatException e) {
+							newBinding = 0;
+						}
+
+						widget.setBinding(knowIt.getBinding());
+						// spinner.removeChangeListener(changeListener);
+						spinner.setValue(newBinding);
+						// spinner.addChangeListener(changeListener);
+					}
+				}
+			}
+		};
+
+		spinner.addChangeListener(changeListener);
+
+		knowIt.addStoryComponentObserver(observer);
+		observedPanel.addObserver(observer);
 
 		widgetsToStoryComponents.put(spinner, knowIt);
-		return spinner;
+
+		return observedPanel;
 	}
 
 	public static JComponent buildComboEditor(final KnowIt knowIt,
-			final String bindingType) {
+			final BindingWidget bindingWidget, final String bindingType) {
+		final Map<String, String> enumMap;
+		final List<String> list;
+
 		final JComboBox combo;
-		final Map<String, String> enumMap = TranslatorManager.getInstance()
-				.getActiveTranslator().getGameTypeManager()
-				.getEnumMap(bindingType);
+		final ObservedJPanel observedPanel;
 
-		// Sort alphabetically
-		List<String> list = new ArrayList<String>(enumMap.values());
+		final StoryComponentObserver observer;
+		final ActionListener actionListener;
+
+		final String scriptValue;
+
+		enumMap = TranslatorManager.getInstance().getActiveTranslator()
+				.getGameTypeManager().getEnumMap(bindingType);
+		list = new ArrayList<String>(enumMap.values());
 		Collections.sort(list);
-		combo = new JComboBox(list.toArray());
 
-		String scriptValue = knowIt.getBinding().getScriptValue();
+		combo = new JComboBox(list.toArray());
+		observedPanel = new ObservedJPanel(combo);
+
+		scriptValue = knowIt.getBinding().getScriptValue();
+
 		if (scriptValue != null && !scriptValue.isEmpty())
 			combo.setSelectedItem(enumMap.get(scriptValue));
 		else
 			combo.setSelectedIndex(-1);
 
-		combo.addActionListener(new ActionListener() {
+		actionListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			
+
 				final GameConstant newBinding;
 
 				// check the selected value
@@ -500,10 +549,32 @@ public class ScriptWidgetFactory {
 					UndoManager.getInstance().endUndoableAction();
 				}
 			}
-		});
+		};
+
+		observer = new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
+					final String scriptValue = knowIt.getBinding()
+							.getScriptValue();
+
+					if (scriptValue != null && !scriptValue.isEmpty())
+						combo.setSelectedItem(enumMap.get(scriptValue));
+					else
+						combo.setSelectedIndex(-1);
+					bindingWidget.setBinding(knowIt.getBinding());
+				}
+			}
+		};
+
+		combo.addActionListener(actionListener);
+
+		knowIt.addStoryComponentObserver(observer);
+		observedPanel.addObserver(observer);
 
 		widgetsToStoryComponents.put(combo, knowIt);
-		return combo;
+
+		return observedPanel;
 	}
 
 	/**
@@ -528,6 +599,7 @@ public class ScriptWidgetFactory {
 					nameEditor.setText(component.getDisplayText());
 
 					GUIOp.resizeJTextField(nameEditor);
+
 				}
 			}
 		};
@@ -594,7 +666,8 @@ public class ScriptWidgetFactory {
 	 * @param knowIt
 	 * @return
 	 */
-	public static JComponent buildValueEditor(final KnowIt knowIt) {
+	public static JComponent buildValueEditor(final KnowIt knowIt,
+			final BindingWidget bindingWidget) {
 		final KnowItBinding binding;
 
 		final JTextField valueEditor;
@@ -610,11 +683,13 @@ public class ScriptWidgetFactory {
 
 		valueEditor = new JTextField(binding.getScriptValue());
 		panel = new ObservedJPanel(valueEditor);
+
 		observer = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
-				if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
-					valueEditor.setText(binding.getScriptValue());
+				if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
+					valueEditor.setText(knowIt.getBinding().getScriptValue());
+					bindingWidget.setBinding(knowIt.getBinding());
 
 					GUIOp.resizeJTextField(valueEditor);
 				}

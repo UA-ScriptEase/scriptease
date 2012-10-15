@@ -173,31 +173,6 @@ public class StoryComponentPanelFactory {
 	}
 
 	/**
-	 * Reconstructs the main panel of the given StoryComponentPanel with the
-	 * current state of the model.
-	 * 
-	 * @param panel
-	 */
-	public void refreshStoryComponentPanel(StoryComponentPanel panel) {
-		final StoryComponent storyComponent = panel.getStoryComponent();
-		final StoryComponentPanelLayoutManager layout = panel.getLayout();
-		if (layout != null) {
-			final JPanel mainPanel = layout.getMainPanel();
-			if (mainPanel != null) {
-				storyComponent.process(new StoryAdapter() {
-					@Override
-					protected void defaultProcessComplex(
-							ComplexStoryComponent complex) {
-						parseDisplayText(mainPanel, complex);
-					}
-				});
-			} else
-				throw new IllegalStateException(
-						"Attempted to refresh a null Main Panel");
-		}
-	}
-
-	/**
 	 * Converts the display text of a StoryComponent from a String into a
 	 * graphical representation that uses different GUI components.
 	 * 
