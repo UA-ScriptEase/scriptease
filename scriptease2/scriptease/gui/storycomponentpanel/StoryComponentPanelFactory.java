@@ -329,6 +329,7 @@ public class StoryComponentPanelFactory {
 	 */
 	private void addWidget(final JPanel displayNamePanel, final KnowIt knowIt,
 			final boolean editable) {
+		
 		final KnowItBinding binding = knowIt.getBinding();
 		binding.process(new BindingAdapter() {
 			// functions, descriptions and runTimes all get a draggable bubble

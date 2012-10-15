@@ -221,7 +221,7 @@ public class SlotPanel extends JPanel {
 						SameBindingGroupVisitor groupVisitor = new SameBindingGroupVisitor(
 								knowIt);
 						Collection<KnowIt> group = groupVisitor.getGroup();
-						if (group.size() > 1) {
+						if (group.size() > 0) {
 							for (KnowIt knowIt : group) {
 								Collection<JPanel> panels = ScriptWidgetFactory
 										.getEditedJPanel(knowIt);
