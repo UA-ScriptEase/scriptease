@@ -54,13 +54,9 @@ public class BindingWidget extends JPanel implements Cloneable {
 		this.setOpaque(false);
 		this.setUI(new BindingWidgetUI());
 
-		// Default transferHandler
-		TransferHandler transferHandler = BindingWidgetTransferHandler
-				.getInstance();
-		this.setTransferHandler(transferHandler);
+		this.setTransferHandler(BindingWidgetTransferHandler.getInstance());
 	}
 
-	
 	/**
 	 * Updates the tooltip to reflect the current binding
 	 * 
@@ -94,7 +90,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 	public void setBinding(KnowItBinding binding) {
 		this.binding = binding;
 	}
-	
+
 	/**
 	 * Gets the binding that this widget currently represents.
 	 * 

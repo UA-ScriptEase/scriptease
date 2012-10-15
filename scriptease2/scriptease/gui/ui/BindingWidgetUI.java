@@ -96,9 +96,11 @@ public class BindingWidgetUI extends ComponentUI {
 				final TransferHandler transferHandler = source
 						.getTransferHandler();
 				if (transferHandler != null) {
-					if (source.getBinding().isBound())
-						transferHandler.exportAsDrag(source, e,
-								TransferHandler.MOVE);
+					if (source.getBinding().isBound()) {
+						// if (e.isShiftDown())
+							transferHandler.exportAsDrag(source, e,
+									TransferHandler.MOVE);
+					}
 				}
 			}
 		});
