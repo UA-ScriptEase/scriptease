@@ -462,9 +462,10 @@ public class ScriptWidgetFactory {
 		else
 			combo.setSelectedIndex(-1);
 
-		combo.addFocusListener(new FocusListener() {
+		combo.addActionListener(new ActionListener() {
 			@Override
-			public void focusLost(FocusEvent e) {
+			public void actionPerformed(ActionEvent e) {
+			
 				final GameConstant newBinding;
 
 				// check the selected value
@@ -498,10 +499,6 @@ public class ScriptWidgetFactory {
 					knowIt.setBinding(newBinding);
 					UndoManager.getInstance().endUndoableAction();
 				}
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
 			}
 		});
 
