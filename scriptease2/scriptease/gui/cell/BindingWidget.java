@@ -46,7 +46,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 	private TransferHandler transferHandler;
 
 	public BindingWidget(final KnowItBinding binding) {
-		this.binding = binding;
+		this.setBinding(binding);
 		// we don't want horizontal/vertical gaps, so make FlowLayout do this
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		this.updateToolTip(this.binding);
@@ -87,6 +87,12 @@ public class BindingWidget extends JPanel implements Cloneable {
 		return clone;
 	}
 
+	/**
+	 * Sets the binding of the BindingWidget. If the binding contains a story
+	 * component, an observer is added to check for name changes.
+	 * 
+	 * @param binding
+	 */
 	public void setBinding(KnowItBinding binding) {
 		this.binding = binding;
 	}

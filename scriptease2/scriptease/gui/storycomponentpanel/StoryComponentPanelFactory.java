@@ -189,9 +189,9 @@ public class StoryComponentPanelFactory {
 		JLabel plainTextLabel;
 		String plainText;
 		KnowIt knowIt = null;
-	
+
 		displayNamePanel.removeAll();
-	
+
 		displayNamePanel.setOpaque(false);
 		displayNamePanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 
@@ -241,7 +241,8 @@ public class StoryComponentPanelFactory {
 				}
 			}
 
-			plainTextLabel = ScriptWidgetFactory.buildLabel(plainText, null);
+			plainTextLabel = ScriptWidgetFactory.buildLabel(plainText,
+					Color.BLACK);
 
 			displayNamePanel.add(plainTextLabel);
 
@@ -440,8 +441,7 @@ public class StoryComponentPanelFactory {
 
 	private void buildMainKnowItPanel(KnowIt knowIt, final JPanel mainPanel) {
 		// Add displayName panel
-		
-		//mainPanel.removeAll();
+
 		mainPanel.setOpaque(false);
 		mainPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 
