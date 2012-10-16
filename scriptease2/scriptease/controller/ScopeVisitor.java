@@ -112,6 +112,11 @@ public class ScopeVisitor extends StoryAdapter {
 		if (askIt != this.targetComponent)
 			this.scope.add(askIt.getCondition());
 	}
+	
+	@Override
+	public void processKnowIt(KnowIt knowIt) {
+		this.defaultProcess(knowIt);
+	}
 
 	@Override
 	public void processScriptIt(ScriptIt scriptIt) {
