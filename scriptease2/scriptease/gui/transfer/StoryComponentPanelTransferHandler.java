@@ -19,6 +19,8 @@ import javax.swing.JScrollBar;
 import javax.swing.JSplitPane;
 import javax.swing.TransferHandler;
 
+import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.PanelFactory;
 import scriptease.gui.cell.BindingWidget;
@@ -28,8 +30,13 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
 
 /**
@@ -272,6 +279,56 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			} else {
 				success = parent.addStoryChild(clone);
 			}
+
+			// Remove the bindings if this is a scriptit.
+
+			clone.process(new StoryAdapter() {
+				private void validateScriptItParameters(ScriptIt scriptIt) {
+					for (KnowIt parameter : scriptIt.getParameters()) {
+						final KnowItBinding binding;
+
+						binding = parameter.getBinding();
+
+						if (!binding.compatibleWith(parameter))
+							parameter.setBinding(new KnowItBindingNull());
+					}
+				}
+
+				@Override
+				public void processScriptIt(ScriptIt scriptIt) {
+					this.validateScriptItParameters(scriptIt);
+				}
+
+				@Override
+				public void processAskIt(AskIt questionIt) {
+					final KnowIt condition;
+					final KnowItBinding binding;
+
+					condition = questionIt.getCondition();
+					binding = condition.getBinding();
+
+					if (!binding.compatibleWith(condition)) {
+						condition.setBinding(new KnowItBindingNull());
+					}
+				}
+
+				@Override
+				public void processKnowIt(KnowIt knowIt) {
+					final KnowItBinding binding;
+
+					binding = knowIt.getBinding();
+
+					binding.process(new BindingAdapter() {
+						@Override
+						public void processFunction(
+								KnowItBindingFunction function) {
+
+							validateScriptItParameters(function.getValue());
+						}
+					});
+				}
+
+			});
 
 			if (!success)
 				throw new IllegalStateException("Was unable to add " + newChild
