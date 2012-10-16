@@ -114,26 +114,26 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
-				bindingWidget.add(ScriptWidgetFactory.buildLabel(
-						knowIt.getDisplayText(), Color.WHITE));
+				bindingWidget.add(ScriptWidgetFactory
+						.buildObservedNameLabel(knowIt));
 			}
 
 			@Override
 			public void processReference(KnowItBindingReference reference) {
-				bindingWidget.add(ScriptWidgetFactory.buildLabel(reference
-						.getValue().getDisplayText(), Color.WHITE));
+				bindingWidget.add(ScriptWidgetFactory
+						.buildObservedNameLabel(reference.getValue()));
 			}
 
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				bindingWidget.add(ScriptWidgetFactory.buildLabel(function
-						.getValue().getDisplayText(), Color.WHITE));
+				bindingWidget.add(ScriptWidgetFactory
+						.buildObservedNameLabel(function.getValue()));
 			}
 
 			@Override
 			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
-				bindingWidget.add(ScriptWidgetFactory.buildLabel(storyPoint
-						.getValue().getDisplayText(), Color.WHITE));
+				bindingWidget.add(ScriptWidgetFactory
+						.buildObservedNameLabel(storyPoint.getValue()));
 			}
 
 			@Override
@@ -167,8 +167,8 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 			@Override
 			protected void defaultProcess(KnowItBinding binding) {
-				bindingWidget.add(ScriptWidgetFactory.buildLabel(
-						knowIt.getDisplayText(), Color.WHITE));
+				bindingWidget.add(ScriptWidgetFactory
+						.buildObservedNameLabel(knowIt));
 			}
 		});
 
@@ -195,7 +195,6 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 	@Override
 	public void componentChanged(StoryComponentEvent event) {
-		System.out.println(event);
 		if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
 			this.bindingWidget.getBinding().process(new BindingAdapter() {
 				@Override

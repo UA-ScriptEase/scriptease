@@ -165,6 +165,40 @@ public class ScriptWidgetFactory {
 	}
 
 	/**
+	 * Builds a name label for a component that updates itself based on the name
+	 * passed to it.
+	 * 
+	 * @param storyComponent
+	 * @return
+	 */
+	public static JComponent buildObservedNameLabel(
+			StoryComponent storyComponent) {
+		final JLabel nameLabel;
+		final ObservedJPanel observedLabel;
+		final StoryComponentObserver observer;
+
+		nameLabel = ScriptWidgetFactory.buildLabel(
+				storyComponent.getDisplayText(), Color.WHITE);
+		observer = new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				// only update the name for now, but if anything else is
+				// needed later, it should be added here. - remiller
+				if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+					nameLabel.setText(event.getSource().getDisplayText());
+				}
+			}
+		};
+
+		observedLabel = new ObservedJPanel(nameLabel);
+		observedLabel.addObserver(observer);
+
+		storyComponent.addStoryComponentObserver(observer);
+
+		return observedLabel;
+	}
+
+	/**
 	 * Visitor class that constructs {@link BindingWidget}s. <br>
 	 * <br>
 	 * The related methods in ScriptWidgetFactory are facades that forwarding to
@@ -197,30 +231,8 @@ public class ScriptWidgetFactory {
 			if (editable) {
 				widget.add(ScriptWidgetFactory.buildNameEditor(storyComponent));
 			} else {
-				final JLabel nameLabel;
-				final ObservedJPanel observedLabel;
-				final StoryComponentObserver observer;
-
-				nameLabel = ScriptWidgetFactory.buildLabel(
-						storyComponent.getDisplayText(), Color.WHITE);
-				observer = new StoryComponentObserver() {
-					@Override
-					public void componentChanged(StoryComponentEvent event) {
-						// only update the name for now, but if anything else is
-						// needed later, it should be added here. - remiller
-						if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
-							nameLabel.setText(event.getSource()
-									.getDisplayText());
-						}
-					}
-				};
-
-				observedLabel = new ObservedJPanel(nameLabel);
-				observedLabel.addObserver(observer);
-
-				storyComponent.addStoryComponentObserver(observer);
-
-				widget.add(observedLabel);
+				widget.add(ScriptWidgetFactory
+						.buildObservedNameLabel(storyComponent));
 			}
 
 			widget.setTransferHandler(BindingTransferHandlerExportOnly
