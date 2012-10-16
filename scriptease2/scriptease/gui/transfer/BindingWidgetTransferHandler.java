@@ -1,6 +1,7 @@
 package scriptease.gui.transfer;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -16,6 +17,7 @@ import scriptease.controller.groupvisitor.SameBindingGroupVisitor;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.cell.BindingWidget;
 import scriptease.gui.cell.ScriptWidgetFactory;
+import scriptease.gui.cell.SlotPanel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
@@ -100,7 +102,11 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 
 			// Set the KnowItBinding to null.
 			toRemove.clearBinding();
-			UndoManager.getInstance().endUndoableAction();
+
+			this.repopulateParentOf(component);
+
+			if (UndoManager.getInstance().hasOpenUndoableAction())
+				UndoManager.getInstance().endUndoableAction();
 		}
 	}
 
@@ -185,12 +191,25 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				if (BindingWidgetTransferHandler.lastDragShiftDown)
 					setGroupBindings(sourceBinding, destinationKnowIt, binding);
 				destinationKnowIt.setBinding(sourceBinding);
+
+				this.repopulateParentOf(destinationComponent);
+
+				if (UndoManager.getInstance().hasOpenUndoableAction())
+					UndoManager.getInstance().endUndoableAction();
 			}
-			if (UndoManager.getInstance().hasOpenUndoableAction())
-				UndoManager.getInstance().endUndoableAction();
 			return true;
 		}
 		return false;
+	}
+
+	private void repopulateParentOf(JComponent destinationComponent) {
+		final Container parent;
+		parent = destinationComponent.getParent();
+
+		if (parent != null && parent instanceof SlotPanel) {
+			parent.removeAll();
+			((SlotPanel) parent).populate();
+		}
 	}
 
 	/**
