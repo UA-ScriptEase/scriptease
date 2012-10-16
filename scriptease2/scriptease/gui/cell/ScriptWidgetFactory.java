@@ -441,8 +441,11 @@ public class ScriptWidgetFactory {
 						UndoManager.getInstance().startUndoableAction(
 								"Set " + knowIt.getDisplayText()
 										+ "'s value to [" + value + "]");
+
 					knowIt.setBinding(newBinding);
-					UndoManager.getInstance().endUndoableAction();
+
+					if (UndoManager.getInstance().hasOpenUndoableAction())
+						UndoManager.getInstance().endUndoableAction();
 				}
 			}
 		};
@@ -546,7 +549,8 @@ public class ScriptWidgetFactory {
 						UndoManager.getInstance().startUndoableAction(
 								"Set " + knowIt.getDisplayText() + "'s value");
 					knowIt.setBinding(newBinding);
-					UndoManager.getInstance().endUndoableAction();
+					if (UndoManager.getInstance().hasOpenUndoableAction())
+						UndoManager.getInstance().endUndoableAction();
 				}
 			}
 		};

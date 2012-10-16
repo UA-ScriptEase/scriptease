@@ -66,7 +66,7 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 		this.knowIt.addStoryComponentObserver(this);
 	}
 
-	private void populate() {
+	public void populate() {
 		// Set the layout for this panel.
 		final JPanel typesPanel;
 
@@ -195,14 +195,25 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 	@Override
 	public void componentChanged(StoryComponentEvent event) {
+		System.out.println(event);
 		if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
 			this.bindingWidget.getBinding().process(new BindingAdapter() {
 				@Override
 				public void processConstant(KnowItBindingConstant constant) {
+					/*
+					 * We need this listener because the slot panel does not
+					 * otherwise get updated if we do a group binding. This
+					 * ensures that the slot panel is updated.
+					 */
 					if (!(constant.getValue() instanceof SimpleGameConstant)) {
-						SlotPanel.this.removeAll();
-						SlotPanel.this.populate();
+						this.defaultProcess(constant);
 					}
+				}
+
+				@Override
+				protected void defaultProcess(KnowItBinding binding) {
+					SlotPanel.this.removeAll();
+					SlotPanel.this.populate();
 				}
 			});
 		}
