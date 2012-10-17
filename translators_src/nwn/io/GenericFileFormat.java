@@ -830,13 +830,23 @@ public class GenericFileFormat {
 		// size of the chunk it just wrote.
 		fieldsOffset = structsOffset
 				+ this.writeStructs(writer, filePosition + structsOffset);
+
+		// NEeds to be called after writefielddatablock
 		labelsOffset = fieldsOffset
 				+ this.writeFields(writer, filePosition + fieldsOffset);
+
 		fieldDataOffset = labelsOffset
 				+ this.writeLabels(writer, filePosition + labelsOffset);
+
+		// Needs to be called before writefields.
 		fieldIndicesArrayOffset = fieldDataOffset
 				+ this.writeFieldDataBlock(writer, filePosition
 						+ fieldDataOffset);
+
+		// We need to call writeFields again because DataOrDataOffsets changed
+		// when we called writeFieldDataBlock.
+		this.writeFields(writer, filePosition + fieldsOffset);
+
 		listIndicesArrayOffset = fieldIndicesArrayOffset
 				+ this.writeFieldIndices(writer, filePosition
 						+ fieldIndicesArrayOffset);
