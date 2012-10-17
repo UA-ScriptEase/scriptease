@@ -741,7 +741,7 @@ public class PanelFactory {
 		currentTranslatorNameLabel = new JLabel("-None-");
 
 		translatorObserver = LifetimeObserverFactory.getInstance()
-				.buildStatusPanelTranslatorObserver(currentTranslatorLabel);
+				.buildStatusPanelTranslatorObserver(currentTranslatorNameLabel);
 
 		statusObserver = new StatusObserver() {
 			@Override
