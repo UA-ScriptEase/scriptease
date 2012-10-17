@@ -129,7 +129,8 @@ public class CodeBlockSource extends CodeBlock {
 	 */
 	public CodeBlockSource(String subject, String slot,
 			Collection<String> returnTypes, Collection<KnowIt> parameters,
-			Collection<String> includes, Collection<AbstractFragment> code, int id) {
+			Collection<String> includes, Collection<AbstractFragment> code,
+			int id) {
 		this.init(id);
 		this.setSubject(subject);
 		this.setSlot(slot);
@@ -341,5 +342,12 @@ public class CodeBlockSource extends CodeBlock {
 	@Override
 	public void process(StoryVisitor visitor) {
 		visitor.processCodeBlockSource(this);
+	}
+
+	@Override
+	public void revalidateKnowItBindings() {
+		System.err
+				.println("Attempted to revalidate KnowItBindings on CodeBlockSource: "
+						+ this);
 	}
 }

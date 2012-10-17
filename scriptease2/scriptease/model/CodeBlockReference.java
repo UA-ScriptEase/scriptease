@@ -301,4 +301,9 @@ public class CodeBlockReference extends CodeBlock {
 	public void process(StoryVisitor visitor) {
 		visitor.processCodeBlockReference(this);
 	}
+
+	@Override
+	public void revalidateKnowItBindings() {
+		// Do nothing.
+	}
 }
