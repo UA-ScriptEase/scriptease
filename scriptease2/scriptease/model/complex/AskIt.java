@@ -9,6 +9,8 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 
 /**
  * Represents the "if/else" programming construct.<br>
@@ -148,7 +150,7 @@ public final class AskIt extends ComplexStoryComponent {
 	public StoryItemSequence getIfBlock() {
 		return this.ifBlock;
 	}
-	
+
 	/**
 	 * Gets the container for children that are in the Else part of the AskIt.
 	 * 
@@ -158,12 +160,12 @@ public final class AskIt extends ComplexStoryComponent {
 	public StoryItemSequence getElseBlock() {
 		return this.elseBlock;
 	}
-	
+
 	public void setIfBlock(StoryItemSequence ifBlock) {
 		this.ifBlock = ifBlock;
 		ifBlock.setOwner(this);
 	}
-	
+
 	public void setElseBlock(StoryItemSequence elseBlock) {
 		this.elseBlock = elseBlock;
 		elseBlock.setOwner(this);
@@ -189,5 +191,21 @@ public final class AskIt extends ComplexStoryComponent {
 	@Override
 	public String toString() {
 		return "AskIt [" + this.getDisplayText() + "]";
+	}
+
+	@Override
+	public void revalidateKnowItBindings() {
+		final KnowIt condition;
+		final KnowItBinding binding;
+
+		condition = this.getCondition();
+		binding = condition.getBinding();
+
+		if (!binding.compatibleWith(condition)) {
+			condition.setBinding(new KnowItBindingNull());
+		}
+
+		this.getIfBlock().revalidateKnowItBindings();
+		this.getElseBlock().revalidateKnowItBindings();
 	}
 }

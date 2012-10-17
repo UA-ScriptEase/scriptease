@@ -282,54 +282,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			// Remove the bindings if this is a scriptit.
 
-			clone.process(new StoryAdapter() {
-				private void validateScriptItParameters(ScriptIt scriptIt) {
-					for (KnowIt parameter : scriptIt.getParameters()) {
-						final KnowItBinding binding;
-
-						binding = parameter.getBinding();
-
-						if (!binding.compatibleWith(parameter))
-							parameter.setBinding(new KnowItBindingNull());
-					}
-				}
-
-				@Override
-				public void processScriptIt(ScriptIt scriptIt) {
-					this.validateScriptItParameters(scriptIt);
-				}
-
-				@Override
-				public void processAskIt(AskIt questionIt) {
-					final KnowIt condition;
-					final KnowItBinding binding;
-
-					condition = questionIt.getCondition();
-					binding = condition.getBinding();
-
-					if (!binding.compatibleWith(condition)) {
-						condition.setBinding(new KnowItBindingNull());
-					}
-				}
-
-				@Override
-				public void processKnowIt(KnowIt knowIt) {
-					final KnowItBinding binding;
-
-					binding = knowIt.getBinding();
-
-					binding.process(new BindingAdapter() {
-						@Override
-						public void processFunction(
-								KnowItBindingFunction function) {
-
-							validateScriptItParameters(function.getValue());
-						}
-					});
-				}
-
-			});
-
+			clone.revalidateKnowItBindings();
+			
 			if (!success)
 				throw new IllegalStateException("Was unable to add " + newChild
 						+ " to " + parent

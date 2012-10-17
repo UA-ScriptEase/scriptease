@@ -3,6 +3,10 @@ package scriptease.model.atomic.knowitbindings;
 import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
+import scriptease.model.PatternModel;
+import scriptease.model.PatternModelManager;
+import scriptease.model.StoryModel;
+import scriptease.model.atomic.KnowIt;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.tools.SimpleGameConstant;
 
@@ -50,6 +54,25 @@ public class KnowItBindingConstant extends KnowItBinding {
 		if (this.isIdentifiableGameConstant())
 			return this.getValue().getTemplateID();
 		return this.getValue().getTypes().iterator().next();
+	}
+
+	@Override
+	public boolean compatibleWith(KnowIt knowIt) {
+		if (typeMatches(knowIt.getAcceptableTypes())) {
+			if (knowIt.getOwner() != null
+					&& !(this.getValue() instanceof SimpleGameConstant)) {
+				final PatternModel model;
+
+				model = PatternModelManager.getInstance().getActiveModel();
+				if (model instanceof StoryModel) {
+					return ((StoryModel) model).getModule()
+							.getInstanceForObjectIdentifier(
+									this.getValue().getTemplateID()) != null;
+				}
+			} else
+				return true;
+		}
+		return false;
 	}
 
 	/**

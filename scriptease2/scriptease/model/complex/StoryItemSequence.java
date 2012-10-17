@@ -49,4 +49,11 @@ public class StoryItemSequence extends ComplexStoryComponent {
 	public String toString() {
 		return "StoryItemSequence [" + this.getDisplayText() + "]";
 	}
+
+	@Override
+	public void revalidateKnowItBindings() {
+		for (StoryComponent child : this.getChildren()) {
+			child.revalidateKnowItBindings();
+		}
+	}
 }

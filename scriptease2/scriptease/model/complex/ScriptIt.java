@@ -13,6 +13,8 @@ import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.translator.codegenerator.LocationInformation;
 
 /**
@@ -167,10 +169,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		alwaysBlock.setOwner(this);
 	}
 
-	/**
-	 * TODO Handles these stupid If/ElseBlock pointers.. we need to fix this NOT
-	 * THIS
-	 */
 	@Override
 	public boolean addStoryChildBefore(StoryComponent newChild,
 			StoryComponent sibling) {
@@ -325,5 +323,22 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	public void processImplicits(StoryVisitor processController) {
 		for (KnowIt implicit : this.getImplicits())
 			implicit.process(processController);
+	}
+
+	@Override
+	public void revalidateKnowItBindings() {
+		for (KnowIt parameter : this.getParameters()) {
+			final KnowItBinding binding;
+
+			binding = parameter.getBinding();
+
+			if (!binding.compatibleWith(parameter))
+				parameter.setBinding(new KnowItBindingNull());
+		}
+
+		if (this.isCause()) {
+			this.getAlwaysBlock().revalidateKnowItBindings();
+			this.getStoryBlock().revalidateKnowItBindings();
+		}
 	}
 }

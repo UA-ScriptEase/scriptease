@@ -22,4 +22,9 @@ public final class Note extends StoryComponent {
 		visitor.processNote(this);
 
 	}
+
+	@Override
+	public void revalidateKnowItBindings() {
+		// Do nothing. Notes don't have any bindings.
+	}
 }

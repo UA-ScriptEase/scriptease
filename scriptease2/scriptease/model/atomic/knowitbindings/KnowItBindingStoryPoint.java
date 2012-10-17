@@ -5,6 +5,10 @@ import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.BindingVisitor;
+import scriptease.model.PatternModel;
+import scriptease.model.PatternModelManager;
+import scriptease.model.StoryModel;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.StoryPoint;
 
 /**
@@ -79,5 +83,22 @@ public class KnowItBindingStoryPoint extends KnowItBinding {
 	@Override
 	public void process(BindingVisitor processController) {
 		processController.processStoryPoint(this);
+	}
+
+	@Override
+	public boolean compatibleWith(KnowIt knowIt) {
+		if (typeMatches(knowIt.getAcceptableTypes())) {
+			if (knowIt.getOwner() != null) {
+				final PatternModel model;
+
+				model = PatternModelManager.getInstance().getActiveModel();
+				if (model instanceof StoryModel) {
+					return ((StoryModel) model).getRoot().getDescendants()
+							.contains(this.getValue());
+				}
+			} else
+				return true;
+		}
+		return false;
 	}
 }

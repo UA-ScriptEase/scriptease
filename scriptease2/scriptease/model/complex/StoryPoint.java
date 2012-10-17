@@ -176,4 +176,10 @@ public class StoryPoint extends ComplexStoryComponent {
 
 		return descendants;
 	}
+
+	@Override
+	public void revalidateKnowItBindings() {
+		for (StoryComponent child : this.getChildren())
+			child.revalidateKnowItBindings();
+	}
 }

@@ -494,4 +494,19 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			});
 		}
 	}
+
+	@Override
+	public void revalidateKnowItBindings() {
+		final KnowItBinding binding;
+
+		binding = this.getBinding();
+
+		binding.process(new BindingAdapter() {
+			@Override
+			public void processFunction(KnowItBindingFunction function) {
+
+				function.getValue().revalidateKnowItBindings();
+			}
+		});
+	}
 }

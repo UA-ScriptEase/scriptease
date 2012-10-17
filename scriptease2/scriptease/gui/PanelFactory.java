@@ -246,6 +246,12 @@ public class PanelFactory {
 							}
 						});
 			}
+
+			@Override
+			public void nodeOverwritten(Object node) {
+				if (node instanceof StoryPoint)
+					((StoryPoint) node).revalidateKnowItBindings();
+			}
 		});
 
 		start.addStoryComponentObserver(graphRedrawer);
@@ -564,7 +570,8 @@ public class PanelFactory {
 
 		modelObserver = new PatternModelObserver() {
 			public void modelChanged(PatternModelEvent event) {
-				// TODO Need to redraw this panel so that nothing is shown if no model
+				// TODO Need to redraw this panel so that nothing is shown if no
+				// model
 				// is open.
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
 					tree.drawTree(event.getPatternModel(),

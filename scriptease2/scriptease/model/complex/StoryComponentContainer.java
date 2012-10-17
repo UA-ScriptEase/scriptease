@@ -40,4 +40,9 @@ public class StoryComponentContainer extends ComplexStoryComponent {
 	public String toString() {
 		return "StoryComponentContainer (\"" + this.getDisplayText() + "\")";
 	}
+
+	@Override
+	public void revalidateKnowItBindings() {
+		// Do nothing. In the future, we may need to revalidate its children.
+	}
 }
