@@ -53,6 +53,10 @@ import sun.awt.util.IdentityArrayList;
  */
 @SuppressWarnings("serial")
 public class SEGraph<E> extends JComponent {
+	public static enum SelectionMode {
+		SELECT_NODE, SELECT_PATH
+	}
+
 	private final SEGraphModel<E> model;
 
 	private SEGraphNodeRenderer<E> renderer;
@@ -60,11 +64,13 @@ public class SEGraph<E> extends JComponent {
 
 	private final BiHashMap<E, JComponent> nodesToComponents;
 	private final NodeMouseAdapter mouseAdapter;
-
 	private final List<SEGraphObserver> observers;
 
 	private E selectedNode;
 	private Point mousePosition;
+
+	// TODO IMPLEMENT PATH SELECTION!
+	private SelectionMode selectionMode;
 
 	/**
 	 * Builds a new graph with the passed in start point and a builder.
@@ -80,6 +86,7 @@ public class SEGraph<E> extends JComponent {
 		this.nodesToComponents = new BiHashMap<E, JComponent>();
 		this.mouseAdapter = new NodeMouseAdapter();
 		this.observers = new ArrayList<SEGraphObserver>();
+		this.selectionMode = SelectionMode.SELECT_PATH;
 
 		this.transferHandler = new SEGraphNodeTransferHandler<E>(this);
 
@@ -101,6 +108,16 @@ public class SEGraph<E> extends JComponent {
 
 		this.repaint();
 		this.revalidate();
+	}
+
+	/**
+	 * Set the selection mode to path or node.
+	 * 
+	 * @param mode
+	 *            Either SELECT_PATH or SELECT_NODE from {@link SelectionMode}.
+	 */
+	public void setSelectionMode(SelectionMode mode) {
+		this.selectionMode = mode;
 	}
 
 	/**

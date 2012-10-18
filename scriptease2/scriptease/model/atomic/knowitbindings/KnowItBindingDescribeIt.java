@@ -3,7 +3,7 @@ package scriptease.model.atomic.knowitbindings;
 import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
-import scriptease.model.atomic.DescribeIt;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.ScriptIt;
 
 public class KnowItBindingDescribeIt extends KnowItBinding {

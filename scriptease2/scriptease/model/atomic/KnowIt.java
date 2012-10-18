@@ -14,6 +14,7 @@ import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;

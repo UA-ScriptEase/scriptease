@@ -35,8 +35,8 @@ import scriptease.gui.action.graphs.DisconnectModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.InsertModeAction;
 import scriptease.gui.action.graphs.SelectModeAction;
-import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.describeits.DescribeIt;
 
 /**
  * ToolBarFactory is responsible for creating all JToolBars.

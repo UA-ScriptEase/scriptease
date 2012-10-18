@@ -11,16 +11,17 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.SEGraph.GraphPanel;
-import scriptease.gui.SEGraph.nodes.GraphNode;
-import scriptease.gui.SEGraph.observers.GraphNodeEvent;
-import scriptease.gui.SEGraph.observers.GraphNodeObserver;
-import scriptease.gui.SEGraph.observers.GraphNodeEvent.GraphNodeEventType;
+import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
+import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.SEGraph.observers.SEGraphAdapter;
+import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
 import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
-import scriptease.model.atomic.DescribeIt;
+import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * This view is used to allow the user to select various pathways from
@@ -29,28 +30,50 @@ import scriptease.model.complex.ScriptIt;
  * @author mfchurch
  */
 @SuppressWarnings("serial")
-public class DescribeItPanel extends JPanel implements GraphNodeObserver {
+public class DescribeItPanel extends JPanel {
+	private SEGraph<DescribeItNode> expandedPanel;
 
 	private DescribeIt describeIt;
 
 	public DescribeItPanel(DescribeIt describeIt, boolean collapsed) {
-		final GraphNode headNode = describeIt.getHeadNode();
+		final DescribeItNode headNode = describeIt.getHeadNode();
+		final DescribeItNodeGraphModel describeItGraphModel;
+
 		this.describeIt = describeIt;
+
+		describeItGraphModel = new DescribeItNodeGraphModel(headNode);
+
+		this.expandedPanel = new SEGraph<DescribeItNode>(describeItGraphModel);
+		// observer the graph nodes'
+
+		this.expandedPanel.setNodeRenderer(new DescribeItNodeRenderer(
+				this.expandedPanel));
+
+		// TODO
+		// Make graph redraw if we add or remove successors from these nodes.
+		// Should be an observed JPanel to remember these
+
+		this.expandedPanel.addSEGraphObserver(new SEGraphAdapter() {
+
+			@Override
+			public void nodeSelected(final Object node) {
+				if (!(node instanceof DescribeItNode))
+					return;
+
+				// TODO Set selected path in DescribeIt to the selected path.
+			}
+
+			@Override
+			public void nodeOverwritten(Object node) {
+				if (node instanceof StoryPoint)
+					((StoryPoint) node).revalidateKnowItBindings();
+			}
+		});
+
 		this.setOpaque(false);
 		this.setLayout(new DescribeItPanelLayoutManager(headNode, collapsed));
-		// observer the graph nodes
-
-		GraphNode.observeDepthMap(this, headNode);
 	}
 
-	@Override
-	public void nodeChanged(GraphNodeEvent event) {
-		if (event.getEventType() == GraphNodeEventType.SELECTED) {
-			this.describeIt.selectFromHeadToNode(event.getSource());
-		}
-	}
-
-	// TODO abstract a common layoutManager between this and ParameterPanel
 	/**
 	 * DescribeItPanelLayoutManager handles laying out the describeItPanel in
 	 * either it's text form, or graph form
@@ -62,16 +85,14 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 		private static final int BUTTON_X_INDENT = 5;
 
 		private ExpansionButton expansionButton;
-		private GraphPanel expandedPanel;
 		private JPanel collapsedPanel;
 		private boolean collapsed;
 
-		public DescribeItPanelLayoutManager(GraphNode headNode,
+		public DescribeItPanelLayoutManager(DescribeItNode headNode,
 				boolean collapsed) {
 			this.collapsed = collapsed;
 			// initialize the panels
 			this.collapsedPanel = new JPanel();
-			this.expandedPanel = new GraphPanel(headNode);
 
 			// expansion button
 			this.expansionButton = ScriptWidgetFactory
@@ -95,10 +116,13 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 						if (!commited) {
 							// if the path was incomplete, revert to the current
 							// selected path
-							DescribeItPanel.this.describeIt.selectPath(DescribeItPanel.this.describeIt.getSelectedPath());
+							DescribeItPanel.this.describeIt
+									.selectPath(DescribeItPanel.this.describeIt
+											.getSelectedPath());
 						}
 					}
-					DescribeItPanelLayoutManager.this.expansionButton.setCollapsed(shouldCollapse);
+					DescribeItPanelLayoutManager.this.expansionButton
+							.setCollapsed(shouldCollapse);
 					DescribeItPanel.this.revalidate();
 				}
 			});
@@ -106,7 +130,7 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			// add the components so they display
 			DescribeItPanel.this.add(this.expansionButton);
 			DescribeItPanel.this.add(this.collapsedPanel);
-			DescribeItPanel.this.add(this.expandedPanel);
+			DescribeItPanel.this.add(expandedPanel);
 		}
 
 		@Override
@@ -114,12 +138,13 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			final Insets insets = parent.getInsets();
 
 			// only show expansion if more than a single path exists
-			final boolean moreThanOnePath = DescribeItPanel.this.describeIt.getPaths().size() > 1;
+			final boolean moreThanOnePath = DescribeItPanel.this.describeIt
+					.getPaths().size() > 1;
 			this.expansionButton.setVisible(moreThanOnePath);
 
 			// update the visibility
 			this.collapsedPanel.setVisible(this.collapsed);
-			this.expandedPanel.setVisible(!this.collapsed);
+			expandedPanel.setVisible(!this.collapsed);
 
 			if (this.collapsed) {
 				layoutCollapsed(insets.left + insets.right, insets.top
@@ -163,15 +188,16 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			ySize = Math.max(ySize, buttonHeight);
 
 			// Resolve the displayNamePanel's size
-			ScriptIt resolvedDoIt = DescribeItPanel.this.describeIt.getResolvedScriptIt();
+			ScriptIt resolvedDoIt = DescribeItPanel.this.describeIt
+					.getResolvedScriptIt();
 
 			if (resolvedDoIt != null) {
 				StoryComponentPanelFactory.getInstance().parseDisplayText(
 						this.collapsedPanel, resolvedDoIt);
 
 				xSize += this.collapsedPanel.getPreferredSize().getWidth();
-				ySize = Math.max(ySize, (int) this.collapsedPanel.getPreferredSize()
-						.getHeight());
+				ySize = Math.max(ySize, (int) this.collapsedPanel
+						.getPreferredSize().getHeight());
 			}
 
 			return new Dimension(xSize, ySize);
@@ -200,15 +226,18 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			xLocation += buttonWidth + BUTTON_X_INDENT;
 
 			// Resolve the displayNamePanel size
-			final ScriptIt resolvedDoIt = DescribeItPanel.this.describeIt.getResolvedScriptIt();
+			final ScriptIt resolvedDoIt = DescribeItPanel.this.describeIt
+					.getResolvedScriptIt();
 
 			if (resolvedDoIt != null) {
 				StoryComponentPanelFactory.getInstance().parseDisplayText(
 						this.collapsedPanel, resolvedDoIt);
 
-				this.collapsedPanel.setBounds(xLocation, yLocation,
-						(int) this.collapsedPanel.getPreferredSize().getWidth(),
-						(int) this.collapsedPanel.getPreferredSize().getHeight());
+				this.collapsedPanel
+						.setBounds(xLocation, yLocation,
+								(int) this.collapsedPanel.getPreferredSize()
+										.getWidth(), (int) this.collapsedPanel
+										.getPreferredSize().getHeight());
 			}
 		}
 
@@ -234,7 +263,7 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			ySize = Math.max(buttonHeight, ySize);
 
 			// calculate the minimum size with the graphPanel
-			Dimension minimumSize = this.expandedPanel.getMinimumSize();
+			Dimension minimumSize = expandedPanel.getMinimumSize();
 			minimumSize.setSize(minimumSize.getWidth() + xSize,
 					Math.max(minimumSize.getHeight(), ySize));
 
@@ -265,8 +294,8 @@ public class DescribeItPanel extends JPanel implements GraphNodeObserver {
 			xLocation += buttonWidth;
 
 			// graphPanel does the rest
-			this.expandedPanel.setBounds(xLocation, yLocation, (int) this.expandedPanel
-					.getPreferredSize().getWidth(), (int) this.expandedPanel
+			expandedPanel.setBounds(xLocation, yLocation, (int) expandedPanel
+					.getPreferredSize().getWidth(), (int) expandedPanel
 					.getPreferredSize().getHeight());
 		}
 

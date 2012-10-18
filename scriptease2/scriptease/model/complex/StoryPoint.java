@@ -41,18 +41,19 @@ public class StoryPoint extends ComplexStoryComponent {
 	 */
 	public StoryPoint(String name) {
 		super();
+		this.fanIn = DEFAULT_FAN_IN;
+		this.successors = new HashSet<StoryPoint>();
+
 		this.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		this.registerChildType(Note.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
-		if ((name.equals("")) || (name == null)) {
+		if (name.equals("") || name == null) {
 			name = NEW_STORY_POINT + " " + storyPointCounter++;
 		}
 
 		this.setDisplayText(name);
-		this.fanIn = DEFAULT_FAN_IN;
-		this.successors = new HashSet<StoryPoint>();
 	}
 
 	/**

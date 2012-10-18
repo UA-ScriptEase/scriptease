@@ -12,7 +12,7 @@ import scriptease.controller.io.converter.graphnode.TextNodeConverter;
 import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.gui.SEGraph.nodes.KnowItNode;
 import scriptease.gui.SEGraph.nodes.TextNode;
-import scriptease.model.atomic.DescribeIt;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.ScriptIt;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -89,7 +89,7 @@ public class DescribeItConverter implements Converter {
 		writer.endNode();
 
 		// default path
-		final List<GraphNode> defaultPath = describeIt.getDefaultPath();
+		final List<GraphNode> defaultPath = describeIt.getShortestPath();
 		writer.startNode(TAG_DEFAULT_PATH);
 		context.convertAnother(new ArrayList<GraphNode>(defaultPath));
 		writer.endNode();

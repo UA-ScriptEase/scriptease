@@ -21,9 +21,9 @@ import scriptease.gui.describeIts.DescribeItPanel;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
-import scriptease.model.atomic.DescribeIt;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -445,7 +445,7 @@ public class StoryComponentPanelFactory {
 		mainPanel.setOpaque(false);
 		mainPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 
-		addWidget(mainPanel, knowIt, true);
+		this.addWidget(mainPanel, knowIt, true);
 		final KnowItBinding binding = knowIt.getBinding().resolveBinding();
 
 		binding.process(new BindingAdapter() {
@@ -464,8 +464,8 @@ public class StoryComponentPanelFactory {
 			@Override
 			public void processDescribeIt(KnowItBindingDescribeIt described) {
 				processDefault();
-				DescribeIt describeIt = described.getValue();
-				DescribeItPanel describeItPanel = new DescribeItPanel(
+				final DescribeIt describeIt = described.getValue();
+				final DescribeItPanel describeItPanel = new DescribeItPanel(
 						describeIt, true);
 				mainPanel.add(describeItPanel);
 			}
@@ -473,8 +473,8 @@ public class StoryComponentPanelFactory {
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
 				processDefault();
-				ScriptIt scriptIt = function.getValue();
-				JPanel displayNamePanel = new JPanel();
+				final ScriptIt scriptIt = function.getValue();
+				final JPanel displayNamePanel = new JPanel();
 				parseDisplayText(displayNamePanel, scriptIt);
 				mainPanel.add(displayNamePanel);
 			}
