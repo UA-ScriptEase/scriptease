@@ -171,10 +171,6 @@ public final class AskIt extends ComplexStoryComponent {
 		elseBlock.setOwner(this);
 	}
 
-	/**
-	 * TODO Handles these stupid If/ElseBlock pointers.. we need to fix this NOT
-	 * THIS
-	 */
 	@Override
 	public boolean addStoryChildBefore(StoryComponent newChild,
 			StoryComponent sibling) {
