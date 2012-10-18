@@ -19,8 +19,6 @@ import javax.swing.JScrollBar;
 import javax.swing.JSplitPane;
 import javax.swing.TransferHandler;
 
-import scriptease.controller.BindingAdapter;
-import scriptease.controller.StoryAdapter;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.PanelFactory;
 import scriptease.gui.cell.BindingWidget;
@@ -30,13 +28,8 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
-import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
 
 /**

@@ -18,6 +18,7 @@ import scriptease.gui.SEGraph.nodes.GraphNode;
  * @author mfchurch
  * @author kschenk
  * 
+ * @deprecated
  */
 @SuppressWarnings("serial")
 public abstract class GraphNodeEditor extends JComponent {

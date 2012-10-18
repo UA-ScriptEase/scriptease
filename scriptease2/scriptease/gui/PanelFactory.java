@@ -73,7 +73,7 @@ import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
-import scriptease.model.atomic.DescribeIt;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.TranslatorManager;
 import scriptease.util.BiHashMap;
