@@ -82,7 +82,8 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	 * @param key
 	 * @return
 	 */
-	private Integer countKeyMatches(Collection<String> searchableData, String key) {
+	private Integer countKeyMatches(Collection<String> searchableData,
+			String key) {
 		int count = 0;
 		Collection<String> parsedKeys = parseKey(key);
 		for (String parsedKey : parsedKeys) {
@@ -202,28 +203,6 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 		public void processKnowIt(KnowIt knowIt) {
 			defaultProcess(knowIt);
 			this.searchData.addAll(knowIt.getTypes());
-
-			/*
-			 * XXX What is this stuff? Remove it or make it work!
-			 */
-
-			// final KnowItBinding binding = knowIt.getBinding();
-			/*
-			 * binding.process(new AbstractNoOpBindingVisitor() {
-			 * 
-			 * @Override public void processFunction(KnowItBindingFunction
-			 * function) { final ScriptIt doIt = function.getValue();
-			 * SearchDataCompiler.this.compile(doIt); }
-			 * 
-			 * @Override public void processDescribeIt(KnowItBindingDescribeIt
-			 * described) { final DescribeIt describeIt = described.getValue();
-			 * final Collection<ScriptIt> doIts = describeIt .getScriptIts();
-			 * for (final ScriptIt doIt : doIts) {
-			 * SearchDataCompiler.this.compile(doIt); } } });
-			 */
-			// binding.process(new AbstractNoOpBindingVisitor() {
-			// Inner methods need alot ofwork...
-			// });
 		}
 	}
 }

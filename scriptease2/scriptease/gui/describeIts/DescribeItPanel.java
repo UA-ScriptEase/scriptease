@@ -107,19 +107,12 @@ public class DescribeItPanel extends JPanel {
 					if (shouldCollapse) {
 
 						// Record the rebinding
-						if (!UndoManager.getInstance().hasOpenUndoableAction())
-							UndoManager.getInstance().startUndoableAction(
-									"Bind DescribeIt");
-						boolean commited = DescribeItPanel.this.describeIt
-								.commitSelection();
-						UndoManager.getInstance().endUndoableAction();
-						if (!commited) {
-							// if the path was incomplete, revert to the current
-							// selected path
-							DescribeItPanel.this.describeIt
-									.selectPath(DescribeItPanel.this.describeIt
-											.getSelectedPath());
-						}
+						// TODO We need to set Selecetd path elsewhere, not here.
+						//if (!UndoManager.getInstance().hasOpenUndoableAction())
+							//UndoManager.getInstance().startUndoableAction(
+								//	"Bind DescribeIt");
+						//DescribeItPanel.this.describeIt.setSelectedPath(path);
+						//UndoManager.getInstance().endUndoableAction();
 					}
 					DescribeItPanelLayoutManager.this.expansionButton
 							.setCollapsed(shouldCollapse);

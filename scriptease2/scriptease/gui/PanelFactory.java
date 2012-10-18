@@ -49,10 +49,10 @@ import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.gui.SEGraph.GraphPanel;
+import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.SEGraph.SEGraphModel;
 import scriptease.gui.SEGraph.StoryPointGraphModel;
-import scriptease.gui.SEGraph.nodes.GraphNode;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
@@ -74,6 +74,7 @@ import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.TranslatorManager;
 import scriptease.util.BiHashMap;
@@ -138,30 +139,23 @@ public class PanelFactory {
 	 *            Start Point of the graph
 	 * @return
 	 */
-	public JPanel buildDescribeItPanel(final GraphNode start,
+	public JPanel buildDescribeItPanel(final DescribeItNode start,
 			final DescribeIt describeIt) {
 		final JPanel describeItPanel = new JPanel(new BorderLayout(), true);
-		final GraphPanel graphPanel = new GraphPanel(start);
 
-		DescribeIt editedDescribeIt = describeIt.clone();
-		editedDescribeIt.clearSelection();
-
-		graphPanel.setHeadNode(editedDescribeIt.getHeadNode());
-
-		GraphToolBarModeAction.addJComponent(graphPanel);
+		final SEGraphModel<DescribeItNode> graphModel = new DescribeItNodeGraphModel(
+				start);
+		final SEGraph<DescribeItNode> graph = new SEGraph<DescribeItNode>(
+				graphModel);
 
 		final JToolBar graphToolBar = ToolBarFactory.getInstance()
 				.buildGraphEditorToolBar();
 
-		final JToolBar describeItToolBar = ToolBarFactory.getInstance()
-				.buildDescribeItToolBar(editedDescribeIt, graphPanel);
-
-		describeItPanel.add(graphToolBar.add(describeItToolBar),
-				BorderLayout.PAGE_START);
+		describeItPanel.add(graphToolBar, BorderLayout.PAGE_START);
 
 		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
 
-		describeItPanel.add(new JScrollPane(graphPanel), BorderLayout.CENTER);
+		describeItPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
 
 		return describeItPanel;
 	}
