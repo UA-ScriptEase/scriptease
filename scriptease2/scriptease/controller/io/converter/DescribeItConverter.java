@@ -20,13 +20,13 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * Converter used for DescribeIt file I/O
  * 
  * @author mfchurch
+ * @author kschenk
  * 
  */
 public class DescribeItConverter implements Converter {
 	public static final String TAG_DESCRIBEIT = "DescribeIt";
-	private static final String TAG_DEFAULT_PATH = "DefaultPath";
 	private static final String TAG_SELECTED_PATH = "SelectedPath";
-	private static final String TAG_HEAD = "Head";
+	private static final String TAG_HEAD = "HeadNode";
 	private static final String TAG_PATH_MAP = "PathMap";
 	private static final String TAG_ENTRY = "Entry";
 	private static final String TAG_PATH = "Path";
@@ -39,12 +39,7 @@ public class DescribeItConverter implements Converter {
 		// head node
 		final DescribeItNode headNode = describeIt.getHeadNode();
 		writer.startNode(TAG_HEAD);
-
-		// TODO Should instead point to node name 
-		// Like DescribeItNodeConverter.TAG_NODE_NAME
-		writer.startNode("DescribeItNode");
 		context.convertAnother(headNode);
-
 		writer.endNode();
 
 		// paths
@@ -101,14 +96,10 @@ public class DescribeItConverter implements Converter {
 				 * class. So until we find a better way to do this make sure
 				 * this encompasses all of the possible head node types :(
 				 */
-				if (reader.getNodeName()
-						.equals(TextNodeConverter.TAG_TEXT_NODE))
+				if (reader.getNodeName().equals(
+						DescribeItNodeConverter.TAG_NODE_NAME))
 					headNode = (DescribeItNode) context.convertAnother(
-							describeIt, TextNode.class);
-				else if (reader.getNodeName().equals(
-						KnowItNodeConverter.TAG_KNOWIT_NODE))
-					headNode = (DescribeItNode) context.convertAnother(
-							describeIt, KnowItNode.class);
+							describeIt, DescribeItNode.class);
 				reader.moveUp();
 			}
 			// paths
@@ -143,12 +134,6 @@ public class DescribeItConverter implements Converter {
 					}
 					reader.moveUp();
 				}
-			}
-			// default path
-			else if (nodeName.equals(TAG_DEFAULT_PATH)) {
-				defaultPath = new ArrayList<DescribeItNode>();
-				defaultPath.addAll((Collection<DescribeItNode>) context
-						.convertAnother(describeIt, ArrayList.class));
 			}
 			// selected path
 			else if (nodeName.equals(TAG_SELECTED_PATH)) {

@@ -13,6 +13,7 @@ import scriptease.controller.io.converter.AskItConverter;
 import scriptease.controller.io.converter.CodeBlockReferenceConverter;
 import scriptease.controller.io.converter.CodeBlockSourceConverter;
 import scriptease.controller.io.converter.DescribeItConverter;
+import scriptease.controller.io.converter.DescribeItNodeConverter;
 import scriptease.controller.io.converter.GameMapConverter;
 import scriptease.controller.io.converter.GameTypeConverter;
 import scriptease.controller.io.converter.IdentityArrayListConverter;
@@ -423,6 +424,7 @@ public class FileIO {
 		stream.registerConverter(new ScriptItConverter());
 		stream.registerConverter(new StoryPointConverter());
 		stream.registerConverter(new NoteConverter());
+		stream.registerConverter(new DescribeItNodeConverter());
 
 		stream.registerConverter(new IdentityArrayListConverter(stream
 				.getMapper()));

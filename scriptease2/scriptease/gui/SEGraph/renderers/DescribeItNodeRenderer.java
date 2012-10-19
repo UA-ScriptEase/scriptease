@@ -46,7 +46,7 @@ public class DescribeItNodeRenderer extends SEGraphNodeRenderer<DescribeItNode> 
 			component.add(typePanel);
 			component.add(new JLabel(knowIt.getDisplayText()));
 		} else {
-			component.add(new JLabel(node.getDisplayText()));
+			component.add(new JLabel(node.getName()));
 		}
 	}
 }
