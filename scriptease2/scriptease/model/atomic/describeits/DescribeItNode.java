@@ -15,33 +15,40 @@ import scriptease.model.atomic.KnowIt;
 /**
  * 
  * @author kschenk
- *
+ * 
  */
-public class DescribeItNode extends StoryComponent implements
-		StoryComponentObserver {
+public class DescribeItNode {
 	private static final String NEW_DESCRIBEIT_NODE = "New Node";
 	private static int describeItNodeCounter = 1;
 
 	private KnowIt knowIt;
+	private String name;
 
 	private final Set<DescribeItNode> successors;
 
 	public DescribeItNode(String name, KnowIt knowIt) {
 		super();
 		this.successors = new HashSet<DescribeItNode>();
-		this.knowIt = knowIt;
 
 		if (name.equals("") || name == null) {
 			name = NEW_DESCRIBEIT_NODE + " " + describeItNodeCounter++;
 		}
-		this.setDisplayText(name);
+
+		this.setKnowIt(knowIt);
+		this.setName(name);
+
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public void setKnowIt(KnowIt knowIt) {
-		if (this.knowIt != null)
-			this.knowIt.removeStoryComponentObserver(this);
 		this.knowIt = knowIt;
-		this.knowIt.addStoryComponentObserver(this);
 	}
 
 	public KnowIt getKnowIt() {
@@ -65,9 +72,6 @@ public class DescribeItNode extends StoryComponent implements
 	public boolean addSuccessor(DescribeItNode successor) {
 		if (successor != this && !successor.getSuccessors().contains(this)) {
 			if (this.successors.add(successor)) {
-				this.notifyObservers(new StoryComponentEvent(
-						successor,
-						StoryComponentChangeEnum.DESCRIBEIT_NODE_SUCCESSOR_ADDED));
 				return true;
 			}
 		}
@@ -94,8 +98,6 @@ public class DescribeItNode extends StoryComponent implements
 	 */
 	public boolean removeSuccessor(DescribeItNode successor) {
 		if (this.successors.remove(successor)) {
-			this.notifyObservers(new StoryComponentEvent(successor,
-					StoryComponentChangeEnum.DESCRIBEIT_NODE_SUCCESSOR_REMOVED));
 			return true;
 		}
 		return false;
@@ -122,28 +124,5 @@ public class DescribeItNode extends StoryComponent implements
 			descendants.addAll(successor.getDescendants());
 		}
 		return descendants;
-	}
-
-	@Override
-	public void componentChanged(StoryComponentEvent event) {
-		StoryComponent source = event.getSource();
-		source.process(new StoryAdapter() {
-			@Override
-			public void processKnowIt(KnowIt knowIt) {
-				setKnowIt(knowIt);
-			}
-		});
-	}
-
-	@Override
-	public void process(StoryVisitor visitor) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void revalidateKnowItBindings() {
-		// TODO Auto-generated method stub
-		
 	}
 }

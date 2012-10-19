@@ -62,7 +62,8 @@
 	<!-- Defines a list of TypeConverter definitions -->
 	<xsd:complexType name="TypeConverterList_Type">
 		<xsd:sequence>
-			<xsd:element minOccurs ="0" maxOccurs="unbounded" name="ScriptIt" type="ScriptIt_Type" />
+			<xsd:element minOccurs="0" maxOccurs="unbounded" name="ScriptIt"
+				type="ScriptIt_Type" />
 		</xsd:sequence>
 	</xsd:complexType>
 
@@ -174,25 +175,16 @@
 
 	<xsd:complexType name="DescribeIt_Type">
 		<xsd:sequence>
-			<xsd:element name="Head">
+			<xsd:element name="HeadNode">
 				<xsd:complexType>
-					<xsd:group ref="GraphNode_Group" maxOccurs="unbounded" />
+					<xsd:group ref="DescribeItNode_Group" maxOccurs="unbounded" />
 				</xsd:complexType>
 			</xsd:element>
 			<xsd:element name="PathMap" type="PathMap_Type" />
-			<xsd:element name="DefaultPath">
-				<xsd:complexType>
-					<xsd:sequence minOccurs="0">
-						<xsd:group ref="GraphNode_Group" maxOccurs="unbounded" />
-					</xsd:sequence>
-					<xsd:attribute name="reference" type="xsd:string"
-						use="optional" />
-				</xsd:complexType>
-			</xsd:element>
 			<xsd:element name="SelectedPath">
 				<xsd:complexType>
 					<xsd:sequence minOccurs="0">
-						<xsd:group ref="GraphNode_Group" maxOccurs="unbounded" />
+						<xsd:group ref="DescribeItNode_Group" maxOccurs="unbounded" />
 					</xsd:sequence>
 					<xsd:attribute name="reference" type="xsd:string"
 						use="optional" />
@@ -302,33 +294,23 @@
 			aren't meant to be shared. They should be cloning all the time. - remiller -->
 	</xsd:complexType>
 
-	<!-- represents the choice between -->
-	<xsd:group name="GraphNode_Group">
+	<!-- represents a group of DescribeItNodes -->
+	<xsd:group name="DescribeItNode_Group">
 		<xsd:choice>
-			<xsd:element name="TextNode" type="GraphNode_Type" />
-			<xsd:element name="KnowItNode" type="GraphNode_Type" />
+			<xsd:element name="DescribeItNode" type="DescribeItNode_Type" />
 		</xsd:choice>
 	</xsd:group>
 
-	<!-- Represents a graph node - either full or reference -->
-	<xsd:complexType name="GraphNode_Type">
-		<xsd:sequence minOccurs="0">
-			<xsd:element name="Children" type="GraphNodeChildren_Type" />
-			<xsd:choice maxOccurs="unbounded">
-				<xsd:element name="Text" type="xsd:string" />
-				<xsd:element name="KnowIt" type="KnowIt_Type" />
-			</xsd:choice>
-		</xsd:sequence>
-		<xsd:attribute name="reference" type="xsd:string" use="optional" />
-		<xsd:attribute name="terminal" type="xsd:boolean" use="optional" />
-	</xsd:complexType>
-
-	<!-- Represents a graph node child list -->
-	<xsd:complexType name="GraphNodeChildren_Type">
-		<xsd:choice maxOccurs="unbounded" minOccurs="0">
-			<xsd:element name="TextNode" type="GraphNode_Type" />
-			<xsd:element name="KnowItNode" type="GraphNode_Type" />
+	<!-- Represents a DescribeItNode - either full or reference -->
+	<xsd:complexType name="DescribeItNode_Type">
+		<xsd:choice>
+			<xsd:element name="Name" type="xsd:string" minOccurs="0" />
+			<xsd:element name="KnowIt" type="KnowIt_Type" minOccurs="0" />
+			<xsd:sequence minOccurs="0">
+				<xsd:element name="Successors" type="DescribeItNodeList_Type" />
+			</xsd:sequence>
 		</xsd:choice>
+	<xsd:attribute name="reference" type="xsd:string" />
 	</xsd:complexType>
 
 	<xsd:complexType name="PathMap_Type">
@@ -340,18 +322,15 @@
 
 	<xsd:complexType name="PathMapEntry_Type">
 		<xsd:sequence>
-			<xsd:element name="Path" type="GraphPathNodeList_Type" />
+			<xsd:element name="Path" type="DescribeItNodeList_Type" />
 			<xsd:element name="ScriptIt" type="ScriptIt_Type" />
 		</xsd:sequence>
 	</xsd:complexType>
 
-	<!-- List of GraphNodes, which are either TextNodes or KnowItNodes -->
-	<xsd:complexType name="GraphPathNodeList_Type">
+	<!-- List of DescribeItNodes, which are either TextNodes or KnowItNodes -->
+	<xsd:complexType name="DescribeItNodeList_Type">
 		<xsd:sequence maxOccurs="unbounded">
-			<xsd:choice>
-				<xsd:element name="TextNode" type="GraphNode_Type" />
-				<xsd:element name="KnowItNode" type="GraphNode_Type" />
-			</xsd:choice>
+			<xsd:element name="DescribeItNode" type="DescribeItNode_Type" />
 		</xsd:sequence>
 	</xsd:complexType>
 </xsd:schema>

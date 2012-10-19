@@ -40,7 +40,6 @@ public aspect Progress {
 	void around(): showProgress() {
 		// this is being marked as unused even though it appears below.
 		// Java/AspectJ compiler bug, I guess. - remiller
-		@SuppressWarnings("unused")
 		final Thread mainThread = Thread.currentThread();
 		SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
 			@Override

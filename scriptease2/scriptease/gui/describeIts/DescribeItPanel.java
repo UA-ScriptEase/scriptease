@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
-import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
@@ -107,12 +106,14 @@ public class DescribeItPanel extends JPanel {
 					if (shouldCollapse) {
 
 						// Record the rebinding
-						// TODO We need to set Selecetd path elsewhere, not here.
-						//if (!UndoManager.getInstance().hasOpenUndoableAction())
-							//UndoManager.getInstance().startUndoableAction(
-								//	"Bind DescribeIt");
-						//DescribeItPanel.this.describeIt.setSelectedPath(path);
-						//UndoManager.getInstance().endUndoableAction();
+						// TODO We need to set Selecetd path elsewhere, not
+						// here.
+						// if
+						// (!UndoManager.getInstance().hasOpenUndoableAction())
+						// UndoManager.getInstance().startUndoableAction(
+						// "Bind DescribeIt");
+						// DescribeItPanel.this.describeIt.setSelectedPath(path);
+						// UndoManager.getInstance().endUndoableAction();
 					}
 					DescribeItPanelLayoutManager.this.expansionButton
 							.setCollapsed(shouldCollapse);

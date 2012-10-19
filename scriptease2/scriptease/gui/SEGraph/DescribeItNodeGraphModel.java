@@ -53,7 +53,7 @@ public class DescribeItNodeGraphModel extends SEGraphModel<DescribeItNode> {
 		if (existingNode == node)
 			return false;
 
-		existingNode.setDisplayText(node.getDisplayText());
+		existingNode.setName(node.getName());
 		existingNode.setKnowIt(node.getKnowIt());
 
 		return true;
