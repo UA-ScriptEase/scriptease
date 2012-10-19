@@ -38,6 +38,7 @@ import scriptease.gui.action.file.SaveModelAction;
 import scriptease.gui.action.file.SaveModelExplicitlyAction;
 import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
+import scriptease.gui.action.libraryeditor.NewDescriptionAction;
 import scriptease.gui.action.libraryeditor.NewEffectAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
@@ -91,8 +92,6 @@ public class MenuFactory {
 	private static final String TOOLS = Il8nResources.getString("Tools");
 	private static final String HELP = Il8nResources.getString("Help");
 	private static final String NEW = Il8nResources.getString("New");
-	private static final String NEW_DESCRIPTION = Il8nResources
-			.getString("KnowIt");
 	private static final String DEBUG = "Debug";
 
 	/**
@@ -152,7 +151,7 @@ public class MenuFactory {
 			newMenu = new JMenu(MenuFactory.NEW);
 			newCause = new JMenuItem(NewCauseAction.getInstance());
 			newEffect = new JMenuItem(NewEffectAction.getInstance());
-			newDescription = new JMenuItem(MenuFactory.NEW_DESCRIPTION);
+			newDescription = new JMenuItem(NewDescriptionAction.getInstance());
 
 			newMenu.add(NewStoryModelAction.getInstance());
 			newMenu.addSeparator();

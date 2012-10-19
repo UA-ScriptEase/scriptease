@@ -128,8 +128,9 @@ public class DescribeIt implements Cloneable {
 	}
 
 	public boolean setSelectedPath(List<DescribeItNode> path) {
-		if (!this.selectedPath.isEmpty()
-				&& this.paths.get(this.selectedPath) != null) {
+		if (this.selectedPath == null
+				|| (!this.selectedPath.isEmpty() && this.paths
+						.get(this.selectedPath) != null)) {
 			// clear bindings on the previous selectedPath
 			final ScriptIt scriptIt;
 

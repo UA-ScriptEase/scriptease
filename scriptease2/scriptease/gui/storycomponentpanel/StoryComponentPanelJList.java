@@ -22,6 +22,7 @@ import scriptease.gui.filters.VisibilityFilter;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 
 /**
@@ -135,6 +136,10 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		listModel.removeElement(noResultsPanel);
 
 		for (StoryComponent component : storyComponentList) {
+			if(component instanceof KnowIt)
+				if(component.getDisplayText().isEmpty())
+					System.out.println("");
+			
 			if (!(this.filterRule == null)) {
 				if (!this.filterRule.isAcceptable(component))
 					continue;

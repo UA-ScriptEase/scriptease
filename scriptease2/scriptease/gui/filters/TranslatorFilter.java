@@ -8,6 +8,7 @@ import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 
@@ -56,6 +57,11 @@ public class TranslatorFilter extends StoryComponentFilter {
 			// If the describeIt is bound to a DoIt, we can rely on the DoIt to
 			// check if the describeIt is acceptable for this Translator.
 			binding.process(new BindingAdapter() {
+				@Override
+				public void processNull(KnowItBindingNull nullBinding) {
+					TranslatorFilterVisitor.this.acceptable = true;
+				}
+				
 				@Override
 				public void processFunction(KnowItBindingFunction function) {
 					final ScriptIt doIt = function.getValue();
