@@ -2,6 +2,7 @@ package scriptease.gui.libraryeditor;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -25,6 +27,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import scriptease.ScriptEase;
+import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
@@ -36,6 +39,11 @@ import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.atomic.describeits.DescribeItNode;
+import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.TranslatorManager;
@@ -50,6 +58,9 @@ import scriptease.util.StringOp;
  */
 public class LibraryEditorPanelFactory {
 	private static LibraryEditorPanelFactory instance = new LibraryEditorPanelFactory();
+	private static Font labelFont = new Font("SansSerif", Font.BOLD,
+			Integer.parseInt(ScriptEase.getInstance().getPreference(
+					ScriptEase.FONT_SIZE_KEY)) + 1);
 
 	/**
 	 * Returns the single instance of StoryComponentBuilderPanelFactory
@@ -103,6 +114,8 @@ public class LibraryEditorPanelFactory {
 							editingPanel.add(buildCodeBlockComponent(codeBlock,
 									scriptIt));
 						}
+
+						editingPanel.revalidate();
 					}
 				};
 			}
@@ -111,16 +124,18 @@ public class LibraryEditorPanelFactory {
 			public void processScriptIt(final ScriptIt scriptIt) {
 				this.defaultProcess(scriptIt);
 
-				final JPanel editingPanel;
+				final JPanel codeBlockEditingPanel;
+				final JPanel scriptItControlPanel;
 				final JButton addCodeBlockButton;
 
-				editingPanel = new JPanel();
+				codeBlockEditingPanel = new JPanel();
+				scriptItControlPanel = new JPanel();
 				addCodeBlockButton = new JButton("Add CodeBlock");
 
-				editingPanel.setLayout(new BoxLayout(editingPanel,
-						BoxLayout.PAGE_AXIS));
-
-				editorPanel.add(editingPanel);
+				codeBlockEditingPanel.setLayout(new BoxLayout(
+						codeBlockEditingPanel, BoxLayout.PAGE_AXIS));
+				scriptItControlPanel.setLayout(new FlowLayout(
+						FlowLayout.LEADING));
 
 				// Causes and effects are processed as ScriptIts
 				addCodeBlockButton.addActionListener(new ActionListener() {
@@ -143,14 +158,21 @@ public class LibraryEditorPanelFactory {
 					}
 				});
 
-				editorPanel.add(addCodeBlockButton);
+				scriptItControlPanel.setBorder(BorderFactory
+						.createTitledBorder("ScriptIt Controls"));
+				scriptItControlPanel.add(addCodeBlockButton);
 
-				this.setUpCodeBlockPanels(scriptIt, editingPanel).run();
+				editorPanel.add(scriptItControlPanel);
+				editorPanel.add(codeBlockEditingPanel);
+
+				this.setUpCodeBlockPanels(scriptIt, codeBlockEditingPanel)
+						.run();
 
 				scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
 						.getInstance().buildScriptItEditorObserver(
-								setUpCodeBlockPanels(scriptIt, editingPanel)));
-				
+								setUpCodeBlockPanels(scriptIt,
+										codeBlockEditingPanel)));
+
 				editorPanel.revalidate();
 			}
 
@@ -158,6 +180,150 @@ public class LibraryEditorPanelFactory {
 			public void processKnowIt(final KnowIt knowIt) {
 				this.defaultProcess(knowIt);
 
+				final JPanel knowItControlPanel;
+				final GroupLayout controlPanelLayout;
+				final JComboBox bindingSelectorBox;
+
+				final TypeAction typeAction;
+				final JButton typesButton;
+
+				final JLabel bindingLabel;
+				final JLabel typesLabel;
+
+				final String describeItBinding = "DescribeIt";
+				final String functionBinding = "Function";
+
+				knowItControlPanel = new JPanel();
+				controlPanelLayout = new GroupLayout(knowItControlPanel);
+				bindingSelectorBox = new JComboBox();
+
+				typeAction = new TypeAction();
+				typesButton = new JButton(typeAction);
+
+				bindingLabel = new JLabel("Binding: ");
+				typesLabel = new JLabel("Types: ");
+
+				bindingSelectorBox.addItem(describeItBinding);
+				bindingSelectorBox.addItem(functionBinding);
+
+				bindingLabel.setFont(labelFont);
+				typesLabel.setFont(labelFont);
+
+				typeAction.getTypeSelectionDialogBuilder().deselectAll();
+				typeAction.getTypeSelectionDialogBuilder().selectTypes(
+						knowIt.getTypes(), true);
+
+				knowItControlPanel.setLayout(controlPanelLayout);
+				knowItControlPanel.setBorder(BorderFactory
+						.createTitledBorder("KnowIt Controls"));
+
+				typeAction.setAction(new Runnable() {
+					@Override
+					public void run() {
+						final Collection<String> types;
+
+						types = typeAction.getTypeSelectionDialogBuilder()
+								.getSelectedTypes();
+
+						knowIt.setTypes(types);
+
+						knowIt.getBinding().process(new BindingAdapter() {
+							@Override
+							public void processDescribeIt(
+									KnowItBindingDescribeIt described) {
+								// TODO Do soemthing with describeits
+							}
+
+							@Override
+							public void processFunction(
+									KnowItBindingFunction function) {
+								function.getValue().setTypes(types);
+							}
+						});
+					}
+				});
+
+				// Add JComponents to DescriptorPanel using GroupLayout
+				controlPanelLayout
+						.setHorizontalGroup(controlPanelLayout
+								.createParallelGroup()
+								.addGroup(
+										controlPanelLayout
+												.createSequentialGroup()
+												.addGroup(
+														controlPanelLayout
+																.createParallelGroup()
+																.addComponent(
+																		typesLabel)
+																.addComponent(
+																		bindingLabel))
+												.addGroup(
+														controlPanelLayout
+																.createParallelGroup()
+																.addComponent(
+																		typesButton)
+																.addComponent(
+																		bindingSelectorBox))));
+
+				controlPanelLayout.setVerticalGroup(controlPanelLayout
+						.createSequentialGroup()
+						.addGroup(
+								controlPanelLayout
+										.createParallelGroup(
+												GroupLayout.Alignment.BASELINE)
+										.addComponent(typesLabel)
+										.addComponent(typesButton))
+						.addGroup(
+								controlPanelLayout
+										.createParallelGroup(
+												GroupLayout.Alignment.BASELINE)
+										.addComponent(bindingLabel)
+										.addComponent(bindingSelectorBox)));
+
+				editorPanel.add(knowItControlPanel);
+
+				knowIt.getBinding().process(new BindingAdapter() {
+					public void processNull(KnowItBindingNull nullBinding) {
+						bindingSelectorBox.setSelectedItem(null);
+					};
+
+					@Override
+					public void processDescribeIt(
+							KnowItBindingDescribeIt described) {
+						bindingSelectorBox.setSelectedItem(describeItBinding);
+						editorPanel.add(buildDescribeItBindingPanel(knowIt,
+								described));
+					}
+
+					@Override
+					public void processFunction(KnowItBindingFunction function) {
+						bindingSelectorBox.setSelectedItem(functionBinding);
+						editorPanel.add(buildFunctionBindingPanel(knowIt,
+								function));
+					}
+				});
+
+				bindingSelectorBox.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						final String selectedItem;
+						selectedItem = (String) bindingSelectorBox
+								.getSelectedItem();
+
+						if (selectedItem.equals(describeItBinding)) {
+							knowIt.setBinding(new DescribeIt(
+									new DescribeItNode("", null)));
+						} else if (selectedItem.equals(functionBinding)) {
+							final ScriptIt scriptIt = new ScriptIt("");
+							final CodeBlock codeBlock = new CodeBlockSource();
+
+							codeBlock.setTypes(knowIt.getTypes());
+							scriptIt.addCodeBlock(codeBlock);
+
+							knowIt.setBinding(scriptIt);
+						}
+					}
+				});
 			}
 
 			// We may want to implement these later, so their default methods
@@ -178,6 +344,8 @@ public class LibraryEditorPanelFactory {
 
 				editorPanel.add(LibraryEditorPanelFactory.this
 						.buildDescriptorPanel(component));
+
+				editorPanel.revalidate();
 			}
 		};
 
@@ -190,11 +358,58 @@ public class LibraryEditorPanelFactory {
 		return editorPanel;
 	}
 
+	/**
+	 * Builds a panel used to edit a KnowItBindingFunction
+	 * 
+	 * @param knowIt
+	 * @param functionBinding
+	 * @return
+	 */
+	private JPanel buildFunctionBindingPanel(KnowIt knowIt,
+			KnowItBindingFunction functionBinding) {
+		final JPanel bindingPanel;
+		final ScriptIt function;
+		final EffectHolder panelHolder;
+
+		bindingPanel = new JPanel();
+		function = functionBinding.getValue();
+		panelHolder = new EffectHolder();
+
+		bindingPanel.setBorder(BorderFactory
+				.createTitledBorder("Function Binding"));
+		panelHolder.setComponent(function);
+
+		bindingPanel.add(panelHolder);
+
+		return bindingPanel;
+	}
+
+	/**
+	 * Builds a panel used to edit a KnowItBindingDescribeIt.
+	 * 
+	 * @param knowIt
+	 * @param describeItBinding
+	 * @return
+	 */
+	private JPanel buildDescribeItBindingPanel(KnowIt knowIt,
+			KnowItBindingDescribeIt describeItBinding) {
+
+		return null;
+	}
+
+	/**
+	 * Builds a JTextField used to edit the name of the story component.
+	 * 
+	 * @param component
+	 * @return
+	 */
 	private JTextField buildNameEditorField(final StoryComponent component) {
 		final JTextField nameField;
 
 		nameField = new JTextField(component.getDisplayText());
 
+		// TODO: This is way too slow. See if we can just use the Name Editor in
+		// ScriptWidgetFactory instead.
 		nameField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -214,6 +429,12 @@ public class LibraryEditorPanelFactory {
 		return nameField;
 	}
 
+	/**
+	 * Builds a JTextField used to edit the lables of a story component.
+	 * 
+	 * @param component
+	 * @return
+	 */
 	private JTextField buildLabelEditorField(final StoryComponent component) {
 		final JTextField labelField;
 		final String labelToolTip;
@@ -226,6 +447,7 @@ public class LibraryEditorPanelFactory {
 
 		labelField.setToolTipText(labelToolTip);
 
+		// TODO Also too slow. See above.
 		labelField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -256,6 +478,12 @@ public class LibraryEditorPanelFactory {
 		return labelField;
 	}
 
+	/**
+	 * Builds a JCheckBox to set a component's visibility.
+	 * 
+	 * @param component
+	 * @return
+	 */
 	private JCheckBox buildVisibleBox(final StoryComponent component) {
 		final JCheckBox visibleBox;
 
@@ -272,6 +500,12 @@ public class LibraryEditorPanelFactory {
 		return visibleBox;
 	}
 
+	/**
+	 * Builds a panel containing a name, label, and visibility editor.
+	 * 
+	 * @param component
+	 * @return
+	 */
 	private JPanel buildDescriptorPanel(StoryComponent component) {
 		final JPanel descriptorPanel;
 		final GroupLayout descriptorPanelLayout;
@@ -284,8 +518,6 @@ public class LibraryEditorPanelFactory {
 		final JTextField labelsField;
 		final JCheckBox visibleBox;
 
-		final Font labelFont;
-
 		descriptorPanel = new JPanel();
 		descriptorPanelLayout = new GroupLayout(descriptorPanel);
 
@@ -296,10 +528,6 @@ public class LibraryEditorPanelFactory {
 		nameField = this.buildNameEditorField(component);
 		labelsField = this.buildLabelEditorField(component);
 		visibleBox = this.buildVisibleBox(component);
-
-		labelFont = new Font("SansSerif", Font.BOLD,
-				Integer.parseInt(ScriptEase.getInstance().getPreference(
-						ScriptEase.FONT_SIZE_KEY)) + 1);
 
 		// Set up the labels
 		nameLabel.setFont(labelFont);

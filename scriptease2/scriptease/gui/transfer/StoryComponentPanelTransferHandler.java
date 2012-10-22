@@ -22,6 +22,7 @@ import javax.swing.TransferHandler;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.PanelFactory;
 import scriptease.gui.cell.BindingWidget;
+import scriptease.gui.libraryeditor.EffectHolder;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
@@ -30,6 +31,7 @@ import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
 
 /**
@@ -193,11 +195,13 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			// Handles the case where the user drags a Binding (delete)
 			return true;
 		} else {
-			if (support.getComponent() instanceof StoryComponentPanel) {
+			final Component supportComponent = support.getComponent();
+
+			if (supportComponent instanceof StoryComponentPanel) {
 				final StoryComponentPanel acceptingPanel;
 				final StoryComponent acceptingStoryComponent;
 
-				acceptingPanel = (StoryComponentPanel) support.getComponent();
+				acceptingPanel = (StoryComponentPanel) supportComponent;
 				acceptingStoryComponent = acceptingPanel.getStoryComponent();
 
 				// Only import to complex story components which are editable
@@ -215,6 +219,14 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 						return true;
 					}
 				}
+			} else if (supportComponent instanceof EffectHolder) {
+				final StoryComponent potentialChild = this
+						.extractStoryComponents(support).iterator().next();
+				if (potentialChild instanceof ScriptIt) {
+					if (((ScriptIt) potentialChild).isCause())
+						return false;
+					return true;
+				}
 			}
 		}
 		return false;
@@ -226,69 +238,79 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (!this.canImport(support))
 			return false;
 
-		// variables
-		final Collection<StoryComponent> transferData;
-		int insertionIndex;
-		final StoryComponentPanel panel = (StoryComponentPanel) support
-				.getComponent();
-		final ComplexStoryComponent parent = (ComplexStoryComponent) panel
-				.getStoryComponent();
-		boolean success = false;
+		final Component supportComponent = support.getComponent();
 
-		// get transfer data
-		transferData = this.extractStoryComponents(support);
-		if (transferData == null)
-			return false;
+		if (supportComponent instanceof StoryComponentPanel) {
 
-		if (support.isDrop()) {
-			// drops have user input to decide where to place things
-			insertionIndex = this.getInsertionIndex(panel, support);
-		} else {
-			// pastes just always go to the end of the parent's child list
-			insertionIndex = ((ComplexStoryComponent) panel.getStoryComponent())
-					.getChildCount();
-			// Record Pasting so it can be undone
-			if (!UndoManager.getInstance().hasOpenUndoableAction())
-				UndoManager.getInstance().startUndoableAction("Paste");
-		}
+			// variables
+			final Collection<StoryComponent> transferData;
+			int insertionIndex;
+			final StoryComponentPanel panel = (StoryComponentPanel) supportComponent;
+			final ComplexStoryComponent parent = (ComplexStoryComponent) panel
+					.getStoryComponent();
+			boolean success = false;
 
-		// handle invalid child indexes
-		if (insertionIndex == -1) {
-			// Insert to the end of the parent's child list in the case of an
-			// illegal index.
-			insertionIndex = ((ComplexStoryComponent) panel.getStoryComponent())
-					.getChildCount();
-		}
+			// get transfer data
+			transferData = this.extractStoryComponents(support);
+			if (transferData == null)
+				return false;
 
-		// Now we actually add the transfer data
-		for (StoryComponent newChild : transferData) {
-			final StoryComponent clone;
-			clone = newChild.clone();
-
-			StoryComponent sibling = parent.getChildAt(insertionIndex);
-			if (sibling != null) {
-				// add in the middle
-				success = parent.addStoryChildBefore(clone, sibling);
+			if (support.isDrop()) {
+				// drops have user input to decide where to place things
+				insertionIndex = this.getInsertionIndex(panel, support);
 			} else {
-				success = parent.addStoryChild(clone);
+				// pastes just always go to the end of the parent's child list
+				insertionIndex = ((ComplexStoryComponent) panel
+						.getStoryComponent()).getChildCount();
+				// Record Pasting so it can be undone
+				if (!UndoManager.getInstance().hasOpenUndoableAction())
+					UndoManager.getInstance().startUndoableAction("Paste");
 			}
 
-			// Remove the bindings if this is a scriptit.
+			// handle invalid child indexes
+			if (insertionIndex == -1) {
+				// Insert to the end of the parent's child list in the case of
+				// an
+				// illegal index.
+				insertionIndex = ((ComplexStoryComponent) panel
+						.getStoryComponent()).getChildCount();
+			}
 
-			clone.revalidateKnowItBindings();
-			
-			if (!success)
-				throw new IllegalStateException("Was unable to add " + newChild
-						+ " to " + parent
-						+ ". This should have been prevented by canImport.");
+			// Now we actually add the transfer data
+			for (StoryComponent newChild : transferData) {
+				final StoryComponent clone;
+				clone = newChild.clone();
+
+				StoryComponent sibling = parent.getChildAt(insertionIndex);
+				if (sibling != null) {
+					// add in the middle
+					success = parent.addStoryChildBefore(clone, sibling);
+				} else {
+					success = parent.addStoryChild(clone);
+				}
+
+				// Remove the bindings if this is a scriptit.
+
+				clone.revalidateKnowItBindings();
+
+				if (!success)
+					throw new IllegalStateException("Was unable to add "
+							+ newChild + " to " + parent
+							+ ". This should have been prevented by canImport.");
+			}
+
+			// End the recording of the paste
+			if (!support.isDrop()
+					&& UndoManager.getInstance().hasOpenUndoableAction())
+				UndoManager.getInstance().endUndoableAction();
+
+			return true;
+		} else if (supportComponent instanceof EffectHolder) {
+			return ((EffectHolder) supportComponent).setComponent(this
+					.extractStoryComponents(support).iterator().next());
 		}
 
-		// End the recording of the paste
-		if (!support.isDrop()
-				&& UndoManager.getInstance().hasOpenUndoableAction())
-			UndoManager.getInstance().endUndoableAction();
-
-		return true;
+		return false;
 	}
 
 	@Override
