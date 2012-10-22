@@ -220,11 +220,25 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					}
 				}
 			} else if (supportComponent instanceof EffectHolder) {
-				final StoryComponent potentialChild = this
-						.extractStoryComponents(support).iterator().next();
-				if (potentialChild instanceof ScriptIt) {
-					if (((ScriptIt) potentialChild).isCause())
+				final EffectHolder effectHolder;
+				final StoryComponent component;
+
+				effectHolder = (EffectHolder) supportComponent;
+				component = this.extractStoryComponents(support).iterator()
+						.next();
+
+				if (component instanceof ScriptIt) {
+					final ScriptIt scriptIt;
+
+					scriptIt = (ScriptIt) component;
+
+					if (scriptIt.isCause())
 						return false;
+
+					for (String type : scriptIt.getTypes()) {
+						if (!effectHolder.getAllowableTypes().contains(type))
+							return false;
+					}
 					return true;
 				}
 			}
@@ -306,8 +320,16 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			return true;
 		} else if (supportComponent instanceof EffectHolder) {
-			return ((EffectHolder) supportComponent).setComponent(this
-					.extractStoryComponents(support).iterator().next());
+			final StoryComponent component;
+			final EffectHolder effectHolder;
+
+			component = this.extractStoryComponents(support).iterator().next();
+			effectHolder = (EffectHolder) supportComponent;
+
+			if (!(component instanceof ScriptIt))
+				return false;
+
+			return effectHolder.setEffect((ScriptIt) component);
 		}
 
 		return false;

@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -365,21 +367,33 @@ public class LibraryEditorPanelFactory {
 	 * @param functionBinding
 	 * @return
 	 */
-	private JPanel buildFunctionBindingPanel(KnowIt knowIt,
+	private JPanel buildFunctionBindingPanel(final KnowIt knowIt,
 			KnowItBindingFunction functionBinding) {
 		final JPanel bindingPanel;
 		final ScriptIt function;
-		final EffectHolder panelHolder;
+		final EffectHolder effectHolder;
 
 		bindingPanel = new JPanel();
 		function = functionBinding.getValue();
-		panelHolder = new EffectHolder();
+		effectHolder = new EffectHolder(knowIt.getTypes());
 
 		bindingPanel.setBorder(BorderFactory
 				.createTitledBorder("Function Binding"));
-		panelHolder.setComponent(function);
+		effectHolder.setEffect(function);
 
-		bindingPanel.add(panelHolder);
+		effectHolder.addContainerListener(new ContainerListener() {
+			@Override
+			public void componentAdded(ContainerEvent e) {
+				knowIt.setBinding(effectHolder.getEffect());
+			}
+
+			@Override
+			public void componentRemoved(ContainerEvent e) {
+
+			}
+		});
+
+		bindingPanel.add(effectHolder);
 
 		return bindingPanel;
 	}
