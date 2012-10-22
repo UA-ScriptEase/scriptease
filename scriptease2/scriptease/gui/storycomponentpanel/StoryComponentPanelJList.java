@@ -136,10 +136,10 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		listModel.removeElement(noResultsPanel);
 
 		for (StoryComponent component : storyComponentList) {
-			if(component instanceof KnowIt)
-				if(component.getDisplayText().isEmpty())
+			if (component instanceof KnowIt)
+				if (component.getDisplayText().isEmpty())
 					System.out.println("");
-			
+
 			if (!(this.filterRule == null)) {
 				if (!this.filterRule.isAcceptable(component))
 					continue;
@@ -223,7 +223,8 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				else if (!isSelected && isVisible)
 					valuePanel.setBackground(list.getBackground());
 
-				if (valueComponent instanceof ScriptIt) {
+				if (valueComponent instanceof ScriptIt
+						&& ((ScriptIt) valueComponent).isCause()) {
 					valuePanel.setShowChildren(false);
 					valuePanel.getExpansionButton().setCollapsed(true);
 				}

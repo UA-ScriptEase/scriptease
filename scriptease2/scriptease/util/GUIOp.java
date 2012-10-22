@@ -11,6 +11,7 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
+import javax.swing.CellRendererPane;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -232,22 +233,36 @@ public class GUIOp {
 	/**
 	 * Returns a BufferedImage representing the component.
 	 * 
-	 * @author Andrew Thompson from <a
-	 *         href=http://stackoverflow.com/questions/5853879/java-swing
-	 *         -obtain-image-of- jframe>Stack Overflow</a>
+	 * @author aioobe from <a href=http://stackoverflow.com/a/4154510>Stack
+	 *         Overflow</a>
 	 * 
 	 * 
 	 * @param component
 	 * @return
 	 */
-	public static BufferedImage getScreenShot(Component component) {
+	public static BufferedImage getScreenshot(Component c) {
 
-		BufferedImage image = new BufferedImage(component.getWidth(),
-				component.getHeight(), BufferedImage.TYPE_INT_RGB);
-		// call the Component's paint method, using
-		// the Graphics object of the image.
-		component.paint(image.getGraphics());
-		return image;
+		// Set it to it's preferred size. (optional)
+		c.setSize(c.getPreferredSize());
+		layoutComponent(c);
+
+		BufferedImage img = new BufferedImage(c.getWidth(), c.getHeight(),
+				BufferedImage.TYPE_INT_RGB);
+
+		CellRendererPane crp = new CellRendererPane();
+		crp.add(c);
+		crp.paintComponent(img.createGraphics(), c, crp, c.getBounds());
+		return img;
+	}
+
+	// from the example of user489041
+	private static void layoutComponent(Component c) {
+		synchronized (c.getTreeLock()) {
+			c.doLayout();
+			if (c instanceof Container)
+				for (Component child : ((Container) c).getComponents())
+					layoutComponent(child);
+		}
 	}
 
 	/**
