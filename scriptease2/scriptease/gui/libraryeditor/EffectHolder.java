@@ -1,8 +1,8 @@
 package scriptease.gui.libraryeditor;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Image;
+import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
-import scriptease.model.StoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.util.GUIOp;
 
@@ -25,10 +24,13 @@ import scriptease.util.GUIOp;
 @SuppressWarnings("serial")
 public class EffectHolder extends JPanel {
 
-	private StoryComponent component;
+	private ScriptIt effect;
+	private final Collection<String> allowableTypes;
 
-	public EffectHolder() {
+	public EffectHolder(Collection<String> allowableTypes) {
 		super();
+
+		this.allowableTypes = allowableTypes;
 
 		this.setBorder(BorderFactory.createLoweredBevelBorder());
 
@@ -41,35 +43,31 @@ public class EffectHolder extends JPanel {
 	 * 
 	 * @param component
 	 */
-	public boolean setComponent(StoryComponent component) {
-		if (component instanceof ScriptIt) {
-			if (((ScriptIt) component).isCause())
-				return false;
+	public boolean setEffect(ScriptIt effect) {
+		if (((ScriptIt) effect).isCause())
+			return false;
 
-			this.component = component;
-			this.removeAll();
+		this.effect = effect;
+		this.removeAll();
 
-			final StoryComponentPanel panel;
+		final StoryComponentPanel panel;
 
-			panel = StoryComponentPanelFactory.getInstance()
-					.buildStoryComponentPanel(component);
+		panel = StoryComponentPanelFactory.getInstance()
+				.buildStoryComponentPanel(effect);
 
-			panel.setVisible(true);
+		panel.setVisible(true);
 
-			panel.setBackground(Color.WHITE);
-			panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		panel.setBackground(Color.WHITE);
+		panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-			final Image image = GUIOp.getScreenshot(panel);
+		final Image image = GUIOp.getScreenshot(panel);
 
-			this.add(new JLabel(new ImageIcon(image)));
+		this.add(new JLabel(new ImageIcon(image)));
 
-			this.repaint();
-			this.revalidate();
+		this.repaint();
+		this.revalidate();
 
-			return true;
-		}
-
-		return false;
+		return true;
 	}
 
 	/**
@@ -77,8 +75,17 @@ public class EffectHolder extends JPanel {
 	 * 
 	 * @return
 	 */
-	public StoryComponent getPanel() {
-		return this.component;
+	public ScriptIt getEffect() {
+		return this.effect;
+	}
+
+	/**
+	 * Returns the allowable types of the effect holder.
+	 * 
+	 * @return
+	 */
+	public Collection<String> getAllowableTypes() {
+		return this.allowableTypes;
 	}
 
 }
