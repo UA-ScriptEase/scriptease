@@ -3,6 +3,7 @@ package scriptease.model.complex;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.StoryVisitor;
@@ -241,6 +242,11 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	 * @return
 	 */
 	public CodeBlock getMainCodeBlock() {
+		if (this.codeBlocks.isEmpty())
+			throw new NoSuchElementException(
+					"Cannot get main CodeBlock because there are none! Did "
+							+ "you remember to add a CodeBlock when you "
+							+ "created the ScriptIt?");
 		return this.codeBlocks.iterator().next();
 	}
 

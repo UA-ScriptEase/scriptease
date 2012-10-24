@@ -9,7 +9,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.model.complex.ScriptIt;
@@ -33,9 +32,10 @@ public class EffectHolder extends JPanel {
 		this.allowableTypes = allowableTypes;
 
 		this.setBorder(BorderFactory.createLoweredBevelBorder());
-
 		this.setTransferHandler(StoryComponentPanelTransferHandler
 				.getInstance());
+
+		this.setEffect(null);
 	}
 
 	/**
@@ -44,16 +44,21 @@ public class EffectHolder extends JPanel {
 	 * @param component
 	 */
 	public boolean setEffect(ScriptIt effect) {
-		if (((ScriptIt) effect).isCause())
+		if (effect != null && ((ScriptIt) effect).isCause())
 			return false;
 
 		this.effect = effect;
 		this.removeAll();
 
-		final StoryComponentPanel panel;
+		final JPanel panel;
 
-		panel = StoryComponentPanelFactory.getInstance()
-				.buildStoryComponentPanel(effect);
+		if (effect != null)
+			panel = StoryComponentPanelFactory.getInstance()
+					.buildStoryComponentPanel(effect);
+		else {
+			panel = new JPanel();
+			panel.add(new JLabel("No Effect"));
+		}
 
 		panel.setVisible(true);
 

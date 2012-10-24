@@ -491,7 +491,7 @@ public class MenuFactory {
 									frame.add(PanelFactory.getInstance()
 											.buildDescribeItPanel(
 													described.getValue()
-															.getHeadNode(),
+															.getStartNode(),
 													described.getValue()));
 									frame.setMinimumSize(new Dimension(800, 300));
 									frame.setVisible(true);

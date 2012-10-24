@@ -4,15 +4,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import scriptease.controller.StoryAdapter;
-import scriptease.controller.StoryVisitor;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 
 /**
+ * A node for DescribeIts.
  * 
  * @author kschenk
  * 
@@ -25,6 +20,14 @@ public class DescribeItNode {
 	private String name;
 
 	private final Set<DescribeItNode> successors;
+
+	public DescribeItNode() {
+		this("", null);
+	}
+
+	public DescribeItNode(String name) {
+		this(name, null);
+	}
 
 	public DescribeItNode(String name, KnowIt knowIt) {
 		super();

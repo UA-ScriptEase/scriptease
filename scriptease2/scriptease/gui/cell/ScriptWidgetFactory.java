@@ -301,14 +301,28 @@ public class ScriptWidgetFactory {
 	/**
 	 * Builds a widget that represents a location where game data must be
 	 * specified via a user's drag & drop. The slot widget is meant to display a
+	 * KnowIt, its legal types, and its current binding. Name editable
+	 * determines if the knowits name is editable when no knowit is bound.
+	 * 
+	 * @param knowIt
+	 * @param isNameEditable
+	 * @return
+	 */
+	public static JComponent buildSlotPanel(final KnowIt knowIt,
+			boolean isNameEditable) {
+		final SlotPanel slotPanel = new SlotPanel(knowIt, isNameEditable);
+
+		widgetsToStoryComponents.put(slotPanel, knowIt);
+
+		return slotPanel;
+	}
+
+	/**
+	 * Builds a widget that represents a location where game data must be
+	 * specified via a user's drag & drop. The slot widget is meant to display a
 	 * KnowIt, its legal types, and its current binding.
 	 * 
 	 * @param knowIt
-	 * @param compressed
-	 *            whether or not to draw the slot as its compressed version. If
-	 *            <code>true</code>, then the slot will draw the binding,
-	 *            otherwise it will only draw the types list.
-	 * 
 	 * @return
 	 */
 	public static JComponent buildSlotPanel(final KnowIt knowIt) {

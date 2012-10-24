@@ -13,6 +13,12 @@ import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 
+/**
+ * Renders DescribeItNodes as GraphNodes for display in an SEGraph.
+ * 
+ * @author kschenk
+ * 
+ */
 public class DescribeItNodeRenderer extends SEGraphNodeRenderer<DescribeItNode> {
 
 	public DescribeItNodeRenderer(SEGraph<DescribeItNode> graph) {
