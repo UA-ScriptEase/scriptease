@@ -273,7 +273,7 @@ public class SEGraphNodeRenderer<E> {
 				// If hovered over
 				backgroundColour = toolHighlight;
 			}
-		} else if (this.graph.getSelectedNode() == node) {
+		} else if (this.graph.getSelectedNodes().contains(node)) {
 			/*
 			 * Use a bright tool colour if its pressed, use the tool colour if
 			 * it's hovered over, use gold if its selected and not hovered,

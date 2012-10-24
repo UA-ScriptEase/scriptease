@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -50,9 +51,20 @@ import sun.awt.util.IdentityArrayList;
  * @author kschenk
  * 
  * @param <E>
+ * 
  */
 @SuppressWarnings("serial")
 public class SEGraph<E> extends JComponent {
+	/**
+	 * The selection mode for the graph. We can either select nodes or paths. If
+	 * node selection is enabled, we fire
+	 * {@link SEGraphObserver#nodeSelected(Object)} events. If multiple node
+	 * selection is enabled, we fire
+	 * {@link SEGraphObserver#nodesSelected(Collection)} events.
+	 * 
+	 * @author kschenk
+	 * 
+	 */
 	public static enum SelectionMode {
 		SELECT_NODE, SELECT_PATH
 	}
@@ -64,33 +76,52 @@ public class SEGraph<E> extends JComponent {
 
 	private final BiHashMap<E, JComponent> nodesToComponents;
 	private final NodeMouseAdapter mouseAdapter;
-	private final List<SEGraphObserver> observers;
+	private final List<SEGraphObserver<E>> observers;
+	private final LinkedHashSet<E> selectedNodes;
 
-	private E selectedNode;
 	private Point mousePosition;
 
 	// TODO IMPLEMENT PATH SELECTION!
 	private SelectionMode selectionMode;
 
 	/**
-	 * Builds a new graph with the passed in start point and a builder.
+	 * Builds a new graph with the passed in model and single node selection
+	 * enabled.
 	 * 
 	 * @param model
 	 *            The model used for the Graph.
 	 */
 	public SEGraph(SEGraphModel<E> model) {
-		this.selectedNode = model.getStartNode();
+		this(model, SelectionMode.SELECT_NODE);
+	}
+
+	/**
+	 * Builds a new graph with the passed in model and passed in selection mode.
+	 * 
+	 * @param model
+	 *            The model used for the Graph.
+	 * 
+	 * @param selectionMode
+	 *            The selection mode for the graph. One of either
+	 *            {@link SelectionMode#SELECT_NODE} or
+	 *            {@link SelectionMode#SELECT_PATH}.
+	 */
+	public SEGraph(SEGraphModel<E> model, SelectionMode selectionMode) {
+		this.selectionMode = selectionMode;
+		this.selectedNodes = new LinkedHashSet<E>();
 
 		this.model = model;
 		this.mousePosition = new Point();
 		this.nodesToComponents = new BiHashMap<E, JComponent>();
 		this.mouseAdapter = new NodeMouseAdapter();
-		this.observers = new ArrayList<SEGraphObserver>();
+		this.observers = new ArrayList<SEGraphObserver<E>>();
 		this.selectionMode = SelectionMode.SELECT_PATH;
 
 		this.transferHandler = new SEGraphNodeTransferHandler<E>(this);
 
 		this.setLayout(new SEGraphLayoutManager());
+
+		this.selectedNodes.add(model.getStartNode());
 
 		this.setUI(new SEGraphUI());
 		this.setOpaque(true);
@@ -144,7 +175,7 @@ public class SEGraph<E> extends JComponent {
 			parents = this.model.getParents(newNode);
 			children = this.model.getChildren(newNode);
 
-			for (SEGraphObserver observer : this.observers) {
+			for (SEGraphObserver<E> observer : this.observers) {
 				observer.nodeAdded(newNode, children, parents);
 			}
 
@@ -184,7 +215,7 @@ public class SEGraph<E> extends JComponent {
 			parents = this.model.getParents(newNode);
 			children = this.model.getChildren(newNode);
 
-			for (SEGraphObserver observer : this.observers) {
+			for (SEGraphObserver<E> observer : this.observers) {
 				observer.nodeAdded(newNode, children, parents);
 			}
 
@@ -208,7 +239,7 @@ public class SEGraph<E> extends JComponent {
 	 */
 	public boolean replaceNode(E existingNode, E newNode) {
 		if (this.model.overwriteNodeData(existingNode, newNode)) {
-			for (SEGraphObserver observer : this.observers) {
+			for (SEGraphObserver<E> observer : this.observers) {
 				observer.nodeOverwritten(existingNode);
 			}
 
@@ -232,7 +263,7 @@ public class SEGraph<E> extends JComponent {
 	 */
 	public boolean removeNode(E node) {
 		if (this.model.removeNode(node)) {
-			for (SEGraphObserver observer : this.observers)
+			for (SEGraphObserver<E> observer : this.observers)
 				observer.nodeRemoved(node);
 
 			nodesToComponents.removeKey(node);
@@ -258,7 +289,7 @@ public class SEGraph<E> extends JComponent {
 	 */
 	public boolean connectNodes(E child, E parent) {
 		if (this.model.connectNodes(child, parent)) {
-			for (SEGraphObserver observer : this.observers) {
+			for (SEGraphObserver<E> observer : this.observers) {
 				observer.nodesConnected(child, parent);
 			}
 
@@ -283,7 +314,7 @@ public class SEGraph<E> extends JComponent {
 	 */
 	public boolean disconnectNodes(E child, E parent) {
 		if (this.model.disconnectNodes(child, parent)) {
-			for (SEGraphObserver observer : this.observers) {
+			for (SEGraphObserver<E> observer : this.observers) {
 				observer.nodesDisconnected(child, parent);
 			}
 
@@ -298,6 +329,74 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
+	 * Sets the current selected nodes. Fires a
+	 * {@link SEGraphObserver#nodesSelected(Collection)} event if the selection
+	 * was successful.
+	 * 
+	 * @param nodes
+	 *            The new collection of nodes to select.
+	 */
+	public boolean setSelectedNodes(Collection<E> nodes) {
+		if (!this.selectedNodes.equals(nodes)) {
+			this.selectedNodes.removeAll(this.selectedNodes);
+			this.selectedNodes.addAll(nodes);
+
+			for (SEGraphObserver<E> observer : this.observers) {
+				observer.nodesSelected(this.selectedNodes);
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Selects the nodes from the start selected node up until the node. This
+	 * method identifies if a previous path existed that may be contained in the
+	 * new path. If so, it adds a new path onto the existing path.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public boolean selectNodesUntil(E node) {
+		final E start;
+		final E end;
+
+		start = this.getFirstSelectedNode();
+		end = this.getLastSelectedNode();
+
+		if (node == start) {
+			final Collection<E> path;
+
+			path = new LinkedHashSet<E>();
+
+			path.add(start);
+
+			return this.setSelectedNodes(path);
+		} else if (start == end) {
+			return this.setSelectedNodes(this.model.getPathBetweenNodes(start,
+					end));
+		} else {
+			final Collection<E> newSubPath;
+
+			newSubPath = this.model.getPathBetweenNodes(end, node);
+
+			if (!newSubPath.isEmpty()) {
+				final Collection<E> path;
+
+				path = new LinkedHashSet<E>(this.selectedNodes);
+
+				path.addAll(newSubPath);
+				return this.setSelectedNodes(path);
+			}
+		}
+
+		return this.setSelectedNodes(this.model
+				.getPathBetweenNodes(start, node));
+	}
+
+	/**
 	 * Adds an observer to the Graph to observe changes to the children and
 	 * parents of nodes. Note that these observers are strongly referenced. One
 	 * does not simply get garbage collected when the caller is removed. They
@@ -308,7 +407,7 @@ public class SEGraph<E> extends JComponent {
 	 *            The observer to be added
 	 * @see SEGraphObserver
 	 */
-	public void addSEGraphObserver(SEGraphObserver observer) {
+	public void addSEGraphObserver(SEGraphObserver<E> observer) {
 		this.observers.add(observer);
 	}
 
@@ -319,7 +418,7 @@ public class SEGraph<E> extends JComponent {
 	 *            The observer to be removed
 	 * @see SEGraphObserver
 	 */
-	public void removeSEGraphObserver(SEGraphObserver observer) {
+	public void removeSEGraphObserver(SEGraphObserver<E> observer) {
 		this.observers.remove(observer);
 	}
 
@@ -328,43 +427,59 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 * @return
 	 */
-	public Collection<SEGraphObserver> getSEGraphObservers() {
+	public Collection<SEGraphObserver<E>> getSEGraphObservers() {
 		return this.observers;
 	}
 
 	/**
-	 * Sets the current selected node. Fires a
-	 * {@link SEGraphObserver#nodeSelected(Object)} event if the selection was
-	 * successful.
+	 * Returns a list of the current selected nodes. For single node selected
+	 * graphs, it is recommended to use {@link #getFirstSelectedNode()} for
+	 * convenience.
 	 * 
-	 * @param node
+	 * @return
 	 */
-	public void setSelectedNode(E node) {
-		if (this.selectedNode != node) {
-			this.selectedNode = node;
+	public LinkedHashSet<E> getSelectedNodes() {
+		return this.selectedNodes;
+	}
 
-			for (SEGraphObserver observer : this.observers) {
-				observer.nodeSelected(node);
-			}
+	/**
+	 * Returns the first node in the selected path.
+	 * 
+	 * @return
+	 */
+	public E getFirstSelectedNode() {
+		return this.selectedNodes.iterator().next();
+	}
+
+	/**
+	 * Returns the last node in the selected path.
+	 * 
+	 * @return
+	 */
+	public E getLastSelectedNode() {
+		E lastNode = this.getFirstSelectedNode();
+
+		for (E node : this.selectedNodes) {
+			lastNode = node;
 		}
+
+		return lastNode;
 	}
 
 	/**
-	 * Returns the current selected node.
+	 * Returns the current selected components.
 	 * 
-	 * @return
+	 * @return A collection of selected components
 	 */
-	public E getSelectedNode() {
-		return this.selectedNode;
-	}
+	public Collection<JComponent> getSelectedComponent() {
+		final Collection<JComponent> selectedComponents;
 
-	/**
-	 * Returns the current selected component.
-	 * 
-	 * @return
-	 */
-	public JComponent getSelectedComponent() {
-		return this.nodesToComponents.getValue(this.selectedNode);
+		selectedComponents = new ArrayList<JComponent>();
+
+		for (E node : this.selectedNodes) {
+			selectedComponents.add(this.nodesToComponents.getValue(node));
+		}
+		return selectedComponents;
 	}
 
 	/**
@@ -410,11 +525,23 @@ public class SEGraph<E> extends JComponent {
 	 * to null.
 	 */
 	private void validateSelectedNode() {
-		if (this.model.getStartNode() == this.getSelectedNode())
+		if (this.model.getStartNode() == this.selectedNodes.iterator().next())
 			return;
 
-		if (this.model.getParents(this.getSelectedNode()).size() == 0) {
-			this.setSelectedNode(this.getStartNode());
+		for (E node : this.selectedNodes) {
+			if (this.model.getParents(node).size() == 0) {
+				// If any node doesn't have parents, it's no longer in the
+				// graph. So we set the selected nodes to just the start node.
+
+				final List<E> startNodeList;
+
+				startNodeList = new ArrayList<E>();
+
+				startNodeList.add(this.getStartNode());
+
+				this.setSelectedNodes(startNodeList);
+				return;
+			}
 		}
 	}
 
@@ -853,9 +980,9 @@ public class SEGraph<E> extends JComponent {
 
 			SEFocusManager.getInstance().setFocus(SEGraph.this);
 
-			switch (GraphToolBarModeAction.getMode()) {
-			case SELECT:
-			case DELETE:
+			ToolBarMode mode = GraphToolBarModeAction.getMode();
+
+			if (mode == ToolBarMode.SELECT || mode == ToolBarMode.DELETE) {
 				final Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
 
 				/*
@@ -869,16 +996,23 @@ public class SEGraph<E> extends JComponent {
 						- source.getLocationOnScreen().x,
 						mouseLoc.y - source.getLocationOnScreen().y))
 					return;
-			default:
-				break;
 			}
 
-			switch (GraphToolBarModeAction.getMode()) {
-			case SELECT:
-				SEGraph.this.setSelectedNode(node);
+			if (mode == ToolBarMode.SELECT) {
+				if (selectionMode == SelectionMode.SELECT_PATH
+						&& e.isShiftDown()) {
+					SEGraph.this.selectNodesUntil(node);
+				} else {
+					final Collection<E> nodes;
+
+					nodes = new ArrayList<E>();
+
+					nodes.add(node);
+
+					SEGraph.this.setSelectedNodes(nodes);
+				}
 				source.requestFocusInWindow();
-				break;
-			case INSERT:
+			} else if (mode == ToolBarMode.INSERT) {
 				if (this.lastEnteredNode != null)
 					if (this.lastEnteredNode == node) {
 						if (!UndoManager.getInstance().hasOpenUndoableAction())
@@ -899,8 +1033,7 @@ public class SEGraph<E> extends JComponent {
 
 						UndoManager.getInstance().endUndoableAction();
 					}
-				break;
-			case DELETE:
+			} else if (mode == ToolBarMode.DELETE) {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
 					UndoManager.getInstance().startUndoableAction(
 							"Remove " + node);
@@ -909,8 +1042,7 @@ public class SEGraph<E> extends JComponent {
 
 				UndoManager.getInstance().endUndoableAction();
 
-				break;
-			case CONNECT:
+			} else if (mode == ToolBarMode.CONNECT) {
 				if (this.lastEnteredNode != null
 						&& this.lastEnteredNode != node) {
 					if (!UndoManager.getInstance().hasOpenUndoableAction())
@@ -922,8 +1054,7 @@ public class SEGraph<E> extends JComponent {
 
 					UndoManager.getInstance().endUndoableAction();
 				}
-				break;
-			case DISCONNECT:
+			} else if (mode == ToolBarMode.DISCONNECT) {
 				if (this.lastEnteredNode != null
 						&& this.lastEnteredNode != node) {
 					if (!UndoManager.getInstance().hasOpenUndoableAction())
@@ -935,7 +1066,6 @@ public class SEGraph<E> extends JComponent {
 
 					UndoManager.getInstance().endUndoableAction();
 				}
-				break;
 			}
 
 			SEGraph.this.draggedFromNode = null;

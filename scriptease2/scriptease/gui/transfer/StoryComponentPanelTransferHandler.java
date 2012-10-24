@@ -22,7 +22,7 @@ import javax.swing.TransferHandler;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.PanelFactory;
 import scriptease.gui.cell.BindingWidget;
-import scriptease.gui.libraryeditor.EffectHolder;
+import scriptease.gui.libraryeditor.EffectHolderPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
@@ -219,11 +219,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 						return true;
 					}
 				}
-			} else if (supportComponent instanceof EffectHolder) {
-				final EffectHolder effectHolder;
+			} else if (supportComponent instanceof EffectHolderPanel) {
+				final EffectHolderPanel effectHolder;
 				final StoryComponent component;
 
-				effectHolder = (EffectHolder) supportComponent;
+				effectHolder = (EffectHolderPanel) supportComponent;
 				component = this.extractStoryComponents(support).iterator()
 						.next();
 
@@ -319,12 +319,12 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				UndoManager.getInstance().endUndoableAction();
 
 			return true;
-		} else if (supportComponent instanceof EffectHolder) {
+		} else if (supportComponent instanceof EffectHolderPanel) {
 			final StoryComponent component;
-			final EffectHolder effectHolder;
+			final EffectHolderPanel effectHolder;
 
 			component = this.extractStoryComponents(support).iterator().next();
-			effectHolder = (EffectHolder) supportComponent;
+			effectHolder = (EffectHolderPanel) supportComponent;
 
 			if (!(component instanceof ScriptIt))
 				return false;

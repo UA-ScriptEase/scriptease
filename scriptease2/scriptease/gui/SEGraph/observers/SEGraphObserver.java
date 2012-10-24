@@ -9,7 +9,7 @@ import java.util.Collection;
  * @author kschenk
  * 
  */
-public interface SEGraphObserver {
+public interface SEGraphObserver<E> {
 
 	/**
 	 * Called when two nodes have been connected.
@@ -19,7 +19,7 @@ public interface SEGraphObserver {
 	 * @param parent
 	 *            The new parent
 	 */
-	public void nodesConnected(Object child, Object parent);
+	public void nodesConnected(E child, E parent);
 
 	/**
 	 * Called when two nodes have been disconnected.
@@ -29,7 +29,7 @@ public interface SEGraphObserver {
 	 * @param parent
 	 *            The old parent
 	 */
-	public void nodesDisconnected(Object child, Object parent);
+	public void nodesDisconnected(E child, E parent);
 
 	/**
 	 * Called when a node has been added to the graph.
@@ -41,8 +41,8 @@ public interface SEGraphObserver {
 	 * @param parents
 	 *            The parents of the new node
 	 */
-	public void nodeAdded(Object newNode, Collection<?> children,
-			Collection<?> parents);
+	public void nodeAdded(E newNode, Collection<E> children,
+			Collection<E> parents);
 
 	/**
 	 * Called when a node has been removed from the graph.
@@ -50,21 +50,22 @@ public interface SEGraphObserver {
 	 * @param removedNode
 	 *            The node that was removed from the graph.
 	 */
-	public void nodeRemoved(Object removedNode);
+	public void nodeRemoved(E removedNode);
 
 	/**
 	 * Called when a node has been overwritten.
 	 * 
 	 * @param overwittenNode
 	 */
-	public void nodeOverwritten(Object overwittenNode);
+	public void nodeOverwritten(E overwittenNode);
 
 	/**
-	 * Called when a node has been selected.
+	 * Called when nodes have been selected. In a graph with single node
+	 * selection mode enabled, the nodes only contain one node.
 	 * 
-	 * @param node
-	 *            The selected node.
+	 * @param nodes
+	 *            The selected nodes, in order from parents to children.
 	 */
-	public void nodeSelected(Object node);
+	public void nodesSelected(Collection<E> nodes);
 
 }

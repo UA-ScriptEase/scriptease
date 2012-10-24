@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 
 import javax.swing.JPanel;
 
@@ -20,7 +21,6 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryPoint;
 
 /**
  * This view is used to allow the user to select various pathways from
@@ -53,20 +53,20 @@ public class DescribeItPanel extends JPanel {
 		// Make graph redraw if we add or remove successors from these nodes.
 		// Should be an observed JPanel to remember these
 
-		this.expandedPanel.addSEGraphObserver(new SEGraphAdapter() {
-
+		this.expandedPanel.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
+			
 			@Override
-			public void nodeSelected(final Object node) {
-				if (!(node instanceof DescribeItNode))
-					return;
-
+			public void nodesSelected(Collection<DescribeItNode> nodes) {
+				for(DescribeItNode node : nodes) {
+					
+				}
 				// TODO Set selected path in DescribeIt to the selected path.
 			}
 
 			@Override
-			public void nodeOverwritten(Object node) {
-				if (node instanceof StoryPoint)
-					((StoryPoint) node).revalidateKnowItBindings();
+			public void nodeOverwritten(DescribeItNode node) {
+			/*	if (node instanceof StoryPoint)
+					((StoryPoint) node).revalidateKnowItBindings();*/
 			}
 		});
 
