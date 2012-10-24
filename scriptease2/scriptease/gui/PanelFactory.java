@@ -225,26 +225,23 @@ public class PanelFactory {
 
 		// Set up the Story Graph
 		storyGraph.setNodeRenderer(storyNodeRenderer);
-		storyGraph.addSEGraphObserver(new SEGraphAdapter() {
+		storyGraph.addSEGraphObserver(new SEGraphAdapter<StoryPoint>() {
 
 			@Override
-			public void nodeSelected(final Object node) {
-				if (!(node instanceof StoryPoint))
-					return;
-
+			public void nodesSelected(final Collection<StoryPoint> nodes) {
 				PatternModelManager.getInstance().getActiveModel()
 						.process(new ModelAdapter() {
 							@Override
 							public void processStoryModel(StoryModel storyModel) {
-								storyComponentTree.setRoot((StoryPoint) node);
+								storyComponentTree.setRoot(nodes.iterator()
+										.next());
 							}
 						});
 			}
 
 			@Override
-			public void nodeOverwritten(Object node) {
-				if (node instanceof StoryPoint)
-					((StoryPoint) node).revalidateKnowItBindings();
+			public void nodeOverwritten(StoryPoint node) {
+				node.revalidateKnowItBindings();
 			}
 		});
 

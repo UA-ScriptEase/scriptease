@@ -103,16 +103,15 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 		} else if (focusOwner instanceof SEGraph) {
 			// Raw types here, but the way Graphs are set up, these should work
 			final SEGraph graph;
-			final Object selectedNode;
 
 			graph = (SEGraph) focusOwner;
-			selectedNode = graph.getSelectedNode();
 
 			if (!UndoManager.getInstance().hasOpenUndoableAction())
-				UndoManager.getInstance().startUndoableAction(
-						"Remove " + selectedNode);
+				UndoManager.getInstance().startUndoableAction("Remove nodes");
 
-			graph.removeNode(selectedNode);
+			for (Object node : graph.getSelectedNodes()) {
+				graph.removeNode(node);
+			}
 
 			UndoManager.getInstance().endUndoableAction();
 

@@ -399,13 +399,13 @@ public class LibraryEditorPanelFactory {
 			KnowItBindingFunction functionBinding) {
 		final JPanel bindingPanel;
 		final ScriptIt function;
-		final EffectHolder effectHolder;
+		final EffectHolderPanel effectHolder;
 
 		bindingPanel = new JPanel();
 		function = functionBinding.getValue();
 		// XXX I don't think the types are updated for this when KnowIt's types
 		// are. Need to check, and possibly add a StoryComponentObserver.
-		effectHolder = new EffectHolder(knowIt.getTypes());
+		effectHolder = new EffectHolderPanel(knowIt.getTypes());
 
 		bindingPanel.setBorder(BorderFactory
 				.createTitledBorder("Function Binding"));
@@ -444,7 +444,7 @@ public class LibraryEditorPanelFactory {
 
 		final DescribeIt describeIt;
 
-		final EffectHolder effectHolder;
+		final EffectHolderPanel effectHolder;
 		final SEGraph<DescribeItNode> describeItGraph;
 		final DescribeItNodeGraphModel describeItGraphModel;
 
@@ -456,7 +456,7 @@ public class LibraryEditorPanelFactory {
 		describeIt = describeItBinding.getValue();
 		// XXX I don't think the types are updated for this when KnowIt's types
 		// are. Need to check, and possibly add a StoryComponentObserver.
-		effectHolder = new EffectHolder(knowIt.getTypes());
+		effectHolder = new EffectHolderPanel(knowIt.getTypes());
 
 		describeItGraphModel = new DescribeItNodeGraphModel(
 				describeIt.getStartNode());

@@ -21,12 +21,12 @@ import scriptease.util.GUIOp;
  * 
  */
 @SuppressWarnings("serial")
-public class EffectHolder extends JPanel {
+public class EffectHolderPanel extends JPanel {
 
 	private ScriptIt effect;
 	private final Collection<String> allowableTypes;
 
-	public EffectHolder(Collection<String> allowableTypes) {
+	public EffectHolderPanel(Collection<String> allowableTypes) {
 		super();
 
 		this.allowableTypes = allowableTypes;

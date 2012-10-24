@@ -9,30 +9,30 @@ import java.util.Collection;
  * @author kschenk
  * 
  */
-public abstract class SEGraphAdapter implements SEGraphObserver {
+public abstract class SEGraphAdapter<E> implements SEGraphObserver<E> {
 
 	@Override
-	public void nodesConnected(Object child, Object parent) {
+	public void nodesConnected(E child, E parent) {
 	}
 
 	@Override
-	public void nodesDisconnected(Object child, Object parent) {
+	public void nodesDisconnected(E child, E parent) {
 	}
 
 	@Override
-	public void nodeOverwritten(Object overwittenNode) {
+	public void nodeOverwritten(E overwittenNode) {
 	}
 
 	@Override
-	public void nodeAdded(Object newNode, Collection<?> children,
-			Collection<?> parents) {
+	public void nodeAdded(E newNode, Collection<E> children,
+			Collection<E> parents) {
 	}
 
 	@Override
-	public void nodeRemoved(Object removedNode) {
+	public void nodeRemoved(E removedNode) {
 	}
 
 	@Override
-	public void nodeSelected(Object node) {
+	public void nodesSelected(Collection<E> nodes) {
 	}
 }
