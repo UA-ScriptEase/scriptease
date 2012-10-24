@@ -47,12 +47,19 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 	private BindingWidget bindingWidget;
 	private final KnowIt knowIt;
 
+	private final boolean isNameEditable;
+
 	public SlotPanel(final KnowIt knowIt) {
+		this(knowIt, false);
+	}
+
+	public SlotPanel(final KnowIt knowIt, boolean isNameEditable) {
 		if (knowIt == null)
 			throw new IllegalStateException(
 					"Cannot build a SlotPanel with a null KnowIt");
 
 		this.knowIt = knowIt;
+		this.isNameEditable = isNameEditable;
 
 		// Set a border of 2 pixels around the slot.
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
@@ -114,8 +121,12 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
-				bindingWidget.add(ScriptWidgetFactory
-						.buildObservedNameLabel(knowIt));
+				if (isNameEditable)
+					bindingWidget.add(ScriptWidgetFactory
+							.buildNameEditor(knowIt));
+				else
+					bindingWidget.add(ScriptWidgetFactory
+							.buildObservedNameLabel(knowIt));
 			}
 
 			@Override

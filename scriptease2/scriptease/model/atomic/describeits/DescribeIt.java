@@ -22,25 +22,25 @@ import sun.awt.util.IdentityArrayList;
  */
 public class DescribeIt implements Cloneable {
 	public static String DESCRIBES = "describes";
-	private DescribeItNode headNode;
+	private DescribeItNode startNode;
 	private List<DescribeItNode> selectedPath;
 	private Map<List<DescribeItNode>, ScriptIt> paths;
 	// Longest path length used for calculating shortest path
 	private int INF_PATH_LENGTH = 100;
 
-	public DescribeIt(DescribeItNode headNode) {
-		this(headNode, null, null, null);
+	public DescribeIt(DescribeItNode startNode) {
+		this(startNode, null, null);
 	}
 
-	public DescribeIt(DescribeItNode headNode,
+	public DescribeIt(DescribeItNode startNode,
 			Map<List<DescribeItNode>, ScriptIt> paths,
-			List<DescribeItNode> defaultPath, List<DescribeItNode> selectedPath) {
-		// assure the headNode is valid
-		if (headNode != null)
-			this.headNode = headNode;
+			List<DescribeItNode> selectedPath) {
+		// assure the startNode is valid
+		if (startNode != null)
+			this.startNode = startNode;
 		else
 			throw new IllegalStateException(
-					"Cannot initialize DescribeIt with a null HeadNode");
+					"Cannot initialize DescribeIt with a null StartNode");
 		// calculate paths if not given any
 		if (paths != null && !paths.isEmpty()) {
 			this.paths = new HashMap<List<DescribeItNode>, ScriptIt>(paths);
@@ -179,14 +179,13 @@ public class DescribeIt implements Cloneable {
 			return null;
 	}
 
-	// TODO Rename start node because head node sounds stupid
 	/**
-	 * Get the headNode of the DescribeIt's graph
+	 * Get the startNode of the DescribeIt's graph
 	 * 
 	 * @return
 	 */
-	public DescribeItNode getHeadNode() {
-		return this.headNode;
+	public DescribeItNode getStartNode() {
+		return this.startNode;
 	}
 
 	/**
@@ -210,19 +209,18 @@ public class DescribeIt implements Cloneable {
 
 	/**
 	 * Assigns the given scriptIt to the given path iff every parameter in the
-	 * scriptIt has a matching KnowItNode, and the path exists in the path map
+	 * scriptIt has a matching KnowItNode, and the path exists in the path map.
 	 * 
 	 * @param path
 	 * @param scriptIt
 	 */
 	public void assignScriptItToPath(List<DescribeItNode> path,
 			ScriptIt scriptIt) {
-		if (this.containsPath(path))
-			this.paths.put(path, scriptIt);
+		this.paths.put(path, scriptIt);
 	}
 
 	@Override
 	public String toString() {
-		return "DescribeIt [" + this.headNode + "]";
+		return "DescribeIt [" + this.startNode + "]";
 	}
 }

@@ -297,7 +297,6 @@ public class BindingWidgetUI extends ComponentUI {
 
 		if (binding.isBound()) {
 			type = binding.getFirstType();
-
 			this.typeRenderer = ScriptWidgetFactory.getTypeWidget(type);
 		} else
 			this.typeRenderer = null;

@@ -54,7 +54,7 @@ public class NewDescriptionAction extends ActiveTranslatorSensitiveAction {
 		apiDictionary = activeTranslator.getApiDictionary();
 		libraryModel = apiDictionary.getLibrary();
 
-		newKnowIt = new KnowIt();
+		newKnowIt = new KnowIt("New Description");
 
 		libraryModel.add(newKnowIt);
 	}

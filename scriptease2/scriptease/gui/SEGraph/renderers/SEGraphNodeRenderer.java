@@ -58,8 +58,6 @@ public class SEGraphNodeRenderer<E> {
 
 		component = PanelFactory.getInstance().buildGradientPanel(1.3);
 
-		// Set up input and action maps for copy cut and paste.
-		// TODO !
 		final InputMap input = component.getInputMap(JComponent.WHEN_FOCUSED);
 		input.put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK),
@@ -214,8 +212,7 @@ public class SEGraphNodeRenderer<E> {
 			secondLineBorder = BorderFactory.createCompoundBorder(lineBorder,
 					innerBorder);
 			lineSpaceBorder = BorderFactory.createCompoundBorder(
-					secondLineBorder,
-					BorderFactory.createLoweredBevelBorder());
+					secondLineBorder, BorderFactory.createLoweredBevelBorder());
 		}
 
 		component.setBorder(lineSpaceBorder);

@@ -398,6 +398,12 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		return acceptableTypes;
 	}
 
+	/**
+	 * Sets the types of the KnowIt and notifies all observers of a
+	 * {@link StoryComponentChangeEnum#CHANGE_KNOW_IT_TYPE} event.
+	 * 
+	 * @param types
+	 */
 	public void setTypes(Collection<String> types) {
 		this.types = types;
 		this.notifyObservers(new StoryComponentEvent(this,

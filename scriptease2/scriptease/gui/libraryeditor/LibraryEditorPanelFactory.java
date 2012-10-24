@@ -1,5 +1,6 @@
 package scriptease.gui.libraryeditor;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -24,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -35,6 +37,12 @@ import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.ToolBarFactory;
+import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
+import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.SEGraph.renderers.EditableDescribeItNodeRenderer;
+import scriptease.gui.action.graphs.GraphToolBarModeAction;
+import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
@@ -183,7 +191,7 @@ public class LibraryEditorPanelFactory {
 				this.defaultProcess(knowIt);
 
 				final JPanel knowItControlPanel;
-				final GroupLayout controlPanelLayout;
+				final GroupLayout layout;
 				final JComboBox bindingSelectorBox;
 
 				final TypeAction typeAction;
@@ -196,7 +204,7 @@ public class LibraryEditorPanelFactory {
 				final String functionBinding = "Function";
 
 				knowItControlPanel = new JPanel();
-				controlPanelLayout = new GroupLayout(knowItControlPanel);
+				layout = new GroupLayout(knowItControlPanel);
 				bindingSelectorBox = new JComboBox();
 
 				typeAction = new TypeAction();
@@ -215,7 +223,7 @@ public class LibraryEditorPanelFactory {
 				typeAction.getTypeSelectionDialogBuilder().selectTypes(
 						knowIt.getTypes(), true);
 
-				knowItControlPanel.setLayout(controlPanelLayout);
+				knowItControlPanel.setLayout(layout);
 				knowItControlPanel.setBorder(BorderFactory
 						.createTitledBorder("KnowIt Controls"));
 
@@ -233,12 +241,14 @@ public class LibraryEditorPanelFactory {
 							@Override
 							public void processDescribeIt(
 									KnowItBindingDescribeIt described) {
-								// TODO Do soemthing with describeits
+								// TODO Do soemthing with describeits to set
+								// types
 							}
 
 							@Override
 							public void processFunction(
 									KnowItBindingFunction function) {
+								// XXX This requires testing!
 								function.getValue().setTypes(types);
 							}
 						});
@@ -246,43 +256,41 @@ public class LibraryEditorPanelFactory {
 				});
 
 				// Add JComponents to DescriptorPanel using GroupLayout
-				controlPanelLayout
-						.setHorizontalGroup(controlPanelLayout
-								.createParallelGroup()
-								.addGroup(
-										controlPanelLayout
-												.createSequentialGroup()
-												.addGroup(
-														controlPanelLayout
-																.createParallelGroup()
-																.addComponent(
-																		typesLabel)
-																.addComponent(
-																		bindingLabel))
-												.addGroup(
-														controlPanelLayout
-																.createParallelGroup()
-																.addComponent(
-																		typesButton)
-																.addComponent(
-																		bindingSelectorBox))));
+				layout.setHorizontalGroup(layout
+						.createParallelGroup()
+						.addGroup(
+								layout.createSequentialGroup()
+										.addGroup(
+												layout.createParallelGroup()
+														.addComponent(
+																typesLabel)
+														.addComponent(
+																bindingLabel))
+										.addGroup(
+												layout.createParallelGroup()
+														.addComponent(
+																typesButton)
+														.addComponent(
+																bindingSelectorBox))));
 
-				controlPanelLayout.setVerticalGroup(controlPanelLayout
+				layout.setVerticalGroup(layout
 						.createSequentialGroup()
 						.addGroup(
-								controlPanelLayout
-										.createParallelGroup(
-												GroupLayout.Alignment.BASELINE)
+								layout.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
 										.addComponent(typesLabel)
 										.addComponent(typesButton))
 						.addGroup(
-								controlPanelLayout
-										.createParallelGroup(
-												GroupLayout.Alignment.BASELINE)
+								layout.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
 										.addComponent(bindingLabel)
 										.addComponent(bindingSelectorBox)));
 
 				editorPanel.add(knowItControlPanel);
+
+				// TODO need a binding listener so this changes when we change
+				// the binding. Not necessarily the "selected item", but
+				// definitely the panels.
 
 				knowIt.getBinding().process(new BindingAdapter() {
 					public void processNull(KnowItBindingNull nullBinding) {
@@ -313,8 +321,27 @@ public class LibraryEditorPanelFactory {
 								.getSelectedItem();
 
 						if (selectedItem.equals(describeItBinding)) {
-							knowIt.setBinding(new DescribeIt(
-									new DescribeItNode("", null)));
+							// We need to have a default ScriptIt for a path
+							// with the same type as the KnowIt or the KnowIt
+							// will not accept the binding.
+							final DescribeItNode describeItNode;
+							final DescribeIt describeIt;
+							final ScriptIt scriptIt;
+							final List<DescribeItNode> path;
+
+							describeItNode = new DescribeItNode();
+							describeIt = new DescribeIt(describeItNode);
+							scriptIt = new ScriptIt("New ScriptIt");
+							path = new ArrayList<DescribeItNode>(1);
+
+							scriptIt.addCodeBlock(new CodeBlockSource());
+							scriptIt.setTypes(knowIt.getTypes());
+
+							path.add(describeItNode);
+
+							describeIt.assignScriptItToPath(path, scriptIt);
+
+							knowIt.setBinding(describeIt);
 						} else if (selectedItem.equals(functionBinding)) {
 							final ScriptIt scriptIt = new ScriptIt("");
 							final CodeBlock codeBlock = new CodeBlockSource();
@@ -348,6 +375,7 @@ public class LibraryEditorPanelFactory {
 						.buildDescriptorPanel(component));
 
 				editorPanel.revalidate();
+				editorPanel.repaint();
 			}
 		};
 
@@ -375,6 +403,8 @@ public class LibraryEditorPanelFactory {
 
 		bindingPanel = new JPanel();
 		function = functionBinding.getValue();
+		// XXX I don't think the types are updated for this when KnowIt's types
+		// are. Need to check, and possibly add a StoryComponentObserver.
 		effectHolder = new EffectHolder(knowIt.getTypes());
 
 		bindingPanel.setBorder(BorderFactory
@@ -389,7 +419,7 @@ public class LibraryEditorPanelFactory {
 
 			@Override
 			public void componentRemoved(ContainerEvent e) {
-
+				// Do nothing. We don't need to update twice.
 			}
 		});
 
@@ -408,7 +438,56 @@ public class LibraryEditorPanelFactory {
 	private JPanel buildDescribeItBindingPanel(KnowIt knowIt,
 			KnowItBindingDescribeIt describeItBinding) {
 
-		return null;
+		final JPanel bindingPanel;
+		final JPanel describeItGraphPanel;
+		final JToolBar graphToolBar;
+
+		final DescribeIt describeIt;
+
+		final EffectHolder effectHolder;
+		final SEGraph<DescribeItNode> describeItGraph;
+		final DescribeItNodeGraphModel describeItGraphModel;
+
+		bindingPanel = new JPanel();
+		// XXX may need to change this to observed panel. Check StoryGraphPanel
+		describeItGraphPanel = new JPanel();
+		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
+
+		describeIt = describeItBinding.getValue();
+		// XXX I don't think the types are updated for this when KnowIt's types
+		// are. Need to check, and possibly add a StoryComponentObserver.
+		effectHolder = new EffectHolder(knowIt.getTypes());
+
+		describeItGraphModel = new DescribeItNodeGraphModel(
+				describeIt.getStartNode());
+		describeItGraph = new SEGraph<DescribeItNode>(describeItGraphModel);
+
+		describeItGraph.setNodeRenderer(new EditableDescribeItNodeRenderer(
+				describeItGraph));
+
+		// TODO we need a listener here that updates the graph.
+
+		// Reset the ToolBar to select and add the Graph to it.
+		// XXX MEMORY LEAK! We never remove these JComponents from
+		// GraphToolBarModeAction.
+		GraphToolBarModeAction.addJComponent(describeItGraph);
+		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
+
+		// Set up the JPanel containing the graph
+		describeItGraphPanel.setLayout(new BorderLayout());
+		describeItGraphPanel.add(graphToolBar, BorderLayout.PAGE_START);
+		describeItGraphPanel.add(new JScrollPane(describeItGraph),
+				BorderLayout.CENTER);
+
+		bindingPanel
+				.setLayout(new BoxLayout(bindingPanel, BoxLayout.PAGE_AXIS));
+		bindingPanel.setBorder(BorderFactory
+				.createTitledBorder("DescribeIt Binding"));
+
+		bindingPanel.add(effectHolder);
+		bindingPanel.add(describeItGraphPanel);
+
+		return bindingPanel;
 	}
 
 	/**

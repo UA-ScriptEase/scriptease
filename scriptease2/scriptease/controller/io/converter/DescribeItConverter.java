@@ -37,7 +37,7 @@ public class DescribeItConverter implements Converter {
 		final DescribeIt describeIt = (DescribeIt) source;
 
 		// head node
-		final DescribeItNode headNode = describeIt.getHeadNode();
+		final DescribeItNode headNode = describeIt.getStartNode();
 		writer.startNode(TAG_HEAD);
 		context.convertAnother(headNode);
 		writer.endNode();
@@ -82,7 +82,6 @@ public class DescribeItConverter implements Converter {
 		DescribeIt describeIt = null;
 		DescribeItNode headNode = null;
 		Map<List<DescribeItNode>, ScriptIt> paths = null;
-		List<DescribeItNode> defaultPath = null;
 		List<DescribeItNode> selectedPath = null;
 
 		while (reader.hasMoreChildren()) {
@@ -144,7 +143,7 @@ public class DescribeItConverter implements Converter {
 			reader.moveUp();
 		}
 
-		describeIt = new DescribeIt(headNode, paths, defaultPath, selectedPath);
+		describeIt = new DescribeIt(headNode, paths, selectedPath);
 		return describeIt;
 	}
 

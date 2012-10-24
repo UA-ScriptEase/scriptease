@@ -27,6 +27,7 @@ import scriptease.model.complex.StoryPoint;
  * DescribeIts to determine what effect they should have.
  * 
  * @author mfchurch
+ * @author kschenk
  */
 @SuppressWarnings("serial")
 public class DescribeItPanel extends JPanel {
@@ -35,13 +36,13 @@ public class DescribeItPanel extends JPanel {
 	private DescribeIt describeIt;
 
 	public DescribeItPanel(DescribeIt describeIt, boolean collapsed) {
-		final DescribeItNode headNode = describeIt.getHeadNode();
+		final DescribeItNode headNode;
 		final DescribeItNodeGraphModel describeItGraphModel;
 
-		this.describeIt = describeIt;
-
+		headNode = describeIt.getStartNode();
 		describeItGraphModel = new DescribeItNodeGraphModel(headNode);
 
+		this.describeIt = describeIt;
 		this.expandedPanel = new SEGraph<DescribeItNode>(describeItGraphModel);
 		// observer the graph nodes'
 
@@ -106,7 +107,7 @@ public class DescribeItPanel extends JPanel {
 					if (shouldCollapse) {
 
 						// Record the rebinding
-						// TODO We need to set Selecetd path elsewhere, not
+						// TODO We need to set Selected path elsewhere, not
 						// here.
 						// if
 						// (!UndoManager.getInstance().hasOpenUndoableAction())
@@ -132,9 +133,15 @@ public class DescribeItPanel extends JPanel {
 			final Insets insets = parent.getInsets();
 
 			// only show expansion if more than a single path exists
+
+			// XXX This makes the expansion button invisible if we do not have
+			// more than one path in the DescribeIt. I've commented it out so I
+			// can actually see the DescribeIts and debug them, but this seems
+			// like a good idea otherwise.
+
 			final boolean moreThanOnePath = DescribeItPanel.this.describeIt
 					.getPaths().size() > 1;
-			this.expansionButton.setVisible(moreThanOnePath);
+			// this.expansionButton.setVisible(moreThanOnePath);
 
 			// update the visibility
 			this.collapsedPanel.setVisible(this.collapsed);
