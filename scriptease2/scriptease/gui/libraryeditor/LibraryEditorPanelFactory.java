@@ -192,6 +192,7 @@ public class LibraryEditorPanelFactory {
 				this.defaultProcess(knowIt);
 
 				final JPanel knowItControlPanel;
+				final JPanel bindingEditingPanel;
 				final GroupLayout layout;
 				final JComboBox bindingSelectorBox;
 
@@ -204,7 +205,10 @@ public class LibraryEditorPanelFactory {
 				final String describeItBinding = "DescribeIt";
 				final String functionBinding = "Function";
 
+				final Runnable changeEditingPanel;
+
 				knowItControlPanel = new JPanel();
+				bindingEditingPanel = new JPanel();
 				layout = new GroupLayout(knowItControlPanel);
 				bindingSelectorBox = new JComboBox();
 
@@ -213,6 +217,41 @@ public class LibraryEditorPanelFactory {
 
 				bindingLabel = new JLabel("Binding: ");
 				typesLabel = new JLabel("Types: ");
+
+				changeEditingPanel = new Runnable() {
+					@Override
+					public void run() {
+						knowIt.getBinding().process(new BindingAdapter() {
+							public void processNull(
+									KnowItBindingNull nullBinding) {
+								bindingSelectorBox.setSelectedItem(null);
+								bindingEditingPanel.removeAll();
+							};
+
+							@Override
+							public void processDescribeIt(
+									KnowItBindingDescribeIt described) {
+								bindingSelectorBox
+										.setSelectedItem(describeItBinding);
+								bindingEditingPanel.removeAll();
+
+								bindingEditingPanel
+										.add(buildDescribeItBindingPanel(knowIt));
+							}
+
+							@Override
+							public void processFunction(
+									KnowItBindingFunction function) {
+								bindingSelectorBox
+										.setSelectedItem(functionBinding);
+								bindingEditingPanel.removeAll();
+								bindingEditingPanel
+										.add(buildFunctionBindingPanel(knowIt));
+							}
+						});
+
+					}
+				};
 
 				bindingSelectorBox.addItem(describeItBinding);
 				bindingSelectorBox.addItem(functionBinding);
@@ -288,57 +327,10 @@ public class LibraryEditorPanelFactory {
 
 				editorPanel.add(knowItControlPanel);
 
-				// TODO need a binding listener so this changes when we change
-				// the binding. Not necessarily the "selected item", but
-				// definitely the panels.
-
-				final Runnable changeEditingPanel;
-				final JPanel bindingEditingPanel;
-
-				bindingEditingPanel = new JPanel();
-
 				bindingEditingPanel.setLayout(new BoxLayout(
 						bindingEditingPanel, BoxLayout.PAGE_AXIS));
 
 				editorPanel.add(bindingEditingPanel);
-
-				changeEditingPanel = new Runnable() {
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						knowIt.getBinding().process(new BindingAdapter() {
-							public void processNull(
-									KnowItBindingNull nullBinding) {
-								bindingSelectorBox.setSelectedItem(null);
-								bindingEditingPanel.removeAll();
-							};
-
-							@Override
-							public void processDescribeIt(
-									KnowItBindingDescribeIt described) {
-								bindingSelectorBox
-										.setSelectedItem(describeItBinding);
-								bindingEditingPanel.removeAll();
-
-								bindingEditingPanel
-										.add(buildDescribeItBindingPanel(
-												knowIt, described));
-							}
-
-							@Override
-							public void processFunction(
-									KnowItBindingFunction function) {
-								bindingSelectorBox
-										.setSelectedItem(functionBinding);
-								bindingEditingPanel.removeAll();
-								bindingEditingPanel
-										.add(buildFunctionBindingPanel(knowIt,
-												function));
-							}
-						});
-
-					}
-				};
 
 				changeEditingPanel.run();
 
@@ -429,13 +421,14 @@ public class LibraryEditorPanelFactory {
 	 * @param functionBinding
 	 * @return
 	 */
-	private JPanel buildFunctionBindingPanel(final KnowIt knowIt,
-			KnowItBindingFunction functionBinding) {
+	private JPanel buildFunctionBindingPanel(final KnowIt knowIt) {
 		final JPanel bindingPanel;
+		final KnowItBindingFunction functionBinding;
 		final ScriptIt function;
 		final EffectHolderPanel effectHolder;
 
 		bindingPanel = new JPanel();
+		functionBinding = (KnowItBindingFunction) knowIt.getBinding();
 		function = functionBinding.getValue();
 		// XXX I don't think the types are updated for this when KnowIt's types
 		// are. Need to check, and possibly add a StoryComponentObserver.
@@ -469,13 +462,13 @@ public class LibraryEditorPanelFactory {
 	 * @param describeItBinding
 	 * @return
 	 */
-	private JPanel buildDescribeItBindingPanel(KnowIt knowIt,
-			KnowItBindingDescribeIt describeItBinding) {
+	private JPanel buildDescribeItBindingPanel(KnowIt knowIt) {
 
 		final JPanel bindingPanel;
 		final JPanel describeItGraphPanel;
 		final JToolBar graphToolBar;
 
+		final KnowItBindingDescribeIt describeItBinding;
 		final DescribeIt describeIt;
 
 		final EffectHolderPanel effectHolder;
@@ -487,6 +480,7 @@ public class LibraryEditorPanelFactory {
 		describeItGraphPanel = new JPanel();
 		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
 
+		describeItBinding = (KnowItBindingDescribeIt) knowIt.getBinding();
 		describeIt = describeItBinding.getValue();
 		// XXX I don't think the types are updated for this when KnowIt's types
 		// are. Need to check, and possibly add a StoryComponentObserver.
