@@ -242,14 +242,13 @@ public class LibraryEditorPanelFactory {
 							@Override
 							public void processDescribeIt(
 									KnowItBindingDescribeIt described) {
-								// TODO Do soemthing with describeits to set
-								// types
+								// TODO Should probably check our paths to see
+								// if they return the correct types.
 							}
 
 							@Override
 							public void processFunction(
 									KnowItBindingFunction function) {
-								// XXX This requires testing!
 								function.getValue().setTypes(types);
 							}
 						});
@@ -293,26 +292,59 @@ public class LibraryEditorPanelFactory {
 				// the binding. Not necessarily the "selected item", but
 				// definitely the panels.
 
-				knowIt.getBinding().process(new BindingAdapter() {
-					public void processNull(KnowItBindingNull nullBinding) {
-						bindingSelectorBox.setSelectedItem(null);
-					};
+				final Runnable changeEditingPanel;
+				final JPanel bindingEditingPanel;
 
-					@Override
-					public void processDescribeIt(
-							KnowItBindingDescribeIt described) {
-						bindingSelectorBox.setSelectedItem(describeItBinding);
-						editorPanel.add(buildDescribeItBindingPanel(knowIt,
-								described));
-					}
+				bindingEditingPanel = new JPanel();
 
+				bindingEditingPanel.setLayout(new BoxLayout(
+						bindingEditingPanel, BoxLayout.PAGE_AXIS));
+
+				editorPanel.add(bindingEditingPanel);
+
+				changeEditingPanel = new Runnable() {
 					@Override
-					public void processFunction(KnowItBindingFunction function) {
-						bindingSelectorBox.setSelectedItem(functionBinding);
-						editorPanel.add(buildFunctionBindingPanel(knowIt,
-								function));
+					public void run() {
+						// TODO Auto-generated method stub
+						knowIt.getBinding().process(new BindingAdapter() {
+							public void processNull(
+									KnowItBindingNull nullBinding) {
+								bindingSelectorBox.setSelectedItem(null);
+								bindingEditingPanel.removeAll();
+							};
+
+							@Override
+							public void processDescribeIt(
+									KnowItBindingDescribeIt described) {
+								bindingSelectorBox
+										.setSelectedItem(describeItBinding);
+								bindingEditingPanel.removeAll();
+
+								bindingEditingPanel
+										.add(buildDescribeItBindingPanel(
+												knowIt, described));
+							}
+
+							@Override
+							public void processFunction(
+									KnowItBindingFunction function) {
+								bindingSelectorBox
+										.setSelectedItem(functionBinding);
+								bindingEditingPanel.removeAll();
+								bindingEditingPanel
+										.add(buildFunctionBindingPanel(knowIt,
+												function));
+							}
+						});
+
 					}
-				});
+				};
+
+				changeEditingPanel.run();
+
+				knowIt.addStoryComponentObserver(LibraryEditorListenerFactory
+						.getInstance().buildKnowItEditorObserver(
+								changeEditingPanel));
 
 				bindingSelectorBox.addActionListener(new ActionListener() {
 					@Override
@@ -343,6 +375,7 @@ public class LibraryEditorPanelFactory {
 							describeIt.assignScriptItToPath(path, scriptIt);
 
 							knowIt.setBinding(describeIt);
+
 						} else if (selectedItem.equals(functionBinding)) {
 							final ScriptIt scriptIt = new ScriptIt("");
 							final CodeBlock codeBlock = new CodeBlockSource();
