@@ -40,6 +40,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.WidgetDecorator;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.transfer.BindingTransferHandlerExportOnly;
@@ -617,8 +618,7 @@ public class ScriptWidgetFactory {
 		final JTextField nameEditor;
 		final ObservedJPanel panel;
 		final StoryComponentObserver observer;
-
-		final Border defaultBorder;
+		final Runnable commitText;
 
 		nameEditor = new JTextField(component.getDisplayText());
 		panel = new ObservedJPanel(nameEditor);
@@ -633,19 +633,9 @@ public class ScriptWidgetFactory {
 				}
 			}
 		};
-
-		defaultBorder = nameEditor.getBorder();
-
-		component.addStoryComponentObserver(observer);
-		panel.addObserver(observer);
-
-		nameEditor.setBackground(Color.white);
-		nameEditor.setHorizontalAlignment(JTextField.CENTER);
-
-		nameEditor.addFocusListener(new FocusListener() {
+		commitText = new Runnable() {
 			@Override
-			public void focusLost(FocusEvent e) {
-
+			public void run() {
 				final String newValue = nameEditor.getText();
 				if (PatternModelManager.getInstance().hasActiveModel()) {
 					final String oldValue = component.getDisplayText();
@@ -658,33 +648,14 @@ public class ScriptWidgetFactory {
 						}
 					}
 				}
-
-				nameEditor.setBorder(defaultBorder);
 			}
+		};
 
-			@Override
-			public void focusGained(FocusEvent e) {
-				nameEditor.setBorder(BorderFactory.createLineBorder(Color.RED,
-						1));
-			}
-		});
+		WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
+				nameEditor, commitText, false);
 
-		nameEditor.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				WindowFactory.getInstance().getCurrentFrame()
-						.requestFocusInWindow();
-			}
-		});
-
-		nameEditor.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				GUIOp.resizeJTextField(nameEditor);
-			}
-		});
-
-		GUIOp.resizeJTextField(nameEditor);
+		component.addStoryComponentObserver(observer);
+		panel.addObserver(observer);
 
 		widgetsToStoryComponents.put(panel, component);
 		return panel;
@@ -725,6 +696,8 @@ public class ScriptWidgetFactory {
 				}
 			}
 		};
+		
+		System.out.println("Value Editor Created for : " + knowIt);
 
 		knowIt.addStoryComponentObserver(observer);
 		panel.addObserver(observer);
@@ -770,7 +743,7 @@ public class ScriptWidgetFactory {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				valueEditor.setBorder(BorderFactory.createLineBorder(Color.RED,
+				valueEditor.setBorder(BorderFactory.createLineBorder(Color.PINK,
 						1));
 			}
 		});
