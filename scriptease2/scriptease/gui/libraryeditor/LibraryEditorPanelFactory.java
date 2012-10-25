@@ -40,6 +40,7 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.ToolBarFactory;
 import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.SEGraph.SEGraph.SelectionMode;
 import scriptease.gui.SEGraph.renderers.EditableDescribeItNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
@@ -460,7 +461,8 @@ public class LibraryEditorPanelFactory {
 
 		describeItGraphModel = new DescribeItNodeGraphModel(
 				describeIt.getStartNode());
-		describeItGraph = new SEGraph<DescribeItNode>(describeItGraphModel);
+		describeItGraph = new SEGraph<DescribeItNode>(describeItGraphModel,
+				SelectionMode.SELECT_PATH);
 
 		describeItGraph.setNodeRenderer(new EditableDescribeItNodeRenderer(
 				describeItGraph));

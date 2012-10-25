@@ -1,9 +1,9 @@
 package scriptease.gui.SEGraph;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -289,112 +289,36 @@ public abstract class SEGraphModel<E> {
 	}
 
 	/**
-	 * Returns the path between the start and end node.
+	 * Returns the path between the start and end node. Recursively adds the
+	 * paths between each child of the start node and the end node to create one
+	 * path. If there are multiple path, this gets a path on a depth first
+	 * basis.
 	 * 
 	 * @param start
+	 *            The start node for the path
 	 * @param end
-	 * @return
+	 *            The end node for the path
+	 * @return An ordered, LinkedHashSet of nodes.
 	 */
 	public Collection<E> getPathBetweenNodes(E start, E end) {
 		final Collection<E> path;
 
-		path = new ArrayList<E>();
+		path = new LinkedHashSet<E>();
 
 		if (start == null || end == null
 				|| !this.getDescendants(start).contains(end))
 			return path;
 
-		if (this.getChildren(start).contains(end)) {
-			path.add(start);
+		path.add(start);
 
-			return path;
+		for (E child : this.getChildren(start)) {
+			if (path.addAll(getPathBetweenNodes(child, end)))
+				// We break so that we only add one child to the path.
+				break;
 		}
 
-		// TODO This may or may not work.
-		for (E child : this.getChildren(start))
-			path.addAll(getPathBetweenNodes(child, end));
+		path.add(end);
 
 		return path;
 	}
-	
-	// XXX Old Get Path Code from GraphNode.
-	
-	/*
-	*//**
-	 * Finds the best path from this node, to the given end node. Criteria being
-	 * the most selected nodes (from previous selection), otherwise if no
-	 * selection, take the shortest path.
-	 * 
-	 * @param end
-	 * @return
-	 *//*
-	public List<GraphNode> getBestPathToNode(GraphNode end) {
-		List<GraphNode> bestPath = new ArrayList<GraphNode>();
-		if (this != null && end != null && this != end) {
-			// Get all paths to that node
-			Collection<List<GraphNode>> paths = this.getPathsTo(end);
-			int mostSelected = 0;
-			// For each path, rank which one is best
-			for (List<GraphNode> path : paths) {
-				int selected = 0;
-				for (GraphNode node : path) {
-					if (node.isSelected())
-						selected++;
-					// break when we hit a non-selected node
-					else
-						break;
-				}
-				// if the new path is better, pick it
-				if (selected > mostSelected) {
-					mostSelected = selected;
-					bestPath = path;
-				}
-			}
-			// if nothing was found, pick the shortest path
-			if (bestPath.isEmpty() && !paths.isEmpty()) {
-				int shortestPath = this.INF_PATH_LENGTH;
-				for (List<GraphNode> path : paths) {
-					final int size = path.size();
-					if (size < shortestPath) {
-						shortestPath = size;
-						bestPath = path;
-					}
-				}
-			}
-		}
-		return bestPath;
-	}
-
-	*//**
-	 * Get all paths from this GraphNode to the given GraphNode.
-	 * 
-	 * @param end
-	 * @return
-	 *//*
-	public Collection<List<GraphNode>> getPathsTo(GraphNode end) {
-		Collection<List<GraphNode>> paths = new ArrayList<List<GraphNode>>();
-		if (end != null) {
-			if (end != this) {
-				for (GraphNode child : this.children) {
-					if (end.isDescendant(child)) {
-						// Calculate subPaths to end
-						Collection<List<GraphNode>> subPaths = child
-								.getPathsTo(end);
-
-						// For each subPath, append yourself to it and add it to
-						// paths
-						for (List<GraphNode> subPath : subPaths) {
-							subPath.add(0, this);
-							paths.add(subPath);
-						}
-					}
-				}
-			} else {
-				List<GraphNode> path = new ArrayList<GraphNode>();
-				path.add(this);
-				paths.add(path);
-			}
-		}
-		return paths;
-	}*/
 }
