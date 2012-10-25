@@ -40,8 +40,10 @@ public class LibraryEditorListenerFactory {
 	private static LibraryEditorListenerFactory instance = new LibraryEditorListenerFactory();
 
 	// These need to be instance variables or else they get garbage collected.
+	// XXX Note that this will cause some listeners to get garbage collected
+	// when we have two library editors open.
+	private StoryComponentObserver storyComponentObserver;
 	// Call refreshCodeBlockComponentObserverList when a new codeblock selected.
-	private StoryComponentObserver scriptItObserver;
 	private List<StoryComponentObserver> codeBlockComponentObservers = new ArrayList<StoryComponentObserver>();
 
 	/**
@@ -93,15 +95,16 @@ public class LibraryEditorListenerFactory {
 	}
 
 	/**
-	 * Builds a new observer for the script it editor. Note that only one of
-	 * these will exist at one time.
+	 * Builds a new observer for the script it editor. Note that calling this
+	 * method again or {@link #buildKnowItEditorObserver(Runnable)} will cause
+	 * this listener to be garbage collected.
 	 * 
 	 * @param runnable
 	 * @return
 	 */
 	protected StoryComponentObserver buildScriptItEditorObserver(
 			final Runnable runnable) {
-		this.scriptItObserver = new StoryComponentObserver() {
+		this.storyComponentObserver = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
 				final StoryComponentChangeEnum type;
@@ -114,7 +117,33 @@ public class LibraryEditorListenerFactory {
 			}
 		};
 
-		return this.scriptItObserver;
+		return this.storyComponentObserver;
+	}
+
+	/**
+	 * Builds a new observer for the know it editor. Note that calling this
+	 * method again or {@link #buildScriptItEditorObserver(Runnable)} will cause
+	 * this listener to be garbage collected..
+	 * 
+	 * @param runnable
+	 * @return
+	 */
+	protected StoryComponentObserver buildKnowItEditorObserver(
+			final Runnable runnable) {
+		this.storyComponentObserver = new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				final StoryComponentChangeEnum type;
+
+				type = event.getType();
+
+				if (type == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND)
+					runnable.run();
+
+			}
+		};
+
+		return this.storyComponentObserver;
 	}
 
 	/**

@@ -51,28 +51,16 @@ public class DescribeItPanel extends JPanel {
 		this.expandedPanel.setNodeRenderer(new DescribeItNodeRenderer(
 				this.expandedPanel));
 
-		// TODO
-		// Make graph redraw if we add or remove successors from these nodes.
-		// Should be an observed JPanel to remember these
+		// TODO We might need to make graph redraw if we add or remove
+		// successors from these nodes. Use observed JPanel for StryCmpntObsrvrs
 
 		this.expandedPanel
 				.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
 
 					@Override
 					public void nodesSelected(Collection<DescribeItNode> nodes) {
-						for (DescribeItNode node : nodes) {
-
-						}
 						// TODO Set selected path in DescribeIt to the selected
 						// path.
-					}
-
-					@Override
-					public void nodeOverwritten(DescribeItNode node) {
-						/*
-						 * if (node instanceof StoryPoint) ((StoryPoint)
-						 * node).revalidateKnowItBindings();
-						 */
 					}
 				});
 
