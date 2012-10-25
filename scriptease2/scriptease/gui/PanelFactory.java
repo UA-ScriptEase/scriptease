@@ -174,7 +174,6 @@ public class PanelFactory {
 
 		final SEGraph<StoryPoint> storyGraph;
 		final StoryPointGraphModel storyGraphModel;
-		final StoryPointNodeRenderer storyNodeRenderer;
 
 		final StoryComponentPanelTree storyComponentTree;
 		final StoryComponentObserver graphRedrawer;
@@ -187,7 +186,6 @@ public class PanelFactory {
 
 		storyGraphModel = new StoryPointGraphModel(start);
 		storyGraph = new SEGraph<StoryPoint>(storyGraphModel);
-		storyNodeRenderer = new StoryPointNodeRenderer(storyGraph);
 
 		storyComponentTree = new StoryComponentPanelTree(start);
 		graphRedrawer = new StoryComponentObserver() {
@@ -224,7 +222,7 @@ public class PanelFactory {
 		this.modelsToComponents.put(model, panes);
 
 		// Set up the Story Graph
-		storyGraph.setNodeRenderer(storyNodeRenderer);
+		storyGraph.setNodeRenderer( new StoryPointNodeRenderer(storyGraph));
 		storyGraph.addSEGraphObserver(new SEGraphAdapter<StoryPoint>() {
 
 			@Override

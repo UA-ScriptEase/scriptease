@@ -12,6 +12,7 @@ import java.awt.event.ContainerListener;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -41,6 +42,7 @@ import scriptease.gui.ToolBarFactory;
 import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraph.SelectionMode;
+import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.SEGraph.renderers.EditableDescribeItNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
@@ -430,8 +432,6 @@ public class LibraryEditorPanelFactory {
 		bindingPanel = new JPanel();
 		functionBinding = (KnowItBindingFunction) knowIt.getBinding();
 		function = functionBinding.getValue();
-		// XXX I don't think the types are updated for this when KnowIt's types
-		// are. Need to check, and possibly add a StoryComponentObserver.
 		effectHolder = new EffectHolderPanel(knowIt.getTypes());
 
 		bindingPanel.setBorder(BorderFactory
@@ -472,7 +472,7 @@ public class LibraryEditorPanelFactory {
 		final DescribeIt describeIt;
 
 		final EffectHolderPanel effectHolder;
-		final SEGraph<DescribeItNode> describeItGraph;
+		final SEGraph<DescribeItNode> graph;
 		final DescribeItNodeGraphModel describeItGraphModel;
 
 		bindingPanel = new JPanel();
@@ -488,25 +488,34 @@ public class LibraryEditorPanelFactory {
 
 		describeItGraphModel = new DescribeItNodeGraphModel(
 				describeIt.getStartNode());
-		describeItGraph = new SEGraph<DescribeItNode>(describeItGraphModel,
+		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
 				SelectionMode.SELECT_PATH);
 
-		describeItGraph.setNodeRenderer(new EditableDescribeItNodeRenderer(
-				describeItGraph));
+		graph.setNodeRenderer(new EditableDescribeItNodeRenderer(graph));
 
-		// TODO we need a listener here that updates the graph.
+		graph.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
+			@Override
+			public void nodesSelected(Collection<DescribeItNode> nodes) {
+				// TODO Change the view in Effect Holder to the path defined by
+				// the selected nodes.
+				graph.getSelectedNodes();
+			}
+		});
+
+		// TODO Add a change listener that updates the current selected path
+		// with the scriptit dragged in, just like with functionbBr.
+
+		// TODO We may need a listener that updates the graph on model changes.
+		// Not implementing this yet unless it's necessary.
 
 		// Reset the ToolBar to select and add the Graph to it.
-		// XXX MEMORY LEAK! We never remove these JComponents from
-		// GraphToolBarModeAction.
-		GraphToolBarModeAction.addJComponent(describeItGraph);
+		GraphToolBarModeAction.addJComponent(graph);
 		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
 
 		// Set up the JPanel containing the graph
 		describeItGraphPanel.setLayout(new BorderLayout());
 		describeItGraphPanel.add(graphToolBar, BorderLayout.PAGE_START);
-		describeItGraphPanel.add(new JScrollPane(describeItGraph),
-				BorderLayout.CENTER);
+		describeItGraphPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
 
 		bindingPanel
 				.setLayout(new BoxLayout(bindingPanel, BoxLayout.PAGE_AXIS));
@@ -552,7 +561,7 @@ public class LibraryEditorPanelFactory {
 	}
 
 	/**
-	 * Builds a JTextField used to edit the lables of a story component.
+	 * Builds a JTextField used to edit the labels of a story component.
 	 * 
 	 * @param component
 	 * @return
