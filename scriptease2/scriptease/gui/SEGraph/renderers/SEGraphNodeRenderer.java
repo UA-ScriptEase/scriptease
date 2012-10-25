@@ -75,7 +75,7 @@ public class SEGraphNodeRenderer<E> {
 		am.put("Paste", TransferHandler.getPasteAction());
 		component.setActionMap(am);
 
-		this.configureAppearance(component, node);
+		this.reconfigureAppearance(component, node);
 		this.configureInternalComponents(component, node);
 
 		component.addMouseListener(this.componentAppearanceMouseListener(node));
@@ -126,7 +126,13 @@ public class SEGraphNodeRenderer<E> {
 				SEGraphNodeRenderer.this.pressedComponent = null;
 
 				resetAppearances();
-				configureAppearance(component, node);
+
+				/*
+				 * We redraw the actual clicked on components by calling
+				 * reconfigureAppearance(JComponent, E) in SEGraph. This is
+				 * because the listeners are added in a different order. This
+				 * does not work out in the case of selecting multiple nodes.
+				 */
 			}
 
 			@Override
@@ -134,7 +140,7 @@ public class SEGraphNodeRenderer<E> {
 				final JComponent component = (JComponent) e.getSource();
 
 				SEGraphNodeRenderer.this.pressedComponent = component;
-				configureAppearance(component, node);
+				reconfigureAppearance(component, node);
 			}
 
 			@Override
@@ -142,7 +148,7 @@ public class SEGraphNodeRenderer<E> {
 				final JComponent component = (JComponent) e.getSource();
 
 				SEGraphNodeRenderer.this.hoveredComponent = component;
-				configureAppearance(component, node);
+				reconfigureAppearance(component, node);
 			}
 
 			@Override
@@ -152,7 +158,7 @@ public class SEGraphNodeRenderer<E> {
 				SEGraphNodeRenderer.this.hoveredComponent = null;
 				SEGraphNodeRenderer.this.pressedComponent = null;
 
-				configureAppearance(component, node);
+				reconfigureAppearance(component, node);
 			}
 		};
 	}
@@ -168,7 +174,8 @@ public class SEGraphNodeRenderer<E> {
 		for (Entry<E, JComponent> entry : this.graph.getNodesToComponentsMap()
 				.getEntrySet()) {
 			if (GraphToolBarModeAction.getMode() != ToolBarMode.SELECT) {
-				if (entry.getValue() == this.graph.getSelectedComponent())
+				if (this.graph.getSelectedComponents().contains(
+						entry.getValue()))
 					continue;
 			}
 			this.setComponentAppearance(entry.getValue(), entry.getKey(),
@@ -228,7 +235,7 @@ public class SEGraphNodeRenderer<E> {
 	 * @param node
 	 *            The graph node to configure based on.
 	 */
-	private void configureAppearance(final JComponent component, final E node) {
+	public void reconfigureAppearance(final JComponent component, final E node) {
 		if (component == null)
 			return;
 		// The default colour of the tool.

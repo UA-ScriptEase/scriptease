@@ -46,7 +46,8 @@ import sun.awt.util.IdentityArrayList;
 
 /**
  * Builds a directed, acyclic graph that must have a start node. Each graph must
- * be created with a model.
+ * be created with a model. Depending on the mode chosen, the graph can be set
+ * to only select individual nodes, or entire paths by holding shift.
  * 
  * @author kschenk
  * 
@@ -81,7 +82,6 @@ public class SEGraph<E> extends JComponent {
 
 	private Point mousePosition;
 
-	// TODO IMPLEMENT PATH SELECTION!
 	private SelectionMode selectionMode;
 
 	/**
@@ -111,11 +111,12 @@ public class SEGraph<E> extends JComponent {
 		this.selectedNodes = new LinkedHashSet<E>();
 
 		this.model = model;
+		this.selectionMode = selectionMode;
+
 		this.mousePosition = new Point();
 		this.nodesToComponents = new BiHashMap<E, JComponent>();
 		this.mouseAdapter = new NodeMouseAdapter();
 		this.observers = new ArrayList<SEGraphObserver<E>>();
-		this.selectionMode = SelectionMode.SELECT_PATH;
 
 		this.transferHandler = new SEGraphNodeTransferHandler<E>(this);
 
@@ -344,10 +345,8 @@ public class SEGraph<E> extends JComponent {
 			for (SEGraphObserver<E> observer : this.observers) {
 				observer.nodesSelected(this.selectedNodes);
 			}
-
 			return true;
 		}
-
 		return false;
 	}
 
@@ -364,32 +363,29 @@ public class SEGraph<E> extends JComponent {
 		final E end;
 
 		start = this.getFirstSelectedNode();
+
+		// Immediately return false if there is no possible path.
+		if (!this.model.getDescendants(start).contains(node))
+			return false;
+
 		end = this.getLastSelectedNode();
 
-		if (node == start) {
+		if (start == end)
+			// If the start node is the only node selected
+			return this.setSelectedNodes(this.model.getPathBetweenNodes(start,
+					node));
+
+		final Collection<E> newSubPath;
+
+		newSubPath = this.model.getPathBetweenNodes(end, node);
+
+		if (!newSubPath.isEmpty()) {
 			final Collection<E> path;
 
-			path = new LinkedHashSet<E>();
+			path = new LinkedHashSet<E>(this.selectedNodes);
 
-			path.add(start);
-
+			path.addAll(newSubPath);
 			return this.setSelectedNodes(path);
-		} else if (start == end) {
-			return this.setSelectedNodes(this.model.getPathBetweenNodes(start,
-					end));
-		} else {
-			final Collection<E> newSubPath;
-
-			newSubPath = this.model.getPathBetweenNodes(end, node);
-
-			if (!newSubPath.isEmpty()) {
-				final Collection<E> path;
-
-				path = new LinkedHashSet<E>(this.selectedNodes);
-
-				path.addAll(newSubPath);
-				return this.setSelectedNodes(path);
-			}
 		}
 
 		return this.setSelectedNodes(this.model
@@ -448,7 +444,10 @@ public class SEGraph<E> extends JComponent {
 	 * @return
 	 */
 	public E getFirstSelectedNode() {
-		return this.selectedNodes.iterator().next();
+		for (E node : this.selectedNodes)
+			return node;
+
+		return null;
 	}
 
 	/**
@@ -471,7 +470,7 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 * @return A collection of selected components
 	 */
-	public Collection<JComponent> getSelectedComponent() {
+	public Collection<JComponent> getSelectedComponents() {
 		final Collection<JComponent> selectedComponents;
 
 		selectedComponents = new ArrayList<JComponent>();
@@ -525,10 +524,10 @@ public class SEGraph<E> extends JComponent {
 	 * to null.
 	 */
 	private void validateSelectedNode() {
-		if (this.model.getStartNode() == this.selectedNodes.iterator().next())
-			return;
-
 		for (E node : this.selectedNodes) {
+			if (node == this.getStartNode())
+				continue;
+
 			if (this.model.getParents(node).size() == 0) {
 				// If any node doesn't have parents, it's no longer in the
 				// graph. So we set the selected nodes to just the start node.
@@ -1002,6 +1001,12 @@ public class SEGraph<E> extends JComponent {
 				if (selectionMode == SelectionMode.SELECT_PATH
 						&& e.isShiftDown()) {
 					SEGraph.this.selectNodesUntil(node);
+
+					for (E selectedNode : SEGraph.this.getSelectedNodes()) {
+						SEGraph.this.renderer.reconfigureAppearance(
+								SEGraph.this.nodesToComponents
+										.getValue(selectedNode), selectedNode);
+					}
 				} else {
 					final Collection<E> nodes;
 
@@ -1068,6 +1073,8 @@ public class SEGraph<E> extends JComponent {
 				}
 			}
 
+			SEGraph.this.renderer.reconfigureAppearance(
+					SEGraph.this.nodesToComponents.getValue(node), node);
 			SEGraph.this.draggedFromNode = null;
 			SEGraph.this.repaint();
 		}
