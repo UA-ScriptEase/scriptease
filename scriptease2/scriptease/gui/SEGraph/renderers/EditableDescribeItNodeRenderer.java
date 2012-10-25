@@ -8,6 +8,7 @@ import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
+import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.cell.ScriptWidgetFactory;
@@ -26,12 +27,15 @@ import scriptease.model.atomic.describeits.DescribeItNode;
 public class EditableDescribeItNodeRenderer extends
 		SEGraphNodeRenderer<DescribeItNode> {
 
+	final SEGraph<DescribeItNode> graph;
+
 	public EditableDescribeItNodeRenderer(SEGraph<DescribeItNode> graph) {
 		super(graph);
+		this.graph = graph;
 	}
 
 	@Override
-	protected void configureInternalComponents(JComponent component,
+	protected void configureInternalComponents(final JComponent component,
 			final DescribeItNode node) {
 
 		final KnowIt knowIt;
@@ -56,6 +60,12 @@ public class EditableDescribeItNodeRenderer extends
 				public void run() {
 					knowIt.setTypes(typeAction.getTypeSelectionDialogBuilder()
 							.getSelectedTypes());
+
+					component.removeAll();
+					configureInternalComponents(component, node);
+
+					EditableDescribeItNodeRenderer.this.graph.revalidate();
+					EditableDescribeItNodeRenderer.this.graph.repaint();
 				}
 			});
 
@@ -66,14 +76,18 @@ public class EditableDescribeItNodeRenderer extends
 			component.add(typesButton);
 		} else {
 			final JTextField nodeNameEditor;
+			final Runnable commitText;
 
 			nodeNameEditor = new JTextField(node.getName());
-
-			nodeNameEditor.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+			commitText = new Runnable() {
+				@Override
+				public void run() {
 					node.setName(nodeNameEditor.getText());
 				}
-			});
+			};
+
+			WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
+					nodeNameEditor, commitText, true);
 
 			component.add(knowItButton);
 			component.add(nodeNameEditor);
@@ -88,6 +102,12 @@ public class EditableDescribeItNodeRenderer extends
 					node.setName(node.getKnowIt().getDisplayText());
 					node.setKnowIt(null);
 				}
+
+				component.removeAll();
+				configureInternalComponents(component, node);
+
+				EditableDescribeItNodeRenderer.this.graph.revalidate();
+				EditableDescribeItNodeRenderer.this.graph.repaint();
 			}
 		});
 	}

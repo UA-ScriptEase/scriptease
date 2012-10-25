@@ -7,7 +7,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.imageio.ImageIO;
 import javax.swing.Action;
@@ -29,18 +31,14 @@ import scriptease.util.FileOp;
 public abstract class GraphToolBarModeAction extends ActiveModelSensitiveAction {
 
 	public static enum ToolBarMode {
-		INSERT,
-		SELECT,
-		DELETE,
-		CONNECT,
-		DISCONNECT
+		INSERT, SELECT, DELETE, CONNECT, DISCONNECT
 	}
 
 	private static ToolBarMode selectedMode;
 
 	private String actionName;
 
-	private static ArrayList<JComponent> activeComponents = new ArrayList<JComponent>();
+	private static Collection<WeakReference<JComponent>> activeComponents = new ArrayList<WeakReference<JComponent>>();
 
 	/**
 	 * Constructor. Creates the icon for the ToolBar button.
@@ -99,7 +97,8 @@ public abstract class GraphToolBarModeAction extends ActiveModelSensitiveAction 
 	}
 
 	public static void addJComponent(JComponent component) {
-		GraphToolBarModeAction.activeComponents.add(component);
+		GraphToolBarModeAction.activeComponents
+				.add(new WeakReference<JComponent>(component));
 	}
 
 	/**
@@ -151,7 +150,8 @@ public abstract class GraphToolBarModeAction extends ActiveModelSensitiveAction 
 			}
 		}
 
-		for (JComponent component : activeComponents)
-			component.setCursor(customCursor);
+		for (WeakReference<JComponent> reference : activeComponents)
+			reference.get().setCursor(customCursor);
+
 	}
 }

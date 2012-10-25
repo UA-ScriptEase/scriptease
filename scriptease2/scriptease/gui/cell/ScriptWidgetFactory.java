@@ -5,10 +5,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,7 +24,6 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -41,7 +36,6 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
-import scriptease.gui.WindowFactory;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.transfer.BindingTransferHandlerExportOnly;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -652,7 +646,7 @@ public class ScriptWidgetFactory {
 		};
 
 		WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
-				nameEditor, commitText, false);
+				nameEditor, commitText, true);
 
 		component.addStoryComponentObserver(observer);
 		panel.addObserver(observer);
@@ -674,8 +668,7 @@ public class ScriptWidgetFactory {
 		final JTextField valueEditor;
 		final ObservedJPanel panel;
 		final StoryComponentObserver observer;
-
-		final Border defaultBorder;
+		final Runnable commitText;
 
 		binding = knowIt.getBinding();
 		if (!(binding instanceof KnowItBindingConstant))
@@ -696,28 +689,18 @@ public class ScriptWidgetFactory {
 				}
 			}
 		};
-		
-		System.out.println("Value Editor Created for : " + knowIt);
-
-		knowIt.addStoryComponentObserver(observer);
-		panel.addObserver(observer);
-
-		defaultBorder = valueEditor.getBorder();
-
-		valueEditor.setBackground(Color.white);
-		valueEditor.setHorizontalAlignment(JTextField.CENTER);
-
-		valueEditor.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-
+		commitText = new Runnable() {
+			public void run() {
 				final String newValue = valueEditor.getText();
 				if (PatternModelManager.getInstance().hasActiveModel()) {
 					binding.process(new BindingAdapter() {
 						@Override
 						public void processConstant(
 								KnowItBindingConstant constant) {
-							final String oldValue = constant.getScriptValue();
+							final String oldValue;
+
+							oldValue = constant.getScriptValue();
+
 							if (!oldValue.equals(newValue)) {
 								if (!UndoManager.getInstance()
 										.hasOpenUndoableAction()) {
@@ -738,32 +721,14 @@ public class ScriptWidgetFactory {
 						}
 					});
 				}
-				valueEditor.setBorder(defaultBorder);
-			}
+			};
+		};
 
-			@Override
-			public void focusGained(FocusEvent e) {
-				valueEditor.setBorder(BorderFactory.createLineBorder(Color.PINK,
-						1));
-			}
-		});
+		WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
+				valueEditor, commitText, true);
 
-		valueEditor.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				WindowFactory.getInstance().getCurrentFrame()
-						.requestFocusInWindow();
-			}
-		});
-
-		valueEditor.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				GUIOp.resizeJTextField(valueEditor);
-			}
-		});
-
-		GUIOp.resizeJTextField(valueEditor);
+		knowIt.addStoryComponentObserver(observer);
+		panel.addObserver(observer);
 
 		widgetsToStoryComponents.put(panel, knowIt);
 		return panel;
