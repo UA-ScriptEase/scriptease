@@ -58,7 +58,7 @@ public class DescribeItNodeConverter implements Converter {
 
 		node = new DescribeItNode("", null);
 		successors = new HashSet<DescribeItNode>();
-
+		
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 

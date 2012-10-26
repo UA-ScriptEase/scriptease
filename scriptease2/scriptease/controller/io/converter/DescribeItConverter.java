@@ -26,7 +26,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class DescribeItConverter implements Converter {
 	public static final String TAG_DESCRIBEIT = "DescribeIt";
 	private static final String TAG_SELECTED_PATH = "SelectedPath";
-	private static final String TAG_HEAD = "HeadNode";
 	private static final String TAG_PATH_MAP = "PathMap";
 	private static final String TAG_ENTRY = "Entry";
 	private static final String TAG_PATH = "Path";
@@ -38,7 +37,7 @@ public class DescribeItConverter implements Converter {
 
 		// head node
 		final DescribeItNode headNode = describeIt.getStartNode();
-		writer.startNode(TAG_HEAD);
+		writer.startNode(DescribeItNodeConverter.TAG_NODE_NAME);
 		context.convertAnother(headNode);
 		writer.endNode();
 
@@ -89,18 +88,9 @@ public class DescribeItConverter implements Converter {
 			reader.moveDown();
 			final String nodeName = reader.getNodeName();
 			// head node - can't think of a better way to handle this
-			if (nodeName.equals(TAG_HEAD)) {
-				reader.moveDown();
-				/*
-				 * I want to use a visitor, but we're breaking on a String not a
-				 * class. So until we find a better way to do this make sure
-				 * this encompasses all of the possible head node types :(
-				 */
-				if (reader.getNodeName().equals(
-						DescribeItNodeConverter.TAG_NODE_NAME))
-					headNode = (DescribeItNode) context.convertAnother(
-							describeIt, DescribeItNode.class);
-				reader.moveUp();
+			if (nodeName.equals(DescribeItNodeConverter.TAG_NODE_NAME)) {
+				headNode = (DescribeItNode) context.convertAnother(describeIt,
+						DescribeItNode.class);
 			}
 			// paths
 			else if (nodeName.equals(TAG_PATH_MAP)) {

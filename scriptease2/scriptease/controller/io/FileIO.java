@@ -98,11 +98,7 @@ public class FileIO {
 	 * @author remiller
 	 */
 	public enum IoMode {
-		API_DICTIONARY,
-		LANGUAGE_DICTIONARY,
-		STORY,
-		LIBRARY,
-		NONE;
+		API_DICTIONARY, LANGUAGE_DICTIONARY, STORY, LIBRARY, NONE;
 	}
 
 	private static FileIO instance;
@@ -418,12 +414,12 @@ public class FileIO {
 		stream.registerConverter(new APIDictionaryConverter());
 		stream.registerConverter(new LanguageDictionaryConverter());
 		stream.registerConverter(new GameMapConverter());
-		stream.registerConverter(new DescribeItConverter());
 		stream.registerConverter(new CodeBlockSourceConverter());
 		stream.registerConverter(new CodeBlockReferenceConverter());
 		stream.registerConverter(new ScriptItConverter());
 		stream.registerConverter(new StoryPointConverter());
 		stream.registerConverter(new NoteConverter());
+		stream.registerConverter(new DescribeItConverter());
 		stream.registerConverter(new DescribeItNodeConverter());
 
 		stream.registerConverter(new IdentityArrayListConverter(stream
