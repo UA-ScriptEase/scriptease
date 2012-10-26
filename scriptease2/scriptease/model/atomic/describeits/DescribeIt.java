@@ -114,8 +114,9 @@ public class DescribeIt implements Cloneable {
 	 */
 	private boolean containsPath(Collection<DescribeItNode> path) {
 		if (this.paths != null) {
-			for(Collection<DescribeItNode> existingPath : this.paths.keySet()) {
-				if(existingPath.containsAll(path) && existingPath.size() == path.size())
+			for (Collection<DescribeItNode> existingPath : this.paths.keySet()) {
+				if (existingPath.containsAll(path)
+						&& existingPath.size() == path.size())
 					return true;
 			}
 		}
@@ -141,9 +142,7 @@ public class DescribeIt implements Cloneable {
 	}
 
 	public boolean setSelectedPath(Collection<DescribeItNode> path) {
-		if (this.selectedPath == null
-				|| (!this.selectedPath.isEmpty() && this.paths
-						.get(this.selectedPath) != null)) {
+		if (!(path == null || path.isEmpty()) && this.paths.get(path) != null) {
 			// clear bindings on the previous selectedPath
 			final ScriptIt scriptIt;
 

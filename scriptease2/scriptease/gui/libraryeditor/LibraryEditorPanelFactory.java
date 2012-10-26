@@ -501,7 +501,7 @@ public class LibraryEditorPanelFactory {
 				describeIt.assignScriptItToPath(selectedNodes, newEffect);
 			}
 		};
-
+	
 		graph.setNodeRenderer(new EditableDescribeItNodeRenderer(graph));
 
 		graph.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
@@ -510,7 +510,7 @@ public class LibraryEditorPanelFactory {
 				final ScriptIt pathScriptIt;
 
 				pathScriptIt = describeIt.getScriptItForPath(nodes);
-
+					
 				effectHolder.removeSetEffectObserver(effectObserver);
 				effectHolder.setEffect(pathScriptIt);
 				effectHolder.addSetEffectObserver(effectObserver);

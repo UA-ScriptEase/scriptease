@@ -7,10 +7,12 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.JPanel;
 
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraph.SelectionMode;
@@ -36,7 +38,7 @@ public class DescribeItPanel extends JPanel {
 
 	private DescribeIt describeIt;
 
-	public DescribeItPanel(DescribeIt describeIt, boolean collapsed) {
+	public DescribeItPanel(final DescribeIt describeIt, boolean collapsed) {
 		final DescribeItNode headNode;
 		final DescribeItNodeGraphModel describeItGraphModel;
 
@@ -46,21 +48,22 @@ public class DescribeItPanel extends JPanel {
 		this.describeIt = describeIt;
 		this.expandedPanel = new SEGraph<DescribeItNode>(describeItGraphModel,
 				SelectionMode.SELECT_PATH);
-		// observer the graph nodes'
 
 		this.expandedPanel.setNodeRenderer(new DescribeItNodeRenderer(
 				this.expandedPanel));
-
-		// TODO We might need to make graph redraw if we add or remove
-		// successors from these nodes. Use observed JPanel for StryCmpntObsrvrs
 
 		this.expandedPanel
 				.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
 
 					@Override
 					public void nodesSelected(Collection<DescribeItNode> nodes) {
-						// TODO Set selected path in DescribeIt to the selected
-						// path.
+						final Collection<DescribeItNode> selectedNodes;
+
+						selectedNodes = new ArrayList<DescribeItNode>();
+
+						selectedNodes.addAll(nodes);
+
+						describeIt.setSelectedPath(selectedNodes);
 					}
 				});
 
@@ -99,16 +102,14 @@ public class DescribeItPanel extends JPanel {
 					DescribeItPanelLayoutManager.this.collapsed = !DescribeItPanelLayoutManager.this.collapsed;
 					boolean shouldCollapse = DescribeItPanelLayoutManager.this.collapsed;
 					if (shouldCollapse) {
-
-						// Record the rebinding
-						// TODO We need to set Selected path elsewhere, not
-						// here.
-						// if
-						// (!UndoManager.getInstance().hasOpenUndoableAction())
-						// UndoManager.getInstance().startUndoableAction(
-						// "Bind DescribeIt");
-						// DescribeItPanel.this.describeIt.setSelectedPath(path);
-						// UndoManager.getInstance().endUndoableAction();
+						// Start undo when we open graph
+						if (!UndoManager.getInstance().hasOpenUndoableAction())
+							UndoManager.getInstance().startUndoableAction(
+									"Bind DescribeIt");
+					} else {
+						// End undo when we close it.
+						if (UndoManager.getInstance().hasOpenUndoableAction())
+							UndoManager.getInstance().endUndoableAction();
 					}
 					DescribeItPanelLayoutManager.this.expansionButton
 							.setCollapsed(shouldCollapse);
@@ -127,15 +128,9 @@ public class DescribeItPanel extends JPanel {
 			final Insets insets = parent.getInsets();
 
 			// only show expansion if more than a single path exists
-
-			// XXX This makes the expansion button invisible if we do not have
-			// more than one path in the DescribeIt. I've commented it out so I
-			// can actually see the DescribeIts and debug them, but this seems
-			// like a good idea otherwise.
-
 			final boolean moreThanOnePath = DescribeItPanel.this.describeIt
 					.getPaths().size() > 1;
-			// this.expansionButton.setVisible(moreThanOnePath);
+			this.expansionButton.setVisible(moreThanOnePath);
 
 			// update the visibility
 			this.collapsedPanel.setVisible(this.collapsed);
@@ -223,6 +218,8 @@ public class DescribeItPanel extends JPanel {
 			// Resolve the displayNamePanel size
 			final ScriptIt resolvedDoIt = DescribeItPanel.this.describeIt
 					.getResolvedScriptIt();
+
+			System.out.println("RESOLVEDDOIT: " + resolvedDoIt);
 
 			if (resolvedDoIt != null) {
 				StoryComponentPanelFactory.getInstance().parseDisplayText(
