@@ -45,8 +45,9 @@ public class DescribeItConverter implements Converter {
 		// paths
 		writer.startNode(TAG_PATH_MAP);
 
-		final Collection<List<DescribeItNode>> paths = describeIt.getPaths();
-		for (List<DescribeItNode> path : paths) {
+		final Collection<Collection<DescribeItNode>> paths = describeIt
+				.getPaths();
+		for (Collection<DescribeItNode> path : paths) {
 			// path with the consisting nodes and the resulting doIt
 			writer.startNode(TAG_ENTRY);
 			// nodes
@@ -81,7 +82,7 @@ public class DescribeItConverter implements Converter {
 			UnmarshallingContext context) {
 		DescribeIt describeIt = null;
 		DescribeItNode headNode = null;
-		Map<List<DescribeItNode>, ScriptIt> paths = null;
+		Map<Collection<DescribeItNode>, ScriptIt> paths = null;
 		List<DescribeItNode> selectedPath = null;
 
 		while (reader.hasMoreChildren()) {
@@ -103,7 +104,7 @@ public class DescribeItConverter implements Converter {
 			}
 			// paths
 			else if (nodeName.equals(TAG_PATH_MAP)) {
-				paths = new HashMap<List<DescribeItNode>, ScriptIt>();
+				paths = new HashMap<Collection<DescribeItNode>, ScriptIt>();
 				// read all of the paths
 				while (reader.hasMoreChildren()) {
 					reader.moveDown();

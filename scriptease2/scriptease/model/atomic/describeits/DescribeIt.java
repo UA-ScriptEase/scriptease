@@ -23,8 +23,8 @@ import sun.awt.util.IdentityArrayList;
 public class DescribeIt implements Cloneable {
 	public static String DESCRIBES = "describes";
 	private DescribeItNode startNode;
-	private List<DescribeItNode> selectedPath;
-	private Map<List<DescribeItNode>, ScriptIt> paths;
+	private Collection<DescribeItNode> selectedPath;
+	private Map<Collection<DescribeItNode>, ScriptIt> paths;
 	// Longest path length used for calculating shortest path
 	private int INF_PATH_LENGTH = 100;
 
@@ -33,8 +33,8 @@ public class DescribeIt implements Cloneable {
 	}
 
 	public DescribeIt(DescribeItNode startNode,
-			Map<List<DescribeItNode>, ScriptIt> paths,
-			List<DescribeItNode> selectedPath) {
+			Map<Collection<DescribeItNode>, ScriptIt> paths,
+			Collection<DescribeItNode> selectedPath) {
 		// assure the startNode is valid
 		if (startNode != null)
 			this.startNode = startNode;
@@ -43,9 +43,10 @@ public class DescribeIt implements Cloneable {
 					"Cannot initialize DescribeIt with a null StartNode");
 		// calculate paths if not given any
 		if (paths != null && !paths.isEmpty()) {
-			this.paths = new HashMap<List<DescribeItNode>, ScriptIt>(paths);
+			this.paths = new HashMap<Collection<DescribeItNode>, ScriptIt>(
+					paths);
 		} else {
-			this.paths = new HashMap<List<DescribeItNode>, ScriptIt>();
+			this.paths = new HashMap<Collection<DescribeItNode>, ScriptIt>();
 		}
 
 		// assure the selected path is valid, otherwise use defaultPath
@@ -62,12 +63,19 @@ public class DescribeIt implements Cloneable {
 	 * @param bPath
 	 * @return
 	 */
-	public ScriptIt getScriptItForPath(List<DescribeItNode> bPath) {
-		if (bPath != null) {
-			for (Entry<List<DescribeItNode>, ScriptIt> entry : this.paths
+	public ScriptIt getScriptItForPath(Collection<DescribeItNode> bPath) {
+		if (bPath != null && this.containsPath(bPath)) {
+			for (Entry<Collection<DescribeItNode>, ScriptIt> entry : this.paths
 					.entrySet()) {
-				List<DescribeItNode> aPath = entry.getKey();
-				if (ListOp.identityEqualLists(aPath, bPath))
+				Collection<DescribeItNode> aPath = entry.getKey();
+
+				List<DescribeItNode> aList = new ArrayList<DescribeItNode>(
+						aPath);
+				List<DescribeItNode> bList = new ArrayList<DescribeItNode>(
+						bPath);
+
+				// TODO Maybe we can change this to be more general.
+				if (ListOp.identityEqualLists(aList, bList))
 					return entry.getValue();
 			}
 		}
@@ -79,7 +87,7 @@ public class DescribeIt implements Cloneable {
 	 * 
 	 * @return
 	 */
-	public Collection<List<DescribeItNode>> getPaths() {
+	public Collection<Collection<DescribeItNode>> getPaths() {
 		return this.paths.keySet();
 	}
 
@@ -104,9 +112,14 @@ public class DescribeIt implements Cloneable {
 	 * @param path
 	 * @return
 	 */
-	private boolean containsPath(List<DescribeItNode> path) {
-		if (this.paths != null)
-			return ListOp.identityContains(this.paths.keySet(), path);
+	private boolean containsPath(Collection<DescribeItNode> path) {
+		if (this.paths != null) {
+			for(Collection<DescribeItNode> existingPath : this.paths.keySet()) {
+				if(existingPath.containsAll(path) && existingPath.size() == path.size())
+					return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -127,7 +140,7 @@ public class DescribeIt implements Cloneable {
 		return new IdentityArrayList<DescribeItNode>();
 	}
 
-	public boolean setSelectedPath(List<DescribeItNode> path) {
+	public boolean setSelectedPath(Collection<DescribeItNode> path) {
 		if (this.selectedPath == null
 				|| (!this.selectedPath.isEmpty() && this.paths
 						.get(this.selectedPath) != null)) {
@@ -194,10 +207,13 @@ public class DescribeIt implements Cloneable {
 	 * 
 	 * @return
 	 */
-	public List<DescribeItNode> getShortestPath() {
-		List<DescribeItNode> shortestPath = new IdentityArrayList<DescribeItNode>();
+	public Collection<DescribeItNode> getShortestPath() {
+		Collection<DescribeItNode> shortestPath;
+
+		shortestPath = new IdentityArrayList<DescribeItNode>();
+
 		int shortestPathSize = this.INF_PATH_LENGTH;
-		for (List<DescribeItNode> path : this.paths.keySet()) {
+		for (Collection<DescribeItNode> path : this.paths.keySet()) {
 			int size = path.size();
 			if (size < shortestPathSize) {
 				shortestPathSize = size;
@@ -209,12 +225,13 @@ public class DescribeIt implements Cloneable {
 
 	/**
 	 * Assigns the given scriptIt to the given path iff every parameter in the
-	 * scriptIt has a matching KnowItNode, and the path exists in the path map.
+	 * scriptIt has a matching KnowItNode. If the path does not exist yet, adds
+	 * it to the map.
 	 * 
 	 * @param path
 	 * @param scriptIt
 	 */
-	public void assignScriptItToPath(List<DescribeItNode> path,
+	public void assignScriptItToPath(Collection<DescribeItNode> path,
 			ScriptIt scriptIt) {
 		this.paths.put(path, scriptIt);
 	}
