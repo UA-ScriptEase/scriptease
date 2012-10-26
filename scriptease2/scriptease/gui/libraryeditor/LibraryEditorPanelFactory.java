@@ -12,7 +12,6 @@ import java.awt.event.ContainerListener;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -35,6 +34,7 @@ import scriptease.ScriptEase;
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
+import scriptease.controller.observer.SetEffectObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.undo.UndoManager;
@@ -356,9 +356,11 @@ public class LibraryEditorPanelFactory {
 							final ScriptIt scriptIt;
 							final List<DescribeItNode> path;
 
+							// TODO Need to get rid of this placeholder scriptit
+							// and just set it to "null".
 							describeItNode = new DescribeItNode();
 							describeIt = new DescribeIt(describeItNode);
-							scriptIt = new ScriptIt("New ScriptIt");
+							scriptIt = new ScriptIt("");
 							path = new ArrayList<DescribeItNode>(1);
 
 							scriptIt.addCodeBlock(new CodeBlockSource());
@@ -438,15 +440,11 @@ public class LibraryEditorPanelFactory {
 				.createTitledBorder("Function Binding"));
 		effectHolder.setEffect(function);
 
-		effectHolder.addContainerListener(new ContainerListener() {
-			@Override
-			public void componentAdded(ContainerEvent e) {
-				knowIt.setBinding(effectHolder.getEffect());
-			}
+		effectHolder.addSetEffectObserver(new SetEffectObserver() {
 
 			@Override
-			public void componentRemoved(ContainerEvent e) {
-				// Do nothing. We don't need to update twice.
+			public void effectChanged(ScriptIt newEffect) {
+				knowIt.setBinding(effectHolder.getEffect());
 			}
 		});
 
@@ -472,11 +470,11 @@ public class LibraryEditorPanelFactory {
 		final DescribeIt describeIt;
 
 		final EffectHolderPanel effectHolder;
+		final SetEffectObserver effectObserver;
 		final SEGraph<DescribeItNode> graph;
 		final DescribeItNodeGraphModel describeItGraphModel;
 
 		bindingPanel = new JPanel();
-		// XXX may need to change this to observed panel. Check StoryGraphPanel
 		describeItGraphPanel = new JPanel();
 		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
 
@@ -485,28 +483,48 @@ public class LibraryEditorPanelFactory {
 		// XXX I don't think the types are updated for this when KnowIt's types
 		// are. Need to check, and possibly add a StoryComponentObserver.
 		effectHolder = new EffectHolderPanel(knowIt.getTypes());
-
 		describeItGraphModel = new DescribeItNodeGraphModel(
 				describeIt.getStartNode());
 		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
 				SelectionMode.SELECT_PATH);
+
+		effectObserver = new SetEffectObserver() {
+			@Override
+			public void effectChanged(ScriptIt newEffect) {
+				// We need to make a copy or else the path is ALWAYS the current
+				// selected nodes, which is not what we want at all.
+				final Collection<DescribeItNode> selectedNodes;
+
+				selectedNodes = new ArrayList<DescribeItNode>(
+						graph.getSelectedNodes());
+
+				describeIt.assignScriptItToPath(selectedNodes, newEffect);
+			}
+		};
 
 		graph.setNodeRenderer(new EditableDescribeItNodeRenderer(graph));
 
 		graph.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
 			@Override
 			public void nodesSelected(Collection<DescribeItNode> nodes) {
-				// TODO Change the view in Effect Holder to the path defined by
-				// the selected nodes.
-				graph.getSelectedNodes();
+				final ScriptIt pathScriptIt;
+
+				pathScriptIt = describeIt.getScriptItForPath(nodes);
+
+				effectHolder.removeSetEffectObserver(effectObserver);
+				effectHolder.setEffect(pathScriptIt);
+				effectHolder.addSetEffectObserver(effectObserver);
 			}
 		});
 
-		// TODO Add a change listener that updates the current selected path
-		// with the scriptit dragged in, just like with functionbBr.
+		effectHolder.addSetEffectObserver(effectObserver);
 
-		// TODO We may need a listener that updates the graph on model changes.
-		// Not implementing this yet unless it's necessary.
+		/*
+		 * TODO We may need a listener that updates the graph on model changes.
+		 * Not implementing this unless it's necessary, because the only case
+		 * where this should happen is if we have two library editors open. In
+		 * that case, we need to refactor a lot of code here anyways, incl this
+		 */
 
 		// Reset the ToolBar to select and add the Graph to it.
 		GraphToolBarModeAction.addJComponent(graph);
