@@ -23,7 +23,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class ScriptItConverter extends ComplexStoryComponentConverter {
 	public static final String TAG_SCRIPTIT = "ScriptIt";
 	private static final String TAG_CODEBLOCKS = "CodeBlocks";
-	
+
 	// Other tags: Storychild scope
 	// always child scope
 	// functioncall
@@ -32,7 +32,7 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final ScriptIt scriptIt = (ScriptIt) source;
-		
+
 		super.marshal(source, writer, context);
 
 		// CodeBlocks
@@ -48,18 +48,21 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 		final ScriptIt scriptIt;
 
 		scriptIt = (ScriptIt) super.unmarshal(reader, context);
-		
+
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
-			Collection<CodeBlock> codeBlocks = ((Collection<CodeBlock>) context
-					.convertAnother(scriptIt, ArrayList.class));
+			final Collection<CodeBlock> codeBlocks;
+
+			codeBlocks = ((Collection<CodeBlock>) context.convertAnother(
+					scriptIt, ArrayList.class));
+			
 			if (codeBlocks.isEmpty())
 				throw new IllegalStateException(
 						"Unable to read CodeBlocks for " + scriptIt);
 			scriptIt.setCodeBlocks(codeBlocks);
 			reader.moveUp();
 		}
-		
+
 		return scriptIt;
 	}
 

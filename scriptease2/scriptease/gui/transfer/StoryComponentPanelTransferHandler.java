@@ -257,12 +257,15 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (supportComponent instanceof StoryComponentPanel) {
 
 			// variables
-			final Collection<StoryComponent> transferData;
 			int insertionIndex;
-			final StoryComponentPanel panel = (StoryComponentPanel) supportComponent;
-			final ComplexStoryComponent parent = (ComplexStoryComponent) panel
-					.getStoryComponent();
 			boolean success = false;
+
+			final Collection<StoryComponent> transferData;
+			final StoryComponentPanel panel;
+			final ComplexStoryComponent parent;
+
+			panel = (StoryComponentPanel) supportComponent;
+			parent = (ComplexStoryComponent) panel.getStoryComponent();
 
 			// get transfer data
 			transferData = this.extractStoryComponents(support);
