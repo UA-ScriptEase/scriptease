@@ -21612,6 +21612,60 @@
         <ScriptIt reference="/APIDictionary/Effects/ScriptIt[242]"/>
       </Binding>
     </KnowIt>
+        <KnowIt>
+      <Name>Description</Name>
+      <Visible>true</Visible>
+      <Labels/>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <Binding flavour="describeIt">
+        <DescribeIt>
+          <DescribeItNode>
+            <Name>New Node 4</Name>
+            <Successors>
+              <DescribeItNode>
+                <Name>New Node 5</Name>
+                <Successors/>
+              </DescribeItNode>
+            </Successors>
+          </DescribeItNode>
+          <PathMap>
+            <Entry>
+              <Path>
+                <DescribeItNode reference="/APIDictionary/DescribeIts/KnowIt[13]/Binding/DescribeIt/DescribeItNode"/>
+                <DescribeItNode reference="/APIDictionary/DescribeIts/KnowIt[13]/Binding/DescribeIt/DescribeItNode/Successors/DescribeItNode"/>
+              </Path>
+              <ScriptIt reference="/APIDictionary/Effects/ScriptIt[228]"/>
+            </Entry>
+            <Entry>
+              <Path>
+                <DescribeItNode reference="/APIDictionary/DescribeIts/KnowIt[13]/Binding/DescribeIt/DescribeItNode"/>
+              </Path>
+              <ScriptIt>
+                <Name></Name>
+                <Visible>true</Visible>
+                <Labels/>
+                <Children/>
+                <CodeBlocks>
+                  <CodeBlockSource>
+                    <Name></Name>
+                    <Visible>true</Visible>
+                    <Labels/>
+                    <Id>-1</Id>
+                    <Types>
+                      <Type>question</Type>
+                    </Types>
+                    <Code/>
+                  </CodeBlockSource>
+                </CodeBlocks>
+              </ScriptIt>
+            </Entry>
+          </PathMap>
+          <SelectedPath/>
+        </DescribeIt>
+      </Binding>
+    </KnowIt>
   </DescribeIts>
   <TypeConverters/>
 </APIDictionary>

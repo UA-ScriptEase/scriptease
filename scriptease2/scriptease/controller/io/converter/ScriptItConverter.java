@@ -24,10 +24,6 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 	public static final String TAG_SCRIPTIT = "ScriptIt";
 	private static final String TAG_CODEBLOCKS = "CodeBlocks";
 
-	// Other tags: Storychild scope
-	// always child scope
-	// functioncall
-
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
