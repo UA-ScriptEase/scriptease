@@ -21,12 +21,14 @@ import sun.awt.util.IdentityArrayList;
  * @author kschenk
  */
 public class DescribeIt implements Cloneable {
+	// TODO Whoa there. What in the world is this public string? Get rid of it!
 	public static String DESCRIBES = "describes";
 	private DescribeItNode startNode;
-	private Collection<DescribeItNode> selectedPath;
 	private Map<Collection<DescribeItNode>, ScriptIt> paths;
 	// Longest path length used for calculating shortest path
-	private int INF_PATH_LENGTH = 100;
+	private final int INF_PATH_LENGTH = 100;
+
+	private Collection<DescribeItNode> selectedPath;
 
 	public DescribeIt(DescribeItNode startNode) {
 		this(startNode, null, null);
@@ -74,7 +76,6 @@ public class DescribeIt implements Cloneable {
 				List<DescribeItNode> bList = new ArrayList<DescribeItNode>(
 						bPath);
 
-				// TODO Maybe we can change this to be more general.
 				if (ListOp.identityEqualLists(aList, bList))
 					return entry.getValue();
 			}
@@ -126,8 +127,54 @@ public class DescribeIt implements Cloneable {
 
 	@Override
 	public DescribeIt clone() {
-		// TODO Need to clone these somehow.
-		return this;
+		DescribeIt clone = null;
+
+		try {
+			clone = (DescribeIt) super.clone();
+
+		} catch (CloneNotSupportedException e) {
+			Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
+					Thread.currentThread(), e);
+		}
+
+		clone.startNode = this.startNode.clone();
+		// FIXME: We're making new DescribeItNodes and adding them to paths when
+		// we should be creating paths based on existing nodes from cloning the
+		// start node. This breaks stuff.
+
+		// We need to find out if nodes are equal. Let's override the hashcode
+		// method in DescribeItNode, and then we can add the correct
+		// describeitnode to paths instead of cloning them again.
+		clone.paths = new HashMap<Collection<DescribeItNode>, ScriptIt>();
+
+		for (Entry<Collection<DescribeItNode>, ScriptIt> entry : this.paths
+				.entrySet()) {
+			final List<DescribeItNode> describeItNodes;
+
+			describeItNodes = new ArrayList<DescribeItNode>();
+
+			for (DescribeItNode node : entry.getKey()) {
+				// FIXME: here we should be finding existing clones, not
+				// creating new ones.
+				for (DescribeItNode existingNode : clone.startNode
+						.getDescendants()) {
+					if (existingNode.equals(node)) {
+						describeItNodes.add(existingNode);
+						break;
+					}
+				}
+			}
+
+			clone.paths.put(describeItNodes, entry.getValue().clone());
+		}
+
+		clone.selectedPath = new ArrayList<DescribeItNode>();
+
+		for (DescribeItNode selected : this.getSelectedPath()) {
+			clone.selectedPath.add(selected.clone());
+		}
+
+		return clone;
 	}
 
 	/**

@@ -7,8 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -356,11 +354,9 @@ public class LibraryEditorPanelFactory {
 							final ScriptIt scriptIt;
 							final List<DescribeItNode> path;
 
-							// TODO Need to get rid of this placeholder scriptit
-							// and just set it to "null".
 							describeItNode = new DescribeItNode();
 							describeIt = new DescribeIt(describeItNode);
-							scriptIt = new ScriptIt("");
+							scriptIt = new ScriptIt("Placeholder ScriptIt");
 							path = new ArrayList<DescribeItNode>(1);
 
 							scriptIt.addCodeBlock(new CodeBlockSource());
@@ -373,7 +369,8 @@ public class LibraryEditorPanelFactory {
 							knowIt.setBinding(describeIt);
 
 						} else if (selectedItem.equals(functionBinding)) {
-							final ScriptIt scriptIt = new ScriptIt("");
+							final ScriptIt scriptIt = new ScriptIt(
+									"Placeholder ScriptIt");
 							final CodeBlock codeBlock = new CodeBlockSource();
 
 							codeBlock.setTypes(knowIt.getTypes());
@@ -501,7 +498,7 @@ public class LibraryEditorPanelFactory {
 				describeIt.assignScriptItToPath(selectedNodes, newEffect);
 			}
 		};
-	
+
 		graph.setNodeRenderer(new EditableDescribeItNodeRenderer(graph));
 
 		graph.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
@@ -510,7 +507,7 @@ public class LibraryEditorPanelFactory {
 				final ScriptIt pathScriptIt;
 
 				pathScriptIt = describeIt.getScriptItForPath(nodes);
-					
+
 				effectHolder.removeSetEffectObserver(effectObserver);
 				effectHolder.setEffect(pathScriptIt);
 				effectHolder.addSetEffectObserver(effectObserver);

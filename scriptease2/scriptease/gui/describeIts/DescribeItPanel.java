@@ -42,10 +42,11 @@ public class DescribeItPanel extends JPanel {
 		final DescribeItNode headNode;
 		final DescribeItNodeGraphModel describeItGraphModel;
 
-		headNode = describeIt.getStartNode();
+		this.describeIt = describeIt.clone();
+
+		headNode = this.describeIt.getStartNode();
 		describeItGraphModel = new DescribeItNodeGraphModel(headNode);
 
-		this.describeIt = describeIt;
 		this.expandedPanel = new SEGraph<DescribeItNode>(describeItGraphModel,
 				SelectionMode.SELECT_PATH);
 
@@ -63,7 +64,8 @@ public class DescribeItPanel extends JPanel {
 
 						selectedNodes.addAll(nodes);
 
-						describeIt.setSelectedPath(selectedNodes);
+						DescribeItPanel.this.describeIt
+								.setSelectedPath(selectedNodes);
 					}
 				});
 
@@ -183,7 +185,7 @@ public class DescribeItPanel extends JPanel {
 
 			if (resolvedDoIt != null) {
 				StoryComponentPanelFactory.getInstance().parseDisplayText(
-						this.collapsedPanel, resolvedDoIt);
+						this.collapsedPanel, resolvedDoIt.clone());
 
 				xSize += this.collapsedPanel.getPreferredSize().getWidth();
 				ySize = Math.max(ySize, (int) this.collapsedPanel
@@ -219,11 +221,9 @@ public class DescribeItPanel extends JPanel {
 			final ScriptIt resolvedDoIt = DescribeItPanel.this.describeIt
 					.getResolvedScriptIt();
 
-			System.out.println("RESOLVEDDOIT: " + resolvedDoIt);
-
 			if (resolvedDoIt != null) {
 				StoryComponentPanelFactory.getInstance().parseDisplayText(
-						this.collapsedPanel, resolvedDoIt);
+						this.collapsedPanel, resolvedDoIt.clone());
 
 				this.collapsedPanel
 						.setBounds(xLocation, yLocation,

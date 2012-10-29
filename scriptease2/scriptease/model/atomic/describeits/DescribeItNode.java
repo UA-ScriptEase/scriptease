@@ -12,14 +12,14 @@ import scriptease.model.atomic.KnowIt;
  * @author kschenk
  * 
  */
-public class DescribeItNode {
+public class DescribeItNode implements Cloneable {
 	private static final String NEW_DESCRIBEIT_NODE = "New Node";
 	private static int describeItNodeCounter = 1;
 
 	private KnowIt knowIt;
 	private String name;
 
-	private final Set<DescribeItNode> successors;
+	private Set<DescribeItNode> successors;
 
 	public DescribeItNode() {
 		this("", null);
@@ -40,6 +40,29 @@ public class DescribeItNode {
 		this.setKnowIt(knowIt);
 		this.setName(name);
 
+	}
+
+	@Override
+	protected DescribeItNode clone() {
+		DescribeItNode clone = null;
+		try {
+			clone = (DescribeItNode) super.clone();
+
+		} catch (CloneNotSupportedException e) {
+			Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
+					Thread.currentThread(), e);
+		}
+
+		clone.name = this.name;
+		if (this.knowIt != null)
+			clone.knowIt = this.knowIt.clone();
+		clone.successors = new HashSet<DescribeItNode>();
+
+		for (DescribeItNode successor : this.getSuccessors()) {
+			clone.addSuccessor(successor.clone());
+		}
+
+		return clone;
 	}
 
 	public String getName() {
@@ -127,5 +150,20 @@ public class DescribeItNode {
 			descendants.addAll(successor.getDescendants());
 		}
 		return descendants;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof DescribeItNode) {
+			final DescribeItNode compared;
+
+			compared = (DescribeItNode) obj;
+
+			if (this.knowIt == compared.getKnowIt() && this.knowIt != null)
+				return this.knowIt.equals(compared.getKnowIt());
+			else
+				return this.getName().equals(compared.getName());
+		}
+		return false;
 	}
 }

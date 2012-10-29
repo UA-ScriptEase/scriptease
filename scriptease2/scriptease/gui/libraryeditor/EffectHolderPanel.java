@@ -64,7 +64,7 @@ public class EffectHolderPanel extends JPanel {
 
 		final JPanel panel;
 
-		if (effect != null && !effect.getDisplayText().isEmpty())
+		if (effect != null)
 			panel = StoryComponentPanelFactory.getInstance()
 					.buildStoryComponentPanel(effect);
 		else {
