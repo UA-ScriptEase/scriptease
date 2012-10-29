@@ -29,6 +29,7 @@ public class DescribeItConverter implements Converter {
 	private static final String TAG_PATH_MAP = "PathMap";
 	private static final String TAG_ENTRY = "Entry";
 	private static final String TAG_PATH = "Path";
+	private static final String TAG_CURRENT_SCRIPTIT = "CurrentScriptIt";
 
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
@@ -70,7 +71,15 @@ public class DescribeItConverter implements Converter {
 				.getSelectedPath();
 		if (selectedPath != null) {
 			writer.startNode(TAG_SELECTED_PATH);
-			context.convertAnother(new ArrayList<DescribeItNode>(selectedPath));
+			context.convertAnother(selectedPath);
+			writer.endNode();
+		}
+
+		final ScriptIt currentScriptIt = describeIt.getResolvedScriptIt();
+
+		if (currentScriptIt != null) {
+			writer.startNode(TAG_CURRENT_SCRIPTIT);
+			context.convertAnother(currentScriptIt);
 			writer.endNode();
 		}
 	}
@@ -83,6 +92,7 @@ public class DescribeItConverter implements Converter {
 		DescribeItNode headNode = null;
 		Map<Collection<DescribeItNode>, ScriptIt> paths = null;
 		List<DescribeItNode> selectedPath = null;
+		ScriptIt currentScriptIt = null;
 
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
@@ -131,10 +141,16 @@ public class DescribeItConverter implements Converter {
 				selectedPath.addAll((Collection<DescribeItNode>) context
 						.convertAnother(describeIt, ArrayList.class));
 			}
+			// selected scriptit
+			else if (nodeName.equals(TAG_CURRENT_SCRIPTIT)) {
+				currentScriptIt = (ScriptIt) context.convertAnother(describeIt,
+						ScriptIt.class);
+			}
 			reader.moveUp();
 		}
 
-		describeIt = new DescribeIt(headNode, paths, selectedPath);
+		describeIt = new DescribeIt(headNode, paths, selectedPath,
+				currentScriptIt);
 		return describeIt;
 	}
 

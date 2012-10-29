@@ -242,12 +242,13 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	 * @return
 	 */
 	public CodeBlock getMainCodeBlock() {
-		if (this.codeBlocks.isEmpty())
-			throw new NoSuchElementException(
-					"Cannot get main CodeBlock because there are none! Did "
-							+ "you remember to add a CodeBlock when you "
-							+ "created the ScriptIt?");
-		return this.codeBlocks.iterator().next();
+		for (CodeBlock codeBlock : this.codeBlocks)
+			return codeBlock;
+
+		throw new NoSuchElementException(
+				"Cannot get main CodeBlock because there are none! Did "
+						+ "you remember to add a CodeBlock when you "
+						+ "created the ScriptIt?");
 	}
 
 	public void removeCodeBlock(CodeBlock codeBlock) {
