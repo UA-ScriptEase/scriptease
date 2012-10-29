@@ -44,23 +44,21 @@ public class DescribeItPanel extends JPanel {
 	public DescribeItPanel(final DescribeIt describeIt, boolean collapsed) {
 		final DescribeItNode headNode;
 		final DescribeItNodeGraphModel describeItGraphModel;
+		final ScriptIt resolvedScriptIt;
 
 		this.describeIt = describeIt;
 		this.collapsed = collapsed;
 
 		headNode = this.describeIt.getStartNode();
 		describeItGraphModel = new DescribeItNodeGraphModel(headNode);
+		resolvedScriptIt = DescribeItPanel.this.describeIt
+				.getResolvedScriptIt();
 
 		this.expandedPanel = new SEGraph<DescribeItNode>(describeItGraphModel,
 				SelectionMode.SELECT_PATH);
 		this.collapsedPanel = new JPanel();
 		this.expansionButton = ScriptWidgetFactory
 				.buildExpansionButton(this.collapsed);
-
-		final ScriptIt resolvedScriptIt;
-
-		resolvedScriptIt = DescribeItPanel.this.describeIt
-				.getResolvedScriptIt();
 
 		if (resolvedScriptIt != null) {
 			StoryComponentPanelFactory.getInstance().parseDisplayText(
