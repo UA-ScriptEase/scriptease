@@ -34,8 +34,11 @@ import scriptease.model.complex.ScriptIt;
  */
 @SuppressWarnings("serial")
 public class DescribeItPanel extends JPanel {
-	private SEGraph<DescribeItNode> expandedPanel;
+	private final SEGraph<DescribeItNode> expandedPanel;
+	private final JPanel collapsedPanel;
+	private final ExpansionButton expansionButton;
 
+	private boolean collapsed;
 	private DescribeIt describeIt;
 
 	public DescribeItPanel(final DescribeIt describeIt, boolean collapsed) {
@@ -43,12 +46,16 @@ public class DescribeItPanel extends JPanel {
 		final DescribeItNodeGraphModel describeItGraphModel;
 
 		this.describeIt = describeIt.clone();
+		this.collapsed = collapsed;
 
 		headNode = this.describeIt.getStartNode();
 		describeItGraphModel = new DescribeItNodeGraphModel(headNode);
 
 		this.expandedPanel = new SEGraph<DescribeItNode>(describeItGraphModel,
 				SelectionMode.SELECT_PATH);
+		this.collapsedPanel = new JPanel();
+		this.expansionButton = ScriptWidgetFactory
+				.buildExpansionButton(this.collapsed);
 
 		this.expandedPanel.setNodeRenderer(new DescribeItNodeRenderer(
 				this.expandedPanel));
@@ -69,8 +76,50 @@ public class DescribeItPanel extends JPanel {
 					}
 				});
 
+		this.expansionButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// toggle
+				DescribeItPanel.this.collapsed = !DescribeItPanel.this.collapsed;
+				boolean shouldCollapse = DescribeItPanel.this.collapsed;
+				if (shouldCollapse) {
+					// Start undo when we open graph
+					if (!UndoManager.getInstance().hasOpenUndoableAction())
+						UndoManager.getInstance().startUndoableAction(
+								"Bind DescribeIt");
+
+					final ScriptIt resolvedScriptIt;
+
+					resolvedScriptIt = DescribeItPanel.this.describeIt
+							.getResolvedScriptIt();
+
+					if (resolvedScriptIt != null) {
+						StoryComponentPanelFactory.getInstance()
+								.parseDisplayText(
+										DescribeItPanel.this.collapsedPanel,
+										resolvedScriptIt.clone());
+					}
+				} else {
+					// End undo when we close it.
+					if (UndoManager.getInstance().hasOpenUndoableAction())
+						UndoManager.getInstance().endUndoableAction();
+				}
+				collapsedPanel.setVisible(shouldCollapse);
+				expandedPanel.setVisible(!shouldCollapse);
+				expansionButton.setCollapsed(shouldCollapse);
+				DescribeItPanel.this.revalidate();
+			}
+		});
+
 		this.setOpaque(false);
-		this.setLayout(new DescribeItPanelLayoutManager(headNode, collapsed));
+		this.setLayout(new DescribeItPanelLayoutManager());
+
+		if (this.describeIt.getPaths().size() <= 1)
+			this.expansionButton.setVisible(false);
+
+		this.add(expansionButton);
+		this.add(collapsedPanel);
+		this.add(expandedPanel);
 	}
 
 	/**
@@ -83,62 +132,10 @@ public class DescribeItPanel extends JPanel {
 	private class DescribeItPanelLayoutManager implements LayoutManager {
 		private static final int BUTTON_X_INDENT = 5;
 
-		private ExpansionButton expansionButton;
-		private JPanel collapsedPanel;
-		private boolean collapsed;
-
-		public DescribeItPanelLayoutManager(DescribeItNode headNode,
-				boolean collapsed) {
-			this.collapsed = collapsed;
-			// initialize the panels
-			this.collapsedPanel = new JPanel();
-
-			// expansion button
-			this.expansionButton = ScriptWidgetFactory
-					.buildExpansionButton(this.collapsed);
-
-			this.expansionButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					// toggle
-					DescribeItPanelLayoutManager.this.collapsed = !DescribeItPanelLayoutManager.this.collapsed;
-					boolean shouldCollapse = DescribeItPanelLayoutManager.this.collapsed;
-					if (shouldCollapse) {
-						// Start undo when we open graph
-						if (!UndoManager.getInstance().hasOpenUndoableAction())
-							UndoManager.getInstance().startUndoableAction(
-									"Bind DescribeIt");
-					} else {
-						// End undo when we close it.
-						if (UndoManager.getInstance().hasOpenUndoableAction())
-							UndoManager.getInstance().endUndoableAction();
-					}
-					DescribeItPanelLayoutManager.this.expansionButton
-							.setCollapsed(shouldCollapse);
-					DescribeItPanel.this.revalidate();
-				}
-			});
-
-			// add the components so they display
-			DescribeItPanel.this.add(this.expansionButton);
-			DescribeItPanel.this.add(this.collapsedPanel);
-			DescribeItPanel.this.add(expandedPanel);
-		}
-
 		@Override
 		public void layoutContainer(Container parent) {
 			final Insets insets = parent.getInsets();
-
-			// only show expansion if more than a single path exists
-			final boolean moreThanOnePath = DescribeItPanel.this.describeIt
-					.getPaths().size() > 1;
-			this.expansionButton.setVisible(moreThanOnePath);
-
-			// update the visibility
-			this.collapsedPanel.setVisible(this.collapsed);
-			expandedPanel.setVisible(!this.collapsed);
-
-			if (this.collapsed) {
+			if (DescribeItPanel.this.collapsed) {
 				layoutCollapsed(insets.left + insets.right, insets.top
 						+ insets.bottom);
 			} else {
@@ -150,7 +147,7 @@ public class DescribeItPanel extends JPanel {
 		@Override
 		public Dimension minimumLayoutSize(Container parent) {
 			final Insets insets = parent.getInsets();
-			if (this.collapsed)
+			if (DescribeItPanel.this.collapsed)
 				return minimumCollapsedLayoutSize(insets.left + insets.right,
 						insets.top + insets.bottom);
 			else
@@ -168,10 +165,10 @@ public class DescribeItPanel extends JPanel {
 			int buttonHeight = 0;
 			int buttonWidth = 0;
 			// Expansion button
-			if (this.expansionButton.isVisible()) {
-				buttonHeight += (int) this.expansionButton.getPreferredSize()
+			if (expansionButton.isVisible()) {
+				buttonHeight += (int) expansionButton.getPreferredSize()
 						.getHeight();
-				buttonWidth += (int) this.expansionButton.getPreferredSize()
+				buttonWidth += (int) expansionButton.getPreferredSize()
 						.getWidth();
 			}
 
@@ -179,18 +176,10 @@ public class DescribeItPanel extends JPanel {
 			xSize += buttonWidth + BUTTON_X_INDENT;
 			ySize = Math.max(ySize, buttonHeight);
 
-			// Resolve the displayNamePanel's size
-			ScriptIt resolvedDoIt = DescribeItPanel.this.describeIt
-					.getResolvedScriptIt();
-
-			if (resolvedDoIt != null) {
-				StoryComponentPanelFactory.getInstance().parseDisplayText(
-						this.collapsedPanel, resolvedDoIt.clone());
-
-				xSize += this.collapsedPanel.getPreferredSize().getWidth();
-				ySize = Math.max(ySize, (int) this.collapsedPanel
-						.getPreferredSize().getHeight());
-			}
+			xSize += DescribeItPanel.this.collapsedPanel.getPreferredSize()
+					.getWidth();
+			ySize = Math.max(ySize, (int) DescribeItPanel.this.collapsedPanel
+					.getPreferredSize().getHeight());
 
 			return new Dimension(xSize, ySize);
 		}
@@ -203,13 +192,13 @@ public class DescribeItPanel extends JPanel {
 		private void layoutCollapsed(int xLocation, int yLocation) {
 			int buttonHeight = 0;
 			int buttonWidth = 0;
-			if (this.expansionButton.isVisible()) {
+			if (DescribeItPanel.this.expansionButton.isVisible()) {
 				// Expansion button
-				buttonHeight += (int) this.expansionButton.getPreferredSize()
-						.getHeight();
-				buttonWidth += (int) this.expansionButton.getPreferredSize()
-						.getWidth();
-				this.expansionButton.setBounds(xLocation,
+				buttonHeight += (int) DescribeItPanel.this.expansionButton
+						.getPreferredSize().getHeight();
+				buttonWidth += (int) DescribeItPanel.this.expansionButton
+						.getPreferredSize().getWidth();
+				DescribeItPanel.this.expansionButton.setBounds(xLocation,
 						((int) DescribeItPanel.this.getPreferredSize()
 								.getHeight() - buttonHeight) / 2, buttonWidth,
 						buttonHeight);
@@ -217,20 +206,11 @@ public class DescribeItPanel extends JPanel {
 			// Add the button indent
 			xLocation += buttonWidth + BUTTON_X_INDENT;
 
-			// Resolve the displayNamePanel size
-			final ScriptIt resolvedDoIt = DescribeItPanel.this.describeIt
-					.getResolvedScriptIt();
-
-			if (resolvedDoIt != null) {
-				StoryComponentPanelFactory.getInstance().parseDisplayText(
-						this.collapsedPanel, resolvedDoIt.clone());
-
-				this.collapsedPanel
-						.setBounds(xLocation, yLocation,
-								(int) this.collapsedPanel.getPreferredSize()
-										.getWidth(), (int) this.collapsedPanel
-										.getPreferredSize().getHeight());
-			}
+			DescribeItPanel.this.collapsedPanel.setBounds(xLocation, yLocation,
+					(int) DescribeItPanel.this.collapsedPanel
+							.getPreferredSize().getWidth(),
+					(int) DescribeItPanel.this.collapsedPanel
+							.getPreferredSize().getHeight());
 		}
 
 		/**
@@ -242,12 +222,12 @@ public class DescribeItPanel extends JPanel {
 		protected Dimension minimumExpandedLayoutSize(int xSize, int ySize) {
 			int buttonHeight = 0;
 			int buttonWidth = 0;
-			if (this.expansionButton.isVisible()) {
+			if (DescribeItPanel.this.expansionButton.isVisible()) {
 				// Expansion button
-				buttonHeight += (int) this.expansionButton.getPreferredSize()
-						.getHeight();
-				buttonWidth += (int) this.expansionButton.getPreferredSize()
-						.getWidth();
+				buttonHeight += (int) DescribeItPanel.this.expansionButton
+						.getPreferredSize().getHeight();
+				buttonWidth += (int) DescribeItPanel.this.expansionButton
+						.getPreferredSize().getWidth();
 			}
 
 			// Add the button indent
@@ -271,13 +251,13 @@ public class DescribeItPanel extends JPanel {
 		protected void layoutExpanded(int xLocation, int yLocation) {
 			int buttonHeight = 0;
 			int buttonWidth = 0;
-			if (this.expansionButton.isVisible()) {
+			if (DescribeItPanel.this.expansionButton.isVisible()) {
 				// Expansion button
-				buttonHeight = (int) this.expansionButton.getPreferredSize()
-						.getHeight();
-				buttonWidth = (int) this.expansionButton.getPreferredSize()
-						.getWidth();
-				this.expansionButton.setBounds(xLocation,
+				buttonHeight = (int) DescribeItPanel.this.expansionButton
+						.getPreferredSize().getHeight();
+				buttonWidth = (int) DescribeItPanel.this.expansionButton
+						.getPreferredSize().getWidth();
+				DescribeItPanel.this.expansionButton.setBounds(xLocation,
 						(((int) DescribeItPanel.this.getPreferredSize()
 								.getHeight() - buttonHeight) / 2), buttonWidth,
 						buttonHeight);
