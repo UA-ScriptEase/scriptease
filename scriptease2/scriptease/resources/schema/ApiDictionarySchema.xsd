@@ -186,6 +186,8 @@
 						use="optional" />
 				</xsd:complexType>
 			</xsd:element>
+			<xsd:element name="CurrentScriptIt" type="ScriptIt_Type"
+				minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 
@@ -302,15 +304,16 @@
 		<xsd:sequence>
 			<xsd:element name="Name" type="xsd:string" minOccurs="0" />
 			<xsd:element name="KnowIt" type="KnowIt_Type" minOccurs="0" />
-			<xsd:element name="Successors" type="DescribeItNodeList_Type" minOccurs="0" />
+			<xsd:element name="Successors" type="DescribeItNodeList_Type"
+				minOccurs="0" />
 		</xsd:sequence>
 		<xsd:attribute name="reference" type="xsd:string" />
 	</xsd:complexType>
 
 	<xsd:complexType name="PathMap_Type">
 		<xsd:sequence>
-			<xsd:element name="Entry" type="PathMapEntry_Type" minOccurs="0"
-				maxOccurs="unbounded" />
+			<xsd:element name="Entry" type="PathMapEntry_Type"
+				minOccurs="0" maxOccurs="unbounded" />
 		</xsd:sequence>
 	</xsd:complexType>
 

@@ -45,7 +45,7 @@ public class DescribeItPanel extends JPanel {
 		final DescribeItNode headNode;
 		final DescribeItNodeGraphModel describeItGraphModel;
 
-		this.describeIt = describeIt.clone();
+		this.describeIt = describeIt;
 		this.collapsed = collapsed;
 
 		headNode = this.describeIt.getStartNode();
@@ -56,6 +56,16 @@ public class DescribeItPanel extends JPanel {
 		this.collapsedPanel = new JPanel();
 		this.expansionButton = ScriptWidgetFactory
 				.buildExpansionButton(this.collapsed);
+
+		final ScriptIt resolvedScriptIt;
+
+		resolvedScriptIt = DescribeItPanel.this.describeIt
+				.getResolvedScriptIt();
+
+		if (resolvedScriptIt != null) {
+			StoryComponentPanelFactory.getInstance().parseDisplayText(
+					this.collapsedPanel, resolvedScriptIt);
+		}
 
 		this.expandedPanel.setNodeRenderer(new DescribeItNodeRenderer(
 				this.expandedPanel));
@@ -97,7 +107,7 @@ public class DescribeItPanel extends JPanel {
 						StoryComponentPanelFactory.getInstance()
 								.parseDisplayText(
 										DescribeItPanel.this.collapsedPanel,
-										resolvedScriptIt.clone());
+										resolvedScriptIt);
 					}
 				} else {
 					// End undo when we close it.

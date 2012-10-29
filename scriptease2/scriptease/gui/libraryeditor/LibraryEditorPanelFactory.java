@@ -352,14 +352,16 @@ public class LibraryEditorPanelFactory {
 							final DescribeItNode describeItNode;
 							final DescribeIt describeIt;
 							final ScriptIt scriptIt;
+							final CodeBlock codeBlock;
 							final List<DescribeItNode> path;
 
 							describeItNode = new DescribeItNode();
 							describeIt = new DescribeIt(describeItNode);
 							scriptIt = new ScriptIt("Placeholder ScriptIt");
+							codeBlock = new CodeBlockSource();
 							path = new ArrayList<DescribeItNode>(1);
 
-							scriptIt.addCodeBlock(new CodeBlockSource());
+							scriptIt.addCodeBlock(codeBlock);
 							scriptIt.setTypes(knowIt.getTypes());
 
 							path.add(describeItNode);

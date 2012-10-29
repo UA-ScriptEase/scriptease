@@ -24,6 +24,7 @@ public class DescribeIt implements Cloneable {
 	// TODO Whoa there. What in the world is this public string? Get rid of it!
 	public static String DESCRIBES = "describes";
 	private DescribeItNode startNode;
+	private ScriptIt currentScriptIt;
 	private Map<Collection<DescribeItNode>, ScriptIt> paths;
 	// Longest path length used for calculating shortest path
 	private final int INF_PATH_LENGTH = 100;
@@ -31,18 +32,20 @@ public class DescribeIt implements Cloneable {
 	private Collection<DescribeItNode> selectedPath;
 
 	public DescribeIt(DescribeItNode startNode) {
-		this(startNode, null, null);
+		this(startNode, null, null, null);
 	}
 
 	public DescribeIt(DescribeItNode startNode,
 			Map<Collection<DescribeItNode>, ScriptIt> paths,
-			Collection<DescribeItNode> selectedPath) {
+			Collection<DescribeItNode> selectedPath, ScriptIt scriptIt) {
 		// assure the startNode is valid
 		if (startNode != null)
 			this.startNode = startNode;
 		else
 			throw new IllegalStateException(
 					"Cannot initialize DescribeIt with a null StartNode");
+
+		this.currentScriptIt = null;
 		// calculate paths if not given any
 		if (paths != null && !paths.isEmpty()) {
 			this.paths = new HashMap<Collection<DescribeItNode>, ScriptIt>(
@@ -52,10 +55,12 @@ public class DescribeIt implements Cloneable {
 		}
 
 		// assure the selected path is valid, otherwise use defaultPath
-		if (selectedPath != null && this.containsPath(selectedPath))
+		if (selectedPath != null && this.containsPath(selectedPath)) {
 			this.setSelectedPath(selectedPath);
-		else
+			this.currentScriptIt = scriptIt;
+		} else
 			this.setSelectedPath(this.getShortestPath());
+
 	}
 
 	/**
@@ -138,13 +143,6 @@ public class DescribeIt implements Cloneable {
 		}
 
 		clone.startNode = this.startNode.clone();
-		// FIXME: We're making new DescribeItNodes and adding them to paths when
-		// we should be creating paths based on existing nodes from cloning the
-		// start node. This breaks stuff.
-
-		// We need to find out if nodes are equal. Let's override the hashcode
-		// method in DescribeItNode, and then we can add the correct
-		// describeitnode to paths instead of cloning them again.
 		clone.paths = new HashMap<Collection<DescribeItNode>, ScriptIt>();
 
 		for (Entry<Collection<DescribeItNode>, ScriptIt> entry : this.paths
@@ -154,8 +152,6 @@ public class DescribeIt implements Cloneable {
 			describeItNodes = new ArrayList<DescribeItNode>();
 
 			for (DescribeItNode node : entry.getKey()) {
-				// FIXME: here we should be finding existing clones, not
-				// creating new ones.
 				for (DescribeItNode existingNode : clone.startNode
 						.getDescendants()) {
 					if (existingNode.equals(node)) {
@@ -173,6 +169,8 @@ public class DescribeIt implements Cloneable {
 		for (DescribeItNode selected : this.getSelectedPath()) {
 			clone.selectedPath.add(selected.clone());
 		}
+
+		clone.currentScriptIt = this.currentScriptIt.clone();
 
 		return clone;
 	}
@@ -201,6 +199,7 @@ public class DescribeIt implements Cloneable {
 			}
 
 			this.selectedPath = path;
+			this.currentScriptIt = scriptIt.clone();
 
 			return true;
 		}
@@ -233,7 +232,7 @@ public class DescribeIt implements Cloneable {
 	 */
 	public ScriptIt getResolvedScriptIt() {
 		if (this.selectedPath != null && this.containsPath(this.selectedPath))
-			return this.paths.get(this.selectedPath);
+			return this.currentScriptIt;
 		else
 			return null;
 	}

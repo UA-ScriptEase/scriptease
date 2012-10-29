@@ -3,6 +3,7 @@ package scriptease.translator.codegenerator.code.contexts;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
 import scriptease.controller.get.VariableGetter;
@@ -48,7 +49,7 @@ public class CodeBlockContext extends Context {
 	@Override
 	public String getStoryPointName() {
 		StoryComponent component = this.codeBlock.getOwner();
-		
+
 		while (!(component instanceof StoryPoint) && component != null)
 			component = component.getOwner();
 
@@ -74,10 +75,12 @@ public class CodeBlockContext extends Context {
 	public String getType() {
 		// Grab the first type of the first codeBlock - Assumes they will all
 		// have matching codeSymbols
-		String type = this.codeBlock.getTypes().iterator().next();
+		for (String type : this.codeBlock.getTypes())
+			return TranslatorManager.getInstance().getActiveTranslator()
+					.getGameTypeManager().getCodeSymbol(type);
 
-		return TranslatorManager.getInstance().getActiveTranslator()
-				.getGameTypeManager().getCodeSymbol(type);
+		throw new NoSuchElementException("Error: No type found for CodeBlock "
+				+ this.codeBlock);
 	}
 
 	@Override
