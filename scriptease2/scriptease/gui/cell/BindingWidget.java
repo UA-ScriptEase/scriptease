@@ -18,7 +18,6 @@ import scriptease.gui.ui.BindingWidgetUI;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
@@ -160,11 +159,6 @@ public class BindingWidget extends JPanel implements Cloneable {
 
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
-			}
-
-			@Override
-			public void processDescribeIt(KnowItBindingDescribeIt described) {
 				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
 			}
 

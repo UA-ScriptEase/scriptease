@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
@@ -18,8 +17,7 @@ import scriptease.model.complex.ScriptIt;
  * @author mfchurch
  * 
  */
-public class ComplexStoryComponentDescendantCollector extends
-		StoryAdapter {
+public class ComplexStoryComponentDescendantCollector extends StoryAdapter {
 	private Collection<StoryComponent> children;
 
 	public Collection<StoryComponent> collectDescendants(
@@ -50,15 +48,6 @@ public class ComplexStoryComponentDescendantCollector extends
 	public void processKnowIt(KnowIt knowIt) {
 		this.children.add(knowIt);
 		knowIt.getBinding().process(new BindingAdapter() {
-			@Override
-			public void processDescribeIt(KnowItBindingDescribeIt described) {
-				ScriptIt resolvedScriptIt = described.getValue()
-						.getResolvedScriptIt();
-				if (resolvedScriptIt != null)
-					resolvedScriptIt
-							.process(ComplexStoryComponentDescendantCollector.this);
-			}
-
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
 				ScriptIt scriptIt = function.getValue();

@@ -13,6 +13,9 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+/*
+ * XXX Do we need this class? Is it used? Where is it used..??
+ */
 public class LibraryModelConverter implements Converter {
 	private static final String TAG_TITLE = "Title";
 	private static final String TAG_AUTHOR = "Author";
@@ -27,6 +30,9 @@ public class LibraryModelConverter implements Converter {
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final LibraryModel model = (LibraryModel) source;
+
+		System.out
+				.println("We are writing out to Library Model. I don't think we should be doing this, ever?");
 
 		writer.startNode(TAG_TITLE);
 		writer.setValue(model.getTitle());
@@ -50,8 +56,7 @@ public class LibraryModelConverter implements Converter {
 
 		// Descriptions
 		writer.startNode("DESCRIPTIONS");
-		context.convertAnother(model.getDescriptionsCategory()
-				.getChildren());
+		context.convertAnother(model.getDescriptionsCategory().getChildren());
 		writer.endNode();
 
 		// controllers
@@ -69,14 +74,14 @@ public class LibraryModelConverter implements Converter {
 
 		title = FileIO.readValue(reader, TAG_TITLE);
 		author = FileIO.readValue(reader, TAG_AUTHOR);
-		
+
 		model = new LibraryModel(title, author);
 
 		this.unmarshallLibraryContents(reader, context, model);
 
 		return model;
 	}
-	
+
 	/**
 	 * Populates the library from its recorded contents on disk.
 	 * 
@@ -91,6 +96,8 @@ public class LibraryModelConverter implements Converter {
 	private void unmarshallLibraryContents(HierarchicalStreamReader reader,
 			UnmarshallingContext context, LibraryModel library) {
 		final Collection<StoryComponent> contents;
+		
+		System.out.println("We are unmarshalling the Library Model!!!");
 
 		// read in the libary's patterns by category
 		contents = new ArrayList<StoryComponent>();

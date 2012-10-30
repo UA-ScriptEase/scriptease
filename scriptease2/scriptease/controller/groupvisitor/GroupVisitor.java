@@ -8,7 +8,6 @@ import scriptease.controller.StoryAdapter;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
@@ -75,14 +74,6 @@ public abstract class GroupVisitor extends StoryAdapter {
 			public void processReference(KnowItBindingReference reference) {
 				KnowIt referenced = reference.getValue();
 				referenced.process(GroupVisitor.this);
-			}
-
-			@Override
-			public void processDescribeIt(KnowItBindingDescribeIt described) {
-				ScriptIt resolved = described.getValue()
-						.getResolvedScriptIt();
-				if (resolved != null)
-					resolved.process(GroupVisitor.this);
 			}
 		});
 	}

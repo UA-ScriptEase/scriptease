@@ -15,9 +15,13 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
+import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.DescribeItManager;
 
 /**
  * Represents and performs the Delete command, as well as encapsulates its
@@ -87,18 +91,34 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 
 			for (Object selectedObject : list.getSelectedValues()) {
 				final StoryComponentPanel selectedPanel;
-				selectedPanel = (StoryComponentPanel) selectedObject;
+				final StoryComponent selectedComponent;
 
 				final Translator activeTranslator;
 				final APIDictionary apiDictionary;
 				final LibraryModel libraryModel;
+				final DescribeItManager describeItManager;
 
 				activeTranslator = TranslatorManager.getInstance()
 						.getActiveTranslator();
 				apiDictionary = activeTranslator.getApiDictionary();
 				libraryModel = apiDictionary.getLibrary();
+				describeItManager = apiDictionary.getDescribeItManager();
 
-				libraryModel.remove(selectedPanel.getStoryComponent());
+				selectedPanel = (StoryComponentPanel) selectedObject;
+				selectedComponent = selectedPanel.getStoryComponent();
+
+				if (selectedComponent instanceof KnowIt) {
+					final DescribeIt describeIt;
+
+					describeIt = describeItManager
+							.findDescribeItForTypes(((KnowIt) selectedComponent)
+									.getTypes());
+
+					if (describeIt != null)
+						describeItManager.removeDescribeIt(describeIt);
+				}
+
+				libraryModel.remove(selectedComponent);
 			}
 		} else if (focusOwner instanceof SEGraph) {
 			// Raw types here, but the way Graphs are set up, these should work

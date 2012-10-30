@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.BindingAdapter;
-import scriptease.controller.StoryAdapter;
 import scriptease.controller.ModelVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -22,6 +22,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.Translator;
+import scriptease.translator.apimanagers.DescribeItManager;
 
 /**
  * A collection of abstract patterns that are somehow related, either because
@@ -232,6 +233,25 @@ public class LibraryModel extends PatternModel implements
 	 */
 	public void add(StoryComponent component) {
 		component.process(new CategoryAdder());
+	}
+
+	/**
+	 * Adds a KnowIt representing a DescribeIt to the LibraryModel. Adds the
+	 * DescribeIt to the DescribeItManager if it is not already in there.
+	 * 
+	 * @param describeIt
+	 */
+	public void add(DescribeIt describeIt) {
+		final DescribeItManager describeItManager;
+
+		describeItManager = this.translator.getApiDictionary()
+				.getDescribeItManager();
+
+		if (!describeItManager.getDescribeIts().contains(describeIt))
+			describeItManager.addDescribeIt(describeIt);
+
+		describeItManager.createKnowItForDescribeIt(describeIt).process(
+				new CategoryAdder());
 	}
 
 	public void remove(StoryComponent component) {
@@ -579,15 +599,6 @@ public class LibraryModel extends PatternModel implements
 				public void processFunction(KnowItBindingFunction function) {
 					final ScriptIt scriptIt = function.getValue();
 					scriptIt.process(ScriptItRetriever.this);
-				}
-
-				@Override
-				public void processDescribeIt(KnowItBindingDescribeIt described) {
-					Collection<ScriptIt> scriptIts = described.getValue()
-							.getScriptIts();
-					for (final ScriptIt doIt : scriptIts) {
-						doIt.process(ScriptItRetriever.this);
-					}
 				}
 			});
 		}

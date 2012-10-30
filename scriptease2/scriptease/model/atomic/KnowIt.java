@@ -7,8 +7,8 @@ import java.util.HashSet;
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
@@ -17,11 +17,10 @@ import scriptease.model.TypedComponent;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
@@ -121,15 +120,6 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 					"KnowIt cannot be bound to GameConstant null");
 		KnowItBindingConstant bindingValue = new KnowItBindingConstant(
 				gameConstant);
-		this.setBinding(bindingValue);
-	}
-
-	public void setBinding(DescribeIt describeIt) {
-		if (describeIt == null)
-			throw new IllegalArgumentException(
-					"KnowIt cannot be bound to DescribeIt null");
-		KnowItBindingDescribeIt bindingValue = new KnowItBindingDescribeIt(
-				describeIt);
 		this.setBinding(bindingValue);
 	}
 
@@ -256,18 +246,6 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			}
 
 			@Override
-			public void processDescribeIt(KnowItBindingDescribeIt described) {
-				defaultProcess(described);
-				// Observer the reference
-				final DescribeIt describeIt = described.getValue();
-				for (ScriptIt scriptIt : describeIt.getScriptIts()) {
-					scriptIt.setOwner(KnowIt.this);
-					addObservers(scriptIt);
-					addParameterObservers(scriptIt);
-				}
-			}
-
-			@Override
 			public void processReference(KnowItBindingReference reference) {
 				defaultProcess(reference);
 				// Observer the reference
@@ -294,14 +272,6 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 					public void processReference(
 							KnowItBindingReference reference) {
 						removeObservers(reference.getValue());
-					}
-
-					@Override
-					public void processDescribeIt(
-							KnowItBindingDescribeIt described) {
-						final DescribeIt describeIt = described.getValue();
-						for (ScriptIt doIt : describeIt.getScriptIts())
-							removeObservers(doIt);
 					}
 
 					@Override
@@ -481,11 +451,6 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			this.knowItBinding.process(new BindingAdapter() {
 				@Override
 				public void processReference(KnowItBindingReference reference) {
-					KnowIt.this.notifyObservers(event);
-				}
-
-				@Override
-				public void processDescribeIt(KnowItBindingDescribeIt described) {
 					KnowIt.this.notifyObservers(event);
 				}
 

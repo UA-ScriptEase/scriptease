@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.BindingAdapter;
-import scriptease.controller.StoryAdapter;
 import scriptease.controller.BindingVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryObserver;
 import scriptease.model.CodeBlock;
@@ -15,10 +15,11 @@ import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.translator.apimanagers.EventSlotManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.Slot;
@@ -38,6 +39,7 @@ import scriptease.translator.io.model.Slot;
  */
 public class APIDictionary implements LibraryObserver {
 	private final LibraryModel library;
+	private final DescribeItManager describeItManager;
 	private final GameTypeManager typeManager;
 	private final EventSlotManager slotManager;
 	private int nextID;
@@ -52,6 +54,7 @@ public class APIDictionary implements LibraryObserver {
 		this.library = new LibraryModel();
 		this.typeManager = new GameTypeManager();
 		this.slotManager = new EventSlotManager();
+		this.describeItManager = new DescribeItManager();
 
 		this.library.addLibraryChangeListener(this);
 	}
@@ -66,9 +69,9 @@ public class APIDictionary implements LibraryObserver {
 
 				codeBlocks = new ArrayList<CodeBlock>(
 						((ScriptIt) source).getCodeBlocks());
-				
-				for(CodeBlock codeBlock : codeBlocks) {
-					this.nextID = Math.max(codeBlock.getId() +1, this.nextID);
+
+				for (CodeBlock codeBlock : codeBlocks) {
+					this.nextID = Math.max(codeBlock.getId() + 1, this.nextID);
 				}
 			}
 		}
@@ -77,6 +80,9 @@ public class APIDictionary implements LibraryObserver {
 	// //////////////////////
 	// Getters and Setters //
 	// //////////////////////
+	public DescribeItManager getDescribeItManager() {
+		return this.describeItManager;
+	}
 
 	public GameTypeManager getGameTypeManager() {
 		return this.typeManager;
@@ -97,7 +103,7 @@ public class APIDictionary implements LibraryObserver {
 	public String getAuthor() {
 		return this.library.getAuthor();
 	}
-	
+
 	public Translator getTranslator() {
 		return this.library.getTranslator();
 	}
@@ -123,7 +129,7 @@ public class APIDictionary implements LibraryObserver {
 		final List<StoryComponent> componentList;
 
 		componentList = this.library.getEffectsCategory().getChildren();
-		
+
 		for (StoryComponent component : componentList) {
 			if (component instanceof ScriptIt
 					&& component.getDisplayText().equals(scriptValue)) {

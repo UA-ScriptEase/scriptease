@@ -8,12 +8,11 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
@@ -24,9 +23,9 @@ import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingConstantContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingFunctionContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingNullContext;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingStoryPointContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingReferenceContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingRunTimeContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingStoryPointContext;
 
 /**
  * ContextFactory generates a new context based on the current source. It also
@@ -136,16 +135,6 @@ public class ContextFactory {
 			public void processRunTime(KnowItBindingRunTime runTime) {
 				ContextFactory.this.activeContext = new KnowItBindingRunTimeContext(
 						pastContext, runTime);
-			}
-
-			@Override
-			public void processDescribeIt(KnowItBindingDescribeIt described) {
-				ScriptIt resolvedDoIt = described.getValue()
-						.getResolvedScriptIt();
-				if (resolvedDoIt != null)
-					ContextFactory.this.activeContext = new KnowItBindingFunctionContext(
-							pastContext,
-							new KnowItBindingFunction(resolvedDoIt));
 			}
 
 			@Override
