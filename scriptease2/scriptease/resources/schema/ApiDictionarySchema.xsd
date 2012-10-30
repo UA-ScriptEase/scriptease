@@ -186,17 +186,6 @@
 			<xsd:element name="Types" type="SpecificTypeList_Type" />
 			<xsd:element name="DescribeItNode" type="DescribeItNode_Type" />
 			<xsd:element name="PathMap" type="PathMap_Type" />
-			<xsd:element name="SelectedPath">
-				<xsd:complexType>
-					<xsd:sequence minOccurs="0">
-						<xsd:group ref="DescribeItNode_Group" maxOccurs="unbounded" />
-					</xsd:sequence>
-					<xsd:attribute name="reference" type="xsd:string"
-						use="optional" />
-				</xsd:complexType>
-			</xsd:element>
-			<xsd:element name="CurrentScriptIt" type="ScriptIt_Type"
-				minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 

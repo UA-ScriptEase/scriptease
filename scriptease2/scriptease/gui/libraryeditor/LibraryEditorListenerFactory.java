@@ -121,32 +121,6 @@ public class LibraryEditorListenerFactory {
 	}
 
 	/**
-	 * Builds a new observer for the know it editor. Note that calling this
-	 * method again or {@link #buildScriptItEditorObserver(Runnable)} will cause
-	 * this listener to be garbage collected..
-	 * 
-	 * @param runnable
-	 * @return
-	 */
-	protected StoryComponentObserver buildKnowItEditorObserver(
-			final Runnable runnable) {
-		this.storyComponentObserver = new StoryComponentObserver() {
-			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				final StoryComponentChangeEnum type;
-
-				type = event.getType();
-
-				if (type == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND)
-					runnable.run();
-
-			}
-		};
-
-		return this.storyComponentObserver;
-	}
-
-	/**
 	 * Creates an observer for the parameter panel.
 	 * 
 	 * @param scriptIt

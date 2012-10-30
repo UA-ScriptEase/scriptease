@@ -29,7 +29,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import scriptease.ScriptEase;
-import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.SetEffectObserver;
@@ -52,11 +51,11 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
-import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.translator.APIDictionary;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.util.StringOp;
 
 /**
@@ -191,66 +190,41 @@ public class LibraryEditorPanelFactory {
 				this.defaultProcess(knowIt);
 
 				final JPanel knowItControlPanel;
-				final JPanel bindingEditingPanel;
-				final GroupLayout layout;
-				final JComboBox bindingSelectorBox;
+				final JPanel describeItEditingPanel;
 
 				final TypeAction typeAction;
 				final JButton typesButton;
 
-				final JLabel bindingLabel;
 				final JLabel typesLabel;
+				final APIDictionary apiDictionary;
+				final DescribeItManager describeItManager;
 
-				final String describeItBinding = "DescribeIt";
-				final String functionBinding = "Function";
-
-				final Runnable changeEditingPanel;
+				final DescribeIt describeIt;
 
 				knowItControlPanel = new JPanel();
-				bindingEditingPanel = new JPanel();
-				layout = new GroupLayout(knowItControlPanel);
-				bindingSelectorBox = new JComboBox();
 
 				typeAction = new TypeAction();
 				typesButton = new JButton(typeAction);
 
-				bindingLabel = new JLabel("Binding: ");
 				typesLabel = new JLabel("Types: ");
 
-				changeEditingPanel = new Runnable() {
-					@Override
-					public void run() {
-						knowIt.getBinding().process(new BindingAdapter() {
-							public void processNull(
-									KnowItBindingNull nullBinding) {
-								bindingSelectorBox.setSelectedItem(null);
-								bindingEditingPanel.removeAll();
-							};
+				apiDictionary = TranslatorManager.getInstance()
+						.getActiveTranslator().getApiDictionary();
+				describeItManager = apiDictionary.getDescribeItManager();
 
-							public void processFunction(
-									KnowItBindingFunction function) {
-								bindingSelectorBox
-										.setSelectedItem(functionBinding);
-								bindingEditingPanel.removeAll();
-								bindingEditingPanel
-										.add(buildFunctionBindingPanel(knowIt));
-							}
-						});
+				describeIt = describeItManager.findDescribeItForTypes(knowIt
+						.getTypes());
+				describeItEditingPanel = LibraryEditorPanelFactory
+						.getInstance().buildDescribeItEditingPanel(describeIt);
 
-					}
-				};
-
-				bindingSelectorBox.addItem(describeItBinding);
-				bindingSelectorBox.addItem(functionBinding);
-
-				bindingLabel.setFont(labelFont);
 				typesLabel.setFont(labelFont);
 
 				typeAction.getTypeSelectionDialogBuilder().deselectAll();
 				typeAction.getTypeSelectionDialogBuilder().selectTypes(
 						knowIt.getTypes(), true);
 
-				knowItControlPanel.setLayout(layout);
+				knowItControlPanel.setLayout(new BoxLayout(knowItControlPanel,
+						BoxLayout.PAGE_AXIS));
 				knowItControlPanel.setBorder(BorderFactory
 						.createTitledBorder("KnowIt Controls"));
 
@@ -258,108 +232,38 @@ public class LibraryEditorPanelFactory {
 					@Override
 					public void run() {
 						final Collection<String> types;
+						final Collection<String> properCaseTypes;
 
 						types = typeAction.getTypeSelectionDialogBuilder()
 								.getSelectedTypes();
+						properCaseTypes = new ArrayList<String>();
+
+						// Important: DescribeIt types MUST be set first because
+						// KnowIts notify observers when their's are changed,
+						// throwing NullPointExceptions everywhere!
+						describeIt.setTypes(types);
 
 						knowIt.setTypes(types);
 
-						knowIt.getBinding().process(new BindingAdapter() {
-							@Override
-							public void processFunction(
-									KnowItBindingFunction function) {
-								function.getValue().setTypes(types);
-							}
-						});
+						for (String type : types) {
+							properCaseTypes.add(StringOp.toProperCase(type));
+						}
+
+						knowIt.setDisplayText(StringOp.getCollectionAsString(
+								properCaseTypes, ", "));
+						
 					}
 				});
 
-				// Add JComponents to DescriptorPanel using GroupLayout
-				layout.setHorizontalGroup(layout
-						.createParallelGroup()
-						.addGroup(
-								layout.createSequentialGroup()
-										.addGroup(
-												layout.createParallelGroup()
-														.addComponent(
-																typesLabel)
-														.addComponent(
-																bindingLabel))
-										.addGroup(
-												layout.createParallelGroup()
-														.addComponent(
-																typesButton)
-														.addComponent(
-																bindingSelectorBox))));
-
-				layout.setVerticalGroup(layout
-						.createSequentialGroup()
-						.addGroup(
-								layout.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-										.addComponent(typesLabel)
-										.addComponent(typesButton))
-						.addGroup(
-								layout.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-										.addComponent(bindingLabel)
-										.addComponent(bindingSelectorBox)));
+				knowItControlPanel.add(typesLabel);
+				knowItControlPanel.add(typesButton);
 
 				editorPanel.add(knowItControlPanel);
 
-				bindingEditingPanel.setLayout(new BoxLayout(
-						bindingEditingPanel, BoxLayout.PAGE_AXIS));
+				describeItEditingPanel.setLayout(new BoxLayout(
+						describeItEditingPanel, BoxLayout.PAGE_AXIS));
 
-				editorPanel.add(bindingEditingPanel);
-
-				changeEditingPanel.run();
-
-				knowIt.addStoryComponentObserver(LibraryEditorListenerFactory
-						.getInstance().buildKnowItEditorObserver(
-								changeEditingPanel));
-
-				bindingSelectorBox.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						final String selectedItem;
-						selectedItem = (String) bindingSelectorBox
-								.getSelectedItem();
-
-						if (selectedItem.equals(describeItBinding)) {
-							// We need to have a default ScriptIt for a path
-							// with the same type as the KnowIt or the KnowIt
-							// will not accept the binding.
-							final DescribeItNode describeItNode;
-							final DescribeIt describeIt;
-							final ScriptIt scriptIt;
-							final CodeBlock codeBlock;
-							final List<DescribeItNode> path;
-
-							describeItNode = new DescribeItNode();
-							describeIt = new DescribeIt(describeItNode);
-							scriptIt = new ScriptIt("Placeholder ScriptIt");
-							codeBlock = new CodeBlockSource();
-							path = new ArrayList<DescribeItNode>(1);
-
-							scriptIt.addCodeBlock(codeBlock);
-							scriptIt.setTypes(knowIt.getTypes());
-
-							path.add(describeItNode);
-
-							describeIt.assignScriptItToPath(path, scriptIt);
-
-						} else if (selectedItem.equals(functionBinding)) {
-							final ScriptIt scriptIt = new ScriptIt(
-									"Placeholder ScriptIt");
-							final CodeBlock codeBlock = new CodeBlockSource();
-
-							codeBlock.setTypes(knowIt.getTypes());
-							scriptIt.addCodeBlock(codeBlock);
-
-							knowIt.setBinding(scriptIt);
-						}
-					}
-				});
+				editorPanel.add(describeItEditingPanel);
 			}
 
 			// We may want to implement these later, so their default methods
@@ -396,49 +300,13 @@ public class LibraryEditorPanelFactory {
 	}
 
 	/**
-	 * Builds a panel used to edit a KnowItBindingFunction
-	 * 
-	 * @param knowIt
-	 * @param functionBinding
-	 * @return
-	 */
-	private JPanel buildFunctionBindingPanel(final KnowIt knowIt) {
-		final JPanel bindingPanel;
-		final KnowItBindingFunction functionBinding;
-		final ScriptIt function;
-		final EffectHolderPanel effectHolder;
-
-		bindingPanel = new JPanel();
-		functionBinding = (KnowItBindingFunction) knowIt.getBinding();
-		function = functionBinding.getValue();
-		effectHolder = new EffectHolderPanel(knowIt.getTypes());
-
-		bindingPanel.setBorder(BorderFactory
-				.createTitledBorder("Function Binding"));
-		effectHolder.setEffect(function);
-
-		effectHolder.addSetEffectObserver(new SetEffectObserver() {
-
-			@Override
-			public void effectChanged(ScriptIt newEffect) {
-				knowIt.setBinding(effectHolder.getEffect());
-			}
-		});
-
-		bindingPanel.add(effectHolder);
-
-		return bindingPanel;
-	}
-
-	/**
 	 * Builds a panel used to edit a KnowItBindingDescribeIt.
 	 * 
 	 * @param knowIt
 	 * @param describeItBinding
 	 * @return
 	 */
-	private JPanel buildDescribeItBindingPanel(final DescribeIt describeIt) {
-
+	private JPanel buildDescribeItEditingPanel(final DescribeIt describeIt) {
 		final JPanel bindingPanel;
 		final JPanel describeItGraphPanel;
 		final JToolBar graphToolBar;

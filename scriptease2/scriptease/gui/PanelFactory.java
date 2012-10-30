@@ -131,35 +131,7 @@ public class PanelFactory {
 			}
 		});
 	}
-
-	/**
-	 * Creates a panel for editing DescribeIts.
-	 * 
-	 * @param start
-	 *            Start Point of the graph
-	 * @return
-	 */
-	public JPanel buildDescribeItPanel(final DescribeItNode start,
-			final DescribeIt describeIt) {
-		final JPanel describeItPanel = new JPanel(new BorderLayout(), true);
-
-		final SEGraphModel<DescribeItNode> graphModel = new DescribeItNodeGraphModel(
-				start);
-		final SEGraph<DescribeItNode> graph = new SEGraph<DescribeItNode>(
-				graphModel);
-
-		final JToolBar graphToolBar = ToolBarFactory.getInstance()
-				.buildGraphEditorToolBar();
-
-		describeItPanel.add(graphToolBar, BorderLayout.PAGE_START);
-
-		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
-
-		describeItPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
-
-		return describeItPanel;
-	}
-
+	
 	/**
 	 * Builds a panel for a StoryModel. This panel includes an {@link SEGraph}
 	 * and a {@link StoryComponentPanelTree}.
@@ -222,7 +194,7 @@ public class PanelFactory {
 		this.modelsToComponents.put(model, panes);
 
 		// Set up the Story Graph
-		storyGraph.setNodeRenderer( new StoryPointNodeRenderer(storyGraph));
+		storyGraph.setNodeRenderer(new StoryPointNodeRenderer(storyGraph));
 		storyGraph.addSEGraphObserver(new SEGraphAdapter<StoryPoint>() {
 
 			@Override
