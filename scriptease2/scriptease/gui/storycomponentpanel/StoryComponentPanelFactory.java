@@ -17,6 +17,7 @@ import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
+import scriptease.gui.describeIts.DescribeItPanel;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
@@ -463,16 +464,9 @@ public class StoryComponentPanelFactory {
 			}
 		});
 
-		// TODO If the knowit has an attached describeit, draw it as a
-		// describeitpanel.
-		/*
-		 * 
-		 * 	final DescribeIt describeIt = described.getValue();
-				final DescribeItPanel describeItPanel = new DescribeItPanel(
-						describeIt, true);
-				mainPanel.add(describeItPanel);
-		 * 
-		 * 
-		 */
+		final DescribeItPanel describeItPanel = new DescribeItPanel(knowIt,
+				true);
+		mainPanel.add(describeItPanel);
+
 	}
 }

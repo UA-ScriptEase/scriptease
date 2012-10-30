@@ -85,6 +85,8 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 			panel.getSelectionManager().deleteSelected();
 		} else if (focusOwner instanceof StoryComponentPanelJList
 				&& PatternModelManager.getInstance().getActiveModel() instanceof LibraryModel) {
+			// TODO Needs undoability
+			
 			// Delete elements from StoryComponentPanelJList
 			final StoryComponentPanelJList list;
 			list = (StoryComponentPanelJList) focusOwner;
@@ -134,7 +136,6 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 			}
 
 			UndoManager.getInstance().endUndoableAction();
-
 		}
 	}
 }

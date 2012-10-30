@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import scriptease.controller.io.FileIO;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.ScriptIt;
@@ -25,16 +26,26 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class DescribeItConverter implements Converter {
 	public static final String TAG_DESCRIBEIT = "DescribeIt";
-	private static final String TAG_SELECTED_PATH = "SelectedPath";
+
+	private static final String TAG_TYPE = "TYPE";
+	private static final String TAG_TYPES = "Types";
 	private static final String TAG_PATH_MAP = "PathMap";
 	private static final String TAG_ENTRY = "Entry";
 	private static final String TAG_PATH = "Path";
-	private static final String TAG_CURRENT_SCRIPTIT = "CurrentScriptIt";
 
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
 			final MarshallingContext context) {
 		final DescribeIt describeIt = (DescribeIt) source;
+
+		// types
+		writer.startNode(TAG_TYPES);
+		for (String type : describeIt.getTypes()) {
+			writer.startNode(TAG_TYPE);
+			writer.setValue(type);
+			writer.endNode();
+		}
+		writer.endNode();
 
 		// head node
 		final DescribeItNode headNode = describeIt.getStartNode();
@@ -65,40 +76,31 @@ public class DescribeItConverter implements Converter {
 			writer.endNode();
 		}
 		writer.endNode();
-
-		// optional selected path
-		final Collection<DescribeItNode> selectedPath = describeIt
-				.getSelectedPath();
-		if (selectedPath != null) {
-			writer.startNode(TAG_SELECTED_PATH);
-			context.convertAnother(selectedPath);
-			writer.endNode();
-		}
-
-		final ScriptIt currentScriptIt = describeIt.getResolvedScriptIt();
-
-		if (currentScriptIt != null) {
-			writer.startNode(TAG_CURRENT_SCRIPTIT);
-			context.convertAnother(currentScriptIt);
-			writer.endNode();
-		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
+		final Collection<String> types;
+
+		types = new ArrayList<String>();
+
 		DescribeIt describeIt = null;
 		DescribeItNode headNode = null;
 		Map<Collection<DescribeItNode>, ScriptIt> paths = null;
-		List<DescribeItNode> selectedPath = null;
-		ScriptIt currentScriptIt = null;
 
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 			final String nodeName = reader.getNodeName();
+
+			if (nodeName.equals(TAG_TYPES)) {
+				while (reader.hasMoreChildren()) {
+					types.add(FileIO.readValue(reader, TAG_TYPE));
+				}
+			}
 			// head node - can't think of a better way to handle this
-			if (nodeName.equals(DescribeItNodeConverter.TAG_NODE_NAME)) {
+			else if (nodeName.equals(DescribeItNodeConverter.TAG_NODE_NAME)) {
 				headNode = (DescribeItNode) context.convertAnother(describeIt,
 						DescribeItNode.class);
 			}
@@ -135,22 +137,10 @@ public class DescribeItConverter implements Converter {
 					reader.moveUp();
 				}
 			}
-			// selected path
-			else if (nodeName.equals(TAG_SELECTED_PATH)) {
-				selectedPath = new ArrayList<DescribeItNode>();
-				selectedPath.addAll((Collection<DescribeItNode>) context
-						.convertAnother(describeIt, ArrayList.class));
-			}
-			// selected scriptit
-			else if (nodeName.equals(TAG_CURRENT_SCRIPTIT)) {
-				currentScriptIt = (ScriptIt) context.convertAnother(describeIt,
-						ScriptIt.class);
-			}
 			reader.moveUp();
 		}
 
-		describeIt = new DescribeIt(headNode, paths, selectedPath,
-				currentScriptIt);
+		describeIt = new DescribeIt(headNode, paths, types);
 		return describeIt;
 	}
 

@@ -24,7 +24,6 @@ public class DescribeIt implements Cloneable, TypedComponent {
 	// TODO Whoa there. What in the world is this public string? Get rid of it!
 	public static String DESCRIBES = "describes";
 	private DescribeItNode startNode;
-	private ScriptIt currentScriptIt;
 	private Map<Collection<DescribeItNode>, ScriptIt> paths;
 	private Collection<String> types;
 	// Longest path length used for calculating shortest path
@@ -33,21 +32,26 @@ public class DescribeIt implements Cloneable, TypedComponent {
 	private Collection<DescribeItNode> selectedPath;
 
 	public DescribeIt(DescribeItNode startNode) {
-		this(startNode, null, null, null);
+		this(startNode, null, new ArrayList<String>());
 	}
 
 	public DescribeIt(DescribeItNode startNode,
 			Map<Collection<DescribeItNode>, ScriptIt> paths,
-			Collection<DescribeItNode> selectedPath, ScriptIt scriptIt) {
+			Collection<String> types) {
 		// assure the startNode is valid
+
 		if (startNode != null)
 			this.startNode = startNode;
 		else
 			throw new IllegalStateException(
 					"Cannot initialize DescribeIt with a null StartNode");
 
-		this.currentScriptIt = null;
-		this.types = new ArrayList<String>();
+		if (types == null)
+			throw new NullPointerException(
+					"Cannot initialize DescribeIt with null types.");
+
+		this.types = types;
+
 		// calculate paths if not given any
 		if (paths != null && !paths.isEmpty()) {
 			this.paths = new HashMap<Collection<DescribeItNode>, ScriptIt>(
@@ -56,13 +60,7 @@ public class DescribeIt implements Cloneable, TypedComponent {
 			this.paths = new HashMap<Collection<DescribeItNode>, ScriptIt>();
 		}
 
-		// assure the selected path is valid, otherwise use defaultPath
-		if (selectedPath != null && this.containsPath(selectedPath)) {
-			this.setSelectedPath(selectedPath);
-			this.currentScriptIt = scriptIt;
-		} else
-			this.setSelectedPath(this.getShortestPath());
-
+		this.setSelectedPath(new ArrayList<DescribeItNode>());
 	}
 
 	/**
@@ -172,8 +170,6 @@ public class DescribeIt implements Cloneable, TypedComponent {
 			clone.selectedPath.add(selected.clone());
 		}
 
-		clone.currentScriptIt = this.currentScriptIt.clone();
-
 		clone.types = new ArrayList<String>(this.types);
 
 		return clone;
@@ -203,7 +199,6 @@ public class DescribeIt implements Cloneable, TypedComponent {
 			}
 
 			this.selectedPath = path;
-			this.currentScriptIt = scriptIt.clone();
 
 			return true;
 		}
@@ -224,17 +219,9 @@ public class DescribeIt implements Cloneable, TypedComponent {
 		return this.types;
 	}
 
-	/**
-	 * Returns the resolved ScriptIt value for the current selectedPath key in
-	 * the paths map
-	 * 
-	 * @return
-	 */
-	public ScriptIt getResolvedScriptIt() {
-		if (this.selectedPath != null && this.containsPath(this.selectedPath))
-			return this.currentScriptIt;
-		else
-			return null;
+	public void setTypes(Collection<String> types) {
+		this.types.removeAll(this.types);
+		this.types.addAll(types);
 	}
 
 	/**

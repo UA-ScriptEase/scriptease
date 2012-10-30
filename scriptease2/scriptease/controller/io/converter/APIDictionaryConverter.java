@@ -170,7 +170,16 @@ public class APIDictionaryConverter implements Converter {
 								.convertAnother(apiDictionary, ArrayList.class));
 
 				for (DescribeIt describeIt : describeItManager.getDescribeIts()) {
-					apiDictionary.getLibrary().add(describeIt);
+					/*
+					 * We can't add this to LibraryModel as usual since our
+					 * APIdictionary is still getting created right here. The
+					 * add(DescribeIt) method would thus cause a null pointer
+					 * exception to be thrown. Besides, we'd be doing things
+					 * twice. -kschenk
+					 */
+					apiDictionary.getLibrary().add(
+							describeItManager
+									.createKnowItForDescribeIt(describeIt));
 				}
 			}
 		}

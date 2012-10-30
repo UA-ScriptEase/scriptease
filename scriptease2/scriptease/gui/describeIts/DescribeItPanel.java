@@ -21,9 +21,13 @@ import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
 import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.ScriptIt;
+import scriptease.translator.APIDictionary;
+import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.DescribeItManager;
 
 /**
  * This view is used to allow the user to select various pathways from
@@ -39,20 +43,34 @@ public class DescribeItPanel extends JPanel {
 	private final ExpansionButton expansionButton;
 
 	private boolean collapsed;
-	private DescribeIt describeIt;
 
-	public DescribeItPanel(final DescribeIt describeIt, boolean collapsed) {
+	public DescribeItPanel(final KnowIt knowIt, boolean collapsed) {
+		final APIDictionary apiDictionary;
+		final DescribeItManager describeItManager;
+		final DescribeIt describeIt;
 		final DescribeItNode headNode;
+
 		final DescribeItNodeGraphModel describeItGraphModel;
+
 		final ScriptIt resolvedScriptIt;
 
-		this.describeIt = describeIt;
 		this.collapsed = collapsed;
 
-		headNode = this.describeIt.getStartNode();
+		apiDictionary = TranslatorManager.getInstance().getActiveTranslator()
+				.getApiDictionary();
+		describeItManager = apiDictionary.getDescribeItManager();
+		describeIt = describeItManager
+				.findDescribeItForTypes(knowIt.getTypes());
+
+		if (describeIt == null) {
+			throw new NullPointerException("No DescribeIt found for " + knowIt
+					+ " when attempting to create DescribeItPanel!");
+		}
+
+		headNode = describeIt.getStartNode();
 		describeItGraphModel = new DescribeItNodeGraphModel(headNode);
-		resolvedScriptIt = DescribeItPanel.this.describeIt
-				.getResolvedScriptIt();
+		resolvedScriptIt = describeIt.getScriptItForPath(describeIt
+				.getSelectedPath());
 
 		this.expandedPanel = new SEGraph<DescribeItNode>(describeItGraphModel,
 				SelectionMode.SELECT_PATH);
@@ -79,8 +97,7 @@ public class DescribeItPanel extends JPanel {
 
 						selectedNodes.addAll(nodes);
 
-						DescribeItPanel.this.describeIt
-								.setSelectedPath(selectedNodes);
+						describeIt.setSelectedPath(selectedNodes);
 					}
 				});
 
@@ -98,14 +115,15 @@ public class DescribeItPanel extends JPanel {
 
 					final ScriptIt resolvedScriptIt;
 
-					resolvedScriptIt = DescribeItPanel.this.describeIt
-							.getResolvedScriptIt();
+					resolvedScriptIt = describeIt.getScriptItForPath(describeIt
+							.getSelectedPath());
 
 					if (resolvedScriptIt != null) {
 						StoryComponentPanelFactory.getInstance()
 								.parseDisplayText(
 										DescribeItPanel.this.collapsedPanel,
 										resolvedScriptIt);
+						knowIt.setBinding(resolvedScriptIt);
 					}
 				} else {
 					// End undo when we close it.
@@ -122,7 +140,7 @@ public class DescribeItPanel extends JPanel {
 		this.setOpaque(false);
 		this.setLayout(new DescribeItPanelLayoutManager());
 
-		if (this.describeIt.getPaths().size() <= 1)
+		if (describeIt.getPaths().size() <= 1)
 			this.expansionButton.setVisible(false);
 
 		this.add(expansionButton);
@@ -295,6 +313,6 @@ public class DescribeItPanel extends JPanel {
 
 	@Override
 	public String toString() {
-		return "DescribeItPanel [" + this.describeIt + "]";
+		return "DescribeItPanel [" + this.expandedPanel.getStartNode() + "]";
 	}
 }
