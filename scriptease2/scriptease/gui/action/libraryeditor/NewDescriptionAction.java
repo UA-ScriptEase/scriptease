@@ -8,7 +8,8 @@ import javax.swing.KeyStroke;
 
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.model.LibraryModel;
-import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -47,15 +48,17 @@ public class NewDescriptionAction extends ActiveTranslatorSensitiveAction {
 		final APIDictionary apiDictionary;
 		final LibraryModel libraryModel;
 
-		final KnowIt newKnowIt;
+		final DescribeItNode describeItNode;
+		final DescribeIt describeIt;
 
 		activeTranslator = TranslatorManager.getInstance()
 				.getActiveTranslator();
 		apiDictionary = activeTranslator.getApiDictionary();
 		libraryModel = apiDictionary.getLibrary();
 
-		newKnowIt = new KnowIt("");
+		describeItNode = new DescribeItNode("Placeholder Node");
+		describeIt = new DescribeIt(describeItNode);
 
-		libraryModel.add(newKnowIt);
+		libraryModel.add(describeIt);
 	}
 }

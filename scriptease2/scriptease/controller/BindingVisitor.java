@@ -2,12 +2,11 @@ package scriptease.controller;
 
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 
 /**
  * Generic controller object that is a collection of double dispatch methods to
@@ -37,7 +36,5 @@ public interface BindingVisitor {
 
 	public void processNull(KnowItBindingNull nullBinding);
 
-	public void processDescribeIt(KnowItBindingDescribeIt described);
-	
 	public void processStoryPoint(KnowItBindingStoryPoint storyPoint);
 }

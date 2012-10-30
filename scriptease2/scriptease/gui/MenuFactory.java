@@ -1,7 +1,6 @@
 package scriptease.gui;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -13,7 +12,6 @@ import java.util.Collection;
 import javax.swing.AbstractButton;
 import javax.swing.FocusManager;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -24,8 +22,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 
 import scriptease.ScriptEase;
-import scriptease.controller.BindingAdapter;
-import scriptease.controller.StoryAdapter;
 import scriptease.controller.FileManager;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
@@ -47,10 +43,7 @@ import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
-import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
-import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerator;
@@ -383,7 +376,6 @@ public class MenuFactory {
 		final JMenuItem throwExceptionItem;
 		final JMenuItem throwErrorItem;
 		final JMenuItem generateCodeItem;
-		final JMenuItem viewGraphEditorItem;
 		final JMenuItem consoleOutputItem;
 
 		menu.add(MenuFactory.buildStoryMenu());
@@ -393,7 +385,6 @@ public class MenuFactory {
 		throwExceptionItem = new JMenuItem("Throw Exception!");
 		throwErrorItem = new JMenuItem("Throw Error!");
 		generateCodeItem = new JMenuItem("Generate Code");
-		viewGraphEditorItem = new JMenuItem("View Graph Editor (NWN Only)");
 		consoleOutputItem = new JMenuItem("Print Things!");
 
 		throwExceptionItem.addActionListener(new ActionListener() {
@@ -472,37 +463,6 @@ public class MenuFactory {
 			}
 		});
 
-		viewGraphEditorItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final TranslatorManager manager = TranslatorManager
-						.getInstance();
-				Translator nwn = manager.getTranslator("Neverwinter Nights");
-
-				LibraryModel model = nwn.getApiDictionary().getLibrary();
-				for (StoryComponent component : model.getAllStoryComponents()) {
-					component.process(new StoryAdapter() {
-						public void processKnowIt(final KnowIt knowIt) {
-							knowIt.getBinding().process(new BindingAdapter() {
-								public void processDescribeIt(
-										KnowItBindingDescribeIt described) {
-									JFrame frame = new JFrame("Graph Editor");
-
-									frame.add(PanelFactory.getInstance()
-											.buildDescribeItPanel(
-													described.getValue()
-															.getStartNode(),
-													described.getValue()));
-									frame.setMinimumSize(new Dimension(800, 300));
-									frame.setVisible(true);
-								};
-							});
-						}
-					});
-				}
-			}
-		});
-
 		consoleOutputItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -517,7 +477,6 @@ public class MenuFactory {
 		menu.addSeparator();
 		menu.add(generateCodeItem);
 		menu.addSeparator();
-		menu.add(viewGraphEditorItem);
 		menu.add(consoleOutputItem);
 
 		return menu;

@@ -4,9 +4,7 @@ import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.ScriptIt;
@@ -47,7 +45,8 @@ public class TranslatorFilter extends StoryComponentFilter {
 		 */
 		@Override
 		public void processScriptIt(ScriptIt scriptIt) {
-			this.acceptable = (TranslatorFilter.this.translator.getApiDictionary().getLibrary()
+			this.acceptable = (TranslatorFilter.this.translator
+					.getApiDictionary().getLibrary()
 					.retrieveScriptIt(scriptIt.getDisplayText()) != null);
 		}
 
@@ -61,28 +60,11 @@ public class TranslatorFilter extends StoryComponentFilter {
 				public void processNull(KnowItBindingNull nullBinding) {
 					TranslatorFilterVisitor.this.acceptable = true;
 				}
-				
+
 				@Override
 				public void processFunction(KnowItBindingFunction function) {
 					final ScriptIt doIt = function.getValue();
 					doIt.process(TranslatorFilterVisitor.this);
-				}
-
-				@Override
-				public void processDescribeIt(KnowItBindingDescribeIt described) {
-					boolean isValid = true;
-					final DescribeIt describeIt = described.getValue();
-					for (final ScriptIt doIt : describeIt.getScriptIts()) {
-						// process the DoIt to determine if it is valid
-						doIt.process(TranslatorFilterVisitor.this);
-						isValid &= TranslatorFilterVisitor.this.acceptable;
-
-						// no need to continue if there exists an un supported
-						// DoIt
-						if (!isValid)
-							break;
-						TranslatorFilterVisitor.this.acceptable = isValid;
-					}
 				}
 			});
 		}
@@ -92,12 +74,12 @@ public class TranslatorFilter extends StoryComponentFilter {
 			this.acceptable = true;
 		}
 	}
-	
+
 	@Override
-	public String toString(){ 
-		if(this.translator == null)
+	public String toString() {
+		if (this.translator == null)
 			return "TranslatorFilter for null Translator";
 		else
-			return "TranslatorFilter ["+this.translator.getName()+"]";
+			return "TranslatorFilter [" + this.translator.getName() + "]";
 	}
 }

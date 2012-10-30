@@ -101,7 +101,7 @@ public class KnowItBindingReference extends KnowItBinding {
 	public boolean compatibleWith(KnowIt knowIt) {
 		if (typeMatches(knowIt.getAcceptableTypes()) && !hasBindingLoop(knowIt)) {
 			KnowItBinding value = this.resolveBinding();
-			if ((value instanceof KnowItBindingFunction || value instanceof KnowItBindingDescribeIt)
+			if (value instanceof KnowItBindingFunction
 					&& knowIt.getOwner() != null)
 				return ScopeVisitor.getScope(knowIt).contains(this.getValue());
 			else

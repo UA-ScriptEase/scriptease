@@ -52,10 +52,18 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
+	<!-- Defines a list of KnowIts to be used as descriptions definitions -->
+	<xsd:complexType name="DescriptionList_Type">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" name="KnowIt" type="KnowIt_Type" />
+		</xsd:sequence>
+	</xsd:complexType>
+
 	<!-- Defines a list of DescribeIt definitions -->
 	<xsd:complexType name="DescribeItList_Type">
 		<xsd:sequence>
-			<xsd:element maxOccurs="unbounded" name="KnowIt" type="KnowIt_Type" />
+			<xsd:element minOccurs="0" maxOccurs="unbounded" name="DescribeIt"
+				type="DescribeIt_Type" />
 		</xsd:sequence>
 	</xsd:complexType>
 
@@ -175,6 +183,7 @@
 
 	<xsd:complexType name="DescribeIt_Type">
 		<xsd:sequence>
+			<xsd:element name="Types" type="SpecificTypeList_Type" />
 			<xsd:element name="DescribeItNode" type="DescribeItNode_Type" />
 			<xsd:element name="PathMap" type="PathMap_Type" />
 			<xsd:element name="SelectedPath">
@@ -196,6 +205,8 @@
 			<xsd:group ref="StoryComponentDataGroup" />
 			<xsd:element name="Types" type="SpecificTypeList_Type" />
 			<xsd:element name="Binding" type="Binding_Type"
+				minOccurs="0" />
+			<xsd:element name="DescribeIt" type="DescribeIt_Type"
 				minOccurs="0" />
 		</xsd:sequence>
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
@@ -271,7 +282,6 @@
 		<xsd:choice minOccurs="0">
 			<xsd:element name="ScriptIt" type="ScriptIt_Type" />
 			<xsd:element name="KnowIt" type="KnowIt_Type" />
-			<xsd:element name="DescribeIt" type="DescribeIt_Type" />
 			<!-- This is for the run time flavour -->
 			<xsd:element name="Types" type="SpecificTypeList_Type" />
 			<!-- This is for constants + gameobjects -->
@@ -283,8 +293,7 @@
 		<xsd:attribute name="flavour" use="required">
 			<xsd:simpleType>
 				<xsd:restriction base="xsd:string">
-					<xsd:pattern
-						value="constant|gameObject|function|reference|runTime|null|describeIt" />
+					<xsd:pattern value="constant|gameObject|function|reference|runTime|null" />
 				</xsd:restriction>
 			</xsd:simpleType>
 		</xsd:attribute>

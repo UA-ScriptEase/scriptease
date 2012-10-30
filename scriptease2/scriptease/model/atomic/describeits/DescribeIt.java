@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.CopyOnWriteArraySet;
 
+import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.util.ListOp;
@@ -20,12 +20,13 @@ import sun.awt.util.IdentityArrayList;
  * @author mfchurch
  * @author kschenk
  */
-public class DescribeIt implements Cloneable {
+public class DescribeIt implements Cloneable, TypedComponent {
 	// TODO Whoa there. What in the world is this public string? Get rid of it!
 	public static String DESCRIBES = "describes";
 	private DescribeItNode startNode;
 	private ScriptIt currentScriptIt;
 	private Map<Collection<DescribeItNode>, ScriptIt> paths;
+	private Collection<String> types;
 	// Longest path length used for calculating shortest path
 	private final int INF_PATH_LENGTH = 100;
 
@@ -46,6 +47,7 @@ public class DescribeIt implements Cloneable {
 					"Cannot initialize DescribeIt with a null StartNode");
 
 		this.currentScriptIt = null;
+		this.types = new ArrayList<String>();
 		// calculate paths if not given any
 		if (paths != null && !paths.isEmpty()) {
 			this.paths = new HashMap<Collection<DescribeItNode>, ScriptIt>(
@@ -172,6 +174,8 @@ public class DescribeIt implements Cloneable {
 
 		clone.currentScriptIt = this.currentScriptIt.clone();
 
+		clone.types = new ArrayList<String>(this.types);
+
 		return clone;
 	}
 
@@ -215,13 +219,9 @@ public class DescribeIt implements Cloneable {
 	 * Returns the possible types that the DescribeIt can resolve to, based on
 	 * it's available scriptIts
 	 */
+	@Override
 	public Collection<String> getTypes() {
-		Collection<String> types = new CopyOnWriteArraySet<String>();
-		final Collection<ScriptIt> scriptIts = this.getScriptIts();
-		for (ScriptIt scriptIt : scriptIts) {
-			types.addAll(scriptIt.getTypes());
-		}
-		return types;
+		return this.types;
 	}
 
 	/**

@@ -17,7 +17,6 @@ import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
-import scriptease.gui.describeIts.DescribeItPanel;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
@@ -25,7 +24,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
@@ -312,12 +310,6 @@ public class StoryComponentPanelFactory {
 						knowIt, editable));
 			}
 
-			@Override
-			public void processDescribeIt(KnowItBindingDescribeIt described) {
-				displayNamePanel.add(ScriptWidgetFactory.buildBindingWidget(
-						knowIt, editable));
-			}
-
 			// everything else gets a regular slot
 			@Override
 			protected void defaultProcess(KnowItBinding binding) {
@@ -462,15 +454,6 @@ public class StoryComponentPanelFactory {
 			}
 
 			@Override
-			public void processDescribeIt(KnowItBindingDescribeIt described) {
-				processDefault();
-				final DescribeIt describeIt = described.getValue();
-				final DescribeItPanel describeItPanel = new DescribeItPanel(
-						describeIt, true);
-				mainPanel.add(describeItPanel);
-			}
-
-			@Override
 			public void processFunction(KnowItBindingFunction function) {
 				processDefault();
 				final ScriptIt scriptIt = function.getValue();
@@ -479,5 +462,17 @@ public class StoryComponentPanelFactory {
 				mainPanel.add(displayNamePanel);
 			}
 		});
+
+		// TODO If the knowit has an attached describeit, draw it as a
+		// describeitpanel.
+		/*
+		 * 
+		 * 	final DescribeIt describeIt = described.getValue();
+				final DescribeItPanel describeItPanel = new DescribeItPanel(
+						describeIt, true);
+				mainPanel.add(describeItPanel);
+		 * 
+		 * 
+		 */
 	}
 }

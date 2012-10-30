@@ -2,12 +2,11 @@ package scriptease.controller;
 
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 
 /**
  * Default implementation of BindingVisitor that does nothing. Ever. <br>
@@ -50,11 +49,6 @@ public abstract class BindingAdapter implements BindingVisitor {
 	@Override
 	public void processNull(KnowItBindingNull nullBinding) {
 		this.defaultProcess(nullBinding);
-	}
-
-	@Override
-	public void processDescribeIt(KnowItBindingDescribeIt described) {
-		this.defaultProcess(described);
 	}
 
 	@Override

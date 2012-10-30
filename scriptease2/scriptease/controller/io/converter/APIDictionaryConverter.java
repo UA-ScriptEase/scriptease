@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
+import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.translator.apimanagers.EventSlotManager;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
@@ -70,10 +72,11 @@ public class APIDictionaryConverter implements Converter {
 				.getChildren());
 		writer.endNode();
 
+		final DescribeItManager describeItManager = apiDictionary
+				.getDescribeItManager();
 		// descriptions
 		writer.startNode(TAG_DESCRIBE_ITS);
-		context.convertAnother(apiDictionary.getLibrary()
-				.getDescriptionsCategory().getChildren());
+		context.convertAnother(describeItManager.getDescribeIts());
 		writer.endNode();
 
 		// typeconverters
@@ -88,7 +91,7 @@ public class APIDictionaryConverter implements Converter {
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final APIDictionary apiDictionary = new APIDictionary();
-		
+
 		System.err.println("Unmarshaling APIDictionary");
 
 		// name
@@ -154,16 +157,21 @@ public class APIDictionaryConverter implements Converter {
 		reader.moveUp();
 
 		// descriptions
+		final DescribeItManager describeItManager = apiDictionary
+				.getDescribeItManager();
 		reader.moveDown();
 		if (reader.hasMoreChildren()) {
 			if (!reader.getNodeName().equalsIgnoreCase(TAG_DESCRIBE_ITS))
 				System.err.println("Expected " + TAG_DESCRIBE_ITS
 						+ ", but found " + reader.getNodeName());
 			else {
-				apiDictionary
-						.getLibrary()
-						.addAll(((Collection<? extends StoryComponent>) context
-								.convertAnother(apiDictionary, ArrayList.class)));
+				describeItManager
+						.addDescribeIts((Collection<DescribeIt>) context
+								.convertAnother(apiDictionary, ArrayList.class));
+
+				for (DescribeIt describeIt : describeItManager.getDescribeIts()) {
+					apiDictionary.getLibrary().add(describeIt);
+				}
 			}
 		}
 		reader.moveUp();

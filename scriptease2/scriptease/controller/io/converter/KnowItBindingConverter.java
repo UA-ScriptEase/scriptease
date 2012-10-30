@@ -8,15 +8,13 @@ import scriptease.controller.BindingVisitor;
 import scriptease.controller.io.FileIO;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.io.model.GameConstant;
@@ -46,7 +44,6 @@ public class KnowItBindingConverter implements Converter {
 	private static final String ATTRIBUTE_VALUE_REFERENCE_FLAVOUR = "reference";
 	private static final String ATTRIBUTE_VALUE_RUNTIME_FLAVOUR = "runTime";
 	private static final String ATTRIBUTE_VALUE_NULL_FLAVOUR = "null";
-	private static final String ATTRIBUTE_VALUE_DESCRIBEIT_FLAVOUR = "describeIt";
 	private static final String ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR = "storyPoint";
 
 	/**
@@ -119,12 +116,6 @@ public class KnowItBindingConverter implements Converter {
 			}
 
 			@Override
-			public void processDescribeIt(KnowItBindingDescribeIt described) {
-				KnowItBindingConverter.this.marshallDescribeItBinding(
-						described, writer, context);
-			}
-
-			@Override
 			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
 				KnowItBindingConverter.this.marshallStoryPointBinding(
 						storyPoint, writer, context);
@@ -162,16 +153,6 @@ public class KnowItBindingConverter implements Converter {
 			writer.setValue(type);
 			writer.endNode();
 		}
-		writer.endNode();
-	}
-
-	private void marshallDescribeItBinding(KnowItBindingDescribeIt binding,
-			HierarchicalStreamWriter writer, MarshallingContext context) {
-		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
-				ATTRIBUTE_VALUE_DESCRIBEIT_FLAVOUR);
-
-		writer.startNode(DescribeItConverter.TAG_DESCRIBEIT);
-		context.convertAnother(binding.getValue());
 		writer.endNode();
 	}
 
@@ -260,9 +241,6 @@ public class KnowItBindingConverter implements Converter {
 			else if (flavour
 					.equalsIgnoreCase(ATTRIBUTE_VALUE_REFERENCE_FLAVOUR))
 				binding = this.unmarshallReferenceBinding(reader, context);
-			else if (flavour
-					.equalsIgnoreCase(ATTRIBUTE_VALUE_DESCRIBEIT_FLAVOUR))
-				binding = this.unmarshallDescribeItBinding(reader, context);
 			else if (flavour
 					.equalsIgnoreCase(ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR))
 				binding = this.unmarshallStoryPointBinding(reader, context);
@@ -367,18 +345,6 @@ public class KnowItBindingConverter implements Converter {
 		binding = new KnowItBindingReference(referent);
 
 		return binding;
-	}
-
-	private KnowItBindingDescribeIt unmarshallDescribeItBinding(
-			HierarchicalStreamReader reader, UnmarshallingContext context) {
-		KnowItBindingDescribeIt binding = new KnowItBindingDescribeIt(null);
-
-		// move down and read as a describeIt
-		reader.moveDown();
-		KnowItBindingDescribeIt knowItBindingDescribeIt = new KnowItBindingDescribeIt(
-				(DescribeIt) context.convertAnother(binding, DescribeIt.class));
-		reader.moveUp();
-		return knowItBindingDescribeIt;
 	}
 
 	private KnowItBindingStoryPoint unmarshallStoryPointBinding(

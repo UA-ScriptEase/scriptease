@@ -52,7 +52,6 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
-import scriptease.model.atomic.knowitbindings.KnowItBindingDescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.AskIt;
@@ -228,18 +227,6 @@ public class LibraryEditorPanelFactory {
 								bindingEditingPanel.removeAll();
 							};
 
-							@Override
-							public void processDescribeIt(
-									KnowItBindingDescribeIt described) {
-								bindingSelectorBox
-										.setSelectedItem(describeItBinding);
-								bindingEditingPanel.removeAll();
-
-								bindingEditingPanel
-										.add(buildDescribeItBindingPanel(knowIt));
-							}
-
-							@Override
 							public void processFunction(
 									KnowItBindingFunction function) {
 								bindingSelectorBox
@@ -278,13 +265,6 @@ public class LibraryEditorPanelFactory {
 						knowIt.setTypes(types);
 
 						knowIt.getBinding().process(new BindingAdapter() {
-							@Override
-							public void processDescribeIt(
-									KnowItBindingDescribeIt described) {
-								// TODO Should probably check our paths to see
-								// if they return the correct types.
-							}
-
 							@Override
 							public void processFunction(
 									KnowItBindingFunction function) {
@@ -367,8 +347,6 @@ public class LibraryEditorPanelFactory {
 							path.add(describeItNode);
 
 							describeIt.assignScriptItToPath(path, scriptIt);
-
-							knowIt.setBinding(describeIt);
 
 						} else if (selectedItem.equals(functionBinding)) {
 							final ScriptIt scriptIt = new ScriptIt(
@@ -459,14 +437,11 @@ public class LibraryEditorPanelFactory {
 	 * @param describeItBinding
 	 * @return
 	 */
-	private JPanel buildDescribeItBindingPanel(KnowIt knowIt) {
+	private JPanel buildDescribeItBindingPanel(final DescribeIt describeIt) {
 
 		final JPanel bindingPanel;
 		final JPanel describeItGraphPanel;
 		final JToolBar graphToolBar;
-
-		final KnowItBindingDescribeIt describeItBinding;
-		final DescribeIt describeIt;
 
 		final EffectHolderPanel effectHolder;
 		final SetEffectObserver effectObserver;
@@ -477,11 +452,9 @@ public class LibraryEditorPanelFactory {
 		describeItGraphPanel = new JPanel();
 		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
 
-		describeItBinding = (KnowItBindingDescribeIt) knowIt.getBinding();
-		describeIt = describeItBinding.getValue();
 		// XXX I don't think the types are updated for this when KnowIt's types
 		// are. Need to check, and possibly add a StoryComponentObserver.
-		effectHolder = new EffectHolderPanel(knowIt.getTypes());
+		effectHolder = new EffectHolderPanel(describeIt.getTypes());
 		describeItGraphModel = new DescribeItNodeGraphModel(
 				describeIt.getStartNode());
 		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
