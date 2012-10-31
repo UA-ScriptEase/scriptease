@@ -258,12 +258,13 @@ public class SEGraphNodeRenderer<E> {
 
 			mode = GraphToolBarModeAction.getMode();
 
-			if (mode == ToolBarMode.INSERT || mode == ToolBarMode.CONNECT) {
+			if (!graph.isReadOnly()
+					&& (mode == ToolBarMode.INSERT || mode == ToolBarMode.CONNECT)) {
 				toolColour = ScriptEaseUI.COLOUR_INSERT_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.1);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.1);
-			} else if (mode == ToolBarMode.DELETE
-					|| mode == ToolBarMode.DISCONNECT) {
+			} else if (!graph.isReadOnly()
+					&& (mode == ToolBarMode.DELETE || mode == ToolBarMode.DISCONNECT)) {
 				toolColour = ScriptEaseUI.COLOUR_DELETE_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.2);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);

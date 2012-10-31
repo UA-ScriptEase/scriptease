@@ -69,7 +69,7 @@ public class DescribeItPanel extends JPanel {
 				describeIt.getStartNode());
 
 		this.describeItGraph = new SEGraph<DescribeItNode>(
-				describeItGraphModel, SelectionMode.SELECT_PATH);
+				describeItGraphModel, SelectionMode.SELECT_PATH, true);
 		this.expansionButton = ScriptWidgetFactory
 				.buildExpansionButton(this.collapsed);
 

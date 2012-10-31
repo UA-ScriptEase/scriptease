@@ -322,13 +322,11 @@ public class LibraryEditorPanelFactory {
 		describeItGraphPanel = new JPanel();
 		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
 
-		// XXX I don't think the types are updated for this when KnowIt's types
-		// are. Need to check, and possibly add a StoryComponentObserver.
 		effectHolder = new EffectHolderPanel(describeIt.getTypes());
 		describeItGraphModel = new DescribeItNodeGraphModel(
 				describeIt.getStartNode());
 		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
-				SelectionMode.SELECT_PATH);
+				SelectionMode.SELECT_PATH, false);
 
 		effectObserver = new SetEffectObserver() {
 			@Override
