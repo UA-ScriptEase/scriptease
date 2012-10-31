@@ -32,6 +32,9 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
+import scriptease.translator.APIDictionary;
+import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.DescribeItManager;
 
 /**
  * Builds a pane filled with ScriptEase Pattern Constructor GUI widgets for
@@ -439,7 +442,24 @@ public class StoryComponentPanelFactory {
 		mainPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 
 		this.addWidget(mainPanel, knowIt, true);
+		
 		final KnowItBinding binding = knowIt.getBinding().resolveBinding();
+
+		final APIDictionary apiDictionary;
+		final DescribeItManager describeItManager;
+		final DescribeIt describeIt;
+
+		apiDictionary = TranslatorManager.getInstance().getActiveTranslator()
+				.getApiDictionary();
+		describeItManager = apiDictionary.getDescribeItManager();
+		describeIt = describeItManager
+				.findDescribeItForTypes(knowIt.getTypes());
+
+		if (describeIt != null) {
+			mainPanel.add(new DescribeItPanel(knowIt, true));
+		}
+		// TODO Can probably get rid of the other stuff down here and just
+		// redraw the KnowIt? Not sure actually, maybe I'm wrong.
 
 		binding.process(new BindingAdapter() {
 			@Override
@@ -463,10 +483,6 @@ public class StoryComponentPanelFactory {
 				mainPanel.add(displayNamePanel);
 			}
 		});
-
-		final DescribeItPanel describeItPanel = new DescribeItPanel(knowIt,
-				true);
-		mainPanel.add(describeItPanel);
 
 	}
 }

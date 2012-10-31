@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import scriptease.model.TypedComponent;
-import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.util.ListOp;
 import sun.awt.util.IdentityArrayList;
@@ -28,8 +27,6 @@ public class DescribeIt implements Cloneable, TypedComponent {
 	private Collection<String> types;
 	// Longest path length used for calculating shortest path
 	private final int INF_PATH_LENGTH = 100;
-
-	private Collection<DescribeItNode> selectedPath;
 
 	public DescribeIt(DescribeItNode startNode) {
 		this(startNode, null, new ArrayList<String>());
@@ -59,8 +56,6 @@ public class DescribeIt implements Cloneable, TypedComponent {
 		} else {
 			this.paths = new HashMap<Collection<DescribeItNode>, ScriptIt>();
 		}
-
-		this.setSelectedPath(new ArrayList<DescribeItNode>());
 	}
 
 	/**
@@ -164,50 +159,9 @@ public class DescribeIt implements Cloneable, TypedComponent {
 			clone.paths.put(describeItNodes, entry.getValue().clone());
 		}
 
-		clone.selectedPath = new ArrayList<DescribeItNode>();
-
-		for (DescribeItNode selected : this.getSelectedPath()) {
-			clone.selectedPath.add(selected.clone());
-		}
-
 		clone.types = new ArrayList<String>(this.types);
 
 		return clone;
-	}
-
-	/**
-	 * Returns a copy of the currently committed selectedPath
-	 * 
-	 * @return
-	 */
-	public Collection<DescribeItNode> getSelectedPath() {
-		if (this.selectedPath != null)
-			return new IdentityArrayList<DescribeItNode>(this.selectedPath);
-		return new IdentityArrayList<DescribeItNode>();
-	}
-
-	public boolean setSelectedPath(Collection<DescribeItNode> path) {
-		if (!(path == null || path.isEmpty()) && this.paths.get(path) != null) {
-			// clear bindings on the previous selectedPath
-			final ScriptIt scriptIt;
-
-			scriptIt = this.getScriptItForPath(path);
-
-			if (scriptIt != null) {
-				for (KnowIt parameter : scriptIt.getParameters())
-					parameter.clearBinding();
-			}
-
-			this.selectedPath = path;
-
-			return true;
-		}
-
-		return false;
-	}
-
-	public void clearSelection() {
-		this.setSelectedPath(new ArrayList<DescribeItNode>());
 	}
 
 	/**
