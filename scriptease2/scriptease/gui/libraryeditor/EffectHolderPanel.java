@@ -2,11 +2,14 @@ package scriptease.gui.libraryeditor;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -28,8 +31,6 @@ public class EffectHolderPanel extends JPanel {
 	private final Collection<SetEffectObserver> setEffectObservers;
 
 	private ScriptIt effect;
-	// TODO We need to reset allowable types when type is changed in story
-	// component.
 	private final Collection<String> allowableTypes;
 
 	/**
@@ -63,6 +64,9 @@ public class EffectHolderPanel extends JPanel {
 		this.removeAll();
 
 		final JPanel panel;
+		final JButton removeEffectButton;
+
+		removeEffectButton = new JButton("Remove Effect");
 
 		if (effect != null)
 			panel = StoryComponentPanelFactory.getInstance()
@@ -70,9 +74,15 @@ public class EffectHolderPanel extends JPanel {
 		else {
 			panel = new JPanel();
 			panel.add(new JLabel("No Effect"));
+			removeEffectButton.setEnabled(false);
 		}
 
-		panel.setVisible(true);
+		removeEffectButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EffectHolderPanel.this.setEffect(null);
+			}
+		});
 
 		panel.setBackground(Color.WHITE);
 		panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -80,6 +90,8 @@ public class EffectHolderPanel extends JPanel {
 		final Image image = GUIOp.getScreenshot(panel);
 
 		this.add(new JLabel(new ImageIcon(image)));
+
+		this.add(removeEffectButton);
 
 		// Notify observers
 		for (SetEffectObserver observer : this.setEffectObservers) {

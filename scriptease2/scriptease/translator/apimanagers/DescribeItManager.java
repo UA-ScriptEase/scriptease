@@ -5,6 +5,8 @@ import java.util.Collection;
 
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.complex.ScriptIt;
+import scriptease.util.StringOp;
 
 /**
  * A manager that contains all of the DescribeIts in an APIDictionary.
@@ -20,6 +22,11 @@ public class DescribeItManager {
 		this.describeIts = new ArrayList<DescribeIt>();
 	}
 
+	/**
+	 * Returns all DescribeIts in the DescribeItManager.
+	 * 
+	 * @return
+	 */
 	public Collection<DescribeIt> getDescribeIts() {
 		return this.describeIts;
 	}
@@ -80,17 +87,26 @@ public class DescribeItManager {
 	 */
 	public KnowIt createKnowItForDescribeIt(DescribeIt describeIt) {
 		final Collection<String> types;
+		final Collection<String> properCaseTypes;
+		final String name;
+		final ScriptIt initialBinding;
+		final KnowIt knowIt;
 
+		properCaseTypes = new ArrayList<String>();
 		types = describeIt.getTypes();
 
-		String name = "";
-
 		for (String type : types) {
-			if (!name.isEmpty())
-				name += ", ";
-			name += type;
+			properCaseTypes.add(StringOp.toProperCase(type));
 		}
 
-		return new KnowIt(name, types);
+		name = StringOp.getCollectionAsString(properCaseTypes, ", ");
+		knowIt = new KnowIt(name, types);
+		initialBinding = describeIt.getScriptItForPath(describeIt
+				.getShortestPath());
+
+		if (initialBinding != null)
+			knowIt.setBinding(initialBinding);
+
+		return knowIt;
 	}
 }

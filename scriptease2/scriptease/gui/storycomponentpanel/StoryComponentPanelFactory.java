@@ -458,7 +458,6 @@ public class StoryComponentPanelFactory {
 
 	private void buildMainKnowItPanel(KnowIt knowIt, final JPanel mainPanel) {
 		// Add displayName panel
-
 		mainPanel.setOpaque(false);
 		mainPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 

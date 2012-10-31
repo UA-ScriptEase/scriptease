@@ -313,22 +313,6 @@ public class ScriptWidgetFactory {
 	}
 
 	/**
-	 * Builds a widget that represents a location where game data must be
-	 * specified via a user's drag & drop. The slot widget is meant to display a
-	 * KnowIt, its legal types, and its current binding.
-	 * 
-	 * @param knowIt
-	 * @return
-	 */
-	public static JComponent buildSlotPanel(final KnowIt knowIt) {
-		final SlotPanel slotPanel = new SlotPanel(knowIt);
-
-		widgetsToStoryComponents.put(slotPanel, knowIt);
-
-		return slotPanel;
-	}
-
-	/**
 	 * Builds a label for displaying plain text in the ScriptEase pattern
 	 * Constructor GUI.
 	 * 
