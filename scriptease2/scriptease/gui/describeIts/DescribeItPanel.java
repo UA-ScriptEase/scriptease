@@ -1,5 +1,6 @@
 package scriptease.gui.describeIts;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -17,6 +18,7 @@ import scriptease.gui.SEGraph.SEGraph.SelectionMode;
 import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
 import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
@@ -24,6 +26,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.DescribeItManager;
+import scriptease.util.GUIOp;
 
 /**
  * This view is used to allow the user to select various pathways from
@@ -76,18 +79,16 @@ public class DescribeItPanel extends JPanel {
 		this.describeItGraph.setNodeRenderer(new DescribeItNodeRenderer(
 				this.describeItGraph));
 
+		this.describeItGraph.setBackground(GUIOp.scaleWhite(
+				ScriptEaseUI.COLOUR_KNOWN_OBJECT, 0.7));
+
 		this.expansionButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// toggle
 				DescribeItPanel.this.collapsed = !DescribeItPanel.this.collapsed;
-				boolean shouldCollapse = DescribeItPanel.this.collapsed;
-				if (shouldCollapse) {
-					// Start undo when we open graph
-					if (!UndoManager.getInstance().hasOpenUndoableAction())
-						UndoManager.getInstance().startUndoableAction(
-								"Bind DescribeIt");
-
+				boolean collapsed = DescribeItPanel.this.collapsed;
+				if (collapsed) {
 					final ScriptIt resolvedScriptIt;
 
 					resolvedScriptIt = describeIt
@@ -95,15 +96,16 @@ public class DescribeItPanel extends JPanel {
 									.getSelectedNodes());
 
 					if (resolvedScriptIt != null) {
+						if (!UndoManager.getInstance().hasOpenUndoableAction())
+							UndoManager.getInstance().startUndoableAction(
+									"Bind DescribeIt");
 						knowIt.setBinding(resolvedScriptIt.clone());
-					}
-				} else {
-					// End undo when we close it.
-					if (UndoManager.getInstance().hasOpenUndoableAction())
+						// End undo when we close it.
 						UndoManager.getInstance().endUndoableAction();
+					}
 				}
-				describeItGraph.setVisible(!shouldCollapse);
-				expansionButton.setCollapsed(shouldCollapse);
+				describeItGraph.setVisible(!collapsed);
+				expansionButton.setCollapsed(collapsed);
 				DescribeItPanel.this.revalidate();
 			}
 		});
