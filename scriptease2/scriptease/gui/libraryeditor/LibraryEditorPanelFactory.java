@@ -187,9 +187,11 @@ public class LibraryEditorPanelFactory {
 
 			@Override
 			public void processKnowIt(final KnowIt knowIt) {
-				this.defaultProcess(knowIt);
+				editorPanel.removeAll();
+				editorPanel.revalidate();
+				editorPanel.repaint();
 
-				final JPanel knowItControlPanel;
+				final JPanel typePanel;
 				final JPanel describeItEditingPanel;
 
 				final TypeAction typeAction;
@@ -201,7 +203,7 @@ public class LibraryEditorPanelFactory {
 
 				final DescribeIt describeIt;
 
-				knowItControlPanel = new JPanel();
+				typePanel = new JPanel();
 
 				typeAction = new TypeAction();
 				typesButton = new JButton(typeAction);
@@ -215,7 +217,8 @@ public class LibraryEditorPanelFactory {
 				describeIt = describeItManager.findDescribeItForTypes(knowIt
 						.getTypes());
 				describeItEditingPanel = LibraryEditorPanelFactory
-						.getInstance().buildDescribeItEditingPanel(describeIt);
+						.getInstance().buildDescribeItEditingPanel(describeIt,
+								knowIt);
 
 				typesLabel.setFont(labelFont);
 
@@ -223,18 +226,18 @@ public class LibraryEditorPanelFactory {
 				typeAction.getTypeSelectionDialogBuilder().selectTypes(
 						knowIt.getTypes(), true);
 
-				knowItControlPanel.setLayout(new BoxLayout(knowItControlPanel,
-						BoxLayout.PAGE_AXIS));
-				knowItControlPanel.setBorder(BorderFactory
-						.createTitledBorder("KnowIt Controls"));
+				typePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+				typePanel.setBorder(BorderFactory.createTitledBorder("Types"));
 
 				typeAction.setAction(new Runnable() {
 					@Override
 					public void run() {
 						final Collection<String> types;
+						final Collection<String> properCaseTypes;
 
 						types = typeAction.getTypeSelectionDialogBuilder()
 								.getSelectedTypes();
+						properCaseTypes = new ArrayList<String>();
 
 						// Important: DescribeIt types MUST be set first because
 						// KnowIts notify observers when their's are changed,
@@ -242,13 +245,21 @@ public class LibraryEditorPanelFactory {
 						describeIt.setTypes(types);
 
 						knowIt.setTypes(types);
+
+						for (String type : types) {
+							properCaseTypes.add(StringOp.toProperCase(type));
+						}
+
+						knowIt.setDisplayText(StringOp.getCollectionAsString(
+								properCaseTypes, ", "));
+
 					}
 				});
 
-				knowItControlPanel.add(typesLabel);
-				knowItControlPanel.add(typesButton);
+				typePanel.add(typesLabel);
+				typePanel.add(typesButton);
 
-				editorPanel.add(knowItControlPanel);
+				editorPanel.add(typePanel);
 
 				describeItEditingPanel.setLayout(new BoxLayout(
 						describeItEditingPanel, BoxLayout.PAGE_AXIS));
@@ -292,11 +303,12 @@ public class LibraryEditorPanelFactory {
 	/**
 	 * Builds a panel used to edit a KnowItBindingDescribeIt.
 	 * 
+	 * @param describeIt
 	 * @param knowIt
-	 * @param describeItBinding
 	 * @return
 	 */
-	private JPanel buildDescribeItEditingPanel(final DescribeIt describeIt) {
+	private JPanel buildDescribeItEditingPanel(final DescribeIt describeIt,
+			final KnowIt knowIt) {
 		final JPanel bindingPanel;
 		final JPanel describeItGraphPanel;
 		final JToolBar graphToolBar;
@@ -329,6 +341,9 @@ public class LibraryEditorPanelFactory {
 						graph.getSelectedNodes());
 
 				describeIt.assignScriptItToPath(selectedNodes, newEffect);
+
+				knowIt.setBinding(describeIt.getScriptItForPath(describeIt
+						.getShortestPath()));
 			}
 		};
 

@@ -49,10 +49,6 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 	private final boolean isNameEditable;
 
-	public SlotPanel(final KnowIt knowIt) {
-		this(knowIt, false);
-	}
-
 	public SlotPanel(final KnowIt knowIt, boolean isNameEditable) {
 		if (knowIt == null)
 			throw new IllegalStateException(
