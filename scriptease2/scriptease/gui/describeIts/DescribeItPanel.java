@@ -69,9 +69,6 @@ public class DescribeItPanel extends JPanel {
 		this.expansionButton = ScriptWidgetFactory
 				.buildExpansionButton(this.collapsed);
 
-		this.describeItGraph.setBackground(Color.red);
-		this.expansionButton.setBackground(Color.BLUE);
-
 		this.describeItGraph.setNodeRenderer(new DescribeItNodeRenderer(
 				this.describeItGraph));
 
