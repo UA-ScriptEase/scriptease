@@ -27,7 +27,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class DescribeItConverter implements Converter {
 	public static final String TAG_DESCRIBEIT = "DescribeIt";
 
-	private static final String TAG_TYPE = "TYPE";
+	private static final String TAG_TYPE = "Type";
 	private static final String TAG_TYPES = "Types";
 	private static final String TAG_PATH_MAP = "PathMap";
 	private static final String TAG_ENTRY = "Entry";
