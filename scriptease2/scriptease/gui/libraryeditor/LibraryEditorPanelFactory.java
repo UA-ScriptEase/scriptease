@@ -232,11 +232,9 @@ public class LibraryEditorPanelFactory {
 					@Override
 					public void run() {
 						final Collection<String> types;
-						final Collection<String> properCaseTypes;
 
 						types = typeAction.getTypeSelectionDialogBuilder()
 								.getSelectedTypes();
-						properCaseTypes = new ArrayList<String>();
 
 						// Important: DescribeIt types MUST be set first because
 						// KnowIts notify observers when their's are changed,
@@ -244,14 +242,6 @@ public class LibraryEditorPanelFactory {
 						describeIt.setTypes(types);
 
 						knowIt.setTypes(types);
-
-						for (String type : types) {
-							properCaseTypes.add(StringOp.toProperCase(type));
-						}
-
-						knowIt.setDisplayText(StringOp.getCollectionAsString(
-								properCaseTypes, ", "));
-						
 					}
 				});
 
