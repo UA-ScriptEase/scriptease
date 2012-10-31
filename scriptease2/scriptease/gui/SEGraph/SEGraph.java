@@ -83,6 +83,7 @@ public class SEGraph<E> extends JComponent {
 	private Point mousePosition;
 
 	private SelectionMode selectionMode;
+	private boolean isReadOnly;
 
 	/**
 	 * Builds a new graph with the passed in model and single node selection
@@ -92,7 +93,7 @@ public class SEGraph<E> extends JComponent {
 	 *            The model used for the Graph.
 	 */
 	public SEGraph(SEGraphModel<E> model) {
-		this(model, SelectionMode.SELECT_NODE);
+		this(model, SelectionMode.SELECT_NODE, false);
 	}
 
 	/**
@@ -105,13 +106,18 @@ public class SEGraph<E> extends JComponent {
 	 *            The selection mode for the graph. One of either
 	 *            {@link SelectionMode#SELECT_NODE} or
 	 *            {@link SelectionMode#SELECT_PATH}.
+	 * 
+	 * @param isReadOnly
+	 *            If the graph is read only, only selection will be allowed.
 	 */
-	public SEGraph(SEGraphModel<E> model, SelectionMode selectionMode) {
+	public SEGraph(SEGraphModel<E> model, SelectionMode selectionMode,
+			boolean isReadOnly) {
 		this.selectionMode = selectionMode;
 		this.selectedNodes = new LinkedHashSet<E>();
 
 		this.model = model;
 		this.selectionMode = selectionMode;
+		this.isReadOnly = isReadOnly;
 
 		this.mousePosition = new Point();
 		this.nodesToComponents = new BiHashMap<E, JComponent>();
@@ -520,6 +526,15 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
+	 * Returns true if the graph is read only.
+	 * 
+	 * @return
+	 */
+	public boolean isReadOnly() {
+		return this.isReadOnly;
+	}
+
+	/**
 	 * Makes sure the selected node is still in the graph. Otherwise, it sets it
 	 * to null.
 	 */
@@ -902,6 +917,7 @@ public class SEGraph<E> extends JComponent {
 	 */
 	private class NodeMouseAdapter extends MouseAdapter {
 		private E lastEnteredNode = null;
+		private ToolBarMode previousMode = ToolBarMode.SELECT;
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
@@ -928,6 +944,11 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
+			if (SEGraph.this.isReadOnly) {
+				previousMode = GraphToolBarModeAction.getMode();
+				GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
+			}
+
 			final JComponent entered;
 
 			entered = (JComponent) e.getSource();
@@ -966,6 +987,13 @@ public class SEGraph<E> extends JComponent {
 					}
 				} else
 					entered.setCursor(null);
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			if (SEGraph.this.isReadOnly) {
+				GraphToolBarModeAction.setMode(previousMode);
+			}
 		}
 
 		@Override
