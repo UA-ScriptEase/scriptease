@@ -35,6 +35,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.TranslatorManager;
@@ -456,7 +457,8 @@ public class StoryComponentPanelFactory {
 		mainPanel.setOpaque(false);
 	}
 
-	private void buildMainKnowItPanel(KnowIt knowIt, final JPanel mainPanel) {
+	private void buildMainKnowItPanel(final KnowIt knowIt,
+			final JPanel mainPanel) {
 		// Add displayName panel
 		mainPanel.setOpaque(false);
 		mainPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
@@ -489,17 +491,22 @@ public class StoryComponentPanelFactory {
 				// even talk to them.
 			}
 
-			private void processDefault() {
-				mainPanel.add(ScriptWidgetFactory.buildLabel(" "
-						+ DescribeIt.DESCRIBES + " ", Color.black));
-			}
-
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				processDefault();
-				final ScriptIt scriptIt = function.getValue();
-				final JPanel displayNamePanel = new JPanel();
+				// Don't show this if its in the library view.
+				if (knowIt.getOwner() instanceof StoryComponentContainer)
+					return;
+
+				final ScriptIt scriptIt;
+				final JPanel displayNamePanel;
+
+				scriptIt = function.getValue();
+				displayNamePanel = new JPanel();
+
 				parseDisplayText(displayNamePanel, scriptIt);
+
+				mainPanel.add(ScriptWidgetFactory.buildLabel(" "
+						+ DescribeIt.DESCRIBES + " ", Color.black));
 				mainPanel.add(displayNamePanel);
 			}
 		});
