@@ -1,6 +1,5 @@
 package scriptease.gui.describeIts;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -40,19 +39,24 @@ public class DescribeItPanel extends JPanel {
 
 	private boolean collapsed;
 
-	public DescribeItPanel(final KnowIt knowIt, boolean collapsed) {
-		final APIDictionary apiDictionary;
+	/**
+	 * Creates a new DescribeItPanel using the given KnowIt. If the KnowIt does
+	 * not have a valid DescribeIt attached to it, this will throw a null
+	 * pointer exception.
+	 * 
+	 * @param knowIt
+	 */
+	public DescribeItPanel(final KnowIt knowIt) {
+		final APIDictionary dictionary;
 		final DescribeItManager describeItManager;
 		final DescribeIt describeIt;
-		final DescribeItNode headNode;
 
 		final DescribeItNodeGraphModel describeItGraphModel;
 
-		this.collapsed = collapsed;
+		this.collapsed = true;
 
-		apiDictionary = TranslatorManager.getInstance().getActiveTranslator()
-				.getApiDictionary();
-		describeItManager = apiDictionary.getDescribeItManager();
+		dictionary = TranslatorManager.getInstance().getActiveAPIDictionary();
+		describeItManager = dictionary.getDescribeItManager();
 		describeIt = describeItManager
 				.findDescribeItForTypes(knowIt.getTypes());
 
@@ -61,8 +65,8 @@ public class DescribeItPanel extends JPanel {
 					+ " when attempting to create DescribeItPanel!");
 		}
 
-		headNode = describeIt.getStartNode();
-		describeItGraphModel = new DescribeItNodeGraphModel(headNode);
+		describeItGraphModel = new DescribeItNodeGraphModel(
+				describeIt.getStartNode());
 
 		this.describeItGraph = new SEGraph<DescribeItNode>(
 				describeItGraphModel, SelectionMode.SELECT_PATH);

@@ -14,7 +14,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import scriptease.controller.BindingAdapter;
+import scriptease.controller.ObservedJPanel;
 import scriptease.controller.StoryAdapter;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.describeIts.DescribeItPanel;
@@ -317,7 +321,8 @@ public class StoryComponentPanelFactory {
 			// everything else gets a regular slot
 			@Override
 			protected void defaultProcess(KnowItBinding binding) {
-				displayNamePanel.add(ScriptWidgetFactory.buildSlotPanel(knowIt));
+				displayNamePanel.add(ScriptWidgetFactory.buildSlotPanel(knowIt,
+						false));
 			}
 		});
 	}
@@ -361,7 +366,23 @@ public class StoryComponentPanelFactory {
 			@Override
 			public void processKnowIt(final KnowIt knowIt) {
 				final JPanel mainPanel;
+				final ObservedJPanel observedPanel;
+				final StoryComponentObserver bindingObserver;
+
 				mainPanel = new JPanel();
+				observedPanel = new ObservedJPanel(mainPanel);
+				bindingObserver = new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
+							mainPanel.removeAll();
+							buildMainKnowItPanel(knowIt, mainPanel);
+						}
+					}
+				};
+
+				knowIt.addStoryComponentObserver(bindingObserver);
+				observedPanel.addObserver(bindingObserver);
 
 				buildMainKnowItPanel(knowIt, mainPanel);
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
@@ -442,12 +463,14 @@ public class StoryComponentPanelFactory {
 		mainPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 
 		this.addWidget(mainPanel, knowIt, true);
-		
-		final KnowItBinding binding = knowIt.getBinding().resolveBinding();
+
+		final KnowItBinding binding;
 
 		final APIDictionary apiDictionary;
 		final DescribeItManager describeItManager;
 		final DescribeIt describeIt;
+
+		binding = knowIt.getBinding().resolveBinding();
 
 		apiDictionary = TranslatorManager.getInstance().getActiveTranslator()
 				.getApiDictionary();
@@ -456,10 +479,8 @@ public class StoryComponentPanelFactory {
 				.findDescribeItForTypes(knowIt.getTypes());
 
 		if (describeIt != null) {
-			mainPanel.add(new DescribeItPanel(knowIt, true));
+			mainPanel.add(new DescribeItPanel(knowIt));
 		}
-		// TODO Can probably get rid of the other stuff down here and just
-		// redraw the KnowIt? Not sure actually, maybe I'm wrong.
 
 		binding.process(new BindingAdapter() {
 			@Override

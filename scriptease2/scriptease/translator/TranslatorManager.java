@@ -201,6 +201,16 @@ public class TranslatorManager implements PatternModelObserver {
 	}
 
 	/**
+	 * Shortcut method to get the active API Dictionary of the current active
+	 * translator.
+	 * 
+	 * @return
+	 */
+	public APIDictionary getActiveAPIDictionary() {
+		return this.activeTranslator.getApiDictionary();
+	}
+
+	/**
 	 * Registers an observer to be notified when the TranslatorManager loads a
 	 * translator
 	 * 
