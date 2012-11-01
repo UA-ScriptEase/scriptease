@@ -7,8 +7,14 @@ import scriptease.controller.io.FileIO;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.complex.ScriptIt;
+import scriptease.translator.Translator;
+import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.DescribeItManager;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -78,6 +84,35 @@ public class KnowItConverter extends StoryComponentConverter {
 			if (reader.getNodeName().equals(TAG_BINDING)) {
 				binding = (KnowItBinding) context.convertAnother(knowIt,
 						KnowItBinding.class);
+
+				// Check if a DescribeIt exists for the binding. If so, map it
+				if (binding instanceof KnowItBindingFunction) {
+					final Translator translator;
+
+					translator = TranslatorManager.getInstance()
+							.getActiveTranslator();
+
+					if (translator.hasActiveApiDictionary()) {
+						final DescribeItManager describeItManager;
+						final ScriptIt bindingScriptIt;
+
+						describeItManager = translator.getApiDictionary()
+								.getDescribeItManager();
+						bindingScriptIt = (ScriptIt) binding.getValue();
+
+						describeItLoop: for (DescribeIt describeIt : describeItManager
+								.getDescribeIts()) {
+							for (ScriptIt scriptIt : describeIt.getScriptIts()) {
+								if (scriptIt.getDisplayText().equals(
+										bindingScriptIt.getDisplayText())) {
+									describeItManager.addDescribeIt(
+											describeIt.clone(), knowIt);
+									break describeItLoop;
+								}
+							}
+						}
+					}
+				}
 			} else {
 				System.out
 						.println("Binding not specified. Defaulting to Null Binding for "

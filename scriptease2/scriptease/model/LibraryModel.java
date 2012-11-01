@@ -243,15 +243,23 @@ public class LibraryModel extends PatternModel implements
 	 */
 	public void add(DescribeIt describeIt) {
 		final DescribeItManager describeItManager;
+		final StoryComponent existingKnowIt;
 
 		describeItManager = this.translator.getApiDictionary()
 				.getDescribeItManager();
+		existingKnowIt = describeItManager.getStoryComponent(describeIt);
 
-		if (!describeItManager.getDescribeIts().contains(describeIt))
-			describeItManager.addDescribeIt(describeIt);
+		if (describeItManager.getStoryComponent(describeIt) != null) {
+			describeItManager.addDescribeIt(describeIt, existingKnowIt);
+		} else {
+			final KnowIt knowIt;
 
-		describeItManager.createKnowItForDescribeIt(describeIt).process(
-				new CategoryAdder());
+			knowIt = describeItManager.createKnowItForDescribeIt(describeIt);
+
+			this.add(knowIt);
+
+			describeItManager.addDescribeIt(describeIt, knowIt);
+		}
 	}
 
 	public void remove(StoryComponent component) {

@@ -84,7 +84,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		}
 		return matching;
 	}
-
+	
 	@Override
 	public boolean equals(Object other) {
 		if (super.equals(other) && other instanceof ScriptIt) {

@@ -29,10 +29,14 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.translator.APIDictionary;
+import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.DescribeItManager;
 
 /**
  * StoryComponentPanelTransferHandler is a more specific TransferHandler that is
@@ -297,6 +301,20 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			for (StoryComponent newChild : transferData) {
 				final StoryComponent clone;
 				clone = newChild.clone();
+
+				final APIDictionary apiDictionary;
+				final DescribeItManager describeItManager;
+				final DescribeIt describeIt;
+
+				apiDictionary = TranslatorManager.getInstance()
+						.getActiveAPIDictionary();
+
+				describeItManager = apiDictionary.getDescribeItManager();
+				describeIt = describeItManager.getDescribeIt(newChild);
+				
+				if (describeIt != null) {
+					describeItManager.addDescribeIt(describeIt.clone(), clone);
+				}
 
 				StoryComponent sibling = parent.getChildAt(insertionIndex);
 				if (sibling != null) {

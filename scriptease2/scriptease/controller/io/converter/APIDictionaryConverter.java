@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
@@ -165,11 +166,12 @@ public class APIDictionaryConverter implements Converter {
 				System.err.println("Expected " + TAG_DESCRIBE_ITS
 						+ ", but found " + reader.getNodeName());
 			else {
-				describeItManager
-						.addDescribeIts((Collection<DescribeIt>) context
-								.convertAnother(apiDictionary, ArrayList.class));
+				final Collection<DescribeIt> describeIts;
 
-				for (DescribeIt describeIt : describeItManager.getDescribeIts()) {
+				describeIts = (Collection<DescribeIt>) context.convertAnother(
+						apiDictionary, ArrayList.class);
+
+				for (DescribeIt describeIt : describeIts) {
 					/*
 					 * We can't add this to LibraryModel as usual since our
 					 * APIdictionary is still getting created right here. The
@@ -177,9 +179,13 @@ public class APIDictionaryConverter implements Converter {
 					 * exception to be thrown. Besides, we'd be doing things
 					 * twice. -kschenk
 					 */
-					apiDictionary.getLibrary().add(
-							describeItManager
-									.createKnowItForDescribeIt(describeIt));
+					final KnowIt knowIt;
+
+					knowIt = describeItManager
+							.createKnowItForDescribeIt(describeIt);
+
+					apiDictionary.getLibrary().add(knowIt);
+					describeItManager.addDescribeIt(describeIt, knowIt);
 				}
 			}
 		}

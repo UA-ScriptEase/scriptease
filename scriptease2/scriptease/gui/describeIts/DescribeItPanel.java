@@ -1,6 +1,5 @@
 package scriptease.gui.describeIts;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -22,6 +21,8 @@ import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.TranslatorManager;
@@ -60,8 +61,7 @@ public class DescribeItPanel extends JPanel {
 
 		dictionary = TranslatorManager.getInstance().getActiveAPIDictionary();
 		describeItManager = dictionary.getDescribeItManager();
-		describeIt = describeItManager
-				.findDescribeItForTypes(knowIt.getTypes());
+		describeIt = describeItManager.getDescribeIt(knowIt);
 
 		if (describeIt == null) {
 			throw new NullPointerException("No DescribeIt found for " + knowIt
@@ -72,7 +72,8 @@ public class DescribeItPanel extends JPanel {
 				describeIt.getStartNode());
 
 		this.describeItGraph = new SEGraph<DescribeItNode>(
-				describeItGraphModel, SelectionMode.SELECT_PATH, true);
+				describeItGraphModel, SelectionMode.SELECT_PATH_FROM_START,
+				true);
 		this.expansionButton = ScriptWidgetFactory
 				.buildExpansionButton(this.collapsed);
 
@@ -80,7 +81,7 @@ public class DescribeItPanel extends JPanel {
 				this.describeItGraph));
 
 		this.describeItGraph.setBackground(GUIOp.scaleWhite(
-				ScriptEaseUI.COLOUR_KNOWN_OBJECT, 0.7));
+				ScriptEaseUI.COLOUR_KNOWN_OBJECT, 3.5));
 
 		this.expansionButton.addActionListener(new ActionListener() {
 			@Override
@@ -95,7 +96,19 @@ public class DescribeItPanel extends JPanel {
 							.getScriptItForPath(describeItGraph
 									.getSelectedNodes());
 
-					if (resolvedScriptIt != null) {
+					bindingIf: if (resolvedScriptIt != null) {
+						final KnowItBinding previousBinding;
+
+						previousBinding = knowIt.getBinding();
+
+						if (previousBinding != null
+								&& previousBinding instanceof KnowItBindingFunction) {
+							if (((ScriptIt) previousBinding.getValue())
+									.getDisplayText().equals(
+											resolvedScriptIt.getDisplayText()))
+								break bindingIf;
+						}
+
 						if (!UndoManager.getInstance().hasOpenUndoableAction())
 							UndoManager.getInstance().startUndoableAction(
 									"Bind DescribeIt");

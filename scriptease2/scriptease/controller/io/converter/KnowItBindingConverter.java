@@ -353,7 +353,7 @@ public class KnowItBindingConverter implements Converter {
 		final KnowItBindingStoryPoint binding = new KnowItBindingStoryPoint(
 				storyPoint);
 
-		// move down and read as a describeIt
+		// move down and read as a story point
 		reader.moveDown();
 		storyPoint = (StoryPoint) context.convertAnother(binding,
 				StoryPoint.class);

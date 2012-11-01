@@ -432,6 +432,15 @@ public class Translator {
 	}
 
 	/**
+	 * Returns true if the APIDictionary attached to the translator is not null.
+	 * 
+	 * @return
+	 */
+	public boolean hasActiveApiDictionary() {
+		return this.apiDictionary != null;
+	}
+
+	/**
 	 * Gets the API Dictionary for this translator.
 	 * 
 	 * @return the apiDictionary
