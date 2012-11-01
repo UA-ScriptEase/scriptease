@@ -3,23 +3,28 @@ package scriptease.translator.apimanagers;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.util.BiHashMap;
 import scriptease.util.StringOp;
 
 /**
- * A manager that contains all of the DescribeIts in an APIDictionary.
+ * A manager that contains all of the DescribeIts in an APIDictionary mapped to
+ * the StoryComponent that uses it.
+ * 
+ * We may have to turn
  * 
  * @author kschenk
  * 
  */
 public class DescribeItManager {
 
-	private final Collection<DescribeIt> describeIts;
+	private final BiHashMap<DescribeIt, StoryComponent> describeItMap;
 
 	public DescribeItManager() {
-		this.describeIts = new ArrayList<DescribeIt>();
+		this.describeItMap = new BiHashMap<DescribeIt, StoryComponent>();
 	}
 
 	/**
@@ -28,55 +33,61 @@ public class DescribeItManager {
 	 * @return
 	 */
 	public Collection<DescribeIt> getDescribeIts() {
-		return this.describeIts;
+		return this.describeItMap.getKeys();
 	}
 
 	/**
-	 * Add a describeIt to the collection of DescribeIts.
+	 * Returns all StoryComponents with associated DescribeIts.
+	 * 
+	 * @return
+	 */
+	public Collection<StoryComponent> getStoryComponents() {
+		return this.describeItMap.getValues();
+	}
+
+	/**
+	 * Adds a DescribeIt to the map in addition to its attached StoryComponent.
 	 * 
 	 * @param describeIt
 	 */
-	public void addDescribeIt(DescribeIt describeIt) {
-		this.describeIts.add(describeIt);
+	public void addDescribeIt(DescribeIt describeIt, StoryComponent component) {
+		this.describeItMap.put(describeIt, component);
 	}
 
 	/**
-	 * Adds all describeIts to the collection in the manager.
-	 * 
-	 * @param describeIts
-	 */
-	public void addDescribeIts(Collection<DescribeIt> describeIts) {
-		this.describeIts.addAll(describeIts);
-	}
-
-	/**
-	 * Removes a describeIt from the collection of DescribeIts.
+	 * Removes a describeIt from the DescribeIt to StoryComponent map.
 	 * 
 	 * @param describeIt
 	 */
 	public void removeDescribeIt(DescribeIt describeIt) {
-		this.describeIts.remove(describeIt);
+		this.describeItMap.removeKey(describeIt);
 	}
 
 	/**
-	 * Returns the first DescribeIt matching the passed in types. If no
-	 * DescribeIt is found, returns null.
+	 * Removes a StoryComponent from the DescribeIt to StoryComponent map.
+	 */
+	public void removeStoryComponent(StoryComponent component) {
+		this.describeItMap.removeValue(component);
+	}
+
+	/**
+	 * Returns the DescribeIt mapped to the component.
 	 * 
-	 * @param types
+	 * @param component
 	 * @return
 	 */
-	public DescribeIt findDescribeItForTypes(Collection<String> types) {
-		for (DescribeIt describeIt : this.describeIts) {
-			final Collection<String> describeItTypes;
+	public DescribeIt getDescribeIt(StoryComponent component) {
+		return this.describeItMap.getKey(component);
+	}
 
-			describeItTypes = describeIt.getTypes();
-
-			if (describeItTypes.containsAll(types)
-					&& describeItTypes.size() == types.size())
-				return describeIt;
-		}
-
-		return null;
+	/**
+	 * Returns the StoryComponent mapped to the DescribeIt.
+	 * 
+	 * @param describeIt
+	 * @return
+	 */
+	public StoryComponent getStoryComponent(DescribeIt describeIt) {
+		return this.describeItMap.getValue(describeIt);
 	}
 
 	/**

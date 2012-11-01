@@ -214,8 +214,8 @@ public class LibraryEditorPanelFactory {
 						.getActiveTranslator().getApiDictionary();
 				describeItManager = apiDictionary.getDescribeItManager();
 
-				describeIt = describeItManager.findDescribeItForTypes(knowIt
-						.getTypes());
+				describeIt = describeItManager.getDescribeIt(knowIt);
+
 				describeItEditingPanel = LibraryEditorPanelFactory
 						.getInstance().buildDescribeItEditingPanel(describeIt,
 								knowIt);
@@ -326,7 +326,7 @@ public class LibraryEditorPanelFactory {
 		describeItGraphModel = new DescribeItNodeGraphModel(
 				describeIt.getStartNode());
 		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
-				SelectionMode.SELECT_PATH, false);
+				SelectionMode.SELECT_PATH_FROM_START, false);
 
 		effectObserver = new SetEffectObserver() {
 			@Override

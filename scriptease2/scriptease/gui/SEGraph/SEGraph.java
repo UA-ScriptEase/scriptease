@@ -67,7 +67,7 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 */
 	public static enum SelectionMode {
-		SELECT_NODE, SELECT_PATH
+		SELECT_NODE, SELECT_PATH, SELECT_PATH_FROM_START
 	}
 
 	private final SEGraphModel<E> model;
@@ -103,9 +103,7 @@ public class SEGraph<E> extends JComponent {
 	 *            The model used for the Graph.
 	 * 
 	 * @param selectionMode
-	 *            The selection mode for the graph. One of either
-	 *            {@link SelectionMode#SELECT_NODE} or
-	 *            {@link SelectionMode#SELECT_PATH}.
+	 *            The selection mode for the graph.
 	 * 
 	 * @param isReadOnly
 	 *            If the graph is read only, only selection will be allowed.
@@ -1026,8 +1024,9 @@ public class SEGraph<E> extends JComponent {
 			}
 
 			if (mode == ToolBarMode.SELECT) {
-				if (selectionMode == SelectionMode.SELECT_PATH
-						&& e.isShiftDown()) {
+				if (selectionMode == SelectionMode.SELECT_PATH_FROM_START
+						|| (selectionMode == SelectionMode.SELECT_PATH && e
+								.isShiftDown())) {
 					SEGraph.this.selectNodesUntil(node);
 
 					for (E selectedNode : SEGraph.this.getSelectedNodes()) {
@@ -1036,6 +1035,7 @@ public class SEGraph<E> extends JComponent {
 										.getValue(selectedNode), selectedNode);
 					}
 				} else {
+					// Default behaviour is to select individual nodes
 					final Collection<E> nodes;
 
 					nodes = new ArrayList<E>();

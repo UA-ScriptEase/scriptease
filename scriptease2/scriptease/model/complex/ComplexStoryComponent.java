@@ -111,9 +111,11 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 
 		// don't allow double adds.
 		if (previousOwner == this && this.hasChild(newChild)) {
-			/*System.err.println("ComplexStoryComponent '"
-					+ this.getDisplayText() + "' did not add '" + newChild
-					+ "' because it is already a child.");*/ //Debug Code
+			/*
+			 * System.err.println("ComplexStoryComponent '" +
+			 * this.getDisplayText() + "' did not add '" + newChild +
+			 * "' because it is already a child.");
+			 */// Debug Code
 			return false;
 		}
 
@@ -387,7 +389,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 		if (newChild instanceof StoryComponentContainer) {
 			for (StoryComponent child : ((StoryComponentContainer) newChild)
 					.getChildren()) {
-				if(isValidChild(child) == false)
+				if (isValidChild(child) == false)
 					isValidChild(child);
 				isValid &= isValidChild(child);
 			}

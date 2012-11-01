@@ -9,6 +9,7 @@ import java.util.Collection;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -476,8 +477,7 @@ public class StoryComponentPanelFactory {
 		apiDictionary = TranslatorManager.getInstance().getActiveTranslator()
 				.getApiDictionary();
 		describeItManager = apiDictionary.getDescribeItManager();
-		describeIt = describeItManager
-				.findDescribeItForTypes(knowIt.getTypes());
+		describeIt = describeItManager.getDescribeIt(knowIt);
 
 		if (describeIt != null) {
 			mainPanel.add(new DescribeItPanel(knowIt));
