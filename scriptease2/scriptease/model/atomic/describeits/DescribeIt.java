@@ -84,6 +84,24 @@ public class DescribeIt implements Cloneable, TypedComponent {
 	}
 
 	/**
+	 * Returns a path of DescribeItNodes for the passed in ScriptIt. If a path
+	 * does not exist, an empty collection is returned.
+	 * 
+	 * @param scriptIt
+	 * @return
+	 */
+	public Collection<DescribeItNode> getPath(ScriptIt scriptIt) {
+		for (Entry<Collection<DescribeItNode>, ScriptIt> entry : this.paths
+				.entrySet()) {
+			if (entry.getValue().equals(scriptIt)) {
+				return entry.getKey();
+			}
+		}
+
+		return new ArrayList<DescribeItNode>();
+	}
+
+	/**
 	 * Returns the keySet of paths in the path map
 	 * 
 	 * @return
