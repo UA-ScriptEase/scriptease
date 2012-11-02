@@ -3,6 +3,7 @@ package scriptease.gui.describeIts;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
@@ -99,13 +100,14 @@ public class DescribeItPanel extends JPanel {
 
 				StoryComponentPanelFactory.getInstance().parseDisplayText(
 						DescribeItPanel.this.boundScriptItPanel, scriptIt);
-
 			}
-
 		});
 
 		this.setOpaque(false);
 		this.setLayout(new DescribeItPanelLayoutManager());
+
+		// this.setLayout(new FlowLayout());
+		this.boundScriptItPanel.setVisible(true);
 
 		this.add(this.expansionButton);
 		this.add(this.describeItGraph);
@@ -158,7 +160,7 @@ public class DescribeItPanel extends JPanel {
 						knowIt.setBinding(clone);
 
 						DescribeItPanel.this.boundScriptItPanel.removeAll();
-						
+
 						StoryComponentPanelFactory
 								.getInstance()
 								.parseDisplayText(
