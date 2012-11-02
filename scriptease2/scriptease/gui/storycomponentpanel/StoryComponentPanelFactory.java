@@ -9,7 +9,6 @@ import java.util.Collection;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,7 +35,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.TranslatorManager;
@@ -479,10 +477,6 @@ public class StoryComponentPanelFactory {
 		describeItManager = apiDictionary.getDescribeItManager();
 		describeIt = describeItManager.getDescribeIt(knowIt);
 
-		if (describeIt != null) {
-			mainPanel.add(new DescribeItPanel(knowIt));
-		}
-
 		binding.process(new BindingAdapter() {
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
@@ -493,21 +487,12 @@ public class StoryComponentPanelFactory {
 
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				// Don't show this if its in the library view.
-				if (knowIt.getOwner() instanceof StoryComponentContainer)
-					return;
-
-				final ScriptIt scriptIt;
-				final JPanel displayNamePanel;
-
-				scriptIt = function.getValue();
-				displayNamePanel = new JPanel();
-
-				parseDisplayText(displayNamePanel, scriptIt);
-
 				mainPanel.add(ScriptWidgetFactory.buildLabel(" "
 						+ DescribeIt.DESCRIBES + " ", Color.black));
-				mainPanel.add(displayNamePanel);
+
+				if (describeIt != null) {
+					mainPanel.add(new DescribeItPanel(knowIt));
+				}
 			}
 		});
 

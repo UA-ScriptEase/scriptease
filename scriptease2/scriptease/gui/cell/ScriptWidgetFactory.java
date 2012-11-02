@@ -111,6 +111,7 @@ public class ScriptWidgetFactory {
 				}
 			}
 		}
+
 		return jPanels;
 	}
 
