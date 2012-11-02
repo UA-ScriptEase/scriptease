@@ -34,8 +34,10 @@ import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.SetEffectObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.ToolBarFactory;
+import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraph.SelectionMode;
@@ -70,6 +72,11 @@ public class LibraryEditorPanelFactory {
 	private static Font labelFont = new Font("SansSerif", Font.BOLD,
 			Integer.parseInt(ScriptEase.getInstance().getPreference(
 					ScriptEase.FONT_SIZE_KEY)) + 1);
+
+	// Stores the current observers for the selected StoryComponent so that they
+	// do not get garbage colleted.
+	private StoryComponentObserver currentNameObserver;
+	private StoryComponentObserver currentLabelObserver;
 
 	/**
 	 * Returns the single instance of StoryComponentBuilderPanelFactory
@@ -131,47 +138,53 @@ public class LibraryEditorPanelFactory {
 
 			@Override
 			public void processScriptIt(final ScriptIt scriptIt) {
+				// Causes and effects are processed as ScriptIts
 				this.defaultProcess(scriptIt);
 
 				final JPanel codeBlockEditingPanel;
-				final JPanel scriptItControlPanel;
-				final JButton addCodeBlockButton;
 
 				codeBlockEditingPanel = new JPanel();
-				scriptItControlPanel = new JPanel();
-				addCodeBlockButton = new JButton("Add CodeBlock");
 
 				codeBlockEditingPanel.setLayout(new BoxLayout(
 						codeBlockEditingPanel, BoxLayout.PAGE_AXIS));
-				scriptItControlPanel.setLayout(new FlowLayout(
-						FlowLayout.LEADING));
 
-				// Causes and effects are processed as ScriptIts
-				addCodeBlockButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						if (!UndoManager.getInstance().hasOpenUndoableAction())
-							UndoManager.getInstance().startUndoableAction(
-									"Adding CodeBlock to "
-											+ scriptIt.getDisplayText());
+				if (!scriptIt.isCause()) {
+					final JPanel scriptItControlPanel;
+					final JButton addCodeBlockButton;
 
-						final CodeBlock codeBlock;
+					scriptItControlPanel = new JPanel();
+					addCodeBlockButton = new JButton("Add CodeBlock");
 
-						codeBlock = new CodeBlockSource(TranslatorManager
-								.getInstance().getActiveTranslator()
-								.getApiDictionary().getNextCodeBlockID());
+					scriptItControlPanel.setLayout(new FlowLayout(
+							FlowLayout.LEADING));
 
-						scriptIt.addCodeBlock(codeBlock);
+					scriptItControlPanel.setBorder(BorderFactory
+							.createTitledBorder("Effect Control"));
 
-						UndoManager.getInstance().endUndoableAction();
-					}
-				});
+					addCodeBlockButton.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							if (!UndoManager.getInstance()
+									.hasOpenUndoableAction())
+								UndoManager.getInstance().startUndoableAction(
+										"Adding CodeBlock to "
+												+ scriptIt.getDisplayText());
 
-				scriptItControlPanel.setBorder(BorderFactory
-						.createTitledBorder("ScriptIt Controls"));
-				scriptItControlPanel.add(addCodeBlockButton);
+							final CodeBlock codeBlock;
 
-				editorPanel.add(scriptItControlPanel);
+							codeBlock = new CodeBlockSource(TranslatorManager
+									.getInstance().getActiveTranslator()
+									.getApiDictionary().getNextCodeBlockID());
+
+							scriptIt.addCodeBlock(codeBlock);
+
+							UndoManager.getInstance().endUndoableAction();
+						}
+					});
+					scriptItControlPanel.add(addCodeBlockButton);
+					editorPanel.add(scriptItControlPanel);
+				}
+
 				editorPanel.add(codeBlockEditingPanel);
 
 				this.setUpCodeBlockPanels(scriptIt, codeBlockEditingPanel)
@@ -390,33 +403,51 @@ public class LibraryEditorPanelFactory {
 	}
 
 	/**
-	 * Builds a JTextField used to edit the name of the story component.
+	 * Builds a JTextField used to edit the name of the story component. The
+	 * TextField gets updated if the Story Component's name changes for other
+	 * reasons, such as undoing.
 	 * 
 	 * @param component
 	 * @return
 	 */
-	private JTextField buildNameEditorField(final StoryComponent component) {
+	private JTextField buildNameEditorPanel(final StoryComponent component) {
 		final JTextField nameField;
+		final Runnable commitText;
 
 		nameField = new JTextField(component.getDisplayText());
 
-		// TODO: This is way too slow. See if we can just use the Name Editor in
-		// ScriptWidgetFactory instead.
-		nameField.getDocument().addDocumentListener(new DocumentListener() {
+		commitText = new Runnable() {
 			@Override
-			public void insertUpdate(DocumentEvent e) {
-				component.setDisplayText(nameField.getText());
-			}
+			public void run() {
+				if (!UndoManager.getInstance().hasOpenUndoableAction()) {
+					final String text;
 
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				this.insertUpdate(e);
-			}
+					text = nameField.getText();
 
-			@Override
-			public void changedUpdate(DocumentEvent e) {
+					UndoManager.getInstance().startUndoableAction(
+							"Change " + component + "'s display text to "
+									+ text);
+					component.setDisplayText(text);
+					UndoManager.getInstance().endUndoableAction();
+				}
 			}
-		});
+		};
+
+		this.currentNameObserver = new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+					nameField.setText(component.getDisplayText());
+				}
+			}
+		};
+
+		WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
+				nameField, commitText, false);
+
+		nameField.setHorizontalAlignment(JTextField.LEADING);
+
+		component.addStoryComponentObserver(this.currentNameObserver);
 
 		return nameField;
 	}
@@ -428,44 +459,62 @@ public class LibraryEditorPanelFactory {
 	 * @return
 	 */
 	private JTextField buildLabelEditorField(final StoryComponent component) {
+		final String SEPARATOR = ", ";
+
 		final JTextField labelField;
 		final String labelToolTip;
+		final Runnable commitText;
 
 		labelField = new JTextField(StringOp.getCollectionAsString(
-				component.getLabels(), ", "));
+				component.getLabels(), SEPARATOR));
 		labelToolTip = "<html><b>Labels</b> are seperated by commas.<br>"
 				+ "Leading and trailing spaces are<br>"
 				+ "removed automatically.</html>";
 
+		commitText = new Runnable() {
+			@Override
+			public void run() {
+				if (!UndoManager.getInstance().hasOpenUndoableAction()) {
+					final String labelFieldText;
+					final String[] labelArray;
+					final Collection<String> labels;
+
+					labelFieldText = labelField.getText();
+					labelArray = labelFieldText.split(SEPARATOR);
+					labels = new ArrayList<String>();
+
+					for (String label : labelArray) {
+						labels.add(label.trim());
+					}
+
+					UndoManager.getInstance().startUndoableAction(
+							"Setting " + component + "'s labels to "
+									+ labelFieldText);
+					component.setLabels(labels);
+					UndoManager.getInstance().endUndoableAction();
+				}
+			}
+		};
+
+		this.currentLabelObserver = new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				StoryComponentChangeEnum eventType = event.getType();
+				if (eventType == StoryComponentChangeEnum.CHANGE_LABELS_CHANGED) {
+					labelField.setText(StringOp.getCollectionAsString(
+							component.getLabels(), SEPARATOR));
+				}
+			}
+		};
+
+		WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
+				labelField, commitText, false);
+
 		labelField.setToolTipText(labelToolTip);
 
-		// TODO Also too slow. See above.
-		labelField.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				final String labelFieldText;
-				final String[] labelArray;
-				final Collection<String> labels;
+		labelField.setHorizontalAlignment(JTextField.LEADING);
 
-				labelFieldText = labelField.getText();
-				labelArray = labelFieldText.split(",");
-				labels = new ArrayList<String>();
-
-				for (String label : labelArray) {
-					labels.add(label.trim());
-				}
-				component.setLabels(labels);
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				this.insertUpdate(e);
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-			}
-		});
+		component.addStoryComponentObserver(this.currentLabelObserver);
 
 		return labelField;
 	}
@@ -485,7 +534,12 @@ public class LibraryEditorPanelFactory {
 		visibleBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				component.setVisible(visibleBox.isSelected());
+				if (!UndoManager.getInstance().hasOpenUndoableAction()) {
+					UndoManager.getInstance().startUndoableAction(
+							"Toggle " + component + "'s visiblity");
+					component.setVisible(visibleBox.isSelected());
+					UndoManager.getInstance().endUndoableAction();
+				}
 			}
 		});
 
@@ -517,7 +571,7 @@ public class LibraryEditorPanelFactory {
 		labelLabel = new JLabel("Labels: ");
 		visibleLabel = new JLabel("Visible: ");
 
-		nameField = this.buildNameEditorField(component);
+		nameField = this.buildNameEditorPanel(component);
 		labelsField = this.buildLabelEditorField(component);
 		visibleBox = this.buildVisibleBox(component);
 
@@ -696,6 +750,7 @@ public class LibraryEditorPanelFactory {
 				.buildParameterNameObserver(codeBlock, subjectBox));
 
 		subjectBox.addItem(null);
+
 		for (KnowIt parameter : scriptIt.getParameters()) {
 			final Collection<String> slots = getCommonSlotsForTypes(parameter);
 
@@ -756,7 +811,9 @@ public class LibraryEditorPanelFactory {
 			}
 		});
 
-		if (scriptIt.getCodeBlocks().size() < 2) {
+		if (scriptIt.isCause())
+			deleteCodeBlockButton.setVisible(false);
+		else if (scriptIt.getCodeBlocks().size() < 2) {
 			deleteCodeBlockButton.setEnabled(false);
 		}
 
@@ -820,35 +877,49 @@ public class LibraryEditorPanelFactory {
 			}
 		});
 
-		subjectBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final String subjectName;
-				subjectName = (String) subjectBox.getSelectedItem();
+		if (!scriptIt.isCause()
+				&& !scriptIt.getMainCodeBlock().equals(codeBlock)) {
+			subjectBox.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final String subjectName;
+					subjectName = (String) subjectBox.getSelectedItem();
 
-				codeBlock.setSubject(subjectName);
+					codeBlock.setSubject(subjectName);
 
-				scriptIt.updateStoryChildren();
-				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
-						StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
-			}
-		});
+					scriptIt.updateStoryChildren();
+					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+							StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
+				}
+			});
+		} else {
+			subjectLabel.setVisible(false);
+			subjectBox.setVisible(false);
+		}
 
-		slotBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String selectedSlot = (String) slotBox.getSelectedItem();
+		if (scriptIt.isCause()
+				|| !scriptIt.getMainCodeBlock().equals(codeBlock)) {
+			slotBox.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String selectedSlot = (String) slotBox.getSelectedItem();
 
-				if (selectedSlot != null)
-					codeBlock.setSlot((String) slotBox.getSelectedItem());
-				else
-					codeBlock.setSlot("");
+					if (selectedSlot != null)
+						codeBlock.setSlot((String) slotBox.getSelectedItem());
+					else
+						codeBlock.setSlot("");
 
-				scriptIt.updateStoryChildren();
-				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
-						StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
-			}
-		});
+					scriptIt.updateStoryChildren();
+					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+							StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
+				}
+			});
+		} else {
+			slotLabel.setVisible(false);
+			slotBox.setVisible(false);
+			implicitsLabel.setVisible(false);
+			implicitsLabelLabel.setVisible(false);
+		}
 
 		codeBlockEditorLayout.setHorizontalGroup(codeBlockEditorLayout
 				.createSequentialGroup()

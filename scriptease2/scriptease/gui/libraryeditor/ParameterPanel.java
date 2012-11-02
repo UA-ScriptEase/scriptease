@@ -29,6 +29,7 @@ import javax.swing.event.DocumentListener;
 
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.gui.WidgetDecorator;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
@@ -59,7 +60,7 @@ import scriptease.util.StringOp;
  * 
  */
 @SuppressWarnings("serial")
-public class ParameterPanel extends JPanel {
+class ParameterPanel extends JPanel {
 	private final KnowIt knowIt;
 
 	/**
@@ -72,7 +73,6 @@ public class ParameterPanel extends JPanel {
 		super();
 		this.knowIt = knowIt;
 
-		final JTextField nameField;
 		final TypeAction typeAction;
 		final ArrayList<String> types;
 		final JButton typesButton;
@@ -89,7 +89,6 @@ public class ParameterPanel extends JPanel {
 		final Translator activeTranslator;
 		final GameTypeManager gameTypeManager;
 
-		nameField = new JTextField(knowIt.getDisplayText(), 10);
 		typeAction = new TypeAction();
 		types = new ArrayList<String>();
 		typesButton = new JButton(typeAction);
@@ -144,36 +143,6 @@ public class ParameterPanel extends JPanel {
 		knowIt.addStoryComponentObserver(LibraryEditorListenerFactory
 				.getInstance().buildParameterDefaultTypeObserver());
 
-		nameField.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				final String newInput;
-				newInput = nameField.getText();
-
-				if (codeBlock.hasSubject()) {
-					KnowIt subject = codeBlock.getSubject();
-					if (subject.equals(knowIt)) {
-						knowIt.setDisplayText(newInput);
-						codeBlock.setSubject(newInput);
-					} else
-						knowIt.setDisplayText(newInput);
-				} else
-					knowIt.setDisplayText(newInput);
-
-				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
-						StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET));
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				insertUpdate(e);
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-			}
-		});
-
 		typeAction.setAction(new Runnable() {
 			@Override
 			public void run() {
@@ -223,23 +192,28 @@ public class ParameterPanel extends JPanel {
 			}
 		});
 
-		deleteButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final List<KnowIt> parameters;
-				parameters = codeBlock.getParameters();
+		if (!this.isSubjectInCause(scriptIt, codeBlock)) {
+			deleteButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final List<KnowIt> parameters;
+					parameters = codeBlock.getParameters();
 
-				parameters.remove(knowIt);
-				codeBlock.setParameters(parameters);
+					parameters.remove(knowIt);
+					codeBlock.setParameters(parameters);
 
-				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
-						StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_REMOVE));
-			}
-		});
+					scriptIt.notifyObservers(new StoryComponentEvent(
+							scriptIt,
+							StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_REMOVE));
+				}
+			});
+		} else {
+			deleteButton.setVisible(false);
+		}
 
 		typesPanel.add(typesButton);
 		defaultTypeBoxPanel.add(defaultTypeBox);
-		nameFieldPanel.add(nameField);
+		nameFieldPanel.add(this.buildNameField(scriptIt, codeBlock));
 		bindingPanel.add(bindingConstantComponent);
 
 		typesPanel.setBorder(new TitledBorder("Types"));
@@ -259,6 +233,71 @@ public class ParameterPanel extends JPanel {
 				.addComponent(nameFieldPanel).addComponent(typesPanel)
 				.addComponent(deleteButton).addComponent(defaultTypeBoxPanel)
 				.addComponent(bindingPanel));
+	}
+
+	/**
+	 * Builds a TextField used to edit the name of the KnowIt.
+	 * 
+	 * @param scriptIt
+	 * @param codeBlock
+	 * @return
+	 */
+	private JTextField buildNameField(final ScriptIt scriptIt,
+			final CodeBlock codeBlock) {
+
+		final JTextField nameField;
+		final Runnable commitText;
+
+		nameField = new JTextField(this.knowIt.getDisplayText(), 10);
+
+		if (this.isSubjectInCause(scriptIt, codeBlock)) {
+			nameField.setEnabled(false);
+
+			return nameField;
+		}
+
+		commitText = new Runnable() {
+			@Override
+			public void run() {
+				// TODO Undoability
+				final String newInput;
+				newInput = nameField.getText();
+
+				// TODO This probably doesn't do what we want it to.
+				if (codeBlock.hasSubject()) {
+					KnowIt subject = codeBlock.getSubject();
+					if (subject.equals(knowIt)) {
+						knowIt.setDisplayText(newInput);
+						codeBlock.setSubject(newInput);
+					} else
+						knowIt.setDisplayText(newInput);
+				} else
+					knowIt.setDisplayText(newInput);
+
+				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+						StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET));
+			}
+		};
+
+		WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
+				nameField, commitText, false);
+
+		return nameField;
+	}
+
+	/**
+	 * Returns true if the ScriptIt is a cause, the CodeBlock is the first
+	 * CodeBlock in it, and the KnowIt for the panel is the subject of the
+	 * CodeBlock.
+	 * 
+	 * @param scriptIt
+	 * @param codeBlock
+	 * @return
+	 */
+	private boolean isSubjectInCause(ScriptIt scriptIt, CodeBlock codeBlock) {
+		return scriptIt.isCause()
+				&& (scriptIt.getMainCodeBlock().equals(codeBlock))
+				&& (this.knowIt.equals(codeBlock.getSubject()));
 	}
 
 	/**
