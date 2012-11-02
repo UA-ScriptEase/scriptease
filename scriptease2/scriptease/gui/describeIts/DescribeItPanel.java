@@ -3,11 +3,11 @@ package scriptease.gui.describeIts;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 
 import javax.swing.JPanel;
 
@@ -16,6 +16,7 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraph.SelectionMode;
+import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
 import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
@@ -79,37 +80,59 @@ public class DescribeItPanel extends JPanel {
 		this.describeItGraph = new SEGraph<DescribeItNode>(
 				describeItGraphModel, SelectionMode.SELECT_PATH_FROM_START,
 				true);
-		this.expansionButton = ScriptWidgetFactory
-				.buildExpansionButton(this.isCollapsed);
-
 		this.describeItGraph.setNodeRenderer(new DescribeItNodeRenderer(
 				this.describeItGraph));
+
+		this.expansionButton = ScriptWidgetFactory
+				.buildExpansionButton(this.isCollapsed);
 
 		this.describeItGraph.setBackground(GUIOp.scaleWhite(
 				ScriptEaseUI.COLOUR_KNOWN_OBJECT, 3.5));
 
-		this.expansionButton.addActionListener(this
-				.buildExpansionButtonListener(describeIt, knowIt));
+		this.describeItGraph
+				.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
+					public void nodesSelected(Collection<DescribeItNode> nodes) {
+						if (describeIt.getScriptItForPath(nodes) == null) {
+							knowIt.getBinding().process(new BindingAdapter() {
+								@Override
+								public void processFunction(
+										KnowItBindingFunction function) {
+									describeItGraph.setSelectedNodes(describeIt
+											.getPath(function.getValue()));
+								}
+							});
+
+						}
+					}
+				});
 
 		knowIt.getBinding().process(new BindingAdapter() {
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
+				final Collection<DescribeItNode> path;
 				final ScriptIt scriptIt;
 
 				scriptIt = function.getValue();
+				path = describeIt.getPath(scriptIt);
 
 				StoryComponentPanelFactory.getInstance().parseDisplayText(
-						DescribeItPanel.this.boundScriptItPanel, scriptIt);
+						boundScriptItPanel, scriptIt);
+
+				if (path.size() > 0)
+					describeItGraph.setSelectedNodes(path);
 			}
 		});
 
 		this.setOpaque(false);
 		this.setLayout(new DescribeItPanelLayoutManager());
 
-		// this.setLayout(new FlowLayout());
-		this.boundScriptItPanel.setVisible(true);
+		if (describeIt.getPaths().size() > 1) {
+			this.expansionButton.addActionListener(this
+					.buildExpansionButtonListener(describeIt, knowIt));
 
-		this.add(this.expansionButton);
+			this.add(this.expansionButton);
+		}
+
 		this.add(this.describeItGraph);
 		this.add(this.boundScriptItPanel);
 	}
@@ -159,20 +182,16 @@ public class DescribeItPanel extends JPanel {
 
 						knowIt.setBinding(clone);
 
-						DescribeItPanel.this.boundScriptItPanel.removeAll();
+						boundScriptItPanel.removeAll();
 
-						StoryComponentPanelFactory
-								.getInstance()
-								.parseDisplayText(
-										DescribeItPanel.this.boundScriptItPanel,
-										clone);
+						StoryComponentPanelFactory.getInstance()
+								.parseDisplayText(boundScriptItPanel, clone);
 
 						UndoManager.getInstance().endUndoableAction();
 					}
 				}
 
 				describeItGraph.setVisible(!collapsed);
-				// boundScriptItPanel.setVisible(collapsed);
 				expansionButton.setCollapsed(collapsed);
 				DescribeItPanel.this.revalidate();
 			}
@@ -193,6 +212,7 @@ public class DescribeItPanel extends JPanel {
 		@Override
 		public void layoutContainer(Container parent) {
 			final Insets insets = parent.getInsets();
+
 			if (DescribeItPanel.this.isCollapsed) {
 				layoutCollapsed(insets.left + insets.right, insets.top
 						+ insets.bottom);
@@ -234,6 +254,13 @@ public class DescribeItPanel extends JPanel {
 			xSize += buttonWidth + BUTTON_X_INDENT;
 			ySize = Math.max(ySize, buttonHeight);
 
+			// Resolve the displayNamePanel's size
+			if (boundScriptItPanel.isVisible()) {
+				xSize += boundScriptItPanel.getPreferredSize().getWidth();
+				ySize = Math.max(ySize, (int) boundScriptItPanel
+						.getPreferredSize().getHeight());
+			}
+
 			return new Dimension(xSize, ySize);
 		}
 
@@ -247,15 +274,27 @@ public class DescribeItPanel extends JPanel {
 			int buttonWidth = 0;
 
 			// Expansion button
-			buttonHeight += (int) DescribeItPanel.this.expansionButton
-					.getPreferredSize().getHeight();
-			buttonWidth += (int) DescribeItPanel.this.expansionButton
-					.getPreferredSize().getWidth();
-			DescribeItPanel.this.expansionButton
-					.setBounds(xLocation,
-							((int) DescribeItPanel.this.getPreferredSize()
-									.getHeight() - buttonHeight) / 2,
-							buttonWidth, buttonHeight);
+			if (expansionButton.isVisible()) {
+				buttonHeight += (int) DescribeItPanel.this.expansionButton
+						.getPreferredSize().getHeight();
+				buttonWidth += (int) DescribeItPanel.this.expansionButton
+						.getPreferredSize().getWidth();
+				expansionButton.setBounds(xLocation,
+						((int) DescribeItPanel.this.getPreferredSize()
+								.getHeight() - buttonHeight) / 2, buttonWidth,
+						buttonHeight);
+			}
+
+			xLocation += buttonWidth + BUTTON_X_INDENT;
+
+			if (boundScriptItPanel.isVisible()) {
+				boundScriptItPanel
+						.setBounds(xLocation, yLocation,
+								(int) boundScriptItPanel.getPreferredSize()
+										.getWidth(), (int) boundScriptItPanel
+										.getPreferredSize().getHeight());
+			}
+
 		}
 
 		/**
