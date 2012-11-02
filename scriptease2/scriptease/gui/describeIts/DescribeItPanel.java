@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
+import scriptease.controller.BindingAdapter;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.SEGraph;
@@ -17,6 +18,7 @@ import scriptease.gui.SEGraph.SEGraph.SelectionMode;
 import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
 import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
@@ -40,8 +42,9 @@ import scriptease.util.GUIOp;
 public class DescribeItPanel extends JPanel {
 	private final SEGraph<DescribeItNode> describeItGraph;
 	private final ExpansionButton expansionButton;
+	private final JPanel boundScriptItPanel;
 
-	private boolean collapsed;
+	private boolean isCollapsed;
 
 	/**
 	 * Creates a new DescribeItPanel using the given KnowIt. If the KnowIt does
@@ -57,7 +60,8 @@ public class DescribeItPanel extends JPanel {
 
 		final DescribeItNodeGraphModel describeItGraphModel;
 
-		this.collapsed = true;
+		this.isCollapsed = true;
+		this.boundScriptItPanel = new JPanel();
 
 		dictionary = TranslatorManager.getInstance().getActiveAPIDictionary();
 		describeItManager = dictionary.getDescribeItManager();
@@ -75,7 +79,7 @@ public class DescribeItPanel extends JPanel {
 				describeItGraphModel, SelectionMode.SELECT_PATH_FROM_START,
 				true);
 		this.expansionButton = ScriptWidgetFactory
-				.buildExpansionButton(this.collapsed);
+				.buildExpansionButton(this.isCollapsed);
 
 		this.describeItGraph.setNodeRenderer(new DescribeItNodeRenderer(
 				this.describeItGraph));
@@ -83,12 +87,46 @@ public class DescribeItPanel extends JPanel {
 		this.describeItGraph.setBackground(GUIOp.scaleWhite(
 				ScriptEaseUI.COLOUR_KNOWN_OBJECT, 3.5));
 
-		this.expansionButton.addActionListener(new ActionListener() {
+		this.expansionButton.addActionListener(this
+				.buildExpansionButtonListener(describeIt, knowIt));
+
+		knowIt.getBinding().process(new BindingAdapter() {
+			@Override
+			public void processFunction(KnowItBindingFunction function) {
+				final ScriptIt scriptIt;
+
+				scriptIt = function.getValue();
+
+				StoryComponentPanelFactory.getInstance().parseDisplayText(
+						DescribeItPanel.this.boundScriptItPanel, scriptIt);
+
+			}
+
+		});
+
+		this.setOpaque(false);
+		this.setLayout(new DescribeItPanelLayoutManager());
+
+		this.add(this.expansionButton);
+		this.add(this.describeItGraph);
+		this.add(this.boundScriptItPanel);
+	}
+
+	/**
+	 * Builds a listener for the expansion button.
+	 * 
+	 * @param describeIt
+	 * @param knowIt
+	 * @return
+	 */
+	private ActionListener buildExpansionButtonListener(
+			final DescribeIt describeIt, final KnowIt knowIt) {
+		return new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// toggle
-				DescribeItPanel.this.collapsed = !DescribeItPanel.this.collapsed;
-				boolean collapsed = DescribeItPanel.this.collapsed;
+				DescribeItPanel.this.isCollapsed = !DescribeItPanel.this.isCollapsed;
+				boolean collapsed = DescribeItPanel.this.isCollapsed;
 				if (collapsed) {
 					final ScriptIt resolvedScriptIt;
 
@@ -112,30 +150,36 @@ public class DescribeItPanel extends JPanel {
 						if (!UndoManager.getInstance().hasOpenUndoableAction())
 							UndoManager.getInstance().startUndoableAction(
 									"Bind DescribeIt");
-						knowIt.setBinding(resolvedScriptIt.clone());
-						// End undo when we close it.
+
+						final ScriptIt clone;
+
+						clone = resolvedScriptIt.clone();
+
+						knowIt.setBinding(clone);
+
+						DescribeItPanel.this.boundScriptItPanel.removeAll();
+						
+						StoryComponentPanelFactory
+								.getInstance()
+								.parseDisplayText(
+										DescribeItPanel.this.boundScriptItPanel,
+										clone);
+
 						UndoManager.getInstance().endUndoableAction();
 					}
 				}
+
 				describeItGraph.setVisible(!collapsed);
+				// boundScriptItPanel.setVisible(collapsed);
 				expansionButton.setCollapsed(collapsed);
 				DescribeItPanel.this.revalidate();
 			}
-		});
-
-		this.setOpaque(false);
-		this.setLayout(new DescribeItPanelLayoutManager());
-
-		this.add(this.expansionButton);
-		this.add(this.describeItGraph);
+		};
 	}
 
 	/**
 	 * DescribeItPanelLayoutManager handles laying out the describeItPanel in
 	 * either it's text form, or graph form
-	 * 
-	 * TODO Is this necessary? We might be able to achieve what we have with a
-	 * regular layout, like Box Layout or something.
 	 * 
 	 * @author mfchurch
 	 * @author kschenk
@@ -147,7 +191,7 @@ public class DescribeItPanel extends JPanel {
 		@Override
 		public void layoutContainer(Container parent) {
 			final Insets insets = parent.getInsets();
-			if (DescribeItPanel.this.collapsed) {
+			if (DescribeItPanel.this.isCollapsed) {
 				layoutCollapsed(insets.left + insets.right, insets.top
 						+ insets.bottom);
 			} else {
@@ -159,7 +203,7 @@ public class DescribeItPanel extends JPanel {
 		@Override
 		public Dimension minimumLayoutSize(Container parent) {
 			final Insets insets = parent.getInsets();
-			if (DescribeItPanel.this.collapsed)
+			if (DescribeItPanel.this.isCollapsed)
 				return minimumCollapsedLayoutSize(insets.left + insets.right,
 						insets.top + insets.bottom);
 			else
