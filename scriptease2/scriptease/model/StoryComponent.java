@@ -180,7 +180,7 @@ public abstract class StoryComponent implements Cloneable {
 	public void addLabel(String label) {
 		this.labels.add(label);
 		this.notifyObservers(new StoryComponentEvent(this,
-				StoryComponentChangeEnum.LABEL_ADDED));
+				StoryComponentChangeEnum.CHANGE_LABELS_CHANGED));
 	}
 
 	/**
@@ -193,7 +193,7 @@ public abstract class StoryComponent implements Cloneable {
 		for (String label : labels)
 			this.addLabel(label);
 		this.notifyObservers(new StoryComponentEvent(this,
-				StoryComponentChangeEnum.LABELS_ADDED));
+				StoryComponentChangeEnum.CHANGE_LABELS_CHANGED));
 	}
 
 	/**
@@ -205,7 +205,7 @@ public abstract class StoryComponent implements Cloneable {
 		boolean success = this.labels.remove(label);
 		if (success)
 			this.notifyObservers(new StoryComponentEvent(this,
-					StoryComponentChangeEnum.LABEL_REMOVED));
+					StoryComponentChangeEnum.CHANGE_LABELS_CHANGED));
 	}
 
 	/**
@@ -216,7 +216,7 @@ public abstract class StoryComponent implements Cloneable {
 	public void setLabels(Collection<String> labels) {
 		this.labels = labels;
 		this.notifyObservers(new StoryComponentEvent(this,
-				StoryComponentChangeEnum.LABEL_SET));
+				StoryComponentChangeEnum.CHANGE_LABELS_CHANGED));
 	}
 
 	/**

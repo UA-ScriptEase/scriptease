@@ -1,5 +1,7 @@
 package scriptease.controller.undo;
 
+import java.util.Collection;
+
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.CodeBlock;
 import scriptease.model.LibraryModel;
@@ -78,6 +80,15 @@ public aspect Undo {
 	 */
 	public pointcut removingLabel():
 		within(StoryComponent+) && execution(* removeLabel(String));
+
+	/**
+	 * Defines the Set Label operation in StoryComponents.
+	 */
+	public pointcut settingLabels():
+		within(StoryComponent+) && execution(* setLabels(Collection<String>));
+
+	public pointcut settingVisible():
+		within(StoryComponent+) && execution(* setVisible(Boolean));
 
 	/**
 	 * Defines the Add Observer operation in StoryComponents.
@@ -174,13 +185,13 @@ public aspect Undo {
 	 */
 	public pointcut removingCodeBlock():
 		within(ScriptIt+) && execution(* removeCodeBlock(CodeBlock+));
-	
+
 	/**
 	 * Defines the Add Successor operation in StoryPoints.
 	 */
 	public pointcut addingSuccessor():
 		within(StoryPoint+) && execution(* addSuccessor(StoryPoint+));
-	
+
 	/**
 	 * Defines the Remove Successor operation in StoryPoints.
 	 */
@@ -286,6 +297,38 @@ public aspect Undo {
 			@Override
 			public String toString() {
 				return "removing parameter " + removedLabel + " from " + owner;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final StoryComponent owner, final Collection<String> labels): settingLabels() && args(labels) && this(owner) {
+		Modification mod = new FieldModification<Collection<String>>(labels,
+				owner.getLabels()) {
+			@Override
+			public void setOp(Collection<String> value) {
+				owner.setLabels(value);
+			}
+
+			@Override
+			public String toString() {
+				return "setting " + owner + "'s labels to " + labels;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final StoryComponent owner, final Boolean visible): settingVisible() && args(visible) && this(owner) {
+		Modification mod = new FieldModification<Boolean>(visible,
+				owner.isVisible()) {
+			@Override
+			public void setOp(Boolean value) {
+				owner.setVisible(value);
+			}
+
+			@Override
+			public String toString() {
+				return "setting " + owner + "'s visiblity to " + visible;
 			}
 		};
 		this.addModification(mod);
@@ -558,7 +601,7 @@ public aspect Undo {
 		};
 		this.addModification(mod);
 	}
-	
+
 	before(final StoryPoint storyPoint, final StoryPoint successor): addingSuccessor() && args(successor) && this(storyPoint) {
 		Modification mod = new Modification() {
 
@@ -579,7 +622,7 @@ public aspect Undo {
 		};
 		this.addModification(mod);
 	}
-	
+
 	before(final StoryPoint storyPoint, final StoryPoint successor): removingSuccessor() && args(successor) && this(storyPoint) {
 		Modification mod = new Modification() {
 
