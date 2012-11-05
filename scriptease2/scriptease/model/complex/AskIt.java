@@ -11,6 +11,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.translator.apimanagers.GameTypeManager;
 
 /**
  * Represents the "if/else" programming construct.<br>
@@ -62,17 +63,20 @@ public final class AskIt extends ComplexStoryComponent {
 	/**
 	 * Builds a new AskIt.
 	 * 
-	 * @param condition
-	 *            The KnowIt that defines the condition that evaluates this
-	 *            AskIt.
 	 */
-	public AskIt(KnowIt condition) {
+	public AskIt() {
 		super("<No Name>");
 
 		final List<Class<? extends StoryComponent>> ifElseValidTypes;
-		ifElseValidTypes = new ArrayList<Class<? extends StoryComponent>>();
+		final List<String> types;
 
-		this.setCondition(condition);
+		ifElseValidTypes = new ArrayList<Class<? extends StoryComponent>>();
+		types = new ArrayList<String>(1);
+
+		// Add an empty askIt
+		types.add(GameTypeManager.DEFAULT_BOOL_TYPE);
+
+		this.setCondition(new KnowIt("question", types));
 		this.setDisplayText("<question>");
 
 		// AskIts can have two children of type StoryItemSequence. These
