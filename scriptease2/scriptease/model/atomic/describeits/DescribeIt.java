@@ -93,7 +93,8 @@ public class DescribeIt implements Cloneable, TypedComponent {
 	public Collection<DescribeItNode> getPath(ScriptIt scriptIt) {
 		for (Entry<Collection<DescribeItNode>, ScriptIt> entry : this.paths
 				.entrySet()) {
-			if (entry.getValue().equals(scriptIt)) {
+			if (entry.getValue().getDisplayText()
+					.equals(scriptIt.getDisplayText())) {
 				return entry.getKey();
 			}
 		}
