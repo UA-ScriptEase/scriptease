@@ -800,28 +800,6 @@ public class LibraryEditorPanelFactory {
 
 		implicitsLabel.setText(implicits.trim());
 
-		deleteCodeBlockButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (!UndoManager.getInstance().hasOpenUndoableAction())
-					UndoManager.getInstance().startUndoableAction(
-							"Adding CodeBlock to " + scriptIt.getDisplayText());
-				scriptIt.removeCodeBlock(codeBlock);
-				UndoManager.getInstance().endUndoableAction();
-			}
-		});
-
-		if (scriptIt.isCause())
-			deleteCodeBlockButton.setVisible(false);
-		else if (scriptIt.getCodeBlocks().size() < 2) {
-			deleteCodeBlockButton.setEnabled(false);
-		}
-
-		for (KnowIt parameter : parameters) {
-			parameterPanel.add(this.buildParameterPanel(scriptIt, codeBlock,
-					parameter));
-		}
-
 		includesField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -877,50 +855,79 @@ public class LibraryEditorPanelFactory {
 			}
 		});
 
-		if (!scriptIt.isCause()
-				&& !scriptIt.getMainCodeBlock().equals(codeBlock)) {
-			subjectBox.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					final String subjectName;
-					subjectName = (String) subjectBox.getSelectedItem();
+		slotBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String selectedSlot = (String) slotBox.getSelectedItem();
 
-					codeBlock.setSubject(subjectName);
+				if (selectedSlot != null)
+					codeBlock.setSlot((String) slotBox.getSelectedItem());
+				else
+					codeBlock.setSlot("");
 
-					scriptIt.updateStoryChildren();
-					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
-							StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
-				}
-			});
-		} else {
+				scriptIt.updateStoryChildren();
+				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+						StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
+			}
+		});
+
+		if (scriptIt.isCause()) {
+			deleteCodeBlockButton.setVisible(false);
 			subjectLabel.setVisible(false);
 			subjectBox.setVisible(false);
-		}
 
-		if (scriptIt.isCause()
-				|| !scriptIt.getMainCodeBlock().equals(codeBlock)) {
-			slotBox.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					String selectedSlot = (String) slotBox.getSelectedItem();
-
-					if (selectedSlot != null)
-						codeBlock.setSlot((String) slotBox.getSelectedItem());
-					else
-						codeBlock.setSlot("");
-
-					scriptIt.updateStoryChildren();
-					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
-							StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
-				}
-			});
-		} else {
 			slotLabel.setVisible(false);
 			slotBox.setVisible(false);
 			implicitsLabel.setVisible(false);
 			implicitsLabelLabel.setVisible(false);
+		} else {
+			deleteCodeBlockButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (!UndoManager.getInstance().hasOpenUndoableAction())
+						UndoManager.getInstance().startUndoableAction(
+								"Adding CodeBlock to "
+										+ scriptIt.getDisplayText());
+					scriptIt.removeCodeBlock(codeBlock);
+					UndoManager.getInstance().endUndoableAction();
+				}
+			});
+
+			if (!scriptIt.getMainCodeBlock().equals(codeBlock)) {
+				subjectBox.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						final String subjectName;
+						subjectName = (String) subjectBox.getSelectedItem();
+
+						codeBlock.setSubject(subjectName);
+
+						scriptIt.updateStoryChildren();
+						scriptIt.notifyObservers(new StoryComponentEvent(
+								scriptIt,
+								StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
+					}
+				});
+			} else {
+				subjectLabel.setVisible(false);
+				subjectBox.setVisible(false);
+
+				slotLabel.setVisible(false);
+				slotBox.setVisible(false);
+				implicitsLabel.setVisible(false);
+				implicitsLabelLabel.setVisible(false);
+			}
+
+			if (scriptIt.getCodeBlocks().size() < 2) {
+				deleteCodeBlockButton.setEnabled(false);
+			}
 		}
 
+		for (KnowIt parameter : parameters) {
+			parameterPanel.add(this.buildParameterPanel(scriptIt, codeBlock,
+					parameter));
+		}
+		
 		codeBlockEditorLayout.setHorizontalGroup(codeBlockEditorLayout
 				.createSequentialGroup()
 				.addGroup(
