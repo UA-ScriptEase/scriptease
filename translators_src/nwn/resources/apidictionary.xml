@@ -414,8 +414,6 @@
       <Name>Question</Name>
       <Keyword>question</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>FALSE&lt;No&gt;|TRUE&lt;Yes&gt;</Enum>
-      <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
       <Name>Ability</Name>

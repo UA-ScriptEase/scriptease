@@ -4,7 +4,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -23,7 +22,6 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.GameTypeManager;
 
 /**
  * Manages all of the Libraries in ScriptEase.
@@ -83,16 +81,13 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 */
 	private void buildDefaultLibrary() {
 		final LibraryModel scriptEaseLibrary;
-		final List<String> types;
 		final AskIt conditional;
 		final Note note;
 
 		scriptEaseLibrary = new LibraryModel(LibraryManager.SCRIPTEASE_LIBRARY,
 				LibraryManager.SCRIPTEASE_LIBRARY);
-		types = new ArrayList<String>(1);
-		// Add an empty askIt
-		types.add(GameTypeManager.DEFAULT_BOOL_TYPE);
-		conditional = new AskIt(new KnowIt("question", types));
+		
+		conditional = new AskIt();
 		note = new Note("Note");
 
 		scriptEaseLibrary.add(conditional);

@@ -70,7 +70,7 @@ public class AskItConverter extends ComplexStoryComponentConverter {
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		AskIt askIt = new AskIt(null);
+		AskIt askIt = new AskIt();
 		// Remove the default generated If and Else blocks.
 		askIt.removeStoryChild(askIt.getIfBlock());
 		askIt.removeStoryChild(askIt.getElseBlock());
