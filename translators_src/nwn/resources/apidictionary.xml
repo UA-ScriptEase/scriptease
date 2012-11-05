@@ -115,7 +115,7 @@
       <Name>ObjectType</Name>
       <Keyword>object_type</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>OBJECT_TYPE_INVALID&lt;Object Type Invalid&gt;|OBJECT_TYPE_AREA_OF_EFFECT&lt;Object Type Area Of Effect&gt;|OBJECT_TYPE_STORE&lt;Object Type Store&gt;|OBJECT_TYPE_CREATURE&lt;Object Type Creature&gt;|OBJECT_TYPE_PLACEABLE&lt;Object Type Placeable&gt;|OBJECT_TYPE_TRIGGER&lt;Object Type Trigger&gt;|OBJECT_TYPE_ITEM&lt;Object Type Item&gt;|OBJECT_TYPE_WAYPOINT&lt;Object Type Waypoint&gt;|OBJECT_TYPE_ENCOUNTER&lt;Object Type Encounter&gt;|OBJECT_TYPE_ALL&lt;Object Type All&gt;|OBJECT_TYPE_DOOR&lt;Object Type Door&gt;</Enum>
+      <Enum>OBJECT_TYPE_INVALID&lt;Invalid&gt;|OBJECT_TYPE_AREA_OF_EFFECT&lt;Area Of Effect&gt;|OBJECT_TYPE_STORE&lt;Store&gt;|OBJECT_TYPE_CREATURE&lt;Creature&gt;|OBJECT_TYPE_PLACEABLE&lt;Placeable&gt;|OBJECT_TYPE_TRIGGER&lt;Trigger&gt;|OBJECT_TYPE_ITEM&lt;Item&gt;|OBJECT_TYPE_WAYPOINT&lt;Waypoint&gt;|OBJECT_TYPE_ENCOUNTER&lt;Encounter&gt;|OBJECT_TYPE_ALL&lt;Object&gt;|OBJECT_TYPE_DOOR&lt;Door&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -176,7 +176,7 @@
       <Name>VisualEffectImpact</Name>
       <Keyword>visual_effect_impact</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>VFX_IMP_FLAME_M&lt;Imp Flame M&gt;|VFX_IMP_PULSE_NEGATIVE&lt;Imp Pulse Negative&gt;|VFX_IMP_AURA_FEAR&lt;Imp Aura Fear&gt;|VFX_IMP_RESTORATION&lt;Imp Restoration&gt;|VFX_IMP_FLAME_S&lt;Imp Flame S&gt;|VFX_IMP_LIGHTNING_M&lt;Imp Lightning M&gt;|VFX_IMP_ELEMENTAL_PROTECTION&lt;Imp Elemental Protection&gt;|VFX_IMP_POISON_S&lt;Imp Poison S&gt;|VFX_IMP_DESTRUCTION&lt;Imp Destruction&gt;|VFX_IMP_SPELL_MANTLE_USE&lt;Imp Spell Mantle Use&gt;|VFX_IMP_HEAD_ELECTRICITY&lt;Imp Head Electricity&gt;|VFX_IMP_SPIKE_TRAP&lt;Imp Spike Trap&gt;|VFX_IMP_LIGHTNING_S&lt;Imp Lightning S&gt;|VFX_IMP_SILENCE&lt;Imp Silence&gt;|VFX_IMP_HEAD_HOLY&lt;Imp Head Holy&gt;|VFX_IMP_HEAD_MIND&lt;Imp Head Mind&gt;|VFX_IMP_NEGATIVE_ENERGY&lt;Imp Negative Energy&gt;|VFX_IMP_PULSE_COLD&lt;Imp Pulse Cold&gt;|VFX_IMP_MIRV_FLAME&lt;Imp Mirv Flame&gt;|VFX_IMP_DISPEL&lt;Imp Dispel&gt;|VFX_IMP_RAISE_DEAD&lt;Imp Raise Dead&gt;|VFX_IMP_BREACH&lt;Imp Breach&gt;|VFX_IMP_HEALING_G&lt;Imp Healing G&gt;|VFX_IMP_HEAD_EVIL&lt;Imp Head Evil&gt;|VFX_IMP_DEATH&lt;Imp Death&gt;|VFX_IMP_FROST_S&lt;Imp Frost S&gt;|VFX_IMP_HEALING_L&lt;Imp Healing L&gt;|VFX_IMP_GOOD_HELP&lt;Imp Good Help&gt;|VFX_IMP_HEALING_M&lt;Imp Healing M&gt;|VFX_IMP_DEATH_L&lt;Imp Death L&gt;|VFX_IMP_DOMINATE_S&lt;Imp Dominate S&gt;|VFX_IMP_FROST_L&lt;Imp Frost L&gt;|VFX_IMP_DISPEL_DISJUNCTION&lt;Imp Dispel Disjunction&gt;|VFX_IMP_DOOM&lt;Imp Doom&gt;|VFX_IMP_AURA_HOLY&lt;Imp Aura Holy&gt;|VFX_IMP_FORTITUDE_SAVING_THROW_USE&lt;Imp Fortitude Saving Throw Use&gt;|VFX_IMP_DEATH_WARD&lt;Imp Death Ward&gt;|VFX_IMP_UNSUMMON&lt;Imp Unsummon&gt;|VFX_IMP_HEAD_ODD&lt;Imp Head Odd&gt;|VFX_IMP_SUPER_HEROISM&lt;Imp Super Heroism&gt;|VFX_IMP_IMPROVE_ABILITY_SCORE&lt;Imp Improve Ability Score&gt;|VFX_IMP_GLOBE_USE&lt;Imp Globe Use&gt;|VFX_IMP_HEAD_COLD&lt;Imp Head Cold&gt;|VFX_IMP_MAGBLUE&lt;Imp Magblue&gt;|VFX_IMP_HEALING_S&lt;Imp Healing S&gt;|VFX_IMP_CHARM&lt;Imp Charm&gt;|VFX_IMP_DIVINE_STRIKE_FIRE&lt;Imp Divine Strike Fire&gt;|VFX_IMP_HASTE&lt;Imp Haste&gt;|VFX_IMP_STUN&lt;Imp Stun&gt;|VFX_IMP_RESTORATION_GREATER&lt;Imp Restoration Greater&gt;|VFX_IMP_DISEASE_S&lt;Imp Disease S&gt;|VFX_IMP_HEALING_X&lt;Imp Healing X&gt;|VFX_IMP_CONFUSION_S&lt;Imp Confusion S&gt;|VFX_IMP_HEAD_FIRE&lt;Imp Head Fire&gt;|VFX_IMP_PULSE_HOLY&lt;Imp Pulse Holy&gt;|VFX_IMP_DAZED_S&lt;Imp Dazed S&gt;|VFX_IMP_HEAD_ACID&lt;Imp Head Acid&gt;|VFX_IMP_KNOCK&lt;Imp Knock&gt;|VFX_IMP_PULSE_WIND&lt;Imp Pulse Wind&gt;|VFX_IMP_HEAD_SONIC&lt;Imp Head Sonic&gt;|VFX_IMP_HEAD_NATURE&lt;Imp Head Nature&gt;|VFX_IMP_REDUCE_ABILITY_SCORE&lt;Imp Reduce Ability Score&gt;|VFX_IMP_SLOW&lt;Imp Slow&gt;|VFX_IMP_REMOVE_CONDITION&lt;Imp Remove Condition&gt;|VFX_IMP_MAGICAL_VISION&lt;Imp Magical Vision&gt;|VFX_IMP_MIRV&lt;Imp Mirv&gt;|VFX_IMP_HEAD_HEAL&lt;Imp Head Heal&gt;|VFX_IMP_ACID_L&lt;Imp Acid L&gt;|VFX_IMP_GREASE&lt;Imp Grease&gt;|VFX_IMP_WILL_SAVING_THROW_USE&lt;Imp Will Saving Throw Use&gt;|VFX_IMP_POLYMORPH&lt;Imp Polymorph&gt;|VFX_IMP_SLEEP&lt;Imp Sleep&gt;|VFX_IMP_SUNSTRIKE&lt;Imp Sunstrike&gt;|VFX_IMP_REFLEX_SAVE_THROW_USE&lt;Imp Reflex Save Throw Use&gt;|VFX_IMP_PULSE_WATER&lt;Imp Pulse Water&gt;|VFX_IMP_MAGIC_PROTECTION&lt;Imp Magic Protection&gt;|VFX_IMP_ACID_S&lt;Imp Acid S&gt;|VFX_IMP_AURA_UNEARTHLY&lt;Imp Aura Unearthly&gt;|VFX_IMP_PULSE_NATURE&lt;Imp Pulse Nature&gt;|VFX_IMP_FEAR_S&lt;Imp Fear S&gt;|VFX_IMP_PULSE_FIRE&lt;Imp Pulse Fire&gt;|VFX_IMP_EVIL_HELP&lt;Imp Evil Help&gt;|VFX_IMP_RESTORATION_LESSER&lt;Imp Restoration Lesser&gt;|VFX_IMP_POISON_L&lt;Imp Poison L&gt;|VFX_IMP_BLIND_DEAF_M&lt;Imp Blind Deaf M&gt;|VFX_IMP_AC_BONUS&lt;Imp Ac Bonus&gt;|VFX_IMP_AURA_NEGATIVE_ENERGY&lt;Imp Aura Negative Energy&gt;|VFX_IMP_SONIC&lt;Imp Sonic&gt;|VFX_IMP_HOLY_AID&lt;Imp Holy Aid&gt;|VFX_IMP_MAGIC_RESISTANCE_USE&lt;Imp Magic Resistance Use&gt;|VFX_IMP_HARM&lt;Imp Harm&gt;</Enum>
+      <Enum>VFX_IMP_FLAME_M&lt;Imp Flame M&gt;|VFX_IMP_PULSE_NEGATIVE&lt;Imp Pulse Negative&gt;|VFX_IMP_AURA_FEAR&lt;Imp Aura Fear&gt;|VFX_IMP_RESTORATION&lt;Imp Restoration&gt;|VFX_IMP_FLAME_S&lt;Imp Flame S&gt;|VFX_IMP_LIGHTNING_M&lt;Imp Lightning M&gt;|VFX_IMP_ELEMENTAL_PROTECTION&lt;Imp Elemental Protection&gt;|VFX_IMP_POISON_S&lt;Imp Poison S&gt;|VFX_IMP_DESTRUCTION&lt;Imp Destruction&gt;|VFX_IMP_SPELL_MANTLE_USE&lt;Imp Spell Mantle Use&gt;|VFX_IMP_HEAD_ELECTRICITY&lt;Imp Head Electricity&gt;|VFX_IMP_SPIKE_TRAP&lt;Imp Spike Trap&gt;|VFX_IMP_LIGHTNING_S&lt;Imp Lightning S&gt;|VFX_IMP_SILENCE&lt;Imp Silence&gt;|VFX_IMP_HEAD_HOLY&lt;Imp Head Holy&gt;|VFX_IMP_HEAD_MIND&lt;Imp Head Mind&gt;|VFX_IMP_NEGATIVE_ENERGY&lt;Imp Negative Energy&gt;|VFX_IMP_PULSE_COLD&lt;Imp Pulse Cold&gt;|VFX_IMP_MIRV_FLAME&lt;Imp Mirv Flame&gt;|VFX_IMP_DISPEL&lt;Imp Dispel&gt;|VFX_IMP_RAISE_DEAD&lt;Imp Raise Dead&gt;|VFX_IMP_BREACH&lt;Imp Breach&gt;|VFX_IMP_HEALING_G&lt;Imp Healing G&gt;|VFX_IMP_HEAD_EVIL&lt;Imp Head Evil&gt;|VFX_IMP_DEATH&lt;Imp Death&gt;|VFX_IMP_FROST_S&lt;Imp Frost S&gt;|VFX_IMP_HEALING_L&lt;Imp Healing L&gt;|VFX_IMP_GOOD_HELP&lt;Imp Good Help&gt;|VFX_IMP_HEALING_M&lt;Imp Healing M&gt;|VFX_IMP_DEATH_L&lt;Imp Death L&gt;|VFX_IMP_DOMINATE_S&lt;Imp Dominate S&gt;|VFX_IMP_FROST_L&lt;Imp Frost L&gt;|VFX_IMP_DISPEL_DISJUNCTION&lt;Imp Dispel Disjunction&gt;|VFX_IMP_DOOM&lt;Imp Doom&gt;|VFX_IMP_AURA_HOLY&lt;Imp Aura Holy&gt;|VFX_IMP_FORTITUDE_SAVING_THROW_USE&lt;Imp Fortitude Saving Throw Use&gt;|VFX_IMP_DEATH_WARD&lt;Imp Death Ward&gt;|VFX_IMP_UNSUMMON&lt;Imp Unsummon&gt;|VFX_IMP_HEAD_ODD&lt;Imp Head Odd&gt;|VFX_IMP_SUPER_HEROISM&lt;Imp Super Heroism&gt;|VFX_IMP_IMPROVE_ABILITY_SCORE&lt;Imp Improve Ability Score&gt;|VFX_IMP_GLOBE_USE&lt;Imp Globe Use&gt;|VFX_IMP_HEAD_COLD&lt;Imp Head Cold&gt;|VFX_IMP_MAGBLUE&lt;Imp Magblue&gt;|VFX_IMP_HEALING_S&lt;Imp Healing S&gt;|VFX_IMP_CHARM&lt;Imp Charm&gt;|VFX_IMP_DIVINE_STRIKE_FIRE&lt;Imp Divine Strike Fire&gt;|VFX_IMP_STUN&lt;Imp Stun&gt;|VFX_IMP_RESTORATION_GREATER&lt;Imp Restoration Greater&gt;|VFX_IMP_HASTE&lt;Imp Haste&gt;|VFX_IMP_DISEASE_S&lt;Imp Disease S&gt;|VFX_IMP_HEALING_X&lt;Imp Healing X&gt;|VFX_IMP_CONFUSION_S&lt;Imp Confusion S&gt;|VFX_IMP_HEAD_FIRE&lt;Imp Head Fire&gt;|VFX_IMP_PULSE_HOLY&lt;Imp Pulse Holy&gt;|VFX_IMP_DAZED_S&lt;Imp Dazed S&gt;|VFX_IMP_HEAD_ACID&lt;Imp Head Acid&gt;|VFX_IMP_KNOCK&lt;Imp Knock&gt;|VFX_IMP_PULSE_WIND&lt;Imp Pulse Wind&gt;|VFX_IMP_HEAD_SONIC&lt;Imp Head Sonic&gt;|VFX_IMP_HEAD_NATURE&lt;Imp Head Nature&gt;|VFX_IMP_REDUCE_ABILITY_SCORE&lt;Imp Reduce Ability Score&gt;|VFX_IMP_SLOW&lt;Imp Slow&gt;|VFX_IMP_REMOVE_CONDITION&lt;Imp Remove Condition&gt;|VFX_IMP_MAGICAL_VISION&lt;Imp Magical Vision&gt;|VFX_IMP_MIRV&lt;Imp Mirv&gt;|VFX_IMP_HEAD_HEAL&lt;Imp Head Heal&gt;|VFX_IMP_ACID_L&lt;Imp Acid L&gt;|VFX_IMP_GREASE&lt;Imp Grease&gt;|VFX_IMP_WILL_SAVING_THROW_USE&lt;Imp Will Saving Throw Use&gt;|VFX_IMP_POLYMORPH&lt;Imp Polymorph&gt;|VFX_IMP_SLEEP&lt;Imp Sleep&gt;|VFX_IMP_SUNSTRIKE&lt;Imp Sunstrike&gt;|VFX_IMP_REFLEX_SAVE_THROW_USE&lt;Imp Reflex Save Throw Use&gt;|VFX_IMP_PULSE_WATER&lt;Imp Pulse Water&gt;|VFX_IMP_MAGIC_PROTECTION&lt;Imp Magic Protection&gt;|VFX_IMP_ACID_S&lt;Imp Acid S&gt;|VFX_IMP_AURA_UNEARTHLY&lt;Imp Aura Unearthly&gt;|VFX_IMP_PULSE_NATURE&lt;Imp Pulse Nature&gt;|VFX_IMP_FEAR_S&lt;Imp Fear S&gt;|VFX_IMP_PULSE_FIRE&lt;Imp Pulse Fire&gt;|VFX_IMP_EVIL_HELP&lt;Imp Evil Help&gt;|VFX_IMP_RESTORATION_LESSER&lt;Imp Restoration Lesser&gt;|VFX_IMP_POISON_L&lt;Imp Poison L&gt;|VFX_IMP_BLIND_DEAF_M&lt;Imp Blind Deaf M&gt;|VFX_IMP_AC_BONUS&lt;Imp Ac Bonus&gt;|VFX_IMP_AURA_NEGATIVE_ENERGY&lt;Imp Aura Negative Energy&gt;|VFX_IMP_SONIC&lt;Imp Sonic&gt;|VFX_IMP_HOLY_AID&lt;Imp Holy Aid&gt;|VFX_IMP_MAGIC_RESISTANCE_USE&lt;Imp Magic Resistance Use&gt;|VFX_IMP_HARM&lt;Imp Harm&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -20829,7 +20829,9 @@
     <ScriptIt>
       <Name>The Player Character</Name>
       <Visible>false</Visible>
-      <Labels/>
+      <Labels>
+        <Label></Label>
+      </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
@@ -21414,6 +21416,411 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
+    <ScriptIt>
+      <Name>the nearest &lt;Object Type&gt;</Name>
+      <Visible>false</Visible>
+      <Labels>
+        <Label></Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>the nearest &lt;Object Type&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>458</Id>
+          <Types>
+            <Type>store</Type>
+            <Type>door</Type>
+            <Type>placeable</Type>
+            <Type>waypoint</Type>
+            <Type>trigger</Type>
+            <Type>creature</Type>
+            <Type>item</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object Type</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>object_type</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>object_type</Type>
+                <Value>OBJECT_TYPE_ALL</Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return GetNearestObject(</Literal>
+              <Scope data="ARGUMENT" ref="Object Type">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>the &lt;Number&gt; nearest &lt;Object Type&gt;</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>the &lt;Number&gt; nearest &lt;Object Type&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>459</Id>
+          <Types>
+            <Type>store</Type>
+            <Type>door</Type>
+            <Type>placeable</Type>
+            <Type>waypoint</Type>
+            <Type>trigger</Type>
+            <Type>creature</Type>
+            <Type>item</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Number</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Object Type</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>object_type</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>object_type</Type>
+                <Value>OBJECT_TYPE_ALL</Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return GetNearestObject(</Literal>
+              <Scope data="ARGUMENT" ref="Object Type">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, OBJECT_SELF, </Literal>
+              <Scope data="ARGUMENT" ref="Number">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[228]"/>
+    <ScriptIt>
+      <Name>the different nearest &lt;Object Type&gt;</Name>
+      <Visible>false</Visible>
+      <Labels>
+        <Label></Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>the different nearest &lt;Object Type&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>460</Id>
+          <Types>
+            <Type>store</Type>
+            <Type>door</Type>
+            <Type>placeable</Type>
+            <Type>waypoint</Type>
+            <Type>trigger</Type>
+            <Type>creature</Type>
+            <Type>item</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object Type</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>object_type</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>object_type</Type>
+                <Value>OBJECT_TYPE_ALL</Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>if(GetObjectType(OBJECT_SELF) ==</Literal>
+              <Scope data="ARGUMENT" ref="Object Type">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>)</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>return GetNearestObject(</Literal>
+                <Scope data="ARGUMENT" ref="Object Type">
+                  <Fragment data="NAME"/>
+                </Scope>
+                <Literal>, OBJECT_SELF, 2);</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>else</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>return GetNearestObject(</Literal>
+                <Scope data="ARGUMENT" ref="Object Type">
+                  <Fragment data="NAME"/>
+                </Scope>
+                <Literal>);</Literal>
+              </Line>
+            </Indent>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>the nearest &lt;Object Type&gt; to &lt;Object&gt;</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>the nearest &lt;Object Type&gt; to &lt;Object&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>461</Id>
+          <Types>
+            <Type>store</Type>
+            <Type>door</Type>
+            <Type>placeable</Type>
+            <Type>waypoint</Type>
+            <Type>trigger</Type>
+            <Type>creature</Type>
+            <Type>item</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object Type</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>object_type</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>object_type</Type>
+                <Value>OBJECT_TYPE_ALL</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>creature</Type>
+                <Type>door</Type>
+                <Type>placeable</Type>
+                <Type>waypoint</Type>
+                <Type>trigger</Type>
+                <Type>item</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return GetNearestObject(</Literal>
+              <Scope data="ARGUMENT" ref="Object Type">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, GetTag(</Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>), 1);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>the &lt;Number&gt; nearest &lt;Object Type&gt; to &lt;Object&gt;</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>the &lt;Number&gt; nearest &lt;Object Type&gt; to &lt;Object&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>462</Id>
+          <Types>
+            <Type>store</Type>
+            <Type>door</Type>
+            <Type>placeable</Type>
+            <Type>waypoint</Type>
+            <Type>trigger</Type>
+            <Type>creature</Type>
+            <Type>item</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Number</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Object Type</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>object_type</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>object_type</Type>
+                <Value>OBJECT_TYPE_ALL</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>creature</Type>
+                <Type>door</Type>
+                <Type>placeable</Type>
+                <Type>waypoint</Type>
+                <Type>trigger</Type>
+                <Type>item</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return GetNearestObject(</Literal>
+              <Scope data="ARGUMENT" ref="Object Type">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, GetTag(</Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>), </Literal>
+              <Scope data="ARGUMENT" ref="Number">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>the different nearest &lt;Object Type&gt; to &lt;Object&gt;</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>the different nearest &lt;Object Type&gt; to &lt;Object&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>463</Id>
+          <Types>
+            <Type>store</Type>
+            <Type>door</Type>
+            <Type>placeable</Type>
+            <Type>waypoint</Type>
+            <Type>trigger</Type>
+            <Type>creature</Type>
+            <Type>item</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object Type</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>object_type</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>object_type</Type>
+                <Value>OBJECT_TYPE_ALL</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>creature</Type>
+                <Type>door</Type>
+                <Type>placeable</Type>
+                <Type>waypoint</Type>
+                <Type>trigger</Type>
+                <Type>item</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>string tag = GetTag(</Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+            <Line>
+              <Literal>if(GetObjectType(</Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>) == </Literal>
+              <Scope data="ARGUMENT" ref="Object Type">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>)</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>return GetNearestCreature(</Literal>
+                <Scope data="ARGUMENT" ref="Object Type">
+                  <Fragment data="NAME"/>
+                </Scope>
+                <Literal>, tag, 2);</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>else</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>return GetNearestCreature(</Literal>
+                <Scope data="ARGUMENT" ref="Object Type">
+                  <Fragment data="NAME"/>
+                </Scope>
+                <Literal>, tag, 1);</Literal>
+              </Line>
+            </Indent>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
   </Effects>
   <DescribeIts>
     <DescribeIt>
@@ -21423,6 +21830,36 @@
       <DescribeItNode>
         <Name>if</Name>
         <Successors>
+          <DescribeItNode>
+            <Name>New Node 1</Name>
+            <KnowIt>
+              <Name>Creature</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>creature</Type>
+              </Types>
+            </KnowIt>
+            <Successors>
+              <DescribeItNode>
+                <Name>has</Name>
+                <Successors>
+                  <DescribeItNode>
+                    <Name>Item</Name>
+                    <KnowIt>
+                      <Name>Item</Name>
+                      <Visible>true</Visible>
+                      <Labels/>
+                      <Types>
+                        <Type>item</Type>
+                      </Types>
+                    </KnowIt>
+                    <Successors/>
+                  </DescribeItNode>
+                </Successors>
+              </DescribeItNode>
+            </Successors>
+          </DescribeItNode>
           <DescribeItNode>
             <Name>New Node 4</Name>
             <KnowIt>
@@ -21459,54 +21896,24 @@
               </DescribeItNode>
             </Successors>
           </DescribeItNode>
-          <DescribeItNode>
-            <Name>New Node 1</Name>
-            <KnowIt>
-              <Name>Creature</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
-            <Successors>
-              <DescribeItNode>
-                <Name>has</Name>
-                <Successors>
-                  <DescribeItNode>
-                    <Name>Item</Name>
-                    <KnowIt>
-                      <Name>Item</Name>
-                      <Visible>true</Visible>
-                      <Labels/>
-                      <Types>
-                        <Type>item</Type>
-                      </Types>
-                    </KnowIt>
-                    <Successors/>
-                  </DescribeItNode>
-                </Successors>
-              </DescribeItNode>
-            </Successors>
-          </DescribeItNode>
         </Successors>
       </DescribeItNode>
       <PathMap>
         <Entry>
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[228]"/>
         </Entry>
         <Entry>
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[241]"/>
         </Entry>
