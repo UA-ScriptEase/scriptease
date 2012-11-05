@@ -16,7 +16,6 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraph.SelectionMode;
-import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
 import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
@@ -88,23 +87,6 @@ public class DescribeItPanel extends JPanel {
 
 		this.describeItGraph.setBackground(GUIOp.scaleWhite(
 				ScriptEaseUI.COLOUR_KNOWN_OBJECT, 3.5));
-
-		this.describeItGraph
-				.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
-					public void nodesSelected(Collection<DescribeItNode> nodes) {
-						if (describeIt.getScriptItForPath(nodes) == null) {
-							knowIt.getBinding().process(new BindingAdapter() {
-								@Override
-								public void processFunction(
-										KnowItBindingFunction function) {
-									describeItGraph.setSelectedNodes(describeIt
-											.getPath(function.getValue()));
-								}
-							});
-
-						}
-					}
-				});
 
 		knowIt.getBinding().process(new BindingAdapter() {
 			@Override
@@ -189,6 +171,15 @@ public class DescribeItPanel extends JPanel {
 
 						UndoManager.getInstance().endUndoableAction();
 					}
+				}
+
+				final KnowItBinding binding;
+
+				binding = knowIt.getBinding();
+
+				if (binding instanceof KnowItBindingFunction) {
+					describeItGraph.setSelectedNodes(describeIt
+							.getPath((ScriptIt) binding.getValue()));
 				}
 
 				describeItGraph.setVisible(!collapsed);

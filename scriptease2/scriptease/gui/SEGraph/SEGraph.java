@@ -349,6 +349,14 @@ public class SEGraph<E> extends JComponent {
 			for (SEGraphObserver<E> observer : this.observers) {
 				observer.nodesSelected(this.selectedNodes);
 			}
+
+			this.renderer.resetAppearances();
+
+			for (E node : this.selectedNodes) {
+				this.renderer.reconfigureAppearance(this
+						.getNodesToComponentsMap().getValue(node), node);
+			}
+
 			return true;
 		}
 		return false;

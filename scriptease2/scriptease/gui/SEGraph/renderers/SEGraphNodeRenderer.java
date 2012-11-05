@@ -173,11 +173,9 @@ public class SEGraphNodeRenderer<E> {
 
 		for (Entry<E, JComponent> entry : this.graph.getNodesToComponentsMap()
 				.getEntrySet()) {
-			if (GraphToolBarModeAction.getMode() != ToolBarMode.SELECT) {
-				if (this.graph.getSelectedComponents().contains(
-						entry.getValue()))
-					continue;
-			}
+			if (this.graph.getSelectedComponents().contains(entry.getValue()))
+				continue;
+			
 			this.setComponentAppearance(entry.getValue(), entry.getKey(),
 					backgroundColour);
 
