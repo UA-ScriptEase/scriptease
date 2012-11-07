@@ -198,30 +198,38 @@ public class LibraryEditorPanelFactory {
 				editorPanel.revalidate();
 			}
 
+			/**
+			 * @param knowIt
+			 */
 			@Override
 			public void processKnowIt(final KnowIt knowIt) {
 				editorPanel.removeAll();
 				editorPanel.revalidate();
 				editorPanel.repaint();
 
-				final JPanel typePanel;
+				final JPanel knowItPanel;
 				final JPanel describeItEditingPanel;
 
+				final GroupLayout knowItPanelLayout;
 				final TypeAction typeAction;
-				final JButton typesButton;
+				final Runnable commitText;
 
+				final JButton typesButton;
+				final JTextField nameField;
+
+				final JLabel nameLabel;
 				final JLabel typesLabel;
+
 				final APIDictionary apiDictionary;
 				final DescribeItManager describeItManager;
 
 				final DescribeIt describeIt;
 
-				typePanel = new JPanel();
+				knowItPanel = new JPanel();
 
+				knowItPanelLayout = new GroupLayout(knowItPanel);
 				typeAction = new TypeAction();
 				typesButton = new JButton(typeAction);
-
-				typesLabel = new JLabel("Types: ");
 
 				apiDictionary = TranslatorManager.getInstance()
 						.getActiveTranslator().getApiDictionary();
@@ -229,28 +237,47 @@ public class LibraryEditorPanelFactory {
 
 				describeIt = describeItManager.getDescribeIt(knowIt);
 
+				nameField = new JTextField(describeIt.getName());
+
+				nameLabel = new JLabel("Name: ");
+				typesLabel = new JLabel("Types: ");
+
+				commitText = new Runnable() {
+					@Override
+					public void run() {
+						describeIt.setName(nameField.getText());
+						knowIt.setDisplayText(nameField.getText());
+					}
+				};
+
 				describeItEditingPanel = LibraryEditorPanelFactory
 						.getInstance().buildDescribeItEditingPanel(describeIt,
 								knowIt);
 
+				knowItPanel.setLayout(knowItPanelLayout);
+
 				typesLabel.setFont(labelFont);
+				nameLabel.setFont(labelFont);
 
 				typeAction.getTypeSelectionDialogBuilder().deselectAll();
 				typeAction.getTypeSelectionDialogBuilder().selectTypes(
 						knowIt.getTypes(), true);
 
-				typePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-				typePanel.setBorder(BorderFactory.createTitledBorder("Types"));
+				WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
+						nameField, commitText, false);
+
+				nameField.setHorizontalAlignment(JTextField.LEADING);
+
+				knowItPanel.setBorder(BorderFactory
+						.createTitledBorder("DescribeIt"));
 
 				typeAction.setAction(new Runnable() {
 					@Override
 					public void run() {
 						final Collection<String> types;
-						final Collection<String> properCaseTypes;
 
 						types = typeAction.getTypeSelectionDialogBuilder()
 								.getSelectedTypes();
-						properCaseTypes = new ArrayList<String>();
 
 						// Important: DescribeIt types MUST be set first because
 						// KnowIts notify observers when their's are changed,
@@ -258,24 +285,46 @@ public class LibraryEditorPanelFactory {
 						describeIt.setTypes(types);
 
 						knowIt.setTypes(types);
-
-						for (String type : types) {
-							properCaseTypes.add(StringOp.toProperCase(type));
-						}
-
-						knowIt.setDisplayText(StringOp.getCollectionAsString(
-								properCaseTypes, ", "));
-
 					}
 				});
 
-				typePanel.add(typesLabel);
-				typePanel.add(typesButton);
+				knowItPanelLayout
+						.setHorizontalGroup(knowItPanelLayout
+								.createParallelGroup()
+								.addGroup(
+										knowItPanelLayout
+												.createSequentialGroup()
+												.addGroup(
+														knowItPanelLayout
+																.createParallelGroup()
+																.addComponent(
+																		nameLabel)
+																.addComponent(
+																		typesLabel))
+												.addGroup(
+														knowItPanelLayout
+																.createParallelGroup()
+																.addComponent(
+																		nameField)
+																.addComponent(
+																		typesButton))));
 
-				editorPanel.add(typePanel);
+				knowItPanelLayout.setVerticalGroup(knowItPanelLayout
+						.createSequentialGroup()
+						.addGroup(
+								knowItPanelLayout
+										.createParallelGroup(
+												GroupLayout.Alignment.BASELINE)
+										.addComponent(nameLabel)
+										.addComponent(nameField))
+						.addGroup(
+								knowItPanelLayout
+										.createParallelGroup(
+												GroupLayout.Alignment.BASELINE)
+										.addComponent(typesLabel)
+										.addComponent(typesButton)));
 
-				describeItEditingPanel.setLayout(new BoxLayout(
-						describeItEditingPanel, BoxLayout.PAGE_AXIS));
+				editorPanel.add(knowItPanel);
 
 				editorPanel.add(describeItEditingPanel);
 			}
@@ -927,7 +976,7 @@ public class LibraryEditorPanelFactory {
 			parameterPanel.add(this.buildParameterPanel(scriptIt, codeBlock,
 					parameter));
 		}
-		
+
 		codeBlockEditorLayout.setHorizontalGroup(codeBlockEditorLayout
 				.createSequentialGroup()
 				.addGroup(

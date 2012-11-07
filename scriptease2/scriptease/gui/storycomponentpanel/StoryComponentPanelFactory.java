@@ -487,8 +487,8 @@ public class StoryComponentPanelFactory {
 
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				mainPanel.add(ScriptWidgetFactory.buildLabel(" "
-						+ DescribeIt.DESCRIBES + " ", Color.black));
+				mainPanel.add(ScriptWidgetFactory.buildLabel(" describes ",
+						Color.black));
 
 				if (describeIt != null) {
 					mainPanel.add(new DescribeItPanel(knowIt));

@@ -20,22 +20,23 @@ import sun.awt.util.IdentityArrayList;
  * @author kschenk
  */
 public class DescribeIt implements Cloneable, TypedComponent {
-	// TODO Whoa there. What in the world is this public string? Get rid of it!
-	public static String DESCRIBES = "describes";
 	private DescribeItNode startNode;
+	private String name;
 	private Map<Collection<DescribeItNode>, ScriptIt> paths;
 	private Collection<String> types;
 	// Longest path length used for calculating shortest path
 	private final int INF_PATH_LENGTH = 100;
 
-	public DescribeIt(DescribeItNode startNode) {
-		this(startNode, null, new ArrayList<String>());
+	public DescribeIt(String name, DescribeItNode startNode) {
+		this(name, startNode, null, new ArrayList<String>());
 	}
 
-	public DescribeIt(DescribeItNode startNode,
+	public DescribeIt(String name, DescribeItNode startNode,
 			Map<Collection<DescribeItNode>, ScriptIt> paths,
 			Collection<String> types) {
 		// assure the startNode is valid
+
+		this.name = name;
 
 		if (startNode != null)
 			this.startNode = startNode;
@@ -142,6 +143,24 @@ public class DescribeIt implements Cloneable, TypedComponent {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Returns the name of the DescribeIt.
+	 * 
+	 * @return
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * Sets the name of the DescribeIt.
+	 * 
+	 * @param name
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override

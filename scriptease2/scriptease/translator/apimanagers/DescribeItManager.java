@@ -1,6 +1,5 @@
 package scriptease.translator.apimanagers;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.model.StoryComponent;
@@ -8,7 +7,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.util.BiHashMap;
-import scriptease.util.StringOp;
 
 /**
  * A manager that contains all of the DescribeIts in an APIDictionary mapped to
@@ -97,21 +95,11 @@ public class DescribeItManager {
 	 * @return
 	 */
 	public KnowIt createKnowItForDescribeIt(DescribeIt describeIt) {
-		final Collection<String> types;
-		final Collection<String> properCaseTypes;
-		final String name;
 		final ScriptIt initialBinding;
 		final KnowIt knowIt;
 
-		properCaseTypes = new ArrayList<String>();
-		types = describeIt.getTypes();
+		knowIt = new KnowIt(describeIt.getName(), describeIt.getTypes());
 
-		for (String type : types) {
-			properCaseTypes.add(StringOp.toProperCase(type));
-		}
-
-		name = StringOp.getCollectionAsString(properCaseTypes, ", ");
-		knowIt = new KnowIt(name, types);
 		initialBinding = describeIt.getScriptItForPath(describeIt
 				.getShortestPath());
 

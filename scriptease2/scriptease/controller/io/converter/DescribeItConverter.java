@@ -27,6 +27,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class DescribeItConverter implements Converter {
 	public static final String TAG_DESCRIBEIT = "DescribeIt";
 
+	private static final String TAG_NAME = "Name";
 	private static final String TAG_TYPE = "Type";
 	private static final String TAG_TYPES = "Types";
 	private static final String TAG_PATH_MAP = "PathMap";
@@ -37,6 +38,11 @@ public class DescribeItConverter implements Converter {
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
 			final MarshallingContext context) {
 		final DescribeIt describeIt = (DescribeIt) source;
+
+		// name
+		writer.startNode(TAG_NAME);
+		writer.setValue(describeIt.getName());
+		writer.endNode();
 
 		// types
 		writer.startNode(TAG_TYPES);
@@ -86,6 +92,7 @@ public class DescribeItConverter implements Converter {
 
 		types = new ArrayList<String>();
 
+		String name = "";
 		DescribeIt describeIt = null;
 		DescribeItNode headNode = null;
 		Map<Collection<DescribeItNode>, ScriptIt> paths = null;
@@ -94,7 +101,9 @@ public class DescribeItConverter implements Converter {
 			reader.moveDown();
 			final String nodeName = reader.getNodeName();
 
-			if (nodeName.equals(TAG_TYPES)) {
+			if (nodeName.equals(TAG_NAME)) {
+				name = reader.getValue();
+			} else if (nodeName.equals(TAG_TYPES)) {
 				while (reader.hasMoreChildren()) {
 					types.add(FileIO.readValue(reader, TAG_TYPE));
 				}
@@ -140,7 +149,7 @@ public class DescribeItConverter implements Converter {
 			reader.moveUp();
 		}
 
-		describeIt = new DescribeIt(headNode, paths, types);
+		describeIt = new DescribeIt(name, headNode, paths, types);
 		return describeIt;
 	}
 
