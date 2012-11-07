@@ -322,10 +322,10 @@ public abstract class SEGraphModel<E> {
 				childPath = getPathBetweenNodes(child, end);
 
 				// We swap out selected paths if a child has a shorter path than
-				// the
-				// current selected path.
-				if (innerPath.size() == 0
-						|| childPath.size() < innerPath.size()) {
+				// the current selected path.
+				if (childPath.size() > 0
+						&& (innerPath.size() == 0 || childPath.size() < innerPath
+								.size())) {
 					innerPath.removeAll(innerPath);
 					innerPath.addAll(childPath);
 				}
