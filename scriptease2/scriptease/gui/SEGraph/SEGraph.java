@@ -374,6 +374,16 @@ public class SEGraph<E> extends JComponent {
 		final E start;
 		final E end;
 
+		// Check if Start Node selected.
+		if (node == this.getStartNode()) {
+			final Collection<E> startList;
+
+			startList = new ArrayList<E>();
+			startList.add(this.getStartNode());
+
+			return this.setSelectedNodes(startList);
+		}
+
 		start = this.getFirstSelectedNode();
 
 		// Immediately return false if there is no possible path.
