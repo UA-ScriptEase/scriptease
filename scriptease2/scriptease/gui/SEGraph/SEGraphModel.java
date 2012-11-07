@@ -311,11 +311,24 @@ public abstract class SEGraphModel<E> {
 
 		path.add(start);
 
+		final Collection<E> innerPath;
+
+		innerPath = new LinkedHashSet<E>();
+
 		for (E child : this.getChildren(start)) {
-			if (path.addAll(getPathBetweenNodes(child, end)))
-				// We break so that we only add one child to the path.
-				break;
+			final Collection<E> childPath;
+
+			childPath = getPathBetweenNodes(child, end);
+
+			// We swap out selected paths if a child has a shorter path than the
+			// current selected path.
+			if (innerPath.size() == 0 || childPath.size() < innerPath.size()) {
+				innerPath.removeAll(innerPath);
+				innerPath.addAll(childPath);
+			}
 		}
+
+		path.addAll(innerPath);
 
 		path.add(end);
 

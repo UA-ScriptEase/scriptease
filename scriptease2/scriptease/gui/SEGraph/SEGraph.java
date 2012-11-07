@@ -393,7 +393,7 @@ public class SEGraph<E> extends JComponent {
 		end = this.getLastSelectedNode();
 
 		if (start == end)
-			// If the start node is the only node selected
+			// If the start node is the only node previously selected
 			return this.setSelectedNodes(this.model.getPathBetweenNodes(start,
 					node));
 
