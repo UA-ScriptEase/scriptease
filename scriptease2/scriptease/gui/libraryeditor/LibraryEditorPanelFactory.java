@@ -74,7 +74,7 @@ public class LibraryEditorPanelFactory {
 					ScriptEase.FONT_SIZE_KEY)) + 1);
 
 	// Stores the current observers for the selected StoryComponent so that they
-	// do not get garbage colleted.
+	// do not get garbage collected.
 	private StoryComponentObserver currentNameObserver;
 	private StoryComponentObserver currentLabelObserver;
 
@@ -1084,6 +1084,14 @@ public class LibraryEditorPanelFactory {
 		return slots;
 	}
 
+	/**
+	 * Builds a parameter panel.
+	 * 
+	 * @param scriptIt
+	 * @param codeBlock
+	 * @param knowIt
+	 * @return
+	 */
 	protected JPanel buildParameterPanel(ScriptIt scriptIt,
 			CodeBlock codeBlock, KnowIt knowIt) {
 		return new ParameterPanel(scriptIt, codeBlock, knowIt);
