@@ -57,7 +57,7 @@ public class NewDescriptionAction extends ActiveTranslatorSensitiveAction {
 		libraryModel = apiDictionary.getLibrary();
 
 		describeItNode = new DescribeItNode("Placeholder Node");
-		describeIt = new DescribeIt(describeItNode);
+		describeIt = new DescribeIt("New DescribeIt", describeItNode);
 
 		libraryModel.add(describeIt);
 	}

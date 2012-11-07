@@ -183,6 +183,7 @@
 
 	<xsd:complexType name="DescribeIt_Type">
 		<xsd:sequence>
+			<xsd:element name="Name" type="xsd:string" />
 			<xsd:element name="Types" type="SpecificTypeList_Type" />
 			<xsd:element name="DescribeItNode" type="DescribeItNode_Type" />
 			<xsd:element name="PathMap" type="PathMap_Type" />
