@@ -1,6 +1,7 @@
 package io;
 
-import io.GenericFileFormat.GffStruct;
+import io.genericfileformat.GenericFileFormat;
+import io.genericfileformat.GenericFileFormat.GffStruct;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import scriptease.util.StringOp;
  */
 public class NWNDialogueLine extends NWNGameConstant implements
 		GameConversationNode {
-	protected static final String INDEXER_SEPARATOR = ">";
+	public static final String INDEXER_SEPARATOR = ">";
 
 	private static final String TYPE_DIALOG_LINE = "dialogue_line";
 

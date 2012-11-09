@@ -24,7 +24,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	}
 
 	public ScriptItContext(Context other) {
-		this(other.getModel(), other.getIndent(), other.getNamifier(), other
+		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
 				.getTranslator(), other.getLocationInfo());
 	}
 

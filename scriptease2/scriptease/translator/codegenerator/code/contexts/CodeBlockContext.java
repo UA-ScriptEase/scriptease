@@ -37,7 +37,7 @@ public class CodeBlockContext extends Context {
 	}
 
 	public CodeBlockContext(Context other) {
-		this(other.getModel(), other.getIndent(), other.getNamifier(), other
+		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
 				.getTranslator(), other.getLocationInfo());
 	}
 

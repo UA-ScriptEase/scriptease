@@ -1,4 +1,10 @@
-package io;
+package io.genericfileformat;
+
+import io.ErfFile;
+import io.NWNConversation;
+import io.NWNDialogueLine;
+import io.NWNObject;
+import io.TlkManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,20 +34,21 @@ import scriptease.translator.io.tools.ScriptEaseFileAccess;
  */
 public class GenericFileFormat {
 	private static final String GFF_VERSION = "V3.2";
-	private static final String TYPE_SOUND_BP = "UTS";
-	private static final String TYPE_WAYPOINT_BP = "UTW";
-	private static final String TYPE_TRIGGER_BP = "UTT";
-	private static final String TYPE_CREATURE_BP = "UTC";
-	private static final String TYPE_ENCOUNTER_BP = "UTE";
-	private static final String TYPE_MERCHANT_BP = "UTM";
-	private static final String TYPE_PLACEABLE_BP = "UTP";
-	private static final String TYPE_ITEM_BP = "UTI";
-	private static final String TYPE_DOOR_BP = "UTD";
-	private static final String TYPE_DIALOGUE_BP = "DLG";
-	private static final String TYPE_JOURNAL_BP = "JRL";
-	private static final String TYPE_MODULE_INFO = "IFO";
-	private static final String TYPE_AREA_GAME_INSTANCE_FILE = "GIT";
-	private static final String TYPE_AREA_FILE = "ARE";
+
+	protected static final String TYPE_SOUND_BP = "UTS";
+	protected static final String TYPE_WAYPOINT_BP = "UTW";
+	protected static final String TYPE_TRIGGER_BP = "UTT";
+	protected static final String TYPE_CREATURE_BP = "UTC";
+	protected static final String TYPE_ENCOUNTER_BP = "UTE";
+	protected static final String TYPE_MERCHANT_BP = "UTM";
+	protected static final String TYPE_PLACEABLE_BP = "UTP";
+	protected static final String TYPE_ITEM_BP = "UTI";
+	protected static final String TYPE_DOOR_BP = "UTD";
+	protected static final String TYPE_DIALOGUE_BP = "DLG";
+	protected static final String TYPE_JOURNAL_BP = "JRL";
+	protected static final String TYPE_MODULE_INFO = "IFO";
+	protected static final String TYPE_AREA_GAME_INSTANCE_FILE = "GIT";
+	protected static final String TYPE_AREA_FILE = "ARE";
 
 	/**
 	 * Separator used when indexing occurs. The left hand side of the separator
@@ -51,7 +58,7 @@ public class GenericFileFormat {
 	// this must never be set to an alphanumeric character or "_" or "."
 	// This gets used in regex searches, so try to avoid regular expression
 	// special characters, too. Anything else should be fine. - remiller
-	protected static final String RESREF_SEPARATOR = "#";
+	public static final String RESREF_SEPARATOR = "#";
 
 	// these are the specific fields for conversations that are used in dialogue
 	// line indexing
@@ -63,11 +70,11 @@ public class GenericFileFormat {
 	// end header data
 
 	// file data
-	private final List<GffStruct> structArray;
-	private final List<GffField> fieldArray;
-	private final List<String> labelArray;
-	private List<Long> fieldIndicesArray;
-	private List<List<Long>> listIndicesArray;
+	protected final List<GffStruct> structArray;
+	protected final List<GffField> fieldArray;
+	protected final List<String> labelArray;
+	protected List<Long> fieldIndicesArray;
+	protected List<List<Long>> listIndicesArray;
 	// end file data
 
 	// added by us for convenience. This isn't actually stored within a GFF on
@@ -84,7 +91,38 @@ public class GenericFileFormat {
 	 */
 	private static final TlkManager stringTable = TlkManager.getInstance();
 
-	protected GenericFileFormat(String resRef, ScriptEaseFileAccess reader,
+	/**
+	 * Creates a new GFF with the passed in ResRef and File Type. Note that this
+	 * constructor does not add anything to the actual fields. Thus, it can
+	 * cause major issues if you just create a new GFF with this and add it to
+	 * the module.
+	 * 
+	 * @param resRef
+	 * @param fileType
+	 *            A string. The types can be found as static fields starting
+	 *            with TYPE_* in GenericFileFormat.
+	 */
+	protected GenericFileFormat(String resRef, String fileType) {
+		this.resRef = resRef;
+		this.fileType = fileType;
+
+		this.structArray = new ArrayList<GffStruct>();
+		this.fieldArray = new ArrayList<GffField>();
+		this.labelArray = new ArrayList<String>();
+
+		this.fieldIndicesArray = new ArrayList<Long>();
+		this.listIndicesArray = new ArrayList<List<Long>>();
+	}
+
+	/**
+	 * Reads in a GenericFileFormat from file.
+	 * 
+	 * @param resRef
+	 * @param reader
+	 * @param filePosition
+	 * @throws IOException
+	 */
+	public GenericFileFormat(String resRef, ScriptEaseFileAccess reader,
 			long filePosition) throws IOException {
 		final String version;
 		final long structOffset;
@@ -136,17 +174,17 @@ public class GenericFileFormat {
 
 		// need to read labels first to make debugging easier
 		this.readLabels(reader, labelOffset, labelCount);
-		this.readStructs(reader, structOffset, structCount, fieldIndicesOffset);
+		this.readStructs(reader, structOffset, structCount);
 		this.readFields(reader, fieldOffset, fieldCount, fieldDataOffset);
 		this.readFieldIndices(reader, fieldIndicesOffset, fieldIndicesCount);
 		this.readListIndices(reader, listIndicesOffset, listIndicesCount);
 	}
 
-	protected String getFileType() {
+	public String getFileType() {
 		return this.fileType;
 	}
 
-	protected String getResRef() {
+	public String getResRef() {
 		return this.resRef;
 	}
 
@@ -160,7 +198,7 @@ public class GenericFileFormat {
 	 *            whether the sync struct is for a player line or an NPC line.
 	 * @return The Dialogue Struct
 	 */
-	protected GffStruct resolveSyncStruct(GffStruct syncStruct,
+	public GffStruct resolveSyncStruct(GffStruct syncStruct,
 			boolean isPlayerLine) {
 		final String listLabel;
 		final int index;
@@ -218,7 +256,7 @@ public class GenericFileFormat {
 	 * 
 	 * @return
 	 */
-	protected GffStruct getTopLevelStruct() {
+	public GffStruct getTopLevelStruct() {
 		for (GffStruct struct : this.structArray)
 			if (struct.isTopLevelStruct())
 				return struct;
@@ -365,7 +403,7 @@ public class GenericFileFormat {
 	 * 
 	 * @return The ScriptEase notion of this game object.
 	 */
-	protected GameConstant getObjectRepresentation() {
+	public GameConstant getObjectRepresentation() {
 		return this.getObjectRepresentation(null);
 	}
 
@@ -384,7 +422,7 @@ public class GenericFileFormat {
 	 * @return The ScriptEase version of this GFF object that matches the
 	 *         indexing information.
 	 */
-	protected GameConstant getObjectRepresentation(String index) {
+	public GameConstant getObjectRepresentation(String index) {
 		final GameConstant representation;
 		final String name;
 		final String fileType = this.getFileType().trim();
@@ -502,7 +540,7 @@ public class GenericFileFormat {
 	 * 
 	 * @return
 	 */
-	protected Collection<GameConstant> getInternalObjectRepresentations() {
+	public Collection<GameConstant> getInternalObjectRepresentations() {
 		final Collection<GameConstant> reps;
 		final List<GffStruct> categories;
 
@@ -529,7 +567,7 @@ public class GenericFileFormat {
 	 * 
 	 * @return a GameType representing the NWN type.
 	 */
-	protected String getScriptEaseType() {
+	public String getScriptEaseType() {
 		String type = null;
 		final String typeString = this.fileType.trim();
 		if (typeString.equalsIgnoreCase(GenericFileFormat.TYPE_CREATURE_BP)) {
@@ -586,7 +624,7 @@ public class GenericFileFormat {
 	 * @return if this GFF can be translated into something important to
 	 *         ScriptEase
 	 */
-	protected boolean generatesObject() {
+	public boolean generatesObject() {
 		final String typeString = this.fileType.trim();
 		final ArrayList<String> importantTypes = new ArrayList<String>();
 
@@ -617,11 +655,10 @@ public class GenericFileFormat {
 	}
 
 	private final void readStructs(ScriptEaseFileAccess reader,
-			long structOffset, long structCount, long fieldIndicesOffset)
-			throws IOException {
+			long structOffset, long structCount) throws IOException {
 		for (long i = 0; i < structCount; i++) {
 			reader.seek(structOffset + (i * GffStruct.BYTE_LENGTH));
-			this.structArray.add(new GffStruct(reader, fieldIndicesOffset));
+			this.structArray.add(new GffStruct(reader));
 		}
 	}
 
@@ -744,7 +781,7 @@ public class GenericFileFormat {
 	 * @param newData
 	 *            The new data value.
 	 */
-	protected void setField(String index, String fieldLabel, String newData) {
+	public void setField(String index, String fieldLabel, String newData) {
 		final String type = this.fileType.trim();
 		final GffField field;
 
@@ -768,14 +805,13 @@ public class GenericFileFormat {
 
 			final GffStruct resolvedSyncStruct;
 
-			// TODO We resolve the sync struct, meaning we find the
-			// dialogue struct that the sync struct belongs to. We shouldn't be
-			// doing this when we attach scripts to dialogue lines, but we were.
+			// We resolve the sync struct, meaning we find the dialogue struct
+			// that the sync struct belongs to. We shouldn't be doing this when
+			// we attach scripts to dialogue lines, but we were.
 			resolvedSyncStruct = this.resolveSyncStruct(lineStruct,
 					isPlayerLine);
 
-			// TODO OK! Figured it out. If it's a cause, i.e. script on Script,
-			// use ResolvedSyncStruct.
+			// If it's a cause, i.e. script on Script, use ResolvedSyncStruct.
 
 			// If it's the effect, i.e. script on Active, use lineStruct.
 			if (fieldLabel.equals("Active"))
@@ -815,7 +851,7 @@ public class GenericFileFormat {
 	 * @return the number of bytes written.
 	 * @throws IOException
 	 */
-	protected long write(ScriptEaseFileAccess writer, long filePosition)
+	public long write(ScriptEaseFileAccess writer, long filePosition)
 			throws IOException {
 		final int headerSize = 4 * 14; // 14 header entries, 4 bytes each
 		final long structsOffset = headerSize;
@@ -1004,7 +1040,7 @@ public class GenericFileFormat {
 	 * @author mfchurch
 	 * 
 	 */
-	protected class GffStruct {
+	public class GffStruct {
 		public static final long BYTE_LENGTH = 12;
 
 		private final long typeNumber;
@@ -1017,16 +1053,26 @@ public class GenericFileFormat {
 		 * 
 		 * @param reader
 		 *            The reader to read from.
-		 * @param fieldIndicesOffset
-		 *            The offset in the GFF file to the
 		 * @throws IOException
 		 *             if the cat came back the very next day.
 		 */
-		private GffStruct(ScriptEaseFileAccess reader, long fieldIndicesOffset)
-				throws IOException {
-			this.typeNumber = reader.readUnsignedInt(true);
-			this.dataOrDataOffset = reader.readUnsignedInt(true);
-			this.fieldCount = reader.readUnsignedInt(true);
+		private GffStruct(ScriptEaseFileAccess reader) throws IOException {
+			this(reader.readUnsignedInt(true), reader.readUnsignedInt(true),
+					reader.readUnsignedInt(true));
+		}
+
+		/**
+		 * Builds a new GFF struct with the given values.
+		 * 
+		 * @param typeNumber
+		 * @param dataOrDataOffset
+		 * @param fieldCount
+		 */
+		protected GffStruct(long typeNumber, long dataOrDataOffset,
+				long fieldCount) {
+			this.typeNumber = typeNumber;
+			this.dataOrDataOffset = dataOrDataOffset;
+			this.fieldCount = fieldCount;
 		}
 
 		@Override
@@ -1138,7 +1184,7 @@ public class GenericFileFormat {
 			}
 		}
 
-		protected boolean hasField(String label) {
+		public boolean hasField(String label) {
 			for (GffField field : this.getGffFields()) {
 				if (field.getLabel().equals(label)) {
 					return true;
@@ -1155,7 +1201,7 @@ public class GenericFileFormat {
 		 *            the field's name.
 		 * @return The data stored in that field.
 		 */
-		protected List<GffStruct> getList(String label) {
+		public List<GffStruct> getList(String label) {
 			return this.getFieldByLabel(label).getListData();
 		}
 
@@ -1166,7 +1212,7 @@ public class GenericFileFormat {
 		 *            the field's name.
 		 * @return The data stored in that field.
 		 */
-		protected String getString(String label) {
+		public String getString(String label) {
 			return this.getFieldByLabel(label).getStringData();
 		}
 	}
@@ -1178,7 +1224,7 @@ public class GenericFileFormat {
 	 * @author remiller
 	 * 
 	 */
-	private class GffField {
+	protected class GffField {
 
 		public static final int BYTE_LENGTH = 12;
 
@@ -1233,11 +1279,17 @@ public class GenericFileFormat {
 
 		private GffField(ScriptEaseFileAccess reader, long fieldDataOffset)
 				throws IOException {
-			this.typeNumber = reader.readUnsignedInt(true);
-			this.labelIndex = reader.readUnsignedInt(true);
-			this.dataOrDataOffset = reader.readUnsignedInt(true);
+			this(reader.readUnsignedInt(true), reader.readUnsignedInt(true),
+					reader.readUnsignedInt(true));
 
 			this.readData(reader, fieldDataOffset);
+		}
+
+		protected GffField(long typeNumber, long labelIndex,
+				long dataOrDataOffset) {
+			this.typeNumber = typeNumber;
+			this.labelIndex = labelIndex;
+			this.dataOrDataOffset = dataOrDataOffset;
 		}
 
 		/**
@@ -1268,7 +1320,7 @@ public class GenericFileFormat {
 		/**
 		 * @return the labelIndex
 		 */
-		private long getLabelIndex() {
+		public long getLabelIndex() {
 			return this.labelIndex;
 		}
 
@@ -1456,7 +1508,7 @@ public class GenericFileFormat {
 		 * @param value
 		 *            The string containing the value to be used.
 		 */
-		private void setData(String value) {
+		protected void setData(String value) {
 			String oldVal = null;
 
 			if (!this.isComplexType()) { // just data
@@ -1757,7 +1809,7 @@ public class GenericFileFormat {
 		}
 	}
 
-	protected void removeScriptEaseReferences() {
+	public void removeScriptEaseReferences() {
 		GffStruct gitFileStruct = this.getTopLevelStruct();
 
 		gitFileStruct.removeScriptEaseReferences();
@@ -1776,7 +1828,7 @@ public class GenericFileFormat {
 	 * @param scriptResRef
 	 *            The new data to live in the given slot.
 	 */
-	protected void updateAllInstances(GenericFileFormat sourceGFF, String slot,
+	public void updateAllInstances(GenericFileFormat sourceGFF, String slot,
 			String scriptResRef) {
 		if (!this.isInstanceUpdatable()) {
 			throw new IllegalStateException(
@@ -1846,7 +1898,7 @@ public class GenericFileFormat {
 	 * 
 	 * @return <code>true</code> if this GFF supports updating instances.
 	 */
-	protected boolean isInstanceUpdatable() {
+	public boolean isInstanceUpdatable() {
 		String fileType = this.getFileType().trim();
 		return fileType
 				.equalsIgnoreCase(GenericFileFormat.TYPE_AREA_GAME_INSTANCE_FILE);
