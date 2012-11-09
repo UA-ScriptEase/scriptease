@@ -1,6 +1,7 @@
 package io;
 
-import io.GenericFileFormat.GffStruct;
+import io.genericfileformat.GenericFileFormat;
+import io.genericfileformat.GenericFileFormat.GffStruct;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +18,7 @@ import scriptease.util.FileOp;
  */
 public class NWNConversation extends NWNGameConstant implements
 		GameConversation {
-	protected static final String TYPE_DIALOGUE = "dialogue";
+	public static final String TYPE_DIALOGUE = "dialogue";
 	private final GenericFileFormat convo;
 
 	public NWNConversation(String resref, GenericFileFormat conversation) {

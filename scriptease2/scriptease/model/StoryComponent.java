@@ -431,7 +431,7 @@ public abstract class StoryComponent implements Cloneable {
 
 	/**
 	 * Adds the observer to the Story Component, it's immediate components, and
-	 * it's children.
+	 * it's children. Also known as SauronObserver.
 	 * 
 	 * @param observer
 	 */

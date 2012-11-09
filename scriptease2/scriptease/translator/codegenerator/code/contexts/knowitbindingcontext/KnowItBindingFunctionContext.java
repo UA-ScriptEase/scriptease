@@ -28,7 +28,7 @@ public class KnowItBindingFunctionContext extends KnowItBindingContext {
 	}
 
 	public KnowItBindingFunctionContext(Context other) {
-		this(other.getModel(), other.getIndent(), other.getNamifier(),
+		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(),
 				other.getTranslator(), other.getLocationInfo());
 	}
 

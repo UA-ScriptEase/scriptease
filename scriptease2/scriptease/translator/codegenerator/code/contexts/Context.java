@@ -90,7 +90,7 @@ public class Context {
 	/**
 	 * @return the Context's model
 	 */
-	public final StoryPoint getModel() {
+	public final StoryPoint getStartStoryPoint() {
 		return this.model;
 	}
 

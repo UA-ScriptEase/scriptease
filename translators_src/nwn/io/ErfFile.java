@@ -1,5 +1,7 @@
 package io;
 
+import io.genericfileformat.GenericFileFormat;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,9 +23,23 @@ import java.util.Set;
 
 import scriptease.controller.CodeBlockMapper;
 import scriptease.controller.FileManager;
+import scriptease.controller.ModelAdapter;
+import scriptease.controller.observer.PatternModelEvent;
+import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.StatusManager;
 import scriptease.model.CodeBlock;
+import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
+import scriptease.model.StoryModel;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
@@ -75,6 +91,12 @@ public final class ErfFile implements GameModule {
 	 */
 	private final List<NWNResource> uncompiledScripts;
 
+	private final StoryComponentObserver componentObserver;
+	private final PatternModelObserver modelObserver;
+
+	// TODO Write in the correct name
+	private static final String CREATE_JOURNAL_EFFECT = "Create Quest for <Story Point> with title <Title>";
+
 	/**
 	 * Location of the ErfFile.
 	 */
@@ -102,6 +124,126 @@ public final class ErfFile implements GameModule {
 	public ErfFile() {
 		this.resources = new ArrayList<NWNResource>();
 		this.uncompiledScripts = new ArrayList<NWNResource>();
+
+		this.componentObserver = new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
+					event.getSource().observeEverything(this);
+					if (event.getSource().getDisplayText()
+							.equals(CREATE_JOURNAL_EFFECT)) {
+						final ScriptIt scriptIt;
+						String name = null;
+						StoryPoint storyPoint = null;
+
+						scriptIt = (ScriptIt) event.getSource();
+
+						// Get the name and story point for the new Journal.
+						int count = 0;
+						for (KnowIt parameter : scriptIt.getParameters()) {
+							final KnowItBinding binding = parameter
+									.getBinding();
+
+							// We're checking instanceofs instead of using an
+							// adapter because we want to assign variables.
+							if (binding instanceof KnowItBindingConstant) {
+								name = ((KnowItBindingConstant) binding)
+										.getValue().getName();
+							} else if (binding instanceof KnowItBindingStoryPoint) {
+								storyPoint = ((KnowItBindingStoryPoint) binding)
+										.getValue();
+							} else {
+								throw new IllegalArgumentException(
+										"Wrong binding type attached to "
+												+ "create journal effect. "
+												+ "Commence explosion.");
+							}
+							count++;
+						}
+						if (count > 2 || name == null || storyPoint == null) {
+							throw new IllegalArgumentException(
+									"Failure when creating journal for name: "
+											+ name + " and story point: "
+											+ storyPoint + " with " + count
+											+ " arguments found in " + scriptIt);
+						}
+
+						// Create the new Journal
+
+						if (ErfFile.this.getResourcesOfType("journal")
+								.isEmpty()) {
+
+						
+							
+							// First create all the data into Bytes.
+
+							// Last create new NWNResource with constructor and
+							// add it to erffile list
+
+						}
+						
+						// TODO Need to add a listenr to this child that
+						// changes values of journalgff when we change
+						// bindings.
+						
+						/*
+						 * 
+						 * TODO Will need to get Category tag based KnowIt's
+						 * StoryPoint's name attached to this child.
+						 * 
+						 * Also need to get text in a string parameter from
+						 * this.
+						 * 
+						 * Then we create a new Journal Category.
+						 * 
+						 * First we create the Journal erf file. Then we create
+						 * + add a category Then we add one entry to the
+						 * category.
+						 * 
+						 * The entry contains one custom token.
+						 * 
+						 * 
+						 * APIDictionary stuff:
+						 * 
+						 * Set a local string with name '"CT_"+storyPoint' to
+						 * empty.
+						 * 
+						 * Increment a local int at 'CT_SIZE'. If 0, it should
+						 * be set to
+						 * 
+						 * Custom token number:
+						 * 
+						 * Store the custom token number as a local int with
+						 * name: '"CT_NUM_"+storyPoint'
+						 */
+					}
+				} else if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED) {
+					if (event.getSource().getDisplayText()
+							.equals(CREATE_JOURNAL_EFFECT)) {
+						// TODO remove a journal
+					}
+				}
+			}
+		};
+
+		this.modelObserver = new PatternModelObserver() {
+			public void modelChanged(PatternModelEvent event) {
+				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
+
+					event.getPatternModel().process(new ModelAdapter() {
+						@Override
+						public void processStoryModel(StoryModel storyModel) {
+							storyModel.getRoot().observeEverything(
+									componentObserver);
+						}
+					});
+				}
+			};
+		};
+
+		PatternModelManager.getInstance().addPatternModelObserver(
+				this.modelObserver);
+
 	}
 
 	@Override
@@ -237,6 +379,7 @@ public final class ErfFile implements GameModule {
 				gff = resource.getGFF();
 				gffType = gff.getScriptEaseType();
 
+				// TODO Whoa what the carpe is zis?
 				if (gffType != null && gffType.equalsIgnoreCase(type)) {
 					if (gffType.equalsIgnoreCase("journal")) {
 						filteredObjects.addAll(gff
@@ -776,6 +919,15 @@ public final class ErfFile implements GameModule {
 
 	@Override
 	public void addGameObject(GameObject object) {
+
+		// NWNObject nwnObject = new NWNObject();
+
+		// NWNResource resource = new NWNResource(object.getTemplateID(),
+		// fileType, data);
+		// NWNResource resource = new NWNResource(object.getTemplateID(),
+		// ErfKey.JOURNAL_FILE_TYPE, data);
+
+		// TODO This is where we add a journal.
 	}
 
 	@Override
