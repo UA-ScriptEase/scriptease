@@ -1283,6 +1283,12 @@ public class GenericFileFormat {
 					reader.readUnsignedInt(true));
 
 			this.readData(reader, fieldDataOffset);
+
+			// XXX DEBUG PRINTLNs!
+			if (fileType.trim().equals(TYPE_JOURNAL_BP)) {
+				System.out.println(this.getLabel() + ": "
+						+ this.dataOrDataOffset);
+			}
 		}
 
 		protected GffField(long typeNumber, long labelIndex,
