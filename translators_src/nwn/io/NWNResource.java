@@ -1,6 +1,5 @@
 package io;
 
-
 import io.genericfileformat.GenericFileFormat;
 
 import java.io.IOException;
@@ -71,14 +70,13 @@ public class NWNResource implements Comparable<NWNResource> {
 		}
 	}
 
-	protected NWNResource(ErfKey key, ResourceListElement entry,
-			GenericFileFormat gff) {
-
+	public NWNResource(ErfKey key, GenericFileFormat gff) {
 		this.key = key;
-		this.resourceListEntry = entry;
 		this.gff = gff;
-		
-		// TODO Need to initialize byte data, too!
+
+		// These are handled later when we write out.
+		this.byteData = null;
+		this.resourceListEntry = new ResourceListElement(-1, 0);
 	}
 
 	/**

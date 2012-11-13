@@ -1493,6 +1493,19 @@ public class GenericFileFormat {
 			}
 		}
 
+		public void setBlankCExoLocString() {
+			// This is annoyingly complicated. See CExoLocString in GFF doc,
+			// page 3, and 4.6 for details. - remiller
+			if (this.getType() == GffField.TYPE_NUM_CEXOLOCSTRING) {
+				this.fieldDataLocString = new CExoLocString();
+				this.fieldDataLocString.strRef = -1;
+			} else {
+				System.err.println("Attempted to set blank CExoLocString for "
+						+ "non CExoLocString field " + this
+						+ ". You're doing it wrong.");
+			}
+		}
+
 		private IllegalStateException dieUnknownType() {
 			// This should never happen, unless we missed a type or we
 			// somehow hit a snag while reading unsigned ints and
@@ -1691,6 +1704,11 @@ public class GenericFileFormat {
 			case GffField.TYPE_NUM_CEXOSTRING:
 				strValue = this.fieldDataString;
 
+				if (strValue == null) {
+					System.err.println("Encountered null FieldDataString in "
+							+ this);
+				}
+
 				if (strValue.length() > EXO_STRING_MAX_LENGTH)
 					strValue.substring(0, EXO_STRING_MAX_LENGTH);
 
@@ -1711,6 +1729,11 @@ public class GenericFileFormat {
 
 				break;
 			case GffField.TYPE_NUM_CEXOLOCSTRING:
+
+				if (this.fieldDataLocString == null) {
+					System.out.println("WUT");
+				}
+
 				final Map<Long, String> strings = this.fieldDataLocString.strings;
 				final long strRef = this.fieldDataLocString.strRef;
 
