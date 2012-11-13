@@ -1,5 +1,6 @@
 package io;
 
+import io.genericfileformat.GeneratedJournalGFF;
 import io.genericfileformat.GenericFileFormat;
 
 import java.io.BufferedReader;
@@ -144,28 +145,26 @@ public final class ErfFile implements GameModule {
 							final KnowItBinding binding = parameter
 									.getBinding();
 
+							// TODO Instead of checking this stuff, change to
+							// listeners on the bindings.
+							
 							// We're checking instanceofs instead of using an
 							// adapter because we want to assign variables.
-							if (binding instanceof KnowItBindingConstant) {
-								name = ((KnowItBindingConstant) binding)
-										.getValue().getName();
-							} else if (binding instanceof KnowItBindingStoryPoint) {
-								storyPoint = ((KnowItBindingStoryPoint) binding)
-										.getValue();
-							} else {
-								throw new IllegalArgumentException(
-										"Wrong binding type attached to "
-												+ "create journal effect. "
-												+ "Commence explosion.");
-							}
+						//	if (binding instanceof KnowItBindingConstant) {
+								//		.getValue().getName();
+							//} else if (binding instanceof KnowItBindingStoryPoint) {
+							//	storyPoint = ((KnowItBindingStoryPoint) binding)
+								//		.getValue();
+						//	}
 							count++;
 						}
-						if (count > 2 || name == null || storyPoint == null) {
+						if (count > 2) {
+							System.err
+									.println("Error: Failed to create journal.");
 							throw new IllegalArgumentException(
-									"Failure when creating journal for name: "
-											+ name + " and story point: "
-											+ storyPoint + " with " + count
-											+ " arguments found in " + scriptIt);
+									"Failure when creating journal for "
+											+ scriptIt + "with " + count
+											+ "parameters.");
 						}
 
 						// Create the new Journal
@@ -173,19 +172,21 @@ public final class ErfFile implements GameModule {
 						if (ErfFile.this.getResourcesOfType("journal")
 								.isEmpty()) {
 
-						
-							
-							// First create all the data into Bytes.
+							// Resref of journal must be module.
+							final NWNResource resource = new NWNResource(
+									new ErfKey("module",
+											ErfKey.JOURNAL_FILE_TYPE),
+									GeneratedJournalGFF.getInstance());
 
-							// Last create new NWNResource with constructor and
-							// add it to erffile list
-
+							ErfFile.this.resources.add(resource);
+						} else {
+							// TODO add a category to the existing journal
 						}
-						
+
 						// TODO Need to add a listenr to this child that
 						// changes values of journalgff when we change
 						// bindings.
-						
+
 						/*
 						 * 
 						 * TODO Will need to get Category tag based KnowIt's
