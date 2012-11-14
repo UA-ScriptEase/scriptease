@@ -703,6 +703,21 @@ public class GenericFileFormat {
 			// ... and add that list like a boss.
 			this.listIndicesArray.add(indexList);
 		}
+
+		// XXX DEBUG CODE!!! DELETE LATER!
+		if (fileType.trim().toUpperCase().equals(TYPE_JOURNAL_BP)) {
+			for (List<Long> list : this.listIndicesArray) {
+				System.out.print("List " + this.listIndicesArray.indexOf(list)
+						+ ": ");
+				for (Long luong : list) {
+					System.out.print(luong);
+
+					if (list.indexOf(luong) != list.size() - 1)
+						System.out.print(", ");
+				}
+				System.out.println();
+			}
+		}
 	}
 
 	/**
@@ -1230,17 +1245,19 @@ public class GenericFileFormat {
 
 		private static final int MAX_RESREF_LENGTH = 16;
 
-		private static final int TYPE_NUM_INT = 5;
-		private static final int TYPE_NUM_DWORD64 = 6;
-		private static final int TYPE_NUM_INT64 = 7;
-		private static final int TYPE_NUM_FLOAT = 8;
-		private static final int TYPE_NUM_DOUBLE = 9;
-		private static final int TYPE_NUM_CEXOSTRING = 10;
-		private static final int TYPE_NUM_RESREF = 11;
-		private static final int TYPE_NUM_CEXOLOCSTRING = 12;
-		private static final int TYPE_NUM_VOID = 13;
-		private static final int TYPE_NUM_STRUCT = 14;
-		private static final int TYPE_NUM_LIST = 15;
+		public static final int TYPE_WORD = 2;
+		public static final int TYPE_DWORD = 4;
+		public static final int TYPE_INT = 5;
+		public static final int TYPE_DWORD64 = 6;
+		public static final int TYPE_INT64 = 7;
+		public static final int TYPE_FLOAT = 8;
+		public static final int TYPE_DOUBLE = 9;
+		public static final int TYPE_CEXOSTRING = 10;
+		public static final int TYPE_RESREF = 11;
+		public static final int TYPE_CEXOLOCSTRING = 12;
+		public static final int TYPE_VOID = 13;
+		public static final int TYPE_STRUCT = 14;
+		public static final int TYPE_LIST = 15;
 
 		// max length is defined in GFF doc page 4
 		private static final int EXO_STRING_MAX_LENGTH = 1024;
@@ -1283,12 +1300,6 @@ public class GenericFileFormat {
 					reader.readUnsignedInt(true));
 
 			this.readData(reader, fieldDataOffset);
-
-			// XXX DEBUG PRINTLNs!
-			if (fileType.trim().equals(TYPE_JOURNAL_BP)) {
-				System.out.println(this.getLabel() + ": "
-						+ this.dataOrDataOffset);
-			}
 		}
 
 		protected GffField(long typeNumber, long labelIndex,
@@ -1435,30 +1446,30 @@ public class GenericFileFormat {
 			long length;
 
 			switch ((int) this.getType()) {
-			case GffField.TYPE_NUM_DWORD64:
+			case GffField.TYPE_DWORD64:
 				this.fieldDataDWord64 = reader.readUnsignedInt(true);
 				break;
-			case GffField.TYPE_NUM_INT64:
+			case GffField.TYPE_INT64:
 				this.fieldDataInt64 = reader.readLong(true);
 				break;
-			case GffField.TYPE_NUM_DOUBLE:
+			case GffField.TYPE_DOUBLE:
 				// this.fieldDataDouble = reader.readDouble(true);
 				// break;
 
 				throw new UnsupportedOperationException(
 						"I can't read a Double yet!");
-			case GffField.TYPE_NUM_CEXOSTRING:
+			case GffField.TYPE_CEXOSTRING:
 				length = reader.readUnsignedInt(true);
 
 				this.fieldDataString = reader.readString((int) length);
 				break;
-			case GffField.TYPE_NUM_RESREF:
+			case GffField.TYPE_RESREF:
 				length = reader.readByte();
 
 				this.fieldDataString = reader.readString((int) length);
 
 				break;
-			case GffField.TYPE_NUM_CEXOLOCSTRING:
+			case GffField.TYPE_CEXOLOCSTRING:
 				// This is annoyingly complicated. See CExoLocString in GFF doc,
 				// page 3, and 4.6 for details. - remiller
 
@@ -1488,7 +1499,7 @@ public class GenericFileFormat {
 				}
 
 				break;
-			case GffField.TYPE_NUM_VOID:
+			case GffField.TYPE_VOID:
 				// voids are arbitrary binary data. Hopefully that doesn't cause
 				// us nightmares. - remiller
 				long numBytes = reader.readUnsignedInt(true);
@@ -1502,7 +1513,7 @@ public class GenericFileFormat {
 		public void setBlankCExoLocString() {
 			// This is annoyingly complicated. See CExoLocString in GFF doc,
 			// page 3, and 4.6 for details. - remiller
-			if (this.getType() == GffField.TYPE_NUM_CEXOLOCSTRING) {
+			if (this.getType() == GffField.TYPE_CEXOLOCSTRING) {
 				this.fieldDataLocString = new CExoLocString();
 				this.fieldDataLocString.strRef = -1;
 			} else {
@@ -1539,21 +1550,21 @@ public class GenericFileFormat {
 						+ ") or List (" + this.isListType() + ") type.");
 			} else {
 				switch ((int) this.getType()) {
-				case GffField.TYPE_NUM_DWORD64:
+				case GffField.TYPE_DWORD64:
 					this.fieldDataDWord64 = Long.valueOf(value);
 					break;
-				case GffField.TYPE_NUM_INT64:
+				case GffField.TYPE_INT64:
 					this.fieldDataInt64 = Long.valueOf(value);
 					break;
-				case GffField.TYPE_NUM_DOUBLE:
+				case GffField.TYPE_DOUBLE:
 					this.fieldDataDouble = Double.valueOf(value);
 					break;
-				case GffField.TYPE_NUM_CEXOSTRING:
-				case GffField.TYPE_NUM_RESREF:
+				case GffField.TYPE_CEXOSTRING:
+				case GffField.TYPE_RESREF:
 					oldVal = this.fieldDataString;
 					this.fieldDataString = value;
 					break;
-				case GffField.TYPE_NUM_CEXOLOCSTRING:
+				case GffField.TYPE_CEXOLOCSTRING:
 					if (this.fieldDataLocString.strRef == -1) {
 						oldVal = this.fieldDataLocString.strings.put(0L, value);
 					} else {
@@ -1562,7 +1573,7 @@ public class GenericFileFormat {
 					}
 
 					break;
-				case GffField.TYPE_NUM_VOID:
+				case GffField.TYPE_VOID:
 					this.fieldDataBytes = value.getBytes();
 					break;
 				default:
@@ -1621,16 +1632,16 @@ public class GenericFileFormat {
 								+ " does not contain a String. It contains a struct or a list.");
 			} else {
 				switch ((int) this.getType()) {
-				case GffField.TYPE_NUM_DWORD64:
+				case GffField.TYPE_DWORD64:
 					return Long.toString(this.fieldDataDWord64);
-				case GffField.TYPE_NUM_INT64:
+				case GffField.TYPE_INT64:
 					return Long.toString(this.fieldDataInt64);
-				case GffField.TYPE_NUM_DOUBLE:
+				case GffField.TYPE_DOUBLE:
 					return Double.toString(this.fieldDataDouble);
-				case GffField.TYPE_NUM_CEXOSTRING:
-				case GffField.TYPE_NUM_RESREF:
+				case GffField.TYPE_CEXOSTRING:
+				case GffField.TYPE_RESREF:
 					return this.fieldDataString;
-				case GffField.TYPE_NUM_CEXOLOCSTRING:
+				case GffField.TYPE_CEXOLOCSTRING:
 					String value;
 					// we prioritize strings stored in the file over external
 					// ones, like the toolset does (as described in GFF
@@ -1646,7 +1657,7 @@ public class GenericFileFormat {
 					}
 
 					return value;
-				case GffField.TYPE_NUM_VOID:
+				case GffField.TYPE_VOID:
 					return new String(this.fieldDataBytes);
 				default:
 					this.dieUnknownType();
@@ -1696,18 +1707,18 @@ public class GenericFileFormat {
 			startByte = writer.getFilePointer();
 
 			switch ((int) this.getType()) {
-			case GffField.TYPE_NUM_DWORD64:
+			case GffField.TYPE_DWORD64:
 				writer.writeUnsignedLong(this.fieldDataDWord64, true);
 				break;
-			case GffField.TYPE_NUM_INT64:
+			case GffField.TYPE_INT64:
 				writer.writeLong(this.fieldDataInt64, true);
 				break;
-			case GffField.TYPE_NUM_DOUBLE:
+			case GffField.TYPE_DOUBLE:
 				// writer.writeDouble(this.fieldDataDouble, true);
 				// break;
 
 				throw new IllegalStateException("I can't write a Double yet!");
-			case GffField.TYPE_NUM_CEXOSTRING:
+			case GffField.TYPE_CEXOSTRING:
 				strValue = this.fieldDataString;
 
 				if (strValue == null) {
@@ -1723,7 +1734,7 @@ public class GenericFileFormat {
 				writer.writeString(strValue, strValue.length());
 
 				break;
-			case GffField.TYPE_NUM_RESREF:
+			case GffField.TYPE_RESREF:
 				String newData = this.fieldDataString.toLowerCase();
 
 				if (newData.length() > GffField.MAX_RESREF_LENGTH)
@@ -1734,7 +1745,7 @@ public class GenericFileFormat {
 				writer.writeString(newData, newData.length());
 
 				break;
-			case GffField.TYPE_NUM_CEXOLOCSTRING:
+			case GffField.TYPE_CEXOLOCSTRING:
 
 				if (this.fieldDataLocString == null) {
 					System.out.println("WUT");
@@ -1765,7 +1776,7 @@ public class GenericFileFormat {
 				}
 
 				break;
-			case GffField.TYPE_NUM_VOID:
+			case GffField.TYPE_VOID:
 				writer.writeUnsignedInt(this.fieldDataBytes.length, true);
 				writer.writeBytes(this.fieldDataBytes);
 
@@ -1789,8 +1800,7 @@ public class GenericFileFormat {
 		private boolean isComplexType() {
 			long type = this.getType();
 
-			return (type > GffField.TYPE_NUM_INT)
-					&& (type != GffField.TYPE_NUM_FLOAT);
+			return (type > GffField.TYPE_INT) && (type != GffField.TYPE_FLOAT);
 		}
 
 		/**
@@ -1820,7 +1830,7 @@ public class GenericFileFormat {
 		private final boolean isStructType() {
 			long type = this.getType();
 
-			return (type == GffField.TYPE_NUM_STRUCT);
+			return (type == GffField.TYPE_STRUCT);
 		}
 
 		/**
@@ -1834,7 +1844,7 @@ public class GenericFileFormat {
 		private final boolean isListType() {
 			long type = this.getType();
 
-			return (type == GffField.TYPE_NUM_LIST);
+			return (type == GffField.TYPE_LIST);
 		}
 	}
 

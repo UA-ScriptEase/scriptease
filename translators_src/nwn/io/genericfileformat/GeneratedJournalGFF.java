@@ -1,13 +1,12 @@
 package io.genericfileformat;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * We never want more than one Journal GFF in our erf file, so this is a
- * singleton class. This is its own class due to specialist methods that we do
- * NOT want inside of a regular GFF.
+ * We never want more than one Journal GFF in our erf file. This is its own
+ * class due to specialist methods that we do NOT want inside of a regular GFF.
  * 
  * @author kschenk
  * 
@@ -15,169 +14,273 @@ import java.util.List;
 public class GeneratedJournalGFF extends GenericFileFormat {
 	private static final String RESREF = "se_genjournal";
 
-	private static final GeneratedJournalGFF instance = new GeneratedJournalGFF();
+	private final List<JournalCategory> categories;
 
-	private final Collection<JournalCategory> categories;
-
-	/**
-	 * Returns the sole instance of GeneratedJournalGFF.
-	 * 
-	 * @return
-	 */
-	public static GeneratedJournalGFF getInstance() {
-		return instance;
-	}
-
-	public void addCategory() {
-		this.categories.add(new JournalCategory());
-	}
-
-	private GeneratedJournalGFF() {
+	public GeneratedJournalGFF() {
 		super(RESREF, TYPE_JOURNAL_BP + " ");
 
 		this.categories = new ArrayList<JournalCategory>();
 
 		// Add labels
 		this.labelArray.add("Categories");
+		this.labelArray.add("Name");
+		this.labelArray.add("XP");
+		this.labelArray.add("Priority");
+		this.labelArray.add("Picture");
+		this.labelArray.add("Comment");
+		this.labelArray.add("Tag");
+		this.labelArray.add("EntryList");
+		this.labelArray.add("ID");
+		this.labelArray.add("End");
+		this.labelArray.add("Text");
 
 		// Top Level Struct
 		this.structArray.add(new GffStruct(-1, 0, 1));
+		// Categories Field: DataOrDataOffset is constant
+		this.addField(GffField.TYPE_LIST, 0, 0);
 
-		// TODO Anything other than "categories" should be separated, so we can
-		// create individual ones. We can have many categories and many entries
-		// per category...
+		this.addCategory("Placeholder", "se_placeholder", "<PLCEHLDR>");
+	}
+
+	/**
+	 * Set the name of the Journal Category with the specified tag.
+	 * 
+	 * @param name
+	 *            The new name for the Category.
+	 * @param tag
+	 *            The tag used to find the Category.
+	 * @return Returns whether the assignment was successful. This will only
+	 *         fail if we do not find the tag.
+	 */
+	public boolean setName(String name, String tag) {
+		boolean success = false;
+
+		for (JournalCategory category : this.categories) {
+			if (category.getTag().equals(tag)) {
+				category.setName(name);
+				success = true;
+				break;
+			}
+		}
+
+		if (success)
+			this.writeCategoriesToModel();
+
+		return success;
+	}
+
+	/**
+	 * Set the tag of the Journal Category with the specified tag.
+	 * 
+	 * @param newTag
+	 *            The new tag for the Category.
+	 * @param tag
+	 *            The tag used to find the Category.
+	 * @return Returns true if assignment was successful. Unsuccessful
+	 *         assignment can mean that a category with the tag was not found,
+	 *         or a category with the new tag already existed.
+	 */
+	public boolean setTag(String newTag, String tag) {
+		JournalCategory foundCategory = null;
+
+		for (JournalCategory category : this.categories) {
+			// Return false if we find that the tag already exists.
+			if (category.getTag().equals(newTag))
+				return false;
+
+			if (category.getTag().equals(tag))
+				foundCategory = category;
+		}
+
+		if (foundCategory != null) {
+			foundCategory.setTag(newTag);
+
+			this.writeCategoriesToModel();
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Add a category to the Journal.
+	 * 
+	 * @param name
+	 * @param tag
+	 * @param entryText
+	 */
+	public void addCategory(String name, String tag, String entryText) {
+		this.categories.add(new JournalCategory(name, tag, entryText));
+
+		Collections.sort(this.categories);
+
+		writeCategoriesToModel();
+	}
+
+	/**
+	 * Adds a new field into the field array with the given type, label index,
+	 * and data or data offset. Initializes CEXOLOCSTRING types to blanks.
+	 * 
+	 * I abstracted this out to make the {@link #writeCategoriesToModel()}
+	 * method easier to read.
+	 * 
+	 * @param typeNumber
+	 * @param labelIndex
+	 * @param dataOrDataOffset
+	 * 
+	 * @return The created field.
+	 */
+	private GffField addField(long typeNumber, long labelIndex,
+			long dataOrDataOffset) {
+		final GffField newField;
+
+		newField = new GffField(typeNumber, labelIndex, dataOrDataOffset);
+
+		if (typeNumber == GffField.TYPE_CEXOLOCSTRING)
+			newField.setBlankCExoLocString();
+
+		this.fieldArray.add(newField);
+
+		return newField;
+	}
+
+	/**
+	 * Writes the journals categories to the model with appropriate offsets.
+	 */
+	private void writeCategoriesToModel() {
+		this.repopulateIndexArrays();
+
+		final String commentText;
+
+		commentText = "Journal generated by ScriptEase 2. Do not touch if you"
+				+ " don't want to cause major issues.";
+
+		int previousOffset = 0;
+		for (JournalCategory category : this.categories) {
+			final int index = this.categories.indexOf(category);
+
+			final int COMMENT_OFFSET;
+			final int TAG_OFFSET;
+			final int TEXT_OFFSET;
+			final int ENTRY_LIST_OFFSET;
+
+			COMMENT_OFFSET = previousOffset + category.getName().length() + 20;
+			TAG_OFFSET = COMMENT_OFFSET + commentText.length() + 20;
+			TEXT_OFFSET = TAG_OFFSET + category.getTag().length() + 4;
+
+			if (this.categories.size() == 2) {
+				if (index == 0) {
+					ENTRY_LIST_OFFSET = 8;
+				} else {
+					ENTRY_LIST_OFFSET = 28;
+				}
+			} else {
+				ENTRY_LIST_OFFSET = 4 * (this.categories.size() + 1) + 8
+						* index;
+			}
+
+			final GffField nameField;
+			final GffField commentField;
+			final GffField tagField;
+			final GffField textField;
+
+			// JournalCategory struct
+			this.structArray.add(new GffStruct(index, index * 40, 7));
+			// JournalEntry struct
+			this.structArray.add(new GffStruct(0, index * 40 + 28, 3));
+
+			nameField = this.addField(GffField.TYPE_CEXOLOCSTRING, 1,
+					previousOffset);
+
+			this.addField(GffField.TYPE_DWORD, 2, 0); // XP
+			this.addField(GffField.TYPE_DWORD, 3, 4); // Priority
+			this.addField(GffField.TYPE_WORD, 4, 65535); // Picture
+
+			commentField = this.addField(GffField.TYPE_CEXOSTRING, 5,
+					COMMENT_OFFSET);
+			tagField = this.addField(GffField.TYPE_CEXOSTRING, 6, TAG_OFFSET);
+
+			this.addField(GffField.TYPE_LIST, 7, ENTRY_LIST_OFFSET); // EntryList
+
+			/*
+			 * Note: we only have one entry per category since we're using
+			 * custom tags to update entries instead of the built-in journal
+			 * system.
+			 */
+
+			this.addField(GffField.TYPE_DWORD, 8, 1); // ID
+			this.addField(GffField.TYPE_WORD, 9, 0); // End
+
+			// Text field:
+			textField = this.addField(GffField.TYPE_CEXOLOCSTRING, 10,
+					TEXT_OFFSET);
+
+			textField.setData(category.getEntryText());
+			commentField.setData(commentText);
+			tagField.setData(category.getTag());
+			nameField.setData(category.getName());
+
+			previousOffset = TEXT_OFFSET + category.getEntryText().length()
+					+ 20;
+		}
 	}
 
 	/**
 	 * Repopulates index arrays based on number of categories.
 	 */
 	private void repopulateIndexArrays() {
+		final int SIZE_CATEGORIES = this.categories.size();
 		this.fieldIndicesArray.clear();
 		this.listIndicesArray.clear();
 
-		for (long i = 0; i < this.categories.size() * 10; i++)
+		for (long i = 0; i < SIZE_CATEGORIES * 10; i++)
 			this.fieldIndicesArray.add(i);
 
-		// TODO This is probably wrong.
-		// output for an old test file showed these to be:
-
 		/*
-		 * LISTINDICES@0: 1
-		 * 
-		 * LISTINDICES@1: 2
-		 * 
-		 * LISTINDICES@2: 1
-		 * 
-		 * LISTINDICES@2: 3
-		 * 
-		 * LISTINDICES@3: 4
+		 * Not sure if there's a method to the madness, but this is what is
+		 * generated by NWN. Beware he who dares to look upon this abomination.
 		 */
-		for (long i = 0; i < this.categories.size() * 2; i++) {
-			final List<Long> longList;
+		if (SIZE_CATEGORIES != 2)
+			for (long i = 0; i <= SIZE_CATEGORIES; i++) {
+				final List<Long> longList;
 
-			longList = new ArrayList<Long>();
+				longList = new ArrayList<Long>();
 
-			longList.add(i + 1);
+				if (i == 0) {
+					for (long j = 0; j < SIZE_CATEGORIES; j++) {
+						longList.add(j * 2 + 1);
+					}
+				} else
+					longList.add(i * 2);
 
-			this.listIndicesArray.add(longList);
+				this.listIndicesArray.add(longList);
+			}
+		else {
+			// Special case for a size of 2. Why? Why not!
+			for (long i = 0; i <= SIZE_CATEGORIES * 2; i++) {
+				final List<Long> longList;
+
+				longList = new ArrayList<Long>();
+
+				if (i == 2) {
+					longList.add(i - 2);
+				}
+
+				longList.add(i + 1);
+			}
 		}
 	}
 
-	private class JournalCategory {
-		private final GffField nameField;
-		private final GffField tagField;
+	private class JournalCategory implements Comparable<JournalCategory> {
+		private String name;
+		private String tag;
+		private String entryText;
 
-		public JournalCategory() {
-			// TODO: Tag based on # of categories
-			// TODO: entry data based on # of categories
-			// TODO: name based on user input
-
-			final GeneratedJournalGFF gff;
-
-			gff = GeneratedJournalGFF.this;
-
-			gff.labelArray.add("Name");
-			gff.labelArray.add("XP");
-			gff.labelArray.add("Priority");
-			gff.labelArray.add("Picture");
-			gff.labelArray.add("Comment");
-			gff.labelArray.add("Tag");
-			gff.labelArray.add("EntryList");
-			gff.labelArray.add("ID");
-			gff.labelArray.add("End");
-			gff.labelArray.add("Text");
-
-			// JournalCategory struct
-			gff.structArray.add(new GffStruct(0, 0, 7));
-			// JournalEntry struct
-			gff.structArray.add(new GffStruct(0, 28, 3));
-
-			// Categories Field: TODO DODO (!?)
-			gff.fieldArray.add(new GffField(15, 0, 0));
-
-			// Name Field: TODO DODO
-			this.nameField = new GffField(12, 1, 0);
-			this.nameField.setBlankCExoLocString();
-			gff.fieldArray.add(this.nameField);
-
-			// XP Field: DataOrDataOffset is constant.
-			gff.fieldArray.add(new GffField(4, 2, 0));
-
-			// Priority Field: DataOrDataOffset is constant.
-			gff.fieldArray.add(new GffField(4, 3, 4));
-
-			// Picture Field: DataOrDataOffset is constant.
-			gff.fieldArray.add(new GffField(2, 4, 65535));
-
-			// Comment Field: TODO DODO
-			final GffField commentField;
-			commentField = new GffField(10, 5, 20);
-			gff.fieldArray.add(commentField);
-
-			// Tag Field: TODO DODO
-			this.tagField = new GffField(10, 6, 24);
-			gff.fieldArray.add(tagField);
-
-			// EntryList field: TODO DODO
-			gff.fieldArray.add(new GffField(15, 7, 8));
-
-			/*
-			 * Entries
-			 * 
-			 * Note: we only have one entry per category since we're using
-			 * custom tags to update entries instead of the built-in journal
-			 * system.
-			 */
-
-			// ID Field: DataOrDataOffset is constant.
-			gff.fieldArray.add(new GffField(4, 8, 1));
-
-			// End field: DataOrDataOffset is constant.
-			gff.fieldArray.add(new GffField(2, 9, 0));
-
-			// Text field:
-			final GffField textField;
-
-			// This is a CExoLoc field. TODO DODO
-			textField = new GffField(12, 10, 28);
-			textField.setBlankCExoLocString();
-
-			gff.fieldArray.add(textField);
-
-			// TODO When we move out categories, we need to set data to
-			// "<CUSTOM" + categoryCount + ">" instead
-			// TODO Will have to change Tag data to category
-
-			// There is nothing wrong with regenerating these btw
-
-			textField.setData("<CUSTOM10>");
-			commentField.setData("Journal generated by ScriptEase 2. Do not "
-					+ "touch if you don't want to cause major issues.");
-
-			this.setTag("se_category1");
-			this.setName("Category Test");
-
-			gff.repopulateIndexArrays();
+		private JournalCategory(String name, String tag, String entryText) {
+			this.setName(name);
+			this.setTag(tag);
+			this.setEntryText(entryText);
 		}
 
 		/**
@@ -185,8 +288,19 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 		 * 
 		 * @param name
 		 */
-		public void setName(String name) {
-			this.nameField.setData(name);
+		private void setName(String name) {
+			this.name = name;
+		}
+
+		/**
+		 * Returns the name stored by the Journal Category. Note that this
+		 * returns what is stored in the class field, not in the GFFfield,
+		 * although these two should be the same.
+		 * 
+		 * @return
+		 */
+		private String getName() {
+			return this.name;
 		}
 
 		/**
@@ -194,8 +308,51 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 		 * 
 		 * @param tag
 		 */
-		public void setTag(String tag) {
-			this.tagField.setData(tag);
+		private void setTag(String tag) {
+			this.tag = tag;
+		}
+
+		/**
+		 * Set the entry text.
+		 * 
+		 * @param entryText
+		 */
+		private void setEntryText(String entryText) {
+			this.entryText = entryText;
+		}
+
+		/**
+		 * Returns the tag stored by the Journal Category. Note that this
+		 * returns what is stored in the class field, not in the GFFfield,
+		 * although these two should be the same.
+		 * 
+		 * @return
+		 */
+		private String getTag() {
+			return this.tag;
+		}
+
+		/**
+		 * Returns the entry text stored by the Journal Category. Note that this
+		 * returns what is stored in the class field, not in the GFFfield,
+		 * although these two should be the same.
+		 * 
+		 * @return
+		 */
+		private String getEntryText() {
+			return this.entryText;
+		}
+
+		@Override
+		public int compareTo(JournalCategory o) {
+			int comparison;
+			// Upper case has a different ascii value. This can be important for
+			// comparisons to underscores, etc.
+
+			comparison = this.getName().toUpperCase()
+					.compareTo(o.getName().toUpperCase());
+
+			return comparison;
 		}
 	}
 }

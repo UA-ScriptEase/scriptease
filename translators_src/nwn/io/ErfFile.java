@@ -147,15 +147,16 @@ public final class ErfFile implements GameModule {
 
 							// TODO Instead of checking this stuff, change to
 							// listeners on the bindings.
-							
+
 							// We're checking instanceofs instead of using an
 							// adapter because we want to assign variables.
-						//	if (binding instanceof KnowItBindingConstant) {
-								//		.getValue().getName();
-							//} else if (binding instanceof KnowItBindingStoryPoint) {
-							//	storyPoint = ((KnowItBindingStoryPoint) binding)
-								//		.getValue();
-						//	}
+							// if (binding instanceof KnowItBindingConstant) {
+							// .getValue().getName();
+							// } else if (binding instanceof
+							// KnowItBindingStoryPoint) {
+							// storyPoint = ((KnowItBindingStoryPoint) binding)
+							// .getValue();
+							// }
 							count++;
 						}
 						if (count > 2) {
@@ -172,11 +173,18 @@ public final class ErfFile implements GameModule {
 						if (ErfFile.this.getResourcesOfType("journal")
 								.isEmpty()) {
 
+							// TODO We should make this somewhere else so we can
+							// acccess it. Make it on module creation instead.
+							// All ScriptEase 2 modules should have this instead
+							// of default journal.
+
+							final GeneratedJournalGFF journal;
+							journal = new GeneratedJournalGFF();
+
 							// Resref of journal must be module.
 							final NWNResource resource = new NWNResource(
 									new ErfKey("module",
-											ErfKey.JOURNAL_FILE_TYPE),
-									GeneratedJournalGFF.getInstance());
+											ErfKey.JOURNAL_FILE_TYPE), journal);
 
 							ErfFile.this.resources.add(resource);
 						} else {
