@@ -285,7 +285,7 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 		this.fieldIndicesArray.clear();
 		this.listIndicesArray.clear();
 
-		for (long i = 0; i < SIZE_CATEGORIES * 10; i++)
+		for (long i = 1; i <= SIZE_CATEGORIES * 10; i++)
 			this.fieldIndicesArray.add(i);
 
 		/*
