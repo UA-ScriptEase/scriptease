@@ -129,22 +129,6 @@ public interface GameModule {
 	public void setLocation(File location);
 
 	/**
-	 * Creates a representation for the given template in this GameModule. It is
-	 * up to the specific implementation of GameModule to determine what is an
-	 * appropriate game representation of the template<br>
-	 * <br>
-	 * This should be used to store all sorts of template data. This does not
-	 * include scripts because it is addScripts(Collection)'s duty to handle
-	 * scripts and their references.
-	 * 
-	 * @param template
-	 *            The template whose data must be written to memory.
-	 * @see #addScripts(Collection)
-	 * @see GameObject
-	 */
-	public void addGameObject(GameObject object);
-
-	/**
 	 * Writes the given script to this GameModule module, and attaches a script
 	 * reference to the template supplied via ScriptInfo into the given slot,
 	 * also stored in ScriptInfo. It is up to the specific implementation of

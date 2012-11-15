@@ -25,6 +25,7 @@ import java.util.Set;
 import scriptease.controller.CodeBlockMapper;
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
@@ -36,11 +37,7 @@ import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
-import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryPoint;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
@@ -48,7 +45,6 @@ import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameModule;
-import scriptease.translator.io.model.GameObject;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
 import scriptease.util.FileOp;
 
@@ -95,8 +91,9 @@ public final class ErfFile implements GameModule {
 	private final StoryComponentObserver componentObserver;
 	private final PatternModelObserver modelObserver;
 
-	// TODO Write in the correct name
 	private static final String CREATE_JOURNAL_EFFECT = "Create Quest for <Story Point> with title <Title>";
+	private static final String STORY_POINT_KNOWIT = "Story Point";
+	private static final String STRING_KNOWIT = "Title";
 
 	/**
 	 * Location of the ErfFile.
@@ -122,116 +119,33 @@ public final class ErfFile implements GameModule {
 	// header size = 11 entries * 4 bytes each + reserved space
 	private static final long HEADER_BYTE_SIZE = 4 * 11 + HEADER_RESERVED_BYTES;
 
+	/*
+	 * TODO APIDictionary stuff:
+	 * 
+	 * Set a local string with name '"CT_"+storyPoint' to empty.
+	 * 
+	 * Increment a local int at 'CT_SIZE'. If 0, it should be set to
+	 * 
+	 * Custom token number:
+	 * 
+	 * Store the custom token number as a local int with name:
+	 * '"CT_NUM_"+storyPoint'
+	 * 
+	 * Category needs unique tag. Store the tag in another local string or
+	 * something.
+	 */
+
 	public ErfFile() {
 		this.resources = new ArrayList<NWNResource>();
 		this.uncompiledScripts = new ArrayList<NWNResource>();
 
+		// TODO This is all well and good for creating something, but it won't
+		// work the same when we load things in... Hm...
+
 		this.componentObserver = new StoryComponentObserver() {
 			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
-					event.getSource().observeEverything(this);
-					if (event.getSource().getDisplayText()
-							.equals(CREATE_JOURNAL_EFFECT)) {
-						final ScriptIt scriptIt;
-						String name = null;
-						StoryPoint storyPoint = null;
-
-						scriptIt = (ScriptIt) event.getSource();
-
-						// Get the name and story point for the new Journal.
-						int count = 0;
-						for (KnowIt parameter : scriptIt.getParameters()) {
-							final KnowItBinding binding = parameter
-									.getBinding();
-
-							// TODO Instead of checking this stuff, change to
-							// listeners on the bindings.
-
-							// We're checking instanceofs instead of using an
-							// adapter because we want to assign variables.
-							// if (binding instanceof KnowItBindingConstant) {
-							// .getValue().getName();
-							// } else if (binding instanceof
-							// KnowItBindingStoryPoint) {
-							// storyPoint = ((KnowItBindingStoryPoint) binding)
-							// .getValue();
-							// }
-							count++;
-						}
-						if (count > 2) {
-							System.err
-									.println("Error: Failed to create journal.");
-							throw new IllegalArgumentException(
-									"Failure when creating journal for "
-											+ scriptIt + "with " + count
-											+ "parameters.");
-						}
-
-						// Create the new Journal
-
-						if (ErfFile.this.getResourcesOfType("journal")
-								.isEmpty()) {
-
-							// TODO We should make this somewhere else so we can
-							// acccess it. Make it on module creation instead.
-							// All ScriptEase 2 modules should have this instead
-							// of default journal.
-
-							final GeneratedJournalGFF journal;
-							journal = new GeneratedJournalGFF();
-
-							// Resref of journal must be module.
-							final NWNResource resource = new NWNResource(
-									new ErfKey("module",
-											ErfKey.JOURNAL_FILE_TYPE), journal);
-
-							ErfFile.this.resources.add(resource);
-						} else {
-							// TODO add a category to the existing journal
-						}
-
-						// TODO Need to add a listenr to this child that
-						// changes values of journalgff when we change
-						// bindings.
-
-						/*
-						 * 
-						 * TODO Will need to get Category tag based KnowIt's
-						 * StoryPoint's name attached to this child.
-						 * 
-						 * Also need to get text in a string parameter from
-						 * this.
-						 * 
-						 * Then we create a new Journal Category.
-						 * 
-						 * First we create the Journal erf file. Then we create
-						 * + add a category Then we add one entry to the
-						 * category.
-						 * 
-						 * The entry contains one custom token.
-						 * 
-						 * 
-						 * APIDictionary stuff:
-						 * 
-						 * Set a local string with name '"CT_"+storyPoint' to
-						 * empty.
-						 * 
-						 * Increment a local int at 'CT_SIZE'. If 0, it should
-						 * be set to
-						 * 
-						 * Custom token number:
-						 * 
-						 * Store the custom token number as a local int with
-						 * name: '"CT_NUM_"+storyPoint'
-						 */
-					}
-				} else if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED) {
-					if (event.getSource().getDisplayText()
-							.equals(CREATE_JOURNAL_EFFECT)) {
-						// TODO remove a journal
-					}
-				}
+			public void componentChanged(final StoryComponentEvent event) {
+				ErfFile.this.processJournalEffectChange(event);
 			}
 		};
 
@@ -253,6 +167,118 @@ public final class ErfFile implements GameModule {
 		PatternModelManager.getInstance().addPatternModelObserver(
 				this.modelObserver);
 
+	}
+
+	/**
+	 * Process changes to the Journal effect.
+	 * 
+	 * @param event
+	 */
+	private void processJournalEffectChange(final StoryComponentEvent event) {
+		final StoryComponentChangeEnum eventType;
+		final GeneratedJournalGFF journal;
+
+		eventType = event.getType();
+		journal = ErfFile.this.getJournalGFF();
+
+		event.getSource().process(new StoryAdapter() {
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+
+				if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
+					scriptIt.observeEverything(ErfFile.this.componentObserver);
+
+					if (!scriptIt.getDisplayText()
+							.equals(CREATE_JOURNAL_EFFECT))
+						return;
+
+					if (journal == null) {
+						// All ScriptEase 2 modules should have this
+						// instead
+						// of default journal.
+
+						final GeneratedJournalGFF newJournal;
+						final NWNResource resource;
+
+						newJournal = new GeneratedJournalGFF(scriptIt);
+
+						// Resref of journal must be module.
+						resource = new NWNResource(new ErfKey(newJournal
+								.getResRef(), ErfKey.JOURNAL_FILE_TYPE),
+								newJournal);
+
+						ErfFile.this.resources.add(resource);
+
+						System.out
+								.println("Added a new JRL file to the module.");
+					} else {
+						journal.addCategory(scriptIt);
+
+						System.out
+								.println("Added a new Category to the Journal.");
+					}
+
+				} else if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED
+						&& scriptIt.getDisplayText().equals(
+								CREATE_JOURNAL_EFFECT)) {
+
+					if (journal == null)
+						throw new NullPointerException("Tried to remove a "
+								+ "category from a null journal. How did we "
+								+ "even get here?");
+
+					journal.removeCategory(scriptIt);
+
+					System.out.println("Removed a Category from the Journal.");
+
+					if (journal.getNumberOfCategories() == 0) {
+						// If it's the last category, remove the journal
+						// entirely.
+						ErfFile.this.resources.removeAll(ErfFile.this
+								.getResourcesOfType("journal"));
+
+						System.out
+								.println("Removed the JRL file from the module.");
+					}
+				}
+			}
+
+			@Override
+			public void processKnowIt(KnowIt knowIt) {
+				// TODO Change name and/or tag of Journal.
+
+				// TODO Make sure to check if the Story Point has
+				// already
+				// been bound to another journal category. If so,
+				// remove
+				// this binding.
+			};
+		});
+	}
+
+	private GeneratedJournalGFF getJournalGFF() {
+		final Collection<GameConstant> journals;
+
+		journals = this.getResourcesOfType("journal");
+
+		if (journals.size() > 1) {
+			System.err.println("Found more than one Journal object in " + this);
+			throw new IllegalArgumentException(
+					"More than one journal object found!");
+		}
+
+		for (GameConstant journalConstant : journals) {
+			if (journalConstant instanceof NWNResource) {
+				final GenericFileFormat gff;
+				gff = ((NWNResource) journalConstant).getGFF();
+
+				if (gff instanceof GeneratedJournalGFF) {
+					return (GeneratedJournalGFF) gff;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	@Override
@@ -312,6 +338,12 @@ public final class ErfFile implements GameModule {
 					elementIndexes.get(index), this.fileAccess);
 
 			this.resources.add(resource);
+
+			// Remove any journals that may exist. We don't need to deal with
+			// that.
+			this.resources.removeAll(this.getResourcesOfType("journal"));
+
+			// TODO May want to create journal object here instead.
 		}
 
 		// get rid of old scriptease-generated stuff from last save.
@@ -388,7 +420,9 @@ public final class ErfFile implements GameModule {
 				gff = resource.getGFF();
 				gffType = gff.getScriptEaseType();
 
-				// TODO Whoa what the carpe is zis?
+				// TODO Whoa what the carpe is this
+				// TODO Should probably delete the specific "journal" stuff
+				// since journals won't be seen by anything after this anyways.
 				if (gffType != null && gffType.equalsIgnoreCase(type)) {
 					if (gffType.equalsIgnoreCase("journal")) {
 						filteredObjects.addAll(gff
@@ -784,7 +818,10 @@ public final class ErfFile implements GameModule {
 				blackList.add(resource);
 			} else if (resource.isGFF()) {
 				gff = resource.getGFF();
-				gff.removeScriptEaseReferences();
+				
+				if(!(gff instanceof GeneratedJournalGFF)) {
+					gff.removeScriptEaseReferences();
+				}
 			}
 		}
 
@@ -924,19 +961,6 @@ public final class ErfFile implements GameModule {
 		}
 
 		return scriptBuckets;
-	}
-
-	@Override
-	public void addGameObject(GameObject object) {
-
-		// NWNObject nwnObject = new NWNObject();
-
-		// NWNResource resource = new NWNResource(object.getTemplateID(),
-		// fileType, data);
-		// NWNResource resource = new NWNResource(object.getTemplateID(),
-		// ErfKey.JOURNAL_FILE_TYPE, data);
-
-		// TODO This is where we add a journal.
 	}
 
 	@Override

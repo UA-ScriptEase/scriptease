@@ -703,21 +703,6 @@ public class GenericFileFormat {
 			// ... and add that list like a boss.
 			this.listIndicesArray.add(indexList);
 		}
-
-		// XXX DEBUG CODE!!! DELETE LATER!
-		if (fileType.trim().toUpperCase().equals(TYPE_JOURNAL_BP)) {
-			for (List<Long> list : this.listIndicesArray) {
-				System.out.print("List " + this.listIndicesArray.indexOf(list)
-						+ ": ");
-				for (Long luong : list) {
-					System.out.print(luong);
-
-					if (list.indexOf(luong) != list.size() - 1)
-						System.out.print(", ");
-				}
-				System.out.println();
-			}
-		}
 	}
 
 	/**
@@ -1307,6 +1292,12 @@ public class GenericFileFormat {
 			this.typeNumber = typeNumber;
 			this.labelIndex = labelIndex;
 			this.dataOrDataOffset = dataOrDataOffset;
+
+			// XXX DEBUG CODE! REMOVE LATER
+			if (fileType.trim().equalsIgnoreCase(TYPE_JOURNAL_BP)) {
+				System.out.println(this.getName() + ": "
+						+ this.dataOrDataOffset);
+			}
 		}
 
 		/**
