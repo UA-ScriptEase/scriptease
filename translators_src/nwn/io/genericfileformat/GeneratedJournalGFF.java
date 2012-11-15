@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import scriptease.model.complex.ScriptIt;
+
 /**
  * We never want more than one Journal GFF in our erf file. This is its own
  * class due to specialist methods that we do NOT want inside of a regular GFF.
@@ -12,12 +14,26 @@ import java.util.List;
  * 
  */
 public class GeneratedJournalGFF extends GenericFileFormat {
-	private static final String RESREF = "se_genjournal";
+	// ResRef must be module for journal.
+	private static final String RESREF = "module";
 
 	private final List<JournalCategory> categories;
 
-	public GeneratedJournalGFF() {
+	/**
+	 * Creates a new GeneratedJournalGFF. Since a journal requires at least one
+	 * category, we need to pass in a ScriptIt to create the first category.
+	 * 
+	 * @param scriptIt
+	 *            The initial ScriptIt to create a Journal GFF for. This cannot
+	 *            be null.
+	 */
+	public GeneratedJournalGFF(ScriptIt scriptIt) {
 		super(RESREF, TYPE_JOURNAL_BP + " ");
+
+		if (scriptIt == null) {
+			throw new NullPointerException("Cannot create journal GFF with"
+					+ "null ScriptIt.");
+		}
 
 		this.categories = new ArrayList<JournalCategory>();
 
@@ -34,29 +50,24 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 		this.labelArray.add("End");
 		this.labelArray.add("Text");
 
-		// Top Level Struct
-		this.structArray.add(new GffStruct(-1, 0, 1));
-		// Categories Field: DataOrDataOffset is constant
-		this.addField(GffField.TYPE_LIST, 0, 0);
-
-		this.addCategory("Placeholder", "se_placeholder", "<PLCEHLDR>");
+		this.addCategory(scriptIt);
 	}
 
 	/**
-	 * Set the name of the Journal Category with the specified tag.
+	 * Set the name of the Journal Category with the specified ScriptIt.
 	 * 
 	 * @param name
 	 *            The new name for the Category.
-	 * @param tag
-	 *            The tag used to find the Category.
+	 * @param scriptIt
+	 *            The ScriptIt used to find the Category.
 	 * @return Returns whether the assignment was successful. This will only
 	 *         fail if we do not find the tag.
 	 */
-	public boolean setName(String name, String tag) {
+	public boolean setName(String name, ScriptIt scriptIt) {
 		boolean success = false;
 
 		for (JournalCategory category : this.categories) {
-			if (category.getTag().equals(tag)) {
+			if (category.getScriptIt().equals(scriptIt)) {
 				category.setName(name);
 				success = true;
 				break;
@@ -64,23 +75,23 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 		}
 
 		if (success)
-			this.writeCategoriesToModel();
+			this.updateFieldsAndOffsets();
 
 		return success;
 	}
 
 	/**
-	 * Set the tag of the Journal Category with the specified tag.
+	 * Set the tag of the Journal Category with the specified ScriptIt.
 	 * 
 	 * @param newTag
 	 *            The new tag for the Category.
-	 * @param tag
-	 *            The tag used to find the Category.
+	 * @param scriptIt
+	 *            The ScriptIt used to find the Category.
 	 * @return Returns true if assignment was successful. Unsuccessful
 	 *         assignment can mean that a category with the tag was not found,
 	 *         or a category with the new tag already existed.
 	 */
-	public boolean setTag(String newTag, String tag) {
+	public boolean setTag(String newTag, ScriptIt scriptIt) {
 		JournalCategory foundCategory = null;
 
 		for (JournalCategory category : this.categories) {
@@ -88,14 +99,14 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 			if (category.getTag().equals(newTag))
 				return false;
 
-			if (category.getTag().equals(tag))
+			if (category.getScriptIt().equals(scriptIt))
 				foundCategory = category;
 		}
 
 		if (foundCategory != null) {
 			foundCategory.setTag(newTag);
 
-			this.writeCategoriesToModel();
+			this.updateFieldsAndOffsets();
 
 			return true;
 		}
@@ -104,25 +115,48 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	}
 
 	/**
-	 * Add a category to the Journal.
-	 * 
-	 * @param name
-	 * @param tag
-	 * @param entryText
+	 * Adds a placeholder category to the journal with name "Placeholder", tag
+	 * "se_placeholder+number_of_categories" and entry text "&lt;PLCEHLDR&gt;"
 	 */
-	public void addCategory(String name, String tag, String entryText) {
-		this.categories.add(new JournalCategory(name, tag, entryText));
+	public void addCategory(ScriptIt scriptIt) {
+		this.categories.add(new JournalCategory(scriptIt, "Placeholder",
+				"se_placeholder" + this.categories.size(), "<PLCEHLDR>"));
 
 		Collections.sort(this.categories);
 
-		writeCategoriesToModel();
+		this.updateFieldsAndOffsets();
+	}
+
+	/**
+	 * Removes a category with the specified ScriptIt. Returns true if
+	 * successful.
+	 * 
+	 * @param scriptIt
+	 *            The scriptIt used to find the JournalCategory.
+	 */
+	public boolean removeCategory(ScriptIt scriptIt) {
+		JournalCategory toBeRemoved = null;
+
+		for (JournalCategory category : this.categories) {
+			if (category.getScriptIt().equals(scriptIt)) {
+				toBeRemoved = category;
+				break;
+			}
+		}
+
+		if (toBeRemoved != null) {
+			this.categories.remove(toBeRemoved);
+			this.updateFieldsAndOffsets();
+		}
+
+		return toBeRemoved != null;
 	}
 
 	/**
 	 * Adds a new field into the field array with the given type, label index,
 	 * and data or data offset. Initializes CEXOLOCSTRING types to blanks.
 	 * 
-	 * I abstracted this out to make the {@link #writeCategoriesToModel()}
+	 * I abstracted this out to make the {@link #updateFieldsAndOffsets()}
 	 * method easier to read.
 	 * 
 	 * @param typeNumber
@@ -148,13 +182,21 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	/**
 	 * Writes the journals categories to the model with appropriate offsets.
 	 */
-	private void writeCategoriesToModel() {
+	private void updateFieldsAndOffsets() {
+		this.structArray.clear();
+		this.fieldArray.clear();
+
 		this.repopulateIndexArrays();
 
 		final String commentText;
 
 		commentText = "Journal generated by ScriptEase 2. Do not touch if you"
 				+ " don't want to cause major issues.";
+
+		// Top Level Struct
+		this.structArray.add(new GffStruct(-1, 0, 1));
+		// Categories Field: DataOrDataOffset is constant
+		this.addField(GffField.TYPE_LIST, 0, 0);
 
 		int previousOffset = 0;
 		for (JournalCategory category : this.categories) {
@@ -227,6 +269,15 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	}
 
 	/**
+	 * Return the number of categories in the journal.
+	 * 
+	 * @return
+	 */
+	public int getNumberOfCategories() {
+		return this.categories.size();
+	}
+
+	/**
 	 * Repopulates index arrays based on number of categories.
 	 */
 	private void repopulateIndexArrays() {
@@ -268,19 +319,35 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 				}
 
 				longList.add(i + 1);
+
+				this.listIndicesArray.add(longList);
 			}
 		}
 	}
 
 	private class JournalCategory implements Comparable<JournalCategory> {
+		private final ScriptIt scriptIt;
+
 		private String name;
 		private String tag;
 		private String entryText;
 
-		private JournalCategory(String name, String tag, String entryText) {
+		private JournalCategory(ScriptIt scriptIt, String name, String tag,
+				String entryText) {
+			this.scriptIt = scriptIt;
+
 			this.setName(name);
 			this.setTag(tag);
 			this.setEntryText(entryText);
+		}
+
+		/**
+		 * Returns the ScriptIt associated with the JournalCategory.
+		 * 
+		 * @return
+		 */
+		private ScriptIt getScriptIt() {
+			return this.scriptIt;
 		}
 
 		/**
