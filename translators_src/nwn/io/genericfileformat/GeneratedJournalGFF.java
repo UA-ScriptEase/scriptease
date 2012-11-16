@@ -195,8 +195,14 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 
 		// Top Level Struct
 		this.structArray.add(new GffStruct(-1, 0, 1));
+
 		// Categories Field: DataOrDataOffset is constant
-		this.addField(GffField.TYPE_LIST, 0, 0);
+		if (this.categories.size() == 2) {
+			// Special case for 2 categories again. Not sure what it is about
+			// these, but they like being special...
+			this.addField(GffField.TYPE_LIST, 0, 16);
+		} else
+			this.addField(GffField.TYPE_LIST, 0, 0);
 
 		int previousOffset = 0;
 		for (JournalCategory category : this.categories) {
@@ -309,13 +315,13 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 			}
 		else {
 			// Special case for a size of 2. Why? Why not!
-			for (long i = 0; i <= SIZE_CATEGORIES * 2; i++) {
+			for (long i = 0; i < SIZE_CATEGORIES * 2; i++) {
 				final List<Long> longList;
 
 				longList = new ArrayList<Long>();
 
 				if (i == 2) {
-					longList.add(i - 2);
+					longList.add(i - 1);
 				}
 
 				longList.add(i + 1);

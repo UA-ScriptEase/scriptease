@@ -257,9 +257,19 @@ public final class ErfFile implements GameModule {
 	}
 
 	private GeneratedJournalGFF getJournalGFF() {
-		final Collection<GameConstant> journals;
+		final Collection<GeneratedJournalGFF> journals;
 
-		journals = this.getResourcesOfType("journal");
+		journals = new ArrayList<GeneratedJournalGFF>();
+
+		for (NWNResource resource : this.resources) {
+			final GenericFileFormat gff;
+
+			gff = resource.getGFF();
+
+			if (gff instanceof GeneratedJournalGFF) {
+				journals.add((GeneratedJournalGFF) gff);
+			}
+		}
 
 		if (journals.size() > 1) {
 			System.err.println("Found more than one Journal object in " + this);
@@ -267,15 +277,8 @@ public final class ErfFile implements GameModule {
 					"More than one journal object found!");
 		}
 
-		for (GameConstant journalConstant : journals) {
-			if (journalConstant instanceof NWNResource) {
-				final GenericFileFormat gff;
-				gff = ((NWNResource) journalConstant).getGFF();
-
-				if (gff instanceof GeneratedJournalGFF) {
-					return (GeneratedJournalGFF) gff;
-				}
-			}
+		for (GeneratedJournalGFF journal : journals) {
+			return journal;
 		}
 
 		return null;
@@ -818,8 +821,8 @@ public final class ErfFile implements GameModule {
 				blackList.add(resource);
 			} else if (resource.isGFF()) {
 				gff = resource.getGFF();
-				
-				if(!(gff instanceof GeneratedJournalGFF)) {
+
+				if (!(gff instanceof GeneratedJournalGFF)) {
 					gff.removeScriptEaseReferences();
 				}
 			}
