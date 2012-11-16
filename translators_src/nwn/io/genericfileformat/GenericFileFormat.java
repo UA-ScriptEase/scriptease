@@ -436,11 +436,6 @@ public class GenericFileFormat {
 		if (index == null)
 			index = "";
 
-		if (index.isEmpty()
-				&& fileType.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
-			throw new IllegalArgumentException("Journals require an indexer.");
-		}
-
 		// conversations
 		if (fileType.equalsIgnoreCase(GenericFileFormat.TYPE_DIALOGUE_BP)) {
 			if (index.isEmpty()) {
@@ -452,10 +447,6 @@ public class GenericFileFormat {
 		}
 		// other types
 		else {
-			if (fileType.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
-				templateId += GenericFileFormat.RESREF_SEPARATOR + index;
-			}
-
 			name = this.getName(index);
 			final String tag;
 			final String type;
@@ -534,34 +525,6 @@ public class GenericFileFormat {
 	}
 
 	/**
-	 * Gets the object representations for the items contained <i>within</i>
-	 * this GFF. For example, Journals contain their stories which need Game
-	 * Objects.
-	 * 
-	 * @return
-	 */
-	public Collection<GameConstant> getInternalObjectRepresentations() {
-		final Collection<GameConstant> reps;
-		final List<GffStruct> categories;
-
-		categories = this.getFieldByLabel("Categories").getListData();
-
-		if (!this.getFileType().trim()
-				.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
-			throw new IllegalStateException(
-					"Can only get internal object reps from Journals.");
-		}
-
-		reps = new ArrayList<GameConstant>();
-
-		for (int i = 0; i < categories.size(); i++) {
-			reps.add(this.getObjectRepresentation(Integer.toString(i)));
-		}
-
-		return reps;
-	}
-
-	/**
 	 * Returns an equivalent ScriptEase GameType for the NWNObject Type. It will
 	 * default to the first type if the NWN type is not found.
 	 * 
@@ -596,9 +559,6 @@ public class GenericFileFormat {
 		} else if (typeString
 				.equalsIgnoreCase(GenericFileFormat.TYPE_DIALOGUE_BP)) {
 			type = NWNConversation.TYPE_DIALOGUE;
-		} else if (typeString
-				.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
-			type = "journal";
 		} else if (typeString
 				.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_INFO)) {
 			type = "module";
@@ -640,7 +600,6 @@ public class GenericFileFormat {
 		importantTypes.add(GenericFileFormat.TYPE_DIALOGUE_BP);
 		importantTypes.add(GenericFileFormat.TYPE_AREA_FILE);
 		importantTypes.add(GenericFileFormat.TYPE_MODULE_INFO);
-		importantTypes.add(GenericFileFormat.TYPE_JOURNAL_BP);
 
 		return importantTypes.contains(typeString);
 	}
@@ -1292,11 +1251,6 @@ public class GenericFileFormat {
 			this.typeNumber = typeNumber;
 			this.labelIndex = labelIndex;
 			this.dataOrDataOffset = dataOrDataOffset;
-
-			// CHECK WHY WE GET WRONG THING!
-			if (fileType.trim().equalsIgnoreCase(TYPE_JOURNAL_BP))
-				System.out.println(this.getName() + ": "
-						+ this.dataOrDataOffset);
 		}
 
 		/**

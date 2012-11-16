@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import scriptease.controller.BindingAdapter;
 import scriptease.controller.CodeBlockMapper;
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
@@ -37,6 +38,9 @@ import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
+import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
@@ -90,10 +94,6 @@ public final class ErfFile implements GameModule {
 
 	private final StoryComponentObserver componentObserver;
 	private final PatternModelObserver modelObserver;
-
-	private static final String CREATE_JOURNAL_EFFECT = "Create Quest for <Story Point> with title <Title>";
-	private static final String STORY_POINT_KNOWIT = "Story Point";
-	private static final String STRING_KNOWIT = "Title";
 
 	/**
 	 * Location of the ErfFile.
@@ -188,8 +188,8 @@ public final class ErfFile implements GameModule {
 				if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
 					scriptIt.observeEverything(ErfFile.this.componentObserver);
 
-					if (!scriptIt.getDisplayText()
-							.equals(CREATE_JOURNAL_EFFECT))
+					if (!scriptIt.getDisplayText().equals(
+							GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT))
 						return;
 
 					if (journal == null) {
@@ -220,7 +220,7 @@ public final class ErfFile implements GameModule {
 
 				} else if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED
 						&& scriptIt.getDisplayText().equals(
-								CREATE_JOURNAL_EFFECT)) {
+								GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT)) {
 
 					if (journal == null)
 						throw new NullPointerException("Tried to remove a "
@@ -234,8 +234,15 @@ public final class ErfFile implements GameModule {
 					if (journal.getNumberOfCategories() == 0) {
 						// If it's the last category, remove the journal
 						// entirely.
-						ErfFile.this.resources.removeAll(ErfFile.this
-								.getResourcesOfType("journal"));
+						final Collection<NWNResource> journalResources;
+
+						journalResources = new ArrayList<NWNResource>();
+
+						for (NWNResource resource : ErfFile.this.resources) {
+							if (resource.getGFF() instanceof GeneratedJournalGFF)
+								journalResources.add(resource);
+						}
+						ErfFile.this.resources.removeAll(journalResources);
 
 						System.out
 								.println("Removed the JRL file from the module.");
@@ -244,14 +251,66 @@ public final class ErfFile implements GameModule {
 			}
 
 			@Override
-			public void processKnowIt(KnowIt knowIt) {
-				// TODO Change name and/or tag of Journal.
+			public void processKnowIt(final KnowIt knowIt) {
 
-				// TODO Make sure to check if the Story Point has
-				// already
-				// been bound to another journal category. If so,
-				// remove
-				// this binding.
+				final StoryComponent owner;
+				final ScriptIt scriptIt;
+
+				owner = knowIt.getOwner();
+
+				if (owner instanceof CodeBlock) {
+
+					scriptIt = ((CodeBlock) owner).getOwner();
+
+					if (!scriptIt.getDisplayText().equals(
+							GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT))
+						return;
+				} else
+					return;
+
+				if (eventType == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
+					knowIt.getBinding().process(new BindingAdapter() {
+						@Override
+						public void processStoryPoint(
+								KnowItBindingStoryPoint storyPoint) {
+
+							if (knowIt
+									.getDisplayText()
+									.equals(GeneratedJournalGFF.PARAMETER_STORY_POINT_TEXT)) {
+								final String storyPointName;
+
+								storyPointName = storyPoint.getValue()
+										.getDisplayText();
+								
+								if (!journal.setTag(storyPointName, scriptIt))
+									// If set tag fails, remove binding.
+									knowIt.clearBinding();
+							}
+						}
+
+						@Override
+						public void processConstant(
+								KnowItBindingConstant constant) {
+							if (knowIt.getDisplayText().equals(
+									GeneratedJournalGFF.PARAMETER_TITLE_TEXT)) {
+								journal.setName(constant.getScriptValue(),
+										scriptIt);
+							}
+						}
+
+						@Override
+						public void processNull(KnowItBindingNull nullBinding) {
+							// We need to set default tag here or else we can't
+							// rebind stuff.
+							if (knowIt
+									.getDisplayText()
+									.equals(GeneratedJournalGFF.PARAMETER_STORY_POINT_TEXT)) {
+								journal.setTag(journal.generateDefaultTag(),
+										scriptIt);
+							}
+						}
+					});
+				}
 			};
 		});
 	}
@@ -342,11 +401,8 @@ public final class ErfFile implements GameModule {
 
 			this.resources.add(resource);
 
-			// Remove any journals that may exist. We don't need to deal with
-			// that.
+			// Remove any journals that may exist.
 			this.resources.removeAll(this.getResourcesOfType("journal"));
-
-			// TODO May want to create journal object here instead.
 		}
 
 		// get rid of old scriptease-generated stuff from last save.
@@ -423,16 +479,8 @@ public final class ErfFile implements GameModule {
 				gff = resource.getGFF();
 				gffType = gff.getScriptEaseType();
 
-				// TODO Whoa what the carpe is this
-				// TODO Should probably delete the specific "journal" stuff
-				// since journals won't be seen by anything after this anyways.
 				if (gffType != null && gffType.equalsIgnoreCase(type)) {
-					if (gffType.equalsIgnoreCase("journal")) {
-						filteredObjects.addAll(gff
-								.getInternalObjectRepresentations());
-					} else {
-						filteredObjects.add(gff.getObjectRepresentation());
-					}
+					filteredObjects.add(gff.getObjectRepresentation());
 				}
 			}
 		}

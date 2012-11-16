@@ -17,7 +17,14 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	// ResRef must be module for journal.
 	private static final String RESREF = "module";
 
+	public static final String EFFECT_CREATE_JOURNAL_TEXT = "Create Quest for <Story Point> with title <Title>";
+	public static final String PARAMETER_STORY_POINT_TEXT = "Story Point";
+	public static final String PARAMETER_TITLE_TEXT = "Title";
+
 	private final List<JournalCategory> categories;
+
+	// This goes up and up for generating default category tags.
+	private int categoryTagCount;
 
 	/**
 	 * Creates a new GeneratedJournalGFF. Since a journal requires at least one
@@ -36,6 +43,7 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 		}
 
 		this.categories = new ArrayList<JournalCategory>();
+		this.categoryTagCount = 0;
 
 		// Add labels
 		this.labelArray.add("Categories");
@@ -56,6 +64,11 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	/**
 	 * Set the name of the Journal Category with the specified ScriptIt.
 	 * 
+	 * Names can be anything and any length, apart from truly astronomical
+	 * numbers that would most likely destroy other parts of our system as well.
+	 * I tried with a string that is over 1,383,320 characters long and it
+	 * worked.
+	 * 
 	 * @param name
 	 *            The new name for the Category.
 	 * @param scriptIt
@@ -68,7 +81,10 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 
 		for (JournalCategory category : this.categories) {
 			if (category.getScriptIt().equals(scriptIt)) {
-				category.setName(name);
+				if (!name.isEmpty())
+					category.setName(name);
+				else
+					category.setName(" ");
 				success = true;
 				break;
 			}
@@ -81,7 +97,11 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	}
 
 	/**
-	 * Set the tag of the Journal Category with the specified ScriptIt.
+	 * Set the tag of the Journal Category with the specified ScriptIt. The tag
+	 * passed in is dealt with appropriately in this method, so anything can be
+	 * passed in here. We trim the tag, set it to lower case, add "se_" to the
+	 * front of it, and then reduce it to 32 characters if it has more than
+	 * that.
 	 * 
 	 * @param newTag
 	 *            The new tag for the Category.
@@ -91,10 +111,28 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	 *         assignment can mean that a category with the tag was not found,
 	 *         or a category with the new tag already existed.
 	 */
-	public boolean setTag(String newTag, ScriptIt scriptIt) {
+	public boolean setTag(String passedTag, ScriptIt scriptIt) {
+		final String SE_CONSTANT = "se_";
+		final int MAX_TAG_LEN = 32;
+
+		final String appendedTag;
+		final String newTag;
+
+		appendedTag = SE_CONSTANT + passedTag.trim().toLowerCase();
+
+		if (appendedTag.length() > MAX_TAG_LEN) {
+			newTag = appendedTag.substring(0, MAX_TAG_LEN);
+		} else
+			newTag = appendedTag;
+
 		JournalCategory foundCategory = null;
 
 		for (JournalCategory category : this.categories) {
+			if (foundCategory == category)
+				throw new IllegalArgumentException(
+						"Found more than one category for the tag " + newTag
+								+ ". Only one category may exist per" + "tag.");
+
 			// Return false if we find that the tag already exists.
 			if (category.getTag().equals(newTag))
 				return false;
@@ -104,6 +142,7 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 		}
 
 		if (foundCategory != null) {
+
 			foundCategory.setTag(newTag);
 
 			this.updateFieldsAndOffsets();
@@ -115,12 +154,22 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	}
 
 	/**
-	 * Adds a placeholder category to the journal with name "Placeholder", tag
-	 * "se_placeholder+number_of_categories" and entry text "&lt;PLCEHLDR&gt;"
+	 * Generates a default tag with the tag "se_placeholder" plus the current
+	 * category tag count.
+	 * 
+	 * @return
+	 */
+	public String generateDefaultTag() {
+		return "se_placeholder" + this.categoryTagCount++;
+	}
+
+	/**
+	 * Adds a placeholder category to the journal with name "Placeholder", a
+	 * default tag and entry text "&lt;PLCEHLDR&gt;"
 	 */
 	public void addCategory(ScriptIt scriptIt) {
-		this.categories.add(new JournalCategory(scriptIt, "Placeholder",
-				"se_placeholder" + this.categories.size(), "<PLCEHLDR>"));
+		this.categories.add(new JournalCategory(scriptIt, "Placeholder", this
+				.generateDefaultTag(), "<PLCEHLDR>"));
 
 		Collections.sort(this.categories);
 
