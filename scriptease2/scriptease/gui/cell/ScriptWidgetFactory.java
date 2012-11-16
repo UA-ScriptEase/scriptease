@@ -682,26 +682,15 @@ public class ScriptWidgetFactory {
 						@Override
 						public void processConstant(
 								KnowItBindingConstant constant) {
-							final String oldValue;
-
-							oldValue = constant.getScriptValue();
-
-							if (!oldValue.equals(newValue)) {
-								if (!UndoManager.getInstance()
-										.hasOpenUndoableAction()) {
-									UndoManager
-											.getInstance()
-											.startUndoableAction(
-													"Change " + oldValue
-															+ " to " + newValue);
-									GameConstant newConstant = GameConstantFactory
-											.getInstance().getConstant(
-													constant.getTypes(),
-													newValue);
-									knowIt.setBinding(newConstant);
-									UndoManager.getInstance()
-											.endUndoableAction();
-								}
+							if (!UndoManager.getInstance()
+									.hasOpenUndoableAction()) {
+								UndoManager.getInstance().startUndoableAction(
+										"Change text to " + newValue);
+								GameConstant newConstant = GameConstantFactory
+										.getInstance().getConstant(
+												constant.getTypes(), newValue);
+								knowIt.setBinding(newConstant);
+								UndoManager.getInstance().endUndoableAction();
 							}
 						}
 					});
