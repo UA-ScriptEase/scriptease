@@ -1293,11 +1293,10 @@ public class GenericFileFormat {
 			this.labelIndex = labelIndex;
 			this.dataOrDataOffset = dataOrDataOffset;
 
-			// XXX DEBUG CODE! REMOVE LATER
-			if (fileType.trim().equalsIgnoreCase(TYPE_JOURNAL_BP)) {
+			// CHECK WHY WE GET WRONG THING!
+			if (fileType.trim().equalsIgnoreCase(TYPE_JOURNAL_BP))
 				System.out.println(this.getName() + ": "
 						+ this.dataOrDataOffset);
-			}
 		}
 
 		/**
