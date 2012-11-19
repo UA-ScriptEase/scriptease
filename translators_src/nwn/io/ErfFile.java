@@ -134,6 +134,9 @@ public final class ErfFile implements GameModule {
 	 * 
 	 * Increment a local int at 'CT_SIZE'. If 0, it should be set to
 	 * 
+	 * 
+	 * Custom token number = 10+storypointid#
+	 * 
 	 * Custom token number:
 	 * 
 	 * Store the custom token number as a local int with name:
@@ -332,7 +335,7 @@ public final class ErfFile implements GameModule {
 						return;
 				} else
 					return;
-				
+
 				if (eventType == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
 					knowIt.getBinding().process(new BindingAdapter() {
 						@Override
@@ -414,7 +417,10 @@ public final class ErfFile implements GameModule {
 
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
-				ErfFile.this.addJournalCategory(scriptIt);
+				if (scriptIt.getDisplayText().equals(
+						GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT))
+					ErfFile.this.addJournalCategory(scriptIt);
+
 				scriptIt.processSubjects(this);
 				scriptIt.processParameters(this);
 				this.defaultProcessComplex(scriptIt);
