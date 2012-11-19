@@ -472,9 +472,15 @@ public final class ErfFile implements GameModule {
 
 				gff = resource.getGFF();
 
-				if (gff instanceof GeneratedJournalGFF) {
-					journals.add((GeneratedJournalGFF) gff);
-				}
+				if (gff.getFileType().trim()
+						.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP))
+					if (gff instanceof GeneratedJournalGFF) {
+						journals.add((GeneratedJournalGFF) gff);
+					} else
+						throw new IllegalArgumentException(
+								"Journal resource for non-"
+										+ "GeneratedJournalGFF journal "
+										+ "found.");
 			}
 		}
 
@@ -548,10 +554,26 @@ public final class ErfFile implements GameModule {
 					elementIndexes.get(index), this.fileAccess);
 
 			this.resources.add(resource);
-
-			// Remove any journals that may exist.
-			this.resources.removeAll(this.getResourcesOfType("journal"));
 		}
+
+		final Collection<NWNResource> journalResources;
+
+		journalResources = new ArrayList<NWNResource>();
+
+		// Remove any journals that may have been created. 
+		for (NWNResource resource : this.resources) {
+			if (resource.isGFF()) {
+				final GenericFileFormat gff;
+
+				gff = resource.getGFF();
+
+				if (gff.getFileType().trim()
+						.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
+					journalResources.add(resource);
+				}
+			}
+		}
+		this.resources.removeAll(journalResources);
 
 		// get rid of old scriptease-generated stuff from last save.
 		this.removeScriptEaseData();

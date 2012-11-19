@@ -45,7 +45,7 @@ public class GenericFileFormat {
 	protected static final String TYPE_ITEM_BP = "UTI";
 	protected static final String TYPE_DOOR_BP = "UTD";
 	protected static final String TYPE_DIALOGUE_BP = "DLG";
-	protected static final String TYPE_JOURNAL_BP = "JRL";
+	public static final String TYPE_JOURNAL_BP = "JRL";
 	protected static final String TYPE_MODULE_INFO = "IFO";
 	protected static final String TYPE_AREA_GAME_INSTANCE_FILE = "GIT";
 	protected static final String TYPE_AREA_FILE = "ARE";
