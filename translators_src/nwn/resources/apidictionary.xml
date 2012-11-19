@@ -274,7 +274,7 @@
       <CodeSymbol>string</CodeSymbol>
       <Format>
         <Literal>&quot;</Literal>
-        <Fragment data="value"/>
+        <Fragment data="unique32charname"/>
         <Literal>&quot;</Literal>
       </Format>
     </Type>

@@ -314,7 +314,7 @@ public class Context {
 		unimplemented("getOwner");
 		return null;
 	}
-	
+
 	public Iterator<KnowIt> getParameters() {
 		unimplemented("getParameters");
 		return new ArrayList<KnowIt>().iterator();
@@ -346,28 +346,28 @@ public class Context {
 		}
 		return effects.iterator();
 	}
-	
+
 	public Iterator<StoryPoint> getStoryPoints() {
 		return this.model.getDescendants().iterator();
 	}
-	
+
 	public Iterator<StoryPoint> getStoryPointChildren() {
 		this.unimplemented("getStoryPointChildren");
 		return null;
 	}
-	
+
 	public Iterator<StoryPoint> getStoryPointParents() {
 		this.unimplemented("getStoryPointParents");
 		return null;
 	}
-	
+
 	public KnowIt getSubject() {
 		unimplemented("getSubject");
 		return null;
 	}
 
 	public ScriptIt getScriptIt(String keyword) {
-		unimplemented("getScriptIt: "+keyword);
+		unimplemented("getScriptIt: " + keyword);
 		return null;
 	}
 
@@ -440,13 +440,24 @@ public class Context {
 		unimplemented("getIncludeFiles");
 		return null;
 	}
-	
+
 	public String getStoryPointName() {
 		unimplemented("getStoryPointName");
 		return null;
 	}
-	
+
 	public String getDisplayText() {
+		unimplemented("getDisplayText");
+		return null;
+	}
+
+	public String getUniqueID() {
+		unimplemented("getUniqueID");
+		return null;
+	}
+
+	public String getUnique32CharName() {
+		unimplemented("getUnique32CharName");
 		return null;
 	}
 

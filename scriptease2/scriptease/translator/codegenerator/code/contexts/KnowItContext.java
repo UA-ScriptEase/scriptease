@@ -34,8 +34,9 @@ public class KnowItContext extends StoryComponentContext {
 	}
 
 	public KnowItContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
-				.getTranslator(), other.getLocationInfo());
+		this(other.getStartStoryPoint(), other.getIndent(),
+				other.getNamifier(), other.getTranslator(), other
+						.getLocationInfo());
 	}
 
 	public KnowItContext(Context other, KnowIt source) {
@@ -57,14 +58,14 @@ public class KnowItContext extends StoryComponentContext {
 				((KnowIt) this.component).getBinding());
 		return binding.getValue();
 	}
-	
+
 	@Override
 	public String getTemplateID() {
 		String templateID = "Error when generating Template ID in "
 				+ this.getClass().toString();
 		final KnowIt knowIt = (KnowIt) this.component;
 		final KnowItBinding binding = knowIt.getBinding();
-		if(binding instanceof KnowItBindingConstant) {
+		if (binding instanceof KnowItBindingConstant) {
 			templateID = ((KnowItBindingConstant) binding).getTemplateID();
 		}
 		return templateID;

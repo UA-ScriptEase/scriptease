@@ -42,6 +42,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
@@ -272,17 +273,18 @@ public final class ErfFile implements GameModule {
 					knowIt.getBinding().process(new BindingAdapter() {
 						@Override
 						public void processStoryPoint(
-								KnowItBindingStoryPoint storyPoint) {
+								KnowItBindingStoryPoint storyPointBinding) {
 
 							if (knowIt
 									.getDisplayText()
 									.equals(GeneratedJournalGFF.PARAMETER_STORY_POINT_TEXT)) {
-								final String storyPointName;
+								final StoryPoint storyPoint;
 
-								storyPointName = storyPoint.getValue()
-										.getDisplayText();
-								
-								if (!journal.setTag(storyPointName, scriptIt))
+								storyPoint = storyPointBinding.getValue();
+
+								if (!journal.setTag(
+										storyPoint.getUnique32CharName(),
+										scriptIt))
 									// If set tag fails, remove binding.
 									knowIt.clearBinding();
 							}
@@ -321,12 +323,14 @@ public final class ErfFile implements GameModule {
 		journals = new ArrayList<GeneratedJournalGFF>();
 
 		for (NWNResource resource : this.resources) {
-			final GenericFileFormat gff;
+			if (resource.isGFF()) {
+				final GenericFileFormat gff;
 
-			gff = resource.getGFF();
+				gff = resource.getGFF();
 
-			if (gff instanceof GeneratedJournalGFF) {
-				journals.add((GeneratedJournalGFF) gff);
+				if (gff instanceof GeneratedJournalGFF) {
+					journals.add((GeneratedJournalGFF) gff);
+				}
 			}
 		}
 

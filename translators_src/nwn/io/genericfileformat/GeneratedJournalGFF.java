@@ -97,44 +97,34 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	}
 
 	/**
-	 * Set the tag of the Journal Category with the specified ScriptIt. The tag
-	 * passed in is dealt with appropriately in this method, so anything can be
-	 * passed in here. We trim the tag, set it to lower case, add "se_" to the
-	 * front of it, and then reduce it to 32 characters if it has more than
-	 * that.
+	 * Set the tag of the Journal Category with the specified ScriptIt. We pass
+	 * in a story point that
 	 * 
-	 * @param newTag
-	 *            The new tag for the Category.
+	 * @param storyPoint
+	 *            The story point that we are assigning
 	 * @param scriptIt
 	 *            The ScriptIt used to find the Category.
 	 * @return Returns true if assignment was successful. Unsuccessful
 	 *         assignment can mean that a category with the tag was not found,
 	 *         or a category with the new tag already existed.
 	 */
-	public boolean setTag(String passedTag, ScriptIt scriptIt) {
-		final String SE_CONSTANT = "se_";
+	public boolean setTag(String tag, ScriptIt scriptIt) {
 		final int MAX_TAG_LEN = 32;
 
-		final String appendedTag;
-		final String newTag;
-
-		appendedTag = SE_CONSTANT + passedTag.trim().toLowerCase();
-
-		if (appendedTag.length() > MAX_TAG_LEN) {
-			newTag = appendedTag.substring(0, MAX_TAG_LEN);
-		} else
-			newTag = appendedTag;
+		if (tag.length() > MAX_TAG_LEN)
+			throw new IllegalArgumentException("Tag \"" + tag
+					+ "\" is greater than " + MAX_TAG_LEN);
 
 		JournalCategory foundCategory = null;
 
 		for (JournalCategory category : this.categories) {
 			if (foundCategory == category)
 				throw new IllegalArgumentException(
-						"Found more than one category for the tag " + newTag
+						"Found more than one category for the tag " + tag
 								+ ". Only one category may exist per" + "tag.");
 
 			// Return false if we find that the tag already exists.
-			if (category.getTag().equals(newTag))
+			if (category.getTag().equals(tag))
 				return false;
 
 			if (category.getScriptIt().equals(scriptIt))
@@ -143,7 +133,7 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 
 		if (foundCategory != null) {
 
-			foundCategory.setTag(newTag);
+			foundCategory.setTag(tag);
 
 			this.updateFieldsAndOffsets();
 

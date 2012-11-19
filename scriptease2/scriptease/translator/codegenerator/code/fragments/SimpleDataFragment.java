@@ -104,7 +104,7 @@ public class SimpleDataFragment extends AbstractFragment {
 			else if (dataLabel
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.CURRENTSTORYPOINT
 							.name()))
-				resolveString = context.getStoryPointName();
+				resolveString = context.getUnique32CharName();
 			else if (dataLabel
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.FORMATTEDVALUE
 							.name()))
@@ -126,6 +126,14 @@ public class SimpleDataFragment extends AbstractFragment {
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.NOTE
 							.name()))
 				resolveString = context.getDisplayText();
+			else if (dataLabel
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.UNIQUEID
+							.name()))
+				resolveString = context.getUniqueID();
+			else if (dataLabel
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.UNIQUE32CHARNAME
+							.name()))
+				resolveString = context.getUnique32CharName();
 			else
 				throw (new CodeGenerationException(
 						"Simple Data Fragment was unable to be resolved for data: "

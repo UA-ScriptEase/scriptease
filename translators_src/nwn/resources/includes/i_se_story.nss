@@ -21,6 +21,12 @@ void SE2_Story_RegisterStoryPointParent(string name, string parent, object playe
 // registers the given child for the given storypoint
 void SE2_Story_RegisterStoryPointChild(string name, string child, object player);
 
+// Returns a unique 32 character name using the story point's name and uniqueID.
+// This should be used whenever we use story point names to keep everything consistent.
+//    name: The name of the story point
+//    uniqueID: The uniqueID of the story point
+string SE2_Story_GetUnique32CharName(string name, int uniqueID);
+
 // Determines if the storypoint with the given name has had its
 // fan-in count condition satisfied
 //   oPlayer:   The owner of the story point
@@ -117,6 +123,19 @@ int SE2_Story_FanInAchieved(object oPlayer, string name) {
 
     // return whether the fanIn condition has been satisfied
     return fanIn <= 0;
+}
+
+string SE2_Story_GetUnique32CharName(string name, int uniqueID) {
+    string noWhiteSpace = "";
+    int i;
+
+    for(i = 0; i < GetStringLength(name); i++) {
+        string letter = GetSubString(name, i, 1);
+        if(letter != " ")
+            noWhiteSpace += letter;
+    }
+
+    return GetStringLowerCase(GetSubString(noWhiteSpace, 0, 16) + IntToString(uniqueID));
 }
 
 void SE2_Story_RegisterStoryPoint(object oPlayer, string name, int fanIn) {

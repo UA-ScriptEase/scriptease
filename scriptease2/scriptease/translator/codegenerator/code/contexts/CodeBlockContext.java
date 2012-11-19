@@ -37,8 +37,9 @@ public class CodeBlockContext extends Context {
 	}
 
 	public CodeBlockContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
-				.getTranslator(), other.getLocationInfo());
+		this(other.getStartStoryPoint(), other.getIndent(),
+				other.getNamifier(), other.getTranslator(), other
+						.getLocationInfo());
 	}
 
 	public CodeBlockContext(Context other, CodeBlock source) {
@@ -47,14 +48,14 @@ public class CodeBlockContext extends Context {
 	}
 
 	@Override
-	public String getStoryPointName() {
+	public String getUnique32CharName() {
 		StoryComponent component = this.codeBlock.getOwner();
 
 		while (!(component instanceof StoryPoint) && component != null)
 			component = component.getOwner();
 
 		if (component != null)
-			return this.getNamifier().getUniqueName(component, null);
+			return ((StoryPoint) component).getUnique32CharName();
 		else
 			throw new CodeGenerationException(
 					"Failed to find a Story Point parent for CodeBlock: "
