@@ -9,6 +9,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.Note;
+import scriptease.util.StringOp;
 
 /**
  * StoryPoints are the basic units used to build stories. Each StoryPoint holds
@@ -30,6 +31,12 @@ public class StoryPoint extends ComplexStoryComponent {
 	private static int storyPointCounter = 1;
 
 	private int fanIn;
+	/**
+	 * StoryPoints must be unique. This uniqueID helps maintain uniqueness. It
+	 * only gets saved to the model, not written to any files. So it must get
+	 * generated whenever we create a new StoryPoint.
+	 */
+	private final int uniqueID;
 	private final Set<StoryPoint> successors;
 
 	/**
@@ -43,6 +50,9 @@ public class StoryPoint extends ComplexStoryComponent {
 		super();
 		this.fanIn = DEFAULT_FAN_IN;
 		this.successors = new HashSet<StoryPoint>();
+		this.uniqueID = storyPointCounter;
+
+		StoryPoint.storyPointCounter++;
 
 		this.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
@@ -50,7 +60,7 @@ public class StoryPoint extends ComplexStoryComponent {
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
 		if (name.equals("") || name == null) {
-			name = NEW_STORY_POINT + " " + storyPointCounter++;
+			name = NEW_STORY_POINT + " " + this.uniqueID;
 		}
 
 		this.setDisplayText(name);
@@ -176,6 +186,50 @@ public class StoryPoint extends ComplexStoryComponent {
 		}
 
 		return descendants;
+	}
+
+	@Override
+	public String getDisplayText() {
+		// TODO Auto-generated method stub
+		return super.getDisplayText();
+	}
+	
+	/**
+	 * Returns a 32 character, lower case string that uses the unique id to
+	 * generate a unique name for the story point.
+	 * 
+	 * @return
+	 */
+	public String getUnique32CharName() {
+		if (this.uniqueID < 0) {
+			throw new IllegalArgumentException("UniqueID (" + this.uniqueID
+					+ ") for " + this + " cannot be less than 0.");
+		}
+
+		final int MAX_LEN = 32;
+
+		final String noWhiteSpace;
+		final String nameTag;
+
+		noWhiteSpace = StringOp.removeWhiteSpace(this.getDisplayText());
+
+		if (noWhiteSpace.length() > MAX_LEN / 2) {
+			nameTag = noWhiteSpace.substring(0, MAX_LEN / 2).toLowerCase();
+		} else
+			nameTag = noWhiteSpace.toLowerCase();
+		
+		return nameTag + this.getUniqueID();
+	}
+
+	/**
+	 * Returns the unique ID. Unique IDs are generated on ScriptEase startup and
+	 * not saved to file, so remember not to implement code that requires unique
+	 * IDs to be persistent across different saves.
+	 * 
+	 * @return
+	 */
+	public Integer getUniqueID() {
+		return this.uniqueID;
 	}
 
 	@Override

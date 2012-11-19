@@ -28,8 +28,9 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 	}
 
 	public StoryPointContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
-				.getTranslator(), other.getLocationInfo());
+		this(other.getStartStoryPoint(), other.getIndent(),
+				other.getNamifier(), other.getTranslator(), other
+						.getLocationInfo());
 	}
 
 	public StoryPointContext(Context other, StoryPoint source) {
@@ -65,6 +66,16 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 	@Override
 	public String getNameOf(StoryComponent component) {
 		return this.getNamifier().getUniqueName(component, null);
+	}
+
+	@Override
+	public String getUniqueID() {
+		return ((StoryPoint) this.component).getUniqueID().toString();
+	}
+
+	@Override
+	public String getUnique32CharName() {
+		return ((StoryPoint) this.component).getUnique32CharName();
 	}
 
 	@Override

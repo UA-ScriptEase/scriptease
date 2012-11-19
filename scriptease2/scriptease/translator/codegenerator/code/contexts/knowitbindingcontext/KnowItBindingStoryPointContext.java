@@ -35,11 +35,19 @@ public class KnowItBindingStoryPointContext extends KnowItBindingContext {
 		this(other);
 		this.binding = source;
 	}
-	
+
+	@Override
+	public String getUnique32CharName() {
+		final StoryPoint qp = ((KnowItBindingStoryPoint) this.binding)
+				.getValue();
+		
+		return qp.getUnique32CharName();
+	}
+
 	@Override
 	public String getFormattedValue() {
 		final Collection<AbstractFragment> typeFormat;
-		
+
 		typeFormat = this.translator.getGameTypeManager().getFormat(
 				StoryPoint.STORY_POINT_TYPE);
 		if (typeFormat == null || typeFormat.isEmpty())
@@ -58,7 +66,7 @@ public class KnowItBindingStoryPointContext extends KnowItBindingContext {
 		final Context knowItContext;
 
 		knowItContext = ContextFactory.getInstance().createContext(this, qp);
-		
+
 		return knowItContext.getName();
 	}
 }

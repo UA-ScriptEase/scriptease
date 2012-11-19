@@ -49,6 +49,8 @@ public interface CodeGenerationKeywordConstants {
 		SUBJECT,
 		TEMPLATEID,
 		TYPE,
+		UNIQUEID,
+		UNIQUE32CHARNAME,
 		VALUE,
 		CURRENTSTORYPOINT
 	}
