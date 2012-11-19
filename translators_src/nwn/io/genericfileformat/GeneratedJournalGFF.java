@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * We never want more than one Journal GFF in our erf file. This is its own
@@ -109,8 +109,14 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	 *         assignment can mean that a category with the tag was not found,
 	 *         or a category with the new tag already existed.
 	 */
-	public boolean setTag(String tag, ScriptIt scriptIt) {
+	public boolean setTag(StoryPoint storyPoint, ScriptIt scriptIt) {
 		final int MAX_TAG_LEN = 32;
+		final String tag;
+
+		if (storyPoint != null)
+			tag = storyPoint.getUnique32CharName();
+		else
+			tag = this.generateDefaultTag();
 
 		if (tag.length() > MAX_TAG_LEN)
 			throw new IllegalArgumentException("Tag \"" + tag
@@ -133,8 +139,12 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 		}
 
 		if (foundCategory != null) {
+			final int tagNumber;
+
+			tagNumber = 10 + storyPoint.getUniqueID();
 
 			foundCategory.setTag(tag);
+			foundCategory.setEntryText("<CUSTOM" + tagNumber + ">");
 
 			this.updateFieldsAndOffsets();
 
