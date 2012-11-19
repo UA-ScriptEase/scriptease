@@ -188,12 +188,6 @@ public class StoryPoint extends ComplexStoryComponent {
 		return descendants;
 	}
 
-	@Override
-	public String getDisplayText() {
-		// TODO Auto-generated method stub
-		return super.getDisplayText();
-	}
-	
 	/**
 	 * Returns a 32 character, lower case string that uses the unique id to
 	 * generate a unique name for the story point.
@@ -217,7 +211,7 @@ public class StoryPoint extends ComplexStoryComponent {
 			nameTag = noWhiteSpace.substring(0, MAX_LEN / 2).toLowerCase();
 		} else
 			nameTag = noWhiteSpace.toLowerCase();
-		
+
 		return nameTag + this.getUniqueID();
 	}
 
@@ -236,5 +230,15 @@ public class StoryPoint extends ComplexStoryComponent {
 	public void revalidateKnowItBindings() {
 		for (StoryComponent child : this.getChildren())
 			child.revalidateKnowItBindings();
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		return this.hashCode() == other.hashCode();
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode() + this.getUniqueID();
 	}
 }
