@@ -21,6 +21,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * Abstract Class that defines all pattern-related model components in
@@ -262,6 +263,7 @@ public abstract class StoryComponent implements Cloneable {
 			StoryComponentObserver storyComponentObserver = observerRef.get();
 			if (storyComponentObserver != null
 					&& storyComponentObserver == observer)
+				// This checks if the observer already exists.
 				return;
 			else if (storyComponentObserver == null)
 				this.observers.remove(observerRef);
@@ -439,6 +441,17 @@ public abstract class StoryComponent implements Cloneable {
 		final StoryAdapter adapter;
 
 		adapter = new StoryAdapter() {
+			@Override
+			public void processStoryPoint(StoryPoint storyPoint) {
+				storyPoint.addStoryComponentObserver(observer);
+
+				for (StoryComponent child : storyPoint.getChildren())
+					child.process(this);
+
+				for (StoryPoint successor : storyPoint.getSuccessors())
+					successor.process(this);
+			}
+
 			@Override
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
 				complex.addStoryComponentObserver(observer);

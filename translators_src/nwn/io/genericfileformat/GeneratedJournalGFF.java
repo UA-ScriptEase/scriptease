@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 
 /**
