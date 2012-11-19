@@ -129,21 +129,18 @@ public final class ErfFile implements GameModule {
 
 	/*
 	 * TODO APIDictionary stuff:
+	 */
+
+	/*
+	 * In Translator:
 	 * 
-	 * Set a local string with name '"CT_"+storyPoint' to empty.
+	 * - set entry text to "<CUSTOM" + (10+storyPoint.getUniqueID) + ">";
+	 */
+
+	/*
+	 * NWN Pseudocode:
 	 * 
-	 * Increment a local int at 'CT_SIZE'. If 0, it should be set to
-	 * 
-	 * 
-	 * Custom token number = 10+storypointid#
-	 * 
-	 * Custom token number:
-	 * 
-	 * Store the custom token number as a local int with name:
-	 * '"CT_NUM_"+storyPoint'
-	 * 
-	 * Category needs unique tag. Store the tag in another local string or
-	 * something.
+	 * - use existing code in i_se_story to do what we wanted to do
 	 */
 
 	public ErfFile() {
@@ -212,8 +209,7 @@ public final class ErfFile implements GameModule {
 
 						storyPoint = storyPointBinding.getValue();
 
-						if (!journal.setTag(storyPoint.getUnique32CharName(),
-								scriptIt))
+						if (!journal.setTag(storyPoint, scriptIt))
 							// If set tag fails, remove binding.
 							parameter.clearBinding();
 					}
@@ -349,9 +345,7 @@ public final class ErfFile implements GameModule {
 
 								storyPoint = storyPointBinding.getValue();
 
-								if (!journal.setTag(
-										storyPoint.getUnique32CharName(),
-										scriptIt))
+								if (!journal.setTag(storyPoint, scriptIt))
 									// If set tag fails, remove binding.
 									knowIt.clearBinding();
 							}
@@ -374,8 +368,7 @@ public final class ErfFile implements GameModule {
 							if (knowIt
 									.getDisplayText()
 									.equals(GeneratedJournalGFF.PARAMETER_STORY_POINT_TEXT)) {
-								journal.setTag(journal.generateDefaultTag(),
-										scriptIt);
+								journal.setTag(null, scriptIt);
 							}
 						}
 					});
@@ -560,7 +553,7 @@ public final class ErfFile implements GameModule {
 
 		journalResources = new ArrayList<NWNResource>();
 
-		// Remove any journals that may have been created. 
+		// Remove any journals that may have been created.
 		for (NWNResource resource : this.resources) {
 			if (resource.isGFF()) {
 				final GenericFileFormat gff;
