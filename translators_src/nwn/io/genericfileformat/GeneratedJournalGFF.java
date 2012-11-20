@@ -101,7 +101,13 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 
 	/**
 	 * Set the tag of the Journal Category with the specified ScriptIt. We pass
-	 * in a story point. This deals with null values appropriately.
+	 * in a story point, whose unique 32 character name is used to generate a
+	 * tag.<br>
+	 * <br>
+	 * This method also creates an entry text for the passed in story point.<br>
+	 * <br>
+	 * This method deals with null values appropriately by creating a
+	 * placeholder tag and entry text.
 	 * 
 	 * @param storyPoint
 	 *            The story point that we are assigning
@@ -162,7 +168,7 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	}
 
 	/**
-	 * Generates a default tag with the tag "se_placeholder" plus the current
+	 * Generates a default tag that equals "se_placeholder" plus the current
 	 * category tag count.
 	 * 
 	 * @return
@@ -388,6 +394,21 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 		}
 	}
 
+	/**
+	 * A JournalCategory represents a category in NWN journals. These categories
+	 * have names, tags, and entry text. There are other fields and variables
+	 * associated with journals, such as Quest Experience and if reaching them
+	 * finishes the category. However, we are not interested in those right now.
+	 * If we ever are, this would be the place to store them. <br>
+	 * <br>
+	 * The JournalCategory object also stores a ScriptIt, which facillitates
+	 * deleting categories by deleting ScriptIts from the model. <br>
+	 * <br>
+	 * JournalCategory implements Comparable, allowing it to be sorted by name.
+	 * 
+	 * @author kschenk
+	 * 
+	 */
 	private class JournalCategory implements Comparable<JournalCategory> {
 		private final ScriptIt scriptIt;
 

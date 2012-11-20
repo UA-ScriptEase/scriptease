@@ -73,6 +73,7 @@ import scriptease.util.FileOp;
  * 
  * @author jtduncan
  * @author remiller
+ * @author kschenk
  */
 public final class ErfFile implements GameModule {
 
@@ -138,6 +139,7 @@ public final class ErfFile implements GameModule {
 			}
 		};
 
+		// Used for journal observance
 		this.modelObserver = new PatternModelObserver() {
 			public void modelChanged(PatternModelEvent event) {
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
@@ -164,7 +166,8 @@ public final class ErfFile implements GameModule {
 
 	/**
 	 * Adds a journal category for the scriptIt. Also makes sure that any
-	 * subsequent additions to the scriptIt are observed.
+	 * subsequent additions to the scriptIt are observed. This method is where a
+	 * journal is created if one does not already exist.
 	 * 
 	 * @param scriptIt
 	 */
@@ -192,10 +195,11 @@ public final class ErfFile implements GameModule {
 
 						if (!journal.setTag(storyPoint, scriptIt)) {
 							// If set tag fails, remove binding.
-							try{
-							parameter.clearBinding();
-							} catch(Exception e) {
-								System.err.println("EXCEPTION! at " + parameter);
+							try {
+								parameter.clearBinding();
+							} catch (Exception e) {
+								System.err
+										.println("EXCEPTION! at " + parameter);
 							}
 							System.out
 									.println("Parameter successfully cleared.");
@@ -366,7 +370,8 @@ public final class ErfFile implements GameModule {
 	}
 
 	/**
-	 * Adds journal categories for any existing effects.
+	 * Adds journal categories for any existing effects. This is called when we
+	 * load a module, so that we can create journals for all of these ScriptIts.
 	 * 
 	 * @param observer
 	 */
@@ -442,6 +447,12 @@ public final class ErfFile implements GameModule {
 		root.process(adapter);
 	}
 
+	/**
+	 * Returns the GeneratedJournalGFF associated with the module. Note that
+	 * this can return null if nothing is found.
+	 * 
+	 * @return
+	 */
 	private GeneratedJournalGFF getJournalGFF() {
 		final Collection<GeneratedJournalGFF> journals;
 
