@@ -127,28 +127,9 @@ public final class ErfFile implements GameModule {
 	// header size = 11 entries * 4 bytes each + reserved space
 	private static final long HEADER_BYTE_SIZE = 4 * 11 + HEADER_RESERVED_BYTES;
 
-	/*
-	 * TODO APIDictionary stuff:
-	 */
-
-	/*
-	 * In Translator:
-	 * 
-	 * - set entry text to "<CUSTOM" + (10+storyPoint.getUniqueID) + ">";
-	 */
-
-	/*
-	 * NWN Pseudocode:
-	 * 
-	 * - use existing code in i_se_story to do what we wanted to do
-	 */
-
 	public ErfFile() {
 		this.resources = new ArrayList<NWNResource>();
 		this.uncompiledScripts = new ArrayList<NWNResource>();
-
-		// TODO This is all well and good for creating something, but it won't
-		// work the same when we load things in... Hm...
 
 		this.componentObserver = new StoryComponentObserver() {
 			@Override
@@ -209,9 +190,16 @@ public final class ErfFile implements GameModule {
 
 						storyPoint = storyPointBinding.getValue();
 
-						if (!journal.setTag(storyPoint, scriptIt))
+						if (!journal.setTag(storyPoint, scriptIt)) {
 							// If set tag fails, remove binding.
+							try{
 							parameter.clearBinding();
+							} catch(Exception e) {
+								System.err.println("EXCEPTION! at " + parameter);
+							}
+							System.out
+									.println("Parameter successfully cleared.");
+						}
 					}
 				}
 

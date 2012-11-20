@@ -22,6 +22,8 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	public static final String PARAMETER_STORY_POINT_TEXT = "Story Point";
 	public static final String PARAMETER_TITLE_TEXT = "Title";
 
+	private static final String PLACEHOLDER_ENTRY_TEXT = "<PLACEHOLDER>";
+
 	private final List<JournalCategory> categories;
 
 	// This goes up and up for generating default category tags.
@@ -99,7 +101,7 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 
 	/**
 	 * Set the tag of the Journal Category with the specified ScriptIt. We pass
-	 * in a story point that
+	 * in a story point. This deals with null values appropriately.
 	 * 
 	 * @param storyPoint
 	 *            The story point that we are assigning
@@ -139,12 +141,17 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 		}
 
 		if (foundCategory != null) {
-			final int tagNumber;
-
-			tagNumber = 10 + storyPoint.getUniqueID();
 
 			foundCategory.setTag(tag);
-			foundCategory.setEntryText("<CUSTOM" + tagNumber + ">");
+
+			if (storyPoint != null) {
+				final int tagNumber;
+
+				tagNumber = 10 + storyPoint.getUniqueID();
+
+				foundCategory.setEntryText("<CUSTOM" + tagNumber + ">");
+			} else
+				foundCategory.setEntryText(PLACEHOLDER_ENTRY_TEXT);
 
 			this.updateFieldsAndOffsets();
 
@@ -170,7 +177,7 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	 */
 	public void addCategory(ScriptIt scriptIt) {
 		this.categories.add(new JournalCategory(scriptIt, "Placeholder", this
-				.generateDefaultTag(), "<PLCEHLDR>"));
+				.generateDefaultTag(), PLACEHOLDER_ENTRY_TEXT));
 
 		Collections.sort(this.categories);
 

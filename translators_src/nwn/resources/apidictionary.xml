@@ -22182,6 +22182,71 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
+     <ScriptIt>
+      <Name>Set &lt;Story Point&gt; Quest text to &lt;Text&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Set &lt;Story Point&gt; Quest text to &lt;Text&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>468</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Story Point</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>storyPoint</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Text</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>string</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+          	<Line>
+          		<Literal>SetCustomToken(10+</Literal>
+          		<Scope data="argument" ref="Story Point">
+          			<Fragment data="uniqueID" />
+          		</Scope>
+          		<Literal>, </Literal>
+          		<Scope data="argument" ref="Text">
+          			<Fragment data="name" />
+          		</Scope>
+          		<Literal>);</Literal>
+          	</Line>
+          	<Line></Line>
+          	<Line>
+          		<Literal>RemoveJournalQuestEntry(</Literal>
+          		<Scope data="argument" ref="Story Point">
+          			<Fragment data="name" />
+          		</Scope>
+          		<Literal>, GetFirstPC());</Literal>
+          	</Line>
+          	<Line>
+          		<Literal>AddJournalQuestEntry(</Literal>
+          		<Scope data="argument" ref="Story Point">
+          			<Fragment data="name" />
+          		</Scope>
+          		<Literal>, 1, GetFirstPC());</Literal>
+          	</Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
   </Effects>
   <DescribeIts>
     <DescribeIt>
