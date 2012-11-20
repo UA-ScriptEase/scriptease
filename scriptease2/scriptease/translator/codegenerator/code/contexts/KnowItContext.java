@@ -7,6 +7,7 @@ import scriptease.controller.get.VariableGetter;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.APIDictionary;
@@ -110,6 +111,19 @@ public class KnowItContext extends StoryComponentContext {
 		final APIDictionary apiDictionary = this.translator.getApiDictionary();
 		return apiDictionary.getGameTypeManager().getCodeSymbol(
 				((KnowIt) this.component).getDefaultType());
+	}
+
+	@Override
+	public String getUniqueID() {
+		final KnowIt knowIt = (KnowIt) this.component;
+		final KnowItBinding binding = knowIt.getBinding();
+
+		if (binding instanceof KnowItBindingStoryPoint) {
+			return ((KnowItBindingStoryPoint) binding).getValue().getUniqueID()
+					.toString();
+		} else {
+			return "<Binding was not of type \"KnowItBindingStoryPoint\">";
+		}
 	}
 
 	@Override

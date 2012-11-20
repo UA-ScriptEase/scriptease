@@ -65,6 +65,12 @@ public class StoryPoint extends ComplexStoryComponent {
 
 		this.setDisplayText(name);
 	}
+	
+	@Override
+	public ComplexStoryComponent clone() {
+		// TODO Auto-generated method stub
+		return super.clone();
+	}
 
 	/**
 	 * Only accepts Causes, not effects, as children.

@@ -49,6 +49,7 @@ import sun.awt.util.IdentityArrayList;
  * be created with a model. Depending on the mode chosen, the graph can be set
  * to only select individual nodes, or entire paths by holding shift.
  * 
+ * @author mfchurch
  * @author kschenk
  * 
  * @param <E>
