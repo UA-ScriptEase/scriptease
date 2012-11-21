@@ -22,7 +22,7 @@ import scriptease.gui.SEGraph.SEGraph;
  */
 @SuppressWarnings("serial")
 public class SEGraphNodeTransferHandler<E> extends TransferHandler {
-	private static DataFlavor nodeFlavour;
+	private DataFlavor nodeFlavour;
 
 	private final SEGraph<E> graph;
 
@@ -35,8 +35,7 @@ public class SEGraphNodeTransferHandler<E> extends TransferHandler {
 			try {
 				String seGraphNodeFlavour = DataFlavor.javaJVMLocalObjectMimeType
 						+ ";class=" + startNode.getClass().getCanonicalName();
-				SEGraphNodeTransferHandler.nodeFlavour = new DataFlavor(
-						seGraphNodeFlavour);
+				this.nodeFlavour = new DataFlavor(seGraphNodeFlavour);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -153,11 +152,9 @@ public class SEGraphNodeTransferHandler<E> extends TransferHandler {
 	protected E extractNode(Transferable transferData) {
 		E data = null;
 
-		if (transferData
-				.isDataFlavorSupported(SEGraphNodeTransferHandler.nodeFlavour)) {
+		if (transferData.isDataFlavorSupported(this.nodeFlavour)) {
 			try {
-				data = (E) transferData
-						.getTransferData(SEGraphNodeTransferHandler.nodeFlavour);
+				data = (E) transferData.getTransferData(this.nodeFlavour);
 			} catch (UnsupportedFlavorException e) {
 				// data flavour is incompatible, the import is impossible
 				return null;
@@ -199,12 +196,12 @@ public class SEGraphNodeTransferHandler<E> extends TransferHandler {
 		 */
 		@Override
 		public DataFlavor[] getTransferDataFlavors() {
-			return new DataFlavor[] { SEGraphNodeTransferHandler.nodeFlavour };
+			return new DataFlavor[] { nodeFlavour };
 		}
 
 		@Override
 		public boolean isDataFlavorSupported(DataFlavor flavor) {
-			return flavor.equals(SEGraphNodeTransferHandler.nodeFlavour);
+			return flavor.equals(nodeFlavour);
 		}
 
 		@Override
