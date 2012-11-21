@@ -19,7 +19,7 @@ import sun.awt.util.IdentityArrayList;
  * @author mfchurch
  * @author kschenk
  */
-public class DescribeIt implements Cloneable, TypedComponent {
+public class DescribeIt implements TypedComponent {
 	private DescribeItNode startNode;
 	private String name;
 	private Map<Collection<DescribeItNode>, ScriptIt> paths;
@@ -161,45 +161,6 @@ public class DescribeIt implements Cloneable, TypedComponent {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	@Override
-	public DescribeIt clone() {
-		DescribeIt clone = null;
-
-		try {
-			clone = (DescribeIt) super.clone();
-
-		} catch (CloneNotSupportedException e) {
-			Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
-					Thread.currentThread(), e);
-		}
-
-		clone.startNode = this.startNode.clone();
-		clone.paths = new HashMap<Collection<DescribeItNode>, ScriptIt>();
-
-		for (Entry<Collection<DescribeItNode>, ScriptIt> entry : this.paths
-				.entrySet()) {
-			final List<DescribeItNode> describeItNodes;
-
-			describeItNodes = new ArrayList<DescribeItNode>();
-
-			for (DescribeItNode node : entry.getKey()) {
-				for (DescribeItNode existingNode : clone.startNode
-						.getDescendants()) {
-					if (existingNode.equals(node)) {
-						describeItNodes.add(existingNode);
-						break;
-					}
-				}
-			}
-
-			clone.paths.put(describeItNodes, entry.getValue().clone());
-		}
-
-		clone.types = new ArrayList<String>(this.types);
-
-		return clone;
 	}
 
 	/**

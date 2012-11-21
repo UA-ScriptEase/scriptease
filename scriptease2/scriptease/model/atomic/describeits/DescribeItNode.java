@@ -12,7 +12,7 @@ import scriptease.model.atomic.KnowIt;
  * @author kschenk
  * 
  */
-public class DescribeItNode implements Cloneable {
+public class DescribeItNode {
 	private static final String NEW_DESCRIBEIT_NODE = "New Node";
 	private static int describeItNodeCounter = 1;
 
@@ -40,29 +40,6 @@ public class DescribeItNode implements Cloneable {
 		this.setKnowIt(knowIt);
 		this.setName(name);
 
-	}
-
-	@Override
-	protected DescribeItNode clone() {
-		DescribeItNode clone = null;
-		try {
-			clone = (DescribeItNode) super.clone();
-
-		} catch (CloneNotSupportedException e) {
-			Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
-					Thread.currentThread(), e);
-		}
-
-		clone.name = this.name;
-		if (this.knowIt != null)
-			clone.knowIt = this.knowIt.clone();
-		clone.successors = new HashSet<DescribeItNode>();
-
-		for (DescribeItNode successor : this.getSuccessors()) {
-			clone.addSuccessor(successor.clone());
-		}
-
-		return clone;
 	}
 
 	public String getName() {
@@ -165,5 +142,12 @@ public class DescribeItNode implements Cloneable {
 				return this.getName().equals(compared.getName());
 		}
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return "DescribeItNode[" + this.getName() + "] with "
+				+ this.getKnowIt() + " and " + this.getSuccessors().size()
+				+ " successors.";
 	}
 }
