@@ -247,11 +247,11 @@ public class LibraryModel extends PatternModel implements
 
 		describeItManager = this.translator.getApiDictionary()
 				.getDescribeItManager();
-		existingKnowIt = describeItManager.getStoryComponent(describeIt);
+		/*existingKnowIt = describeItManager.getStoryComponent(describeIt);
 
-		if (describeItManager.getStoryComponent(describeIt) != null) {
+		if (existingKnowIt != null) {
 			describeItManager.addDescribeIt(describeIt, existingKnowIt);
-		} else {
+		} else {*/
 			final KnowIt knowIt;
 
 			knowIt = describeItManager.createKnowItForDescribeIt(describeIt);
@@ -259,7 +259,7 @@ public class LibraryModel extends PatternModel implements
 			this.add(knowIt);
 
 			describeItManager.addDescribeIt(describeIt, knowIt);
-		}
+		//}
 	}
 
 	public void remove(StoryComponent component) {

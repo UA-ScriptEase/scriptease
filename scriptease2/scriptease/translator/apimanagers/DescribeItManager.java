@@ -1,6 +1,8 @@
 package scriptease.translator.apimanagers;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map.Entry;
 
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -19,10 +21,10 @@ import scriptease.util.BiHashMap;
  */
 public class DescribeItManager {
 
-	private final BiHashMap<DescribeIt, StoryComponent> describeItMap;
+	private final BiHashMap<DescribeIt, Collection<StoryComponent>> describeItMap;
 
 	public DescribeItManager() {
-		this.describeItMap = new BiHashMap<DescribeIt, StoryComponent>();
+		this.describeItMap = new BiHashMap<DescribeIt, Collection<StoryComponent>>();
 	}
 
 	/**
@@ -35,21 +37,22 @@ public class DescribeItManager {
 	}
 
 	/**
-	 * Returns all StoryComponents with associated DescribeIts.
-	 * 
-	 * @return
-	 */
-	public Collection<StoryComponent> getStoryComponents() {
-		return this.describeItMap.getValues();
-	}
-
-	/**
 	 * Adds a DescribeIt to the map in addition to its attached StoryComponent.
 	 * 
 	 * @param describeIt
 	 */
 	public void addDescribeIt(DescribeIt describeIt, StoryComponent component) {
-		this.describeItMap.put(describeIt, component);
+		Collection<StoryComponent> components;
+
+		components = this.describeItMap.getValue(describeIt);
+
+		if(components == null)
+			components = new ArrayList<StoryComponent>();
+		
+		if (!components.contains(component))
+			components.add(component);
+
+		this.describeItMap.put(describeIt, components);
 	}
 
 	/**
@@ -62,20 +65,18 @@ public class DescribeItManager {
 	}
 
 	/**
-	 * Removes a StoryComponent from the DescribeIt to StoryComponent map.
-	 */
-	public void removeStoryComponent(StoryComponent component) {
-		this.describeItMap.removeValue(component);
-	}
-
-	/**
 	 * Returns the DescribeIt mapped to the component.
 	 * 
 	 * @param component
 	 * @return
 	 */
 	public DescribeIt getDescribeIt(StoryComponent component) {
-		return this.describeItMap.getKey(component);
+		for(Entry<DescribeIt, Collection<StoryComponent>> entry : this.describeItMap.getEntrySet()) {
+			if(entry.getValue().contains(component))
+				return entry.getKey();
+		}
+		
+		return null;
 	}
 
 	/**
@@ -83,10 +84,10 @@ public class DescribeItManager {
 	 * 
 	 * @param describeIt
 	 * @return
-	 */
+	 *//*
 	public StoryComponent getStoryComponent(DescribeIt describeIt) {
 		return this.describeItMap.getValue(describeIt);
-	}
+	}*/
 
 	/**
 	 * Generates a blank KnowIt for the selected type.

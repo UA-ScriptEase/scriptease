@@ -106,7 +106,7 @@ public class KnowItConverter extends StoryComponentConverter {
 								if (scriptIt.getDisplayText().equals(
 										bindingScriptIt.getDisplayText())) {
 									describeItManager.addDescribeIt(
-											describeIt.clone(), knowIt);
+											describeIt, knowIt);
 									break describeItLoop;
 								}
 							}

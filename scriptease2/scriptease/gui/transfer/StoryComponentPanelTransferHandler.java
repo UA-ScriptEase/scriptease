@@ -313,7 +313,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				describeIt = describeItManager.getDescribeIt(newChild);
 				
 				if (describeIt != null) {
-					describeItManager.addDescribeIt(describeIt.clone(), clone);
+					describeItManager.addDescribeIt(describeIt, clone);
+					// TODO REMOVED CLONE HERE
+					// FIXME
+						//.clone(), clone);
 				}
 
 				StoryComponent sibling = parent.getChildAt(insertionIndex);
