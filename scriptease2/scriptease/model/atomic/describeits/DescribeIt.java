@@ -14,7 +14,8 @@ import sun.awt.util.IdentityArrayList;
 
 /**
  * A DescribeIt is a class that contains a graph of {@link DescribeItNode}s and
- * a mapping of paths of these nodes to {@link ScriptIt}s.
+ * a mapping of paths of these nodes to {@link ScriptIt}s. DescribeIts cannot be
+ * cloned, as they are merely maps of paths.
  * 
  * @author mfchurch
  * @author kschenk
