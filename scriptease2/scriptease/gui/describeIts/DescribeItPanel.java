@@ -182,6 +182,7 @@ public class DescribeItPanel extends JPanel {
 							.getPath((ScriptIt) binding.getValue()));
 				}
 
+				boundScriptItPanel.setVisible(collapsed);
 				describeItGraph.setVisible(!collapsed);
 				expansionButton.setCollapsed(collapsed);
 				DescribeItPanel.this.revalidate();
