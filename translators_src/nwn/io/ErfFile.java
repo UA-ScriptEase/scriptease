@@ -320,13 +320,13 @@ public final class ErfFile implements GameModule {
 
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
-				if (!scriptIt.getDisplayText().equals(
-						GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT))
-					return;
-
-				if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
+				if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_ADDED
+						&& scriptIt.getDisplayText().equals(
+								GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT)) {
 					ErfFile.this.addJournalCategory(scriptIt);
-				} else if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED) {
+				} else if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED
+						&& scriptIt.getDisplayText().equals(
+								GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT)) {
 					ErfFile.this.removeJournalCategory(scriptIt);
 				}
 
