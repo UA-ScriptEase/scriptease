@@ -239,27 +239,24 @@ public class LibraryModel extends PatternModel implements
 	 * Adds a KnowIt representing a DescribeIt to the LibraryModel. Adds the
 	 * DescribeIt to the DescribeItManager if it is not already in there.
 	 * 
+	 * This should only ever be called when we are creating an entirely new
+	 * DescribeIt.
+	 * 
 	 * @param describeIt
 	 */
 	public void add(DescribeIt describeIt) {
 		final DescribeItManager describeItManager;
-		final StoryComponent existingKnowIt;
 
 		describeItManager = this.translator.getApiDictionary()
 				.getDescribeItManager();
-		/*existingKnowIt = describeItManager.getStoryComponent(describeIt);
 
-		if (existingKnowIt != null) {
-			describeItManager.addDescribeIt(describeIt, existingKnowIt);
-		} else {*/
-			final KnowIt knowIt;
+		final KnowIt knowIt;
 
-			knowIt = describeItManager.createKnowItForDescribeIt(describeIt);
+		knowIt = describeItManager.createKnowItForDescribeIt(describeIt);
 
-			this.add(knowIt);
+		this.add(knowIt);
 
-			describeItManager.addDescribeIt(describeIt, knowIt);
-		//}
+		describeItManager.addDescribeIt(describeIt, knowIt);
 	}
 
 	public void remove(StoryComponent component) {

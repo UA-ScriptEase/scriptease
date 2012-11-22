@@ -39,7 +39,6 @@ import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
@@ -193,7 +192,7 @@ public final class ErfFile implements GameModule {
 
 						storyPoint = storyPointBinding.getValue();
 
-						if (!journal.setTag(storyPoint, scriptIt)) {
+						if (!journal.setStoryPoint(storyPoint, scriptIt)) {
 							// If set tag fails, remove binding.
 							try {
 								parameter.clearBinding();
@@ -204,14 +203,6 @@ public final class ErfFile implements GameModule {
 							System.out
 									.println("Parameter successfully cleared.");
 						}
-					}
-				}
-
-				@Override
-				public void processConstant(KnowItBindingConstant constant) {
-					if (parameter.getDisplayText().equals(
-							GeneratedJournalGFF.PARAMETER_TITLE_TEXT)) {
-						journal.setName(constant.getScriptValue(), scriptIt);
 					}
 				}
 
@@ -337,19 +328,10 @@ public final class ErfFile implements GameModule {
 
 								storyPoint = storyPointBinding.getValue();
 
-								if (!journal.setTag(storyPoint, scriptIt))
+								if (!journal
+										.setStoryPoint(storyPoint, scriptIt))
 									// If set tag fails, remove binding.
 									knowIt.clearBinding();
-							}
-						}
-
-						@Override
-						public void processConstant(
-								KnowItBindingConstant constant) {
-							if (knowIt.getDisplayText().equals(
-									GeneratedJournalGFF.PARAMETER_TITLE_TEXT)) {
-								journal.setName(constant.getScriptValue(),
-										scriptIt);
 							}
 						}
 
@@ -360,7 +342,7 @@ public final class ErfFile implements GameModule {
 							if (knowIt
 									.getDisplayText()
 									.equals(GeneratedJournalGFF.PARAMETER_STORY_POINT_TEXT)) {
-								journal.setTag(null, scriptIt);
+								journal.setStoryPoint(null, scriptIt);
 							}
 						}
 					});
