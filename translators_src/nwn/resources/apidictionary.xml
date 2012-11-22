@@ -22217,10 +22217,29 @@
           		<Literal>);</Literal>
           	</Line>
           	<Line>
-          		<Literal>string newEntryText = entryText + "\n\n" + </Literal>
+          		<Literal>string newEntryText = entryText;</Literal>
+          	</Line>
+          	<Line>
+          		<Literal>if(GetStringLength(newEntryText) > 0)</Literal>
+          	</Line>
+          	<Indent>
+          		<Line>
+          			<Literal>newEntryText += "\n\n";</Literal>
+          		</Line>
+          	</Indent>
+          	<Line>
+          		<Literal>newEntryText += </Literal>
           		<Scope data="argument" ref="Text">
           			<Fragment data="name" />
           		</Scope>
+          		<Literal>;</Literal>
+          	</Line>
+          	<Line>
+          		<Literal>SetLocalString(GetFirstPC(), "CT_"+</Literal>
+          			<Scope data="argument" ref="Story Point">
+          			<Fragment data="name" />
+          		</Scope>
+          		<Literal>, newEntryText);</Literal>
           	</Line>
           	<Line>
           		<Literal>SetCustomToken(10+</Literal>
@@ -22260,7 +22279,7 @@
       	<Name>Finish Journal Record of &lt;Story Point&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
-          <Id>468</Id>
+          <Id>469</Id>
           <Types>
             <Type>void</Type>
           </Types>
