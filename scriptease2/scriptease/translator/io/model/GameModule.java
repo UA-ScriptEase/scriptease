@@ -98,6 +98,12 @@ public interface GameModule {
 	 * @return the GameConstant whose identifier matches the given identifier.
 	 */
 	public GameConstant getInstanceForObjectIdentifier(String id);
+	
+	/**
+	 * Retrieves the GameConstant object that represents the module
+	 * @return
+	 */
+	public GameConstant getModule();
 
 	/**
 	 * Gets the location of the GameModule

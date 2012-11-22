@@ -465,6 +465,12 @@ public class PinballGameModule implements GameModule {
 		}
 		return matches;
 	}
+	
+	@Override
+	public GameConstant getModule()
+	{
+		return null;
+	}
 
 	@Override
 	public Collection<StoryRule> getCodeGenerationRules() {

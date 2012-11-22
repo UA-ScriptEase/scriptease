@@ -6668,7 +6668,9 @@
     <ScriptIt>
       <Name>When &lt;subject&gt; starts</Name>
       <Visible>true</Visible>
-      <Labels/>
+      <Labels>
+		<Label>automatic</Label>
+	  </Labels>
       <Children>
         <StoryItemSequence>
           <Name>Story:</Name>

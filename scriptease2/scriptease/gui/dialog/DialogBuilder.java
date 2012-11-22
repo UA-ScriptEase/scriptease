@@ -40,6 +40,7 @@ import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.AutomaticsManager;
 import scriptease.translator.io.model.GameModule;
 
 public class DialogBuilder {
@@ -222,9 +223,13 @@ public class DialogBuilder {
 					} else {
 						model = new StoryModel(module, title, author,
 								selectedTranslator);
-
+						
 						PatternModelManager.getInstance().add(model, true);
 						PanelFactory.getInstance().createTabForModel(model);
+						
+						// Process automatics and add them to the StoryModel
+						AutomaticsManager automaticsManager = new AutomaticsManager();
+						automaticsManager.resolveAndAddAutomatics( module, selectedTranslator, model);
 					}
 				} catch (Throwable e) {
 					UncaughtExceptionHandler handler = Thread

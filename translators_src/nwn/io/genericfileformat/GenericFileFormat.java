@@ -49,6 +49,7 @@ public class GenericFileFormat {
 	protected static final String TYPE_MODULE_INFO = "IFO";
 	protected static final String TYPE_AREA_GAME_INSTANCE_FILE = "GIT";
 	protected static final String TYPE_AREA_FILE = "ARE";
+	public static final String TYPE_MODULE = "module";
 
 	/**
 	 * Separator used when indexing occurs. The left hand side of the separator
@@ -561,7 +562,7 @@ public class GenericFileFormat {
 			type = NWNConversation.TYPE_DIALOGUE;
 		} else if (typeString
 				.equalsIgnoreCase(GenericFileFormat.TYPE_MODULE_INFO)) {
-			type = "module";
+			type = TYPE_MODULE;
 		} else if (typeString
 				.equalsIgnoreCase(GenericFileFormat.TYPE_AREA_FILE)) {
 			type = "area";
