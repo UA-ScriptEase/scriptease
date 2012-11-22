@@ -22,6 +22,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.Translator;
+import scriptease.translator.apimanagers.AutomaticsManager;
 import scriptease.translator.apimanagers.DescribeItManager;
 
 /**
@@ -179,6 +180,29 @@ public class LibraryModel extends PatternModel implements
 
 	public StoryComponentContainer getNoteContainer() {
 		return this.noteContainer;
+	}
+
+	/**
+	 * Retrieves the automatics scriptIts from the causes
+	 * 
+	 * @return
+	 */
+	public Collection<ScriptIt> getAutomatics() {
+		Collection<ScriptIt> automatics = new ArrayList<ScriptIt>();
+		final Collection<StoryComponent> causes = getCausesCategory()
+				.getChildren();
+		for (StoryComponent cause : causes) {
+			if (cause instanceof ScriptIt) {
+				final Collection<String> labels = cause.getLabels();
+				for (String label : labels) {
+					if (label
+							.equalsIgnoreCase(AutomaticsManager.AUTOMATIC_LABEL)) {
+						automatics.add((ScriptIt)cause);
+					}
+				}
+			}
+		}
+		return automatics;
 	}
 
 	/**

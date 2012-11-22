@@ -78,8 +78,9 @@ public class GameConstantPanel extends JPanel {
 
 		allGameObjects = new ArrayList<GameConstant>();
 
-		for (GameConstant gameConstant : model.getModule().getResourcesOfType(
-				type)) {
+		final List<GameConstant> resourcesOfType = model.getModule().getResourcesOfType(
+				type);
+		for (GameConstant gameConstant : resourcesOfType) {
 			if (matchesSearchText(gameConstant, searchText))
 				allGameObjects.add(gameConstant);
 		}

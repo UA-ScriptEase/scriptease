@@ -192,10 +192,11 @@ public final class ErfFile implements GameModule {
 
 						if (!journal.setTag(storyPoint, scriptIt)) {
 							// If set tag fails, remove binding.
-							try{
-							parameter.clearBinding();
-							} catch(Exception e) {
-								System.err.println("EXCEPTION! at " + parameter);
+							try {
+								parameter.clearBinding();
+							} catch (Exception e) {
+								System.err
+										.println("EXCEPTION! at " + parameter);
 							}
 							System.out
 									.println("Parameter successfully cleared.");
@@ -636,6 +637,18 @@ public final class ErfFile implements GameModule {
 			}
 		}
 		return filteredObjects;
+	}
+
+	@Override
+	public GameConstant getModule() {
+		GameConstant module = null;
+		final List<GameConstant> modules = getResourcesOfType(GenericFileFormat.TYPE_MODULE);
+		if (modules.size() > 0) {
+			module = modules.iterator().next();
+		} else {
+			throw new IllegalStateException("Cannot retrieve Module");
+		}
+		return module;
 	}
 
 	@Override

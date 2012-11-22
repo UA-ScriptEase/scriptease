@@ -20,6 +20,12 @@ public final class UnityProject implements GameModule {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public GameConstant getModule()
+	{
+		return null;
+	}
 
 	@Override
 	public void addIncludeFiles(Collection<File> scriptList) {
