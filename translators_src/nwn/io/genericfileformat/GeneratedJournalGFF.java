@@ -21,7 +21,7 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	// TODO Not sure if there's an easier way to reference these effects.
 	// I almost feel like we should have tags in our APIDictionary, especially
 	// since these should be implemented in all translators ever.
-	public static final String EFFECT_CREATE_JOURNAL_TEXT = "Create Quest for <Story Point> with title <Title>";
+	public static final String EFFECT_CREATE_JOURNAL_TEXT = "Add Journal Record for <Story Point>";
 	public static final String PARAMETER_STORY_POINT_TEXT = "Story Point";
 
 	private static final String PLACEHOLDER_ENTRY_TEXT = "<PLACEHOLDER>";
