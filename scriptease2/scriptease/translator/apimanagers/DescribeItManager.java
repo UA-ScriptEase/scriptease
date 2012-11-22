@@ -1,5 +1,6 @@
 package scriptease.translator.apimanagers;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map.Entry;
@@ -12,19 +13,21 @@ import scriptease.util.BiHashMap;
 
 /**
  * A manager that contains all of the DescribeIts in an APIDictionary mapped to
- * the StoryComponent that uses it.
- * 
- * We may have to turn
+ * the StoryComponents that use it. One DescribeIt can be mapped to multiple
+ * story components.<br>
+ * <br>
+ * StoryComponents are weakly referenced so that the map does not store
+ * references to non-existent ones.
  * 
  * @author kschenk
  * 
  */
 public class DescribeItManager {
 
-	private final BiHashMap<DescribeIt, Collection<StoryComponent>> describeItMap;
+	private final BiHashMap<DescribeIt, Collection<WeakReference<StoryComponent>>> describeItMap;
 
 	public DescribeItManager() {
-		this.describeItMap = new BiHashMap<DescribeIt, Collection<StoryComponent>>();
+		this.describeItMap = new BiHashMap<DescribeIt, Collection<WeakReference<StoryComponent>>>();
 	}
 
 	/**
@@ -42,17 +45,26 @@ public class DescribeItManager {
 	 * @param describeIt
 	 */
 	public void addDescribeIt(DescribeIt describeIt, StoryComponent component) {
-		Collection<StoryComponent> components;
+		Collection<WeakReference<StoryComponent>> weakReferences;
+		final Collection<StoryComponent> storyComponents;
 
-		components = this.describeItMap.getValue(describeIt);
+		weakReferences = this.describeItMap.getValue(describeIt);
+		storyComponents = new ArrayList<StoryComponent>();
 
-		if(components == null)
-			components = new ArrayList<StoryComponent>();
-		
-		if (!components.contains(component))
-			components.add(component);
+		if (weakReferences == null)
+			weakReferences = new ArrayList<WeakReference<StoryComponent>>();
+		else {
+			// We add all of our story components to an array list so we can
+			// parse
+			for (WeakReference<StoryComponent> ref : weakReferences) {
+				storyComponents.add(ref.get());
+			}
+		}
 
-		this.describeItMap.put(describeIt, components);
+		if (!storyComponents.contains(component))
+			weakReferences.add(new WeakReference<StoryComponent>(component));
+
+		this.describeItMap.put(describeIt, weakReferences);
 	}
 
 	/**
@@ -71,23 +83,16 @@ public class DescribeItManager {
 	 * @return
 	 */
 	public DescribeIt getDescribeIt(StoryComponent component) {
-		for(Entry<DescribeIt, Collection<StoryComponent>> entry : this.describeItMap.getEntrySet()) {
-			if(entry.getValue().contains(component))
-				return entry.getKey();
+		for (Entry<DescribeIt, Collection<WeakReference<StoryComponent>>> entry : this.describeItMap
+				.getEntrySet()) {
+			for (WeakReference<StoryComponent> ref : entry.getValue()) {
+				if (ref.get() == component)
+					return entry.getKey();
+			}
 		}
-		
+
 		return null;
 	}
-
-	/**
-	 * Returns the StoryComponent mapped to the DescribeIt.
-	 * 
-	 * @param describeIt
-	 * @return
-	 *//*
-	public StoryComponent getStoryComponent(DescribeIt describeIt) {
-		return this.describeItMap.getValue(describeIt);
-	}*/
 
 	/**
 	 * Generates a blank KnowIt for the selected type.
