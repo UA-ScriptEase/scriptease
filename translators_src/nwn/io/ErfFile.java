@@ -286,6 +286,39 @@ public final class ErfFile implements GameModule {
 
 		source.process(new StoryAdapter() {
 			@Override
+			public void processStoryPoint(StoryPoint storyPoint) {
+				for (StoryComponent child : storyPoint.getChildren())
+					child.process(this);
+
+				for (StoryPoint successor : storyPoint.getSuccessors())
+					successor.process(this);
+			}
+
+			@Override
+			protected void defaultProcessComplex(ComplexStoryComponent complex) {
+				for (StoryComponent child : complex.getChildren()) {
+					child.process(this);
+				}
+			}
+
+			@Override
+			public void processStoryComponentContainer(
+					StoryComponentContainer storyComponentContainer) {
+				this.defaultProcessComplex(storyComponentContainer);
+			}
+
+			@Override
+			public void processAskIt(AskIt askIt) {
+				askIt.getCondition().process(this);
+				this.defaultProcessComplex(askIt);
+			}
+
+			@Override
+			public void processStoryItemSequence(StoryItemSequence sequence) {
+				this.defaultProcessComplex(sequence);
+			}
+
+			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
 				if (!scriptIt.getDisplayText().equals(
 						GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT))
@@ -296,6 +329,10 @@ public final class ErfFile implements GameModule {
 				} else if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED) {
 					ErfFile.this.removeJournalCategory(scriptIt);
 				}
+
+				scriptIt.processSubjects(this);
+				scriptIt.processParameters(this);
+				this.defaultProcessComplex(scriptIt);
 			}
 
 			@Override
@@ -347,6 +384,23 @@ public final class ErfFile implements GameModule {
 						}
 					});
 				}
+
+				KnowItBinding binding = knowIt.getBinding();
+				final StoryAdapter outerAnonInnerClass = this;
+				binding.process(new BindingAdapter() {
+					@Override
+					public void processReference(
+							KnowItBindingReference reference) {
+						KnowIt referenced = reference.getValue();
+						referenced.process(outerAnonInnerClass);
+					}
+
+					@Override
+					public void processFunction(KnowItBindingFunction function) {
+						ScriptIt referenced = function.getValue();
+						referenced.process(outerAnonInnerClass);
+					}
+				});
 			};
 		});
 	}
