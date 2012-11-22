@@ -6667,7 +6667,7 @@
     </ScriptIt>
     <ScriptIt>
       <Name>When &lt;subject&gt; starts</Name>
-      <Visible>true</Visible>
+      <Visible>false</Visible>
       <Labels>
 		<Label>automatic</Label>
 	  </Labels>
