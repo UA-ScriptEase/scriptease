@@ -1,8 +1,6 @@
 package scriptease.gui;
 
 import java.awt.Component;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
