@@ -103,7 +103,9 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				StoryComponentPanelJList.this.clearSelection();
+				if (SEFocusManager.getInstance().isCompatibleType(
+						e.getOppositeComponent()))
+					StoryComponentPanelJList.this.clearSelection();
 			}
 		});
 
