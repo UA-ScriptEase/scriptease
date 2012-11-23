@@ -3,17 +3,12 @@ package scriptease.gui.SEGraph.renderers;
 import java.awt.Color;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Map.Entry;
 
-import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
-import javax.swing.InputMap;
 import javax.swing.JComponent;
-import javax.swing.KeyStroke;
-import javax.swing.TransferHandler;
 import javax.swing.border.Border;
 
 import scriptease.gui.PanelFactory;
@@ -57,23 +52,6 @@ public class SEGraphNodeRenderer<E> {
 		final JComponent component;
 
 		component = PanelFactory.getInstance().buildGradientPanel(1.3);
-
-		final InputMap input = component.getInputMap(JComponent.WHEN_FOCUSED);
-		input.put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK),
-				"Copy");
-		input.put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_DOWN_MASK),
-				"Cut");
-		input.put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK),
-				"Paste");
-
-		final ActionMap am = new ActionMap();
-		am.put("Copy", TransferHandler.getCopyAction());
-		am.put("Cut", TransferHandler.getCutAction());
-		am.put("Paste", TransferHandler.getPasteAction());
-		component.setActionMap(am);
 
 		this.reconfigureAppearance(component, node);
 		this.configureInternalComponents(component, node);
@@ -175,7 +153,7 @@ public class SEGraphNodeRenderer<E> {
 				.getEntrySet()) {
 			if (this.graph.getSelectedComponents().contains(entry.getValue()))
 				continue;
-			
+
 			this.setComponentAppearance(entry.getValue(), entry.getKey(),
 					backgroundColour);
 
