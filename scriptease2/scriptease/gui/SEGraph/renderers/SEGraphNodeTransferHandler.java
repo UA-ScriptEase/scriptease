@@ -85,6 +85,11 @@ public class SEGraphNodeTransferHandler<E> extends TransferHandler {
 	}
 
 	@Override
+	public boolean importData(JComponent comp, Transferable t) {
+		return this.importData(new TransferSupport(comp, t));
+	}
+
+	@Override
 	public boolean importData(TransferSupport support) {
 		// sanity check
 		if (!this.canImport(support))

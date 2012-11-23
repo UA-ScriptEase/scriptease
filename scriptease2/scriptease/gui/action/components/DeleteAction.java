@@ -1,4 +1,4 @@
-package scriptease.gui.action;
+package scriptease.gui.action.components;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -10,6 +10,7 @@ import javax.swing.KeyStroke;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.model.LibraryModel;

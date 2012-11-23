@@ -6,18 +6,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputListener;
 
@@ -66,24 +62,6 @@ public class StoryComponentPanel extends JPanel implements
 		// Action Listeners
 		this.addMouseMotionListener(mouseListener);
 		this.addMouseListener(mouseListener);
-
-		// Set up input and action maps for copy cut and paste.
-		final InputMap input = this.getInputMap(WHEN_FOCUSED);
-		input.put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK),
-				"Copy");
-		input.put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_DOWN_MASK),
-				"Cut");
-		input.put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK),
-				"Paste");
-
-		final ActionMap am = new ActionMap();
-		am.put("Copy", TransferHandler.getCopyAction());
-		am.put("Cut", TransferHandler.getCutAction());
-		am.put("Paste", TransferHandler.getPasteAction());
-		this.setActionMap(am);
 
 		// Observer the panel and its children
 		this.component.observeRelated(this);
