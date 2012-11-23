@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
+import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.filters.Filter;
 import scriptease.gui.filters.Filterable;
@@ -103,6 +104,16 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 			@Override
 			public void focusLost(FocusEvent e) {
+			}
+		});
+
+		SEFocusManager.getInstance().addObserver(this, new SEFocusObserver() {
+			@Override
+			public void gainFocus(Component oldFocus) {
+			}
+
+			@Override
+			public void loseFocus(Component oldFocus) {
 				StoryComponentPanelJList.this.clearSelection();
 			}
 		});

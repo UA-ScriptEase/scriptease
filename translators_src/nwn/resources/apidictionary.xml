@@ -22147,7 +22147,7 @@
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[228]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[248]"/>
     <ScriptIt>
-      <Name>Create Quest for &lt;Story Point&gt; with title &lt;Title&gt;</Name>
+      <Name>Add Journal Record for &lt;Story Point&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -22155,7 +22155,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Create Quest for &lt;Story Point&gt; with title &lt;Title&gt;</Name>
+          <Name>Add Journal Record for &lt;Story Point&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>467</Id>
@@ -22171,21 +22171,13 @@
                 <Type>storyPoint</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
-              <Name>Title</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>string</Type>
-              </Types>
-            </KnowIt>
           </Parameters>
           <Code/>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
      <ScriptIt>
-      <Name>Set &lt;Story Point&gt; Quest text to &lt;Text&gt;</Name>
+      <Name>Add Journal Point to Journal Record of &lt;Story Point&gt; with text &lt;Text&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -22193,7 +22185,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;Story Point&gt; Quest text to &lt;Text&gt;</Name>
+          <Name>Add Journal Point to Journal Record of &lt;Story Point&gt; with text &lt;Text&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>468</Id>
@@ -22220,15 +22212,43 @@
           </Parameters>
           <Code>
           	<Line>
+          		<Literal>string entryText = GetLocalString(GetFirstPC(), "CT_"+</Literal>
+          		<Scope data="argument" ref="Story Point">
+          			<Fragment data="name" />
+          		</Scope>
+          		<Literal>);</Literal>
+          	</Line>
+          	<Line>
+          		<Literal>string newEntryText = entryText;</Literal>
+          	</Line>
+          	<Line>
+          		<Literal>if(GetStringLength(newEntryText) > 0)</Literal>
+          	</Line>
+          	<Indent>
+          		<Line>
+          			<Literal>newEntryText += "\n\n";</Literal>
+          		</Line>
+          	</Indent>
+          	<Line>
+          		<Literal>newEntryText += </Literal>
+          		<Scope data="argument" ref="Text">
+          			<Fragment data="name" />
+          		</Scope>
+          		<Literal>;</Literal>
+          	</Line>
+          	<Line>
+          		<Literal>SetLocalString(GetFirstPC(), "CT_"+</Literal>
+          			<Scope data="argument" ref="Story Point">
+          			<Fragment data="name" />
+          		</Scope>
+          		<Literal>, newEntryText);</Literal>
+          	</Line>
+          	<Line>
           		<Literal>SetCustomToken(10+</Literal>
           		<Scope data="argument" ref="Story Point">
           			<Fragment data="uniqueID" />
           		</Scope>
-          		<Literal>, </Literal>
-          		<Scope data="argument" ref="Text">
-          			<Fragment data="name" />
-          		</Scope>
-          		<Literal>);</Literal>
+          		<Literal>, newEntryText);</Literal>
           	</Line>
           	<Line></Line>
           	<Line>
@@ -22244,6 +22264,44 @@
           			<Fragment data="name" />
           		</Scope>
           		<Literal>, 1, GetFirstPC());</Literal>
+          	</Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+     <ScriptIt>
+      <Name>Finish Journal Record of &lt;Story Point&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+      	<Name>Finish Journal Record of &lt;Story Point&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>469</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Story Point</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>storyPoint</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+          	<Line>
+          		<Literal>AddJournalQuestEntry(</Literal>
+          		<Scope data="argument" ref="Story Point">
+          			<Fragment data="name" />
+          		</Scope>
+          		<Literal>, 2, GetFirstPC());</Literal>
           	</Line>
           </Code>
         </CodeBlockSource>

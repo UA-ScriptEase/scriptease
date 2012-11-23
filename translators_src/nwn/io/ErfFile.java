@@ -39,7 +39,6 @@ import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
@@ -73,6 +72,7 @@ import scriptease.util.FileOp;
  * 
  * @author jtduncan
  * @author remiller
+ * @author kschenk
  */
 public final class ErfFile implements GameModule {
 
@@ -138,6 +138,7 @@ public final class ErfFile implements GameModule {
 			}
 		};
 
+		// Used for journal observance
 		this.modelObserver = new PatternModelObserver() {
 			public void modelChanged(PatternModelEvent event) {
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
@@ -164,7 +165,8 @@ public final class ErfFile implements GameModule {
 
 	/**
 	 * Adds a journal category for the scriptIt. Also makes sure that any
-	 * subsequent additions to the scriptIt are observed.
+	 * subsequent additions to the scriptIt are observed. This method is where a
+	 * journal is created if one does not already exist.
 	 * 
 	 * @param scriptIt
 	 */
@@ -190,7 +192,7 @@ public final class ErfFile implements GameModule {
 
 						storyPoint = storyPointBinding.getValue();
 
-						if (!journal.setTag(storyPoint, scriptIt)) {
+						if (!journal.setStoryPoint(storyPoint, scriptIt)) {
 							// If set tag fails, remove binding.
 							try {
 								parameter.clearBinding();
@@ -201,14 +203,6 @@ public final class ErfFile implements GameModule {
 							System.out
 									.println("Parameter successfully cleared.");
 						}
-					}
-				}
-
-				@Override
-				public void processConstant(KnowItBindingConstant constant) {
-					if (parameter.getDisplayText().equals(
-							GeneratedJournalGFF.PARAMETER_TITLE_TEXT)) {
-						journal.setName(constant.getScriptValue(), scriptIt);
 					}
 				}
 
@@ -292,16 +286,53 @@ public final class ErfFile implements GameModule {
 
 		source.process(new StoryAdapter() {
 			@Override
-			public void processScriptIt(ScriptIt scriptIt) {
-				if (!scriptIt.getDisplayText().equals(
-						GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT))
-					return;
+			public void processStoryPoint(StoryPoint storyPoint) {
+				for (StoryComponent child : storyPoint.getChildren())
+					child.process(this);
 
-				if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
+				for (StoryPoint successor : storyPoint.getSuccessors())
+					successor.process(this);
+			}
+
+			@Override
+			protected void defaultProcessComplex(ComplexStoryComponent complex) {
+				for (StoryComponent child : complex.getChildren()) {
+					child.process(this);
+				}
+			}
+
+			@Override
+			public void processStoryComponentContainer(
+					StoryComponentContainer storyComponentContainer) {
+				this.defaultProcessComplex(storyComponentContainer);
+			}
+
+			@Override
+			public void processAskIt(AskIt askIt) {
+				askIt.getCondition().process(this);
+				this.defaultProcessComplex(askIt);
+			}
+
+			@Override
+			public void processStoryItemSequence(StoryItemSequence sequence) {
+				this.defaultProcessComplex(sequence);
+			}
+
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_ADDED
+						&& scriptIt.getDisplayText().equals(
+								GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT)) {
 					ErfFile.this.addJournalCategory(scriptIt);
-				} else if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED) {
+				} else if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED
+						&& scriptIt.getDisplayText().equals(
+								GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT)) {
 					ErfFile.this.removeJournalCategory(scriptIt);
 				}
+
+				scriptIt.processSubjects(this);
+				scriptIt.processParameters(this);
+				this.defaultProcessComplex(scriptIt);
 			}
 
 			@Override
@@ -334,19 +365,10 @@ public final class ErfFile implements GameModule {
 
 								storyPoint = storyPointBinding.getValue();
 
-								if (!journal.setTag(storyPoint, scriptIt))
+								if (!journal
+										.setStoryPoint(storyPoint, scriptIt))
 									// If set tag fails, remove binding.
 									knowIt.clearBinding();
-							}
-						}
-
-						@Override
-						public void processConstant(
-								KnowItBindingConstant constant) {
-							if (knowIt.getDisplayText().equals(
-									GeneratedJournalGFF.PARAMETER_TITLE_TEXT)) {
-								journal.setName(constant.getScriptValue(),
-										scriptIt);
 							}
 						}
 
@@ -357,17 +379,35 @@ public final class ErfFile implements GameModule {
 							if (knowIt
 									.getDisplayText()
 									.equals(GeneratedJournalGFF.PARAMETER_STORY_POINT_TEXT)) {
-								journal.setTag(null, scriptIt);
+								journal.setStoryPoint(null, scriptIt);
 							}
 						}
 					});
 				}
+
+				KnowItBinding binding = knowIt.getBinding();
+				final StoryAdapter outerAnonInnerClass = this;
+				binding.process(new BindingAdapter() {
+					@Override
+					public void processReference(
+							KnowItBindingReference reference) {
+						KnowIt referenced = reference.getValue();
+						referenced.process(outerAnonInnerClass);
+					}
+
+					@Override
+					public void processFunction(KnowItBindingFunction function) {
+						ScriptIt referenced = function.getValue();
+						referenced.process(outerAnonInnerClass);
+					}
+				});
 			};
 		});
 	}
 
 	/**
-	 * Adds journal categories for any existing effects.
+	 * Adds journal categories for any existing effects. This is called when we
+	 * load a module, so that we can create journals for all of these ScriptIts.
 	 * 
 	 * @param observer
 	 */
@@ -443,6 +483,12 @@ public final class ErfFile implements GameModule {
 		root.process(adapter);
 	}
 
+	/**
+	 * Returns the GeneratedJournalGFF associated with the module. Note that
+	 * this can return null if nothing is found.
+	 * 
+	 * @return
+	 */
 	private GeneratedJournalGFF getJournalGFF() {
 		final Collection<GeneratedJournalGFF> journals;
 

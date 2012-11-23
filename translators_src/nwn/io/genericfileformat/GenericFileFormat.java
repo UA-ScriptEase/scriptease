@@ -35,6 +35,7 @@ import scriptease.translator.io.tools.ScriptEaseFileAccess;
 public class GenericFileFormat {
 	private static final String GFF_VERSION = "V3.2";
 
+	// Note: the BP stands for Blueprint, not Boston Pizza
 	protected static final String TYPE_SOUND_BP = "UTS";
 	protected static final String TYPE_WAYPOINT_BP = "UTW";
 	protected static final String TYPE_TRIGGER_BP = "UTT";
@@ -177,6 +178,7 @@ public class GenericFileFormat {
 		this.readLabels(reader, labelOffset, labelCount);
 		this.readStructs(reader, structOffset, structCount);
 		this.readFields(reader, fieldOffset, fieldCount, fieldDataOffset);
+
 		this.readFieldIndices(reader, fieldIndicesOffset, fieldIndicesCount);
 		this.readListIndices(reader, listIndicesOffset, listIndicesCount);
 	}
@@ -1233,6 +1235,7 @@ public class GenericFileFormat {
 		private CExoLocString fieldDataLocString;
 		private String fieldDataString;
 		private double fieldDataDouble;
+		// private long fieldDataWord32;
 		private long fieldDataDWord64;
 		private long fieldDataInt64;
 		private byte[] fieldDataBytes;
@@ -1269,7 +1272,7 @@ public class GenericFileFormat {
 		@Override
 		public String toString() {
 			return "GffField [" + this.getName() + ", type: " + this.typeNumber
-					+ "]";
+					+ ", dodOffset: " + this.dataOrDataOffset + "]";
 		}
 
 		/**
@@ -1691,11 +1694,6 @@ public class GenericFileFormat {
 
 				break;
 			case GffField.TYPE_CEXOLOCSTRING:
-
-				if (this.fieldDataLocString == null) {
-					System.out.println("WUT");
-				}
-
 				final Map<Long, String> strings = this.fieldDataLocString.strings;
 				final long strRef = this.fieldDataLocString.strRef;
 
