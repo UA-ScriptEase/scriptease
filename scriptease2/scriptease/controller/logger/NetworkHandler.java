@@ -91,7 +91,7 @@ public class NetworkHandler extends Handler {
 			while (((readLine = br.readLine()) != null)) {
 				innhold += readLine;
 			}
-			// tell the user if the report was sucessfully sent and clear
+			// tell the user if the report was successfully sent and clear
 			// the buffer
 			if (response.getStatusLine().getStatusCode() == NetworkHandler.HTML_SUCESS) {
 				this.success();
@@ -137,7 +137,7 @@ public class NetworkHandler extends Handler {
 
 	/**
 	 * Displays an error window explaining a server connection problem has
-	 * occured.
+	 * occurred.
 	 */
 	private void error() {
 		WindowFactory.getInstance().showProblemDialog("Error Report Failed",
@@ -145,8 +145,8 @@ public class NetworkHandler extends Handler {
 	}
 
 	/**
-	 * Displays an sucess window explaining that the error report was sent
-	 * sucessfully
+	 * Displays an success window explaining that the error report was sent
+	 * successfully
 	 */
 	private void success() {
 		String msg = "The error reporting was successfully sent!\n";

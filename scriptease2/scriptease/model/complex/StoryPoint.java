@@ -65,10 +65,10 @@ public class StoryPoint extends ComplexStoryComponent {
 
 		this.setDisplayText(name);
 	}
-	
+
 	@Override
 	public ComplexStoryComponent clone() {
-		// TODO Auto-generated method stub
+		// TODO We are not cloning Story Points properly! Could cause problems?
 		return super.clone();
 	}
 

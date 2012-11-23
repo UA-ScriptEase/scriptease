@@ -17,15 +17,16 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.TransferHandler;
 
 import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
-import scriptease.gui.action.DeleteAction;
+import scriptease.gui.action.components.CopyAction;
+import scriptease.gui.action.components.CutAction;
+import scriptease.gui.action.components.DeleteAction;
+import scriptease.gui.action.components.PasteAction;
 import scriptease.gui.action.file.ClosePatternModelAction;
 import scriptease.gui.action.file.NewStoryModelAction;
 import scriptease.gui.action.file.OpenRecentFileAction;
@@ -230,54 +231,9 @@ public class MenuFactory {
 
 		editMenu.addSeparator();
 
-		// The Cut/Copy/Paste items are different because Transfer Handlers
-		// use special actions whose display names are hardcoded into a check in
-		// TransferHandler. Since we don't want those display names (they're
-		// lower case and the check is case-sensitive) I'm overriding the
-		// getText method to no longer return the display text from the action,
-		// but the display text set here. It's ugly but it's the least horrible
-		// solution I've come up with and it works. -remiller
-
-		// Create and add the Cut item.
-		@SuppressWarnings("serial")
-		final JMenuItem cutItem = new JMenuItem(TransferHandler.getCutAction()) {
-			@Override
-			public String getText() {
-				return "Cut";
-			}
-		};
-		cutItem.setMnemonic(KeyEvent.VK_U);
-		cutItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-				ActionEvent.CTRL_MASK));
-		editMenu.add(cutItem);
-
-		// Create and add the Copy item.
-		@SuppressWarnings("serial")
-		final JMenuItem copyItem = new JMenuItem(
-				TransferHandler.getCopyAction()) {
-			@Override
-			public String getText() {
-				return "Copy";
-			}
-		};
-		copyItem.setMnemonic(KeyEvent.VK_T);
-		copyItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-				ActionEvent.CTRL_MASK));
-		editMenu.add(copyItem);
-
-		// Create and add the Paste item.
-		@SuppressWarnings("serial")
-		final JMenuItem pasteItem = new JMenuItem(
-				TransferHandler.getPasteAction()) {
-			@Override
-			public String getText() {
-				return "Paste";
-			}
-		};
-		pasteItem.setMnemonic(KeyEvent.VK_P);
-		pasteItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-				ActionEvent.CTRL_MASK));
-		editMenu.add(pasteItem);
+		editMenu.add(CutAction.getInstance());
+		editMenu.add(CopyAction.getInstance());
+		editMenu.add(PasteAction.getInstance());
 
 		// delete item
 		editMenu.add(DeleteAction.getInstance());

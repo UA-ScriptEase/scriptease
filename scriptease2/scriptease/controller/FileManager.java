@@ -386,7 +386,7 @@ public final class FileManager {
 			module.save(compile);
 			StatusManager.getInstance().setStatus(
 					(compile ? "Compilation and " : "")
-							+ "Story Save Sucessful!");
+							+ "Story Save Successful!");
 		} catch (IOException e) {
 			// Nothing better to do at the moment except let ScriptEase
 			// explode.

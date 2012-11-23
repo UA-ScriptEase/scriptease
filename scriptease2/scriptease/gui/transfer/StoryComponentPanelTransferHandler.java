@@ -251,6 +251,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	}
 
 	@Override
+	public boolean importData(JComponent comp, Transferable t) {
+		return importData(new TransferSupport(comp, t));
+	}
+
+	@Override
 	public boolean importData(TransferSupport support) {
 		// sanity check
 		if (!this.canImport(support))
@@ -311,9 +316,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 				describeItManager = apiDictionary.getDescribeItManager();
 				describeIt = describeItManager.getDescribeIt(newChild);
-				
+
 				if (describeIt != null) {
-					describeItManager.addDescribeIt(describeIt.clone(), clone);
+					describeItManager.addDescribeIt(describeIt, clone);
 				}
 
 				StoryComponent sibling = parent.getChildAt(insertionIndex);
