@@ -3,12 +3,19 @@ package scriptease.gui;
 import java.awt.Component;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.WeakHashMap;
+
+import scriptease.controller.observer.SEFocusObserver;
 
 /**
  * A simple manager class that allows us to store which component currently has
  * focus. A common way to set focus is to use a FocusListener on a component.
  * This allows us to track focus only on specific components rather than every
- * component ever.
+ * component ever.<br>
+ * <br>
+ * We also keep our collection of SEFocusObservers here in a weak hashmap.
  * 
  * @see java.awt.event.FocusListener
  * 
@@ -18,6 +25,8 @@ public class SEFocusManager {
 	private static Component focus;
 	private static final SEFocusManager instance = new SEFocusManager();
 
+	private static Map<Component, SEFocusObserver> observerMap = new WeakHashMap<Component, SEFocusObserver>();
+
 	/**
 	 * Gets the sole instance of the ComponentFocusManager.
 	 * 
@@ -25,15 +34,6 @@ public class SEFocusManager {
 	 */
 	public static SEFocusManager getInstance() {
 		return SEFocusManager.instance;
-	}
-
-	/**
-	 * Sets the current focus to the passed in component.
-	 * 
-	 * @param focus
-	 */
-	public void setFocus(Component focus) {
-		SEFocusManager.focus = focus;
 	}
 
 	/**
@@ -46,24 +46,34 @@ public class SEFocusManager {
 	}
 
 	/**
-	 * Sets up a default focus listener for the passed in component. This
-	 * listener simple sets the focus to the passed in component when focus is
-	 * gained. No events fire when focus is lost.
+	 * Sets the current focus to the passed in component.
 	 * 
 	 * @param focus
-	 * @return
 	 */
-	public FocusListener defaultFocusListener(final Component focus) {
-		return new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				SEFocusManager.getInstance().setFocus(focus);
-			}
+	public void setFocus(Component focus) {
+		final Component oldFocus;
 
-			@Override
-			public void focusLost(FocusEvent e) {
-			}
-		};
+		oldFocus = SEFocusManager.focus;
+
+		SEFocusManager.focus = focus;
+
+		for (Entry<Component, SEFocusObserver> entry : observerMap.entrySet()) {
+			if (entry.getKey() == focus)
+				entry.getValue().gainFocus(oldFocus);
+			else
+				entry.getValue().loseFocus(oldFocus);
+		}
 	}
 
+	/**
+	 * Add an observer to the SEFocusManager so that it will fire events when
+	 * SEFocus changes. This observer will not get garbage collected until the
+	 * component disappears.
+	 * 
+	 * @param component
+	 * @param observer
+	 */
+	public void addObserver(Component component, SEFocusObserver observer) {
+		SEFocusManager.observerMap.put(component, observer);
+	}
 }

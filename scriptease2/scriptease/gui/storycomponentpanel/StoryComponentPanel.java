@@ -98,15 +98,20 @@ public class StoryComponentPanel extends JPanel implements
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				if (e.getOppositeComponent() instanceof StoryComponentPanel)
+				final Component other;
+
+				other = e.getOppositeComponent();
+
+				if (other instanceof StoryComponentPanel)
 					return;
+				else if (SEFocusManager.getInstance().isCompatibleType(other)) {
+					final StoryComponentPanelManager selectionManager;
 
-				final StoryComponentPanelManager selectionManager;
-
-				selectionManager = StoryComponentPanel.this
-						.getSelectionManager();
-				if (selectionManager != null)
-					selectionManager.clearSelection();
+					selectionManager = StoryComponentPanel.this
+							.getSelectionManager();
+					if (selectionManager != null)
+						selectionManager.clearSelection();
+				}
 			}
 		});
 
