@@ -611,29 +611,46 @@ public class Translator {
 	public GameModule loadModule(File location) {
 		StatusManager.getInstance().setStatus("Loading Module ...");
 		GameModule module = this.createGameModuleInstance();
-		try {
-			module.setLocation(location);
-			// read the module to memory.
-			module.load(false);
-		} catch (FileNotFoundException e) {
+
+		if (!location.exists()) {
+			// We need to do this separately, because otherwise "open" creates a
+			// new, empty file for the module.
 			System.err.println("Module not found at [" + location + "]");
+
 			WindowFactory.getInstance().showProblemDialog(
 					"Problem loading Game Module",
-					"I couldn't find a Game Module at \"" + location
-							+ "\". \n\nPlease tell me a new location to use.");
+					"I couldn't find a Game Module at \"" + location + "\"."
+							+ " \n\nPlease tell me a new location to use.");
 
 			module = null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			WindowFactory
-					.getInstance()
-					.showProblemDialog(
-							"Problem loading GameModule",
-							"I can't read the Game Module at \""
-									+ location
-									+ "\".\n\n It might be corrupt. Please give me another file to try instead.");
-			module = null;
-		}
+		} else
+			try {
+				module.setLocation(location);
+				// read the module to memory.
+				module.load(false);
+			} catch (FileNotFoundException e) {
+				// This should only actually be called if module is read only.
+				System.err.println("Module not found at [" + location + "]");
+				e.printStackTrace();
+
+				WindowFactory.getInstance().showProblemDialog(
+						"Problem loading Game Module",
+						"I couldn't find a Game Module at \"" + location
+								+ "\". It may no longer exist or be in use."
+								+ " \n\nPlease tell me a new location to use.");
+
+				module = null;
+			} catch (IOException e) {
+				e.printStackTrace();
+				WindowFactory
+						.getInstance()
+						.showProblemDialog(
+								"Problem loading GameModule",
+								"I can't read the Game Module at \""
+										+ location
+										+ "\".\n\n It might be corrupt. Please give me another file to try instead.");
+				module = null;
+			}
 
 		// If the module could not be found, ask the user for its location
 		if (module == null) {
