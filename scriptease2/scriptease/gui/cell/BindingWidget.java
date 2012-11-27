@@ -54,6 +54,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 		this.setOpaque(false);
 		this.setUI(new BindingWidgetUI());
 
+		// Necessary to save changes that require loss of focus.
 		this.addMouseListener(new MouseAdapter() {
 			public void mousePressed(java.awt.event.MouseEvent e) {
 				BindingWidget.this.requestFocusInWindow();

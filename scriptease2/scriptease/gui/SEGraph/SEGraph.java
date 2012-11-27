@@ -1085,6 +1085,9 @@ public class SEGraph<E> extends JComponent {
 
 						UndoManager.getInstance().endUndoableAction();
 					}
+
+				SEGraph.this.getNodesToComponentsMap()
+						.getValue(this.lastEnteredNode).requestFocusInWindow();
 			} else if (mode == ToolBarMode.DELETE) {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
 					UndoManager.getInstance().startUndoableAction(
