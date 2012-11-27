@@ -368,9 +368,12 @@ public class StoryComponentPanel extends JPanel implements
 				selectionManager = panel.getSelectionManager();
 
 				if (selectionManager != null) {
-					boolean clearSelection = !(selectionManager
-							.getSelectedPanels().contains(this));
+					final boolean clearSelection;
+
+					clearSelection = !(selectionManager.getSelectedPanels()
+							.contains(StoryComponentPanel.this));
 					selectionManager.setSelection(panel, true, clearSelection);
+
 					JComponent component = (JComponent) e.getSource();
 
 					// Determine the type of action
@@ -383,7 +386,6 @@ public class StoryComponentPanel extends JPanel implements
 					component.getTransferHandler().exportAsDrag(
 							(JComponent) e.getSource(), e, action);
 
-					panel.requestFocusInWindow();
 				}
 				e.consume();
 			}
@@ -408,7 +410,6 @@ public class StoryComponentPanel extends JPanel implements
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				StoryComponentPanel.this.requestFocusInWindow();
 				e.consume();
 			}
 
