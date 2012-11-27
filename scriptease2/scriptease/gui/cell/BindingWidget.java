@@ -3,6 +3,7 @@ package scriptease.gui.cell;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
@@ -52,6 +53,12 @@ public class BindingWidget extends JPanel implements Cloneable {
 		this.updateBackgroundColour(this.binding);
 		this.setOpaque(false);
 		this.setUI(new BindingWidgetUI());
+
+		this.addMouseListener(new MouseAdapter() {
+			public void mousePressed(java.awt.event.MouseEvent e) {
+				BindingWidget.this.requestFocusInWindow();
+			};
+		});
 
 		this.setTransferHandler(BindingWidgetTransferHandler.getInstance());
 	}
