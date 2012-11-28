@@ -290,7 +290,6 @@ public class PanelFactory {
 
 		if (components == null) {
 			components = new ArrayList<JComponent>();
-			components.add(scbScrollPane);
 			this.modelsToComponents.put(model, components);
 		}
 		components.add(scbScrollPane);
@@ -366,8 +365,8 @@ public class PanelFactory {
 
 	/**
 	 * Builds a JSplitPane that is used for pattern models which contains a
-	 * LibraryPanel and a GameConstatPanel. The GameConstantPanel is hidden when
-	 * a non-StoryModel PatternModel is opened up.
+	 * LibraryPanel and a GameConstantPanel. The GameConstantPanel is hidden
+	 * when a non-StoryModel PatternModel is opened up.
 	 * 
 	 * @return
 	 */
@@ -546,12 +545,13 @@ public class PanelFactory {
 
 		modelObserver = new PatternModelObserver() {
 			public void modelChanged(PatternModelEvent event) {
-				// TODO Need to redraw this panel so that nothing is shown if no
-				// model
-				// is open.
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
 					tree.drawTree(event.getPatternModel(),
 							searchField.getText(),
+							typeFilter.getSelectedTypes());
+				} else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED
+						&& PatternModelManager.getInstance().getActiveModel() == null) {
+					tree.drawTree(null, searchField.getText(),
 							typeFilter.getSelectedTypes());
 				}
 			}
@@ -573,6 +573,11 @@ public class PanelFactory {
 		return gameConstantPane;
 	}
 
+	/**
+	 * Returns all tabs in the JTabbedPane.
+	 * 
+	 * @return
+	 */
 	public JTabbedPane getModelTabPane() {
 		return this.modelTabs;
 	}
@@ -682,9 +687,7 @@ public class PanelFactory {
 
 					PanelFactory.this.modelTabs.remove(component);
 
-					// TODO Should close the translator if it's not open
-					// anywhere else. We can use the usingTranslator in
-					// PatternModelPool to check for this.
+					FileManager.getInstance().close(libraryModel);
 				};
 
 				@Override

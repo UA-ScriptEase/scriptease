@@ -341,8 +341,9 @@ public class TranslatorManager implements PatternModelObserver {
 				this.setActiveTranslator(translator);
 			}
 		} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED) {
-			if (!PatternModelManager.getInstance().usingTranslator(translator))
-				translator.unloadTranslator();
+			if (!PatternModelManager.getInstance().usingTranslator(translator)) {
+				this.setActiveTranslator(null);
+			}
 		}
 	}
 }

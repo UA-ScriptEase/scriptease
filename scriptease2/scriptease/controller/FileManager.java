@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,6 +41,7 @@ import scriptease.translator.codegenerator.CodeGenerator;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
+import scriptease.util.BiHashMap;
 import scriptease.util.FileOp;
 
 /**
@@ -81,7 +81,7 @@ public final class FileManager {
 	 * Set of all openFiles currently open. Strictly speaking, the model itself
 	 * isn't open, its module and patterns are.
 	 */
-	private final Map<File, StoryModel> openFiles;
+	private final BiHashMap<File, StoryModel> openFiles;
 
 	private final Set<File> tempFiles;
 
@@ -106,7 +106,7 @@ public final class FileManager {
 	private FileManager() {
 		this.tempFiles = new HashSet<File>();
 
-		this.openFiles = new HashMap<File, StoryModel>();
+		this.openFiles = new BiHashMap<File, StoryModel>();
 
 		this.filesToChannels = new HashMap<File, FileChannel>();
 
@@ -203,8 +203,8 @@ public final class FileManager {
 
 			@Override
 			public void processStoryModel(StoryModel storyModel) {
-				final File location = FileManager.this
-						.reverseLookup(storyModel);
+				final File location = FileManager.this.openFiles
+						.getKey(storyModel);
 				final String saveMessage = "Saving story "
 						+ storyModel.getTitle() + " to " + location;
 
@@ -303,7 +303,7 @@ public final class FileManager {
 	 *            The location to save the model.
 	 */
 	private void writeStoryModelFile(StoryModel model, File location) {
-		final StoryModel storedModel = this.openFiles.get(location);
+		final StoryModel storedModel = this.openFiles.getValue(location);
 		final WindowFactory windowManager = WindowFactory.getInstance();
 		final FileIO writer = FileIO.getInstance();
 
@@ -337,8 +337,7 @@ public final class FileManager {
 
 		// update the map of open files/models to reflect the new file location.
 		// remove the entry corresponding to the model, not the location.
-		// TODO:change to bimap implementation once bimaps exist.
-		this.openFiles.remove(this.reverseLookup(model));
+		this.openFiles.removeValue(model);
 		this.openFiles.put(location, model);
 
 		this.writeCode(model, true);
@@ -467,7 +466,7 @@ public final class FileManager {
 		final File location = toTest.getModule().getLocation();
 		File openLocation;
 
-		for (StoryModel model : this.openFiles.values()) {
+		for (StoryModel model : this.openFiles.getValues()) {
 			openLocation = model.getModule().getLocation();
 
 			if (openLocation.equals(location) && model != toTest) {
@@ -476,32 +475,6 @@ public final class FileManager {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Gets the File location associated with the given model.
-	 * 
-	 * @param model
-	 *            The <code>StoryModel</code> whose location is being
-	 *            determined.
-	 * @return The <code>File</code> corresponding to this model.
-	 *         <code>null</code> if one doesn't exist.
-	 */
-	private File reverseLookup(StoryModel model) {
-		// TODO: change openFiles into a bimap (when one exists), so it can
-		// be queried by key and by value instead of this messed up reverse
-		// lookup hack.
-		Set<File> models = this.openFiles.keySet(); // get all open files.
-
-		Iterator<File> iter = models.iterator(); // search for the one that maps
-		// to the given model.
-		while (iter.hasNext()) {
-			File nextFile = iter.next();
-			if (this.openFiles.get(nextFile).equals(model)) {
-				return nextFile;
-			}
-		}
-		return null;
 	}
 
 	public void loadLibraryModel(File location) {
@@ -552,7 +525,7 @@ public final class FileManager {
 		// if we've already got the model open, then we don't need to
 		// load it again.
 		if (this.openFiles.containsKey(location)) {
-			model = this.openFiles.get(location);
+			model = this.openFiles.getValue(location);
 			this.updateRecentFiles(location);
 		} else {
 			reader = FileIO.getInstance();
@@ -652,8 +625,10 @@ public final class FileManager {
 		model.process(new ModelAdapter() {
 			@Override
 			public void processLibraryModel(LibraryModel libraryModel) {
-				// TODO Possibly add functionality to close translators.
-				super.processLibraryModel(libraryModel);
+				if (PanelFactory.getInstance()
+						.getComponentsForModel(libraryModel).size() < 1) {
+					PatternModelManager.getInstance().remove(libraryModel);
+				}
 			}
 
 			@Override
@@ -676,8 +651,7 @@ public final class FileManager {
 						.getComponentsForModel(storyModel).size() < 1) {
 					PatternModelManager.getInstance().remove(storyModel);
 
-					FileManager.this.openFiles.remove(FileManager.this
-							.reverseLookup(storyModel));
+					FileManager.this.openFiles.removeValue(storyModel);
 
 				}
 			}
