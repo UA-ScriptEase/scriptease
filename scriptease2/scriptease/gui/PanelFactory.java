@@ -127,7 +127,7 @@ public class PanelFactory {
 			}
 		});
 	}
-	
+
 	/**
 	 * Builds a panel for a StoryModel. This panel includes an {@link SEGraph}
 	 * and a {@link StoryComponentPanelTree}.
@@ -159,16 +159,35 @@ public class PanelFactory {
 		graphRedrawer = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
-				if (event.getType() == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED) {
+				final StoryComponentChangeEnum type;
+
+				type = event.getType();
+
+				if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED) {
 					event.getSource().addStoryComponentObserver(this);
 					storyGraph.repaint();
 					storyGraph.revalidate();
-				} else if (event.getType() == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED
-						|| event.getType() == StoryComponentChangeEnum.CHANGE_FAN_IN
-						|| event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+				} else if (type == StoryComponentChangeEnum.CHANGE_FAN_IN
+						|| type == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
 					storyGraph.repaint();
 					storyGraph.revalidate();
+				} else if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED) {
+					storyGraph.repaint();
+					storyGraph.revalidate();
+
+					// Set root to start node if we remove the selected node.
+					if (event.getSource() == storyComponentTree.getRoot()) {
+						final Collection<StoryPoint> nodes;
+
+						nodes = new ArrayList<StoryPoint>();
+
+						nodes.add(storyGraph.getStartNode());
+
+						storyGraph.setSelectedNodes(nodes);
+						storyComponentTree.setRoot(storyGraph.getStartNode());
+					}
 				}
+
 			}
 		};
 		storyGraphPanel = new ObservedJPanel(storyGraph);

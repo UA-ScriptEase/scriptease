@@ -285,6 +285,7 @@ public class MenuFactory {
 		helpMenuItem.setMnemonic(KeyEvent.VK_A);
 
 		menu.add(sendBugReportItem);
+		menu.addSeparator();
 		menu.add(helpMenuItem);
 
 		return menu;
