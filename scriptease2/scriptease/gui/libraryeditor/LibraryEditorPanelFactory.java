@@ -469,15 +469,15 @@ public class LibraryEditorPanelFactory {
 			@Override
 			public void run() {
 				if (!UndoManager.getInstance().hasOpenUndoableAction()) {
-					final String text;
-
-					text = nameField.getText();
-
-					UndoManager.getInstance().startUndoableAction(
-							"Change " + component + "'s display text to "
-									+ text);
-					component.setDisplayText(text);
-					UndoManager.getInstance().endUndoableAction();
+					String text = nameField.getText();
+					if(!text.equals(component.getDisplayText()))
+					{
+						UndoManager.getInstance().startUndoableAction(
+								"Change " + component + "'s display text to "
+										+ text);
+						component.setDisplayText(text);
+						UndoManager.getInstance().endUndoableAction();
+					}
 				}
 			}
 		};

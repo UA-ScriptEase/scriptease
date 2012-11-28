@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -22,6 +23,7 @@ import javax.swing.event.DocumentListener;
 
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.gui.action.typemenus.TypeAction;
@@ -38,6 +40,7 @@ import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
+import scriptease.model.StoryComponent;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
@@ -71,8 +74,18 @@ public class LibraryPanel extends JPanel {
 			 */
 			@Override
 			public void modelChanged(LibraryManagerEvent event) {
-				if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED)
-					updateLists();
+				if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
+					final LibraryEvent libraryEvent = event.getEvent();
+					final StoryComponent storyComponent = libraryEvent
+							.getEvent().getSource();
+					if (libraryEvent.getEventType() == LibraryEvent.STORYCOMPONENT_CHANGED) {
+						updateElement(storyComponent);
+					} else if (libraryEvent.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED) {
+						addElement(storyComponent);
+					} else if (libraryEvent.getEventType() == LibraryEvent.STORYCOMPONENT_REMOVED) {
+						removeElement(storyComponent);
+					}
+				}
 			}
 		};
 
@@ -207,35 +220,60 @@ public class LibraryPanel extends JPanel {
 	}
 
 	/**
+	 * Finds and updates the StoryComponentPanel of the changed StoryComponent
+	 * in each StoryComponentPanelJList
+	 * 
+	 * @param changed
+	 */
+	private void updateElement(StoryComponent changed) {
+		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			list.updateStoryComponentPanel(changed);
+		}
+	}
+
+	private void addElement(StoryComponent storyComponent) {
+		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			list.addStoryComponent(storyComponent);
+		}
+	}
+
+	private void removeElement(StoryComponent storyComponent) {
+		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			list.removeStoryComponent(storyComponent);
+		}
+	}
+
+	/**
 	 * Updates the lists based on their filters. Works by removing and adding
 	 * back all components in the list panes.
 	 */
 	private void updateLists() {
+		final PatternModel model;
+		final Translator activeTranslator;
+		final boolean hideInvisible;
+
+		model = PatternModelManager.getInstance().getActiveModel();
+		activeTranslator = TranslatorManager.getInstance()
+				.getActiveTranslator();
+
+		if (model instanceof LibraryModel)
+			hideInvisible = false;
+		else
+			hideInvisible = true;
+
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			final PatternModel model;
-			final Translator activeTranslator;
-			final boolean hideInvisible;
-
-			model = PatternModelManager.getInstance().getActiveModel();
-			activeTranslator = TranslatorManager.getInstance()
-					.getActiveTranslator();
-
-			if (model instanceof LibraryModel)
-				hideInvisible = false;
-			else
-				hideInvisible = true;
-
 			list.updateFilter(new TranslatorFilter(activeTranslator));
 			list.updateFilter(new VisibilityFilter(hideInvisible));
-
 			list.removeAllStoryComponents();
 
-			if (activeTranslator != null)
-				for (LibraryModel libraryModel : TranslatorManager
-						.getInstance().getActiveTranslator().getLibraries()) {
+			if (activeTranslator != null) {
+				final Collection<LibraryModel> libraries = activeTranslator
+						.getLibraries();
+				for (LibraryModel libraryModel : libraries) {
 					list.addStoryComponents(libraryModel
 							.getMainStoryComponents());
 				}
+			}
 		}
 	}
 }
