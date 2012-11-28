@@ -242,7 +242,8 @@ public final class FileManager {
 				apiDictionary = active.getApiDictionary();
 
 				File location = windowManager.showFileChooser(
-						FileManager.SAVE_AS, FileManager.LIBRARY_FILTER);
+						FileManager.SAVE_AS, libraryModel.getName(),
+						FileManager.LIBRARY_FILTER);
 
 				if (location == null) {
 					return;
@@ -267,7 +268,8 @@ public final class FileManager {
 				final WindowFactory windowManager = WindowFactory.getInstance();
 
 				File location = windowManager.showFileChooser(
-						FileManager.SAVE_AS, FileManager.STORY_FILTER);
+						FileManager.SAVE_AS, storyModel.getName(),
+						FileManager.STORY_FILTER);
 
 				// make sure the user didn't cancel/close window.
 				if (location == null) {

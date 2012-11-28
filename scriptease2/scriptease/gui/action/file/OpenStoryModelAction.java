@@ -46,8 +46,8 @@ public final class OpenStoryModelAction extends AbstractAction {
 		super(OpenStoryModelAction.OPEN_MODEL + "...");
 
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
-		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-				KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+		this.putValue(Action.ACCELERATOR_KEY,
+				KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
 	}
 
 	@Override
@@ -55,7 +55,8 @@ public final class OpenStoryModelAction extends AbstractAction {
 		File location = null;
 		boolean tryAgain = false;
 		do {
-			location = WindowFactory.getInstance().showFileChooser(OPEN_MODEL, FileManager.STORY_FILTER);
+			location = WindowFactory.getInstance().showFileChooser(OPEN_MODEL,
+					"", FileManager.STORY_FILTER);
 
 			if (location == null) {
 				return;
