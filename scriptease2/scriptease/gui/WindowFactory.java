@@ -540,8 +540,9 @@ public final class WindowFactory {
 		});
 	}
 
-	public File showFileChooser(String operation, FileFilter filter) {
-		return this.showFileChooser(operation, filter, null);
+	public File showFileChooser(String operation, String defaultFileName,
+			FileFilter filter) {
+		return this.showFileChooser(operation, defaultFileName, filter, null);
 	}
 
 	/**
@@ -559,8 +560,8 @@ public final class WindowFactory {
 	 * @return The file selected. This <b>can</b> be null if the chooser window
 	 *         is dismissed without accepting (closed or cancelled).
 	 */
-	public File showFileChooser(String operation, FileFilter filter,
-			File directoryPath) {
+	public File showFileChooser(String operation, String defaultFileName,
+			FileFilter filter, File directoryPath) {
 		final JFileChooser chooser;
 
 		chooser = new JFileChooser();
@@ -594,7 +595,7 @@ public final class WindowFactory {
 
 		// clear the selected file (since it shows up by default and isn't
 		// usually the correct extension)
-		chooser.setSelectedFile(new File(""));
+		chooser.setSelectedFile(new File(defaultFileName));
 
 		buttonChoice = chooser.showDialog(this.currentFrame, operation);
 

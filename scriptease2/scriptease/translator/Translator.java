@@ -673,7 +673,7 @@ public class Translator {
 		filter = new FileNameExtensionFilter(this.getName() + " Game Files",
 				this.getLegalExtensions());
 		// Otherwise pass in a null filter (defaults to accept all)
-		newLocation = WindowFactory.getInstance().showFileChooser("Select",
+		newLocation = WindowFactory.getInstance().showFileChooser("Select", "",
 				filter, this.getLocation());
 
 		return newLocation;
