@@ -139,10 +139,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * @param storyComponentList
 	 */
 	public void addStoryComponents(Collection<StoryComponent> storyComponentList) {
-		final DefaultListModel listModel;
-
-		listModel = (DefaultListModel) this.getModel();
-
+		final DefaultListModel listModel = (DefaultListModel) this.getModel();
 		listModel.removeElement(noResultsPanel);
 
 		for (StoryComponent component : storyComponentList) {
@@ -160,6 +157,73 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		else
 			for (int i = 0; i < listModel.size(); i++)
 				listModel.setElementAt(listModel.getElementAt(i), i);
+	}
+
+	public void addStoryComponent(StoryComponent component) {
+		final DefaultListModel listModel = (DefaultListModel) this.getModel();
+		if ((this.filterRule == null)
+				|| ((this.filterRule != null) && (this.filterRule
+						.isAcceptable(component)))) {
+			// Check if the element is already part of the list
+			if (getStoryComponentPanelListIndexForStoryComponent(component) == -1) {
+				listModel.addElement(StoryComponentPanelFactory.getInstance()
+						.buildStoryComponentPanel(component));
+			} else {
+				throw new IllegalStateException(component
+						+ " is already represented in " + this);
+			}
+		}
+	}
+
+	/**
+	 * Returns the index in the StoryComponentPanelJList where the
+	 * StoryComponentPanel representing the StoryComponent resides.
+	 * 
+	 * returns -1 if no StoryComponentPanel is found to represent the given
+	 * StoryComponent
+	 * 
+	 * @param component
+	 * @return
+	 */
+	public int getStoryComponentPanelListIndexForStoryComponent(
+			StoryComponent component) {
+		final DefaultListModel listModel = (DefaultListModel) this.getModel();
+		int returnIndex = -1;
+		for (int panelIndex = 0; panelIndex < listModel.size(); panelIndex++) {
+			final Object element = listModel.elementAt(panelIndex);
+			if (element instanceof StoryComponentPanel) {
+				final StoryComponentPanel panel = (StoryComponentPanel) element;
+				final StoryComponent panelComponent = panel.getStoryComponent();
+				if (panelComponent == component) {
+					returnIndex = panelIndex;
+					break;
+				}
+			}
+		}
+		return returnIndex;
+	}
+
+	public void removeStoryComponent(StoryComponent component) {
+		final DefaultListModel listModel = (DefaultListModel) this.getModel();
+		final int panelIndex = getStoryComponentPanelListIndexForStoryComponent(component);
+		if (panelIndex != -1) {
+			listModel.removeElementAt(panelIndex);
+		}
+	}
+
+	/**
+	 * Replaced the StoryComponentPanel for the StoryComponent with a new one in
+	 * the StoryComponentPanelJList
+	 * 
+	 * @param component
+	 */
+	public void updateStoryComponentPanel(StoryComponent component) {
+		final DefaultListModel listModel = (DefaultListModel) this.getModel();
+		final int panelIndex = getStoryComponentPanelListIndexForStoryComponent(component);
+		if (panelIndex != -1) {
+			listModel.set(panelIndex, (StoryComponentPanelFactory.getInstance()
+					.buildStoryComponentPanel(component)));
+		}
 	}
 
 	/**
