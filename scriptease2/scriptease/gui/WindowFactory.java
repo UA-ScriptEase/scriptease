@@ -3,8 +3,11 @@ package scriptease.gui;
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -14,6 +17,7 @@ import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -21,7 +25,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.SwingWorker.StateValue;
@@ -29,6 +35,7 @@ import javax.swing.filechooser.FileFilter;
 
 import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
+import scriptease.controller.logger.NetworkHandler;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.LifetimeObserverFactory;
 import scriptease.controller.observer.PatternModelObserver;
@@ -611,12 +618,98 @@ public final class WindowFactory {
 		preferencesDialog.display();
 	}
 
+	/**
+	 * Creates a new, empty dialog.
+	 * 
+	 * @param title
+	 * @return
+	 */
 	public JDialog buildDialog(String title) {
 		final JDialog dialog = new JDialog(this.currentFrame, title,
 				Dialog.ModalityType.DOCUMENT_MODAL);
 
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		return dialog;
+	}
+
+	/**
+	 * Shows a bug report dialog.
+	 * 
+	 * @return
+	 */
+	public JDialog buildBugReportDialog() {
+		final String TITLE = "Send Bug Report";
+		final JDialog bugReportDialog;
+
+		final JPanel content;
+		final JButton sendButton;
+		final JButton cancelButton;
+		final JTextArea commentArea;
+		final JScrollPane areaScrollPane;
+
+		final GroupLayout layout;
+
+		bugReportDialog = this.buildDialog(TITLE);
+
+		content = new JPanel();
+		sendButton = new JButton("Send");
+		cancelButton = new JButton("Cancel");
+		commentArea = new JTextArea();
+		areaScrollPane = new JScrollPane(commentArea);
+
+		commentArea.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		commentArea.setLineWrap(true);
+		commentArea.setWrapStyleWord(true);
+
+		areaScrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		areaScrollPane.setPreferredSize(new Dimension(250, 250));
+		areaScrollPane.setBorder(BorderFactory
+				.createTitledBorder("Bug Description"));
+
+		layout = new GroupLayout(content);
+
+		content.setLayout(layout);
+
+		sendButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				NetworkHandler.getInstance().sendBugReport(
+						commentArea.getText());
+				bugReportDialog.setVisible(false);
+				bugReportDialog.dispose();
+			}
+		});
+
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				bugReportDialog.setVisible(false);
+				bugReportDialog.dispose();
+			}
+		});
+
+		layout.setHorizontalGroup(layout
+				.createParallelGroup()
+				.addComponent(areaScrollPane)
+				.addGroup(
+						GroupLayout.Alignment.TRAILING,
+						layout.createSequentialGroup().addComponent(sendButton)
+								.addComponent(cancelButton)));
+
+		layout.setVerticalGroup(layout
+				.createSequentialGroup()
+				.addComponent(areaScrollPane)
+				.addGroup(
+						layout.createParallelGroup().addComponent(sendButton)
+								.addComponent(cancelButton)));
+
+		bugReportDialog.setContentPane(content);
+		bugReportDialog.pack();
+		bugReportDialog.setResizable(false);
+		bugReportDialog.setLocationRelativeTo(bugReportDialog.getParent());
+
+		return bugReportDialog;
 	}
 
 	/**

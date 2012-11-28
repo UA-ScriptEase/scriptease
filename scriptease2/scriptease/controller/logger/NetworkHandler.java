@@ -1,8 +1,6 @@
 package scriptease.controller.logger;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
@@ -26,15 +24,23 @@ import scriptease.gui.WindowFactory;
  * 
  */
 public class NetworkHandler extends Handler {
+	private static final int HTML_SUCESS = 200;
+
 	private HttpClient client;
 	private HttpPost post;
 	private LogRecord buffered;
-	private static final int HTML_SUCESS = 200;
 
 	private static final NetworkHandler instance = new NetworkHandler();
 
-	private static final String CONNECTION_ERROR_MESSAGE = "The error reporting system was unable to connect to the server.\n"
-			+ "Please email the latest log file to scriptease@cs.ualberta.ca.";
+	/**
+	 * Gets the sole instance of NetworkHandler as per the Singleton design
+	 * pattern.
+	 * 
+	 * @return The sole instance of ScriptEase.
+	 */
+	public static NetworkHandler getInstance() {
+		return NetworkHandler.instance;
+	}
 
 	@Override
 	public void close() throws SecurityException {
@@ -52,6 +58,8 @@ public class NetworkHandler extends Handler {
 		this.client = new DefaultHttpClient();
 		this.post = new HttpPost(ScriptEase.getInstance().getConfiguration(
 				ConfigurationKeys.BugServer));
+
+		System.out.println(this.post + " < > " + this.client);
 	}
 
 	@Override
@@ -84,13 +92,7 @@ public class NetworkHandler extends Handler {
 		try {
 			this.post.setEntity(new StringEntity(report));
 			HttpResponse response = this.client.execute(this.post);
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent()));
-			String readLine;
-			String innhold = "";
-			while (((readLine = br.readLine()) != null)) {
-				innhold += readLine;
-			}
+
 			// tell the user if the report was successfully sent and clear
 			// the buffer
 			if (response.getStatusLine().getStatusCode() == NetworkHandler.HTML_SUCESS) {
@@ -114,24 +116,32 @@ public class NetworkHandler extends Handler {
 	 */
 	public String generateReport(String comment) {
 		String report;
-		Formatter formatter = new ScriptEaseFormatter();
 
-		report = "ScriptEase2\n";
-		report += ("<version>\n");
+		report = "=== ScriptEase2\n\n";
+		report += ("=== Version: ");
 		report += ScriptEase.getInstance().getVersion();
-		report += " (" + ScriptEase.getInstance().getSpecificVersion() + ")";
-		report += ("</version>\n<log>\n");
-		if (this.buffered != null)
-			report += (formatter.format(this.buffered).trim() + "\n");
-		report += ("</log>\n<comment>\n");
+		report += " (" + ScriptEase.getInstance().getSpecificVersion() + ")\n";
+		report += ("\n=== Comment:\n\n");
 		report += comment + "\n";
-		report += ("</comment>\n<system>\n");
+		if (this.buffered != null) {
+			final String formattedText;
+			final Formatter formatter;
+
+			formatter = new ScriptEaseFormatter();
+			formattedText = formatter.format(this.buffered).trim();
+
+			if (!formattedText.isEmpty()) {
+				report += ("\n=== Log:\n\n");
+				report += formattedText + "\n";
+			}
+		}
+		report += ("\n=== System:\n\n");
 		String sys = System.getProperties().toString();
 		String[] properties = sys.split(",");
 		for (String property : properties) {
 			report += (property + "\n");
 		}
-		report += ("</system>\n</bug>\n");
+		report += ("\n");
 		return report;
 	}
 
@@ -140,8 +150,13 @@ public class NetworkHandler extends Handler {
 	 * occurred.
 	 */
 	private void error() {
+		final String errorMessage;
+
+		errorMessage = "The bug reporting system was unable to connect to the server.\n"
+				+ "Please email the latest log file to scriptease@cs.ualberta.ca.";
+
 		WindowFactory.getInstance().showProblemDialog("Error Report Failed",
-				NetworkHandler.CONNECTION_ERROR_MESSAGE);
+				errorMessage);
 	}
 
 	/**
@@ -149,18 +164,11 @@ public class NetworkHandler extends Handler {
 	 * successfully
 	 */
 	private void success() {
-		String msg = "The error reporting was successfully sent!\n";
-		WindowFactory.getInstance().showInformationDialog(
-				"Error Report Sucess", msg);
-	}
+		final String successMessage;
 
-	/**
-	 * Gets the sole instance of NetworkHandler as per the Singleton design
-	 * pattern.
-	 * 
-	 * @return The sole instance of ScriptEase.
-	 */
-	public static NetworkHandler getInstance() {
-		return NetworkHandler.instance;
+		successMessage = "The bug report was successfully sent!\n";
+
+		WindowFactory.getInstance().showInformationDialog(
+				"Error Report Sucess", successMessage);
 	}
 }

@@ -121,7 +121,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		this.setCellRenderer(new StoryComponentListRenderer());
 		this.setLayoutOrientation(JList.VERTICAL);
 
-		this.setSelectionBackground(ScriptEaseUI.SELECTED_COLOUR);
+		this.setSelectionBackground(ScriptEaseUI.COLOUR_LIST_SELECTED);
 		this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 
 		this.setDragEnabled(true);
