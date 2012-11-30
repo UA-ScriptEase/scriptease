@@ -1858,7 +1858,7 @@
       <Parameters/>
       <Implicits/>
     </Slot>
-    <Slot>
+    <Slot format="conversation_conditional">
       <Name>Active</Name>
       <Keyword>Active</Keyword>
       <Parameters/>
