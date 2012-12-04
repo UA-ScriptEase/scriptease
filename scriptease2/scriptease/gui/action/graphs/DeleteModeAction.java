@@ -2,6 +2,8 @@ package scriptease.gui.action.graphs;
 
 import java.awt.event.ActionEvent;
 
+import scriptease.gui.ui.ScriptEaseUI;
+
 /**
  * Represents and performs the DeleteMode command, as well as encapsulating its
  * enabled and name display state. This sets the ToolBar's mode to "Delete".
@@ -36,7 +38,7 @@ public final class DeleteModeAction extends GraphToolBarModeAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		setCursorToImageFromPath(ICON_TEXT);
+		setCursor(ScriptEaseUI.CURSOR_NODE_DELETE);
 		setMode(ToolBarMode.DELETE);
 	}
 }
