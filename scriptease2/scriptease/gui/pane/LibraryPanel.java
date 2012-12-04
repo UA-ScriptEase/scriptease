@@ -3,6 +3,8 @@ package scriptease.gui.pane;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -140,12 +143,19 @@ public class LibraryPanel extends JPanel {
 
 		// Set up the listeners
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
+			final Timer timer = new Timer(1000, new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					for (StoryComponentPanelJList list : LibraryPanel.this.storyComponentPanelJLists)
+						list.updateFilter(new StoryComponentSearchFilter(
+								searchField.getText()));
+					updateLists();
+					timer.stop();
+				};
+			});
+			
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				for (StoryComponentPanelJList list : LibraryPanel.this.storyComponentPanelJLists)
-					list.updateFilter(new StoryComponentSearchFilter(
-							searchField.getText()));
-				updateLists();
+				timer.restart();
 			}
 
 			@Override

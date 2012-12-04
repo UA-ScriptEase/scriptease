@@ -85,7 +85,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	public StoryComponentPanelJList(StoryComponentFilter filter,
 			boolean hideInvisible) {
 		super();
-
+		
 		final DefaultListModel listModel = new DefaultListModel();
 
 		this.setModel(listModel);
@@ -143,20 +143,11 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		listModel.removeElement(noResultsPanel);
 
 		for (StoryComponent component : storyComponentList) {
-			if (!(this.filterRule == null)) {
-				if (!this.filterRule.isAcceptable(component))
-					continue;
-			}
-
-			listModel.addElement(StoryComponentPanelFactory.getInstance()
-					.buildStoryComponentPanel(component));
+			addStoryComponent(component);
 		}
 
 		if (listModel.isEmpty())
 			listModel.addElement(noResultsPanel);
-		else
-			for (int i = 0; i < listModel.size(); i++)
-				listModel.setElementAt(listModel.getElementAt(i), i);
 	}
 
 	public void addStoryComponent(StoryComponent component) {
@@ -169,8 +160,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				listModel.addElement(StoryComponentPanelFactory.getInstance()
 						.buildStoryComponentPanel(component));
 			} else {
-				throw new IllegalStateException(component
-						+ " is already represented in " + this);
+				System.err.println("StoryComponent " + component + " already exists in StoryComponentPanelJList");
 			}
 		}
 	}
@@ -231,9 +221,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 */
 	public void removeAllStoryComponents() {
 		final DefaultListModel listModel;
-
 		listModel = (DefaultListModel) this.getModel();
-
 		listModel.clear();
 	}
 

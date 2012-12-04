@@ -402,8 +402,14 @@ public class LibraryEditorPanelFactory {
 
 				describeIt.assignScriptItToPath(selectedNodes, newEffect);
 
-				knowIt.setBinding(describeIt.getScriptItForPath(describeIt
-						.getShortestPath()));
+				final ScriptIt scriptItForPath = describeIt
+						.getScriptItForPath(describeIt.getShortestPath());
+				if (scriptItForPath != null) {
+					knowIt.setBinding(scriptItForPath);
+				} else {
+					knowIt.clearBinding();
+				}
+
 			}
 		};
 
@@ -470,8 +476,7 @@ public class LibraryEditorPanelFactory {
 			public void run() {
 				if (!UndoManager.getInstance().hasOpenUndoableAction()) {
 					String text = nameField.getText();
-					if(!text.equals(component.getDisplayText()))
-					{
+					if (!text.equals(component.getDisplayText())) {
 						UndoManager.getInstance().startUndoableAction(
 								"Change " + component + "'s display text to "
 										+ text);
