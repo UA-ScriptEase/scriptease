@@ -51,16 +51,33 @@ import scriptease.translator.io.model.Slot;
  * 
  * @author remiller
  * @author mfchurch
+ * @author kschenk
+ * 
  * @see AbstractFragment
  * @see SimpleDataFragment
  * @see SeriesFragment
  */
 public class CodeGenerator {
 
+	private static CodeGenerator instance = new CodeGenerator();
+
+	/**
+	 * Returns the sole instance of CodeGenerator.
+	 * 
+	 * @return
+	 */
+	public static CodeGenerator getInstance() {
+		return instance;
+	}
+
+	private CodeGenerator() {
+		// Privatized constructor
+	}
+
 	private ScriptInfo generateScriptFile(Context context) {
 
 		// generate the script file
-		String scriptContent = this.generateScript(context);
+		String scriptContent = generateScript(context);
 		return new ScriptInfo(scriptContent, context.getLocationInfo());
 	}
 
@@ -107,56 +124,86 @@ public class CodeGenerator {
 	 * @param problems
 	 * @return
 	 */
-	public static Collection<ScriptInfo> generateCode(StoryModel model,
+	public Collection<ScriptInfo> generateCode(StoryModel model,
 			final Collection<StoryProblem> problems) {
-		final GameModule module = model.getModule();
-		final Translator translator = model.getTranslator();
-		final Collection<ScriptInfo> scriptInfos = new ArrayList<ScriptInfo>();
-		final StoryPoint root = model.getRoot();
+		final GameModule module;
+		final Translator translator;
+		final Collection<ScriptInfo> scriptInfos;
+		final StoryPoint root;
+		final SemanticAnalyzer analyzer;
 
+		translator = model.getTranslator();
+		module = model.getModule();
+		scriptInfos = new ArrayList<ScriptInfo>();
+		root = model.getRoot();
 		// do the first pass (semantic analysis) for the given story
-		final SemanticAnalyzer analyzer = new SemanticAnalyzer(root, translator);
+		analyzer = new SemanticAnalyzer(root, translator);
 
-		// check for problems
+		// Find problems with code gen, such as slots missing bindings, etc.
 		problems.addAll(analyzer.getProblems());
 
 		// If no problems were detected, generate the scripts
 		if (problems.isEmpty()) {
 			// aggregate the scripts based on the storyPoints
-			final Collection<Set<CodeBlock>> scriptBuckets = module
+			final Collection<Set<CodeBlock>> scriptBuckets;
+
+			scriptBuckets = module
 					.aggregateScripts(new ArrayList<StoryComponent>(root
 							.getDescendants()));
 
 			if (scriptBuckets.size() > 0) {
 				// Multithreaded
-//				final ExecutorService executor = Executors
-//						.newFixedThreadPool(scriptBuckets.size());
+				final ExecutorService executor;
+
+				executor = Executors.newFixedThreadPool(scriptBuckets.size());
+
+				/*
+				 * This method is called so that we load the Language Dictionary
+				 * if it has not been loaded before. Otherwise, the following
+				 * multithreaded code will attempt to load the language
+				 * dictionary in each thread, creating a race condition.
+				 */
+				translator.getLanguageDictionary();
+
+				/*
+				 * A note on debugging:
+				 * 
+				 * If for some reason we are running into issues with
+				 * multithreading, make sure you do not print out or debug
+				 * inside of the multithreaded code. This will slow down
+				 * function calls, which may make everything work fine and give
+				 * the false appearance that the bug is fixed. Instead, debug or
+				 * print out debug statements after the multiple threads are
+				 * finished.
+				 */
 				for (final Set<CodeBlock> bucket : scriptBuckets) {
-					// All CodeBlocks of a given bucket share slot and subject,
-					// so
-					// take the first one
-					final CodeBlock codeBlock = bucket.iterator().next();
-					final LocationInformation locationInfo = new LocationInformation(
-							codeBlock);
-					final Context context = analyzer.buildContext(locationInfo);
 					// Spawn a new thread to compile the code
-//					Runnable worker = new Runnable() {
-//						@Override
-//						public void run() {
-							final CodeGenerator generator;
-							generator = new CodeGenerator();
-							scriptInfos.add(generator
-									.generateScriptFile(context));
-//						}
-//					};
-//					executor.execute(worker);
+					Runnable worker = new Runnable() {
+						@Override
+						public void run() {
+							final CodeBlock codeBlock;
+							final LocationInformation locationInfo;
+							final Context context;
+							final ScriptInfo generated;
+
+							// All CodeBlocks of a given bucket share slot and
+							// subject, so we can just use the first one
+							codeBlock = bucket.iterator().next();
+							locationInfo = new LocationInformation(codeBlock);
+							context = analyzer.buildContext(locationInfo);
+							generated = generateScriptFile(context);
+
+							scriptInfos.add(generated);
+						}
+					};
+					executor.execute(worker);
 				}
-				// This will make the executor accept no new threads
-				// and finish all existing threads in the queue
-//				executor.shutdown();
-				// Wait until all threads are finish
-//				while (!executor.isTerminated())
-//					;
+				// This will make the executor accept no new threads and finish
+				// all existing threads in the queue
+				executor.shutdown();
+				// Wait until all threads are finish before continuing.
+				while (!executor.isTerminated())
+					;
 			}
 		} else {
 			WindowFactory.getInstance().showCompileProblems(problems);
@@ -168,6 +215,7 @@ public class CodeGenerator {
 					+ translator.getCompiler().getName()
 					+ " could not be found.");
 		}
+
 		return scriptInfos;
 	}
 }

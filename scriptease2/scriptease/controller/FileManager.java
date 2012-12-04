@@ -354,7 +354,7 @@ public final class FileManager {
 		final GameModule module = model.getModule();
 		final Translator translator = model.getTranslator();
 		final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
-		final Collection<ScriptInfo> scriptInfos = CodeGenerator.generateCode(
+		final Collection<ScriptInfo> scriptInfos = CodeGenerator.getInstance().generateCode(
 				model, problems);
 
 		module.addScripts(scriptInfos);

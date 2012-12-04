@@ -148,8 +148,6 @@ public class Translator {
 				.getClassLoader(), this);
 		gameModuleClassFile = this
 				.getPathProperty(DescriptionKeys.GAME_MODULE_PATH);
-		// new
-		// File(this.getProperty(DescriptionKeys.GAME_MODULE_PATH.toString()));
 
 		System.err.println("Game Module Class File "
 				+ (gameModuleClassFile.exists() ? "discovered"
@@ -471,8 +469,9 @@ public class Translator {
 	}
 
 	/**
-	 * Gets the Language Dictionary for this translator. returns null if not yet
-	 * initialized
+	 * Gets the Language Dictionary for this translator. If there is no Language
+	 * Dictionary assigned to the translator yet, this method will attempt to
+	 * open one. 
 	 * 
 	 * @return the languageDictionary
 	 */

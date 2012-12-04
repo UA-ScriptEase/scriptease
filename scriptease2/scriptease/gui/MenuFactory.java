@@ -409,8 +409,8 @@ public class MenuFactory {
 								&& activeModel instanceof StoryModel) {
 							final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
 							final Collection<ScriptInfo> scriptInfos = CodeGenerator
-									.generateCode((StoryModel) activeModel,
-											problems);
+									.getInstance().generateCode(
+											(StoryModel) activeModel, problems);
 
 							String code = "";
 							for (ScriptInfo script : scriptInfos) {
