@@ -2,6 +2,7 @@ package scriptease.gui.ui;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Point;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -181,7 +182,7 @@ public interface ScriptEaseUI {
 	 * like in No Smoking or No Pie signs.
 	 */
 	public static final Cursor CURSOR_UNAVAILABLE = GUIOp
-			.createCursor("unavailable");
+			.createCursor("unavailable", new Point(15, 15));
 
 	/**
 	 * The maximum screen width that ScriptEase can support. Can be increased if

@@ -320,15 +320,34 @@ public class GUIOp {
 	}
 
 	/**
+	 * Creates a cursor based on a name with a hotspot of 0, 0. Returns null if
+	 * the file is not found. We recommend using one of the constant cursors
+	 * found in {@link ScriptEaseUI} instead of this method, since all cursors
+	 * should be created in there anyways.
+	 * 
+	 * @param name
+	 *            Part of the path to a .png file represting the cursor:
+	 *            "scriptease/resources/icons/cursors/[name].png"
+	 * @return
+	 */
+	public static Cursor createCursor(String name) {
+		return GUIOp.createCursor(name, new Point(0, 0));
+	}
+
+	/**
 	 * Creates a cursor based on a name. Returns null if the file is not found.
 	 * We recommend using one of the constant cursors found in
 	 * {@link ScriptEaseUI} instead of this method, since all cursors should be
 	 * created in there anyways.
 	 * 
 	 * @param name
+	 *            Part of the path to a .png file represting the cursor:
+	 *            "scriptease/resources/icons/cursors/[name].png"
+	 * @param hotspot
+	 *            The hotspot for the cursor.
 	 * @return
 	 */
-	public static Cursor createCursor(String name) {
+	public static Cursor createCursor(String name, Point hotspot) {
 		final File file;
 		final String resultingCursorPath;
 
@@ -341,8 +360,6 @@ public class GUIOp {
 
 			if (file != null) {
 				try {
-					final Point CURSOR_HOTSPOT = new Point(0, 0);
-
 					final BufferedImage cursorImage;
 					final Toolkit toolkit;
 
@@ -351,7 +368,7 @@ public class GUIOp {
 					toolkit = Toolkit.getDefaultToolkit();
 
 					customCursor = toolkit.createCustomCursor(cursorImage,
-							CURSOR_HOTSPOT, resultingCursorPath);
+							hotspot, resultingCursorPath);
 				} catch (IOException e) {
 					System.err.println("Failed to read cursor file at " + file
 							+ ". Setting cursor to default.");

@@ -4,7 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -12,12 +11,8 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.plaf.ComponentUI;
@@ -40,7 +34,6 @@ import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.util.BiHashMap;
-import scriptease.util.FileOp;
 import scriptease.util.GUIOp;
 import sun.awt.util.IdentityArrayList;
 
@@ -975,33 +968,9 @@ public class SEGraph<E> extends JComponent {
 
 			if (this.lastEnteredNode == SEGraph.this.getStartNode())
 				if (GraphToolBarModeAction.getMode() == ToolBarMode.DELETE) {
-					final String resultingCursorPath;
-					final File file;
-
-					resultingCursorPath = "scriptease/resources/icons/cursors/unavailable.png";
-					file = FileOp.getFileResource(resultingCursorPath);
-
-					if (file != null) {
-						try {
-							final Point CURSOR_HOTSPOT = new Point(15, 15);
-
-							final BufferedImage cursorImage;
-							final Toolkit toolkit;
-							final Cursor customCursor;
-
-							cursorImage = ImageIO.read(file);
-							toolkit = Toolkit.getDefaultToolkit();
-							customCursor = toolkit.createCustomCursor(
-									cursorImage, CURSOR_HOTSPOT,
-									resultingCursorPath);
-
-							entered.setCursor(customCursor);
-
-						} catch (IOException exception) {
-							System.err.println("Failed to read cursor file at "
-									+ file + ". Setting cursor to default.");
-						}
-					}
+					// Make the cursor appear unavailable for start node
+					// deletion
+					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
 					entered.setCursor(null);
 		}
