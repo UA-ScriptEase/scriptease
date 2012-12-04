@@ -129,8 +129,8 @@ public class CodeGenerator {
 
 			if (scriptBuckets.size() > 0) {
 				// Multithreaded
-				final ExecutorService executor = Executors
-						.newFixedThreadPool(scriptBuckets.size());
+//				final ExecutorService executor = Executors
+//						.newFixedThreadPool(scriptBuckets.size());
 				for (final Set<CodeBlock> bucket : scriptBuckets) {
 					// All CodeBlocks of a given bucket share slot and subject,
 					// so
@@ -140,23 +140,23 @@ public class CodeGenerator {
 							codeBlock);
 					final Context context = analyzer.buildContext(locationInfo);
 					// Spawn a new thread to compile the code
-					Runnable worker = new Runnable() {
-						@Override
-						public void run() {
+//					Runnable worker = new Runnable() {
+//						@Override
+//						public void run() {
 							final CodeGenerator generator;
 							generator = new CodeGenerator();
 							scriptInfos.add(generator
 									.generateScriptFile(context));
-						}
-					};
-					executor.execute(worker);
+//						}
+//					};
+//					executor.execute(worker);
 				}
 				// This will make the executor accept no new threads
 				// and finish all existing threads in the queue
-				executor.shutdown();
+//				executor.shutdown();
 				// Wait until all threads are finish
-				while (!executor.isTerminated())
-					;
+//				while (!executor.isTerminated())
+//					;
 			}
 		} else {
 			WindowFactory.getInstance().showCompileProblems(problems);
