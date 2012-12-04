@@ -238,7 +238,7 @@ public class PanelFactory {
 		storyGraph.setBackground(Color.WHITE);
 
 		// Reset the ToolBar to select and add the Story Graph to it.
-		GraphToolBarModeAction.addJComponent(storyGraph);
+		GraphToolBarModeAction.useGraphCursorForJComponent(storyGraph);
 		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
 
 		// Set up the JPanel containing the graph

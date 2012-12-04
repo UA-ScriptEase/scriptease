@@ -118,30 +118,38 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 	 */
 	@Override
 	public boolean canImport(TransferHandler.TransferSupport support) {
+		boolean canImport = false;
+
 		// Check the destination.
 		// If the destination component is a BindingWidget, and the Transferable
 		// is a BindingTransferable.
 		final Component destinationComponent = support.getComponent();
-		final KnowItBinding sourceBinding;
-
-		// Get the destination KnowIt
-		final KnowIt destinationKnowIt = (KnowIt) ScriptWidgetFactory
-				.getEditedStoryComponent(destinationComponent.getParent());
 
 		if (destinationComponent instanceof BindingWidget
 				&& support.isDataFlavorSupported(KnowItBindingFlavor)) {
+			// Get the destination KnowIt
+			final KnowIt destinationKnowIt;
+			final KnowItBinding sourceBinding;
+
+			destinationKnowIt = (KnowIt) ScriptWidgetFactory
+					.getEditedStoryComponent(destinationComponent.getParent());
 			sourceBinding = this.extractBinding(support);
 
-			if (sourceBinding == null || destinationKnowIt == null) {
-				return false;
-			}
-
 			// Check that the KnowItBinding type matches the destination KnowIt
-			if (sourceBinding.compatibleWith(destinationKnowIt)) {
-				return true;
+			if (sourceBinding != null && destinationKnowIt != null) {
+				if (sourceBinding.compatibleWith(destinationKnowIt)) {
+					canImport = true;
+				}
 			}
 		}
-		return false;
+		
+		if(canImport) {
+			// TODO Set mouse pointer to normal
+		} else {
+			// TODO Set mouse pointer to invalid operation.
+		}
+		
+		return canImport;
 	}
 
 	private static boolean lastDragShiftDown = false;
