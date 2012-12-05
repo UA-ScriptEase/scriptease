@@ -30,7 +30,6 @@ import java.util.Set;
  */
 public class BiHashMap<K, V> {
 	private final Map<K, V> mainMap;
-	private final Map<V, K> reverseMap;
 
 	/**
 	 * Creates a bidirectional hash map where keys and values are unique. This
@@ -39,7 +38,6 @@ public class BiHashMap<K, V> {
 	 */
 	public BiHashMap() {
 		this.mainMap = new IdentityHashMap<K, V>();
-		this.reverseMap = new IdentityHashMap<V, K>();
 	}
 
 	/**
@@ -49,7 +47,6 @@ public class BiHashMap<K, V> {
 	 * @see HashMap#size()
 	 */
 	public int size() {
-		this.checkBidirectionality();
 		return this.mainMap.size();
 	}
 
@@ -60,8 +57,7 @@ public class BiHashMap<K, V> {
 	 * @see HashMap#isEmpty()
 	 */
 	public boolean isEmpty() {
-		this.checkBidirectionality();
-		return (this.mainMap.isEmpty());
+		return this.mainMap.isEmpty();
 	}
 
 	/**
@@ -72,8 +68,7 @@ public class BiHashMap<K, V> {
 	 * @return <tt>true</tt> if the bidirectional hash map contains the key
 	 * @see HashMap#containsKey(Object)
 	 */
-	public boolean containsKey(Object key) {
-		this.checkBidirectionality();
+	public boolean containsKey(K key) {
 		return this.mainMap.containsKey(key);
 	}
 
@@ -85,8 +80,7 @@ public class BiHashMap<K, V> {
 	 * @return <tt>true</tt> if the bidirectional hash map contains the value
 	 * @see HashMap#containsValue(Object)
 	 */
-	public boolean containsValue(Object value) {
-		this.checkBidirectionality();
+	public boolean containsValue(V value) {
 		return this.mainMap.containsValue(value);
 	}
 
@@ -115,9 +109,13 @@ public class BiHashMap<K, V> {
 	 */
 	public K getKey(V value) {
 		if (this.containsValue(value))
-			return (this.reverseMap.get(value));
-		else
-			return null;
+			for (Entry<K, V> entry : this.mainMap.entrySet()) {
+				if (entry.getValue() == value) {
+					return entry.getKey();
+				}
+			}
+
+		return null;
 	}
 
 	/**
@@ -129,10 +127,9 @@ public class BiHashMap<K, V> {
 	 */
 	public void put(K key, V value) {
 		this.removeKey(key);
-		this.removeValue(this.getValue(key));
+		this.removeValue(value);
+
 		this.mainMap.put(key, value);
-		this.reverseMap.put(value, key);
-		this.checkBidirectionality();
 	}
 
 	/**
@@ -142,13 +139,6 @@ public class BiHashMap<K, V> {
 	 *            The key to remove
 	 */
 	public void removeKey(final K key) {
-		this.checkBidirectionality();
-		for (Entry<V, K> entry : this.reverseMap.entrySet()) {
-			if (entry.getValue() == key) {
-				this.reverseMap.remove(entry.getKey());
-				break;
-			}
-		}
 		this.mainMap.remove(key);
 	}
 
@@ -159,13 +149,15 @@ public class BiHashMap<K, V> {
 	 *            The value to remove
 	 */
 	public void removeValue(final V value) {
-		this.checkBidirectionality();
-		for (Entry<K, V> entry : this.mainMap.entrySet()) {
-			if (entry.getKey() == value) {
-				this.mainMap.remove(entry.getValue());
+		final Set<Entry<K, V>> entrySetCopy;
+
+		entrySetCopy = new HashSet<Entry<K, V>>(this.mainMap.entrySet());
+
+		for (Entry<K, V> entry : entrySetCopy) {
+			if (entry.getValue() == value) {
+				this.mainMap.remove(entry.getKey());
 			}
 		}
-		this.reverseMap.remove(value);
 	}
 
 	/**
@@ -179,7 +171,6 @@ public class BiHashMap<K, V> {
 	 */
 	public void clear() {
 		this.mainMap.clear();
-		this.reverseMap.clear();
 	}
 
 	/**
@@ -192,12 +183,10 @@ public class BiHashMap<K, V> {
 	 * @return
 	 */
 	public Collection<K> getKeys() {
-		this.checkBidirectionality();
-
 		final Collection<K> keyList;
 		keyList = new ArrayList<K>();
 
-		keyList.addAll(this.reverseMap.values());
+		keyList.addAll(this.mainMap.keySet());
 
 		return keyList;
 	}
@@ -212,8 +201,6 @@ public class BiHashMap<K, V> {
 	 * @return
 	 */
 	public Collection<V> getValues() {
-		this.checkBidirectionality();
-
 		final Collection<V> valueList;
 		valueList = new ArrayList<V>();
 
@@ -233,8 +220,6 @@ public class BiHashMap<K, V> {
 	 * @return
 	 */
 	public Set<Entry<K, V>> getEntrySet() {
-		this.checkBidirectionality();
-
 		final Set<Entry<K, V>> entrySet;
 
 		entrySet = new HashSet<Entry<K, V>>();
@@ -281,40 +266,5 @@ public class BiHashMap<K, V> {
 		}
 
 		return entrySet;
-	}
-
-	/**
-	 * Checks if the two hashmaps are truly bidirectional. This should be
-	 * checked every time we do something with a HashBiMap. A violation of
-	 * bidirectionality most likely indicates that something is wrong with the
-	 * HashBiMap class itself.
-	 * 
-	 * @return
-	 */
-	private void checkBidirectionality() {
-		if (this.mainMap.size() != this.reverseMap.size())
-			throw new BidirectionalityViolatedException(
-					"Sizes of maps in HashBiMap are not equal.");
-
-		if (this.mainMap.isEmpty() != this.reverseMap.isEmpty())
-			throw new BidirectionalityViolatedException(
-					"One map in HashBiMap is empty while other is not.");
-
-		for (Entry<K, V> mainMapEntry : this.mainMap.entrySet()) {
-			boolean keyFound = false;
-			for (Entry<V, K> reverseMapEntry : this.reverseMap.entrySet()) {
-				if (mainMapEntry.getKey() == reverseMapEntry.getValue()) {
-					if (mainMapEntry.getValue() != reverseMapEntry.getKey())
-						throw new BidirectionalityViolatedException("Value "
-								+ mainMapEntry.getValue()
-								+ " is present in only one map.");
-					keyFound = true;
-				}
-			}
-			if (!keyFound)
-				throw new BidirectionalityViolatedException("Key "
-						+ mainMapEntry.getKey()
-						+ " is present in only one map.");
-		}
 	}
 }

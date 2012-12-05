@@ -200,8 +200,6 @@ public final class ErfFile implements GameModule {
 								System.err
 										.println("EXCEPTION! at " + parameter);
 							}
-							System.out
-									.println("Parameter successfully cleared.");
 						}
 					}
 				}

@@ -127,7 +127,7 @@ public class PanelFactory {
 			}
 		});
 	}
-	
+
 	/**
 	 * Builds a panel for a StoryModel. This panel includes an {@link SEGraph}
 	 * and a {@link StoryComponentPanelTree}.
@@ -159,16 +159,35 @@ public class PanelFactory {
 		graphRedrawer = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
-				if (event.getType() == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED) {
+				final StoryComponentChangeEnum type;
+
+				type = event.getType();
+
+				if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED) {
 					event.getSource().addStoryComponentObserver(this);
 					storyGraph.repaint();
 					storyGraph.revalidate();
-				} else if (event.getType() == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED
-						|| event.getType() == StoryComponentChangeEnum.CHANGE_FAN_IN
-						|| event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+				} else if (type == StoryComponentChangeEnum.CHANGE_FAN_IN
+						|| type == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
 					storyGraph.repaint();
 					storyGraph.revalidate();
+				} else if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED) {
+					storyGraph.repaint();
+					storyGraph.revalidate();
+
+					// Set root to start node if we remove the selected node.
+					if (event.getSource() == storyComponentTree.getRoot()) {
+						final Collection<StoryPoint> nodes;
+
+						nodes = new ArrayList<StoryPoint>();
+
+						nodes.add(storyGraph.getStartNode());
+
+						storyGraph.setSelectedNodes(nodes);
+						storyComponentTree.setRoot(storyGraph.getStartNode());
+					}
 				}
+
 			}
 		};
 		storyGraphPanel = new ObservedJPanel(storyGraph);
@@ -219,7 +238,7 @@ public class PanelFactory {
 		storyGraph.setBackground(Color.WHITE);
 
 		// Reset the ToolBar to select and add the Story Graph to it.
-		GraphToolBarModeAction.addJComponent(storyGraph);
+		GraphToolBarModeAction.useGraphCursorForJComponent(storyGraph);
 		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
 
 		// Set up the JPanel containing the graph
@@ -271,7 +290,6 @@ public class PanelFactory {
 
 		if (components == null) {
 			components = new ArrayList<JComponent>();
-			components.add(scbScrollPane);
 			this.modelsToComponents.put(model, components);
 		}
 		components.add(scbScrollPane);
@@ -347,8 +365,8 @@ public class PanelFactory {
 
 	/**
 	 * Builds a JSplitPane that is used for pattern models which contains a
-	 * LibraryPanel and a GameConstatPanel. The GameConstantPanel is hidden when
-	 * a non-StoryModel PatternModel is opened up.
+	 * LibraryPanel and a GameConstantPanel. The GameConstantPanel is hidden
+	 * when a non-StoryModel PatternModel is opened up.
 	 * 
 	 * @return
 	 */
@@ -527,12 +545,13 @@ public class PanelFactory {
 
 		modelObserver = new PatternModelObserver() {
 			public void modelChanged(PatternModelEvent event) {
-				// TODO Need to redraw this panel so that nothing is shown if no
-				// model
-				// is open.
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
 					tree.drawTree(event.getPatternModel(),
 							searchField.getText(),
+							typeFilter.getSelectedTypes());
+				} else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED
+						&& PatternModelManager.getInstance().getActiveModel() == null) {
+					tree.drawTree(null, searchField.getText(),
 							typeFilter.getSelectedTypes());
 				}
 			}
@@ -554,6 +573,11 @@ public class PanelFactory {
 		return gameConstantPane;
 	}
 
+	/**
+	 * Returns all tabs in the JTabbedPane.
+	 * 
+	 * @return
+	 */
 	public JTabbedPane getModelTabPane() {
 		return this.modelTabs;
 	}
@@ -663,9 +687,7 @@ public class PanelFactory {
 
 					PanelFactory.this.modelTabs.remove(component);
 
-					// TODO Should close the translator if it's not open
-					// anywhere else. We can use the usingTranslator in
-					// PatternModelPool to check for this.
+					FileManager.getInstance().close(libraryModel);
 				};
 
 				@Override

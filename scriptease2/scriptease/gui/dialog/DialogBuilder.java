@@ -223,13 +223,14 @@ public class DialogBuilder {
 					} else {
 						model = new StoryModel(module, title, author,
 								selectedTranslator);
-						
+
 						PatternModelManager.getInstance().add(model, true);
 						PanelFactory.getInstance().createTabForModel(model);
-						
+
 						// Process automatics and add them to the StoryModel
 						AutomaticsManager automaticsManager = new AutomaticsManager();
-						automaticsManager.resolveAndAddAutomatics( module, selectedTranslator, model);
+						automaticsManager.resolveAndAddAutomatics(module,
+								selectedTranslator, model);
 					}
 				} catch (Throwable e) {
 					UncaughtExceptionHandler handler = Thread
@@ -308,7 +309,7 @@ public class DialogBuilder {
 				}
 
 				location = WindowFactory.getInstance().showFileChooser(
-						"Select", filter, defaultLocation);
+						"Select", "", filter, defaultLocation);
 
 				if (location != null)
 					moduleField.setText(location.getAbsolutePath());

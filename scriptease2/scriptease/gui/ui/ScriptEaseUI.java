@@ -1,6 +1,8 @@
 package scriptease.gui.ui;
 
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Point;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -51,13 +53,18 @@ public interface ScriptEaseUI {
 	public static final Color UNSELECTED_COLOUR = Color.WHITE;
 
 	/**
+	 * The colour (Grey) used for selected list.
+	 */
+	public static final Color COLOUR_LIST_SELECTED = new Color(200, 200, 200);
+
+	/**
 	 * The colour (light blue) used by default for node backgrounds.
 	 */
 	public static final Color COLOUR_NODE_DEFAULT = new Color(205, 221, 250);
-	
+
 	/**
 	 * The colour (dark blue) used for selected graph nodes
-	 */ 
+	 */
 	public static final Color COLOUR_SELECTED_NODE = new Color(89, 147, 255);
 
 	/**
@@ -146,6 +153,36 @@ public interface ScriptEaseUI {
 	 */
 	public static final Icon EXPAND_ICON = (Icon) UIManager
 			.get("Tree.collapsedIcon");
+
+	/**
+	 * Cursor used for adding nodes to a graph.
+	 */
+	public static final Cursor CURSOR_NODE_ADD = GUIOp.createCursor("node_add");
+
+	/**
+	 * Cursor used for deleting nodes from the graph.
+	 */
+	public static final Cursor CURSOR_NODE_DELETE = GUIOp
+			.createCursor("node_delete");
+
+	/**
+	 * Cursor used for drawing paths between nodes.
+	 */
+	public static final Cursor CURSOR_PATH_DRAW = GUIOp
+			.createCursor("path_draw");
+
+	/**
+	 * Cursor used for erasing paths between nodes.
+	 */
+	public static final Cursor CURSOR_PATH_ERASE = GUIOp
+			.createCursor("path_erase");
+
+	/**
+	 * Cursor to represent unavailable actions. A circle with a line through it,
+	 * like in No Smoking or No Pie signs.
+	 */
+	public static final Cursor CURSOR_UNAVAILABLE = GUIOp
+			.createCursor("unavailable", new Point(15, 15));
 
 	/**
 	 * The maximum screen width that ScriptEase can support. Can be increased if

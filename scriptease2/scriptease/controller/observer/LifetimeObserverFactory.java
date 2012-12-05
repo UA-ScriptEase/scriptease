@@ -184,6 +184,11 @@ public class LifetimeObserverFactory {
 							});
 						}
 					});
+				} else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED) {
+					if (PatternModelManager.getInstance().getActiveModel() == null) {
+						for (JComponent component : storyJComponents)
+							component.setVisible(false);
+					}
 				}
 			}
 		};

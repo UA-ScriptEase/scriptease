@@ -240,6 +240,10 @@ public class StoryPoint extends ComplexStoryComponent {
 
 	@Override
 	public boolean equals(Object other) {
+		System.out.println("StoryPoint #" + this.hashCode() + " "
+				+ this.getDisplayText());
+		System.out.println("StoryPoint #" + other.hashCode() + " "
+				+ ((StoryPoint) other).getDisplayText());
 		return this.hashCode() == other.hashCode();
 	}
 

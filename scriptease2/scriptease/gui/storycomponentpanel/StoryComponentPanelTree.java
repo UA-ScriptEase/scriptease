@@ -62,6 +62,8 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 *            The root StoryComponent for the tree.
 	 */
 	public void setRoot(StoryPoint root) {
+		this.root = root;
+
 		if (this.rootPanel != null)
 			this.selectionManager.cleanUpPanel(this.rootPanel);
 
@@ -75,6 +77,15 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		this.filterTree(this.rootPanel);
 
 		this.setViewportView(this.rootPanel);
+	}
+
+	/**
+	 * Returns the root of the tree.
+	 * 
+	 * @return
+	 */
+	public StoryPoint getRoot() {
+		return this.root;
 	}
 
 	/**
