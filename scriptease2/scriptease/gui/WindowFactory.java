@@ -91,9 +91,8 @@ public final class WindowFactory {
 	 * thus just created on the root pane. However, if we ever have multiple
 	 * windows, this will be useful.
 	 * 
-	 * TODO Either implmement this so it can be "useful" or get rid of it. If we
-	 * added everything that could possibly be useful in the future, ScriptEase
-	 * would be twice the size with half the functionality.
+	 * TODO Either implmement this so it can be "useful" or get rid of it (i.e.
+	 * rename it to "mainFrame" or something).
 	 */
 	private JFrame currentFrame = null;
 
