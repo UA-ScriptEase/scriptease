@@ -169,7 +169,7 @@
       <Name>VisualEffectImpact</Name>
       <Keyword>visual_effect_impact</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>VFX_IMP_FLAME_M&lt;Imp Flame M&gt;|VFX_IMP_PULSE_NEGATIVE&lt;Imp Pulse Negative&gt;|VFX_IMP_AURA_FEAR&lt;Imp Aura Fear&gt;|VFX_IMP_RESTORATION&lt;Imp Restoration&gt;|VFX_IMP_FLAME_S&lt;Imp Flame S&gt;|VFX_IMP_LIGHTNING_M&lt;Imp Lightning M&gt;|VFX_IMP_ELEMENTAL_PROTECTION&lt;Imp Elemental Protection&gt;|VFX_IMP_POISON_S&lt;Imp Poison S&gt;|VFX_IMP_DESTRUCTION&lt;Imp Destruction&gt;|VFX_IMP_SPELL_MANTLE_USE&lt;Imp Spell Mantle Use&gt;|VFX_IMP_HEAD_ELECTRICITY&lt;Imp Head Electricity&gt;|VFX_IMP_SPIKE_TRAP&lt;Imp Spike Trap&gt;|VFX_IMP_LIGHTNING_S&lt;Imp Lightning S&gt;|VFX_IMP_SILENCE&lt;Imp Silence&gt;|VFX_IMP_HEAD_MIND&lt;Imp Head Mind&gt;|VFX_IMP_HEAD_HOLY&lt;Imp Head Holy&gt;|VFX_IMP_NEGATIVE_ENERGY&lt;Imp Negative Energy&gt;|VFX_IMP_PULSE_COLD&lt;Imp Pulse Cold&gt;|VFX_IMP_DISPEL&lt;Imp Dispel&gt;|VFX_IMP_MIRV_FLAME&lt;Imp Mirv Flame&gt;|VFX_IMP_HEALING_G&lt;Imp Healing G&gt;|VFX_IMP_BREACH&lt;Imp Breach&gt;|VFX_IMP_RAISE_DEAD&lt;Imp Raise Dead&gt;|VFX_IMP_HEAD_EVIL&lt;Imp Head Evil&gt;|VFX_IMP_DEATH&lt;Imp Death&gt;|VFX_IMP_FROST_S&lt;Imp Frost S&gt;|VFX_IMP_HEALING_L&lt;Imp Healing L&gt;|VFX_IMP_GOOD_HELP&lt;Imp Good Help&gt;|VFX_IMP_HEALING_M&lt;Imp Healing M&gt;|VFX_IMP_DEATH_L&lt;Imp Death L&gt;|VFX_IMP_DOMINATE_S&lt;Imp Dominate S&gt;|VFX_IMP_FROST_L&lt;Imp Frost L&gt;|VFX_IMP_DISPEL_DISJUNCTION&lt;Imp Dispel Disjunction&gt;|VFX_IMP_DOOM&lt;Imp Doom&gt;|VFX_IMP_AURA_HOLY&lt;Imp Aura Holy&gt;|VFX_IMP_FORTITUDE_SAVING_THROW_USE&lt;Imp Fortitude Saving Throw Use&gt;|VFX_IMP_DEATH_WARD&lt;Imp Death Ward&gt;|VFX_IMP_UNSUMMON&lt;Imp Unsummon&gt;|VFX_IMP_HEAD_ODD&lt;Imp Head Odd&gt;|VFX_IMP_SUPER_HEROISM&lt;Imp Super Heroism&gt;|VFX_IMP_IMPROVE_ABILITY_SCORE&lt;Imp Improve Ability Score&gt;|VFX_IMP_GLOBE_USE&lt;Imp Globe Use&gt;|VFX_IMP_HEAD_COLD&lt;Imp Head Cold&gt;|VFX_IMP_MAGBLUE&lt;Imp Magblue&gt;|VFX_IMP_HEALING_S&lt;Imp Healing S&gt;|VFX_IMP_CHARM&lt;Imp Charm&gt;|VFX_IMP_DIVINE_STRIKE_FIRE&lt;Imp Divine Strike Fire&gt;|VFX_IMP_STUN&lt;Imp Stun&gt;|VFX_IMP_RESTORATION_GREATER&lt;Imp Restoration Greater&gt;|VFX_IMP_HASTE&lt;Imp Haste&gt;|VFX_IMP_HEALING_X&lt;Imp Healing X&gt;|VFX_IMP_DISEASE_S&lt;Imp Disease S&gt;|VFX_IMP_HEAD_FIRE&lt;Imp Head Fire&gt;|VFX_IMP_CONFUSION_S&lt;Imp Confusion S&gt;|VFX_IMP_PULSE_HOLY&lt;Imp Pulse Holy&gt;|VFX_IMP_DAZED_S&lt;Imp Dazed S&gt;|VFX_IMP_HEAD_ACID&lt;Imp Head Acid&gt;|VFX_IMP_KNOCK&lt;Imp Knock&gt;|VFX_IMP_HEAD_SONIC&lt;Imp Head Sonic&gt;|VFX_IMP_PULSE_WIND&lt;Imp Pulse Wind&gt;|VFX_IMP_HEAD_NATURE&lt;Imp Head Nature&gt;|VFX_IMP_REDUCE_ABILITY_SCORE&lt;Imp Reduce Ability Score&gt;|VFX_IMP_MAGICAL_VISION&lt;Imp Magical Vision&gt;|VFX_IMP_REMOVE_CONDITION&lt;Imp Remove Condition&gt;|VFX_IMP_SLOW&lt;Imp Slow&gt;|VFX_IMP_MIRV&lt;Imp Mirv&gt;|VFX_IMP_HEAD_HEAL&lt;Imp Head Heal&gt;|VFX_IMP_GREASE&lt;Imp Grease&gt;|VFX_IMP_ACID_L&lt;Imp Acid L&gt;|VFX_IMP_WILL_SAVING_THROW_USE&lt;Imp Will Saving Throw Use&gt;|VFX_IMP_POLYMORPH&lt;Imp Polymorph&gt;|VFX_IMP_SLEEP&lt;Imp Sleep&gt;|VFX_IMP_PULSE_WATER&lt;Imp Pulse Water&gt;|VFX_IMP_REFLEX_SAVE_THROW_USE&lt;Imp Reflex Save Throw Use&gt;|VFX_IMP_SUNSTRIKE&lt;Imp Sunstrike&gt;|VFX_IMP_AURA_UNEARTHLY&lt;Imp Aura Unearthly&gt;|VFX_IMP_ACID_S&lt;Imp Acid S&gt;|VFX_IMP_MAGIC_PROTECTION&lt;Imp Magic Protection&gt;|VFX_IMP_FEAR_S&lt;Imp Fear S&gt;|VFX_IMP_PULSE_NATURE&lt;Imp Pulse Nature&gt;|VFX_IMP_PULSE_FIRE&lt;Imp Pulse Fire&gt;|VFX_IMP_EVIL_HELP&lt;Imp Evil Help&gt;|VFX_IMP_BLIND_DEAF_M&lt;Imp Blind Deaf M&gt;|VFX_IMP_POISON_L&lt;Imp Poison L&gt;|VFX_IMP_RESTORATION_LESSER&lt;Imp Restoration Lesser&gt;|VFX_IMP_AURA_NEGATIVE_ENERGY&lt;Imp Aura Negative Energy&gt;|VFX_IMP_AC_BONUS&lt;Imp Ac Bonus&gt;|VFX_IMP_SONIC&lt;Imp Sonic&gt;|VFX_IMP_HOLY_AID&lt;Imp Holy Aid&gt;|VFX_IMP_MAGIC_RESISTANCE_USE&lt;Imp Magic Resistance Use&gt;|VFX_IMP_HARM&lt;Imp Harm&gt;</Enum>
+      <Enum>VFX_IMP_FLAME_M&lt;Imp Flame M&gt;|VFX_IMP_PULSE_NEGATIVE&lt;Imp Pulse Negative&gt;|VFX_IMP_AURA_FEAR&lt;Imp Aura Fear&gt;|VFX_IMP_RESTORATION&lt;Imp Restoration&gt;|VFX_IMP_FLAME_S&lt;Imp Flame S&gt;|VFX_IMP_LIGHTNING_M&lt;Imp Lightning M&gt;|VFX_IMP_ELEMENTAL_PROTECTION&lt;Imp Elemental Protection&gt;|VFX_IMP_POISON_S&lt;Imp Poison S&gt;|VFX_IMP_DESTRUCTION&lt;Imp Destruction&gt;|VFX_IMP_SPELL_MANTLE_USE&lt;Imp Spell Mantle Use&gt;|VFX_IMP_HEAD_ELECTRICITY&lt;Imp Head Electricity&gt;|VFX_IMP_SPIKE_TRAP&lt;Imp Spike Trap&gt;|VFX_IMP_LIGHTNING_S&lt;Imp Lightning S&gt;|VFX_IMP_SILENCE&lt;Imp Silence&gt;|VFX_IMP_HEAD_MIND&lt;Imp Head Mind&gt;|VFX_IMP_HEAD_HOLY&lt;Imp Head Holy&gt;|VFX_IMP_NEGATIVE_ENERGY&lt;Imp Negative Energy&gt;|VFX_IMP_PULSE_COLD&lt;Imp Pulse Cold&gt;|VFX_IMP_DISPEL&lt;Imp Dispel&gt;|VFX_IMP_MIRV_FLAME&lt;Imp Mirv Flame&gt;|VFX_IMP_HEALING_G&lt;Imp Healing G&gt;|VFX_IMP_BREACH&lt;Imp Breach&gt;|VFX_IMP_RAISE_DEAD&lt;Imp Raise Dead&gt;|VFX_IMP_HEAD_EVIL&lt;Imp Head Evil&gt;|VFX_IMP_DEATH&lt;Imp Death&gt;|VFX_IMP_FROST_S&lt;Imp Frost S&gt;|VFX_IMP_HEALING_L&lt;Imp Healing L&gt;|VFX_IMP_GOOD_HELP&lt;Imp Good Help&gt;|VFX_IMP_HEALING_M&lt;Imp Healing M&gt;|VFX_IMP_DEATH_L&lt;Imp Death L&gt;|VFX_IMP_DOMINATE_S&lt;Imp Dominate S&gt;|VFX_IMP_FROST_L&lt;Imp Frost L&gt;|VFX_IMP_DISPEL_DISJUNCTION&lt;Imp Dispel Disjunction&gt;|VFX_IMP_DOOM&lt;Imp Doom&gt;|VFX_IMP_AURA_HOLY&lt;Imp Aura Holy&gt;|VFX_IMP_FORTITUDE_SAVING_THROW_USE&lt;Imp Fortitude Saving Throw Use&gt;|VFX_IMP_DEATH_WARD&lt;Imp Death Ward&gt;|VFX_IMP_UNSUMMON&lt;Imp Unsummon&gt;|VFX_IMP_HEAD_ODD&lt;Imp Head Odd&gt;|VFX_IMP_SUPER_HEROISM&lt;Imp Super Heroism&gt;|VFX_IMP_IMPROVE_ABILITY_SCORE&lt;Imp Improve Ability Score&gt;|VFX_IMP_GLOBE_USE&lt;Imp Globe Use&gt;|VFX_IMP_HEAD_COLD&lt;Imp Head Cold&gt;|VFX_IMP_MAGBLUE&lt;Imp Magblue&gt;|VFX_IMP_HEALING_S&lt;Imp Healing S&gt;|VFX_IMP_CHARM&lt;Imp Charm&gt;|VFX_IMP_DIVINE_STRIKE_FIRE&lt;Imp Divine Strike Fire&gt;|VFX_IMP_RESTORATION_GREATER&lt;Imp Restoration Greater&gt;|VFX_IMP_HASTE&lt;Imp Haste&gt;|VFX_IMP_STUN&lt;Imp Stun&gt;|VFX_IMP_HEALING_X&lt;Imp Healing X&gt;|VFX_IMP_DISEASE_S&lt;Imp Disease S&gt;|VFX_IMP_HEAD_FIRE&lt;Imp Head Fire&gt;|VFX_IMP_CONFUSION_S&lt;Imp Confusion S&gt;|VFX_IMP_PULSE_HOLY&lt;Imp Pulse Holy&gt;|VFX_IMP_DAZED_S&lt;Imp Dazed S&gt;|VFX_IMP_HEAD_ACID&lt;Imp Head Acid&gt;|VFX_IMP_KNOCK&lt;Imp Knock&gt;|VFX_IMP_HEAD_SONIC&lt;Imp Head Sonic&gt;|VFX_IMP_PULSE_WIND&lt;Imp Pulse Wind&gt;|VFX_IMP_HEAD_NATURE&lt;Imp Head Nature&gt;|VFX_IMP_REDUCE_ABILITY_SCORE&lt;Imp Reduce Ability Score&gt;|VFX_IMP_MAGICAL_VISION&lt;Imp Magical Vision&gt;|VFX_IMP_REMOVE_CONDITION&lt;Imp Remove Condition&gt;|VFX_IMP_SLOW&lt;Imp Slow&gt;|VFX_IMP_MIRV&lt;Imp Mirv&gt;|VFX_IMP_HEAD_HEAL&lt;Imp Head Heal&gt;|VFX_IMP_GREASE&lt;Imp Grease&gt;|VFX_IMP_ACID_L&lt;Imp Acid L&gt;|VFX_IMP_WILL_SAVING_THROW_USE&lt;Imp Will Saving Throw Use&gt;|VFX_IMP_POLYMORPH&lt;Imp Polymorph&gt;|VFX_IMP_SLEEP&lt;Imp Sleep&gt;|VFX_IMP_PULSE_WATER&lt;Imp Pulse Water&gt;|VFX_IMP_REFLEX_SAVE_THROW_USE&lt;Imp Reflex Save Throw Use&gt;|VFX_IMP_SUNSTRIKE&lt;Imp Sunstrike&gt;|VFX_IMP_AURA_UNEARTHLY&lt;Imp Aura Unearthly&gt;|VFX_IMP_ACID_S&lt;Imp Acid S&gt;|VFX_IMP_MAGIC_PROTECTION&lt;Imp Magic Protection&gt;|VFX_IMP_FEAR_S&lt;Imp Fear S&gt;|VFX_IMP_PULSE_NATURE&lt;Imp Pulse Nature&gt;|VFX_IMP_PULSE_FIRE&lt;Imp Pulse Fire&gt;|VFX_IMP_EVIL_HELP&lt;Imp Evil Help&gt;|VFX_IMP_BLIND_DEAF_M&lt;Imp Blind Deaf M&gt;|VFX_IMP_POISON_L&lt;Imp Poison L&gt;|VFX_IMP_RESTORATION_LESSER&lt;Imp Restoration Lesser&gt;|VFX_IMP_AURA_NEGATIVE_ENERGY&lt;Imp Aura Negative Energy&gt;|VFX_IMP_AC_BONUS&lt;Imp Ac Bonus&gt;|VFX_IMP_SONIC&lt;Imp Sonic&gt;|VFX_IMP_HOLY_AID&lt;Imp Holy Aid&gt;|VFX_IMP_MAGIC_RESISTANCE_USE&lt;Imp Magic Resistance Use&gt;|VFX_IMP_HARM&lt;Imp Harm&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -183,7 +183,7 @@
       <Name>Spell</Name>
       <Keyword>spell</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>SPELL_RAY_OF_FROST&lt;Spell Ray Of Frost&gt;|SPELL_RAISE_DEAD&lt;Spell Raise Dead&gt;|SPELL_CURE_MODERATE_WOUNDS&lt;Spell Cure Moderate Wounds&gt;|SPELL_CREATE_GREATER_UNDEAD&lt;Spell Create Greater Undead&gt;|SPELL_SHADES_STONESKIN&lt;Spell Shades Stoneskin&gt;|SPELL_DISPEL_MAGIC&lt;Spell Dispel Magic&gt;|SPELL_SOUND_BURST&lt;Spell Sound Burst&gt;|SPELL_FEAR&lt;Spell Fear&gt;|SPELL_UNHOLY_AURA&lt;Spell Unholy Aura&gt;|SPELL_GREATER_BULLS_STRENGTH&lt;Spell Greater Bulls Strength&gt;|SPELL_PRISMATIC_SPRAY&lt;Spell Prismatic Spray&gt;|SPELL_GREATER_FOXS_CUNNING&lt;Spell Greater Foxs Cunning&gt;|SPELL_MAGIC_CIRCLE_AGAINST_LAW&lt;Spell Magic Circle Against Law&gt;|SPELL_EAGLE_SPLEDOR&lt;Spell Eagle Spledor&gt;|SPELL_SHAPECHANGE&lt;Spell Shapechange&gt;|SPELL_PHANTASMAL_KILLER&lt;Spell Phantasmal Killer&gt;|SPELL_CURE_SERIOUS_WOUNDS&lt;Spell Cure Serious Wounds&gt;|SPELL_ENTANGLE&lt;Spell Entangle&gt;|SPELL_NEGATIVE_ENERGY_RAY&lt;Spell Negative Energy Ray&gt;|SPELL_CONTROL_UNDEAD&lt;Spell Control Undead&gt;|SPELL_AWAKEN&lt;Spell Awaken&gt;|SPELL_LEGEND_LORE&lt;Spell Legend Lore&gt;|SPELL_SUMMON_CREATURE_VII&lt;Spell Summon Creature Vii&gt;|SPELL_MASS_BLINDNESS_AND_DEAFNESS&lt;Spell Mass Blindness And Deafness&gt;|SPELL_ANIMATE_DEAD&lt;Spell Animate Dead&gt;|SPELL_FLAME_STRIKE&lt;Spell Flame Strike&gt;|SPELL_HORRID_WILTING&lt;Spell Horrid Wilting&gt;|SPELL_HOLY_AURA&lt;Spell Holy Aura&gt;|SPELL_REGENERATE&lt;Spell Regenerate&gt;|SPELL_BLESS_WEAPON&lt;Spell Bless Weapon&gt;|SPELL_BANE&lt;Spell Bane&gt;|SPELL_GREATER_CATS_GRACE&lt;Spell Greater Cats Grace&gt;|SPELL_DOMINATE_ANIMAL&lt;Spell Dominate Animal&gt;|SPELL_SHADES_FIREBALL&lt;Spell Shades Fireball&gt;|SPELL_GATE&lt;Spell Gate&gt;|SPELL_INCENDIARY_CLOUD&lt;Spell Incendiary Cloud&gt;|SPELL_HARM&lt;Spell Harm&gt;|SPELL_SEE_INVISIBILITY&lt;Spell See Invisibility&gt;|SPELL_GREATER_ENDURANCE&lt;Spell Greater Endurance&gt;|SPELL_SHADOW_CONJURATION_MAGE_ARMOR&lt;Spell Shadow Conjuration Mage Armor&gt;|SPELL_GREATER_SHADOW_CONJURATION_MINOR_GLOBE&lt;Spell Greater Shadow Conjuration Minor Globe&gt;|SPELL_REMOVE_FEAR&lt;Spell Remove Fear&gt;|SPELL_HOLD_MONSTER&lt;Spell Hold Monster&gt;|SPELL_MAGE_ARMOR&lt;Spell Mage Armor&gt;|SPELL_BURNING_HANDS&lt;Spell Burning Hands&gt;|SPELL_CLOUDKILL&lt;Spell Cloudkill&gt;|SPELL_CLOAK_OF_CHAOS&lt;Spell Cloak Of Chaos&gt;|SPELL_SHADOW_SHIELD&lt;Spell Shadow Shield&gt;|SPELL_SHADOW_CONJURATION_INIVSIBILITY&lt;Spell Shadow Conjuration Inivsibility&gt;|SPELL_HEAL&lt;Spell Heal&gt;|SPELL_LESSER_SPELL_MANTLE&lt;Spell Lesser Spell Mantle&gt;|SPELL_INVISIBILITY_SPHERE&lt;Spell Invisibility Sphere&gt;|SPELL_CHAIN_LIGHTNING&lt;Spell Chain Lightning&gt;|SPELL_BLINDNESS_AND_DEAFNESS&lt;Spell Blindness And Deafness&gt;|SPELL_HOLD_PERSON&lt;Spell Hold Person&gt;|SPELL_METEOR_SWARM&lt;Spell Meteor Swarm&gt;|SPELL_VIRTUE&lt;Spell Virtue&gt;|SPELL_SHADOW_CONJURATION_DARKNESS&lt;Spell Shadow Conjuration Darkness&gt;|SPELL_POISON&lt;Spell Poison&gt;|SPELL_HASTE&lt;Spell Haste&gt;|SPELL_SEARING_LIGHT&lt;Spell Searing Light&gt;|SPELL_FLAME_ARROW&lt;Spell Flame Arrow&gt;|SPELL_WAIL_OF_THE_BANSHEE&lt;Spell Wail Of The Banshee&gt;|SPELL_REMOVE_DISEASE&lt;Spell Remove Disease&gt;|SPELL_MINOR_GLOBE_OF_INVULNERABILITY&lt;Spell Minor Globe Of Invulnerability&gt;|SPELL_PROTECTION_FROM_LAW&lt;Spell Protection From Law&gt;|SPELL_SHADES_SUMMON_SHADOW&lt;Spell Shades Summon Shadow&gt;|SPELL_RESIST_ELEMENTS&lt;Spell Resist Elements&gt;|SPELL_GREATER_SPELL_BREACH&lt;Spell Greater Spell Breach&gt;|SPELL_GREATER_OWLS_WISDOM&lt;Spell Greater Owls Wisdom&gt;|SPELL_MAGIC_WEAPON&lt;Spell Magic Weapon&gt;|SPELL_RESISTANCE&lt;Spell Resistance&gt;|SPELL_SCARE&lt;Spell Scare&gt;|SPELL_FIREBALL&lt;Spell Fireball&gt;|SPELL_CURE_CRITICAL_WOUNDS&lt;Spell Cure Critical Wounds&gt;|SPELL_ELEMENTAL_SHIELD&lt;Spell Elemental Shield&gt;|SPELL_DEATH_WARD&lt;Spell Death Ward&gt;|SPELL_DISMISSAL&lt;Spell Dismissal&gt;|SPELL_GREATER_SHADOW_CONJURATION_SUMMON_SHADOW&lt;Spell Greater Shadow Conjuration Summon Shadow&gt;|SPELL_FIRE_STORM&lt;Spell Fire Storm&gt;|SPELL_BESTOW_CURSE&lt;Spell Bestow Curse&gt;|SPELL_CHARM_MONSTER&lt;Spell Charm Monster&gt;|SPELL_DIVINE_POWER&lt;Spell Divine Power&gt;|SPELL_FINGER_OF_DEATH&lt;Spell Finger Of Death&gt;|SPELL_TIME_STOP&lt;Spell Time Stop&gt;|SPELL_EVARDS_BLACK_TENTACLES&lt;Spell Evards Black Tentacles&gt;|SPELL_SLOW&lt;Spell Slow&gt;|SPELL_LIGHT&lt;Spell Light&gt;|SPELL_PLANAR_BINDING&lt;Spell Planar Binding&gt;|SPELL_GHOUL_TOUCH&lt;Spell Ghoul Touch&gt;|SPELL_SPHERE_OF_CHAOS&lt;Spell Sphere Of Chaos&gt;|SPELL_SLAY_LIVING&lt;Spell Slay Living&gt;|SPELL_LESSER_SPELL_BREACH&lt;Spell Lesser Spell Breach&gt;|SPELL_CURE_LIGHT_WOUNDS&lt;Spell Cure Light Wounds&gt;|SPELL_COLOR_SPRAY&lt;Spell Color Spray&gt;|SPELL_SANCTUARY&lt;Spell Sanctuary&gt;|SPELL_INVISIBILITY&lt;Spell Invisibility&gt;|SPELL_GREATER_STONESKIN&lt;Spell Greater Stoneskin&gt;|SPELL_BLADE_BARRIER&lt;Spell Blade Barrier&gt;|SPELL_SHADES_CONE_OF_COLD&lt;Spell Shades Cone Of Cold&gt;|SPELL_AID&lt;Spell Aid&gt;|SPELL_PROTECTION_FROM_EVIL&lt;Spell Protection From Evil&gt;|SPELL_LESSER_DISPEL&lt;Spell Lesser Dispel&gt;|SPELL_VAMPIRIC_TOUCH&lt;Spell Vampiric Touch&gt;|SPELL_PRAYER&lt;Spell Prayer&gt;|SPELL_RESURRECTION&lt;Spell Resurrection&gt;|SPELL_GREASE&lt;Spell Grease&gt;|SPELL_GREATER_PLANAR_BINDING&lt;Spell Greater Planar Binding&gt;|SPELL_FOXS_CUNNING&lt;Spell Foxs Cunning&gt;|SPELL_CATS_GRACE&lt;Spell Cats Grace&gt;|SPELL_MIND_FOG&lt;Spell Mind Fog&gt;|SPELL_SHIELD_OF_LAW&lt;Spell Shield Of Law&gt;|SPELL_NEUTRALIZE_POISON&lt;Spell Neutralize Poison&gt;|SPELL_REMOVE_CURSE&lt;Spell Remove Curse&gt;|SPELL_ACID_FOG&lt;Spell Acid Fog&gt;|SPELL_CONE_OF_COLD&lt;Spell Cone Of Cold&gt;|SPELL_PROTECTION_FROM_GOOD&lt;Spell Protection From Good&gt;|SPELL_DOOM&lt;Spell Doom&gt;|SPELL_SPELL_RESISTANCE&lt;Spell Spell Resistance&gt;|SPELL_SLEEP&lt;Spell Sleep&gt;|SPELL_WEIRD&lt;Spell Weird&gt;|SPELL_RAY_OF_ENFEEBLEMENT&lt;Spell Ray Of Enfeeblement&gt;|SPELL_DAZE&lt;Spell Daze&gt;|SPELL_KNOCK&lt;Spell Knock&gt;|SPELL_MORDENKAINENS_DISJUNCTION&lt;Spell Mordenkainens Disjunction&gt;|SPELL_FLAME_LASH&lt;Spell Flame Lash&gt;|SPELL_CONTAGION&lt;Spell Contagion&gt;|SPELL_FREEDOM_OF_MOVEMENT&lt;Spell Freedom Of Movement&gt;|SPELL_CIRCLE_OF_DOOM&lt;Spell Circle Of Doom&gt;|SPELL_DESTRUCTION&lt;Spell Destruction&gt;|SPELL_POLYMORPH_SELF&lt;Spell Polymorph Self&gt;|SPELL_CHARM_PERSON_OR_ANIMAL&lt;Spell Charm Person Or Animal&gt;|SPELL_MAGIC_VESTMENT&lt;Spell Magic Vestment&gt;|SPELL_WEB&lt;Spell Web&gt;|SPELL_SPELL_MANTLE&lt;Spell Spell Mantle&gt;|SPELL_MAGIC_CIRCLE_AGAINST_GOOD&lt;Spell Magic Circle Against Good&gt;|SPELL_ETHEREAL_VISAGE&lt;Spell Ethereal Visage&gt;|SPELL_STONESKIN&lt;Spell Stoneskin&gt;|SPELL_REMOVE_PARALYSIS&lt;Spell Remove Paralysis&gt;|SPELL_TENSERS_TRANSFORMATION&lt;Spell Tensers Transformation&gt;|SPELL_GREATER_MAGIC_WEAPON&lt;Spell Greater Magic Weapon&gt;|SPELL_TRUE_SEEING&lt;Spell True Seeing&gt;|SPELL_WAR_CRY&lt;Spell War Cry&gt;|SPELL_IMPROVED_INVISIBILITY&lt;Spell Improved Invisibility&gt;|SPELL_MAGIC_CIRCLE_AGAINST_CHAOS&lt;Spell Magic Circle Against Chaos&gt;|SPELL_NEGATIVE_ENERGY_BURST&lt;Spell Negative Energy Burst&gt;|SPELL_CONFUSION&lt;Spell Confusion&gt;|SPELL_HAMMER_OF_THE_GODS&lt;Spell Hammer Of The Gods&gt;|SPELL_OWLS_WISDOM&lt;Spell Owls Wisdom&gt;|SPELL_CLARITY&lt;Spell Clarity&gt;|SPELL_GREATER_SHADOW_CONJURATION_WEB&lt;Spell Greater Shadow Conjuration Web&gt;|SPELL_POWER_WORD_STUN&lt;Spell Power Word Stun&gt;|SPELL_SILENCE&lt;Spell Silence&gt;|SPELL_PREMONITION&lt;Spell Premonition&gt;|SPELL_SUMMON_CREATURE_V&lt;Spell Summon Creature V&gt;|SPELL_ICE_STORM&lt;Spell Ice Storm&gt;|SPELL_MIND_BLANK&lt;Spell Mind Blank&gt;|SPELL_RESTORATION&lt;Spell Restoration&gt;|SPELL_BARKSKIN&lt;Spell Barkskin&gt;|SPELL_GREATER_SHADOW_CONJURATION_MIRROR_IMAGE&lt;Spell Greater Shadow Conjuration Mirror Image&gt;|SPELL_SUMMON_CREATURE_I&lt;Spell Summon Creature I&gt;|SPELL_MASS_CHARM&lt;Spell Mass Charm&gt;|SPELL_SUMMON_CREATURE_III&lt;Spell Summon Creature Iii&gt;|SPELL_FEEBLEMIND&lt;Spell Feeblemind&gt;|SPELL_DARKNESS&lt;Spell Darkness&gt;|SPELL_CHARM_PERSON&lt;Spell Charm Person&gt;|SPELL_PROTECTION__FROM_CHAOS&lt;Spell Protection  From Chaos&gt;|SPELL_NEGATIVE_ENERGY_PROTECTION&lt;Spell Negative Energy Protection&gt;|SPELL_WORD_OF_FAITH&lt;Spell Word Of Faith&gt;|SPELL_ENERVATION&lt;Spell Enervation&gt;|SPELL_IDENTIFY&lt;Spell Identify&gt;|SPELL_SUNBEAM&lt;Spell Sunbeam&gt;|SPELL_GREATER_SPELL_MANTLE&lt;Spell Greater Spell Mantle&gt;|SPELL_GREATER_EAGLE_SPLENDOR&lt;Spell Greater Eagle Splendor&gt;|SPELL_GHOSTLY_VISAGE&lt;Spell Ghostly Visage&gt;|SPELL_HOLY_SWORD&lt;Spell Holy Sword&gt;|SPELL_SHADES_WALL_OF_FIRE&lt;Spell Shades Wall Of Fire&gt;|SPELL_DOMINATE_PERSON&lt;Spell Dominate Person&gt;|SPELL_LIGHTNING_BOLT&lt;Spell Lightning Bolt&gt;|SPELL_REMOVE_BLINDNESS_AND_DEAFNESS&lt;Spell Remove Blindness And Deafness&gt;|SPELL_WALL_OF_FIRE&lt;Spell Wall Of Fire&gt;|SPELL_PROTECTION_FROM_ELEMENTS&lt;Spell Protection From Elements&gt;|SPELL_ELEMENTAL_SWARM&lt;Spell Elemental Swarm&gt;|SPELL_SUMMON_CREATURE_IV&lt;Spell Summon Creature Iv&gt;|SPELL_FIND_TRAPS&lt;Spell Find Traps&gt;|SPELL_LESSER_RESTORATION&lt;Spell Lesser Restoration&gt;|SPELL_GREATER_RESTORATION&lt;Spell Greater Restoration&gt;|SPELL_PROTECTION_FROM_SPELLS&lt;Spell Protection From Spells&gt;|SPELL_INVISIBILITY_PURGE&lt;Spell Invisibility Purge&gt;|SPELL_SUMMON_CREATURE_IX&lt;Spell Summon Creature Ix&gt;|SPELL_SUMMON_CREATURE_VI&lt;Spell Summon Creature Vi&gt;|SPELL_CIRCLE_OF_DEATH&lt;Spell Circle Of Death&gt;|SPELL_GREATER_DISPELLING&lt;Spell Greater Dispelling&gt;|SPELL_ENERGY_BUFFER&lt;Spell Energy Buffer&gt;|SPELL_LESSER_MIND_BLANK&lt;Spell Lesser Mind Blank&gt;|SPELL_SUMMON_CREATURE_VIII&lt;Spell Summon Creature Viii&gt;|SPELL_SHADOW_CONJURATION_MAGIC_MISSILE&lt;Spell Shadow Conjuration Magic Missile&gt;|SPELL_MELFS_ACID_ARROW&lt;Spell Melfs Acid Arrow&gt;|SPELL_LESSER_PLANAR_BINDING&lt;Spell Lesser Planar Binding&gt;|SPELL_ENDURANCE&lt;Spell Endurance&gt;|SPELL_MORDENKAINENS_SWORD&lt;Spell Mordenkainens Sword&gt;|SPELL_ENDURE_ELEMENTS&lt;Spell Endure Elements&gt;|SPELL_GREATER_SHADOW_CONJURATION_ACID_ARROW&lt;Spell Greater Shadow Conjuration Acid Arrow&gt;|SPELL_CLAIRAUDIENCE_AND_CLAIRVOYANCE&lt;Spell Clairaudience And Clairvoyance&gt;|SPELL_CREEPING_DOOM&lt;Spell Creeping Doom&gt;|SPELL_MAGIC_CIRCLE_AGAINST_EVIL&lt;Spell Magic Circle Against Evil&gt;|SPELL_CURE_MINOR_WOUNDS&lt;Spell Cure Minor Wounds&gt;|SPELL_STORM_OF_VENGEANCE&lt;Spell Storm Of Vengeance&gt;|SPELL_CREATE_UNDEAD&lt;Spell Create Undead&gt;|SPELL_NATURES_BALANCE&lt;Spell Natures Balance&gt;|SPELL_HOLD_ANIMAL&lt;Spell Hold Animal&gt;|SPELL_DARKVISION&lt;Spell Darkvision&gt;|SPELL_STINKING_CLOUD&lt;Spell Stinking Cloud&gt;|SPELL_SHADOW_CONJURATION_SUMMON_SHADOW&lt;Spell Shadow Conjuration Summon Shadow&gt;|SPELL_DELAYED_BLAST_FIREBALL&lt;Spell Delayed Blast Fireball&gt;|SPELL_HEALING_CIRCLE&lt;Spell Healing Circle&gt;|SPELL_POWER_WORD_KILL&lt;Spell Power Word Kill&gt;|SPELL_IMPLOSION&lt;Spell Implosion&gt;|SPELL_SUMMON_CREATURE_II&lt;Spell Summon Creature Ii&gt;|SPELL_MAGIC_MISSILE&lt;Spell Magic Missile&gt;|SPELL_CALL_LIGHTNING&lt;Spell Call Lightning&gt;</Enum>
+      <Enum>SPELL_RAY_OF_FROST&lt;Ray Of Frost&gt;|SPELL_RAISE_DEAD&lt;Raise Dead&gt;|SPELL_CURE_MODERATE_WOUNDS&lt;Cure Moderate Wounds&gt;|SPELL_CREATE_GREATER_UNDEAD&lt;Create Greater Undead&gt;|SPELL_SHADES_STONESKIN&lt;Shades Stoneskin&gt;|SPELL_DISPEL_MAGIC&lt;Dispel Magic&gt;|SPELL_SOUND_BURST&lt;Sound Burst&gt;|SPELL_FEAR&lt;Fear&gt;|SPELL_UNHOLY_AURA&lt;Unholy Aura&gt;|SPELL_GREATER_BULLS_STRENGTH&lt;Greater Bulls Strength&gt;|SPELL_PRISMATIC_SPRAY&lt;Prismatic Spray&gt;|SPELL_GREATER_FOXS_CUNNING&lt;Greater Foxs Cunning&gt;|SPELL_MAGIC_CIRCLE_AGAINST_LAW&lt;Magic Circle Against Law&gt;|SPELL_EAGLE_SPLEDOR&lt;Eagle Spledor&gt;|SPELL_SHAPECHANGE&lt;Shapechange&gt;|SPELL_PHANTASMAL_KILLER&lt;Phantasmal Killer&gt;|SPELL_CURE_SERIOUS_WOUNDS&lt;Cure Serious Wounds&gt;|SPELL_ENTANGLE&lt;Entangle&gt;|SPELL_NEGATIVE_ENERGY_RAY&lt;Negative Energy Ray&gt;|SPELL_CONTROL_UNDEAD&lt;Control Undead&gt;|SPELL_AWAKEN&lt;Awaken&gt;|SPELL_LEGEND_LORE&lt;Legend Lore&gt;|SPELL_SUMMON_CREATURE_VII&lt;Summon Creature Vii&gt;|SPELL_MASS_BLINDNESS_AND_DEAFNESS&lt;Mass Blindness And Deafness&gt;|SPELL_ANIMATE_DEAD&lt;Animate Dead&gt;|SPELL_FLAME_STRIKE&lt;Flame Strike&gt;|SPELL_HORRID_WILTING&lt;Horrid Wilting&gt;|SPELL_HOLY_AURA&lt;Holy Aura&gt;|SPELL_REGENERATE&lt;Regenerate&gt;|SPELL_BLESS_WEAPON&lt;Bless Weapon&gt;|SPELL_BANE&lt;Bane&gt;|SPELL_GREATER_CATS_GRACE&lt;Greater Cats Grace&gt;|SPELL_DOMINATE_ANIMAL&lt;Dominate Animal&gt;|SPELL_SHADES_FIREBALL&lt;Shades Fireball&gt;|SPELL_GATE&lt;Gate&gt;|SPELL_INCENDIARY_CLOUD&lt;Incendiary Cloud&gt;|SPELL_HARM&lt;Harm&gt;|SPELL_SEE_INVISIBILITY&lt;See Invisibility&gt;|SPELL_GREATER_ENDURANCE&lt;Greater Endurance&gt;|SPELL_SHADOW_CONJURATION_MAGE_ARMOR&lt;Shadow Conjuration Mage Armor&gt;|SPELL_GREATER_SHADOW_CONJURATION_MINOR_GLOBE&lt;Greater Shadow Conjuration Minor Globe&gt;|SPELL_REMOVE_FEAR&lt;Remove Fear&gt;|SPELL_HOLD_MONSTER&lt;Hold Monster&gt;|SPELL_MAGE_ARMOR&lt;Mage Armor&gt;|SPELL_BURNING_HANDS&lt;Burning Hands&gt;|SPELL_CLOUDKILL&lt;Cloudkill&gt;|SPELL_CLOAK_OF_CHAOS&lt;Cloak Of Chaos&gt;|SPELL_SHADOW_SHIELD&lt;Shadow Shield&gt;|SPELL_SHADOW_CONJURATION_INIVSIBILITY&lt;Shadow Conjuration Inivsibility&gt;|SPELL_HEAL&lt;Heal&gt;|SPELL_LESSER_SPELL_MANTLE&lt;Lesser Mantle&gt;|SPELL_INVISIBILITY_SPHERE&lt;Invisibility Sphere&gt;|SPELL_CHAIN_LIGHTNING&lt;Chain Lightning&gt;|SPELL_BLINDNESS_AND_DEAFNESS&lt;Blindness And Deafness&gt;|SPELL_HOLD_PERSON&lt;Hold Person&gt;|SPELL_METEOR_SWARM&lt;Meteor Swarm&gt;|SPELL_VIRTUE&lt;Virtue&gt;|SPELL_SHADOW_CONJURATION_DARKNESS&lt;Shadow Conjuration Darkness&gt;|SPELL_POISON&lt;Poison&gt;|SPELL_HASTE&lt;Haste&gt;|SPELL_SEARING_LIGHT&lt;Searing Light&gt;|SPELL_FLAME_ARROW&lt;Flame Arrow&gt;|SPELL_WAIL_OF_THE_BANSHEE&lt;Wail Of The Banshee&gt;|SPELL_REMOVE_DISEASE&lt;Remove Disease&gt;|SPELL_MINOR_GLOBE_OF_INVULNERABILITY&lt;Minor Globe Of Invulnerability&gt;|SPELL_PROTECTION_FROM_LAW&lt;Protection From Law&gt;|SPELL_SHADES_SUMMON_SHADOW&lt;Shades Summon Shadow&gt;|SPELL_RESIST_ELEMENTS&lt;Resist Elements&gt;|SPELL_GREATER_SPELL_BREACH&lt;Greater Breach&gt;|SPELL_GREATER_OWLS_WISDOM&lt;Greater Owls Wisdom&gt;|SPELL_MAGIC_WEAPON&lt;Magic Weapon&gt;|SPELL_RESISTANCE&lt;Resistance&gt;|SPELL_SCARE&lt;Scare&gt;|SPELL_FIREBALL&lt;Fireball&gt;|SPELL_CURE_CRITICAL_WOUNDS&lt;Cure Critical Wounds&gt;|SPELL_ELEMENTAL_SHIELD&lt;Elemental Shield&gt;|SPELL_DEATH_WARD&lt;Death Ward&gt;|SPELL_DISMISSAL&lt;Dismissal&gt;|SPELL_GREATER_SHADOW_CONJURATION_SUMMON_SHADOW&lt;Greater Shadow Conjuration Summon Shadow&gt;|SPELL_FIRE_STORM&lt;Fire Storm&gt;|SPELL_BESTOW_CURSE&lt;Bestow Curse&gt;|SPELL_CHARM_MONSTER&lt;Charm Monster&gt;|SPELL_DIVINE_POWER&lt;Divine Power&gt;|SPELL_FINGER_OF_DEATH&lt;Finger Of Death&gt;|SPELL_TIME_STOP&lt;Time Stop&gt;|SPELL_EVARDS_BLACK_TENTACLES&lt;Evards Black Tentacles&gt;|SPELL_SLOW&lt;Slow&gt;|SPELL_LIGHT&lt;Light&gt;|SPELL_PLANAR_BINDING&lt;Planar Binding&gt;|SPELL_GHOUL_TOUCH&lt;Ghoul Touch&gt;|SPELL_SPHERE_OF_CHAOS&lt;Sphere Of Chaos&gt;|SPELL_SLAY_LIVING&lt;Slay Living&gt;|SPELL_LESSER_SPELL_BREACH&lt;Lesser Breach&gt;|SPELL_CURE_LIGHT_WOUNDS&lt;Cure Light Wounds&gt;|SPELL_COLOR_SPRAY&lt;Color Spray&gt;|SPELL_SANCTUARY&lt;Sanctuary&gt;|SPELL_INVISIBILITY&lt;Invisibility&gt;|SPELL_GREATER_STONESKIN&lt;Greater Stoneskin&gt;|SPELL_BLADE_BARRIER&lt;Blade Barrier&gt;|SPELL_SHADES_CONE_OF_COLD&lt;Shades Cone Of Cold&gt;|SPELL_AID&lt;Aid&gt;|SPELL_PROTECTION_FROM_EVIL&lt;Protection From Evil&gt;|SPELL_LESSER_DISPEL&lt;Lesser Dispel&gt;|SPELL_VAMPIRIC_TOUCH&lt;Vampiric Touch&gt;|SPELL_PRAYER&lt;Prayer&gt;|SPELL_RESURRECTION&lt;Resurrection&gt;|SPELL_GREASE&lt;Grease&gt;|SPELL_GREATER_PLANAR_BINDING&lt;Greater Planar Binding&gt;|SPELL_FOXS_CUNNING&lt;Foxs Cunning&gt;|SPELL_CATS_GRACE&lt;Cats Grace&gt;|SPELL_MIND_FOG&lt;Mind Fog&gt;|SPELL_SHIELD_OF_LAW&lt;Shield Of Law&gt;|SPELL_NEUTRALIZE_POISON&lt;Neutralize Poison&gt;|SPELL_REMOVE_CURSE&lt;Remove Curse&gt;|SPELL_ACID_FOG&lt;Acid Fog&gt;|SPELL_CONE_OF_COLD&lt;Cone Of Cold&gt;|SPELL_PROTECTION_FROM_GOOD&lt;Protection From Good&gt;|SPELL_DOOM&lt;Doom&gt;|SPELL_SPELL_RESISTANCE&lt;Resistance&gt;|SPELL_SLEEP&lt;Sleep&gt;|SPELL_WEIRD&lt;Weird&gt;|SPELL_RAY_OF_ENFEEBLEMENT&lt;Ray Of Enfeeblement&gt;|SPELL_DAZE&lt;Daze&gt;|SPELL_KNOCK&lt;Knock&gt;|SPELL_MORDENKAINENS_DISJUNCTION&lt;Mordenkainens Disjunction&gt;|SPELL_FLAME_LASH&lt;Flame Lash&gt;|SPELL_CONTAGION&lt;Contagion&gt;|SPELL_FREEDOM_OF_MOVEMENT&lt;Freedom Of Movement&gt;|SPELL_CIRCLE_OF_DOOM&lt;Circle Of Doom&gt;|SPELL_DESTRUCTION&lt;Destruction&gt;|SPELL_POLYMORPH_SELF&lt;Polymorph Self&gt;|SPELL_CHARM_PERSON_OR_ANIMAL&lt;Charm Person Or Animal&gt;|SPELL_MAGIC_VESTMENT&lt;Magic Vestment&gt;|SPELL_WEB&lt;Web&gt;|SPELL_SPELL_MANTLE&lt;Mantle&gt;|SPELL_MAGIC_CIRCLE_AGAINST_GOOD&lt;Magic Circle Against Good&gt;|SPELL_ETHEREAL_VISAGE&lt;Ethereal Visage&gt;|SPELL_STONESKIN&lt;Stoneskin&gt;|SPELL_REMOVE_PARALYSIS&lt;Remove Paralysis&gt;|SPELL_TENSERS_TRANSFORMATION&lt;Tensers Transformation&gt;|SPELL_GREATER_MAGIC_WEAPON&lt;Greater Magic Weapon&gt;|SPELL_TRUE_SEEING&lt;True Seeing&gt;|SPELL_WAR_CRY&lt;War Cry&gt;|SPELL_IMPROVED_INVISIBILITY&lt;Improved Invisibility&gt;|SPELL_MAGIC_CIRCLE_AGAINST_CHAOS&lt;Magic Circle Against Chaos&gt;|SPELL_NEGATIVE_ENERGY_BURST&lt;Negative Energy Burst&gt;|SPELL_CONFUSION&lt;Confusion&gt;|SPELL_HAMMER_OF_THE_GODS&lt;Hammer Of The Gods&gt;|SPELL_OWLS_WISDOM&lt;Owls Wisdom&gt;|SPELL_CLARITY&lt;Clarity&gt;|SPELL_GREATER_SHADOW_CONJURATION_WEB&lt;Greater Shadow Conjuration Web&gt;|SPELL_POWER_WORD_STUN&lt;Power Word Stun&gt;|SPELL_SILENCE&lt;Silence&gt;|SPELL_PREMONITION&lt;Premonition&gt;|SPELL_SUMMON_CREATURE_V&lt;Summon Creature V&gt;|SPELL_ICE_STORM&lt;Ice Storm&gt;|SPELL_MIND_BLANK&lt;Mind Blank&gt;|SPELL_RESTORATION&lt;Restoration&gt;|SPELL_BARKSKIN&lt;Barkskin&gt;|SPELL_GREATER_SHADOW_CONJURATION_MIRROR_IMAGE&lt;Greater Shadow Conjuration Mirror Image&gt;|SPELL_SUMMON_CREATURE_I&lt;Summon Creature I&gt;|SPELL_MASS_CHARM&lt;Mass Charm&gt;|SPELL_SUMMON_CREATURE_III&lt;Summon Creature Iii&gt;|SPELL_FEEBLEMIND&lt;Feeblemind&gt;|SPELL_DARKNESS&lt;Darkness&gt;|SPELL_CHARM_PERSON&lt;Charm Person&gt;|SPELL_PROTECTION__FROM_CHAOS&lt;Protection  From Chaos&gt;|SPELL_NEGATIVE_ENERGY_PROTECTION&lt;Negative Energy Protection&gt;|SPELL_WORD_OF_FAITH&lt;Word Of Faith&gt;|SPELL_ENERVATION&lt;Enervation&gt;|SPELL_IDENTIFY&lt;Identify&gt;|SPELL_SUNBEAM&lt;Sunbeam&gt;|SPELL_GREATER_SPELL_MANTLE&lt;Greater Mantle&gt;|SPELL_GREATER_EAGLE_SPLENDOR&lt;Greater Eagle Splendor&gt;|SPELL_GHOSTLY_VISAGE&lt;Ghostly Visage&gt;|SPELL_HOLY_SWORD&lt;Holy Sword&gt;|SPELL_SHADES_WALL_OF_FIRE&lt;Shades Wall Of Fire&gt;|SPELL_DOMINATE_PERSON&lt;Dominate Person&gt;|SPELL_LIGHTNING_BOLT&lt;Lightning Bolt&gt;|SPELL_REMOVE_BLINDNESS_AND_DEAFNESS&lt;Remove Blindness And Deafness&gt;|SPELL_WALL_OF_FIRE&lt;Wall Of Fire&gt;|SPELL_PROTECTION_FROM_ELEMENTS&lt;Protection From Elements&gt;|SPELL_ELEMENTAL_SWARM&lt;Elemental Swarm&gt;|SPELL_SUMMON_CREATURE_IV&lt;Summon Creature Iv&gt;|SPELL_FIND_TRAPS&lt;Find Traps&gt;|SPELL_LESSER_RESTORATION&lt;Lesser Restoration&gt;|SPELL_GREATER_RESTORATION&lt;Greater Restoration&gt;|SPELL_PROTECTION_FROM_SPELLS&lt;Protection From Spells&gt;|SPELL_INVISIBILITY_PURGE&lt;Invisibility Purge&gt;|SPELL_SUMMON_CREATURE_IX&lt;Summon Creature Ix&gt;|SPELL_SUMMON_CREATURE_VI&lt;Summon Creature Vi&gt;|SPELL_CIRCLE_OF_DEATH&lt;Circle Of Death&gt;|SPELL_GREATER_DISPELLING&lt;Greater Dispelling&gt;|SPELL_ENERGY_BUFFER&lt;Energy Buffer&gt;|SPELL_LESSER_MIND_BLANK&lt;Lesser Mind Blank&gt;|SPELL_SUMMON_CREATURE_VIII&lt;Summon Creature Viii&gt;|SPELL_SHADOW_CONJURATION_MAGIC_MISSILE&lt;Shadow Conjuration Magic Missile&gt;|SPELL_MELFS_ACID_ARROW&lt;Melfs Acid Arrow&gt;|SPELL_LESSER_PLANAR_BINDING&lt;Lesser Planar Binding&gt;|SPELL_ENDURANCE&lt;Endurance&gt;|SPELL_MORDENKAINENS_SWORD&lt;Mordenkainens Sword&gt;|SPELL_ENDURE_ELEMENTS&lt;Endure Elements&gt;|SPELL_GREATER_SHADOW_CONJURATION_ACID_ARROW&lt;Greater Shadow Conjuration Acid Arrow&gt;|SPELL_CLAIRAUDIENCE_AND_CLAIRVOYANCE&lt;Clairaudience And Clairvoyance&gt;|SPELL_CREEPING_DOOM&lt;Creeping Doom&gt;|SPELL_MAGIC_CIRCLE_AGAINST_EVIL&lt;Magic Circle Against Evil&gt;|SPELL_CURE_MINOR_WOUNDS&lt;Cure Minor Wounds&gt;|SPELL_STORM_OF_VENGEANCE&lt;Storm Of Vengeance&gt;|SPELL_CREATE_UNDEAD&lt;Create Undead&gt;|SPELL_NATURES_BALANCE&lt;Natures Balance&gt;|SPELL_HOLD_ANIMAL&lt;Hold Animal&gt;|SPELL_DARKVISION&lt;Darkvision&gt;|SPELL_STINKING_CLOUD&lt;Stinking Cloud&gt;|SPELL_SHADOW_CONJURATION_SUMMON_SHADOW&lt;Shadow Conjuration Summon Shadow&gt;|SPELL_DELAYED_BLAST_FIREBALL&lt;Delayed Blast Fireball&gt;|SPELL_HEALING_CIRCLE&lt;Healing Circle&gt;|SPELL_POWER_WORD_KILL&lt;Power Word Kill&gt;|SPELL_IMPLOSION&lt;Implosion&gt;|SPELL_SUMMON_CREATURE_II&lt;Summon Creature Ii&gt;|SPELL_MAGIC_MISSILE&lt;Magic Missile&gt;|SPELL_CALL_LIGHTNING&lt;Call Lightning&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -7636,6 +7636,10 @@
               <Types>
                 <Type>spell</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>spell</Type>
+                <Value>SPELL_RAY_OF_FROST</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -7706,6 +7710,10 @@
               <Types>
                 <Type>spell</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>spell</Type>
+                <Value>SPELL_RAY_OF_FROST</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Location</Name>
@@ -7772,6 +7780,10 @@
               <Types>
                 <Type>spell</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>spell</Type>
+                <Value>SPELL_RAY_OF_FROST</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -7842,6 +7854,10 @@
               <Types>
                 <Type>spell</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>spell</Type>
+                <Value>SPELL_RAY_OF_FROST</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Location</Name>
@@ -7908,6 +7924,10 @@
               <Types>
                 <Type>spell</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>spell</Type>
+                <Value>SPELL_RAY_OF_FROST</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -7978,6 +7998,10 @@
               <Types>
                 <Type>spell</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>spell</Type>
+                <Value>SPELL_RAY_OF_FROST</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Location</Name>
@@ -8040,6 +8064,10 @@
               <Types>
                 <Type>feat</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>feat</Type>
+                <Value>FEAT_DIVINE_HEALTH</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -8144,6 +8172,10 @@
               <Types>
                 <Type>effect_type</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>effect_type</Type>
+                <Value>EFFECT_TYPE_INVISIBILITY</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -8205,6 +8237,10 @@
               <Types>
                 <Type>effect_type</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>effect_type</Type>
+                <Value>EFFECT_TYPE_INVISIBILITY</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -8270,6 +8306,10 @@
               <Types>
                 <Type>feat</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>feat</Type>
+                <Value>FEAT_DIVINE_HEALTH</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -8336,6 +8376,10 @@
               <Types>
                 <Type>skill</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>skill</Type>
+                <Value>SKILL_TAUNT</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -8584,6 +8628,10 @@
               <Types>
                 <Type>ability</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>ability</Type>
+                <Value>ABILITY_INTELLIGENCE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Time</Name>
@@ -8658,6 +8706,10 @@
               <Types>
                 <Type>ability</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>ability</Type>
+                <Value>ABILITY_INTELLIGENCE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Time</Name>
@@ -9881,6 +9933,10 @@
               <Types>
                 <Type>visual_effect_combat</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>visual_effect_combat</Type>
+                <Value>VFX_COM_BLOOD_REG_RED</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -9938,6 +9994,10 @@
               <Types>
                 <Type>visual_effect_combat</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>visual_effect_combat</Type>
+                <Value>VFX_COM_BLOOD_REG_RED</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Location</Name>
@@ -9991,6 +10051,10 @@
               <Types>
                 <Type>visual_effect_effect</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>visual_effect_effect</Type>
+                <Value>VFX_FNF_METEOR_SWARM</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -10048,6 +10112,10 @@
               <Types>
                 <Type>visual_effect_effect</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>visual_effect_effect</Type>
+                <Value>VFX_FNF_METEOR_SWARM</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Location</Name>
@@ -10113,6 +10181,10 @@
               <Types>
                 <Type>visual_effect_effect</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>visual_effect_effect</Type>
+                <Value>VFX_FNF_METEOR_SWARM</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -10189,6 +10261,10 @@
               <Types>
                 <Type>visual_effect_effect</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>visual_effect_effect</Type>
+                <Value>VFX_FNF_METEOR_SWARM</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Location</Name>
@@ -10246,6 +10322,10 @@
               <Types>
                 <Type>visual_effect_impact</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>visual_effect_impact</Type>
+                <Value>VFX_IMP_FLAME_M</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -10303,6 +10383,10 @@
               <Types>
                 <Type>visual_effect_impact</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>visual_effect_impact</Type>
+                <Value>VFX_IMP_FLAME_M</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Creature</Name>
@@ -10356,6 +10440,10 @@
               <Types>
                 <Type>visual_effect_impact</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>visual_effect_impact</Type>
+                <Value>VFX_IMP_FLAME_M</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Location</Name>
@@ -10421,6 +10509,10 @@
               <Types>
                 <Type>visual_effect_impact</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>visual_effect_impact</Type>
+                <Value>VFX_IMP_FLAME_M</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -10494,6 +10586,10 @@
               <Types>
                 <Type>visual_effect_impact</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>visual_effect_impact</Type>
+                <Value>VFX_IMP_FLAME_M</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Location</Name>
@@ -10551,6 +10647,10 @@
               <Types>
                 <Type>visual_effect_beam</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>visual_effect_beam</Type>
+                <Value>VFX_BEAM_LIGHTNING</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Source</Name>
@@ -10624,6 +10724,10 @@
               <Types>
                 <Type>visual_effect_beam</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>visual_effect_beam</Type>
+                <Value>VFX_BEAM_LIGHTNING</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Source</Name>
@@ -10911,6 +11015,10 @@
               <Types>
                 <Type>spell_visual_effect</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>spell_visual_effect</Type>
+                <Value>VFX_DUR_LIGHT_RED_5</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -10968,6 +11076,10 @@
               <Types>
                 <Type>spell_visual_effect</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>spell_visual_effect</Type>
+                <Value>VFX_DUR_LIGHT_RED_5</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Location</Name>
@@ -11021,6 +11133,10 @@
               <Types>
                 <Type>spell_visual_effect</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>spell_visual_effect</Type>
+                <Value>VFX_DUR_LIGHT_RED_5</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -11090,6 +11206,10 @@
               <Types>
                 <Type>spell_visual_effect</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>spell_visual_effect</Type>
+                <Value>VFX_DUR_LIGHT_RED_5</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Location</Name>
@@ -11155,6 +11275,10 @@
               <Types>
                 <Type>area_of_effect</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>area_of_effect</Type>
+                <Value>AOE_PER_STORM</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -11273,6 +11397,10 @@
               <Types>
                 <Type>placeable_action</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>placeable_action</Type>
+                <Value>PLACEABLE_ACTION_USE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Placeable</Name>
@@ -12233,6 +12361,10 @@
               <Types>
                 <Type>walk_speed</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>walk_speed</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Range</Name>
@@ -12307,6 +12439,10 @@
               <Types>
                 <Type>walk_speed</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>walk_speed</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Range</Name>
@@ -12385,6 +12521,10 @@
               <Types>
                 <Type>walk_speed</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>walk_speed</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Location</Name>
@@ -12459,6 +12599,10 @@
               <Types>
                 <Type>walk_speed</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>walk_speed</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Location</Name>
@@ -12521,6 +12665,10 @@
               <Types>
                 <Type>walk_speed</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>walk_speed</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Distance</Name>
@@ -12615,6 +12763,10 @@
               <Types>
                 <Type>walk_speed</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>walk_speed</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Distance</Name>
@@ -12697,6 +12849,10 @@
               <Types>
                 <Type>walk_speed</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>walk_speed</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -12767,6 +12923,10 @@
               <Types>
                 <Type>walk_speed</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>walk_speed</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Distance</Name>
@@ -12878,6 +13038,10 @@
               <Types>
                 <Type>walk_speed</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>walk_speed</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Distance</Name>
@@ -12993,6 +13157,10 @@
               <Types>
                 <Type>walk_speed</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>walk_speed</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Distance</Name>
@@ -13120,6 +13288,10 @@
               <Types>
                 <Type>walk_speed</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>walk_speed</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Distance</Name>
@@ -13247,6 +13419,10 @@
               <Types>
                 <Type>alignment</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>alignment</Type>
+                <Value>ALIGNMENT_EVIL</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Alignment Shift</Name>
@@ -13321,6 +13497,10 @@
               <Types>
                 <Type>alignment</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>alignment</Type>
+                <Value>ALIGNMENT_EVIL</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Alignment Shift</Name>
@@ -13812,6 +13992,10 @@
               <Types>
                 <Type>allow</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>allow</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -14226,6 +14410,10 @@
               <Types>
                 <Type>immortal</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>immortal</Type>
+                <Value>TRUE</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -14840,6 +15028,10 @@
               <Types>
                 <Type>open_close</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>open_close</Type>
+                <Value>TRUE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Door</Name>
@@ -15147,10 +15339,9 @@
               <Types>
                 <Type>damage_type</Type>
               </Types>
-              <Binding flavour="runTime">
-                <Types>
-                  <Type>damage_type</Type>
-                </Types>
+              <Binding flavour="constant">
+                <Type>damage_type</Type>
+                <Value>DAMAGE_TYPE_MAGICAL</Value>
               </Binding>
             </KnowIt>
             <KnowIt>
@@ -15432,68 +15623,6 @@
               <Types>
                 <Type>enable_disable</Type>
               </Types>
-            </KnowIt>
-            <KnowIt>
-              <Name>Target</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
-            <KnowIt>
-              <Name>Action Mode</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>action_mode</Type>
-              </Types>
-            </KnowIt>
-          </Parameters>
-          <Code>
-            <Line>
-              <Literal>SetActionMode(</Literal>
-              <Scope data="argument" ref="Target">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
-              <Scope data="argument" ref="Action Mode">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
-              <Scope data="argument" ref="Disable">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>);</Literal>
-            </Line>
-          </Code>
-        </CodeBlockSource>
-      </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
-      <Name>&lt;Disable&gt; &lt;Target&gt;&apos;s &lt;Action Mode&gt; mode</Name>
-      <Visible>true</Visible>
-      <Labels>
-        <Label>NOW</Label>
-      </Labels>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>&lt;Disable&gt; &lt;Target&gt;&apos;s &lt;Action Mode&gt; mode</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Id>330</Id>
-          <Types>
-            <Type>void</Type>
-          </Types>
-          <Parameters>
-            <KnowIt>
-              <Name>Disable</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>enable_disable</Type>
-              </Types>
               <Binding flavour="constant">
                 <Type>enable_disable</Type>
                 <Value>TRUE</Value>
@@ -15648,6 +15777,10 @@
               <Types>
                 <Type>voice_chat</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>voice_chat</Type>
+                <Value>VOICE_CHAT_LAUGH</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -15953,6 +16086,10 @@
               <Types>
                 <Type>body_part</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>body_part</Type>
+                <Value>CREATURE_PART_HEAD</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Model Type</Name>
@@ -15961,6 +16098,10 @@
               <Types>
                 <Type>model_type</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>model_type</Type>
+                <Value>CREATURE_MODEL_TYPE_NONE</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -16629,6 +16770,10 @@
               <Types>
                 <Type>fade_speed</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>fade_speed</Type>
+                <Value>FADE_SPEED_MEDIUM</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -16771,6 +16916,10 @@
               <Types>
                 <Type>camera_mode</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>camera_mode</Type>
+                <Value>CAMERA_MODE_CHASE_CAMERA</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -17067,6 +17216,10 @@
               <Types>
                 <Type>skybox</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>skybox</Type>
+                <Value>SKYBOX_GRASS_CLEAR</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -17118,6 +17271,10 @@
               <Types>
                 <Type>weather</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>weather</Type>
+                <Value>WEATHER_RAIN</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -17168,6 +17325,10 @@
               <Types>
                 <Type>onoroff</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>onoroff</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -17555,8 +17716,12 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>creature</Type>
+                <Type>effect_type</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>effect_type</Type>
+                <Value>EFFECT_TYPE_CONFUSED</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Target</Name>
@@ -17909,7 +18074,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Start new module &lt;Module Name&gt;</Name>
+      <Name>Start new module with filename &lt;Module Name&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -17917,7 +18082,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Start new module &lt;Module Name&gt;</Name>
+          <Name>Start new module with filename &lt;Module Name&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>380</Id>
@@ -18749,6 +18914,10 @@
               <Types>
                 <Type>inventory_slot</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>inventory_slot</Type>
+                <Value>INVENTORY_SLOT_CHEST</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -19127,7 +19296,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Allow&gt; &lt;Item&gt;&apos; to be dropped</Name>
+      <Name>&lt;Allow&gt; &lt;Item&gt; to be dropped</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -19135,7 +19304,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Allow&gt; &lt;Item&gt;&apos; to be dropped</Name>
+          <Name>&lt;Allow&gt; &lt;Item&gt; to be dropped</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>401</Id>
@@ -19158,6 +19327,10 @@
               <Types>
                 <Type>allow</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>allow</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -19464,6 +19637,10 @@
               <Types>
                 <Type>enable_disable</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>enable_disable</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Encounter</Name>
@@ -20135,7 +20312,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Execute the script &quot;&lt;Script&gt; on OBJECT_SELF</Name>
+      <Name>Execute the script &quot;&lt;Script&gt;&quot; on subject</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -20143,7 +20320,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Execute the script &quot;&lt;Script&gt; on OBJECT_SELF</Name>
+          <Name>Execute the script &quot;&lt;Script&gt;&quot; on subject</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>418</Id>
@@ -20286,6 +20463,10 @@
               <Types>
                 <Type>number_operator</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>number_operator</Type>
+                <Value>0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -20504,6 +20685,10 @@
               <Types>
                 <Type>enable_disable</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>enable_disable</Type>
+                <Value>FALSE</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>dialogue line</Name>
@@ -22441,6 +22626,10 @@
               <Types>
                 <Type>spell</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>spell</Type>
+                <Value>SPELL_RAY_OF_FROST</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -22533,6 +22722,10 @@
               <Types>
                 <Type>appearance_type</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>appearance_type</Type>
+                <Value>APPEARANCE_TYPE_DOG</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -22581,6 +22774,10 @@
               <Types>
                 <Type>class_type</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>class_type</Type>
+                <Value>CLASS_TYPE_ASSASSIN</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -22627,6 +22824,10 @@
               <Types>
                 <Type>effect_type</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>effect_type</Type>
+                <Value>EFFECT_TYPE_CONFUSED</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -22683,6 +22884,10 @@
               <Types>
                 <Type>inventory_slot</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>inventory_slot</Type>
+                <Value>INVENTORY_SLOT_CHEST</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -23348,9 +23553,11 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[235]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[248]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[245]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[241]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[234]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[247]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[240]"/>
   </Effects>
   <DescribeIts>
     <DescribeIt>
@@ -23367,7 +23574,7 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[235]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[234]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -23405,7 +23612,45 @@
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode/Successors/DescribeItNode"/>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[246]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[245]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Location</Name>
+      <Types>
+        <Type>location</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>the location of</Name>
+        <Successors>
+          <DescribeItNode>
+            <Name>Object</Name>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>door</Type>
+                <Type>placeable</Type>
+                <Type>sound</Type>
+                <Type>waypoint</Type>
+                <Type>trigger</Type>
+                <Type>creature</Type>
+                <Type>item</Type>
+              </Types>
+            </KnowIt>
+            <Successors/>
+          </DescribeItNode>
+        </Successors>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[241]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -23499,149 +23744,111 @@
               </DescribeItNode>
             </Successors>
           </DescribeItNode>
-          <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           <DescribeItNode>
             <Name>different</Name>
             <Successors>
-              <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+              <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
             </Successors>
           </DescribeItNode>
-        </Successors>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[251]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode[3]"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[253]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[254]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[252]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[255]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode[3]"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[250]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode[3]"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[256]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[249]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[248]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Location</Name>
-      <Types>
-        <Type>location</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>the location of</Name>
-        <Successors>
-          <DescribeItNode>
-            <Name>Object</Name>
-            <KnowIt>
-              <Name>Object</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>door</Type>
-                <Type>placeable</Type>
-                <Type>sound</Type>
-                <Type>waypoint</Type>
-                <Type>trigger</Type>
-                <Type>creature</Type>
-                <Type>item</Type>
-              </Types>
-            </KnowIt>
-            <Successors/>
-          </DescribeItNode>
+          <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
         </Successors>
       </DescribeItNode>
       <PathMap>
         <Entry>
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[242]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[255]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[252]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[254]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[253]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[248]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[251]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[250]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[247]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[249]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -23705,7 +23912,7 @@
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[241]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[240]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
