@@ -62,6 +62,7 @@ public class TypeWidget extends JToggleButton implements TranslatorObserver {
 				.getDisplayText(this.type) : "";
 
 		setTypeText(typeName);
+		this.setToolTipText(typeName);
 		TranslatorManager.getInstance().addTranslatorObserver(this);
 	}
 

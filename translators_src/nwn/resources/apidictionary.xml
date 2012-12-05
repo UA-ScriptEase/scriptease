@@ -778,7 +778,6 @@
                   <Name>Unlocker</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>OnUnlock</Slot>
                   <Id>4</Id>
                   <Types>
                     <Type>creature</Type>
@@ -818,7 +817,6 @@
                   <Name>Last Clicker</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>OnAreaTransitionClick</Slot>
                   <Id>5</Id>
                   <Types>
                     <Type>creature</Type>
@@ -993,7 +991,6 @@
                   <Name>Dying Player</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>Mod_OnPlrDying</Slot>
                   <Id>9</Id>
                   <Types>
                     <Type>creature</Type>
@@ -1146,7 +1143,6 @@
                   <Name>Last Clicker</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>OnClick</Slot>
                   <Id>13</Id>
                   <Types>
                     <Type>creature</Type>
@@ -1186,7 +1182,6 @@
                   <Name>Unequipped Item</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>Mod_OnPlrUnEqItm</Slot>
                   <Id>14</Id>
                   <Types>
                     <Type>item</Type>
@@ -1219,7 +1214,6 @@
                   <Name>Unequipper</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>Mod_OnPlrUnEqItm</Slot>
                   <Id>15</Id>
                   <Types>
                     <Type>creature</Type>
@@ -1311,7 +1305,6 @@
                   <Name>Entering Object</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>Mod_OnClientEntr</Slot>
                   <Id>17</Id>
                   <Types>
                     <Type>creature</Type>
@@ -1374,7 +1367,6 @@
                   <Name>Triggering Creature</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>OnTrapTriggered</Slot>
                   <Id>18</Id>
                   <Types>
                     <Type>creature</Type>
@@ -1568,7 +1560,6 @@
                   <Name>Killer</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>OnDeath</Slot>
                   <Id>23</Id>
                   <Types>
                     <Type>creature</Type>
@@ -1610,7 +1601,6 @@
                   <Name>Damager</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>OnDamaged</Slot>
                   <Id>24</Id>
                   <Types>
                     <Type>creature</Type>
@@ -1645,7 +1635,6 @@
                   <Name>Damage Amount</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>OnDamaged</Slot>
                   <Id>25</Id>
                   <Types>
                     <Type>float</Type>
@@ -1678,7 +1667,6 @@
                   <Name>Current Hit Points</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>OnDamaged</Slot>
                   <Id>26</Id>
                   <Types>
                     <Type>float</Type>
@@ -1711,7 +1699,6 @@
                   <Name>Max Hit Points for Object &lt;object&gt;</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>OnDamaged</Slot>
                   <Id>27</Id>
                   <Types>
                     <Type>float</Type>
@@ -2815,7 +2802,6 @@
                   <Name>Last Disturber</Name>
                   <Visible>true</Visible>
                   <Labels/>
-                  <Slot>ScriptDisturbed</Slot>
                   <Id>55</Id>
                   <Types>
                     <Type>creature</Type>
