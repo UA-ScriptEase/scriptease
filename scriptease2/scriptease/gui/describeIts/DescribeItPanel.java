@@ -113,7 +113,8 @@ public class DescribeItPanel extends JPanel {
 					.buildExpansionButtonListener(describeIt, knowIt));
 
 			this.add(this.expansionButton);
-		}
+		} else 
+			this.expansionButton.setVisible(false);
 
 		this.add(this.describeItGraph);
 		this.add(this.boundScriptItPanel);
@@ -275,9 +276,10 @@ public class DescribeItPanel extends JPanel {
 						((int) DescribeItPanel.this.getPreferredSize()
 								.getHeight() - buttonHeight) / 2, buttonWidth,
 						buttonHeight);
+
+				xLocation += buttonWidth + BUTTON_X_INDENT;
 			}
 
-			xLocation += buttonWidth + BUTTON_X_INDENT;
 
 			if (boundScriptItPanel.isVisible()) {
 				boundScriptItPanel
