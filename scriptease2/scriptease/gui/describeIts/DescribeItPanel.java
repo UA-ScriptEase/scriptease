@@ -113,7 +113,7 @@ public class DescribeItPanel extends JPanel {
 					.buildExpansionButtonListener(describeIt, knowIt));
 
 			this.add(this.expansionButton);
-		} else 
+		} else
 			this.expansionButton.setVisible(false);
 
 		this.add(this.describeItGraph);
@@ -279,7 +279,6 @@ public class DescribeItPanel extends JPanel {
 
 				xLocation += buttonWidth + BUTTON_X_INDENT;
 			}
-
 
 			if (boundScriptItPanel.isVisible()) {
 				boundScriptItPanel
