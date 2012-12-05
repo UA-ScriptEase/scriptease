@@ -438,7 +438,7 @@ public class LibraryEditorPanelFactory {
 		 */
 
 		// Reset the ToolBar to select and add the Graph to it.
-		GraphToolBarModeAction.addJComponent(graph);
+		GraphToolBarModeAction.useGraphCursorForJComponent(graph);
 		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
 
 		// Set up the JPanel containing the graph

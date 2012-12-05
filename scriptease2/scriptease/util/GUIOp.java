@@ -3,19 +3,26 @@ package scriptease.util;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.CellRendererPane;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
+
+import scriptease.gui.ui.ScriptEaseUI;
 
 /**
  * Collection of simple GUI-related routines that don't really belong anywhere.
@@ -310,5 +317,65 @@ public class GUIOp {
 			parent.doLayout();
 			parent = parent.getParent();
 		}
+	}
+
+	/**
+	 * Creates a cursor based on a name with a hotspot of 0, 0. Returns null if
+	 * the file is not found. We recommend using one of the constant cursors
+	 * found in {@link ScriptEaseUI} instead of this method, since all cursors
+	 * should be created in there anyways.
+	 * 
+	 * @param name
+	 *            Part of the path to a .png file represting the cursor:
+	 *            "scriptease/resources/icons/cursors/[name].png"
+	 * @return
+	 */
+	public static Cursor createCursor(String name) {
+		return GUIOp.createCursor(name, new Point(0, 0));
+	}
+
+	/**
+	 * Creates a cursor based on a name. Returns null if the file is not found.
+	 * We recommend using one of the constant cursors found in
+	 * {@link ScriptEaseUI} instead of this method, since all cursors should be
+	 * created in there anyways.
+	 * 
+	 * @param name
+	 *            Part of the path to a .png file represting the cursor:
+	 *            "scriptease/resources/icons/cursors/[name].png"
+	 * @param hotspot
+	 *            The hotspot for the cursor.
+	 * @return
+	 */
+	public static Cursor createCursor(String name, Point hotspot) {
+		final File file;
+		final String resultingCursorPath;
+
+		Cursor customCursor = null;
+
+		if (name != null) {
+			resultingCursorPath = "scriptease/resources/icons/cursors/" + name
+					+ ".png";
+			file = FileOp.getFileResource(resultingCursorPath);
+
+			if (file != null) {
+				try {
+					final BufferedImage cursorImage;
+					final Toolkit toolkit;
+
+					cursorImage = ImageIO.read(file);
+
+					toolkit = Toolkit.getDefaultToolkit();
+
+					customCursor = toolkit.createCustomCursor(cursorImage,
+							hotspot, resultingCursorPath);
+				} catch (IOException e) {
+					System.err.println("Failed to read cursor file at " + file
+							+ ". Setting cursor to default.");
+				}
+			}
+		}
+
+		return customCursor;
 	}
 }

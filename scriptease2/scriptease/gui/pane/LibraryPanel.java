@@ -102,6 +102,10 @@ public class LibraryPanel extends JPanel {
 			public void modelChanged(PatternModelEvent event) {
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED)
 					updateLists();
+				else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED
+						&& PatternModelManager.getInstance().getActiveModel() == null) {
+					updateLists();
+				}
 			}
 		};
 

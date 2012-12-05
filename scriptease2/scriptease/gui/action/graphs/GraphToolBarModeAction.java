@@ -1,10 +1,7 @@
 package scriptease.gui.action.graphs;
 
 import java.awt.Cursor;
-import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.ref.WeakReference;
@@ -96,7 +93,13 @@ public abstract class GraphToolBarModeAction extends ActiveModelSensitiveAction 
 		GraphToolBarModeAction.selectedMode = newMode;
 	}
 
-	public static void addJComponent(JComponent component) {
+	/**
+	 * Adds the JComponent to a weakly referenced list of JComponents that use
+	 * the cursor created by the graph tool bar.
+	 * 
+	 * @param component
+	 */
+	public static void useGraphCursorForJComponent(JComponent component) {
 		GraphToolBarModeAction.activeComponents
 				.add(new WeakReference<JComponent>(component));
 	}
@@ -111,47 +114,14 @@ public abstract class GraphToolBarModeAction extends ActiveModelSensitiveAction 
 	}
 
 	/**
-	 * Sets the cursor to the image from "scriptease/resources/icons/cursors/" +
-	 * cursorPath.
+	 * Sets the cursor of the relevant components to the passed in cursor.
 	 * 
 	 * @param cursorPath
 	 */
-	public void setCursorToImageFromPath(String cursorPath) {
+	public void setCursor(Cursor cursor) {
 		// Setting a cursor to null sets it to its parent, which is the default
 		// cursor in this case.
-		Cursor customCursor = null;
-
-		if (cursorPath != null) {
-			final File file;
-			final String resultingCursorPath;
-
-			resultingCursorPath = "scriptease/resources/icons/cursors/"
-					+ cursorPath + ".png";
-			file = FileOp.getFileResource(resultingCursorPath);
-
-			if (file == null)
-				customCursor = null;
-			else {
-				try {
-					final Point CURSOR_HOTSPOT = new Point(0, 0);
-
-					final BufferedImage cursorImage;
-					final Toolkit toolkit;
-
-					cursorImage = ImageIO.read(file);
-					toolkit = Toolkit.getDefaultToolkit();
-
-					customCursor = toolkit.createCustomCursor(cursorImage,
-							CURSOR_HOTSPOT, resultingCursorPath);
-				} catch (IOException e) {
-					System.err.println("Failed to read cursor file at " + file
-							+ ". Setting cursor to default.");
-				}
-			}
-		}
-
 		for (WeakReference<JComponent> reference : activeComponents)
-			reference.get().setCursor(customCursor);
-
+			reference.get().setCursor(cursor);
 	}
 }
