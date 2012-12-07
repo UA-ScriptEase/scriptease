@@ -180,14 +180,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 					this.searchData.add(binding.getScriptValue());
 				this.compile(parameter);
 			}
-			// searchable by implicit
-			// int i = 0;
-			// System.out.println("Size of Implicits" +
-			// scriptIt.getImplicits().size());
 			for (KnowIt implicit : scriptIt.getImplicits()) {
-				// i++;
-				// System.out.println("Index of Implicit: " + i);
-				// More problems here it seems
 				this.compile(implicit);
 			}
 

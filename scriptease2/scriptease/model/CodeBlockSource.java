@@ -238,9 +238,6 @@ public class CodeBlockSource extends CodeBlock {
 		for (String include : this.getIncludes()) {
 			hashCode += include.hashCode();
 		}
-		// for (KnowIt implicit : this.getImplicits(this.getOwner())) {
-		// hashCode += implicit.getDisplayText().hashCode();
-		// }
 
 		return hashCode;
 	}

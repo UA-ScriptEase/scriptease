@@ -61,8 +61,7 @@ public class DescribeItManager {
 			}
 		}
 
-		if (!storyComponents.contains(component))
-			weakReferences.add(new WeakReference<StoryComponent>(component));
+		weakReferences.add(new WeakReference<StoryComponent>(component));
 
 		this.describeItMap.put(describeIt, weakReferences);
 	}
@@ -86,7 +85,11 @@ public class DescribeItManager {
 		for (Entry<DescribeIt, Collection<WeakReference<StoryComponent>>> entry : this.describeItMap
 				.getEntrySet()) {
 			for (WeakReference<StoryComponent> ref : entry.getValue()) {
-				if (ref.get() == component)
+				final StoryComponent weakComponent;
+
+				weakComponent = ref.get();
+
+				if (weakComponent == component)
 					return entry.getKey();
 			}
 		}

@@ -320,7 +320,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				if (describeIt != null) {
 					describeItManager.addDescribeIt(describeIt, clone);
 				}
-
+				
 				StoryComponent sibling = parent.getChildAt(insertionIndex);
 				if (sibling != null) {
 					// add in the middle

@@ -206,7 +206,6 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		// invalid for the duration of the undo/redo
 		if (!UndoManager.getInstance().isUndoingOrRedoing()
 				&& !value.compatibleWith(this)) {
-			System.err.println(this + " is not compatible with " + value);
 			return;
 		}
 
@@ -250,8 +249,10 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				defaultProcess(reference);
 				// Observer the reference
 				final KnowIt knowIt = reference.getValue();
+
 				if (knowIt.getOwner() == null)
 					knowIt.setOwner(KnowIt.this);
+				
 				addObservers(knowIt);
 			}
 

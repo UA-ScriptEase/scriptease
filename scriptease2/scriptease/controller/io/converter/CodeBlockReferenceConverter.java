@@ -113,6 +113,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		if (target == null)
 			System.err.println("Failed to read target information for \""
 					+ block + "\", nulling the reference.");
+
 		block.setTarget(target);
 		reader.moveUp();
 
@@ -133,6 +134,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 
 			parameters.addAll((Collection<KnowIt>) context.convertAnother(
 					block, ArrayList.class));
+
 			reader.moveUp();
 
 			block.setParameters(parameters);
