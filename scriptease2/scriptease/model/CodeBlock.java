@@ -125,7 +125,7 @@ public abstract class CodeBlock extends StoryComponent implements
 	public void setParameters(Collection<KnowIt> parameters) {
 		this.parameters = new ArrayList<KnowIt>(parameters);
 	}
-	
+
 	/**
 	 * Sets the includes to the given include list.
 	 * 
@@ -172,7 +172,7 @@ public abstract class CodeBlock extends StoryComponent implements
 	public List<KnowIt> getParameters() {
 		return new ArrayList<KnowIt>(this.parameters);
 	}
-	
+
 	/**
 	 * Resets the implicits to null.
 	 */
@@ -280,19 +280,22 @@ public abstract class CodeBlock extends StoryComponent implements
 		 * It's not a valid cause-codeblock while in that state, but this is as
 		 * close as we can get. - remiller
 		 */
-		if (this.hasSubject() || this.hasSlot())
+		if (this.hasSubject() && this.hasSlot())
 			return this.getOwner();
 		else {
 			StoryComponent parent = this.getOwner().getOwner();
 			while (parent != null) {
 				if (parent instanceof ScriptIt && ((ScriptIt) parent).isCause())
 					break;
+
 				parent = parent.getOwner();
 			}
-			if (parent == null)
+
+			if (parent == null) {
 				throw new IllegalStateException(
 						"Failed to locate enclosing Cause for CodeBlock "
 								+ this.toString());
+			}
 			return (ScriptIt) parent;
 		}
 	}
@@ -328,7 +331,6 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * @return The base id of this code block.
 	 */
 	public abstract int getId();
-	
 
 	@Override
 	public void componentChanged(StoryComponentEvent event) {

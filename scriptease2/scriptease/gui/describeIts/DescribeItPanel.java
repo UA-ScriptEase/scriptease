@@ -287,7 +287,6 @@ public class DescribeItPanel extends JPanel {
 										.getWidth(), (int) boundScriptItPanel
 										.getPreferredSize().getHeight());
 			}
-
 		}
 
 		/**

@@ -93,15 +93,15 @@ public class ScopeVisitor extends StoryAdapter {
 
 		return priorKnowIts;
 	}
-	
+
 	@Override
 	protected void defaultProcess(StoryComponent component) {
 		final StoryComponent owner = component.getOwner();
-		
+
 		if (owner != null) {
 			owner.process(this);
 		}
-		
+
 		this.scope.addAll(this.getPriorKnowIts(component));
 	}
 
@@ -112,7 +112,7 @@ public class ScopeVisitor extends StoryAdapter {
 		if (askIt != this.targetComponent)
 			this.scope.add(askIt.getCondition());
 	}
-	
+
 	@Override
 	public void processKnowIt(KnowIt knowIt) {
 		this.defaultProcess(knowIt);
@@ -135,7 +135,7 @@ public class ScopeVisitor extends StoryAdapter {
 					// only inherit parameters from Causes because you can't add
 					// things to scope within an Effect's parameter list.
 					this.scope.addAll(codeBlock.getParameters());
-					
+
 					this.scope.addAll(scriptIt.getImplicits());
 					this.scope.add(subject);
 				}
