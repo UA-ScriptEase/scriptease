@@ -102,9 +102,15 @@ public class KnowItBindingReference extends KnowItBinding {
 		if (typeMatches(knowIt.getAcceptableTypes()) && !hasBindingLoop(knowIt)) {
 			KnowItBinding value = this.resolveBinding();
 			if (value instanceof KnowItBindingFunction
-					&& knowIt.getOwner() != null)
-				return ScopeVisitor.getScope(knowIt).contains(this.getValue());
-			else
+					&& knowIt.getOwner() != null) {
+
+				final KnowIt thisValue = this.getValue();
+
+				for (KnowIt scope : ScopeVisitor.getScope(knowIt))
+					// We can't use equals() because it's not the exact knowit.
+					if (scope == thisValue)
+						return true;
+			} else
 				return true;
 		}
 		return false;
