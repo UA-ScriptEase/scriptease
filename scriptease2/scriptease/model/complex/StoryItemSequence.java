@@ -26,6 +26,11 @@ public class StoryItemSequence extends ComplexStoryComponent {
 	public void process(StoryVisitor processController) {
 		processController.processStoryItemSequence(this);
 	}
+	
+	@Override
+	public StoryItemSequence clone() {
+		return (StoryItemSequence) super.clone();
+	}
 
 	/**
 	 * Special check so that we do not add a cause to a StoryItemSequence. If we
