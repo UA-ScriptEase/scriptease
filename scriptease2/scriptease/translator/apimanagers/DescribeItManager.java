@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Map.Entry;
 
 import scriptease.model.StoryComponent;
+import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.ScriptIt;
@@ -24,6 +25,7 @@ import scriptease.util.BiHashMap;
  */
 public class DescribeItManager {
 
+	// Weakly referenced to prevent memory leaks
 	private final BiHashMap<DescribeIt, Collection<WeakReference<StoryComponent>>> describeItMap;
 
 	public DescribeItManager() {
@@ -41,6 +43,8 @@ public class DescribeItManager {
 
 	/**
 	 * Adds a DescribeIt to the map in addition to its attached StoryComponent.
+	 * You likely do not need to call this if you're creating a clone of a
+	 * KnowIt, since {@link KnowIt#clone()} does this for you.
 	 * 
 	 * @param describeIt
 	 */
@@ -90,6 +94,29 @@ public class DescribeItManager {
 				weakComponent = ref.get();
 
 				if (weakComponent == component)
+					return entry.getKey();
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the DescribeIt that is mapped to a component equal to the passed
+	 * in component.
+	 * 
+	 * @param component
+	 * @return
+	 */
+	public DescribeIt getEquivalentDescribeIt(StoryComponent component) {
+		for (Entry<DescribeIt, Collection<WeakReference<StoryComponent>>> entry : this.describeItMap
+				.getEntrySet()) {
+			for (WeakReference<StoryComponent> ref : entry.getValue()) {
+				final StoryComponent weakComponent;
+
+				weakComponent = ref.get();
+
+				if (weakComponent.equals(component))
 					return entry.getKey();
 			}
 		}
