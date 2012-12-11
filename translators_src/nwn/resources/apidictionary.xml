@@ -169,7 +169,7 @@
       <Name>VisualEffectImpact</Name>
       <Keyword>visual_effect_impact</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>VFX_IMP_FLAME_M&lt;Imp Flame M&gt;|VFX_IMP_PULSE_NEGATIVE&lt;Imp Pulse Negative&gt;|VFX_IMP_AURA_FEAR&lt;Imp Aura Fear&gt;|VFX_IMP_RESTORATION&lt;Imp Restoration&gt;|VFX_IMP_FLAME_S&lt;Imp Flame S&gt;|VFX_IMP_LIGHTNING_M&lt;Imp Lightning M&gt;|VFX_IMP_ELEMENTAL_PROTECTION&lt;Imp Elemental Protection&gt;|VFX_IMP_POISON_S&lt;Imp Poison S&gt;|VFX_IMP_DESTRUCTION&lt;Imp Destruction&gt;|VFX_IMP_SPELL_MANTLE_USE&lt;Imp Spell Mantle Use&gt;|VFX_IMP_HEAD_ELECTRICITY&lt;Imp Head Electricity&gt;|VFX_IMP_SPIKE_TRAP&lt;Imp Spike Trap&gt;|VFX_IMP_LIGHTNING_S&lt;Imp Lightning S&gt;|VFX_IMP_SILENCE&lt;Imp Silence&gt;|VFX_IMP_HEAD_MIND&lt;Imp Head Mind&gt;|VFX_IMP_HEAD_HOLY&lt;Imp Head Holy&gt;|VFX_IMP_NEGATIVE_ENERGY&lt;Imp Negative Energy&gt;|VFX_IMP_PULSE_COLD&lt;Imp Pulse Cold&gt;|VFX_IMP_DISPEL&lt;Imp Dispel&gt;|VFX_IMP_MIRV_FLAME&lt;Imp Mirv Flame&gt;|VFX_IMP_HEALING_G&lt;Imp Healing G&gt;|VFX_IMP_BREACH&lt;Imp Breach&gt;|VFX_IMP_RAISE_DEAD&lt;Imp Raise Dead&gt;|VFX_IMP_HEAD_EVIL&lt;Imp Head Evil&gt;|VFX_IMP_DEATH&lt;Imp Death&gt;|VFX_IMP_FROST_S&lt;Imp Frost S&gt;|VFX_IMP_HEALING_L&lt;Imp Healing L&gt;|VFX_IMP_GOOD_HELP&lt;Imp Good Help&gt;|VFX_IMP_HEALING_M&lt;Imp Healing M&gt;|VFX_IMP_DEATH_L&lt;Imp Death L&gt;|VFX_IMP_DOMINATE_S&lt;Imp Dominate S&gt;|VFX_IMP_FROST_L&lt;Imp Frost L&gt;|VFX_IMP_DISPEL_DISJUNCTION&lt;Imp Dispel Disjunction&gt;|VFX_IMP_DOOM&lt;Imp Doom&gt;|VFX_IMP_AURA_HOLY&lt;Imp Aura Holy&gt;|VFX_IMP_FORTITUDE_SAVING_THROW_USE&lt;Imp Fortitude Saving Throw Use&gt;|VFX_IMP_DEATH_WARD&lt;Imp Death Ward&gt;|VFX_IMP_UNSUMMON&lt;Imp Unsummon&gt;|VFX_IMP_HEAD_ODD&lt;Imp Head Odd&gt;|VFX_IMP_SUPER_HEROISM&lt;Imp Super Heroism&gt;|VFX_IMP_IMPROVE_ABILITY_SCORE&lt;Imp Improve Ability Score&gt;|VFX_IMP_GLOBE_USE&lt;Imp Globe Use&gt;|VFX_IMP_HEAD_COLD&lt;Imp Head Cold&gt;|VFX_IMP_MAGBLUE&lt;Imp Magblue&gt;|VFX_IMP_HEALING_S&lt;Imp Healing S&gt;|VFX_IMP_CHARM&lt;Imp Charm&gt;|VFX_IMP_DIVINE_STRIKE_FIRE&lt;Imp Divine Strike Fire&gt;|VFX_IMP_HASTE&lt;Imp Haste&gt;|VFX_IMP_STUN&lt;Imp Stun&gt;|VFX_IMP_RESTORATION_GREATER&lt;Imp Restoration Greater&gt;|VFX_IMP_HEALING_X&lt;Imp Healing X&gt;|VFX_IMP_DISEASE_S&lt;Imp Disease S&gt;|VFX_IMP_HEAD_FIRE&lt;Imp Head Fire&gt;|VFX_IMP_CONFUSION_S&lt;Imp Confusion S&gt;|VFX_IMP_PULSE_HOLY&lt;Imp Pulse Holy&gt;|VFX_IMP_DAZED_S&lt;Imp Dazed S&gt;|VFX_IMP_HEAD_ACID&lt;Imp Head Acid&gt;|VFX_IMP_KNOCK&lt;Imp Knock&gt;|VFX_IMP_HEAD_SONIC&lt;Imp Head Sonic&gt;|VFX_IMP_PULSE_WIND&lt;Imp Pulse Wind&gt;|VFX_IMP_HEAD_NATURE&lt;Imp Head Nature&gt;|VFX_IMP_REDUCE_ABILITY_SCORE&lt;Imp Reduce Ability Score&gt;|VFX_IMP_MAGICAL_VISION&lt;Imp Magical Vision&gt;|VFX_IMP_REMOVE_CONDITION&lt;Imp Remove Condition&gt;|VFX_IMP_SLOW&lt;Imp Slow&gt;|VFX_IMP_MIRV&lt;Imp Mirv&gt;|VFX_IMP_HEAD_HEAL&lt;Imp Head Heal&gt;|VFX_IMP_GREASE&lt;Imp Grease&gt;|VFX_IMP_ACID_L&lt;Imp Acid L&gt;|VFX_IMP_WILL_SAVING_THROW_USE&lt;Imp Will Saving Throw Use&gt;|VFX_IMP_POLYMORPH&lt;Imp Polymorph&gt;|VFX_IMP_SLEEP&lt;Imp Sleep&gt;|VFX_IMP_PULSE_WATER&lt;Imp Pulse Water&gt;|VFX_IMP_REFLEX_SAVE_THROW_USE&lt;Imp Reflex Save Throw Use&gt;|VFX_IMP_SUNSTRIKE&lt;Imp Sunstrike&gt;|VFX_IMP_AURA_UNEARTHLY&lt;Imp Aura Unearthly&gt;|VFX_IMP_ACID_S&lt;Imp Acid S&gt;|VFX_IMP_MAGIC_PROTECTION&lt;Imp Magic Protection&gt;|VFX_IMP_FEAR_S&lt;Imp Fear S&gt;|VFX_IMP_PULSE_NATURE&lt;Imp Pulse Nature&gt;|VFX_IMP_PULSE_FIRE&lt;Imp Pulse Fire&gt;|VFX_IMP_EVIL_HELP&lt;Imp Evil Help&gt;|VFX_IMP_BLIND_DEAF_M&lt;Imp Blind Deaf M&gt;|VFX_IMP_POISON_L&lt;Imp Poison L&gt;|VFX_IMP_RESTORATION_LESSER&lt;Imp Restoration Lesser&gt;|VFX_IMP_AURA_NEGATIVE_ENERGY&lt;Imp Aura Negative Energy&gt;|VFX_IMP_AC_BONUS&lt;Imp Ac Bonus&gt;|VFX_IMP_SONIC&lt;Imp Sonic&gt;|VFX_IMP_HOLY_AID&lt;Imp Holy Aid&gt;|VFX_IMP_MAGIC_RESISTANCE_USE&lt;Imp Magic Resistance Use&gt;|VFX_IMP_HARM&lt;Imp Harm&gt;</Enum>
+      <Enum>VFX_IMP_FLAME_M&lt;Imp Flame M&gt;|VFX_IMP_PULSE_NEGATIVE&lt;Imp Pulse Negative&gt;|VFX_IMP_AURA_FEAR&lt;Imp Aura Fear&gt;|VFX_IMP_RESTORATION&lt;Imp Restoration&gt;|VFX_IMP_FLAME_S&lt;Imp Flame S&gt;|VFX_IMP_LIGHTNING_M&lt;Imp Lightning M&gt;|VFX_IMP_ELEMENTAL_PROTECTION&lt;Imp Elemental Protection&gt;|VFX_IMP_POISON_S&lt;Imp Poison S&gt;|VFX_IMP_DESTRUCTION&lt;Imp Destruction&gt;|VFX_IMP_SPELL_MANTLE_USE&lt;Imp Spell Mantle Use&gt;|VFX_IMP_HEAD_ELECTRICITY&lt;Imp Head Electricity&gt;|VFX_IMP_SPIKE_TRAP&lt;Imp Spike Trap&gt;|VFX_IMP_LIGHTNING_S&lt;Imp Lightning S&gt;|VFX_IMP_SILENCE&lt;Imp Silence&gt;|VFX_IMP_HEAD_MIND&lt;Imp Head Mind&gt;|VFX_IMP_HEAD_HOLY&lt;Imp Head Holy&gt;|VFX_IMP_NEGATIVE_ENERGY&lt;Imp Negative Energy&gt;|VFX_IMP_PULSE_COLD&lt;Imp Pulse Cold&gt;|VFX_IMP_DISPEL&lt;Imp Dispel&gt;|VFX_IMP_MIRV_FLAME&lt;Imp Mirv Flame&gt;|VFX_IMP_HEALING_G&lt;Imp Healing G&gt;|VFX_IMP_BREACH&lt;Imp Breach&gt;|VFX_IMP_RAISE_DEAD&lt;Imp Raise Dead&gt;|VFX_IMP_HEAD_EVIL&lt;Imp Head Evil&gt;|VFX_IMP_DEATH&lt;Imp Death&gt;|VFX_IMP_FROST_S&lt;Imp Frost S&gt;|VFX_IMP_HEALING_L&lt;Imp Healing L&gt;|VFX_IMP_GOOD_HELP&lt;Imp Good Help&gt;|VFX_IMP_HEALING_M&lt;Imp Healing M&gt;|VFX_IMP_DEATH_L&lt;Imp Death L&gt;|VFX_IMP_DOMINATE_S&lt;Imp Dominate S&gt;|VFX_IMP_FROST_L&lt;Imp Frost L&gt;|VFX_IMP_DISPEL_DISJUNCTION&lt;Imp Dispel Disjunction&gt;|VFX_IMP_DOOM&lt;Imp Doom&gt;|VFX_IMP_AURA_HOLY&lt;Imp Aura Holy&gt;|VFX_IMP_FORTITUDE_SAVING_THROW_USE&lt;Imp Fortitude Saving Throw Use&gt;|VFX_IMP_DEATH_WARD&lt;Imp Death Ward&gt;|VFX_IMP_UNSUMMON&lt;Imp Unsummon&gt;|VFX_IMP_HEAD_ODD&lt;Imp Head Odd&gt;|VFX_IMP_SUPER_HEROISM&lt;Imp Super Heroism&gt;|VFX_IMP_IMPROVE_ABILITY_SCORE&lt;Imp Improve Ability Score&gt;|VFX_IMP_GLOBE_USE&lt;Imp Globe Use&gt;|VFX_IMP_HEAD_COLD&lt;Imp Head Cold&gt;|VFX_IMP_MAGBLUE&lt;Imp Magblue&gt;|VFX_IMP_HEALING_S&lt;Imp Healing S&gt;|VFX_IMP_CHARM&lt;Imp Charm&gt;|VFX_IMP_DIVINE_STRIKE_FIRE&lt;Imp Divine Strike Fire&gt;|VFX_IMP_STUN&lt;Imp Stun&gt;|VFX_IMP_RESTORATION_GREATER&lt;Imp Restoration Greater&gt;|VFX_IMP_HASTE&lt;Imp Haste&gt;|VFX_IMP_HEALING_X&lt;Imp Healing X&gt;|VFX_IMP_DISEASE_S&lt;Imp Disease S&gt;|VFX_IMP_HEAD_FIRE&lt;Imp Head Fire&gt;|VFX_IMP_CONFUSION_S&lt;Imp Confusion S&gt;|VFX_IMP_PULSE_HOLY&lt;Imp Pulse Holy&gt;|VFX_IMP_DAZED_S&lt;Imp Dazed S&gt;|VFX_IMP_HEAD_ACID&lt;Imp Head Acid&gt;|VFX_IMP_KNOCK&lt;Imp Knock&gt;|VFX_IMP_HEAD_SONIC&lt;Imp Head Sonic&gt;|VFX_IMP_PULSE_WIND&lt;Imp Pulse Wind&gt;|VFX_IMP_HEAD_NATURE&lt;Imp Head Nature&gt;|VFX_IMP_REDUCE_ABILITY_SCORE&lt;Imp Reduce Ability Score&gt;|VFX_IMP_MAGICAL_VISION&lt;Imp Magical Vision&gt;|VFX_IMP_REMOVE_CONDITION&lt;Imp Remove Condition&gt;|VFX_IMP_SLOW&lt;Imp Slow&gt;|VFX_IMP_MIRV&lt;Imp Mirv&gt;|VFX_IMP_HEAD_HEAL&lt;Imp Head Heal&gt;|VFX_IMP_GREASE&lt;Imp Grease&gt;|VFX_IMP_ACID_L&lt;Imp Acid L&gt;|VFX_IMP_WILL_SAVING_THROW_USE&lt;Imp Will Saving Throw Use&gt;|VFX_IMP_POLYMORPH&lt;Imp Polymorph&gt;|VFX_IMP_SLEEP&lt;Imp Sleep&gt;|VFX_IMP_PULSE_WATER&lt;Imp Pulse Water&gt;|VFX_IMP_REFLEX_SAVE_THROW_USE&lt;Imp Reflex Save Throw Use&gt;|VFX_IMP_SUNSTRIKE&lt;Imp Sunstrike&gt;|VFX_IMP_AURA_UNEARTHLY&lt;Imp Aura Unearthly&gt;|VFX_IMP_ACID_S&lt;Imp Acid S&gt;|VFX_IMP_MAGIC_PROTECTION&lt;Imp Magic Protection&gt;|VFX_IMP_FEAR_S&lt;Imp Fear S&gt;|VFX_IMP_PULSE_NATURE&lt;Imp Pulse Nature&gt;|VFX_IMP_PULSE_FIRE&lt;Imp Pulse Fire&gt;|VFX_IMP_EVIL_HELP&lt;Imp Evil Help&gt;|VFX_IMP_BLIND_DEAF_M&lt;Imp Blind Deaf M&gt;|VFX_IMP_POISON_L&lt;Imp Poison L&gt;|VFX_IMP_RESTORATION_LESSER&lt;Imp Restoration Lesser&gt;|VFX_IMP_AURA_NEGATIVE_ENERGY&lt;Imp Aura Negative Energy&gt;|VFX_IMP_AC_BONUS&lt;Imp Ac Bonus&gt;|VFX_IMP_SONIC&lt;Imp Sonic&gt;|VFX_IMP_HOLY_AID&lt;Imp Holy Aid&gt;|VFX_IMP_MAGIC_RESISTANCE_USE&lt;Imp Magic Resistance Use&gt;|VFX_IMP_HARM&lt;Imp Harm&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -1845,7 +1845,7 @@
       <Parameters/>
       <Implicits/>
     </Slot>
-    <Slot format="conversation_conditional">
+    <Slot>
       <Name>Active</Name>
       <Keyword>Active</Keyword>
       <Parameters/>
@@ -20385,13 +20385,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;X&gt; is &lt;Number Operator&gt; &lt;Y&gt;</Name>
+      <Name>if &lt;X&gt; is &lt;Number Operator&gt; &lt;Y&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;X&gt; is &lt;Number Operator&gt; &lt;Y&gt;</Name>
+          <Name>if &lt;X&gt; is &lt;Number Operator&gt; &lt;Y&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>421</Id>
@@ -20562,59 +20562,6 @@
                 <Fragment data="name"/>
               </Scope>
               <Literal>);</Literal>
-            </Line>
-          </Code>
-        </CodeBlockSource>
-      </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
-      <Name>if &lt;Creature&gt; has &lt;Item&gt;</Name>
-      <Visible>false</Visible>
-      <Labels>
-        <Label></Label>
-      </Labels>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>if &lt;Creature&gt; has &lt;Item&gt;</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Id>428</Id>
-          <Types>
-            <Type>question</Type>
-          </Types>
-          <Parameters>
-            <KnowIt>
-              <Name>Creature</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
-            <KnowIt>
-              <Name>Item</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>item</Type>
-              </Types>
-            </KnowIt>
-          </Parameters>
-          <Includes>
-            <Include>nw_i0_plot</Include>
-          </Includes>
-          <Code>
-            <Line>
-              <Literal>return HasItem(</Literal>
-              <Scope data="argument" ref="Creature">
-                <Fragment data="name"/>
-              </Scope>
-              <Literal>, GetTag( </Literal>
-              <Scope data="argument" ref="Item">
-                <Fragment data="name"/>
-              </Scope>
-              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -22447,7 +22394,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;Creature1&gt; is a henchman of &lt;Creature2&gt;</Name>
+      <Name>if &lt;First Creature&gt; is a henchman of &lt;Second Creature&gt;</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -22455,7 +22402,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;Creature1&gt; is a henchman of &lt;Creature2&gt;</Name>
+          <Name>if &lt;First Creature&gt; is a henchman of &lt;Second Creature&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>471</Id>
@@ -22464,7 +22411,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Creature1</Name>
+              <Name>First Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -22472,7 +22419,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Creature2</Name>
+              <Name>Second Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -22483,10 +22430,10 @@
           <Code>
             <Literal>int nLoop; for (nLoop=1; nLoop&amp;lt;=GetMaxHenchmen(); nLoop++) {    object aHenchman = </Literal>
             <Literal>GetHenchman(</Literal>
-            <Scope data="ARGUMENT" ref="Creature1">
+            <Scope data="ARGUMENT" ref="First Creature">
               <Fragment data="NAME"/>
               <Literal>, nLoop); if (GetIsObjectValid( aHenchman ) &amp;&amp; ( aHenchman == </Literal>
-              <Scope data="ARGUMENT" ref="Creature2">
+              <Scope data="ARGUMENT" ref="Second Creature">
                 <Fragment data="NAME"/>
               </Scope>
             </Scope>
@@ -22496,7 +22443,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;Object1&gt; potential enemy of &lt;Object2&gt;</Name>
+      <Name>if &lt;First Creature&gt; is an enemy of &lt;Second Creature&gt;</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -22504,7 +22451,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;Object1&gt; potential enemy of &lt;Object2&gt;</Name>
+          <Name>if &lt;First Creature&gt; is an enemy of &lt;Second Creature&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>472</Id>
@@ -22513,43 +22460,29 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Object1</Name>
+              <Name>First Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>store</Type>
-                <Type>door</Type>
-                <Type>dialogue</Type>
-                <Type>encounter</Type>
-                <Type>placeable</Type>
-                <Type>area</Type>
-                <Type>trigger</Type>
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Object2</Name>
+              <Name>Second Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>store</Type>
-                <Type>door</Type>
-                <Type>dialogue</Type>
-                <Type>encounter</Type>
-                <Type>placeable</Type>
-                <Type>area</Type>
-                <Type>trigger</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Literal>return GetIsEnemy(</Literal>
-            <Scope data="ARGUMENT" ref="Object1">
+            <Scope data="ARGUMENT" ref="First Creature">
               <Fragment data="NAME"/>
               <Literal>, </Literal>
             </Scope>
-            <Scope data="ARGUMENT" ref="Object2">
+            <Scope data="ARGUMENT" ref="Second Creature">
               <Fragment data="NAME"/>
             </Scope>
             <Literal>);</Literal>
@@ -22608,13 +22541,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;Source&gt; can see &lt;Target&gt;</Name>
+      <Name>if &lt;First Creature&gt; can see &lt;Second Creature&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;Source&gt; can see &lt;Target&gt;</Name>
+          <Name>if &lt;First Creature&gt; can see &lt;Second Creature&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>475</Id>
@@ -22623,7 +22556,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Source</Name>
+              <Name>First Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -22631,7 +22564,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Target</Name>
+              <Name>Second Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -22641,11 +22574,11 @@
           </Parameters>
           <Code>
             <Literal>return GetObjectSeen(</Literal>
-            <Scope data="ARGUMENT" ref="Target">
+            <Scope data="ARGUMENT" ref="Second Creature">
               <Fragment data="NAME"/>
             </Scope>
             <Literal>, </Literal>
-            <Scope data="ARGUMENT" ref="Source">
+            <Scope data="ARGUMENT" ref="First Creature">
               <Fragment data="NAME"/>
             </Scope>
             <Literal>);</Literal>
@@ -22654,13 +22587,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;Target&gt; has appearance type &lt;Type&gt;</Name>
+      <Name>if &lt;Creature&gt; has appearance type &lt;Type&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;Target&gt; has appearance type &lt;Type&gt;</Name>
+          <Name>if &lt;Creature&gt; has appearance type &lt;Type&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>476</Id>
@@ -22669,7 +22602,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Target</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -22691,7 +22624,7 @@
           </Parameters>
           <Code>
             <Literal>return GetAppearanceType(</Literal>
-            <Scope data="ARGUMENT" ref="Target">
+            <Scope data="ARGUMENT" ref="Creature">
               <Fragment data="NAME"/>
             </Scope>
             <Literal>) == </Literal>
@@ -22704,7 +22637,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;Creature&gt; has &lt;Class Type&gt;</Name>
+      <Name>if &lt;Creature&gt; has class type &lt;Class Type&gt;</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -22712,7 +22645,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;Creature&gt; has &lt;Class Type&gt;</Name>
+          <Name>if &lt;Creature&gt; has class type &lt;Class Type&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>477</Id>
@@ -22806,7 +22739,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;Owner&gt; has &lt;Item&gt; in &lt;Slot&gt;</Name>
+      <Name>if &lt;Creature&gt; has &lt;Item&gt; equipped on &lt;Slot&gt;</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -22814,7 +22747,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;Owner&gt; has &lt;Item&gt; in &lt;Slot&gt;</Name>
+          <Name>if &lt;Creature&gt; has &lt;Item&gt; equipped on &lt;Slot&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>479</Id>
@@ -22823,7 +22756,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Owner</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -22861,7 +22794,7 @@
               <Fragment data="NAME"/>
             </Scope>
             <Literal>, </Literal>
-            <Scope data="ARGUMENT" ref="Owner">
+            <Scope data="ARGUMENT" ref="Creature">
               <Fragment data="NAME"/>
             </Scope>
             <Literal>) == </Literal>
@@ -23016,13 +22949,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;Creature&gt; has gender type &lt;Gender&gt;</Name>
+      <Name>if &lt;Creature&gt; is gender &lt;Gender&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;Creature&gt; has gender type &lt;Gender&gt;</Name>
+          <Name>if &lt;Creature&gt; is gender &lt;Gender&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>484</Id>
@@ -23120,7 +23053,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;Owner&gt; has &lt;Item&gt;</Name>
+      <Name>if &lt;Creature&gt; has &lt;Item&gt;</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -23128,7 +23061,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;Owner&gt; has &lt;Item&gt;</Name>
+          <Name>if &lt;Creature&gt; has &lt;Item&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>486</Id>
@@ -23137,13 +23070,11 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Owner</Name>
+              <Name>Creature</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
                 <Type>creature</Type>
-                <Type>door</Type>
-                <Type>placeable</Type>
               </Types>
             </KnowIt>
             <KnowIt>
@@ -23157,8 +23088,8 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>return getIsObjectValid(GetItemPossessedBy(</Literal>
-              <Scope data="ARGUMENT" ref="Owner">
+              <Literal>return GetIsObjectValid(GetItemPossessedBy(</Literal>
+              <Scope data="ARGUMENT" ref="Creature">
                 <Fragment data="NAME"/>
               </Scope>
               <Literal>, GetTag(</Literal>
@@ -23434,92 +23365,6 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;Locked&gt; object requires key</Name>
-      <Visible>false</Visible>
-      <Labels/>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>if &lt;Locked&gt; object requires key</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Id>493</Id>
-          <Types>
-            <Type>question</Type>
-          </Types>
-          <Parameters>
-            <KnowIt>
-              <Name>Locked</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>door</Type>
-                <Type>placeable</Type>
-              </Types>
-            </KnowIt>
-          </Parameters>
-          <Code>
-            <Line>
-              <Literal>return GetLockKeyRequired(</Literal>
-              <Scope data="ARGUMENT" ref="Locked">
-                <Fragment data="NAME"/>
-              </Scope>
-              <Literal>);</Literal>
-            </Line>
-          </Code>
-        </CodeBlockSource>
-      </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
-      <Name>True</Name>
-      <Visible>false</Visible>
-      <Labels/>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>True</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Id>494</Id>
-          <Types>
-            <Type>question</Type>
-          </Types>
-          <Code>
-            <Line>
-              <Literal>return TRUE;</Literal>
-            </Line>
-          </Code>
-        </CodeBlockSource>
-      </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
-      <Name>False</Name>
-      <Visible>false</Visible>
-      <Labels/>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>False</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Id>495</Id>
-          <Types>
-            <Type>question</Type>
-          </Types>
-          <Code>
-            <Line>
-              <Literal>return FALSE;</Literal>
-            </Line>
-          </Code>
-        </CodeBlockSource>
-      </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[240]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[244]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[233]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[246]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[239]"/>
-    <ScriptIt>
       <Name>if &lt;First Object&gt; blueprint matches &lt;Second Object&gt;</Name>
       <Visible>false</Visible>
       <Labels>
@@ -23641,8 +23486,518 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
+    <ScriptIt>
+      <Name>if &lt;Object&gt; is a plot object</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>if &lt;Object&gt; is a plot object</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>499</Id>
+          <Types>
+            <Type>question</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>creature</Type>
+                <Type>door</Type>
+                <Type>placeable</Type>
+                <Type>item</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return GetPlotFlag(</Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>if &lt;Placeable&gt; has &lt;Item&gt;</Name>
+      <Visible>false</Visible>
+      <Labels>
+        <Label></Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>if &lt;Placeable&gt; has &lt;Item&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>500</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Placeable</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>placeable</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Item</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>item</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return GetIsObjectValid(GetItemPossessedBy(</Literal>
+              <Scope data="ARGUMENT" ref="Placeable">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, GetTag(</Literal>
+              <Scope data="ARGUMENT" ref="Item">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>)));</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>if &lt;Lockable&gt; is locked</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>if &lt;Lockable&gt; is locked</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>503</Id>
+          <Types>
+            <Type>question</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Lockable</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>door</Type>
+                <Type>placeable</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return GetLocked(</Literal>
+              <Scope data="ARGUMENT" ref="Lockable">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[224]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[260]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[268]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[263]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[259]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[269]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[274]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[261]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[280]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[266]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[258]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[282]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[232]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[243]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[239]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[272]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[277]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[265]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[245]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[278]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[262]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[270]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[273]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[276]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[257]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[267]"/>
   </Effects>
   <DescribeIts>
+    <DescribeIt>
+      <Name>The Player Character</Name>
+      <Types>
+        <Type>creature</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>The Player Character</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[232]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Requires Key</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[272]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>In Combat</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[267]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Door Action Allowed</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[277]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Is Plot</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[280]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Is Henchman</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[6]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[257]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Is Class</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[7]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[262]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Location</Name>
+      <Types>
+        <Type>location</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>the location of</Name>
+        <Successors>
+          <DescribeItNode>
+            <Name>Object</Name>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>door</Type>
+                <Type>placeable</Type>
+                <Type>sound</Type>
+                <Type>waypoint</Type>
+                <Type>trigger</Type>
+                <Type>creature</Type>
+                <Type>item</Type>
+              </Types>
+            </KnowIt>
+            <Successors/>
+          </DescribeItNode>
+        </Successors>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[8]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[8]/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[239]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Has Item</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>if</Name>
+        <Successors>
+          <DescribeItNode>
+            <Name>Placeable</Name>
+            <KnowIt>
+              <Name>Placeable</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>placeable</Type>
+              </Types>
+            </KnowIt>
+            <Successors>
+              <DescribeItNode>
+                <Name>has</Name>
+                <Successors>
+                  <DescribeItNode>
+                    <Name>Item</Name>
+                    <KnowIt>
+                      <Name>Item</Name>
+                      <Visible>true</Visible>
+                      <Labels/>
+                      <Types>
+                        <Type>item</Type>
+                      </Types>
+                    </KnowIt>
+                    <Successors>
+                      <DescribeItNode>
+                        <Name>equipped on</Name>
+                        <Successors>
+                          <DescribeItNode>
+                            <Name>New Node 28</Name>
+                            <KnowIt>
+                              <Name>Slot</Name>
+                              <Visible>true</Visible>
+                              <Labels/>
+                              <Types>
+                                <Type>inventory_slot</Type>
+                              </Types>
+                            </KnowIt>
+                            <Successors/>
+                          </DescribeItNode>
+                        </Successors>
+                      </DescribeItNode>
+                    </Successors>
+                  </DescribeItNode>
+                </Successors>
+              </DescribeItNode>
+            </Successors>
+          </DescribeItNode>
+          <DescribeItNode>
+            <Name>New Node 22</Name>
+            <KnowIt>
+              <Name>Creature</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>creature</Type>
+              </Types>
+            </KnowIt>
+            <Successors>
+              <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            </Successors>
+          </DescribeItNode>
+        </Successors>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[264]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[281]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[271]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Number Comparison</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Number Comparison</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[10]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[224]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Has Succeeded</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>if</Name>
+        <Successors>
+          <DescribeItNode>
+            <Name>New Node 16</Name>
+            <KnowIt>
+              <Name>Story Point</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>storyPoint</Type>
+              </Types>
+            </KnowIt>
+            <Successors>
+              <DescribeItNode>
+                <Name>has succeeded</Name>
+                <Successors/>
+              </DescribeItNode>
+            </Successors>
+          </DescribeItNode>
+        </Successors>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[11]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[11]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[11]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[243]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Has Effect</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[12]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[263]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Is Dead</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[13]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[265]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
     <DescribeIt>
       <Name>Nearest Object</Name>
       <Types>
@@ -23658,7 +24013,15 @@
         <Name>the</Name>
         <Successors>
           <DescribeItNode>
-            <Name>different</Name>
+            <Name>New Node 9</Name>
+            <KnowIt>
+              <Name>Number</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
             <Successors>
               <DescribeItNode>
                 <Name>nearest</Name>
@@ -23725,19 +24088,11 @@
               </DescribeItNode>
             </Successors>
           </DescribeItNode>
-          <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           <DescribeItNode>
-            <Name>New Node 9</Name>
-            <KnowIt>
-              <Name>Number</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>float</Type>
-              </Types>
-            </KnowIt>
+            <Name>different</Name>
             <Successors>
-              <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+              <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
             </Successors>
           </DescribeItNode>
         </Successors>
@@ -23745,193 +24100,153 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[252]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[254]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode[3]"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode[3]"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[253]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[249]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode[3]"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode[3]"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[250]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[246]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[249]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[251]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[245]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode[3]"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode[3]"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[247]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[246]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[251]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[248]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Has Succeeded</Name>
+      <Name>Can Cast</Name>
       <Types>
         <Type>question</Type>
       </Types>
       <DescribeItNode>
-        <Name>if</Name>
-        <Successors>
-          <DescribeItNode>
-            <Name>New Node 16</Name>
-            <KnowIt>
-              <Name>Story Point</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>storyPoint</Type>
-              </Types>
-            </KnowIt>
-            <Successors>
-              <DescribeItNode>
-                <Name>has succeeded</Name>
-                <Successors/>
-              </DescribeItNode>
-            </Successors>
-          </DescribeItNode>
-        </Successors>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[244]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>The Player Character</Name>
-      <Types>
-        <Type>creature</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>The Player Character</Name>
+        <Name>Placeholder Node</Name>
         <Successors/>
       </DescribeItNode>
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[15]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[233]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[259]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Location</Name>
+      <Name>Has Appearance</Name>
       <Types>
-        <Type>location</Type>
+        <Type>question</Type>
       </Types>
       <DescribeItNode>
-        <Name>the location of</Name>
-        <Successors>
-          <DescribeItNode>
-            <Name>Object</Name>
-            <KnowIt>
-              <Name>Object</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>door</Type>
-                <Type>placeable</Type>
-                <Type>sound</Type>
-                <Type>waypoint</Type>
-                <Type>trigger</Type>
-                <Type>creature</Type>
-                <Type>item</Type>
-              </Types>
-            </KnowIt>
-            <Successors/>
-          </DescribeItNode>
-        </Successors>
+        <Name>Placeholder Node</Name>
+        <Successors/>
       </DescribeItNode>
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[16]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[240]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[261]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Is Gender</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[17]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[269]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -23961,7 +24276,7 @@
             </KnowIt>
             <Successors>
               <DescribeItNode>
-                <Name>&apos;s tag matches</Name>
+                <Name>is</Name>
                 <Successors>
                   <DescribeItNode>
                     <Name>New Node 19</Name>
@@ -23986,13 +24301,13 @@
               <DescribeItNode>
                 <Name>&apos;s blueprint matches</Name>
                 <Successors>
-                  <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+                  <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
                 </Successors>
               </DescribeItNode>
               <DescribeItNode>
-                <Name>is</Name>
+                <Name>&apos;s tag matches</Name>
                 <Successors>
-                  <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+                  <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
                 </Successors>
               </DescribeItNode>
             </Successors>
@@ -24002,30 +24317,192 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[239]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[278]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[288]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[238]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[287]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[279]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Can See</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[19]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[260]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Is Enemy</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[20]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[258]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Is Locked</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[21]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[282]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Has Spell Effect</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[22]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[270]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>In Conversation</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[23]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[268]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Has Blueprint</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[24]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[274]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Is Immortal</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[25]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[266]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Object Exists</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[26]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[273]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Is Open</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[27]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[276]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
