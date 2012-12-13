@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.WindowFactory;
@@ -153,9 +151,14 @@ public class CodeGenerator {
 
 			if (scriptBuckets.size() > 0) {
 				// Multithreaded
-//				final ExecutorService executor;
+				// XXX
+				// Multi-threading has been commented out. There is a race
+				// condition somewhere that causes code to compile wrong the
+				// first time through on larger stories.
+				// final ExecutorService executor;
 
-//				executor = Executors.newFixedThreadPool(scriptBuckets.size());
+				// executor =
+				// Executors.newFixedThreadPool(scriptBuckets.size());
 
 				/*
 				 * This method is called so that we load the Language Dictionary
@@ -178,32 +181,32 @@ public class CodeGenerator {
 				 */
 				for (final Set<CodeBlock> bucket : scriptBuckets) {
 					// Spawn a new thread to compile the code
-//					Runnable worker = new Runnable() {
-//						@Override
-//						public void run() {
-							final CodeBlock codeBlock;
-							final LocationInformation locationInfo;
-							final Context context;
-							final ScriptInfo generated;
+					// Runnable worker = new Runnable() {
+					// @Override
+					// public void run() {
+					final CodeBlock codeBlock;
+					final LocationInformation locationInfo;
+					final Context context;
+					final ScriptInfo generated;
 
-							// All CodeBlocks of a given bucket share slot and
-							// subject, so we can just use the first one
-							codeBlock = bucket.iterator().next();
-							locationInfo = new LocationInformation(codeBlock);
-							context = analyzer.buildContext(locationInfo);
-							generated = generateScriptFile(context);
+					// All CodeBlocks of a given bucket share slot and
+					// subject, so we can just use the first one
+					codeBlock = bucket.iterator().next();
+					locationInfo = new LocationInformation(codeBlock);
+					context = analyzer.buildContext(locationInfo);
+					generated = generateScriptFile(context);
 
-							scriptInfos.add(generated);
-//						}
-//					};
-//					executor.execute(worker);
+					scriptInfos.add(generated);
+					// }
+					// };
+					// executor.execute(worker);
 				}
 				// This will make the executor accept no new threads and finish
 				// all existing threads in the queue
-//				executor.shutdown();
+				// executor.shutdown();
 				// Wait until all threads are finish before continuing.
-//				while (!executor.isTerminated())
-//					;
+				// while (!executor.isTerminated())
+				// ;
 			}
 		} else {
 			WindowFactory.getInstance().showCompileProblems(problems);
