@@ -60,7 +60,7 @@ public class StoryPoint extends ComplexStoryComponent {
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
 		if (name.equals("") || name == null) {
-			name = NEW_STORY_POINT + " " + this.uniqueID;
+			name = NEW_STORY_POINT;
 		}
 
 		this.setDisplayText(name);
