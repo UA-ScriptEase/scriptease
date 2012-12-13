@@ -280,13 +280,13 @@ public class Context {
 		return null;
 	}
 
-	public StoryItemSequence getStoryChild() {
-		unimplemented("getStoryChild");
+	public StoryItemSequence getActiveChild() {
+		unimplemented("getActiveChild");
 		return null;
 	}
 
-	public StoryItemSequence getAlwaysChild() {
-		unimplemented("getAlwaysChild");
+	public StoryItemSequence getInactiveChild() {
+		unimplemented("getInactiveChild");
 		return null;
 	}
 
