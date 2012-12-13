@@ -153,30 +153,31 @@ public class CodeBlockContext extends Context {
 	}
 
 	/**
-	 * Get the ScriptIt's Story Child
+	 * Get the ScriptIt's Story Point Active Child
 	 */
 	@Override
-	public StoryItemSequence getStoryChild() {
+	public StoryItemSequence getActiveChild() {
 		ScriptIt cause = this.codeBlock.getCause();
 		if (cause != null)
-			return cause.getStoryBlock();
+			return cause.getActiveBlock();
 		else
 			throw new CodeGenerationException(
-					"Attempted to get Story Block for a CodeBlock without a Cause: "
-							+ this.codeBlock);
+					"Attempted to get Story Point Active Block for a "
+							+ "CodeBlock without a Cause: " + this.codeBlock);
 	}
 
 	/**
-	 * Get the ScriptIt's Always Child
+	 * Get the ScriptIt's Story Point Inactive Child
 	 */
 	@Override
-	public StoryItemSequence getAlwaysChild() {
+	public StoryItemSequence getInactiveChild() {
 		ScriptIt cause = this.codeBlock.getCause();
 		if (cause != null)
-			return cause.getAlwaysBlock();
+			return cause.getInactiveBlock();
 		else
 			throw new CodeGenerationException(
-					"Attempted to get Always Block for a CodeBlock without a Cause: "
-							+ this.codeBlock);
+					"Attempted to get Story Point Inactive Block for a "
+							+ "CodeBlock without a Cause: " + this.codeBlock);
+		// CodeBlock Without A Cause. (Not) Starring James Dean
 	}
 }

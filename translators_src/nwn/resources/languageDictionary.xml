@@ -186,16 +186,21 @@
 				<Literal>") == STORY_POINT_STATE_ENABLED){</Literal>
 			</Line>
 			<Indent>
-				<Scope data="storyChild">
+				<Scope data="activeChild">
 					<FormatRef ref="childrenWithoutImplicits" />
 				</Scope>
 			</Indent>
 			<Line>
-				<Literal>}</Literal>
+				<Literal>} else {</Literal>
 			</Line>
-			<Scope data="alwaysChild">
+			<Indent>
+			<Scope data="inactiveChild">
 				<FormatRef ref="childrenWithoutImplicits" />
 			</Scope>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
 		</Format>
 
 		<Format id="askItConditional">

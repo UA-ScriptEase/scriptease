@@ -22,18 +22,18 @@ public interface CodeGenerationKeywordConstants {
 
 	// Used in ScopeFragment.
 	public static enum ScopeTypes {
-		ALWAYSCHILD,
+		ACTIVECHILD,
 		ARGUMENT,
 		ASKIT,
 		BINDING,
 		ELSECHILD,
 		END,
 		IFCHILD,
+		INACTIVECHILD,
 		MAINCODEBLOCK,
 		OWNER,
 		SCRIPTIT,
 		START,
-		STORYCHILD,
 		SUBJECT
 	}
 
