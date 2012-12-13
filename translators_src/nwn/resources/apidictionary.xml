@@ -7341,14 +7341,6 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Placeable</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>placeable</Type>
-              </Types>
-            </KnowIt>
-            <KnowIt>
               <Name>Placeable Animation</Name>
               <Visible>true</Visible>
               <Labels/>
@@ -8255,11 +8247,11 @@
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, FloatToInt(</Literal>
+              <Literal>, </Literal>
               <Scope data="argument" ref="Time">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>);</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -9487,15 +9479,15 @@
           <Code>
             <Line>
               <Literal>SetLocalFloat(</Literal>
-              <Scope data="argument" ref="Real Value">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
               <Scope data="argument" ref="Label">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="argument" ref="Real Value">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -9541,11 +9533,11 @@
           <Code>
             <Line>
               <Literal>SetLocalFloat(GetModule(), </Literal>
-              <Scope data="argument" ref="Number">
+              <Scope data="argument" ref="Label">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Label">
+              <Scope data="argument" ref="Number">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -9603,15 +9595,15 @@
           <Code>
             <Line>
               <Literal>SetLocalString(</Literal>
-              <Scope data="argument" ref="Text Value">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
               <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
               <Scope data="argument" ref="Label">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="argument" ref="Text Value">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -9674,7 +9666,7 @@
       <Name>Assign &lt;Binary Value&gt; to &lt;Target&gt;&apos;s variable labelled &lt;Label&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -9717,21 +9709,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <Line>
-              <Literal>SetLocalInt(FloatToInt(</Literal>
-              <Scope data="argument" ref="Binary Value">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>), </Literal>
-              <Scope data="argument" ref="Target">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>, </Literal>
-              <Scope data="argument" ref="Label">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>);</Literal>
-            </Line>
+           
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -9793,11 +9771,11 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Target">
+               <Scope data="argument" ref="Label">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Label">
+              <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -9849,11 +9827,11 @@
           <Code>
             <Line>
               <Literal>SetLocalObject(GetModule(), </Literal>
-              <Scope data="argument" ref="Object">
+              <Scope data="argument" ref="Label">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Label">
+              <Scope data="argument" ref="Object">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -11375,7 +11353,7 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Placeable">
+              <Scope data="argument" ref="Placeable Action">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>)));</Literal>
@@ -11511,7 +11489,7 @@
           <Code>
             <Line>
               <Literal>AssignCommand(</Literal>
-              <Scope data="argument" ref="Face">
+              <Scope data="argument" ref="Facer">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, SetFacing(</Literal>
@@ -11998,7 +11976,7 @@
             </Line>
             <Line>
               <Literal>targetPosition = GetPositionFromLocation(</Literal>
-              <Scope data="argument" ref="Distance">
+              <Scope data="argument" ref="Location">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -12011,7 +11989,7 @@
             </Line>
             <Line>
               <Literal>jumperPosition = jumperPosition + </Literal>
-              <Scope data="argument" ref="Location">
+              <Scope data="argument" ref="Distance">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>*heading;</Literal>
@@ -12116,11 +12094,11 @@
               <Literal>jumperFacing = GetFacingFromLocation(jumperLocation);</Literal>
             </Line>
             <Line>
-              <Literal>targetPosition = GetPositionFromLocation(GetLocation(</Literal>
-              <Scope data="argument" ref="Distance">
+              <Literal>targetPosition = GetPosition(</Literal>
+              <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
               <Literal>heading = Vector(targetPosition.x - jumperPosition.x, targetPosition.y -   jumperPosition.y, targetPosition.z - jumperPosition.z);</Literal>
@@ -12130,7 +12108,7 @@
             </Line>
             <Line>
               <Literal>jumperPosition = jumperPosition + </Literal>
-              <Scope data="argument" ref="Target">
+              <Scope data="argument" ref="Distance">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>*heading;</Literal>
@@ -13115,7 +13093,7 @@
             </Line>
             <Line>
               <Literal>targetPosition = GetPositionFromLocation(</Literal>
-              <Scope data="argument" ref="walk">
+              <Scope data="argument" ref="Location">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -13141,11 +13119,7 @@
               <Scope data="argument" ref="Mover">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionMoveToLocation(moverLocation, </Literal>
-              <Scope data="argument" ref="Lcoation">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>));</Literal>
+              <Literal>, ActionMoveToLocation(moverLocation));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -15302,26 +15276,26 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>effect dEff = EffectDamage(</Literal>
-              <Scope data="argument" ref="Target">
+              <Literal>effect dEff = EffectDamage(FloatToInt(</Literal>
+              <Scope data="argument" ref="Amount">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, FloatToInt(</Literal>
+              <Literal>), </Literal>
               <Scope data="argument" ref="Damage Type">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>));</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
               <Literal>AssignCommand(</Literal>
               <Scope data="argument" ref="Damager">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, ActionDoCommand(ApplyEffectToObject(DURATION_TYPE_INSTANT, dEff, FloatToInt(</Literal>
-              <Scope data="argument" ref="Amount">
+              <Literal>, ActionDoCommand(ApplyEffectToObject(DURATION_TYPE_INSTANT, dEff, </Literal>
+              <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>))));</Literal>
+              <Literal>)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -15543,16 +15517,7 @@
           <Types>
             <Type>void</Type>
           </Types>
-          <Parameters>
-            <KnowIt>
-              <Name>Surrenderer</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
-          </Parameters>
+          <Parameters/>
           <Code>
             <Line>
               <Literal>SurrenderToEnemies();</Literal>
@@ -16377,7 +16342,7 @@
           <Code>
             <Line>
               <Literal>ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectCutsceneParalyze(),</Literal>
-              <Scope data="argument" ref=" The Target">
+              <Scope data="argument" ref="The Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -17476,11 +17441,11 @@
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Target">
+              <Scope data="argument" ref="Label">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>, </Literal>
-              <Scope data="argument" ref="Label">
+              <Scope data="argument" ref="Target">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -17696,14 +17661,18 @@
             </Line>
             <Line/>
             <Line>
-              <Literal>effect eDumb = EffectAbilityDecrease(ABILITY_INTELLIGENCE, </Literal>
+              <Literal>effect eDumb = EffectAbilityDecrease(ABILITY_INTELLIGENCE, FloatToInt(</Literal>
               <Scope data="argument" ref="Intelligence Lost">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
             <Line>
-              <Literal>    ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eDumb, param_1_object, </Literal>
+              <Literal>    ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eDumb, </Literal>
+               <Scope data="argument" ref="Creature">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>, </Literal>
               <Scope data="argument" ref="Duration">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -18060,11 +18029,11 @@
           </Parameters>
           <Code>
             <Line>
-              <Scope data="argument" ref="Recipient">
+              <Literal>GiveXPToCreature(</Literal>
+                <Scope data="argument" ref="Recipient">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, </Literal>
-              <Literal>GiveXPToCreature(FloatToInt(</Literal>
+              <Literal>, FloatToInt(</Literal>
               <Scope data="argument" ref="Amount">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -18078,7 +18047,7 @@
       <Name>Reward &lt;Percent&gt; % XP to &lt;Recipient&gt; for a &lt;quest&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -18585,25 +18554,25 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>int left = </Literal>
-              <Scope data="argument" ref="The Container">
-                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
-              </Scope>
-              <Literal>;</Literal>
-            </Line>
-            <Line>
-              <Literal>object owner = FloatToInt(</Literal>
+              <Literal>int left = FloatToInt(</Literal>
               <Scope data="argument" ref="The Number">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
             </Line>
             <Line>
-              <Literal>string resref = </Literal>
-              <Scope data="argument" ref="The Item Blueprint">
+              <Literal>object owner = </Literal>
+              <Scope data="argument" ref="The Container">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>;</Literal>
+            </Line>
+            <Line>
+              <Literal>string resref = GetResRef(</Literal>
+              <Scope data="argument" ref="The Item Blueprint">
+                <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
+              </Scope>
+              <Literal>);</Literal>
             </Line>
             <Line>
               <Literal>object oItem = GetFirstItemInInventory(owner);</Literal>
@@ -20020,7 +19989,7 @@
             </Line>
             <Line>
               <Literal>string tag = GetTag(</Literal>
-              <Scope data="argument" ref="The Door">
+              <Scope data="argument" ref="Door">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
@@ -20700,7 +20669,7 @@
       <Name>Reverse attribute &lt;Named&gt; in &lt;Object&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>DELETE</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -20734,23 +20703,7 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetLocalFloat(</Literal>
-              <Scope data="argument" ref="Object">
-                <Fragment data="name"/>
-              </Scope>
-              <Literal>,</Literal>
-              <Scope data="argument" ref="Named">
-                <Fragment data="name"/>
-              </Scope>
-              <Literal>, !GetLocalFloat(</Literal>
-              <Scope data="argument" ref="Object">
-                <Fragment data="name"/>
-              </Scope>
-              <Literal>,</Literal>
-              <Scope data="argument" ref="Named">
-                <Fragment data="name"/>
-              </Scope>
-              <Literal>));</Literal>
+             
             </Line>
           </Code>
         </CodeBlockSource>
