@@ -153,9 +153,9 @@ public class CodeGenerator {
 
 			if (scriptBuckets.size() > 0) {
 				// Multithreaded
-				final ExecutorService executor;
+//				final ExecutorService executor;
 
-				executor = Executors.newFixedThreadPool(scriptBuckets.size());
+//				executor = Executors.newFixedThreadPool(scriptBuckets.size());
 
 				/*
 				 * This method is called so that we load the Language Dictionary
@@ -178,9 +178,9 @@ public class CodeGenerator {
 				 */
 				for (final Set<CodeBlock> bucket : scriptBuckets) {
 					// Spawn a new thread to compile the code
-					Runnable worker = new Runnable() {
-						@Override
-						public void run() {
+//					Runnable worker = new Runnable() {
+//						@Override
+//						public void run() {
 							final CodeBlock codeBlock;
 							final LocationInformation locationInfo;
 							final Context context;
@@ -194,16 +194,16 @@ public class CodeGenerator {
 							generated = generateScriptFile(context);
 
 							scriptInfos.add(generated);
-						}
-					};
-					executor.execute(worker);
+//						}
+//					};
+//					executor.execute(worker);
 				}
 				// This will make the executor accept no new threads and finish
 				// all existing threads in the queue
-				executor.shutdown();
+//				executor.shutdown();
 				// Wait until all threads are finish before continuing.
-				while (!executor.isTerminated())
-					;
+//				while (!executor.isTerminated())
+//					;
 			}
 		} else {
 			WindowFactory.getInstance().showCompileProblems(problems);
