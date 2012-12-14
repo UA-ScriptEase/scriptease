@@ -2,6 +2,7 @@ package scriptease.gui.storycomponentpanel;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -344,17 +345,20 @@ public class StoryComponentPanelFactory {
 
 				// Add the children panels
 				addChildrenPanels(storyPoint, panel);
+
+				panel.setPreferredSize(new Dimension(
+						panel.getPreferredSize().width, panel
+								.getPreferredSize().height + 150));
 			}
 
 			@Override
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
 				// Add an expansion button
 				addExpansionButton(complex, panel);
-	
 
 				final JPanel mainPanel;
 				mainPanel = new JPanel();
-				
+
 				parseDisplayText(mainPanel, complex);
 
 				// Add a label for the complex story component
