@@ -21,16 +21,19 @@ public class CodeBlockMapper extends StoryAdapter {
 	@Override
 	public void processScriptIt(ScriptIt scriptIt) {
 		for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
-			String slot = codeBlock.getSlot();
-			KnowIt subject = codeBlock.getSubject();
-			String key = subject.getBinding().toString() + slot;
+			final String slot;
+			final KnowIt subject;
+			final String key;
+
+			slot = codeBlock.getSlot();
+			subject = codeBlock.getSubject();
+			key = subject.getBinding().toString() + slot;
 
 			List<CodeBlock> bucket = this.codeBlocks.get(key);
-
 			if (bucket == null) {
 				bucket = new ArrayList<CodeBlock>();
 			}
-			
+
 			bucket.add(codeBlock);
 			this.codeBlocks.put(key, bucket);
 		}

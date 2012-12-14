@@ -86,8 +86,13 @@ public class CodeGenerator {
 	private ScriptInfo generateScriptFile(Context context) {
 
 		// generate the script file
-		String scriptContent = generateScript(context);
-		return new ScriptInfo(scriptContent, context.getLocationInfo());
+		final String scriptContent;
+		final LocationInformation location;
+
+		scriptContent = this.generateScript(context);
+		location = context.getLocationInfo();
+
+		return new ScriptInfo(scriptContent, location);
 	}
 
 	/**
@@ -130,6 +135,9 @@ public class CodeGenerator {
 	 * @param scriptBuckets
 	 * @param analyzer
 	 * @param translator
+	 * @deprecated Use
+	 *             {@link #compileSingleThread(Collection, SemanticAnalyzer, Translator)}
+	 *             until this is fixed.
 	 * @return
 	 */
 	private Collection<ScriptInfo> compileMultiThread(
@@ -230,7 +238,7 @@ public class CodeGenerator {
 			codeBlock = bucket.iterator().next();
 			locationInfo = new LocationInformation(codeBlock);
 			context = analyzer.buildContext(locationInfo);
-			generated = generateScriptFile(context);
+			generated = this.generateScriptFile(context);
 
 			scriptInfos.add(generated);
 		}
@@ -267,12 +275,12 @@ public class CodeGenerator {
 
 		// If no problems were detected, generate the scripts
 		if (problems.isEmpty()) {
-			// aggregate the scripts based on the storyPoints
+			final Collection<StoryComponent> storyPoints;
 			final Collection<Set<CodeBlock>> scriptBuckets;
 
-			scriptBuckets = module
-					.aggregateScripts(new ArrayList<StoryComponent>(root
-							.getDescendants()));
+			storyPoints = new ArrayList<StoryComponent>(root.getDescendants());
+			// aggregate the scripts based on the storyPoints
+			scriptBuckets = module.aggregateScripts(storyPoints);
 
 			if (scriptBuckets.size() > 0) {
 				if (CodeGenerator.THREAD_MODE == ThreadMode.SINGLE)
