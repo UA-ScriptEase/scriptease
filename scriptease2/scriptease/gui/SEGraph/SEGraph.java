@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.plaf.ComponentUI;
 
 import scriptease.controller.undo.UndoManager;
@@ -931,9 +932,23 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			if (SEGraph.this.getMousePosition() != null)
-				SEGraph.this.mousePosition.setLocation(SEGraph.this
-						.getMousePosition());
+
+			Container parent = SEGraph.this.getParent();
+			while (parent != null) {
+				if (parent instanceof JScrollPane) {
+					GUIOp.scrollJScrollPaneToMousePosition((JScrollPane) parent);
+					break;
+				}
+				parent = parent.getParent();
+			}
+
+			final Point mousePosition;
+
+			mousePosition = SEGraph.this.getMousePosition();
+
+			if (mousePosition != null)
+				SEGraph.this.mousePosition.setLocation(mousePosition);
+
 			SEGraph.this.repaint();
 		}
 
