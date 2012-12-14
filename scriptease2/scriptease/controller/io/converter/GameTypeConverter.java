@@ -28,6 +28,7 @@ public class GameTypeConverter implements Converter {
 	private static final String TAG_SLOT = "Slot";
 	private static final String TAG_FORMAT = "Format";
 	private static final String TAG_GUI = "GUI";
+	private static final String TAG_WIDGETNAME = "WidgetName";
 	private static final String TAG_CODESYMBOL = "CodeSymbol";
 
 	@Override
@@ -56,6 +57,12 @@ public class GameTypeConverter implements Converter {
 			context.convertAnother(type.getFormat());
 			writer.endNode();
 		}
+		// Write Reg
+		if (type.getReg() != null && !type.getReg().isEmpty()) {
+			writer.startNode(TAG_LEGAL_VALUES);
+			writer.setValue(type.getReg());
+			writer.endNode();
+		}
 
 		// Write Enum
 		String enumString = type.getEnumString();
@@ -65,10 +72,10 @@ public class GameTypeConverter implements Converter {
 			writer.endNode();
 		}
 
-		// Write Reg
-		if (type.getReg() != null && !type.getReg().isEmpty()) {
-			writer.startNode(TAG_LEGAL_VALUES);
-			writer.setValue(type.getReg());
+		// Write GUI
+		if (type.hasGUI()) {
+			writer.startNode(TAG_GUI);
+			context.convertAnother(type.getGui());
 			writer.endNode();
 		}
 
@@ -83,10 +90,9 @@ public class GameTypeConverter implements Converter {
 			writer.endNode();
 		}
 
-		// Write GUI
-		if (type.getGui() != null) {
-			writer.startNode(TAG_GUI);
-			context.convertAnother(type.getGui());
+		if (type.hasWidgetName()) {
+			writer.startNode(TAG_WIDGETNAME);
+			context.convertAnother(type.getWidgetName());
 			writer.endNode();
 		}
 	}
@@ -102,6 +108,7 @@ public class GameTypeConverter implements Converter {
 		final Collection<String> slots = new ArrayList<String>();
 		String enums = "";
 		String reg = "";
+		String widgetName = "";
 		TypeValueWidgets gui = null;
 		GameType type = null;
 
@@ -156,11 +163,16 @@ public class GameTypeConverter implements Converter {
 					gui = TypeValueWidgets.JTEXTFIELD;
 			}
 
+			// Read widget name
+			if (node.equals(TAG_WIDGETNAME)) {
+				widgetName = reader.getValue();
+			}
+
 			reader.moveUp();
 		}
 
 		type = new GameType(name, keyword, codeSymbol, fragments, slots, enums,
-				reg, gui);
+				reg, gui, widgetName);
 
 		return type;
 	}

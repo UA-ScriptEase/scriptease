@@ -94,6 +94,7 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			<xsd:element name="WidgetName" type="xsd:string" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 

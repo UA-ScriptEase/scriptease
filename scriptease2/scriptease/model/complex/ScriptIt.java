@@ -28,6 +28,9 @@ import scriptease.translator.codegenerator.LocationInformation;
  * 
  */
 public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
+	private static final String ACTIVE_BLOCK_TEXT = "Story Point Active:";
+	private static final String INACTIVE_BLOCK_TEXT = "Story Point Inactive:";
+
 	/**
 	 * The group of children that are in the Story Point Active part of the
 	 * Cause.
@@ -60,9 +63,9 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		validTypes.add(Note.class);
 
 		this.activeBlock = new StoryItemSequence(validTypes);
-		this.activeBlock.setDisplayText("Story Point Active:");
+		this.activeBlock.setDisplayText(ACTIVE_BLOCK_TEXT);
 		this.inactiveBlock = new StoryItemSequence(validTypes);
-		this.inactiveBlock.setDisplayText("Story Point Inactive:");
+		this.inactiveBlock.setDisplayText(INACTIVE_BLOCK_TEXT);
 
 	}
 
@@ -165,11 +168,15 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	}
 
 	public void setActiveBlock(StoryItemSequence activeBlock) {
+		// Change text for backwards compatibility
+		activeBlock.setDisplayText(ACTIVE_BLOCK_TEXT);
 		this.activeBlock = activeBlock;
 		activeBlock.setOwner(this);
 	}
 
 	public void setInactiveBlock(StoryItemSequence inactiveBlock) {
+		// Change text for backwards compatibility
+		inactiveBlock.setDisplayText(INACTIVE_BLOCK_TEXT);
 		this.inactiveBlock = inactiveBlock;
 		inactiveBlock.setOwner(this);
 	}
