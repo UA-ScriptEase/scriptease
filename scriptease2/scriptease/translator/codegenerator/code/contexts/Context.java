@@ -330,8 +330,19 @@ public class Context {
 		Iterator<ScriptIt> scriptIts = this.getScriptIts();
 		while (scriptIts.hasNext()) {
 			final ScriptIt scriptIt = scriptIts.next();
-			if (scriptIt.isCause())
-				causes.add(scriptIt);
+			if (scriptIt.isCause()) {
+
+				boolean causeExists = false;
+
+				for (ScriptIt cause : causes) {
+					if (cause.getDisplayText()
+							.equals(scriptIt.getDisplayText()))
+						causeExists = true;
+				}
+
+				if (!causeExists)
+					causes.add(scriptIt);
+			}
 		}
 		return causes.iterator();
 	}
