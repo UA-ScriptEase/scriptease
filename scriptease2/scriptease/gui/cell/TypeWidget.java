@@ -77,7 +77,7 @@ public class TypeWidget extends JToggleButton implements TranslatorObserver {
 				// their type widget.
 				this.setText("?");
 			else
-				this.setText(typeName.substring(0, 1).toUpperCase());
+				this.setText(typeName.substring(0, 2).toUpperCase());
 		}
 	}
 
