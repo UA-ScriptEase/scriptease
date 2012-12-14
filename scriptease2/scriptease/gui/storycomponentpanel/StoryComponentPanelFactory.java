@@ -350,10 +350,11 @@ public class StoryComponentPanelFactory {
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
 				// Add an expansion button
 				addExpansionButton(complex, panel);
+	
 
 				final JPanel mainPanel;
 				mainPanel = new JPanel();
-
+				
 				parseDisplayText(mainPanel, complex);
 
 				// Add a label for the complex story component
