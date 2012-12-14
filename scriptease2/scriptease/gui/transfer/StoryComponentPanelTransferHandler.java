@@ -2,7 +2,6 @@ package scriptease.gui.transfer;
 
 import java.awt.Component;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -15,7 +14,6 @@ import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JList;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.TransferHandler;
@@ -27,7 +25,6 @@ import scriptease.gui.libraryeditor.EffectHolderPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
-import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
