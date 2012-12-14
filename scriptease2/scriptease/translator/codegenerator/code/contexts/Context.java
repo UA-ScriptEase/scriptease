@@ -334,6 +334,8 @@ public class Context {
 
 				boolean causeExists = false;
 
+				// TODO FIXME Not sure if this is a good way of checking for
+				// uniqueness.
 				for (ScriptIt cause : causes) {
 					if (cause.getDisplayText()
 							.equals(scriptIt.getDisplayText()))
