@@ -16,6 +16,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.TransferHandler;
 
@@ -33,6 +34,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.util.GUIOp;
 
 /**
  * StoryComponentPanelTransferHandler is a more specific TransferHandler that is
@@ -145,42 +147,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 				bottomComponent = ((JSplitPane) component).getBottomComponent();
 				if (bottomComponent instanceof StoryComponentPanelTree) {
-					final int SCROLL_RECT_HEIGHT = 20;
+					final JScrollPane pane = (StoryComponentPanelTree) bottomComponent;
 
-					final StoryComponentPanelTree tree;
-					final JScrollBar scrollBar;
-					final Point mousePosition;
-
-					final int scrollBarValue;
-					final Rectangle viewPort;
-					final Rectangle topScrollRectangle;
-					final Rectangle bottomScrollRectangle;
-
-					tree = (StoryComponentPanelTree) bottomComponent;
-					scrollBar = tree.getVerticalScrollBar();
-					mousePosition = bottomComponent.getMousePosition();
-
-					if (mousePosition == null)
-						continue;
-
-					scrollBarValue = scrollBar.getValue();
-					viewPort = ((StoryComponentPanelTree) bottomComponent)
-							.getViewportBorderBounds();
-					topScrollRectangle = new Rectangle(0, 0, viewPort.width,
-							SCROLL_RECT_HEIGHT);
-					bottomScrollRectangle = new Rectangle(0, viewPort.height
-							- SCROLL_RECT_HEIGHT, viewPort.width,
-							SCROLL_RECT_HEIGHT);
-
-					if (topScrollRectangle.contains(mousePosition)) {
-						scrollBar.setValue(scrollBarValue
-								- ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
-						break;
-					} else if (bottomScrollRectangle.contains(mousePosition)) {
-						scrollBar.setValue(scrollBarValue
-								+ ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
-						break;
-					}
+					GUIOp.scrollJScrollPaneToMousePosition(pane);
 				}
 			}
 		}
@@ -312,7 +281,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				}
 
 				clone.revalidateKnowItBindings();
-				
+
 				if (!success)
 					throw new IllegalStateException("Was unable to add "
 							+ newChild + " to " + parent
