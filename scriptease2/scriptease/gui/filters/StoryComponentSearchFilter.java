@@ -1,15 +1,17 @@
 package scriptease.gui.filters;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.model.CodeBlock;
+import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
@@ -37,22 +39,42 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 
 	private String searchText;
 
-	// TODO Store by string. Sort the map for more efficient search.
-	// TODO Add a translator listener to update this map
-	private static Map<String, Collection<StoryComponent>> searchMap = new HashMap<String, Collection<StoryComponent>>();
+	// Stored by string. Sort the map for more efficient search.
+	private static Map<String, Collection<StoryComponent>> searchMap = new TreeMap<String, Collection<StoryComponent>>();
 
+	// Reloads the search map when we load up a new translator
 	private static TranslatorObserver translatorObserver = new TranslatorObserver() {
 		@Override
 		public void translatorLoaded(Translator newTranslator) {
-			// TODO Reload the search map.
+			/*for (LibraryModel library : newTranslator.getLibraries()) {
+				for (StoryComponent component : library.getAllStoryComponents()) {
+					final Collection<String> searchData;
+
+					searchData = getSearchDataForComponent(component);
+
+					for (String data : searchData) {
+						final Collection<StoryComponent> value;
+
+						value = searchMap.get(data);
+
+						if (value == null) {
+							final Collection<StoryComponent> storyComponents;
+
+							storyComponents = new ArrayList<StoryComponent>();
+
+							storyComponents.add(component);
+						} else if (!value.contains(component)) {
+							value.add(component);
+						}
+					}
+				}
+			}*/
 		}
 	};
 
 	static {
-		// TODO will have to uncomment once we have reverse index search
-
-		// TranslatorManager.getInstance().addTranslatorObserver(
-		// translatorObserver);
+		TranslatorManager.getInstance().addTranslatorObserver(
+				translatorObserver);
 	}
 
 	public StoryComponentSearchFilter(String searchText) {
@@ -87,11 +109,16 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 		// TODO This should instead search the map.
 
 		if (key != null && !key.trim().isEmpty()) {
-			searchableData = getSearchDataForComponent(component);
-			count = countKeyMatches(searchableData, key);
+			//searchableData = getSearchDataForComponent(component);
+
+			if(searchMap.get(key).contains(component)) {
+				return 1;
+			}
+			
+			//count = countKeyMatches(searchableData, key);
 		}
 
-		return count;
+		return 0;
 	}
 
 	/**
@@ -100,7 +127,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	 * @param component
 	 * @return
 	 */
-	private Collection<String> getSearchDataForComponent(
+	private static Collection<String> getSearchDataForComponent(
 			StoryComponent component) {
 		SearchDataCompiler searchData = new SearchDataCompiler();
 		component.process(searchData);
@@ -175,7 +202,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	 * @author mfchurch
 	 * 
 	 */
-	private class SearchDataCompiler extends StoryAdapter {
+	private static class SearchDataCompiler extends StoryAdapter {
 		private final Collection<String> searchData;
 
 		private SearchDataCompiler() {

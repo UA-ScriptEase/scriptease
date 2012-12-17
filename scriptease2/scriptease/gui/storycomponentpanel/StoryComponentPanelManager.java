@@ -91,10 +91,12 @@ public class StoryComponentPanelManager {
 		if (clearSelection)
 			clearSelection();
 		if (selectable) {
-			for (StoryComponentPanel subPanel : panel
-					.getDescendantStoryComponentPanels()) {
-				this.selected.put(subPanel, isSelected);
-			}
+
+			if (!(panel.getStoryComponent() instanceof StoryPoint))
+				for (StoryComponentPanel subPanel : panel
+						.getDescendantStoryComponentPanels()) {
+					this.selected.put(subPanel, isSelected);
+				}
 
 			this.selected.put(panel, isSelected);
 

@@ -131,9 +131,14 @@ public class StoryComponentPanelFactory {
 				if (parentTree != null) {
 					childPanel.updateComplexSettings();
 				}
+
+				boolean select = false;
 				// if the parent is selected, select the child as well
-				boolean select = selectionManager.getSelectedPanels().contains(
-						panel);
+				if (!(parent instanceof StoryPoint)) {
+					select = selectionManager.getSelectedPanels().contains(
+							panel);
+				}
+
 				selectionManager.addComplexPanel(childPanel, select);
 			}
 		} else {

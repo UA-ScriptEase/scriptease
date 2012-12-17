@@ -3,6 +3,8 @@ package scriptease.gui.storycomponentpanel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
@@ -13,6 +15,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputListener;
 
@@ -314,7 +317,7 @@ public class StoryComponentPanel extends JPanel implements
 			 */
 			@Override
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
-			//	boolean notRoot = (complex.getOwner() != null);
+				// boolean notRoot = (complex.getOwner() != null);
 				panel.setSelectable(true);
 				panel.setRemovable(true);
 			}
@@ -401,21 +404,31 @@ public class StoryComponentPanel extends JPanel implements
 				e.consume();
 			}
 
+			private final Timer hoverTimer = new Timer(100,
+					new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+
+							previousColor = panel.getBackground();
+
+							final Color hoverColor;
+
+							hoverColor = GUIOp.scaleWhite(previousColor, 0.9);
+
+							panel.setBackground(hoverColor);
+
+							for (StoryComponentPanel descendant : panel
+									.getDescendantStoryComponentPanels()) {
+								descendant.setBackground(hoverColor);
+							}
+
+							hoverTimer.stop();
+						};
+					});
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				if (!(panel.getStoryComponent() instanceof StoryPoint)) {
-					this.previousColor = panel.getBackground();
-
-					final Color hoverColor;
-
-					hoverColor = GUIOp.scaleWhite(this.previousColor, 0.9);
-
-					this.panel.setBackground(hoverColor);
-
-					for (StoryComponentPanel descendant : this.panel
-							.getDescendantStoryComponentPanels()) {
-						descendant.setBackground(hoverColor);
-					}
+					hoverTimer.restart();
 				}
 
 				e.consume();
@@ -423,6 +436,8 @@ public class StoryComponentPanel extends JPanel implements
 
 			@Override
 			public void mouseExited(MouseEvent e) {
+				hoverTimer.stop();
+				
 				if (!(panel.getStoryComponent() instanceof StoryPoint)) {
 					this.panel.getSelectionManager().updatePanelBackgrounds();
 				}
