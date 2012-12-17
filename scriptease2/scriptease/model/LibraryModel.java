@@ -406,45 +406,6 @@ public class LibraryModel extends PatternModel implements
 		components.addAll(this.controllersCategory.getChildren());
 		components.addAll(this.noteContainer.getChildren());
 
-		// Get the implicit and parameters of the binding scriptIts
-		final Collection<StoryComponent> implicitsAndParameters = new ArrayList<StoryComponent>();
-		for (StoryComponent component : components) {
-			component.process(new StoryAdapter() {
-				@Override
-				public void processScriptIt(ScriptIt scriptIt) {
-					Collection<KnowIt> implicits = scriptIt.getImplicits();
-					for (KnowIt implicit : implicits) {
-						if (!implicitsAndParameters.contains(implicit)) {
-							implicitsAndParameters.add(implicit);
-							implicit.process(this);
-						}
-					}
-					Collection<KnowIt> parameters = scriptIt.getParameters();
-					for (KnowIt parameter : parameters) {
-						if (!implicitsAndParameters.contains(parameter)) {
-							implicitsAndParameters.add(parameter);
-							parameter.process(this);
-						}
-					}
-				}
-
-				@Override
-				public void processKnowIt(KnowIt knowIt) {
-					knowIt.getBinding().process(new BindingAdapter() {
-						@Override
-						public void processFunction(
-								KnowItBindingFunction function) {
-							ScriptIt scriptIt = function.getValue();
-							if (!implicitsAndParameters.contains(scriptIt)) {
-								implicitsAndParameters.add(scriptIt);
-								processScriptIt(scriptIt);
-							}
-						}
-					});
-				}
-			});
-		}
-		components.addAll(implicitsAndParameters);
 		return components;
 	}
 
