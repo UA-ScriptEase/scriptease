@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
-import javax.swing.border.Border;
 
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.undo.UndoManager;
@@ -18,6 +17,7 @@ import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * 
@@ -287,6 +287,11 @@ public class StoryComponentPanelManager {
 	 */
 	private void displayPanelSelection(final StoryComponentPanel panel,
 			final Boolean isSelected) {
+		if (panel.getStoryComponent() instanceof StoryPoint) {
+			panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
+			return;
+		}
+
 		if (isSelected) {
 			panel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
 			StoryComponentPanel parentStoryComponentPanel = panel

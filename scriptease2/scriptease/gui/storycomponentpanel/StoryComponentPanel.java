@@ -314,9 +314,9 @@ public class StoryComponentPanel extends JPanel implements
 			 */
 			@Override
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
-				boolean notRoot = (complex.getOwner() != null);
-				panel.setSelectable(notRoot);
-				panel.setRemovable(notRoot);
+			//	boolean notRoot = (complex.getOwner() != null);
+				panel.setSelectable(true);
+				panel.setRemovable(true);
 			}
 
 			@Override
