@@ -1,16 +1,28 @@
 package scriptease.gui.filters;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
+import scriptease.controller.observer.TranslatorObserver;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.translator.Translator;
+import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.DescribeItManager;
 
 /**
  * Accepts StoryComponents if one of their properties contains the text given in
@@ -24,6 +36,24 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	private static final String QUOTES_ONLY = "\"";
 
 	private String searchText;
+
+	// TODO Store by string. Sort the map for more efficient search.
+	// TODO Add a translator listener to update this map
+	private static Map<String, Collection<StoryComponent>> searchMap = new HashMap<String, Collection<StoryComponent>>();
+
+	private static TranslatorObserver translatorObserver = new TranslatorObserver() {
+		@Override
+		public void translatorLoaded(Translator newTranslator) {
+			// TODO Reload the search map.
+		}
+	};
+
+	static {
+		// TODO will have to uncomment once we have reverse index search
+
+		// TranslatorManager.getInstance().addTranslatorObserver(
+		// translatorObserver);
+	}
 
 	public StoryComponentSearchFilter(String searchText) {
 		this.searchText = searchText;
@@ -54,6 +84,8 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 		final Collection<String> searchableData;
 		Integer count = 1;
 
+		// TODO This should instead search the map.
+
 		if (key != null && !key.trim().isEmpty()) {
 			searchableData = getSearchDataForComponent(component);
 			count = countKeyMatches(searchableData, key);
@@ -71,7 +103,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	private Collection<String> getSearchDataForComponent(
 			StoryComponent component) {
 		SearchDataCompiler searchData = new SearchDataCompiler();
-		searchData.compile(component);
+		component.process(searchData);
 		return searchData.getData();
 	}
 
@@ -144,15 +176,10 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	 * 
 	 */
 	private class SearchDataCompiler extends StoryAdapter {
-		private Collection<String> searchData;
+		private final Collection<String> searchData;
 
 		private SearchDataCompiler() {
 			this.searchData = new CopyOnWriteArraySet<String>();
-		}
-
-		private void compile(StoryComponent component) {
-			this.searchData.add(component.getDisplayText());
-			component.process(this);
 		}
 
 		private Collection<String> getData() {
@@ -161,13 +188,14 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 
 		@Override
 		protected void defaultProcess(StoryComponent component) {
+			this.searchData.add(component.getDisplayText());
 			this.searchData.addAll(component.getLabels());
 		}
 
 		@Override
 		public void processAskIt(AskIt askIt) {
 			defaultProcess(askIt);
-			this.compile(askIt.getCondition());
+			askIt.getCondition().process(this);
 		}
 
 		@Override
@@ -178,10 +206,10 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 				if (binding.isBound())
 					// allow searching of bound values
 					this.searchData.add(binding.getScriptValue());
-				this.compile(parameter);
+				parameter.process(this);
 			}
 			for (KnowIt implicit : scriptIt.getImplicits()) {
-				this.compile(implicit);
+				implicit.process(this);
 			}
 
 			// searchable by slot
@@ -195,7 +223,49 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
 			defaultProcess(knowIt);
+
 			this.searchData.addAll(knowIt.getTypes());
+
+			knowIt.getBinding().process(new BindingAdapter() {
+
+				@Override
+				public void processConstant(KnowItBindingConstant constant) {
+					searchData.add(constant.getName());
+					searchData.add(constant.getTag());
+					searchData.add(constant.getScriptValue());
+					searchData.add(constant.getTemplateID());
+
+					searchData.addAll(constant.getTypes());
+				}
+
+				@Override
+				public void processFunction(KnowItBindingFunction function) {
+					function.getValue().process(SearchDataCompiler.this);
+				}
+
+				@Override
+				public void processReference(KnowItBindingReference reference) {
+					reference.getValue().process(SearchDataCompiler.this);
+				}
+
+				@Override
+				public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
+					storyPoint.getValue().process(SearchDataCompiler.this);
+				}
+			});
+
+			final DescribeItManager describeItManager;
+			final DescribeIt describeIt;
+
+			describeItManager = TranslatorManager.getInstance()
+					.getActiveAPIDictionary().getDescribeItManager();
+			describeIt = describeItManager.getDescribeIt(knowIt);
+
+			if (describeIt != null) {
+				for (ScriptIt scriptIt : describeIt.getScriptIts()) {
+					scriptIt.process(this);
+				}
+			}
 		}
 	}
 }
