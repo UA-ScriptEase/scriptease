@@ -27,6 +27,7 @@ import scriptease.gui.control.ExpansionButton;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryPoint;
 import scriptease.util.GUIOp;
 
 /**
@@ -402,17 +403,19 @@ public class StoryComponentPanel extends JPanel implements
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				this.previousColor = ((JComponent) e.getSource()).getBackground();
+				if (!(panel.getStoryComponent() instanceof StoryPoint)) {
+					this.previousColor = panel.getBackground();
 
-				final Color hoverColor;
+					final Color hoverColor;
 
-				hoverColor = GUIOp.scaleWhite(this.previousColor, 0.9);
+					hoverColor = GUIOp.scaleWhite(this.previousColor, 0.9);
 
-				this.panel.setBackground(hoverColor);
+					this.panel.setBackground(hoverColor);
 
-				for (StoryComponentPanel descendant : this.panel
-						.getDescendantStoryComponentPanels()) {
-					descendant.setBackground(hoverColor);
+					for (StoryComponentPanel descendant : this.panel
+							.getDescendantStoryComponentPanels()) {
+						descendant.setBackground(hoverColor);
+					}
 				}
 
 				e.consume();
@@ -420,7 +423,9 @@ public class StoryComponentPanel extends JPanel implements
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				this.panel.getSelectionManager().updatePanelBackgrounds();
+				if (!(panel.getStoryComponent() instanceof StoryPoint)) {
+					this.panel.getSelectionManager().updatePanelBackgrounds();
+				}
 				e.consume();
 			}
 		};

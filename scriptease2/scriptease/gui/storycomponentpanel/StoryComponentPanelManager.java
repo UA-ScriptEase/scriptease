@@ -1,5 +1,6 @@
 package scriptease.gui.storycomponentpanel;
 
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,10 +9,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
+
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ScriptIt;
 
 /**
  * 
@@ -293,7 +299,36 @@ public class StoryComponentPanelManager {
 				panel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
 		} else {
 			panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
-			panel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
+			final StoryComponent panelComponent;
+
+			panelComponent = panel.getStoryComponent();
+
+			panelComponent.process(new StoryAdapter() {
+				@Override
+				protected void defaultProcessComplex(
+						ComplexStoryComponent complex) {
+					this.defaultProcess(complex);
+				}
+
+				@Override
+				protected void defaultProcess(StoryComponent component) {
+					panel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
+				}
+
+				@Override
+				public void processScriptIt(ScriptIt scriptIt) {
+					if (scriptIt.isCause())
+						panel.setBorder(BorderFactory
+								.createLineBorder(Color.LIGHT_GRAY));
+					else
+						this.defaultProcess(scriptIt);
+				}
+
+				@Override
+				protected void defaultProcessAtomic(StoryComponent atom) {
+					this.defaultProcess(atom);
+				}
+			});
 		}
 	}
 
