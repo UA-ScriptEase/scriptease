@@ -1,5 +1,6 @@
 package scriptease.gui.storycomponentpanel;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.FocusEvent;
@@ -26,6 +27,7 @@ import scriptease.gui.control.ExpansionButton;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.util.GUIOp;
 
 /**
  * JPanel used to properly observe and redraw its component. Can be editable and
@@ -102,7 +104,7 @@ public class StoryComponentPanel extends JPanel implements
 				}
 			}
 		});
-		
+
 		this.setVisible(component.isVisible());
 	}
 
@@ -335,6 +337,8 @@ public class StoryComponentPanel extends JPanel implements
 	private MouseInputListener mouseListener() {
 		return new MouseInputListener() {
 			private StoryComponentPanel panel = StoryComponentPanel.this;
+			private Color previousColor = StoryComponentPanel.this
+					.getBackground();
 
 			/**
 			 * Toggle a drag event manually
@@ -398,11 +402,25 @@ public class StoryComponentPanel extends JPanel implements
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
+				this.previousColor = ((JComponent) e.getSource()).getBackground();
+
+				final Color hoverColor;
+
+				hoverColor = GUIOp.scaleWhite(this.previousColor, 0.9);
+
+				this.panel.setBackground(hoverColor);
+
+				for (StoryComponentPanel descendant : this.panel
+						.getDescendantStoryComponentPanels()) {
+					descendant.setBackground(hoverColor);
+				}
+
 				e.consume();
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
+				this.panel.getSelectionManager().updatePanelBackgrounds();
 				e.consume();
 			}
 		};
