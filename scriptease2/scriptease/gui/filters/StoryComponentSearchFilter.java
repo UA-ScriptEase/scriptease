@@ -4,13 +4,21 @@ import java.util.Collection;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.DescribeItManager;
 
 /**
  * Accepts StoryComponents if one of their properties contains the text given in
@@ -71,7 +79,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	private Collection<String> getSearchDataForComponent(
 			StoryComponent component) {
 		SearchDataCompiler searchData = new SearchDataCompiler();
-		searchData.compile(component);
+		component.process(searchData);
 		return searchData.getData();
 	}
 
@@ -144,15 +152,10 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	 * 
 	 */
 	private class SearchDataCompiler extends StoryAdapter {
-		private Collection<String> searchData;
+		private final Collection<String> searchData;
 
 		private SearchDataCompiler() {
 			this.searchData = new CopyOnWriteArraySet<String>();
-		}
-
-		private void compile(StoryComponent component) {
-			this.searchData.add(component.getDisplayText());
-			component.process(this);
 		}
 
 		private Collection<String> getData() {
@@ -161,13 +164,14 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 
 		@Override
 		protected void defaultProcess(StoryComponent component) {
+			this.searchData.add(component.getDisplayText());
 			this.searchData.addAll(component.getLabels());
 		}
 
 		@Override
 		public void processAskIt(AskIt askIt) {
 			defaultProcess(askIt);
-			this.compile(askIt.getCondition());
+			askIt.getCondition().process(this);
 		}
 
 		@Override
@@ -178,17 +182,10 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 				if (binding.isBound())
 					// allow searching of bound values
 					this.searchData.add(binding.getScriptValue());
-				this.compile(parameter);
+				parameter.process(this);
 			}
-			// searchable by implicit
-			// int i = 0;
-			// System.out.println("Size of Implicits" +
-			// scriptIt.getImplicits().size());
 			for (KnowIt implicit : scriptIt.getImplicits()) {
-				// i++;
-				// System.out.println("Index of Implicit: " + i);
-				// More problems here it seems
-				this.compile(implicit);
+				implicit.process(this);
 			}
 
 			// searchable by slot
@@ -202,7 +199,49 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
 			defaultProcess(knowIt);
+
 			this.searchData.addAll(knowIt.getTypes());
+
+			knowIt.getBinding().process(new BindingAdapter() {
+
+				@Override
+				public void processConstant(KnowItBindingConstant constant) {
+					searchData.add(constant.getName());
+					searchData.add(constant.getTag());
+					searchData.add(constant.getScriptValue());
+					searchData.add(constant.getTemplateID());
+
+					searchData.addAll(constant.getTypes());
+				}
+
+				@Override
+				public void processFunction(KnowItBindingFunction function) {
+					function.getValue().process(SearchDataCompiler.this);
+				}
+
+				@Override
+				public void processReference(KnowItBindingReference reference) {
+					reference.getValue().process(SearchDataCompiler.this);
+				}
+
+				@Override
+				public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
+					storyPoint.getValue().process(SearchDataCompiler.this);
+				}
+			});
+
+			final DescribeItManager describeItManager;
+			final DescribeIt describeIt;
+
+			describeItManager = TranslatorManager.getInstance()
+					.getActiveAPIDictionary().getDescribeItManager();
+			describeIt = describeItManager.getDescribeIt(knowIt);
+
+			if (describeIt != null) {
+				for (ScriptIt scriptIt : describeIt.getScriptIts()) {
+					scriptIt.process(this);
+				}
+			}
 		}
 	}
 }

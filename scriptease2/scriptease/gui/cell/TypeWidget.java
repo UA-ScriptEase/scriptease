@@ -61,22 +61,30 @@ public class TypeWidget extends JToggleButton implements TranslatorObserver {
 				.loadedAPIDictionary()) ? activeTranslator.getGameTypeManager()
 				.getDisplayText(this.type) : "";
 
-		setTypeText(typeName);
+		setTypeText(type);
+		this.setToolTipText(typeName);
 		TranslatorManager.getInstance().addTranslatorObserver(this);
 	}
 
-	private void setTypeText(String typeName) {
-		if (typeName.equals("")) {
+	private void setTypeText(String type) {
+		if (type.equals("")) {
 			// Unknown type. Translator is probably not loaded.
 			this.setText("!");
 			this.setEnabled(false);
 		} else {
-			if (typeName.equalsIgnoreCase(GameTypeManager.DEFAULT_BOOL_TYPE))
-				// Duane wanted AskIts and booleans to have a question mark for
-				// their type widget.
-				this.setText("?");
-			else
-				this.setText(typeName.substring(0, 1).toUpperCase());
+			final GameTypeManager gameTypeManager;
+
+			gameTypeManager = TranslatorManager.getInstance()
+					.getActiveGameTypeManager();
+
+			if (gameTypeManager.hasWidgetName(type)) {
+				this.setText(gameTypeManager.getWidgetName(type));
+			} else {
+				if (gameTypeManager.hasEnum(type))
+					this.setText("Li");
+				else
+					this.setText(type.substring(0, 2).toUpperCase());
+			}
 		}
 	}
 
@@ -98,7 +106,8 @@ public class TypeWidget extends JToggleButton implements TranslatorObserver {
 		typeName = newTranslator != null ? newTranslator.getGameTypeManager()
 				.getDisplayText(this.type) : "";
 
-		setTypeText(typeName);
+		if (typeName == null || typeName.equals(""))
+			setTypeText("");
 	}
 
 	@Override

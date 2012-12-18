@@ -19,9 +19,6 @@ public class LineFragmentConverter implements Converter {
 			MarshallingContext context) {
 		final LineFragment line = (LineFragment) source;
 
-		if(line.getSubFragments().size() == 5)
-			System.out.println();;
-		
 		// Write Sub Fragments
 		context.convertAnother(line.getSubFragments());
 	}

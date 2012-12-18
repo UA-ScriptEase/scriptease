@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
 import scriptease.model.atomic.KnowIt;
+import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.Slot;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -30,6 +31,12 @@ public class SlotConverter implements Converter {
 			MarshallingContext context) {
 		final Slot slot = (Slot) source;
 
+		if (!slot.getFormatKeyword().equals(
+				TranslatorManager.getInstance().getActiveAPIDictionary()
+						.getEventSlotManager().getDefaultFormatKeyword())) {
+			writer.addAttribute(TAG_FORMAT, slot.getFormatKeyword());
+		}
+		
 		// Write Name
 		writer.startNode(TAG_NAME);
 		writer.setValue(slot.getDisplayName());

@@ -78,8 +78,8 @@ public class GameConstantPanel extends JPanel {
 
 		allGameObjects = new ArrayList<GameConstant>();
 
-		final List<GameConstant> resourcesOfType = model.getModule().getResourcesOfType(
-				type);
+		final List<GameConstant> resourcesOfType = model.getModule()
+				.getResourcesOfType(type);
 		for (GameConstant gameConstant : resourcesOfType) {
 			if (matchesSearchText(gameConstant, searchText))
 				allGameObjects.add(gameConstant);
@@ -157,9 +157,9 @@ public class GameConstantPanel extends JPanel {
 	public void drawTree(PatternModel model, final String searchText,
 			final Collection<String> validTypes) {
 		this.removeAll();
-		
+
 		final List<String> types;
-		
+
 		types = new ArrayList<String>(validTypes);
 
 		if (model == null || !(model instanceof StoryModel)) {
@@ -305,45 +305,8 @@ public class GameConstantPanel extends JPanel {
 			gameObjectBindingWidget = new BindingWidget(
 					new KnowItBindingConstant(gameConstant));
 
-			// If the name is longer than 5 characters, shorten it and add a
-			// MouseListener to display longer name when clicked
-			if (StringOp.wordCount(regularText) > 5) {
-				final String shortText;
-
-				shortText = shortenText(regularText);
-
-				gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(
-						shortText, Color.WHITE));
-
-				gameObjectBindingWidget.addMouseListener(new MouseAdapter() {
-					boolean textIsShortened = true;
-
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						final String newText;
-
-						for (Component component : gameObjectBindingWidget
-								.getComponents())
-							if (component instanceof JLabel)
-								gameObjectBindingWidget.remove(component);
-
-						if (textIsShortened)
-							newText = regularText;
-						else
-							newText = shortText;
-
-						gameObjectBindingWidget.add(ScriptWidgetFactory
-								.buildLabel(newText, Color.WHITE));
-
-						gameObjectBindingWidget.revalidate();
-
-						textIsShortened = !textIsShortened;
-					}
-				});
-			} else
-				// Otherwise, just use the normal, long name
-				gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(
-						regularText, Color.WHITE));
+			gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(
+					regularText, Color.WHITE));
 
 			gameObjectBindingWidget.setBorder(BorderFactory.createEmptyBorder(
 					ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
@@ -458,31 +421,6 @@ public class GameConstantPanel extends JPanel {
 			indentedPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 			return indentedPanel;
-		}
-
-		/**
-		 * Shortens the text to fit on the binding widget.
-		 * 
-		 * @param text
-		 *            The text to shorten
-		 * @return
-		 */
-		private String shortenText(final String text) {
-			String truncatedVersion = "";
-			int firstSpace = 0;
-			int secondSpace = 0;
-
-			firstSpace = text.indexOf(" ");
-			secondSpace = text.indexOf(" ", firstSpace + 1);
-
-			int lastSpace = text.lastIndexOf(" ");
-			int penultimateSpace = text.substring(0, lastSpace - 1)
-					.lastIndexOf(" ");
-
-			truncatedVersion = text.substring(0, secondSpace + 1) + " ... "
-					+ text.substring(penultimateSpace, text.length());
-
-			return truncatedVersion;
 		}
 	}
 }

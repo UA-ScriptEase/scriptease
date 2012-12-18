@@ -76,8 +76,8 @@ public final class AskIt extends ComplexStoryComponent {
 		// Add an empty askIt
 		types.add(GameTypeManager.DEFAULT_BOOL_TYPE);
 
-		this.setCondition(new KnowIt("question", types));
-		this.setDisplayText("<question>");
+		this.setCondition(new KnowIt("Question", types));
+		this.setDisplayText("<Question>");
 
 		// AskIts can have two children of type StoryItemSequence. These
 		// function as containers for the If/Else blocks

@@ -79,7 +79,11 @@ public class CodeBlockReference extends CodeBlock {
 		// parameters
 		clonedParameters = new ArrayList<KnowIt>(this.getParameters().size());
 		for (KnowIt parameter : this.getParameters()) {
-			clonedParameters.add(parameter.clone());
+			final KnowIt clonedParameter;
+
+			clonedParameter = parameter.clone();
+
+			clonedParameters.add(clonedParameter);
 		}
 		clone.setParameters(clonedParameters);
 

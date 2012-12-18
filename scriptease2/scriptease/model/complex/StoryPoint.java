@@ -60,7 +60,7 @@ public class StoryPoint extends ComplexStoryComponent {
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
 		if (name.equals("") || name == null) {
-			name = NEW_STORY_POINT + " " + this.uniqueID;
+			name = NEW_STORY_POINT;
 		}
 
 		this.setDisplayText(name);
@@ -240,10 +240,6 @@ public class StoryPoint extends ComplexStoryComponent {
 
 	@Override
 	public boolean equals(Object other) {
-		System.out.println("StoryPoint #" + this.hashCode() + " "
-				+ this.getDisplayText());
-		System.out.println("StoryPoint #" + other.hashCode() + " "
-				+ ((StoryPoint) other).getDisplayText());
 		return this.hashCode() == other.hashCode();
 	}
 

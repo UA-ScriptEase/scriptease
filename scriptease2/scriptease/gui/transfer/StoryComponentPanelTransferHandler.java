@@ -2,7 +2,6 @@ package scriptease.gui.transfer;
 
 import java.awt.Component;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -15,7 +14,7 @@ import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JList;
-import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.TransferHandler;
 
@@ -26,17 +25,13 @@ import scriptease.gui.libraryeditor.EffectHolderPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
-import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
-import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
-import scriptease.translator.APIDictionary;
-import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.DescribeItManager;
+import scriptease.util.GUIOp;
 
 /**
  * StoryComponentPanelTransferHandler is a more specific TransferHandler that is
@@ -149,42 +144,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 				bottomComponent = ((JSplitPane) component).getBottomComponent();
 				if (bottomComponent instanceof StoryComponentPanelTree) {
-					final int SCROLL_RECT_HEIGHT = 20;
+					final JScrollPane pane = (StoryComponentPanelTree) bottomComponent;
 
-					final StoryComponentPanelTree tree;
-					final JScrollBar scrollBar;
-					final Point mousePosition;
-
-					final int scrollBarValue;
-					final Rectangle viewPort;
-					final Rectangle topScrollRectangle;
-					final Rectangle bottomScrollRectangle;
-
-					tree = (StoryComponentPanelTree) bottomComponent;
-					scrollBar = tree.getVerticalScrollBar();
-					mousePosition = bottomComponent.getMousePosition();
-
-					if (mousePosition == null)
-						continue;
-
-					scrollBarValue = scrollBar.getValue();
-					viewPort = ((StoryComponentPanelTree) bottomComponent)
-							.getViewportBorderBounds();
-					topScrollRectangle = new Rectangle(0, 0, viewPort.width,
-							SCROLL_RECT_HEIGHT);
-					bottomScrollRectangle = new Rectangle(0, viewPort.height
-							- SCROLL_RECT_HEIGHT, viewPort.width,
-							SCROLL_RECT_HEIGHT);
-
-					if (topScrollRectangle.contains(mousePosition)) {
-						scrollBar.setValue(scrollBarValue
-								- ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
-						break;
-					} else if (bottomScrollRectangle.contains(mousePosition)) {
-						scrollBar.setValue(scrollBarValue
-								+ ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
-						break;
-					}
+					GUIOp.scrollJScrollPaneToMousePosition(pane);
 				}
 			}
 		}
@@ -307,20 +269,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				final StoryComponent clone;
 				clone = newChild.clone();
 
-				final APIDictionary apiDictionary;
-				final DescribeItManager describeItManager;
-				final DescribeIt describeIt;
-
-				apiDictionary = TranslatorManager.getInstance()
-						.getActiveAPIDictionary();
-
-				describeItManager = apiDictionary.getDescribeItManager();
-				describeIt = describeItManager.getDescribeIt(newChild);
-
-				if (describeIt != null) {
-					describeItManager.addDescribeIt(describeIt, clone);
-				}
-
 				StoryComponent sibling = parent.getChildAt(insertionIndex);
 				if (sibling != null) {
 					// add in the middle
@@ -328,8 +276,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				} else {
 					success = parent.addStoryChild(clone);
 				}
-
-				// Remove the bindings if this is a scriptit.
 
 				clone.revalidateKnowItBindings();
 

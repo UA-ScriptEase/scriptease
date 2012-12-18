@@ -60,6 +60,12 @@ public class EffectHolderPanel extends JPanel {
 		if (effect != null && ((ScriptIt) effect).isCause())
 			return false;
 
+		/*
+		 * TODO FIXME XXX We're doing this backwards. We should be listening to
+		 * changes to the DescribeIt, not the other way around. That way, this
+		 * should automatically not accept invalid types, etc. We shouldn't be
+		 * checking for that stuff in the View classes!
+		 */
 		this.effect = effect;
 		this.removeAll();
 

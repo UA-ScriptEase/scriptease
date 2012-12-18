@@ -280,13 +280,13 @@ public class Context {
 		return null;
 	}
 
-	public StoryItemSequence getStoryChild() {
-		unimplemented("getStoryChild");
+	public StoryItemSequence getActiveChild() {
+		unimplemented("getActiveChild");
 		return null;
 	}
 
-	public StoryItemSequence getAlwaysChild() {
-		unimplemented("getAlwaysChild");
+	public StoryItemSequence getInactiveChild() {
+		unimplemented("getInactiveChild");
 		return null;
 	}
 
@@ -330,8 +330,21 @@ public class Context {
 		Iterator<ScriptIt> scriptIts = this.getScriptIts();
 		while (scriptIts.hasNext()) {
 			final ScriptIt scriptIt = scriptIts.next();
-			if (scriptIt.isCause())
-				causes.add(scriptIt);
+			if (scriptIt.isCause()) {
+
+				boolean causeExists = false;
+
+				// TODO FIXME Not sure if this is a good way of checking for
+				// uniqueness.
+				for (ScriptIt cause : causes) {
+					if (cause.getDisplayText()
+							.equals(scriptIt.getDisplayText()))
+						causeExists = true;
+				}
+
+				if (!causeExists)
+					causes.add(scriptIt);
+			}
 		}
 		return causes.iterator();
 	}

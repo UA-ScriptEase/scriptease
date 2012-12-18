@@ -19,7 +19,7 @@ public class ScopeFragment extends AbstractContainerFragment {
 		this.nameRef = "";
 		this.subFragments = new ArrayList<AbstractFragment>();
 	}
-	
+
 	/**
 	 * ScopeFragment is a fragment which narrows the context to the specified
 	 * dataLabel. Works similarily to SeriesFragment except on a single object
@@ -44,7 +44,7 @@ public class ScopeFragment extends AbstractContainerFragment {
 	public void setSubFragments(List<AbstractFragment> subFragments) {
 		this.subFragments = subFragments;
 	}
-	
+
 	public void setNameRef(String nameRef) {
 		this.nameRef = nameRef;
 	}
@@ -63,7 +63,8 @@ public class ScopeFragment extends AbstractContainerFragment {
 		if (scope != null) {
 			Context newContext = ContextFactory.getInstance().createContext(
 					context, scope);
-			return (AbstractFragment.resolveFormat(this.subFragments, newContext));
+			return (AbstractFragment.resolveFormat(this.subFragments,
+					newContext));
 		} else
 			return "< Scope was unable to be resolved for data: "
 					+ this.getDirectiveText() + " >";
@@ -79,30 +80,54 @@ public class ScopeFragment extends AbstractContainerFragment {
 		final String dataLabel = this.getDirectiveText();
 
 		// IF+ELSE BLOCK (scope data= <dataLabel> )
-		if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.SUBJECT.name()))
+		if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.SUBJECT
+						.name()))
 			return context.getSubject();
-		else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.OWNER.name()))
+		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.OWNER
+						.name()))
 			return context.getOwner();
-		else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.ARGUMENT.name()))
+		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.ARGUMENT
+						.name()))
 			return context.getParameter(this.nameRef);
-		else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.MAINCODEBLOCK.name()))
+		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.MAINCODEBLOCK
+						.name()))
 			return context.getMainCodeBlock();
-		else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.SCRIPTIT.name()))
+		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.SCRIPTIT
+						.name()))
 			return context.getScriptIt(this.nameRef);
-		else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.ASKIT.name()))
+		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.ASKIT
+						.name()))
 			return context.getAskIt();
-		else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.IFCHILD.name()))
+		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.IFCHILD
+						.name()))
 			return context.getIfChild();
-		else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.ELSECHILD.name()))
+		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.ELSECHILD
+						.name()))
 			return context.getElseChild();
-		else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.BINDING.name()))
+		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.BINDING
+						.name()))
 			return context.getBinding();
-		else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.START.name()))
-			return context.getStartStoryPoint(); 
-		else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.STORYCHILD.name()))
-			return context.getStoryChild();
-		else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.ALWAYSCHILD.name()))
-			return context.getAlwaysChild();
+		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.START
+						.name()))
+			return context.getStartStoryPoint();
+		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.ACTIVECHILD
+						.name()))
+			return context.getActiveChild();
+		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.INACTIVECHILD
+						.name()))
+			return context.getInactiveChild();
 		else {
 			System.err.println("Unrecognizable Scope tag : " + dataLabel);
 			return null;

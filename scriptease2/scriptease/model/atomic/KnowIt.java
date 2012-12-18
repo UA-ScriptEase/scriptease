@@ -23,8 +23,10 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
+import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.apimanagers.TypeConverter;
 import scriptease.translator.io.model.GameConstant;
@@ -97,6 +99,20 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		clone.types = new ArrayList<String>(this.types);
 
 		clone.setBinding(this.knowItBinding.clone());
+		
+		final APIDictionary apiDictionary;
+		final DescribeItManager describeItManager;
+		final DescribeIt describeIt;
+
+		apiDictionary = TranslatorManager.getInstance()
+				.getActiveAPIDictionary();
+
+		describeItManager = apiDictionary.getDescribeItManager();
+		describeIt = describeItManager.getDescribeIt(this);
+		
+		if (describeIt != null) {
+			describeItManager.addDescribeIt(describeIt, clone);
+		}
 
 		return clone;
 	}
@@ -206,7 +222,6 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		// invalid for the duration of the undo/redo
 		if (!UndoManager.getInstance().isUndoingOrRedoing()
 				&& !value.compatibleWith(this)) {
-			System.err.println(this + " is not compatible with " + value);
 			return;
 		}
 
@@ -250,8 +265,10 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				defaultProcess(reference);
 				// Observer the reference
 				final KnowIt knowIt = reference.getValue();
+
 				if (knowIt.getOwner() == null)
 					knowIt.setOwner(KnowIt.this);
+				
 				addObservers(knowIt);
 			}
 

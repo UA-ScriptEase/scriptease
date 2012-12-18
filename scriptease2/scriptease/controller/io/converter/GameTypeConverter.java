@@ -31,9 +31,10 @@ public class GameTypeConverter implements Converter {
 	private static final String TAG_SLOT = "Slot";
 	private static final String TAG_FORMAT = "Format";
 	private static final String TAG_GUI = "GUI";
+	private static final String TAG_WIDGETNAME = "WidgetName";
 	private static final String TAG_CODESYMBOL = "CodeSymbol";
-	private static final String TAG_ESCAPES = "Escapes";
 	private static final String TAG_ESCAPE = "Escape";
+	private static final String TAG_ESCAPES = "Escapes";
 
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
@@ -61,6 +62,12 @@ public class GameTypeConverter implements Converter {
 			context.convertAnother(type.getFormat());
 			writer.endNode();
 		}
+		// Write Reg
+		if (type.getReg() != null && !type.getReg().isEmpty()) {
+			writer.startNode(TAG_LEGAL_VALUES);
+			writer.setValue(type.getReg());
+			writer.endNode();
+		}
 
 		// Write Enum
 		String enumString = type.getEnumString();
@@ -70,10 +77,24 @@ public class GameTypeConverter implements Converter {
 			writer.endNode();
 		}
 
-		// Write Reg
-		if (type.getReg() != null && !type.getReg().isEmpty()) {
-			writer.startNode(TAG_LEGAL_VALUES);
-			writer.setValue(type.getReg());
+		// Write GUI
+		if (type.hasGUI()) {
+			writer.startNode(TAG_GUI);
+			context.convertAnother(type.getGui());
+			writer.endNode();
+		}
+
+		// Write Escapes
+		if (type.getEscapes() != null && !type.getEscapes().isEmpty()) {
+			writer.startNode(TAG_ESCAPES);
+			final Map<String, String> escapes = type.getEscapes();
+			for (Entry<String, String> entry : escapes.entrySet()) {
+				final String key = entry.getKey();
+				final String value = entry.getValue();
+				writer.startNode(TAG_ESCAPE);
+				writer.addAttribute("key", key);
+				writer.setValue(value);
+			}
 			writer.endNode();
 		}
 
@@ -88,22 +109,9 @@ public class GameTypeConverter implements Converter {
 			writer.endNode();
 		}
 
-		// Write Escapes
-		if (type.getEscapes() != null && !type.getEscapes().isEmpty()) {
-			final Map<String, String> escapes = type.getEscapes();
-			for (Entry<String, String> entry : escapes.entrySet()) {
-				final String key = entry.getKey();
-				final String value = entry.getValue();
-				writer.startNode(TAG_ESCAPE);
-				writer.addAttribute("key", key);
-				writer.setValue(value);
-			}
-		}
-
-		// Write GUI
-		if (type.getGui() != null) {
-			writer.startNode(TAG_GUI);
-			context.convertAnother(type.getGui());
+		if (type.hasWidgetName()) {
+			writer.startNode(TAG_WIDGETNAME);
+			context.convertAnother(type.getWidgetName());
 			writer.endNode();
 		}
 	}
@@ -120,6 +128,7 @@ public class GameTypeConverter implements Converter {
 		final Map<String, String> escapes = new HashMap<String, String>();
 		String enums = "";
 		String reg = "";
+		String widgetName = "";
 		TypeValueWidgets gui = null;
 		GameType type = null;
 
@@ -136,7 +145,7 @@ public class GameTypeConverter implements Converter {
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 			// Read Format
-			final String node = reader.getNodeName();
+			String node = reader.getNodeName();
 			if (node.equals(TAG_FORMAT)) {
 				fragments.addAll((Collection<AbstractFragment>) context
 						.convertAnother(type, ArrayList.class));
@@ -163,16 +172,24 @@ public class GameTypeConverter implements Converter {
 			if (node.equals(TAG_ESCAPES)) {
 				while (reader.hasMoreChildren()) {
 					reader.moveDown();
-					final String key = reader.getAttribute("key");
 					final String value = reader.getValue();
+					final String key = reader.getAttribute("key");
 					escapes.put(key, value);
 					reader.moveUp();
 				}
 			}
 
+			// Read Escapes
+			if (node.equals(TAG_SLOTS)) {
+				while (reader.hasMoreChildren()) {
+					slots.add(FileIO.readValue(reader, TAG_SLOT));
+				}
+			}
+
 			// Read GUI
 			if (node.equals(TAG_GUI)) {
-				final String guiStr = reader.getValue();
+				String guiStr = reader.getValue();
+
 				if (guiStr.equalsIgnoreCase(TypeValueWidgets.JCOMBOBOX
 						.toString()))
 					gui = TypeValueWidgets.JCOMBOBOX;
@@ -184,11 +201,16 @@ public class GameTypeConverter implements Converter {
 					gui = TypeValueWidgets.JTEXTFIELD;
 			}
 
+			// Read widget name
+			if (node.equals(TAG_WIDGETNAME)) {
+				widgetName = reader.getValue();
+			}
+
 			reader.moveUp();
 		}
 
 		type = new GameType(name, keyword, codeSymbol, fragments, slots, enums,
-				reg, escapes, gui);
+				reg, escapes, gui, widgetName);
 
 		return type;
 	}

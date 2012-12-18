@@ -61,6 +61,15 @@ public class CodeGenerator {
 
 	private static CodeGenerator instance = new CodeGenerator();
 
+	private enum ThreadMode {
+		SINGLE, MULTI
+	}
+
+	// XXX Change this to ThreadMode.MULTI to enable multi-threading.
+	// This has been disabled due to race conditions. See
+	// compileMultiThread(...) for more info.
+	private static ThreadMode THREAD_MODE = ThreadMode.SINGLE;
+
 	/**
 	 * Returns the sole instance of CodeGenerator.
 	 * 
@@ -77,8 +86,13 @@ public class CodeGenerator {
 	private ScriptInfo generateScriptFile(Context context) {
 
 		// generate the script file
-		String scriptContent = generateScript(context);
-		return new ScriptInfo(scriptContent, context.getLocationInfo());
+		final String scriptContent;
+		final LocationInformation location;
+
+		scriptContent = this.generateScript(context);
+		location = context.getLocationInfo();
+
+		return new ScriptInfo(scriptContent, location);
 	}
 
 	/**
@@ -116,6 +130,123 @@ public class CodeGenerator {
 	}
 
 	/**
+	 * Compiles the script buckets in multi threaded mode.
+	 * 
+	 * @param scriptBuckets
+	 * @param analyzer
+	 * @param translator
+	 * @deprecated Use
+	 *             {@link #compileSingleThread(Collection, SemanticAnalyzer, Translator)}
+	 *             until this is fixed.
+	 * @return
+	 */
+	private Collection<ScriptInfo> compileMultiThread(
+			Collection<Set<CodeBlock>> scriptBuckets,
+			final SemanticAnalyzer analyzer, Translator translator) {
+
+		final Collection<ScriptInfo> scriptInfos;
+
+		scriptInfos = new ArrayList<ScriptInfo>();
+		// Multithreaded
+
+		// XXX Multi-threading has been disabled. There is a race
+		// condition somewhere that causes code to compile wrong the
+		// first time through on larger stories.
+		final ExecutorService executor;
+
+		executor = Executors.newFixedThreadPool(scriptBuckets.size());
+
+		/*
+		 * This method is called so that we load the Language Dictionary if it
+		 * has not been loaded before. Otherwise, the following multithreaded
+		 * code will attempt to load the language dictionary in each thread,
+		 * creating a race condition.
+		 */
+		translator.getLanguageDictionary();
+
+		/*
+		 * A note on debugging:
+		 * 
+		 * If for some reason we are running into issues with multithreading,
+		 * make sure you do not print out or debug inside of the multithreaded
+		 * code. This will slow down function calls, which may make everything
+		 * work fine and give the false appearance that the bug is fixed.
+		 * Instead, debug or print out debug statements after the multiple
+		 * threads are finished.
+		 */
+		for (final Set<CodeBlock> bucket : scriptBuckets) {
+			// Spawn a new thread to compile the code
+			Runnable worker = new Runnable() {
+				@Override
+				public void run() {
+					final CodeBlock codeBlock;
+					final LocationInformation locationInfo;
+					final Context context;
+					final ScriptInfo generated;
+
+					// All CodeBlocks of a given bucket share slot and
+					// subject, so we can just use the first one
+					codeBlock = bucket.iterator().next();
+					locationInfo = new LocationInformation(codeBlock);
+					context = analyzer.buildContext(locationInfo);
+					generated = generateScriptFile(context);
+
+					scriptInfos.add(generated);
+				}
+			};
+			executor.execute(worker);
+		}
+		// This will make the executor accept no new threads and finish
+		// all existing threads in the queue
+		// executor.shutdown();
+		// Wait until all threads are finish before continuing.
+		while (!executor.isTerminated())
+			;
+
+		return scriptInfos;
+	}
+
+	/**
+	 * Compiles the script buckets in single threaded mode.
+	 * 
+	 * @param scriptBuckets
+	 * @param analyzer
+	 * @param translator
+	 * @return
+	 */
+	private Collection<ScriptInfo> compileSingleThread(
+			Collection<Set<CodeBlock>> scriptBuckets,
+			SemanticAnalyzer analyzer, Translator translator) {
+
+		final Collection<ScriptInfo> scriptInfos;
+
+		scriptInfos = new ArrayList<ScriptInfo>();
+		/*
+		 * This method is called so that we load the Language Dictionary if it
+		 * has not been loaded before.
+		 */
+		translator.getLanguageDictionary();
+
+		for (final Set<CodeBlock> bucket : scriptBuckets) {
+			final CodeBlock codeBlock;
+			final LocationInformation locationInfo;
+			final Context context;
+			final ScriptInfo generated;
+
+			// All CodeBlocks of a given bucket share slot and
+			// subject, so we can just use the first one
+			codeBlock = bucket.iterator().next();
+			locationInfo = new LocationInformation(codeBlock);
+			context = analyzer.buildContext(locationInfo);
+			generated = this.generateScriptFile(context);
+
+			scriptInfos.add(generated);
+		}
+
+		return scriptInfos;
+	}
+
+	/**
 	 * Generates the script files based on the current state of the model.
 	 * Returns the generated scriptInfo files, and any problems that may have
 	 * arisen during the process.
@@ -144,67 +275,22 @@ public class CodeGenerator {
 
 		// If no problems were detected, generate the scripts
 		if (problems.isEmpty()) {
-			// aggregate the scripts based on the storyPoints
+			final Collection<StoryComponent> storyPoints;
 			final Collection<Set<CodeBlock>> scriptBuckets;
 
-			scriptBuckets = module
-					.aggregateScripts(new ArrayList<StoryComponent>(root
-							.getDescendants()));
+			storyPoints = new ArrayList<StoryComponent>(root.getDescendants());
+			// aggregate the scripts based on the storyPoints
+			scriptBuckets = module.aggregateScripts(storyPoints);
 
 			if (scriptBuckets.size() > 0) {
-				// Multithreaded
-				final ExecutorService executor;
-
-				executor = Executors.newFixedThreadPool(scriptBuckets.size());
-
-				/*
-				 * This method is called so that we load the Language Dictionary
-				 * if it has not been loaded before. Otherwise, the following
-				 * multithreaded code will attempt to load the language
-				 * dictionary in each thread, creating a race condition.
-				 */
-				translator.getLanguageDictionary();
-
-				/*
-				 * A note on debugging:
-				 * 
-				 * If for some reason we are running into issues with
-				 * multithreading, make sure you do not print out or debug
-				 * inside of the multithreaded code. This will slow down
-				 * function calls, which may make everything work fine and give
-				 * the false appearance that the bug is fixed. Instead, debug or
-				 * print out debug statements after the multiple threads are
-				 * finished.
-				 */
-				for (final Set<CodeBlock> bucket : scriptBuckets) {
-					// Spawn a new thread to compile the code
-					Runnable worker = new Runnable() {
-						@Override
-						public void run() {
-							final CodeBlock codeBlock;
-							final LocationInformation locationInfo;
-							final Context context;
-							final ScriptInfo generated;
-
-							// All CodeBlocks of a given bucket share slot and
-							// subject, so we can just use the first one
-							codeBlock = bucket.iterator().next();
-							locationInfo = new LocationInformation(codeBlock);
-							context = analyzer.buildContext(locationInfo);
-							generated = generateScriptFile(context);
-
-							scriptInfos.add(generated);
-						}
-					};
-					executor.execute(worker);
-				}
-				// This will make the executor accept no new threads and finish
-				// all existing threads in the queue
-				executor.shutdown();
-				// Wait until all threads are finish before continuing.
-				while (!executor.isTerminated())
-					;
+				if (CodeGenerator.THREAD_MODE == ThreadMode.SINGLE)
+					scriptInfos.addAll(this.compileSingleThread(scriptBuckets,
+							analyzer, translator));
+				else if (CodeGenerator.THREAD_MODE == ThreadMode.MULTI)
+					scriptInfos.addAll(this.compileMultiThread(scriptBuckets,
+							analyzer, translator));
 			}
+
 		} else {
 			WindowFactory.getInstance().showCompileProblems(problems);
 		}

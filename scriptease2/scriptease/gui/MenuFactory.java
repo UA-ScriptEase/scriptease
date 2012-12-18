@@ -438,6 +438,11 @@ public class MenuFactory {
 		consoleOutputItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
+				for (LibraryModel model : TranslatorManager.getInstance()
+						.getActiveTranslator().getLibraries())
+					model.getAllStoryComponents();
+
 				System.out.println("Current Focus: "
 						+ FocusManager.getCurrentManager().getFocusOwner());
 			}

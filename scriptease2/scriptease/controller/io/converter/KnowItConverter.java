@@ -99,6 +99,8 @@ public class KnowItConverter extends StoryComponentConverter {
 						describeItManager = translator.getApiDictionary()
 								.getDescribeItManager();
 						bindingScriptIt = (ScriptIt) binding.getValue();
+						
+						bindingScriptIt.setOwner(knowIt);
 
 						describeItLoop: for (DescribeIt describeIt : describeItManager
 								.getDescribeIts()) {

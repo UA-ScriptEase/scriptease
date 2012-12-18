@@ -50,7 +50,6 @@ public class NewCauseAction extends ActiveTranslatorSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final Translator activeTranslator;
 		final APIDictionary apiDictionary;
 		final LibraryModel libraryModel;
 		final GameTypeManager gameTypeManager;
@@ -64,11 +63,11 @@ public class NewCauseAction extends ActiveTranslatorSensitiveAction {
 
 		GameType type;
 
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-		apiDictionary = activeTranslator.getApiDictionary();
+		apiDictionary = TranslatorManager.getInstance()
+				.getActiveAPIDictionary();
 		libraryModel = apiDictionary.getLibrary();
-		gameTypeManager = activeTranslator.getGameTypeManager();
+		gameTypeManager = TranslatorManager.getInstance()
+				.getActiveGameTypeManager();
 
 		newCause = new ScriptIt("When <" + SUBJECT + ">");
 
