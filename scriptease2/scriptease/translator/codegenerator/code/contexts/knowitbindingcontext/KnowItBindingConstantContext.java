@@ -1,7 +1,10 @@
 package scriptease.translator.codegenerator.code.contexts.knowitbindingcontext;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import scriptease.model.CodeBlock;
@@ -33,8 +36,9 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 	}
 
 	public KnowItBindingConstantContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
-				.getTranslator(), other.getLocationInfo());
+		this(other.getStartStoryPoint(), other.getIndent(),
+				other.getNamifier(), other.getTranslator(), other
+						.getLocationInfo());
 	}
 
 	public KnowItBindingConstantContext(Context other, KnowItBinding source) {
@@ -48,32 +52,29 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 	 */
 	@Override
 	public String getFormattedValue() {
-		final Collection<AbstractFragment> typeFormat;
+		Collection<AbstractFragment> typeFormat = new ArrayList<AbstractFragment>();
+		if (this.binding instanceof KnowItBindingConstant) {
+			final String type = ((KnowItBindingConstant) this.binding)
+					.getFirstType();
+			typeFormat = this.translator.getGameTypeManager().getFormat(type);
+			if (typeFormat == null || typeFormat.isEmpty()) {
+				if (((KnowItBindingConstant) this.binding).getValue() instanceof GameObject) {
+					final List<CodeBlock> codeBlocks = this
+							.getBindingCodeBlocks();
+					if (codeBlocks.size() <= 0)
+						throw new CodeGenerationException(
+								"Couldn't find code block for "
+										+ this.binding
+										+ ". Maybe it's missing from the API library?");
 
-		typeFormat = this.translator.getGameTypeManager().getFormat(
-				((KnowItBindingConstant) this.binding).getFirstType());
-
-		if (typeFormat == null || typeFormat.isEmpty()
-				&& this.binding instanceof KnowItBindingConstant) {
-			if (((KnowItBindingConstant) this.binding).getValue() instanceof GameObject) {
-				List<CodeBlock> codeBlocks = this.getBindingCodeBlocks();
-
-				if (codeBlocks.size() <= 0)
-					throw new CodeGenerationException(
-							"Couldn't find code block for "
-									+ this.binding
-									+ ". Maybe it's missing from the API library?");
-
-				final Collection<AbstractFragment> codeFragments;
-
-				codeFragments = codeBlocks.get(0).getCode();
-
-				String bindingCode = AbstractFragment.resolveFormat(
-						codeFragments, this);
-
-				return bindingCode;
-			} else {
-				return this.getValue();
+					final Collection<AbstractFragment> codeFragments;
+					codeFragments = codeBlocks.get(0).getCode();
+					String bindingCode = AbstractFragment.resolveFormat(
+							codeFragments, this);
+					return bindingCode;
+				} else {
+					return this.getValue();
+				}
 			}
 		}
 		return AbstractFragment.resolveFormat(typeFormat, this);
@@ -89,7 +90,30 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 	 */
 	@Override
 	public String getValue() {
-		return ((KnowItBindingConstant) this.binding).getScriptValue();
+		String scriptValue = ((KnowItBindingConstant) this.binding)
+				.getScriptValue();
+		final String type = ((KnowItBindingConstant) this.binding)
+				.getFirstType();
+		final Set<Entry<String, String>> entrySet = this.translator
+				.getGameTypeManager().getEscapes(type).entrySet();
+		for (Entry<String, String> escape : entrySet) {
+			final String key = escape.getKey();
+			final String value = escape.getValue();
+			if (scriptValue.contains(key)) {
+				final int indexOf = scriptValue.indexOf(key);
+				final String before;
+				if (indexOf > 0) {
+					before = scriptValue.substring(0, indexOf - 1);
+				} else {
+					before = "";
+				}
+				final String after = scriptValue.substring(indexOf);
+
+				// Add them together to form the newly escaped String
+				scriptValue = before + value + after;
+			}
+		}
+		return scriptValue;
 	}
 
 	/**
