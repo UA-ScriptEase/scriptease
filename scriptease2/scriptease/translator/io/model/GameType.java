@@ -34,6 +34,7 @@ public class GameType {
 	private String displayName;
 	private String keyword;
 	private String regEx;
+	private String widgetName;
 	private Collection<String> slots;
 	private TypeValueWidgets guiEditorName;
 	private Map<String, String> enums;
@@ -68,7 +69,7 @@ public class GameType {
 	 */
 	public GameType(String name, String keyword, String codeSymbol,
 			Collection<AbstractFragment> fragments, Collection<String> slots,
-			String enums, String regEx, Map<String, String> escapes, TypeValueWidgets gui) {
+			String enums, String regEx, Map<String, String> escapes, TypeValueWidgets gui, String widgetName) {
 
 		// Sanity check. If we're not requiring a selection from a list of
 		// precisely nothing, that's Very Bad. - remiller
@@ -86,6 +87,7 @@ public class GameType {
 		this.enums = this.convertEnumStringToMap(enums);
 		this.codeSymbol = codeSymbol;
 		this.escapes = new HashMap<String,String>(escapes);
+		this.widgetName = widgetName;
 	}
 
 	/**
@@ -206,6 +208,14 @@ public class GameType {
 
 	public String getReg() {
 		return this.regEx;
+	}
+
+	public String getWidgetName() {
+		return this.widgetName;
+	}
+
+	public void setWidgetName(String widgetName) {
+		this.widgetName = widgetName;
 	}
 
 	public void setReg(String reg) {
@@ -331,5 +341,9 @@ public class GameType {
 	 */
 	public boolean hasEnum() {
 		return this.enums != null && !this.enums.isEmpty();
+	}
+
+	public boolean hasWidgetName() {
+		return this.widgetName != null && !this.widgetName.isEmpty();
 	}
 }

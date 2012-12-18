@@ -28,15 +28,20 @@ import scriptease.translator.codegenerator.LocationInformation;
  * 
  */
 public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
-	/**
-	 * The group of children that are in the Story part of the Cause.
-	 */
-	private StoryItemSequence storyBlock;
+	private static final String ACTIVE_BLOCK_TEXT = "Story Point Active:";
+	private static final String INACTIVE_BLOCK_TEXT = "Story Point Inactive:";
 
 	/**
-	 * The group of children that are in the Always part of the Cause.
+	 * The group of children that are in the Story Point Active part of the
+	 * Cause.
 	 */
-	private StoryItemSequence alwaysBlock;
+	private StoryItemSequence activeBlock;
+
+	/**
+	 * The group of children that are in the Story Point Inactive part of the
+	 * Cause.
+	 */
+	private StoryItemSequence inactiveBlock;
 
 	protected Collection<CodeBlock> codeBlocks;
 
@@ -57,10 +62,10 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		validTypes.add(StoryComponentContainer.class);
 		validTypes.add(Note.class);
 
-		this.storyBlock = new StoryItemSequence(validTypes);
-		this.storyBlock.setDisplayText("Story:");
-		this.alwaysBlock = new StoryItemSequence(validTypes);
-		this.alwaysBlock.setDisplayText("Always:");
+		this.activeBlock = new StoryItemSequence(validTypes);
+		this.activeBlock.setDisplayText(ACTIVE_BLOCK_TEXT);
+		this.inactiveBlock = new StoryItemSequence(validTypes);
+		this.inactiveBlock.setDisplayText(INACTIVE_BLOCK_TEXT);
 
 	}
 
@@ -84,7 +89,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		}
 		return matching;
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
 		if (super.equals(other) && other instanceof ScriptIt) {
@@ -132,10 +137,10 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 
 		if (component.isCause()) {
 			component
-					.setStoryBlock((StoryItemSequence) component.childComponents
+					.setActiveBlock((StoryItemSequence) component.childComponents
 							.get(0));
 			component
-					.setAlwaysBlock((StoryItemSequence) component.childComponents
+					.setInactiveBlock((StoryItemSequence) component.childComponents
 							.get(1));
 		}
 
@@ -143,31 +148,37 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	}
 
 	/**
-	 * Gets the container for children that are in the Story block of a cause.
+	 * Gets the container for children that are in the Story Point Active block
+	 * of a cause.
 	 * 
 	 * @return
 	 */
-	public StoryItemSequence getStoryBlock() {
-		return this.storyBlock;
+	public StoryItemSequence getActiveBlock() {
+		return this.activeBlock;
 	}
 
 	/**
-	 * Gets the container for children that are in the Always block of a cause.
+	 * Gets the container for children that are in the Story Point Inactive
+	 * block of a cause.
 	 * 
 	 * @return
 	 */
-	public StoryItemSequence getAlwaysBlock() {
-		return this.alwaysBlock;
+	public StoryItemSequence getInactiveBlock() {
+		return this.inactiveBlock;
 	}
 
-	public void setStoryBlock(StoryItemSequence storyBlock) {
-		this.storyBlock = storyBlock;
-		storyBlock.setOwner(this);
+	public void setActiveBlock(StoryItemSequence activeBlock) {
+		// Change text for backwards compatibility
+		activeBlock.setDisplayText(ACTIVE_BLOCK_TEXT);
+		this.activeBlock = activeBlock;
+		activeBlock.setOwner(this);
 	}
 
-	public void setAlwaysBlock(StoryItemSequence alwaysBlock) {
-		this.alwaysBlock = alwaysBlock;
-		alwaysBlock.setOwner(this);
+	public void setInactiveBlock(StoryItemSequence inactiveBlock) {
+		// Change text for backwards compatibility
+		inactiveBlock.setDisplayText(INACTIVE_BLOCK_TEXT);
+		this.inactiveBlock = inactiveBlock;
+		inactiveBlock.setOwner(this);
 	}
 
 	@Override
@@ -176,9 +187,9 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		boolean success = super.addStoryChildBefore(newChild, sibling);
 		if (success) {
 			if (this.getChildren().iterator().next() == newChild)
-				this.setStoryBlock((StoryItemSequence) newChild);
+				this.setActiveBlock((StoryItemSequence) newChild);
 			else
-				this.setAlwaysBlock((StoryItemSequence) newChild);
+				this.setInactiveBlock((StoryItemSequence) newChild);
 		}
 		return success;
 	}
@@ -272,18 +283,18 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	}
 
 	/**
-	 * Updates the ScriptIt to display the Story and Always blocks, depending on
-	 * if it is a cause or not.
+	 * Updates the ScriptIt to display the Story Point Active and Inactive
+	 * blocks, depending on if it is a cause or not.
 	 */
 	public void updateStoryChildren() {
 		if (this.isCause()) {
-			if (!this.childComponents.contains(this.storyBlock))
-				this.addStoryChild(this.storyBlock);
-			if (!this.childComponents.contains(this.alwaysBlock))
-				this.addStoryChild(this.alwaysBlock);
+			if (!this.childComponents.contains(this.activeBlock))
+				this.addStoryChild(this.activeBlock);
+			if (!this.childComponents.contains(this.inactiveBlock))
+				this.addStoryChild(this.inactiveBlock);
 		} else {
-			this.removeStoryChild(this.storyBlock);
-			this.removeStoryChild(this.alwaysBlock);
+			this.removeStoryChild(this.activeBlock);
+			this.removeStoryChild(this.inactiveBlock);
 		}
 	}
 
@@ -344,8 +355,8 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		}
 
 		if (this.isCause()) {
-			this.getAlwaysBlock().revalidateKnowItBindings();
-			this.getStoryBlock().revalidateKnowItBindings();
+			this.getInactiveBlock().revalidateKnowItBindings();
+			this.getActiveBlock().revalidateKnowItBindings();
 		}
 	}
 }

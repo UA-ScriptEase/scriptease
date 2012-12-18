@@ -162,4 +162,24 @@ public class GameTypeManager {
 		} else
 			return false;
 	}
+
+	public boolean hasWidgetName(String keyword) {
+		final GameType type = this.gameTypes.get(keyword);
+		if (type != null) {
+			return type.hasWidgetName();
+		} else
+			return false;
+	}
+
+	/**
+	 * Gets the widget name that is to be used for displaying the type widget.
+	 * 
+	 * @param keyword
+	 *            the type whose widget name is to be determined.
+	 */
+	public String getWidgetName(String keyword) {
+		final GameType type = this.gameTypes.get(keyword);
+
+		return type != null ? type.getWidgetName() : null;
+	}
 }

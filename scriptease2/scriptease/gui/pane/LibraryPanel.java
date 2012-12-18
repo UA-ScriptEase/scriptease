@@ -57,6 +57,7 @@ import scriptease.translator.TranslatorManager;
  * @author kschenk
  */
 public class LibraryPanel extends JPanel {
+	private final Timer searchFieldTimer;
 	private final LibraryManagerObserver libraryManagerObserver;
 	private final PatternModelObserver modelObserver;
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
@@ -145,21 +146,21 @@ public class LibraryPanel extends JPanel {
 		this.storyComponentPanelJLists.add(descriptionsList);
 		this.storyComponentPanelJLists.add(controlsList);
 
+		this.searchFieldTimer = new Timer(1000, new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				for (StoryComponentPanelJList list : LibraryPanel.this.storyComponentPanelJLists)
+					list.updateFilter(new StoryComponentSearchFilter(
+							searchField.getText()));
+				updateLists();
+				searchFieldTimer.stop();
+			};
+		});
+
 		// Set up the listeners
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
-			final Timer timer = new Timer(1000, new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					for (StoryComponentPanelJList list : LibraryPanel.this.storyComponentPanelJLists)
-						list.updateFilter(new StoryComponentSearchFilter(
-								searchField.getText()));
-					updateLists();
-					timer.stop();
-				};
-			});
-			
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				timer.restart();
+				searchFieldTimer.restart();
 			}
 
 			@Override
@@ -169,6 +170,17 @@ public class LibraryPanel extends JPanel {
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
+			}
+		});
+
+		searchField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				searchFieldTimer.stop();
+				for (StoryComponentPanelJList list : LibraryPanel.this.storyComponentPanelJLists)
+					list.updateFilter(new StoryComponentSearchFilter(
+							searchField.getText()));
+				updateLists();
 			}
 		});
 

@@ -1,9 +1,10 @@
 package scriptease.gui.storycomponentpanel;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
@@ -14,6 +15,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputListener;
 
@@ -28,6 +30,8 @@ import scriptease.gui.control.ExpansionButton;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryPoint;
+import scriptease.util.GUIOp;
 
 /**
  * JPanel used to properly observe and redraw its component. Can be editable and
@@ -237,26 +241,6 @@ public class StoryComponentPanel extends JPanel implements
 		return descendants;
 	}
 
-	private boolean drawLine;
-
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-
-		if (this.drawLine) {
-			final Graphics2D g2 = (Graphics2D) g.create();
-
-			g2.drawLine(this.getX(), this.getY(),
-					this.getPreferredSize().width, this.getY());
-		}
-	}
-
-	public void setDrawLine(boolean drawLine) {
-		this.drawLine = drawLine;
-
-		this.repaint();
-	}
-
 	/**
 	 * StoryComponentPanel is listening to the model for changes such as:
 	 * adding, removing, binding and changes in text for potential adding,
@@ -333,9 +317,9 @@ public class StoryComponentPanel extends JPanel implements
 			 */
 			@Override
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
-				boolean notRoot = (complex.getOwner() != null);
-				panel.setSelectable(notRoot);
-				panel.setRemovable(notRoot);
+				// boolean notRoot = (complex.getOwner() != null);
+				panel.setSelectable(true);
+				panel.setRemovable(true);
 			}
 
 			@Override
@@ -357,6 +341,8 @@ public class StoryComponentPanel extends JPanel implements
 	private MouseInputListener mouseListener() {
 		return new MouseInputListener() {
 			private StoryComponentPanel panel = StoryComponentPanel.this;
+			private Color previousColor = StoryComponentPanel.this
+					.getBackground();
 
 			/**
 			 * Toggle a drag event manually
@@ -418,13 +404,43 @@ public class StoryComponentPanel extends JPanel implements
 				e.consume();
 			}
 
+			private final Timer hoverTimer = new Timer(100,
+					new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+
+							previousColor = panel.getBackground();
+
+							final Color hoverColor;
+
+							hoverColor = GUIOp.scaleWhite(previousColor, 0.9);
+
+							panel.setBackground(hoverColor);
+
+							for (StoryComponentPanel descendant : panel
+									.getDescendantStoryComponentPanels()) {
+								descendant.setBackground(hoverColor);
+							}
+
+							hoverTimer.stop();
+						};
+					});
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
+				if (!(panel.getStoryComponent() instanceof StoryPoint)) {
+					hoverTimer.restart();
+				}
+
 				e.consume();
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
+				hoverTimer.stop();
+				
+				if (!(panel.getStoryComponent() instanceof StoryPoint)) {
+					this.panel.getSelectionManager().updatePanelBackgrounds();
+				}
 				e.consume();
 			}
 		};

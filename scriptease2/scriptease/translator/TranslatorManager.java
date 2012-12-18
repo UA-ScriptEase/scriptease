@@ -19,6 +19,7 @@ import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 
 /**
  * Singleton class that manages the available translators for different games.
@@ -208,6 +209,16 @@ public class TranslatorManager implements PatternModelObserver {
 	 */
 	public APIDictionary getActiveAPIDictionary() {
 		return this.activeTranslator.getApiDictionary();
+	}
+
+	/**
+	 * Shortcut method to get the active Game Type Manager of the current active
+	 * translator.
+	 * 
+	 * @return
+	 */
+	public GameTypeManager getActiveGameTypeManager() {
+		return this.activeTranslator.getGameTypeManager();
 	}
 
 	/**

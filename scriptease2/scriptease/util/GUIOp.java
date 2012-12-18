@@ -9,6 +9,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -19,6 +20,8 @@ import javax.imageio.ImageIO;
 import javax.swing.CellRendererPane;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
@@ -30,6 +33,7 @@ import scriptease.gui.ui.ScriptEaseUI;
  * 
  * @author remiller
  * @author mfchurch
+ * @author kschenk
  */
 public class GUIOp {
 	public static int MAX_COLOUR_VALUE = 255;
@@ -377,5 +381,65 @@ public class GUIOp {
 		}
 
 		return customCursor;
+	}
+
+	/**
+	 * Scrolls the passed in JScrollPane by current mouse position. Usually used
+	 * in combination with a mouse listener listening for drag events.
+	 * 
+	 * @param pane
+	 */
+	public static void scrollJScrollPaneToMousePosition(JScrollPane pane) {
+		final int SCROLL_RECT_DEPTH = 20;
+
+		final JScrollBar verticalScrollBar;
+		final JScrollBar horizontalScrollBar;
+		final Point mousePosition;
+
+		final int verticalScrollBarValue;
+		final int horizontalScrollBarValue;
+
+		final Rectangle viewPort;
+		final Rectangle topScrollRectangle;
+		final Rectangle bottomScrollRectangle;
+		final Rectangle leftScrollRectangle;
+		final Rectangle rightScrollRectangle;
+
+		verticalScrollBar = pane.getVerticalScrollBar();
+		horizontalScrollBar = pane.getHorizontalScrollBar();
+		mousePosition = pane.getMousePosition();
+
+		if (mousePosition == null)
+			return;
+
+		verticalScrollBarValue = verticalScrollBar.getValue();
+		horizontalScrollBarValue = horizontalScrollBar.getValue();
+
+		viewPort = pane.getViewportBorderBounds();
+		topScrollRectangle = new Rectangle(0, 0, viewPort.width,
+				SCROLL_RECT_DEPTH);
+		bottomScrollRectangle = new Rectangle(0, viewPort.height
+				- SCROLL_RECT_DEPTH, viewPort.width, SCROLL_RECT_DEPTH);
+		leftScrollRectangle = new Rectangle(0, 0, SCROLL_RECT_DEPTH,
+				viewPort.height);
+		rightScrollRectangle = new Rectangle(
+				viewPort.width - SCROLL_RECT_DEPTH, 0, SCROLL_RECT_DEPTH,
+				viewPort.height);
+
+		if (topScrollRectangle.contains(mousePosition)) {
+			verticalScrollBar.setValue(verticalScrollBarValue
+					- ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+		} else if (bottomScrollRectangle.contains(mousePosition)) {
+			verticalScrollBar.setValue(verticalScrollBarValue
+					+ ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+		}
+
+		if (leftScrollRectangle.contains(mousePosition)) {
+			horizontalScrollBar.setValue(horizontalScrollBarValue
+					- ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+		} else if (rightScrollRectangle.contains(mousePosition)) {
+			horizontalScrollBar.setValue(horizontalScrollBarValue
+					+ ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+		}
 	}
 }

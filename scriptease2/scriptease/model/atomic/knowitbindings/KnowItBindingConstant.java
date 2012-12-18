@@ -31,6 +31,10 @@ public class KnowItBindingConstant extends KnowItBinding {
 		return this.constantValue.getCodeText();
 	}
 
+	public String getName() {
+		return this.constantValue.getName();
+	}
+
 	public String getTag() {
 		return this.constantValue.getTag();
 	}
@@ -68,6 +72,8 @@ public class KnowItBindingConstant extends KnowItBinding {
 					return ((StoryModel) model).getModule()
 							.getInstanceForObjectIdentifier(
 									this.getValue().getTemplateID()) != null;
+				} else if (model == null) {
+					return true;
 				}
 			} else
 				return true;

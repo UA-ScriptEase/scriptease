@@ -24,8 +24,9 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	}
 
 	public ScriptItContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
-				.getTranslator(), other.getLocationInfo());
+		this(other.getStartStoryPoint(), other.getIndent(),
+				other.getNamifier(), other.getTranslator(), other
+						.getLocationInfo());
 	}
 
 	public ScriptItContext(Context other, ScriptIt source) {
@@ -89,9 +90,13 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	 */
 	@Override
 	public String getCode() {
-		final Collection<AbstractFragment> code = new ArrayList<AbstractFragment>();
-		final Collection<CodeBlock> codeBlocks = ((ScriptIt) this.component)
-				.getCodeBlocksForLocation(this.locationInfo);
+		final ScriptIt scriptIt;
+		final Collection<CodeBlock> codeBlocks;
+		final Collection<AbstractFragment> code;
+
+		scriptIt = (ScriptIt) this.component;
+		codeBlocks = scriptIt.getCodeBlocksForLocation(this.locationInfo);
+		code = new ArrayList<AbstractFragment>();
 
 		// Combine codeBlocks with the same slot
 		for (CodeBlock codeBlock : codeBlocks) {
