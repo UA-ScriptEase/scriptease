@@ -39,6 +39,7 @@ public class GameType {
 	private Map<String, String> enums;
 	private Collection<AbstractFragment> format;
 	private String codeSymbol;
+	private Map<String, String> escapes;
 
 	/**
 	 * Build a new Game Type representation.
@@ -58,6 +59,8 @@ public class GameType {
 	 * @param regEx
 	 *            An optional regular expression that all values for bindings of
 	 *            this type must match.
+	 * @param escapes
+	 * 			  An optional map of (key) characters which need to be escaped and their escape characters (values)
 	 * @param gui
 	 *            An optional GUI widget specification string to be used . Must
 	 *            be one of: <code>JComboBox</code><code>JSpinner</code>
@@ -65,7 +68,7 @@ public class GameType {
 	 */
 	public GameType(String name, String keyword, String codeSymbol,
 			Collection<AbstractFragment> fragments, Collection<String> slots,
-			String enums, String regEx, TypeValueWidgets gui) {
+			String enums, String regEx, Map<String, String> escapes, TypeValueWidgets gui) {
 
 		// Sanity check. If we're not requiring a selection from a list of
 		// precisely nothing, that's Very Bad. - remiller
@@ -77,13 +80,12 @@ public class GameType {
 		this.displayName = name;
 		this.keyword = keyword;
 		this.regEx = regEx;
-		this.slots = new ArrayList<String>();
-		this.slots.addAll(slots);
+		this.slots = new ArrayList<String>(slots);
 		this.guiEditorName = gui;
-		this.format = new ArrayList<AbstractFragment>();
+		this.format = new ArrayList<AbstractFragment>(fragments);
 		this.enums = this.convertEnumStringToMap(enums);
-		this.format.addAll(fragments);
 		this.codeSymbol = codeSymbol;
+		this.escapes = new HashMap<String,String>(escapes);
 	}
 
 	/**
@@ -246,6 +248,14 @@ public class GameType {
 	 */
 	public void setGui(TypeValueWidgets newGuiId) {
 		this.guiEditorName = newGuiId;
+	}
+	
+	/**
+	 * returns a copy of the map of (key) characters which need to be escaped and their escape characters (values)
+	 * @return
+	 */
+	public Map<String,String> getEscapes() {
+		return new HashMap<String,String>(escapes);
 	}
 
 	public void addSlot(String slot) {

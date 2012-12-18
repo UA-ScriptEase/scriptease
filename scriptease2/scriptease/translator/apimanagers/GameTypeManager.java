@@ -114,6 +114,15 @@ public class GameTypeManager {
 			return "";
 	}
 
+	public Map<String, String> getEscapes(String keyword) {
+		final GameType type = this.gameTypes.get(keyword);
+		if (type != null) {
+			return type.getEscapes();
+		} else {
+			return new HashMap<String, String>(0);
+		}
+	}
+
 	/**
 	 * Gets the GUI widget that is to be used for editing this type.
 	 * 

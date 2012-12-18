@@ -2,6 +2,9 @@ package scriptease.controller.io.converter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import scriptease.controller.io.FileIO;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -29,6 +32,8 @@ public class GameTypeConverter implements Converter {
 	private static final String TAG_FORMAT = "Format";
 	private static final String TAG_GUI = "GUI";
 	private static final String TAG_CODESYMBOL = "CodeSymbol";
+	private static final String TAG_ESCAPES = "Escapes";
+	private static final String TAG_ESCAPE = "Escape";
 
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
@@ -83,6 +88,18 @@ public class GameTypeConverter implements Converter {
 			writer.endNode();
 		}
 
+		// Write Escapes
+		if (type.getEscapes() != null && !type.getEscapes().isEmpty()) {
+			final Map<String, String> escapes = type.getEscapes();
+			for (Entry<String, String> entry : escapes.entrySet()) {
+				final String key = entry.getKey();
+				final String value = entry.getValue();
+				writer.startNode(TAG_ESCAPE);
+				writer.addAttribute("key", key);
+				writer.setValue(value);
+			}
+		}
+
 		// Write GUI
 		if (type.getGui() != null) {
 			writer.startNode(TAG_GUI);
@@ -100,6 +117,7 @@ public class GameTypeConverter implements Converter {
 		final String codeSymbol;
 		final Collection<AbstractFragment> fragments = new ArrayList<AbstractFragment>();
 		final Collection<String> slots = new ArrayList<String>();
+		final Map<String, String> escapes = new HashMap<String, String>();
 		String enums = "";
 		String reg = "";
 		TypeValueWidgets gui = null;
@@ -118,7 +136,7 @@ public class GameTypeConverter implements Converter {
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 			// Read Format
-			String node = reader.getNodeName();
+			final String node = reader.getNodeName();
 			if (node.equals(TAG_FORMAT)) {
 				fragments.addAll((Collection<AbstractFragment>) context
 						.convertAnother(type, ArrayList.class));
@@ -141,10 +159,20 @@ public class GameTypeConverter implements Converter {
 				}
 			}
 
+			// Read Escapes
+			if (node.equals(TAG_ESCAPES)) {
+				while (reader.hasMoreChildren()) {
+					reader.moveDown();
+					final String key = reader.getAttribute("key");
+					final String value = reader.getValue();
+					escapes.put(key, value);
+					reader.moveUp();
+				}
+			}
+
 			// Read GUI
 			if (node.equals(TAG_GUI)) {
-				String guiStr = reader.getValue();
-
+				final String guiStr = reader.getValue();
 				if (guiStr.equalsIgnoreCase(TypeValueWidgets.JCOMBOBOX
 						.toString()))
 					gui = TypeValueWidgets.JCOMBOBOX;
@@ -160,7 +188,7 @@ public class GameTypeConverter implements Converter {
 		}
 
 		type = new GameType(name, keyword, codeSymbol, fragments, slots, enums,
-				reg, gui);
+				reg, escapes, gui);
 
 		return type;
 	}

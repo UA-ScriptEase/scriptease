@@ -90,10 +90,10 @@ public class KnowItContext extends StoryComponentContext {
 			final TypeConverter converter = TranslatorManager.getInstance()
 					.getActiveTranslator().getGameTypeManager()
 					.getTypeConverter();
-			final ScriptIt doIt = converter.convert(knowIt);
-			if (doIt != null) {
+			final ScriptIt scriptIt = converter.convert(knowIt);
+			if (scriptIt != null) {
 				final Context converterContext = ContextFactory.getInstance()
-						.createContext(this, doIt);
+						.createContext(this, scriptIt);
 				String converterContextName = converterContext.getName() + "("
 						+ formattedValue + ")";
 				return converterContextName;

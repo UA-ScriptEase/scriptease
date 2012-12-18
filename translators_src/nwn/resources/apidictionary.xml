@@ -277,6 +277,11 @@
         <Fragment data="unique32charname"/>
         <Literal>&quot;</Literal>
       </Format>
+	  <!--
+	  <Escapes>
+		<Escape key="\">"</Escape>
+	  </Escapes>
+	  -->
     </Type>
     <Type>
       <Name>ModelType</Name>
@@ -576,6 +581,11 @@
         <Literal>&quot;</Literal>
       </Format>
       <LegalValues>[.\n]*</LegalValues>
+	  <!--
+	  <Escapes>
+		<Escape key="\">"</Escape>
+	  </Escapes>
+	  -->
       <GUI>JTEXTFIELD</GUI>
     </Type>
     <Type>
