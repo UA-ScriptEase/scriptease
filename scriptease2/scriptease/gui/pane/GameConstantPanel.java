@@ -359,7 +359,8 @@ public class GameConstantPanel extends JPanel {
 				indent = 1;
 
 				convoPanel.add(createIndentedConversationPanel(
-						gameConversationNode, indent, false));
+						gameConversationNode, indent,
+						gameConversationNode.getSpeaker()));
 
 				this.addConversationRoots(gameConversationNode.getChildren(),
 						convoPanel, indent + 1, true);
@@ -394,7 +395,7 @@ public class GameConstantPanel extends JPanel {
 				final JPanel nodePanel;
 
 				nodePanel = createIndentedConversationPanel(root, indent,
-						isPCSpeaker);
+						root.getSpeaker());
 
 				convoPanel.add(nodePanel);
 
@@ -416,13 +417,13 @@ public class GameConstantPanel extends JPanel {
 		 *            The constant to create a panel for
 		 * @param indent
 		 *            The indent
-		 * @param prefix
-		 *            The letter to display before the constant
+		 * @param Speaker
+		 *            The speaker of the dialogue line
 		 * 
 		 * @return
 		 */
 		private JPanel createIndentedConversationPanel(
-				GameConstant gameConstant, int indent, boolean isPCSpeaker) {
+				GameConstant gameConstant, int indent, String speaker) {
 			final int STRUT_SIZE = 10 * indent;
 			final JLabel prefixLabel;
 			final JPanel indentedPanel;
@@ -437,12 +438,18 @@ public class GameConstantPanel extends JPanel {
 			prefixLabel.setOpaque(true);
 
 			prefixLabel.setBackground(Color.LIGHT_GRAY);
-			if (isPCSpeaker) {
-				prefixLabel.setText(" P ");
-				prefixLabel.setForeground(Color.BLUE);
-			} else {
-				prefixLabel.setText(" N ");
-				prefixLabel.setForeground(Color.RED);
+
+			if (speaker != null && !speaker.isEmpty()) {
+				final char firstChar;
+
+				firstChar = speaker.charAt(0);
+
+				prefixLabel.setText(" " + firstChar + " ");
+
+				if (indent % 2 == 0)
+					prefixLabel.setForeground(Color.BLUE);
+				else
+					prefixLabel.setForeground(Color.RED);
 			}
 
 			indentedPanel.add(Box.createHorizontalStrut(STRUT_SIZE));

@@ -28,4 +28,13 @@ public interface GameConversationNode extends GameConstant {
 	 * @return <code>true</code> if the node is a link.
 	 */
 	public boolean isLink();
+
+	/**
+	 * Returns a string representing the speaker. Depending on the translator,
+	 * this may be the speaker's actual name, or another String that represents
+	 * the speaker.
+	 * 
+	 * @return A String representing the speaker.
+	 */
+	public String getSpeaker();
 }
