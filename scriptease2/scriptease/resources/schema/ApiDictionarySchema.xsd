@@ -5,6 +5,15 @@
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<xsd:include schemaLocation="CodeElementSchema.xsd" />
 
+	<xsd:complexType name="AttrElement">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="key" type="xsd:string">
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
 	<!-- Start with the overall file type -->
 	<xsd:element name="APIDictionary" type="APIDictionaryFile_Type" />
 
@@ -94,11 +103,12 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
-			<xsd:element name="WidgetName" type="xsd:string" minOccurs="0" />
+			<xsd:element name="WidgetName" type="xsd:string"
+				minOccurs="0" />
 			<xsd:element name="Escapes" minOccurs="0">
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="Escape" type="xsd:string" maxOccurs="unbounded" />
+						<xsd:element name="Escape" type="AttrElement" maxOccurs="unbounded" />
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
