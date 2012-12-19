@@ -84,7 +84,7 @@ public class StoryComponentPanel extends JPanel implements
 			}
 		});
 
-		SEFocusManager.getInstance().addObserver(this, new SEFocusObserver() {
+		SEFocusManager.getInstance().addSEFocusObserver(this, new SEFocusObserver() {
 			@Override
 			public void gainFocus(Component oldFocus) {
 			}
