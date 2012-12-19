@@ -29,6 +29,7 @@ import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
 import scriptease.translator.io.model.GameObject;
+import scriptease.util.GUIOp;
 
 /**
  * Draws a Game Constant Panel for the passed in StoryModel.
@@ -217,6 +218,11 @@ public class GameConstantPanel extends JPanel {
 	 * 
 	 */
 	private class GameObjectContainer extends JPanel {
+		private final Color LINE_COLOR_1 = Color.red;
+		private final Color LINE_COLOR_2 = Color.blue;
+		private final Color LINE_COLOR_LINK = GUIOp
+				.scaleColour(Color.green, 0.7);
+
 		private boolean collapsed;
 
 		/**
@@ -353,17 +359,16 @@ public class GameConstantPanel extends JPanel {
 
 			for (GameConversationNode gameConversationNode : gameConversation
 					.getConversationRoots()) {
-
-				int indent;
+				final int indent;
 
 				indent = 1;
 
 				convoPanel.add(createIndentedConversationPanel(
 						gameConversationNode, indent,
-						gameConversationNode.getSpeaker()));
+						gameConversationNode.getSpeaker(), this.LINE_COLOR_1));
 
 				this.addConversationRoots(gameConversationNode.getChildren(),
-						convoPanel, indent + 1, true);
+						convoPanel, indent + 1);
 			}
 
 			convoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -386,24 +391,37 @@ public class GameConstantPanel extends JPanel {
 		 */
 		private void addConversationRoots(
 				List<? extends GameConversationNode> roots, JPanel convoPanel,
-				int indent, boolean isPCSpeaker) {
+				int indent) {
 			if (roots.isEmpty()) {
 				return;
 			}
 
 			for (GameConversationNode root : roots) {
-				final JPanel nodePanel;
-
-				nodePanel = createIndentedConversationPanel(root, indent,
-						root.getSpeaker());
-
-				convoPanel.add(nodePanel);
-
 				if (root.isLink()) {
-					nodePanel.setBackground(Color.GRAY);
-				} else
+					final JPanel nodePanel;
+
+					nodePanel = createIndentedConversationPanel(root, indent,
+							root.getSpeaker(), this.LINE_COLOR_LINK);
+
+					convoPanel.add(nodePanel);
+				} else {
+					final JPanel nodePanel;
+					final Color color;
+
+					if (indent % 2 == 0) {
+						color = this.LINE_COLOR_2;
+					} else {
+						color = this.LINE_COLOR_1;
+					}
+
+					nodePanel = createIndentedConversationPanel(root, indent,
+							root.getSpeaker(), color);
+
+					convoPanel.add(nodePanel);
+
 					this.addConversationRoots(root.getChildren(), convoPanel,
-							indent + 1, !isPCSpeaker);
+							indent + 1);
+				}
 			}
 		}
 
@@ -417,13 +435,16 @@ public class GameConstantPanel extends JPanel {
 		 *            The constant to create a panel for
 		 * @param indent
 		 *            The indent
-		 * @param Speaker
+		 * @param speaker
 		 *            The speaker of the dialogue line
+		 * @param color
+		 *            The color of the speaker label
 		 * 
 		 * @return
 		 */
 		private JPanel createIndentedConversationPanel(
-				GameConstant gameConstant, int indent, String speaker) {
+				GameConstant gameConstant, int indent, String speaker,
+				Color color) {
 			final int STRUT_SIZE = 10 * indent;
 			final JLabel prefixLabel;
 			final JPanel indentedPanel;
@@ -439,17 +460,14 @@ public class GameConstantPanel extends JPanel {
 
 			prefixLabel.setBackground(Color.LIGHT_GRAY);
 
-			if (speaker != null && !speaker.isEmpty()) {
+			if (speaker != null && !speaker.isEmpty() && color != null) {
 				final char firstChar;
 
 				firstChar = speaker.charAt(0);
 
 				prefixLabel.setText(" " + firstChar + " ");
 
-				if (indent % 2 == 0)
-					prefixLabel.setForeground(Color.BLUE);
-				else
-					prefixLabel.setForeground(Color.RED);
+				prefixLabel.setForeground(color);
 			}
 
 			indentedPanel.add(Box.createHorizontalStrut(STRUT_SIZE));
