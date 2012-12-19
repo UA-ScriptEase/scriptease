@@ -182,18 +182,28 @@ public class GameConstantPanel extends JPanel {
 		});
 
 		// Add the game objects to the tree model.
-		for (String typeName : types) {
+		for (String typeTag : types) {
 
 			final Collection<GameConstant> gameObjects;
 
-			gameObjects = this.getObjectsOfType((StoryModel) model, typeName,
+			gameObjects = this.getObjectsOfType((StoryModel) model, typeTag,
 					searchText);
 
 			// Ignore empty categories because they're confusing.
 			if (gameObjects.size() <= 0)
 				continue;
-			else
-				this.add(new GameObjectContainer(typeName, gameObjects));
+			else {
+				final GameTypeManager typeManager;
+				final String typeName;
+				final GameObjectContainer container;
+
+				typeManager = TranslatorManager.getInstance()
+						.getActiveTranslator().getGameTypeManager();
+				typeName = typeManager.getDisplayText(typeTag);
+				container = new GameObjectContainer(typeName, gameObjects);
+
+				this.add(container);
+			}
 		}
 
 		this.repaint();
@@ -214,37 +224,37 @@ public class GameConstantPanel extends JPanel {
 		 * Creates a new game object container with the passed in name and
 		 * collection of GameObjects.
 		 * 
-		 * @param label
+		 * @param typeName
 		 *            The name of the container
 		 * @param gameConstants
 		 *            The list of GameConstants in the container
 		 */
-		private GameObjectContainer(String label,
+		private GameObjectContainer(String typeName,
 				final Collection<GameConstant> gameConstants) {
 			this.collapsed = false;
 
 			this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 			this.setBackground(Color.WHITE);
 
-			redrawContainer(label, gameConstants);
+			this.redrawContainer(typeName, gameConstants);
 		}
 
 		/**
 		 * Redraws the container. This also fires whenever the container is
 		 * collapsed or expanded.
 		 * 
-		 * @param label
+		 * @param typeName
 		 *            The name of the container
 		 * @param gameConstants
 		 *            The list of GameConstants in the container
 		 */
-		private void redrawContainer(final String label,
+		private void redrawContainer(final String typeName,
 				final Collection<GameConstant> gameConstants) {
 			this.removeAll();
 
 			final JLabel categoryLabel;
 
-			categoryLabel = new JLabel(StringOp.toProperCase(label));
+			categoryLabel = new JLabel(typeName);
 
 			categoryLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -252,7 +262,7 @@ public class GameConstantPanel extends JPanel {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					GameObjectContainer.this.collapsed ^= true;
-					redrawContainer(label, gameConstants);
+					redrawContainer(typeName, gameConstants);
 				}
 			});
 
