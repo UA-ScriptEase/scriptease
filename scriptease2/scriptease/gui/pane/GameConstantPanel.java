@@ -220,8 +220,6 @@ public class GameConstantPanel extends JPanel {
 	private class GameObjectContainer extends JPanel {
 		private final Color LINE_COLOR_1 = Color.red;
 		private final Color LINE_COLOR_2 = Color.blue;
-		private final Color LINE_COLOR_LINK = GUIOp
-				.scaleColour(Color.green, 0.7);
 
 		private boolean collapsed;
 
@@ -320,6 +318,12 @@ public class GameConstantPanel extends JPanel {
 			gameObjectBindingWidget = new BindingWidget(
 					new KnowItBindingConstant(gameConstant));
 
+			if (gameConstant instanceof GameConversationNode) {
+				if (((GameConversationNode) gameConstant).isLink())
+					gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
+							gameObjectBindingWidget.getBackground(), 1.24));
+			}
+
 			gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(
 					regularText, Color.WHITE));
 
@@ -397,31 +401,28 @@ public class GameConstantPanel extends JPanel {
 			}
 
 			for (GameConversationNode root : roots) {
-				if (root.isLink()) {
-					final JPanel nodePanel;
+				final String speaker;
+				final JPanel nodePanel;
+				final Color color;
 
-					nodePanel = createIndentedConversationPanel(root, indent,
-							root.getSpeaker(), this.LINE_COLOR_LINK);
-
-					convoPanel.add(nodePanel);
+				if (indent % 2 == 0) {
+					color = this.LINE_COLOR_2;
 				} else {
-					final JPanel nodePanel;
-					final Color color;
-
-					if (indent % 2 == 0) {
-						color = this.LINE_COLOR_2;
-					} else {
-						color = this.LINE_COLOR_1;
-					}
-
-					nodePanel = createIndentedConversationPanel(root, indent,
-							root.getSpeaker(), color);
-
-					convoPanel.add(nodePanel);
-
-					this.addConversationRoots(root.getChildren(), convoPanel,
-							indent + 1);
+					color = this.LINE_COLOR_1;
 				}
+
+				if (root.isLink())
+					speaker = "Link";
+				else
+					speaker = root.getSpeaker();
+
+				nodePanel = createIndentedConversationPanel(root, indent,
+						speaker, color);
+
+				convoPanel.add(nodePanel);
+
+				this.addConversationRoots(root.getChildren(), convoPanel,
+						indent + 1);
 			}
 		}
 
@@ -431,7 +432,7 @@ public class GameConstantPanel extends JPanel {
 		 * {@link Box#createRigidArea(Dimension)}, where the dimension is
 		 * (5*indent, 0).
 		 * 
-		 * @param gameConstant
+		 * @param gameConversationNode
 		 *            The constant to create a panel for
 		 * @param indent
 		 *            The indent
@@ -443,8 +444,8 @@ public class GameConstantPanel extends JPanel {
 		 * @return
 		 */
 		private JPanel createIndentedConversationPanel(
-				GameConstant gameConstant, int indent, String speaker,
-				Color color) {
+				GameConversationNode gameConversationNode, int indent,
+				String speaker, Color color) {
 			final int STRUT_SIZE = 10 * indent;
 			final JLabel prefixLabel;
 			final JPanel indentedPanel;
@@ -472,7 +473,7 @@ public class GameConstantPanel extends JPanel {
 
 			indentedPanel.add(Box.createHorizontalStrut(STRUT_SIZE));
 			indentedPanel.add(prefixLabel);
-			indentedPanel.add(createGameConstantPanel(gameConstant));
+			indentedPanel.add(createGameConstantPanel(gameConversationNode));
 
 			indentedPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
