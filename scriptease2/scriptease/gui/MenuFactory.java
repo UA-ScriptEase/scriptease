@@ -88,6 +88,9 @@ public class MenuFactory {
 	private static final String NEW = Il8nResources.getString("New");
 	private static final String DEBUG = "Debug";
 
+	// Change this to false to remove the tools menu.
+	private static final boolean TOOLS_MENU_ENABLED = true;
+
 	/**
 	 * Creates the top level menu bar for a story.
 	 * 
@@ -102,7 +105,9 @@ public class MenuFactory {
 
 		bar.add(MenuFactory.buildFileMenu(model));
 		bar.add(MenuFactory.buildEditMenu());
-		bar.add(MenuFactory.buildToolsMenu());
+
+		if (TOOLS_MENU_ENABLED)
+			bar.add(MenuFactory.buildToolsMenu());
 
 		bar.add(MenuFactory.buildHelpMenu());
 		if (ScriptEase.DEBUG_MODE)
@@ -260,13 +265,22 @@ public class MenuFactory {
 		final JMenu menu = new JMenu(MenuFactory.HELP);
 		menu.setMnemonic(KeyEvent.VK_H);
 
+		final JMenuItem sendFeedbackItem;
 		final JMenuItem sendBugReportItem;
 		final JMenuItem helpMenuItem;
 
+		sendFeedbackItem = new JMenuItem("Send Feedback");
 		sendBugReportItem = new JMenuItem("Send Bug Report");
 		helpMenuItem = new JMenuItem(
 				Il8nResources.getString("About_ScriptEase"));
 
+		sendFeedbackItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WindowFactory.getInstance().buildFeedbackDialog()
+						.setVisible(true);
+			}
+		});
 		sendBugReportItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -281,9 +295,11 @@ public class MenuFactory {
 			}
 		});
 
+		sendFeedbackItem.setMnemonic(KeyEvent.VK_F);
 		sendBugReportItem.setMnemonic(KeyEvent.VK_R);
 		helpMenuItem.setMnemonic(KeyEvent.VK_A);
 
+		menu.add(sendFeedbackItem);
 		menu.add(sendBugReportItem);
 		menu.addSeparator();
 		menu.add(helpMenuItem);

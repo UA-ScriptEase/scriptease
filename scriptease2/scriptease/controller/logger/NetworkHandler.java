@@ -76,21 +76,45 @@ public class NetworkHandler extends Handler {
 	}
 
 	/**
-	 * sendBugReport connects to the bugserver, creates a log and sends it to
-	 * Httpclient. serverlog.cgi is used serverside to handle bug reporting.
+	 * This method does not contain system information. If you need system
+	 * information, use {@link #sendBugReport(String)}
+	 * 
+	 * @param comment
+	 */
+	public void sendFeedback(String comment, String email) {
+		final String feedback;
+
+		feedback = "From: " + email + "\n\nFeedback:\n\n" + comment;
+
+		this.connect();
+		this.sendToServer(feedback);
+	}
+
+	/**
+	 * Sends a bug report to the server.
 	 * 
 	 * @param comment
 	 *            the user comment taken from ExceptionDialog
 	 * @see ExceptionDialog
 	 */
 	public void sendBugReport(String comment) {
-		String report;
+		final String report;
 
 		this.connect();
 		report = this.generateReport(comment);
 
+		this.sendToServer(report);
+	}
+
+	/**
+	 * Connects to the bugserver, creates a log and sends it to Httpclient.
+	 * serverlog.cgi is used serverside to handle reporting.
+	 * 
+	 * @param servable
+	 */
+	private void sendToServer(String servable) {
 		try {
-			this.post.setEntity(new StringEntity(report));
+			this.post.setEntity(new StringEntity(servable));
 			HttpResponse response = this.client.execute(this.post);
 
 			// tell the user if the report was successfully sent and clear
