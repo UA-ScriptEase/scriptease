@@ -6,8 +6,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -28,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.SwingWorker.StateValue;
@@ -630,6 +634,118 @@ public final class WindowFactory {
 
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		return dialog;
+	}
+
+	/**
+	 * Shows a send feedback dialog.
+	 * 
+	 * @return
+	 */
+	public JDialog buildFeedbackDialog() {
+		final String TITLE = "Send Feedback";
+		final JDialog feedbackDialog;
+
+		final JPanel content;
+		final JButton sendButton;
+		final JButton cancelButton;
+		final JTextArea commentArea;
+		final JScrollPane areaScrollPane;
+		final JLabel emailLabel;
+		final JTextField emailField;
+
+		final GroupLayout layout;
+
+		feedbackDialog = this.buildDialog(TITLE);
+
+		content = new JPanel();
+		sendButton = new JButton("Send");
+		cancelButton = new JButton("Cancel");
+		commentArea = new JTextArea();
+		areaScrollPane = new JScrollPane(commentArea);
+		emailLabel = new JLabel("Email");
+		emailField = new JTextField();
+
+		commentArea.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		commentArea.setLineWrap(true);
+		commentArea.setWrapStyleWord(true);
+
+		areaScrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		areaScrollPane.setPreferredSize(new Dimension(250, 250));
+		areaScrollPane.setBorder(BorderFactory.createTitledBorder("Feedback"));
+
+		layout = new GroupLayout(content);
+
+		content.setLayout(layout);
+
+		commentArea.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					KeyboardFocusManager.getCurrentKeyboardFocusManager()
+							.focusNextComponent();
+					e.consume();
+					// \(^o^)/ nom nom nom
+				}
+			}
+		});
+
+		emailField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				NetworkHandler.getInstance().sendFeedback(
+						commentArea.getText(), emailField.getText());
+				feedbackDialog.setVisible(false);
+				feedbackDialog.dispose();
+			}
+		});
+
+		sendButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				NetworkHandler.getInstance().sendFeedback(
+						commentArea.getText(), emailField.getText());
+				feedbackDialog.setVisible(false);
+				feedbackDialog.dispose();
+			}
+		});
+
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				feedbackDialog.setVisible(false);
+				feedbackDialog.dispose();
+			}
+		});
+
+		layout.setHorizontalGroup(layout
+				.createParallelGroup()
+				.addComponent(areaScrollPane)
+				.addGroup(
+						GroupLayout.Alignment.CENTER,
+						layout.createSequentialGroup().addComponent(emailLabel)
+								.addComponent(emailField))
+				.addGroup(
+						GroupLayout.Alignment.TRAILING,
+						layout.createSequentialGroup().addComponent(sendButton)
+								.addComponent(cancelButton)));
+
+		layout.setVerticalGroup(layout
+				.createSequentialGroup()
+				.addComponent(areaScrollPane)
+				.addGroup(
+						layout.createParallelGroup().addComponent(emailLabel)
+								.addComponent(emailField))
+				.addGroup(
+						layout.createParallelGroup().addComponent(sendButton)
+								.addComponent(cancelButton)));
+
+		feedbackDialog.setContentPane(content);
+		feedbackDialog.pack();
+		feedbackDialog.setResizable(false);
+		feedbackDialog.setLocationRelativeTo(feedbackDialog.getParent());
+
+		return feedbackDialog;
 	}
 
 	/**
