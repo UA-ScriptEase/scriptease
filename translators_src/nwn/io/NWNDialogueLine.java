@@ -122,6 +122,14 @@ public class NWNDialogueLine extends NWNGameConstant implements
 	}
 
 	@Override
+	public String getSpeaker() {
+		if (this.isPlayerLine)
+			return "PC";
+		else
+			return "NPC";
+	}
+
+	@Override
 	public String toString() {
 		return this.getName();
 	}
