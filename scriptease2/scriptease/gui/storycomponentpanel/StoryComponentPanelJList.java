@@ -107,7 +107,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 			}
 		});
 
-		SEFocusManager.getInstance().addObserver(this, new SEFocusObserver() {
+		SEFocusManager.getInstance().addSEFocusObserver(this, new SEFocusObserver() {
 			@Override
 			public void gainFocus(Component oldFocus) {
 			}

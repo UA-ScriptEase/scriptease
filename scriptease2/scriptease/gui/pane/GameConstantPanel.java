@@ -321,7 +321,7 @@ public class GameConstantPanel extends JPanel {
 			if (gameConstant instanceof GameConversationNode) {
 				if (((GameConversationNode) gameConstant).isLink())
 					gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
-							gameObjectBindingWidget.getBackground(), 1.24));
+							gameObjectBindingWidget.getBackground()	, 1.24));
 			}
 
 			gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(

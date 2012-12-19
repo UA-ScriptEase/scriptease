@@ -23,7 +23,7 @@ public class SEFocusManager {
 	private static Component focus;
 	private static final SEFocusManager instance = new SEFocusManager();
 
-	private static Map<Component, SEFocusObserver> observerMap = new WeakHashMap<Component, SEFocusObserver>();
+	private static Map<Object, SEFocusObserver> observerMap = new WeakHashMap<Object, SEFocusObserver>();
 
 	/**
 	 * Gets the sole instance of the ComponentFocusManager.
@@ -55,7 +55,7 @@ public class SEFocusManager {
 
 		SEFocusManager.focus = focus;
 
-		for (Entry<Component, SEFocusObserver> entry : observerMap.entrySet()) {
+		for (Entry<Object, SEFocusObserver> entry : observerMap.entrySet()) {
 			if (entry.getKey() == focus)
 				entry.getValue().gainFocus(oldFocus);
 			else
@@ -68,10 +68,23 @@ public class SEFocusManager {
 	 * SEFocus changes. This observer will not get garbage collected until the
 	 * component disappears.
 	 * 
-	 * @param component
+	 * @param object
 	 * @param observer
 	 */
-	public void addObserver(Component component, SEFocusObserver observer) {
-		SEFocusManager.observerMap.put(component, observer);
+	public void addSEFocusObserver(Object object, SEFocusObserver observer) {
+		SEFocusManager.observerMap.put(object, observer);
+	}
+
+	/**
+	 * Add an observer to the SEFocusManager so that it will fire events when
+	 * SEFocus changes. This observer will get garbage collected if its
+	 * reference is removed elsewhere. If we are not storing this observer
+	 * elsewhere, use {@link #addSEFocusObserver(Object, SEFocusObserver)} instead.
+	 * 
+	 * @param object
+	 * @param observer
+	 */
+	public void addSEFocusObserver(SEFocusObserver observer) {
+		SEFocusManager.observerMap.put(observer, observer);
 	}
 }
