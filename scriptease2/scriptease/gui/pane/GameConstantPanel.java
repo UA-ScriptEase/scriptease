@@ -29,7 +29,6 @@ import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
 import scriptease.translator.io.model.GameObject;
-import scriptease.util.StringOp;
 
 /**
  * Draws a Game Constant Panel for the passed in StoryModel.
@@ -359,11 +358,11 @@ public class GameConstantPanel extends JPanel {
 
 				indent = 1;
 
-				convoPanel
-						.add(createIndentedPanel(gameConversationNode, indent));
+				convoPanel.add(createIndentedConversationPanel(
+						gameConversationNode, indent, false));
 
 				this.addConversationRoots(gameConversationNode.getChildren(),
-						convoPanel, indent + 1);
+						convoPanel, indent + 1, true);
 			}
 
 			convoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -381,24 +380,29 @@ public class GameConstantPanel extends JPanel {
 		 *            The panel to add the roots to.
 		 * @param indent
 		 *            The amount to indent as defined in
-		 *            {@link #createIndentedPanel(GameConstant, int)}.
-		 *            Incremented for each level.
+		 *            {@link #createIndentedConversationPanel(GameConstant, int)}
+		 *            . Incremented for each level.
 		 */
 		private void addConversationRoots(
 				List<? extends GameConversationNode> roots, JPanel convoPanel,
-				int indent) {
+				int indent, boolean isPCSpeaker) {
 			if (roots.isEmpty()) {
 				return;
 			}
 
 			for (GameConversationNode root : roots) {
-				// TODO We still need to implement linked conversations.
-				if (root.isLink())
-					continue;
+				final JPanel nodePanel;
 
-				convoPanel.add(createIndentedPanel(root, indent));
-				this.addConversationRoots(root.getChildren(), convoPanel,
-						indent + 1);
+				nodePanel = createIndentedConversationPanel(root, indent,
+						isPCSpeaker);
+
+				convoPanel.add(nodePanel);
+
+				if (root.isLink()) {
+					nodePanel.setBackground(Color.GRAY);
+				} else
+					this.addConversationRoots(root.getChildren(), convoPanel,
+							indent + 1, !isPCSpeaker);
 			}
 		}
 
@@ -412,20 +416,37 @@ public class GameConstantPanel extends JPanel {
 		 *            The constant to create a panel for
 		 * @param indent
 		 *            The indent
+		 * @param prefix
+		 *            The letter to display before the constant
+		 * 
 		 * @return
 		 */
-		private JPanel createIndentedPanel(GameConstant gameConstant, int indent) {
+		private JPanel createIndentedConversationPanel(
+				GameConstant gameConstant, int indent, boolean isPCSpeaker) {
 			final int STRUT_SIZE = 10 * indent;
+			final JLabel prefixLabel;
 			final JPanel indentedPanel;
 
+			prefixLabel = new JLabel();
 			indentedPanel = new JPanel();
 
 			indentedPanel.setLayout(new BoxLayout(indentedPanel,
 					BoxLayout.LINE_AXIS));
 
 			indentedPanel.setOpaque(false);
+			prefixLabel.setOpaque(true);
+
+			prefixLabel.setBackground(Color.LIGHT_GRAY);
+			if (isPCSpeaker) {
+				prefixLabel.setText(" P ");
+				prefixLabel.setForeground(Color.BLUE);
+			} else {
+				prefixLabel.setText(" N ");
+				prefixLabel.setForeground(Color.RED);
+			}
 
 			indentedPanel.add(Box.createHorizontalStrut(STRUT_SIZE));
+			indentedPanel.add(prefixLabel);
 			indentedPanel.add(createGameConstantPanel(gameConstant));
 
 			indentedPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
