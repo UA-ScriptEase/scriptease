@@ -137,5 +137,8 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 
 			UndoManager.getInstance().endUndoableAction();
 		}
+		
+		// Reset the focus after we delete something.
+		SEFocusManager.getInstance().setFocus(null);
 	}
 }
