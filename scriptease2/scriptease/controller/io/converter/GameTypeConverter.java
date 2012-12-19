@@ -171,18 +171,11 @@ public class GameTypeConverter implements Converter {
 			// Read Escapes
 			if (node.equals(TAG_ESCAPES)) {
 				while (reader.hasMoreChildren()) {
+					final String key = reader.getAttribute("key");
 					reader.moveDown();
 					final String value = reader.getValue();
-					final String key = reader.getAttribute("key");
 					escapes.put(key, value);
 					reader.moveUp();
-				}
-			}
-
-			// Read Escapes
-			if (node.equals(TAG_SLOTS)) {
-				while (reader.hasMoreChildren()) {
-					slots.add(FileIO.readValue(reader, TAG_SLOT));
 				}
 			}
 
