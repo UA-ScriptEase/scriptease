@@ -28,6 +28,7 @@ import javax.swing.event.DocumentListener;
 
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
@@ -91,6 +92,7 @@ public class LibraryPanel extends JPanel {
 
 		final PatternModelObserver modelObserver;
 		final LibraryManagerObserver libraryManagerObserver;
+		final TranslatorObserver translatorObserver;
 
 		listTabs = new JTabbedPane();
 
@@ -124,6 +126,14 @@ public class LibraryPanel extends JPanel {
 						&& PatternModelManager.getInstance().getActiveModel() == null) {
 					updateLists();
 				}
+			}
+		};
+		translatorObserver = new TranslatorObserver() {
+
+			@Override
+			public void translatorLoaded(Translator newTranslator) {
+				if (newTranslator == null)
+					updateLists();
 			}
 		};
 
@@ -238,6 +248,8 @@ public class LibraryPanel extends JPanel {
 				libraryManagerObserver);
 		PatternModelManager.getInstance().addPatternModelObserver(this,
 				modelObserver);
+		TranslatorManager.getInstance().addTranslatorObserver(this,
+				translatorObserver);
 	}
 
 	/**

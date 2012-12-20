@@ -95,10 +95,10 @@ public class TypeWidget extends JToggleButton {
 			gameTypeManager = TranslatorManager.getInstance()
 					.getActiveGameTypeManager();
 
-			if (gameTypeManager.hasWidgetName(type)) {
+			if (gameTypeManager != null && gameTypeManager.hasWidgetName(type)) {
 				this.setText(gameTypeManager.getWidgetName(type));
 			} else {
-				if (gameTypeManager.hasEnum(type))
+				if (gameTypeManager != null && gameTypeManager.hasEnum(type))
 					this.setText(GameTypeManager.DEFAULT_LIST_WIDGET);
 				else
 					this.setText(type.substring(0, 2).toUpperCase());
