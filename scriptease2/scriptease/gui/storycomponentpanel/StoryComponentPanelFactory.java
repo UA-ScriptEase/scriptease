@@ -14,7 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import scriptease.controller.BindingAdapter;
-import scriptease.controller.ObservedJPanel;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
@@ -371,11 +370,9 @@ public class StoryComponentPanelFactory {
 			@Override
 			public void processKnowIt(final KnowIt knowIt) {
 				final JPanel mainPanel;
-				final ObservedJPanel observedPanel;
 				final StoryComponentObserver bindingObserver;
 
 				mainPanel = new JPanel();
-				observedPanel = new ObservedJPanel(mainPanel);
 				bindingObserver = new StoryComponentObserver() {
 					@Override
 					public void componentChanged(StoryComponentEvent event) {
@@ -387,7 +384,6 @@ public class StoryComponentPanelFactory {
 				};
 
 				knowIt.addStoryComponentObserver(bindingObserver);
-				observedPanel.addObserver(bindingObserver);
 
 				buildMainKnowItPanel(knowIt, mainPanel);
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);

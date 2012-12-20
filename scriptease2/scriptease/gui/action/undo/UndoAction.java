@@ -64,7 +64,6 @@ public final class UndoAction extends ActiveModelSensitiveAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		WindowFactory.getInstance().getCurrentFrame().requestFocusInWindow();
-
 		UndoManager.getInstance().undo();
 	}
 }

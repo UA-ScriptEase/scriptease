@@ -3,15 +3,14 @@ package scriptease.translator;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import scriptease.ScriptEase;
 import scriptease.ScriptEase.ConfigurationKeys;
+import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
@@ -45,7 +44,7 @@ public class TranslatorManager {
 
 	private static TranslatorManager instance = new TranslatorManager();
 
-	private final List<WeakReference<TranslatorObserver>> observers;
+	private final ObserverManager<TranslatorObserver> observerManager;
 
 	/**
 	 * Returns the singleton instance of the TranslatorManager.
@@ -64,7 +63,7 @@ public class TranslatorManager {
 	 */
 	private TranslatorManager() {
 		this.translatorPool = new HashSet<Translator>();
-		this.observers = new ArrayList<WeakReference<TranslatorObserver>>();
+		this.observerManager = new ObserverManager<TranslatorObserver>();
 
 		// scan for translators in the translators folder
 		this.fillTranslatorPool();
@@ -256,22 +255,8 @@ public class TranslatorManager {
 	 * @param observer
 	 *            the observer to register
 	 */
-	public void addTranslatorObserver(TranslatorObserver observer) {
-		Collection<WeakReference<TranslatorObserver>> observersCopy = new ArrayList<WeakReference<TranslatorObserver>>(
-				this.observers);
-
-		for (WeakReference<TranslatorObserver> observerRef : observersCopy) {
-			if (observerRef == null)
-				continue;
-
-			final TranslatorObserver translatorObserver = observerRef.get();
-			if (translatorObserver != null && translatorObserver == observer)
-				return;
-			else if (translatorObserver == null)
-				this.observers.remove(observerRef);
-		}
-
-		this.observers.add(new WeakReference<TranslatorObserver>(observer));
+	public void addTranslatorObserver(Object object, TranslatorObserver observer) {
+		this.observerManager.addObserver(object, observer);
 	}
 
 	/**
@@ -282,25 +267,12 @@ public class TranslatorManager {
 	 *            the observer to register
 	 */
 	public void removeTranslatorObserver(TranslatorObserver observer) {
-		for (WeakReference<TranslatorObserver> reference : this.observers) {
-			if (reference.get() == observer) {
-				this.observers.remove(reference);
-				return;
-			}
-		}
+		this.observerManager.removeObserver(observer);
 	}
 
 	private void notifyObservers() {
-		Collection<WeakReference<TranslatorObserver>> observersCopy = new ArrayList<WeakReference<TranslatorObserver>>(
-				this.observers);
-
-		for (WeakReference<TranslatorObserver> observerRef : observersCopy) {
-			TranslatorObserver graphNodeObserver = observerRef.get();
-			if (graphNodeObserver != null)
-				graphNodeObserver.translatorLoaded(this.activeTranslator);
-			else
-				this.observers.remove(observerRef);
-		}
+		for (TranslatorObserver observer : this.observerManager.getObservers())
+			observer.translatorLoaded(this.activeTranslator);
 	}
 
 	/**

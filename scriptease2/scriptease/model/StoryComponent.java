@@ -1,6 +1,5 @@
 package scriptease.model;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -9,6 +8,7 @@ import java.util.Set;
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
+import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
@@ -61,7 +61,8 @@ public abstract class StoryComponent implements Cloneable {
 	private Boolean isVisible;
 
 	public StoryComponent ownerComponent;
-	private Collection<WeakReference<StoryComponentObserver>> observers;
+
+	private ObserverManager<StoryComponentObserver> observerManager;
 
 	private static final Set<Class<? extends StoryComponent>> noValidChildren = new HashSet<Class<? extends StoryComponent>>();
 	public static final String BLANK_TEXT = "";
@@ -90,7 +91,7 @@ public abstract class StoryComponent implements Cloneable {
 	 */
 	protected void init() {
 		this.ownerComponent = null;
-		this.observers = new ArrayList<WeakReference<StoryComponentObserver>>();
+		this.observerManager = new ObserverManager<StoryComponentObserver>();
 		this.displayText = StoryComponent.BLANK_TEXT;
 		this.labels = new ArrayList<String>();
 		this.isVisible = true;
@@ -256,20 +257,7 @@ public abstract class StoryComponent implements Cloneable {
 	 *            The observer who will be notified of changes
 	 */
 	public final void addStoryComponentObserver(StoryComponentObserver observer) {
-		Collection<WeakReference<StoryComponentObserver>> observersCopy = new ArrayList<WeakReference<StoryComponentObserver>>(
-				this.observers);
-
-		for (WeakReference<StoryComponentObserver> observerRef : observersCopy) {
-			StoryComponentObserver storyComponentObserver = observerRef.get();
-			if (storyComponentObserver != null
-					&& storyComponentObserver == observer)
-				// This checks if the observer already exists.
-				return;
-			else if (storyComponentObserver == null)
-				this.observers.remove(observerRef);
-		}
-
-		this.observers.add(new WeakReference<StoryComponentObserver>(observer));
+		this.observerManager.addObserver(this, observer);
 	}
 
 	/**
@@ -286,25 +274,13 @@ public abstract class StoryComponent implements Cloneable {
 	 */
 	public final void removeStoryComponentObserver(
 			StoryComponentObserver observer) {
-		for (WeakReference<StoryComponentObserver> reference : this.observers) {
-			if (reference.get() == observer) {
-				this.observers.remove(reference);
-				return;
-			}
-		}
+		this.observerManager.removeObserver(observer);
 	}
 
 	public final void notifyObservers(StoryComponentEvent event) {
-		Collection<WeakReference<StoryComponentObserver>> observersCopy = new ArrayList<WeakReference<StoryComponentObserver>>(
-				this.observers);
-
-		for (WeakReference<StoryComponentObserver> observerRef : observersCopy) {
-			StoryComponentObserver storyComponentObserver = observerRef.get();
-			if (storyComponentObserver != null)
-				storyComponentObserver.componentChanged(event);
-			else
-				this.observers.remove(observerRef);
-		}
+		for (StoryComponentObserver observer : this.observerManager
+				.getObservers())
+			observer.componentChanged(event);
 	}
 
 	/**

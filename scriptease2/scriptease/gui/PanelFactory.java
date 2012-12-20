@@ -38,8 +38,6 @@ import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
-import scriptease.controller.ObservedJPanel;
-import scriptease.controller.observer.LifetimeObserverFactory;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.StatusObserver;
@@ -72,6 +70,7 @@ import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.complex.StoryPoint;
+import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.util.BiHashMap;
 import scriptease.util.GUIOp;
@@ -145,7 +144,7 @@ public class PanelFactory {
 
 		final StoryComponentPanelTree storyComponentTree;
 		final StoryComponentObserver graphRedrawer;
-		final ObservedJPanel storyGraphPanel;
+		final JPanel storyGraphPanel;
 
 		final JScrollPane storyGraphScrollPane;
 
@@ -190,8 +189,7 @@ public class PanelFactory {
 
 			}
 		};
-		storyGraphPanel = new ObservedJPanel(storyGraph);
-		storyGraphPanel.addObserver(graphRedrawer);
+		storyGraphPanel = new JPanel();
 
 		storyGraphScrollPane = new JScrollPane(storyGraph);
 
@@ -470,8 +468,6 @@ public class PanelFactory {
 
 		final JScrollPane treeScrollPane;
 
-		final ObservedJPanel observedPanel;
-
 		final GameConstantPanel tree;
 		final JTextField searchField;
 
@@ -582,17 +578,10 @@ public class PanelFactory {
 			}
 		};
 
-		LibraryManager.getInstance().addLibraryManagerObserver(libraryObserver);
+		LibraryManager.getInstance().addLibraryManagerObserver(
+				gameConstantPane, libraryObserver);
 		PatternModelManager.getInstance().addPatternModelObserver(
 				gameConstantPane, modelObserver);
-
-		// This is very, very hack. But it's the only way our observers are
-		// stored for the lifetime of the game constant pane. The sizes get
-		// messed up if we just add gameConstantPane to observedPanel and that
-		observedPanel = new ObservedJPanel(new JPanel());
-		observedPanel.addObserver(libraryObserver);
-		observedPanel.setVisible(false);
-		gameConstantPane.add(observedPanel);
 
 		return gameConstantPane;
 	}
@@ -750,8 +739,20 @@ public class PanelFactory {
 		currentTranslatorLabel = new JLabel(transPrefix);
 		currentTranslatorNameLabel = new JLabel("-None-");
 
-		translatorObserver = LifetimeObserverFactory.getInstance()
-				.buildStatusPanelTranslatorObserver(currentTranslatorNameLabel);
+		translatorObserver = new TranslatorObserver() {
+			@Override
+			public void translatorLoaded(Translator newTranslator) {
+				if (newTranslator != null) {
+					timedLabel.setText(newTranslator.getName());
+					timedLabel.setEnabled(true);
+					timedLabel.setIcon(newTranslator.getIcon());
+				} else {
+					timedLabel.setText("-None-");
+					timedLabel.setEnabled(false);
+					timedLabel.setIcon(null);
+				}
+			}
+		};
 
 		statusObserver = new StatusObserver() {
 			@Override
@@ -760,7 +761,7 @@ public class PanelFactory {
 			}
 		};
 
-		TranslatorManager.getInstance().addTranslatorObserver(
+		TranslatorManager.getInstance().addTranslatorObserver(statusPanel,
 				translatorObserver);
 		StatusManager.getInstance().addStatusObserver(statusObserver);
 
