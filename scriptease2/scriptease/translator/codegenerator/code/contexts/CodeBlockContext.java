@@ -10,6 +10,7 @@ import scriptease.controller.get.VariableGetter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
@@ -179,5 +180,26 @@ public class CodeBlockContext extends Context {
 					"Attempted to get Story Point Inactive Block for a "
 							+ "CodeBlock without a Cause: " + this.codeBlock);
 		// CodeBlock Without A Cause. (Not) Starring James Dean
+	}
+
+	@Override
+	public Iterator<? extends Object> getIdenticalCauses() {
+		final Collection<ScriptIt> identicalCauses;
+		final ScriptIt scriptIt;
+
+		scriptIt = this.codeBlock.getCause();
+		identicalCauses = new ArrayList<ScriptIt>();
+
+		for (StoryPoint point : this.getStartStoryPoint().getDescendants()) {
+			for (StoryComponent child : point.getChildren()) {
+				if (child instanceof ScriptIt) {
+					if (scriptIt.isEquivalentToCause((ScriptIt) child)) {
+						identicalCauses.add((ScriptIt) child);
+					}
+				}
+			}
+		}
+
+		return identicalCauses.iterator();
 	}
 }

@@ -103,7 +103,7 @@
 			<Series data="children">
 				<FormatRef data="scriptIt" ref="functionCall" />
 				<FormatRef data="askIt" ref="askItConditional" />
-				<FormatRef data="note" ref = "noteFormat" />
+				<FormatRef data="note" ref="noteFormat" />
 				<FormatRef data="knowIt" ref="knowItDefinition" />
 			</Series>
 		</Format>
@@ -180,6 +180,7 @@
 
 		<!-- Conditionals for ScriptIts -->
 		<Format id="scriptItConditional">
+			<Series data="identicalCauses">
 			<Line>
 				<Literal>if(SE2_Story_GetState(GetFirstPC(), "</Literal>
 				<Fragment data="currentstorypoint" />
@@ -194,15 +195,15 @@
 				<Literal>} else {</Literal>
 			</Line>
 			<Indent>
-			<Scope data="inactiveChild">
-				<FormatRef ref="childrenWithoutImplicits" />
-			</Scope>
+				<Scope data="inactiveChild">
+					<FormatRef ref="childrenWithoutImplicits" />
+				</Scope>
 			</Indent>
 			<Line>
 				<Literal>}</Literal>
 			</Line>
+			</Series>
 		</Format>
-
 		<Format id="askItConditional">
 			<Line>
 				<Literal>//Condition Variables</Literal>
@@ -395,11 +396,11 @@
 				<FormatRef ref="include" />
 			</Series>
 		</Format>
-		
+
 		<Format id="noteFormat">
 			<Line>
-			<Literal>// </Literal>
-			<Fragment data="note" />
+				<Literal>// </Literal>
+				<Fragment data="note" />
 			</Line>
 		</Format>
 	</Formats>
