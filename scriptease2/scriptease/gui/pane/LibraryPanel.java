@@ -66,7 +66,6 @@ public class LibraryPanel extends JPanel {
 			.storyComponentSorter();
 
 	private final Timer searchFieldTimer;
-	private final LibraryManagerObserver libraryManagerObserver;
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
 
 	/**
@@ -76,29 +75,6 @@ public class LibraryPanel extends JPanel {
 	 */
 	public LibraryPanel() {
 		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
-		this.libraryManagerObserver = new LibraryManagerObserver() {
-			/**
-			 * Keep the display of the library up to date with the changes to
-			 * Libraries. This listener is important for the Story Component
-			 * Builder, so that changes made there will apply to the library
-			 * view as well.
-			 */
-			@Override
-			public void modelChanged(LibraryManagerEvent event) {
-				if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
-					final LibraryEvent libraryEvent = event.getEvent();
-					final StoryComponent storyComponent = libraryEvent
-							.getEvent().getSource();
-					if (libraryEvent.getEventType() == LibraryEvent.STORYCOMPONENT_CHANGED) {
-						updateElement(storyComponent);
-					} else if (libraryEvent.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED) {
-						addElement(storyComponent);
-					} else if (libraryEvent.getEventType() == LibraryEvent.STORYCOMPONENT_REMOVED) {
-						removeElement(storyComponent);
-					}
-				}
-			}
-		};
 
 		final JTabbedPane listTabs;
 
@@ -113,7 +89,8 @@ public class LibraryPanel extends JPanel {
 		final StoryComponentPanelJList descriptionsList;
 		final StoryComponentPanelJList controlsList;
 
-		final PatternModelObserver observer;
+		final PatternModelObserver modelObserver;
+		final LibraryManagerObserver libraryManagerObserver;
 
 		listTabs = new JTabbedPane();
 
@@ -133,7 +110,7 @@ public class LibraryPanel extends JPanel {
 		controlsList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.CONTROLS));
 
-		observer = new PatternModelObserver() {
+		modelObserver = new PatternModelObserver() {
 			/**
 			 * This listener checks for when the model is changed. This usually
 			 * happens when you load a model, or when you switch them by
@@ -164,6 +141,29 @@ public class LibraryPanel extends JPanel {
 				searchFieldTimer.stop();
 			};
 		});
+		libraryManagerObserver = new LibraryManagerObserver() {
+			/**
+			 * Keep the display of the library up to date with the changes to
+			 * Libraries. This listener is important for the Story Component
+			 * Builder, so that changes made there will apply to the library
+			 * view as well.
+			 */
+			@Override
+			public void modelChanged(LibraryManagerEvent event) {
+				if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
+					final LibraryEvent libraryEvent = event.getEvent();
+					final StoryComponent storyComponent = libraryEvent
+							.getEvent().getSource();
+					if (libraryEvent.getEventType() == LibraryEvent.STORYCOMPONENT_CHANGED) {
+						updateElement(storyComponent);
+					} else if (libraryEvent.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED) {
+						addElement(storyComponent);
+					} else if (libraryEvent.getEventType() == LibraryEvent.STORYCOMPONENT_REMOVED) {
+						removeElement(storyComponent);
+					}
+				}
+			}
+		};
 
 		// Set up the listeners
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
@@ -234,10 +234,10 @@ public class LibraryPanel extends JPanel {
 		// Configure the displaying of the pane
 		this.updateLists();
 
-		LibraryManager.getInstance().addLibraryManagerObserver(
-				this.libraryManagerObserver);
+		LibraryManager.getInstance().addLibraryManagerObserver(this,
+				libraryManagerObserver);
 		PatternModelManager.getInstance().addPatternModelObserver(this,
-				observer);
+				modelObserver);
 	}
 
 	/**

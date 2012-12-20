@@ -49,7 +49,7 @@ import scriptease.model.StoryModel;
  * @author remiller
  * @author mfchurch
  */
-public final class UndoManager implements FileManagerObserver {
+public final class UndoManager {
 	private final static UndoManager instance = new UndoManager();
 	private ObserverManager<UndoManagerObserver> observerManager;
 
@@ -71,9 +71,10 @@ public final class UndoManager implements FileManagerObserver {
 	private UndoManager() {
 		this.observerManager = new ObserverManager<UndoManagerObserver>();
 
-		final PatternModelObserver observer;
+		final PatternModelObserver modelObserver;
+		final FileManagerObserver fileObserver;
 
-		observer = new PatternModelObserver() {
+		modelObserver = new PatternModelObserver() {
 			@Override
 			public void modelChanged(PatternModelEvent event) {
 				final short eventType = event.getEventType();
@@ -105,9 +106,18 @@ public final class UndoManager implements FileManagerObserver {
 			}
 		};
 
+		fileObserver = new FileManagerObserver() {
+			@Override
+			public void fileReferenced(StoryModel model, File location) {
+				History history = UndoManager.this.findHistoryForModel(model);
+
+				history.markSaved();
+			}
+		};
+
 		PatternModelManager.getInstance().addPatternModelObserver(this,
-				observer);
-		FileManager.getInstance().addObserver(this);
+				modelObserver);
+		FileManager.getInstance().addObserver(this, fileObserver);
 	}
 
 	public final void addUndoManagerObserver(Object object,
@@ -417,12 +427,5 @@ public final class UndoManager implements FileManagerObserver {
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public void fileReferenced(StoryModel model, File location) {
-		History history = this.findHistoryForModel(model);
-
-		history.markSaved();
 	}
 }

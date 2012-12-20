@@ -184,10 +184,8 @@ public class MenuFactory {
 			menu.addSeparator();
 
 		menu.add(ExitScriptEaseAction.getInstance());
-		// Set up a listener to update the file menu's recent file list.
-		// I'm doing this via an anonymous inner class because I don't think its
-		// worth creating a new subclass over. - remiller
-		FileManager.getInstance().addObserver(new FileManagerObserver() {
+
+		FileManager.getInstance().addObserver(menu, new FileManagerObserver() {
 			@Override
 			public void fileReferenced(StoryModel model, File location) {
 				SwingUtilities.invokeLater(new Runnable() {

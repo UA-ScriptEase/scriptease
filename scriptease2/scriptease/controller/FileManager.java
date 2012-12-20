@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOError;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +21,7 @@ import scriptease.ScriptEase;
 import scriptease.controller.io.FileIO;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
+import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.PanelFactory;
 import scriptease.gui.StatusManager;
@@ -87,7 +87,7 @@ public final class FileManager {
 
 	private final Map<File, FileChannel> filesToChannels;
 
-	private final List<WeakReference<FileManagerObserver>> observers;
+	private final ObserverManager<FileManagerObserver> observerManager;
 
 	/**
 	 * The sole instance of this class as per the singleton pattern.
@@ -110,8 +110,7 @@ public final class FileManager {
 
 		this.filesToChannels = new HashMap<File, FileChannel>();
 
-		this.observers = new ArrayList<WeakReference<FileManagerObserver>>(
-				FileManager.RECENT_FILE_MAX);
+		this.observerManager = new ObserverManager<FileManagerObserver>();
 	}
 
 	/**
@@ -943,43 +942,16 @@ public final class FileManager {
 		return deleted;
 	}
 
-	public void addObserver(FileManagerObserver observer) {
-		final Collection<WeakReference<FileManagerObserver>> observersCopy;
-
-		observersCopy = new ArrayList<WeakReference<FileManagerObserver>>(
-				this.observers);
-
-		for (WeakReference<FileManagerObserver> observerRef : observersCopy) {
-			FileManagerObserver storyComponentObserver = observerRef.get();
-			if (storyComponentObserver != null
-					&& storyComponentObserver == observer)
-				return;
-			else if (storyComponentObserver == null)
-				this.observers.remove(observerRef);
-		}
-
-		this.observers.add(new WeakReference<FileManagerObserver>(observer));
+	public void addObserver(Object object, FileManagerObserver observer) {
+		this.observerManager.addObserver(object, observer);
 	}
 
 	public void removeObserver(FileManagerObserver observer) {
-		for (WeakReference<FileManagerObserver> reference : this.observers) {
-			if (reference.get() == observer) {
-				this.observers.remove(reference);
-				return;
-			}
-		}
+		this.observerManager.removeObserver(observer);
 	}
 
 	private void notifyObservers(StoryModel model, File location) {
-		Collection<WeakReference<FileManagerObserver>> observersCopy = new ArrayList<WeakReference<FileManagerObserver>>(
-				this.observers);
-
-		for (WeakReference<FileManagerObserver> observerRef : observersCopy) {
-			FileManagerObserver observer = observerRef.get();
-			if (observer != null)
-				observer.fileReferenced(model, location);
-			else
-				this.observers.remove(observerRef);
-		}
+		for (FileManagerObserver observer : this.observerManager.getObservers())
+			observer.fileReferenced(model, location);
 	}
 }
