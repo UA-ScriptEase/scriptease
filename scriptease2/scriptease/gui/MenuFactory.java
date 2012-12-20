@@ -89,7 +89,7 @@ public class MenuFactory {
 	private static final String DEBUG = "Debug";
 
 	// Change this to false to remove the tools menu.
-	private static final boolean TOOLS_MENU_ENABLED = true;
+	private static final boolean TOOLS_MENU_ENABLED = false;
 
 	/**
 	 * Creates the top level menu bar for a story.
