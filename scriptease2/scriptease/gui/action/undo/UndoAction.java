@@ -15,8 +15,7 @@ import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 
 @SuppressWarnings("serial")
-public final class UndoAction extends ActiveModelSensitiveAction implements
-		UndoManagerObserver {
+public final class UndoAction extends ActiveModelSensitiveAction {
 	private static final String UNDO = "Undo";
 
 	private static final Action instance = new UndoAction();
@@ -47,20 +46,25 @@ public final class UndoAction extends ActiveModelSensitiveAction implements
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_Z);
 		this.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
-		UndoManager.getInstance().addUndoManagerObserver(this);
+
+		final UndoManagerObserver observer;
+
+		observer = new UndoManagerObserver() {
+			@Override
+			public void stackChanged() {
+				UndoAction.this.updateEnabledState();
+				UndoAction.this.putValue(Action.NAME, UndoAction.UNDO + " "
+						+ UndoManager.getInstance().getLastUndoName());
+			}
+		};
+
+		UndoManager.getInstance().addUndoManagerObserver(this, observer);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		WindowFactory.getInstance().getCurrentFrame().requestFocusInWindow();
-		
-		UndoManager.getInstance().undo();
-	}
 
-	@Override
-	public void stackChanged() {
-		this.updateEnabledState();
-		this.putValue(Action.NAME, UndoAction.UNDO + " "
-				+ UndoManager.getInstance().getLastUndoName());
+		UndoManager.getInstance().undo();
 	}
 }

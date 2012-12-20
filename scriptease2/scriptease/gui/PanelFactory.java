@@ -326,11 +326,6 @@ public class PanelFactory {
 		final List<JComponent> panels = this.modelsToComponents.getValue(model);
 
 		if (panels == null) {
-			System.out
-					.println("WARNING: Encountered null list of model display "
-							+ "panels when attempting to get panels for "
-							+ model.getName());
-
 			return new ArrayList<JComponent>();
 		}
 
@@ -421,12 +416,42 @@ public class PanelFactory {
 			noteList.addStoryComponents(libraryModel.getNoteContainer()
 					.getChildren());
 
-		storyLibraryPaneObserver = LifetimeObserverFactory.getInstance()
-				.buildStoryLibraryPaneObserver(librarySplitPane,
-						storyJComponents);
+		storyLibraryPaneObserver = new PatternModelObserver() {
+			public void modelChanged(PatternModelEvent event) {
+
+				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
+					event.getPatternModel().process(new ModelAdapter() {
+
+						@Override
+						public void processLibraryModel(
+								LibraryModel libraryModel) {
+							for (JComponent component : storyJComponents)
+								component.setVisible(false);
+						}
+
+						@Override
+						public void processStoryModel(StoryModel storyModel) {
+							for (JComponent component : storyJComponents)
+								component.setVisible(true);
+							SwingUtilities.invokeLater(new Runnable() {
+								@Override
+								public void run() {
+									librarySplitPane.setDividerLocation(0.5);
+								}
+							});
+						}
+					});
+				} else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED) {
+					if (PatternModelManager.getInstance().getActiveModel() == null) {
+						for (JComponent component : storyJComponents)
+							component.setVisible(false);
+					}
+				}
+			}
+		};
 
 		PatternModelManager.getInstance().addPatternModelObserver(
-				storyLibraryPaneObserver);
+				librarySplitPane, storyLibraryPaneObserver);
 
 		return librarySplitPane;
 	}
@@ -558,15 +583,14 @@ public class PanelFactory {
 		};
 
 		LibraryManager.getInstance().addLibraryManagerObserver(libraryObserver);
-		PatternModelManager.getInstance()
-				.addPatternModelObserver(modelObserver);
+		PatternModelManager.getInstance().addPatternModelObserver(
+				gameConstantPane, modelObserver);
 
 		// This is very, very hack. But it's the only way our observers are
 		// stored for the lifetime of the game constant pane. The sizes get
 		// messed up if we just add gameConstantPane to observedPanel and that
 		observedPanel = new ObservedJPanel(new JPanel());
 		observedPanel.addObserver(libraryObserver);
-		observedPanel.addObserver(modelObserver);
 		observedPanel.setVisible(false);
 		gameConstantPane.add(observedPanel);
 

@@ -26,6 +26,7 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -41,7 +42,7 @@ import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.logger.NetworkHandler;
 import scriptease.controller.modelverifier.problem.StoryProblem;
-import scriptease.controller.observer.LifetimeObserverFactory;
+import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
@@ -882,8 +883,41 @@ public final class WindowFactory {
 		preferredLayout = ScriptEase.getInstance().getPreference(
 				ScriptEase.PREFERRED_LAYOUT_KEY);
 
-		modelObserver = LifetimeObserverFactory.getInstance()
-				.buildFrameModelObserver(frame);
+		modelObserver = new PatternModelObserver() {
+			@Override
+			public void modelChanged(PatternModelEvent event) {
+				final short eventType;
+				final PatternModel activeModel;
+
+				eventType = event.getEventType();
+				activeModel = PatternModelManager.getInstance()
+						.getActiveModel();
+
+				if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED
+						|| (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED && activeModel == null)) {
+					final JMenuBar bar;
+
+					bar = MenuFactory.createMainMenuBar(activeModel);
+
+					frame.setJMenuBar(bar);
+
+					// Create the title for the frame
+					String newTitle = "";
+					if (activeModel != null) {
+						String modelTitle = activeModel.getTitle();
+						if (!modelTitle.isEmpty())
+							newTitle += modelTitle + " - ";
+					}
+					newTitle += ScriptEase.TITLE;
+
+					frame.setTitle(newTitle);
+
+					// We need to revalidate the menu bar.
+					// http://bugs.sun.com/view_bug.do?bug_id=4949810
+					bar.revalidate();
+				}
+			}
+		};
 
 		frame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -917,8 +951,8 @@ public final class WindowFactory {
 			// when building of the Library Pane was moved to panelfactory.
 		}
 
-		PatternModelManager.getInstance()
-				.addPatternModelObserver(modelObserver);
+		PatternModelManager.getInstance().addPatternModelObserver(this,
+				modelObserver);
 
 		frame.getContentPane().add(content);
 

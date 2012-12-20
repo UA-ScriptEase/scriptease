@@ -67,7 +67,6 @@ public class LibraryPanel extends JPanel {
 
 	private final Timer searchFieldTimer;
 	private final LibraryManagerObserver libraryManagerObserver;
-	private final PatternModelObserver modelObserver;
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
 
 	/**
@@ -101,23 +100,6 @@ public class LibraryPanel extends JPanel {
 			}
 		};
 
-		this.modelObserver = new PatternModelObserver() {
-			/**
-			 * This listener checks for when the model is changed. This usually
-			 * happens when you load a model, or when you switch them by
-			 * switching tabs.
-			 */
-			@Override
-			public void modelChanged(PatternModelEvent event) {
-				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED)
-					updateLists();
-				else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED
-						&& PatternModelManager.getInstance().getActiveModel() == null) {
-					updateLists();
-				}
-			}
-		};
-
 		final JTabbedPane listTabs;
 
 		final JComponent filterPane;
@@ -130,6 +112,8 @@ public class LibraryPanel extends JPanel {
 		final StoryComponentPanelJList effectsList;
 		final StoryComponentPanelJList descriptionsList;
 		final StoryComponentPanelJList controlsList;
+
+		final PatternModelObserver observer;
 
 		listTabs = new JTabbedPane();
 
@@ -148,6 +132,23 @@ public class LibraryPanel extends JPanel {
 				Category.DESCRIPTIONS));
 		controlsList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.CONTROLS));
+
+		observer = new PatternModelObserver() {
+			/**
+			 * This listener checks for when the model is changed. This usually
+			 * happens when you load a model, or when you switch them by
+			 * switching tabs.
+			 */
+			@Override
+			public void modelChanged(PatternModelEvent event) {
+				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED)
+					updateLists();
+				else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED
+						&& PatternModelManager.getInstance().getActiveModel() == null) {
+					updateLists();
+				}
+			}
+		};
 
 		this.storyComponentPanelJLists.add(causesList);
 		this.storyComponentPanelJLists.add(effectsList);
@@ -235,8 +236,8 @@ public class LibraryPanel extends JPanel {
 
 		LibraryManager.getInstance().addLibraryManagerObserver(
 				this.libraryManagerObserver);
-		PatternModelManager.getInstance().addPatternModelObserver(
-				this.modelObserver);
+		PatternModelManager.getInstance().addPatternModelObserver(this,
+				observer);
 	}
 
 	/**

@@ -41,8 +41,7 @@ import scriptease.translator.TranslatorManager;
  * 
  * @author mfchurch
  */
-public class LibraryManager implements TranslatorObserver, LibraryObserver,
-		PatternModelObserver {
+public class LibraryManager implements TranslatorObserver, LibraryObserver {
 
 	final private static LibraryManager instance = new LibraryManager();
 	private static final String SCRIPTEASE_LIBRARY = "ScriptEase";
@@ -50,14 +49,14 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	private final Map<Translator, LibraryModel> loadedTranslators;
 	private final StoryComponentContainer masterRoot;
 
-	private final Collection<WeakLibraryManagerObserverReference<LibraryManagerObserver>> observers;
+	private final Collection<WeakReference<LibraryManagerObserver>> observers;
 
 	private LibraryManager() {
 		this.libraries = new CopyOnWriteArraySet<LibraryModel>();
 		this.loadedTranslators = new HashMap<Translator, LibraryModel>();
 		this.masterRoot = new StoryComponentContainer("Library");
 
-		this.observers = new CopyOnWriteArraySet<WeakLibraryManagerObserverReference<LibraryManagerObserver>>();
+		this.observers = new CopyOnWriteArraySet<WeakReference<LibraryManagerObserver>>();
 
 		this.masterRoot.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
@@ -72,8 +71,32 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 
 		this.buildDefaultLibrary();
 
+		final PatternModelObserver observer;
+
+		observer = new PatternModelObserver() {
+			/*
+			 * On StoryModelPoolEvent, If the StoryModelPool no longer uses the
+			 * translator, removes the translator from loadedTranslators.
+			 */
+			@Override
+			public void modelChanged(PatternModelEvent event) {
+				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED)
+					for (Translator translator : LibraryManager.this.loadedTranslators
+							.keySet()) {
+						if (!PatternModelManager.getInstance().usingTranslator(
+								translator)) {
+							// this.remove(loadedTranslators.get(translator));
+							LibraryManager.this.loadedTranslators
+									.remove(translator);
+							break;
+						}
+					}
+			}
+		};
+
 		TranslatorManager.getInstance().addTranslatorObserver(this);
-		PatternModelManager.getInstance().addPatternModelObserver(this);
+		PatternModelManager.getInstance().addPatternModelObserver(this,
+				observer);
 	}
 
 	/**
@@ -86,7 +109,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 
 		scriptEaseLibrary = new LibraryModel(LibraryManager.SCRIPTEASE_LIBRARY,
 				LibraryManager.SCRIPTEASE_LIBRARY);
-		
+
 		conditional = new AskIt();
 		note = new Note("Note");
 
@@ -200,12 +223,12 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 * @param observer
 	 */
 	public void addLibraryManagerObserver(LibraryManagerObserver observer) {
-		final Collection<WeakLibraryManagerObserverReference<LibraryManagerObserver>> observersCopy;
+		final Collection<WeakReference<LibraryManagerObserver>> observersCopy;
 
-		observersCopy = new ArrayList<WeakLibraryManagerObserverReference<LibraryManagerObserver>>(
+		observersCopy = new ArrayList<WeakReference<LibraryManagerObserver>>(
 				this.observers);
 
-		for (WeakLibraryManagerObserverReference<LibraryManagerObserver> observerRef : observersCopy) {
+		for (WeakReference<LibraryManagerObserver> observerRef : observersCopy) {
 			LibraryManagerObserver storyComponentObserver = observerRef.get();
 			if (storyComponentObserver != null
 					&& storyComponentObserver == observer)
@@ -214,9 +237,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 				this.observers.remove(observerRef);
 		}
 
-		this.observers
-				.add(new WeakLibraryManagerObserverReference<LibraryManagerObserver>(
-						observer));
+		this.observers.add(new WeakReference<LibraryManagerObserver>(observer));
 	}
 
 	/**
@@ -226,7 +247,7 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 * @param observer
 	 */
 	public void removeLibraryChangeListener(LibraryManagerObserver observer) {
-		for (WeakLibraryManagerObserverReference<LibraryManagerObserver> reference : this.observers) {
+		for (WeakReference<LibraryManagerObserver> reference : this.observers) {
 			if (reference.get() == observer) {
 				this.observers.remove(reference);
 				return;
@@ -239,10 +260,10 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 * added or removed.
 	 */
 	private void notifyChange(LibraryManagerEvent event) {
-		Collection<WeakLibraryManagerObserverReference<LibraryManagerObserver>> observersCopy = new ArrayList<WeakLibraryManagerObserverReference<LibraryManagerObserver>>(
+		Collection<WeakReference<LibraryManagerObserver>> observersCopy = new ArrayList<WeakReference<LibraryManagerObserver>>(
 				this.observers);
 
-		for (WeakLibraryManagerObserverReference<LibraryManagerObserver> observerRef : observersCopy) {
+		for (WeakReference<LibraryManagerObserver> observerRef : observersCopy) {
 			LibraryManagerObserver libraryManagerObserver = observerRef.get();
 			if (libraryManagerObserver != null)
 				libraryManagerObserver.modelChanged(event);
@@ -288,38 +309,5 @@ public class LibraryManager implements TranslatorObserver, LibraryObserver,
 	 */
 	public boolean contains(LibraryModel model) {
 		return this.libraries.contains(model);
-	}
-
-	/**
-	 * On StoryModelPoolEvent, If the StoryModelPool no longer uses the
-	 * translator, removes the translator from loadedTranslators.
-	 */
-	@Override
-	public void modelChanged(PatternModelEvent event) {
-		if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED)
-			for (Translator translator : this.loadedTranslators.keySet()) {
-				if (!PatternModelManager.getInstance().usingTranslator(
-						translator)) {
-					// this.remove(loadedTranslators.get(translator));
-					this.loadedTranslators.remove(translator);
-					break;
-				}
-			}
-	}
-
-	/**
-	 * WeakReference wrapper used to track how many WeakReferences of each type
-	 * are generated. This class provides no functionality, but it does make it
-	 * easier for us to see where memory leaks may be occurring.
-	 * 
-	 * @author kschenk
-	 * 
-	 * @param <T>
-	 */
-	private class WeakLibraryManagerObserverReference<T> extends
-			WeakReference<T> {
-		public WeakLibraryManagerObserverReference(T referent) {
-			super(referent);
-		}
 	}
 }
