@@ -24,6 +24,7 @@ import scriptease.translator.io.model.GameType.TypeValueWidgets;
 public class GameTypeManager {
 	public static final String DEFAULT_VOID_TYPE = "void";
 	public static final String DEFAULT_BOOL_TYPE = "question";
+	public static final String DEFAULT_LIST_WIDGET = "Li";
 
 	private final Map<String, GameType> gameTypes;
 	private final TypeConverter typeConverter;

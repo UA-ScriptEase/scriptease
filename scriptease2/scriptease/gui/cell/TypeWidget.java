@@ -81,7 +81,7 @@ public class TypeWidget extends JToggleButton implements TranslatorObserver {
 				this.setText(gameTypeManager.getWidgetName(type));
 			} else {
 				if (gameTypeManager.hasEnum(type))
-					this.setText("Li");
+					this.setText(GameTypeManager.DEFAULT_LIST_WIDGET);
 				else
 					this.setText(type.substring(0, 2).toUpperCase());
 			}

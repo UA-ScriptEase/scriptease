@@ -16,7 +16,6 @@ import scriptease.model.LibraryModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
-import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameType;

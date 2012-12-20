@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -44,8 +46,11 @@ import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 
 @SuppressWarnings("serial")
 /**
@@ -57,6 +62,9 @@ import scriptease.translator.TranslatorManager;
  * @author kschenk
  */
 public class LibraryPanel extends JPanel {
+	private static final Comparator<StoryComponent> STORY_COMPONENT_COMPARATOR = LibraryPanel
+			.storyComponentSorter();
+
 	private final Timer searchFieldTimer;
 	private final LibraryManagerObserver libraryManagerObserver;
 	private final PatternModelObserver modelObserver;
@@ -269,6 +277,73 @@ public class LibraryPanel extends JPanel {
 		}
 	}
 
+	private static Comparator<StoryComponent> storyComponentSorter() {
+		return new Comparator<StoryComponent>() {
+			@Override
+			public int compare(StoryComponent c1, StoryComponent c2) {
+				int compare = 0;
+
+				if (c1 instanceof KnowIt && c2 instanceof KnowIt) {
+					final KnowIt k1 = (KnowIt) c1;
+					final KnowIt k2 = (KnowIt) c2;
+					final String k1Type = k1.getDefaultType();
+					final String k2Type = k2.getDefaultType();
+
+					final GameTypeManager typeManager = TranslatorManager
+							.getInstance().getActiveGameTypeManager();
+
+					String k1Widget = typeManager.getWidgetName(k1Type);
+					String k2Widget = typeManager.getWidgetName(k2Type);
+
+					if (k1Widget == null || k1Widget.isEmpty()) {
+						if (typeManager.hasEnum(k1Type) == true) {
+							k1Widget = GameTypeManager.DEFAULT_LIST_WIDGET;
+						}
+					}
+					if (k2Widget == null || k2Widget.isEmpty()) {
+						if (typeManager.hasEnum(k2Type) == true) {
+							k2Widget = GameTypeManager.DEFAULT_LIST_WIDGET;
+						}
+					}
+
+					compare = k1Widget.compareTo(k2Widget);
+
+				} else if (c1 instanceof ScriptIt && c2 instanceof ScriptIt) {
+					final ScriptIt s1 = (ScriptIt) c1;
+					final ScriptIt s2 = (ScriptIt) c2;
+
+					if (!s1.isCause() || !s2.isCause())
+						return 0;
+
+					final Collection<KnowIt> params1 = s1.getParameters();
+					final Collection<KnowIt> params2 = s2.getParameters();
+
+					if (params1.isEmpty() && params2.isEmpty()) {
+						compare = 0;
+					} else if (params1.isEmpty()) {
+						compare = 1;
+					} else if (params2.isEmpty()) {
+						compare = -1;
+					} else {
+						final KnowIt p1 = params1.iterator().next();
+						final KnowIt p2 = params2.iterator().next();
+
+						if (p1 != null && p2 != null) {
+							compare = p1.getDefaultType().compareTo(
+									p2.getDefaultType());
+						}
+					}
+				}
+
+				if (compare == 0) {
+					compare = c1.getDisplayText()
+							.compareTo(c2.getDisplayText());
+				}
+				return compare;
+			}
+		};
+	}
+
 	/**
 	 * Updates the lists based on their filters. Works by removing and adding
 	 * back all components in the list panes.
@@ -293,11 +368,19 @@ public class LibraryPanel extends JPanel {
 			list.removeAllStoryComponents();
 
 			if (activeTranslator != null) {
-				final Collection<LibraryModel> libraries = activeTranslator
-						.getLibraries();
+				final Collection<LibraryModel> libraries;
+
+				libraries = activeTranslator.getLibraries();
+
 				for (LibraryModel libraryModel : libraries) {
-					list.addStoryComponents(libraryModel
-							.getMainStoryComponents());
+					final List<StoryComponent> components;
+
+					components = libraryModel.getAllStoryComponents();
+
+					Collections.sort(components,
+							LibraryPanel.STORY_COMPONENT_COMPARATOR);
+
+					list.addStoryComponents(components);
 				}
 			}
 		}
