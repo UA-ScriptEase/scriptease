@@ -557,8 +557,6 @@ public abstract class StoryComponent implements Cloneable {
 		});
 	}
 
-	/************** Abstract Methods ******************/
-
 	/**
 	 * This is a double-dispatch hook for the
 	 * {@link scriptease.controller.StoryVisitor} family of controllers.

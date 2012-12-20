@@ -84,30 +84,32 @@ public class StoryComponentPanel extends JPanel implements
 			}
 		});
 
-		SEFocusManager.getInstance().addSEFocusObserver(this, new SEFocusObserver() {
-			@Override
-			public void gainFocus(Component oldFocus) {
-			}
+		SEFocusManager.getInstance().addSEFocusObserver(this,
+				new SEFocusObserver() {
+					@Override
+					public void gainFocus(Component oldFocus) {
+					}
 
-			@Override
-			public void loseFocus(Component oldFocus) {
-				final Component newFocus;
+					@Override
+					public void loseFocus(Component oldFocus) {
+						final Component newFocus;
 
-				newFocus = SEFocusManager.getInstance().getFocus();
+						newFocus = SEFocusManager.getInstance().getFocus();
 
-				if (newFocus instanceof StoryComponentPanel)
-					return;
-				else {
-					// Clear the selection if new focus is not a SCPanel.
-					final StoryComponentPanelManager selectionManager;
+						if (newFocus instanceof StoryComponentPanel)
+							return;
+						else {
+							// Clear the selection if new focus is not a
+							// SCPanel.
+							final StoryComponentPanelManager selectionManager;
 
-					selectionManager = StoryComponentPanel.this
-							.getSelectionManager();
-					if (selectionManager != null)
-						selectionManager.clearSelection();
-				}
-			}
-		});
+							selectionManager = StoryComponentPanel.this
+									.getSelectionManager();
+							if (selectionManager != null)
+								selectionManager.clearSelection();
+						}
+					}
+				});
 
 		this.setVisible(component.isVisible());
 	}
@@ -437,7 +439,7 @@ public class StoryComponentPanel extends JPanel implements
 			@Override
 			public void mouseExited(MouseEvent e) {
 				hoverTimer.stop();
-				
+
 				if (!(panel.getStoryComponent() instanceof StoryPoint)) {
 					this.panel.getSelectionManager().updatePanelBackgrounds();
 				}

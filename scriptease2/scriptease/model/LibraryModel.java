@@ -2,6 +2,7 @@ package scriptease.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.ModelVisitor;
@@ -197,7 +198,7 @@ public class LibraryModel extends PatternModel implements
 				for (String label : labels) {
 					if (label
 							.equalsIgnoreCase(AutomaticsManager.AUTOMATIC_LABEL)) {
-						automatics.add((ScriptIt)cause);
+						automatics.add((ScriptIt) cause);
 					}
 				}
 			}
@@ -373,30 +374,12 @@ public class LibraryModel extends PatternModel implements
 	}
 
 	/**
-	 * Returns all story components representable by a story component panel.
-	 * 
-	 * @return
-	 */
-	public Collection<StoryComponent> getMainStoryComponents() {
-		final Collection<StoryComponent> components;
-
-		components = new ArrayList<StoryComponent>();
-
-		components.addAll(this.effectsCategory.getChildren());
-		components.addAll(this.causesCategory.getChildren());
-		components.addAll(this.descriptionsCategory.getChildren());
-		components.addAll(this.controllersCategory.getChildren());
-		components.addAll(this.noteContainer.getChildren());
-		return components;
-	}
-
-	/**
 	 * Get's all the LibraryModel's StoryComponents
 	 * 
 	 * @return
 	 */
-	public Collection<StoryComponent> getAllStoryComponents() {
-		final Collection<StoryComponent> components;
+	public List<StoryComponent> getAllStoryComponents() {
+		final List<StoryComponent> components;
 
 		components = new ArrayList<StoryComponent>();
 
