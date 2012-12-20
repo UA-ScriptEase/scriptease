@@ -468,7 +468,7 @@
       <WidgetName>T</WidgetName>
     </Type>
     <Type>
-      <Name>Story</Name>
+      <Name>Story &lt;Module&gt;</Name>
       <Keyword>module</Keyword>
       <CodeSymbol>object</CodeSymbol>
       <Slots>
@@ -524,7 +524,7 @@
       <Name>Speak</Name>
       <Keyword>speak</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>TALKVOLUME_WHISPER&lt;Talkvolume Whisper&gt;|TALKVOLUME_SHOUT&lt;Talkvolume Shout&gt;|TALKVOLUME_TALK&lt;Talkvolume Talk&gt;</Enum>
+      <Enum>TALKVOLUME_TELL&lt;Talkvolum Tell&gt;|TALKVOLUME_WHISPER&lt;Talkvolume Whisper&gt;|TALKVOLUME_SHOUT&lt;Talkvolume Shout&gt;|TALKVOLUME_TALK&lt;Talkvolume Talk&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -565,7 +565,7 @@
       <Name>TalkVolume</Name>
       <Keyword>talk_volume</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>TALKVOLUME_SILENT_SHOUT&lt;Silent Shout&gt;|TALKVOLUME_WHISPER&lt;Whisper&gt;|TALKVOLUME_SHOUT&lt;Shout&gt;|TALKVOLUME_TALK&lt;Talk&gt;|TALKVOLUME_SILENT_TALK&lt;Silent Talk&gt;</Enum>
+      <Enum>TALKVOLUME_TELL&lt;Tell&gt;|TALKVOLUME_SILENT_SHOUT&lt;Silent Shout&gt;|TALKVOLUME_WHISPER&lt;Whisper&gt;|TALKVOLUME_SHOUT&lt;Shout&gt;|TALKVOLUME_TALK&lt;Talk&gt;|TALKVOLUME_SILENT_TALK&lt;Silent Talk&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
