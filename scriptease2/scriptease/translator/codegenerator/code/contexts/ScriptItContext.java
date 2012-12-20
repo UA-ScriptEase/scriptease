@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import scriptease.model.CodeBlock;
+import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.LocationInformation;
@@ -129,5 +131,31 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	@Override
 	public Iterator<KnowIt> getParameters() {
 		return ((ScriptIt) this.component).getParameters().iterator();
+	}
+
+	@Override
+	public StoryItemSequence getActiveChild() {
+		return ((ScriptIt) this.component).getActiveBlock();
+	}
+
+	@Override
+	public StoryItemSequence getInactiveChild() {
+		return ((ScriptIt) this.component).getInactiveBlock();
+	}
+
+	@Override
+	public String getUnique32CharName() {
+		final ScriptIt scriptIt;
+
+		scriptIt = (ScriptIt) this.component;
+
+		StoryComponent owner = scriptIt.getOwner();
+		while (owner != null) {
+			if (owner instanceof StoryPoint)
+				return ((StoryPoint) owner).getUnique32CharName();
+		}
+
+		throw new NullPointerException("Could not find Story Point for "
+				+ "ScriptIt: " + scriptIt);
 	}
 }

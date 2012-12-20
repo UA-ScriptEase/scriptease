@@ -220,6 +220,10 @@ public class SeriesFragment extends AbstractContainerFragment {
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.CHILDRENNODES
 						.name())) {
 			it = context.getStoryPointChildren();
+		} else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.IDENTICALCAUSES
+						.name())) {
+			it = context.getIdenticalCauses();
 		} else {
 			// Default return 'cuz they didn't tell us a real label!
 			System.err.println("Series was unable to be resolved for data: "

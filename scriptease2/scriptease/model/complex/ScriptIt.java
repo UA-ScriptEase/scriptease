@@ -343,6 +343,41 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 			implicit.process(processController);
 	}
 
+	/**
+	 * Returns the bindings on the ScriptIt's parameters
+	 * 
+	 * @return
+	 */
+	public Collection<KnowItBinding> getBindings() {
+		final Collection<KnowItBinding> bindings;
+
+		bindings = new ArrayList<KnowItBinding>();
+
+		for (KnowIt parameter : this.getParameters()) {
+			bindings.add(parameter.getBinding());
+		}
+
+		return bindings;
+	}
+
+	/**
+	 * Returns whether the two causes are equivalent. That is, whether they have
+	 * the same display text and the same bindings. If one of these ScriptIts is
+	 * not a cause, this returns false.
+	 * 
+	 * @param cause
+	 * @return
+	 */
+	public boolean isEquivalentToCause(ScriptIt cause) {
+		boolean equality = true;
+
+		equality &= cause.isCause() && this.isCause();
+		equality &= cause.getDisplayText().equals(this.getDisplayText());
+		equality &= cause.getBindings().equals(this.getBindings());
+
+		return equality;
+	}
+
 	@Override
 	public void revalidateKnowItBindings() {
 		for (KnowIt parameter : this.getParameters()) {
