@@ -87,7 +87,7 @@ public final class FileManager {
 
 	private final Map<File, FileChannel> filesToChannels;
 
-	private final List<WeakFileManagerObserverReference<FileManagerObserver>> observers;
+	private final List<WeakReference<FileManagerObserver>> observers;
 
 	/**
 	 * The sole instance of this class as per the singleton pattern.
@@ -110,7 +110,7 @@ public final class FileManager {
 
 		this.filesToChannels = new HashMap<File, FileChannel>();
 
-		this.observers = new ArrayList<WeakFileManagerObserverReference<FileManagerObserver>>(
+		this.observers = new ArrayList<WeakReference<FileManagerObserver>>(
 				FileManager.RECENT_FILE_MAX);
 	}
 
@@ -354,8 +354,8 @@ public final class FileManager {
 		final GameModule module = model.getModule();
 		final Translator translator = model.getTranslator();
 		final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
-		final Collection<ScriptInfo> scriptInfos = CodeGenerator.getInstance().generateCode(
-				model, problems);
+		final Collection<ScriptInfo> scriptInfos = CodeGenerator.getInstance()
+				.generateCode(model, problems);
 
 		module.addScripts(scriptInfos);
 		module.addIncludeFiles(translator.getIncludes());
@@ -944,12 +944,12 @@ public final class FileManager {
 	}
 
 	public void addObserver(FileManagerObserver observer) {
-		final Collection<WeakFileManagerObserverReference<FileManagerObserver>> observersCopy;
+		final Collection<WeakReference<FileManagerObserver>> observersCopy;
 
-		observersCopy = new ArrayList<WeakFileManagerObserverReference<FileManagerObserver>>(
+		observersCopy = new ArrayList<WeakReference<FileManagerObserver>>(
 				this.observers);
 
-		for (WeakFileManagerObserverReference<FileManagerObserver> observerRef : observersCopy) {
+		for (WeakReference<FileManagerObserver> observerRef : observersCopy) {
 			FileManagerObserver storyComponentObserver = observerRef.get();
 			if (storyComponentObserver != null
 					&& storyComponentObserver == observer)
@@ -958,13 +958,11 @@ public final class FileManager {
 				this.observers.remove(observerRef);
 		}
 
-		this.observers
-				.add(new WeakFileManagerObserverReference<FileManagerObserver>(
-						observer));
+		this.observers.add(new WeakReference<FileManagerObserver>(observer));
 	}
 
 	public void removeObserver(FileManagerObserver observer) {
-		for (WeakFileManagerObserverReference<FileManagerObserver> reference : this.observers) {
+		for (WeakReference<FileManagerObserver> reference : this.observers) {
 			if (reference.get() == observer) {
 				this.observers.remove(reference);
 				return;
@@ -973,30 +971,15 @@ public final class FileManager {
 	}
 
 	private void notifyObservers(StoryModel model, File location) {
-		Collection<WeakFileManagerObserverReference<FileManagerObserver>> observersCopy = new ArrayList<WeakFileManagerObserverReference<FileManagerObserver>>(
+		Collection<WeakReference<FileManagerObserver>> observersCopy = new ArrayList<WeakReference<FileManagerObserver>>(
 				this.observers);
 
-		for (WeakFileManagerObserverReference<FileManagerObserver> observerRef : observersCopy) {
+		for (WeakReference<FileManagerObserver> observerRef : observersCopy) {
 			FileManagerObserver observer = observerRef.get();
 			if (observer != null)
 				observer.fileReferenced(model, location);
 			else
 				this.observers.remove(observerRef);
-		}
-	}
-
-	/**
-	 * WeakReference wrapper used to track how many WeakReferences of each type
-	 * are generated. This class provides no functionality, but it does make it
-	 * easier for us to see where memory leaks may be occurring.
-	 * 
-	 * @author kschenk
-	 * 
-	 * @param <T>
-	 */
-	private class WeakFileManagerObserverReference<T> extends WeakReference<T> {
-		public WeakFileManagerObserverReference(T referent) {
-			super(referent);
 		}
 	}
 }

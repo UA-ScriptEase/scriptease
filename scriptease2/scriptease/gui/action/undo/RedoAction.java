@@ -15,8 +15,7 @@ import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 
 @SuppressWarnings("serial")
-public final class RedoAction extends ActiveModelSensitiveAction implements
-		UndoManagerObserver {
+public final class RedoAction extends ActiveModelSensitiveAction {
 	private static final String REDO = "Redo";
 
 	private static final Action instance = new RedoAction();
@@ -47,20 +46,25 @@ public final class RedoAction extends ActiveModelSensitiveAction implements
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_R);
 		this.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
-		UndoManager.getInstance().addUndoManagerObserver(this);
+
+		final UndoManagerObserver observer;
+
+		observer = new UndoManagerObserver() {
+			@Override
+			public void stackChanged() {
+				RedoAction.this.updateEnabledState();
+				RedoAction.this.putValue(Action.NAME, RedoAction.REDO + " "
+						+ UndoManager.getInstance().getLastRedoName());
+			}
+		};
+
+		UndoManager.getInstance().addUndoManagerObserver(this, observer);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		WindowFactory.getInstance().getCurrentFrame().requestFocusInWindow();
-		
-		UndoManager.getInstance().redo();
-	}
 
-	@Override
-	public void stackChanged() {
-		this.updateEnabledState();
-		this.putValue(Action.NAME, RedoAction.REDO + " "
-				+ UndoManager.getInstance().getLastRedoName());
+		UndoManager.getInstance().redo();
 	}
 }

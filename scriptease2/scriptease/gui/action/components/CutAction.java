@@ -61,8 +61,6 @@ public final class CutAction extends ActiveModelSensitiveAction {
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
 		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 				KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
-
-		PatternModelManager.getInstance().addPatternModelObserver(this);
 	}
 
 	/**

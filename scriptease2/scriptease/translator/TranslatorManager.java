@@ -35,7 +35,7 @@ import scriptease.translator.apimanagers.GameTypeManager;
  * 
  * @author graves
  */
-public class TranslatorManager implements PatternModelObserver {
+public class TranslatorManager {
 	private static final String NO_TRANSLATORS_PROBLEM = "ScriptEase could not locate any valid game translators in its \"translators\" directory. "
 			+ "\n\nYou will not be able to open Story files or perform any other game-specific operations.";
 
@@ -68,7 +68,31 @@ public class TranslatorManager implements PatternModelObserver {
 
 		// scan for translators in the translators folder
 		this.fillTranslatorPool();
-		PatternModelManager.getInstance().addPatternModelObserver(this);
+
+		final PatternModelObserver observer;
+
+		observer = new PatternModelObserver() {
+			@Override
+			public void modelChanged(PatternModelEvent event) {
+				final short eventType = event.getEventType();
+				final PatternModel model = event.getPatternModel();
+				Translator translator = (model == null ? null : model
+						.getTranslator());
+
+				if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
+					if (TranslatorManager.this.activeTranslator != translator) {
+						TranslatorManager.this.setActiveTranslator(translator);
+					}
+				} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED) {
+					if (!PatternModelManager.getInstance().usingTranslator(
+							translator)) {
+						TranslatorManager.this.setActiveTranslator(null);
+					}
+				}
+			}
+		};
+		PatternModelManager.getInstance().addPatternModelObserver(this,
+				observer);
 	}
 
 	/**
@@ -208,6 +232,8 @@ public class TranslatorManager implements PatternModelObserver {
 	 * @return
 	 */
 	public APIDictionary getActiveAPIDictionary() {
+		if (this.activeTranslator == null)
+			return null;
 		return this.activeTranslator.getApiDictionary();
 	}
 
@@ -218,6 +244,8 @@ public class TranslatorManager implements PatternModelObserver {
 	 * @return
 	 */
 	public GameTypeManager getActiveGameTypeManager() {
+		if (this.activeTranslator == null)
+			return null;
 		return this.activeTranslator.getGameTypeManager();
 	}
 
@@ -339,22 +367,5 @@ public class TranslatorManager implements PatternModelObserver {
 					translator.getName() + " translator loaded");
 
 		this.notifyObservers();
-	}
-
-	@Override
-	public void modelChanged(PatternModelEvent event) {
-		final short eventType = event.getEventType();
-		final PatternModel model = event.getPatternModel();
-		Translator translator = (model == null ? null : model.getTranslator());
-
-		if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
-			if (this.activeTranslator != translator) {
-				this.setActiveTranslator(translator);
-			}
-		} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED) {
-			if (!PatternModelManager.getInstance().usingTranslator(translator)) {
-				this.setActiveTranslator(null);
-			}
-		}
 	}
 }

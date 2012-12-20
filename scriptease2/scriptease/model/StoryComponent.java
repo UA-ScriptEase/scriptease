@@ -61,7 +61,7 @@ public abstract class StoryComponent implements Cloneable {
 	private Boolean isVisible;
 
 	public StoryComponent ownerComponent;
-	private Collection<WeakStoryComponentObserverReference<StoryComponentObserver>> observers;
+	private Collection<WeakReference<StoryComponentObserver>> observers;
 
 	private static final Set<Class<? extends StoryComponent>> noValidChildren = new HashSet<Class<? extends StoryComponent>>();
 	public static final String BLANK_TEXT = "";
@@ -90,7 +90,7 @@ public abstract class StoryComponent implements Cloneable {
 	 */
 	protected void init() {
 		this.ownerComponent = null;
-		this.observers = new ArrayList<WeakStoryComponentObserverReference<StoryComponentObserver>>();
+		this.observers = new ArrayList<WeakReference<StoryComponentObserver>>();
 		this.displayText = StoryComponent.BLANK_TEXT;
 		this.labels = new ArrayList<String>();
 		this.isVisible = true;
@@ -256,10 +256,10 @@ public abstract class StoryComponent implements Cloneable {
 	 *            The observer who will be notified of changes
 	 */
 	public final void addStoryComponentObserver(StoryComponentObserver observer) {
-		Collection<WeakStoryComponentObserverReference<StoryComponentObserver>> observersCopy = new ArrayList<WeakStoryComponentObserverReference<StoryComponentObserver>>(
+		Collection<WeakReference<StoryComponentObserver>> observersCopy = new ArrayList<WeakReference<StoryComponentObserver>>(
 				this.observers);
 
-		for (WeakStoryComponentObserverReference<StoryComponentObserver> observerRef : observersCopy) {
+		for (WeakReference<StoryComponentObserver> observerRef : observersCopy) {
 			StoryComponentObserver storyComponentObserver = observerRef.get();
 			if (storyComponentObserver != null
 					&& storyComponentObserver == observer)
@@ -269,9 +269,7 @@ public abstract class StoryComponent implements Cloneable {
 				this.observers.remove(observerRef);
 		}
 
-		this.observers
-				.add(new WeakStoryComponentObserverReference<StoryComponentObserver>(
-						observer));
+		this.observers.add(new WeakReference<StoryComponentObserver>(observer));
 	}
 
 	/**
@@ -288,7 +286,7 @@ public abstract class StoryComponent implements Cloneable {
 	 */
 	public final void removeStoryComponentObserver(
 			StoryComponentObserver observer) {
-		for (WeakStoryComponentObserverReference<StoryComponentObserver> reference : this.observers) {
+		for (WeakReference<StoryComponentObserver> reference : this.observers) {
 			if (reference.get() == observer) {
 				this.observers.remove(reference);
 				return;
@@ -297,10 +295,10 @@ public abstract class StoryComponent implements Cloneable {
 	}
 
 	public final void notifyObservers(StoryComponentEvent event) {
-		Collection<WeakStoryComponentObserverReference<StoryComponentObserver>> observersCopy = new ArrayList<WeakStoryComponentObserverReference<StoryComponentObserver>>(
+		Collection<WeakReference<StoryComponentObserver>> observersCopy = new ArrayList<WeakReference<StoryComponentObserver>>(
 				this.observers);
 
-		for (WeakStoryComponentObserverReference<StoryComponentObserver> observerRef : observersCopy) {
+		for (WeakReference<StoryComponentObserver> observerRef : observersCopy) {
 			StoryComponentObserver storyComponentObserver = observerRef.get();
 			if (storyComponentObserver != null)
 				storyComponentObserver.componentChanged(event);
@@ -362,22 +360,6 @@ public abstract class StoryComponent implements Cloneable {
 		}
 
 		return equal;
-	}
-
-	/**
-	 * WeakReference wrapper used to track how many WeakReferences of each type
-	 * are generated. This class provides no functionality, but it does make it
-	 * easier for us to see where memory leaks may be occuring.
-	 * 
-	 * @author kschenk
-	 * 
-	 * @param <T>
-	 */
-	private class WeakStoryComponentObserverReference<T> extends
-			WeakReference<T> {
-		public WeakStoryComponentObserverReference(T referent) {
-			super(referent);
-		}
 	}
 
 	/**

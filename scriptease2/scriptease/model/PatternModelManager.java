@@ -1,10 +1,10 @@
 package scriptease.model;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.gui.StatusManager;
@@ -27,7 +27,7 @@ import scriptease.translator.Translator;
  */
 public final class PatternModelManager {
 	private final List<PatternModel> models;
-	private final List<WeakPatternModelObserverReference<PatternModelObserver>> observers;
+	private final ObserverManager<PatternModelObserver> observerManager;
 	private PatternModel activeModel;
 
 	private final static PatternModelManager instance = new PatternModelManager();
@@ -46,7 +46,7 @@ public final class PatternModelManager {
 	 */
 	private PatternModelManager() {
 		this.models = new ArrayList<PatternModel>();
-		this.observers = new ArrayList<WeakPatternModelObserverReference<PatternModelObserver>>();
+		this.observerManager = new ObserverManager<PatternModelObserver>();
 		this.activeModel = null;
 	}
 
@@ -160,24 +160,9 @@ public final class PatternModelManager {
 	 * @param observer
 	 *            the listener to add
 	 */
-	public void addPatternModelObserver(PatternModelObserver observer) {
-		final Collection<WeakPatternModelObserverReference<PatternModelObserver>> observersCopy;
-
-		observersCopy = new ArrayList<WeakPatternModelObserverReference<PatternModelObserver>>(
-				this.observers);
-
-		for (WeakPatternModelObserverReference<PatternModelObserver> observerRef : observersCopy) {
-			PatternModelObserver storyComponentObserver = observerRef.get();
-			if (storyComponentObserver != null
-					&& storyComponentObserver == observer)
-				return;
-			else if (storyComponentObserver == null)
-				this.observers.remove(observerRef);
-		}
-
-		this.observers
-				.add(new WeakPatternModelObserverReference<PatternModelObserver>(
-						observer));
+	public void addPatternModelObserver(Object object,
+			PatternModelObserver value) {
+		this.observerManager.addObserver(object, value);
 	}
 
 	/**
@@ -188,40 +173,12 @@ public final class PatternModelManager {
 	 *            the listener to remove
 	 */
 	public void removePatternModelObserver(PatternModelObserver observer) {
-		for (WeakPatternModelObserverReference<PatternModelObserver> reference : this.observers) {
-			if (reference.get() == observer) {
-				this.observers.remove(reference);
-				return;
-			}
-		}
+		this.observerManager.removeObserver(observer);
 	}
 
 	private void notifyChange(PatternModel model, short eventType) {
-		Collection<WeakPatternModelObserverReference<PatternModelObserver>> observersCopy = new ArrayList<WeakPatternModelObserverReference<PatternModelObserver>>(
-				this.observers);
-
-		for (WeakPatternModelObserverReference<PatternModelObserver> observerRef : observersCopy) {
-			PatternModelObserver patternModelPoolObserver = observerRef.get();
-			if (patternModelPoolObserver != null)
-				patternModelPoolObserver.modelChanged(new PatternModelEvent(
-						model, eventType));
-			else
-				this.observers.remove(observerRef);
-		}
-	}
-
-	/**
-	 * WeakReference wrapper used to track how many WeakReferences of each type
-	 * are generated. This class provides no functionality, but it does make it
-	 * easier for us to see where memory leaks may be occuring.
-	 * 
-	 * @author kschenk
-	 * 
-	 * @param <T>
-	 */
-	private class WeakPatternModelObserverReference<T> extends WeakReference<T> {
-		public WeakPatternModelObserverReference(T referent) {
-			super(referent);
-		}
+		for (PatternModelObserver observer : this.observerManager
+				.getObservers())
+			observer.modelChanged(new PatternModelEvent(model, eventType));
 	}
 }
