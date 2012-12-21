@@ -19,6 +19,7 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameObject;
+import scriptease.util.StringOp;
 
 /**
  * KnowItBindingConstantContext is Context for a KnowItBindingConstant object.
@@ -94,25 +95,21 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 				.getScriptValue();
 		final String type = ((KnowItBindingConstant) this.binding)
 				.getFirstType();
+		// Handles Escaped Characters
 		final Set<Entry<String, String>> entrySet = this.translator
 				.getGameTypeManager().getEscapes(type).entrySet();
 		for (Entry<String, String> escape : entrySet) {
 			final String key = escape.getKey();
 			final String value = escape.getValue();
-			if (scriptValue.contains(key)) {
-				final int indexOf = scriptValue.indexOf(key);
-				final String before;
-				if (indexOf > 0) {
-					before = scriptValue.substring(0, indexOf - 1);
-				} else {
-					before = "";
-				}
-				final String after = scriptValue.substring(indexOf);
-
-				// Add them together to form the newly escaped String
-				scriptValue = before + value + after;
-			}
+			scriptValue = scriptValue.replace(key, value + key);
 		}
+
+		// Handle Legal Values the type can take
+		final String regex = this.translator.getGameTypeManager().getReg(type);
+		final Pattern regexPattern = Pattern.compile(regex);
+		scriptValue = StringOp.removeIllegalCharacters(scriptValue,
+				regexPattern);
+
 		return scriptValue;
 	}
 
