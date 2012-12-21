@@ -74,12 +74,24 @@ import scriptease.util.StringOp;
  */
 public final class WindowFactory {
 	private static final String CODE_GENERATION_PROBLEM = "Code Generation Problem";
-	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase 2";
-	private static final String ABOUT_SCRIPTEASE_MESSAGE = "ScriptEase 2\n"
-			+ "Version: " + ScriptEase.getInstance().getVersion() + "\n"
-			+ "Revision: " + ScriptEase.getInstance().getSpecificVersion()
-			+ "\n\n" + "Game Scripting and Code Generation for any game!\n"
-			+ "Visit us online at http://www.cs.ualberta.ca/~script/\n";
+	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase II";
+
+	// TODO we used to use "ScriptEase.getInstance().getVersion()" to get the
+	// version, but it was generating a version of "2.-1", which is wrong. Fix
+	// that and change this back.
+	private static final String ABOUT_SCRIPTEASE_MESSAGE = "<html><b><font size=\"4\">ScriptEase II</font></b><br>"
+			+ "<font size=\"2\">Version: Beta<br>"
+			+ "Revision: "
+			+ ScriptEase.getInstance().getSpecificVersion()
+			+ "</font><br><br>"
+			+ "Game Scripting and Code Generation for any game!<br><br>"
+			+ "<b>Contributors:</b><br>"
+			+ "<br><b>Professors:</b> Mike Carbonaro, Jonathan Schaeffer, Duane Szafron"
+			+ "<br><b>Ph.D. Students:</b> Neesha Desai, Richard Zhao"
+			+ "<br><b>Programmer Analysts:</b> Matthew Church, Jason Duncan, Eric Graves, Adel Lari, Robin Miller, Kevin Schenk"
+			+ "<br><b>Artists:</b> Wei Li, Jamie Schmitt"
+			+ "<br><b>Interns:</b> Alex Czeto, Kirsten Svidal"
+			+ "<br><br>Visit us online at http://www.cs.ualberta.ca/~script/<br></html>";
 	private static final String LAST_DIRECTORY_KEY = "LastDirectory_FilterType";
 	private static final String CONFIRM_OVERWRITE_TITLE = "Save As";
 	private static final String CONFIRM_OVERWRITE_TEXT = "Are you sure you want to overwrite it?";
