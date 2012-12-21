@@ -23,13 +23,15 @@ import scriptease.translator.apimanagers.GameTypeManager;
  * 
  */
 @SuppressWarnings("serial")
-public class TypeWidget extends JToggleButton implements TranslatorObserver {
+public class TypeWidget extends JToggleButton {
 	private String type;
 
 	public TypeWidget(final String type) {
 		final int baseFontSize;
 		final int fontSize;
 		final String typeName;
+		final Translator activeTranslator;
+		final TranslatorObserver observer;
 
 		this.setUI(TypeWidgetUI.getInstance());
 		this.setEnabled(false);
@@ -54,16 +56,32 @@ public class TypeWidget extends JToggleButton implements TranslatorObserver {
 
 		this.type = type;
 
-		Translator activeTranslator = TranslatorManager.getInstance()
+		activeTranslator = TranslatorManager.getInstance()
 				.getActiveTranslator();
 
 		typeName = (activeTranslator != null && activeTranslator
 				.loadedAPIDictionary()) ? activeTranslator.getGameTypeManager()
 				.getDisplayText(this.type) : "";
+		observer = new TranslatorObserver() {
+			/**
+			 * When a new translator is loaded, update the TypeText to match
+			 * whether the type exists or not.
+			 */
+			@Override
+			public void translatorLoaded(Translator newTranslator) {
+				String typeName = "";
+				typeName = newTranslator != null ? newTranslator
+						.getGameTypeManager().getDisplayText(
+								TypeWidget.this.type) : "";
+
+				if (typeName == null || typeName.equals(""))
+					setTypeText("");
+			}
+		};
 
 		setTypeText(type);
 		this.setToolTipText(typeName);
-		TranslatorManager.getInstance().addTranslatorObserver(this);
+		TranslatorManager.getInstance().addTranslatorObserver(this, observer);
 	}
 
 	private void setTypeText(String type) {
@@ -77,11 +95,11 @@ public class TypeWidget extends JToggleButton implements TranslatorObserver {
 			gameTypeManager = TranslatorManager.getInstance()
 					.getActiveGameTypeManager();
 
-			if (gameTypeManager.hasWidgetName(type)) {
+			if (gameTypeManager != null && gameTypeManager.hasWidgetName(type)) {
 				this.setText(gameTypeManager.getWidgetName(type));
 			} else {
-				if (gameTypeManager.hasEnum(type))
-					this.setText("Li");
+				if (gameTypeManager != null && gameTypeManager.hasEnum(type))
+					this.setText(GameTypeManager.DEFAULT_LIST_WIDGET);
 				else
 					this.setText(type.substring(0, 2).toUpperCase());
 			}
@@ -94,20 +112,6 @@ public class TypeWidget extends JToggleButton implements TranslatorObserver {
 	@Override
 	public void setEnabled(boolean b) {
 		super.setEnabled(false);
-	}
-
-	/**
-	 * When a new translator is loaded, update the TypeText to match whether the
-	 * type exists or not.
-	 */
-	@Override
-	public void translatorLoaded(Translator newTranslator) {
-		String typeName = "";
-		typeName = newTranslator != null ? newTranslator.getGameTypeManager()
-				.getDisplayText(this.type) : "";
-
-		if (typeName == null || typeName.equals(""))
-			setTypeText("");
 	}
 
 	@Override

@@ -1,13 +1,12 @@
 package scriptease.controller.undo;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.FileManager;
 import scriptease.controller.observer.FileManagerObserver;
+import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.UndoManagerObserver;
@@ -50,10 +49,9 @@ import scriptease.model.StoryModel;
  * @author remiller
  * @author mfchurch
  */
-public final class UndoManager implements PatternModelObserver,
-		FileManagerObserver {
+public final class UndoManager {
 	private final static UndoManager instance = new UndoManager();
-	private ArrayList<WeakReference<UndoManagerObserver>> observers;
+	private ObserverManager<UndoManagerObserver> observerManager;
 
 	private List<History> storyHistories = new ArrayList<History>();
 	private History activeHistory;
@@ -71,48 +69,69 @@ public final class UndoManager implements PatternModelObserver,
 	private boolean performingUndoRedo = false;
 
 	private UndoManager() {
-		PatternModelManager.getInstance().addPatternModelObserver(this);
-		FileManager.getInstance().addObserver(this);
-		this.observers = new ArrayList<WeakReference<UndoManagerObserver>>();
+		this.observerManager = new ObserverManager<UndoManagerObserver>();
+
+		final PatternModelObserver modelObserver;
+		final FileManagerObserver fileObserver;
+
+		modelObserver = new PatternModelObserver() {
+			@Override
+			public void modelChanged(PatternModelEvent event) {
+				final short eventType = event.getEventType();
+				final PatternModel model = event.getPatternModel();
+
+				// Keep an up-to-date mapping of open models to their histories
+				if (eventType == PatternModelEvent.PATTERN_MODEL_ADDED) {
+					UndoManager.this.storyHistories.add(new History(model));
+				} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED) {
+					History removed = UndoManager.this
+							.findHistoryForModel(model);
+
+					if (removed != null
+							&& UndoManager.this.activeHistory != null) {
+						UndoManager.this.storyHistories.remove(removed);
+
+						if (UndoManager.this.activeHistory.equals(removed)) {
+							UndoManager.this.activeHistory = null;
+							UndoManager.this.notifyObservers();
+						}
+
+						if (!removed.undoStack.isEmpty()
+								&& (removed.undoStack.peek() == UndoManager.this.unfinishedCommand))
+							UndoManager.this.unfinishedCommand = null;
+					}
+				} else if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
+					UndoManager.this.setActiveHistory(model);
+				}
+			}
+		};
+
+		fileObserver = new FileManagerObserver() {
+			@Override
+			public void fileReferenced(StoryModel model, File location) {
+				History history = UndoManager.this.findHistoryForModel(model);
+
+				history.markSaved();
+			}
+		};
+
+		PatternModelManager.getInstance().addPatternModelObserver(this,
+				modelObserver);
+		FileManager.getInstance().addObserver(this, fileObserver);
 	}
 
-	public final void addUndoManagerObserver(UndoManagerObserver observer) {
-
-		final Collection<WeakReference<UndoManagerObserver>> observersCopy;
-
-		observersCopy = new ArrayList<WeakReference<UndoManagerObserver>>(
-				this.observers);
-
-		for (WeakReference<UndoManagerObserver> observerRef : observersCopy) {
-			UndoManagerObserver undoManagerObserver = observerRef.get();
-			if (undoManagerObserver != null && undoManagerObserver == observer)
-				return;
-			else if (undoManagerObserver == null)
-				this.observers.remove(observerRef);
-		}
-
-		this.observers.add(new WeakReference<UndoManagerObserver>(observer));
+	public final void addUndoManagerObserver(Object object,
+			UndoManagerObserver observer) {
+		this.observerManager.addObserver(object, observer);
 	}
 
 	public final void removeUndoManagerObserver(UndoManagerObserver observer) {
-		for (WeakReference<UndoManagerObserver> reference : this.observers) {
-			if (reference.get() == observer) {
-				this.observers.remove(reference);
-				return;
-			}
-		}
+		this.observerManager.removeObserver(observer);
 	}
 
 	protected final void notifyObservers() {
-		ArrayList<WeakReference<UndoManagerObserver>> observersCopy = new ArrayList<WeakReference<UndoManagerObserver>>(
-				this.observers);
-		for (WeakReference<UndoManagerObserver> observerRef : observersCopy) {
-			UndoManagerObserver undoManagerObserver = observerRef.get();
-			if (undoManagerObserver != null)
-				undoManagerObserver.stackChanged();
-			else
-				this.observers.remove(observerRef);
-		}
+		for (UndoManagerObserver observer : this.observerManager.getObservers())
+			observer.stackChanged();
 	}
 
 	/**
@@ -408,40 +427,5 @@ public final class UndoManager implements PatternModelObserver,
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public void modelChanged(PatternModelEvent event) {
-		final short eventType = event.getEventType();
-		final PatternModel model = event.getPatternModel();
-
-		// Keep an up-to-date mapping of open models to their histories
-		if (eventType == PatternModelEvent.PATTERN_MODEL_ADDED) {
-			this.storyHistories.add(new History(model));
-		} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED) {
-			History removed = this.findHistoryForModel(model);
-
-			if (removed != null && this.activeHistory != null) {
-				this.storyHistories.remove(removed);
-
-				if (this.activeHistory.equals(removed)) {
-					this.activeHistory = null;
-					this.notifyObservers();
-				}
-
-				if (!removed.undoStack.isEmpty()
-						&& (removed.undoStack.peek() == this.unfinishedCommand))
-					this.unfinishedCommand = null;
-			}
-		} else if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
-			this.setActiveHistory(model);
-		}
-	}
-
-	@Override
-	public void fileReferenced(StoryModel model, File location) {
-		History history = this.findHistoryForModel(model);
-
-		history.markSaved();
 	}
 }

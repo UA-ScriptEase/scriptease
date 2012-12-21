@@ -101,7 +101,6 @@ public final class ErfFile implements GameModule {
 	private final List<NWNResource> uncompiledScripts;
 
 	private final StoryComponentObserver componentObserver;
-	private final PatternModelObserver modelObserver;
 
 	/**
 	 * Location of the ErfFile.
@@ -138,8 +137,10 @@ public final class ErfFile implements GameModule {
 			}
 		};
 
+		final PatternModelObserver observer;
+
 		// Used for journal observance
-		this.modelObserver = new PatternModelObserver() {
+		observer = new PatternModelObserver() {
 			public void modelChanged(PatternModelEvent event) {
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
 					event.getPatternModel().process(new ModelAdapter() {
@@ -158,8 +159,8 @@ public final class ErfFile implements GameModule {
 			};
 		};
 
-		PatternModelManager.getInstance().addPatternModelObserver(
-				this.modelObserver);
+		PatternModelManager.getInstance().addPatternModelObserver(this,
+				observer);
 
 	}
 

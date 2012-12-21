@@ -28,8 +28,7 @@ import scriptease.translator.TranslatorManager;
  * @author kschenk
  */
 @SuppressWarnings("serial")
-public final class TypeAction extends AbstractAction implements
-		LibraryManagerObserver, TranslatorObserver {
+public final class TypeAction extends AbstractAction {
 
 	private Runnable action;
 	private TypeDialogBuilder typeBuilder;
@@ -53,9 +52,42 @@ public final class TypeAction extends AbstractAction implements
 		super();
 
 		setAction(action);
-		// add self as observers of the translator and library
-		LibraryManager.getInstance().addLibraryManagerObserver(this);
-		TranslatorManager.getInstance().addTranslatorObserver(this);
+
+		final LibraryManagerObserver libraryObserver;
+		final TranslatorObserver translatorObserver;
+
+		libraryObserver = new LibraryManagerObserver() {
+			@Override
+			public void modelChanged(final LibraryManagerEvent managerEvent) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						if (managerEvent.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
+							final LibraryEvent event = managerEvent.getEvent();
+							if (event != null)
+								if (event.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED
+										|| event.getEventType() == LibraryEvent.STORYCOMPONENT_REMOVED) {
+									TypeAction.this.updateEnabledState();
+								}
+						}
+					}
+				});
+			}
+		};
+		translatorObserver = new TranslatorObserver() {
+			@Override
+			public void translatorLoaded(Translator newTranslator) {
+				TypeAction.this.updateEnabledState();
+
+				TypeAction.this.typeBuilder = new TypeDialogBuilder(
+						TypeAction.this.action);
+				TypeAction.this.updateName();
+			}
+		};
+
+		LibraryManager.getInstance().addLibraryManagerObserver(this,
+				libraryObserver);
+		TranslatorManager.getInstance().addTranslatorObserver(this,
+				translatorObserver);
 
 		this.updateName();
 		this.putValue(SHORT_DESCRIPTION, "Select Type");
@@ -168,32 +200,5 @@ public final class TypeAction extends AbstractAction implements
 				&& !activeTranslator.getGameTypeManager().getKeywords()
 						.isEmpty() && LibraryManager.getInstance()
 				.hasLibraries());
-	}
-
-	/**
-	 * Handles changes to the LibraryManager
-	 */
-	@Override
-	public void modelChanged(final LibraryManagerEvent managerEvent) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				if (managerEvent.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
-					final LibraryEvent event = managerEvent.getEvent();
-					if (event != null)
-						if (event.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED
-								|| event.getEventType() == LibraryEvent.STORYCOMPONENT_REMOVED) {
-							TypeAction.this.updateEnabledState();
-						}
-				}
-			}
-		});
-	}
-
-	@Override
-	public void translatorLoaded(Translator newTranslator) {
-		this.updateEnabledState();
-
-		this.typeBuilder = new TypeDialogBuilder(this.action);
-		this.updateName();
 	}
 }

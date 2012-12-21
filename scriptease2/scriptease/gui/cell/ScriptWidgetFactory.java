@@ -29,7 +29,6 @@ import javax.swing.event.ChangeListener;
 
 import scriptease.ScriptEase;
 import scriptease.controller.BindingAdapter;
-import scriptease.controller.ObservedJPanel;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
@@ -170,7 +169,6 @@ public class ScriptWidgetFactory {
 	public static JComponent buildObservedNameLabel(
 			StoryComponent storyComponent) {
 		final JLabel nameLabel;
-		final ObservedJPanel observedLabel;
 		final StoryComponentObserver observer;
 
 		nameLabel = ScriptWidgetFactory.buildLabel(
@@ -186,12 +184,9 @@ public class ScriptWidgetFactory {
 			}
 		};
 
-		observedLabel = new ObservedJPanel(nameLabel);
-		observedLabel.addObserver(observer);
-
 		storyComponent.addStoryComponentObserver(observer);
 
-		return observedLabel;
+		return nameLabel;
 	}
 
 	/**
@@ -388,7 +383,6 @@ public class ScriptWidgetFactory {
 		final Comparable<?> MAX = null; // default to no max limit
 		final Float STEP_SIZE = 1.0f; // default to int step size
 
-		final ObservedJPanel observedPanel;
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
 
@@ -408,7 +402,6 @@ public class ScriptWidgetFactory {
 		spinner = new JSpinner(model);
 		scriptValue = knowIt.getBinding().getScriptValue();
 
-		observedPanel = new ObservedJPanel(spinner);
 
 		// Handle the initial value case
 		if (scriptValue == null || scriptValue.isEmpty()) {
@@ -485,11 +478,10 @@ public class ScriptWidgetFactory {
 		spinner.addChangeListener(changeListener);
 
 		knowIt.addStoryComponentObserver(observer);
-		observedPanel.addObserver(observer);
 
 		widgetsToStoryComponents.put(spinner, knowIt);
 
-		return observedPanel;
+		return spinner;
 	}
 
 	public static JComponent buildComboEditor(final KnowIt knowIt,
@@ -498,7 +490,6 @@ public class ScriptWidgetFactory {
 		final List<String> list;
 
 		final JComboBox combo;
-		final ObservedJPanel observedPanel;
 
 		final StoryComponentObserver observer;
 		final ActionListener actionListener;
@@ -511,7 +502,6 @@ public class ScriptWidgetFactory {
 		Collections.sort(list);
 
 		combo = new JComboBox(list.toArray());
-		observedPanel = new ObservedJPanel(combo);
 
 		scriptValue = knowIt.getBinding().getScriptValue();
 
@@ -580,11 +570,10 @@ public class ScriptWidgetFactory {
 		combo.addActionListener(actionListener);
 
 		knowIt.addStoryComponentObserver(observer);
-		observedPanel.addObserver(observer);
 
 		widgetsToStoryComponents.put(combo, knowIt);
 
-		return observedPanel;
+		return combo;
 	}
 
 	/**
@@ -595,12 +584,10 @@ public class ScriptWidgetFactory {
 	 */
 	public static JComponent buildNameEditor(final StoryComponent component) {
 		final JTextField nameEditor;
-		final ObservedJPanel panel;
 		final StoryComponentObserver observer;
 		final Runnable commitText;
 
 		nameEditor = new JTextField(component.getDisplayText());
-		panel = new ObservedJPanel(nameEditor);
 		observer = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
@@ -634,10 +621,9 @@ public class ScriptWidgetFactory {
 				nameEditor, commitText, true);
 
 		component.addStoryComponentObserver(observer);
-		panel.addObserver(observer);
 
-		widgetsToStoryComponents.put(panel, component);
-		return panel;
+		widgetsToStoryComponents.put(nameEditor, component);
+		return nameEditor;
 	}
 
 	/**
@@ -651,7 +637,6 @@ public class ScriptWidgetFactory {
 		final KnowItBinding binding;
 
 		final JTextField valueEditor;
-		final ObservedJPanel panel;
 		final StoryComponentObserver observer;
 		final Runnable commitText;
 
@@ -661,7 +646,6 @@ public class ScriptWidgetFactory {
 					.println("Warning: ValueEditor currently only supports KnowItBindingConstant");
 
 		valueEditor = new JTextField(binding.getScriptValue());
-		panel = new ObservedJPanel(valueEditor);
 
 		observer = new StoryComponentObserver() {
 			@Override
@@ -702,10 +686,9 @@ public class ScriptWidgetFactory {
 				valueEditor, commitText, true);
 
 		knowIt.addStoryComponentObserver(observer);
-		panel.addObserver(observer);
 
-		widgetsToStoryComponents.put(panel, knowIt);
-		return panel;
+		widgetsToStoryComponents.put(valueEditor, knowIt);
+		return valueEditor;
 	}
 
 	/**

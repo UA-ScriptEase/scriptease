@@ -63,4 +63,20 @@ public final class NWNObject extends NWNGameConstant implements GameObject {
 	public String toString() {
 		return this.getTemplateID();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof NWNObject))
+			return false;
+
+		final NWNObject other = (NWNObject) obj;
+		boolean equals = true;
+
+		equals &= this.getName().equals(other.getName());
+		equals &= this.getTag().equals(other.getTag());
+		equals &= this.getTemplateID().equals(other.getTemplateID());
+		equals &= this.getTypes().equals(other.getTypes());
+
+		return equals;
+	}
 }

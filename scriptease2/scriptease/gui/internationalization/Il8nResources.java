@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 
 /**
- * This class is used to incorporate Internationalization into ScriptEase 2. Any
+ * This class is used to incorporate Internationalization into ScriptEase II. Any
  * words that need to be internationalized should be acquired with
  * {@link Il8nResources#getString(String)}. The Il8nResources class must be
  * initialized before any other use by calling

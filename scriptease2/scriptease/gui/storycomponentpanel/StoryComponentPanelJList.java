@@ -85,7 +85,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	public StoryComponentPanelJList(StoryComponentFilter filter,
 			boolean hideInvisible) {
 		super();
-		
+
 		final DefaultListModel listModel = new DefaultListModel();
 
 		this.setModel(listModel);
@@ -107,16 +107,17 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 			}
 		});
 
-		SEFocusManager.getInstance().addObserver(this, new SEFocusObserver() {
-			@Override
-			public void gainFocus(Component oldFocus) {
-			}
+		SEFocusManager.getInstance().addSEFocusObserver(this,
+				new SEFocusObserver() {
+					@Override
+					public void gainFocus(Component oldFocus) {
+					}
 
-			@Override
-			public void loseFocus(Component oldFocus) {
-				StoryComponentPanelJList.this.clearSelection();
-			}
-		});
+					@Override
+					public void loseFocus(Component oldFocus) {
+						StoryComponentPanelJList.this.clearSelection();
+					}
+				});
 
 		this.setCellRenderer(new StoryComponentListRenderer());
 		this.setLayoutOrientation(JList.VERTICAL);
@@ -160,7 +161,8 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				listModel.addElement(StoryComponentPanelFactory.getInstance()
 						.buildStoryComponentPanel(component));
 			} else {
-				System.err.println("StoryComponent " + component + " already exists in StoryComponentPanelJList");
+				System.err.println("StoryComponent " + component
+						+ " already exists in StoryComponentPanelJList");
 			}
 		}
 	}
