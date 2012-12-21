@@ -287,10 +287,8 @@
         <Fragment data="unique32charname"/>
         <Literal>&quot;</Literal>
       </Format>
+	  <LegalValues>[a-zA-Z_0-9]+</LegalValues>
       <WidgetName>SP</WidgetName>
-	  <Escapes>
-		<Escape key="\">"</Escape>
-	  </Escapes>
     </Type>
     <Type>
       <Name>ModelType</Name>
@@ -606,12 +604,9 @@
         <Fragment data="value"/>
         <Literal>&quot;</Literal>
       </Format>
-      <LegalValues>[.\n]*</LegalValues>
+	  <LegalValues>[a-zA-Z_0-9]+</LegalValues>
       <GUI>JTEXTFIELD</GUI>
-      <WidgetName>Tx</WidgetName>
-	  <Escapes>
-		<Escape key="\">"</Escape>
-	  </Escapes>
+      <WidgetName>Tx</WidgetName>	  
     </Type>
     <Type>
       <Name>ClassType</Name>

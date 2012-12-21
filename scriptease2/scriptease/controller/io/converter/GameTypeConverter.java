@@ -92,7 +92,7 @@ public class GameTypeConverter implements Converter {
 				final String key = entry.getKey();
 				final String value = entry.getValue();
 				writer.startNode(TAG_ESCAPE);
-				writer.addAttribute("key", key);
+				writer.addAttribute("value", key);
 				writer.setValue(value);
 			}
 			writer.endNode();
@@ -171,9 +171,9 @@ public class GameTypeConverter implements Converter {
 			// Read Escapes
 			if (node.equals(TAG_ESCAPES)) {
 				while (reader.hasMoreChildren()) {
-					final String key = reader.getAttribute("key");
+					final String value = reader.getAttribute("value");
 					reader.moveDown();
-					final String value = reader.getValue();
+					final String key = reader.getValue();
 					escapes.put(key, value);
 					reader.moveUp();
 				}

@@ -8,7 +8,7 @@
 	<xsd:complexType name="AttrElement">
 		<xsd:simpleContent>
 			<xsd:extension base="xsd:string">
-				<xsd:attribute name="key" type="xsd:string">
+				<xsd:attribute name="value" type="xsd:string">
 				</xsd:attribute>
 			</xsd:extension>
 		</xsd:simpleContent>
@@ -108,7 +108,8 @@
 			<xsd:element name="Escapes" minOccurs="0">
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="Escape" type="AttrElement" maxOccurs="unbounded" />
+						<xsd:element name="Escape" type="AttrElement"
+							maxOccurs="unbounded" />
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>

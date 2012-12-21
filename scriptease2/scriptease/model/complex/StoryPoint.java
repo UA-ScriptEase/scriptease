@@ -3,12 +3,15 @@ package scriptease.model.complex;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.Note;
+import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.util.StringOp;
 
 /**
@@ -212,13 +215,20 @@ public class StoryPoint extends ComplexStoryComponent {
 		final String nameTag;
 
 		noWhiteSpace = StringOp.removeWhiteSpace(this.getDisplayText());
-
 		if (noWhiteSpace.length() > MAX_LEN / 2) {
 			nameTag = noWhiteSpace.substring(0, MAX_LEN / 2).toLowerCase();
 		} else
 			nameTag = noWhiteSpace.toLowerCase();
-
-		return nameTag + this.getUniqueID();
+		
+		String name = nameTag + this.getUniqueID();
+		// Handle Legal Values the type can take
+		final String regex = TranslatorManager.getInstance().getActiveTranslator().getGameTypeManager().getReg(
+				StoryPoint.STORY_POINT_TYPE);
+		final Pattern regexPattern = Pattern.compile(regex);
+		name = StringOp.removeIllegalCharacters(name,
+				regexPattern);
+		
+		return name;
 	}
 
 	/**
