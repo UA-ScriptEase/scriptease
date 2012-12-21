@@ -6,6 +6,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseListener;
 import java.util.Collection;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
@@ -41,6 +43,10 @@ import scriptease.model.complex.ScriptIt;
 public class StoryComponentPanelJList extends JList implements Filterable {
 	private Filter filterRule;
 
+	// Store a weak map of panels to story components so that we do not have to
+	// redraw them every single time
+	private final Map<StoryComponent, StoryComponentPanel> panelMap;
+
 	/*
 	 * We only need one no results panel instead of generating a new one each
 	 * time.
@@ -58,10 +64,19 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * <br>
 	 * Panels should be added using {@link #addStoryComponents(Collection)}
 	 * 
-	 * @param filter
+	 */
+	public StoryComponentPanelJList() {
+		this(null, true);
+	}
+
+	/**
+	 * Creates a JList that is able to render Story Component Panels as items.
+	 * The JList also has a transfer handler attached that gives the ability to
+	 * drag and drop the Panels. <br>
+	 * <br>
+	 * Panels should be added using {@link #addStoryComponents(Collection)}
 	 * 
-	 * @param storyComponentList
-	 *            The list of StoryComponents to display in the list.
+	 * @param filter
 	 */
 	public StoryComponentPanelJList(StoryComponentFilter filter) {
 		this(filter, true);
@@ -90,6 +105,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 		this.setModel(listModel);
 
+		this.panelMap = new WeakHashMap<StoryComponent, StoryComponentPanel>();
 		this.filterRule = new VisibilityFilter(hideInvisible);
 
 		if (filter != null)
@@ -157,9 +173,23 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				|| ((this.filterRule != null) && (this.filterRule
 						.isAcceptable(component)))) {
 			// Check if the element is already part of the list
-			if (getStoryComponentPanelListIndexForStoryComponent(component) == -1) {
-				listModel.addElement(StoryComponentPanelFactory.getInstance()
-						.buildStoryComponentPanel(component));
+			if (getIndexOfStoryComponent(component) == -1) {
+				final StoryComponentPanel panel;
+
+				panel = panelMap.get(component);
+
+				if (panel == null) {
+					final StoryComponentPanel newPanel;
+
+					newPanel = StoryComponentPanelFactory.getInstance()
+							.buildStoryComponentPanel(component);
+
+					panelMap.put(component, newPanel);
+
+					listModel.addElement(newPanel);
+				} else {
+					listModel.addElement(panel);
+				}
 			} else {
 				System.err.println("StoryComponent " + component
 						+ " already exists in StoryComponentPanelJList");
@@ -177,8 +207,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * @param component
 	 * @return
 	 */
-	public int getStoryComponentPanelListIndexForStoryComponent(
-			StoryComponent component) {
+	private int getIndexOfStoryComponent(StoryComponent component) {
 		final DefaultListModel listModel = (DefaultListModel) this.getModel();
 		int returnIndex = -1;
 		for (int panelIndex = 0; panelIndex < listModel.size(); panelIndex++) {
@@ -197,7 +226,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 	public void removeStoryComponent(StoryComponent component) {
 		final DefaultListModel listModel = (DefaultListModel) this.getModel();
-		final int panelIndex = getStoryComponentPanelListIndexForStoryComponent(component);
+		final int panelIndex = getIndexOfStoryComponent(component);
 		if (panelIndex != -1) {
 			listModel.removeElementAt(panelIndex);
 		}
@@ -211,10 +240,17 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 */
 	public void updateStoryComponentPanel(StoryComponent component) {
 		final DefaultListModel listModel = (DefaultListModel) this.getModel();
-		final int panelIndex = getStoryComponentPanelListIndexForStoryComponent(component);
+		final int panelIndex = getIndexOfStoryComponent(component);
 		if (panelIndex != -1) {
-			listModel.set(panelIndex, (StoryComponentPanelFactory.getInstance()
-					.buildStoryComponentPanel(component)));
+			final StoryComponentPanel panel;
+
+			panel = StoryComponentPanelFactory.getInstance()
+					.buildStoryComponentPanel(component);
+
+			listModel.set(panelIndex, panel);
+
+			panelMap.put(component, panel);
+
 		}
 	}
 
