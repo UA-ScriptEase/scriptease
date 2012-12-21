@@ -3,15 +3,14 @@ package scriptease.translator;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import scriptease.ScriptEase;
 import scriptease.ScriptEase.ConfigurationKeys;
+import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
@@ -35,7 +34,7 @@ import scriptease.translator.apimanagers.GameTypeManager;
  * 
  * @author graves
  */
-public class TranslatorManager implements PatternModelObserver {
+public class TranslatorManager {
 	private static final String NO_TRANSLATORS_PROBLEM = "ScriptEase could not locate any valid game translators in its \"translators\" directory. "
 			+ "\n\nYou will not be able to open Story files or perform any other game-specific operations.";
 
@@ -45,7 +44,7 @@ public class TranslatorManager implements PatternModelObserver {
 
 	private static TranslatorManager instance = new TranslatorManager();
 
-	private final List<WeakReference<TranslatorObserver>> observers;
+	private final ObserverManager<TranslatorObserver> observerManager;
 
 	/**
 	 * Returns the singleton instance of the TranslatorManager.
@@ -64,11 +63,35 @@ public class TranslatorManager implements PatternModelObserver {
 	 */
 	private TranslatorManager() {
 		this.translatorPool = new HashSet<Translator>();
-		this.observers = new ArrayList<WeakReference<TranslatorObserver>>();
+		this.observerManager = new ObserverManager<TranslatorObserver>();
 
 		// scan for translators in the translators folder
 		this.fillTranslatorPool();
-		PatternModelManager.getInstance().addPatternModelObserver(this);
+
+		final PatternModelObserver observer;
+
+		observer = new PatternModelObserver() {
+			@Override
+			public void modelChanged(PatternModelEvent event) {
+				final short eventType = event.getEventType();
+				final PatternModel model = event.getPatternModel();
+				Translator translator = (model == null ? null : model
+						.getTranslator());
+
+				if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
+					if (TranslatorManager.this.activeTranslator != translator) {
+						TranslatorManager.this.setActiveTranslator(translator);
+					}
+				} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED) {
+					if (!PatternModelManager.getInstance().usingTranslator(
+							translator)) {
+						TranslatorManager.this.setActiveTranslator(null);
+					}
+				}
+			}
+		};
+		PatternModelManager.getInstance().addPatternModelObserver(this,
+				observer);
 	}
 
 	/**
@@ -208,6 +231,8 @@ public class TranslatorManager implements PatternModelObserver {
 	 * @return
 	 */
 	public APIDictionary getActiveAPIDictionary() {
+		if (this.activeTranslator == null)
+			return null;
 		return this.activeTranslator.getApiDictionary();
 	}
 
@@ -218,6 +243,8 @@ public class TranslatorManager implements PatternModelObserver {
 	 * @return
 	 */
 	public GameTypeManager getActiveGameTypeManager() {
+		if (this.activeTranslator == null)
+			return null;
 		return this.activeTranslator.getGameTypeManager();
 	}
 
@@ -228,22 +255,8 @@ public class TranslatorManager implements PatternModelObserver {
 	 * @param observer
 	 *            the observer to register
 	 */
-	public void addTranslatorObserver(TranslatorObserver observer) {
-		Collection<WeakReference<TranslatorObserver>> observersCopy = new ArrayList<WeakReference<TranslatorObserver>>(
-				this.observers);
-
-		for (WeakReference<TranslatorObserver> observerRef : observersCopy) {
-			if (observerRef == null)
-				continue;
-
-			final TranslatorObserver translatorObserver = observerRef.get();
-			if (translatorObserver != null && translatorObserver == observer)
-				return;
-			else if (translatorObserver == null)
-				this.observers.remove(observerRef);
-		}
-
-		this.observers.add(new WeakReference<TranslatorObserver>(observer));
+	public void addTranslatorObserver(Object object, TranslatorObserver observer) {
+		this.observerManager.addObserver(object, observer);
 	}
 
 	/**
@@ -254,25 +267,12 @@ public class TranslatorManager implements PatternModelObserver {
 	 *            the observer to register
 	 */
 	public void removeTranslatorObserver(TranslatorObserver observer) {
-		for (WeakReference<TranslatorObserver> reference : this.observers) {
-			if (reference.get() == observer) {
-				this.observers.remove(reference);
-				return;
-			}
-		}
+		this.observerManager.removeObserver(observer);
 	}
 
 	private void notifyObservers() {
-		Collection<WeakReference<TranslatorObserver>> observersCopy = new ArrayList<WeakReference<TranslatorObserver>>(
-				this.observers);
-
-		for (WeakReference<TranslatorObserver> observerRef : observersCopy) {
-			TranslatorObserver graphNodeObserver = observerRef.get();
-			if (graphNodeObserver != null)
-				graphNodeObserver.translatorLoaded(this.activeTranslator);
-			else
-				this.observers.remove(observerRef);
-		}
+		for (TranslatorObserver observer : this.observerManager.getObservers())
+			observer.translatorLoaded(this.activeTranslator);
 	}
 
 	/**
@@ -339,22 +339,5 @@ public class TranslatorManager implements PatternModelObserver {
 					translator.getName() + " translator loaded");
 
 		this.notifyObservers();
-	}
-
-	@Override
-	public void modelChanged(PatternModelEvent event) {
-		final short eventType = event.getEventType();
-		final PatternModel model = event.getPatternModel();
-		Translator translator = (model == null ? null : model.getTranslator());
-
-		if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
-			if (this.activeTranslator != translator) {
-				this.setActiveTranslator(translator);
-			}
-		} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED) {
-			if (!PatternModelManager.getInstance().usingTranslator(translator)) {
-				this.setActiveTranslator(null);
-			}
-		}
 	}
 }

@@ -29,7 +29,7 @@ import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameConversation;
 import scriptease.translator.io.model.GameConversationNode;
 import scriptease.translator.io.model.GameObject;
-import scriptease.util.StringOp;
+import scriptease.util.GUIOp;
 
 /**
  * Draws a Game Constant Panel for the passed in StoryModel.
@@ -182,18 +182,28 @@ public class GameConstantPanel extends JPanel {
 		});
 
 		// Add the game objects to the tree model.
-		for (String typeName : types) {
+		for (String typeTag : types) {
 
 			final Collection<GameConstant> gameObjects;
 
-			gameObjects = this.getObjectsOfType((StoryModel) model, typeName,
+			gameObjects = this.getObjectsOfType((StoryModel) model, typeTag,
 					searchText);
 
 			// Ignore empty categories because they're confusing.
 			if (gameObjects.size() <= 0)
 				continue;
-			else
-				this.add(new GameObjectContainer(typeName, gameObjects));
+			else {
+				final GameTypeManager typeManager;
+				final String typeName;
+				final GameObjectContainer container;
+
+				typeManager = TranslatorManager.getInstance()
+						.getActiveTranslator().getGameTypeManager();
+				typeName = typeManager.getDisplayText(typeTag);
+				container = new GameObjectContainer(typeName, gameObjects);
+
+				this.add(container);
+			}
 		}
 
 		this.repaint();
@@ -208,43 +218,46 @@ public class GameConstantPanel extends JPanel {
 	 * 
 	 */
 	private class GameObjectContainer extends JPanel {
+		private final Color LINE_COLOR_1 = Color.red;
+		private final Color LINE_COLOR_2 = Color.blue;
+
 		private boolean collapsed;
 
 		/**
 		 * Creates a new game object container with the passed in name and
 		 * collection of GameObjects.
 		 * 
-		 * @param label
+		 * @param typeName
 		 *            The name of the container
 		 * @param gameConstants
 		 *            The list of GameConstants in the container
 		 */
-		private GameObjectContainer(String label,
+		private GameObjectContainer(String typeName,
 				final Collection<GameConstant> gameConstants) {
 			this.collapsed = false;
 
 			this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 			this.setBackground(Color.WHITE);
 
-			redrawContainer(label, gameConstants);
+			this.redrawContainer(typeName, gameConstants);
 		}
 
 		/**
 		 * Redraws the container. This also fires whenever the container is
 		 * collapsed or expanded.
 		 * 
-		 * @param label
+		 * @param typeName
 		 *            The name of the container
 		 * @param gameConstants
 		 *            The list of GameConstants in the container
 		 */
-		private void redrawContainer(final String label,
+		private void redrawContainer(final String typeName,
 				final Collection<GameConstant> gameConstants) {
 			this.removeAll();
 
 			final JLabel categoryLabel;
 
-			categoryLabel = new JLabel(StringOp.toProperCase(label));
+			categoryLabel = new JLabel(typeName);
 
 			categoryLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -252,7 +265,7 @@ public class GameConstantPanel extends JPanel {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					GameObjectContainer.this.collapsed ^= true;
-					redrawContainer(label, gameConstants);
+					redrawContainer(typeName, gameConstants);
 				}
 			});
 
@@ -305,6 +318,12 @@ public class GameConstantPanel extends JPanel {
 			gameObjectBindingWidget = new BindingWidget(
 					new KnowItBindingConstant(gameConstant));
 
+			if (gameConstant instanceof GameConversationNode) {
+				if (((GameConversationNode) gameConstant).isLink())
+					gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
+							gameObjectBindingWidget.getBackground()	, 1.24));
+			}
+
 			gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(
 					regularText, Color.WHITE));
 
@@ -344,13 +363,13 @@ public class GameConstantPanel extends JPanel {
 
 			for (GameConversationNode gameConversationNode : gameConversation
 					.getConversationRoots()) {
-
-				int indent;
+				final int indent;
 
 				indent = 1;
 
-				convoPanel
-						.add(createIndentedPanel(gameConversationNode, indent));
+				convoPanel.add(createIndentedConversationPanel(
+						gameConversationNode, indent,
+						gameConversationNode.getSpeaker(), this.LINE_COLOR_1));
 
 				this.addConversationRoots(gameConversationNode.getChildren(),
 						convoPanel, indent + 1);
@@ -371,8 +390,8 @@ public class GameConstantPanel extends JPanel {
 		 *            The panel to add the roots to.
 		 * @param indent
 		 *            The amount to indent as defined in
-		 *            {@link #createIndentedPanel(GameConstant, int)}.
-		 *            Incremented for each level.
+		 *            {@link #createIndentedConversationPanel(GameConstant, int)}
+		 *            . Incremented for each level.
 		 */
 		private void addConversationRoots(
 				List<? extends GameConversationNode> roots, JPanel convoPanel,
@@ -382,11 +401,26 @@ public class GameConstantPanel extends JPanel {
 			}
 
 			for (GameConversationNode root : roots) {
-				// TODO We still need to implement linked conversations.
-				if (root.isLink())
-					continue;
+				final String speaker;
+				final JPanel nodePanel;
+				final Color color;
 
-				convoPanel.add(createIndentedPanel(root, indent));
+				if (indent % 2 == 0) {
+					color = this.LINE_COLOR_2;
+				} else {
+					color = this.LINE_COLOR_1;
+				}
+
+				if (root.isLink())
+					speaker = "Link";
+				else
+					speaker = root.getSpeaker();
+
+				nodePanel = createIndentedConversationPanel(root, indent,
+						speaker, color);
+
+				convoPanel.add(nodePanel);
+
 				this.addConversationRoots(root.getChildren(), convoPanel,
 						indent + 1);
 			}
@@ -398,25 +432,48 @@ public class GameConstantPanel extends JPanel {
 		 * {@link Box#createRigidArea(Dimension)}, where the dimension is
 		 * (5*indent, 0).
 		 * 
-		 * @param gameConstant
+		 * @param gameConversationNode
 		 *            The constant to create a panel for
 		 * @param indent
 		 *            The indent
+		 * @param speaker
+		 *            The speaker of the dialogue line
+		 * @param color
+		 *            The color of the speaker label
+		 * 
 		 * @return
 		 */
-		private JPanel createIndentedPanel(GameConstant gameConstant, int indent) {
+		private JPanel createIndentedConversationPanel(
+				GameConversationNode gameConversationNode, int indent,
+				String speaker, Color color) {
 			final int STRUT_SIZE = 10 * indent;
+			final JLabel prefixLabel;
 			final JPanel indentedPanel;
 
+			prefixLabel = new JLabel();
 			indentedPanel = new JPanel();
 
 			indentedPanel.setLayout(new BoxLayout(indentedPanel,
 					BoxLayout.LINE_AXIS));
 
 			indentedPanel.setOpaque(false);
+			prefixLabel.setOpaque(true);
+
+			prefixLabel.setBackground(Color.LIGHT_GRAY);
+
+			if (speaker != null && !speaker.isEmpty() && color != null) {
+				final char firstChar;
+
+				firstChar = speaker.charAt(0);
+
+				prefixLabel.setText(" " + firstChar + " ");
+
+				prefixLabel.setForeground(color);
+			}
 
 			indentedPanel.add(Box.createHorizontalStrut(STRUT_SIZE));
-			indentedPanel.add(createGameConstantPanel(gameConstant));
+			indentedPanel.add(prefixLabel);
+			indentedPanel.add(createGameConstantPanel(gameConversationNode));
 
 			indentedPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 

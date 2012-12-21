@@ -61,8 +61,6 @@ public final class CopyAction extends ActiveModelSensitiveAction {
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
 		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 				KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
-
-		PatternModelManager.getInstance().addPatternModelObserver(this);
 	}
 
 	/**

@@ -331,15 +331,13 @@ public class Context {
 		while (scriptIts.hasNext()) {
 			final ScriptIt scriptIt = scriptIts.next();
 			if (scriptIt.isCause()) {
-
 				boolean causeExists = false;
 
-				// TODO FIXME Not sure if this is a good way of checking for
-				// uniqueness.
 				for (ScriptIt cause : causes) {
-					if (cause.getDisplayText()
-							.equals(scriptIt.getDisplayText()))
+					if (cause.isEquivalentToCause(scriptIt)) {
 						causeExists = true;
+						break;
+					}
 				}
 
 				if (!causeExists)
@@ -483,5 +481,10 @@ public class Context {
 	private void unimplemented(String methodName) {
 		throw (new CodeGenerationException(UNIMPLEMENTED + ": " + methodName
 				+ " unimplemented in " + this.getClass().getName()));
+	}
+
+	public Iterator<? extends Object> getIdenticalCauses() {
+		unimplemented("getIdenticalCauses");
+		return null;
 	}
 }

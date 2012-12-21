@@ -6,8 +6,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -23,11 +26,13 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.SwingWorker.StateValue;
@@ -37,7 +42,7 @@ import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.logger.NetworkHandler;
 import scriptease.controller.modelverifier.problem.StoryProblem;
-import scriptease.controller.observer.LifetimeObserverFactory;
+import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
@@ -69,12 +74,24 @@ import scriptease.util.StringOp;
  */
 public final class WindowFactory {
 	private static final String CODE_GENERATION_PROBLEM = "Code Generation Problem";
-	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase 2";
-	private static final String ABOUT_SCRIPTEASE_MESSAGE = "ScriptEase 2\n"
-			+ "Version: " + ScriptEase.getInstance().getVersion() + "\n"
-			+ "Revision: " + ScriptEase.getInstance().getSpecificVersion()
-			+ "\n\n" + "Game Scripting and Code Generation for any game!\n"
-			+ "Visit us online at http://www.cs.ualberta.ca/~script/\n";
+	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase II";
+
+	// TODO we used to use "ScriptEase.getInstance().getVersion()" to get the
+	// version, but it was generating a version of "2.-1", which is wrong. Fix
+	// that and change this back.
+	private static final String ABOUT_SCRIPTEASE_MESSAGE = "<html><b><font size=\"4\">ScriptEase II</font></b><br>"
+			+ "<font size=\"2\">Version: Beta<br>"
+			+ "Revision: "
+			+ ScriptEase.getInstance().getSpecificVersion()
+			+ "</font><br><br>"
+			+ "Game Scripting and Code Generation for any game!<br><br>"
+			+ "<b>Contributors:</b><br>"
+			+ "<br><b>Professors:</b> Mike Carbonaro, Jonathan Schaeffer, Duane Szafron"
+			+ "<br><b>Ph.D. Students:</b> Neesha Desai, Richard Zhao"
+			+ "<br><b>Programmer Analysts:</b> Matthew Church, Jason Duncan, Eric Graves, Adel Lari, Robin Miller, Kevin Schenk"
+			+ "<br><b>Artists:</b> Wei Li, Jamie Schmitt"
+			+ "<br><b>Interns:</b> Alex Czeto, Kirsten Svidal"
+			+ "<br><br>Visit us online at http://www.cs.ualberta.ca/~script/<br></html>";
 	private static final String LAST_DIRECTORY_KEY = "LastDirectory_FilterType";
 	private static final String CONFIRM_OVERWRITE_TITLE = "Save As";
 	private static final String CONFIRM_OVERWRITE_TEXT = "Are you sure you want to overwrite it?";
@@ -633,6 +650,118 @@ public final class WindowFactory {
 	}
 
 	/**
+	 * Shows a send feedback dialog.
+	 * 
+	 * @return
+	 */
+	public JDialog buildFeedbackDialog() {
+		final String TITLE = "Send Feedback";
+		final JDialog feedbackDialog;
+
+		final JPanel content;
+		final JButton sendButton;
+		final JButton cancelButton;
+		final JTextArea commentArea;
+		final JScrollPane areaScrollPane;
+		final JLabel emailLabel;
+		final JTextField emailField;
+
+		final GroupLayout layout;
+
+		feedbackDialog = this.buildDialog(TITLE);
+
+		content = new JPanel();
+		sendButton = new JButton("Send");
+		cancelButton = new JButton("Cancel");
+		commentArea = new JTextArea();
+		areaScrollPane = new JScrollPane(commentArea);
+		emailLabel = new JLabel("Email");
+		emailField = new JTextField();
+
+		commentArea.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		commentArea.setLineWrap(true);
+		commentArea.setWrapStyleWord(true);
+
+		areaScrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		areaScrollPane.setPreferredSize(new Dimension(250, 250));
+		areaScrollPane.setBorder(BorderFactory.createTitledBorder("Feedback"));
+
+		layout = new GroupLayout(content);
+
+		content.setLayout(layout);
+
+		commentArea.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					KeyboardFocusManager.getCurrentKeyboardFocusManager()
+							.focusNextComponent();
+					e.consume();
+					// \(^o^)/ nom nom nom
+				}
+			}
+		});
+
+		emailField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				NetworkHandler.getInstance().sendFeedback(
+						commentArea.getText(), emailField.getText());
+				feedbackDialog.setVisible(false);
+				feedbackDialog.dispose();
+			}
+		});
+
+		sendButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				NetworkHandler.getInstance().sendFeedback(
+						commentArea.getText(), emailField.getText());
+				feedbackDialog.setVisible(false);
+				feedbackDialog.dispose();
+			}
+		});
+
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				feedbackDialog.setVisible(false);
+				feedbackDialog.dispose();
+			}
+		});
+
+		layout.setHorizontalGroup(layout
+				.createParallelGroup()
+				.addComponent(areaScrollPane)
+				.addGroup(
+						GroupLayout.Alignment.CENTER,
+						layout.createSequentialGroup().addComponent(emailLabel)
+								.addComponent(emailField))
+				.addGroup(
+						GroupLayout.Alignment.TRAILING,
+						layout.createSequentialGroup().addComponent(sendButton)
+								.addComponent(cancelButton)));
+
+		layout.setVerticalGroup(layout
+				.createSequentialGroup()
+				.addComponent(areaScrollPane)
+				.addGroup(
+						layout.createParallelGroup().addComponent(emailLabel)
+								.addComponent(emailField))
+				.addGroup(
+						layout.createParallelGroup().addComponent(sendButton)
+								.addComponent(cancelButton)));
+
+		feedbackDialog.setContentPane(content);
+		feedbackDialog.pack();
+		feedbackDialog.setResizable(false);
+		feedbackDialog.setLocationRelativeTo(feedbackDialog.getParent());
+
+		return feedbackDialog;
+	}
+
+	/**
 	 * Shows a bug report dialog.
 	 * 
 	 * @return
@@ -766,8 +895,41 @@ public final class WindowFactory {
 		preferredLayout = ScriptEase.getInstance().getPreference(
 				ScriptEase.PREFERRED_LAYOUT_KEY);
 
-		modelObserver = LifetimeObserverFactory.getInstance()
-				.buildFrameModelObserver(frame);
+		modelObserver = new PatternModelObserver() {
+			@Override
+			public void modelChanged(PatternModelEvent event) {
+				final short eventType;
+				final PatternModel activeModel;
+
+				eventType = event.getEventType();
+				activeModel = PatternModelManager.getInstance()
+						.getActiveModel();
+
+				if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED
+						|| (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED && activeModel == null)) {
+					final JMenuBar bar;
+
+					bar = MenuFactory.createMainMenuBar(activeModel);
+
+					frame.setJMenuBar(bar);
+
+					// Create the title for the frame
+					String newTitle = "";
+					if (activeModel != null) {
+						String modelTitle = activeModel.getTitle();
+						if (!modelTitle.isEmpty())
+							newTitle += modelTitle + " - ";
+					}
+					newTitle += ScriptEase.TITLE;
+
+					frame.setTitle(newTitle);
+
+					// We need to revalidate the menu bar.
+					// http://bugs.sun.com/view_bug.do?bug_id=4949810
+					bar.revalidate();
+				}
+			}
+		};
 
 		frame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -801,8 +963,8 @@ public final class WindowFactory {
 			// when building of the Library Pane was moved to panelfactory.
 		}
 
-		PatternModelManager.getInstance()
-				.addPatternModelObserver(modelObserver);
+		PatternModelManager.getInstance().addPatternModelObserver(this,
+				modelObserver);
 
 		frame.getContentPane().add(content);
 

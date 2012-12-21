@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOError;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +21,7 @@ import scriptease.ScriptEase;
 import scriptease.controller.io.FileIO;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
+import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.PanelFactory;
 import scriptease.gui.StatusManager;
@@ -87,7 +87,7 @@ public final class FileManager {
 
 	private final Map<File, FileChannel> filesToChannels;
 
-	private final List<WeakFileManagerObserverReference<FileManagerObserver>> observers;
+	private final ObserverManager<FileManagerObserver> observerManager;
 
 	/**
 	 * The sole instance of this class as per the singleton pattern.
@@ -110,8 +110,7 @@ public final class FileManager {
 
 		this.filesToChannels = new HashMap<File, FileChannel>();
 
-		this.observers = new ArrayList<WeakFileManagerObserverReference<FileManagerObserver>>(
-				FileManager.RECENT_FILE_MAX);
+		this.observerManager = new ObserverManager<FileManagerObserver>();
 	}
 
 	/**
@@ -354,8 +353,8 @@ public final class FileManager {
 		final GameModule module = model.getModule();
 		final Translator translator = model.getTranslator();
 		final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
-		final Collection<ScriptInfo> scriptInfos = CodeGenerator.getInstance().generateCode(
-				model, problems);
+		final Collection<ScriptInfo> scriptInfos = CodeGenerator.getInstance()
+				.generateCode(model, problems);
 
 		module.addScripts(scriptInfos);
 		module.addIncludeFiles(translator.getIncludes());
@@ -943,60 +942,16 @@ public final class FileManager {
 		return deleted;
 	}
 
-	public void addObserver(FileManagerObserver observer) {
-		final Collection<WeakFileManagerObserverReference<FileManagerObserver>> observersCopy;
-
-		observersCopy = new ArrayList<WeakFileManagerObserverReference<FileManagerObserver>>(
-				this.observers);
-
-		for (WeakFileManagerObserverReference<FileManagerObserver> observerRef : observersCopy) {
-			FileManagerObserver storyComponentObserver = observerRef.get();
-			if (storyComponentObserver != null
-					&& storyComponentObserver == observer)
-				return;
-			else if (storyComponentObserver == null)
-				this.observers.remove(observerRef);
-		}
-
-		this.observers
-				.add(new WeakFileManagerObserverReference<FileManagerObserver>(
-						observer));
+	public void addObserver(Object object, FileManagerObserver observer) {
+		this.observerManager.addObserver(object, observer);
 	}
 
 	public void removeObserver(FileManagerObserver observer) {
-		for (WeakFileManagerObserverReference<FileManagerObserver> reference : this.observers) {
-			if (reference.get() == observer) {
-				this.observers.remove(reference);
-				return;
-			}
-		}
+		this.observerManager.removeObserver(observer);
 	}
 
 	private void notifyObservers(StoryModel model, File location) {
-		Collection<WeakFileManagerObserverReference<FileManagerObserver>> observersCopy = new ArrayList<WeakFileManagerObserverReference<FileManagerObserver>>(
-				this.observers);
-
-		for (WeakFileManagerObserverReference<FileManagerObserver> observerRef : observersCopy) {
-			FileManagerObserver observer = observerRef.get();
-			if (observer != null)
-				observer.fileReferenced(model, location);
-			else
-				this.observers.remove(observerRef);
-		}
-	}
-
-	/**
-	 * WeakReference wrapper used to track how many WeakReferences of each type
-	 * are generated. This class provides no functionality, but it does make it
-	 * easier for us to see where memory leaks may be occurring.
-	 * 
-	 * @author kschenk
-	 * 
-	 * @param <T>
-	 */
-	private class WeakFileManagerObserverReference<T> extends WeakReference<T> {
-		public WeakFileManagerObserverReference(T referent) {
-			super(referent);
-		}
+		for (FileManagerObserver observer : this.observerManager.getObservers())
+			observer.fileReferenced(model, location);
 	}
 }

@@ -19,6 +19,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.DescribeItManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 
 /**
  * Accepts StoryComponents if one of their properties contains the text given in
@@ -162,6 +163,20 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 			return this.searchData;
 		}
 
+		private void addTypeData(Collection<String> typeTags) {
+			final GameTypeManager typeManager;
+
+			typeManager = TranslatorManager.getInstance()
+					.getActiveGameTypeManager();
+
+			for (String typeTag : typeTags) {
+				this.searchData.add(typeTag);
+				this.searchData.add(typeManager.getDisplayText(typeTag));
+				this.searchData.add(typeManager.getCodeSymbol(typeTag));
+				this.searchData.add(typeManager.getWidgetName(typeTag));
+			}
+		}
+
 		@Override
 		protected void defaultProcess(StoryComponent component) {
 			this.searchData.add(component.getDisplayText());
@@ -193,14 +208,15 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 				if (codeBlock.hasSlot())
 					this.searchData.add(codeBlock.getSlot());
 			}
-			this.searchData.addAll(scriptIt.getTypes());
+
+			this.addTypeData(scriptIt.getTypes());
 		}
 
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
 			defaultProcess(knowIt);
 
-			this.searchData.addAll(knowIt.getTypes());
+			this.addTypeData(knowIt.getTypes());
 
 			knowIt.getBinding().process(new BindingAdapter() {
 
@@ -211,7 +227,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 					searchData.add(constant.getScriptValue());
 					searchData.add(constant.getTemplateID());
 
-					searchData.addAll(constant.getTypes());
+					addTypeData(constant.getTypes());
 				}
 
 				@Override

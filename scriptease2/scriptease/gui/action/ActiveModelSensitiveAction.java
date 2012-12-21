@@ -22,8 +22,7 @@ import scriptease.model.PatternModelManager;
  * @author remiller
  */
 @SuppressWarnings("serial")
-public abstract class ActiveModelSensitiveAction extends AbstractAction
-		implements PatternModelObserver {
+public abstract class ActiveModelSensitiveAction extends AbstractAction {
 	/**
 	 * Builds an action that is sensitive to the model pool's active model
 	 * state. It is protected to disallow non-actions from instantiating this
@@ -34,21 +33,26 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction
 	 */
 	protected ActiveModelSensitiveAction(String name) {
 		super(name);
+		final PatternModelObserver observer;
+
+		observer = new PatternModelObserver() {
+			@Override
+			public void modelChanged(final PatternModelEvent event) {
+				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED
+						|| event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED) {
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							ActiveModelSensitiveAction.this
+									.updateEnabledState();
+						}
+					});
+				}
+			}
+		};
 
 		this.updateEnabledState();
-		PatternModelManager.getInstance().addPatternModelObserver(this);
-	}
-
-	@Override
-	public void modelChanged(final PatternModelEvent event) {
-		if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED
-				|| event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED) {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					ActiveModelSensitiveAction.this.updateEnabledState();
-				}
-			});
-		}
+		PatternModelManager.getInstance().addPatternModelObserver(this,
+				observer);
 	}
 
 	/**

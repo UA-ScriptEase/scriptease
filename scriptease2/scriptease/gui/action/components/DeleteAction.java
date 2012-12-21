@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
+import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
@@ -32,7 +33,8 @@ import scriptease.translator.apimanagers.DescribeItManager;
  * @author kschenk
  */
 @SuppressWarnings("serial")
-public final class DeleteAction extends ActiveModelSensitiveAction {
+public final class DeleteAction extends ActiveModelSensitiveAction implements
+		SEFocusObserver {
 	private static final String DELETE_TEXT = "Delete";
 
 	private static final Action instance = new DeleteAction();
@@ -47,18 +49,6 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 	}
 
 	/**
-	 * Updates the action to either be enabled or disabled depending on the
-	 * current selection.
-	 */
-	protected boolean isLegal() {
-		final PatternModel activeModel;
-
-		activeModel = PatternModelManager.getInstance().getActiveModel();
-
-		return activeModel != null;
-	}
-
-	/**
 	 * Defines a <code>DeleteStoryComponentAction</code> object with no icon.
 	 */
 	private DeleteAction() {
@@ -68,7 +58,33 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 		this.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 
-		PatternModelManager.getInstance().addPatternModelObserver(this);
+		SEFocusManager.getInstance().addSEFocusObserver(this);
+	}
+
+	/**
+	 * Updates the action to either be enabled or disabled depending on the
+	 * current selection.
+	 */
+	protected boolean isLegal() {
+		final PatternModel activeModel;
+		final Component focusOwner;
+
+		focusOwner = SEFocusManager.getInstance().getFocus();
+		activeModel = PatternModelManager.getInstance().getActiveModel();
+
+		return activeModel != null
+				&& (focusOwner instanceof StoryComponentPanel
+						|| focusOwner instanceof StoryComponentPanelJList || focusOwner instanceof SEGraph);
+	}
+
+	@Override
+	public void gainFocus(Component oldFocus) {
+		this.updateEnabledState();
+	}
+
+	@Override
+	public void loseFocus(Component oldFocus) {
+		this.updateEnabledState();
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -137,5 +153,8 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 
 			UndoManager.getInstance().endUndoableAction();
 		}
+
+		// Reset the focus after we delete something.
+		SEFocusManager.getInstance().setFocus(null);
 	}
 }

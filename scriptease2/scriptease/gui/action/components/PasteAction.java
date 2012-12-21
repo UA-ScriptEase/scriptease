@@ -59,8 +59,6 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_P);
 		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 				KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK));
-
-		PatternModelManager.getInstance().addPatternModelObserver(this);
 	}
 
 	/**

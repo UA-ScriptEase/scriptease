@@ -78,6 +78,7 @@ public interface CodeGenerationKeywordConstants {
 		CHILDRENNODES,
 		CODEBLOCKS,
 		EFFECTS,
+		IDENTICALCAUSES,
 		IMPLICITS,
 		INCLUDES,
 		PARAMETERS,

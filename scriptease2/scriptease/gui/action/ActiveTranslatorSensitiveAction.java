@@ -14,16 +14,14 @@ import scriptease.translator.TranslatorManager;
  * Actions that want to be sensitive to the active translator should extend this
  * class. <br>
  * <br>
- * All or almost all of the actions that affect Story Component building
- * should have this behaviour. If a subclass wants to redefine or extend the
- * definition of when the action should be enabled, it should override
- * {@link #isLegal()}.
+ * All or almost all of the actions that affect Story Component building should
+ * have this behaviour. If a subclass wants to redefine or extend the definition
+ * of when the action should be enabled, it should override {@link #isLegal()}.
  * 
  * @author kschenk
  */
 @SuppressWarnings("serial")
-public abstract class ActiveTranslatorSensitiveAction extends AbstractAction
-		implements TranslatorObserver {
+public abstract class ActiveTranslatorSensitiveAction extends AbstractAction {
 	/**
 	 * Builds an action that is sensitive to the model pool's active model
 	 * state. It is protected to disallow non-actions from instantiating this
@@ -36,16 +34,21 @@ public abstract class ActiveTranslatorSensitiveAction extends AbstractAction
 		super(name);
 
 		this.updateEnabledState();
-		TranslatorManager.getInstance().addTranslatorObserver(this);
-	}
+		final TranslatorObserver observer;
 
-	@Override
-	public void translatorLoaded(Translator newTranslator) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				ActiveTranslatorSensitiveAction.this.updateEnabledState();
+		observer = new TranslatorObserver() {
+			@Override
+			public void translatorLoaded(Translator newTranslator) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						ActiveTranslatorSensitiveAction.this
+								.updateEnabledState();
+					}
+				});
 			}
-		});
+		};
+
+		TranslatorManager.getInstance().addTranslatorObserver(this, observer);
 	}
 
 	/**
