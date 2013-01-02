@@ -121,6 +121,9 @@ public class CodeGenerationNamifier {
 
 		name = StringOp.removeIllegalCharacters(component.getDisplayText(),
 				legalFormat);
+		
+		// make sure the name doesn't start with a number
+		name = StringOp.removeNonCharPrefix(name);
 
 		while (!this.isNameUnique(name) && counter < ARBITRARY_STOP_SIZE) {
 			// tack on a counter to the end of the name,
@@ -226,9 +229,6 @@ public class CodeGenerationNamifier {
 		while (owner != null && ownerNamifier != null) {
 			// Propogate one level regardless of owner type.
 			ownerNamifier.componentsToNames.put(component, name);
-
-			// if (owner instanceof ScriptIt)
-			// break;
 
 			ownerNamifier = ownerNamifier.parentNamifier;
 			owner = owner.getOwner();

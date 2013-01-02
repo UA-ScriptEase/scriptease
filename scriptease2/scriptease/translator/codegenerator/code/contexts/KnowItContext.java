@@ -81,6 +81,10 @@ public class KnowItContext extends StoryComponentContext {
 				.createContext(this, knowIt.getBinding());
 
 		final String formattedValue = bindingContext.getFormattedValue();
+		if (formattedValue.isEmpty()) {
+			System.err.println("Value of " + knowIt
+					+ " resolved to an empty string.");
+		}
 
 		if (binding.explicitlyCompatibleWith((KnowIt) this.component)) {
 			return formattedValue;
