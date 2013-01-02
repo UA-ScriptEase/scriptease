@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
@@ -34,6 +35,7 @@ import scriptease.translator.io.tools.SimpleGameConstant;
  * binding. Labels are added separately.
  * 
  * @author remiller
+ * @author kschenk
  * @see BindingWidgetUI
  */
 @SuppressWarnings("serial")
@@ -56,6 +58,34 @@ public class BindingWidget extends JPanel implements Cloneable {
 
 		// Necessary to save changes that require loss of focus.
 		this.addMouseListener(new MouseAdapter() {
+
+			private Component getValidParent(Component child) {
+				final Component parent;
+
+				parent = child.getParent();
+
+				if (parent == null)
+					return null;
+				else if (parent.getMouseListeners().length > 0)
+					return parent;
+				else
+					return getValidParent(parent);
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// Forward mouse clicked to first parent with mouse listeners.
+
+				final Component child = e.getComponent();
+				final Component parent = this.getValidParent(child);
+
+				if (parent == null)
+					return;
+
+				e.setSource(parent);
+				parent.dispatchEvent(e);
+			}
+
 			public void mousePressed(java.awt.event.MouseEvent e) {
 				BindingWidget.this.requestFocusInWindow();
 			};
