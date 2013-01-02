@@ -4,8 +4,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.MouseListener;
 import java.util.Collection;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
@@ -30,9 +31,8 @@ import scriptease.model.complex.ScriptIt;
  * JList also has a transfer handler attached that gives the ability to drag and
  * drop the Panels.
  * 
- * At the moment, this List is used to display the Library. However, it should
- * be very easy to use it elsewhere if necessary. Just create a list with the
- * constructor, then add story components with the addStoryComponents method.
+ * Create a list with the constructor, then add story components with the
+ * addStoryComponents method.
  * 
  * @author kschenk
  * 
@@ -41,8 +41,12 @@ import scriptease.model.complex.ScriptIt;
 public class StoryComponentPanelJList extends JList implements Filterable {
 	private Filter filterRule;
 
+	// Store a weak map of panels to story components so that we do not have to
+	// redraw them every single time
+	private final Map<StoryComponent, StoryComponentPanel> panelMap;
+
 	/*
-	 * We only need one no results panel instead of generating a new one each
+	 * We only need one "no results panel" instead of generating a new one each
 	 * time.
 	 */
 	private static final JPanel noResultsPanel = new JPanel();
@@ -58,10 +62,19 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * <br>
 	 * Panels should be added using {@link #addStoryComponents(Collection)}
 	 * 
-	 * @param filter
+	 */
+	public StoryComponentPanelJList() {
+		this(null, true);
+	}
+
+	/**
+	 * Creates a JList that is able to render Story Component Panels as items.
+	 * The JList also has a transfer handler attached that gives the ability to
+	 * drag and drop the Panels. <br>
+	 * <br>
+	 * Panels should be added using {@link #addStoryComponents(Collection)}
 	 * 
-	 * @param storyComponentList
-	 *            The list of StoryComponents to display in the list.
+	 * @param filter
 	 */
 	public StoryComponentPanelJList(StoryComponentFilter filter) {
 		this(filter, true);
@@ -90,6 +103,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 		this.setModel(listModel);
 
+		this.panelMap = new WeakHashMap<StoryComponent, StoryComponentPanel>();
 		this.filterRule = new VisibilityFilter(hideInvisible);
 
 		if (filter != null)
@@ -122,7 +136,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		this.setCellRenderer(new StoryComponentListRenderer());
 		this.setLayoutOrientation(JList.VERTICAL);
 
-		this.setSelectionBackground(ScriptEaseUI.COLOUR_LIST_SELECTED);
+		this.setSelectionBackground(ScriptEaseUI.SELECTED_COLOUR);
 		this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 
 		this.setDragEnabled(true);
@@ -144,7 +158,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		listModel.removeElement(noResultsPanel);
 
 		for (StoryComponent component : storyComponentList) {
-			addStoryComponent(component);
+			this.addStoryComponent(component);
 		}
 
 		if (listModel.isEmpty())
@@ -152,14 +166,29 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	}
 
 	public void addStoryComponent(StoryComponent component) {
-		final DefaultListModel listModel = (DefaultListModel) this.getModel();
 		if ((this.filterRule == null)
 				|| ((this.filterRule != null) && (this.filterRule
 						.isAcceptable(component)))) {
 			// Check if the element is already part of the list
-			if (getStoryComponentPanelListIndexForStoryComponent(component) == -1) {
-				listModel.addElement(StoryComponentPanelFactory.getInstance()
-						.buildStoryComponentPanel(component));
+			if (getIndexOfStoryComponent(component) == -1) {
+				final DefaultListModel listModel;
+				final StoryComponentPanel panel;
+
+				listModel = (DefaultListModel) this.getModel();
+				panel = panelMap.get(component);
+
+				if (panel == null) {
+					final StoryComponentPanel newPanel;
+
+					newPanel = StoryComponentPanelFactory.getInstance()
+							.buildStoryComponentPanel(component);
+
+					panelMap.put(component, newPanel);
+
+					listModel.addElement(newPanel);
+				} else {
+					listModel.addElement(panel);
+				}
 			} else {
 				System.err.println("StoryComponent " + component
 						+ " already exists in StoryComponentPanelJList");
@@ -177,8 +206,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * @param component
 	 * @return
 	 */
-	public int getStoryComponentPanelListIndexForStoryComponent(
-			StoryComponent component) {
+	private int getIndexOfStoryComponent(StoryComponent component) {
 		final DefaultListModel listModel = (DefaultListModel) this.getModel();
 		int returnIndex = -1;
 		for (int panelIndex = 0; panelIndex < listModel.size(); panelIndex++) {
@@ -196,10 +224,9 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	}
 
 	public void removeStoryComponent(StoryComponent component) {
-		final DefaultListModel listModel = (DefaultListModel) this.getModel();
-		final int panelIndex = getStoryComponentPanelListIndexForStoryComponent(component);
+		final int panelIndex = getIndexOfStoryComponent(component);
 		if (panelIndex != -1) {
-			listModel.removeElementAt(panelIndex);
+			((DefaultListModel) this.getModel()).removeElementAt(panelIndex);
 		}
 	}
 
@@ -211,10 +238,17 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 */
 	public void updateStoryComponentPanel(StoryComponent component) {
 		final DefaultListModel listModel = (DefaultListModel) this.getModel();
-		final int panelIndex = getStoryComponentPanelListIndexForStoryComponent(component);
+		final int panelIndex = getIndexOfStoryComponent(component);
 		if (panelIndex != -1) {
-			listModel.set(panelIndex, (StoryComponentPanelFactory.getInstance()
-					.buildStoryComponentPanel(component)));
+			final StoryComponentPanel panel;
+
+			panel = StoryComponentPanelFactory.getInstance()
+					.buildStoryComponentPanel(component);
+
+			listModel.set(panelIndex, panel);
+
+			panelMap.put(component, panel);
+
 		}
 	}
 
@@ -222,20 +256,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * Removes all Story Components from the list.
 	 */
 	public void removeAllStoryComponents() {
-		final DefaultListModel listModel;
-		listModel = (DefaultListModel) this.getModel();
-		listModel.clear();
-	}
-
-	/**
-	 * Adds a mouse listener to the list. This method needs to exist because
-	 * using the {@link #addMouseListener(MouseListener)} method would just add
-	 * a mouse listener to the JScrollPane.
-	 * 
-	 * @param mouseListener
-	 */
-	public void addListMouseListener(MouseListener mouseListener) {
-		this.addMouseListener(mouseListener);
+		((DefaultListModel) this.getModel()).clear();
 	}
 
 	@Override

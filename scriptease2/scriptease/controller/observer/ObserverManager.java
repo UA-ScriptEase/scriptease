@@ -2,9 +2,10 @@ package scriptease.controller.observer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.Map.Entry;
+import java.util.WeakHashMap;
 
 /**
  * A manager for observers. We store a weak key so that the observer can get
@@ -36,7 +37,7 @@ public final class ObserverManager<O> {
 		Collection<O> value = this.observerMap.get(object);
 
 		if (value == null) {
-			value = new ArrayList<O>();
+			value = new HashSet<O>();
 		}
 
 		value.add(observer);

@@ -134,6 +134,22 @@ public class NWNDialogueLine extends NWNGameConstant implements
 		return this.getName();
 	}
 
+	@Override
+	public int hashCode() {
+		int hashcode = super.hashCode() + this.getSpeaker().hashCode()
+				+ this.getChildren().hashCode();
+
+		if (this.isLink())
+			hashcode++;
+
+		return hashcode;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof NWNDialogueLine && super.equals(obj);
+	}
+
 	private static String constructResRef(GenericFileFormat convo,
 			GffStruct dialogueSyncStruct, List<String> indexes) {
 		String lineResRef;

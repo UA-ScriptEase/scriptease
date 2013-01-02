@@ -6,6 +6,9 @@ import scriptease.model.TypedComponent;
  * Representation of constant game data. GameConstants are immutable (that is,
  * to 'change' them, they must be replaced with a new instance).
  * 
+ * Note that you may need to implement the {@link #hashCode()} and
+ * {@link #equals(Object)} methods properly in order for intended functionality.
+ * 
  * @author remiller
  */
 public interface GameConstant extends TypedComponent {

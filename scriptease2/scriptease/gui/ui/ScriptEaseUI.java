@@ -45,7 +45,7 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (Grey) used for selected UI Components
 	 */
-	public static final Color SELECTED_COLOUR = new Color(220, 220, 220);
+	public static final Color SELECTED_COLOUR = new Color(200, 200, 200);
 
 	/**
 	 * The colour (White) used for unselected UI components
@@ -55,7 +55,7 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (Grey) used for selected list.
 	 */
-	public static final Color COLOUR_LIST_SELECTED = new Color(200, 200, 200);
+//	public static final Color COLOUR_LIST_SELECTED = new Color(200, 200, 200);
 
 	/**
 	 * The colour (light blue) used by default for node backgrounds.
