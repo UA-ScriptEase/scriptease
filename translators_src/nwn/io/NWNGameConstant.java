@@ -53,6 +53,18 @@ public abstract class NWNGameConstant implements GameConstant {
 	}
 
 	@Override
+	public int hashCode() {
+		return this.name.hashCode() + this.resRef.hashCode()
+				+ this.tag.hashCode() + this.types.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof NWNGameConstant
+				&& this.hashCode() == obj.hashCode();
+	}
+
+	@Override
 	public abstract String toString();
 
 }

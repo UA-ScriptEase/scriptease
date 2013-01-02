@@ -503,6 +503,7 @@ public class PanelFactory {
 				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
 						"SansSerif", Font.PLAIN, 12), Color.black));
 
+		// TODO Don't redraw the entire tree
 		typeFilter.setAction(new Runnable() {
 			@Override
 			public void run() {
@@ -535,6 +536,8 @@ public class PanelFactory {
 		gameConstantPane.add(Box.createVerticalStrut(5));
 		gameConstantPane.add(treeScrollPane);
 
+		
+		// TODO Don't redraw the entire tree
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {

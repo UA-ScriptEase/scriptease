@@ -37,6 +37,15 @@ public class NWNConversation extends NWNGameConstant implements
 	}
 
 	@Override
+	public int hashCode() {
+		return super.hashCode() + convo.hashCode();
+	}
+
+	public boolean equals(Object obj) {
+		return obj instanceof NWNConversation && super.equals(obj);
+	}
+
+	@Override
 	public List<GameConversationNode> getConversationRoots() {
 		final List<GameConversationNode> roots;
 		final List<GffStruct> rootStructs;
