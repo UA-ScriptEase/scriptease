@@ -9,11 +9,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -39,6 +42,12 @@ import scriptease.util.GUIOp;
  */
 @SuppressWarnings("serial")
 public class GameConstantPanel extends JPanel {
+	private final Color LINE_COLOR_1 = Color.red;
+	private final Color LINE_COLOR_2 = Color.blue;
+
+	private GameConstant selectedConstant = null;
+
+	private Map<GameConstant, JPanel> panelMap;
 
 	/**
 	 * Creates a new GameConstantPanel with the passed in model.
@@ -51,6 +60,10 @@ public class GameConstantPanel extends JPanel {
 	 */
 	public GameConstantPanel(PatternModel model) {
 		super();
+		this.panelMap = new HashMap<GameConstant, JPanel>();
+
+		// TODO Sort game constants by type into categories
+
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
 		if (model != null && model instanceof StoryModel) {
@@ -62,8 +75,105 @@ public class GameConstantPanel extends JPanel {
 
 			types = new ArrayList<String>(typeManager.getKeywords());
 
-			this.drawTree((StoryModel) model, "", types);
+			this.drawTree(model, "", types);
 		}
+	}
+
+	/**
+	 * Draws the tree.
+	 */
+	public void drawTree(PatternModel model, final String searchText,
+			final Collection<String> validTypes) {
+		this.removeAll();
+		this.panelMap.clear();
+
+		final List<String> types;
+
+		types = new ArrayList<String>(validTypes);
+
+		if (model == null || !(model instanceof StoryModel)) {
+			return;
+		}
+
+		// Sort the types by alphabet
+		Collections.sort(types, new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				final GameTypeManager typeManager;
+
+				typeManager = TranslatorManager.getInstance()
+						.getActiveTranslator().getGameTypeManager();
+
+				return String.CASE_INSENSITIVE_ORDER.compare(
+						typeManager.getDisplayText(o1),
+						typeManager.getDisplayText(o2));
+			}
+		});
+
+		// Add the game objects to the tree model.
+		for (String typeTag : types) {
+
+			final Collection<GameConstant> gameObjects;
+
+			gameObjects = this.getObjectsOfType((StoryModel) model, typeTag,
+					searchText);
+
+			for (GameConstant constant : gameObjects) {
+				if (constant instanceof GameObject)
+					this.panelMap.put(constant,
+							createGameConstantPanel(constant));
+				else if (constant instanceof GameConversation) {
+					// this.panelMap
+					// .put(constant,
+					// createGameConversationPanel((GameConversation)
+					// constant));
+					this.panelMap.put(constant,
+							createGameConstantPanel(constant));
+
+					for (GameConversationNode gameConversationNode : ((GameConversation) constant)
+							.getConversationRoots()) {
+						final int indent;
+
+						indent = 1;
+
+						this.panelMap.put(
+								gameConversationNode,
+								createIndentedConversationPanel(
+										gameConversationNode, indent,
+										gameConversationNode.getSpeaker(),
+										this.LINE_COLOR_1));
+
+						this.addConversationRoots(
+								gameConversationNode.getChildren(), indent + 1);
+					}
+
+				} else {
+					final JPanel invalidPanel = new JPanel();
+					invalidPanel
+							.add(new JLabel("Invalid GameConstant Created"));
+					this.panelMap.put(constant, invalidPanel);
+				}
+			}
+
+			// Ignore empty categories because they're confusing.
+			if (gameObjects.size() <= 0)
+				continue;
+			else {
+				final GameTypeManager typeManager;
+				final String typeName;
+				final GameObjectContainer container;
+
+				typeManager = TranslatorManager.getInstance()
+						.getActiveTranslator().getGameTypeManager();
+				typeName = typeManager.getDisplayText(typeTag);
+				container = new GameObjectContainer(typeName, gameObjects);
+
+				this.add(container);
+			}
+		}
+
+		this.repaint();
+		this.revalidate();
 	}
 
 	/**
@@ -152,62 +262,194 @@ public class GameConstantPanel extends JPanel {
 	}
 
 	/**
-	 * Draws the tree.
+	 * Creates a JPanel for the passed in GameConstant. This panel contains a
+	 * binding widget that the user can then drag and drop into the appropriate
+	 * slots.
+	 * 
+	 * @param gameConstant
+	 *            The GameConstant to create a panel for
+	 * @return
 	 */
-	public void drawTree(PatternModel model, final String searchText,
-			final Collection<String> validTypes) {
-		this.removeAll();
+	private JPanel createGameConstantPanel(final GameConstant gameConstant) {
+		final JPanel objectPanel;
+		final BindingWidget gameObjectBindingWidget;
+		final String regularText;
 
-		final List<String> types;
+		objectPanel = new JPanel();
+		regularText = gameConstant.getName();
 
-		types = new ArrayList<String>(validTypes);
+		objectPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		if (model == null || !(model instanceof StoryModel)) {
+		objectPanel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
+		objectPanel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
+
+		objectPanel.setLayout(new BoxLayout(objectPanel, BoxLayout.X_AXIS));
+
+		gameObjectBindingWidget = new BindingWidget(new KnowItBindingConstant(
+				gameConstant));
+
+		if (gameConstant instanceof GameConversationNode) {
+			if (((GameConversationNode) gameConstant).isLink())
+				gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
+						gameObjectBindingWidget.getBackground(), 1.24));
+		}
+
+		gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(regularText,
+				Color.WHITE));
+
+		gameObjectBindingWidget.setBorder(BorderFactory.createEmptyBorder(
+				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
+				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
+				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
+				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE));
+
+		objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+		objectPanel.add(gameObjectBindingWidget);
+		objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+
+		return objectPanel;
+	}
+
+	/**
+	 * Creates a game conversation panel using the passed in game conversation.
+	 * This adds all of the game conversation's successors to the list as well.
+	 * 
+	 * @param gameConversation
+	 *            The GameConversation to make a panel for
+	 * @return
+	 */
+	private JPanel createGameConversationPanel(GameConversation gameConversation) {
+		final JPanel convoPanel;
+
+		convoPanel = new JPanel();
+		convoPanel.setBackground(Color.WHITE);
+
+		convoPanel.setLayout(new BoxLayout(convoPanel, BoxLayout.PAGE_AXIS));
+
+		convoPanel.add(createGameConstantPanel(gameConversation));
+
+		for (GameConversationNode gameConversationNode : gameConversation
+				.getConversationRoots()) {
+			final int indent;
+
+			indent = 1;
+
+			convoPanel.add(createIndentedConversationPanel(
+					gameConversationNode, indent,
+					gameConversationNode.getSpeaker(), this.LINE_COLOR_1));
+
+			this.addConversationRoots(gameConversationNode.getChildren(),
+					indent + 1);
+		}
+
+		convoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+		return convoPanel;
+	}
+
+	/**
+	 * Recursively adds all passed in roots to the passed in JPanel.
+	 * 
+	 * @param roots
+	 *            The roots to add to the JPanel. Recursively adds these roots'
+	 *            roots and so forth.
+	 * @param convoPanel
+	 *            The panel to add the roots to.
+	 * @param indent
+	 *            The amount to indent as defined in
+	 *            {@link #createIndentedConversationPanel(GameConstant, int)} .
+	 *            Incremented for each level.
+	 */
+	private void addConversationRoots(
+			List<? extends GameConversationNode> roots,// JPanel convoPanel,
+			int indent) {
+		if (roots.isEmpty()) {
 			return;
 		}
 
-		// Sort the types by alphabet
-		Collections.sort(types, new Comparator<String>() {
-			@Override
-			public int compare(String o1, String o2) {
-				final GameTypeManager typeManager;
+		for (GameConversationNode root : roots) {
+			final String speaker;
+			final JPanel nodePanel;
+			final Color color;
 
-				typeManager = TranslatorManager.getInstance()
-						.getActiveTranslator().getGameTypeManager();
-
-				return String.CASE_INSENSITIVE_ORDER.compare(
-						typeManager.getDisplayText(o1),
-						typeManager.getDisplayText(o2));
+			if (indent % 2 == 0) {
+				color = this.LINE_COLOR_2;
+			} else {
+				color = this.LINE_COLOR_1;
 			}
-		});
 
-		// Add the game objects to the tree model.
-		for (String typeTag : types) {
+			if (root.isLink())
+				speaker = "Link";
+			else
+				speaker = root.getSpeaker();
 
-			final Collection<GameConstant> gameObjects;
+			nodePanel = createIndentedConversationPanel(root, indent, speaker,
+					color);
 
-			gameObjects = this.getObjectsOfType((StoryModel) model, typeTag,
-					searchText);
+			this.panelMap.put(root, nodePanel);
 
-			// Ignore empty categories because they're confusing.
-			if (gameObjects.size() <= 0)
-				continue;
-			else {
-				final GameTypeManager typeManager;
-				final String typeName;
-				final GameObjectContainer container;
+			this.addConversationRoots(root.getChildren(), indent + 1);
+		}
+	}
 
-				typeManager = TranslatorManager.getInstance()
-						.getActiveTranslator().getGameTypeManager();
-				typeName = typeManager.getDisplayText(typeTag);
-				container = new GameObjectContainer(typeName, gameObjects);
+	/**
+	 * Creates an indented panel for the passed in GameConstant using the
+	 * indent. Indents are made using a {@link Box#createRigidArea(Dimension)},
+	 * where the dimension is (5*indent, 0).
+	 * 
+	 * @param gameConversationNode
+	 *            The constant to create a panel for
+	 * @param indent
+	 *            The indent
+	 * @param speaker
+	 *            The speaker of the dialogue line
+	 * @param color
+	 *            The color of the speaker label
+	 * 
+	 * @return
+	 */
+	private JPanel createIndentedConversationPanel(
+			GameConversationNode gameConversationNode, int indent,
+			String speaker, Color color) {
+		final int STRUT_SIZE = 10 * indent;
+		final JLabel prefixLabel;
+		final JPanel indentedPanel;
 
-				this.add(container);
-			}
+		prefixLabel = new JLabel();
+		indentedPanel = new JPanel();
+
+		indentedPanel.setLayout(new BoxLayout(indentedPanel,
+				BoxLayout.LINE_AXIS));
+
+		indentedPanel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
+		prefixLabel.setOpaque(true);
+
+		prefixLabel.setBackground(Color.LIGHT_GRAY);
+
+		if (speaker != null && !speaker.isEmpty() && color != null) {
+			final char firstChar;
+
+			firstChar = speaker.charAt(0);
+
+			prefixLabel.setText(" " + firstChar + " ");
+
+			prefixLabel.setForeground(color);
 		}
 
-		this.repaint();
-		this.revalidate();
+		indentedPanel.add(Box.createHorizontalStrut(STRUT_SIZE));
+		indentedPanel.add(prefixLabel);
+
+		final JPanel nodePanel;
+
+		nodePanel = createGameConstantPanel(gameConversationNode);
+		
+		nodePanel.setOpaque(false);
+		
+		indentedPanel.add(nodePanel);
+
+		indentedPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+		return indentedPanel;
 	}
 
 	/**
@@ -218,9 +460,6 @@ public class GameConstantPanel extends JPanel {
 	 * 
 	 */
 	private class GameObjectContainer extends JPanel {
-		private final Color LINE_COLOR_1 = Color.red;
-		private final Color LINE_COLOR_2 = Color.blue;
-
 		private boolean collapsed;
 
 		/**
@@ -276,11 +515,8 @@ public class GameConstantPanel extends JPanel {
 				categoryLabel.setIcon(ScriptEaseUI.COLLAPSE_ICON);
 				this.add(categoryLabel);
 
-				for (GameConstant successor : gameConstants) {
-					if (successor instanceof GameObject)
-						this.add(createGameConstantPanel((GameObject) successor));
-					else if (successor instanceof GameConversation)
-						this.add(createGameConversationPanel((GameConversation) successor));
+				for (final GameConstant gameConstant : gameConstants) {
+					this.addGameConstant(gameConstant);
 				}
 			}
 
@@ -289,195 +525,45 @@ public class GameConstantPanel extends JPanel {
 			this.revalidate();
 		}
 
-		/**
-		 * Creates a JPanel for the passed in GameConstant. This panel contains
-		 * a binding widget that the user can then drag and drop into the
-		 * appropriate slots.
-		 * 
-		 * @param gameConstant
-		 *            The GameConstant to create a panel for
-		 * @return
-		 */
-		private JPanel createGameConstantPanel(GameConstant gameConstant) {
-			final JPanel objectPanel;
-			final BindingWidget gameObjectBindingWidget;
-			final String regularText;
+		private void addGameConstant(final GameConstant constant) {
+			final JComponent constantPanel;
 
-			objectPanel = new JPanel();
-			regularText = gameConstant.getName();
+			constantPanel = panelMap.get(constant);
 
-			objectPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+			if (selectedConstant == constant)
+				constantPanel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
 
-			objectPanel.setOpaque(true);
-
-			objectPanel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
-			objectPanel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
-
-			objectPanel.setLayout(new BoxLayout(objectPanel, BoxLayout.X_AXIS));
-
-			gameObjectBindingWidget = new BindingWidget(
-					new KnowItBindingConstant(gameConstant));
-
-			if (gameConstant instanceof GameConversationNode) {
-				if (((GameConversationNode) gameConstant).isLink())
-					gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
-							gameObjectBindingWidget.getBackground()	, 1.24));
-			}
-
-			gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(
-					regularText, Color.WHITE));
-
-			gameObjectBindingWidget.setBorder(BorderFactory.createEmptyBorder(
-					ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
-					ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
-					ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
-					ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE));
-
-			objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
-			objectPanel.add(gameObjectBindingWidget);
-			objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
-
-			return objectPanel;
-		}
-
-		/**
-		 * Creates a game conversation panel using the passed in game
-		 * conversation. This adds all of the game conversation's successors to
-		 * the list as well.
-		 * 
-		 * @param gameConversation
-		 *            The GameConversation to make a panel for
-		 * @return
-		 */
-		private JPanel createGameConversationPanel(
-				GameConversation gameConversation) {
-			final JPanel convoPanel;
-
-			convoPanel = new JPanel();
-			convoPanel.setOpaque(false);
-
-			convoPanel
-					.setLayout(new BoxLayout(convoPanel, BoxLayout.PAGE_AXIS));
-
-			convoPanel.add(createGameConstantPanel(gameConversation));
-
-			for (GameConversationNode gameConversationNode : gameConversation
-					.getConversationRoots()) {
-				final int indent;
-
-				indent = 1;
-
-				convoPanel.add(createIndentedConversationPanel(
-						gameConversationNode, indent,
-						gameConversationNode.getSpeaker(), this.LINE_COLOR_1));
-
-				this.addConversationRoots(gameConversationNode.getChildren(),
-						convoPanel, indent + 1);
-			}
-
-			convoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-			return convoPanel;
-		}
-
-		/**
-		 * Recursively adds all passed in roots to the passed in JPanel.
-		 * 
-		 * @param roots
-		 *            The roots to add to the JPanel. Recursively adds these
-		 *            roots' roots and so forth.
-		 * @param convoPanel
-		 *            The panel to add the roots to.
-		 * @param indent
-		 *            The amount to indent as defined in
-		 *            {@link #createIndentedConversationPanel(GameConstant, int)}
-		 *            . Incremented for each level.
-		 */
-		private void addConversationRoots(
-				List<? extends GameConversationNode> roots, JPanel convoPanel,
-				int indent) {
-			if (roots.isEmpty()) {
+			if (constantPanel == null) {
+				System.out.println("Constant has null component: " + constant);
 				return;
 			}
 
-			for (GameConversationNode root : roots) {
-				final String speaker;
-				final JPanel nodePanel;
-				final Color color;
+			constantPanel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (selectedConstant != null)
+						panelMap.get(selectedConstant).setBackground(
+								ScriptEaseUI.UNSELECTED_COLOUR);
 
-				if (indent % 2 == 0) {
-					color = this.LINE_COLOR_2;
-				} else {
-					color = this.LINE_COLOR_1;
+					selectedConstant = constant;
+					constantPanel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
+				}
+			});
+
+			this.add(constantPanel);
+
+			if (constant instanceof GameConversation) {
+				for (GameConversationNode child : ((GameConversation) constant)
+						.getConversationRoots()) {
+					this.addGameConstant(child);
 				}
 
-				if (root.isLink())
-					speaker = "Link";
-				else
-					speaker = root.getSpeaker();
-
-				nodePanel = createIndentedConversationPanel(root, indent,
-						speaker, color);
-
-				convoPanel.add(nodePanel);
-
-				this.addConversationRoots(root.getChildren(), convoPanel,
-						indent + 1);
+			} else if (constant instanceof GameConversationNode) {
+				for (GameConstant child : ((GameConversationNode) constant)
+						.getChildren()) {
+					this.addGameConstant(child);
+				}
 			}
-		}
-
-		/**
-		 * Creates an indented panel for the passed in GameConstant using the
-		 * indent. Indents are made using a
-		 * {@link Box#createRigidArea(Dimension)}, where the dimension is
-		 * (5*indent, 0).
-		 * 
-		 * @param gameConversationNode
-		 *            The constant to create a panel for
-		 * @param indent
-		 *            The indent
-		 * @param speaker
-		 *            The speaker of the dialogue line
-		 * @param color
-		 *            The color of the speaker label
-		 * 
-		 * @return
-		 */
-		private JPanel createIndentedConversationPanel(
-				GameConversationNode gameConversationNode, int indent,
-				String speaker, Color color) {
-			final int STRUT_SIZE = 10 * indent;
-			final JLabel prefixLabel;
-			final JPanel indentedPanel;
-
-			prefixLabel = new JLabel();
-			indentedPanel = new JPanel();
-
-			indentedPanel.setLayout(new BoxLayout(indentedPanel,
-					BoxLayout.LINE_AXIS));
-
-			indentedPanel.setOpaque(false);
-			prefixLabel.setOpaque(true);
-
-			prefixLabel.setBackground(Color.LIGHT_GRAY);
-
-			if (speaker != null && !speaker.isEmpty() && color != null) {
-				final char firstChar;
-
-				firstChar = speaker.charAt(0);
-
-				prefixLabel.setText(" " + firstChar + " ");
-
-				prefixLabel.setForeground(color);
-			}
-
-			indentedPanel.add(Box.createHorizontalStrut(STRUT_SIZE));
-			indentedPanel.add(prefixLabel);
-			indentedPanel.add(createGameConstantPanel(gameConversationNode));
-
-			indentedPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-			return indentedPanel;
 		}
 	}
 }

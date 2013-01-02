@@ -261,7 +261,8 @@ public class LibraryPanel extends JPanel {
 	 */
 	public void addListMouseListener(MouseListener listener) {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			list.addListMouseListener(listener);
+			//list.addListMouseListener(listener);
+			list.addMouseListener(listener);
 		}
 	}
 

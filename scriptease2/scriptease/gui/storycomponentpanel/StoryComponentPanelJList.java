@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.MouseListener;
 import java.util.Collection;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -32,9 +31,8 @@ import scriptease.model.complex.ScriptIt;
  * JList also has a transfer handler attached that gives the ability to drag and
  * drop the Panels.
  * 
- * At the moment, this List is used to display the Library. However, it should
- * be very easy to use it elsewhere if necessary. Just create a list with the
- * constructor, then add story components with the addStoryComponents method.
+ * Create a list with the constructor, then add story components with the
+ * addStoryComponents method.
  * 
  * @author kschenk
  * 
@@ -48,7 +46,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	private final Map<StoryComponent, StoryComponentPanel> panelMap;
 
 	/*
-	 * We only need one no results panel instead of generating a new one each
+	 * We only need one "no results panel" instead of generating a new one each
 	 * time.
 	 */
 	private static final JPanel noResultsPanel = new JPanel();
@@ -138,7 +136,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		this.setCellRenderer(new StoryComponentListRenderer());
 		this.setLayoutOrientation(JList.VERTICAL);
 
-		this.setSelectionBackground(ScriptEaseUI.COLOUR_LIST_SELECTED);
+		this.setSelectionBackground(ScriptEaseUI.SELECTED_COLOUR);
 		this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 
 		this.setDragEnabled(true);
@@ -160,7 +158,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		listModel.removeElement(noResultsPanel);
 
 		for (StoryComponent component : storyComponentList) {
-			addStoryComponent(component);
+			this.addStoryComponent(component);
 		}
 
 		if (listModel.isEmpty())
@@ -168,14 +166,15 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	}
 
 	public void addStoryComponent(StoryComponent component) {
-		final DefaultListModel listModel = (DefaultListModel) this.getModel();
 		if ((this.filterRule == null)
 				|| ((this.filterRule != null) && (this.filterRule
 						.isAcceptable(component)))) {
 			// Check if the element is already part of the list
 			if (getIndexOfStoryComponent(component) == -1) {
+				final DefaultListModel listModel;
 				final StoryComponentPanel panel;
 
+				listModel = (DefaultListModel) this.getModel();
 				panel = panelMap.get(component);
 
 				if (panel == null) {
@@ -225,10 +224,9 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	}
 
 	public void removeStoryComponent(StoryComponent component) {
-		final DefaultListModel listModel = (DefaultListModel) this.getModel();
 		final int panelIndex = getIndexOfStoryComponent(component);
 		if (panelIndex != -1) {
-			listModel.removeElementAt(panelIndex);
+			((DefaultListModel) this.getModel()).removeElementAt(panelIndex);
 		}
 	}
 
@@ -258,20 +256,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * Removes all Story Components from the list.
 	 */
 	public void removeAllStoryComponents() {
-		final DefaultListModel listModel;
-		listModel = (DefaultListModel) this.getModel();
-		listModel.clear();
-	}
-
-	/**
-	 * Adds a mouse listener to the list. This method needs to exist because
-	 * using the {@link #addMouseListener(MouseListener)} method would just add
-	 * a mouse listener to the JScrollPane.
-	 * 
-	 * @param mouseListener
-	 */
-	public void addListMouseListener(MouseListener mouseListener) {
-		this.addMouseListener(mouseListener);
+		((DefaultListModel) this.getModel()).clear();
 	}
 
 	@Override
