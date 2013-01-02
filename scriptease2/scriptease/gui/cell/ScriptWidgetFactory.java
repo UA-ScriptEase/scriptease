@@ -467,9 +467,10 @@ public class ScriptWidgetFactory {
 						}
 
 						widget.setBinding(knowIt.getBinding());
-						// spinner.removeChangeListener(changeListener);
+						
+						spinner.removeChangeListener(changeListener);
 						spinner.setValue(newBinding);
-						// spinner.addChangeListener(changeListener);
+						spinner.addChangeListener(changeListener);
 					}
 				}
 			}
