@@ -53,11 +53,6 @@ public interface ScriptEaseUI {
 	public static final Color UNSELECTED_COLOUR = Color.WHITE;
 
 	/**
-	 * The colour (Grey) used for selected list.
-	 */
-//	public static final Color COLOUR_LIST_SELECTED = new Color(200, 200, 200);
-
-	/**
 	 * The colour (light blue) used by default for node backgrounds.
 	 */
 	public static final Color COLOUR_NODE_DEFAULT = new Color(205, 221, 250);
@@ -66,7 +61,17 @@ public interface ScriptEaseUI {
 	 * The colour (dark blue) used for selected graph nodes
 	 */
 	public static final Color COLOUR_SELECTED_NODE = new Color(89, 147, 255);
-
+	
+	/**
+	 * The colour (darker blue) used for parent of selected node
+	 */
+	public static final Color COLOUR_PARENT_NODE = new Color(190, 180, 255);
+	
+	/**
+	 * The colour (lighter blue) used for children of selected node
+	 */
+	public static final Color COLOUR_CHILD_NODE = new Color(180, 255, 185);
+	
 	/**
 	 * The colour (red) used for the delete node tool
 	 */

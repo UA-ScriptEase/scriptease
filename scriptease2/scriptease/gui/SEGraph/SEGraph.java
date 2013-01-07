@@ -927,13 +927,19 @@ public class SEGraph<E> extends JComponent {
 						g2.setColor(lineColour);
 
 						final List<Point> points;
-
+						final Point start;
+						final Point end;
 						points = new ArrayList<Point>();
+						start = GUIOp.getMidRight(SEGraph.this
+								.createComponentForNode(parent));
+						end = GUIOp.getMidLeft(SEGraph.this
+								.createComponentForNode(child));
 
-						points.add(GUIOp.getMidRight(SEGraph.this
-								.createComponentForNode(parent)));
-						points.add(GUIOp.getMidLeft(SEGraph.this
-								.createComponentForNode(child)));
+						points.add(start);
+
+						// Add points between
+
+						points.add(end);
 
 						// Draw an arrow pointing towards the child.
 						GUIOp.paintArrow(g2, points);
