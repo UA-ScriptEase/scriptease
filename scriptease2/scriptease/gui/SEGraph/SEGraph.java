@@ -26,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.plaf.ComponentUI;
 
+import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.observers.SEGraphObserver;
@@ -126,6 +127,30 @@ public class SEGraph<E> extends JComponent {
 		this.setUI(this.new SEGraphUI());
 		this.setOpaque(true);
 		this.setBackground(Color.white);
+
+		SEFocusManager.getInstance().addSEFocusObserver(this,
+				new SEFocusObserver() {
+					@Override
+					public void gainFocus(Component oldFocus) {
+					}
+
+					@Override
+					public void loseFocus(Component oldFocus) {
+						if (oldFocus instanceof SEGraph) {
+							for (JComponent selected : SEGraph.this
+									.getSelectedComponents()) {
+								if (selected == null)
+									continue;
+
+								Color background = selected.getBackground();
+
+								selected.setBackground(GUIOp.scaleWhite(
+										background, 1.2));
+
+							}
+						}
+					}
+				});
 	}
 
 	/**

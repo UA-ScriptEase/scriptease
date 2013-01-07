@@ -25,6 +25,7 @@ import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.util.GUIOp;
 
 /**
  * Creates a JList that is able to render Story Component Panels as items. The
@@ -125,11 +126,13 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				new SEFocusObserver() {
 					@Override
 					public void gainFocus(Component oldFocus) {
+						setSelectionBackground(ScriptEaseUI.SELECTED_COLOUR);
 					}
 
 					@Override
 					public void loseFocus(Component oldFocus) {
-						StoryComponentPanelJList.this.clearSelection();
+						setSelectionBackground(GUIOp.scaleWhite(
+								ScriptEaseUI.SELECTED_COLOUR, 1.15));
 					}
 				});
 

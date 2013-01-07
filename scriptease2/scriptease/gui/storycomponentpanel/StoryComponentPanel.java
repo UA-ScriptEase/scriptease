@@ -27,6 +27,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.control.ExpansionButton;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.StoryItemSequence;
@@ -88,6 +89,15 @@ public class StoryComponentPanel extends JPanel implements
 				new SEFocusObserver() {
 					@Override
 					public void gainFocus(Component oldFocus) {
+						final Component newFocus;
+
+						newFocus = SEFocusManager.getInstance().getFocus();
+
+						if (newFocus instanceof StoryComponentPanel) {
+							((StoryComponentPanel) newFocus)
+									.getSelectionManager()
+									.updatePanelBackgrounds();
+						}
 					}
 
 					@Override
@@ -96,17 +106,11 @@ public class StoryComponentPanel extends JPanel implements
 
 						newFocus = SEFocusManager.getInstance().getFocus();
 
-						if (newFocus instanceof StoryComponentPanel)
-							return;
-						else {
-							// Clear the selection if new focus is not a
-							// SCPanel.
-							final StoryComponentPanelManager selectionManager;
-
-							selectionManager = StoryComponentPanel.this
-									.getSelectionManager();
-							if (selectionManager != null)
-								selectionManager.clearSelection();
+						if (oldFocus instanceof StoryComponentPanel
+								&& !(newFocus instanceof StoryComponentPanel)) {
+							((StoryComponentPanel) oldFocus)
+									.getSelectionManager()
+									.updatePanelBackgrounds();
 						}
 					}
 				});
