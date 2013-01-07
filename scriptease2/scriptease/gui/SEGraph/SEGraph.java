@@ -873,9 +873,16 @@ public class SEGraph<E> extends JComponent {
 					g2.setColor(ScriptEaseUI.COLOUR_DELETE_NODE);
 
 				g2.setStroke(new BasicStroke(1.5f));
-				GUIOp.paintArrow(g2, GUIOp.getMidRight(SEGraph.this
-						.createComponentForNode(SEGraph.this.draggedFromNode)),
-						SEGraph.this.mousePosition);
+
+				final List<Point> points;
+
+				points = new ArrayList<Point>();
+
+				points.add(GUIOp.getMidRight(SEGraph.this
+						.createComponentForNode(SEGraph.this.draggedFromNode)));
+
+				points.add(SEGraph.this.mousePosition);
+				GUIOp.paintArrow(g2, points);
 
 			}
 			connectNodes(g);
@@ -919,11 +926,17 @@ public class SEGraph<E> extends JComponent {
 						lineColour = Color.GRAY;
 						g2.setColor(lineColour);
 
+						final List<Point> points;
+
+						points = new ArrayList<Point>();
+
+						points.add(GUIOp.getMidRight(SEGraph.this
+								.createComponentForNode(parent)));
+						points.add(GUIOp.getMidLeft(SEGraph.this
+								.createComponentForNode(child)));
+
 						// Draw an arrow pointing towards the child.
-						GUIOp.paintArrow(g2, GUIOp.getMidRight(SEGraph.this
-								.createComponentForNode(parent)), GUIOp
-								.getMidLeft(SEGraph.this
-										.createComponentForNode(child)));
+						GUIOp.paintArrow(g2, points);
 					}
 				}
 			}
