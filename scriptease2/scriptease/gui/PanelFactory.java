@@ -737,13 +737,13 @@ public class PanelFactory {
 			@Override
 			public void translatorLoaded(Translator newTranslator) {
 				if (newTranslator != null) {
-					timedLabel.setText(newTranslator.getName());
-					timedLabel.setEnabled(true);
-					timedLabel.setIcon(newTranslator.getIcon());
+					currentTranslatorNameLabel.setText(newTranslator.getName());
+					currentTranslatorNameLabel.setEnabled(true);
+					currentTranslatorNameLabel.setIcon(newTranslator.getIcon());
 				} else {
-					timedLabel.setText("-None-");
-					timedLabel.setEnabled(false);
-					timedLabel.setIcon(null);
+					currentTranslatorNameLabel.setText("-None-");
+					currentTranslatorNameLabel.setEnabled(false);
+					currentTranslatorNameLabel.setIcon(null);
 				}
 			}
 		};
