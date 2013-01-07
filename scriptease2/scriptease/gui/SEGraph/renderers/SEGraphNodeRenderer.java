@@ -12,6 +12,7 @@ import javax.swing.JComponent;
 import javax.swing.border.Border;
 
 import scriptease.gui.PanelFactory;
+import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
@@ -263,7 +264,12 @@ public class SEGraphNodeRenderer<E> {
 			 * it's hovered over, use gold if its selected and not hovered,
 			 * white/gray otherwise.
 			 */
-			backgroundColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
+			if (graph.equals(SEFocusManager.getInstance().getFocus())) {
+				backgroundColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
+			} else {
+				backgroundColour = GUIOp.scaleWhite(
+						ScriptEaseUI.COLOUR_SELECTED_NODE, 1.2);
+			}
 			// If nothing and selected
 		} else {
 			backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
