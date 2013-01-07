@@ -118,6 +118,7 @@ public class SEGraphNodeRenderer<E> {
 			public void mousePressed(MouseEvent e) {
 				final JComponent component = (JComponent) e.getSource();
 
+				SEGraphNodeRenderer.this.hoveredComponent = null;
 				SEGraphNodeRenderer.this.pressedComponent = component;
 				reconfigureAppearance(component, node);
 			}
@@ -264,12 +265,20 @@ public class SEGraphNodeRenderer<E> {
 			 * it's hovered over, use gold if its selected and not hovered,
 			 * white/gray otherwise.
 			 */
+			final Color initialColour;
+
 			if (graph.equals(SEFocusManager.getInstance().getFocus())) {
-				backgroundColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
+				initialColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
 			} else {
-				backgroundColour = GUIOp.scaleWhite(
+				initialColour = GUIOp.scaleWhite(
 						ScriptEaseUI.COLOUR_SELECTED_NODE, 1.2);
 			}
+
+			if (this.pressedComponent == component) {
+				backgroundColour = GUIOp.scaleWhite(initialColour, 1.2);
+			} else
+				backgroundColour = initialColour;
+			
 			// If nothing and selected
 		} else {
 			backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
