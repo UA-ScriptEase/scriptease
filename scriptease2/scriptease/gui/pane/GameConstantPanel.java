@@ -540,12 +540,13 @@ public class GameConstantPanel extends JPanel {
 			constantPanel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if (selectedConstant != null)
-						panelMap.get(selectedConstant).setBackground(
-								ScriptEaseUI.UNSELECTED_COLOUR);
+					setGameConstantBackground(selectedConstant,
+							ScriptEaseUI.UNSELECTED_COLOUR);
 
 					selectedConstant = constant;
-					constantPanel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
+
+					setGameConstantBackground(selectedConstant,
+							ScriptEaseUI.SELECTED_COLOUR);
 				}
 			});
 
@@ -564,6 +565,24 @@ public class GameConstantPanel extends JPanel {
 						this.addGameConstant(child);
 				}
 			}
+		}
+	}
+
+	private void setGameConstantBackground(GameConstant constant, Color color) {
+		final JPanel panel;
+
+		panel = this.panelMap.get(constant);
+
+		if (panel == null)
+			return;
+
+		panel.setBackground(color);
+
+		if (constant instanceof GameConversationNode) {
+			// TODO Find all links and colour them.
+			// Go down children of parent GameConversation. Find all
+			// GameConversationNodes that have the same name and children (?),
+			// and are links.
 		}
 	}
 }

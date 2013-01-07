@@ -441,7 +441,18 @@ public class StoryComponentPanel extends JPanel implements
 				hoverTimer.stop();
 
 				if (!(panel.getStoryComponent() instanceof StoryPoint)) {
-					this.panel.getSelectionManager().updatePanelBackgrounds();
+					final StoryComponentPanelManager manager;
+
+					manager = this.panel.getSelectionManager();
+
+					if (manager != null)
+						manager.updatePanelBackgrounds();
+					else
+						System.out
+								.println("Attempted to change UI of panel "
+										+ "with null selection manager for "
+										+ "StoryComponent "
+										+ panel.getStoryComponent());
 				}
 				e.consume();
 			}
