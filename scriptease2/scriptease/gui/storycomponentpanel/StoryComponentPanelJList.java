@@ -259,6 +259,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * Removes all Story Components from the list.
 	 */
 	public void removeAllStoryComponents() {
+		this.panelMap.clear();
 		((DefaultListModel) this.getModel()).clear();
 	}
 

@@ -107,9 +107,13 @@ public class StoryComponentPanel extends JPanel implements
 
 						if (oldFocus instanceof StoryComponentPanel
 								&& !(newFocus instanceof StoryComponentPanel)) {
-							((StoryComponentPanel) oldFocus)
-									.getSelectionManager()
-									.updatePanelBackgrounds();
+							final StoryComponentPanelManager manager;
+
+							manager = ((StoryComponentPanel) oldFocus)
+									.getSelectionManager();
+
+							if (manager != null)
+								manager.updatePanelBackgrounds();
 						}
 					}
 				});

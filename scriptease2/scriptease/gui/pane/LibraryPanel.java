@@ -380,7 +380,7 @@ public class LibraryPanel extends JPanel {
 			list.updateFilter(new VisibilityFilter(hideInvisible));
 			list.removeAllStoryComponents();
 
-			if (activeTranslator != null) {
+			if (activeTranslator != null && model != null) {
 				final Collection<LibraryModel> libraries;
 
 				libraries = activeTranslator.getLibraries();

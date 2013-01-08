@@ -544,6 +544,7 @@ public final class FileManager {
 		this.notifyObservers(model, location);
 
 		PanelFactory.getInstance().createTabForModel(model);
+
 	}
 
 	private void updateRecentFiles(File opened) {
