@@ -383,13 +383,28 @@ public class GenericFileFormat {
 	private void removeGeneratedReferences() {
 		final GameTypeManager typeManager;
 		final Collection<String> scriptSlots;
-		String reference;
 
 		typeManager = ErfFile.getTranslator().getGameTypeManager();
 		scriptSlots = typeManager.getSlots(this.getScriptEaseType());
 
 		// remove all generated script references
 		for (String slotName : scriptSlots) {
+			final GffField field;
+
+			field = this.getFieldByLabel(slotName);
+
+			// Stupid special case. I think they added it in a patch or
+			// something, because some placeables don't have it, and it's not
+			// mentioned in the official docs. But it's definitely there.
+			if (field == null && this.getScriptEaseType().equals("placeable"))
+				continue;
+			else if (field == null) {
+				throw new NullPointerException("Null Field found for " + this
+						+ " for slot " + slotName);
+			}
+
+			final String reference;
+
 			reference = this.getFieldByLabel(slotName).getStringData();
 
 			if (ErfFile.isScriptEaseGenerated(reference)) {
@@ -687,6 +702,11 @@ public class GenericFileFormat {
 				return field;
 			}
 		}
+
+		// This is awful, but as with many things, NWN has a special case where
+		// "OnClick" can be optional in placeables. Fun, isn't it?
+		if (label.equals("OnClick"))
+			return null;
 
 		// this can happen if it is called on the incorrect list, or with a
 		// label that doens't exist.
