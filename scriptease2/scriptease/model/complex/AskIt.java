@@ -89,6 +89,7 @@ public final class AskIt extends ComplexStoryComponent {
 		ifElseValidTypes.add(KnowIt.class);
 		ifElseValidTypes.add(StoryComponentContainer.class);
 		ifElseValidTypes.add(Note.class);
+		ifElseValidTypes.add(ControlIt.class);
 
 		// now we can Initialize the StoryItemSequences
 		this.ifBlock = new StoryItemSequence(ifElseValidTypes);
