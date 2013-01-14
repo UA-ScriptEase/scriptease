@@ -41,6 +41,7 @@ public interface CodeGenerationKeywordConstants {
 	public static enum DataTypes {
 		CODE,
 		CONDITION,
+		CONTROLITFORMAT,
 		FANIN,
 		FORMATTEDVALUE,
 		INCLUDE,
@@ -67,7 +68,8 @@ public interface CodeGenerationKeywordConstants {
 		ASKIT,
 		KNOWIT,
 		NOTE,
-		SCRIPTIT
+		SCRIPTIT,
+		CONTROLIT
 	}
 
 	// Used in SeriesFragment

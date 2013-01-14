@@ -18,6 +18,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.Translator;
@@ -67,6 +68,8 @@ public class LibraryManager implements LibraryObserver {
 		this.masterRoot.registerChildType(StoryComponentContainer.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		this.masterRoot.registerChildType(Note.class,
+				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		this.masterRoot.registerChildType(ControlIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
 		this.buildDefaultLibrary();

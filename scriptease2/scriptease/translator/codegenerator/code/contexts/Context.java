@@ -472,6 +472,11 @@ public class Context {
 		return null;
 	}
 
+	public String getControlItFormat() {
+		unimplemented("getControlItFormat");
+		return null;
+	}
+
 	/**
 	 * Throws a CodeGenerationException if the called method is not implemented
 	 * in a subclass, or the implementation is not correctly called.
