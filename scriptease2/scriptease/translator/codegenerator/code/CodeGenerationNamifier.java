@@ -162,7 +162,8 @@ public class CodeGenerationNamifier {
 		name = this.componentsToNames.get(component);
 
 		// We have a special case for KnowIts with function bindings because we
-		// do not want them to always have a unique name.
+		// do not want them to always have a unique name. If you guessed that
+		// this is because of implicits, it's a bingo! Aren't you a clever one.
 		if (!this.componentsToNames.isEmpty()
 				&& component instanceof KnowIt
 				&& ((KnowIt) component).getBinding() instanceof KnowItBindingFunction)
