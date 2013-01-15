@@ -26,6 +26,7 @@ public interface CodeGenerationKeywordConstants {
 		ARGUMENT,
 		ASKIT,
 		BINDING,
+		CAUSE,
 		ELSECHILD,
 		END,
 		IFCHILD,

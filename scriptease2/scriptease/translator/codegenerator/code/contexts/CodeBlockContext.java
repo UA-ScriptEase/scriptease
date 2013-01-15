@@ -142,6 +142,11 @@ public class CodeBlockContext extends Context {
 		return used.iterator();
 	}
 
+	@Override
+	public Object getCause() {
+		return this.codeBlock.getCause();
+	}
+
 	/**
 	 * Get the Collection of FormatFragments which represent the method body
 	 */

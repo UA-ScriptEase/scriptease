@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.FormatReferenceType;
@@ -23,6 +24,17 @@ public class ControlItContext extends ScriptItContext {
 		this(other.getStartStoryPoint(), other.getIndent(),
 				other.getNamifier(), other.getTranslator(), other
 						.getLocationInfo());
+	}
+
+	@Override
+	public Iterator<KnowIt> getImplicits() {
+		final ControlIt controlIt;
+		final ScriptIt cause;
+
+		controlIt = (ControlIt) this.component;
+		cause = controlIt.getMainCodeBlock().getCause();
+
+		return cause.getImplicits().iterator();
 	}
 
 	@Override
