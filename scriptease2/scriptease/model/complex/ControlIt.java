@@ -11,10 +11,39 @@ import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import sun.awt.util.IdentityArrayList;
 
+/**
+ * ControlIts are a special type of ScriptIt that allow children other than the
+ * story active and inactive block. They require a format, which can only be one
+ * of the enumerated {@link ControlItFormat} types.
+ * 
+ * @author kschenk
+ * 
+ */
 public class ControlIt extends ScriptIt {
-	private String format;
 
-	public ControlIt(String name, String format) {
+	/**
+	 * The formats allowed for ControlIts. Note that
+	 * {@link ControlItFormat#NONE} may have undefined behaviour and is not
+	 * recommended to be used.
+	 * 
+	 * @author kschenk
+	 * 
+	 */
+	public enum ControlItFormat {
+		// TODO we need to add askits here once we add them.
+		NONE, DELAY, REPEAT
+	}
+
+	private ControlItFormat format;
+
+	/**
+	 * Sets up the ControlIt, registering its allowable children and setting its
+	 * format to the passed in format.
+	 * 
+	 * @param name
+	 * @param format
+	 */
+	public ControlIt(String name, ControlItFormat format) {
 		super(name);
 		this.allowableChildMap.clear();
 
@@ -30,14 +59,29 @@ public class ControlIt extends ScriptIt {
 		this.registerChildType(ControlIt.class, max);
 	}
 
-	public String getFormat() {
+	/**
+	 * Returns the format of the ControlIt.
+	 * 
+	 * @return
+	 */
+	public ControlItFormat getFormat() {
 		return format;
 	}
 
-	public void setFormat(String format) {
+	/**
+	 * Set the format of the ControlIt to one of {@link ControlItFormat}.
+	 * 
+	 * @param format
+	 */
+	public void setFormat(ControlItFormat format) {
 		this.format = format;
 	}
 
+	/**
+	 * Overridden to allow children to be added.
+	 * 
+	 * TODO This should no longer be necessary once we remove Causes from this.
+	 */
 	@Override
 	public boolean addStoryChildBefore(StoryComponent newChild,
 			StoryComponent sibling) {
@@ -48,21 +92,13 @@ public class ControlIt extends ScriptIt {
 		return false;
 	}
 
-	@Override
-	public Collection<KnowIt> getParameters() {
-		// TODO Auto-generated method stub
-		return super.getParameters();
-	}
-
-/*	@Override
-	public void processParameters(StoryVisitor processController) {
-		for (KnowIt knowIt : this.getRequiredParameters()) {
-			knowIt.process(processController);
-		}
-	}*/
-
 	/**
-	 * Returns all required parameters of the ControlIt.
+	 * Returns all parameters of the ControlIt that it will require. Since
+	 * ControlIts end up at the same level as Causes, they need to have some
+	 * variables passed in as parameters.
+	 * 
+	 * TODO Only pass in required variables instead of all of the preceding
+	 * ones.
 	 */
 	public Collection<KnowIt> getRequiredParameters() {
 		final Collection<KnowIt> parameters;
@@ -83,8 +119,6 @@ public class ControlIt extends ScriptIt {
 
 				children = new IdentityArrayList<StoryComponent>(complex
 						.getChildren());
-
-				// children = complex.getChildren();
 
 				if (children.contains(this.previousComponent)) {
 					for (StoryComponent child : children) {
@@ -135,6 +169,8 @@ public class ControlIt extends ScriptIt {
 	@Override
 	public ControlIt clone() {
 		final ControlIt component = (ControlIt) super.clone();
+
+		component.setFormat(this.getFormat());
 
 		return component;
 	}

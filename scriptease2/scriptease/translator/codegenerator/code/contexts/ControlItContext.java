@@ -47,7 +47,7 @@ public class ControlItContext extends ScriptItContext {
 		final String reference;
 		final FormatReferenceFragment fragment;
 
-		reference = ((ControlIt) this.component).getFormat();
+		reference = ((ControlIt) this.component).getFormat().name();
 		fragment = new FormatReferenceFragment(reference,
 				FormatReferenceType.CONTROLIT);
 
