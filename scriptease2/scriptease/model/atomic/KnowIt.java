@@ -99,7 +99,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		clone.types = new ArrayList<String>(this.types);
 
 		clone.setBinding(this.knowItBinding.clone());
-		
+
 		final APIDictionary apiDictionary;
 		final DescribeItManager describeItManager;
 		final DescribeIt describeIt;
@@ -109,7 +109,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 		describeItManager = apiDictionary.getDescribeItManager();
 		describeIt = describeItManager.getDescribeIt(this);
-		
+
 		if (describeIt != null) {
 			describeItManager.addDescribeIt(describeIt, clone);
 		}
@@ -268,7 +268,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 				if (knowIt.getOwner() == null)
 					knowIt.setOwner(KnowIt.this);
-				
+
 				addObservers(knowIt);
 			}
 
