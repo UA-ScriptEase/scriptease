@@ -1,9 +1,5 @@
 package scriptease.translator.codegenerator.code.contexts;
 
-import java.util.Iterator;
-
-import scriptease.model.StoryComponent;
-import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
