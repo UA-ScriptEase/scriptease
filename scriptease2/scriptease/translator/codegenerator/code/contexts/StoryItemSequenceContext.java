@@ -1,5 +1,9 @@
 package scriptease.translator.codegenerator.code.contexts;
 
+import java.util.Iterator;
+
+import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
@@ -25,7 +29,7 @@ public class StoryItemSequenceContext extends ComplexStoryComponentContext {
 		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
 				.getTranslator(), other.getLocationInfo());
 	}
-
+	
 	public StoryItemSequenceContext(Context other, StoryItemSequence source) {
 		this(other);
 		this.component = source;

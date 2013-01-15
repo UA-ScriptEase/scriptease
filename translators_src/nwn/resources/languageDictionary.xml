@@ -120,7 +120,7 @@
 		<Format id="functionHeader">
 			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			<Literal>(</Literal>
-			<Series data="parameters" separator=", ">
+			<Series data="parameters" unique="true" separator=", ">
 				<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			</Series>
 			<Literal>)</Literal>
