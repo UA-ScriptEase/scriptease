@@ -233,28 +233,6 @@ public class Context {
 		return null;
 	}
 
-	/**
-	 * Returns only the scriptIts which are not causes from the Context's
-	 * symbolTable
-	 * 
-	 * @return
-	 */
-	public Iterator<ScriptIt> getScriptItEffects() {
-		final Collection<ScriptIt> effectScriptIts = new ArrayList<ScriptIt>();
-		Iterator<ScriptIt> scriptIts = this.getScriptIts();
-		while (scriptIts.hasNext()) {
-			final ScriptIt scriptIt = scriptIts.next();
-			if (!scriptIt.isCause())
-				effectScriptIts.add(scriptIt);
-		}
-		return effectScriptIts.iterator();
-	}
-
-	public Iterator<KnowIt> getArguments() {
-		unimplemented("getArguments");
-		return new ArrayList<KnowIt>().iterator();
-	}
-
 	public Iterator<AskIt> getAskIts() {
 		unimplemented("getAskIts");
 		return new ArrayList<AskIt>().iterator();
@@ -345,17 +323,6 @@ public class Context {
 			}
 		}
 		return causes.iterator();
-	}
-
-	public Iterator<ScriptIt> getEffects() {
-		final Collection<ScriptIt> effects = new ArrayList<ScriptIt>();
-		Iterator<ScriptIt> scriptIts = this.getScriptIts();
-		while (scriptIts.hasNext()) {
-			final ScriptIt scriptIt = scriptIts.next();
-			if (!scriptIt.isCause())
-				effects.add(scriptIt);
-		}
-		return effects.iterator();
 	}
 
 	public Iterator<StoryPoint> getStoryPoints() {
