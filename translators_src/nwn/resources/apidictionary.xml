@@ -27981,6 +27981,36 @@
         </CodeBlockSource>
       </CodeBlocks>
   	</ControlIt>
+  	<ControlIt control="repeat">
+      <Name>Repeat the following &lt;Number&gt; times</Name>
+      <Visible>true</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>After &lt;Number&gt; seconds</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>576</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Number</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+             <FormatRef data="NONE" ref="controlItChildren"/>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+  	</ControlIt>
   </ControlIts>
   <TypeConverters/>
 </APIDictionary>

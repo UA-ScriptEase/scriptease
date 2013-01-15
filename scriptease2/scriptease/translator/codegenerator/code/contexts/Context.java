@@ -492,4 +492,9 @@ public class Context {
 		unimplemented("getIdenticalCauses");
 		return null;
 	}
+
+	public Object getCause() {
+		unimplemented("getCause");
+		return null;
+	}
 }
