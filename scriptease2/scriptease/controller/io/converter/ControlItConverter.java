@@ -9,13 +9,11 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
- * Converts only ScriptIts to/from XML.
+ * Converts ControlIts to/from XML.
  * 
- * @author remiller
- * @author mfchurch
  * @author kschenk
  * 
- * @see ComplexStoryComponentConverter
+ * @see ScriptItConverter
  */
 public class ControlItConverter extends ScriptItConverter {
 	private static final String ATTRIBUTE_FORMAT_FLAVOUR = "control";
@@ -26,11 +24,12 @@ public class ControlItConverter extends ScriptItConverter {
 
 		final ControlIt controlIt = (ControlIt) source;
 
-		writer.addAttribute(ATTRIBUTE_FORMAT_FLAVOUR, controlIt.getFormat());
+		writer.addAttribute(ATTRIBUTE_FORMAT_FLAVOUR, controlIt.getFormat()
+				.name());
 
 		super.marshal(source, writer, context);
 	}
-	
+
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
@@ -41,11 +40,12 @@ public class ControlItConverter extends ScriptItConverter {
 
 		controlIt = (ControlIt) super.unmarshal(reader, context);
 
-		controlIt.setFormat(format);
+		controlIt.setFormat(ControlIt.ControlItFormat.valueOf(format
+				.toUpperCase()));
 
 		return controlIt;
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean canConvert(Class type) {
@@ -55,6 +55,6 @@ public class ControlItConverter extends ScriptItConverter {
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		return new ControlIt("", "");
+		return new ControlIt("", ControlIt.ControlItFormat.NONE);
 	}
 }
