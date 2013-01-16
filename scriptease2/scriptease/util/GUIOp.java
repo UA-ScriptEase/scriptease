@@ -272,7 +272,7 @@ public class GUIOp {
 		layoutComponent(c);
 
 		BufferedImage img = new BufferedImage(c.getWidth(), c.getHeight(),
-				BufferedImage.TYPE_INT_RGB);
+				BufferedImage.TYPE_INT_ARGB);
 
 		CellRendererPane crp = new CellRendererPane();
 		crp.add(c);

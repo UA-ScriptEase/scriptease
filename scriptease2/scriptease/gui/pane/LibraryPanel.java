@@ -32,6 +32,7 @@ import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
+import scriptease.gui.ComponentFactory;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.filters.CategoryFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
@@ -53,53 +54,37 @@ import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 
-@SuppressWarnings("serial")
 /**
  * LibraryPane represents the JPanel used for managing, filtering and choosing
- * Patterns from the loaded Libraries. It appears in the top left corner of
- * the main ScriptEase window.
+ * Patterns from the loaded Libraries. It appears in the top left corner of the
+ * main ScriptEase window.
  * 
  * @author mfchurch
  * @author kschenk
  */
-public class LibraryPanel extends JPanel {
+@SuppressWarnings("serial")
+public class LibraryPanel extends JTabbedPane {
 	private static final Comparator<StoryComponent> STORY_COMPONENT_COMPARATOR = LibraryPanel
 			.storyComponentSorter();
 
-	private final Timer searchFieldTimer;
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
-	private final StoryComponentPanelJList causesList;
-	private final StoryComponentPanelJList effectsList;
-	private final StoryComponentPanelJList descriptionsList;
-	private final StoryComponentPanelJList controlsList;
 
 	/**
 	 * Creates a new LibraryPane with default filters, and configures its
-	 * display.
+	 * display. Also configures its listeners.
 	 * 
 	 */
 	public LibraryPanel() {
 		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
 
-		final JTabbedPane listTabs;
-
-		final JComponent filterPane;
-		final JComponent searchFilterPane;
-		final JTextField searchField;
-
-		final TypeAction typeFilter;
-
 		final PatternModelObserver modelObserver;
 		final LibraryManagerObserver libraryManagerObserver;
 		final TranslatorObserver translatorObserver;
 
-		listTabs = new JTabbedPane();
-
-		filterPane = new JPanel();
-		searchFilterPane = new JPanel();
-		searchField = new JTextField(20);
-
-		typeFilter = new TypeAction();
+		final StoryComponentPanelJList causesList;
+		final StoryComponentPanelJList effectsList;
+		final StoryComponentPanelJList descriptionsList;
+		final StoryComponentPanelJList controlsList;
 
 		// Create the Tree with the root and the default filter
 		causesList = new StoryComponentPanelJList(new CategoryFilter(
@@ -141,20 +126,11 @@ public class LibraryPanel extends JPanel {
 		this.storyComponentPanelJLists.add(descriptionsList);
 		this.storyComponentPanelJLists.add(controlsList);
 
-		this.searchFieldTimer = new Timer(500, new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				for (StoryComponentPanelJList list : LibraryPanel.this.storyComponentPanelJLists)
-					list.updateFilter(new StoryComponentSearchFilter(
-							searchField.getText()));
-				updateLists();
-				searchFieldTimer.stop();
-			};
-		});
 		libraryManagerObserver = new LibraryManagerObserver() {
 			/**
 			 * Keep the display of the library up to date with the changes to
-			 * Libraries. This listener is important for the Library Editor, so
-			 * that changes made there will apply to the library view as well.
+			 * Libraries. This listener is updates the library view when changes
+			 * are made in the Library Editor.
 			 */
 			@Override
 			public void modelChanged(LibraryManagerEvent event) {
@@ -172,6 +148,51 @@ public class LibraryPanel extends JPanel {
 				}
 			}
 		};
+
+		this.add("Causes", this.createTab(causesList));
+		this.add("Effects", this.createTab(effectsList));
+		this.add("Descriptions", this.createTab(descriptionsList));
+		this.add("Controls", this.createTab(controlsList));
+
+		LibraryManager.getInstance().addLibraryManagerObserver(this,
+				libraryManagerObserver);
+		PatternModelManager.getInstance().addPatternModelObserver(this,
+				modelObserver);
+		TranslatorManager.getInstance().addTranslatorObserver(this,
+				translatorObserver);
+	}
+
+	/**
+	 * Creates a tab for a list with a search field and type filter.
+	 * 
+	 * @param list
+	 * @return
+	 */
+	private JPanel createTab(final StoryComponentPanelJList list) {
+		final JPanel tabPanel;
+		final Timer searchFieldTimer;
+
+		final JComponent filterPane;
+		final JComponent searchFilterPane;
+		final JTextField searchField;
+
+		final TypeAction typeFilter;
+
+		tabPanel = new JPanel();
+		filterPane = new JPanel();
+		searchFilterPane = new JPanel();
+		searchField = ComponentFactory.getInstance()
+				.buildJTextFieldWithTextBackground(20, "Library");
+
+		typeFilter = new TypeAction();
+
+		searchFieldTimer = new Timer(300, new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				list.updateFilter(new StoryComponentSearchFilter(searchField
+						.getText()));
+				updateList(list, (Timer) arg0.getSource());
+			};
+		});
 
 		// Set up the listeners
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
@@ -193,21 +214,20 @@ public class LibraryPanel extends JPanel {
 		searchField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				searchFieldTimer.stop();
-				for (StoryComponentPanelJList list : LibraryPanel.this.storyComponentPanelJLists)
-					list.updateFilter(new StoryComponentSearchFilter(
-							searchField.getText()));
-				updateLists();
+				list.updateFilter(new StoryComponentSearchFilter(searchField
+						.getText()));
+
+				updateList(list, searchFieldTimer);
 			}
 		});
 
 		typeFilter.setAction(new Runnable() {
 			@Override
 			public void run() {
-				for (StoryComponentPanelJList list : LibraryPanel.this.storyComponentPanelJLists)
-					list.updateFilter(new TypeFilter(typeFilter
-							.getTypeSelectionDialogBuilder().getSelectedTypes()));
-				updateLists();
+				list.updateFilter(new TypeFilter(typeFilter
+						.getTypeSelectionDialogBuilder().getSelectedTypes()));
+
+				updateList(list);
 			}
 		});
 
@@ -217,37 +237,29 @@ public class LibraryPanel extends JPanel {
 				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
 						"SansSerif", Font.PLAIN, 12), Color.black));
 
-		listTabs.add("Causes", new JScrollPane(causesList));
-		listTabs.add("Effects", new JScrollPane(effectsList));
-		listTabs.add("Descriptions", new JScrollPane(descriptionsList));
-		listTabs.add("Controls", new JScrollPane(controlsList));
-
 		// SearchFilterPane
 		searchFilterPane.add(searchField);
 		searchFilterPane.add(new JButton(typeFilter));
 		searchFilterPane.setLayout(new BoxLayout(searchFilterPane,
 				BoxLayout.LINE_AXIS));
+		searchFilterPane.setOpaque(false);
 
 		// FilterPane Layout
 		filterPane.setLayout(new BoxLayout(filterPane, BoxLayout.PAGE_AXIS));
 		filterPane.add(searchFilterPane);
 		filterPane.setMaximumSize(new Dimension(ScriptEaseUI.MAX_SCREEN_WIDTH,
 				50));
+		filterPane.setOpaque(false);
 
-		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		this.add(filterPane);
-		this.add(Box.createVerticalStrut(5));
-		this.add(listTabs);
+		tabPanel.setLayout(new BoxLayout(tabPanel, BoxLayout.PAGE_AXIS));
+		tabPanel.add(filterPane);
+		tabPanel.add(Box.createVerticalStrut(5));
+		tabPanel.add(new JScrollPane(list));
 
 		// Configure the displaying of the pane
-		this.updateLists();
+		this.updateList(list);
 
-		LibraryManager.getInstance().addLibraryManagerObserver(this,
-				libraryManagerObserver);
-		PatternModelManager.getInstance().addPatternModelObserver(this,
-				modelObserver);
-		TranslatorManager.getInstance().addTranslatorObserver(this,
-				translatorObserver);
+		return tabPanel;
 	}
 
 	/**
@@ -260,7 +272,6 @@ public class LibraryPanel extends JPanel {
 	 */
 	public void addListMouseListener(MouseListener listener) {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			// list.addListMouseListener(listener);
 			list.addMouseListener(listener);
 		}
 	}
@@ -277,18 +288,33 @@ public class LibraryPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Adds the story component to every list.
+	 * 
+	 * @param storyComponent
+	 */
 	private void addElement(StoryComponent storyComponent) {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
 			list.addStoryComponent(storyComponent);
 		}
 	}
 
+	/**
+	 * Removes the story component from every list.
+	 * 
+	 * @param storyComponent
+	 */
 	private void removeElement(StoryComponent storyComponent) {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
 			list.removeStoryComponent(storyComponent);
 		}
 	}
 
+	/**
+	 * Sorts story components in a list.
+	 * 
+	 * @return
+	 */
 	private static Comparator<StoryComponent> storyComponentSorter() {
 		return new Comparator<StoryComponent>() {
 			@Override
@@ -357,10 +383,22 @@ public class LibraryPanel extends JPanel {
 	}
 
 	/**
-	 * Updates the lists based on their filters. Works by removing and adding
-	 * back all components in the list panes.
+	 * Updates a list and stops a timer at the same time.
+	 * 
+	 * @param list
+	 * @param timer
 	 */
-	private void updateLists() {
+	private void updateList(StoryComponentPanelJList list, Timer timer) {
+		timer.stop();
+		updateList(list);
+	}
+
+	/**
+	 * Updates a list according to its filters and the active translators.
+	 * 
+	 * @param list
+	 */
+	private void updateList(StoryComponentPanelJList list) {
 		final PatternModel model;
 		final Translator activeTranslator;
 		final boolean hideInvisible;
@@ -369,47 +407,57 @@ public class LibraryPanel extends JPanel {
 		activeTranslator = TranslatorManager.getInstance()
 				.getActiveTranslator();
 
+		// Show invisible components if we're editing a library model.
 		if (model instanceof LibraryModel)
 			hideInvisible = false;
 		else
 			hideInvisible = true;
 
-		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			list.updateFilter(new TranslatorFilter(activeTranslator));
-			list.updateFilter(new VisibilityFilter(hideInvisible));
-			list.removeAllStoryComponents();
+		list.updateFilter(new TranslatorFilter(activeTranslator));
+		list.updateFilter(new VisibilityFilter(hideInvisible));
+		list.removeAllStoryComponents();
 
-			if (activeTranslator != null && model != null) {
-				final Collection<LibraryModel> libraries;
+		if (activeTranslator != null && model != null) {
+			final Collection<LibraryModel> libraries;
 
-				libraries = activeTranslator.getLibraries();
+			libraries = activeTranslator.getLibraries();
 
-				for (LibraryModel libraryModel : libraries) {
-					final List<StoryComponent> components;
+			final int index = this.storyComponentPanelJLists.indexOf(list);
 
-					if (list == this.causesList) {
-						components = libraryModel.getCausesCategory()
-								.getChildren();
-					} else if (list == this.effectsList) {
-						components = libraryModel.getEffectsCategory()
-								.getChildren();
-					} else if (list == this.descriptionsList) {
-						components = libraryModel.getDescriptionsCategory()
-								.getChildren();
-					} else if (list == this.controlsList) {
-						components = libraryModel.getControllersCategory()
-								.getChildren();
-					} else {
-						throw new IllegalArgumentException(
-								"Invalid list in LibraryPanel: " + list);
-					}
+			for (LibraryModel libraryModel : libraries) {
+				final List<StoryComponent> components;
 
-					Collections.sort(components,
-							LibraryPanel.STORY_COMPONENT_COMPARATOR);
-
-					list.addStoryComponents(components);
+				if (index == 0) {
+					components = libraryModel.getCausesCategory().getChildren();
+				} else if (index == 1) {
+					components = libraryModel.getEffectsCategory()
+							.getChildren();
+				} else if (index == 2) {
+					components = libraryModel.getDescriptionsCategory()
+							.getChildren();
+				} else if (index == 3) {
+					components = libraryModel.getControllersCategory()
+							.getChildren();
+				} else {
+					throw new IllegalArgumentException(
+							"Invalid list in LibraryPanel: " + list);
 				}
+
+				Collections.sort(components,
+						LibraryPanel.STORY_COMPONENT_COMPARATOR);
+
+				list.addStoryComponents(components);
 			}
+		}
+	}
+
+	/**
+	 * Updates the lists based on their filters. Works by removing and adding
+	 * back all components in the list panes.
+	 */
+	private void updateLists() {
+		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			this.updateList(list);
 		}
 	}
 }
