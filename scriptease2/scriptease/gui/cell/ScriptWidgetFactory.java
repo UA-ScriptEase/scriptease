@@ -2,6 +2,7 @@ package scriptease.gui.cell;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,6 +35,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.ComponentFactory;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.transfer.BindingTransferHandlerExportOnly;
@@ -41,6 +43,7 @@ import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
@@ -402,7 +405,6 @@ public class ScriptWidgetFactory {
 		spinner = new JSpinner(model);
 		scriptValue = knowIt.getBinding().getScriptValue();
 
-
 		// Handle the initial value case
 		if (scriptValue == null || scriptValue.isEmpty()) {
 			// Set the initial value
@@ -467,7 +469,7 @@ public class ScriptWidgetFactory {
 						}
 
 						widget.setBinding(knowIt.getBinding());
-						
+
 						spinner.removeChangeListener(changeListener);
 						spinner.setValue(newBinding);
 						spinner.addChangeListener(changeListener);
@@ -588,7 +590,13 @@ public class ScriptWidgetFactory {
 		final StoryComponentObserver observer;
 		final Runnable commitText;
 
-		nameEditor = new JTextField(component.getDisplayText());
+		if (component instanceof Note) {
+			nameEditor = ComponentFactory.getInstance()
+					.buildJTextFieldWithTextBackground(0,
+							component.getDisplayText());
+		} else
+			nameEditor = new JTextField(component.getDisplayText());
+
 		observer = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
@@ -620,12 +628,12 @@ public class ScriptWidgetFactory {
 
 		// TODO Update graph panel so this isn't necessary
 		final boolean resizing;
-		
-		if(component instanceof StoryPoint)
+
+		if (component instanceof StoryPoint)
 			resizing = false;
 		else
 			resizing = true;
-		
+
 		WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
 				nameEditor, commitText, resizing);
 

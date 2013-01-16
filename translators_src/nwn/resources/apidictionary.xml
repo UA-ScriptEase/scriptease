@@ -215,13 +215,6 @@
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
-      <Name>Integer</Name>
-      <Keyword>int</Keyword>
-      <CodeSymbol>int</CodeSymbol>
-      <GUI>JSPINNER</GUI>
-      <WidgetName>In</WidgetName>
-    </Type>
-    <Type>
       <Name>Skybox</Name>
       <Keyword>skybox</Keyword>
       <CodeSymbol>int</CodeSymbol>
@@ -4224,13 +4217,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4269,13 +4262,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4314,13 +4307,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4359,13 +4352,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4404,13 +4397,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4449,13 +4442,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4494,13 +4487,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4539,13 +4532,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4584,13 +4577,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4629,13 +4622,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4674,13 +4667,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4719,13 +4712,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4764,13 +4757,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4810,13 +4803,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4856,13 +4849,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4902,13 +4895,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4948,13 +4941,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -4995,13 +4988,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5043,13 +5036,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5089,13 +5082,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5135,13 +5128,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5181,13 +5174,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5227,13 +5220,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5274,13 +5267,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5320,13 +5313,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5368,13 +5361,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5413,13 +5406,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5458,13 +5451,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5505,13 +5498,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5550,13 +5543,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5595,13 +5588,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5640,13 +5633,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5685,13 +5678,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5731,13 +5724,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5776,13 +5769,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5821,13 +5814,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5866,13 +5859,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5911,13 +5904,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -5956,13 +5949,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6001,13 +5994,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6046,13 +6039,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6091,13 +6084,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6136,13 +6129,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6181,13 +6174,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6226,13 +6219,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6271,13 +6264,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6316,13 +6309,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6361,13 +6354,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6406,13 +6399,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6451,13 +6444,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6496,13 +6489,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6541,13 +6534,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6586,13 +6579,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6631,13 +6624,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6676,13 +6669,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6721,13 +6714,13 @@
       <Labels/>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -6800,13 +6793,13 @@
       </Labels>
       <Children>
         <StoryItemSequence>
-          <Name>Story Point Active:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
         </StoryItemSequence>
         <StoryItemSequence>
-          <Name>Story Point Inactive:</Name>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
@@ -20274,7 +20267,7 @@
           <Slot>Active</Slot>
           <Id>431</Id>
           <Types>
-            <Type>int</Type>
+            <Type>enable_disable</Type>
           </Types>
           <Code>
             <Line>

@@ -36,9 +36,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.DescribeItManager;
 
 /**
  * Builds a pane filled with ScriptEase Pattern Constructor GUI widgets for
@@ -58,6 +56,8 @@ import scriptease.translator.apimanagers.DescribeItManager;
  * @author kschenk
  */
 public class StoryComponentPanelFactory {
+	public static final String CURRENT_STORY_POINT_TAG = "#currentStoryPoint";
+
 	private static final StoryComponentPanelFactory instance = new StoryComponentPanelFactory();
 	private static final String QUESTION = "question";
 	private static final ImageIcon noteIcon;
@@ -173,10 +173,13 @@ public class StoryComponentPanelFactory {
 						.getSelectionManager();
 				if (selectionManager != null)
 					selectionManager.cleanUpPanel(childPanel);
-			} else
-				System.err.println("Attempted to remove " + child
-						+ "'s StoryComponentPanel when it is not a child of "
-						+ parent);
+			} /*
+			 * TODO We need to fix this instead of just hiding it. This method
+			 * should only be called once when removing a child.
+			 * 
+			 * else System.err.println("Attempted to remove " + child +
+			 * "'s StoryComponentPanel when it is not a child of " + parent);
+			 */
 		} else
 			throw new IllegalStateException(parent
 					+ " is not a ComplexStoryComponent and cannot have "
@@ -198,7 +201,7 @@ public class StoryComponentPanelFactory {
 		String tagName;
 		JLabel plainTextLabel;
 		String plainText;
-		KnowIt knowIt = null;
+		StoryComponent knowIt = null;
 
 		displayNamePanel.removeAll();
 
@@ -234,6 +237,20 @@ public class StoryComponentPanelFactory {
 				if (tagName.equalsIgnoreCase(QUESTION)
 						&& storyComponent instanceof AskIt) {
 					knowIt = ((AskIt) storyComponent).getCondition();
+				} else if (tagName.equalsIgnoreCase(CURRENT_STORY_POINT_TAG)) {
+
+					StoryComponent owner = storyComponent;
+					while (!(owner instanceof StoryPoint) && owner != null) {
+						owner = owner.getOwner();
+					}
+
+					if (owner instanceof StoryPoint) {
+						knowIt = owner;
+						// final StoryPoint storyPoint;
+						// storyPoint = (StoryPoint) owner;
+						// knowIt = new KnowIt(storyPoint.getDisplayText());
+						// knowIt.setBinding(storyPoint);
+					}
 				}
 				// Now check for a parameter/implicit tag
 				else {
@@ -243,8 +260,7 @@ public class StoryComponentPanelFactory {
 								(ScriptIt) storyComponent, tagName);
 					}
 
-					// Invalid parameter tags are treated as plain text,
-					// valid
+					// Invalid parameter tags are treated as plain text, valid
 					// ones are represented with the appropriate widget.
 					if (knowIt == null)
 						plainText += toParse.substring(paramTagStart,
@@ -257,8 +273,12 @@ public class StoryComponentPanelFactory {
 
 			displayNamePanel.add(plainTextLabel);
 
-			if (knowIt != null) {
-				addWidget(displayNamePanel, knowIt, false);
+			if (knowIt instanceof KnowIt) {
+				addWidget(displayNamePanel, (KnowIt) knowIt, false);
+				knowIt = null;
+			} else if (knowIt instanceof StoryPoint) {
+				displayNamePanel.add(ScriptWidgetFactory.buildBindingWidget(
+						(StoryPoint) knowIt, false));
 				knowIt = null;
 			}
 
@@ -301,33 +321,31 @@ public class StoryComponentPanelFactory {
 	/**
 	 * Adds the resolved widget for the given knowIt to the given JPanel
 	 * 
-	 * @param displayNamePanel
+	 * @param panel
 	 * @param knowIt
 	 */
-	private void addWidget(final JPanel displayNamePanel, final KnowIt knowIt,
+	private void addWidget(final JPanel panel, final KnowIt knowIt,
 			final boolean editable) {
 
-		final KnowItBinding binding = knowIt.getBinding();
-		binding.process(new BindingAdapter() {
+		knowIt.getBinding().process(new BindingAdapter() {
 			// functions, descriptions and runTimes all get a draggable bubble
 			// with no slot
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				displayNamePanel.add(ScriptWidgetFactory.buildBindingWidget(
-						knowIt, editable));
+				panel.add(ScriptWidgetFactory.buildBindingWidget(knowIt,
+						editable));
 			}
 
 			@Override
 			public void processRunTime(KnowItBindingRunTime runTime) {
-				displayNamePanel.add(ScriptWidgetFactory.buildBindingWidget(
-						knowIt, editable));
+				panel.add(ScriptWidgetFactory.buildBindingWidget(knowIt,
+						editable));
 			}
 
 			// everything else gets a regular slot
 			@Override
 			protected void defaultProcess(KnowItBinding binding) {
-				displayNamePanel.add(ScriptWidgetFactory.buildSlotPanel(knowIt,
-						false));
+				panel.add(ScriptWidgetFactory.buildSlotPanel(knowIt, false));
 			}
 		});
 	}
@@ -337,12 +355,10 @@ public class StoryComponentPanelFactory {
 			@Override
 			public void processStoryPoint(StoryPoint storyPoint) {
 				// Add an expansion button
-				addExpansionButton(storyPoint, panel);
-
 				final JPanel mainPanel;
 				mainPanel = new JPanel();
 
-				buildMainStoryPointPanel(storyPoint, mainPanel);
+				mainPanel.setOpaque(false);
 
 				// Add a BindingWidget for the StoryPoint
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
@@ -381,21 +397,53 @@ public class StoryComponentPanelFactory {
 			public void processKnowIt(final KnowIt knowIt) {
 				final JPanel mainPanel;
 				final StoryComponentObserver bindingObserver;
+				final BindingAdapter adapter;
 
 				mainPanel = new JPanel();
+
+				adapter = new BindingAdapter() {
+					@Override
+					public void processNull(KnowItBindingNull nullBinding) {
+					}
+
+					@Override
+					public void processFunction(KnowItBindingFunction function) {
+						mainPanel.add(ScriptWidgetFactory.buildLabel(
+								" describes ", Color.black));
+
+						final DescribeIt describeIt;
+
+						describeIt = TranslatorManager.getInstance()
+								.getActiveDescribeItManager()
+								.getDescribeIt(knowIt);
+
+						if (describeIt != null) {
+							mainPanel.add(new DescribeItPanel(knowIt));
+						}
+					}
+				};
+
 				bindingObserver = new StoryComponentObserver() {
 					@Override
 					public void componentChanged(StoryComponentEvent event) {
 						if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
 							mainPanel.removeAll();
-							buildMainKnowItPanel(knowIt, mainPanel);
+							StoryComponentPanelFactory.this.addWidget(
+									mainPanel, knowIt, true);
+							knowIt.getBinding().resolveBinding()
+									.process(adapter);
 						}
 					}
 				};
 
-				knowIt.addStoryComponentObserver(bindingObserver);
+				mainPanel.setOpaque(false);
+				mainPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 
-				buildMainKnowItPanel(knowIt, mainPanel);
+				knowIt.addStoryComponentObserver(bindingObserver);
+				StoryComponentPanelFactory.this.addWidget(mainPanel, knowIt,
+						true);
+
+				knowIt.getBinding().resolveBinding().process(adapter);
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
 			}
 
@@ -435,77 +483,29 @@ public class StoryComponentPanelFactory {
 					}
 				}
 			}
+
+			private void addExpansionButton(ComplexStoryComponent complex,
+					final StoryComponentPanel panel) {
+				// Add expansion button if you are not root
+				if (complex.getOwner() != null) {
+					final ExpansionButton expansionButton = ScriptWidgetFactory
+							.buildExpansionButton(!panel.showChildren());
+					expansionButton.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							boolean showChildren = !panel.showChildren();
+							panel.setShowChildren(showChildren);
+							expansionButton.setCollapsed(!showChildren);
+							panel.revalidate();
+						}
+					});
+
+					panel.setExpansionButton(expansionButton);
+					panel.add(expansionButton,
+							StoryComponentPanelLayoutManager.BUTTON);
+				}
+			}
+
 		};
-	}
-
-	private void addExpansionButton(ComplexStoryComponent complex,
-			final StoryComponentPanel panel) {
-		// Add expansion button if you are not root
-		if (complex.getOwner() != null) {
-			final ExpansionButton expansionButton = ScriptWidgetFactory
-					.buildExpansionButton(!panel.showChildren());
-			expansionButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					boolean showChildren = !panel.showChildren();
-					panel.setShowChildren(showChildren);
-					expansionButton.setCollapsed(!showChildren);
-					panel.revalidate();
-				}
-			});
-
-			panel.setExpansionButton(expansionButton);
-			panel.add(expansionButton, StoryComponentPanelLayoutManager.BUTTON);
-		}
-	}
-
-	private void buildMainStoryPointPanel(StoryPoint storyPoint,
-			JPanel mainPanel) {
-		// Add a BindingWidget for the StoryPoint
-		mainPanel
-				.add(ScriptWidgetFactory.buildBindingWidget(storyPoint, false));
-		mainPanel.setOpaque(false);
-	}
-
-	private void buildMainKnowItPanel(final KnowIt knowIt,
-			final JPanel mainPanel) {
-		// Add displayName panel
-		mainPanel.setOpaque(false);
-		mainPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
-
-		this.addWidget(mainPanel, knowIt, true);
-
-		final KnowItBinding binding;
-
-		final APIDictionary apiDictionary;
-		final DescribeItManager describeItManager;
-		final DescribeIt describeIt;
-
-		binding = knowIt.getBinding().resolveBinding();
-
-		apiDictionary = TranslatorManager.getInstance().getActiveTranslator()
-				.getApiDictionary();
-		describeItManager = apiDictionary.getDescribeItManager();
-		describeIt = describeItManager.getDescribeIt(knowIt);
-
-		binding.process(new BindingAdapter() {
-			@Override
-			public void processNull(KnowItBindingNull nullBinding) {
-				// do nothing for KnowItBindingNull. Not even the default.
-				// That's right. We hate empty bindings so much that we won't
-				// even talk to them.
-			}
-
-			@Override
-			public void processFunction(KnowItBindingFunction function) {
-				mainPanel.add(ScriptWidgetFactory.buildLabel(" describes ",
-						Color.black));
-
-				if (describeIt != null) {
-					mainPanel.add(new DescribeItPanel(knowIt));
-				}
-			}
-		});
-
 	}
 }

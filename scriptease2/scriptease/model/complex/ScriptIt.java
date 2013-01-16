@@ -9,6 +9,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
@@ -28,8 +29,11 @@ import scriptease.translator.codegenerator.LocationInformation;
  * 
  */
 public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
-	private static final String ACTIVE_BLOCK_TEXT = "Story Point Active:";
-	private static final String INACTIVE_BLOCK_TEXT = "Story Point Inactive:";
+	private static final String ACTIVE_BLOCK_TEXT = "<"
+			+ StoryComponentPanelFactory.CURRENT_STORY_POINT_TAG + "> Active:";
+	private static final String INACTIVE_BLOCK_TEXT = "<"
+			+ StoryComponentPanelFactory.CURRENT_STORY_POINT_TAG
+			+ "> Inactive:";
 
 	/*
 	 * TODO Eventually, we should move out all of the cause specific stuff and
@@ -114,7 +118,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	public boolean isCause() {
 		if (this.codeBlocks.size() == 0)
 			return false;
-		
+
 		for (CodeBlock codeBlock : this.codeBlocks) {
 			if (!codeBlock.hasSubject() || !codeBlock.hasSlot())
 				return false;
