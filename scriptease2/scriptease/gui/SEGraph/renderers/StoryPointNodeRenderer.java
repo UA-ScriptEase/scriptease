@@ -81,7 +81,7 @@ public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 			
 			editableWidget = ScriptWidgetFactory.buildBindingWidget(node,
 					true);
-
+			
 			if (this.graph.getStartNode() != node) {
 				// If not start node, add a fan in spinner.
 				final JSpinner fanInSpinner;

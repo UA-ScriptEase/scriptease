@@ -59,6 +59,24 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 
 	}
 
+	@Override
+	public Iterator<KnowIt> getImplicits() {
+		final Collection<KnowIt> used = new ArrayList<KnowIt>();
+
+		// Only return implicits that are used in this Context
+		for (KnowIt implicit : ((ScriptIt) this.component).getMainCodeBlock()
+				.getImplicits()) {
+			if (getComponents().contains(implicit))
+				used.add(implicit);
+		}
+		return used.iterator();
+	}
+
+	@Override
+	public Object getCause() {
+		return this.getMainCodeBlock().getCause();
+	}
+
 	/**
 	 * Namification needs to be done at a CodeBlock level instead of a
 	 * StoryComponent level

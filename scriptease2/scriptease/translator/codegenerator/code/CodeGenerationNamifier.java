@@ -5,12 +5,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.translator.LanguageDictionary;
 import scriptease.util.StringOp;
 
@@ -38,7 +41,7 @@ public class CodeGenerationNamifier {
 	public CodeGenerationNamifier(CodeGenerationNamifier existingNames,
 			LanguageDictionary languageDictionary) {
 		this.parentNamifier = existingNames;
-		// This is an identity hash map to use == instead of .equals to compare
+
 		this.componentsToNames = new IdentityHashMap<StoryComponent, String>();
 		this.codeBlocksToNames = new HashMap<CodeBlock, String>();
 		this.languageDictionary = languageDictionary;
@@ -52,13 +55,16 @@ public class CodeGenerationNamifier {
 	 * @return true if name is unique in scope
 	 */
 	protected boolean isNameUnique(String name) {
-		Collection<String> componentNameList = new ArrayList<String>(this.componentsToNames.values());
-		Collection<String> codeBlockNameList = new ArrayList<String>(this.codeBlocksToNames.values());
-		
-		boolean isUniqueInScope =  !(componentNameList.contains(name)) &&
-				 !(codeBlockNameList.contains(name));
-		
-		boolean isUnique = isUniqueInScope && !this.languageDictionary.isReservedWord(name);
+		Collection<String> componentNameList = new ArrayList<String>(
+				this.componentsToNames.values());
+		Collection<String> codeBlockNameList = new ArrayList<String>(
+				this.codeBlocksToNames.values());
+
+		boolean isUniqueInScope = !(componentNameList.contains(name))
+				&& !(codeBlockNameList.contains(name));
+
+		boolean isUnique = isUniqueInScope
+				&& !this.languageDictionary.isReservedWord(name);
 		if (isUnique && this.parentNamifier != null)
 			isUnique = this.parentNamifier.isNameUnique(name);
 		return isUnique;
@@ -76,7 +82,7 @@ public class CodeGenerationNamifier {
 	 */
 	public String getUniqueName(StoryComponent component, Pattern legalFormat) {
 		String currentName = "";
-		
+
 		if (legalFormat == null || legalFormat.pattern().isEmpty())
 			legalFormat = Pattern.compile("[a-zA-Z_0-9]+");
 
@@ -152,7 +158,24 @@ public class CodeGenerationNamifier {
 	 */
 	public String getGeneratedNameFor(StoryComponent component) {
 		String name = "";
+
 		name = this.componentsToNames.get(component);
+
+		// We have a special case for KnowIts with function bindings because we
+		// do not want them to always have a unique name. If you guessed that
+		// this is because of implicits, it's a bingo! Aren't you a clever one.
+		if (!this.componentsToNames.isEmpty()
+				&& component instanceof KnowIt
+				&& ((KnowIt) component).getBinding() instanceof KnowItBindingFunction)
+
+			for (Entry<StoryComponent, String> entry : this.componentsToNames
+					.entrySet()) {
+				if (entry.getKey().equals(component)) {
+					name = entry.getValue();
+					break;
+				}
+			}
+
 		if (name != null)
 			return name;
 
@@ -165,6 +188,7 @@ public class CodeGenerationNamifier {
 		name = this.codeBlocksToNames.get(codeBlock);
 		if (name != null)
 			return name;
+		name = this.codeBlocksToNames.get(codeBlock);
 
 		return this.parentNamifier != null ? this.parentNamifier
 				.getGeneratedNameFor(codeBlock) : null;

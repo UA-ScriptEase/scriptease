@@ -12,6 +12,7 @@ import javax.swing.JComponent;
 import javax.swing.border.Border;
 
 import scriptease.gui.PanelFactory;
+import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
@@ -117,6 +118,7 @@ public class SEGraphNodeRenderer<E> {
 			public void mousePressed(MouseEvent e) {
 				final JComponent component = (JComponent) e.getSource();
 
+				SEGraphNodeRenderer.this.hoveredComponent = null;
 				SEGraphNodeRenderer.this.pressedComponent = component;
 				reconfigureAppearance(component, node);
 			}
@@ -145,18 +147,28 @@ public class SEGraphNodeRenderer<E> {
 	 * Resets the appearance of all components to the default white colour.
 	 */
 	public void resetAppearances() {
-		final Color backgroundColour;
+		final E lastSelectedNode;
 
-		backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
+		lastSelectedNode = this.graph.getLastSelectedNode();
 
 		for (Entry<E, JComponent> entry : this.graph.getNodesToComponentsMap()
 				.getEntrySet()) {
 			if (this.graph.getSelectedComponents().contains(entry.getValue()))
 				continue;
 
-			this.setComponentAppearance(entry.getValue(), entry.getKey(),
-					backgroundColour);
+			final E key = entry.getKey();
 
+			final Color backgroundColour;
+
+			if (this.graph.getParents(lastSelectedNode).contains(key)) {
+				backgroundColour = ScriptEaseUI.COLOUR_PARENT_NODE;
+			} else if (this.graph.getChildren(lastSelectedNode).contains(key)) {
+				backgroundColour = ScriptEaseUI.COLOUR_CHILD_NODE;
+			} else {
+				backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
+			}
+
+			this.setComponentAppearance(entry.getValue(), key, backgroundColour);
 		}
 	}
 
@@ -263,11 +275,33 @@ public class SEGraphNodeRenderer<E> {
 			 * it's hovered over, use gold if its selected and not hovered,
 			 * white/gray otherwise.
 			 */
-			backgroundColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
+			final Color initialColour;
+
+			if (graph.equals(SEFocusManager.getInstance().getFocus())) {
+				initialColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
+			} else {
+				initialColour = GUIOp.scaleWhite(
+						ScriptEaseUI.COLOUR_SELECTED_NODE, 1.2);
+			}
+
+			if (this.pressedComponent == component) {
+				backgroundColour = GUIOp.scaleWhite(initialColour, 1.2);
+			} else
+				backgroundColour = initialColour;
+
 			// If nothing and selected
 		} else {
-			backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
-			// If nothing
+			final E lastSelectedNode;
+
+			lastSelectedNode = this.graph.getLastSelectedNode();
+
+			if (this.graph.getParents(lastSelectedNode).contains(node)) {
+				backgroundColour = ScriptEaseUI.COLOUR_PARENT_NODE;
+			} else if (this.graph.getChildren(lastSelectedNode).contains(node)) {
+				backgroundColour = ScriptEaseUI.COLOUR_CHILD_NODE;
+			} else {
+				backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
+			}
 		}
 
 		this.setComponentAppearance(component, node, backgroundColour);

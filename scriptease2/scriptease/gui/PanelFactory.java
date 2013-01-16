@@ -503,13 +503,10 @@ public class PanelFactory {
 				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
 						"SansSerif", Font.PLAIN, 12), Color.black));
 
-		// TODO Don't redraw the entire tree
 		typeFilter.setAction(new Runnable() {
 			@Override
 			public void run() {
-				tree.drawTree(PatternModelManager.getInstance()
-						.getActiveModel(), searchField.getText(), typeFilter
-						.getSelectedTypes());
+				tree.filterByTypes(typeFilter.getSelectedTypes());
 			}
 		});
 
@@ -536,14 +533,10 @@ public class PanelFactory {
 		gameConstantPane.add(Box.createVerticalStrut(5));
 		gameConstantPane.add(treeScrollPane);
 
-		
-		// TODO Don't redraw the entire tree
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				tree.drawTree(PatternModelManager.getInstance()
-						.getActiveModel(), searchField.getText(), typeFilter
-						.getSelectedTypes());
+				tree.filterByText(searchField.getText());
 			}
 
 			@Override
@@ -561,8 +554,8 @@ public class PanelFactory {
 			@Override
 			public void modelChanged(LibraryManagerEvent event) {
 				if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
-					tree.drawTree(event.getSource(), searchField.getText(),
-							typeFilter.getSelectedTypes());
+					tree.fillTree(event.getSource());
+					tree.filterByTypes(typeFilter.getSelectedTypes());
 				}
 			}
 		};
@@ -570,13 +563,11 @@ public class PanelFactory {
 		modelObserver = new PatternModelObserver() {
 			public void modelChanged(PatternModelEvent event) {
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
-					tree.drawTree(event.getPatternModel(),
-							searchField.getText(),
-							typeFilter.getSelectedTypes());
+					tree.fillTree(event.getPatternModel());
+					tree.filterByTypes(typeFilter.getSelectedTypes());
 				} else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED
 						&& PatternModelManager.getInstance().getActiveModel() == null) {
-					tree.drawTree(null, searchField.getText(),
-							typeFilter.getSelectedTypes());
+					tree.fillTree(null);
 				}
 			}
 		};
@@ -746,13 +737,13 @@ public class PanelFactory {
 			@Override
 			public void translatorLoaded(Translator newTranslator) {
 				if (newTranslator != null) {
-					timedLabel.setText(newTranslator.getName());
-					timedLabel.setEnabled(true);
-					timedLabel.setIcon(newTranslator.getIcon());
+					currentTranslatorNameLabel.setText(newTranslator.getName());
+					currentTranslatorNameLabel.setEnabled(true);
+					currentTranslatorNameLabel.setIcon(newTranslator.getIcon());
 				} else {
-					timedLabel.setText("-None-");
-					timedLabel.setEnabled(false);
-					timedLabel.setIcon(null);
+					currentTranslatorNameLabel.setText("-None-");
+					currentTranslatorNameLabel.setEnabled(false);
+					currentTranslatorNameLabel.setIcon(null);
 				}
 			}
 		};

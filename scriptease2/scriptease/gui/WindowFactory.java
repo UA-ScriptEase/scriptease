@@ -191,6 +191,22 @@ public final class WindowFactory {
 	}
 
 	/**
+	 * Shows a dialog where the user can choose yes or no.
+	 * 
+	 * @param message
+	 * @param title
+	 * @return
+	 */
+	public boolean showYesNoConfirmDialog(String message, String title) {
+		final int option;
+
+		option = JOptionPane.showConfirmDialog(this.currentFrame, message,
+				title, JOptionPane.YES_NO_OPTION);
+
+		return option == JOptionPane.YES_OPTION;
+	}
+
+	/**
 	 * Shows the Exception Dialog if it is not already showing. The Error Dialog
 	 * is modal and will sit on top of any other window when shown.
 	 */

@@ -88,6 +88,15 @@ public class StoryComponentPanel extends JPanel implements
 				new SEFocusObserver() {
 					@Override
 					public void gainFocus(Component oldFocus) {
+						final Component newFocus;
+
+						newFocus = SEFocusManager.getInstance().getFocus();
+
+						if (newFocus instanceof StoryComponentPanel) {
+							((StoryComponentPanel) newFocus)
+									.getSelectionManager()
+									.updatePanelBackgrounds();
+						}
 					}
 
 					@Override
@@ -96,17 +105,15 @@ public class StoryComponentPanel extends JPanel implements
 
 						newFocus = SEFocusManager.getInstance().getFocus();
 
-						if (newFocus instanceof StoryComponentPanel)
-							return;
-						else {
-							// Clear the selection if new focus is not a
-							// SCPanel.
-							final StoryComponentPanelManager selectionManager;
+						if (oldFocus instanceof StoryComponentPanel
+								&& !(newFocus instanceof StoryComponentPanel)) {
+							final StoryComponentPanelManager manager;
 
-							selectionManager = StoryComponentPanel.this
+							manager = ((StoryComponentPanel) oldFocus)
 									.getSelectionManager();
-							if (selectionManager != null)
-								selectionManager.clearSelection();
+
+							if (manager != null)
+								manager.updatePanelBackgrounds();
 						}
 					}
 				});
@@ -441,7 +448,18 @@ public class StoryComponentPanel extends JPanel implements
 				hoverTimer.stop();
 
 				if (!(panel.getStoryComponent() instanceof StoryPoint)) {
-					this.panel.getSelectionManager().updatePanelBackgrounds();
+					final StoryComponentPanelManager manager;
+
+					manager = this.panel.getSelectionManager();
+
+					if (manager != null)
+						manager.updatePanelBackgrounds();
+					else
+						System.out
+								.println("Attempted to change UI of panel "
+										+ "with null selection manager for "
+										+ "StoryComponent "
+										+ panel.getStoryComponent());
 				}
 				e.consume();
 			}

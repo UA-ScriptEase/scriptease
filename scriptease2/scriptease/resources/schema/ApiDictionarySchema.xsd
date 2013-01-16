@@ -25,6 +25,7 @@
 			<xsd:element name="Causes" type="CauseList_Type" />
 			<xsd:element name="Effects" type="EffectList_Type" />
 			<xsd:element name="DescribeIts" type="DescribeItList_Type" />
+			<xsd:element name="ControlIts" type="ControlItList_Type" />
 			<xsd:element name="TypeConverters" type="TypeConverterList_Type" />
 		</xsd:sequence>
 		<xsd:attribute name="name" type="xsd:string" use="required" />
@@ -58,6 +59,13 @@
 	<xsd:complexType name="EffectList_Type">
 		<xsd:sequence>
 			<xsd:element maxOccurs="unbounded" name="ScriptIt" type="ScriptIt_Type" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Defines a list of Effect (ScriptIt) definitions -->
+	<xsd:complexType name="ControlItList_Type">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" name="ControlIt" type="ControlIt_Type" />
 		</xsd:sequence>
 	</xsd:complexType>
 
@@ -162,6 +170,31 @@
 			<xsd:element name="CodeBlocks" type="CodeBlockList_Type" />
 		</xsd:sequence>
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+	</xsd:complexType>
+
+	<!-- Defines a Control -->
+	<xsd:complexType name="ControlIt_Type">
+		<xsd:sequence minOccurs="0">
+			<xsd:group ref="StoryComponentDataGroup" />
+			<xsd:element name="Children" type="StoryComponentList_Type" />
+			<xsd:element name="CodeBlocks" type="CodeBlockList_Type" />
+		</xsd:sequence>
+		<xsd:attribute name="control" use="required">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="delay|question|repeat" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+	</xsd:complexType>
+
+	<!-- Defines a StoryItemSequence -->
+	<xsd:complexType name="StoryComponentList_Type">
+		<xsd:sequence minOccurs="0">
+			<xsd:group ref="StoryComponentDataGroup" />
+			<xsd:element name="Children" type="xsd:string" />
+		</xsd:sequence>
 	</xsd:complexType>
 
 	<!-- Defines a StoryItemSequence -->
