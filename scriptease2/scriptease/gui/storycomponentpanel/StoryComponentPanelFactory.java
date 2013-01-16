@@ -33,6 +33,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.APIDictionary;
@@ -192,7 +193,6 @@ public class StoryComponentPanelFactory {
 	 */
 	public void parseDisplayText(JPanel displayNamePanel,
 			StoryComponent storyComponent) {
-		String toParse = storyComponent.getDisplayText();
 		int paramTagStart;
 		int paramTagEnd;
 		String tagName;
@@ -216,6 +216,7 @@ public class StoryComponentPanelFactory {
 			}
 		}
 
+		String toParse = storyComponent.getDisplayText();
 		// Loop through the display text until there is no more to parse.
 		while (toParse.length() > 0) {
 			// Get the first occurrence of a parameter name.
@@ -353,7 +354,16 @@ public class StoryComponentPanelFactory {
 			@Override
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
 				// Add an expansion button
-				addExpansionButton(complex, panel);
+
+				// TODO Once we have CauseIts as a subclass, we can change this
+				// to be better.
+				if (complex instanceof ScriptIt) {
+					if (((ScriptIt) complex).isCause()
+							|| complex instanceof ControlIt) {
+						addExpansionButton(complex, panel);
+					}
+				} else
+					addExpansionButton(complex, panel);
 
 				final JPanel mainPanel;
 				mainPanel = new JPanel();

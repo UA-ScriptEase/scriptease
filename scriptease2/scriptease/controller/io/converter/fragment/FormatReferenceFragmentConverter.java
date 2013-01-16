@@ -36,10 +36,10 @@ public class FormatReferenceFragmentConverter implements Converter {
 		// Start vanilla
 		final FormatReferenceFragment reference;
 
-		if (data != null && !data.isEmpty())
+		if (data != null && !data.isEmpty()) {
 			reference = new FormatReferenceFragment(ref,
 					FormatReferenceType.valueOf(data.toUpperCase()));
-		else
+		} else
 			reference = new FormatReferenceFragment(ref);
 
 		return reference;

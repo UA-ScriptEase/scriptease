@@ -153,9 +153,8 @@ public class LibraryPanel extends JPanel {
 		libraryManagerObserver = new LibraryManagerObserver() {
 			/**
 			 * Keep the display of the library up to date with the changes to
-			 * Libraries. This listener is important for the Story Component
-			 * Builder, so that changes made there will apply to the library
-			 * view as well.
+			 * Libraries. This listener is important for the Library Editor, so
+			 * that changes made there will apply to the library view as well.
 			 */
 			@Override
 			public void modelChanged(LibraryManagerEvent event) {
@@ -261,7 +260,7 @@ public class LibraryPanel extends JPanel {
 	 */
 	public void addListMouseListener(MouseListener listener) {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			//list.addListMouseListener(listener);
+			// list.addListMouseListener(listener);
 			list.addMouseListener(listener);
 		}
 	}
@@ -380,7 +379,7 @@ public class LibraryPanel extends JPanel {
 			list.updateFilter(new VisibilityFilter(hideInvisible));
 			list.removeAllStoryComponents();
 
-			if (activeTranslator != null) {
+			if (activeTranslator != null && model != null) {
 				final Collection<LibraryModel> libraries;
 
 				libraries = activeTranslator.getLibraries();

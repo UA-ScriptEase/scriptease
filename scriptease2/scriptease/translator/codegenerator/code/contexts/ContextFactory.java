@@ -15,6 +15,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
@@ -168,6 +169,12 @@ public class ContextFactory {
 			public void processScriptIt(ScriptIt scriptIt) {
 				ContextFactory.this.activeContext = new ScriptItContext(
 						pastContext, scriptIt);
+			}
+
+			@Override
+			public void processControlIt(ControlIt controlIt) {
+				ContextFactory.this.activeContext = new ControlItContext(
+						pastContext, controlIt);
 			}
 
 			@Override

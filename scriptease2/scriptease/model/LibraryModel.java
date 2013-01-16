@@ -19,6 +19,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
@@ -126,23 +127,23 @@ public class LibraryModel extends PatternModel implements
 		this.controllersCategory.clearAllowableChildren();
 		this.noteContainer.clearAllowableChildren();
 
-		this.effectsCategory.registerChildType(ScriptIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.causesCategory.registerChildType(ScriptIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.descriptionsCategory.registerChildType(KnowIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
+
+		this.effectsCategory.registerChildType(ScriptIt.class, max);
+
+		this.causesCategory.registerChildType(ScriptIt.class, max);
+
+		this.descriptionsCategory.registerChildType(KnowIt.class, max);
+
 		this.controllersCategory.registerChildType(
-				StoryComponentContainer.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.controllersCategory.registerChildType(ScriptIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.controllersCategory.registerChildType(AskIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.controllersCategory.registerChildType(StoryItemSequence.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.controllersCategory.registerChildType(KnowIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+				StoryComponentContainer.class, max);
+		this.controllersCategory.registerChildType(ScriptIt.class, max);
+		this.controllersCategory.registerChildType(AskIt.class, max);
+		this.controllersCategory
+				.registerChildType(StoryItemSequence.class, max);
+		this.controllersCategory.registerChildType(KnowIt.class, max);
+		this.controllersCategory.registerChildType(ControlIt.class, max);
+
 		this.noteContainer.registerChildType(Note.class, 1);
 	}
 
@@ -450,6 +451,14 @@ public class LibraryModel extends PatternModel implements
 					.addStoryChild(askIt);
 			if (success)
 				askIt.addStoryComponentObserver(LibraryModel.this);
+		}
+
+		@Override
+		public void processControlIt(ControlIt controlIt) {
+			final boolean success = LibraryModel.this.controllersCategory
+					.addStoryChild(controlIt);
+			if (success)
+				controlIt.addStoryComponentObserver(LibraryModel.this);
 		}
 
 		@Override

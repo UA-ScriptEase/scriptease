@@ -107,11 +107,12 @@ public class KnowItBindingConstant extends KnowItBinding {
 	}
 
 	/**
-	 * No need to clone constants, that is why they are constant
+	 * No need to clone constants, that is why they are constant.
+	 * 
 	 */
 	@Override
 	public KnowItBinding clone() {
-		return this;
+		return new KnowItBindingConstant(this.constantValue);
 	}
 
 	@Override
