@@ -43,6 +43,7 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -77,8 +78,8 @@ public class CloseableModelTab extends JPanel {
 	 *            The icon to display in the tab. Passing <code>null</code> will
 	 *            show no icon.
 	 */
-	public CloseableModelTab(final JTabbedPane parent, final JComponent component,
-			final PatternModel model, Icon icon) {
+	public CloseableModelTab(final JTabbedPane parent,
+			final JComponent component, final PatternModel model, Icon icon) {
 		// unset the annoying gaps that come with default FlowLayout
 		super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
@@ -120,16 +121,6 @@ public class CloseableModelTab extends JPanel {
 
 		// add more space to the top of the component
 		this.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
-
-		this.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// Close tab on middle mouse click
-				if (e.getButton() == MouseEvent.BUTTON2)
-					PanelFactory.getInstance().removeModelComponent(component,
-							model);
-			}
-		});
 	}
 
 	/**
