@@ -78,6 +78,7 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 				}
 			}
 		}
+
 		return AbstractFragment.resolveFormat(typeFormat, this);
 	}
 
@@ -95,6 +96,7 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 				.getScriptValue();
 		final String type = ((KnowItBindingConstant) this.binding)
 				.getFirstType();
+		
 		// Handles Escaped Characters
 		final Set<Entry<String, String>> entrySet = this.translator
 				.getGameTypeManager().getEscapes(type).entrySet();
@@ -106,9 +108,11 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 
 		// Handle Legal Values the type can take
 		final String regex = this.translator.getGameTypeManager().getReg(type);
-		final Pattern regexPattern = Pattern.compile(regex);
-		scriptValue = StringOp.removeIllegalCharacters(scriptValue,
-				regexPattern);
+		if (regex != null && !regex.isEmpty()) {
+			final Pattern regexPattern = Pattern.compile(regex);
+			scriptValue = StringOp.removeIllegalCharacters(scriptValue,
+					regexPattern);
+		}
 
 		return scriptValue;
 	}

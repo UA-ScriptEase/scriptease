@@ -105,8 +105,8 @@ public class StringOp {
 
 	public static String makeXMLSafe(String toProcess) {
 		for (int i = 0; i < StringOp.XML_SENSITIVE.length; i++)
-			toProcess = StringOp.replaceAll(toProcess, StringOp.XML_SENSITIVE[i],
-					StringOp.XML_EQUIV[i]);
+			toProcess = StringOp.replaceAll(toProcess,
+					StringOp.XML_SENSITIVE[i], StringOp.XML_EQUIV[i]);
 
 		return toProcess;
 	}
@@ -203,6 +203,22 @@ public class StringOp {
 			}
 			return newSource;
 		}
+	}
+
+	/**
+	 * Appends "se_" to the given source string if the first character is not a letter
+	 * @param source
+	 * @return
+	 */
+	public static String removeNonCharPrefix(String source) {
+		if (source.length() > 0) {
+			final char firstChar = source.charAt(0);
+			if( !Character.isLetter(firstChar))
+			{
+				source = "se_" + source;
+			}
+		}
+		return source;
 	}
 
 	public static String convertNumberToPattern(String source,

@@ -390,6 +390,13 @@ public class LibraryEditorPanelFactory {
 		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
 				SelectionMode.SELECT_PATH_FROM_START, false);
 
+		// Set the effectHolder to reflect the initial path of the describeIt
+		// (since it doesn't throw a path selection even in SEGraph the
+		// constructor)
+		final ScriptIt initialScriptIt = describeIt.getScriptItForPath(graph
+				.getSelectedNodes());
+		effectHolder.setEffect(initialScriptIt);
+
 		effectObserver = new SetEffectObserver() {
 			@Override
 			public void effectChanged(ScriptIt newEffect) {
@@ -416,10 +423,10 @@ public class LibraryEditorPanelFactory {
 		graph.setNodeRenderer(new EditableDescribeItNodeRenderer(graph));
 
 		graph.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
+
 			@Override
 			public void nodesSelected(Collection<DescribeItNode> nodes) {
 				final ScriptIt pathScriptIt;
-
 				pathScriptIt = describeIt.getScriptItForPath(nodes);
 
 				effectHolder.removeSetEffectObserver(effectObserver);
