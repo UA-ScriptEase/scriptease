@@ -82,7 +82,7 @@ import scriptease.util.GUIOp;
  * @author kschenk
  * 
  */
-public class PanelFactory {
+public final class PanelFactory {
 	private static PanelFactory instance = new PanelFactory();
 
 	// We keep one common library panel so we do not have to load it each time.

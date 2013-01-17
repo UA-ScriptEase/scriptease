@@ -35,7 +35,7 @@ import scriptease.util.GUIOp;
  * @author kschenk
  * 
  */
-public class ComponentFactory {
+public final class ComponentFactory {
 
 	private static ComponentFactory instance = new ComponentFactory();
 
@@ -153,8 +153,7 @@ public class ComponentFactory {
 	 * @return
 	 */
 	@SuppressWarnings("serial")
-	public JTextField buildJTextFieldWithTextBackground(int size,
-			final String label) {
+	public JTextField buildJTextFieldWithTextBackground(int size, String label) {
 		final JTextField field;
 		final BufferedImage background;
 		final JLabel backgroundLabel;
@@ -181,13 +180,11 @@ public class ComponentFactory {
 							repaint();
 						}
 					}
-
 				});
 			}
 
 			@Override
 			protected void paintComponent(Graphics g) {
-
 				super.paintComponent(g);
 				if (this.drawLabel) {
 					final int x;
