@@ -182,7 +182,7 @@
 		<xsd:attribute name="control" use="required">
 			<xsd:simpleType>
 				<xsd:restriction base="xsd:string">
-					<xsd:pattern value="delay|question|repeat" />
+					<xsd:pattern value="DELAY|QUESTION|REPEAT" />
 				</xsd:restriction>
 			</xsd:simpleType>
 		</xsd:attribute>

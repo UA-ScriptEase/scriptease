@@ -9,6 +9,8 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -623,7 +625,7 @@ public final class PanelFactory {
 
 		model.process(new ModelAdapter() {
 			@Override
-			public void processLibraryModel(LibraryModel libraryModel) {
+			public void processLibraryModel(final LibraryModel libraryModel) {
 				// Creates a Library Editor panel
 				final JScrollPane scbScrollPane;
 				final CloseableModelTab newTab;
