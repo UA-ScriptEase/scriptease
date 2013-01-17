@@ -1,10 +1,16 @@
 package scriptease.gui;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
@@ -17,23 +23,29 @@ import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.InsertModeAction;
 import scriptease.gui.action.graphs.SelectModeAction;
 import scriptease.model.PatternModelManager;
+import scriptease.util.GUIOp;
 
 /**
- * ToolBarFactory is responsible for creating all JToolBars.
+ * For creation of specialized JComponents. If we're just adding properties to a
+ * component, it should probably be decorated instead in {@link WidgetDecorator}
+ * . Also, if we end up making a lot of one type of component, we should
+ * probably move them out into their own factory. For example, if we make lots
+ * of ToolBars, we should make a ToolBarFactory.
  * 
  * @author kschenk
  * 
  */
-public class ToolBarFactory {
-	private static ToolBarFactory instance = new ToolBarFactory();
+public class ComponentFactory {
+
+	private static ComponentFactory instance = new ComponentFactory();
 
 	/**
-	 * Returns the sole instance of ToolBarFactory.
+	 * Returns the sole instance of ComponentFactory.
 	 * 
 	 * @return
 	 */
-	public static ToolBarFactory getInstance() {
-		return ToolBarFactory.instance;
+	public static ComponentFactory getInstance() {
+		return instance;
 	}
 
 	/**
@@ -129,5 +141,66 @@ public class ToolBarFactory {
 		selectButtonRunnable.run();
 
 		return graphEditorToolBar;
+	}
+
+	/**
+	 * Creates a JTextField that uses a JLabel as a background. The background
+	 * disappears when the JTextField is focused on and does not appear if there
+	 * is text inside the field.
+	 * 
+	 * @param size
+	 * @param label
+	 * @return
+	 */
+	@SuppressWarnings("serial")
+	public JTextField buildJTextFieldWithTextBackground(int size,
+			final String label) {
+		final JTextField field;
+		final BufferedImage background;
+		final JLabel backgroundLabel;
+
+		backgroundLabel = new JLabel(label);
+		backgroundLabel.setForeground(Color.LIGHT_GRAY);
+
+		background = GUIOp.getScreenshot(backgroundLabel);
+
+		field = new JTextField(size) {
+			private boolean drawLabel = true;
+			{
+				this.addFocusListener(new FocusListener() {
+					@Override
+					public void focusGained(FocusEvent e) {
+						drawLabel = false;
+						repaint();
+					}
+
+					@Override
+					public void focusLost(FocusEvent e) {
+						if (getText().isEmpty()) {
+							drawLabel = true;
+							repaint();
+						}
+					}
+
+				});
+			}
+
+			@Override
+			protected void paintComponent(Graphics g) {
+
+				super.paintComponent(g);
+				if (this.drawLabel) {
+					final int x;
+					final int y;
+
+					x = 5;
+					y = (getHeight() - background.getHeight()) / 2;
+
+					g.drawImage(background, x, y, this);
+				}
+			}
+		};
+
+		return field;
 	}
 }

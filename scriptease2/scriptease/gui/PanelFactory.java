@@ -149,7 +149,7 @@ public class PanelFactory {
 		final JScrollPane storyGraphScrollPane;
 
 		storyPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
+		graphToolBar = ComponentFactory.getInstance().buildGraphEditorToolBar();
 
 		storyGraphModel = new StoryPointGraphModel(start);
 		storyGraph = new SEGraph<StoryPoint>(storyGraphModel);
