@@ -59,7 +59,7 @@ public class DescribeItNode {
 	}
 
 	/**
-	 * Gets the immediate successors of the StoryPoint.
+	 * Gets the immediate successors of the DescribeItNode.
 	 * 
 	 * @return
 	 */
@@ -68,7 +68,7 @@ public class DescribeItNode {
 	}
 
 	/**
-	 * Adds a successor to the StoryPoint.
+	 * Adds a successor to the DescribeItNode.
 	 * 
 	 * @param successor
 	 */
@@ -82,7 +82,7 @@ public class DescribeItNode {
 	}
 
 	/**
-	 * Adds multiple successors to the StoryPoint.
+	 * Adds multiple successors to the DescribeItNode.
 	 * 
 	 * @param successors
 	 */
@@ -95,7 +95,7 @@ public class DescribeItNode {
 	}
 
 	/**
-	 * Removes a successor from the StoryPoint.
+	 * Removes a successor from the DescribeItNode.
 	 * 
 	 * @param successor
 	 */
@@ -107,8 +107,8 @@ public class DescribeItNode {
 	}
 
 	/**
-	 * Gets all descendants of the StoryPoint, including the StoryPoint itself.
-	 * That is, the successors, the successors of the successors, etc.
+	 * Gets all descendants of the DescribeItNode, including the DescribeItNode
+	 * itself. That is, the successors, the successors of the successors, etc.
 	 * 
 	 * @return
 	 */
