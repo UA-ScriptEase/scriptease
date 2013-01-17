@@ -50,23 +50,21 @@ public class ToolBarFactory {
 
 		final ArrayList<JToggleButton> buttonList = new ArrayList<JToggleButton>();
 
-		final JToggleButton selectNodeButton = new JToggleButton(
-				SelectModeAction.getInstance());
+		final JToggleButton selectNodeButton;
+		final JToggleButton insertNodeButton;
+		final JToggleButton deleteNodeButton;
+		final JToggleButton connectNodeButton;
+		final JToggleButton disconnectNodeButton;
 
-		final JToggleButton insertNodeButton = new JToggleButton(
-				InsertModeAction.getInstance());
-
-		final JToggleButton deleteNodeButton = new JToggleButton(
-				DeleteModeAction.getInstance());
-
-		final JToggleButton connectNodeButton = new JToggleButton(
-				ConnectModeAction.getInstance());
-
-		final JToggleButton disconnectNodeButton = new JToggleButton(
+		selectNodeButton = new JToggleButton(SelectModeAction.getInstance());
+		insertNodeButton = new JToggleButton(InsertModeAction.getInstance());
+		deleteNodeButton = new JToggleButton(DeleteModeAction.getInstance());
+		connectNodeButton = new JToggleButton(ConnectModeAction.getInstance());
+		disconnectNodeButton = new JToggleButton(
 				DisconnectModeAction.getInstance());
 
 		graphEditorToolBar.setLayout(new BoxLayout(graphEditorToolBar,
-				BoxLayout.LINE_AXIS));
+				BoxLayout.PAGE_AXIS));
 		graphEditorToolBar.setRollover(true);
 		graphEditorToolBar.setFloatable(false);
 		graphEditorToolBar.setBackground(Color.WHITE);
@@ -86,6 +84,7 @@ public class ToolBarFactory {
 
 		// TODO We may be able to switch this with a model change listener,
 		// removing the need to know about the tabbed pane.
+		
 		final ChangeListener graphEditorListener = new ChangeListener() {
 
 			@Override

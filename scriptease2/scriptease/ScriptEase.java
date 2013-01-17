@@ -74,6 +74,9 @@ public final class ScriptEase implements Runnable {
 	public static final String PREFERRED_LAYOUT_KEY = "PreferredLayout";
 	public static final String COMPRESSED_LAYOUT = "Compressed";
 	public static final String UNCOMPRESSED_LAYOUT = "Uncompressed";
+	public static final String PREFERRED_ORIENTATION_KEY = "GraphToolsOrientation";
+	public static final String VERTICAL_TOOLBAR = "Vertical";
+	public static final String HORIZONTAL_TOOLBAR = "Horizontal";
 	public static final String FONT_SIZE_KEY = "FontSize";
 	public static final String UNDO_STACK_SIZE_KEY = "MaxUndoSteps";
 

@@ -36,6 +36,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
+import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.PatternModelEvent;
@@ -230,18 +231,34 @@ public class PanelFactory {
 
 		start.addStoryComponentObserver(graphRedrawer);
 
-		storyGraphScrollPane.setBorder(BorderFactory
-				.createEtchedBorder(EtchedBorder.LOWERED));
-
 		storyGraph.setBackground(Color.WHITE);
+
+		storyGraphPanel.setLayout(new BorderLayout());
 
 		// Reset the ToolBar to select and add the Story Graph to it.
 		GraphToolBarModeAction.useGraphCursorForJComponent(storyGraph);
 		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
 
-		// Set up the JPanel containing the graph
-		storyGraphPanel.setLayout(new BorderLayout());
-		storyGraphPanel.add(graphToolBar, BorderLayout.PAGE_START);
+		final String orientation = ScriptEase.getInstance().getPreference(
+				ScriptEase.PREFERRED_ORIENTATION_KEY);
+
+		if (orientation != null
+				&& orientation.equalsIgnoreCase(ScriptEase.HORIZONTAL_TOOLBAR)) {
+			storyGraphScrollPane.setBorder(BorderFactory
+					.createEtchedBorder(EtchedBorder.LOWERED));
+
+			storyGraphPanel.add(graphToolBar, BorderLayout.PAGE_START);
+		} else {// if toolbar is vertical
+			storyGraphScrollPane.setBorder(BorderFactory.createEmptyBorder());
+			storyGraphPanel.setBorder(BorderFactory
+					.createEtchedBorder(EtchedBorder.LOWERED));
+
+			graphToolBar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,
+					Color.LIGHT_GRAY));
+
+			storyGraphPanel.add(graphToolBar, BorderLayout.WEST);
+		}
+
 		storyGraphPanel.add(storyGraphScrollPane, BorderLayout.CENTER);
 
 		storyComponentTree.setBorder(null);
@@ -249,8 +266,8 @@ public class PanelFactory {
 		// Set up the split pane
 		storyPanel.setBorder(null);
 		storyPanel.setOpaque(true);
-		storyPanel.setTopComponent(storyGraphPanel);
-		storyPanel.setBottomComponent(storyComponentTree);
+		storyPanel.setBottomComponent(storyGraphPanel);
+		storyPanel.setTopComponent(storyComponentTree);
 
 		// Set up the divider
 		for (Component component : storyPanel.getComponents()) {
