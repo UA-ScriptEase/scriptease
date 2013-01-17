@@ -43,7 +43,6 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseWheelEvent;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -56,7 +55,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicButtonUI;
 
-import scriptease.gui.PanelFactory;
 import scriptease.gui.action.file.CloseModelTabAction;
 import scriptease.model.PatternModel;
 

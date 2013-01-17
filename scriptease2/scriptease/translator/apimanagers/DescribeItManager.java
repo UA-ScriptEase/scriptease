@@ -3,11 +3,13 @@ package scriptease.translator.apimanagers;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.ScriptIt;
 import scriptease.util.BiHashMap;
 
@@ -95,6 +97,48 @@ public class DescribeItManager {
 				if (weakComponent == component)
 					return entry.getKey();
 			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns true if the node is the end node in a path.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public boolean isEndNode(DescribeItNode node) {
+		final DescribeIt describeIt = this.getDescribeItForNode(node);
+
+		for (Collection<DescribeItNode> path : describeIt.getPaths()) {
+			if (path.isEmpty())
+				continue;
+
+			final Iterator<DescribeItNode> it = path.iterator();
+
+			DescribeItNode nodeInPath = it.next();
+			while (it.hasNext()) {
+				nodeInPath = it.next();
+			}
+
+			if (nodeInPath == node)
+				return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Gets the DescribeIt that the DescribeItNode belongs to.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public DescribeIt getDescribeItForNode(DescribeItNode node) {
+		for (DescribeIt describeIt : this.describeItMap.getKeys()) {
+			if (describeIt.getStartNode().getDescendants().contains(node))
+				return describeIt;
 		}
 
 		return null;
