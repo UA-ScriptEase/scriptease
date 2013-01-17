@@ -683,7 +683,7 @@ public class PanelFactory {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						newPanel.setDividerLocation(0.3);
+						newPanel.setDividerLocation(0.8);
 					}
 				});
 			}
