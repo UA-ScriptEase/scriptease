@@ -31,6 +31,12 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	private static final String ACTIVE_BLOCK_TEXT = "Story Point Active:";
 	private static final String INACTIVE_BLOCK_TEXT = "Story Point Inactive:";
 
+	/*
+	 * TODO Eventually, we should move out all of the cause specific stuff and
+	 * call it a "CauseIt". We are removing functionality when we create the
+	 * ControlIt subclass from ScriptIt, which violates the Liskov principle.
+	 */
+
 	/**
 	 * The group of children that are in the Story Point Active part of the
 	 * Cause.
@@ -61,6 +67,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		validTypes.add(AskIt.class);
 		validTypes.add(StoryComponentContainer.class);
 		validTypes.add(Note.class);
+		validTypes.add(ControlIt.class);
 
 		this.activeBlock = new StoryItemSequence(validTypes);
 		this.activeBlock.setDisplayText(ACTIVE_BLOCK_TEXT);
@@ -107,7 +114,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 	public boolean isCause() {
 		if (this.codeBlocks.size() == 0)
 			return false;
-
+		
 		for (CodeBlock codeBlock : this.codeBlocks) {
 			if (!codeBlock.hasSubject() || !codeBlock.hasSlot())
 				return false;
@@ -171,21 +178,27 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		// Change text for backwards compatibility
 		activeBlock.setDisplayText(ACTIVE_BLOCK_TEXT);
 		this.activeBlock = activeBlock;
-		activeBlock.setOwner(this);
+
+		if (this.activeBlock != null)
+			activeBlock.setOwner(this);
 	}
 
 	public void setInactiveBlock(StoryItemSequence inactiveBlock) {
 		// Change text for backwards compatibility
 		inactiveBlock.setDisplayText(INACTIVE_BLOCK_TEXT);
 		this.inactiveBlock = inactiveBlock;
-		inactiveBlock.setOwner(this);
+
+		if (this.inactiveBlock != null)
+			inactiveBlock.setOwner(this);
 	}
 
 	@Override
 	public boolean addStoryChildBefore(StoryComponent newChild,
 			StoryComponent sibling) {
 		boolean success = super.addStoryChildBefore(newChild, sibling);
-		if (success) {
+		// TODO See this? This "instanceof my subclass"? This is bad. This is
+		// everything that is wrong with this class. Atrocious.
+		if (success && !(this instanceof ControlIt)) {
 			if (this.getChildren().iterator().next() == newChild)
 				this.setActiveBlock((StoryItemSequence) newChild);
 			else
@@ -312,7 +325,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 				StoryComponentChangeEnum.CODE_BLOCKS_SET));
 	}
 
-	public final void processParameters(StoryVisitor processController) {
+	public void processParameters(StoryVisitor processController) {
 		for (StoryComponent parameter : getParameters()) {
 			parameter.process(processController);
 		}

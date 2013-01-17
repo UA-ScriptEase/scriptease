@@ -6,6 +6,7 @@ import java.util.Collection;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.apimanagers.DescribeItManager;
@@ -29,6 +30,7 @@ public class APIDictionaryConverter implements Converter {
 	private static final String TAG_AUTHOR = "author";
 	private static final String TAG_CAUSES = "Causes";
 	private static final String TAG_DESCRIBE_ITS = "DescribeIts";
+	private static final String TAG_CONTROL_ITS = "ControlIts";
 	private static final String TAG_EFFECTS = "Effects";
 	private static final String TAG_TYPES = "Types";
 	private static final String TAG_TYPE_CONVERTERS = "TypeConverters";
@@ -78,6 +80,11 @@ public class APIDictionaryConverter implements Converter {
 		// descriptions
 		writer.startNode(TAG_DESCRIBE_ITS);
 		context.convertAnother(describeItManager.getDescribeIts());
+		writer.endNode();
+
+		writer.startNode(TAG_CONTROL_ITS);
+		context.convertAnother(apiDictionary.getLibrary()
+				.getControllersCategory().getChildren());
 		writer.endNode();
 
 		// typeconverters
@@ -187,6 +194,20 @@ public class APIDictionaryConverter implements Converter {
 					apiDictionary.getLibrary().add(knowIt);
 					describeItManager.addDescribeIt(describeIt, knowIt);
 				}
+			}
+		}
+		reader.moveUp();
+
+		// controls
+		reader.moveDown();
+		if (reader.hasMoreChildren()) {
+			if (!reader.getNodeName().equalsIgnoreCase(TAG_CONTROL_ITS))
+				System.err.println("Expected " + TAG_CONTROL_ITS
+						+ ", but found " + reader.getNodeName());
+			else {
+				apiDictionary.getLibrary().addAll(
+						((Collection<ControlIt>) context.convertAnother(
+								apiDictionary, ArrayList.class)));
 			}
 		}
 		reader.moveUp();

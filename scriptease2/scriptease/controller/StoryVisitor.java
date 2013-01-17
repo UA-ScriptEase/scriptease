@@ -6,6 +6,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
@@ -42,6 +43,8 @@ public interface StoryVisitor {
 
 	public void processAskIt(AskIt askIt);
 	
+	public void processControlIt(ControlIt controlIt);
+
 	/** ATOMIC TYPES **/
 	public void processKnowIt(KnowIt knowIt);
 
@@ -50,4 +53,5 @@ public interface StoryVisitor {
 	public void processCodeBlockReference(CodeBlockReference codeBlockReference);
 
 	public void processNote(Note note);
+	
 }

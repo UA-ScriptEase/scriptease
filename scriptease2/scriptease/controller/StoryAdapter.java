@@ -7,6 +7,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
@@ -56,6 +57,10 @@ public abstract class StoryAdapter implements StoryVisitor {
 		this.defaultProcessComplex(scriptIt);
 	}
 
+	public void processControlIt(ControlIt controlIt) {
+		this.processScriptIt(controlIt);
+	};
+
 	@Override
 	public void processAskIt(AskIt questionIt) {
 		this.defaultProcessComplex(questionIt);
@@ -79,7 +84,7 @@ public abstract class StoryAdapter implements StoryVisitor {
 	public void processCodeBlockReference(CodeBlockReference codeBlockReference) {
 		this.defaultProcessAtomic(codeBlockReference);
 	}
-	
+
 	@Override
 	public void processNote(Note note) {
 		this.defaultProcessAtomic(note);

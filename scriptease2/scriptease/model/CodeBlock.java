@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -75,6 +76,15 @@ public abstract class CodeBlock extends StoryComponent implements
 		for (KnowIt param : params)
 			hashCode += param.getBinding().hashCode();
 
+		final ScriptIt owner = this.getOwner();
+		if(owner instanceof ControlIt) {
+			for(KnowIt param : ((ControlIt) owner).getRequiredParameters()) {
+				hashCode += param.getBinding().hashCode();
+			}
+			
+			hashCode += owner.hashCode();
+		}
+		
 		return hashCode;
 	}
 

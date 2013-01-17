@@ -106,16 +106,12 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 			System.err.println("ComplexStoryComponent '"
 					+ this.getDisplayText() + "' has rejected '" + newChild
 					+ "' because it is not an acceptable child type.");
+			this.canAcceptChild(newChild);
 			return false;
 		}
 
 		// don't allow double adds.
 		if (previousOwner == this && this.hasChild(newChild)) {
-			/*
-			 * System.err.println("ComplexStoryComponent '" +
-			 * this.getDisplayText() + "' did not add '" + newChild +
-			 * "' because it is already a child.");
-			 */// Debug Code
 			return false;
 		}
 

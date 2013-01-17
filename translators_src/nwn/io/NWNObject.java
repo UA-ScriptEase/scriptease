@@ -65,18 +65,15 @@ public final class NWNObject extends NWNGameConstant implements GameObject {
 	}
 
 	@Override
+	public int hashCode() {
+		return super.hashCode() + this.resolutionMethod;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof NWNObject))
-			return false;
-
-		final NWNObject other = (NWNObject) obj;
-		boolean equals = true;
-
-		equals &= this.getName().equals(other.getName());
-		equals &= this.getTag().equals(other.getTag());
-		equals &= this.getTemplateID().equals(other.getTemplateID());
-		equals &= this.getTypes().equals(other.getTypes());
-
-		return equals;
+		if (obj instanceof NWNObject)
+			return this.hashCode() == obj.hashCode();
+		
+		return false;
 	}
 }

@@ -11,6 +11,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
@@ -112,7 +113,18 @@ public class CodeBlockContext extends Context {
 
 	@Override
 	public Iterator<KnowIt> getParameters() {
-		return this.codeBlock.getParameters().iterator();
+		final ScriptIt owner = this.codeBlock.getOwner();
+		final Collection<KnowIt> parameters;
+
+		parameters = new ArrayList<KnowIt>();
+
+		if (owner instanceof ControlIt) {
+			parameters.addAll(((ControlIt) owner).getRequiredParameters());
+		} else {
+			parameters.addAll(this.codeBlock.getParameters());
+		}
+
+		return parameters.iterator();
 	}
 
 	/**
@@ -128,6 +140,11 @@ public class CodeBlockContext extends Context {
 				used.add(implicit);
 		}
 		return used.iterator();
+	}
+
+	@Override
+	public Object getCause() {
+		return this.codeBlock.getCause();
 	}
 
 	/**

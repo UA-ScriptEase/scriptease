@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.get.AskItGetter;
-import scriptease.controller.get.ImplicitGetter;
 import scriptease.controller.get.VariableGetter;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -73,17 +72,6 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 			child.process(variableGetter);
 		}
 		return variableGetter.getObjects().iterator();
-	}
-
-	@Override
-	public Iterator<KnowIt> getImplicits() {
-		ImplicitGetter implicitGetter = new ImplicitGetter();
-		Collection<StoryComponent> children = ((ComplexStoryComponent) this.component)
-				.getChildren();
-		for (StoryComponent child : children) {
-			child.process(implicitGetter);
-		}
-		return implicitGetter.getObjects().iterator();
 	}
 
 	/**

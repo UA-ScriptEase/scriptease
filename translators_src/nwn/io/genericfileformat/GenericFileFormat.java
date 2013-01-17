@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import scriptease.gui.WindowFactory;
 import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.Slot;
@@ -30,6 +31,7 @@ import scriptease.translator.io.tools.ScriptEaseFileAccess;
  * 
  * @author mfchurch
  * @author remiller
+ * @author kschenk
  * 
  */
 public class GenericFileFormat {
@@ -383,13 +385,28 @@ public class GenericFileFormat {
 	private void removeGeneratedReferences() {
 		final GameTypeManager typeManager;
 		final Collection<String> scriptSlots;
-		String reference;
 
 		typeManager = ErfFile.getTranslator().getGameTypeManager();
 		scriptSlots = typeManager.getSlots(this.getScriptEaseType());
 
 		// remove all generated script references
 		for (String slotName : scriptSlots) {
+			final GffField field;
+
+			field = this.getFieldByLabel(slotName);
+
+			// Stupid special case. I think they added it in a patch or
+			// something, because some placeables don't have it, and it's not
+			// mentioned in the official docs. But it's definitely there.
+			if (field == null && this.getScriptEaseType().equals("placeable"))
+				continue;
+			else if (field == null) {
+				throw new NullPointerException("Null Field found for " + this
+						+ " for slot " + slotName);
+			}
+
+			final String reference;
+
 			reference = this.getFieldByLabel(slotName).getStringData();
 
 			if (ErfFile.isScriptEaseGenerated(reference)) {
@@ -669,7 +686,15 @@ public class GenericFileFormat {
 
 	/**
 	 * Searches this GFF's field list for the field that matches the supplied
-	 * label.
+	 * label. This method has a special case for "OnClick". If that event isn't
+	 * found, we just return null. This can cause catastrophic problems, so make
+	 * sure to check for "null" if you aren't searching for a specific field.
+	 * The reason for this heresy is that NWN only introduced the field in
+	 * placeables in 1.67. Any module created before then doesn't have the field
+	 * in those placeables. "But we require NWN 1.69 anyways!" That's true, but
+	 * you could have an old module, save it in 1.69, and they still wouldn't
+	 * have the fields. Which kills the ScriptEase. Instead, this workaround
+	 * lets us continue with business as usual.
 	 * 
 	 * @param fieldList
 	 *            the list to search in.
@@ -688,6 +713,11 @@ public class GenericFileFormat {
 			}
 		}
 
+		// This is awful, but as with many things, NWN has a special case.
+		// "OnClick" can be optional in placeables. Fun, isn't it?
+		if (label.equals("OnClick"))
+			return null;
+
 		// this can happen if it is called on the incorrect list, or with a
 		// label that doens't exist.
 		throw new IllegalStateException("Failed to locate field " + label);
@@ -699,7 +729,7 @@ public class GenericFileFormat {
 	}
 
 	/**
-	 * Gets the string data for the field with the givne label in this GFF file.
+	 * Gets the string data for the field with the given label in this GFF file.
 	 * 
 	 * @param label
 	 *            The field's label.
@@ -782,6 +812,26 @@ public class GenericFileFormat {
 				field = resolvedSyncStruct.getFieldByLabel(fieldLabel);
 		} else {
 			field = this.getFieldByLabel(fieldLabel);
+
+			if (field == null && this.getScriptEaseType().equals("placeable")) {
+				final String name = this.getName("");
+
+				final String message;
+
+				message = "<html>Warning: The Placeable: " + name
+						+ " does not have an OnClick field.<br>"
+						+ "It may have been created before patch 1.67. The "
+						+ "\"When " + name
+						+ " is clicked\" cause will not work.<br>"
+						+ "To fix this, open the NWN toolest, add any script "
+						+ "to the slot, save the module, then remove the "
+						+ "script from the slot and save again.</html>";
+
+				WindowFactory.getInstance().showInformationDialog("Warning",
+						message);
+
+				return;
+			}
 		}
 
 		if (field == null)

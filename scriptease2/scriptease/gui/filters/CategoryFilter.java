@@ -5,6 +5,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
@@ -78,6 +79,12 @@ public class CategoryFilter extends StoryComponentFilter {
 				this.acceptable = scriptIt.isCause();
 			else if (CategoryFilter.this.category.equals(Category.EFFECTS))
 				this.acceptable = !scriptIt.isCause();
+		}
+
+		@Override
+		public void processControlIt(ControlIt controlIt) {
+			this.acceptable = CategoryFilter.this.category
+					.equals(Category.CONTROLS);
 		}
 
 		@Override
