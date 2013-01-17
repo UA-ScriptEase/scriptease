@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -64,8 +65,6 @@ public class ScriptWidgetFactory {
 	/**
 	 * The scaling factor to use for scaling fonts
 	 */
-	public static final float LABEL_FONT_SIZE_SCALE_FACTOR = 1.1f;
-
 	public final static Color LABEL_TEXT_COLOUR = Color.WHITE;
 	public final static Color LABEL_BACKGROUND_COLOUR = Color.GRAY;
 
@@ -126,9 +125,7 @@ public class ScriptWidgetFactory {
 	 * @return A button that displays a type.
 	 */
 	public static TypeWidget getTypeWidget(final String type) {
-		final TypeWidget typeWidget = new TypeWidget(type);
-		typeWidget.setSize(typeWidget.getPreferredSize());
-		return typeWidget;
+		return new TypeWidget(type);
 	}
 
 	/**

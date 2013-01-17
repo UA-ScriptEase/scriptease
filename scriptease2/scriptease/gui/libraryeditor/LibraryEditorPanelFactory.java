@@ -443,7 +443,7 @@ public class LibraryEditorPanelFactory {
 
 		// Set up the JPanel containing the graph
 		describeItGraphPanel.setLayout(new BorderLayout());
-		describeItGraphPanel.add(graphToolBar, BorderLayout.PAGE_START);
+		describeItGraphPanel.add(graphToolBar, BorderLayout.WEST);
 		describeItGraphPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
 
 		bindingPanel

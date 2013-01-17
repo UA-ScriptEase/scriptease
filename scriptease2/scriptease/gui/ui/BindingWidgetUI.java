@@ -98,8 +98,8 @@ public class BindingWidgetUI extends ComponentUI {
 				if (transferHandler != null) {
 					if (source.getBinding().isBound()) {
 						// if (e.isShiftDown())
-							transferHandler.exportAsDrag(source, e,
-									TransferHandler.MOVE);
+						transferHandler.exportAsDrag(source, e,
+								TransferHandler.MOVE);
 					}
 				}
 			}
@@ -272,7 +272,6 @@ public class BindingWidgetUI extends ComponentUI {
 		for (String type : comp.getBinding().getTypes()) {
 
 			this.typeRenderer = ScriptWidgetFactory.getTypeWidget(type);
-
 			this.typeRenderer.setBackground(bgColor);
 
 			preferredTypeSize = this.typeRenderer.getPreferredSize();
