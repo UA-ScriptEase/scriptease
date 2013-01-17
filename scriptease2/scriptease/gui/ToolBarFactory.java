@@ -7,15 +7,16 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
+import scriptease.controller.observer.PatternModelEvent;
+import scriptease.controller.observer.PatternModelObserver;
 import scriptease.gui.action.graphs.ConnectModeAction;
 import scriptease.gui.action.graphs.DeleteModeAction;
 import scriptease.gui.action.graphs.DisconnectModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.InsertModeAction;
 import scriptease.gui.action.graphs.SelectModeAction;
+import scriptease.model.PatternModelManager;
 
 /**
  * ToolBarFactory is responsible for creating all JToolBars.
@@ -44,17 +45,21 @@ public class ToolBarFactory {
 	 * @return
 	 */
 	public JToolBar buildGraphEditorToolBar() {
-		final JToolBar graphEditorToolBar = new JToolBar();
-
-		final ButtonGroup graphEditorButtonGroup = new ButtonGroup();
-
-		final ArrayList<JToggleButton> buttonList = new ArrayList<JToggleButton>();
+		final JToolBar graphEditorToolBar;
+		final ButtonGroup graphEditorButtonGroup;
+		final ArrayList<JToggleButton> buttonList;
 
 		final JToggleButton selectNodeButton;
 		final JToggleButton insertNodeButton;
 		final JToggleButton deleteNodeButton;
 		final JToggleButton connectNodeButton;
 		final JToggleButton disconnectNodeButton;
+
+		final Runnable selectButtonRunnable;
+
+		graphEditorToolBar = new JToolBar();
+		graphEditorButtonGroup = new ButtonGroup();
+		buttonList = new ArrayList<JToggleButton>();
 
 		selectNodeButton = new JToggleButton(SelectModeAction.getInstance());
 		insertNodeButton = new JToggleButton(InsertModeAction.getInstance());
@@ -63,32 +68,10 @@ public class ToolBarFactory {
 		disconnectNodeButton = new JToggleButton(
 				DisconnectModeAction.getInstance());
 
-		graphEditorToolBar.setLayout(new BoxLayout(graphEditorToolBar,
-				BoxLayout.PAGE_AXIS));
-		graphEditorToolBar.setRollover(true);
-		graphEditorToolBar.setFloatable(false);
-		graphEditorToolBar.setBackground(Color.WHITE);
-
-		buttonList.add(selectNodeButton);
-		buttonList.add(insertNodeButton);
-		buttonList.add(deleteNodeButton);
-		buttonList.add(connectNodeButton);
-		buttonList.add(disconnectNodeButton);
-
-		for (JToggleButton toolBarButton : buttonList) {
-			toolBarButton.setHideActionText(true);
-			toolBarButton.setFocusable(false);
-			graphEditorButtonGroup.add(toolBarButton);
-			graphEditorToolBar.add(toolBarButton);
-		}
-
-		// TODO We may be able to switch this with a model change listener,
-		// removing the need to know about the tabbed pane.
-		
-		final ChangeListener graphEditorListener = new ChangeListener() {
-
+		selectButtonRunnable = new Runnable() {
 			@Override
-			public void stateChanged(ChangeEvent arg0) {
+			public void run() {
+
 				switch (GraphToolBarModeAction.getMode()) {
 
 				case SELECT:
@@ -115,8 +98,35 @@ public class ToolBarFactory {
 			}
 		};
 
-		PanelFactory.getInstance().getModelTabPane()
-				.addChangeListener(graphEditorListener);
+		graphEditorToolBar.setLayout(new BoxLayout(graphEditorToolBar,
+				BoxLayout.PAGE_AXIS));
+		graphEditorToolBar.setRollover(true);
+		graphEditorToolBar.setFloatable(false);
+		graphEditorToolBar.setBackground(Color.WHITE);
+
+		buttonList.add(selectNodeButton);
+		buttonList.add(insertNodeButton);
+		buttonList.add(deleteNodeButton);
+		buttonList.add(connectNodeButton);
+		buttonList.add(disconnectNodeButton);
+
+		for (JToggleButton toolBarButton : buttonList) {
+			toolBarButton.setHideActionText(true);
+			toolBarButton.setFocusable(false);
+			graphEditorButtonGroup.add(toolBarButton);
+			graphEditorToolBar.add(toolBarButton);
+		}
+
+		PatternModelManager.getInstance().addPatternModelObserver(
+				graphEditorToolBar, new PatternModelObserver() {
+					@Override
+					public void modelChanged(PatternModelEvent event) {
+						if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED)
+							selectButtonRunnable.run();
+					}
+				});
+
+		selectButtonRunnable.run();
 
 		return graphEditorToolBar;
 	}

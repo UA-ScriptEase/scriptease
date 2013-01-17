@@ -53,7 +53,6 @@ import scriptease.gui.SEGraph.StoryPointGraphModel;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
-import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.filters.CategoryFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
@@ -237,7 +236,7 @@ public class PanelFactory {
 
 		// Reset the ToolBar to select and add the Story Graph to it.
 		GraphToolBarModeAction.useGraphCursorForJComponent(storyGraph);
-		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
+		GraphToolBarModeAction.setMode(GraphToolBarModeAction.getMode());
 
 		final String orientation = ScriptEase.getInstance().getPreference(
 				ScriptEase.PREFERRED_ORIENTATION_KEY);

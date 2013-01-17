@@ -2,8 +2,6 @@ package scriptease.gui.action.graphs;
 
 import java.awt.event.ActionEvent;
 
-import scriptease.gui.ui.ScriptEaseUI;
-
 /**
  * Represents and performs the DisconnectMode command, as well as encapsulating
  * its enabled and name display state. This sets the ToolBar's mode to
@@ -40,7 +38,6 @@ public final class DisconnectModeAction extends GraphToolBarModeAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		this.setCursor(ScriptEaseUI.CURSOR_PATH_ERASE);
 		setMode(ToolBarMode.DISCONNECT);
 	}
 }
