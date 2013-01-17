@@ -4,6 +4,7 @@ import scriptease.translator.codegenerator.CharacterRange;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.FormatReferenceType;
 import scriptease.translator.codegenerator.code.contexts.AskItContext;
 import scriptease.translator.codegenerator.code.contexts.Context;
+import scriptease.translator.codegenerator.code.contexts.ControlItContext;
 import scriptease.translator.codegenerator.code.contexts.KnowItContext;
 import scriptease.translator.codegenerator.code.contexts.NoteContext;
 import scriptease.translator.codegenerator.code.contexts.ScriptItContext;
@@ -47,9 +48,11 @@ public class FormatReferenceFragment extends AbstractFragment {
 
 		if ((this.type == FormatReferenceType.NONE)
 				|| (this.type == FormatReferenceType.ASKIT && context instanceof AskItContext)
-				|| (this.type == FormatReferenceType.SCRIPTIT && context instanceof ScriptItContext)
+				|| (this.type == FormatReferenceType.SCRIPTIT
+						&& context instanceof ScriptItContext && !(context instanceof ControlItContext))
 				|| (this.type == FormatReferenceType.KNOWIT && context instanceof KnowItContext)
-				|| (this.type == FormatReferenceType.NOTE && context instanceof NoteContext)) {
+				|| (this.type == FormatReferenceType.NOTE && context instanceof NoteContext)
+				|| (this.type == FormatReferenceType.CONTROLIT && context instanceof ControlItContext)) {
 
 			return AbstractFragment.resolveFormat(context.getTranslator()
 					.getLanguageDictionary().getFormat(format.toUpperCase()),

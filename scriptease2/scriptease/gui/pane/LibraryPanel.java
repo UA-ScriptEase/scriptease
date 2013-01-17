@@ -68,6 +68,10 @@ public class LibraryPanel extends JPanel {
 
 	private final Timer searchFieldTimer;
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
+	private final StoryComponentPanelJList causesList;
+	private final StoryComponentPanelJList effectsList;
+	private final StoryComponentPanelJList descriptionsList;
+	private final StoryComponentPanelJList controlsList;
 
 	/**
 	 * Creates a new LibraryPane with default filters, and configures its
@@ -84,11 +88,6 @@ public class LibraryPanel extends JPanel {
 		final JTextField searchField;
 
 		final TypeAction typeFilter;
-
-		final StoryComponentPanelJList causesList;
-		final StoryComponentPanelJList effectsList;
-		final StoryComponentPanelJList descriptionsList;
-		final StoryComponentPanelJList controlsList;
 
 		final PatternModelObserver modelObserver;
 		final LibraryManagerObserver libraryManagerObserver;
@@ -142,7 +141,7 @@ public class LibraryPanel extends JPanel {
 		this.storyComponentPanelJLists.add(descriptionsList);
 		this.storyComponentPanelJLists.add(controlsList);
 
-		this.searchFieldTimer = new Timer(1000, new ActionListener() {
+		this.searchFieldTimer = new Timer(500, new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				for (StoryComponentPanelJList list : LibraryPanel.this.storyComponentPanelJLists)
 					list.updateFilter(new StoryComponentSearchFilter(
@@ -154,9 +153,8 @@ public class LibraryPanel extends JPanel {
 		libraryManagerObserver = new LibraryManagerObserver() {
 			/**
 			 * Keep the display of the library up to date with the changes to
-			 * Libraries. This listener is important for the Story Component
-			 * Builder, so that changes made there will apply to the library
-			 * view as well.
+			 * Libraries. This listener is important for the Library Editor, so
+			 * that changes made there will apply to the library view as well.
 			 */
 			@Override
 			public void modelChanged(LibraryManagerEvent event) {
@@ -262,7 +260,8 @@ public class LibraryPanel extends JPanel {
 	 */
 	public void addListMouseListener(MouseListener listener) {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			list.addListMouseListener(listener);
+			// list.addListMouseListener(listener);
+			list.addMouseListener(listener);
 		}
 	}
 
@@ -380,7 +379,7 @@ public class LibraryPanel extends JPanel {
 			list.updateFilter(new VisibilityFilter(hideInvisible));
 			list.removeAllStoryComponents();
 
-			if (activeTranslator != null) {
+			if (activeTranslator != null && model != null) {
 				final Collection<LibraryModel> libraries;
 
 				libraries = activeTranslator.getLibraries();
@@ -388,7 +387,22 @@ public class LibraryPanel extends JPanel {
 				for (LibraryModel libraryModel : libraries) {
 					final List<StoryComponent> components;
 
-					components = libraryModel.getAllStoryComponents();
+					if (list == this.causesList) {
+						components = libraryModel.getCausesCategory()
+								.getChildren();
+					} else if (list == this.effectsList) {
+						components = libraryModel.getEffectsCategory()
+								.getChildren();
+					} else if (list == this.descriptionsList) {
+						components = libraryModel.getDescriptionsCategory()
+								.getChildren();
+					} else if (list == this.controlsList) {
+						components = libraryModel.getControllersCategory()
+								.getChildren();
+					} else {
+						throw new IllegalArgumentException(
+								"Invalid list in LibraryPanel: " + list);
+					}
 
 					Collections.sort(components,
 							LibraryPanel.STORY_COMPONENT_COMPARATOR);

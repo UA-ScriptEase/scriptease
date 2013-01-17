@@ -7,6 +7,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
@@ -44,6 +45,7 @@ public class StoryItemSequenceConverter extends ComplexStoryComponentConverter {
 		validTypes.add(StoryComponentContainer.class);
 		validTypes.add(AskIt.class);
 		validTypes.add(Note.class);
+		validTypes.add(ControlIt.class);
 		return validTypes;
 	}
 

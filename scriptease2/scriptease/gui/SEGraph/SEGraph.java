@@ -26,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.plaf.ComponentUI;
 
+import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.observers.SEGraphObserver;
@@ -126,6 +127,30 @@ public class SEGraph<E> extends JComponent {
 		this.setUI(this.new SEGraphUI());
 		this.setOpaque(true);
 		this.setBackground(Color.white);
+
+		SEFocusManager.getInstance().addSEFocusObserver(this,
+				new SEFocusObserver() {
+					@Override
+					public void gainFocus(Component oldFocus) {
+					}
+
+					@Override
+					public void loseFocus(Component oldFocus) {
+						if (oldFocus instanceof SEGraph) {
+							for (JComponent selected : SEGraph.this
+									.getSelectedComponents()) {
+								if (selected == null)
+									continue;
+
+								Color background = selected.getBackground();
+
+								selected.setBackground(GUIOp.scaleWhite(
+										background, 1.2));
+
+							}
+						}
+					}
+				});
 	}
 
 	/**
@@ -848,9 +873,16 @@ public class SEGraph<E> extends JComponent {
 					g2.setColor(ScriptEaseUI.COLOUR_DELETE_NODE);
 
 				g2.setStroke(new BasicStroke(1.5f));
-				GUIOp.paintArrow(g2, GUIOp.getMidRight(SEGraph.this
-						.createComponentForNode(SEGraph.this.draggedFromNode)),
-						SEGraph.this.mousePosition);
+
+				final List<Point> points;
+
+				points = new ArrayList<Point>();
+
+				points.add(GUIOp.getMidRight(SEGraph.this
+						.createComponentForNode(SEGraph.this.draggedFromNode)));
+
+				points.add(SEGraph.this.mousePosition);
+				GUIOp.paintArrow(g2, points);
 
 			}
 			connectNodes(g);
@@ -894,11 +926,23 @@ public class SEGraph<E> extends JComponent {
 						lineColour = Color.GRAY;
 						g2.setColor(lineColour);
 
+						final List<Point> points;
+						final Point start;
+						final Point end;
+						points = new ArrayList<Point>();
+						start = GUIOp.getMidRight(SEGraph.this
+								.createComponentForNode(parent));
+						end = GUIOp.getMidLeft(SEGraph.this
+								.createComponentForNode(child));
+
+						points.add(start);
+
+						// Add points between
+
+						points.add(end);
+
 						// Draw an arrow pointing towards the child.
-						GUIOp.paintArrow(g2, GUIOp.getMidRight(SEGraph.this
-								.createComponentForNode(parent)), GUIOp
-								.getMidLeft(SEGraph.this
-										.createComponentForNode(child)));
+						GUIOp.paintArrow(g2, points);
 					}
 				}
 			}

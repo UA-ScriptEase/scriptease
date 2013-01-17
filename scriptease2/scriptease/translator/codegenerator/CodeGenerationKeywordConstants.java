@@ -26,6 +26,7 @@ public interface CodeGenerationKeywordConstants {
 		ARGUMENT,
 		ASKIT,
 		BINDING,
+		CAUSE,
 		ELSECHILD,
 		END,
 		IFCHILD,
@@ -41,6 +42,7 @@ public interface CodeGenerationKeywordConstants {
 	public static enum DataTypes {
 		CODE,
 		CONDITION,
+		CONTROLITFORMAT,
 		FANIN,
 		FORMATTEDVALUE,
 		INCLUDE,
@@ -67,7 +69,8 @@ public interface CodeGenerationKeywordConstants {
 		ASKIT,
 		KNOWIT,
 		NOTE,
-		SCRIPTIT
+		SCRIPTIT,
+		CONTROLIT
 	}
 
 	// Used in SeriesFragment
@@ -77,14 +80,12 @@ public interface CodeGenerationKeywordConstants {
 		CHILDREN,
 		CHILDRENNODES,
 		CODEBLOCKS,
-		EFFECTS,
 		IDENTICALCAUSES,
 		IMPLICITS,
 		INCLUDES,
 		PARAMETERS,
 		PARENTNODES,
 		STORYPOINTS,
-		SCRIPTITEFFECTS,
 		SCRIPTITS,
 		VARIABLES
 	}

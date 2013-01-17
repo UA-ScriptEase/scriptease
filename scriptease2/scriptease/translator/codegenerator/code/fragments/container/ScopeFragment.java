@@ -128,6 +128,10 @@ public class ScopeFragment extends AbstractContainerFragment {
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.INACTIVECHILD
 						.name()))
 			return context.getInactiveChild();
+		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.CAUSE
+						.name()))
+			return context.getCause();
 		else {
 			System.err.println("Unrecognizable Scope tag : " + dataLabel);
 			return null;

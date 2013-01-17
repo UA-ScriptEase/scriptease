@@ -324,11 +324,17 @@ public final class FileManager {
 		// make sure the model doesn't reference a module that is already in use
 		// by another model.
 		if (FileManager.getInstance().isModuleInUse(model)) {
-			windowManager
-					.showProblemDialog(
-							"Problem",
-							"The file references resources already in use by another story.\nPlease ensure only one Story is open for each game module.");
-			return;
+			final boolean cancel;
+
+			cancel = windowManager.showYesNoConfirmDialog(
+					"This story uses a game file that is currently in use by "
+							+ "another story. Saving\nthe current story will "
+							+ "overwrite any changes made to the game file!"
+							+ "\n\nAre you sure you want to save the story?",
+					"Problems");
+
+			if (!cancel)
+				return;
 		}
 
 		// Write the Story's patterns to XML
@@ -544,6 +550,7 @@ public final class FileManager {
 		this.notifyObservers(model, location);
 
 		PanelFactory.getInstance().createTabForModel(model);
+
 	}
 
 	private void updateRecentFiles(File opened) {

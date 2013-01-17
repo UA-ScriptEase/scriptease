@@ -467,9 +467,10 @@ public class ScriptWidgetFactory {
 						}
 
 						widget.setBinding(knowIt.getBinding());
-						// spinner.removeChangeListener(changeListener);
+						
+						spinner.removeChangeListener(changeListener);
 						spinner.setValue(newBinding);
-						// spinner.addChangeListener(changeListener);
+						spinner.addChangeListener(changeListener);
 					}
 				}
 			}
@@ -617,8 +618,16 @@ public class ScriptWidgetFactory {
 			}
 		};
 
+		// TODO Update graph panel so this isn't necessary
+		final boolean resizing;
+		
+		if(component instanceof StoryPoint)
+			resizing = false;
+		else
+			resizing = true;
+		
 		WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
-				nameEditor, commitText, true);
+				nameEditor, commitText, resizing);
 
 		component.addStoryComponentObserver(observer);
 

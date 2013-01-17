@@ -6,6 +6,7 @@ import java.util.List;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
@@ -75,6 +76,10 @@ public class CodeBlockReference extends CodeBlock {
 		clone.setTarget(this.getTarget());
 
 		clone.init();
+		
+		if(this.getOwner() instanceof ControlIt) {
+			System.out.println("e");
+		}
 
 		// parameters
 		clonedParameters = new ArrayList<KnowIt>(this.getParameters().size());

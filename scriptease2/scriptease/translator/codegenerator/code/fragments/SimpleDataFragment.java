@@ -102,6 +102,10 @@ public class SimpleDataFragment extends AbstractFragment {
 							.name()))
 				resolveString = context.getCondition();
 			else if (dataLabel
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.CONTROLITFORMAT
+							.name())) {
+				resolveString = context.getControlItFormat();
+			} else if (dataLabel
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.CURRENTSTORYPOINT
 							.name()))
 				resolveString = context.getUnique32CharName();

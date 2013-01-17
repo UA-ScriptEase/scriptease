@@ -165,10 +165,6 @@ public class SeriesFragment extends AbstractContainerFragment {
 
 		// IF+ELSE BLOCK ( series ... data= <dataLabel> )
 		if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.SCRIPTITEFFECTS
-						.name()))
-			it = context.getScriptItEffects();
-		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.INCLUDES
 						.name())) {
 			it = context.getIncludeFiles().iterator();
@@ -185,10 +181,6 @@ public class SeriesFragment extends AbstractContainerFragment {
 						.name()))
 			it = context.getCauses();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.ARGUMENTS
-						.name()))
-			it = context.getArguments();
-		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.PARAMETERS
 						.name()))
 			it = context.getParameters();
@@ -200,10 +192,6 @@ public class SeriesFragment extends AbstractContainerFragment {
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.IMPLICITS
 						.name()))
 			it = context.getImplicits();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.EFFECTS
-						.name()))
-			it = context.getEffects();
 		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.CHILDREN
 						.name()))

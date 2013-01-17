@@ -39,38 +39,21 @@
 	<Maps>
 	</Maps>
 	<Formats>
-		<!-- Format id (attribute) Fragment* -->
-		<!-- Any general "[type] [name]" combo -->
-		<Format id="parameter">
+		<!-- Variables -->
+		<!-- Adds the type of the variable in front of it -->
+		<Format id="variableWithType">
 			<Fragment data="type" default="void" />
 			<Literal> </Literal>
 			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 		</Format>
-		<Format id="functionSignature">
-			<FormatRef ref="parameter" />
-			<Literal>(</Literal>
-			<Series data="parameters" unique="true" separator=", ">
-				<!-- Parameters are just the type and the name -->
-				<FormatRef ref="parameter" />
-			</Series>
-			<Literal>)</Literal>
-		</Format>
-		<Format id="implicitsDeclaration">
+		<!-- Declares a variable with type -->
+		<Format id="variableDeclaration">
 			<Line>
-				<Literal>// Implicits Declaration</Literal>
+				<FormatRef ref="variableWithType" />
+				<Literal>;</Literal>
 			</Line>
-			<Series data="implicits">
-				<FormatRef ref="variableDeclaration" />
-			</Series>
 		</Format>
-		<Format id="implicitsDefinition">
-			<Line>
-				<Literal>// Implicits Definition</Literal>
-			</Line>
-			<Series data="implicits">
-				<FormatRef ref="variableDefinition" />
-			</Series>
-		</Format>
+		<!-- Declares all variables in the series -->
 		<Format id="variablesDeclaration">
 			<Line>
 				<Literal>// Variables Declaration</Literal>
@@ -79,51 +62,69 @@
 				<FormatRef ref="variableDeclaration" />
 			</Series>
 		</Format>
-		<Format id="parametersDeclaration">
-			<Series data="parameters">
+		<!-- Defines the variable with its value -->
+		<Format id="variableDefinition">
+			<Line>
+				<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
+				<Literal> = </Literal>
+				<Fragment data="formattedValue" />
+				<Literal>;</Literal>
+			</Line>
+		</Format>
+
+
+		<!-- Implicits -->
+		<!-- Declares all implicits -->
+		<Format id="implicitsDeclaration">
+			<Line>
+				<Literal>// Implicits Declaration</Literal>
+			</Line>
+			<Series data="implicits">
 				<FormatRef ref="variableDeclaration" />
 			</Series>
 		</Format>
-		<Format id="parametersDefinition">
-			<Series data="parameters">
+		<!-- Defines all implicits -->
+		<Format id="implicitsDefinition">
+			<Line>
+				<Literal>// Implicits Definition</Literal>
+			</Line>
+			<Series data="implicits">
 				<FormatRef ref="variableDefinition" />
 			</Series>
 		</Format>
-		<Format id="children">
-			<FormatRef ref="implicitsDeclaration" />
-			<FormatRef ref="implicitsDefinition" />
-			<FormatRef ref="scriptItConditional" />
-		</Format>
-		<Format id="childrenWithoutImplicits">
-			<FormatRef ref="variablesDeclaration" />
-			<Line>
-				<Literal>// Children</Literal>
-			</Line>
-			<!-- Actions and description definitions come last -->
-			<Series data="children">
-				<FormatRef data="scriptIt" ref="functionCall" />
-				<FormatRef data="askIt" ref="askItConditional" />
-				<FormatRef data="note" ref="noteFormat" />
-				<FormatRef data="knowIt" ref="knowItDefinition" />
+
+		<!-- Functions -->
+		<!-- Function signature with type in front -->
+		<Format id="functionSignature">
+			<FormatRef ref="variableWithType" />
+			<Literal>(</Literal>
+			<Series data="parameters" unique="true" separator=", ">
+				<!-- Parameters are just the type and the name -->
+				<FormatRef ref="variableWithType" />
 			</Series>
+			<Literal>)</Literal>
 		</Format>
+		<!-- Declares the function, for the top of the file -->
 		<Format id="functionDeclaration">
 			<Line>
 				<FormatRef ref="functionSignature" />
 				<Literal>;</Literal>
 			</Line>
 		</Format>
+		<!-- Used by ScriptEase to get the function name -->
 		<Format id="function_as_value">
 			<FormatRef ref="functionHeader" />
 		</Format>
+		<!-- Same as functionSignature, but without types. Used to call it -->
 		<Format id="functionHeader">
 			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			<Literal>(</Literal>
-			<Series data="parameters" separator=", ">
+			<Series data="parameters" unique="true" separator=", ">
 				<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			</Series>
 			<Literal>)</Literal>
 		</Format>
+		<!-- Defines the variables in codeblock and then calls the function -->
 		<Format id="functionCall">
 			<!-- Code block context -->
 			<Scope data="mainCodeBlock">
@@ -136,16 +137,7 @@
 				</Line>
 			</Scope>
 		</Format>
-		<Format id="returnFunction">
-			<Series data="parameters">
-				<FormatRef ref="variableDefinition" />
-			</Series>
-			<Line>
-				<Literal>return </Literal>
-				<FormatRef ref="functionHeader" />
-				<Literal>;</Literal>
-			</Line>
-		</Format>
+		<!-- Writes the entire function with code inside it -->
 		<Format id="functionDefinition">
 			<Line>
 				<FormatRef ref="functionSignature" />
@@ -158,52 +150,157 @@
 				<Literal>}</Literal>
 			</Line>
 		</Format>
-		<Format id="variableDeclaration">
+		<!-- Format to return a function header -->
+		<Format id="returnFunction">
+			<Series data="parameters">
+				<FormatRef ref="variableDefinition" />
+			</Series>
 			<Line>
-				<FormatRef ref="parameter" />
+				<Literal>return </Literal>
+				<FormatRef ref="functionHeader" />
 				<Literal>;</Literal>
 			</Line>
 		</Format>
+
+		<!-- Children -->
+		<Format id="children">
+			<FormatRef ref="implicitsDeclaration" />
+			<FormatRef ref="implicitsDefinition" />
+			<FormatRef ref="scriptItConditional" />
+		</Format>
+		<!-- Gets the appropriate format for the type -->
+		<Format id="childrenWithoutImplicits">
+			<FormatRef ref="variablesDeclaration" />
+			<Line>
+				<Literal>// Children</Literal>
+			</Line>
+			<!-- Actions and description definitions come last -->
+			<Series data="children">
+				<FormatRef data="scriptIt" ref="functionCall" />
+				<FormatRef data="askIt" ref="askItConditional" />
+				<FormatRef data="note" ref="noteFormat" />
+				<FormatRef data="knowIt" ref="knowItDefinition" />
+				<FormatRef data="controlIt" ref="controlItCall" />
+			</Series>
+		</Format>
+		<!-- Format for control it children -->
+		<Format id="controlItChildren">
+			<Scope data="Cause">
+				<FormatRef ref="implicitsDeclaration" />
+				<FormatRef ref="implicitsDefinition" />
+			</Scope>
+			<FormatRef ref="childrenWithoutImplicits" />
+		</Format>
+		<!-- Finds the format for the ControlIt and uses it -->
+		<Format id="controlItCall">
+			<Fragment data="controlItFormat" />
+		</Format>
+		<!-- Defines all variables in the KnowIt -->
 		<Format id="knowItDefinition">
 			<Series data="variables">
 				<FormatRef ref="variableDefinition" />
 			</Series>
 		</Format>
-		<Format id="variableDefinition">
+		<!-- Turns a Note into a comment -->
+		<Format id="noteFormat">
 			<Line>
-				<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
-				<Literal> = </Literal>
-				<Fragment data="formattedValue" />
-				<Literal>;</Literal>
+				<Literal>// </Literal>
+				<Fragment data="note" />
 			</Line>
 		</Format>
 
-		<!-- Conditionals for ScriptIts -->
-		<Format id="scriptItConditional">
-			<Series data="identicalCauses">
+		<!-- Includes -->
+		<!-- NWN format for include files -->
+		<Format id="include">
 			<Line>
-				<Literal>if(SE2_Story_GetState(GetFirstPC(), "</Literal>
-				<Fragment data="currentstorypoint" />
-				<Literal>") == STORY_POINT_STATE_ENABLED){</Literal>
+				<Literal>#include "</Literal>
+				<Fragment data="include" />
+				<Literal>"</Literal>
+			</Line>
+		</Format>
+		<!-- Series of all includes. i_se_story is always included -->
+		<Format id="includes">
+			<Line>
+				<Literal>// Includes</Literal>
+			</Line>
+			<Line>
+				<Literal>#include "i_se_story"</Literal>
+			</Line>
+			<Series data="includes" unique="true">
+				<FormatRef ref="include" />
+			</Series>
+		</Format>
+
+		<!-- Format for the delay controller -->
+		<Format id="delay">
+			<Scope data="argument" ref="Number">
+				<FormatRef ref="variableDefinition" />
+			</Scope>
+			<Line>
+				<Literal>DelayCommand(</Literal>
+				<Scope data="argument" ref="Number">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>, </Literal>
+				<FormatRef ref="functionHeader" />
+				<Literal>);</Literal>
+			</Line>
+		</Format>
+
+		<!-- Format for the repeat controller -->
+		<Format id="repeat">
+			<Scope data="argument" ref="Number">
+				<FormatRef ref="variableDefinition" />
+			</Scope>
+			<Line>
+				<Literal>int i = 0;</Literal>
+			</Line>
+			<Line>
+				<Literal>for(i; i &lt; FloatToInt(</Literal>
+				<Scope data="argument" ref="Number">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>); i++) {</Literal>
 			</Line>
 			<Indent>
-				<Scope data="activeChild">
-					<FormatRef ref="childrenWithoutImplicits" />
-				</Scope>
-			</Indent>
-			<Line>
-				<Literal>} else {</Literal>
-			</Line>
-			<Indent>
-				<Scope data="inactiveChild">
-					<FormatRef ref="childrenWithoutImplicits" />
-				</Scope>
+				<Line>
+					<FormatRef ref="functionHeader" />
+					<Literal>;</Literal>
+				</Line>
 			</Indent>
 			<Line>
 				<Literal>}</Literal>
 			</Line>
+		</Format>
+
+		<!-- Format for ScriptIts -->
+		<Format id="scriptItConditional">
+			<Series data="identicalCauses">
+				<Line>
+					<Literal>if(SE2_Story_GetState(GetFirstPC(), "</Literal>
+					<Fragment data="currentstorypoint" />
+					<Literal>") == STORY_POINT_STATE_ENABLED){</Literal>
+				</Line>
+				<Indent>
+					<Scope data="activeChild">
+						<FormatRef ref="childrenWithoutImplicits" />
+					</Scope>
+				</Indent>
+				<Line>
+					<Literal>} else {</Literal>
+				</Line>
+				<Indent>
+					<Scope data="inactiveChild">
+						<FormatRef ref="childrenWithoutImplicits" />
+					</Scope>
+				</Indent>
+				<Line>
+					<Literal>}</Literal>
+				</Line>
 			</Series>
 		</Format>
+
+		<!-- Format for askits -->
 		<Format id="askItConditional">
 			<Line>
 				<Literal>//Condition Variables</Literal>
@@ -234,6 +331,8 @@
 				<Literal>}</Literal>
 			</Line>
 		</Format>
+
+		<!-- Format for the main method in normal script files -->
 		<Format id="main">
 			<Line>
 				<Literal>void main() {</Literal>
@@ -259,6 +358,37 @@
 			</Line>
 		</Format>
 
+		<!-- File formats -->
+		<!-- Default format for most files -->
+		<Format id="file">
+			<!-- include files first -->
+			<FormatRef ref="includes" />
+			<Line />
+			<Line>
+				<Literal>// Function Declarations</Literal>
+			</Line>
+			<!-- Function declarations next -->
+			<Series data="codeBlocks" unique="true">
+				<FormatRef ref="functionDeclaration" />
+			</Series>
+			<Line />
+			<Line>
+				<Literal>// Main</Literal>
+			</Line>
+			<FormatRef ref="main" />
+			<Line />
+			<Line>
+				<Literal>// Function Definitions</Literal>
+			</Line>
+			<!-- Function definitions last -->
+			<Series data="codeBlocks" unique="true">
+				<FormatRef ref="functionDefinition" />
+			</Series>
+			<Line />
+			<!-- NWN likes a blank line all by itself. I think it's a C-ism that they 
+				seem to want to keep? -->
+			<Line />
+		</Format>
 		<!-- Used in the Active slot on Dialogue Lines -->
 		<Format id="conversation_conditional">
 			<!-- include files first -->
@@ -295,113 +425,6 @@
 				<FormatRef ref="functionDefinition" />
 			</Series>
 			<Line />
-		</Format>
-
-		<!-- Used in the EndConversation and EndConverAbort slot on Dialogues -->
-		<Format id="conversation">
-			<!-- include files first -->
-			<FormatRef ref="includes" />
-			<Line />
-			<Line>
-				<Literal>// Function Declarations</Literal>
-			</Line>
-			<!-- Function declarations next -->
-			<Series data="effects" unique="true">
-				<Series data="codeBlocks" unique="true">
-					<FormatRef ref="functionDeclaration" />
-				</Series>
-			</Series>
-			<Line />
-			<Line>
-				<Literal>// Main</Literal>
-			</Line>
-			<Line>
-				<Literal>void main() {</Literal>
-			</Line>
-			<Line>
-				<Literal>// Variable Declarations</Literal>
-			</Line>
-			<Indent>
-				<Series data="effects" unique="true">
-					<Series data="variables" unique="true">
-						<FormatRef ref="variableDeclaration" />
-					</Series>
-				</Series>
-
-				<Series data="effects" unique="true">
-					<FormatRef ref="functionCall" />
-				</Series>
-			</Indent>
-			<Line>
-				<Literal>}</Literal>
-			</Line>
-			<Line />
-			<Line>
-				<Literal>// Function Definitions</Literal>
-			</Line>
-			<!-- Function definitions last -->
-			<Series data="effects" unique="true">
-				<FormatRef ref="functionDefinition" />
-			</Series>
-			<Line />
-		</Format>
-
-		<!-- Default format for most files -->
-		<Format id="file">
-			<!-- include files first -->
-			<FormatRef ref="includes" />
-			<Line />
-			<Line>
-				<Literal>// Function Declarations</Literal>
-			</Line>
-			<!-- Function declarations next -->
-			<Series data="codeBlocks" unique="true">
-				<FormatRef ref="functionDeclaration" />
-			</Series>
-			<Line />
-			<Line>
-				<Literal>// Main</Literal>
-			</Line>
-			<FormatRef ref="main" />
-			<Line />
-			<Line>
-				<Literal>// Function Definitions</Literal>
-			</Line>
-			<!-- Function definitions last -->
-			<Series data="codeBlocks" unique="true">
-				<FormatRef ref="functionDefinition" />
-			</Series>
-			<Line />
-			<!-- NWN likes a blank line all by itself . I think it's a C-ism that 
-				they seem to want to keep? -->
-			<Line />
-		</Format>
-
-		<Format id="include">
-			<Line>
-				<Literal>#include "</Literal>
-				<Fragment data="include" />
-				<Literal>"</Literal>
-			</Line>
-		</Format>
-
-		<Format id="includes">
-			<Line>
-				<Literal>// Includes</Literal>
-			</Line>
-			<Line>
-				<Literal>#include "i_se_story"</Literal>
-			</Line>
-			<Series data="includes" unique="true">
-				<FormatRef ref="include" />
-			</Series>
-		</Format>
-
-		<Format id="noteFormat">
-			<Line>
-				<Literal>// </Literal>
-				<Fragment data="note" />
-			</Line>
 		</Format>
 	</Formats>
 </LanguageDictionary>

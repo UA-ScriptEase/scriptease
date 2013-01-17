@@ -97,10 +97,7 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 	@Override
 	public Dimension preferredLayoutSize(Container container) {
 		// Determine if the expansion button is needed
-		if (this.button != null)
-			this.button.setVisible(!this.children.isEmpty());
-
-		Dimension dim = new Dimension(0, 0);
+		final Dimension dim = new Dimension(0, 0);
 
 		int widestWidth = 0;
 		int sumHeight = 0;

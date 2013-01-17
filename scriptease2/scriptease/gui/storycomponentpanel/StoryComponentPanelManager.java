@@ -13,11 +13,13 @@ import javax.swing.BorderFactory;
 
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.SEFocusManager;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
+import scriptease.util.GUIOp;
 
 /**
  * 
@@ -295,12 +297,22 @@ public class StoryComponentPanelManager {
 		}
 
 		if (isSelected) {
-			panel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
+			final boolean focusOnAPanel;
+
+			focusOnAPanel = SEFocusManager.getInstance().getFocus() instanceof StoryComponentPanel;
+
+			if (focusOnAPanel)
+				panel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
+			else {
+				panel.setBackground(GUIOp.scaleWhite(
+						ScriptEaseUI.SELECTED_COLOUR, 1.15));
+			}
 			StoryComponentPanel parentStoryComponentPanel = panel
 					.getParentStoryComponentPanel();
 			// If the parent is selected, don't draw a box around the child
 			if (this.selected.containsKey(parentStoryComponentPanel)
-					&& !this.selected.get(parentStoryComponentPanel))
+					&& !this.selected.get(parentStoryComponentPanel)
+					&& focusOnAPanel)
 				panel.setBorder(ScriptEaseUI.SELECTED_BORDER);
 			else
 				panel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);

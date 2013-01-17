@@ -24,7 +24,7 @@ import scriptease.gui.WindowFactory;
  * 
  */
 public class NetworkHandler extends Handler {
-	private static final int HTML_SUCESS = 200;
+	private static final int HTML_SUCCESS = 200;
 
 	private HttpClient client;
 	private HttpPost post;
@@ -119,7 +119,7 @@ public class NetworkHandler extends Handler {
 
 			// tell the user if the report was successfully sent and clear
 			// the buffer
-			if (response.getStatusLine().getStatusCode() == NetworkHandler.HTML_SUCESS) {
+			if (response.getStatusLine().getStatusCode() == NetworkHandler.HTML_SUCCESS) {
 				this.success();
 				this.buffered = null;
 			} else
@@ -193,6 +193,6 @@ public class NetworkHandler extends Handler {
 		successMessage = "The bug report was successfully sent!\n";
 
 		WindowFactory.getInstance().showInformationDialog(
-				"Error Report Sucess", successMessage);
+				"Error Report Success", successMessage);
 	}
 }
