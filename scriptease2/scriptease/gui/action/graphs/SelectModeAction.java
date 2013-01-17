@@ -37,7 +37,6 @@ public final class SelectModeAction extends GraphToolBarModeAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// We set the cursor to null so that it is just the default cursor.
-		setCursor(null);
 		setMode(ToolBarMode.SELECT);
 	}
 }
