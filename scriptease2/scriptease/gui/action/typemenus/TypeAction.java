@@ -51,7 +51,7 @@ public final class TypeAction extends AbstractAction {
 	public TypeAction(Runnable action) {
 		super();
 
-		setAction(action);
+		this.setAction(action);
 
 		final LibraryManagerObserver libraryObserver;
 		final TranslatorObserver translatorObserver;
