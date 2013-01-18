@@ -307,11 +307,12 @@ public class StoryComponentPanelManager {
 				panel.setBackground(GUIOp.scaleWhite(
 						ScriptEaseUI.SELECTED_COLOUR, 1.15));
 			}
-			StoryComponentPanel parentStoryComponentPanel = panel
-					.getParentStoryComponentPanel();
+			final StoryComponentPanel parent;
+
+			parent = panel.getParentStoryComponentPanel();
+
 			// If the parent is selected, don't draw a box around the child
-			if (this.selected.containsKey(parentStoryComponentPanel)
-					&& !this.selected.get(parentStoryComponentPanel)
+			if (selected.containsKey(parent) && !this.selected.get(parent)
 					&& focusOnAPanel)
 				panel.setBorder(ScriptEaseUI.SELECTED_BORDER);
 			else
