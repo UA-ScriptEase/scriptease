@@ -67,8 +67,7 @@ public class StoryComponentPanel extends JPanel implements
 		this.addMouseMotionListener(mouseListener);
 		this.addMouseListener(mouseListener);
 
-		// Observer the panel and its children
-		this.component.observeRelated(this);
+		this.component.addStoryComponentObserver(this);
 
 		// Layout
 		this.setLayout(this.layout);
@@ -261,7 +260,6 @@ public class StoryComponentPanel extends JPanel implements
 		final StoryComponent component = event.getSource();
 
 		if (type.equals(StoryComponentChangeEnum.CHANGE_CHILD_ADDED)) {
-			component.observeRelated(this);
 			if (component.getOwner() == this.component) {
 				StoryComponentPanelFactory.getInstance().addChild(this,
 						component);
@@ -326,7 +324,6 @@ public class StoryComponentPanel extends JPanel implements
 			 */
 			@Override
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
-				// boolean notRoot = (complex.getOwner() != null);
 				panel.setSelectable(true);
 				panel.setRemovable(true);
 			}

@@ -88,8 +88,7 @@ public class StoryComponentPanelFactory {
 	 * @return
 	 */
 	public StoryComponentPanel buildStoryComponentPanel(StoryComponent component) {
-
-		StoryComponentPanel panel = new StoryComponentPanel(component);
+		final StoryComponentPanel panel = new StoryComponentPanel(component);
 
 		if (component != null) {
 			component.process(componentProcessor(panel));
@@ -173,13 +172,11 @@ public class StoryComponentPanelFactory {
 						.getSelectionManager();
 				if (selectionManager != null)
 					selectionManager.cleanUpPanel(childPanel);
-			} /*
-			 * TODO We need to fix this instead of just hiding it. This method
-			 * should only be called once when removing a child.
-			 * 
-			 * else System.err.println("Attempted to remove " + child +
-			 * "'s StoryComponentPanel when it is not a child of " + parent);
-			 */
+			} else
+				System.err.println("Attempted to remove " + child
+						+ "'s StoryComponentPanel when it is not a child of "
+						+ parent);
+
 		} else
 			throw new IllegalStateException(parent
 					+ " is not a ComplexStoryComponent and cannot have "
