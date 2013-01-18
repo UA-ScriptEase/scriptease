@@ -313,6 +313,8 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 					valuePanel.setShowChildren(false);
 					valuePanel.getExpansionButton().setCollapsed(true);
 				}
+				
+				valuePanel.setToolTipText(valueComponent.getDisplayText());
 
 				return valuePanel;
 			} else if (value instanceof JPanel) {

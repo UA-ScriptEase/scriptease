@@ -111,7 +111,7 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 		if (regex != null && !regex.isEmpty()) {
 			final Pattern regexPattern = Pattern.compile(regex);
 			scriptValue = StringOp.removeIllegalCharacters(scriptValue,
-					regexPattern);
+					regexPattern, false);
 		}
 
 		return scriptValue;
