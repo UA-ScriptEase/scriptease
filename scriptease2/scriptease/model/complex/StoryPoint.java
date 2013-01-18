@@ -11,7 +11,6 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.Note;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.util.StringOp;
 
 /**
@@ -226,7 +225,7 @@ public class StoryPoint extends ComplexStoryComponent {
 				StoryPoint.STORY_POINT_TYPE);
 		final Pattern regexPattern = Pattern.compile(regex);
 		name = StringOp.removeIllegalCharacters(name,
-				regexPattern);
+				regexPattern, false);
 		
 		return name;
 	}

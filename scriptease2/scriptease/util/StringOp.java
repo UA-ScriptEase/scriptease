@@ -184,7 +184,7 @@ public class StringOp {
 	 * @return
 	 */
 	public static String removeIllegalCharacters(String source,
-			Pattern legalFormat) {
+			Pattern legalFormat, boolean setUpperCase) {
 		if (legalFormat == null)
 			return source;
 		Matcher legalMatcher = legalFormat.matcher(source);
@@ -197,24 +197,37 @@ public class StringOp {
 			return source;
 		} else {
 			String newSource = "";
+
+			boolean matchedPreviousChar = false;
 			for (char curChar : source.toCharArray()) {
+
 				legalMatcher = legalFormat.matcher(newSource + curChar);
-				newSource += legalMatcher.matches() ? curChar : "";
+
+				if (legalMatcher.matches()) {
+					if (setUpperCase && !matchedPreviousChar)
+						newSource += Character.toUpperCase(curChar);
+					else
+						newSource += curChar;
+					matchedPreviousChar = true;
+				} else {
+					matchedPreviousChar = false;
+				}
 			}
 			return newSource;
 		}
 	}
 
 	/**
-	 * Appends "se_" to the given source string if the first character is not a letter
+	 * Appends "se_" to the given source string if the first character is not a
+	 * letter
+	 * 
 	 * @param source
 	 * @return
 	 */
 	public static String removeNonCharPrefix(String source) {
 		if (source.length() > 0) {
 			final char firstChar = source.charAt(0);
-			if( !Character.isLetter(firstChar))
-			{
+			if (!Character.isLetter(firstChar)) {
 				source = "se_" + source;
 			}
 		}
