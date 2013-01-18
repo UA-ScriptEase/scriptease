@@ -59,6 +59,8 @@ public class TypeDialogBuilder {
 	private final List<CheckBoxPanel> checkBoxPanels;
 	private final JButton allButton;
 
+	private boolean accepting = false;
+
 	private Runnable closeAction;
 
 	/**
@@ -114,9 +116,12 @@ public class TypeDialogBuilder {
 	public JDialog buildTypeDialog() {
 		final JScrollPane typesPanel;
 		final JPanel content;
-		final JButton closeButton;
+		final JButton okButton;
+		final JButton cancelButton;
 		final JSeparator separator;
 		final JDialog typeDialog;
+
+		final Map<String, Boolean> previousSelected;
 
 		final GroupLayout groupLayout;
 
@@ -124,30 +129,44 @@ public class TypeDialogBuilder {
 
 		typesPanel = this.buildTypesPanel();
 		content = new JPanel();
-		closeButton = new JButton("Close");
+		okButton = new JButton("Ok");
+		cancelButton = new JButton("Cancel");
 		separator = new JSeparator(SwingConstants.HORIZONTAL);
 
 		groupLayout = new GroupLayout(content);
+
+		previousSelected = new HashMap<String, Boolean>(this.typesToSelected);
 
 		groupLayout.setAutoCreateGaps(true);
 		groupLayout.setAutoCreateContainerGaps(true);
 
 		// Set up the action listeners for the buttons.
-		closeButton.addActionListener(new ActionListener() {
+		okButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				TypeDialogBuilder.this.accepting = true;
 				if (TypeDialogBuilder.this.closeAction != null)
 					TypeDialogBuilder.this.closeAction.run();
-				typeDialog.setVisible(false);
+				typeDialog.dispose();
+			}
+		});
+
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				typeDialog.dispose();
 			}
 		});
 
 		typeDialog.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(WindowEvent e) {
-				if (TypeDialogBuilder.this.closeAction != null)
-					TypeDialogBuilder.this.closeAction.run();
-				typeDialog.setVisible(false);
+			public void windowClosed(WindowEvent e) {
+				if (!accepting) {
+					TypeDialogBuilder.this.typesToSelected.clear();
+					TypeDialogBuilder.this.typesToSelected
+							.putAll(previousSelected);
+				} else
+					accepting = false;
 			}
 		});
 
@@ -174,7 +193,8 @@ public class TypeDialogBuilder {
 						GroupLayout.Alignment.TRAILING,
 						groupLayout.createSequentialGroup()
 								.addComponent(this.allButton)
-								.addComponent(closeButton)));
+								.addComponent(okButton)
+								.addComponent(cancelButton)));
 
 		groupLayout.setVerticalGroup(groupLayout
 				.createSequentialGroup()
@@ -183,7 +203,8 @@ public class TypeDialogBuilder {
 				.addGroup(
 						groupLayout.createParallelGroup()
 								.addComponent(this.allButton)
-								.addComponent(closeButton)));
+								.addComponent(okButton)
+								.addComponent(cancelButton)));
 
 		typeDialog.setContentPane(content);
 		typeDialog.pack();
