@@ -3,6 +3,7 @@ package scriptease.gui.dialog;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -28,7 +29,6 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -38,6 +38,8 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import scriptease.gui.WindowFactory;
+import scriptease.gui.cell.ScriptWidgetFactory;
+import scriptease.gui.cell.TypeWidget;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -55,6 +57,18 @@ import scriptease.util.GUIOp;
  * 
  */
 public class TypeDialogBuilder {
+	private static final int PANEL_WIDTH;
+	private static final Dimension MAX_PANEL_SIZE;
+	private static final Dimension MIN_PANEL_SIZE;
+	private static final Dimension MAX_SCROLLPANE_SIZE;
+
+	static {
+		PANEL_WIDTH = 450;
+		MAX_PANEL_SIZE = new Dimension(PANEL_WIDTH, 5000);
+		MIN_PANEL_SIZE = new Dimension(PANEL_WIDTH, 150);
+		MAX_SCROLLPANE_SIZE = new Dimension(PANEL_WIDTH + 100, 500);
+	}
+
 	private final Map<String, Boolean> typesToSelected;
 	private final List<CheckBoxPanel> checkBoxPanels;
 	private final JButton allButton;
@@ -219,82 +233,34 @@ public class TypeDialogBuilder {
 	 * @return
 	 */
 	private JScrollPane buildTypesPanel() {
-		final int PANEL_WIDTH = 450;
-		final Dimension MAX_PANEL_SIZE = new Dimension(PANEL_WIDTH, 5000);
-		final Dimension MIN_PANEL_SIZE = new Dimension(PANEL_WIDTH, 150);
-		final Dimension MAX_SCROLLPANE_SIZE = new Dimension(PANEL_WIDTH + 100,
-				500);
-
-		/*
-		 * Yo dawg, I heard you like panels
-		 * 
-		 * So we put three panels in yo panel thats in yo scrolling panel that
-		 * is in yo panel thats in yo panel in yo dialog box.
-		 * 
-		 * No seriously, if you want to preserve your sanity, do NOT look at
-		 * this method. Just look at the output: a beautiful type panel.
-		 */
 		final JPanel typesPanel;
 
-		final JPanel gameObjectPanel;
-		final JPanel gameConstantPanel;
-		final JPanel listPanel;
-
-		final JPanel gameObjectPanel1;
-		final JPanel gameObjectPanel2;
-		final JPanel gameObjectPanel3;
-		final JPanel gameConstantPanel1;
-		final JPanel gameConstantPanel2;
-		final JPanel gameConstantPanel3;
-		final JPanel listPanel1;
-		final JPanel listPanel2;
-		final JPanel listPanel3;
-
 		final List<CheckBoxPanel> checkBoxPanels;
-		final Translator activeTranslator;
 		final GameTypeManager typeManager;
 
 		typesPanel = new JPanel();
 
-		gameObjectPanel = new JPanel();
-		gameConstantPanel = new JPanel();
-		listPanel = new JPanel();
-
-		gameObjectPanel1 = new JPanel();
-		gameObjectPanel2 = new JPanel();
-		gameObjectPanel3 = new JPanel();
-		gameConstantPanel1 = new JPanel();
-		gameConstantPanel2 = new JPanel();
-		gameConstantPanel3 = new JPanel();
-		listPanel1 = new JPanel();
-		listPanel2 = new JPanel();
-		listPanel3 = new JPanel();
-
 		checkBoxPanels = new ArrayList<CheckBoxPanel>();
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-		typeManager = activeTranslator.getGameTypeManager();
+		typeManager = TranslatorManager.getInstance()
+				.getActiveGameTypeManager();
+
+		if (typeManager == null)
+			return new JScrollPane();
 
 		// create a menu item for each type
-		if (activeTranslator != null) {
-			final Collection<String> types;
+		for (String type : this.typesToSelected.keySet()) {
+			final CheckBoxPanel checkBoxPanel;
+			final Boolean typeBool;
 
-			types = new ArrayList<String>(this.typesToSelected.keySet());
+			checkBoxPanel = new CheckBoxPanel(type);
+			typeBool = this.typesToSelected.get(type);
 
-			for (String type : types) {
-				final CheckBoxPanel checkBoxPanel;
-				final Boolean typeBool;
+			this.checkBoxPanels.add(checkBoxPanel);
 
-				checkBoxPanel = new CheckBoxPanel(type);
-				typeBool = this.typesToSelected.get(type);
+			if (typeBool != null)
+				checkBoxPanel.setSelected(typeBool.booleanValue());
 
-				this.checkBoxPanels.add(checkBoxPanel);
-
-				if (typeBool != null)
-					checkBoxPanel.setSelected(typeBool.booleanValue());
-
-				checkBoxPanels.add(checkBoxPanel);
-			}
+			checkBoxPanels.add(checkBoxPanel);
 		}
 
 		Collections.sort(checkBoxPanels, new Comparator<CheckBoxPanel>() {
@@ -308,52 +274,6 @@ public class TypeDialogBuilder {
 
 		typesPanel.setLayout(new BoxLayout(typesPanel, BoxLayout.PAGE_AXIS));
 
-		gameObjectPanel1.setLayout(new BoxLayout(gameObjectPanel1,
-				BoxLayout.PAGE_AXIS));
-		gameObjectPanel2.setLayout(new BoxLayout(gameObjectPanel2,
-				BoxLayout.PAGE_AXIS));
-		gameObjectPanel3.setLayout(new BoxLayout(gameObjectPanel3,
-				BoxLayout.PAGE_AXIS));
-		gameConstantPanel1.setLayout(new BoxLayout(gameConstantPanel1,
-				BoxLayout.PAGE_AXIS));
-		gameConstantPanel2.setLayout(new BoxLayout(gameConstantPanel2,
-				BoxLayout.PAGE_AXIS));
-		gameConstantPanel3.setLayout(new BoxLayout(gameConstantPanel3,
-				BoxLayout.PAGE_AXIS));
-		listPanel1.setLayout(new BoxLayout(listPanel1, BoxLayout.PAGE_AXIS));
-		listPanel2.setLayout(new BoxLayout(listPanel2, BoxLayout.PAGE_AXIS));
-		listPanel3.setLayout(new BoxLayout(listPanel3, BoxLayout.PAGE_AXIS));
-
-		gameObjectPanel1.setAlignmentY(Component.TOP_ALIGNMENT);
-		gameObjectPanel2.setAlignmentY(Component.TOP_ALIGNMENT);
-		gameObjectPanel3.setAlignmentY(Component.TOP_ALIGNMENT);
-		gameConstantPanel1.setAlignmentY(Component.TOP_ALIGNMENT);
-		gameConstantPanel2.setAlignmentY(Component.TOP_ALIGNMENT);
-		gameConstantPanel3.setAlignmentY(Component.TOP_ALIGNMENT);
-		listPanel1.setAlignmentY(Component.TOP_ALIGNMENT);
-		listPanel2.setAlignmentY(Component.TOP_ALIGNMENT);
-		listPanel3.setAlignmentY(Component.TOP_ALIGNMENT);
-
-		gameObjectPanel.setMinimumSize(MIN_PANEL_SIZE);
-		gameConstantPanel.setMinimumSize(MIN_PANEL_SIZE);
-		listPanel.setMinimumSize(MIN_PANEL_SIZE);
-
-		gameObjectPanel.setMaximumSize(MAX_PANEL_SIZE);
-		gameConstantPanel.setMaximumSize(MAX_PANEL_SIZE);
-		listPanel.setMaximumSize(MAX_PANEL_SIZE);
-
-		gameObjectPanel.setOpaque(false);
-		gameConstantPanel.setOpaque(false);
-		listPanel.setOpaque(false);
-
-		gameObjectPanel.setLayout(new BoxLayout(gameObjectPanel,
-				BoxLayout.LINE_AXIS));
-		gameConstantPanel.setLayout(new BoxLayout(gameConstantPanel,
-				BoxLayout.LINE_AXIS));
-		listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.LINE_AXIS));
-
-		// Fill the panels. Again, my apologies about how absolutely disgusting
-		// this code is, but there was no other way.
 		final Collection<CheckBoxPanel> gameObjectCBPanels;
 		final Collection<CheckBoxPanel> gameConstantCBPanels;
 		final Collection<CheckBoxPanel> listCBPanels;
@@ -376,93 +296,41 @@ public class TypeDialogBuilder {
 			}
 		}
 
-		int objectCount = 0;
-		int size = gameObjectCBPanels.size();
-		for (CheckBoxPanel gameObjectCBPanel : gameObjectCBPanels) {
-			if (objectCount <= size / 3)
-				gameObjectPanel1.add(gameObjectCBPanel);
-			else if (objectCount <= 2 * size / 3)
-				gameObjectPanel2.add(gameObjectCBPanel);
-			else
-				gameObjectPanel3.add(gameObjectCBPanel);
-			objectCount++;
-		}
+		final JPanel gameConstantPanel;
+		final JPanel gameObjectPanel;
+		final JPanel listPanel;
 
-		objectCount = 0;
-		size = gameConstantCBPanels.size();
-		for (CheckBoxPanel gameConstantCBPanel : gameConstantCBPanels) {
-			if (objectCount <= size / 3)
-				gameConstantPanel1.add(gameConstantCBPanel);
-			else if (objectCount <= 2 * size / 3)
-				gameConstantPanel2.add(gameConstantCBPanel);
-			else
-				gameConstantPanel3.add(gameConstantCBPanel);
-			objectCount++;
-		}
+		gameConstantPanel = this.createParentPanel(gameConstantCBPanels);
+		gameObjectPanel = this.createParentPanel(gameObjectCBPanels);
+		listPanel = this.createParentPanel(listCBPanels);
 
-		objectCount = 0;
-		size = listCBPanels.size();
-		for (CheckBoxPanel listCBPanel : listCBPanels) {
-			if (objectCount <= size / 3)
-				listPanel1.add(listCBPanel);
-			else if (objectCount <= size * 2 / 3)
-				listPanel2.add(listCBPanel);
-			else
-				listPanel3.add(listCBPanel);
-			objectCount++;
-		}
-
-		if (gameObjectPanel1.getComponents().length > 0) {
-			gameObjectPanel.add(gameObjectPanel1);
-			gameObjectPanel.add(gameObjectPanel2);
-			gameObjectPanel.add(gameObjectPanel3);
-		}
-		if (gameConstantPanel1.getComponents().length > 0) {
-			gameConstantPanel.add(gameConstantPanel1);
-			gameConstantPanel.add(gameConstantPanel2);
-			gameConstantPanel.add(gameConstantPanel3);
-		}
-		if (listPanel1.getComponents().length > 0) {
-			listPanel.add(listPanel1);
-			listPanel.add(listPanel2);
-			listPanel.add(listPanel3);
-		}
-
-		if (gameObjectPanel.getComponents().length > 0) {
-			final JLabel label;
-
-			label = new JLabel("Game Objects");
+		if (gameConstantPanel != null) {
+			final JLabel label = new JLabel("Game Constants");
 
 			label.setAlignmentX(Component.LEFT_ALIGNMENT);
-			gameObjectPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-			typesPanel.add(label);
-			typesPanel.add(gameObjectPanel);
-		}
-
-		if (gameConstantPanel.getComponents().length > 0) {
-			final JLabel label;
-
-			label = new JLabel("Game Constants");
-
-			label.setAlignmentX(Component.LEFT_ALIGNMENT);
-			gameConstantPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 			typesPanel.add(label);
 			typesPanel.add(gameConstantPanel);
 		}
 
-		if (listPanel.getComponents().length > 0) {
-			final JLabel label;
-
-			label = new JLabel("Lists");
+		if (gameObjectPanel != null) {
+			final JLabel label = new JLabel("Game Objects");
 
 			label.setAlignmentX(Component.LEFT_ALIGNMENT);
-			listPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+			typesPanel.add(label);
+			typesPanel.add(gameObjectPanel);
+		}
+
+		if (gameConstantPanel != null) {
+			final JLabel label = new JLabel("Lists");
+
+			label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 			typesPanel.add(label);
 			typesPanel.add(listPanel);
 		}
+
 		this.updateAllButton();
 
 		final JScrollPane typeScrollPane;
@@ -477,6 +345,55 @@ public class TypeDialogBuilder {
 				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
 		return typeScrollPane;
+	}
+
+	private JPanel createParentPanel(Collection<CheckBoxPanel> cbPanels) {
+
+		final JPanel panel;
+		final JPanel subPanel1;
+		final JPanel subPanel2;
+		final JPanel subPanel3;
+
+		panel = new JPanel();
+		subPanel1 = new JPanel();
+		subPanel2 = new JPanel();
+		subPanel3 = new JPanel();
+
+		panel.setMinimumSize(MIN_PANEL_SIZE);
+		panel.setMaximumSize(MAX_PANEL_SIZE);
+		panel.setOpaque(false);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+
+		panel.add(subPanel1);
+		panel.add(subPanel2);
+		panel.add(subPanel3);
+
+		for (Component component : panel.getComponents()) {
+			final JComponent subPanel = (JComponent) component;
+
+			subPanel.setLayout(new BoxLayout(subPanel, BoxLayout.PAGE_AXIS));
+			subPanel.setAlignmentY(Component.TOP_ALIGNMENT);
+		}
+
+		int objectCount = 0;
+		int size = cbPanels.size();
+		for (CheckBoxPanel gameObjectCBPanel : cbPanels) {
+			if (objectCount <= size / 3)
+				subPanel1.add(gameObjectCBPanel);
+			else if (objectCount <= 2 * size / 3)
+				subPanel2.add(gameObjectCBPanel);
+			else
+				subPanel3.add(gameObjectCBPanel);
+			objectCount++;
+		}
+
+		if (subPanel1.getComponents().length > 0) {
+			panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+			return panel;
+		}
+
+		return null;
 	}
 
 	/**
@@ -560,15 +477,19 @@ public class TypeDialogBuilder {
 	 * 
 	 */
 	@SuppressWarnings("serial")
-	private class CheckBoxPanel extends JPanel implements MouseListener {
+	private class CheckBoxPanel extends JPanel {
 		private final Color SELECTED_COLOUR = GUIOp.scaleWhite(
 				Color.LIGHT_GRAY, 1.2);
 		private final Color UNSELECTED_COLOUR = GUIOp.scaleWhite(
 				Color.LIGHT_GRAY, 0.8);
 
-		private final JCheckBox checkBox;
+		private final Color TYPE_WIDGET_SELECTED_COLOUR = GUIOp.scaleColour(
+				Color.GREEN, 1.2);
+		private final Color TYPE_WIDGET_UNSELECTED_COLOUR = Color.GRAY;
+
+		// private final JCheckBox checkBox;
+		private final TypeWidget typeWidget;
 		private final String typeKeyword;
-		private final JLabel typeLabel;
 
 		private CheckBoxPanel(String typeKeyword) {
 			super();
@@ -577,41 +498,120 @@ public class TypeDialogBuilder {
 
 			final String typeDisplayText;
 
-			typeDisplayText = TranslatorManager.getInstance()
-					.getActiveTranslator().getGameTypeManager()
-					.getDisplayText(typeKeyword);
+			final JLabel typeLabel;
+			final JPanel typePanel;
 
-			this.checkBox = new JCheckBox();
+			typeDisplayText = TranslatorManager.getInstance()
+					.getActiveGameTypeManager().getDisplayText(typeKeyword);
+
 			this.typeKeyword = typeKeyword;
-			this.typeLabel = new JLabel(" " + typeDisplayText);
+			this.typeWidget = ScriptWidgetFactory.getTypeWidget(typeKeyword);
+
+			typeLabel = new JLabel(" " + typeDisplayText);
+			typePanel = new JPanel();
+
+			typePanel.setLayout(new BoxLayout(typePanel, BoxLayout.LINE_AXIS));
+			typePanel.add(typeWidget);
+			typePanel.add(typeLabel);
+
+			typePanel.setOpaque(false);
 
 			this.setLayout(new BorderLayout());
 
 			this.setMinimumSize(MIN_PANEL_SIZE);
 			this.setMaximumSize(MAX_PANEL_SIZE);
 
-			this.add(this.checkBox, BorderLayout.EAST);
-			this.add(this.typeLabel, BorderLayout.WEST);
-			this.checkBox.setOpaque(false);
+			this.add(typePanel, BorderLayout.CENTER);
+
 			this.setOpaque(false);
 
-			for (MouseListener defaultListener : this.checkBox
-					.getMouseListeners())
-				this.checkBox.removeMouseListener(defaultListener);
+			this.addMouseListener(new MouseListener() {
+				@Override
+				public void mousePressed(MouseEvent e) {
+					CheckBoxPanel.this.setBackground(GUIOp.scaleColour(
+							CheckBoxPanel.this.getBackground(), 0.7));
+				}
 
-			this.addMouseListener(this);
-			this.checkBox.addMouseListener(this);
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					e.consume();
+				}
+
+				// On hover behaviour
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					CheckBoxPanel.this.setBackground(GUIOp.scaleWhite(
+							CheckBoxPanel.this.getBackground(), 1.1));
+				}
+
+				// On exit hover behaviour
+				@Override
+				public void mouseExited(MouseEvent e) {
+					CheckBoxPanel.this.resetUI();
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					final JComponent source = (JComponent) e.getSource();
+					final Point mouseLoc = MouseInfo.getPointerInfo()
+							.getLocation();
+					/*
+					 * Only respond to releases that happen over this component.
+					 * The default is to respond to releases if the press
+					 * occurred in this component. This seems to be a Java bug,
+					 * but I can't find any kind of complaint for it. Either
+					 * way, we want this behaviour, not the default. - remiller
+					 */
+					if (!source.contains(
+							mouseLoc.x - source.getLocationOnScreen().x,
+							mouseLoc.y - source.getLocationOnScreen().y))
+						return;
+
+					final boolean selected;
+
+					selected = TypeDialogBuilder.this.typesToSelected
+							.get(CheckBoxPanel.this.typeKeyword);
+
+					TypeDialogBuilder.this.selectType(
+							CheckBoxPanel.this.typeKeyword, !selected);
+				}
+			});
+
+		}
+
+		@Override
+		protected void paintComponent(Graphics grphcs) {
+			final Graphics2D g2d;
+
+			g2d = (Graphics2D) grphcs;
+
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+
+			GradientPaint gp = new GradientPaint(0, 0, this.getBackground(), 0,
+					getHeight(), GUIOp.scaleWhite(this.getBackground(), 1.3));
+
+			g2d.setPaint(gp);
+
+			g2d.fillRect(0, 0, getWidth(), getHeight());
+
+			super.paintComponent(grphcs);
+
 		}
 
 		private void resetUI() {
-			if (this.checkBox.isSelected()) {
+			if (TypeDialogBuilder.this.typesToSelected.get(this.typeKeyword)) {
 				this.setBorder(BorderFactory.createCompoundBorder(
 						BorderFactory.createLineBorder(Color.gray),
 						BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 				this.setBackground(SELECTED_COLOUR);
+				this.typeWidget.setBackground(TYPE_WIDGET_SELECTED_COLOUR);
+				this.typeWidget.setSelected(true);
 			} else {
 				this.setBorder(BorderFactory.createRaisedBevelBorder());
 				this.setBackground(UNSELECTED_COLOUR);
+				this.typeWidget.setBackground(TYPE_WIDGET_UNSELECTED_COLOUR);
+				this.typeWidget.setSelected(false);
 			}
 		}
 
@@ -632,72 +632,7 @@ public class TypeDialogBuilder {
 		 * @param isSelected
 		 */
 		private void setSelected(boolean isSelected) {
-			this.checkBox.setSelected(isSelected);
 			this.resetUI();
-		}
-
-		@Override
-		protected void paintComponent(Graphics grphcs) {
-			Graphics2D g2d = (Graphics2D) grphcs;
-
-			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
-
-			GradientPaint gp = new GradientPaint(0, 0, this.getBackground(), 0,
-					getHeight(), GUIOp.scaleWhite(this.getBackground(), 1.3));
-
-			g2d.setPaint(gp);
-
-			g2d.fillRect(0, 0, getWidth(), getHeight());
-
-			super.paintComponent(grphcs);
-
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			this.setBackground(GUIOp.scaleColour(this.getBackground(), 0.7));
-		}
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			e.consume();
-		}
-
-		// On hover behaviour
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			this.setBackground(GUIOp.scaleWhite(this.getBackground(), 1.1));
-		}
-
-		// On exit hover behaviour
-		@Override
-		public void mouseExited(MouseEvent e) {
-			this.resetUI();
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			final JComponent source = (JComponent) e.getSource();
-			final Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
-
-			/*
-			 * Only respond to releases that happen over this component. The
-			 * default is to respond to releases if the press occurred in this
-			 * component. This seems to be a Java bug, but I can't find any kind
-			 * of complaint for it. Either way, we want this behaviour, not the
-			 * default. - remiller
-			 */
-			if (!source.contains(mouseLoc.x - source.getLocationOnScreen().x,
-					mouseLoc.y - source.getLocationOnScreen().y))
-				return;
-
-			final String typeText = this.getTypeKeyword();
-
-			boolean selected = TypeDialogBuilder.this.typesToSelected
-					.get(typeText);
-
-			selectType(typeText, !selected);
 		}
 	}
 }
