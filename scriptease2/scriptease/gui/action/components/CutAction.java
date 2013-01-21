@@ -11,11 +11,10 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 
+import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
-import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
-import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 
@@ -26,7 +25,8 @@ import scriptease.model.PatternModelManager;
  * @author kschenk
  */
 @SuppressWarnings("serial")
-public final class CutAction extends ActiveModelSensitiveAction {
+public final class CutAction extends ActiveModelSensitiveAction implements
+		SEFocusObserver {
 	private static final String CUT_TEXT = "Cut";
 
 	private static final Action instance = new CutAction();
@@ -46,10 +46,18 @@ public final class CutAction extends ActiveModelSensitiveAction {
 	 */
 	protected boolean isLegal() {
 		final PatternModel activeModel;
+		final Component focusOwner;
+		final boolean isLegal;
 
+		focusOwner = SEFocusManager.getInstance().getFocus();
 		activeModel = PatternModelManager.getInstance().getActiveModel();
 
-		return activeModel != null;
+		if (focusOwner instanceof StoryComponentPanel) {
+			isLegal = ((StoryComponentPanel) focusOwner).isRemovable();
+		} else
+			isLegal = false;
+
+		return activeModel != null && isLegal;
 	}
 
 	/**
@@ -61,6 +69,8 @@ public final class CutAction extends ActiveModelSensitiveAction {
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
 		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 				KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
+
+		SEFocusManager.getInstance().addSEFocusObserver(this);
 	}
 
 	/**
@@ -74,7 +84,6 @@ public final class CutAction extends ActiveModelSensitiveAction {
 				TransferHandler.MOVE);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;
@@ -82,28 +91,17 @@ public final class CutAction extends ActiveModelSensitiveAction {
 		focusOwner = SEFocusManager.getInstance().getFocus();
 
 		if (focusOwner instanceof StoryComponentPanel) {
-			// Cuts individual panels. This does cut multiple if multiple are
-			// selected.
 			this.cutComponent((StoryComponentPanel) focusOwner);
-		} else if (focusOwner instanceof StoryComponentPanelJList) {
-			// Cuts from a StoryComponentPanelJList.
-			final StoryComponentPanelJList list;
-			list = (StoryComponentPanelJList) focusOwner;
-
-			for (Object selectedObject : list.getSelectedValues()) {
-				this.cutComponent((StoryComponentPanel) selectedObject);
-			}
-		} else if (focusOwner instanceof SEGraph) {
-			// Cuts the last node in an SEGraph
-			final SEGraph graph;
-			final JComponent selectedComponent;
-
-			graph = (SEGraph) focusOwner;
-
-			selectedComponent = (JComponent) graph.getNodesToComponentsMap()
-					.getValue(graph.getLastSelectedNode());
-
-			this.cutComponent(selectedComponent);
 		}
+	}
+
+	@Override
+	public void gainFocus(Component oldFocus) {
+		this.updateEnabledState();
+	}
+
+	@Override
+	public void loseFocus(Component oldFocus) {
+		this.updateEnabledState();
 	}
 }

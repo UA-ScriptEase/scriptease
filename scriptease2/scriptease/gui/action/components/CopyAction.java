@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 
+import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
@@ -26,7 +27,8 @@ import scriptease.model.PatternModelManager;
  * @author kschenk
  */
 @SuppressWarnings("serial")
-public final class CopyAction extends ActiveModelSensitiveAction {
+public final class CopyAction extends ActiveModelSensitiveAction implements
+		SEFocusObserver {
 	private static final String COPY_TEXT = "Copy";
 
 	private static final Action instance = new CopyAction();
@@ -41,18 +43,6 @@ public final class CopyAction extends ActiveModelSensitiveAction {
 	}
 
 	/**
-	 * Updates the action to either be enabled or disabled depending on the
-	 * current selection.
-	 */
-	protected boolean isLegal() {
-		final PatternModel activeModel;
-
-		activeModel = PatternModelManager.getInstance().getActiveModel();
-
-		return activeModel != null;
-	}
-
-	/**
 	 * Defines a <code>CopyAction</code> object with no icon.
 	 */
 	private CopyAction() {
@@ -61,6 +51,41 @@ public final class CopyAction extends ActiveModelSensitiveAction {
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
 		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 				KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
+
+		SEFocusManager.getInstance().addSEFocusObserver(this);
+	}
+
+	/**
+	 * Updates the action to either be enabled or disabled depending on the
+	 * current selection.
+	 */
+	@Override
+	protected boolean isLegal() {
+		final PatternModel activeModel;
+		final Component focusOwner;
+		final boolean isLegal;
+
+		focusOwner = SEFocusManager.getInstance().getFocus();
+		activeModel = PatternModelManager.getInstance().getActiveModel();
+
+		if (focusOwner instanceof StoryComponentPanel
+				|| focusOwner instanceof StoryComponentPanelJList
+				|| focusOwner instanceof SEGraph) {
+			isLegal = true;
+		} else
+			isLegal = false;
+
+		return activeModel != null && isLegal;
+	}
+
+	@Override
+	public void gainFocus(Component oldFocus) {
+		this.updateEnabledState();
+	}
+
+	@Override
+	public void loseFocus(Component oldFocus) {
+		this.updateEnabledState();
 	}
 
 	/**

@@ -221,6 +221,17 @@ public class LibraryPanel extends JTabbedPane {
 			}
 		});
 
+		TranslatorManager.getInstance().addTranslatorObserver(searchField,
+				new TranslatorObserver() {
+					@Override
+					public void translatorLoaded(Translator newTranslator) {
+						searchField.setEnabled(TranslatorManager.getInstance()
+								.getActiveTranslator() != null);
+					}
+				});
+		searchField.setEnabled(TranslatorManager.getInstance()
+				.getActiveTranslator() != null);
+
 		typeFilter.setAction(new Runnable() {
 			@Override
 			public void run() {
