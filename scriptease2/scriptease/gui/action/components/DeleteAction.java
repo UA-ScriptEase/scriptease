@@ -68,13 +68,21 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 	protected boolean isLegal() {
 		final PatternModel activeModel;
 		final Component focusOwner;
+		final boolean isLegal;
 
 		focusOwner = SEFocusManager.getInstance().getFocus();
 		activeModel = PatternModelManager.getInstance().getActiveModel();
 
-		return activeModel != null
-				&& (focusOwner instanceof StoryComponentPanel
-						|| focusOwner instanceof StoryComponentPanelJList || focusOwner instanceof SEGraph);
+		if (focusOwner instanceof StoryComponentPanel) {
+			isLegal = ((StoryComponentPanel) focusOwner).isRemovable();
+		} else if (focusOwner instanceof StoryComponentPanelJList) {
+			isLegal = PatternModelManager.getInstance().getActiveModel() instanceof LibraryModel;
+		} else if (focusOwner instanceof SEGraph) {
+			isLegal = !((SEGraph<?>) focusOwner).isReadOnly();
+		} else
+			isLegal = false;
+
+		return activeModel != null && isLegal;
 	}
 
 	@Override
@@ -100,8 +108,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 			panel = (StoryComponentPanel) focusOwner;
 
 			panel.getSelectionManager().deleteSelected();
-		} else if (focusOwner instanceof StoryComponentPanelJList
-				&& PatternModelManager.getInstance().getActiveModel() instanceof LibraryModel) {
+		} else if (focusOwner instanceof StoryComponentPanelJList) {
 			// TODO Needs undoability
 
 			// Delete elements from StoryComponentPanelJList

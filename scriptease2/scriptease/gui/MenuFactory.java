@@ -23,6 +23,7 @@ import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.action.components.CopyAction;
 import scriptease.gui.action.components.CutAction;
 import scriptease.gui.action.components.DeleteAction;
@@ -371,7 +372,7 @@ public class MenuFactory {
 		throwExceptionItem = new JMenuItem("Throw Exception!");
 		throwErrorItem = new JMenuItem("Throw Error!");
 		generateCodeItem = new JMenuItem("Generate Code");
-		consoleOutputItem = new JMenuItem("Print Things!");
+		consoleOutputItem = new JMenuItem("Clear Undo!");
 
 		throwExceptionItem.addActionListener(new ActionListener() {
 
@@ -452,13 +453,7 @@ public class MenuFactory {
 		consoleOutputItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				for (LibraryModel model : TranslatorManager.getInstance()
-						.getActiveTranslator().getLibraries())
-					model.getAllStoryComponents();
-
-				System.out.println("Current Focus: "
-						+ FocusManager.getCurrentManager().getFocusOwner());
+				UndoManager.getInstance().clear();
 			}
 		});
 

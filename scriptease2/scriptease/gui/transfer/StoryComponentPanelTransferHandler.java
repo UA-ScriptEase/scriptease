@@ -60,7 +60,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	}
 
 	private StoryComponentPanelTransferHandler() {
-
 		if (StoryComponentPanelTransferHandler.storyCompFlavour == null) {
 			try {
 				String storyComponentFlavour = DataFlavor.javaJVMLocalObjectMimeType

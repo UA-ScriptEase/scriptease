@@ -1042,8 +1042,6 @@ public class SEGraph<E> extends JComponent {
 			node = SEGraph.this.nodesToComponents.getKey((JComponent) e
 					.getSource());
 
-			SEFocusManager.getInstance().setFocus(SEGraph.this);
-
 			ToolBarMode mode = GraphToolBarModeAction.getMode();
 
 			if (mode == ToolBarMode.SELECT || mode == ToolBarMode.DELETE) {
@@ -1143,9 +1141,12 @@ public class SEGraph<E> extends JComponent {
 				}
 			}
 
+			SEFocusManager.getInstance().setFocus(SEGraph.this);
+
 			SEGraph.this.renderer.reconfigureAppearance(
 					SEGraph.this.nodesToComponents.getValue(node), node);
 			SEGraph.this.draggedFromNode = null;
+
 			SEGraph.this.repaint();
 		}
 	}
