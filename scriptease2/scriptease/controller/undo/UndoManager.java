@@ -112,7 +112,7 @@ public final class UndoManager {
 				History history = UndoManager.this.findHistoryForModel(model);
 
 				history.markSaved();
-				
+
 				UndoManager.this.notifyObservers();
 			}
 		};
@@ -350,7 +350,10 @@ public final class UndoManager {
 	 * @return <code>true</code> if the given model's changes has been saved.
 	 */
 	public boolean isSaved(PatternModel model) {
-		return this.findHistoryForModel(model).isSaved();
+		History history = this.findHistoryForModel(model);
+		if (history != null)
+			return history.isSaved();
+		return true;
 	}
 
 	/**
