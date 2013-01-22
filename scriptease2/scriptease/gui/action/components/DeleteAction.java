@@ -14,6 +14,7 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
@@ -105,9 +106,13 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 		if (focusOwner instanceof StoryComponentPanel) {
 			// Delete StoryComponentPanels
 			final StoryComponentPanel panel;
-			panel = (StoryComponentPanel) focusOwner;
+			final StoryComponentPanelManager manager;
 
-			panel.getSelectionManager().deleteSelected();
+			panel = (StoryComponentPanel) focusOwner;
+			manager = panel.getSelectionManager();
+
+			if (manager != null)
+				manager.deleteSelected();
 		} else if (focusOwner instanceof StoryComponentPanelJList) {
 			// TODO Needs undoability
 
