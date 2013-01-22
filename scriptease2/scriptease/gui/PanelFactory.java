@@ -645,14 +645,19 @@ public final class PanelFactory {
 
 				modelTabs.addTab(savedTitle, icon, scbScrollPane);
 
-				final int index = modelTabs.indexOfComponent(scbScrollPane);
-
-				modelTabs.setTabComponentAt(index, newTab);
+				modelTabs.setTabComponentAt(
+						modelTabs.indexOfComponent(scbScrollPane), newTab);
 
 				UndoManager.getInstance().addUndoManagerObserver(libraryModel,
 						new UndoManagerObserver() {
 							@Override
 							public void stackChanged() {
+								final int index = modelTabs
+										.indexOfComponent(scbScrollPane);
+
+								if (index < 0)
+									return;
+
 								if (UndoManager.getInstance().isSaved(
 										libraryModel)) {
 									modelTabs.setTitleAt(index, savedTitle);
@@ -690,9 +695,8 @@ public final class PanelFactory {
 
 				modelTabs.addTab(savedTitle, icon, newPanel);
 
-				final int index = modelTabs.indexOfComponent(newPanel);
-
-				modelTabs.setTabComponentAt(index, newTab);
+				modelTabs.setTabComponentAt(
+						modelTabs.indexOfComponent(newPanel), newTab);
 				modelTabs.setSelectedComponent(newPanel);
 
 				modelTabs.setFocusable(false);
@@ -701,6 +705,12 @@ public final class PanelFactory {
 						new UndoManagerObserver() {
 							@Override
 							public void stackChanged() {
+								final int index = modelTabs
+										.indexOfComponent(newPanel);
+
+								if (index < 0)
+									return;
+
 								if (UndoManager.getInstance().isSaved(
 										storyModel)) {
 									modelTabs.setTitleAt(index, savedTitle);
