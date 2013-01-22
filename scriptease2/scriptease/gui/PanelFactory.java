@@ -43,11 +43,13 @@ import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.StatusObserver;
 import scriptease.controller.observer.TranslatorObserver;
+import scriptease.controller.observer.UndoManagerObserver;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.StoryPointGraphModel;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
@@ -627,19 +629,38 @@ public final class PanelFactory {
 				// Creates a Library Editor panel
 				final JScrollPane scbScrollPane;
 				final CloseableModelTab newTab;
+				final String savedTitle;
+				final String unsavedTitle;
 
 				scbScrollPane = PanelFactory.getInstance()
 						.buildLibraryEditorPanel(libraryModel);
 				newTab = new CloseableModelTab(modelTabs, scbScrollPane,
 						libraryModel, icon);
 
+				savedTitle = libraryModel.getName() + "[Editor]";
+				unsavedTitle = "*" + savedTitle;
+
 				scbScrollPane.getVerticalScrollBar().setUnitIncrement(
 						ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
-				modelTabs.addTab(libraryModel.getName() + "[Editor]", icon,
-						scbScrollPane);
-				modelTabs.setTabComponentAt(
-						modelTabs.indexOfComponent(scbScrollPane), newTab);
+				modelTabs.addTab(savedTitle, icon, scbScrollPane);
+
+				final int index = modelTabs.indexOfComponent(scbScrollPane);
+
+				modelTabs.setTabComponentAt(index, newTab);
+
+				UndoManager.getInstance().addUndoManagerObserver(libraryModel,
+						new UndoManagerObserver() {
+							@Override
+							public void stackChanged() {
+								if (UndoManager.getInstance().isSaved(
+										libraryModel)) {
+									modelTabs.setTitleAt(index, savedTitle);
+								} else {
+									modelTabs.setTitleAt(index, unsavedTitle);
+								}
+							}
+						});
 
 				modelTabs.setFocusable(false);
 			}
@@ -650,7 +671,6 @@ public final class PanelFactory {
 				final StoryPoint startStoryPoint;
 				final JSplitPane newPanel;
 				final CloseableModelTab newTab;
-				final String title;
 				String modelTitle;
 
 				startStoryPoint = storyModel.getRoot();
@@ -663,16 +683,32 @@ public final class PanelFactory {
 				if (modelTitle == null || modelTitle.equals(""))
 					modelTitle = "<Untitled>";
 
-				title = modelTitle + "("
+				final String savedTitle = modelTitle + "("
 						+ storyModel.getModule().getLocation().getName() + ")";
 
-				modelTabs.addTab(title, icon, newPanel);
-				modelTabs.setTabComponentAt(
-						modelTabs.indexOfComponent(newPanel), newTab);
+				final String unsavedTitle = "*" + savedTitle;
+
+				modelTabs.addTab(savedTitle, icon, newPanel);
+
+				final int index = modelTabs.indexOfComponent(newPanel);
+
+				modelTabs.setTabComponentAt(index, newTab);
 				modelTabs.setSelectedComponent(newPanel);
 
 				modelTabs.setFocusable(false);
 
+				UndoManager.getInstance().addUndoManagerObserver(storyModel,
+						new UndoManagerObserver() {
+							@Override
+							public void stackChanged() {
+								if (UndoManager.getInstance().isSaved(
+										storyModel)) {
+									modelTabs.setTitleAt(index, savedTitle);
+								} else {
+									modelTabs.setTitleAt(index, unsavedTitle);
+								}
+							}
+						});
 				/*
 				 * Setting the divider needs to occur here because the
 				 * JSplitPane needs to actually be drawn before this works.

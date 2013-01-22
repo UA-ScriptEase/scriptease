@@ -112,6 +112,8 @@ public final class UndoManager {
 				History history = UndoManager.this.findHistoryForModel(model);
 
 				history.markSaved();
+				
+				UndoManager.this.notifyObservers();
 			}
 		};
 

@@ -87,7 +87,6 @@ public class CloseableModelTab extends JPanel {
 		if (parent == null)
 			throw new NullPointerException("TabbedPane is null");
 
-		// this.tabbedPane = parent;
 		this.setOpaque(false);
 
 		// make JLabel read titles from JTabbedPane
@@ -120,7 +119,7 @@ public class CloseableModelTab extends JPanel {
 		// add more space to the top of the component
 		this.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
 	}
-
+	
 	/**
 	 * Simple tab-closing button.
 	 * 

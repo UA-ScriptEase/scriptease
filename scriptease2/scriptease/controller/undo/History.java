@@ -67,7 +67,7 @@ public final class History {
 	public final PatternModel getModel() {
 		return this.model;
 	}
-	
+
 	/**
 	 * Destroys both the undo and redo histories. Use this after a major change
 	 * that you don't want the user to be able to undo.
@@ -76,7 +76,7 @@ public final class History {
 		this.undoStack.clear();
 		this.redoStack.clear();
 	}
-	
+
 	/**
 	 * Determines whether there are any remaining actions to be undone.
 	 * 
@@ -85,7 +85,7 @@ public final class History {
 	protected boolean canUndo() {
 		return !this.undoStack.isEmpty();
 	}
-	
+
 	/**
 	 * Determines whether there are any remaining actions to be redone.
 	 * 
@@ -94,7 +94,7 @@ public final class History {
 	protected boolean canRedo() {
 		return !this.redoStack.isEmpty();
 	}
-	
+
 	/**
 	 * Gets the name of the UndoableAction at the top of the undo stack.
 	 * 
@@ -102,7 +102,7 @@ public final class History {
 	 */
 	public String getLastUndoName() {
 		if (!this.undoStack.empty() && this.undoStack.lastElement() != null)
-		return this.undoStack.lastElement().getName();
+			return this.undoStack.lastElement().getName();
 		return "";
 	}
 
@@ -113,8 +113,8 @@ public final class History {
 	 */
 	public String getLastRedoName() {
 		if (!this.redoStack.empty() && this.redoStack.lastElement() != null)
-		return this.redoStack.lastElement().getName();
-		return ""; 
+			return this.redoStack.lastElement().getName();
+		return "";
 	}
 
 	/**
@@ -125,6 +125,8 @@ public final class History {
 	public final void markSaved() {
 		if (!this.undoStack.isEmpty())
 			this.lastSavedAction = this.undoStack.peek();
+		else
+			this.lastSavedAction = null;
 	}
 
 	/**
@@ -134,7 +136,9 @@ public final class History {
 	 * @return <code>true</code> if the past actions have been saved.
 	 */
 	public final boolean isSaved() {
-		return this.undoStack.isEmpty() ? true
-				: this.undoStack.peek() == this.lastSavedAction;
+		if (!this.undoStack.isEmpty()) {
+			return this.undoStack.peek() == this.lastSavedAction;
+		} else
+			return this.lastSavedAction == null;
 	}
 }

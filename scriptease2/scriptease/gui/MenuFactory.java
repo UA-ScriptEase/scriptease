@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.AbstractButton;
-import javax.swing.FocusManager;
 import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
