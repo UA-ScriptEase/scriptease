@@ -262,13 +262,14 @@ public final class PanelFactory {
 
 		storyGraphPanel.add(storyGraphScrollPane, BorderLayout.CENTER);
 
-		storyComponentTree.setBorder(null);
+		storyComponentTree.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.LOWERED));
 
 		// Set up the split pane
 		storyPanel.setBorder(null);
 		storyPanel.setOpaque(true);
-		storyPanel.setBottomComponent(storyGraphPanel);
-		storyPanel.setTopComponent(storyComponentTree);
+		storyPanel.setTopComponent(storyGraphPanel);
+		storyPanel.setBottomComponent(storyComponentTree);
 
 		// Set up the divider
 		for (Component component : storyPanel.getComponents()) {
@@ -728,7 +729,7 @@ public final class PanelFactory {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						newPanel.setDividerLocation(0.8);
+						newPanel.setDividerLocation(0.19);
 					}
 				});
 			}
