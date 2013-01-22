@@ -27,6 +27,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.control.ExpansionButton;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.StoryItemSequence;
@@ -291,10 +292,21 @@ public class StoryComponentPanel extends JPanel implements
 	 * @return
 	 */
 	public StoryComponentPanelManager getSelectionManager() {
-		StoryComponentPanelTree parentTree = this.getParentTree();
+		final StoryComponentPanelTree parentTree = this.getParentTree();
 		if (parentTree != null)
 			return parentTree.getSelectionManager();
 		return null;
+	}
+
+	/**
+	 * Method forwarded to the selection manager.
+	 */
+	public void updatePanelBackgrounds() {
+		final StoryComponentPanelManager manager = this.getSelectionManager();
+		if (manager != null)
+			manager.updatePanelBackgrounds();
+		else
+			this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 	}
 
 	/**

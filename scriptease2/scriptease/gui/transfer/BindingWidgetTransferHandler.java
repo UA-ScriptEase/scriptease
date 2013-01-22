@@ -148,7 +148,6 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		} else {
 			// TODO Set mouse pointer to invalid operation.
 		}
-
 		return canImport;
 	}
 
