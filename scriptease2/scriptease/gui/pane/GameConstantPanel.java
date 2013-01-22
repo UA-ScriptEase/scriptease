@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
@@ -376,10 +377,7 @@ public class GameConstantPanel extends JPanel {
 				color = this.LINE_COLOR_1;
 			}
 
-			if (root.isLink())
-				speaker = "Link";
-			else
-				speaker = root.getSpeaker();
+			speaker = root.getSpeaker();
 
 			nodePanel = createIndentedConversationPanel(root, indent, speaker,
 					color);
@@ -579,10 +577,7 @@ public class GameConstantPanel extends JPanel {
 		panel.setBackground(color);
 
 		if (constant instanceof GameConversationNode) {
-			// TODO Find all links and colour them.
-			// Go down children of parent GameConversation. Find all
-			// GameConversationNodes that have the same name and children (?),
-			// and are links.
+			// TODO Select all same nodes.
 		}
 	}
 }
