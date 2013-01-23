@@ -755,7 +755,7 @@ public class LibraryEditorPanelFactory {
 		slotBox = new JComboBox();
 		implicitsLabel = new JLabel();
 		codePanel = new CodeEditorPanel(codeBlock);
-
+		
 		deleteCodeBlockButton = new JButton("Delete CodeBlock");
 		addParameterButton = new JButton("+");
 		typesButton = new JButton(typeAction);
