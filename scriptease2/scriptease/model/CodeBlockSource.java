@@ -143,6 +143,8 @@ public class CodeBlockSource extends CodeBlock {
 	@Override
 	public void setTypes(Collection<String> types) {
 		this.returnTypes = new ArrayList<String>(types);
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES));
 	}
 
 	protected void init(int id) {
@@ -207,10 +209,25 @@ public class CodeBlockSource extends CodeBlock {
 	}
 
 	@Override
-	public void setParameters(Collection<KnowIt> parameters) {
-		super.setParameters(parameters);
+	public boolean addParameter(KnowIt parameter) {
+		final boolean success = super.addParameter(parameter);
+		if (success) {
+			this.updateReferences();
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_ADD));
+		}
+		return success;
+	}
 
-		this.updateReferences();
+	@Override
+	public boolean removeParameter(KnowIt parameter) {
+		final boolean success = super.removeParameter(parameter);
+		if (success) {
+			this.updateReferences();
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_REMOVE));
+		}
+		return success;
 	}
 
 	@Override

@@ -29,6 +29,7 @@ import javax.swing.event.DocumentListener;
 
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.model.CodeBlock;
@@ -164,27 +165,19 @@ class ParameterPanel extends JPanel {
 
 				types = new ArrayList<String>();
 				newTypeList = new ArrayList<String>();
-
 				selectedItem = (String) defaultTypeBox.getSelectedItem();
 
 				if (selectedItem != null) {
-
 					selectedType = selectedItem.split(" - ")[1];
-
 					types.addAll(knowIt.getTypes());
-
 					if (selectedType != null)
 						newTypeList.add(selectedType);
-
 					for (String type : types) {
 						if (!type.equals(selectedType))
 							newTypeList.add(type);
 					}
-
 					knowIt.setTypes(newTypeList);
-
 					updateBindingConstantComponent(bindingConstantComponent);
-
 					scriptIt.notifyObservers(new StoryComponentEvent(
 							scriptIt,
 							StoryComponentChangeEnum.CHANGE_PARAMETER_DEFAULT_TYPE_SET));
@@ -196,15 +189,13 @@ class ParameterPanel extends JPanel {
 			deleteButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final List<KnowIt> parameters;
-					parameters = codeBlock.getParameters();
-
-					parameters.remove(knowIt);
-					codeBlock.setParameters(parameters);
-
-					scriptIt.notifyObservers(new StoryComponentEvent(
-							scriptIt,
-							StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_REMOVE));
+					if (!UndoManager.getInstance().hasOpenUndoableAction()) {
+						UndoManager.getInstance().startUndoableAction(
+								"Remove parameter " + knowIt + " to "
+										+ codeBlock);
+						codeBlock.removeParameter(knowIt);
+						UndoManager.getInstance().endUndoableAction();
+					}
 				}
 			});
 		} else {
