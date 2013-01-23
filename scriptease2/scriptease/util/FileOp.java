@@ -2,6 +2,7 @@ package scriptease.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -12,6 +13,8 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.jar.Manifest;
 
 import javax.xml.transform.Source;
@@ -424,5 +427,41 @@ public class FileOp {
 		}
 
 		return manifest;
+	}
+
+	/**
+	 * Recursively finds all files that match the FileFilter in the given
+	 * directory and all subdirectories. This may includes the directory that is
+	 * given, if it passes the filter. Order is not guaranteed, but each entry
+	 * will be unique.
+	 * 
+	 * @param directory
+	 *            The directory to search in.
+	 * @param filter
+	 *            The file filter to use. If <code>null</code>, then all files
+	 *            will be returned.
+	 * @return A collection of all files that match the filter.
+	 */
+	public static Collection<File> findFiles(File directory, FileFilter filter) {
+		final Collection<File> matchingFiles = new ArrayList<File>();
+
+		// search subdirectories first
+		for (File subdir : directory.listFiles()) {
+			if (subdir.isDirectory())
+				matchingFiles.addAll(findFiles(subdir, filter));
+		}
+
+		// add the files we haven't already gotten
+		for (File file : directory.listFiles(filter)) {
+			if (!matchingFiles.contains(file))
+				matchingFiles.add(file);
+		}
+
+		// we need to check the directory specifically so that we don't miss the
+		// root directory on the first recursion. - remiller
+		if (filter.accept(directory) && !matchingFiles.contains(directory))
+			matchingFiles.add(directory);
+
+		return matchingFiles;
 	}
 }
