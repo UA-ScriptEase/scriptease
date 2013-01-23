@@ -65,7 +65,7 @@
 	<!-- Defines a list of Effect (ScriptIt) definitions -->
 	<xsd:complexType name="ControlItList_Type">
 		<xsd:sequence>
-			<xsd:element maxOccurs="unbounded" name="ControlIt" type="ControlIt_Type" />
+			<xsd:element minOccurs="0" maxOccurs="unbounded" name="ControlIt" type="ControlIt_Type" />
 		</xsd:sequence>
 	</xsd:complexType>
 

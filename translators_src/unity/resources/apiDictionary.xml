@@ -1,17 +1,40 @@
-<APIDictionary name="DefaultUnityAPIDictionary" author="ScriptEase Team" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<APIDictionary name="DefaultUnityAPIDictionary" author="ScriptEase Team"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation='../../../scriptease2/scriptease/resources/schema/ApiDictionarySchema.xsd'>
-	
 	<Types>
+		<Type>
+			<Name>TestType</Name>
+			<Keyword>test_type</Keyword>
+			<CodeSymbol>string</CodeSymbol>
+		</Type>
 	</Types>
 	<Slots defaultFormat="file">
+		<Slot>
+			<Name>TestSlot</Name>
+			<Keyword>TestSlot</Keyword>
+			<Parameters />
+			<Implicits />
+		</Slot>
 	</Slots>
 	<Causes>
+		<ScriptIt>
+			<Name>Test Cause</Name>
+			<Visible>true</Visible>
+			<Labels />
+			<Children />
+			<CodeBlocks />
+		</ScriptIt>
 	</Causes>
 	<Effects>
+		<ScriptIt>
+			<Name>Test Effect</Name>
+			<Visible>true</Visible>
+			<Labels />
+			<Children />
+			<CodeBlocks />
+		</ScriptIt>
 	</Effects>
-	<DescribeIts>
-	</DescribeIts>
-	<TypeConverters>
-	</TypeConverters>
+	<DescribeIts />
+	<ControlIts />
+	<TypeConverters />
 </APIDictionary>
