@@ -29,11 +29,6 @@ public final class UnityProject implements GameModule {
 
 	private final Collection<Scene> scenes = new ArrayList<Scene>();
 
-	/*
-	 * @Override public void addGameObject(GameObject object) { // TODO
-	 * Auto-generated method stub }
-	 */
-
 	@Override
 	public GameConstant getModule() {
 		return null;
@@ -71,8 +66,8 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public List<GameConstant> getResourcesOfType(String type) {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO DO THIS
+		return new ArrayList<GameConstant>();
 	}
 
 	@Override
