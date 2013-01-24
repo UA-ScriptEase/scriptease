@@ -3,11 +3,13 @@ package scriptease.translator;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -85,6 +87,11 @@ public class Translator {
 		SUPPORTED_FILE_EXTENSIONS, INCLUDES_PATH, ICON_PATH, COMPILER_PATH, CUSTOM_PICKER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY;
 	}
 
+	/**
+	 * Java class file extension.
+	 */
+	private static final String CLASS_FILE_EXTENSION = ".class";
+
 	private final Properties properties;
 
 	// data loaded from the translator.ini file
@@ -94,7 +101,9 @@ public class Translator {
 
 	private final Collection<String> legalExtensions;
 
-	final GameModuleClassLoader loader;
+	// special class loader that knows to look in the translators for their
+	// GameModule implementation and required java libaries.
+	private final ClassLoader loader;
 
 	// either the location of the jar, or the location of the description file.
 	private final File location;
@@ -111,10 +120,11 @@ public class Translator {
 	 *            The location of the description file for this translator.
 	 * @throws IOException
 	 */
+	@SuppressWarnings("unchecked")
 	protected Translator(File descriptionFile) throws IOException {
 		final String extensionsString;
-		File gameModuleClassFile;
 		final Reader descriptionReader;
+		final String gameModuleClassLocation;
 
 		if (descriptionFile == null
 				|| !descriptionFile.getName().equalsIgnoreCase(
@@ -143,19 +153,89 @@ public class Translator {
 			}
 		}
 
+		this.loader = this.initClassloader(this.location);
+
+		gameModuleClassLocation = toBinaryName(this
+				.getProperty(DescriptionKeys.GAME_MODULE_PATH.toString()));
+
 		// load the Game Module implementation (but don't create an instance)
-		this.loader = new GameModuleClassLoader(this.getClass()
-				.getClassLoader(), this);
-		gameModuleClassFile = this
-				.getPathProperty(DescriptionKeys.GAME_MODULE_PATH);
+		Class<?> gmClass = null;
+		try {
+			gmClass = loader.loadClass(gameModuleClassLocation);
+		} catch (ClassNotFoundException e) {
+			System.err.println("The game module class could not be loaded: "
+					+ e.getMessage());
+			e.printStackTrace();
+		}
 
-		System.err.println("Game Module Class File "
-				+ (gameModuleClassFile.exists() ? "discovered"
-						: "could not be found") + " at "
-				+ gameModuleClassFile.getAbsolutePath());
+		if (gmClass != null && GameModule.class.isAssignableFrom(gmClass)) {
+			this.gameModuleClass = (Class<? extends GameModule>) gmClass;
+		} else {
+			this.gameModuleClass = null;
+			System.err.println(gmClass == null ? "null" : gmClass.getName()
+					+ " is not an instance of GameModule");
+		}
+	}
 
-		this.gameModuleClass = this.loader
-				.loadGameModuleClass(gameModuleClassFile);
+	/**
+	 * Transforms a given file path to the binary name as expected in
+	 * {@link ClassLoader#loadClass(String)}.
+	 * 
+	 * @param classPath
+	 *            the path to convert.
+	 * @return the binary name for the class at the path given.
+	 */
+	private String toBinaryName(String classPath) {
+		String binaryName = classPath;
+
+		// strip off the .class if provided.
+		if (binaryName.endsWith(CLASS_FILE_EXTENSION))
+			binaryName = binaryName.substring(0, binaryName.length()
+					- CLASS_FILE_EXTENSION.length());
+
+		binaryName = binaryName.replaceAll("/", ".");
+
+		return binaryName;
+	}
+
+	/**
+	 * Builds a URLClassLoader that is aware of the translator directory and all
+	 * contained Jar files. It is to be used to load all Game Module classes.
+	 * 
+	 * @param location
+	 *            the translator directory to look into.
+	 * @return The configured classloader
+	 */
+	private ClassLoader initClassloader(File location) {
+		final FileFilter jarFilter;
+		final Collection<File> fileSourceLocations;
+		final Collection<URL> urlSourceLocations;
+
+		jarFilter = new FileFilter() {
+			@Override
+			public boolean accept(File pathname) {
+				return pathname.getName().toLowerCase().endsWith(".jar");
+			}
+		};
+
+		fileSourceLocations = FileOp.findFiles(location.getParentFile(),
+				jarFilter);
+		fileSourceLocations.add(location.getParentFile());
+		urlSourceLocations = new ArrayList<URL>();
+
+		URL url;
+		for (File srcLocation : fileSourceLocations) {
+			try {
+				url = srcLocation.toURI().toURL();
+			} catch (MalformedURLException e) {
+				// this is a stupid exception. - remiller
+				continue;
+			}
+
+			urlSourceLocations.add(url);
+		}
+
+		return new URLClassLoader(urlSourceLocations.toArray(new URL[0]));
 	}
 
 	/**
@@ -372,9 +452,9 @@ public class Translator {
 		// this is a bit of a hack, but is necessary to get FileOp to also
 		// extract the referenced file(s) into the temp directory that it stores
 		// all of these things. - remiller
-		System.out.println("Extracting XML Schema dependencies...");
+		System.out.println("Extracting XML Schema dependencies for "
+				+ this.getName() + " translator...");
 		FileOp.getFileResource(Translator.CODE_ELEMENT_SCHEMA_LOCATION);
-		System.out.println("Done");
 
 		try {
 			if (!FileOp
@@ -471,7 +551,7 @@ public class Translator {
 	/**
 	 * Gets the Language Dictionary for this translator. If there is no Language
 	 * Dictionary assigned to the translator yet, this method will attempt to
-	 * open one. 
+	 * open one.
 	 * 
 	 * @return the languageDictionary
 	 */
@@ -565,7 +645,13 @@ public class Translator {
 	 *         file.
 	 */
 	public boolean supportsModuleFile(File location) {
-		return this.legalExtensions.contains(FileOp.getExtension(location));
+		if (!this.legalExtensions.isEmpty()) {
+			return this.legalExtensions.contains(FileOp.getExtension(location));
+		} else {
+			// at the moment, we don't have any better information, so we just
+			// have to blindly accept.
+			return true;
+		}
 	}
 
 	private GameModule createGameModuleInstance() {
@@ -666,11 +752,12 @@ public class Translator {
 
 	private File requestNewLocation() {
 		final File newLocation;
-
+		final String[] extensions = this.getLegalExtensions();
 		FileNameExtensionFilter filter = null;
-		// Build the filter based on the translator selected
-		filter = new FileNameExtensionFilter(this.getName() + " Game Files",
-				this.getLegalExtensions());
+
+		if (extensions != null && extensions.length != 0)
+			filter = new FileNameExtensionFilter(
+					this.getName() + " Game Files", extensions);
 		// Otherwise pass in a null filter (defaults to accept all)
 		newLocation = WindowFactory.getInstance().showFileChooser("Select", "",
 				filter, this.getLocation());
@@ -715,198 +802,5 @@ public class Translator {
 		System.err.println("Warning: No libraries found for translator "
 				+ this.getName());
 		return null;
-	}
-
-	/**
-	 * Private implementation of ClassLoader used to load user-defined
-	 * implementations of the GameModule interface. Each instance of this will
-	 * then be called on to load all of the classes requested by the GameModule
-	 * implementation as well.<br>
-	 * <br>
-	 * There should be one of these per translator.
-	 * 
-	 * @author graves
-	 * @author remiller
-	 */
-	private class GameModuleClassLoader extends ClassLoader {
-		private final Translator translator;
-
-		/**
-		 * 
-		 * @param parent
-		 *            The loader to defer to first for loading classes.
-		 * @param translator
-		 *            The translator that this loader is loading for.
-		 */
-		public GameModuleClassLoader(ClassLoader parent, Translator translator) {
-			super(parent);
-
-			this.translator = translator;
-		}
-
-		/**
-		 * Attempts to resolve the given binary name as a file path, then
-		 * attempts to load that file as an object.
-		 */
-		@Override
-		protected Class<?> findClass(String binaryName)
-				throws ClassNotFoundException {
-			// Try to load the class manually.
-			final File pathToClass = this.getClassFileForBinaryName(binaryName);
-			byte classData[] = new byte[0];
-			final FileInputStream fileIn;
-			Class<?> result = null;
-
-			try {
-				if (pathToClass == null || !pathToClass.exists())
-					throw new FileNotFoundException();
-
-				fileIn = new FileInputStream(pathToClass);
-				byte[] buffer = new byte[2048];
-				int n;
-
-				while ((n = fileIn.read(buffer)) >= 0) {
-					classData = Arrays.copyOf(classData, classData.length + n);
-					System.arraycopy(buffer, 0, classData,
-							classData.length - n, n);
-				}
-
-				result = this.defineClass(null, classData, 0, classData.length);
-
-				if (result == null)
-					throw new ClassFormatError();
-			} catch (SecurityException e) {
-				throw new ClassNotFoundException(
-						"Read access was denied when trying to open: "
-								+ pathToClass.getAbsolutePath());
-			} catch (FileNotFoundException e) {
-				throw new ClassNotFoundException("No file exists at: "
-						+ pathToClass);
-			} catch (IOException e) {
-				throw new ClassNotFoundException(
-						"An I/O error occurred when trying to read: "
-								+ pathToClass.getAbsolutePath());
-			} catch (ClassFormatError e) {
-				throw new ClassNotFoundException(
-						"A valid .class file does not exist at: "
-								+ pathToClass.getAbsolutePath());
-			} catch (ClassCastException e) {
-				throw new ClassNotFoundException("The class found at: "
-						+ pathToClass.getAbsolutePath()
-						+ " is not an implementation of GameModule.");
-			}
-
-			return result;
-		}
-
-		/**
-		 * Attempts to resolve the given File to a .class file, then attempts to
-		 * load it using a custom class loader.
-		 * 
-		 * @param gameModuleFile
-		 * @return A new instance of the subclass of GameModule found at the
-		 *         <code>gameModulePath</code> location. If an exception is
-		 *         thrown, null is returned instead.
-		 */
-		@SuppressWarnings("unchecked")
-		public Class<? extends GameModule> loadGameModuleClass(
-				File gameModuleFile) {
-			String className;
-
-			// Get the name of the .class file that implements the GameModule
-			// interface, and load it.
-			try {
-				// must use Fully Qualified Binary Name.
-				className = this.getBinaryNameForClassFile(gameModuleFile);
-
-				if (className == null)
-					throw new ClassNotFoundException(
-							"Failed to parse class name.");
-
-				Class<? extends GameModule> loadedClass = (Class<? extends GameModule>) this
-						.loadClass(className);
-
-				return loadedClass;
-			} catch (ClassNotFoundException e) {
-				this.handleFailedClassLoad(e,
-						"The Game Module implementation class could not be loaded");
-			}
-			// catch (InstantiationException e) {
-			// handleFailedClassLoad(e,
-			// "The Game Module implementation class could not be instantiated");
-			// }
-			// catch (IllegalAccessException e) {
-			// handleFailedClassLoad(e,
-			// "The Game Module implementation class could not be accessed");
-			// }
-			catch (ClassCastException e) {
-				this.handleFailedClassLoad(e,
-						"The Game Module implementation class is not a subclass of GameModule");
-			}
-
-			return null;
-		}
-
-		private void handleFailedClassLoad(Throwable e, String dialogMessage) {
-			System.err.println("The game module class could not be loaded: "
-					+ dialogMessage);
-			e.printStackTrace();
-			// WindowManager.getInstance().showProblemDialog(
-			// "Game Module implementation class loading failed.\n",
-			// dialogMessage + ": \n");
-		}
-
-		/**
-		 * Converts the given binary name into the path of the .class file.
-		 * 
-		 * @param binaryName
-		 * @return A new File object pointing to the location of the .class file
-		 *         specified by the binary name.
-		 */
-		private File getClassFileForBinaryName(String binaryName) {
-			final File result;
-			binaryName = "translators."
-					+ this.translator.getLocation().getParentFile().getName()
-					+ "." + binaryName;
-
-			result = new File(binaryName.replace('.', File.separatorChar)
-					+ ".class");
-
-			return result.exists() ? result : null;
-		}
-
-		/**
-		 * Converts the absolute path of a file object into the binary name for
-		 * that .class file.
-		 * 
-		 * @param file
-		 * @return The binary name for the given file. Example:
-		 *         "translators.NWN.data.ErfFile"
-		 */
-		private String getBinaryNameForClassFile(File file) {
-			String result = null;
-			int namespaceStartIndex = file.getAbsolutePath().indexOf(
-					"translators");
-
-			if (namespaceStartIndex != -1) {
-				result = (FileOp.removeExtension(file)).getAbsolutePath()
-						.substring(namespaceStartIndex);
-				result = result.replace(File.separatorChar, '.');
-
-				// pull off the translators.<translatorDir> part. We stick this
-				// back in findClass. I know it seems silly, but there are
-				// intricacies in how it looks for classes where this is a clean
-				// solution. - remiller
-				result = result.substring(result.indexOf(".") + 1);
-				result = result.substring(result.indexOf(".") + 1);
-			}
-
-			return result;
-		}
-	}
-
-	@Override
-	public String toString() {
-		return "Translator [" + this.getName() + "]";
 	}
 }
