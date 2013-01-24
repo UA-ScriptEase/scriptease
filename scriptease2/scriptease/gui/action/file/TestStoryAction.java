@@ -87,8 +87,9 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 				frame.setStatus("Testing " + activeModel.getTitle());
 				try {
 					procBuilder = new ProcessBuilder();
-					procBuilder.command(((StoryModel) activeModel).getModule()
-							.getTestCommand(procBuilder));
+					if (activeModel instanceof StoryModel)
+						((StoryModel) activeModel).getModule().configureTester(
+								procBuilder);
 
 					// I think merging error and regular output is probably a
 					// good thing since we don't do anything special with them.
@@ -117,13 +118,17 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 				} catch (IOException ioEx) {
 					winMan.showProblemDialog("Game Died",
 							"There was a problem starting the game engine. Sorry about that.");
+				} catch (UnsupportedOperationException nopeEx) {
+					winMan.showProblemDialog(
+							"I can't do that, Dave.",
+							"This translator doesn't actually support testing, sorry.\n\nThe translator author was supposed to tell me that in the translator.ini file.");
 				}
 				frame.setStatus("Finished testing " + activeModel.getTitle());
 			}
 		};
 
-		// run this on a separate thread to still at least draw, if not receive
-		// input events.
+		// run this on a separate thread to be able to at least still draw
+		// correctly, if not receive input events.
 		testThread = new Thread(testTask, "TestStory-"
 				+ StringOp.removeWhiteSpace(activeModel.getName()));
 		testThread.start();

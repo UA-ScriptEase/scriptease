@@ -46,7 +46,6 @@ import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
-import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameConstant;
@@ -82,6 +81,7 @@ public final class ErfFile implements GameModule {
 	 */
 	protected static final String RESREF_REGEX = "[a-zA-Z0-9_]{1,16}(\\.[a-zA-Z0-9]{,3})?$";
 
+	private static final String NEVERWINTER_NIGHTS = "Neverwinter Nights";
 	private static final String VERSION = "V1.0";
 
 	/**
@@ -1047,15 +1047,13 @@ public final class ErfFile implements GameModule {
 	}
 
 	@Override
-	public List<String> getTestCommand(ProcessBuilder builder)
-			throws FileNotFoundException {
-		final File nwnRoot;
-		final File nwnExec;
+	public void configureTester(ProcessBuilder builder)
+			throws FileNotFoundException, UnsupportedOperationException {
+		final File nwnRoot = TranslatorManager.getInstance()
+				.getTranslator(NEVERWINTER_NIGHTS)
+				.getPathProperty(Translator.DescriptionKeys.GAME_DIRECTORY);
+		final File nwnExec = new File(nwnRoot, "nwmain.exe");
 		final List<String> argsList;
-
-		nwnRoot = getTranslator().getPathProperty(
-				DescriptionKeys.GAME_DIRECTORY);
-		nwnExec = new File(nwnRoot, "nwmain.exe");
 		builder.directory(nwnRoot);
 
 		if (!nwnRoot.exists())
@@ -1069,7 +1067,7 @@ public final class ErfFile implements GameModule {
 		argsList.add("+TestNewModule");
 		argsList.add(FileOp.removeExtension(this.location).getName());
 
-		return argsList;
+		builder.command(argsList);
 	}
 
 	@Override

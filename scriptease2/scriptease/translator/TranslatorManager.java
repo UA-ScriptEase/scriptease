@@ -182,9 +182,9 @@ public class TranslatorManager {
 					.getInstance()
 					.showProblemDialog(
 							"Invalid translator",
-							"The "
+							"There's a validation problem with the "
 									+ newTranslator.getName()
-									+ " translator is not valid and will not be loaded.");
+									+ " translator, so I can't use it. \n\nCheck my log file for technical details.");
 
 			newTranslator = null;
 		}

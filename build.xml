@@ -158,8 +158,6 @@ Some important targets to read up on are:
 		<fileset dir="${resourcesDirectory}/lib/">
 			<include name="**/*.jar" />
 		</fileset>
-		<!-- Include all translator jars too -->
-		<path path="translators/*" />
 		<pathelement path="${aspectj.home}/lib/aspectjrt.jar" />
 	</path>
 	<!-- ==== END INIT COMMANDS ==== -->
@@ -249,6 +247,7 @@ Some important targets to read up on are:
 		<!-- load the versioning data if it's not already in memory -->
 		<property file="${buildNumberLocation}" />
 		<property name="jarVersion" value="${majorVersion}.${build.number}" />
+
 		<echo>Jar version is ${jarVersion}, (${gitHash})</echo>
 
 		<jar destFile="${jarDirectory}/${jarFile}">
@@ -274,7 +273,7 @@ Some important targets to read up on are:
 				<attribute name="Implementation-Vendor" value="University of Alberta" />
 				<attribute name="Implementation-Title" value="ScriptEase" />
 				<attribute name="Implementation-Version" value="${jarVersion}" />
-				<attribute name="Implementation-Hash" value="${gitHash}" />
+				<attribute name="Implementation-Hash" value="${git.hash}" />
 				<attribute name="Class-Path" value=". ${jarClasspath}" />
 				<attribute name="Main-Class" value="scriptease.ScriptEase" />
 			</manifest>
