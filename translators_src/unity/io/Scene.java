@@ -68,20 +68,19 @@ public class Scene {
 			 * Once that bug is fixed, we should be able to use the code below
 			 * without problem. - remiller
 			 */
-			// for (Object object : parser.loadAll(reader)) {
-			// objectList.add(object);
-			// }
-
-			// hack around the above
-			final Collection<String> componentYamls;
-
-			componentYamls = this.applyDirectivesAcrossDocuments(this.location);
-
-			for (String doc : componentYamls) {
-				this.yamlData.add(Scene.parser.load(doc));
+			for (Object object : parser.loadAll(reader)) {
+				this.yamlData.add(object);
 			}
-			// end hack
 
+			/*
+			 * // hack around the above final Collection<String> componentYamls;
+			 * 
+			 * componentYamls =
+			 * this.applyDirectivesAcrossDocuments(this.location);
+			 * 
+			 * for (String doc : componentYamls) {
+			 * this.yamlData.add(Scene.parser.load(doc)); } // end hack
+			 */
 		} catch (ReaderException e) {
 			final String message;
 
@@ -94,6 +93,8 @@ public class Scene {
 
 			throw new IOException("Incorrect format.");
 		}
+		
+		System.out.println("File read.");
 	}
 
 	/**

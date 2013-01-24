@@ -18,7 +18,7 @@ Use 'ant zip' to create a distributable zip package. Use flag -Ddebug.mode=true 
 	
 	<!-- All code library dependencies should be here. -->
 	<property name="lib.dir" value="lib"/>
-	<property name="yaml.lib" value ="snakeyaml-1.10.jar"/>
+	<property name="yaml.lib" value ="snakeyaml-1.11.jar"/>
 
 	<property file="${se.base.dir}/mailingLists.properties" />
 	<import file="${se.base.dir}/commonBuild.xml" />
