@@ -124,6 +124,8 @@ public final class UnityProject implements GameModule {
 	@Override
 	public void setLocation(File location) {
 		if (this.projectLocation == null) {
+			if (!location.isDirectory())
+				location = location.getParentFile();
 			this.projectLocation = location;
 		} else {
 			throw new IllegalStateException(

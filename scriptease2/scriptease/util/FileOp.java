@@ -443,6 +443,11 @@ public class FileOp {
 	 * @return A collection of all files that match the filter.
 	 */
 	public static Collection<File> findFiles(File directory, FileFilter filter) {
+		if (!directory.isDirectory()) {
+			throw new IllegalArgumentException("File " + directory
+					+ " is not a directory.");
+		}
+
 		final Collection<File> matchingFiles = new ArrayList<File>();
 
 		// search subdirectories first
