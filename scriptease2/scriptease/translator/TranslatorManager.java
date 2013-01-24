@@ -93,6 +93,9 @@ public class TranslatorManager {
 		};
 		PatternModelManager.getInstance().addPatternModelObserver(this,
 				observer);
+
+		System.out.println("Finished loading " + this.translatorPool.size()
+				+ " translators.");
 	}
 
 	/**
