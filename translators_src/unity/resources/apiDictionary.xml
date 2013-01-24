@@ -22,7 +22,22 @@
 			<Visible>true</Visible>
 			<Labels />
 			<Children />
-			<CodeBlocks />
+			<CodeBlocks>
+				<CodeBlockSource>
+					<Name>Test Cause</Name>
+					<Visible>true</Visible>
+					<Labels />
+					<Id>0</Id>
+					<Types>
+						<Type>test_type</Type>
+					</Types>
+					<Code>
+						<Line>
+							<Literal>Test();</Literal>
+						</Line>
+					</Code>
+				</CodeBlockSource>
+			</CodeBlocks>
 		</ScriptIt>
 	</Causes>
 	<Effects>
@@ -31,7 +46,22 @@
 			<Visible>true</Visible>
 			<Labels />
 			<Children />
-			<CodeBlocks />
+			<CodeBlocks>
+				<CodeBlockSource>
+					<Name>Test Effect</Name>
+					<Visible>true</Visible>
+					<Labels />
+					<Id>1</Id>
+					<Types>
+						<Type>test_type</Type>
+					</Types>
+					<Code>
+						<Line>
+							<Literal>Test();</Literal>
+						</Line>
+					</Code>
+				</CodeBlockSource>
+			</CodeBlocks>
 		</ScriptIt>
 	</Effects>
 	<DescribeIts />

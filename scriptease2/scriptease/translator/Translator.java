@@ -751,9 +751,6 @@ public class Translator {
 		@Override
 		protected Class<?> findClass(String binaryName)
 				throws ClassNotFoundException {
-			
-			if(binaryName.contains("GameCompilerException"))
-				System.out.println("ERF ERF ERF");
 			// Try to load the class manually.
 			final File pathToClass = this.getClassFileForBinaryName(binaryName);
 			byte classData[] = new byte[0];

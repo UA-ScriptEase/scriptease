@@ -131,11 +131,7 @@ public class FileIO {
 		story = (StoryModel) this.readData(location, IoMode.STORY);
 
 		if (story != null) {
-			// Why are [stories] so bloody messy? - remiller
-			// Not anymore! They've been RECTIFIED! - kschenk
-			// And they're now known as stories. -kschenk
 			rootQP = story.getRoot();
-
 			BindingFixer.fixBindings(rootQP);
 		}
 
