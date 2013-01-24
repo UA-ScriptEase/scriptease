@@ -130,10 +130,11 @@ public class DialogBuilder {
 		final JComboBox gameComboBox;
 		final GroupLayout layout;
 		final Vector<Translator> translators;
-
+		
 		// Sort it like a boss.
-		translators = new Vector<Translator>(TranslatorManager.getInstance()
-				.getTranslators());
+		translators = new Vector<Translator>(
+				TranslatorManager.getInstance().getTranslators());
+		
 		Collections.sort(translators, new Comparator<Translator>() {
 			@Override
 			public int compare(Translator t1, Translator t2) {
@@ -165,6 +166,7 @@ public class DialogBuilder {
 
 		gameLabel = new JLabel("Game: ");
 		gameComboBox = new JComboBox(translators);
+
 		gameComboBox.setRenderer(new TranslatorListRenderer());
 		gameComboBox.setSelectedIndex(-1);
 
@@ -206,9 +208,10 @@ public class DialogBuilder {
 				final TranslatorManager translatorMgr = TranslatorManager
 						.getInstance();
 
-				// do everything in a try because otherwise the run will swallow
-
-				// any exceptions.
+				/*
+				 * Do everything inside a try block because otherwise the fact
+				 * that this is in a runnable will hide any exceptions.
+				 */
 				try {
 					statusManager.setStatus("Creating New Story ...");
 					selectedTranslator = (Translator) gameComboBox
@@ -315,10 +318,12 @@ public class DialogBuilder {
 				if (selectedTranslator != null) {
 					legalExtensions = selectedTranslator.getLegalExtensions();
 
-					if (legalExtensions.length != 0) {
+					
+					if(legalExtensions.length != 0){
 						filter = new FileNameExtensionFilter(selectedTranslator
-								.getName() + " Game Files", legalExtensions);
+							.getName() + " Game Files", legalExtensions);
 					}
+					
 					defaultLocation = selectedTranslator
 							.getPathProperty(DescriptionKeys.GAME_DIRECTORY);
 

@@ -60,7 +60,6 @@ public final class UnityProject implements GameModule {
 		for (Scene scene : this.scenes) {
 			scene.close();
 		}
-
 		this.scenes.clear();
 	}
 
@@ -82,8 +81,8 @@ public final class UnityProject implements GameModule {
 	}
 
 	@Override
-	public List<String> getTestCommand(ProcessBuilder builder)
-			throws FileNotFoundException {
+	public void configureTester(ProcessBuilder builder)
+			throws FileNotFoundException, UnsupportedOperationException {
 		throw new UnsupportedOperationException(
 				"The unity translator can't externally test.");
 	}
@@ -124,6 +123,7 @@ public final class UnityProject implements GameModule {
 	@Override
 	public void setLocation(File location) {
 		if (this.projectLocation == null) {
+			// TODO Do we need this?
 			if (!location.isDirectory())
 				location = location.getParentFile();
 			this.projectLocation = location;
@@ -131,6 +131,7 @@ public final class UnityProject implements GameModule {
 			throw new IllegalStateException(
 					"Cannot change Unity project location after it is set.");
 		}
+
 	}
 
 }

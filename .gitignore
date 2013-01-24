@@ -17,9 +17,12 @@
 # Nor are classpath and project files. They all contain person-specific paths.
 */user_preferences.ini
 *.log
+*.log.lck
 *.log.*
+*.log.*.lck
 .classpath
 .project
+scriptease2/.externalToolBuilders
 translators_src/*/.externalToolBuilders
 scriptease2/.settings/
 

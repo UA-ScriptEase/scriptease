@@ -98,17 +98,20 @@ public interface GameModule {
 	 * @return the GameConstant whose identifier matches the given identifier.
 	 */
 	public GameConstant getInstanceForObjectIdentifier(String id);
-	
+
 	/**
 	 * Retrieves the GameConstant object that represents the module
+	 * 
 	 * @return
 	 */
 	public GameConstant getModule();
 
 	/**
-	 * Gets the location of the GameModule
+	 * Gets the location of the GameModule.
 	 * 
-	 * @return The file path that points to this GameModule
+	 * @return The file path that points to this GameModule. Must never be
+	 *         <code>null</code>. If there is no location, this method returns a
+	 *         <code>File("")</code>.
 	 */
 	public File getLocation();
 
@@ -155,9 +158,8 @@ public interface GameModule {
 	 * @param root
 	 *            The root of the tree to aggregate from.
 	 * @return The collection of StartItOwner objects that should all be
-	 *         generating into the same file.
-	 * @see CodeBlock
-	 * @see StoryComponent
+	 *         generating into the same file. This must <b>never</b> be
+	 *         <code>null</code>, but may be empty.
 	 */
 	public Collection<Set<CodeBlock>> aggregateScripts(
 			Collection<StoryComponent> root);
@@ -183,13 +185,16 @@ public interface GameModule {
 	 * 
 	 * @param builder
 	 *            is the process builder that will be used to spawn the game
-	 *            executable. Implementations will not spawn the process
-	 *            themselves, but will instead configure the ProcessBuilder as
+	 *            executable. Implementations do not spawn the process
+	 *            themselves, but instead configure the ProcessBuilder as
 	 *            needed.
 	 * @throws FileNotfoundException
 	 *             if one or more of the required file for game execution could
 	 *             not be located.
+	 * @throws UnsupportedOperationException
+	 *             if the translator does not support testing. Testing support
+	 *             should be declared in translator.ini under SUPPORTS_TESTING.
 	 */
-	public List<String> getTestCommand(ProcessBuilder builder)
-			throws FileNotFoundException;
+	public void configureTester(ProcessBuilder builder)
+			throws FileNotFoundException, UnsupportedOperationException;
 }
