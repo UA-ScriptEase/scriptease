@@ -10,20 +10,17 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.reader.ReaderException;
-
-import scriptease.gui.WindowFactory;
-import scriptease.util.FileOp;
+import org.yaml.snakeyaml.events.Event;
 
 /**
- * Management class for handling the I/O and memory contents of a scene file.
+ * Management class for handling the I/O and memory contents of a .unity scene
+ * file that has been saved in YAML format.
  * 
  * @author remiller
+ * @author kschenk
  */
 public class Scene {
 	private static final Yaml parser = new Yaml(new UnityConstructor());
@@ -32,9 +29,7 @@ public class Scene {
 	}
 
 	private final BufferedReader reader;
-	private final BufferedWriter writer;
-
-	private final List<Object> yamlData;
+	private final List<UnityObject> yamlData;
 	private final File location;
 
 	/**
@@ -52,82 +47,33 @@ public class Scene {
 					+ location.getAbsolutePath() + " went missing!");
 
 		this.reader = new BufferedReader(new FileReader(location));
-		this.writer = new BufferedWriter(new FileWriter(location));
-		this.yamlData = new ArrayList<Object>();
+
+		this.yamlData = new ArrayList<UnityObject>();
 		this.location = location;
 
 		this.read(location);
 	}
 
 	private void read(File location) throws IOException {
-		try {
-			/*
-			 * TODO: We can't use parser.loadAll() while SnakeYAML can't handle
-			 * directives spread across multiple documents. See SnakeYAML Issue
-			 * 149 (http://code.google.com/p/snakeyaml/issues/detail?id=149).
-			 * Once that bug is fixed, we should be able to use the code below
-			 * without problem. - remiller
-			 */
-			for (Object object : parser.loadAll(reader)) {
-				this.yamlData.add(object);
+
+		final Iterable<Event> eventIterable;
+		final UnityObjectBuilder builder;
+
+		eventIterable = parser.parse(reader);
+
+		builder = new UnityObjectBuilder(eventIterable.iterator());
+
+		this.yamlData.addAll(builder.getObjects());
+
+		for (UnityObject object : this.yamlData) {
+			System.out.println(object.getTag() + " &" + object.getUniqueID());
+			for (String key : object.getPropertyMap().keySet()) {
+				System.out.println(key + ":");
+				System.out.println("  " + object.getPropertyMap().get(key));
 			}
-
-			/*
-			 * // hack around the above final Collection<String> componentYamls;
-			 * 
-			 * componentYamls =
-			 * this.applyDirectivesAcrossDocuments(this.location);
-			 * 
-			 * for (String doc : componentYamls) {
-			 * this.yamlData.add(Scene.parser.load(doc)); } // end hack
-			 */
-		} catch (ReaderException e) {
-			final String message;
-
-			message = "The file "
-					+ location.getPath()
-					+ " isn't in the YAML format.\nThe Unity translator can't handle it.";
-
-			WindowFactory.getInstance().showProblemDialog("Bad Scene File",
-					message);
-
-			throw new IOException("Incorrect format.");
 		}
-		
-		System.out.println("File read.");
-	}
-
-	/**
-	 * This is an awful hack to get around the bug in SnakeYAML in <a
-	 * href="http://code.google.com/p/snakeyaml/issues/detail?id=149"/>issue
-	 * #149</a>.<br>
-	 * <BR>
-	 * It splits the given source file into chunks and prepends the directives
-	 * from the start of the source file to each internal YAML document.
-	 * 
-	 * @param source
-	 *            The source file to split and fix
-	 * @return The YAML documents as strings.
-	 * @throws IOException
-	 *             If things go south, in a major way. Velociraptor attacks and
-	 *             the like.
-	 */
-	private Collection<String> applyDirectivesAcrossDocuments(File source)
-			throws IOException {
-		final String documentDelimiter = "---";
-		final List<String> documents;
-
-		final String yamlStr = FileOp.readFileAsString(source);
-
-		documents = new ArrayList<String>(Arrays.asList(yamlStr
-				.split(documentDelimiter)));
-		final String directives = documents.remove(0);
-
-		for (int i = 0; i < documents.size(); i++) {
-			documents.set(i, directives + documentDelimiter + documents.get(i));
-		}
-
-		return documents;
+		System.out.println("Scene File Read with " + this.yamlData.size()
+				+ " objects");
 	}
 
 	/**
@@ -136,7 +82,28 @@ public class Scene {
 	 * @throws IOException
 	 */
 	public void write() throws IOException {
-		parser.dumpAll(this.yamlData.iterator(), this.writer);
+		final BufferedWriter writer;
+		writer = new BufferedWriter(new FileWriter(location));
+
+		writer.write("%YAML 1.1\n" + "%TAG !u! tag:unity3d.com,2011:\n");
+
+		// parser.dumpAll(this.yamlData.iterator(), writer);
+
+		// Add an arbitrary number
+		for (Object data : this.yamlData) {
+			if (data instanceof UnityObject) {
+				final UnityObject unityObj = (UnityObject) data;
+
+				// parser.dump(unityObj);
+				// --- !u!104 &2
+				final String number = unityObj.getTag().split(":")[2];
+				writer.write("--- !u!" + number + " &" + unityObj.getUniqueID()
+						+ "\n");
+				parser.dump(unityObj.getPropertyMap(), writer);
+			}
+		}
+
+		writer.close();
 	}
 
 	/**
@@ -147,7 +114,6 @@ public class Scene {
 	 */
 	public void close() throws IOException {
 		this.reader.close();
-		this.writer.close();
 	}
 
 	@Override
