@@ -1,6 +1,7 @@
 package io.yaml;
 
 import io.Scene;
+import io.UnityObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,8 +29,6 @@ import org.yaml.snakeyaml.nodes.Tag;
  * @author remiller
  */
 public class UnityConstructor extends Constructor {
-	private static final String UNITY_TAG = "tag:unity3d.com,2011:";
-
 	public UnityConstructor() {
 		Map<String, UnityConstruct> typeIds = new HashMap<String, UnityConstruct>();
 
@@ -197,7 +196,7 @@ public class UnityConstructor extends Constructor {
 		typeIds.put("1112", generic); // SubstanceImporter
 
 		for (String id : typeIds.keySet()) {
-			this.registerConverter(UNITY_TAG + id, typeIds.get(id));
+			this.registerConverter(UnityObject.UNITY_TAG + id, typeIds.get(id));
 		}
 	}
 
@@ -232,7 +231,8 @@ public class UnityConstructor extends Constructor {
 	 */
 	private void registerConverter(Tag tag, UnityConstruct converter) {
 		this.yamlConstructors.put(tag, converter);
-		this.addTypeDescription(new TypeDescription(converter.getResultClass(), tag));
+		this.addTypeDescription(new TypeDescription(converter.getResultClass(),
+				tag));
 	}
 
 	private class GenericConverter extends UnityConstruct {
@@ -240,26 +240,39 @@ public class UnityConstructor extends Constructor {
 			super(Object.class);
 		}
 
-		public Object construct(Node node) {
+		@Override
+		public UnityObject construct(Node node) {
 			final NodeId nodeId = node.getNodeId();
-			final Object converted;
+			UnityObject object = null;
 
-			if (nodeId == NodeId.scalar) {
-				ScalarNode sNode = (ScalarNode) node;
-				converted = UnityConstructor.this.constructScalar(sNode);
-			} else if (nodeId == NodeId.mapping) {
-				MappingNode mNode = (MappingNode) node;
-				converted = UnityConstructor.this.constructMapping(mNode);
-			} else if (nodeId == NodeId.sequence) {
-				SequenceNode qNode = (SequenceNode) node;
-				converted = UnityConstructor.this.constructSequence(qNode);
-			} else {
-				converted = null;
-				throw new IllegalStateException(
-						"YAML Node is not one of the three basic types.");
-			}
+			// This is bad. TODO FIXME
+			final String tag = node.getTag().getValue();
 
-			return converted;
+		/*	for (UnityObject uObj : Scene.currentObjects)
+				if (uObj.getTag().equals(tag)) {
+					object = uObj;
+					break;
+				}*/
+			if(object == null)
+				return null;
+			/*
+			 * if (nodeId == NodeId.scalar) { ScalarNode sNode = (ScalarNode)
+			 * node; converted = UnityConstructor.this.constructScalar(sNode); }
+			 * else
+			 */
+			if (nodeId == NodeId.mapping) {
+			//	//MappingNode mNode = (MappingNode) node;
+			//	object.setProperties(UnityConstructor.this
+				//		.constructMapping(mNode));
+			} /*
+			 * else /*if (nodeId == NodeId.sequence) { SequenceNode qNode =
+			 * (SequenceNode) node; converted =
+			 * UnityConstructor.this.constructSequence(qNode); } else {
+			 * converted = null; throw new IllegalStateException(
+			 * "YAML Node is not one of the three basic types."); }
+			 */
+
+			return object;
 		}
 	}
 
