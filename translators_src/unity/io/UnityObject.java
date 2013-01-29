@@ -105,7 +105,7 @@ public class UnityObject implements GameObject {
 		typeMap.put(147, "ResourceManager");
 		typeMap.put(148, "NetworkView");
 		typeMap.put(149, "NetworkManager");
-		typeMap.put(150, "Preloputata");
+		typeMap.put(150, "PreloadedData");
 		typeMap.put(152, "MovieTexture");
 		typeMap.put(153, "ConfigurableJoint");
 		typeMap.put(154, "TerrainCollider");

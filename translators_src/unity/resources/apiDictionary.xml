@@ -464,9 +464,9 @@
 		</Type>
 		<Type>
 			<!-- Not sure if this exists... Google can't even find it. -->
-			<Name>Preloputata</Name>
-			<Keyword>Preloputata</Keyword>
-			<CodeSymbol>Preloputata</CodeSymbol>
+			<Name>PreloadedData</Name>
+			<Keyword>PreloadedData</Keyword>
+			<CodeSymbol>PreloadedData</CodeSymbol>
 		</Type>
 		<Type>
 			<Name>MovieTexture</Name>
