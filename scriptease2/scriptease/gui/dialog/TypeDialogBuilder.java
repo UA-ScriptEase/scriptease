@@ -321,7 +321,7 @@ public class TypeDialogBuilder {
 			typesPanel.add(gameObjectPanel);
 		}
 
-		if (gameConstantPanel != null) {
+		if (listPanel != null) {
 			final JLabel label = new JLabel("Lists");
 
 			label.setAlignmentX(Component.LEFT_ALIGNMENT);

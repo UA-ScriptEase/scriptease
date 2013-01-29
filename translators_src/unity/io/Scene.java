@@ -1,7 +1,5 @@
 package io;
 
-import io.yaml.UnityConstructor;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,7 +21,7 @@ import org.yaml.snakeyaml.events.Event;
  * @author kschenk
  */
 public class Scene {
-	private static final Yaml parser = new Yaml(new UnityConstructor());
+	private static final Yaml parser = new Yaml();
 	static {
 		parser.setName("Unity Scene YAML Parser");
 	}
@@ -54,8 +52,11 @@ public class Scene {
 		this.read(location);
 	}
 
-	private void read(File location) throws IOException {
+	public List<UnityObject> getObjects() {
+		return this.yamlData;
+	}
 
+	private void read(File location) throws IOException {
 		final Iterable<Event> eventIterable;
 		final UnityObjectBuilder builder;
 
@@ -65,13 +66,6 @@ public class Scene {
 
 		this.yamlData.addAll(builder.getObjects());
 
-		for (UnityObject object : this.yamlData) {
-			System.out.println(object.getTag() + " &" + object.getUniqueID());
-			for (String key : object.getPropertyMap().keySet()) {
-				System.out.println(key + ":");
-				System.out.println("  " + object.getPropertyMap().get(key));
-			}
-		}
 		System.out.println("Scene File Read with " + this.yamlData.size()
 				+ " objects");
 	}
@@ -87,16 +81,13 @@ public class Scene {
 
 		writer.write("%YAML 1.1\n" + "%TAG !u! tag:unity3d.com,2011:\n");
 
-		// parser.dumpAll(this.yamlData.iterator(), writer);
-
 		// Add an arbitrary number
 		for (Object data : this.yamlData) {
 			if (data instanceof UnityObject) {
 				final UnityObject unityObj = (UnityObject) data;
 
-				// parser.dump(unityObj);
-				// --- !u!104 &2
-				final String number = unityObj.getTag().split(":")[2];
+				final String number = "" + unityObj.getTypeNumber();
+
 				writer.write("--- !u!" + number + " &" + unityObj.getUniqueID()
 						+ "\n");
 				parser.dump(unityObj.getPropertyMap(), writer);

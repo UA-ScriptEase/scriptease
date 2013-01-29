@@ -66,8 +66,15 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public List<GameConstant> getResourcesOfType(String type) {
+		final List<GameConstant> objects;
+
+		objects = new ArrayList<GameConstant>();
+
+		for (Scene scene : this.scenes) {
+			objects.addAll(scene.getObjects());
+		}
 		// TODO DO THIS
-		return new ArrayList<GameConstant>();
+		return objects;
 	}
 
 	@Override
