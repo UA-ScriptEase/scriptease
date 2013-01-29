@@ -1,5 +1,6 @@
 package io;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -73,7 +74,7 @@ public final class NWNObject extends NWNGameConstant implements GameObject {
 	public boolean equals(Object obj) {
 		if (obj instanceof NWNObject)
 			return this.hashCode() == obj.hashCode();
-		
+
 		return false;
 	}
 }
