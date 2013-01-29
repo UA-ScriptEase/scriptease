@@ -1,5 +1,6 @@
 package scriptease.translator.io.model;
 
+
 /**
  * A GameObject is the "instance" side of a class-instance type of relationship
  * in terms of game objects.<br>
