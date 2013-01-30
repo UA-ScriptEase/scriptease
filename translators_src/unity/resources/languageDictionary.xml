@@ -254,20 +254,14 @@
 		<!-- Functions -->
 		<!-- Function signature with type in front -->
 		<Format id="functionSignature">
-			<FormatRef ref="variableWithType" />
+			<Literal>function</Literal>
+			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			<Literal>(</Literal>
 			<Series data="parameters" unique="true" separator=", ">
 				<!-- Parameters are just the type and the name -->
 				<FormatRef ref="variableWithType" />
 			</Series>
 			<Literal>)</Literal>
-		</Format>
-		<!-- Declares the function, for the top of the file -->
-		<Format id="functionDeclaration">
-			<Line>
-				<FormatRef ref="functionSignature" />
-				<Literal>;</Literal>
-			</Line>
 		</Format>
 		<!-- Used by ScriptEase to get the function name -->
 		<Format id="function_as_value">
@@ -505,14 +499,6 @@
 				<Literal>#pragma strict</Literal>
 			</Line>
 			<Line>
-				<Literal>// Function Declarations</Literal>
-			</Line>
-			<!-- Function declarations next -->
-			<Series data="codeBlocks" unique="true">
-				<FormatRef ref="functionDeclaration" />
-			</Series>
-			<Line />
-			<Line>
 				<Literal>// Main</Literal>
 			</Line>
 			<FormatRef ref="main" />
@@ -527,43 +513,6 @@
 			<Line />
 			<!-- NWN likes a blank line all by itself. I think it's a C-ism that they 
 				seem to want to keep? -->
-			<Line />
-		</Format>
-		<!-- Used in the Active slot on Dialogue Lines -->
-		<Format id="conversation_conditional">
-			<Line>
-				<Literal>#pragma strict</Literal>
-			</Line>
-			<Line>
-				<Literal>//Function Declarations</Literal>
-			</Line>
-			<!-- Function declarations next -->
-			<Series data="codeBlocks" unique="true">
-				<FormatRef ref="functionDeclaration" />
-			</Series>
-			<Line />
-			<Line>
-				<Literal>//Starting Conditional</Literal>
-			</Line>
-			<Line>
-				<Literal>function StartingConditional() {</Literal>
-			</Line>
-			<Indent>
-				<Series data="codeBlocks" unique="true">
-					<FormatRef ref="returnFunction" />
-				</Series>
-			</Indent>
-			<Line>
-				<Literal>}</Literal>
-			</Line>
-			<Line />
-			<Line>
-				<Literal>//Function Definitions</Literal>
-			</Line>
-			<!-- Function definitions last -->
-			<Series data="codeBlocks" unique="true">
-				<FormatRef ref="functionDefinition" />
-			</Series>
 			<Line />
 		</Format>
 	</Formats>

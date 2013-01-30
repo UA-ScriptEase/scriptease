@@ -174,6 +174,8 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public void save(boolean compile) throws IOException {
+		// TODO Delete all "se_" saved script files
+
 		for (Scene scene : this.scenes) {
 			scene.write();
 		}
