@@ -194,19 +194,24 @@
 		<Word>watch</Word>
 		<Word>window</Word>
 		<Word>Window</Word>
+		
+		<!-- Unity Reserved -->
+		<Word>GameObject</Word>
 	</ReservedWords>
 	<Maps></Maps>
 	<Formats>
 		<!-- Variables -->
 		<!-- Adds the type of the variable in front of it -->
 		<Format id="variableWithType">
-			<Fragment data="type" default="void" />
-			<Literal> </Literal>
 			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
+			<Literal>:</Literal>
+			<Fragment data="type" default="void" />
 		</Format>
 		<!-- Declares a variable with type -->
 		<Format id="variableDeclaration">
 			<Line>
+				<Literal>var</Literal>
+				<Literal> </Literal>
 				<FormatRef ref="variableWithType" />
 				<Literal>;</Literal>
 			</Line>
@@ -254,7 +259,7 @@
 		<!-- Functions -->
 		<!-- Function signature with type in front -->
 		<Format id="functionSignature">
-			<Literal>function</Literal>
+			<Literal>function </Literal>
 			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			<Literal>(</Literal>
 			<Series data="parameters" unique="true" separator=", ">
@@ -467,7 +472,7 @@
 			<Line>
 				<Literal>}</Literal>
 			</Line>
-			
+
 			<Line>
 				<Literal>function Update() {</Literal>
 			</Line>
