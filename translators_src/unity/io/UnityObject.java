@@ -25,15 +25,29 @@ public class UnityObject implements GameObject {
 		this.propertyMap.putAll(map);
 	}
 
+	/**
+	 * Returns the tag of the object. Tags always start with {@link #UNITY_TAG}.
+	 * Tags for UnityObjects are not unique and only serve to define the type.
+	 */
 	@Override
 	public String getTag() {
 		return this.tag;
 	}
 
+	/**
+	 * The unique identifier for the object. In YAML, it looks like "&#####".
+	 * 
+	 * @return
+	 */
 	public int getUniqueID() {
 		return this.uniqueID;
 	}
 
+	/**
+	 * Returns the map of various properties of a unity object.
+	 * 
+	 * @return
+	 */
 	public Map<String, Object> getPropertyMap() {
 		return this.propertyMap;
 	}
@@ -49,8 +63,15 @@ public class UnityObject implements GameObject {
 
 	@Override
 	public String getName() {
-		// TODO We should actually return the value of "m_name" if it's a top
-		// level Game Object.
+		// TODO This got accessed 120 times on load for ONE unique object. This
+		// may be why we take forever to load large files.
+		final Object subMap = this.propertyMap.get("GameObject");
+		if (subMap instanceof Map) {
+			final Object mName = ((Map<?, ?>) subMap).get("m_Name");
+			if (mName instanceof String && !((String) mName).isEmpty())
+				return (String) mName;
+		}
+
 		for (String key : this.propertyMap.keySet())
 			return key;
 		return "";
@@ -58,7 +79,7 @@ public class UnityObject implements GameObject {
 
 	@Override
 	public String getTemplateID() {
-		return this.tag;
+		return this.tag + " &" + this.uniqueID;
 	}
 
 	@Override
@@ -67,7 +88,7 @@ public class UnityObject implements GameObject {
 	}
 
 	public int getTypeNumber() {
-		return Integer.parseInt(this.tag.split(":")[2]);
+		return Integer.parseInt(this.tag.split(UNITY_TAG)[1]);
 	}
 
 	@Override
