@@ -1,14 +1,21 @@
 package io;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import scriptease.controller.CodeBlockMapper;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.translator.codegenerator.ScriptInfo;
@@ -21,13 +28,20 @@ import scriptease.util.FileOp;
  * behave as the facade of the project.
  * 
  * @author remiller
+ * @author kschenk
  */
 public final class UnityProject implements GameModule {
 	private static final String SCENE_FILE_EXTENSION = ".unity";
 
 	private File projectLocation;
 
-	private final Collection<Scene> scenes = new ArrayList<Scene>();
+	private final Collection<Scene> scenes;
+	private final Map<String, String> namesToScripts;
+
+	public UnityProject() {
+		this.scenes = new ArrayList<Scene>();
+		this.namesToScripts = new HashMap<String, String>();
+	}
 
 	@Override
 	public GameConstant getModule() {
@@ -36,18 +50,60 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public void addIncludeFiles(Collection<File> scriptList) {
-		// TODO Auto-generated method stub
+		// TODO Once we have our own custom libraries, they are added using
+		// this.
 	}
 
 	@Override
-	public void addScripts(Collection<ScriptInfo> scripts) {
-		// TODO Auto-generated method stub
+	public void addScripts(Collection<ScriptInfo> scriptList) {
+		final int radix = 36;
+
+		int scriptCounter = 0;
+		for (ScriptInfo scriptInfo : scriptList) {
+			if (scriptInfo == null)
+				continue;
+
+			final String code;
+			final String idNum;
+			final String receiverName;
+
+			code = scriptInfo.getCode();
+			idNum = "_" + Integer.toString(scriptCounter++, radix);
+
+			receiverName = "se" + idNum + "_"
+					+ scriptInfo.getSubject().getName();
+
+			this.namesToScripts.put(receiverName, code);
+		}
 	}
 
 	@Override
 	public Collection<Set<CodeBlock>> aggregateScripts(
-			Collection<StoryComponent> root) {
-		return new ArrayList<Set<CodeBlock>>();
+			Collection<StoryComponent> roots) {
+		final Map<String, List<CodeBlock>> codeBlocks;
+		final CodeBlockMapper codeBlockMapper;
+		final List<Set<CodeBlock>> scriptBuckets;
+
+		scriptBuckets = new ArrayList<Set<CodeBlock>>();
+
+		// Split the story tree into groups by CodeBlock info.
+		codeBlockMapper = new CodeBlockMapper();
+		for (StoryComponent root : roots) {
+			root.process(codeBlockMapper);
+		}
+
+		// Now that we've found all the CodeBlockComponents, sort them into
+		// groups.
+		codeBlocks = codeBlockMapper.getCodeBlocks();
+		for (String key : codeBlocks.keySet()) {
+			final Set<CodeBlock> codeBlockGroup = new HashSet<CodeBlock>();
+			for (CodeBlock codeBlockStoryComponent : codeBlocks.get(key)) {
+				codeBlockGroup.add(codeBlockStoryComponent);
+			}
+			scriptBuckets.add(codeBlockGroup);
+		}
+
+		return scriptBuckets;
 	}
 
 	@Override
@@ -60,7 +116,12 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public GameConstant getInstanceForObjectIdentifier(String id) {
-		// TODO Auto-generated method stub
+		for (Scene scene : this.scenes) {
+			for (UnityObject object : scene.getObjects())
+				if (object.getTemplateID().equals(id)) {
+					return object;
+				}
+		}
 		return null;
 	}
 
@@ -73,7 +134,6 @@ public final class UnityProject implements GameModule {
 		for (Scene scene : this.scenes) {
 			objects.addAll(scene.getObjects());
 		}
-		// TODO DO THIS
 		return objects;
 	}
 
@@ -102,18 +162,34 @@ public final class UnityProject implements GameModule {
 
 		// sniff out .unity files and read them all into memory
 		sceneFiles = FileOp.findFiles(this.projectLocation, sceneFileFilter);
-
 		for (File sceneFile : sceneFiles) {
 			scene = new Scene(sceneFile);
 
 			this.scenes.add(scene);
 		}
+
+		// TODO Read all meta files for scripts. Read all scripts that exist,
+		// too.
 	}
 
 	@Override
 	public void save(boolean compile) throws IOException {
 		for (Scene scene : this.scenes) {
 			scene.write();
+		}
+
+		for (Entry<String, String> entry : this.namesToScripts.entrySet()) {
+			final BufferedWriter writer;
+			final File scriptFile = new File(this.projectLocation,
+					entry.getKey() + ".js");
+
+			writer = new BufferedWriter(new FileWriter(scriptFile));
+
+			writer.write(entry.getValue());
+
+			writer.close();
+
+			// TODO Write a meta file Wolololol
 		}
 	}
 

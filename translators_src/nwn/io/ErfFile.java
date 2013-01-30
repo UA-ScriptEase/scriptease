@@ -532,51 +532,51 @@ public final class ErfFile implements GameModule {
 
 	@Override
 	public void addScripts(Collection<ScriptInfo> scriptList) {
-		String code;
-		String scriptResRef;
-		String idNum;
-		int scriptCounter = 0;
-		NWNResource scriptResource;
-		String receiverResRef;
-
 		// the 36 here is to get a number in a base 36 number system. Think of
 		// it like hex that uses the whole alphabet.
 		final int radix = 36;
 
 		this.uncompiledScripts.clear();
 
+		int scriptCounter = 0;
 		for (ScriptInfo scriptInfo : scriptList) {
-			if (scriptInfo != null) {
-				code = scriptInfo.getCode();
-				receiverResRef = scriptInfo.getSubject().getTemplateID();
+			if (scriptInfo == null)
+				continue;
+			
+			final String code;
+			final String idNum;
+			final NWNResource scriptResource;
+			final String receiverResRef;
+			String scriptResRef;
 
-				idNum = "_" + Integer.toString(scriptCounter++, radix);
+			code = scriptInfo.getCode();
+			receiverResRef = scriptInfo.getSubject().getTemplateID();
 
-				scriptResRef = receiverResRef;
+			idNum = "_" + Integer.toString(scriptCounter++, radix);
 
-				// remove indexing info if its there
-				if (scriptResRef.contains(GenericFileFormat.RESREF_SEPARATOR))
-					scriptResRef = scriptResRef
-							.split(GenericFileFormat.RESREF_SEPARATOR)[0];
+			scriptResRef = receiverResRef;
 
-				// same with extension.
-				scriptResRef = FileOp.removeExtension(scriptResRef);
+			// remove indexing info if its there
+			if (scriptResRef.contains(GenericFileFormat.RESREF_SEPARATOR))
+				scriptResRef = scriptResRef
+						.split(GenericFileFormat.RESREF_SEPARATOR)[0];
 
-				// prepend our prefix and append our unique ID
-				scriptResRef = ErfFile.SCRIPT_FILE_PREFIX + scriptResRef
-						+ idNum;
+			// same with extension.
+			scriptResRef = FileOp.removeExtension(scriptResRef);
 
-				// enforce max length on resrefs
-				if (scriptResRef.length() > ErfKey.RESREF_MAX_LENGTH) {
-					scriptResRef = scriptResRef.substring(0,
-							ErfKey.RESREF_MAX_LENGTH - idNum.length()) + idNum;
-				}
+			// prepend our prefix and append our unique ID
+			scriptResRef = ErfFile.SCRIPT_FILE_PREFIX + scriptResRef + idNum;
 
-				scriptResource = this.addScript(scriptResRef, code);
-				this.uncompiledScripts.add(scriptResource);
-
-				this.update(receiverResRef, scriptResRef, scriptInfo);
+			// enforce max length on resrefs
+			if (scriptResRef.length() > ErfKey.RESREF_MAX_LENGTH) {
+				scriptResRef = scriptResRef.substring(0,
+						ErfKey.RESREF_MAX_LENGTH - idNum.length()) + idNum;
 			}
+
+			scriptResource = this.addScript(scriptResRef, code);
+			this.uncompiledScripts.add(scriptResource);
+
+			this.update(receiverResRef, scriptResRef, scriptInfo);
 		}
 	}
 

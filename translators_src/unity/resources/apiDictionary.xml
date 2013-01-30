@@ -3,9 +3,20 @@
 	xsi:noNamespaceSchemaLocation='../../../scriptease2/scriptease/resources/schema/ApiDictionarySchema.xsd'>
 	<Types>
 		<Type>
+			<Name>Number</Name>
+			<Keyword>float</Keyword>
+			<CodeSymbol>float</CodeSymbol>
+			<GUI>JSPINNER</GUI>
+			<WidgetName>#</WidgetName>
+		</Type>
+		<Type>
 			<Name>GameObject</Name>
 			<Keyword>GameObject</Keyword>
 			<CodeSymbol>GameObject</CodeSymbol>
+			<Slots>
+				<Slot>MouseClicked</Slot>
+			</Slots>
+			<WidgetName>G</WidgetName>
 		</Type>
 		<Type>
 			<Name>Component</Name>
@@ -463,7 +474,6 @@
 			<CodeSymbol>NetworkManager</CodeSymbol>
 		</Type>
 		<Type>
-			<!-- Not sure if this exists... Google can't even find it. -->
 			<Name>PreloadedData</Name>
 			<Keyword>PreloadedData</Keyword>
 			<CodeSymbol>PreloadedData</CodeSymbol>
@@ -801,31 +811,41 @@
 	</Types>
 	<Slots defaultFormat="file">
 		<Slot>
-			<Name>TestSlot</Name>
-			<Keyword>TestSlot</Keyword>
+			<Name>MouseClicked</Name>
+			<Keyword>MouseClicked</Keyword>
 			<Parameters />
 			<Implicits />
 		</Slot>
 	</Slots>
 	<Causes>
 		<ScriptIt>
-			<Name>Test Cause</Name>
+			<Name>Update method mouse click in &lt;Game Object&gt;</Name>
 			<Visible>true</Visible>
 			<Labels />
 			<Children />
 			<CodeBlocks>
 				<CodeBlockSource>
-					<Name>Test Cause</Name>
+					<Name>Update method mouse click in &lt;Game Object&gt;</Name>
 					<Visible>true</Visible>
 					<Labels />
+					<Subject>Game Object</Subject>
+					<Slot>MouseClicked</Slot>
 					<Id>0</Id>
 					<Types>
-						<Type>test_type</Type>
+						<Type>void</Type>
 					</Types>
+					<Parameters>
+						<KnowIt>
+							<Name>Game Object</Name>
+							<Visible>true</Visible>
+							<Labels />
+							<Types>
+								<Type>GameObject</Type>
+							</Types>
+						</KnowIt>
+					</Parameters>
 					<Code>
-						<Line>
-							<Literal>Test();</Literal>
-						</Line>
+						<FormatRef data="NONE" ref="children" />
 					</Code>
 				</CodeBlockSource>
 			</CodeBlocks>
@@ -833,22 +853,53 @@
 	</Causes>
 	<Effects>
 		<ScriptIt>
-			<Name>Test Effect</Name>
+			<Name>Shoot out a &lt;Game Object&gt; at speed &lt;Speed&gt;</Name>
 			<Visible>true</Visible>
-			<Labels />
+			<Labels>
+				<Label>NOW</Label>
+			</Labels>
 			<Children />
 			<CodeBlocks>
 				<CodeBlockSource>
-					<Name>Test Effect</Name>
+					<Name>Shoot out a &lt;Game Object&gt; at speed &lt;Speed&gt;</Name>
 					<Visible>true</Visible>
 					<Labels />
 					<Id>1</Id>
 					<Types>
-						<Type>test_type</Type>
+						<Type>void</Type>
 					</Types>
+					<Parameters>
+						<KnowIt>
+							<Name>Game Object</Name>
+							<Visible>true</Visible>
+							<Labels />
+							<Types>
+								<Type>GameObject</Type>
+							</Types>
+						</KnowIt>
+						<KnowIt>
+							<Name>Speed</Name>
+							<Visible>true</Visible>
+							<Labels />
+							<Types>
+								<Type>float</Type>
+							</Types>
+						</KnowIt>
+					</Parameters>
 					<Code>
 						<Line>
-							<Literal>Test();</Literal>
+							<Literal>var clone:GameObject = Instantiate(</Literal>
+							<Scope data="argument" ref="Game Object">
+								<Fragment data="name" />
+							</Scope>
+							<Literal>, transform.position, transform.rotation);</Literal>
+						</Line>
+						<Line>
+							<Literal>clone.rigidbody.velocity = transform.TransformDirection (Vector3.forward * </Literal>
+							<Scope data="argument" ref="Speed">
+								<Fragment data="name" />
+							</Scope>
+							<Literal>);</Literal>
 						</Line>
 					</Code>
 				</CodeBlockSource>
