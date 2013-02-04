@@ -464,4 +464,9 @@ public class Context {
 		unimplemented("getCause");
 		return null;
 	}
+
+	public String getSlotConditional() {
+		unimplemented("getSlotConditional");
+		return null;
+	}
 }

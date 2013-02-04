@@ -1,18 +1,14 @@
 package io;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import scriptease.controller.CodeBlockMapper;
@@ -36,11 +32,11 @@ public final class UnityProject implements GameModule {
 	private File projectLocation;
 
 	private final Collection<Scene> scenes;
-	private final Map<String, String> namesToScripts;
+	private final Collection<UnityScript> scripts;
 
 	public UnityProject() {
 		this.scenes = new ArrayList<Scene>();
-		this.namesToScripts = new HashMap<String, String>();
+		this.scripts = new ArrayList<UnityScript>();
 	}
 
 	@Override
@@ -56,24 +52,13 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public void addScripts(Collection<ScriptInfo> scriptList) {
-		final int radix = 36;
-
-		int scriptCounter = 0;
 		for (ScriptInfo scriptInfo : scriptList) {
-			if (scriptInfo == null)
-				continue;
-
-			final String code;
-			final String idNum;
-			final String receiverName;
-
-			code = scriptInfo.getCode();
-			idNum = "_" + Integer.toString(scriptCounter++, radix);
-
-			receiverName = "se" + idNum + "_"
-					+ scriptInfo.getSubject().getName();
-
-			this.namesToScripts.put(receiverName, code);
+			for (Scene scene : this.scenes) {
+				if (scene.getObjectByTemplateID(scriptInfo.getSubject()
+						.getTemplateID()) != null) {
+					this.scripts.add(new UnityScript(scriptInfo, scene));
+				}
+			}
 		}
 	}
 
@@ -168,31 +153,25 @@ public final class UnityProject implements GameModule {
 			this.scenes.add(scene);
 		}
 
-		// TODO Read all meta files for scripts. Read all scripts that exist,
-		// too.
+		// TODO Read all meta files for scripts so we don't accidentally
+		// overwrite something. Read all scripts that exist, too.
 	}
 
 	@Override
 	public void save(boolean compile) throws IOException {
 		// TODO Delete all "se_" saved script files
+		// ^ we may not have to do this. Looks like Unity is doing this by
+		// itself.
 
 		for (Scene scene : this.scenes) {
 			scene.write();
 		}
 
-		for (Entry<String, String> entry : this.namesToScripts.entrySet()) {
-			final BufferedWriter writer;
-			final File scriptFile = new File(this.projectLocation,
-					entry.getKey() + ".js");
-
-			writer = new BufferedWriter(new FileWriter(scriptFile));
-
-			writer.write(entry.getValue());
-
-			writer.close();
-
-			// TODO Write a meta file Wolololol
+		for (UnityScript script : this.scripts) {
+			script.write(this.projectLocation);
 		}
+
+		UnityScript.resetScriptCounter();
 	}
 
 	@Override
@@ -203,7 +182,6 @@ public final class UnityProject implements GameModule {
 	@Override
 	public void setLocation(File location) {
 		if (this.projectLocation == null) {
-			// TODO Do we need this?
 			if (!location.isDirectory())
 				location = location.getParentFile();
 			this.projectLocation = location;

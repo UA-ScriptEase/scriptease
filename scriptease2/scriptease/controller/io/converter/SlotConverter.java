@@ -24,6 +24,7 @@ public class SlotConverter implements Converter {
 	private static final String TAG_KEYWORD = "Keyword";
 	private static final String TAG_PARAMETERS = "Parameters";
 	private static final String TAG_IMPLICITS = "Implicits";
+	private static final String TAG_CONDITION = "Condition";
 	private static final String TAG_FORMAT = "format";
 
 	@Override
@@ -36,7 +37,7 @@ public class SlotConverter implements Converter {
 						.getEventSlotManager().getDefaultFormatKeyword())) {
 			writer.addAttribute(TAG_FORMAT, slot.getFormatKeyword());
 		}
-		
+
 		// Write Name
 		writer.startNode(TAG_NAME);
 		writer.setValue(slot.getDisplayName());
@@ -58,6 +59,11 @@ public class SlotConverter implements Converter {
 		if (slot.getImplicits() != null && !slot.getImplicits().isEmpty())
 			context.convertAnother(slot.getImplicits());
 		writer.endNode();
+
+		// Write Condition
+		writer.startNode(TAG_CONDITION);
+		writer.setValue(slot.getCondition());
+		writer.endNode();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -66,8 +72,10 @@ public class SlotConverter implements Converter {
 			UnmarshallingContext context) {
 		final String name;
 		final String keyword;
+
 		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
 		final Collection<KnowIt> implicits = new ArrayList<KnowIt>();
+		String condition = null;
 		Slot slot = null;
 		String formatKeyword = null;
 
@@ -98,10 +106,15 @@ public class SlotConverter implements Converter {
 							.convertAnother(slot, ArrayList.class));
 			}
 
+			// Read Condition
+			if (node.equals(TAG_CONDITION))
+				condition = reader.getValue();
+
 			reader.moveUp();
 		}
 
-		slot = new Slot(name, keyword, parameters, implicits, formatKeyword);
+		slot = new Slot(name, keyword, parameters, implicits, formatKeyword,
+				condition);
 
 		return slot;
 	}

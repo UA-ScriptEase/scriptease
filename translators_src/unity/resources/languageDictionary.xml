@@ -194,7 +194,7 @@
 		<Word>watch</Word>
 		<Word>window</Word>
 		<Word>Window</Word>
-		
+
 		<!-- Unity Reserved -->
 		<Word>GameObject</Word>
 	</ReservedWords>
@@ -283,6 +283,19 @@
 		</Format>
 		<!-- Defines the variables in codeblock and then calls the function -->
 		<Format id="functionCall">
+			<!-- Code block context -->
+			<Scope data="mainCodeBlock">
+				<Series data="parameters">
+					<FormatRef ref="variableDefinition" />
+				</Series>
+				<Line>
+					<FormatRef ref="functionHeader" />
+					<Literal>;</Literal>
+				</Line>
+			</Scope>
+		</Format>
+		<!-- Defines the variables in codeblock and then calls the function -->
+		<Format id="causeFunctionCall">
 			<!-- Code block context -->
 			<Scope data="mainCodeBlock">
 				<Series data="parameters">
@@ -408,27 +421,21 @@
 		<!-- Format for ScriptIts -->
 		<Format id="scriptItConditional">
 			<Series data="identicalCauses">
-				<Line>
-					<Literal>if(SE2_Story_GetState(GetFirstPC(), "</Literal>
-					<Fragment data="currentstorypoint" />
-					<Literal>") == STORY_POINT_STATE_ENABLED){</Literal>
-				</Line>
+				<!-- <Line> <Literal>if(SE2_Story_GetState(GetFirstPC(), "</Literal> 
+					<Fragment data="currentstorypoint" /> <Literal>") == STORY_POINT_STATE_ENABLED){</Literal> 
+					</Line> -->
 				<Indent>
 					<Scope data="activeChild">
 						<FormatRef ref="childrenWithoutImplicits" />
 					</Scope>
 				</Indent>
-				<Line>
-					<Literal>} else {</Literal>
-				</Line>
+				<!-- <Line> <Literal>} else {</Literal> </Line> -->
 				<Indent>
 					<Scope data="inactiveChild">
 						<FormatRef ref="childrenWithoutImplicits" />
 					</Scope>
 				</Indent>
-				<Line>
-					<Literal>}</Literal>
-				</Line>
+				<!-- <Line> <Literal>}</Literal> </Line> -->
 			</Series>
 		</Format>
 
@@ -469,6 +476,7 @@
 			<Line>
 				<Literal>function Start() {</Literal>
 			</Line>
+			<!-- TODO We should probably add stuff here -->
 			<Line>
 				<Literal>}</Literal>
 			</Line>
@@ -478,18 +486,28 @@
 			</Line>
 			<Indent>
 				<Line>
-					<Literal>//Variable Declarations</Literal>
-				</Line>
+				</Line><!-- <Series data="causes" unique="true"> </Series> <Line> </Line> -->
 				<Series data="causes" unique="true">
-					<Series data="variables" unique="true">
-						<FormatRef ref="variableDeclaration" />
-					</Series>
-				</Series>
-				<Line>
-					<Literal>//Function Calls</Literal>
-				</Line>
-				<Series data="causes" unique="true">
-					<FormatRef ref="functionCall" />
+					<Line>
+						<Literal>if(</Literal>
+						<Fragment data="slotConditional" />
+						<Literal>) {</Literal>
+					</Line>
+					<Indent>
+						<Line>
+							<Literal>//Variable Declarations</Literal>
+						</Line>
+						<Series data="variables" unique="true">
+							<FormatRef ref="variableDeclaration" />
+						</Series>
+						<Line>
+							<Literal>//Function Calls</Literal>
+						</Line>
+						<FormatRef ref="causeFunctionCall" />
+					</Indent>
+					<Line>
+						<Literal>}</Literal>
+					</Line>
 				</Series>
 			</Indent>
 			<Line>

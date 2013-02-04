@@ -35,14 +35,16 @@
 	<!-- Defines a list of game Type definitions -->
 	<xsd:complexType name="TypeList_Type">
 		<xsd:sequence>
-			<xsd:element name="Type" type="Type_Type" maxOccurs="unbounded" minOccurs="0" />
+			<xsd:element name="Type" type="Type_Type" maxOccurs="unbounded"
+				minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 
 	<!-- Defines a list of Slot definitions -->
 	<xsd:complexType name="SlotList_Type">
 		<xsd:sequence>
-			<xsd:element name="Slot" type="Slot_Type"  maxOccurs="unbounded" minOccurs="0" />
+			<xsd:element name="Slot" type="Slot_Type" maxOccurs="unbounded"
+				minOccurs="0" />
 		</xsd:sequence>
 		<xsd:attribute name="defaultFormat" type="xsd:string"
 			use="required" />
@@ -51,21 +53,24 @@
 	<!-- Defines a list of Cause definitions -->
 	<xsd:complexType name="CauseList_Type">
 		<xsd:sequence>
-			<xsd:element name="ScriptIt" type="ScriptIt_Type" maxOccurs="unbounded" minOccurs="0" />
+			<xsd:element name="ScriptIt" type="ScriptIt_Type"
+				maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 
 	<!-- Defines a list of Effect (ScriptIt) definitions -->
 	<xsd:complexType name="EffectList_Type">
 		<xsd:sequence>
-			<xsd:element name="ScriptIt" type="ScriptIt_Type"  maxOccurs="unbounded" minOccurs="0" />
+			<xsd:element name="ScriptIt" type="ScriptIt_Type"
+				maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 
 	<!-- Defines a list of Effect (ScriptIt) definitions -->
 	<xsd:complexType name="ControlItList_Type">
 		<xsd:sequence>
-			<xsd:element minOccurs="0" maxOccurs="unbounded" name="ControlIt" type="ControlIt_Type" />
+			<xsd:element minOccurs="0" maxOccurs="unbounded" name="ControlIt"
+				type="ControlIt_Type" />
 		</xsd:sequence>
 	</xsd:complexType>
 
@@ -129,6 +134,8 @@
 		<xsd:sequence>
 			<xsd:element name="Name" type="xsd:string" />
 			<xsd:element name="Keyword" type="xsd:string" />
+			<xsd:element name="Condition" type="xsd:string"
+				minOccurs="0" />
 			<xsd:element name="Parameters" type="ParameterList_Type" />
 			<xsd:element name="Implicits">
 				<xsd:complexType>

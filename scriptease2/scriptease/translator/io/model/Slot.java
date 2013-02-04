@@ -21,9 +21,10 @@ public class Slot {
 	private String formatKeyword;
 	private Collection<KnowIt> implicits;
 	private Collection<KnowIt> parameters;
+	private String condition;
 
 	public Slot(String name, String keyword, Collection<KnowIt> parameters,
-			Collection<KnowIt> implicits, String formatKeyword) {
+			Collection<KnowIt> implicits, String formatKeyword, String condition) {
 		this.displayName = name;
 		this.keyword = keyword;
 		this.implicits = new ArrayList<KnowIt>();
@@ -31,10 +32,15 @@ public class Slot {
 		this.parameters = new ArrayList<KnowIt>();
 		this.parameters.addAll(parameters);
 		this.formatKeyword = formatKeyword;
+		this.condition = condition;
 	}
 
 	public String getDisplayName() {
 		return this.displayName;
+	}
+
+	public String getCondition() {
+		return this.condition;
 	}
 
 	/**
@@ -58,8 +64,8 @@ public class Slot {
 	}
 
 	/**
-	 * Gets a new list containing this slot's implicit KnowIts. This should not be used except by
-	 * EventSlotManager and SlotConverter. Use
+	 * Gets a new list containing this slot's implicit KnowIts. This should not
+	 * be used except by EventSlotManager and SlotConverter. Use
 	 * {@link EventSlotManager#getImplicits(String) instead.}
 	 * 
 	 * @return

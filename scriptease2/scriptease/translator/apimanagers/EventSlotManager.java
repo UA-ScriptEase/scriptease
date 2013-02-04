@@ -69,6 +69,15 @@ public class EventSlotManager {
 			return "";
 	}
 
+	public String getCondition(String keyword) {
+		final Slot slot = this.slots.get(keyword);
+
+		if (slot != null) {
+			return slot.getCondition();
+		} else
+			return "";
+	}
+
 	public Slot getEventSlot(String slot) {
 		return this.slots.get(slot);
 	}

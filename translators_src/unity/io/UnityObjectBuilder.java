@@ -101,8 +101,8 @@ public class UnityObjectBuilder {
 	 * @param eventIterator
 	 * @return
 	 */
-	private Map<String, Object> buildMap(Iterator<Event> eventIterator) {
-		final Map<String, Object> map = new LinkedHashMap<String, Object>();
+	private Map<String, PropertyValue> buildMap(Iterator<Event> eventIterator) {
+		final Map<String, PropertyValue> map = new LinkedHashMap<String, PropertyValue>();
 
 		String currentKey = null;
 		while (eventIterator.hasNext()) {
@@ -120,19 +120,21 @@ public class UnityObjectBuilder {
 								"Attempted to add a non "
 										+ "string value as a key.");
 				} else {
-					map.put(currentKey, value);
+					map.put(currentKey, PropertyValue.buildValue(value));
 					currentKey = null;
 				}
 			} else if (event.is(Event.ID.MappingStart)) {
 				if (currentKey != null) {
-					map.put(currentKey, this.buildMap(eventIterator));
+					map.put(currentKey,
+							new PropertyValue(this.buildMap(eventIterator)));
 					currentKey = null;
 				} else
 					throw new NullPointerException(
 							"Attempted to add an entry to map [" + map
 									+ "] with a null key.");
 			} else if (event.is(Event.ID.SequenceStart)) {
-				map.put(currentKey, this.buildSequence(eventIterator));
+				map.put(currentKey,
+						new PropertyValue(this.buildSequence(eventIterator)));
 				currentKey = null;
 			} else if (event.is(Event.ID.MappingEnd)) {
 				return map;
@@ -148,18 +150,20 @@ public class UnityObjectBuilder {
 				"No closing MappingEnd event found for map: " + map);
 	}
 
-	public List<Object> buildSequence(Iterator<Event> eventIterator) {
-		final List<Object> sequence = new ArrayList<Object>();
+	public List<PropertyValue> buildSequence(Iterator<Event> eventIterator) {
+		final List<PropertyValue> sequence = new ArrayList<PropertyValue>();
 
 		while (eventIterator.hasNext()) {
 			final Event event = eventIterator.next();
 
 			if (event.is(Event.ID.Scalar)) {
-				sequence.add(((ScalarEvent) event).getValue());
+				sequence.add(new PropertyValue(((ScalarEvent) event)
+						.getValue()));
 			} else if (event.is(Event.ID.MappingStart)) {
-				sequence.add(this.buildMap(eventIterator));
+				sequence.add(new PropertyValue(this.buildMap(eventIterator)));
 			} else if (event.is(Event.ID.SequenceStart)) {
-				sequence.add(this.buildSequence(eventIterator));
+				sequence.add(new PropertyValue(this
+						.buildSequence(eventIterator)));
 			} else if (event.is(Event.ID.SequenceEnd)) {
 				return sequence;
 			} else {

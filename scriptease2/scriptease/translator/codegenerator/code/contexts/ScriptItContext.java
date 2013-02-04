@@ -13,6 +13,8 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
+import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.EventSlotManager;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -160,6 +162,22 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	public StoryItemSequence getInactiveChild() {
 		return ((ScriptIt) this.component).getInactiveBlock();
 	}
+
+	@Override
+	public String getSlotConditional() {
+		final EventSlotManager manager;
+		final String currentSlot;
+
+		manager = TranslatorManager.getInstance().getActiveAPIDictionary()
+				.getEventSlotManager();
+		currentSlot = ((ScriptIt) this.component).getMainCodeBlock().getSlot();
+
+		if (currentSlot == null)
+			throw new NullPointerException("Encountered null slot in a Cause! "
+					+ "Call may be incorrect in Language Dictionary.");
+
+		return manager.getCondition(currentSlot);
+	};
 
 	@Override
 	public String getUnique32CharName() {
