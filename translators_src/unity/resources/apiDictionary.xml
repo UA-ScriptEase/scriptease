@@ -813,6 +813,7 @@
 		<Slot>
 			<Name>MouseClicked</Name>
 			<Keyword>MouseClicked</Keyword>
+			<Condition>Input.GetMouseButtonDown(0)</Condition>
 			<Parameters />
 			<Implicits />
 		</Slot>
@@ -901,6 +902,42 @@
 							</Scope>
 							<Literal>);</Literal>
 						</Line>
+					</Code>
+				</CodeBlockSource>
+			</CodeBlocks>
+		</ScriptIt>
+		<ScriptIt>
+			<Name>Find Object with Name</Name>
+			<Visible>true</Visible>
+			<Labels>
+				<Label>NOW</Label>
+			</Labels>
+			<Children />
+			<CodeBlocks>
+				<CodeBlockSource>
+					<Name>Find Object with Name</Name>
+					<Visible>true</Visible>
+					<Labels />
+					<Id>2</Id>
+					<Types>
+						<Type>void</Type>
+					</Types>
+					<Parameters>
+						<KnowIt>
+							<Name>Name</Name>
+							<Visible>true</Visible>
+							<Labels />
+							<Types>
+								<Type>String</Type>
+							</Types>
+						</KnowIt>
+					</Parameters>
+					<Code>
+						<Literal>GameObject.Find(&quot;</Literal>
+						<Scope data="argument" ref="Name">
+							<Fragment data="name" legalValues="[^\&quot;]*" />
+						</Scope>
+						<Literal>&quot;)</Literal>
 					</Code>
 				</CodeBlockSource>
 			</CodeBlocks>

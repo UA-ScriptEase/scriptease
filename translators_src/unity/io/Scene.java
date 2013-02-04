@@ -70,6 +70,10 @@ public class Scene {
 				+ " objects");
 	}
 
+	public void addObject(UnityObject object) {
+		this.yamlData.add(object);
+	}
+
 	/**
 	 * Writes its contents to the file it represents.
 	 * 
@@ -77,6 +81,7 @@ public class Scene {
 	 */
 	public void write() throws IOException {
 		final BufferedWriter writer;
+
 		writer = new BufferedWriter(new FileWriter(location));
 
 		writer.write("%YAML 1.1\n" + "%TAG !u! tag:unity3d.com,2011:\n");
@@ -90,11 +95,21 @@ public class Scene {
 
 				writer.write("--- !u!" + number + " &" + unityObj.getUniqueID()
 						+ "\n");
-				parser.dump(unityObj.getPropertyMap(), writer);
+
+				parser.dump(PropertyValue.convertToValueMap(unityObj
+						.getPropertyMap()), writer);
 			}
 		}
-
 		writer.close();
+	}
+
+	public UnityObject getObjectByTemplateID(String templateID) {
+		for (UnityObject object : this.yamlData) {
+			if (object.getTemplateID().equals(templateID))
+				return object;
+		}
+
+		return null;
 	}
 
 	/**

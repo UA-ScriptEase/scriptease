@@ -12,15 +12,15 @@ public class UnityObject implements GameObject {
 
 	private final int uniqueID;
 	private final String tag;
-	private final Map<String, Object> propertyMap;
+	private final Map<String, PropertyValue> propertyMap;
 
 	public UnityObject(int uniqueID, String tag) {
 		this.uniqueID = uniqueID;
 		this.tag = tag;
-		this.propertyMap = new HashMap<String, Object>();
+		this.propertyMap = new HashMap<String, PropertyValue>();
 	}
 
-	public void setProperties(Map<String, Object> map) {
+	public void setProperties(Map<String, PropertyValue> map) {
 		this.propertyMap.clear();
 		this.propertyMap.putAll(map);
 	}
@@ -31,7 +31,7 @@ public class UnityObject implements GameObject {
 	 */
 	@Override
 	public String getTag() {
-		return this.tag;
+		return this.getName();
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class UnityObject implements GameObject {
 	 * 
 	 * @return
 	 */
-	public Map<String, Object> getPropertyMap() {
+	public Map<String, PropertyValue> getPropertyMap() {
 		return this.propertyMap;
 	}
 
@@ -64,12 +64,18 @@ public class UnityObject implements GameObject {
 	@Override
 	public String getName() {
 		// TODO This got accessed 120 times on load for ONE unique object. This
-		// may be why we take forever to load large files.
-		final Object subMap = this.propertyMap.get("GameObject");
-		if (subMap instanceof Map) {
-			final Object mName = ((Map<?, ?>) subMap).get("m_Name");
-			if (mName instanceof String && !((String) mName).isEmpty())
-				return (String) mName;
+		// may be why we take forever to load large files... Investigate
+		final PropertyValue subMap = this.propertyMap.get("GameObject");
+		if (subMap != null && subMap.isMap()) {
+			final PropertyValue mName;
+
+			mName = subMap.getMap().get("m_Name");
+
+			if (mName.isString()) {
+				final String mNameValueString = mName.getString();
+				if (!mNameValueString.isEmpty())
+					return mNameValueString;
+			}
 		}
 
 		for (String key : this.propertyMap.keySet())
@@ -84,7 +90,7 @@ public class UnityObject implements GameObject {
 
 	@Override
 	public String getCodeText() {
-		return this.getName();
+		return "Find Object with Name";
 	}
 
 	public int getTypeNumber() {

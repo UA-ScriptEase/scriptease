@@ -29,7 +29,7 @@ import scriptease.util.StringOp;
  * 
  */
 public class KnowItBindingConstantContext extends KnowItBindingContext {
-
+	
 	public KnowItBindingConstantContext(StoryPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInformation) {

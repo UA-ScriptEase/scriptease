@@ -122,6 +122,8 @@ public class SimpleDataFragment extends AbstractFragment {
 							.name()))
 				resolveString = context.getSubject().getBinding()
 						.getScriptValue();
+			else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.SLOTCONDITIONAL.name()))
+				resolveString = context.getSlotConditional();
 			else if (dataLabel
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.FANIN
 							.name()))
