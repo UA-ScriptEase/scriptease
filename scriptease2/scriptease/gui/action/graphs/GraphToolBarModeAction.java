@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
 import scriptease.gui.action.ActiveModelSensitiveAction;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.util.FileOp;
 
 /**
@@ -31,7 +32,10 @@ public abstract class GraphToolBarModeAction extends ActiveModelSensitiveAction 
 		INSERT, SELECT, DELETE, CONNECT, DISCONNECT
 	}
 
-	private static ToolBarMode selectedMode;
+	private static final String CURSOR_DIRECTORY = "scriptease/resources/icons/buttonicons/";
+	private static final String CURSOR_EXTENSION = ".png";
+
+	private static ToolBarMode selectedMode = ToolBarMode.SELECT;
 
 	private String actionName;
 
@@ -63,15 +67,16 @@ public abstract class GraphToolBarModeAction extends ActiveModelSensitiveAction 
 	 *            The name of the image file being loaded, without the .png
 	 *            extension.
 	 * 
-	 * @return staticButtonImage A BufferedImage for the loaded image.
-	 * @return null Returns null if image cannot be loaded.
+	 * @return A BufferedImage for the loaded image, or null if image cannot be
+	 *         loaded.
 	 */
 	protected BufferedImage loadImages(String actionName) {
 		try {
-			BufferedImage staticButtonImage = ImageIO.read(FileOp
-					.getFileResource("scriptease/resources/icons/buttonicons/"
-							+ actionName + ".png"));
-			return staticButtonImage;
+			final BufferedImage buttonImage;
+
+			buttonImage = ImageIO.read(FileOp.getFileResource(CURSOR_DIRECTORY
+					+ actionName + CURSOR_EXTENSION));
+			return buttonImage;
 		} catch (IOException e) {
 			UncaughtExceptionHandler handler = Thread
 					.getDefaultUncaughtExceptionHandler();
@@ -91,6 +96,13 @@ public abstract class GraphToolBarModeAction extends ActiveModelSensitiveAction 
 	 */
 	public static void setMode(ToolBarMode newMode) {
 		GraphToolBarModeAction.selectedMode = newMode;
+
+		final Cursor cursor;
+
+		cursor = GraphToolBarModeAction.getCursor(newMode);
+
+		for (WeakReference<JComponent> reference : activeComponents)
+			reference.get().setCursor(cursor);
 	}
 
 	/**
@@ -114,14 +126,27 @@ public abstract class GraphToolBarModeAction extends ActiveModelSensitiveAction 
 	}
 
 	/**
-	 * Sets the cursor of the relevant components to the passed in cursor.
+	 * Returns the cursor associated with the mode.
 	 * 
-	 * @param cursorPath
+	 * @param mode
+	 * @return
 	 */
-	public void setCursor(Cursor cursor) {
-		// Setting a cursor to null sets it to its parent, which is the default
-		// cursor in this case.
-		for (WeakReference<JComponent> reference : activeComponents)
-			reference.get().setCursor(cursor);
+	private static Cursor getCursor(ToolBarMode mode) {
+		final Cursor cursor;
+
+		if (mode == ToolBarMode.INSERT)
+			cursor = ScriptEaseUI.CURSOR_NODE_ADD;
+		else if (mode == ToolBarMode.DELETE)
+			cursor = ScriptEaseUI.CURSOR_NODE_DELETE;
+		else if (mode == ToolBarMode.CONNECT)
+			cursor = ScriptEaseUI.CURSOR_PATH_DRAW;
+		else if (mode == ToolBarMode.DISCONNECT)
+			cursor = ScriptEaseUI.CURSOR_PATH_ERASE;
+		else
+			// Setting a cursor to null sets it to its parent, which is the
+			// default cursor in this case.
+			cursor = null;
+
+		return cursor;
 	}
 }

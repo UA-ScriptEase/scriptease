@@ -222,6 +222,8 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 					SlotPanel.this.populate();
 				}
 			});
+			this.repaint();
+			this.revalidate();
 		}
 	}
 }

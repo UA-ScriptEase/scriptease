@@ -272,7 +272,7 @@ public class GUIOp {
 		layoutComponent(c);
 
 		BufferedImage img = new BufferedImage(c.getWidth(), c.getHeight(),
-				BufferedImage.TYPE_INT_RGB);
+				BufferedImage.TYPE_INT_ARGB);
 
 		CellRendererPane crp = new CellRendererPane();
 		crp.add(c);
@@ -298,6 +298,7 @@ public class GUIOp {
 	public static void resizeJTextField(JTextField field) {
 		final Dimension oldSize;
 		final FontMetrics metrics;
+		final String text;
 
 		final int height;
 		final int stringWidth;
@@ -308,11 +309,17 @@ public class GUIOp {
 
 		oldSize = field.getSize();
 		metrics = field.getFontMetrics(field.getFont());
+		text = field.getText();
 
 		height = metrics.getHeight();
-		stringWidth = metrics.stringWidth(field.getText());
 
-		newSize = new Dimension(stringWidth + 26, height + 6);
+		stringWidth = metrics.stringWidth(text);
+
+		if (stringWidth > 24) {
+			newSize = new Dimension(stringWidth + 26, height + 6);
+		} else {
+			newSize = new Dimension(50, height + 6);
+		}
 		xDifference = newSize.width - oldSize.width;
 		yDifference = newSize.height - oldSize.height;
 

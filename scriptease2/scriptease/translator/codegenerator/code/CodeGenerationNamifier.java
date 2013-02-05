@@ -126,7 +126,7 @@ public class CodeGenerationNamifier {
 		counter = 0;
 
 		name = StringOp.removeIllegalCharacters(component.getDisplayText(),
-				legalFormat);
+				legalFormat, true);
 		
 		// make sure the name doesn't start with a number
 		name = StringOp.removeNonCharPrefix(name);

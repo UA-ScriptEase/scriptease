@@ -27,8 +27,8 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 	private final int PRE_CHILD_INDENT = 20;
 	private final int POST_CHILD_INDENT = 15;
 	private final int CHILD_VGAP = 5;
-	private final int TOP_GAP = 4;
-	private final int BOTTOM_GAP = 4;
+	private final int TOP_GAP = 1;
+	private final int BOTTOM_GAP = 1;
 	private final int MAIN_INDENT = 5;
 	private final int BUTTON_GAP = 3;
 

@@ -9,7 +9,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 
 /**

@@ -1,5 +1,6 @@
 package scriptease.gui.transfer;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.datatransfer.Clipboard;
@@ -29,6 +30,7 @@ import scriptease.model.PatternModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.util.GUIOp;
@@ -60,7 +62,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	}
 
 	private StoryComponentPanelTransferHandler() {
-
 		if (StoryComponentPanelTransferHandler.storyCompFlavour == null) {
 			try {
 				String storyComponentFlavour = DataFlavor.javaJVMLocalObjectMimeType
@@ -152,9 +153,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		}
 	}
 
+	private StoryComponentPanel hoveredPanel;
+
 	@Override
 	public boolean canImport(TransferSupport support) {
-
 		this.scrollForMousePosition();
 
 		if (isBinding(support)) {
@@ -182,9 +184,17 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 							&& this.canAcceptChildren(acceptingStoryComponent,
 									potentialChildren)) {
 
+						if (this.hoveredPanel != null)
+							this.hoveredPanel.getSelectionManager()
+									.updatePanelBackgrounds();
+						acceptingPanel.setBackground(Color.LIGHT_GRAY);
+
+						this.hoveredPanel = acceptingPanel;
+
 						return true;
 					}
 				}
+
 			} else if (supportComponent instanceof EffectHolderPanel) {
 				final EffectHolderPanel effectHolder;
 				final StoryComponent component;
@@ -209,6 +219,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				}
 			}
 		}
+
+		if (this.hoveredPanel != null)
+			this.hoveredPanel.updatePanelBackgrounds();
 		return false;
 	}
 
@@ -346,6 +359,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				}
 			}
 
+			if (this.hoveredPanel != null) {
+				this.hoveredPanel.updatePanelBackgrounds();
+			}
 			// Close any open UndoableActions.
 			if (UndoManager.getInstance().hasOpenUndoableAction()) {
 				UndoManager.getInstance().endUndoableAction();
@@ -371,6 +387,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					&& ((ComplexStoryComponent) potentialParent)
 							.canAcceptChild(child)
 					&& !(child instanceof StoryItemSequence);
+
+			// TODO Shouldn't be necessary once CauseIts are created
+			if (potentialParent instanceof ControlIt)
+				acceptable &= !(child instanceof ScriptIt && ((ScriptIt) child)
+						.isCause());
 		}
 
 		return acceptable;

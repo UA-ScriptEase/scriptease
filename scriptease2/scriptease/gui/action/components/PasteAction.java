@@ -9,7 +9,9 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
+import javax.swing.TransferHandler.TransferSupport;
 
+import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
@@ -24,7 +26,8 @@ import scriptease.model.PatternModelManager;
  * @author kschenk
  */
 @SuppressWarnings("serial")
-public final class PasteAction extends ActiveModelSensitiveAction {
+public final class PasteAction extends ActiveModelSensitiveAction implements
+		SEFocusObserver {
 	private static final String PASTE_TEXT = "Paste";
 
 	private static final Action instance = new PasteAction();
@@ -39,18 +42,6 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 	}
 
 	/**
-	 * Updates the action to either be enabled or disabled depending on the
-	 * current selection.
-	 */
-	protected boolean isLegal() {
-		final PatternModel activeModel;
-
-		activeModel = PatternModelManager.getInstance().getActiveModel();
-
-		return activeModel != null;
-	}
-
-	/**
 	 * Defines a <code>DeleteStoryComponentAction</code> object with no icon.
 	 */
 	private PasteAction() {
@@ -59,6 +50,61 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_P);
 		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 				KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK));
+
+		SEFocusManager.getInstance().addSEFocusObserver(this);
+	}
+
+	/**
+	 * Updates the action to either be enabled or disabled depending on the
+	 * current selection.
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected boolean isLegal() {
+		final PatternModel activeModel;
+		final Component focusOwner;
+		final boolean isLegal;
+
+		focusOwner = SEFocusManager.getInstance().getFocus();
+		activeModel = PatternModelManager.getInstance().getActiveModel();
+
+		if (focusOwner instanceof StoryComponentPanel) {
+			isLegal = ((StoryComponentPanel) focusOwner).getTransferHandler()
+					.canImport(
+							new TransferSupport(focusOwner, Toolkit
+									.getDefaultToolkit().getSystemClipboard()
+									.getContents(this)));
+		}
+		// We not paste into StoryComponentPanelJList. Maybe in the future, but
+		// not now.
+		else if (focusOwner instanceof SEGraph) {
+			final SEGraph graph;
+			final JComponent selectedComponent;
+
+			graph = (SEGraph) focusOwner;
+
+			selectedComponent = (JComponent) graph.getNodesToComponentsMap()
+					.getValue(graph.getLastSelectedNode());
+
+			isLegal = 
+					selectedComponent.getTransferHandler().canImport(
+					new TransferSupport(selectedComponent, Toolkit
+							.getDefaultToolkit().getSystemClipboard()
+							.getContents(this)));
+		} else {
+			isLegal = false;
+		}
+
+		return activeModel != null && isLegal;
+	}
+
+	@Override
+	public void gainFocus(Component oldFocus) {
+		this.updateEnabledState();
+	}
+
+	@Override
+	public void loseFocus(Component oldFocus) {
+		this.updateEnabledState();
 	}
 
 	/**

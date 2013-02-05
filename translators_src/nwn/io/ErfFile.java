@@ -27,11 +27,6 @@ import scriptease.controller.CodeBlockMapper;
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.StoryAdapter;
-import scriptease.controller.observer.PatternModelEvent;
-import scriptease.controller.observer.PatternModelObserver;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.StatusManager;
 import scriptease.model.CodeBlock;
 import scriptease.model.PatternModelManager;
@@ -100,8 +95,6 @@ public final class ErfFile implements GameModule {
 	 */
 	private final List<NWNResource> uncompiledScripts;
 
-	private final StoryComponentObserver componentObserver;
-
 	/**
 	 * Location of the ErfFile.
 	 */
@@ -129,39 +122,6 @@ public final class ErfFile implements GameModule {
 	public ErfFile() {
 		this.resources = new ArrayList<NWNResource>();
 		this.uncompiledScripts = new ArrayList<NWNResource>();
-
-		this.componentObserver = new StoryComponentObserver() {
-			@Override
-			public void componentChanged(final StoryComponentEvent event) {
-				ErfFile.this.processComponentChangeEvent(event);
-			}
-		};
-
-		final PatternModelObserver observer;
-
-		// Used for journal observance
-		observer = new PatternModelObserver() {
-			public void modelChanged(PatternModelEvent event) {
-				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
-					event.getPatternModel().process(new ModelAdapter() {
-						@Override
-						public void processStoryModel(StoryModel storyModel) {
-							final StoryPoint root;
-
-							root = storyModel.getRoot();
-
-							root.observeEverything(componentObserver);
-
-							ErfFile.this.parseModelForJournals(root);
-						}
-					});
-				}
-			};
-		};
-
-		PatternModelManager.getInstance().addPatternModelObserver(this,
-				observer);
-
 	}
 
 	/**
@@ -175,7 +135,14 @@ public final class ErfFile implements GameModule {
 		final GeneratedJournalGFF journal;
 
 		if (this.getJournalGFF() == null) {
-			journal = createNewJournalResource(scriptIt);
+			final ErfKey erfKey;
+			final NWNResource resource;
+
+			journal = new GeneratedJournalGFF(scriptIt);
+			erfKey = new ErfKey(journal.getResRef(), ErfKey.JOURNAL_FILE_TYPE);
+			resource = new NWNResource(erfKey, journal);
+
+			ErfFile.this.resources.add(resource);
 		} else {
 			journal = this.getJournalGFF();
 			journal.addCategory(scriptIt);
@@ -211,197 +178,6 @@ public final class ErfFile implements GameModule {
 				}
 			});
 		}
-	}
-
-	/**
-	 * Remove the journal category from a specific ScriptIt. Removes the journal
-	 * entirely if it was the last category.
-	 * 
-	 * @param scriptIt
-	 */
-	private void removeJournalCategory(ScriptIt scriptIt) {
-		final GeneratedJournalGFF journal;
-
-		journal = this.getJournalGFF();
-
-		if (journal == null)
-			throw new NullPointerException("Tried to remove a "
-					+ "category from a null journal. How did we "
-					+ "even get here?");
-
-		journal.removeCategory(scriptIt);
-
-		if (journal.getNumberOfCategories() == 0) {
-			// If it's the last category, remove the journal entirely.
-			final Collection<NWNResource> journalResources;
-
-			journalResources = new ArrayList<NWNResource>();
-
-			for (NWNResource resource : ErfFile.this.resources) {
-				if (resource.getGFF() instanceof GeneratedJournalGFF)
-					journalResources.add(resource);
-			}
-			ErfFile.this.resources.removeAll(journalResources);
-		}
-	}
-
-	/**
-	 * Create a new journal resource. Be warned that this will not remove any
-	 * existing journal resources, which may cause significant problems.
-	 * 
-	 * @param scriptIt
-	 */
-	private GeneratedJournalGFF createNewJournalResource(ScriptIt scriptIt) {
-		final GeneratedJournalGFF newJournal;
-		final ErfKey erfKey;
-		final NWNResource resource;
-
-		newJournal = new GeneratedJournalGFF(scriptIt);
-		erfKey = new ErfKey(newJournal.getResRef(), ErfKey.JOURNAL_FILE_TYPE);
-		resource = new NWNResource(erfKey, newJournal);
-
-		ErfFile.this.resources.add(resource);
-
-		return newJournal;
-	}
-
-	/**
-	 * Process changes to the model and deals with them appropriately.
-	 * 
-	 * @param event
-	 */
-	private void processComponentChangeEvent(final StoryComponentEvent event) {
-		final StoryComponent source;
-		final StoryComponentChangeEnum eventType;
-		final GeneratedJournalGFF journal;
-
-		source = event.getSource();
-		eventType = event.getType();
-
-		journal = ErfFile.this.getJournalGFF();
-
-		// I'm watching you, Wazowski. Always watching. Always.
-		source.observeEverything(this.componentObserver);
-
-		source.process(new StoryAdapter() {
-			@Override
-			public void processStoryPoint(StoryPoint storyPoint) {
-				for (StoryComponent child : storyPoint.getChildren())
-					child.process(this);
-
-				for (StoryPoint successor : storyPoint.getSuccessors())
-					successor.process(this);
-			}
-
-			@Override
-			protected void defaultProcessComplex(ComplexStoryComponent complex) {
-				for (StoryComponent child : complex.getChildren()) {
-					child.process(this);
-				}
-			}
-
-			@Override
-			public void processStoryComponentContainer(
-					StoryComponentContainer storyComponentContainer) {
-				this.defaultProcessComplex(storyComponentContainer);
-			}
-
-			@Override
-			public void processAskIt(AskIt askIt) {
-				askIt.getCondition().process(this);
-				this.defaultProcessComplex(askIt);
-			}
-
-			@Override
-			public void processStoryItemSequence(StoryItemSequence sequence) {
-				this.defaultProcessComplex(sequence);
-			}
-
-			@Override
-			public void processScriptIt(ScriptIt scriptIt) {
-				if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_ADDED
-						&& scriptIt.getDisplayText().equals(
-								GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT)) {
-					ErfFile.this.addJournalCategory(scriptIt);
-				} else if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED
-						&& scriptIt.getDisplayText().equals(
-								GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT)) {
-					ErfFile.this.removeJournalCategory(scriptIt);
-				}
-
-				scriptIt.processSubjects(this);
-				scriptIt.processParameters(this);
-				this.defaultProcessComplex(scriptIt);
-			}
-
-			@Override
-			public void processKnowIt(final KnowIt knowIt) {
-				final StoryComponent owner;
-				final ScriptIt scriptIt;
-
-				owner = knowIt.getOwner();
-
-				if (owner instanceof CodeBlock) {
-
-					scriptIt = ((CodeBlock) owner).getOwner();
-
-					if (!scriptIt.getDisplayText().equals(
-							GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT))
-						return;
-				} else
-					return;
-
-				if (eventType == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
-					knowIt.getBinding().process(new BindingAdapter() {
-						@Override
-						public void processStoryPoint(
-								KnowItBindingStoryPoint storyPointBinding) {
-
-							if (knowIt
-									.getDisplayText()
-									.equals(GeneratedJournalGFF.PARAMETER_STORY_POINT_TEXT)) {
-								final StoryPoint storyPoint;
-
-								storyPoint = storyPointBinding.getValue();
-
-								if (!journal
-										.setStoryPoint(storyPoint, scriptIt))
-									// If set tag fails, remove binding.
-									knowIt.clearBinding();
-							}
-						}
-
-						@Override
-						public void processNull(KnowItBindingNull nullBinding) {
-							// We need to set default tag here or else we can't
-							// rebind stuff.
-							if (knowIt
-									.getDisplayText()
-									.equals(GeneratedJournalGFF.PARAMETER_STORY_POINT_TEXT)) {
-								journal.setStoryPoint(null, scriptIt);
-							}
-						}
-					});
-				}
-
-				KnowItBinding binding = knowIt.getBinding();
-				final StoryAdapter outerAnonInnerClass = this;
-				binding.process(new BindingAdapter() {
-					@Override
-					public void processReference(
-							KnowItBindingReference reference) {
-						KnowIt referenced = reference.getValue();
-						referenced.process(outerAnonInnerClass);
-					}
-
-					@Override
-					public void processFunction(KnowItBindingFunction function) {
-						ScriptIt referenced = function.getValue();
-						referenced.process(outerAnonInnerClass);
-					}
-				});
-			};
-		});
 	}
 
 	/**
@@ -899,6 +675,19 @@ public final class ErfFile implements GameModule {
 		final long offsetToKeyList;
 		final long offsetToResourceList;
 
+		// Parse the model for create journal effects before it's saved.
+		PatternModelManager.getInstance().getActiveModel()
+				.process(new ModelAdapter() {
+					@Override
+					public void processStoryModel(StoryModel storyModel) {
+						final StoryPoint root;
+
+						root = storyModel.getRoot();
+
+						ErfFile.this.parseModelForJournals(root);
+					}
+				});
+
 		if (compile) {
 			try {
 				this.compile();
@@ -932,9 +721,19 @@ public final class ErfFile implements GameModule {
 		this.writeKeys(offsetToKeyList, offsetToResourceList);
 		this.writeResources(offsetToResourceList);
 
-		// Remove everything ScriptEase related that exists to have a clean
-		// slate for next time we add new stuff.
 		this.removeScriptEaseData();
+
+		// Remove all journals from the list of resources so that we create them
+		// new next time.
+		final Collection<NWNResource> journalResources;
+
+		journalResources = new ArrayList<NWNResource>();
+
+		for (NWNResource resource : ErfFile.this.resources) {
+			if (resource.getGFF() instanceof GeneratedJournalGFF)
+				journalResources.add(resource);
+		}
+		ErfFile.this.resources.removeAll(journalResources);
 	}
 
 	private void createBackup() throws IOException {

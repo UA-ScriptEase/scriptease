@@ -35,7 +35,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.ToolBarFactory;
+import scriptease.gui.ComponentFactory;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.SEGraph;
@@ -381,7 +381,7 @@ public class LibraryEditorPanelFactory {
 
 		bindingPanel = new JPanel();
 		describeItGraphPanel = new JPanel();
-		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
+		graphToolBar = ComponentFactory.getInstance().buildGraphEditorToolBar();
 
 		effectHolder = new EffectHolderPanel(describeIt.getTypes());
 		describeItGraphModel = new DescribeItNodeGraphModel(
@@ -449,7 +449,7 @@ public class LibraryEditorPanelFactory {
 
 		// Set up the JPanel containing the graph
 		describeItGraphPanel.setLayout(new BorderLayout());
-		describeItGraphPanel.add(graphToolBar, BorderLayout.PAGE_START);
+		describeItGraphPanel.add(graphToolBar, BorderLayout.WEST);
 		describeItGraphPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
 
 		bindingPanel
