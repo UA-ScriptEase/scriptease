@@ -25,6 +25,7 @@ import scriptease.translator.apimanagers.GameTypeManager;
 @SuppressWarnings("serial")
 public class TypeWidget extends JToggleButton {
 	private String type;
+	private static final float LABEL_FONT_SIZE_SCALE_FACTOR = 1.1f;
 
 	public TypeWidget(final String type) {
 		final int baseFontSize;
@@ -38,8 +39,10 @@ public class TypeWidget extends JToggleButton {
 		this.setFocusable(false);
 
 		// pass events to parent until consumed
-		MouseForwardingAdapter mouseForwardingAdapter = MouseForwardingAdapter
-				.getInstance();
+		final MouseForwardingAdapter mouseForwardingAdapter;
+
+		mouseForwardingAdapter = MouseForwardingAdapter.getInstance();
+
 		this.addMouseListener(mouseForwardingAdapter);
 		this.addMouseMotionListener(mouseForwardingAdapter);
 
@@ -48,8 +51,7 @@ public class TypeWidget extends JToggleButton {
 
 		baseFontSize = Integer.parseInt(ScriptEase.getInstance().getPreference(
 				ScriptEase.FONT_SIZE_KEY));
-		fontSize = Math.round(ScriptWidgetFactory.LABEL_FONT_SIZE_SCALE_FACTOR
-				* baseFontSize);
+		fontSize = Math.round(LABEL_FONT_SIZE_SCALE_FACTOR * baseFontSize);
 		this.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, fontSize));
 
 		this.setBackground(ScriptEaseUI.COLOUR_GAME_OBJECT);
@@ -79,8 +81,11 @@ public class TypeWidget extends JToggleButton {
 			}
 		};
 
-		setTypeText(type);
+		this.setTypeText(type);
 		this.setToolTipText(typeName);
+
+		this.setSize(this.getPreferredSize());
+
 		TranslatorManager.getInstance().addTranslatorObserver(this, observer);
 	}
 

@@ -1,6 +1,7 @@
 package scriptease.gui.SEGraph.renderers;
 
 import java.awt.FlowLayout;
+import java.awt.Font;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -12,6 +13,7 @@ import scriptease.gui.cell.TypeWidget;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
+import scriptease.translator.TranslatorManager;
 
 /**
  * Renders DescribeItNodes as GraphNodes for display in an SEGraph.
@@ -32,6 +34,7 @@ public class DescribeItNodeRenderer extends SEGraphNodeRenderer<DescribeItNode> 
 		component.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 0));
 
 		final KnowIt knowIt = node.getKnowIt();
+		final JLabel nameLabel;
 
 		if (knowIt != null) {
 			final JPanel typePanel;
@@ -50,9 +53,17 @@ public class DescribeItNodeRenderer extends SEGraphNodeRenderer<DescribeItNode> 
 				typePanel.add(typeWidget);
 			}
 			component.add(typePanel);
-			component.add(new JLabel(knowIt.getDisplayText()));
+			nameLabel = new JLabel(knowIt.getDisplayText());
 		} else {
-			component.add(new JLabel(node.getName()));
+			nameLabel = new JLabel(node.getName());
+		}
+
+		component.add(nameLabel);
+
+		if (TranslatorManager.getInstance().getActiveDescribeItManager()
+				.isEndNode(node)) {
+			nameLabel.setFont(new Font("Arial", Font.BOLD, 12));
 		}
 	}
+
 }

@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.swing.SwingUtilities;
 
+import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.modelverifier.problem.ModelProblem;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.modelverifier.rule.StoryRule;
@@ -19,7 +21,16 @@ import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.TranslatorManager;
 
 /**
@@ -53,7 +64,7 @@ public class ModelVerifier implements StoryComponentObserver {
 				ModelVerifier.INITIAL_CAPACITY);
 		this.isSolving = false;
 		// observe changes to the model
-		this.root.observeEverything(this); 
+		this.root.process(observeEverything(this));
 	}
 
 	/**
@@ -70,7 +81,8 @@ public class ModelVerifier implements StoryComponentObserver {
 		for (StoryComponentChangeEnum event : events) {
 			Collection<StoryRule> visitors = this.rules.get(event);
 			if (visitors == null) {
-				visitors = new ArrayList<StoryRule>(ModelVerifier.INITIAL_CAPACITY);
+				visitors = new ArrayList<StoryRule>(
+						ModelVerifier.INITIAL_CAPACITY);
 			}
 			visitors.add(rule);
 			this.rules.put(event, visitors);
@@ -91,7 +103,7 @@ public class ModelVerifier implements StoryComponentObserver {
 
 		// process addition, removal from the model
 		if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
-			source.observeEverything(this);
+			source.process(observeEverything(this));
 		} else if (eventType == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED)
 			source.removeStoryComponentObserverFromChildren(this);
 
@@ -191,5 +203,83 @@ public class ModelVerifier implements StoryComponentObserver {
 	@Override
 	public String toString() {
 		return "ModelVerifier";
+	}
+
+	/**
+	 * Adds the observer to the Story Component, it's immediate components, and
+	 * it's children. Also known as SauronObserver.
+	 * 
+	 * @param observer
+	 */
+	private StoryAdapter observeEverything(final StoryComponentObserver observer) {
+		return new StoryAdapter() {
+			@Override
+			public void processStoryPoint(StoryPoint storyPoint) {
+				storyPoint.addStoryComponentObserver(observer);
+
+				for (StoryComponent child : storyPoint.getChildren())
+					child.process(this);
+
+				for (StoryPoint successor : storyPoint.getSuccessors())
+					successor.process(this);
+			}
+
+			@Override
+			protected void defaultProcessComplex(ComplexStoryComponent complex) {
+				complex.addStoryComponentObserver(observer);
+				for (StoryComponent child : complex.getChildren()) {
+					child.process(this);
+				}
+			}
+
+			@Override
+			public void processStoryComponentContainer(
+					StoryComponentContainer storyComponentContainer) {
+				storyComponentContainer.addStoryComponentObserver(observer);
+				this.defaultProcessComplex(storyComponentContainer);
+			}
+
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				scriptIt.addStoryComponentObserver(observer);
+				scriptIt.processSubjects(this);
+				scriptIt.processParameters(this);
+				this.defaultProcessComplex(scriptIt);
+			}
+
+			@Override
+			public void processKnowIt(KnowIt knowIt) {
+				knowIt.addStoryComponentObserver(observer);
+				KnowItBinding binding = knowIt.getBinding();
+				final StoryAdapter outerAnonInnerClass = this;
+				binding.process(new BindingAdapter() {
+					@Override
+					public void processReference(
+							KnowItBindingReference reference) {
+						KnowIt referenced = reference.getValue();
+						referenced.process(outerAnonInnerClass);
+					}
+
+					@Override
+					public void processFunction(KnowItBindingFunction function) {
+						ScriptIt referenced = function.getValue();
+						referenced.process(outerAnonInnerClass);
+					}
+				});
+			}
+
+			@Override
+			public void processAskIt(AskIt askIt) {
+				askIt.addStoryComponentObserver(observer);
+				askIt.getCondition().process(this);
+				this.defaultProcessComplex(askIt);
+			}
+
+			@Override
+			public void processStoryItemSequence(StoryItemSequence sequence) {
+				sequence.addStoryComponentObserver(observer);
+				this.defaultProcessComplex(sequence);
+			}
+		};
 	}
 }

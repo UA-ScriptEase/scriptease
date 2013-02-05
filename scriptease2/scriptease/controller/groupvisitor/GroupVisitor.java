@@ -53,6 +53,7 @@ public abstract class GroupVisitor extends StoryAdapter {
 	public void processScriptIt(ScriptIt scriptIt) {
 		// add the KnowIt parameters:
 		scriptIt.processParameters(this);
+		scriptIt.processChildren(this);
 	}
 
 	@Override

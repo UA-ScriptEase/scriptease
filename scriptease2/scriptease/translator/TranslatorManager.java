@@ -18,6 +18,7 @@ import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
+import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 
 /**
@@ -234,6 +235,19 @@ public class TranslatorManager {
 		if (this.activeTranslator == null)
 			return null;
 		return this.activeTranslator.getApiDictionary();
+	}
+
+	/**
+	 * Shortcut method to get the active DescribeItManager of the current active
+	 * translator and APIdictionary.
+	 * 
+	 * @return
+	 */
+	public DescribeItManager getActiveDescribeItManager() {
+		final APIDictionary dictionary = this.getActiveAPIDictionary();
+		if (dictionary == null)
+			return null;
+		return dictionary.getDescribeItManager();
 	}
 
 	/**

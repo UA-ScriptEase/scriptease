@@ -10,6 +10,7 @@ import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
@@ -30,8 +31,11 @@ import scriptease.translator.codegenerator.LocationInformation;
  */
 public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		StoryComponentObserver {
-	private static final String ACTIVE_BLOCK_TEXT = "Story Point Active:";
-	private static final String INACTIVE_BLOCK_TEXT = "Story Point Inactive:";
+	private static final String ACTIVE_BLOCK_TEXT = "<"
+			+ StoryComponentPanelFactory.CURRENT_STORY_POINT_TAG + "> Active:";
+	private static final String INACTIVE_BLOCK_TEXT = "<"
+			+ StoryComponentPanelFactory.CURRENT_STORY_POINT_TAG
+			+ "> Inactive:";
 
 	/*
 	 * TODO Eventually, we should move out all of the cause specific stuff and

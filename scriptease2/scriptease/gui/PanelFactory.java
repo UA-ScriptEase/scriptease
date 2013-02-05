@@ -36,23 +36,25 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
+import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.PatternModelEvent;
 import scriptease.controller.observer.PatternModelObserver;
 import scriptease.controller.observer.StatusObserver;
 import scriptease.controller.observer.TranslatorObserver;
+import scriptease.controller.observer.UndoManagerObserver;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.StoryPointGraphModel;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
-import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.filters.CategoryFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
@@ -82,7 +84,7 @@ import scriptease.util.GUIOp;
  * @author kschenk
  * 
  */
-public class PanelFactory {
+public final class PanelFactory {
 	private static PanelFactory instance = new PanelFactory();
 
 	// We keep one common library panel so we do not have to load it each time.
@@ -149,7 +151,7 @@ public class PanelFactory {
 		final JScrollPane storyGraphScrollPane;
 
 		storyPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		graphToolBar = ToolBarFactory.getInstance().buildGraphEditorToolBar();
+		graphToolBar = ComponentFactory.getInstance().buildGraphEditorToolBar();
 
 		storyGraphModel = new StoryPointGraphModel(start);
 		storyGraph = new SEGraph<StoryPoint>(storyGraphModel);
@@ -230,21 +232,38 @@ public class PanelFactory {
 
 		start.addStoryComponentObserver(graphRedrawer);
 
-		storyGraphScrollPane.setBorder(BorderFactory
-				.createEtchedBorder(EtchedBorder.LOWERED));
-
 		storyGraph.setBackground(Color.WHITE);
+
+		storyGraphPanel.setLayout(new BorderLayout());
 
 		// Reset the ToolBar to select and add the Story Graph to it.
 		GraphToolBarModeAction.useGraphCursorForJComponent(storyGraph);
-		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
+		GraphToolBarModeAction.setMode(GraphToolBarModeAction.getMode());
 
-		// Set up the JPanel containing the graph
-		storyGraphPanel.setLayout(new BorderLayout());
-		storyGraphPanel.add(graphToolBar, BorderLayout.PAGE_START);
+		final String orientation = ScriptEase.getInstance().getPreference(
+				ScriptEase.PREFERRED_ORIENTATION_KEY);
+
+		if (orientation != null
+				&& orientation.equalsIgnoreCase(ScriptEase.HORIZONTAL_TOOLBAR)) {
+			storyGraphScrollPane.setBorder(BorderFactory
+					.createEtchedBorder(EtchedBorder.LOWERED));
+
+			storyGraphPanel.add(graphToolBar, BorderLayout.PAGE_START);
+		} else {// if toolbar is vertical
+			storyGraphScrollPane.setBorder(BorderFactory.createEmptyBorder());
+			storyGraphPanel.setBorder(BorderFactory
+					.createEtchedBorder(EtchedBorder.LOWERED));
+
+			graphToolBar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,
+					Color.LIGHT_GRAY));
+
+			storyGraphPanel.add(graphToolBar, BorderLayout.WEST);
+		}
+
 		storyGraphPanel.add(storyGraphScrollPane, BorderLayout.CENTER);
 
-		storyComponentTree.setBorder(null);
+		storyComponentTree.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.LOWERED));
 
 		// Set up the split pane
 		storyPanel.setBorder(null);
@@ -482,7 +501,8 @@ public class PanelFactory {
 
 		tree = new GameConstantPanel(PatternModelManager.getInstance()
 				.getActiveModel());
-		searchField = new JTextField(20);
+		searchField = ComponentFactory.getInstance()
+				.buildJTextFieldWithTextBackground(20, "Game Objects");
 
 		typeFilter = new TypeAction();
 
@@ -606,23 +626,47 @@ public class PanelFactory {
 
 		model.process(new ModelAdapter() {
 			@Override
-			public void processLibraryModel(LibraryModel libraryModel) {
+			public void processLibraryModel(final LibraryModel libraryModel) {
 				// Creates a Library Editor panel
 				final JScrollPane scbScrollPane;
 				final CloseableModelTab newTab;
+				final String savedTitle;
+				final String unsavedTitle;
 
 				scbScrollPane = PanelFactory.getInstance()
 						.buildLibraryEditorPanel(libraryModel);
 				newTab = new CloseableModelTab(modelTabs, scbScrollPane,
 						libraryModel, icon);
 
+				savedTitle = libraryModel.getName() + "[Editor]";
+				unsavedTitle = "*" + savedTitle;
+
 				scbScrollPane.getVerticalScrollBar().setUnitIncrement(
 						ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
-				modelTabs.addTab(libraryModel.getName() + "[Editor]", icon,
-						scbScrollPane);
+				modelTabs.addTab(savedTitle, icon, scbScrollPane);
+
 				modelTabs.setTabComponentAt(
 						modelTabs.indexOfComponent(scbScrollPane), newTab);
+
+				UndoManager.getInstance().addUndoManagerObserver(libraryModel,
+						new UndoManagerObserver() {
+							@Override
+							public void stackChanged() {
+								final int index = modelTabs
+										.indexOfComponent(scbScrollPane);
+
+								if (index < 0)
+									return;
+
+								if (UndoManager.getInstance().isSaved(
+										libraryModel)) {
+									modelTabs.setTitleAt(index, savedTitle);
+								} else {
+									modelTabs.setTitleAt(index, unsavedTitle);
+								}
+							}
+						});
 
 				modelTabs.setFocusable(false);
 			}
@@ -633,7 +677,6 @@ public class PanelFactory {
 				final StoryPoint startStoryPoint;
 				final JSplitPane newPanel;
 				final CloseableModelTab newTab;
-				final String title;
 				String modelTitle;
 
 				startStoryPoint = storyModel.getRoot();
@@ -646,16 +689,37 @@ public class PanelFactory {
 				if (modelTitle == null || modelTitle.equals(""))
 					modelTitle = "<Untitled>";
 
-				title = modelTitle + "("
+				final String savedTitle = modelTitle + "("
 						+ storyModel.getModule().getLocation().getName() + ")";
 
-				modelTabs.addTab(title, icon, newPanel);
+				final String unsavedTitle = "*" + savedTitle;
+
+				modelTabs.addTab(savedTitle, icon, newPanel);
+
 				modelTabs.setTabComponentAt(
 						modelTabs.indexOfComponent(newPanel), newTab);
 				modelTabs.setSelectedComponent(newPanel);
 
 				modelTabs.setFocusable(false);
 
+				UndoManager.getInstance().addUndoManagerObserver(storyModel,
+						new UndoManagerObserver() {
+							@Override
+							public void stackChanged() {
+								final int index = modelTabs
+										.indexOfComponent(newPanel);
+
+								if (index < 0)
+									return;
+
+								if (UndoManager.getInstance().isSaved(
+										storyModel)) {
+									modelTabs.setTitleAt(index, savedTitle);
+								} else {
+									modelTabs.setTitleAt(index, unsavedTitle);
+								}
+							}
+						});
 				/*
 				 * Setting the divider needs to occur here because the
 				 * JSplitPane needs to actually be drawn before this works.
@@ -665,7 +729,7 @@ public class PanelFactory {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						newPanel.setDividerLocation(0.3);
+						newPanel.setDividerLocation(0.19);
 					}
 				});
 			}

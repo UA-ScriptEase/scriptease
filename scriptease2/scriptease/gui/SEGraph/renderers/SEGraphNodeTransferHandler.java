@@ -73,7 +73,6 @@ public class SEGraphNodeTransferHandler<E> extends TransferHandler {
 					acceptingPanel);
 
 			if (acceptingNode != this.graph.getStartNode()) {
-
 				final E potentialChild;
 				potentialChild = this.extractNode(support.getTransferable());
 

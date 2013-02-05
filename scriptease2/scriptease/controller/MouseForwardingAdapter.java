@@ -46,6 +46,16 @@ public class MouseForwardingAdapter extends MouseAdapter {
 	public void mousePressed(MouseEvent e) {
 		this.passToParentListener(e);
 	}
+	
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		this.passToParentListener(e);
+	}
+	
+	@Override
+	public void mouseExited(MouseEvent e) {
+		this.passToParentListener(e);
+	}
 
 	private void passToParentListener(MouseEvent e) {
 		int i = 0;

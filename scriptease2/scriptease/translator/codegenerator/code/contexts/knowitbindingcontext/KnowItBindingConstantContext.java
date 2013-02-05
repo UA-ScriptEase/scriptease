@@ -108,10 +108,10 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 
 		// Handle Legal Values the type can take
 		final String regex = this.translator.getGameTypeManager().getReg(type);
-		if (regex != null && !regex.isEmpty()) {
+		if (regex != null && !regex.isEmpty() && !scriptValue.isEmpty()) {
 			final Pattern regexPattern = Pattern.compile(regex);
 			scriptValue = StringOp.removeIllegalCharacters(scriptValue,
-					regexPattern);
+					regexPattern, false);
 		}
 
 		return scriptValue;

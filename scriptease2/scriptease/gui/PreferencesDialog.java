@@ -53,6 +53,7 @@ public class PreferencesDialog {
 	private String outputDirectory;
 	private Boolean debugMode;
 	private String preferredLayout;
+	private String preferredOrientation;
 
 	private void loadCurrentPreferences() {
 		ScriptEase instance = ScriptEase.getInstance();
@@ -77,12 +78,23 @@ public class PreferencesDialog {
 
 		this.preferredLayout = instance
 				.getPreference(ScriptEase.PREFERRED_LAYOUT_KEY);
+
 		// If the input is invalid, set it to the default.
 		if (this.preferredLayout == null
 				|| !(this.preferredLayout
 						.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT) || this.preferredLayout
 						.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT))) {
 			this.preferredLayout = ScriptEase.COMPRESSED_LAYOUT;
+		}
+
+		this.preferredOrientation = instance
+				.getPreference(ScriptEase.PREFERRED_ORIENTATION_KEY);
+
+		if (this.preferredOrientation == null
+				|| !(this.preferredOrientation
+						.equalsIgnoreCase(ScriptEase.HORIZONTAL_TOOLBAR) || this.preferredLayout
+						.equalsIgnoreCase(ScriptEase.VERTICAL_TOOLBAR))) {
+			this.preferredLayout = ScriptEase.VERTICAL_TOOLBAR;
 		}
 
 		this.outputDirectory = instance
@@ -106,8 +118,8 @@ public class PreferencesDialog {
 		this.loadCurrentPreferences();
 
 		// Create the modal dialog for the preferences window.
-		this.dialog = new JDialog(owner, Il8nResources.getString("Preferences"),
-				true);
+		this.dialog = new JDialog(owner,
+				Il8nResources.getString("Preferences"), true);
 
 		this.dialog.getContentPane().setLayout(
 				new BoxLayout(this.dialog.getContentPane(), BoxLayout.Y_AXIS));
@@ -133,6 +145,8 @@ public class PreferencesDialog {
 						PreferencesDialog.this.debugMode.toString());
 				instance.setPreference(ScriptEase.PREFERRED_LAYOUT_KEY,
 						PreferencesDialog.this.preferredLayout);
+				instance.setPreference(ScriptEase.PREFERRED_ORIENTATION_KEY,
+						PreferencesDialog.this.preferredOrientation);
 
 				// Write the preferences to file.
 				instance.saveUserPrefs();
@@ -177,7 +191,8 @@ public class PreferencesDialog {
 		undoStackSizeSpinnerModel.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				PreferencesDialog.this.maxUndoSteps = (Integer) undoStackSizeSpinnerModel.getValue();
+				PreferencesDialog.this.maxUndoSteps = (Integer) undoStackSizeSpinnerModel
+						.getValue();
 			}
 		});
 		JSpinner undoStackSizeSpinner = new JSpinner(undoStackSizeSpinnerModel);
@@ -194,7 +209,8 @@ public class PreferencesDialog {
 		outputDirectoryTextField.addCaretListener(new CaretListener() {
 			@Override
 			public void caretUpdate(CaretEvent e) {
-				PreferencesDialog.this.outputDirectory = outputDirectoryTextField.getText();
+				PreferencesDialog.this.outputDirectory = outputDirectoryTextField
+						.getText();
 			}
 		});
 		outputDirectoryPanel.add(new JLabel(Il8nResources
@@ -210,7 +226,8 @@ public class PreferencesDialog {
 		debugModeCheckBox.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				PreferencesDialog.this.debugMode = debugModeCheckBox.isSelected();
+				PreferencesDialog.this.debugMode = debugModeCheckBox
+						.isSelected();
 			}
 		});
 		debugModePanel.add(new JLabel(Il8nResources
@@ -265,7 +282,8 @@ public class PreferencesDialog {
 		layoutsGroup.add(uncompressedLayoutButton);
 
 		// Initially select the proper radio button.
-		if (this.preferredLayout.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
+		if (this.preferredLayout
+				.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
 			layoutsGroup.setSelected(uncompressedLayoutButton.getModel(), true);
 		} else if (this.preferredLayout
 				.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
@@ -288,7 +306,8 @@ public class PreferencesDialog {
 		useJavaUICheckBox.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				PreferencesDialog.this.useJavaUI = useJavaUICheckBox.isSelected();
+				PreferencesDialog.this.useJavaUI = useJavaUICheckBox
+						.isSelected();
 			}
 		});
 		useJavaUIPanel.add(useJavaUICheckBox);
@@ -303,7 +322,8 @@ public class PreferencesDialog {
 		fontSizeSpinnerModel.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				PreferencesDialog.this.fontSize = (Integer) fontSizeSpinnerModel.getValue();
+				PreferencesDialog.this.fontSize = (Integer) fontSizeSpinnerModel
+						.getValue();
 			}
 		});
 		JSpinner fontSizeSpinner = new JSpinner(fontSizeSpinnerModel);

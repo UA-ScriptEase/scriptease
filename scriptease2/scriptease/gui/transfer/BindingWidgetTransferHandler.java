@@ -142,13 +142,12 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				}
 			}
 		}
-		
-		if(canImport) {
+
+		if (canImport) {
 			// TODO Set mouse pointer to normal
 		} else {
 			// TODO Set mouse pointer to invalid operation.
 		}
-		
 		return canImport;
 	}
 
@@ -238,9 +237,12 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 
 			@Override
 			protected void defaultProcess(KnowItBinding binding) {
-				SameBindingGroupVisitor groupVisitor = new SameBindingGroupVisitor(
-						destinationKnowIt);
-				List<KnowIt> knowIts = groupVisitor.getGroup();
+				final SameBindingGroupVisitor groupVisitor;
+				final List<KnowIt> knowIts;
+
+				groupVisitor = new SameBindingGroupVisitor(destinationKnowIt);
+				knowIts = groupVisitor.getGroup();
+
 				for (KnowIt knowIt : knowIts) {
 					knowIt.setBinding(sourceBinding);
 				}
