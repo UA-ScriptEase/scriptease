@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameConstant;
@@ -22,7 +21,11 @@ public class UnityScript {
 	private final String fileName;
 	private final String guid;
 
+	private final Scene scene;
 	private final UnityObject attachedObject;
+	private final UnityObject monoBehaviourObject;
+	private final List<PropertyValue> mComponentList;
+
 	private final int idNumber;
 
 	private static int scriptCounter = 0;
@@ -38,19 +41,18 @@ public class UnityScript {
 
 		subject = scriptInfo.getSubject();
 
+		this.scene = scene;
 		this.code = scriptInfo.getCode();
 		this.fileName = "se_" + Integer.toString(scriptCounter++, NAME_RADIX)
 				+ "_" + StringOp.makeAlphaNumeric(subject.getName());
 
-		// Create a 32 char random UUID.
-		// TODO Check if this UUID is already in use
-		this.guid = UUID.randomUUID().toString().replace("-", "");
+		this.guid = UnityProject.generateGUID();
 
-		this.attachedObject = scene.getObjectByTemplateID(scriptInfo
-				.getSubject().getTemplateID());
+		this.attachedObject = this.scene.getObjectByTemplateID(subject
+				.getTemplateID());
 
 		int idNumber = 0;
-		for (UnityObject object : scene.getObjects()) {
+		for (UnityObject object : this.scene.getObjects()) {
 			final int objectID = object.getUniqueID();
 			if (objectID >= idNumber) {
 				idNumber = objectID + 1;
@@ -59,75 +61,121 @@ public class UnityScript {
 
 		this.idNumber = idNumber;
 
-		final UnityObject monoObject;
+		this.monoBehaviourObject = this.buildMonoBehaviourObject();
 
-		monoObject = this.buildMonoBehaviourObject();
+		final Map<String, PropertyValue> attachedObjectMap;
+		final PropertyValue gameObjectValue;
 
-		scene.addObject(monoObject);
-
-		// TODO FIXME This is making me sick. Fix it =|
-		final Map<String, PropertyValue> attachedObjectMap = this.attachedObject
-				.getPropertyMap();
-
-		final PropertyValue gameObjectValue = attachedObjectMap
-				.get("GameObject");
+		attachedObjectMap = this.attachedObject.getPropertyMap();
+		gameObjectValue = attachedObjectMap.get("GameObject");
 
 		if (gameObjectValue.isMap()) {
-			final PropertyValue mapValue = gameObjectValue.getMap()
-					.get("m_Component");
+			final PropertyValue mapValue;
+
+			mapValue = gameObjectValue.getMap().get("m_Component");
 
 			if (mapValue.isList()) {
-				final List<PropertyValue> list = mapValue.getList();
-
-				final Map<String, PropertyValue> firstMap = new HashMap<String, PropertyValue>();
-				final Map<String, PropertyValue> secondMap = new HashMap<String, PropertyValue>();
-
-				firstMap.put("114", new PropertyValue(secondMap));
-				secondMap.put("fileID", new PropertyValue(this.idNumber));
-
-				list.add(new PropertyValue(firstMap));
+				this.mComponentList = mapValue.getList();
+			} else {
+				throw new IllegalArgumentException(
+						"MComponentList not found in " + this.attachedObject);
 			}
-		}
+		} else
+			throw new IllegalArgumentException("GameObject not a map in "
+					+ this.attachedObject
+					+ ". How in the world is this even possible?");
+
+		this.addToScene();
 
 	}
 
+	private void addToScene() {
+		this.scene.addObject(this.monoBehaviourObject);
+
+		final Map<String, PropertyValue> firstMap;
+		final Map<String, PropertyValue> secondMap;
+
+		firstMap = new HashMap<String, PropertyValue>();
+		secondMap = new HashMap<String, PropertyValue>();
+
+		firstMap.put("114", new PropertyValue(secondMap));
+		secondMap.put("fileID", new PropertyValue(this.idNumber));
+
+		this.mComponentList.add(new PropertyValue(firstMap));
+
+		// TODO First check if this exists already.
+	}
+
+	public void removeFromScene() {
+		this.scene.removeObject(this.monoBehaviourObject);
+
+		PropertyValue toBeRemoved = null;
+
+		// TODO Step through this to determine what we can't find.
+
+		for (PropertyValue value : this.mComponentList) {
+			if (value.isMap()) {
+				final Map<String, PropertyValue> firstMap = value.getMap();
+				final PropertyValue secondMapValue = firstMap.get("114");
+
+				if (secondMapValue != null && secondMapValue.isMap()) {
+					final Map<String, PropertyValue> secondMap = secondMapValue.getMap();
+					final PropertyValue fileID = secondMap.get("fileID");
+
+					if (fileID != null && fileID.equals(this.idNumber)) {
+						// We have found the correct component.
+						toBeRemoved = value;
+						break;
+					}
+				}
+			}
+		}
+
+		// TODO THIS IS ALWAYS NULL WHICH BREAKS THINGS!
+		if (toBeRemoved != null)
+			this.mComponentList.remove(toBeRemoved);
+	}
+
 	private UnityObject buildMonoBehaviourObject() {
-		// FIXME: This is HORRIBLY UGLY CODE! REPAIR REPAIR REPAIRRRR!!!!!!
+		final String fileID = "fileID";
+		final PropertyValue zeroValue = new PropertyValue(0);
+
 		final UnityObject monoObject;
-		final Map<String, PropertyValue> objectMap;
+
+		final Map<String, PropertyValue> fileIDMap;
+		final Map<String, PropertyValue> mGameObjectMap;
+		final Map<String, PropertyValue> mScriptMap;
 		final Map<String, PropertyValue> propertiesMap;
+		final Map<String, PropertyValue> objectMap;
 
 		monoObject = new UnityObject(this.idNumber, UnityObject.UNITY_TAG
 				+ "114");
-		objectMap = new HashMap<String, PropertyValue>();
+
+		fileIDMap = new HashMap<String, PropertyValue>();
+		mGameObjectMap = new HashMap<String, PropertyValue>();
+		mScriptMap = new HashMap<String, PropertyValue>();
 		propertiesMap = new HashMap<String, PropertyValue>();
+		objectMap = new HashMap<String, PropertyValue>();
 
-		objectMap.put("MonoBehaviour", new PropertyValue(propertiesMap));
+		fileIDMap.put(fileID, zeroValue);
 
-		propertiesMap.put("m_ObjectHideFlags", new PropertyValue(0));
-		final Map<String, PropertyValue> fileID0Map = new HashMap<String, PropertyValue>();
-		fileID0Map.put("fileID", new PropertyValue(0));
-
-		propertiesMap.put("m_PrefabParentObject", new PropertyValue(
-				fileID0Map));
-		propertiesMap.put("m_PrefabInternal", new PropertyValue(fileID0Map));
-
-		final Map<String, PropertyValue> mGameObjectMap = new HashMap<String, PropertyValue>();
-
-		mGameObjectMap.put("fileID",
+		mGameObjectMap.put(fileID,
 				new PropertyValue(this.attachedObject.getUniqueID()));
 
-		propertiesMap.put("m_GameObject", new PropertyValue(mGameObjectMap));
-		propertiesMap.put("m_Enabled", new PropertyValue(1));
-		propertiesMap.put("m_EditorHideFlags", new PropertyValue(0));
-
-		final Map<String, PropertyValue> mScriptMap = new HashMap<String, PropertyValue>();
-		mScriptMap.put("fileID", new PropertyValue(11500000));
+		mScriptMap.put(fileID, new PropertyValue(11500000));
 		mScriptMap.put("guid", new PropertyValue(this.guid));
 		mScriptMap.put("type", new PropertyValue(1));
 
+		propertiesMap.put("m_ObjectHideFlags", zeroValue);
+		propertiesMap.put("m_PrefabParentObject", new PropertyValue(fileIDMap));
+		propertiesMap.put("m_PrefabInternal", new PropertyValue(fileIDMap));
+		propertiesMap.put("m_GameObject", new PropertyValue(mGameObjectMap));
+		propertiesMap.put("m_Enabled", new PropertyValue(1));
+		propertiesMap.put("m_EditorHideFlags", zeroValue);
 		propertiesMap.put("m_Script", new PropertyValue(mScriptMap));
 		propertiesMap.put("m_Name", new PropertyValue(""));
+
+		objectMap.put("MonoBehaviour", new PropertyValue(propertiesMap));
 
 		monoObject.setProperties(objectMap);
 
