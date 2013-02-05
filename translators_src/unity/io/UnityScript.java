@@ -111,15 +111,14 @@ public class UnityScript {
 
 		PropertyValue toBeRemoved = null;
 
-		// TODO Step through this to determine what we can't find.
-
 		for (PropertyValue value : this.mComponentList) {
 			if (value.isMap()) {
 				final Map<String, PropertyValue> firstMap = value.getMap();
 				final PropertyValue secondMapValue = firstMap.get("114");
 
 				if (secondMapValue != null && secondMapValue.isMap()) {
-					final Map<String, PropertyValue> secondMap = secondMapValue.getMap();
+					final Map<String, PropertyValue> secondMap = secondMapValue
+							.getMap();
 					final PropertyValue fileID = secondMap.get("fileID");
 
 					if (fileID != null && fileID.equals(this.idNumber)) {
@@ -131,7 +130,6 @@ public class UnityScript {
 			}
 		}
 
-		// TODO THIS IS ALWAYS NULL WHICH BREAKS THINGS!
 		if (toBeRemoved != null)
 			this.mComponentList.remove(toBeRemoved);
 	}
