@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import scriptease.controller.CodeBlockMapper;
 import scriptease.model.CodeBlock;
@@ -28,6 +29,9 @@ import scriptease.util.FileOp;
  */
 public final class UnityProject implements GameModule {
 	private static final String SCENE_FILE_EXTENSION = ".unity";
+	private static final String SCRIPT_META_EXTENSION = ".js.meta";
+
+	private static final Collection<String> guids = new ArrayList<String>();;
 
 	private File projectLocation;
 
@@ -37,6 +41,22 @@ public final class UnityProject implements GameModule {
 	public UnityProject() {
 		this.scenes = new ArrayList<Scene>();
 		this.scripts = new ArrayList<UnityScript>();
+	}
+
+	/**
+	 * Create a random 32 char random UUID that does not already exist.
+	 * 
+	 * @return
+	 */
+	public static String generateGUID() {
+		String id;
+		do {
+			id = UUID.randomUUID().toString().replace("-", "");
+		} while (guids.contains(id));
+
+		guids.add(id);
+
+		return id;
 	}
 
 	@Override
@@ -136,25 +156,35 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public void load(boolean readOnly) throws IOException {
-		Scene scene;
-		final Collection<File> sceneFiles;
 		final FileFilter sceneFileFilter = new FileFilter() {
 			@Override
 			public boolean accept(File pathname) {
 				return pathname.getName().endsWith(SCENE_FILE_EXTENSION);
 			}
 		};
+		final FileFilter metaFileFilter = new FileFilter() {
+			@Override
+			public boolean accept(File pathname) {
+				return pathname.getName().endsWith(SCRIPT_META_EXTENSION);
+			}
+		};
+		final Collection<File> sceneFiles;
+		final Collection<File> scriptMetaFiles;
 
 		// sniff out .unity files and read them all into memory
 		sceneFiles = FileOp.findFiles(this.projectLocation, sceneFileFilter);
-		for (File sceneFile : sceneFiles) {
-			scene = new Scene(sceneFile);
+		scriptMetaFiles = FileOp
+				.findFiles(this.projectLocation, metaFileFilter);
 
-			this.scenes.add(scene);
+		for (File sceneFile : sceneFiles) {
+			this.scenes.add(new Scene(sceneFile));
 		}
 
-		// TODO Read all meta files for scripts so we don't accidentally
-		// overwrite something. Read all scripts that exist, too.
+		for (File scriptMetaFile : scriptMetaFiles) {
+			// TODO Load used GUIDs into memory.
+			// Second line in file is "guid: c7eb21f478d84f3cb4b98675845beb98"
+			// Read that and save it.
+		}
 	}
 
 	@Override
@@ -162,6 +192,16 @@ public final class UnityProject implements GameModule {
 		// TODO Delete all "se_" saved script files
 		// ^ we may not have to do this. Looks like Unity is doing this by
 		// itself.
+		final FileFilter filter = new FileFilter() {
+			@Override
+			public boolean accept(File pathname) {
+				return pathname.getName().startsWith("se_");
+			}
+		};
+
+		for (File file : FileOp.findFiles(this.projectLocation, filter)) {
+			file.delete();
+		}
 
 		for (Scene scene : this.scenes) {
 			scene.write();
@@ -169,6 +209,7 @@ public final class UnityProject implements GameModule {
 
 		for (UnityScript script : this.scripts) {
 			script.write(this.projectLocation);
+			script.removeFromScene();
 		}
 
 		UnityScript.resetScriptCounter();

@@ -27,7 +27,7 @@ public class Scene {
 	}
 
 	private final BufferedReader reader;
-	private final List<UnityObject> yamlData;
+	private final List<UnityObject> unityObjects;
 	private final File location;
 
 	/**
@@ -46,14 +46,14 @@ public class Scene {
 
 		this.reader = new BufferedReader(new FileReader(location));
 
-		this.yamlData = new ArrayList<UnityObject>();
+		this.unityObjects = new ArrayList<UnityObject>();
 		this.location = location;
 
 		this.read(location);
 	}
 
 	public List<UnityObject> getObjects() {
-		return this.yamlData;
+		return this.unityObjects;
 	}
 
 	private void read(File location) throws IOException {
@@ -64,14 +64,18 @@ public class Scene {
 
 		builder = new UnityObjectBuilder(eventIterable.iterator());
 
-		this.yamlData.addAll(builder.getObjects());
+		this.unityObjects.addAll(builder.getObjects());
 
-		System.out.println("Scene File Read with " + this.yamlData.size()
+		System.out.println("Scene File Read with " + this.unityObjects.size()
 				+ " objects");
 	}
 
 	public void addObject(UnityObject object) {
-		this.yamlData.add(object);
+		this.unityObjects.add(object);
+	}
+
+	public void removeObject(UnityObject object) {
+		this.unityObjects.remove(object);
 	}
 
 	/**
@@ -87,7 +91,7 @@ public class Scene {
 		writer.write("%YAML 1.1\n" + "%TAG !u! tag:unity3d.com,2011:\n");
 
 		// Add an arbitrary number
-		for (Object data : this.yamlData) {
+		for (Object data : this.unityObjects) {
 			if (data instanceof UnityObject) {
 				final UnityObject unityObj = (UnityObject) data;
 
@@ -104,7 +108,7 @@ public class Scene {
 	}
 
 	public UnityObject getObjectByTemplateID(String templateID) {
-		for (UnityObject object : this.yamlData) {
+		for (UnityObject object : this.unityObjects) {
 			if (object.getTemplateID().equals(templateID))
 				return object;
 		}
@@ -125,6 +129,6 @@ public class Scene {
 	@Override
 	public String toString() {
 		return "Scene <Location:" + this.location + ", Data:"
-				+ this.yamlData.toString() + ">";
+				+ this.unityObjects.toString() + ">";
 	}
 }

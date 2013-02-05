@@ -263,4 +263,9 @@ public class PropertyValue {
 		} else
 			return this.value.equals(obj);
 	}
+
+	@Override
+	public String toString() {
+		return "PropertyValue: [" + this.value + "]";
+	}
 }
