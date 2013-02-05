@@ -137,7 +137,7 @@ public final class PanelFactory {
 	 * @param start
 	 * @return
 	 */
-	public JSplitPane buildStoryPanel(StoryModel model, StoryPoint start) {
+	public JSplitPane buildStoryPanel(StoryModel model, final StoryPoint start) {
 		final JSplitPane storyPanel;
 		final JToolBar graphToolBar;
 
@@ -228,6 +228,12 @@ public final class PanelFactory {
 			public void nodeOverwritten(StoryPoint node) {
 				node.revalidateKnowItBindings();
 			}
+
+			@Override
+			public void nodeRemoved(StoryPoint removedNode) {
+				start.revalidateKnowItBindings();
+			}
+
 		});
 
 		start.addStoryComponentObserver(graphRedrawer);
