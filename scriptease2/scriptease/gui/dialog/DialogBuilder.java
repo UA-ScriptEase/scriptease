@@ -161,6 +161,9 @@ public class DialogBuilder {
 		moduleField = new JTextField(20);
 		moduleButton = new JButton("Browse...");
 
+		moduleField.setEnabled(false);
+		moduleButton.setEnabled(false);
+
 		modulePanel.add(moduleField);
 		modulePanel.add(moduleButton);
 
@@ -399,6 +402,11 @@ public class DialogBuilder {
 			public void actionPerformed(ActionEvent e) {
 				// a bit of a hack to force the module text field to revalidate
 				moduleField.setText(moduleField.getText());
+
+				if (gameComboBox.getSelectedItem() != null) {
+					moduleField.setEnabled(true);
+					moduleButton.setEnabled(true);
+				}
 			}
 		});
 
