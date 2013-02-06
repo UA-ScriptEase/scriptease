@@ -112,6 +112,8 @@ public class Translator {
 	private static final String API_DICT_SCHEMA_LOCATION = "scriptease/resources/schema/ApiDictionarySchema.xsd";
 	private static final String CODE_ELEMENT_SCHEMA_LOCATION = "scriptease/resources/schema/CodeElementSchema.xsd";
 
+	public static final String FALSE = "false";
+
 	/**
 	 * Builds a new Translator from the given translator Jar or description
 	 * file.
@@ -585,7 +587,11 @@ public class Translator {
 	 *         compiler is defined.
 	 */
 	public File getCompiler() {
-		return this.getPathProperty(DescriptionKeys.COMPILER_PATH);
+		final File compiler;
+		
+		compiler = this.getPathProperty(DescriptionKeys.COMPILER_PATH);
+		
+		return compiler; 
 	}
 
 	/**
