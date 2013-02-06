@@ -1,5 +1,8 @@
 package io;
 
+import io.unityobject.UnityObject;
+import io.unityobject.UnityObjectBuilder;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.events.Event;
@@ -68,6 +72,26 @@ public class Scene {
 
 		System.out.println("Scene File Read with " + this.unityObjects.size()
 				+ " objects");
+
+		// TODO Remove scriptease generated stuff from model
+		final int monoBehaviourType;
+
+		monoBehaviourType = UnityTranslatorConstants.TYPE_MAP
+				.getKey("MonoBehaviour");
+
+		for (UnityObject object : this.unityObjects) {
+			if (object.getTypeNumber() == monoBehaviourType) {
+				final Map<String, PropertyValue> propertyMap;
+				final PropertyValue parentValue;
+				final PropertyValue scriptMapValue;
+
+				propertyMap = object.getPropertyMap();
+				parentValue = propertyMap.get("m_GameObject");
+				scriptMapValue = object.getPropertyMap().get("m_Script");
+				
+				
+			}
+		}
 	}
 
 	public void addObject(UnityObject object) {
@@ -77,6 +101,26 @@ public class Scene {
 	public void removeObject(UnityObject object) {
 		this.unityObjects.remove(object);
 	}
+
+	/*
+	 * public void removeMonoBehaviourObject(UnityObject object) {
+	 * this.removeObject(object);
+	 * 
+	 * PropertyValue toBeRemoved = null;
+	 * 
+	 * for (PropertyValue value : this.mComponentList) { if (value.isMap()) {
+	 * final Map<String, PropertyValue> firstMap = value.getMap(); final
+	 * PropertyValue secondMapValue = firstMap.get("114");
+	 * 
+	 * if (secondMapValue != null && secondMapValue.isMap()) { final Map<String,
+	 * PropertyValue> secondMap = secondMapValue .getMap(); final PropertyValue
+	 * fileID = secondMap.get("fileID");
+	 * 
+	 * if (fileID != null && fileID.equals(this.idNumber)) { // We have found
+	 * the correct component. toBeRemoved = value; break; } } } }
+	 * 
+	 * if (toBeRemoved != null) this.mComponentList.remove(toBeRemoved); }
+	 */
 
 	/**
 	 * Writes its contents to the file it represents.
@@ -101,7 +145,7 @@ public class Scene {
 						+ "\n");
 
 				parser.dump(PropertyValue.convertToValueMap(unityObj
-						.getPropertyMap()), writer);
+						.getTopLevelPropertyMap()), writer);
 			}
 		}
 		writer.close();

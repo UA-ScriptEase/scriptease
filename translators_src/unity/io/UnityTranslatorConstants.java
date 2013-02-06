@@ -1,10 +1,9 @@
 package io;
 
-import java.util.HashMap;
-import java.util.Map;
+import scriptease.util.BiHashMap;
 
 public class UnityTranslatorConstants {
-	public static final Map<Integer, String> TYPE_MAP = new HashMap<Integer, String>();
+	public static final BiHashMap<Integer, String> TYPE_MAP = new BiHashMap<Integer, String>();
 	static {
 		TYPE_MAP.put(1, "GameObject");
 		TYPE_MAP.put(2, "Component");
