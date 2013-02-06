@@ -1,5 +1,7 @@
 package io;
 
+import io.unityobject.UnityObject;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -66,7 +68,8 @@ public class UnityScript {
 		final Map<String, PropertyValue> attachedObjectMap;
 		final PropertyValue gameObjectValue;
 
-		attachedObjectMap = this.attachedObject.getPropertyMap();
+		// TODO replace with new method
+		attachedObjectMap = this.attachedObject.getTopLevelPropertyMap();
 		gameObjectValue = attachedObjectMap.get("GameObject");
 
 		if (gameObjectValue.isMap()) {

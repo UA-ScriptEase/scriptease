@@ -1,4 +1,7 @@
-package io;
+package io.unityobject;
+
+import io.PropertyValue;
+import io.UnityTranslatorConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,19 +47,34 @@ public class UnityObject implements GameObject {
 	}
 
 	/**
+	 * Returns the map of various properties of a unity object. This always
+	 * starts with just one value that has the name of the type as the key and
+	 * the actual properties as a map in it's value. If you know that the object
+	 * has a map of other properties, use {@link #getPropertyMap()}.
+	 * 
+	 * @return
+	 */
+	public Map<String, PropertyValue> getTopLevelPropertyMap() {
+		return this.propertyMap;
+	}
+
+	/**
 	 * Returns the map of various properties of a unity object.
 	 * 
 	 * @return
 	 */
 	public Map<String, PropertyValue> getPropertyMap() {
-		return this.propertyMap;
+		return this.propertyMap
+				.get(UnityTranslatorConstants.TYPE_MAP.getValue(this
+						.getTypeNumber())).getMap();
 	}
 
 	@Override
 	public Collection<String> getTypes() {
 		final Collection<String> types = new ArrayList<String>();
 
-		types.add(UnityTranslatorConstants.TYPE_MAP.get(this.getTypeNumber()));
+		types.add(UnityTranslatorConstants.TYPE_MAP.getValue(this
+				.getTypeNumber()));
 
 		return types;
 	}
