@@ -371,8 +371,11 @@ public final class FileManager {
 		compile &= problems.isEmpty() && translator.getCompiler() != null
 				&& translator.getCompiler().exists();
 
-		if (translator.getCompiler() == null
-				|| !translator.getCompiler().exists())
+		final File compiler = translator.getCompiler();
+
+		if (compiler == null
+				|| (!compiler.exists() && !compiler.getName().equalsIgnoreCase(
+						Translator.FALSE)))
 			WindowFactory
 					.getInstance()
 					.showWarningDialog(

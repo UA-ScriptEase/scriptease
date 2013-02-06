@@ -1,5 +1,6 @@
 package scriptease.translator.codegenerator;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -295,8 +296,11 @@ public class CodeGenerator {
 			WindowFactory.getInstance().showCompileProblems(problems);
 		}
 
-		if (translator.getCompiler() != null
-				&& !translator.getCompiler().exists()) {
+		final File compiler = translator.getCompiler();
+
+		if (compiler != null && !compiler.exists()
+				&& !compiler.getName().equalsIgnoreCase(Translator.FALSE)) {
+
 			System.err.println("Compiler: "
 					+ translator.getCompiler().getName()
 					+ " could not be found.");
