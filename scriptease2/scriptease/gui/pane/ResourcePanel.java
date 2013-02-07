@@ -33,18 +33,15 @@ import scriptease.translator.io.model.Resource;
 import scriptease.util.GUIOp;
 
 /**
- * Draws a Game Constant Panel for the passed in StoryModel. This panel is a
- * tree of Game Constants that can be searched by text and types.
+ * Draws a ResourcePanel for the passed in StoryModel. This panel is a tree of
+ * {@link Resource}s that can be searched by text and types.
  * 
  * @author kschenk
  * 
  */
 @SuppressWarnings("serial")
-public class GameConstantPanel extends JPanel {
-	private final Color LINE_COLOR_1 = Color.red;
-	private final Color LINE_COLOR_2 = Color.blue;
-
-	private Resource selectedConstant = null;
+public class ResourcePanel extends JPanel {
+	private Resource selectedResource = null;
 
 	private String filterText;
 	private final List<String> filterTypes;
@@ -52,15 +49,15 @@ public class GameConstantPanel extends JPanel {
 	private Map<Resource, JPanel> panelMap;
 
 	/**
-	 * Creates a new GameConstantPanel with the passed in model.
+	 * Creates a new {@link ResourcePanel} with the passed in model.
 	 * 
 	 * @param model
-	 *            Creates a new GameConstantPanel with the passed in model. If
-	 *            the passed in model is null or not a StoryModel, then nothing
-	 *            is drawn. Use {@link #redrawTree(StoryModel)} to draw the tree
-	 *            later with a StoryModel.
+	 *            Creates a new {@link ResourcePanel} with the passed in model.
+	 *            If the passed in model is null or not a {@link StoryModel},
+	 *            then nothing is drawn. Use {@link #redrawTree(StoryModel)} to
+	 *            draw the tree later with a StoryModel.
 	 */
-	public GameConstantPanel(PatternModel model) {
+	public ResourcePanel(PatternModel model) {
 		super();
 		this.panelMap = new HashMap<Resource, JPanel>();
 		this.filterTypes = new ArrayList<String>();
@@ -96,33 +93,19 @@ public class GameConstantPanel extends JPanel {
 			return;
 
 		final GameTypeManager typeManager;
-		final List<String> types;
 
 		typeManager = TranslatorManager.getInstance()
 				.getActiveGameTypeManager();
-		types = new ArrayList<String>(typeManager.getKeywords());
 
-		for (String type : types) {
+		for (String type : typeManager.getKeywords()) {
 			final Collection<Resource> gameObjects;
 
 			gameObjects = ((StoryModel) model).getModule().getResourcesOfType(
 					type);
 
 			for (Resource constant : gameObjects) {
-				this.panelMap.put(constant, createGameConstantPanel(constant));
-
-				for (Resource child : constant.getChildren()) {
-					final int indent;
-
-					indent = 1;
-
-					this.panelMap.put(
-							child,
-							createIndentedConversationPanel(child, indent,
-									child.getOwnerName(), this.LINE_COLOR_1));
-
-					this.addConversationRoots(child.getChildren(), indent + 1);
-				}
+				this.panelMap.put(constant,
+						createGameConstantPanel(constant, 0));
 			}
 		}
 	}
@@ -195,12 +178,12 @@ public class GameConstantPanel extends JPanel {
 
 			final GameTypeManager typeManager;
 			final String typeName;
-			final GameObjectContainer container;
+			final ResourceContainer container;
 
-			typeManager = TranslatorManager.getInstance().getActiveTranslator()
-					.getGameTypeManager();
+			typeManager = TranslatorManager.getInstance()
+					.getActiveGameTypeManager();
 			typeName = typeManager.getDisplayText(type);
-			container = new GameObjectContainer(typeName, constantList);
+			container = new ResourceContainer(typeName, constantList);
 
 			this.add(container);
 		}
@@ -273,30 +256,34 @@ public class GameConstantPanel extends JPanel {
 	 *            The GameConstant to create a panel for
 	 * @return
 	 */
-	private JPanel createGameConstantPanel(final Resource resource) {
+	private JPanel createGameConstantPanel(Resource resource, int indent) {
+		final int STRUT_SIZE = 10 * indent;
+
+		final String resourceName;
+		final String resourceOwnerName;
+
 		final JPanel objectPanel;
 		final BindingWidget gameObjectBindingWidget;
-		final String regularText;
+
+		resourceName = resource.getName();
+		resourceOwnerName = resource.getOwnerName();
 
 		objectPanel = new JPanel();
-		regularText = resource.getName();
-
-		objectPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-		objectPanel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
-		objectPanel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
-
-		objectPanel.setLayout(new BoxLayout(objectPanel, BoxLayout.X_AXIS));
-
 		gameObjectBindingWidget = new BindingWidget(new KnowItBindingResource(
 				resource));
 
-		if (resource.isLink())
+		objectPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		objectPanel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
+		objectPanel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
+		objectPanel.setLayout(new BoxLayout(objectPanel, BoxLayout.X_AXIS));
+
+		if (resource.isLink()) {
 			gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
 					gameObjectBindingWidget.getBackground(), 1.24));
+		}
 
-		gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(regularText,
-				Color.WHITE));
+		gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(
+				resourceName, Color.WHITE));
 
 		gameObjectBindingWidget.setBorder(BorderFactory.createEmptyBorder(
 				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
@@ -304,109 +291,61 @@ public class GameConstantPanel extends JPanel {
 				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
 				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE));
 
+		objectPanel.add(Box.createHorizontalStrut(STRUT_SIZE));
+
+		if (resourceOwnerName != null && !resourceOwnerName.isEmpty()) {
+			final Color LINE_COLOR_1 = Color.red;
+			final Color LINE_COLOR_2 = Color.blue;
+
+			final JLabel prefixLabel;
+
+			prefixLabel = new JLabel();
+
+			prefixLabel.setOpaque(true);
+			prefixLabel.setBackground(Color.LIGHT_GRAY);
+			prefixLabel.setText(" " + resourceOwnerName.charAt(0) + " ");
+
+			if (indent % 2 == 0) {
+				prefixLabel.setForeground(LINE_COLOR_2);
+			} else {
+				prefixLabel.setForeground(LINE_COLOR_1);
+			}
+
+			objectPanel.add(prefixLabel);
+		}
+
 		objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 		objectPanel.add(gameObjectBindingWidget);
 		objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+
+		for (Resource root : resource.getChildren()) {
+			final JPanel nodePanel = createGameConstantPanel(root, indent + 1);
+
+			this.panelMap.put(root, nodePanel);
+		}
 
 		return objectPanel;
 	}
 
 	/**
-	 * Recursively adds all passed in roots to the passed in JPanel.
+	 * Sets the panel's background to the passed in color.
 	 * 
-	 * @param roots
-	 *            The roots to add to the JPanel. Recursively adds these roots'
-	 *            roots and so forth.
-	 * @param indent
-	 *            The amount to indent as defined in
-	 *            {@link #createIndentedConversationPanel(GameConstant, int)} .
-	 *            Incremented for each level.
-	 */
-	private void addConversationRoots(List<Resource> roots, int indent) {
-		if (roots.isEmpty()) {
-			return;
-		}
-
-		for (Resource root : roots) {
-			final String speaker;
-			final JPanel nodePanel;
-			final Color color;
-
-			if (indent % 2 == 0) {
-				color = this.LINE_COLOR_2;
-			} else {
-				color = this.LINE_COLOR_1;
-			}
-
-			speaker = root.getOwnerName();
-
-			nodePanel = createIndentedConversationPanel(root, indent, speaker,
-					color);
-
-			this.panelMap.put(root, nodePanel);
-
-			this.addConversationRoots(root.getChildren(), indent + 1);
-		}
-	}
-
-	/**
-	 * Creates an indented panel for the passed in GameConstant using the
-	 * indent. Indents are made using a {@link Box#createHorizontalStrut(int)},
-	 * where the dimension is (10*indent, 0).
-	 * 
-	 * @param child
-	 *            The constant to create a panel for
-	 * @param indent
-	 *            The indent
-	 * @param speaker
-	 *            The speaker of the dialogue line
+	 * @param constant
 	 * @param color
-	 *            The color of the speaker label
-	 * 
-	 * @return
 	 */
-	private JPanel createIndentedConversationPanel(Resource child, int indent,
-			String speaker, Color color) {
-		final int STRUT_SIZE = 10 * indent;
-		final JLabel prefixLabel;
-		final JPanel indentedPanel;
+	private void setResourcePanelBackground(Resource constant, Color color) {
+		final JPanel panel;
 
-		prefixLabel = new JLabel();
-		indentedPanel = new JPanel();
+		panel = this.panelMap.get(constant);
 
-		indentedPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		if (panel == null)
+			return;
 
-		indentedPanel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
-		indentedPanel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
+		panel.setBackground(color);
 
-		indentedPanel.setLayout(new BoxLayout(indentedPanel, BoxLayout.X_AXIS));
-
-		prefixLabel.setOpaque(true);
-
-		prefixLabel.setBackground(Color.LIGHT_GRAY);
-
-		if (speaker != null && !speaker.isEmpty() && color != null) {
-			final char firstChar;
-
-			firstChar = speaker.charAt(0);
-
-			prefixLabel.setText(" " + firstChar + " ");
-
-			prefixLabel.setForeground(color);
+		if (constant.isLink()) {
+			// TODO Select all same nodes.
 		}
-
-		indentedPanel.add(Box.createHorizontalStrut(STRUT_SIZE));
-		indentedPanel.add(prefixLabel);
-
-		final JPanel nodePanel;
-
-		nodePanel = createGameConstantPanel(child);
-
-		nodePanel.setOpaque(false);
-
-		indentedPanel.add(nodePanel);
-
-		return indentedPanel;
 	}
 
 	/**
@@ -416,7 +355,7 @@ public class GameConstantPanel extends JPanel {
 	 * @author kschenk
 	 * 
 	 */
-	private class GameObjectContainer extends JPanel {
+	private class ResourceContainer extends JPanel {
 		private boolean collapsed;
 
 		/**
@@ -428,7 +367,7 @@ public class GameConstantPanel extends JPanel {
 		 * @param gameConstants
 		 *            The list of GameConstants in the container
 		 */
-		private GameObjectContainer(String typeName,
+		private ResourceContainer(String typeName,
 				final Collection<Resource> gameConstants) {
 			this.collapsed = false;
 
@@ -444,11 +383,11 @@ public class GameConstantPanel extends JPanel {
 		 * 
 		 * @param typeName
 		 *            The name of the container
-		 * @param gameConstants
+		 * @param resources
 		 *            The list of GameConstants in the container
 		 */
 		private void redrawContainer(final String typeName,
-				final Collection<Resource> gameConstants) {
+				final Collection<Resource> resources) {
 			this.removeAll();
 
 			final JLabel categoryLabel;
@@ -460,8 +399,8 @@ public class GameConstantPanel extends JPanel {
 			categoryLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					GameObjectContainer.this.collapsed ^= true;
-					redrawContainer(typeName, gameConstants);
+					ResourceContainer.this.collapsed ^= true;
+					redrawContainer(typeName, resources);
 				}
 			});
 
@@ -472,8 +411,8 @@ public class GameConstantPanel extends JPanel {
 				categoryLabel.setIcon(ScriptEaseUI.COLLAPSE_ICON);
 				this.add(categoryLabel);
 
-				for (final Resource gameConstant : gameConstants) {
-					this.addGameConstant(gameConstant);
+				for (final Resource resource : resources) {
+					this.addGameConstant(resource);
 				}
 			}
 
@@ -487,7 +426,7 @@ public class GameConstantPanel extends JPanel {
 
 			constantPanel = panelMap.get(constant);
 
-			if (selectedConstant == constant)
+			if (selectedResource == constant)
 				constantPanel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
 
 			if (constantPanel == null) {
@@ -498,12 +437,12 @@ public class GameConstantPanel extends JPanel {
 			constantPanel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					setGameConstantBackground(selectedConstant,
+					setResourcePanelBackground(selectedResource,
 							ScriptEaseUI.UNSELECTED_COLOUR);
 
-					selectedConstant = constant;
+					selectedResource = constant;
 
-					setGameConstantBackground(selectedConstant,
+					setResourcePanelBackground(selectedResource,
 							ScriptEaseUI.SELECTED_COLOUR);
 				}
 			});
@@ -514,21 +453,6 @@ public class GameConstantPanel extends JPanel {
 				if (matchesFilters(child))
 					this.addGameConstant(child);
 			}
-		}
-	}
-
-	private void setGameConstantBackground(Resource constant, Color color) {
-		final JPanel panel;
-
-		panel = this.panelMap.get(constant);
-
-		if (panel == null)
-			return;
-
-		panel.setBackground(color);
-
-		if (constant.isLink()) {
-			// TODO Select all same nodes.
 		}
 	}
 }

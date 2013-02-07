@@ -61,7 +61,7 @@ import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.pane.CloseableModelTab;
-import scriptease.gui.pane.GameConstantPanel;
+import scriptease.gui.pane.ResourcePanel;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
@@ -493,7 +493,7 @@ public final class PanelFactory {
 
 		final JScrollPane treeScrollPane;
 
-		final GameConstantPanel tree;
+		final ResourcePanel tree;
 		final JTextField searchField;
 
 		final TypeAction typeFilter;
@@ -505,7 +505,7 @@ public final class PanelFactory {
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
 
-		tree = new GameConstantPanel(PatternModelManager.getInstance()
+		tree = new ResourcePanel(PatternModelManager.getInstance()
 				.getActiveModel());
 		searchField = ComponentFactory.getInstance()
 				.buildJTextFieldWithTextBackground(20, "Game Objects");
