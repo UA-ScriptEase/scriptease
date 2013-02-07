@@ -11137,14 +11137,6 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Facing Creature</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>creature</Type>
-              </Types>
-            </KnowIt>
-            <KnowIt>
               <Name>Object To Face</Name>
               <Visible>true</Visible>
               <Labels/>

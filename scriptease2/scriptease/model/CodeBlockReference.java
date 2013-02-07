@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.StoryVisitor;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
@@ -76,8 +78,8 @@ public class CodeBlockReference extends CodeBlock {
 		clone.setTarget(this.getTarget());
 
 		clone.init();
-		
-		if(this.getOwner() instanceof ControlIt) {
+
+		if (this.getOwner() instanceof ControlIt) {
 			System.out.println("e");
 		}
 
@@ -141,7 +143,6 @@ public class CodeBlockReference extends CodeBlock {
 	 *            The list of parameters whose bindings should be used for
 	 *            matching parameters in this code block.
 	 */
-	@Override
 	public void setParameters(Collection<KnowIt> newBindings) {
 		final List<KnowIt> targetParameters;
 		final List<KnowIt> newParameters;
@@ -162,15 +163,39 @@ public class CodeBlockReference extends CodeBlock {
 			// see setOwner() for why this is set to null
 			clone.setOwner(null);
 		}
-
 		super.setParameters(newParameters);
-
 		this.setBindings(newBindings);
+	}
+
+	@Override
+	public boolean addParameter(KnowIt parameter) {
+		List<KnowIt> parameters = this.getTarget().getParameters();
+		final boolean success = parameters.add(parameter);
+		if (success) {
+			setParameters(parameters);
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_ADD));
+		}
+		return success;
+	}
+
+	@Override
+	public boolean removeParameter(KnowIt parameter) {
+		List<KnowIt> parameters = this.getTarget().getParameters();
+		final boolean success = parameters.remove(parameter);
+		if (success) {
+			setParameters(parameters);
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_REMOVE));
+		}
+		return success;
 	}
 
 	@Override
 	public void setTypes(Collection<String> types) {
 		this.getTarget().setTypes(types);
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES));
 	}
 
 	@Override

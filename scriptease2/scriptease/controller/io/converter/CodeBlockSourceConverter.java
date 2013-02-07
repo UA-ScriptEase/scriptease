@@ -191,13 +191,13 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 			reader.moveUp();
 		}
 
-
-
 		block.setId(id);
 		block.setSubject(subject);
 		block.setSlot(slot);
 		block.setTypes(types);
-		block.setParameters(parameters);
+		for (KnowIt parameter : parameters) {
+			block.addParameter(parameter);
+		}
 		block.setIncludes(includes);
 		block.setCode(code);
 

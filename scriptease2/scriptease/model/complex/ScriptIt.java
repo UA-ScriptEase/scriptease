@@ -9,6 +9,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
@@ -28,7 +29,8 @@ import scriptease.translator.codegenerator.LocationInformation;
  * @author kschenk
  * 
  */
-public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
+public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
+		StoryComponentObserver {
 	private static final String ACTIVE_BLOCK_TEXT = "<"
 			+ StoryComponentPanelFactory.CURRENT_STORY_POINT_TAG + "> Active:";
 	private static final String INACTIVE_BLOCK_TEXT = "<"
@@ -216,13 +218,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		return this.getMainCodeBlock().getTypes();
 	}
 
-	public void setTypes(Collection<String> types) {
-		this.getMainCodeBlock().setTypes(types);
-
-		this.notifyObservers(new StoryComponentEvent(this,
-				StoryComponentChangeEnum.CHANGE_SCRIPT_IT_TYPES));
-	}
-
 	/**
 	 * Get the parameters for all of the codeBlocks
 	 * 
@@ -281,6 +276,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 
 	public void removeCodeBlock(CodeBlock codeBlock) {
 		if (this.codeBlocks.remove(codeBlock)) {
+			codeBlock.removeStoryComponentObserver(this);
 			codeBlock.setOwner(null);
 			this.notifyObservers(new StoryComponentEvent(this,
 					StoryComponentChangeEnum.CHANGE_CODEBLOCK_REMOVED));
@@ -291,6 +287,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 
 	public void addCodeBlock(CodeBlock codeBlock) {
 		if (this.codeBlocks.add(codeBlock)) {
+			codeBlock.addStoryComponentObserver(this);
 			codeBlock.setOwner(this);
 			this.notifyObservers(new StoryComponentEvent(this,
 					StoryComponentChangeEnum.CHANGE_CODEBLOCK_ADDED));
@@ -409,6 +406,25 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent {
 		if (this.isCause()) {
 			this.getInactiveBlock().revalidateKnowItBindings();
 			this.getActiveBlock().revalidateKnowItBindings();
+		}
+	}
+
+	@Override
+	public void componentChanged(StoryComponentEvent event) {
+		final StoryComponentChangeEnum type = event.getType();
+		final StoryComponent source = event.getSource();
+		// The ScriptIt hijacks the event and sends it to it's observers
+		if (this.codeBlocks.contains(source)) {
+			if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_ADD) {
+				this.notifyObservers(new StoryComponentEvent(this,
+						StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_ADD));
+			} else if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_REMOVE) {
+				this.notifyObservers(new StoryComponentEvent(this,
+						StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_REMOVE));
+			} else if (type == StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES) {
+				this.notifyObservers(new StoryComponentEvent(this,
+						StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES));
+			}
 		}
 	}
 }

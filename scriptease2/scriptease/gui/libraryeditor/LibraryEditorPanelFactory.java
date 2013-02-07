@@ -18,7 +18,6 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -127,7 +126,7 @@ public class LibraryEditorPanelFactory {
 								.setFormatFragment(null, null);
 
 						for (CodeBlock codeBlock : codeBlocks) {
-							editingPanel.add(buildCodeBlockComponent(codeBlock,
+							editingPanel.add(new CodeBlockPanel(codeBlock,
 									scriptIt));
 						}
 
@@ -700,276 +699,246 @@ public class LibraryEditorPanelFactory {
 	/**
 	 * Sets up a JPanel used to edit CodeBlocks. This shows the id, slot,
 	 * includes, types, parameters, and code for the passed in CodeBlock, and
-	 * allows the user to edit it.
+	 * allows the user to edit it. The panel also observes the provided
+	 * codeBlock for changes
 	 * 
 	 * @param scriptIt
-	 * 
 	 * @param codeBlock
 	 * @return
 	 */
-	private JComponent buildCodeBlockComponent(final CodeBlock codeBlock,
-			final ScriptIt scriptIt) {
-		final JLabel subjectLabel;
-		final JLabel slotLabel;
-		final JLabel implicitsLabelLabel;
-		final JLabel includesLabel;
-		final JLabel typesLabel;
-		final JLabel parametersLabel;
-		final JLabel codeLabel;
+	@SuppressWarnings("serial")
+	private class CodeBlockPanel extends JPanel implements
+			StoryComponentObserver {
+		private TypeAction typeAction;
+		private CodeBlock codeBlock;
 
-		final JPanel codeBlockPanel;
-		final JPanel parameterPanel;
-		final JScrollPane parameterScrollPane;
+		public CodeBlockPanel(final CodeBlock codeBlock, final ScriptIt scriptIt) {
+			final JLabel subjectLabel;
+			final JLabel slotLabel;
+			final JLabel implicitsLabelLabel;
+			final JLabel includesLabel;
+			final JLabel typesLabel;
+			final JLabel parametersLabel;
+			final JLabel codeLabel;
 
-		final TypeAction typeAction;
-		final JTextField includesField;
-		final JComboBox subjectBox;
-		final JComboBox slotBox;
-		final JLabel implicitsLabel;
-		final CodeEditorPanel codePanel;
+			final JPanel parameterPanel;
+			final JScrollPane parameterScrollPane;
 
-		final JButton deleteCodeBlockButton;
-		final JButton addParameterButton;
-		final JButton typesButton;
+			final JTextField includesField;
+			final JComboBox subjectBox;
+			final JComboBox slotBox;
+			final JLabel implicitsLabel;
+			final CodeEditorPanel codePanel;
 
-		final GroupLayout codeBlockEditorLayout;
-		final Font labelFont;
+			final JButton deleteCodeBlockButton;
+			final JButton addParameterButton;
+			final JButton typesButton;
 
-		final List<KnowIt> parameters;
+			final GroupLayout codeBlockEditorLayout;
+			final Font labelFont;
 
-		subjectLabel = new JLabel("Subject: ");
-		slotLabel = new JLabel("Slot: ");
-		implicitsLabelLabel = new JLabel("Implicits: ");
-		includesLabel = new JLabel("Includes: ");
-		typesLabel = new JLabel("Types: ");
-		parametersLabel = new JLabel("Parameters: ");
-		codeLabel = new JLabel("Code: ");
+			final List<KnowIt> parameters;
 
-		codeBlockPanel = new JPanel();
-		parameterPanel = new JPanel();
-		parameterScrollPane = new JScrollPane(parameterPanel);
+			this.codeBlock = codeBlock;
+			codeBlock.addStoryComponentObserver(this);
 
-		typeAction = new TypeAction();
-		includesField = new JTextField();
-		subjectBox = new JComboBox();
-		slotBox = new JComboBox();
-		implicitsLabel = new JLabel();
-		codePanel = new CodeEditorPanel(codeBlock);
-		
-		deleteCodeBlockButton = new JButton("Delete CodeBlock");
-		addParameterButton = new JButton("+");
-		typesButton = new JButton(typeAction);
+			subjectLabel = new JLabel("Subject: ");
+			slotLabel = new JLabel("Slot: ");
+			implicitsLabelLabel = new JLabel("Implicits: ");
+			includesLabel = new JLabel("Includes: ");
+			typesLabel = new JLabel("Types: ");
+			parametersLabel = new JLabel("Parameters: ");
+			codeLabel = new JLabel("Code: ");
 
-		codeBlockEditorLayout = new GroupLayout(codeBlockPanel);
-		labelFont = new Font("SansSerif", Font.BOLD,
-				Integer.parseInt(ScriptEase.getInstance().getPreference(
-						ScriptEase.FONT_SIZE_KEY)) + 1);
+			parameterPanel = new JPanel();
+			parameterScrollPane = new JScrollPane(parameterPanel);
 
-		parameters = codeBlock.getParameters();
+			typeAction = new TypeAction();
+			includesField = new JTextField();
+			subjectBox = new JComboBox();
+			slotBox = new JComboBox();
+			implicitsLabel = new JLabel();
+			codePanel = new CodeEditorPanel(codeBlock);
 
-		// Set up the layout
-		codeBlockPanel.setLayout(codeBlockEditorLayout);
-		codeBlockPanel.setBorder(new TitledBorder("Code Block #"
-				+ codeBlock.getId()));
+			deleteCodeBlockButton = new JButton("Delete CodeBlock");
+			addParameterButton = new JButton("+");
+			typesButton = new JButton(typeAction);
 
-		codeBlockEditorLayout.setAutoCreateGaps(true);
-		codeBlockEditorLayout.setAutoCreateContainerGaps(true);
-		codeBlockEditorLayout.setHonorsVisibility(true);
+			codeBlockEditorLayout = new GroupLayout(this);
+			labelFont = new Font("SansSerif", Font.BOLD,
+					Integer.parseInt(ScriptEase.getInstance().getPreference(
+							ScriptEase.FONT_SIZE_KEY)) + 1);
 
-		parameterPanel.setLayout(new BoxLayout(parameterPanel,
-				BoxLayout.PAGE_AXIS));
+			parameters = codeBlock.getParameters();
 
-		parameterScrollPane.setPreferredSize(new Dimension(400, 250));
-		parameterScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+			// Set up the layout
+			this.setLayout(codeBlockEditorLayout);
+			this.setBorder(new TitledBorder("Code Block #" + codeBlock.getId()));
 
-		// Set up the label fonts and colors
-		subjectLabel.setFont(labelFont);
-		slotLabel.setFont(labelFont);
-		implicitsLabelLabel.setFont(labelFont);
-		includesLabel.setFont(labelFont);
-		typesLabel.setFont(labelFont);
-		parametersLabel.setFont(labelFont);
-		codeLabel.setFont(labelFont);
+			codeBlockEditorLayout.setAutoCreateGaps(true);
+			codeBlockEditorLayout.setAutoCreateContainerGaps(true);
+			codeBlockEditorLayout.setHonorsVisibility(true);
 
-		scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildCodeBlockComponentObserver(
-						deleteCodeBlockButton));
+			parameterPanel.setLayout(new BoxLayout(parameterPanel,
+					BoxLayout.PAGE_AXIS));
 
-		scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildParameterPanelObserver(codeBlock,
-						parameterPanel, subjectBox));
+			parameterScrollPane.setPreferredSize(new Dimension(400, 250));
+			parameterScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-		scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildSubjectBoxObserver(codeBlock, subjectBox,
-						slotBox));
+			// Set up the label fonts and colors
+			subjectLabel.setFont(labelFont);
+			slotLabel.setFont(labelFont);
+			implicitsLabelLabel.setFont(labelFont);
+			includesLabel.setFont(labelFont);
+			typesLabel.setFont(labelFont);
+			parametersLabel.setFont(labelFont);
+			codeLabel.setFont(labelFont);
 
-		scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildSlotBoxObserver(codeBlock, implicitsLabel));
+			scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
+					.getInstance().buildCodeBlockComponentObserver(
+							deleteCodeBlockButton));
 
-		scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance()
-				.buildParameterNameObserver(codeBlock, subjectBox));
+			scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
+					.getInstance().buildParameterPanelObserver(codeBlock,
+							parameterPanel, subjectBox));
 
-		subjectBox.addItem(null);
+			scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
+					.getInstance().buildSubjectBoxObserver(codeBlock,
+							subjectBox, slotBox));
 
-		for (KnowIt parameter : scriptIt.getParameters()) {
-			final Collection<String> slots = getCommonSlotsForTypes(parameter);
+			scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
+					.getInstance().buildSlotBoxObserver(codeBlock,
+							implicitsLabel));
 
-			if (!slots.isEmpty())
-				subjectBox.addItem(parameter.getDisplayText());
-		}
+			scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
+					.getInstance().buildParameterNameObserver(codeBlock,
+							subjectBox));
 
-		implicitsLabel.setForeground(Color.DARK_GRAY);
+			subjectBox.addItem(null);
 
-		includesField.setText(StringOp.getCollectionAsString(
-				codeBlock.getIncludes(), ", "));
+			for (KnowIt parameter : scriptIt.getParameters()) {
+				final Collection<String> slots = getCommonSlotsForTypes(parameter);
 
-		ArrayList<String> types = new ArrayList<String>();
-		types.addAll(codeBlock.getTypes());
+				if (!slots.isEmpty())
+					subjectBox.addItem(parameter.getDisplayText());
+			}
 
-		typeAction.getTypeSelectionDialogBuilder().deselectAll();
-		typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
+			implicitsLabel.setForeground(Color.DARK_GRAY);
 
-		final String initialSlot;
+			includesField.setText(StringOp.getCollectionAsString(
+					codeBlock.getIncludes(), ", "));
 
-		if (codeBlock.hasSlot())
-			initialSlot = codeBlock.getSlot();
-		else
-			initialSlot = "";
+			final ArrayList<String> types = new ArrayList<String>(
+					codeBlock.getTypes());
+			typeAction.getTypeSelectionDialogBuilder().deselectAll();
+			typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
 
-		if (codeBlock.hasSubject()) {
-			KnowIt subject = codeBlock.getSubject();
-			if (subject != null) {
-				final Collection<String> slots;
-				final String subjectName;
+			final String initialSlot;
 
-				subjectName = codeBlock.getSubjectName();
-				slots = getCommonSlotsForTypes(subject);
+			if (codeBlock.hasSlot())
+				initialSlot = codeBlock.getSlot();
+			else
+				initialSlot = "";
 
-				for (String slot : slots) {
-					slotBox.addItem(slot);
+			if (codeBlock.hasSubject()) {
+				KnowIt subject = codeBlock.getSubject();
+				if (subject != null) {
+					final Collection<String> slots;
+					final String subjectName;
+
+					subjectName = codeBlock.getSubjectName();
+					slots = getCommonSlotsForTypes(subject);
+
+					for (String slot : slots) {
+						slotBox.addItem(slot);
+					}
+					subjectBox.setSelectedItem(subjectName);
+					slotBox.setSelectedItem(initialSlot);
 				}
-				subjectBox.setSelectedItem(subjectName);
-				slotBox.setSelectedItem(initialSlot);
-			}
-		}
-
-		String implicits = "";
-
-		for (KnowIt implicit : codeBlock.getImplicits())
-			implicits += "[" + implicit.getDisplayText() + "] ";
-
-		implicitsLabel.setText(implicits.trim());
-
-		includesField.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				final String labelFieldText;
-				final String[] labelArray;
-				final Collection<String> labels;
-
-				labelFieldText = includesField.getText();
-				labelArray = labelFieldText.split(",");
-				labels = new ArrayList<String>();
-
-				for (String label : labelArray) {
-					labels.add(label.trim());
-				}
-				codeBlock.setIncludes(labels);
 			}
 
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				insertUpdate(e);
-			}
+			String implicits = "";
 
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-			}
-		});
+			for (KnowIt implicit : codeBlock.getImplicits())
+				implicits += "[" + implicit.getDisplayText() + "] ";
 
-		typeAction.setAction(new Runnable() {
-			@Override
-			public void run() {
-				codeBlock.setTypes(typeAction.getTypeSelectionDialogBuilder()
-						.getSelectedTypes());
+			implicitsLabel.setText(implicits.trim());
 
-				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
-						StoryComponentChangeEnum.CODE_BLOCK_TYPES_SET));
-			}
-		});
+			includesField.getDocument().addDocumentListener(
+					new DocumentListener() {
+						@Override
+						public void insertUpdate(DocumentEvent e) {
+							final String labelFieldText;
+							final String[] labelArray;
+							final Collection<String> labels;
 
-		addParameterButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final KnowIt knowIt;
-				final List<KnowIt> parameters;
+							labelFieldText = includesField.getText();
+							labelArray = labelFieldText.split(",");
+							labels = new ArrayList<String>();
 
-				knowIt = new KnowIt();
-				parameters = codeBlock.getParameters();
+							for (String label : labelArray) {
+								labels.add(label.trim());
+							}
+							codeBlock.setIncludes(labels);
+						}
 
-				parameters.add(knowIt);
-				codeBlock.setParameters(parameters);
+						@Override
+						public void removeUpdate(DocumentEvent e) {
+							insertUpdate(e);
+						}
 
-				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
-						StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_ADD));
-			}
-		});
+						@Override
+						public void changedUpdate(DocumentEvent e) {
+						}
+					});
 
-		slotBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String selectedSlot = (String) slotBox.getSelectedItem();
-
-				if (selectedSlot != null)
-					codeBlock.setSlot((String) slotBox.getSelectedItem());
-				else
-					codeBlock.setSlot("");
-
-				scriptIt.updateStoryChildren();
-				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
-						StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
-			}
-		});
-
-		if (scriptIt.isCause()) {
-			deleteCodeBlockButton.setVisible(false);
-			subjectLabel.setVisible(false);
-			subjectBox.setVisible(false);
-
-			slotLabel.setVisible(false);
-			slotBox.setVisible(false);
-			implicitsLabel.setVisible(false);
-			implicitsLabelLabel.setVisible(false);
-		} else {
-			deleteCodeBlockButton.addActionListener(new ActionListener() {
+			typeAction.setAction(new Runnable() {
 				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (!UndoManager.getInstance().hasOpenUndoableAction())
+				public void run() {
+					if (!UndoManager.getInstance().hasOpenUndoableAction()) {
+						final Collection<String> selectedTypes = typeAction
+								.getTypeSelectionDialogBuilder()
+								.getSelectedTypes();
 						UndoManager.getInstance().startUndoableAction(
-								"Adding CodeBlock to "
-										+ scriptIt.getDisplayText());
-					scriptIt.removeCodeBlock(codeBlock);
-					UndoManager.getInstance().endUndoableAction();
+								"Setting CodeBlock " + codeBlock + " types to "
+										+ selectedTypes);
+						codeBlock.setTypes(selectedTypes);
+						UndoManager.getInstance().endUndoableAction();
+					}
 				}
 			});
 
-			if (!scriptIt.getMainCodeBlock().equals(codeBlock)) {
-				subjectBox.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						final String subjectName;
-						subjectName = (String) subjectBox.getSelectedItem();
-
-						codeBlock.setSubject(subjectName);
-
-						scriptIt.updateStoryChildren();
-						scriptIt.notifyObservers(new StoryComponentEvent(
-								scriptIt,
-								StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
+			addParameterButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final KnowIt knowIt = new KnowIt();
+					if (!UndoManager.getInstance().hasOpenUndoableAction()) {
+						UndoManager.getInstance().startUndoableAction(
+								"Add parameter " + knowIt + " to " + codeBlock);
+						codeBlock.addParameter(knowIt);
+						UndoManager.getInstance().endUndoableAction();
 					}
-				});
-			} else {
+				}
+			});
+
+			slotBox.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String selectedSlot = (String) slotBox.getSelectedItem();
+
+					if (selectedSlot != null)
+						codeBlock.setSlot((String) slotBox.getSelectedItem());
+					else
+						codeBlock.setSlot("");
+
+					scriptIt.updateStoryChildren();
+					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+							StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
+				}
+			});
+
+			if (scriptIt.isCause()) {
+				deleteCodeBlockButton.setVisible(false);
 				subjectLabel.setVisible(false);
 				subjectBox.setVisible(false);
 
@@ -977,92 +946,141 @@ public class LibraryEditorPanelFactory {
 				slotBox.setVisible(false);
 				implicitsLabel.setVisible(false);
 				implicitsLabelLabel.setVisible(false);
+			} else {
+				deleteCodeBlockButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (!UndoManager.getInstance().hasOpenUndoableAction())
+							UndoManager.getInstance().startUndoableAction(
+									"Adding CodeBlock to "
+											+ scriptIt.getDisplayText());
+						scriptIt.removeCodeBlock(codeBlock);
+						UndoManager.getInstance().endUndoableAction();
+					}
+				});
+
+				if (!scriptIt.getMainCodeBlock().equals(codeBlock)) {
+					subjectBox.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							final String subjectName;
+							subjectName = (String) subjectBox.getSelectedItem();
+
+							codeBlock.setSubject(subjectName);
+
+							scriptIt.updateStoryChildren();
+							scriptIt.notifyObservers(new StoryComponentEvent(
+									scriptIt,
+									StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
+						}
+					});
+				} else {
+					subjectLabel.setVisible(false);
+					subjectBox.setVisible(false);
+
+					slotLabel.setVisible(false);
+					slotBox.setVisible(false);
+					implicitsLabel.setVisible(false);
+					implicitsLabelLabel.setVisible(false);
+				}
+
+				if (scriptIt.getCodeBlocks().size() < 2) {
+					deleteCodeBlockButton.setEnabled(false);
+				}
 			}
 
-			if (scriptIt.getCodeBlocks().size() < 2) {
-				deleteCodeBlockButton.setEnabled(false);
+			for (KnowIt parameter : parameters) {
+				parameterPanel.add(buildParameterPanel(scriptIt, codeBlock,
+						parameter));
 			}
+
+			codeBlockEditorLayout.setHorizontalGroup(codeBlockEditorLayout
+					.createSequentialGroup()
+					.addGroup(
+							codeBlockEditorLayout.createParallelGroup()
+									.addComponent(subjectLabel)
+									.addComponent(slotLabel)
+									.addComponent(implicitsLabelLabel)
+									.addComponent(includesLabel)
+									.addComponent(typesLabel)
+									.addComponent(parametersLabel)
+									.addComponent(addParameterButton)
+									.addComponent(codeLabel))
+					.addGroup(
+							codeBlockEditorLayout
+									.createParallelGroup()
+									.addComponent(deleteCodeBlockButton,
+											GroupLayout.Alignment.TRAILING)
+									.addComponent(subjectBox)
+									.addComponent(slotBox)
+									.addComponent(implicitsLabel)
+									.addComponent(includesField)
+									.addComponent(typesButton)
+									.addComponent(parameterScrollPane)
+									.addComponent(codePanel)));
+
+			codeBlockEditorLayout
+					.setVerticalGroup(codeBlockEditorLayout
+							.createSequentialGroup()
+							.addComponent(deleteCodeBlockButton)
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addComponent(subjectLabel)
+											.addComponent(subjectBox))
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addComponent(slotLabel)
+											.addComponent(slotBox))
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addComponent(implicitsLabelLabel)
+											.addComponent(implicitsLabel))
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addComponent(includesLabel)
+											.addComponent(includesField))
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addComponent(typesLabel)
+											.addComponent(typesButton))
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addGroup(
+													codeBlockEditorLayout
+															.createSequentialGroup()
+															.addComponent(
+																	parametersLabel)
+															.addComponent(
+																	addParameterButton))
+											.addComponent(parameterScrollPane))
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addComponent(codeLabel)
+											.addComponent(codePanel)));
 		}
 
-		for (KnowIt parameter : parameters) {
-			parameterPanel.add(this.buildParameterPanel(scriptIt, codeBlock,
-					parameter));
+		@Override
+		public void componentChanged(StoryComponentEvent event) {
+			final ArrayList<String> types = new ArrayList<String>(
+					this.codeBlock.getTypes());
+			typeAction.getTypeSelectionDialogBuilder().deselectAll();
+			typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
+			typeAction.updateName();
 		}
-
-		codeBlockEditorLayout.setHorizontalGroup(codeBlockEditorLayout
-				.createSequentialGroup()
-				.addGroup(
-						codeBlockEditorLayout.createParallelGroup()
-								.addComponent(subjectLabel)
-								.addComponent(slotLabel)
-								.addComponent(implicitsLabelLabel)
-								.addComponent(includesLabel)
-								.addComponent(typesLabel)
-								.addComponent(parametersLabel)
-								.addComponent(addParameterButton)
-								.addComponent(codeLabel))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup()
-								.addComponent(deleteCodeBlockButton,
-										GroupLayout.Alignment.TRAILING)
-								.addComponent(subjectBox).addComponent(slotBox)
-								.addComponent(implicitsLabel)
-								.addComponent(includesField)
-								.addComponent(typesButton)
-								.addComponent(parameterScrollPane)
-								.addComponent(codePanel)));
-
-		codeBlockEditorLayout.setVerticalGroup(codeBlockEditorLayout
-				.createSequentialGroup()
-				.addComponent(deleteCodeBlockButton)
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(subjectLabel)
-								.addComponent(subjectBox))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(slotLabel).addComponent(slotBox))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(implicitsLabelLabel)
-								.addComponent(implicitsLabel))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(includesLabel)
-								.addComponent(includesField))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(typesLabel)
-								.addComponent(typesButton))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addGroup(
-										codeBlockEditorLayout
-												.createSequentialGroup()
-												.addComponent(parametersLabel)
-												.addComponent(
-														addParameterButton))
-								.addComponent(parameterScrollPane))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(codeLabel)
-								.addComponent(codePanel)));
-		return codeBlockPanel;
 	}
 
 	/**
