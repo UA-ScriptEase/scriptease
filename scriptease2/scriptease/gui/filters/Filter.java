@@ -1,7 +1,7 @@
 package scriptease.gui.filters;
 
 import scriptease.model.StoryComponent;
-import scriptease.translator.io.model.GameConstant;
+import scriptease.translator.io.model.Resource;
 
 /**
  * The Filter system implements the chain of responsibility and decorater design
@@ -29,14 +29,14 @@ public abstract class Filter {
 	 * @return <code>true</code> if the given component passes all rules.
 	 * @see #getMatchCount(Object)
 	 */
-	public final boolean isAcceptable(GameConstant gameObject) {
+	public final boolean isAcceptable(Resource resource) {
 		return (this.nextRule == null ? true : this.nextRule
-				.isAcceptable(gameObject))
-				&& this.getMatchCount(gameObject) > 0;
+				.isAcceptable(resource))
+				&& this.getMatchCount(resource) > 0;
 	}
 
 	/**
-	 * Determines if the given GameObject satisfies <i>only</i> this rule alone.
+	 * Determines if the given Resource satisfies <i>only</i> this rule alone.
 	 * To test for this rule including all decorated rules, use
 	 * {@link #isAcceptable(Object)} instead.
 	 * 
@@ -44,7 +44,7 @@ public abstract class Filter {
 	 * @return <code>true</code> if the given element passes this rule.
 	 * @see #isAcceptable(Object)
 	 */
-	protected abstract int getMatchCount(GameConstant element);
+	protected abstract int getMatchCount(Resource resource);
 
 	/**
 	 * Determines if the given StoryComponent is acceptable by this rule and all

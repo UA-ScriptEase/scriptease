@@ -6,7 +6,7 @@ import java.util.Iterator;
 import scriptease.controller.get.VariableGetter;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
@@ -66,8 +66,8 @@ public class KnowItContext extends StoryComponentContext {
 				+ this.getClass().toString();
 		final KnowIt knowIt = (KnowIt) this.component;
 		final KnowItBinding binding = knowIt.getBinding();
-		if (binding instanceof KnowItBindingConstant) {
-			templateID = ((KnowItBindingConstant) binding).getTemplateID();
+		if (binding instanceof KnowItBindingResource) {
+			templateID = ((KnowItBindingResource) binding).getTemplateID();
 		}
 		return templateID;
 	}

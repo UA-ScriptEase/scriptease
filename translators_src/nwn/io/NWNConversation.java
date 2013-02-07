@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import scriptease.translator.io.model.GameConversation;
-import scriptease.translator.io.model.GameConversationNode;
+import scriptease.translator.io.model.Resource;
 import scriptease.util.FileOp;
 
 /**
@@ -16,8 +15,7 @@ import scriptease.util.FileOp;
  * 
  * @author remiller
  */
-public class NWNConversation extends NWNGameConstant implements
-		GameConversation {
+public class NWNConversation extends NWNGameConstant {
 	public static final String TYPE_DIALOGUE = "dialogue";
 	private final GenericFileFormat convo;
 
@@ -46,14 +44,14 @@ public class NWNConversation extends NWNGameConstant implements
 	}
 
 	@Override
-	public List<GameConversationNode> getConversationRoots() {
-		final List<GameConversationNode> roots;
+	public List<Resource> getChildren() {
+		final List<Resource> roots;
 		final List<GffStruct> rootStructs;
 		int i = 0;
 
 		rootStructs = this.convo.getTopLevelStruct().getList("StartingList");
 
-		roots = new ArrayList<GameConversationNode>(rootStructs.size());
+		roots = new ArrayList<Resource>(rootStructs.size());
 
 		for (GffStruct rootStruct : rootStructs) {
 			roots.add(new NWNDialogueLine(this.convo, rootStruct, false, Arrays

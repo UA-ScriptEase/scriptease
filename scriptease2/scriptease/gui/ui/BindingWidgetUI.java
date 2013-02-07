@@ -39,9 +39,9 @@ import scriptease.util.GUIOp;
  * TypeToggleButton over the left side of the rectangle.<br>
  * <br>
  * The shape is filled in with a gradient to make it look convex or concave
- * based on whether the GameObjectLabel is Filled or not. The colour of the
- * gradient is based on the binding type set on the label. Game objects are
- * green, null bindings are red, and everything else is blue.
+ * based on whether the Resource label is Filled or not. The colour of the
+ * gradient is based on the binding type set on the label. Resources are green,
+ * null bindings are red, and everything else is blue.
  * 
  * @author remiller
  */

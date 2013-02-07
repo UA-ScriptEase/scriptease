@@ -333,7 +333,7 @@
 			<xsd:element name="KnowIt" type="KnowIt_Type" />
 			<!-- This is for the run time flavour -->
 			<xsd:element name="Types" type="SpecificTypeList_Type" />
-			<!-- This is for constants + gameobjects -->
+			<!-- This is for constants + resources -->
 			<xsd:sequence>
 				<xsd:element name="Type" type="xsd:string" />
 				<xsd:element name="Value" type="xsd:string" />
@@ -342,7 +342,7 @@
 		<xsd:attribute name="flavour" use="required">
 			<xsd:simpleType>
 				<xsd:restriction base="xsd:string">
-					<xsd:pattern value="constant|gameObject|function|reference|runTime|null" />
+					<xsd:pattern value="constant|resource|function|reference|runTime|null" />
 				</xsd:restriction>
 			</xsd:simpleType>
 		</xsd:attribute>

@@ -16,7 +16,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
@@ -29,8 +29,8 @@ import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.apimanagers.TypeConverter;
-import scriptease.translator.io.model.GameConstant;
-import scriptease.translator.io.tools.GameConstantFactory;
+import scriptease.translator.io.model.Resource;
+import scriptease.translator.io.model.SimpleResource;
 
 /**
  * Represents a piece of data within the script, and can be thought of as a
@@ -48,7 +48,7 @@ import scriptease.translator.io.tools.GameConstantFactory;
  * <li><b>DoIt</b> - Binding a KnowIt to a DoIt will assign the KnowIt that
  * DoIt's return value.</li>
  * <li><b>Constant</b> - This is a constant in either the target scripting
- * language or a reference to a GameObject.</li>
+ * language or a reference to a {@link Resource}.</li>
  * <li><b>null</b> - the default binding when a KnowIt is created.</li>
  * </ol>
  * 
@@ -124,18 +124,16 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 	/**
 	 * Change the <code>KnowIt</code>'s binding to the given
-	 * <code>GameObject</code>.
+	 * <code>Resource</code>.
 	 * 
-	 * @param gameConstant
-	 *            The <code>GameObject</code> to bind the <code>KnowIt</code>
-	 *            to.
+	 * @param resource
+	 *            The <code>Resource</code> to bind the <code>KnowIt</code> to.
 	 */
-	public void setBinding(GameConstant gameConstant) {
-		if (gameConstant == null)
+	public void setBinding(Resource resource) {
+		if (resource == null)
 			throw new IllegalArgumentException(
-					"KnowIt cannot be bound to GameConstant null");
-		KnowItBindingConstant bindingValue = new KnowItBindingConstant(
-				gameConstant);
+					"KnowIt cannot be bound to Resource null");
+		KnowItBindingResource bindingValue = new KnowItBindingResource(resource);
 		this.setBinding(bindingValue);
 	}
 
@@ -238,9 +236,13 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 								.getApiDictionary().getGameTypeManager();
 						for (String type : KnowIt.this.types) {
 							if (typeManager.hasGUI(type)) {
-								KnowItBindingConstant bindingValue = new KnowItBindingConstant(
-										GameConstantFactory.getInstance()
-												.getTypedBlankConstant(type));
+								final Resource resource;
+								final KnowItBindingResource bindingValue;
+
+								resource = SimpleResource
+										.buildSimpleResource(type);
+								bindingValue = new KnowItBindingResource(
+										resource);
 								this.defaultProcess(bindingValue);
 								return;
 							}

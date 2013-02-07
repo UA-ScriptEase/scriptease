@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.CodeGenerationException;
@@ -18,7 +18,6 @@ import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
-import scriptease.translator.io.model.GameObject;
 import scriptease.util.StringOp;
 
 /**
@@ -29,7 +28,7 @@ import scriptease.util.StringOp;
  * 
  */
 public class KnowItBindingConstantContext extends KnowItBindingContext {
-	
+
 	public KnowItBindingConstantContext(StoryPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInformation) {
@@ -54,12 +53,14 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 	@Override
 	public String getFormattedValue() {
 		Collection<AbstractFragment> typeFormat = new ArrayList<AbstractFragment>();
-		if (this.binding instanceof KnowItBindingConstant) {
-			final String type = ((KnowItBindingConstant) this.binding)
+		if (this.binding instanceof KnowItBindingResource) {
+			final String type = ((KnowItBindingResource) this.binding)
 					.getFirstType();
 			typeFormat = this.translator.getGameTypeManager().getFormat(type);
 			if (typeFormat == null || typeFormat.isEmpty()) {
-				if (((KnowItBindingConstant) this.binding).getValue() instanceof GameObject) {
+				if (((KnowItBindingResource) this.binding)
+						.getValue()
+						.isSomethingPreviouslyKnownAsAGameObjectAndNotAConversation()) {
 					final List<CodeBlock> codeBlocks = this
 							.getBindingCodeBlocks();
 					if (codeBlocks.size() <= 0)
@@ -84,7 +85,7 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 
 	@Override
 	public KnowIt getParameter(String parameter) {
-		return new KnowIt(((KnowItBindingConstant) this.binding).getTag());
+		return new KnowIt(((KnowItBindingResource) this.binding).getTag());
 	}
 
 	/**
@@ -92,11 +93,11 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 	 */
 	@Override
 	public String getValue() {
-		String scriptValue = ((KnowItBindingConstant) this.binding)
+		String scriptValue = ((KnowItBindingResource) this.binding)
 				.getScriptValue();
-		final String type = ((KnowItBindingConstant) this.binding)
+		final String type = ((KnowItBindingResource) this.binding)
 				.getFirstType();
-		
+
 		// Handles Escaped Characters
 		final Set<Entry<String, String>> entrySet = this.translator
 				.getGameTypeManager().getEscapes(type).entrySet();
@@ -122,6 +123,6 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 	 */
 	@Override
 	public String getUniqueName(Pattern legalFormat) {
-		return ((KnowItBindingConstant) this.binding).getValue().getName();
+		return ((KnowItBindingResource) this.binding).getValue().getName();
 	}
 }

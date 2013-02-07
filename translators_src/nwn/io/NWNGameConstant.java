@@ -3,14 +3,14 @@ package io;
 import java.util.Arrays;
 import java.util.Collection;
 
-import scriptease.translator.io.model.GameConstant;
+import scriptease.translator.io.model.Resource;
 
 /**
  * Superclass for all for the NWN implementations of the GameConstant hierarchy.
  * 
  * @author remiller
  */
-public abstract class NWNGameConstant implements GameConstant {
+public abstract class NWNGameConstant extends Resource {
 	private final String resRef;
 	private final Collection<String> types;
 	private final String name;

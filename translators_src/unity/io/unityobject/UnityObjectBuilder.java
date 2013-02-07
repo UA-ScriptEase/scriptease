@@ -19,10 +19,10 @@ import org.yaml.snakeyaml.events.ScalarEvent;
  * 
  */
 public class UnityObjectBuilder {
-	private final List<UnityObject> unityObjects;
+	private final List<UnityResource> unityObjects;
 
 	/**
-	 * Builds {@link UnityObject}s for a scene based on the passed in event
+	 * Builds {@link UnityResource}s for a scene based on the passed in event
 	 * iterator. If this event iterator contains start events without matching
 	 * end events, this translator will throw exceptions like [insert baseball
 	 * simile here].
@@ -30,13 +30,13 @@ public class UnityObjectBuilder {
 	 * @param eventIterator
 	 */
 	public UnityObjectBuilder(Iterator<Event> eventIterator) {
-		this.unityObjects = new ArrayList<UnityObject>();
+		this.unityObjects = new ArrayList<UnityResource>();
 
 		// Go through each event.
 		while (eventIterator.hasNext()) {
 			final Event event = eventIterator.next();
 			if (event.is(Event.ID.DocumentStart)) {
-				final UnityObject object;
+				final UnityResource object;
 
 				object = this.buildObject(eventIterator);
 
@@ -60,8 +60,8 @@ public class UnityObjectBuilder {
 		}
 	}
 
-	private UnityObject buildObject(Iterator<Event> eventIterator) {
-		UnityObject object = null;
+	private UnityResource buildObject(Iterator<Event> eventIterator) {
+		UnityResource object = null;
 
 		if (eventIterator.hasNext()) {
 			final Event event = eventIterator.next();
@@ -69,7 +69,7 @@ public class UnityObjectBuilder {
 			if (event.is(Event.ID.MappingStart)) {
 				final MappingStartEvent mapEvent = (MappingStartEvent) event;
 
-				object = new UnityObject(
+				object = new UnityResource(
 						Integer.parseInt(mapEvent.getAnchor()),
 						mapEvent.getTag());
 
@@ -179,11 +179,11 @@ public class UnityObjectBuilder {
 	}
 
 	/**
-	 * Returns a list of {@link UnityObject}s created by the builder.
+	 * Returns a list of {@link UnityResource}s created by the builder.
 	 * 
 	 * @return
 	 */
-	public List<UnityObject> getObjects() {
+	public List<UnityResource> getObjects() {
 		return this.unityObjects;
 	}
 }

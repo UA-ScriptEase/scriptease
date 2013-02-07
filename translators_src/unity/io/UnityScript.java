@@ -1,6 +1,6 @@
 package io;
 
-import io.unityobject.UnityObject;
+import io.unityobject.UnityResource;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import scriptease.translator.codegenerator.ScriptInfo;
-import scriptease.translator.io.model.GameConstant;
+import scriptease.translator.io.model.Resource;
 import scriptease.util.StringOp;
 
 public class UnityScript {
@@ -24,8 +24,8 @@ public class UnityScript {
 	private final String guid;
 
 	private final Scene scene;
-	private final UnityObject attachedObject;
-	private final UnityObject monoBehaviourObject;
+	private final UnityResource attachedObject;
+	private final UnityResource monoBehaviourObject;
 	private final List<PropertyValue> mComponentList;
 
 	private final int idNumber;
@@ -39,7 +39,7 @@ public class UnityScript {
 	 * @param scene
 	 */
 	public UnityScript(final ScriptInfo scriptInfo, final Scene scene) {
-		final GameConstant subject;
+		final Resource subject;
 
 		subject = scriptInfo.getSubject();
 
@@ -54,7 +54,7 @@ public class UnityScript {
 				.getTemplateID());
 
 		int idNumber = 0;
-		for (UnityObject object : this.scene.getObjects()) {
+		for (UnityResource object : this.scene.getObjects()) {
 			final int objectID = object.getUniqueID();
 			if (objectID >= idNumber) {
 				idNumber = objectID + 1;
@@ -137,11 +137,11 @@ public class UnityScript {
 			this.mComponentList.remove(toBeRemoved);
 	}
 
-	private UnityObject buildMonoBehaviourObject() {
+	private UnityResource buildMonoBehaviourObject() {
 		final String fileID = "fileID";
 		final PropertyValue zeroValue = new PropertyValue(0);
 
-		final UnityObject monoObject;
+		final UnityResource monoObject;
 
 		final Map<String, PropertyValue> fileIDMap;
 		final Map<String, PropertyValue> mGameObjectMap;
@@ -149,7 +149,7 @@ public class UnityScript {
 		final Map<String, PropertyValue> propertiesMap;
 		final Map<String, PropertyValue> objectMap;
 
-		monoObject = new UnityObject(this.idNumber, UnityObject.UNITY_TAG
+		monoObject = new UnityResource(this.idNumber, UnityResource.UNITY_TAG
 				+ "114");
 
 		fileIDMap = new HashMap<String, PropertyValue>();

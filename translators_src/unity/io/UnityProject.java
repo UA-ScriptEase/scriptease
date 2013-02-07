@@ -1,6 +1,6 @@
 package io;
 
-import io.unityobject.UnityObject;
+import io.unityobject.UnityResource;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -18,8 +18,8 @@ import scriptease.controller.CodeBlockMapper;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.translator.codegenerator.ScriptInfo;
-import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameModule;
+import scriptease.translator.io.model.Resource;
 import scriptease.util.FileOp;
 
 /**
@@ -62,7 +62,7 @@ public final class UnityProject implements GameModule {
 	}
 
 	@Override
-	public GameConstant getModule() {
+	public Resource getModule() {
 		return null;
 	}
 
@@ -122,9 +122,9 @@ public final class UnityProject implements GameModule {
 	}
 
 	@Override
-	public GameConstant getInstanceForObjectIdentifier(String id) {
+	public Resource getInstanceForObjectIdentifier(String id) {
 		for (Scene scene : this.scenes) {
-			for (UnityObject object : scene.getObjects())
+			for (UnityResource object : scene.getObjects())
 				if (object.getTemplateID().equals(id)) {
 					return object;
 				}
@@ -133,10 +133,10 @@ public final class UnityProject implements GameModule {
 	}
 
 	@Override
-	public List<GameConstant> getResourcesOfType(String type) {
-		final List<GameConstant> objects;
+	public List<Resource> getResourcesOfType(String type) {
+		final List<Resource> objects;
 
-		objects = new ArrayList<GameConstant>();
+		objects = new ArrayList<Resource>();
 
 		for (Scene scene : this.scenes) {
 			objects.addAll(scene.getObjects());

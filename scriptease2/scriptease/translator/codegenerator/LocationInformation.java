@@ -2,8 +2,8 @@ package scriptease.translator.codegenerator;
 
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
-import scriptease.translator.io.model.GameConstant;
-import scriptease.translator.io.tools.SimpleGameConstant;
+import scriptease.translator.io.model.Resource;
+import scriptease.translator.io.model.SimpleResource;
 
 /**
  * LocationInformation provides Context to CodeGeneration in the form of Subject
@@ -14,9 +14,9 @@ import scriptease.translator.io.tools.SimpleGameConstant;
  */
 public class LocationInformation {
 	private final String slot;
-	private final GameConstant subject;
+	private final Resource subject;
 
-	public LocationInformation(GameConstant subject, String slot) {
+	public LocationInformation(Resource subject, String slot) {
 		this.subject = subject;
 		this.slot = slot;
 	}
@@ -24,9 +24,8 @@ public class LocationInformation {
 	public LocationInformation(CodeBlock codeBlock) {
 		KnowIt subject = codeBlock.getSubject();
 		Object value = subject.getBinding().getValue();
-		if (!(value instanceof SimpleGameConstant)
-				&& value instanceof GameConstant)
-			this.subject = (GameConstant) value;
+		if (!(value instanceof SimpleResource) && value instanceof Resource)
+			this.subject = (Resource) value;
 		else
 			throw new IllegalArgumentException(
 					"Subject must be bound to IdentifiableGameConstant.");
@@ -49,7 +48,7 @@ public class LocationInformation {
 		return this.slot;
 	}
 
-	public GameConstant getSubject() {
+	public Resource getSubject() {
 		return this.subject;
 	}
 

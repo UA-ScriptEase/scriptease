@@ -7,8 +7,8 @@ import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
-import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameModule;
+import scriptease.translator.io.model.Resource;
 
 /**
  * AutomaticsManager provides functionality for resolving the binding of module
@@ -60,7 +60,7 @@ public class AutomaticsManager {
 			for (String type : types) {
 				// TODO iterate all special types supported
 				if (type.equalsIgnoreCase(MODULE_TYPE)) {
-					final GameConstant module = gameModule.getModule();
+					final Resource module = gameModule.getModule();
 					parameter.setBinding(module);
 				}
 			}
