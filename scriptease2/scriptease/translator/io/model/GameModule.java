@@ -81,30 +81,28 @@ public interface GameModule {
 	public void close() throws IOException;
 
 	/**
-	 * Gets a list of all <code>GameConstant</code>s that have the type
-	 * <code>type</code>.
+	 * Gets a list of all {@link Resource}s that have the specified type.
 	 * 
 	 * @param type
 	 *            The type to filter by.
-	 * @return A list of all <code>GameObject</code>s that have the supplied
-	 *         type.
+	 * @return A list of all {@link Resource}s that have the supplied type.
 	 */
-	public List<GameConstant> getResourcesOfType(String type);
+	public List<Resource> getResourcesOfType(String type);
 
 	/**
-	 * Retrieves the GameConstant object that represents the game data that is
+	 * Retrieves the Resource object that represents the game data that is
 	 * uniquely identified by its identifier string.
 	 * 
-	 * @return the GameConstant whose identifier matches the given identifier.
+	 * @return the Resource whose identifier matches the given identifier.
 	 */
-	public GameConstant getInstanceForObjectIdentifier(String id);
+	public Resource getInstanceForObjectIdentifier(String id);
 
 	/**
-	 * Retrieves the GameConstant object that represents the module
+	 * Retrieves the Resource object that represents the module
 	 * 
 	 * @return
 	 */
-	public GameConstant getModule();
+	public Resource getModule();
 
 	/**
 	 * Gets the location of the GameModule.

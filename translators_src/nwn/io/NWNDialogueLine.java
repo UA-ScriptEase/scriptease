@@ -6,7 +6,7 @@ import io.genericfileformat.GenericFileFormat.GffStruct;
 import java.util.ArrayList;
 import java.util.List;
 
-import scriptease.translator.io.model.GameConversationNode;
+import scriptease.translator.io.model.Resource;
 import scriptease.util.StringOp;
 
 /**
@@ -18,8 +18,7 @@ import scriptease.util.StringOp;
  * 
  * @author remiller
  */
-public class NWNDialogueLine extends NWNGameConstant implements
-		GameConversationNode {
+public class NWNDialogueLine extends NWNGameConstant {
 	public static final String INDEXER_SEPARATOR = ">";
 
 	private static final String TYPE_DIALOG_LINE = "dialogue_line";
@@ -62,14 +61,14 @@ public class NWNDialogueLine extends NWNGameConstant implements
 	}
 
 	@Override
-	public List<? extends GameConversationNode> getChildren() {
-		final List<GameConversationNode> children;
+	public List<Resource> getChildren() {
+		final List<Resource> children;
 		final String childListLabel;
 		final List<GffStruct> childSyncStructs;
 		List<String> indexes;
 		int index = 0;
 
-		children = new ArrayList<GameConversationNode>();
+		children = new ArrayList<Resource>();
 
 		if (!this.isLink()) {
 			if (this.isPlayerLine)
@@ -95,11 +94,6 @@ public class NWNDialogueLine extends NWNGameConstant implements
 	}
 
 	@Override
-	public boolean isTerminal() {
-		return this.getChildren().size() == 0;
-	}
-
-	@Override
 	public boolean isLink() {
 		final String isChild;
 		final String label = "IsChild";
@@ -122,7 +116,7 @@ public class NWNDialogueLine extends NWNGameConstant implements
 	}
 
 	@Override
-	public String getSpeaker() {
+	public String getOwnerName() {
 		if (this.isPlayerLine)
 			return "PC";
 		else
@@ -136,7 +130,7 @@ public class NWNDialogueLine extends NWNGameConstant implements
 
 	@Override
 	public int hashCode() {
-		int hashcode = super.hashCode() + this.getSpeaker().hashCode()
+		int hashcode = super.hashCode() + this.getOwnerName().hashCode()
 				+ this.getChildren().hashCode();
 
 		if (this.isLink())

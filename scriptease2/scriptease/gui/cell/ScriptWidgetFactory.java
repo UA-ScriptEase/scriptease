@@ -44,13 +44,13 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.io.model.GameConstant;
-import scriptease.translator.io.tools.GameConstantFactory;
+import scriptease.translator.io.model.Resource;
+import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.GUIOp;
 
 /**
@@ -374,7 +374,7 @@ public class ScriptWidgetFactory {
 	 * @return
 	 */
 	public static JComponent buildSpinnerEditor(final KnowIt knowIt,
-			final BindingWidget widget, final GameConstant constantValue,
+			final BindingWidget widget, final Resource constantValue,
 			final String bindingType) {
 
 		final Comparable<?> MIN = null; // default to no min limit
@@ -404,9 +404,9 @@ public class ScriptWidgetFactory {
 		if (scriptValue == null || scriptValue.isEmpty()) {
 			// Set the initial value
 			final Float value = (Float) spinner.getValue();
-			final GameConstant newBinding;
-			newBinding = GameConstantFactory.getInstance().getConstant(
-					bindingType, value.toString());
+			final Resource newBinding;
+			newBinding = SimpleResource.buildSimpleResource(bindingType,
+					value.toString());
 			SwingUtilities.invokeLater(new Runnable() {
 
 				@Override
@@ -421,12 +421,12 @@ public class ScriptWidgetFactory {
 			public void stateChanged(ChangeEvent e) {
 				final JSpinner spinner;
 				final Float value;
-				final GameConstant newBinding;
+				final SimpleResource newBinding;
 
 				spinner = (JSpinner) e.getSource();
 				value = (Float) spinner.getValue();
-				newBinding = GameConstantFactory.getInstance().getConstant(
-						bindingType, value.toString());
+				newBinding = SimpleResource.buildSimpleResource(bindingType,
+						value.toString());
 
 				// null check
 				if (newBinding == null)
@@ -452,13 +452,12 @@ public class ScriptWidgetFactory {
 				if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
 					final Object value;
 					value = knowIt.getBinding().getValue();
-					if (value instanceof GameConstant) {
+					if (value instanceof Resource) {
 						float newBinding = 0;
 
 						try {
-							newBinding = Float
-									.parseFloat(((GameConstant) value)
-											.getCodeText());
+							newBinding = Float.parseFloat(((Resource) value)
+									.getCodeText());
 						} catch (NumberFormatException e) {
 							newBinding = 0;
 						}
@@ -512,7 +511,7 @@ public class ScriptWidgetFactory {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				final GameConstant newBinding;
+				final Resource newBinding;
 
 				// check the selected value
 				String selectedItem = (String) combo.getSelectedItem();
@@ -528,9 +527,9 @@ public class ScriptWidgetFactory {
 						resolvedValue = key;
 				}
 
-				// build a new game constant with that script value and type
-				newBinding = GameConstantFactory.getInstance().getConstant(
-						bindingType, resolvedValue);
+				// build a new resource with that script value and type
+				newBinding = SimpleResource.buildSimpleResource(bindingType,
+						resolvedValue);
 				// null check
 				if (newBinding == null)
 					return;
@@ -653,7 +652,7 @@ public class ScriptWidgetFactory {
 		final Runnable commitText;
 
 		binding = knowIt.getBinding();
-		if (!(binding instanceof KnowItBindingConstant))
+		if (!(binding instanceof KnowItBindingResource))
 			System.err
 					.println("Warning: ValueEditor currently only supports KnowItBindingConstant");
 
@@ -677,15 +676,19 @@ public class ScriptWidgetFactory {
 					binding.process(new BindingAdapter() {
 						@Override
 						public void processConstant(
-								KnowItBindingConstant constant) {
+								KnowItBindingResource constant) {
 							if (!UndoManager.getInstance()
 									.hasOpenUndoableAction()) {
 								UndoManager.getInstance().startUndoableAction(
 										"Change text to " + newValue);
-								GameConstant newConstant = GameConstantFactory
-										.getInstance().getConstant(
+
+								final Resource newResource;
+
+								newResource = SimpleResource
+										.buildSimpleResource(
 												constant.getTypes(), newValue);
-								knowIt.setBinding(newConstant);
+
+								knowIt.setBinding(newResource);
 								UndoManager.getInstance().endUndoableAction();
 							}
 						}

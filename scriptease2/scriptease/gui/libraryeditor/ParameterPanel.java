@@ -37,9 +37,8 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
-import scriptease.translator.io.model.GameConstant;
+import scriptease.translator.io.model.SimpleResource;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
-import scriptease.translator.io.tools.GameConstantFactory;
 import scriptease.util.GUIOp;
 import scriptease.util.StringOp;
 
@@ -349,8 +348,10 @@ class ParameterPanel extends JPanel {
 								final String bindingFieldText;
 								bindingFieldText = bindingField.getText();
 
-								GameConstant newConstant = GameConstantFactory
-										.getInstance().getConstant(
+								final SimpleResource newConstant;
+
+								newConstant = SimpleResource
+										.buildSimpleResource(
 												ParameterPanel.this.knowIt
 														.getTypes(),
 												bindingFieldText);
@@ -419,10 +420,12 @@ class ParameterPanel extends JPanel {
 						String safeValue = StringOp.convertNumberToPattern(
 								bindingFieldValue.toString(), regexPattern);
 
-						GameConstant newConstant = GameConstantFactory
-								.getInstance().getConstant(
-										ParameterPanel.this.knowIt.getTypes(),
-										safeValue);
+						final SimpleResource newConstant;
+
+						newConstant = SimpleResource.buildSimpleResource(
+								ParameterPanel.this.knowIt.getTypes(),
+								safeValue);
+
 						ParameterPanel.this.knowIt.setBinding(newConstant);
 					}
 				});
@@ -465,8 +468,8 @@ class ParameterPanel extends JPanel {
 								}
 							}
 
-							GameConstant newConstant = GameConstantFactory
-									.getInstance().getConstant(
+							final SimpleResource newConstant = SimpleResource
+									.buildSimpleResource(
 											ParameterPanel.this.knowIt
 													.getTypes(),
 											defaultBindingName);

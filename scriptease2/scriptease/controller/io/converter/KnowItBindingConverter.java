@@ -9,17 +9,17 @@ import scriptease.controller.io.FileIO;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
-import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameModule;
-import scriptease.translator.io.tools.GameConstantFactory;
+import scriptease.translator.io.model.Resource;
+import scriptease.translator.io.model.SimpleResource;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
@@ -39,7 +39,7 @@ public class KnowItBindingConverter implements Converter {
 
 	private static final String ATTRIBUTE_BINDING_FLAVOUR = "flavour";
 	private static final String ATTRIBUTE_VALUE_CONSTANT_FLAVOUR = "constant";
-	private static final String ATTRIBUTE_VALUE_GAME_OBJECT_FLAVOUR = "gameObject";
+	private static final String ATTRIBUTE_VALUE_RESOURCE_FLAVOUR = "resource";
 	private static final String ATTRIBUTE_VALUE_FUNCTION_FLAVOUR = "function";
 	private static final String ATTRIBUTE_VALUE_REFERENCE_FLAVOUR = "reference";
 	private static final String ATTRIBUTE_VALUE_RUNTIME_FLAVOUR = "runTime";
@@ -77,7 +77,7 @@ public class KnowItBindingConverter implements Converter {
 
 		// redirect to the appropriate writing method.
 		binding.process(new BindingVisitor() {
-			public void processConstant(KnowItBindingConstant constant) {
+			public void processConstant(KnowItBindingResource constant) {
 				if (constant.getFirstType().equals(StoryPoint.STORY_POINT_TYPE)) {
 					// deal with it B-->:)
 					KnowItBindingConverter.this.marshallConstantBinding(
@@ -126,9 +126,9 @@ public class KnowItBindingConverter implements Converter {
 	/*
 	 * Converts a Game Constant to XML
 	 */
-	private void marshallConstantBinding(KnowItBindingConstant binding,
+	private void marshallConstantBinding(KnowItBindingResource binding,
 			HierarchicalStreamWriter writer) {
-		final GameConstant constant = binding.getValue();
+		final Resource constant = binding.getValue();
 
 		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
 				ATTRIBUTE_VALUE_CONSTANT_FLAVOUR);
@@ -160,13 +160,13 @@ public class KnowItBindingConverter implements Converter {
 	 * Converts a Game Constant to XML
 	 */
 	private void marshallIdentifiableGameConstantBinding(
-			KnowItBindingConstant binding, HierarchicalStreamWriter writer) {
-		final GameConstant gameObject = binding.getValue();
+			KnowItBindingResource binding, HierarchicalStreamWriter writer) {
+		final Resource resource = binding.getValue();
 
 		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
-				ATTRIBUTE_VALUE_GAME_OBJECT_FLAVOUR);
+				ATTRIBUTE_VALUE_RESOURCE_FLAVOUR);
 
-		writer.setValue(gameObject.getTemplateID());
+		writer.setValue(resource.getTemplateID());
 	}
 
 	/*
@@ -233,9 +233,8 @@ public class KnowItBindingConverter implements Converter {
 				binding = this.unmarshallConstantBinding(reader);
 			else if (flavour.equalsIgnoreCase(ATTRIBUTE_VALUE_RUNTIME_FLAVOUR))
 				binding = this.unmarshallRunTimeBinding(reader);
-			else if (flavour
-					.equalsIgnoreCase(ATTRIBUTE_VALUE_GAME_OBJECT_FLAVOUR))
-				binding = this.unmarshallGameObjectBinding(reader);
+			else if (flavour.equalsIgnoreCase(ATTRIBUTE_VALUE_RESOURCE_FLAVOUR))
+				binding = this.unmarshallResourceBinding(reader);
 			else if (flavour.equalsIgnoreCase(ATTRIBUTE_VALUE_FUNCTION_FLAVOUR))
 				binding = this.unmarshallFunctionBinding(reader, context);
 			else if (flavour
@@ -256,18 +255,18 @@ public class KnowItBindingConverter implements Converter {
 			return binding;
 	}
 
-	private KnowItBindingConstant unmarshallConstantBinding(
+	private KnowItBindingResource unmarshallConstantBinding(
 			HierarchicalStreamReader reader) {
-		final GameConstant constant;
+		final Resource constant;
 		final String value;
 		final String type;
 
 		type = FileIO.readValue(reader, TypedComponent.TAG_TYPE);
 		value = FileIO.readValue(reader, TAG_VALUE);
 
-		constant = GameConstantFactory.getInstance().getConstant(type, value);
+		constant = SimpleResource.buildSimpleResource(type, value);
 
-		return new KnowItBindingConstant(constant);
+		return new KnowItBindingResource(constant);
 	}
 
 	private KnowItBindingRunTime unmarshallRunTimeBinding(
@@ -285,16 +284,16 @@ public class KnowItBindingConverter implements Converter {
 	}
 
 	/**
-	 * Unmarshalls the GameObjectBinding and returns a KnowItBindingConstant
-	 * returns null if the GameObject failed to read.
+	 * Unmarshalls the {@link Resource} binding and returns a
+	 * {@link KnowItBindingResource}.
 	 * 
 	 * @param reader
-	 * @return
+	 * @return null if the {@link Resource} failed to read.
 	 */
-	private KnowItBindingConstant unmarshallGameObjectBinding(
+	private KnowItBindingResource unmarshallResourceBinding(
 			HierarchicalStreamReader reader) {
 		final String id;
-		GameConstant gameObject = null;
+		Resource resource = null;
 
 		id = reader.getValue();
 
@@ -303,13 +302,13 @@ public class KnowItBindingConverter implements Converter {
 
 		if (currentModule == null) {
 			throw new IllegalStateException(
-					"Cannot unmarshall a GameObject binding without a module loaded");
+					"Cannot unmarshall a Resource binding without a module loaded");
 		}
 
-		gameObject = currentModule.getInstanceForObjectIdentifier(id);
+		resource = currentModule.getInstanceForObjectIdentifier(id);
 
-		if (gameObject != null) {
-			return new KnowItBindingConstant(gameObject);
+		if (resource != null) {
+			return new KnowItBindingResource(resource);
 		} else {
 			System.err.println("Binding lookup failed for id " + id
 					+ ", assigning null instead.");

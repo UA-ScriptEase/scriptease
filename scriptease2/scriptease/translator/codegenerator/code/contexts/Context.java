@@ -12,7 +12,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
@@ -21,7 +21,7 @@ import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
-import scriptease.translator.io.model.GameObject;
+import scriptease.translator.io.model.Resource;
 
 /**
  * Context represents the object based context used in code generation. It
@@ -193,7 +193,7 @@ public class Context {
 
 	/**
 	 * This finds the CodeBlocks for special circumstances as described in the
-	 * class that implements GameObject in the translator. In Neverwinter
+	 * class that implements {@link Resource} in the translator. In Neverwinter
 	 * Nights, this includes code blocks in i_se_aux.
 	 * 
 	 * @return
@@ -202,13 +202,15 @@ public class Context {
 		final List<CodeBlock> codeBlocks = new ArrayList<CodeBlock>();
 
 		for (StoryComponent key : this.getComponents()) {
-			// The method first checks if there is a GameObject for the
+			// The method first checks if there is a Resource for the
 			// StoryComponent.
 			if (key instanceof KnowIt) {
 				KnowItBinding binding = ((KnowIt) key).getBinding();
-				if (binding instanceof KnowItBindingConstant) {
-					KnowItBindingConstant kibConstant = (KnowItBindingConstant) binding;
-					if (kibConstant.getValue() instanceof GameObject) {
+				if (binding instanceof KnowItBindingResource) {
+					KnowItBindingResource kibConstant = (KnowItBindingResource) binding;
+					if (kibConstant
+							.getValue()
+							.isSomethingPreviouslyKnownAsAGameObjectAndNotAConversation()) {
 						// Then gets a string representing the name of the code
 						// block.
 						String referenceValue = kibConstant.getScriptValue();

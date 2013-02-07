@@ -26,13 +26,10 @@ import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.PatternModel;
 import scriptease.model.StoryModel;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
-import scriptease.translator.io.model.GameConstant;
-import scriptease.translator.io.model.GameConversation;
-import scriptease.translator.io.model.GameConversationNode;
-import scriptease.translator.io.model.GameObject;
+import scriptease.translator.io.model.Resource;
 import scriptease.util.GUIOp;
 
 /**
@@ -47,12 +44,12 @@ public class GameConstantPanel extends JPanel {
 	private final Color LINE_COLOR_1 = Color.red;
 	private final Color LINE_COLOR_2 = Color.blue;
 
-	private GameConstant selectedConstant = null;
+	private Resource selectedConstant = null;
 
 	private String filterText;
 	private final List<String> filterTypes;
 
-	private Map<GameConstant, JPanel> panelMap;
+	private Map<Resource, JPanel> panelMap;
 
 	/**
 	 * Creates a new GameConstantPanel with the passed in model.
@@ -65,7 +62,7 @@ public class GameConstantPanel extends JPanel {
 	 */
 	public GameConstantPanel(PatternModel model) {
 		super();
-		this.panelMap = new HashMap<GameConstant, JPanel>();
+		this.panelMap = new HashMap<Resource, JPanel>();
 		this.filterTypes = new ArrayList<String>();
 		this.filterText = "";
 
@@ -106,40 +103,25 @@ public class GameConstantPanel extends JPanel {
 		types = new ArrayList<String>(typeManager.getKeywords());
 
 		for (String type : types) {
-			final Collection<GameConstant> gameObjects;
+			final Collection<Resource> gameObjects;
 
 			gameObjects = ((StoryModel) model).getModule().getResourcesOfType(
 					type);
 
-			for (GameConstant constant : gameObjects) {
-				if (constant instanceof GameObject)
-					this.panelMap.put(constant,
-							createGameConstantPanel(constant));
-				else if (constant instanceof GameConversation) {
-					this.panelMap.put(constant,
-							createGameConstantPanel(constant));
+			for (Resource constant : gameObjects) {
+				this.panelMap.put(constant, createGameConstantPanel(constant));
 
-					for (GameConversationNode gameConversationNode : ((GameConversation) constant)
-							.getConversationRoots()) {
-						final int indent;
+				for (Resource child : constant.getChildren()) {
+					final int indent;
 
-						indent = 1;
+					indent = 1;
 
-						this.panelMap.put(
-								gameConversationNode,
-								createIndentedConversationPanel(
-										gameConversationNode, indent,
-										gameConversationNode.getSpeaker(),
-										this.LINE_COLOR_1));
+					this.panelMap.put(
+							child,
+							createIndentedConversationPanel(child, indent,
+									child.getOwnerName(), this.LINE_COLOR_1));
 
-						this.addConversationRoots(
-								gameConversationNode.getChildren(), indent + 1);
-					}
-
-				} else {
-					final JPanel invalidPanel = new JPanel();
-					invalidPanel.add(new JLabel("Invalid GameConstant"));
-					this.panelMap.put(constant, invalidPanel);
+					this.addConversationRoots(child.getChildren(), indent + 1);
 				}
 			}
 		}
@@ -175,18 +157,18 @@ public class GameConstantPanel extends JPanel {
 	public void redrawTree() {
 		this.removeAll();
 
-		final Map<String, List<GameConstant>> constantMap;
+		final Map<String, List<Resource>> constantMap;
 
-		constantMap = new TreeMap<String, List<GameConstant>>();
+		constantMap = new TreeMap<String, List<Resource>>();
 
 		// Find constants that match the filters.
-		for (GameConstant constant : this.panelMap.keySet()) {
-			if (!(constant instanceof GameConversationNode)
+		for (Resource constant : this.panelMap.keySet()) {
+			if (constant.getOwnerName().isEmpty()
 					&& this.matchesFilters(constant)) {
 				for (String type : constant.getTypes()) {
-					List<GameConstant> constantList = constantMap.get(type);
+					List<Resource> constantList = constantMap.get(type);
 					if (constantList == null) {
-						constantList = new ArrayList<GameConstant>();
+						constantList = new ArrayList<Resource>();
 					}
 					constantList.add(constant);
 
@@ -199,13 +181,13 @@ public class GameConstantPanel extends JPanel {
 			return;
 
 		for (String type : constantMap.keySet()) {
-			final List<GameConstant> constantList;
+			final List<Resource> constantList;
 
 			constantList = constantMap.get(type);
 
-			Collections.sort(constantList, new Comparator<GameConstant>() {
+			Collections.sort(constantList, new Comparator<Resource>() {
 				@Override
-				public int compare(GameConstant o1, GameConstant o2) {
+				public int compare(Resource o1, Resource o2) {
 					return String.CASE_INSENSITIVE_ORDER.compare(o1.getName(),
 							o2.getName());
 				}
@@ -233,7 +215,7 @@ public class GameConstantPanel extends JPanel {
 	 * @param constant
 	 * @return
 	 */
-	private boolean matchesFilters(GameConstant constant) {
+	private boolean matchesFilters(Resource constant) {
 		boolean match = false;
 
 		for (String type : constant.getTypes()) {
@@ -255,48 +237,31 @@ public class GameConstantPanel extends JPanel {
 	 * text. Recursively searches Conversations to see if any roots contain the
 	 * text.
 	 * 
-	 * @param gameConstant
+	 * @param resource
 	 * @return true if text is found
 	 */
-	private boolean matchesSearchText(GameConstant gameConstant) {
+	private boolean matchesSearchText(Resource resource) {
 		if (this.filterText.length() == 0)
 			return true;
 
-		final String searchTextUpperCase;
+		final String searchText;
 
-		searchTextUpperCase = this.filterText.toUpperCase();
+		searchText = this.filterText.toUpperCase();
 
-		if (gameConstant.getCodeText().toUpperCase()
-				.contains(searchTextUpperCase)
-				|| gameConstant.getName().toUpperCase()
-						.contains(searchTextUpperCase)
-				|| gameConstant.getTag().toUpperCase()
-						.contains(searchTextUpperCase)
-				|| gameConstant.getTemplateID().toUpperCase()
-						.contains(searchTextUpperCase)) {
-
+		if (resource.getCodeText().toUpperCase().contains(searchText)
+				|| resource.getName().toUpperCase().contains(searchText)
+				|| resource.getTag().toUpperCase().contains(searchText)
+				|| resource.getTemplateID().toUpperCase().contains(searchText)) {
 			return true;
 		}
 
-		if (gameConstant instanceof GameConversation) {
-			boolean nodeContainsText = false;
+		boolean nodeContainsText = false;
 
-			for (GameConversationNode child : ((GameConversation) gameConstant)
-					.getConversationRoots()) {
-				nodeContainsText = nodeContainsText || matchesSearchText(child);
-			}
-			return nodeContainsText;
-		} else if (gameConstant instanceof GameConversationNode) {
-			boolean nodeContainsText = false;
-
-			for (GameConstant child : ((GameConversationNode) gameConstant)
-					.getChildren()) {
-				nodeContainsText = nodeContainsText || matchesSearchText(child);
-			}
-			return nodeContainsText;
+		for (Resource child : resource.getChildren()) {
+			nodeContainsText = nodeContainsText || matchesSearchText(child);
 		}
 
-		return false;
+		return nodeContainsText;
 	}
 
 	/**
@@ -304,17 +269,17 @@ public class GameConstantPanel extends JPanel {
 	 * binding widget that the user can then drag and drop into the appropriate
 	 * slots.
 	 * 
-	 * @param gameConstant
+	 * @param resource
 	 *            The GameConstant to create a panel for
 	 * @return
 	 */
-	private JPanel createGameConstantPanel(final GameConstant gameConstant) {
+	private JPanel createGameConstantPanel(final Resource resource) {
 		final JPanel objectPanel;
 		final BindingWidget gameObjectBindingWidget;
 		final String regularText;
 
 		objectPanel = new JPanel();
-		regularText = gameConstant.getName();
+		regularText = resource.getName();
 
 		objectPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -323,14 +288,12 @@ public class GameConstantPanel extends JPanel {
 
 		objectPanel.setLayout(new BoxLayout(objectPanel, BoxLayout.X_AXIS));
 
-		gameObjectBindingWidget = new BindingWidget(new KnowItBindingConstant(
-				gameConstant));
+		gameObjectBindingWidget = new BindingWidget(new KnowItBindingResource(
+				resource));
 
-		if (gameConstant instanceof GameConversationNode) {
-			if (((GameConversationNode) gameConstant).isLink())
-				gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
-						gameObjectBindingWidget.getBackground(), 1.24));
-		}
+		if (resource.isLink())
+			gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
+					gameObjectBindingWidget.getBackground(), 1.24));
 
 		gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(regularText,
 				Color.WHITE));
@@ -359,13 +322,12 @@ public class GameConstantPanel extends JPanel {
 	 *            {@link #createIndentedConversationPanel(GameConstant, int)} .
 	 *            Incremented for each level.
 	 */
-	private void addConversationRoots(
-			List<? extends GameConversationNode> roots, int indent) {
+	private void addConversationRoots(List<Resource> roots, int indent) {
 		if (roots.isEmpty()) {
 			return;
 		}
 
-		for (GameConversationNode root : roots) {
+		for (Resource root : roots) {
 			final String speaker;
 			final JPanel nodePanel;
 			final Color color;
@@ -376,7 +338,7 @@ public class GameConstantPanel extends JPanel {
 				color = this.LINE_COLOR_1;
 			}
 
-			speaker = root.getSpeaker();
+			speaker = root.getOwnerName();
 
 			nodePanel = createIndentedConversationPanel(root, indent, speaker,
 					color);
@@ -392,7 +354,7 @@ public class GameConstantPanel extends JPanel {
 	 * indent. Indents are made using a {@link Box#createHorizontalStrut(int)},
 	 * where the dimension is (10*indent, 0).
 	 * 
-	 * @param gameConversationNode
+	 * @param child
 	 *            The constant to create a panel for
 	 * @param indent
 	 *            The indent
@@ -403,8 +365,7 @@ public class GameConstantPanel extends JPanel {
 	 * 
 	 * @return
 	 */
-	private JPanel createIndentedConversationPanel(
-			GameConversationNode gameConversationNode, int indent,
+	private JPanel createIndentedConversationPanel(Resource child, int indent,
 			String speaker, Color color) {
 		final int STRUT_SIZE = 10 * indent;
 		final JLabel prefixLabel;
@@ -439,7 +400,7 @@ public class GameConstantPanel extends JPanel {
 
 		final JPanel nodePanel;
 
-		nodePanel = createGameConstantPanel(gameConversationNode);
+		nodePanel = createGameConstantPanel(child);
 
 		nodePanel.setOpaque(false);
 
@@ -468,7 +429,7 @@ public class GameConstantPanel extends JPanel {
 		 *            The list of GameConstants in the container
 		 */
 		private GameObjectContainer(String typeName,
-				final Collection<GameConstant> gameConstants) {
+				final Collection<Resource> gameConstants) {
 			this.collapsed = false;
 
 			this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -487,7 +448,7 @@ public class GameConstantPanel extends JPanel {
 		 *            The list of GameConstants in the container
 		 */
 		private void redrawContainer(final String typeName,
-				final Collection<GameConstant> gameConstants) {
+				final Collection<Resource> gameConstants) {
 			this.removeAll();
 
 			final JLabel categoryLabel;
@@ -511,7 +472,7 @@ public class GameConstantPanel extends JPanel {
 				categoryLabel.setIcon(ScriptEaseUI.COLLAPSE_ICON);
 				this.add(categoryLabel);
 
-				for (final GameConstant gameConstant : gameConstants) {
+				for (final Resource gameConstant : gameConstants) {
 					this.addGameConstant(gameConstant);
 				}
 			}
@@ -521,7 +482,7 @@ public class GameConstantPanel extends JPanel {
 			this.revalidate();
 		}
 
-		private void addGameConstant(final GameConstant constant) {
+		private void addGameConstant(final Resource constant) {
 			final JComponent constantPanel;
 
 			constantPanel = panelMap.get(constant);
@@ -549,23 +510,14 @@ public class GameConstantPanel extends JPanel {
 
 			this.add(constantPanel);
 
-			if (constant instanceof GameConversation) {
-				for (GameConversationNode child : ((GameConversation) constant)
-						.getConversationRoots()) {
-					if (matchesFilters(child))
-						this.addGameConstant(child);
-				}
-			} else if (constant instanceof GameConversationNode) {
-				for (GameConstant child : ((GameConversationNode) constant)
-						.getChildren()) {
-					if (matchesFilters(child))
-						this.addGameConstant(child);
-				}
+			for (Resource child : constant.getChildren()) {
+				if (matchesFilters(child))
+					this.addGameConstant(child);
 			}
 		}
 	}
 
-	private void setGameConstantBackground(GameConstant constant, Color color) {
+	private void setGameConstantBackground(Resource constant, Color color) {
 		final JPanel panel;
 
 		panel = this.panelMap.get(constant);
@@ -575,7 +527,7 @@ public class GameConstantPanel extends JPanel {
 
 		panel.setBackground(color);
 
-		if (constant instanceof GameConversationNode) {
+		if (constant.isLink()) {
 			// TODO Select all same nodes.
 		}
 	}

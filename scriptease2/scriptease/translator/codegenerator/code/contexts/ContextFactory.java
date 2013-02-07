@@ -7,7 +7,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
@@ -115,7 +115,7 @@ public class ContextFactory {
 			}
 
 			@Override
-			public void processConstant(KnowItBindingConstant constant) {
+			public void processConstant(KnowItBindingResource constant) {
 				ContextFactory.this.activeContext = new KnowItBindingConstantContext(
 						pastContext, constant);
 			}

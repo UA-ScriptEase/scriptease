@@ -18,17 +18,17 @@ import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.transfer.ProxyTransferHandler;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
-import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
-import scriptease.translator.io.tools.SimpleGameConstant;
+import scriptease.translator.io.model.Resource;
+import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.GUIOp;
 
 /**
@@ -144,10 +144,10 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 			}
 
 			@Override
-			public void processConstant(KnowItBindingConstant constant) {
-				GameConstant constantValue = constant.getValue();
+			public void processConstant(KnowItBindingResource constant) {
+				Resource constantValue = constant.getValue();
 				String name = constantValue.getName();
-				if (constantValue instanceof SimpleGameConstant) {
+				if (constantValue instanceof SimpleResource) {
 					final String bindingType = binding.getFirstType();
 					TypeValueWidgets widgetName = this.typeManager == null ? null
 							: this.typeManager.getGui(bindingType);
@@ -205,13 +205,13 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 		if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
 			this.bindingWidget.getBinding().process(new BindingAdapter() {
 				@Override
-				public void processConstant(KnowItBindingConstant constant) {
+				public void processConstant(KnowItBindingResource constant) {
 					/*
 					 * We need this listener because the slot panel does not
 					 * otherwise get updated if we do a group binding. This
 					 * ensures that the slot panel is updated.
 					 */
-					if (!(constant.getValue() instanceof SimpleGameConstant)) {
+					if (!(constant.getValue() instanceof SimpleResource)) {
 						this.defaultProcess(constant);
 					}
 				}

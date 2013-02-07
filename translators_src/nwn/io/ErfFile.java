@@ -48,8 +48,8 @@ import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.ScriptInfo;
-import scriptease.translator.io.model.GameConstant;
 import scriptease.translator.io.model.GameModule;
+import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
 import scriptease.util.FileOp;
 
@@ -438,11 +438,12 @@ public final class ErfFile implements GameModule {
 	}
 
 	/**
-	 * Returns a List of GameObjects which match the given ScriptEase GameType.
+	 * Returns a List of {@link Resource}s which match the given ScriptEase
+	 * GameType.
 	 */
 	@Override
-	public List<GameConstant> getResourcesOfType(String type) {
-		final List<GameConstant> filteredObjects = new ArrayList<GameConstant>();
+	public List<Resource> getResourcesOfType(String type) {
+		final List<Resource> filteredObjects = new ArrayList<Resource>();
 		GenericFileFormat gff;
 		String gffType;
 
@@ -461,9 +462,10 @@ public final class ErfFile implements GameModule {
 	}
 
 	@Override
-	public GameConstant getModule() {
-		GameConstant module = null;
-		final List<GameConstant> modules = getResourcesOfType(GenericFileFormat.TYPE_MODULE);
+	public Resource getModule() {
+		Resource module = null;
+		final List<Resource> modules = this
+				.getResourcesOfType(GenericFileFormat.TYPE_MODULE);
 		if (modules.size() > 0) {
 			module = modules.iterator().next();
 		} else {
@@ -542,7 +544,7 @@ public final class ErfFile implements GameModule {
 		for (ScriptInfo scriptInfo : scriptList) {
 			if (scriptInfo == null)
 				continue;
-			
+
 			final String code;
 			final String idNum;
 			final NWNResource scriptResource;
@@ -1023,8 +1025,8 @@ public final class ErfFile implements GameModule {
 	}
 
 	@Override
-	public GameConstant getInstanceForObjectIdentifier(String id) {
-		final GameConstant gameResource;
+	public Resource getInstanceForObjectIdentifier(String id) {
+		final Resource gameResource;
 		final NWNResource nwResource;
 		final String resref;
 		final String index;

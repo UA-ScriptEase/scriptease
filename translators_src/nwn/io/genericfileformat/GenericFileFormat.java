@@ -16,7 +16,7 @@ import java.util.Map;
 
 import scriptease.gui.WindowFactory;
 import scriptease.translator.apimanagers.GameTypeManager;
-import scriptease.translator.io.model.GameConstant;
+import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.Slot;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
 
@@ -423,7 +423,7 @@ public class GenericFileFormat {
 	 * 
 	 * @return The ScriptEase notion of this game object.
 	 */
-	public GameConstant getObjectRepresentation() {
+	public Resource getObjectRepresentation() {
 		return this.getObjectRepresentation(null);
 	}
 
@@ -442,8 +442,8 @@ public class GenericFileFormat {
 	 * @return The ScriptEase version of this GFF object that matches the
 	 *         indexing information.
 	 */
-	public GameConstant getObjectRepresentation(String index) {
-		final GameConstant representation;
+	public Resource getObjectRepresentation(String index) {
+		final Resource representation;
 		final String name;
 		final String fileType = this.getFileType().trim();
 		String templateId = this.getResRef() + "." + fileType;
@@ -490,7 +490,7 @@ public class GenericFileFormat {
 	 *            The list of indexes
 	 * @return
 	 */
-	private GameConstant getDialogLine(List<String> indexes) {
+	private Resource getDialogLine(List<String> indexes) {
 		final GffStruct syncStruct;
 		final boolean isPlayerLine;
 

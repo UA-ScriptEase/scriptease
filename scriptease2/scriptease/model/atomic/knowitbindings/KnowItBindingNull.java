@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
 import scriptease.model.atomic.KnowIt;
-import scriptease.translator.io.model.GameObject;
+import scriptease.translator.io.model.Resource;
 
 /**
  * This class represents a <b>null</b> binding for a <code>KnowIt</code>.
@@ -30,7 +30,7 @@ public class KnowItBindingNull extends KnowItBinding {
 	 *             whenever this method is called.
 	 */
 	@Override
-	public GameObject getValue() {
+	public Resource getValue() {
 		throw new UnsupportedOperationException(
 				"Cannot get the value for an unbound KnowIt.");
 	}
@@ -58,9 +58,9 @@ public class KnowItBindingNull extends KnowItBinding {
 	public boolean equals(Object other) {
 		return other instanceof KnowItBindingNull;
 	}
-	
-	@Override 
-	public int hashCode(){
+
+	@Override
+	public int hashCode() {
 		return 0;
 	}
 

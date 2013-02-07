@@ -19,13 +19,13 @@ import scriptease.gui.transfer.BindingWidgetTransferHandler;
 import scriptease.gui.ui.BindingWidgetUI;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
-import scriptease.translator.io.tools.SimpleGameConstant;
+import scriptease.translator.io.model.SimpleResource;
 
 /**
  * Represents a binding or binding slot that can be dropped onto slots via drag
@@ -102,7 +102,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 	private void updateToolTip(KnowItBinding binding) {
 		binding.process(new BindingAdapter() {
 			@Override
-			public void processConstant(KnowItBindingConstant constant) {
+			public void processConstant(KnowItBindingResource constant) {
 				if (constant.isIdentifiableGameConstant()) {
 					String blueprint = constant.getValue().getTemplateID();
 					if (blueprint != null && !blueprint.isEmpty())
@@ -180,8 +180,8 @@ public class BindingWidget extends JPanel implements Cloneable {
 	private void updateBackgroundColour(KnowItBinding binding) {
 		binding.process(new BindingVisitor() {
 			@Override
-			public void processConstant(KnowItBindingConstant constant) {
-				if (constant.getValue() instanceof SimpleGameConstant)
+			public void processConstant(KnowItBindingResource constant) {
+				if (constant.getValue() instanceof SimpleResource)
 					updateBackground(ScriptEaseUI.COLOUR_SIMPLE);
 				else
 					updateBackground(ScriptEaseUI.COLOUR_GAME_OBJECT);

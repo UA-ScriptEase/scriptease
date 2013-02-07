@@ -1,6 +1,6 @@
 package io;
 
-import io.unityobject.UnityObject;
+import io.unityobject.UnityResource;
 import io.unityobject.UnityObjectBuilder;
 
 import java.io.BufferedReader;
@@ -31,7 +31,7 @@ public class Scene {
 	}
 
 	private final BufferedReader reader;
-	private final List<UnityObject> unityObjects;
+	private final List<UnityResource> unityObjects;
 	private final File location;
 
 	/**
@@ -50,13 +50,13 @@ public class Scene {
 
 		this.reader = new BufferedReader(new FileReader(location));
 
-		this.unityObjects = new ArrayList<UnityObject>();
+		this.unityObjects = new ArrayList<UnityResource>();
 		this.location = location;
 
 		this.read(location);
 	}
 
-	public List<UnityObject> getObjects() {
+	public List<UnityResource> getObjects() {
 		return this.unityObjects;
 	}
 
@@ -76,10 +76,10 @@ public class Scene {
 		// TODO Remove scriptease generated stuff from model
 		final int monoBehaviourType;
 
-		monoBehaviourType = UnityTranslatorConstants.TYPE_MAP
-				.getKey("MonoBehaviour");
+		monoBehaviourType = UnityTranslatorConstants.TYPE_LIST
+				.indexOf("MonoBehaviour");
 
-		for (UnityObject object : this.unityObjects) {
+		for (UnityResource object : this.unityObjects) {
 			if (object.getTypeNumber() == monoBehaviourType) {
 				final Map<String, PropertyValue> propertyMap;
 				final PropertyValue parentValue;
@@ -88,17 +88,16 @@ public class Scene {
 				propertyMap = object.getPropertyMap();
 				parentValue = propertyMap.get("m_GameObject");
 				scriptMapValue = object.getPropertyMap().get("m_Script");
-				
-				
+
 			}
 		}
 	}
 
-	public void addObject(UnityObject object) {
+	public void addObject(UnityResource object) {
 		this.unityObjects.add(object);
 	}
 
-	public void removeObject(UnityObject object) {
+	public void removeObject(UnityResource object) {
 		this.unityObjects.remove(object);
 	}
 
@@ -136,8 +135,8 @@ public class Scene {
 
 		// Add an arbitrary number
 		for (Object data : this.unityObjects) {
-			if (data instanceof UnityObject) {
-				final UnityObject unityObj = (UnityObject) data;
+			if (data instanceof UnityResource) {
+				final UnityResource unityObj = (UnityResource) data;
 
 				final String number = "" + unityObj.getTypeNumber();
 
@@ -151,8 +150,8 @@ public class Scene {
 		writer.close();
 	}
 
-	public UnityObject getObjectByTemplateID(String templateID) {
-		for (UnityObject object : this.unityObjects) {
+	public UnityResource getObjectByTemplateID(String templateID) {
+		for (UnityResource object : this.unityObjects) {
 			if (object.getTemplateID().equals(templateID))
 				return object;
 		}

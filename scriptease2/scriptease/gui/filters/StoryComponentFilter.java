@@ -1,6 +1,6 @@
 package scriptease.gui.filters;
 
-import scriptease.translator.io.model.GameConstant;
+import scriptease.translator.io.model.Resource;
 
 /**
  * Superclass for all filters that are capable of filtering StoryComponents.
@@ -24,7 +24,7 @@ public abstract class StoryComponentFilter extends Filter {
 	}
 
 	@Override
-	protected int getMatchCount(GameConstant element) {
+	protected int getMatchCount(Resource resource) {
 		return 0;
 	}
 }

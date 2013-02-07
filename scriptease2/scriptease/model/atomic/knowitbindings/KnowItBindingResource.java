@@ -7,50 +7,50 @@ import scriptease.model.PatternModel;
 import scriptease.model.PatternModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
-import scriptease.translator.io.model.GameConstant;
-import scriptease.translator.io.tools.SimpleGameConstant;
+import scriptease.translator.io.model.Resource;
+import scriptease.translator.io.model.SimpleResource;;
 
 /**
- * This class represents a <b>Constant</b> binding for a <code>KnowIt</code>.
+ * This class represents a <b>Resource</b> binding for a <code>KnowIt</code>.
  * 
  * @author graves
  * @see {@link scriptease.model.atomic.KnowIt}
  */
-public class KnowItBindingConstant extends KnowItBinding {
-	private final GameConstant constantValue;
+public class KnowItBindingResource extends KnowItBinding {
+	private final Resource resource;
 
-	public KnowItBindingConstant(GameConstant value) {
-		if (value == null)
+	public KnowItBindingResource(Resource resource) {
+		if (resource == null)
 			throw new IllegalStateException(
 					"GameConstant's cannot be set to null in a KnowItBindingConstant.");
-		this.constantValue = value;
+		this.resource = resource;
 	}
 
 	@Override
 	public String getScriptValue() {
-		return this.constantValue.getCodeText();
+		return this.resource.getCodeText();
 	}
 
 	public String getName() {
-		return this.constantValue.getName();
+		return this.resource.getName();
 	}
 
 	public String getTag() {
-		return this.constantValue.getTag();
+		return this.resource.getTag();
 	}
 
 	public String getTemplateID() {
-		return this.constantValue.getTemplateID();
+		return this.resource.getTemplateID();
 	}
 
 	@Override
-	public GameConstant getValue() {
-		return this.constantValue;
+	public Resource getValue() {
+		return this.resource;
 	}
 
 	@Override
 	public Collection<String> getTypes() {
-		return this.constantValue.getTypes();
+		return this.resource.getTypes();
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class KnowItBindingConstant extends KnowItBinding {
 	public boolean compatibleWith(KnowIt knowIt) {
 		if (typeMatches(knowIt.getAcceptableTypes())) {
 			if (knowIt.getOwner() != null
-					&& !(this.getValue() instanceof SimpleGameConstant)) {
+					&& !(this.getValue() instanceof SimpleResource)) {
 				final PatternModel model;
 
 				model = PatternModelManager.getInstance().getActiveModel();
@@ -89,15 +89,15 @@ public class KnowItBindingConstant extends KnowItBinding {
 	 *         <code>false</code> otherwise.
 	 */
 	public boolean isIdentifiableGameConstant() {
-		return !(this.constantValue instanceof SimpleGameConstant);
+		return !(this.resource instanceof SimpleResource);
 	}
 
 	@Override
 	public boolean equals(Object other) {
-		if (this.constantValue.getCodeText() != null)
-			return (other instanceof KnowItBindingConstant)
-					&& ((KnowItBindingConstant) other).constantValue
-							.equals(this.constantValue);
+		if (this.resource.getCodeText() != null)
+			return (other instanceof KnowItBindingResource)
+					&& ((KnowItBindingResource) other).resource
+							.equals(this.resource);
 		return false;
 	}
 
@@ -112,7 +112,7 @@ public class KnowItBindingConstant extends KnowItBinding {
 	 */
 	@Override
 	public KnowItBinding clone() {
-		return new KnowItBindingConstant(this.constantValue);
+		return new KnowItBindingResource(this.resource);
 	}
 
 	@Override

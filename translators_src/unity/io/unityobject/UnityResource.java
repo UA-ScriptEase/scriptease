@@ -6,18 +6,19 @@ import io.UnityTranslatorConstants;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import scriptease.translator.io.model.GameObject;
+import scriptease.translator.io.model.Resource;
 
-public class UnityObject implements GameObject {
+public class UnityResource extends Resource {
 	public static final String UNITY_TAG = "tag:unity3d.com,2011:";
 
 	private final int uniqueID;
 	private final String tag;
 	private final Map<String, PropertyValue> propertyMap;
 
-	public UnityObject(int uniqueID, String tag) {
+	public UnityResource(int uniqueID, String tag) {
 		this.uniqueID = uniqueID;
 		this.tag = tag;
 		this.propertyMap = new HashMap<String, PropertyValue>();
@@ -64,17 +65,28 @@ public class UnityObject implements GameObject {
 	 * @return
 	 */
 	public Map<String, PropertyValue> getPropertyMap() {
-		return this.propertyMap
-				.get(UnityTranslatorConstants.TYPE_MAP.getValue(this
-						.getTypeNumber())).getMap();
+		final Integer typeNumber;
+		final String type;
+		final PropertyValue objectMapValue;
+
+		typeNumber = this.getTypeNumber();
+		type = UnityTranslatorConstants.TYPE_LIST.get(typeNumber);
+		objectMapValue = this.propertyMap.get(type);
+
+		return objectMapValue.getMap();
 	}
 
 	@Override
 	public Collection<String> getTypes() {
-		final Collection<String> types = new ArrayList<String>();
+		final Collection<String> types;
+		final Integer typeNumber;
+		final String type;
 
-		types.add(UnityTranslatorConstants.TYPE_MAP.getValue(this
-				.getTypeNumber()));
+		types = new ArrayList<String>();
+		typeNumber = this.getTypeNumber();
+		type = UnityTranslatorConstants.TYPE_LIST.get(typeNumber);
+
+		types.add(type);
 
 		return types;
 	}
@@ -111,18 +123,39 @@ public class UnityObject implements GameObject {
 		return "Find Object with Name";
 	}
 
-	public int getTypeNumber() {
-		return Integer.parseInt(this.tag.split(UNITY_TAG)[1]);
+	public Integer getTypeNumber() {
+		return new Integer(this.tag.split(UNITY_TAG)[1]);
 	}
 
 	@Override
-	public void setResolutionMethod(int methodType) {
+	public boolean equals(Object obj) {
+		// FIXME
+		// XXX
 		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
-	public int getResolutionMethod() {
+	public List<Resource> getChildren() {
+		// FIXME
+		// XXX
 		// TODO Auto-generated method stub
-		return 0;
+		return super.getChildren();
+	}
+
+	@Override
+	public boolean isLink() {
+		// FIXME
+		// XXX
+		// TODO Auto-generated method stub
+		return super.isLink();
+	}
+
+	@Override
+	public String getOwnerName() {
+		// FIXME
+		// XXX
+		// TODO Auto-generated method stub
+		return super.getOwnerName();
 	}
 }

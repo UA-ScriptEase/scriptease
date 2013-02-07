@@ -2,7 +2,7 @@ package scriptease.controller.groupvisitor;
 
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingConstant;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 
 public class SameBindingGroupVisitor extends GroupVisitor {
 
@@ -21,8 +21,8 @@ public class SameBindingGroupVisitor extends GroupVisitor {
 		final KnowItBinding comparingBinding = knowIt.getBinding();
 		if (this.original != null) {
 			// Don't group constants
-			if (comparingBinding instanceof KnowItBindingConstant
-					&& !((KnowItBindingConstant) comparingBinding)
+			if (comparingBinding instanceof KnowItBindingResource
+					&& !((KnowItBindingResource) comparingBinding)
 							.isIdentifiableGameConstant())
 				return false;
 			else
