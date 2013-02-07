@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockReference;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
 import scriptease.model.PatternModel;
 import scriptease.model.StoryComponent;
@@ -70,6 +72,20 @@ public aspect Undo {
 		within(StoryComponent+) && execution(* setDisplayText(String));
 
 	/**
+	 * This is duplicated because just implementing for CodeBlock will end up
+	 * firing twice as the subclasses call super causing the pointcut twice
+	 */
+	public pointcut addingParameter():
+		(within(CodeBlockSource) && execution(* addParameter(KnowIt))) || (within(CodeBlockReference) && execution(* addParameter(KnowIt)));
+
+	/**
+	 * This is duplicated because just implementing for CodeBlock will end up
+	 * firing twice as the subclasses call super causing the pointcut twice
+	 */
+	public pointcut removingParameter():
+		(within(CodeBlockSource) && execution(* removeParameter(KnowIt))) || (within(CodeBlockReference) && execution(* removeParameter(KnowIt)));
+
+	/**
 	 * Defines the Add Label operation in StoryComponents.
 	 */
 	public pointcut addingLabel():
@@ -131,6 +147,9 @@ public aspect Undo {
 	 */
 	public pointcut clearingTypes():
 		within (KnowIt+) && execution(* clearTypes());
+
+	public pointcut settingCodeBlockTypes():
+		within (CodeBlock+) && execution(* setTypes(Collection<String>));
 
 	/**
 	 * Defines the Add Story Child operation in ComplexStoryComponents.
@@ -557,6 +576,64 @@ public aspect Undo {
 			}
 		};
 
+		this.addModification(mod);
+	}
+
+	before(final CodeBlock codeBlock, final Collection<String> types): settingCodeBlockTypes() && args(types) && this(codeBlock){
+		Modification mod = new FieldModification<Collection<String>>(types,
+				codeBlock.getTypes()) {
+			@Override
+			public void setOp(Collection<String> value) {
+				codeBlock.setTypes(value);
+			}
+
+			@Override
+			public String toString() {
+				return "setting " + codeBlock + "'s types to " + types;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final CodeBlock codeBlock, final KnowIt parameter): addingParameter() && args(parameter) && this(codeBlock) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				codeBlock.addParameter(parameter);
+			}
+
+			@Override
+			public void undo() {
+				codeBlock.removeParameter(parameter);
+			}
+
+			@Override
+			public String toString() {
+				return "adding " + parameter + " parameter to " + codeBlock;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final CodeBlock codeBlock, final KnowIt parameter): removingParameter() && args(parameter) && this(codeBlock) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				codeBlock.removeParameter(parameter);
+			}
+
+			@Override
+			public void undo() {
+				codeBlock.addParameter(parameter);
+			}
+
+			@Override
+			public String toString() {
+				return "removing " + parameter + " parameter from " + codeBlock;
+			}
+		};
 		this.addModification(mod);
 	}
 

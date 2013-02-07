@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
@@ -49,7 +50,6 @@ public abstract class CodeBlock extends StoryComponent implements
 	protected void init() {
 		super.init();
 		this.parameters = new ArrayList<KnowIt>();
-
 		// implicits are lazy-load. See getImplicits().
 		this.implicits = null;
 	}
@@ -70,12 +70,12 @@ public abstract class CodeBlock extends StoryComponent implements
 	@Override
 	public int hashCode() {
 		int hashCode = 0;
-
 		final List<KnowIt> params = this.getParameters();
-
-		for (KnowIt param : params)
-			hashCode += param.getBinding().hashCode();
-
+		for (KnowIt param : params) {
+			KnowItBinding binding = param.getBinding();
+			if (binding != null)
+				hashCode += binding.hashCode();
+		}
 		final ScriptIt owner = this.getOwner();
 		if(owner instanceof ControlIt) {
 			for(KnowIt param : ((ControlIt) owner).getRequiredParameters()) {
@@ -91,9 +91,7 @@ public abstract class CodeBlock extends StoryComponent implements
 	@Override
 	public CodeBlock clone() {
 		final CodeBlock clone = (CodeBlock) super.clone();
-
 		clone.init();
-
 		return clone;
 	}
 
@@ -132,8 +130,16 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * @param parameters
 	 *            The new parameters
 	 */
-	public void setParameters(Collection<KnowIt> parameters) {
+	protected void setParameters(Collection<KnowIt> parameters) {
 		this.parameters = new ArrayList<KnowIt>(parameters);
+	}
+
+	public boolean addParameter(KnowIt parameter) {
+		return this.parameters.add(parameter);
+	}
+
+	public boolean removeParameter(KnowIt parameter) {
+		return this.parameters.remove(parameter);
 	}
 
 	/**
