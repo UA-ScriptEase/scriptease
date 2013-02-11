@@ -354,6 +354,24 @@
 			</Series>
 		</Format>
 		<!-- Format for control it children -->
+		<Format id="delayItChildren">
+			<Scope data="Cause">
+				<FormatRef ref="implicitsDeclaration" />
+				<FormatRef ref="implicitsDefinition" />
+			</Scope>
+			<Scope data="argument" ref="Number">
+				<FormatRef ref="variableDefinition" />
+			</Scope>
+			<Line>
+				<Literal>yield WaitForSeconds(</Literal>
+				<Scope data="argument" ref="Number">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>);</Literal>
+			</Line>
+			<FormatRef ref="childrenWithoutImplicits" />
+		</Format>
+			<!-- Format for control it children -->
 		<Format id="controlItChildren">
 			<Scope data="Cause">
 				<FormatRef ref="implicitsDeclaration" />
@@ -381,17 +399,9 @@
 
 		<!-- Format for the delay controller -->
 		<Format id="delay">
-			<Scope data="argument" ref="Number">
-				<FormatRef ref="variableDefinition" />
-			</Scope>
 			<Line>
-				<Literal>DelayCommand(</Literal>
-				<Scope data="argument" ref="Number">
-					<Fragment data="name" />
-				</Scope>
-				<Literal>, </Literal>
 				<FormatRef ref="functionHeader" />
-				<Literal>);</Literal>
+				<Literal>;</Literal>
 			</Line>
 		</Format>
 

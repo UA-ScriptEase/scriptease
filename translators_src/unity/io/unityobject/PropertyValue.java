@@ -1,4 +1,4 @@
-package io;
+package io.unityobject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -217,6 +217,19 @@ public class PropertyValue {
 	}
 
 	/**
+	 * Returns the integer held by the {@link PropertyValue} if it holds one.
+	 * Otherwise, returns null.
+	 * 
+	 * @return
+	 */
+	public Integer getInteger() {
+		if (this.type == Type.INTEGER)
+			return (Integer) this.value;
+		else
+			return null;
+	}
+
+	/**
 	 * Returns the list of {@link PropertyValue}s held by a
 	 * {@link PropertyValue} if it holds one. Otherwise, returns null.
 	 * 
@@ -266,6 +279,6 @@ public class PropertyValue {
 
 	@Override
 	public String toString() {
-		return "PropertyValue: [" + this.value + "]";
+		return "PropertyValue: [" + this.type.name() + ": " + this.value + "]";
 	}
 }
