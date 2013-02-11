@@ -1,7 +1,8 @@
 package io;
 
+import io.unityobject.PropertyValue;
 import io.unityobject.UnityResource;
-import io.unityobject.UnityObjectBuilder;
+import io.unityobject.UnityResourceBuilder;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,8 +12,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.events.Event;
@@ -25,6 +28,8 @@ import org.yaml.snakeyaml.events.Event;
  * @author kschenk
  */
 public class Scene {
+	// There's no point of having multiple parsers unless we were reading in
+	// scene files multi-threaded, which we aren't, so we just use one.
 	private static final Yaml parser = new Yaml();
 	static {
 		parser.setName("Unity Scene YAML Parser");
@@ -37,13 +42,17 @@ public class Scene {
 	/**
 	 * Builds a new scene object and loads it into memory.
 	 * 
+	 * @param seGeneratedGUIDs
+	 *            We pass in a list of GUIDs of ScriptEase generated scripts so
+	 *            we can remove them as soon as we load the scene file.
 	 * @param location
 	 *            The scene file to read from.
 	 * @throws IOException
 	 *             if there is a problem during reading or creating the I/O
 	 *             streams.
 	 */
-	public Scene(File location) throws IOException {
+	public Scene(File location, Collection<String> seGeneratedGUIDs)
+			throws IOException {
 		if (!location.exists())
 			throw new FileNotFoundException("Scene file "
 					+ location.getAbsolutePath() + " went missing!");
@@ -53,73 +62,126 @@ public class Scene {
 		this.unityObjects = new ArrayList<UnityResource>();
 		this.location = location;
 
-		this.read(location);
+		this.read(location, seGeneratedGUIDs);
 	}
 
-	public List<UnityResource> getObjects() {
+	/**
+	 * Returns a list of {@link UnityResource}s.
+	 * 
+	 * @return
+	 */
+	public List<UnityResource> getResources() {
 		return this.unityObjects;
 	}
 
-	private void read(File location) throws IOException {
+	/**
+	 * Reads in the Scene file from the location. Also finds and removes all
+	 * ScriptEase generated content. that existed before.
+	 * 
+	 * @param location
+	 * @param seGeneratedGUIDs
+	 * @throws IOException
+	 */
+	private void read(File location, Collection<String> seGeneratedGUIDs)
+			throws IOException {
 		final Iterable<Event> eventIterable;
-		final UnityObjectBuilder builder;
+		final UnityResourceBuilder builder;
+		final Collection<UnityResource> objectsToRemove;
 
 		eventIterable = parser.parse(reader);
-
-		builder = new UnityObjectBuilder(eventIterable.iterator());
+		builder = new UnityResourceBuilder(eventIterable.iterator(), this);
+		objectsToRemove = new ArrayList<UnityResource>();
 
 		this.unityObjects.addAll(builder.getObjects());
 
-		System.out.println("Scene File Read with " + this.unityObjects.size()
-				+ " objects");
-
-		// TODO Remove scriptease generated stuff from model
-		final int monoBehaviourType;
-
-		monoBehaviourType = UnityTranslatorConstants.TYPE_LIST
-				.indexOf("MonoBehaviour");
-
 		for (UnityResource object : this.unityObjects) {
-			if (object.getTypeNumber() == monoBehaviourType) {
+			if (object.getType().equals(UnityConstants.TYPE_MONOBEHAVIOUR)) {
 				final Map<String, PropertyValue> propertyMap;
-				final PropertyValue parentValue;
 				final PropertyValue scriptMapValue;
+				final Map<String, PropertyValue> scriptMap;
+				final String guid;
 
 				propertyMap = object.getPropertyMap();
-				parentValue = propertyMap.get("m_GameObject");
-				scriptMapValue = object.getPropertyMap().get("m_Script");
+				scriptMapValue = propertyMap.get(UnityConstants.FIELD_M_SCRIPT);
+				scriptMap = scriptMapValue.getMap();
+				guid = scriptMap.get(UnityConstants.FIELD_GUID).getString();
 
+				if (seGeneratedGUIDs.contains(guid)) {
+					objectsToRemove.add(object);
+				}
+			}
+		}
+
+		// Remove all previous ScriptEase generated script references
+		for (UnityResource object : objectsToRemove) {
+			this.unityObjects.remove(object);
+
+			final int objectID;
+			final UnityResource ownerObject;
+			final PropertyValue mComponentValue;
+			final List<PropertyValue> mComponentList;
+
+			objectID = object.getUniqueID();
+			ownerObject = object.getOwner();
+			mComponentValue = ownerObject.getPropertyMap().get(
+					UnityConstants.FIELD_M_COMPONENT);
+			mComponentList = mComponentValue.getList();
+
+			PropertyValue mComponentToRemove = null;
+
+			for (PropertyValue value : mComponentList) {
+				if (mComponentToRemove != null)
+					break;
+
+				final Map<String, PropertyValue> valueMap;
+
+				valueMap = value.getMap();
+
+				for (Entry<String, PropertyValue> entry : valueMap.entrySet()) {
+					final int key = Integer.parseInt(entry.getKey());
+					if (key == UnityConstants.TYPE_LIST
+							.indexOf(UnityConstants.TYPE_MONOBEHAVIOUR)) {
+
+						final Map<String, PropertyValue> refMap;
+						final int fileID;
+
+						refMap = entry.getValue().getMap();
+						fileID = Integer.parseInt(refMap.get(
+								UnityConstants.FIELD_FILEID).getString());
+
+						if (fileID == objectID) {
+							mComponentToRemove = value;
+							break;
+						}
+					}
+				}
+			}
+
+			if (mComponentToRemove != null) {
+				mComponentList.remove(mComponentToRemove);
 			}
 		}
 	}
 
+	/**
+	 * Adds a UnityResource to the list of resources in the scene. Does not add
+	 * anything to the scene's code or change the model in any other way.
+	 * 
+	 * @param object
+	 */
 	public void addObject(UnityResource object) {
 		this.unityObjects.add(object);
 	}
 
+	/**
+	 * Removes a UnityResource from the list of resources in the scene. Does not
+	 * handle any code changes.
+	 * 
+	 * @param object
+	 */
 	public void removeObject(UnityResource object) {
 		this.unityObjects.remove(object);
 	}
-
-	/*
-	 * public void removeMonoBehaviourObject(UnityObject object) {
-	 * this.removeObject(object);
-	 * 
-	 * PropertyValue toBeRemoved = null;
-	 * 
-	 * for (PropertyValue value : this.mComponentList) { if (value.isMap()) {
-	 * final Map<String, PropertyValue> firstMap = value.getMap(); final
-	 * PropertyValue secondMapValue = firstMap.get("114");
-	 * 
-	 * if (secondMapValue != null && secondMapValue.isMap()) { final Map<String,
-	 * PropertyValue> secondMap = secondMapValue .getMap(); final PropertyValue
-	 * fileID = secondMap.get("fileID");
-	 * 
-	 * if (fileID != null && fileID.equals(this.idNumber)) { // We have found
-	 * the correct component. toBeRemoved = value; break; } } } }
-	 * 
-	 * if (toBeRemoved != null) this.mComponentList.remove(toBeRemoved); }
-	 */
 
 	/**
 	 * Writes its contents to the file it represents.
@@ -128,10 +190,11 @@ public class Scene {
 	 */
 	public void write() throws IOException {
 		final BufferedWriter writer;
-
+		final String sceneHeader = "%YAML 1.1\n" + "%TAG !u! "
+				+ UnityConstants.UNITY_TAG + "\n";
 		writer = new BufferedWriter(new FileWriter(location));
 
-		writer.write("%YAML 1.1\n" + "%TAG !u! tag:unity3d.com,2011:\n");
+		writer.write(sceneHeader);
 
 		// Add an arbitrary number
 		for (Object data : this.unityObjects) {
@@ -150,6 +213,28 @@ public class Scene {
 		writer.close();
 	}
 
+	/**
+	 * Returns a UnityResource with a matching ID.
+	 * 
+	 * @param unityID
+	 * @return
+	 */
+	public UnityResource getObjectByUnityID(int unityID) {
+		for (UnityResource object : this.unityObjects) {
+			if (object.getUniqueID() == unityID) {
+				return object;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns a UnityResource by its TemplateID.
+	 * 
+	 * @param templateID
+	 * @return
+	 */
 	public UnityResource getObjectByTemplateID(String templateID) {
 		for (UnityResource object : this.unityObjects) {
 			if (object.getTemplateID().equals(templateID))

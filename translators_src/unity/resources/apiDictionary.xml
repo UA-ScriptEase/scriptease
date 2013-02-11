@@ -854,6 +854,107 @@
 	</Causes>
 	<Effects>
 		<ScriptIt>
+			<Name>Shoot out a &lt;Game Object&gt; at speed &lt;Speed&gt; with spectacular light show</Name>
+			<Visible>true</Visible>
+			<Labels>
+				<Label>NOW</Label>
+			</Labels>
+			<Children />
+			<CodeBlocks>
+				<CodeBlockSource>
+					<Name>Shoot out a &lt;Game Object&gt; at speed &lt;Speed&gt; with spectacular light show</Name>
+					<Visible>true</Visible>
+					<Labels />
+					<Id>1</Id>
+					<Types>
+						<Type>void</Type>
+					</Types>
+					<Parameters>
+						<KnowIt>
+							<Name>Game Object</Name>
+							<Visible>true</Visible>
+							<Labels />
+							<Types>
+								<Type>GameObject</Type>
+							</Types>
+						</KnowIt>
+						<KnowIt>
+							<Name>Speed</Name>
+							<Visible>true</Visible>
+							<Labels />
+							<Types>
+								<Type>float</Type>
+							</Types>
+						</KnowIt>
+					</Parameters>
+					<Code>
+						<Line>
+							<Literal>var clone:GameObject = Instantiate(</Literal>
+							<Scope data="argument" ref="Game Object">
+								<Fragment data="name" />
+							</Scope>
+							<Literal>, transform.position, transform.rotation);</Literal>
+						</Line>
+						<Line>
+							<Literal>clone.rigidbody.velocity = transform.TransformDirection (Vector3.forward * </Literal>
+							<Scope data="argument" ref="Speed">
+								<Fragment data="name" />
+							</Scope>
+							<Literal>);</Literal>
+						</Line>
+						<Line>
+							<Literal>clone.light.color = Color(Random.Range(0.0,1.0),Random.Range(0.0,1.0), Random.Range(0.0,1.0));</Literal>
+						</Line>
+						<Line>
+							<Literal>clone.renderer.material.color = Color(Random.Range(0.0,1.0),Random.Range(0.0,1.0), Random.Range(0.0,1.0));				</Literal>
+						</Line>
+						<Line>
+							<Literal>yield WaitForSeconds(5.0);</Literal>
+						</Line>
+						<Line>
+							<Literal>clone.light.intensity = 0;</Literal>
+						</Line>
+					</Code>
+				</CodeBlockSource>
+			</CodeBlocks>
+		</ScriptIt>
+		<ScriptIt>
+			<Name>Find Object with Name</Name>
+			<Visible>false</Visible>
+			<Labels>
+				<Label>NOW</Label>
+			</Labels>
+			<Children />
+			<CodeBlocks>
+				<CodeBlockSource>
+					<Name>Find Object with Name</Name>
+					<Visible>true</Visible>
+					<Labels />
+					<Id>2</Id>
+					<Types>
+						<Type>void</Type>
+					</Types>
+					<Parameters>
+						<KnowIt>
+							<Name>Name</Name>
+							<Visible>true</Visible>
+							<Labels />
+							<Types>
+								<Type>String</Type>
+							</Types>
+						</KnowIt>
+					</Parameters>
+					<Code>
+						<Literal>GameObject.Find(&quot;</Literal>
+						<Scope data="argument" ref="Name">
+							<Fragment data="name" legalValues="[^\&quot;]*" />
+						</Scope>
+						<Literal>&quot;)</Literal>
+					</Code>
+				</CodeBlockSource>
+			</CodeBlocks>
+		</ScriptIt>
+		<ScriptIt>
 			<Name>Shoot out a &lt;Game Object&gt; at speed &lt;Speed&gt;</Name>
 			<Visible>true</Visible>
 			<Labels>
@@ -906,44 +1007,69 @@
 				</CodeBlockSource>
 			</CodeBlocks>
 		</ScriptIt>
-		<ScriptIt>
-			<Name>Find Object with Name</Name>
+	</Effects>
+	<DescribeIts />
+	<ControlIts>
+		<ControlIt control="DELAY">
+			<Name>After &lt;Number&gt; seconds</Name>
 			<Visible>true</Visible>
-			<Labels>
-				<Label>NOW</Label>
-			</Labels>
+			<Labels />
 			<Children />
 			<CodeBlocks>
 				<CodeBlockSource>
-					<Name>Find Object with Name</Name>
+					<Name>After &lt;Number&gt; seconds</Name>
 					<Visible>true</Visible>
 					<Labels />
-					<Id>2</Id>
+					<Id>3</Id>
 					<Types>
 						<Type>void</Type>
 					</Types>
 					<Parameters>
 						<KnowIt>
-							<Name>Name</Name>
+							<Name>Number</Name>
 							<Visible>true</Visible>
 							<Labels />
 							<Types>
-								<Type>String</Type>
+								<Type>float</Type>
 							</Types>
 						</KnowIt>
 					</Parameters>
 					<Code>
-						<Literal>GameObject.Find(&quot;</Literal>
-						<Scope data="argument" ref="Name">
-							<Fragment data="name" legalValues="[^\&quot;]*" />
-						</Scope>
-						<Literal>&quot;)</Literal>
+						<FormatRef data="NONE" ref="delayItChildren" />
 					</Code>
 				</CodeBlockSource>
 			</CodeBlocks>
-		</ScriptIt>
-	</Effects>
-	<DescribeIts />
-	<ControlIts />
+		</ControlIt>
+		<ControlIt control="REPEAT">
+			<Name>Repeat the following &lt;Number&gt; times</Name>
+			<Visible>true</Visible>
+			<Labels />
+			<Children />
+			<CodeBlocks>
+				<CodeBlockSource>
+					<Name>Repeat the following &lt;Number&gt; times</Name>
+					<Visible>true</Visible>
+					<Labels />
+					<Id>4</Id>
+					<Types>
+						<Type>void</Type>
+					</Types>
+					<Parameters>
+						<KnowIt>
+							<Name>Number</Name>
+							<Visible>true</Visible>
+							<Labels />
+							<Types>
+								<Type>float</Type>
+							</Types>
+						</KnowIt>
+					</Parameters>
+					<Code>
+						<FormatRef data="NONE" ref="controlItChildren" />
+					</Code>
+				</CodeBlockSource>
+			</CodeBlocks>
+		</ControlIt>
+	</ControlIts>
 	<TypeConverters />
 </APIDictionary>

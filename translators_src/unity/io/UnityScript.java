@@ -1,5 +1,6 @@
 package io;
 
+import io.unityobject.PropertyValue;
 import io.unityobject.UnityResource;
 
 import java.io.BufferedWriter;
@@ -14,6 +15,20 @@ import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.StringOp;
 
+/**
+ * This class represents a Unity Script. When a Script is created, it is
+ * attached to a scene automatically and must then be removed via
+ * {@link #removeFromScene()}. The Scene does not need to store references to
+ * these UnityScripts.
+ * 
+ * TODO It may be better design to have the Scene store the UnityScripts as a
+ * collection of objects. We could have the scene deal with itself, rather than
+ * the UnityScripts altering the scene. The Scene would likely have to refresh
+ * the GUID each time.
+ * 
+ * @author kschenk
+ * 
+ */
 public class UnityScript {
 	private static final int NAME_RADIX = 36;
 	private static final String SCRIPT_EXTENSION = ".js";
@@ -30,10 +45,13 @@ public class UnityScript {
 
 	private final int idNumber;
 
+	// Added in front of the script name to prevent duplicate identical names
+	// from occurring.
 	private static int scriptCounter = 0;
 
 	/**
-	 * Creates a new Unity Script file.
+	 * Creates a new Unity Script file from the script info and attaches it to
+	 * the passed in scene.
 	 * 
 	 * @param scriptInfo
 	 * @param scene
@@ -45,8 +63,9 @@ public class UnityScript {
 
 		this.scene = scene;
 		this.code = scriptInfo.getCode();
-		this.fileName = "se_" + Integer.toString(scriptCounter++, NAME_RADIX)
-				+ "_" + StringOp.makeAlphaNumeric(subject.getName());
+		this.fileName = UnityConstants.SCRIPTEASE_FILE_PREFIX
+				+ Integer.toString(scriptCounter++, NAME_RADIX) + "_"
+				+ StringOp.makeAlphaNumeric(subject.getName());
 
 		this.guid = UnityProject.generateGUID();
 
@@ -54,7 +73,7 @@ public class UnityScript {
 				.getTemplateID());
 
 		int idNumber = 0;
-		for (UnityResource object : this.scene.getObjects()) {
+		for (UnityResource object : this.scene.getResources()) {
 			final int objectID = object.getUniqueID();
 			if (objectID >= idNumber) {
 				idNumber = objectID + 1;
@@ -65,50 +84,47 @@ public class UnityScript {
 
 		this.monoBehaviourObject = this.buildMonoBehaviourObject();
 
-		final Map<String, PropertyValue> attachedObjectMap;
-		final PropertyValue gameObjectValue;
+		final PropertyValue mComponentMapValue;
 
-		// TODO replace with new method
-		attachedObjectMap = this.attachedObject.getTopLevelPropertyMap();
-		gameObjectValue = attachedObjectMap.get("GameObject");
+		mComponentMapValue = this.attachedObject.getPropertyMap().get(
+				UnityConstants.FIELD_M_COMPONENT);
 
-		if (gameObjectValue.isMap()) {
-			final PropertyValue mapValue;
-
-			mapValue = gameObjectValue.getMap().get("m_Component");
-
-			if (mapValue.isList()) {
-				this.mComponentList = mapValue.getList();
-			} else {
-				throw new IllegalArgumentException(
-						"MComponentList not found in " + this.attachedObject);
-			}
-		} else
-			throw new IllegalArgumentException("GameObject not a map in "
-					+ this.attachedObject
-					+ ". How in the world is this even possible?");
+		if (mComponentMapValue.isList()) {
+			this.mComponentList = mComponentMapValue.getList();
+		} else {
+			throw new IllegalArgumentException("MComponentList not found in "
+					+ this.attachedObject);
+		}
 
 		this.addToScene();
-
 	}
 
+	/**
+	 * Attaches the Script to the scene. This is private and should only be
+	 * called in the constructor. I've moved the code into a method since we may
+	 * move this type of code to the Scene file itself later.
+	 */
 	private void addToScene() {
 		this.scene.addObject(this.monoBehaviourObject);
+		final String fileID = UnityConstants.FIELD_FILEID;
+		final int fileIDNum = UnityConstants.TYPE_LIST
+				.indexOf(UnityConstants.TYPE_MONOBEHAVIOUR);
 
 		final Map<String, PropertyValue> firstMap;
 		final Map<String, PropertyValue> secondMap;
-
 		firstMap = new HashMap<String, PropertyValue>();
 		secondMap = new HashMap<String, PropertyValue>();
 
-		firstMap.put("114", new PropertyValue(secondMap));
-		secondMap.put("fileID", new PropertyValue(this.idNumber));
+		firstMap.put(String.valueOf(fileIDNum), new PropertyValue(secondMap));
+		secondMap.put(fileID, new PropertyValue(this.idNumber));
 
 		this.mComponentList.add(new PropertyValue(firstMap));
-
-		// TODO First check if this exists already.
 	}
 
+	/**
+	 * Removes the script from the scene it is attached to. Once removed,
+	 * nothing can be done with it.
+	 */
 	public void removeFromScene() {
 		this.scene.removeObject(this.monoBehaviourObject);
 
@@ -133,13 +149,22 @@ public class UnityScript {
 			}
 		}
 
-		if (toBeRemoved != null)
+		if (toBeRemoved != null) {
 			this.mComponentList.remove(toBeRemoved);
+		}
 	}
 
+	/**
+	 * Builds a MonoBehaviourObject in the scene file, which is what a script is
+	 * attached to.
+	 * 
+	 * @return
+	 */
 	private UnityResource buildMonoBehaviourObject() {
-		final String fileID = "fileID";
+		final String fileID = UnityConstants.FIELD_FILEID;
 		final PropertyValue zeroValue = new PropertyValue(0);
+		final int monoTypeNumber = UnityConstants.TYPE_LIST
+				.indexOf(UnityConstants.TYPE_MONOBEHAVIOUR);
 
 		final UnityResource monoObject;
 
@@ -149,8 +174,8 @@ public class UnityScript {
 		final Map<String, PropertyValue> propertiesMap;
 		final Map<String, PropertyValue> objectMap;
 
-		monoObject = new UnityResource(this.idNumber, UnityResource.UNITY_TAG
-				+ "114");
+		monoObject = new UnityResource(this.idNumber, UnityConstants.UNITY_TAG
+				+ monoTypeNumber, this.scene);
 
 		fileIDMap = new HashMap<String, PropertyValue>();
 		mGameObjectMap = new HashMap<String, PropertyValue>();
@@ -164,19 +189,21 @@ public class UnityScript {
 				new PropertyValue(this.attachedObject.getUniqueID()));
 
 		mScriptMap.put(fileID, new PropertyValue(11500000));
-		mScriptMap.put("guid", new PropertyValue(this.guid));
+		mScriptMap.put(UnityConstants.FIELD_GUID, new PropertyValue(this.guid));
 		mScriptMap.put("type", new PropertyValue(1));
 
 		propertiesMap.put("m_ObjectHideFlags", zeroValue);
 		propertiesMap.put("m_PrefabParentObject", new PropertyValue(fileIDMap));
 		propertiesMap.put("m_PrefabInternal", new PropertyValue(fileIDMap));
-		propertiesMap.put("m_GameObject", new PropertyValue(mGameObjectMap));
+		propertiesMap.put(UnityConstants.FIELD_M_GAMEOBJECT, new PropertyValue(
+				mGameObjectMap));
 		propertiesMap.put("m_Enabled", new PropertyValue(1));
 		propertiesMap.put("m_EditorHideFlags", zeroValue);
 		propertiesMap.put("m_Script", new PropertyValue(mScriptMap));
 		propertiesMap.put("m_Name", new PropertyValue(""));
 
-		objectMap.put("MonoBehaviour", new PropertyValue(propertiesMap));
+		objectMap.put(UnityConstants.TYPE_MONOBEHAVIOUR, new PropertyValue(
+				propertiesMap));
 
 		monoObject.setProperties(objectMap);
 
@@ -211,6 +238,9 @@ public class UnityScript {
 		metaWriter.close();
 	}
 
+	/**
+	 * Reset the script counter.
+	 */
 	public static void resetScriptCounter() {
 		scriptCounter = 0;
 	}

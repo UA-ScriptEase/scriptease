@@ -2,9 +2,11 @@ package io;
 
 import io.unityobject.UnityResource;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +28,9 @@ import scriptease.util.FileOp;
  * Represents a Unity Project file. Implements the GameModule interface to
  * behave as the facade of the project.
  * 
+ * Unity Projects, in terms of ScriptEase, are composed of Scene files. A Scene
+ * file is similar to a level. Each Scene file contains various objects in it.
+ * 
  * @author remiller
  * @author kschenk
  */
@@ -36,10 +41,17 @@ public final class UnityProject implements GameModule {
 	private static final Collection<String> guids = new ArrayList<String>();;
 
 	private File projectLocation;
+	// The nice thing about Unity is that it uses multiple files instead of one,
+	// gigantic, binary, gigafile (cough NWN cough). So we have can have a
+	// directory where all of our ScriptEase generated stuff is stored.
+	private File scripteaseGeneratedDirectory;
 
 	private final Collection<Scene> scenes;
 	private final Collection<UnityScript> scripts;
 
+	/**
+	 * Creates a new UnityProjects with no scenes or scripts added.
+	 */
 	public UnityProject() {
 		this.scenes = new ArrayList<Scene>();
 		this.scripts = new ArrayList<UnityScript>();
@@ -63,6 +75,9 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public Resource getModule() {
+		// TODO We need to return something that represents the module.
+		// Modules are used mostly for "Automatics", so if we don't use those,
+		// we may not have to worry about this so much.
 		return null;
 	}
 
@@ -87,6 +102,13 @@ public final class UnityProject implements GameModule {
 	@Override
 	public Collection<Set<CodeBlock>> aggregateScripts(
 			Collection<StoryComponent> roots) {
+		// TODO We may not be aggregating these correctly, since I just ripped
+		// this directly from the NWN translator. It's working right now, but
+		// will likely break in one or more of these cases:
+		// 1. The user adds two same causes
+		// 2. The user adds two same causes with the same game object
+		// 3. The user adds two different causes with the same game object
+
 		final Map<String, List<CodeBlock>> codeBlocks;
 		final CodeBlockMapper codeBlockMapper;
 		final List<Set<CodeBlock>> scriptBuckets;
@@ -118,13 +140,12 @@ public final class UnityProject implements GameModule {
 		for (Scene scene : this.scenes) {
 			scene.close();
 		}
-		this.scenes.clear();
 	}
 
 	@Override
 	public Resource getInstanceForObjectIdentifier(String id) {
 		for (Scene scene : this.scenes) {
-			for (UnityResource object : scene.getObjects())
+			for (UnityResource object : scene.getResources())
 				if (object.getTemplateID().equals(id)) {
 					return object;
 				}
@@ -134,14 +155,18 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public List<Resource> getResourcesOfType(String type) {
-		final List<Resource> objects;
+		final List<Resource> resources;
 
-		objects = new ArrayList<Resource>();
+		resources = new ArrayList<Resource>();
 
 		for (Scene scene : this.scenes) {
-			objects.addAll(scene.getObjects());
+			for (UnityResource resource : scene.getResources()) {
+				if (resource.getTypes().contains(type))
+					resources.add(resource);
+			}
 		}
-		return objects;
+
+		return resources;
 	}
 
 	@Override
@@ -178,42 +203,58 @@ public final class UnityProject implements GameModule {
 		scriptMetaFiles = FileOp
 				.findFiles(this.projectLocation, metaFileFilter);
 
-		for (File sceneFile : sceneFiles) {
-			this.scenes.add(new Scene(sceneFile));
-		}
+		final Collection<String> seGeneratedGUIDs = new ArrayList<String>();
 
 		for (File scriptMetaFile : scriptMetaFiles) {
-			// TODO Load used GUIDs into memory.
-			// Second line in file is "guid: c7eb21f478d84f3cb4b98675845beb98"
-			// Read that and save it.
+			final BufferedReader reader;
+
+			reader = new BufferedReader(new FileReader(scriptMetaFile));
+
+			String line;
+			while ((line = reader.readLine()) != null) {
+				final String guid = UnityConstants.FIELD_GUID;
+				// Format: [guid: 3d8e5b1dcb8f4f6c86fb7422b2e687df]
+				if (line.startsWith(guid)) {
+					final String guidValue = line.substring(guid.length() + 2);
+
+					guids.add(guidValue);
+
+					if (scriptMetaFile.getName().startsWith(
+							UnityConstants.SCRIPTEASE_FILE_PREFIX)) {
+						seGeneratedGUIDs.add(guidValue);
+					}
+				}
+			}
+			reader.close();
+		}
+
+		for (File sceneFile : sceneFiles) {
+			this.scenes.add(new Scene(sceneFile, seGeneratedGUIDs));
 		}
 	}
 
 	@Override
 	public void save(boolean compile) throws IOException {
-		// TODO Delete all "se_" saved script files
-		// ^ we may not have to do this. Looks like Unity is doing this by
-		// itself.
-		final FileFilter filter = new FileFilter() {
-			@Override
-			public boolean accept(File pathname) {
-				return pathname.getName().startsWith("se_");
-			}
-		};
-
-		for (File file : FileOp.findFiles(this.projectLocation, filter)) {
+		// Delete all files in the ScriptEase folder.
+		for (File file : this.scripteaseGeneratedDirectory.listFiles()) {
 			file.delete();
 		}
 
+		// Write out the scene files.
 		for (Scene scene : this.scenes) {
 			scene.write();
 		}
 
+		// Write the script files to the ScriptEase folder.
 		for (UnityScript script : this.scripts) {
-			script.write(this.projectLocation);
+			script.write(this.scripteaseGeneratedDirectory);
+			// We then remove each script from the model immediately after
+			// writing it, for next time.
 			script.removeFromScene();
 		}
 
+		// Reset the story to the state it was at before the save.
+		this.scripts.clear();
 		UnityScript.resetScriptCounter();
 	}
 
@@ -224,10 +265,15 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public void setLocation(File location) {
+		final String SCRIPTEASE_FOLDER_NAME = "/ScriptEase Scripts";
 		if (this.projectLocation == null) {
 			if (!location.isDirectory())
 				location = location.getParentFile();
 			this.projectLocation = location;
+			this.scripteaseGeneratedDirectory = new File(
+					location.getAbsolutePath() + SCRIPTEASE_FOLDER_NAME);
+			// Seriously Java? mkdir()? What kind of name for a method is that!?
+			this.scripteaseGeneratedDirectory.mkdir();
 		} else {
 			throw new IllegalStateException(
 					"Cannot change Unity project location after it is set.");

@@ -1,10 +1,10 @@
 package io.unityobject;
 
-import io.PropertyValue;
+import io.Scene;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +18,9 @@ import org.yaml.snakeyaml.events.ScalarEvent;
  * @author kschenk
  * 
  */
-public class UnityObjectBuilder {
+public class UnityResourceBuilder {
 	private final List<UnityResource> unityObjects;
+	private final Scene scene;
 
 	/**
 	 * Builds {@link UnityResource}s for a scene based on the passed in event
@@ -29,8 +30,9 @@ public class UnityObjectBuilder {
 	 * 
 	 * @param eventIterator
 	 */
-	public UnityObjectBuilder(Iterator<Event> eventIterator) {
+	public UnityResourceBuilder(Iterator<Event> eventIterator, Scene scene) {
 		this.unityObjects = new ArrayList<UnityResource>();
+		this.scene = scene;
 
 		// Go through each event.
 		while (eventIterator.hasNext()) {
@@ -69,9 +71,8 @@ public class UnityObjectBuilder {
 			if (event.is(Event.ID.MappingStart)) {
 				final MappingStartEvent mapEvent = (MappingStartEvent) event;
 
-				object = new UnityResource(
-						Integer.parseInt(mapEvent.getAnchor()),
-						mapEvent.getTag());
+				object = new UnityResource(Integer.parseInt(mapEvent
+						.getAnchor()), mapEvent.getTag(), this.scene);
 
 				object.setProperties(this.buildMap(eventIterator));
 			}
@@ -159,8 +160,7 @@ public class UnityObjectBuilder {
 			final Event event = eventIterator.next();
 
 			if (event.is(Event.ID.Scalar)) {
-				sequence.add(new PropertyValue(((ScalarEvent) event)
-						.getValue()));
+				sequence.add(new PropertyValue(((ScalarEvent) event).getValue()));
 			} else if (event.is(Event.ID.MappingStart)) {
 				sequence.add(new PropertyValue(this.buildMap(eventIterator)));
 			} else if (event.is(Event.ID.SequenceStart)) {
