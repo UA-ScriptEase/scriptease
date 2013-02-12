@@ -48,6 +48,11 @@ public class SlotConverter implements Converter {
 		writer.setValue(slot.getKeyword());
 		writer.endNode();
 
+		// Write Condition
+		writer.startNode(TAG_CONDITION);
+		writer.setValue(slot.getCondition());
+		writer.endNode();
+		
 		// Write Parameters
 		writer.startNode(TAG_PARAMETERS);
 		if (slot.getParameters() != null && !slot.getParameters().isEmpty())
@@ -58,11 +63,6 @@ public class SlotConverter implements Converter {
 		writer.startNode(TAG_IMPLICITS);
 		if (slot.getImplicits() != null && !slot.getImplicits().isEmpty())
 			context.convertAnother(slot.getImplicits());
-		writer.endNode();
-
-		// Write Condition
-		writer.startNode(TAG_CONDITION);
-		writer.setValue(slot.getCondition());
 		writer.endNode();
 	}
 
