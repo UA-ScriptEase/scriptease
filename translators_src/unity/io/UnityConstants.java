@@ -34,6 +34,7 @@ public class UnityConstants {
 	// Strings.
 	public static final String FIELD_M_COMPONENT = "m_Component";
 	public static final String FIELD_M_GAMEOBJECT = "m_GameObject";
+	public static final String FIELD_M_FATHER = "m_Father";
 	public static final String FIELD_M_SCRIPT = "m_Script";
 
 	public static final String FIELD_FILEID = "fileID";

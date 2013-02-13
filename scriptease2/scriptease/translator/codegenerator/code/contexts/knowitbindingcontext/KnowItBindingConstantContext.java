@@ -58,25 +58,27 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 					.getFirstType();
 			typeFormat = this.translator.getGameTypeManager().getFormat(type);
 			if (typeFormat == null || typeFormat.isEmpty()) {
-				if (((KnowItBindingResource) this.binding)
-						.getValue()
-						.isSomethingPreviouslyKnownAsAGameObjectAndNotAConversation()) {
-					final List<CodeBlock> codeBlocks = this
-							.getBindingCodeBlocks();
-					if (codeBlocks.size() <= 0)
-						throw new CodeGenerationException(
-								"Couldn't find code block for "
-										+ this.binding
-										+ ". Maybe it's missing from the API library?");
+				final List<CodeBlock> codeBlocks = this.getBindingCodeBlocks();
+				if (codeBlocks.size() <= 0)
+					throw new CodeGenerationException(
+							"Couldn't find code block for "
+									+ this.binding
+									+ ". Maybe it's missing from the API library?");
 
-					final Collection<AbstractFragment> codeFragments;
-					codeFragments = codeBlocks.get(0).getCode();
-					String bindingCode = AbstractFragment.resolveFormat(
-							codeFragments, this);
-					return bindingCode;
-				} else {
-					return this.getValue();
+				// Finds the correct binding block in the list.
+				for (CodeBlock codeBlock : codeBlocks) {
+					if (this.binding.getScriptValue().equals(
+							codeBlock.getDisplayText())) {
+						final String bindingCode;
+
+						bindingCode = AbstractFragment.resolveFormat(
+								codeBlock.getCode(), this);
+
+						return bindingCode;
+					}
 				}
+
+				return this.getValue();
 			}
 		}
 

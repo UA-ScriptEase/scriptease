@@ -104,8 +104,9 @@ public class ResourcePanel extends JPanel {
 					type);
 
 			for (Resource constant : gameObjects) {
-				this.panelMap.put(constant,
-						createGameConstantPanel(constant, 0));
+				if (constant.getOwner() == null)
+					this.panelMap.put(constant,
+							createGameConstantPanel(constant, 0));
 			}
 		}
 	}
@@ -146,7 +147,9 @@ public class ResourcePanel extends JPanel {
 
 		// Find constants that match the filters.
 		for (Resource constant : this.panelMap.keySet()) {
-			if (constant.getOwnerName().isEmpty()
+			if (constant.getOwner() == null
+					&& (constant.getOwnerName() == null || constant
+							.getOwnerName().isEmpty())
 					&& this.matchesFilters(constant)) {
 				for (String type : constant.getTypes()) {
 					List<Resource> constantList = constantMap.get(type);
@@ -318,10 +321,10 @@ public class ResourcePanel extends JPanel {
 		objectPanel.add(gameObjectBindingWidget);
 		objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
-		for (Resource root : resource.getChildren()) {
-			final JPanel nodePanel = createGameConstantPanel(root, indent + 1);
+		for (Resource child : resource.getChildren()) {
+			final JPanel nodePanel = createGameConstantPanel(child, indent + 1);
 
-			this.panelMap.put(root, nodePanel);
+			this.panelMap.put(child, nodePanel);
 		}
 
 		return objectPanel;

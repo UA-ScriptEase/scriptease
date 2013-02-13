@@ -21,7 +21,7 @@ import scriptease.util.StringOp;
 public class NWNDialogueLine extends NWNGameConstant {
 	public static final String INDEXER_SEPARATOR = ">";
 
-	private static final String TYPE_DIALOG_LINE = "dialogue_line";
+	public static final String TYPE_DIALOG_LINE = "dialogue_line";
 
 	private final GffStruct dialogueSyncStruct;
 	private final boolean isPlayerLine;
@@ -122,7 +122,7 @@ public class NWNDialogueLine extends NWNGameConstant {
 		else
 			return "NPC";
 	}
-
+	
 	@Override
 	public String toString() {
 		return this.getName();

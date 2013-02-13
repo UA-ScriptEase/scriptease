@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import scriptease.translator.io.model.Resource;
 
@@ -138,8 +139,9 @@ public class UnityResource extends Resource {
 	public List<Resource> getChildren() {
 		final List<Resource> children = new ArrayList<Resource>();
 
-		for (Resource resource : this.scene.getResources()) {
-			if (resource.getOwnerName().equals(this.getUniqueID()))
+		for (UnityResource resource : this.scene.getResources()) {
+			final UnityResource owner = resource.getOwner();
+			if (owner != null && owner.getUniqueID() == this.getUniqueID())
 				children.add(resource);
 		}
 
@@ -147,71 +149,129 @@ public class UnityResource extends Resource {
 	}
 
 	/**
+	 * Gets the value of the first occurrence of the passed in field name.
+	 * 
+	 * @param fieldName
+	 * @return
+	 */
+	public PropertyValue getFirstOccuranceOfField(String fieldName) {
+		return this.getFirstOccuranceOfFieldInMap(this.topLevelPropertyMap,
+				fieldName);
+	}
+
+	private PropertyValue getFirstOccuranceOfFieldInMap(
+			Map<String, PropertyValue> map, String fieldName) {
+		for (Entry<String, PropertyValue> entry : map.entrySet()) {
+			final PropertyValue value = entry.getValue();
+
+			if (entry.getKey().equals(fieldName))
+				return entry.getValue();
+			else if (value.isList()) {
+				final PropertyValue returnValue;
+
+				returnValue = this.getFirstOccuranceOfFieldInList(
+						value.getList(), fieldName);
+
+				if (returnValue != null)
+					return returnValue;
+			} else if (value.isMap()) {
+				final PropertyValue returnValue;
+
+				returnValue = this.getFirstOccuranceOfFieldInMap(
+						value.getMap(), fieldName);
+
+				if (returnValue != null)
+					return returnValue;
+			}
+		}
+
+		return null;
+	}
+
+	private PropertyValue getFirstOccuranceOfFieldInList(
+			List<PropertyValue> list, String fieldName) {
+		for (PropertyValue value : list) {
+			if (value.isMap()) {
+				final PropertyValue returnValue;
+
+				returnValue = this.getFirstOccuranceOfFieldInMap(
+						value.getMap(), fieldName);
+
+				if (returnValue != null)
+					return returnValue;
+			} else if (value.isList()) {
+				final PropertyValue returnValue;
+
+				returnValue = this.getFirstOccuranceOfFieldInList(
+						value.getList(), fieldName);
+
+				if (returnValue != null)
+					return returnValue;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Gets the unique ID of the owner of the component.
 	 * 
 	 * @return
 	 */
+	@Override
 	public UnityResource getOwner() {
 		final int uniqueID;
 
 		if (this.getType().equals(UnityConstants.TYPE_GAMEOBJECT)) {
-
-			// TODO Implement this for a heirarchy of game objects.
-			final PropertyValue mComponentValue;
+			// This is the ID of the Transform object.
+			final int transformTypeNumber;
 			final PropertyValue transformIDValue;
-			final Map<String, PropertyValue> mComponentMap;
+			final String transformIDNumber;
 
-			// mComponentValue = this.getPropertyMap().get(
-			// UnityConstants.FIELD_M_COMPONENT);
-			// mComponentMap = mComponentValue.getMap();
-			// transformIDValue = mComponentMap.get(UnityConstants.TYPE_LIST
-			// .indexOf(UnityConstants.TYPE_TRANSFORM));
+			transformTypeNumber = UnityConstants.TYPE_LIST
+					.indexOf(UnityConstants.TYPE_TRANSFORM);
+			transformIDValue = this.getFirstOccuranceOfField(String
+					.valueOf(transformTypeNumber));
+			transformIDNumber = transformIDValue.getMap()
+					.get(UnityConstants.FIELD_FILEID).getString();
 
-			for (UnityResource resource : this.scene.getResources()) {
-				// if (resource.getType().equals(UnityConstants.TYPE_TRANSFORM))
-				// {
+			final UnityResource attachedTransform;
 
-				// / find the transforms m_Father, which points to another
-				// Transform
-				// / find that transforms game object (m_GameObject)
-				// }
-			}
+			attachedTransform = this.scene.getObjectByUnityID(Integer
+					.parseInt(transformIDNumber));
 
-			// TODO
-			uniqueID = -1;
-		} else if (this.getType().equalsIgnoreCase(
-				UnityConstants.TYPE_MONOBEHAVIOUR)) {
-			// Gets the owner Game Object of the monobehaviour.
-			final PropertyValue mapValue;
-			final Map<String, PropertyValue> fileIDMap;
+			final PropertyValue fatherMap = attachedTransform
+					.getFirstOccuranceOfField(UnityConstants.FIELD_M_FATHER);
 
-			mapValue = this.getPropertyMap().get(
-					UnityConstants.FIELD_M_GAMEOBJECT);
-			fileIDMap = mapValue.getMap();
+			final int fatherID = Integer.parseInt(fatherMap.getMap()
+					.get(UnityConstants.FIELD_FILEID).getString());
 
-			uniqueID = Integer.parseInt(fileIDMap.get(
-					UnityConstants.FIELD_FILEID).getString());
+			if (fatherID != 0) {
+				final UnityResource fatherTransform;
+				final PropertyValue mGameObjectMapValue;
+
+				fatherTransform = this.scene.getObjectByUnityID(fatherID);
+
+				mGameObjectMapValue = fatherTransform
+						.getFirstOccuranceOfField(UnityConstants.FIELD_M_GAMEOBJECT);
+
+				uniqueID = Integer.parseInt(mGameObjectMapValue.getMap()
+						.get(UnityConstants.FIELD_FILEID).getString());
+			} else
+				uniqueID = -1;
 		} else {
-			// Unsupported type. TODO
-			uniqueID = -1;
+			final PropertyValue gameObjectMapValue;
+
+			gameObjectMapValue = this
+					.getFirstOccuranceOfField(UnityConstants.FIELD_M_GAMEOBJECT);
+
+			if (gameObjectMapValue != null) {
+				uniqueID = Integer.parseInt(gameObjectMapValue.getMap()
+						.get(UnityConstants.FIELD_FILEID).getString());
+			} else
+				uniqueID = -1;
 		}
 
 		return this.scene.getObjectByUnityID(uniqueID);
-	}
-
-	/**
-	 * Gets the name of the owner. Names are not necessarily unique. Use
-	 * {@link #getOwnerUnityID()} for that.
-	 */
-	@Override
-	public String getOwnerName() {
-		final UnityResource owner;
-
-		owner = this.getOwner();
-
-		if (owner != null)
-			return owner.getName();
-		else
-			return "";
 	}
 }
