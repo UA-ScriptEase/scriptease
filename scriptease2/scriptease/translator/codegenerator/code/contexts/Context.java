@@ -207,23 +207,19 @@ public class Context {
 			if (key instanceof KnowIt) {
 				KnowItBinding binding = ((KnowIt) key).getBinding();
 				if (binding instanceof KnowItBindingResource) {
-					KnowItBindingResource kibConstant = (KnowItBindingResource) binding;
-					if (kibConstant
-							.getValue()
-							.isSomethingPreviouslyKnownAsAGameObjectAndNotAConversation()) {
-						// Then gets a string representing the name of the code
-						// block.
-						String referenceValue = kibConstant.getScriptValue();
+					final KnowItBindingResource kibConstant;
+					final String referenceValue;
+					final List<CodeBlock> specialCodeBlocks;
 
-						// Gets the code block from the API Dictionary using the
-						// reference string.
-						List<CodeBlock> specialCodeBlocks = this.translator
-								.getApiDictionary().getCodeBlocksByName(
-										referenceValue);
+					kibConstant = (KnowItBindingResource) binding;
+					referenceValue = kibConstant.getScriptValue();
+					// Gets the code block from the API Dictionary using the
+					// reference string.
+					specialCodeBlocks = this.translator.getApiDictionary()
+							.getCodeBlocksByName(referenceValue);
 
-						if (specialCodeBlocks != null)
-							codeBlocks.addAll(specialCodeBlocks);
-					}
+					if (specialCodeBlocks != null)
+						codeBlocks.addAll(specialCodeBlocks);
 				}
 			}
 		}

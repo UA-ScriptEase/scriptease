@@ -458,6 +458,7 @@ public final class ErfFile implements GameModule {
 				}
 			}
 		}
+		
 		return filteredObjects;
 	}
 

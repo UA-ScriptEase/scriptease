@@ -81,21 +81,23 @@ public abstract class Resource implements TypedComponent {
 	}
 
 	/**
+	 * Returns the owner of the resource. Not all translators necessarily need
+	 * to implement this.
+	 * 
+	 * @return
+	 */
+	public Resource getOwner() {
+		return null;
+	}
+
+	/**
 	 * Returns the name of the owner of the Resource. This method returns an
 	 * empty string by default and so must be overridden to provide any
 	 * functionality.
-	 * 
-	 * TODO We should get the Owner Resource instead of just the name.
 	 * 
 	 * @return
 	 */
 	public String getOwnerName() {
 		return "";
-	}
-
-	// TODO Obviously get rid of this
-	public boolean isSomethingPreviouslyKnownAsAGameObjectAndNotAConversation() {
-		return !(this instanceof SimpleResource)
-				&& this.getChildren().isEmpty();
 	}
 }
