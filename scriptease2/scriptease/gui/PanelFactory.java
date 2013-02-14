@@ -735,7 +735,12 @@ public final class PanelFactory {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						newPanel.setDividerLocation(0.19);
+						// Need this code for the divider to be set at the right
+						// location for different screen resolutions.
+						final double top = newPanel.getTopComponent().getSize().height;
+						final double bottom = newPanel.getSize().height;
+						final double ratio = top / bottom;
+						newPanel.setDividerLocation(ratio);
 					}
 				});
 			}
