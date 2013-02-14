@@ -19329,7 +19329,7 @@
               <Literal>int nth = 0;</Literal>
             </Line>
             <Line>
-              <Literal>int lock = !</Literal>
+              <Literal>int lock = </Literal>
               <Scope data="argument" ref="lock and close">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
