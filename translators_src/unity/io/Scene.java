@@ -47,12 +47,33 @@ public class Scene {
 	 *            we can remove them as soon as we load the scene file.
 	 * @param location
 	 *            The scene file to read from.
+	 * @return A scene file. If the scene file could not be read, this returns
+	 *         null.
 	 * @throws IOException
 	 *             if there is a problem during reading or creating the I/O
 	 *             streams.
 	 */
-	public Scene(File location, Collection<String> seGeneratedGUIDs)
-			throws IOException {
+	public static Scene buildScene(File location,
+			Collection<String> seGeneratedGUIDs) throws IOException {
+		final Scene scene = new Scene(location);
+		if (scene.read(seGeneratedGUIDs))
+			return scene;
+		return null;
+	}
+
+	/**
+	 * Builds a new scene object and loads it into memory.
+	 * 
+	 * @param seGeneratedGUIDs
+	 *            We pass in a list of GUIDs of ScriptEase generated scripts so
+	 *            we can remove them as soon as we load the scene file.
+	 * @param location
+	 *            The scene file to read from.
+	 * @throws IOException
+	 *             if there is a problem during reading or creating the I/O
+	 *             streams.
+	 */
+	private Scene(File location) throws IOException {
 		if (!location.exists())
 			throw new FileNotFoundException("Scene file "
 					+ location.getAbsolutePath() + " went missing!");
@@ -61,8 +82,6 @@ public class Scene {
 
 		this.unityObjects = new ArrayList<UnityResource>();
 		this.location = location;
-
-		this.read(location, seGeneratedGUIDs);
 	}
 
 	/**
@@ -82,11 +101,27 @@ public class Scene {
 	 * @param seGeneratedGUIDs
 	 * @throws IOException
 	 */
-	private void read(File location, Collection<String> seGeneratedGUIDs)
+	private boolean read(Collection<String> seGeneratedGUIDs)
 			throws IOException {
 		final Iterable<Event> eventIterable;
 		final UnityResourceBuilder builder;
 		final Collection<UnityResource> objectsToRemove;
+
+		String line;
+
+		while ((line = reader.readLine()) != null) {
+			if (line.equals(UnityConstants.YAML_HEADER)) {
+				break;
+			}
+			System.err.println("Scene file has invalid line [" + line
+					+ "]. Skipping.");
+		}
+
+		if (line == null || !line.equals(UnityConstants.YAML_HEADER)) {
+			System.err
+					.println("Could not read .unity file at " + this.location);
+			return false;
+		}
 
 		eventIterable = parser.parse(reader);
 		builder = new UnityResourceBuilder(eventIterable.iterator(), this);
@@ -161,6 +196,8 @@ public class Scene {
 				mComponentList.remove(mComponentToRemove);
 			}
 		}
+
+		return true;
 	}
 
 	/**

@@ -23,6 +23,11 @@ public class UnityConstants {
 	 * The prefix for all tags. This is followed immediately by the type number.
 	 */
 	public static final String UNITY_TAG = "tag:unity3d.com,2011:";
+	
+	/**
+	 * The first line in any valid YAML file.
+	 */
+	public static final String YAML_HEADER = "%YAML 1.1";
 
 	// Types that are called by other classes should have their own static
 	// Strings.
