@@ -174,9 +174,6 @@ public class UnityScript {
 		final Map<String, PropertyValue> propertiesMap;
 		final Map<String, PropertyValue> objectMap;
 
-		monoObject = new UnityResource(this.idNumber, UnityConstants.UNITY_TAG
-				+ monoTypeNumber, this.scene);
-
 		fileIDMap = new HashMap<String, PropertyValue>();
 		mGameObjectMap = new HashMap<String, PropertyValue>();
 		mScriptMap = new HashMap<String, PropertyValue>();
@@ -205,7 +202,8 @@ public class UnityScript {
 		objectMap.put(UnityConstants.TYPE_MONOBEHAVIOUR, new PropertyValue(
 				propertiesMap));
 
-		monoObject.setProperties(objectMap);
+		monoObject = new UnityResource(this.idNumber, UnityConstants.UNITY_TAG
+				+ monoTypeNumber, this.scene, objectMap);
 
 		return monoObject;
 	}

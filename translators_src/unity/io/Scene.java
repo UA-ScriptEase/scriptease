@@ -20,6 +20,8 @@ import java.util.Map.Entry;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.events.Event;
 
+import scriptease.translator.io.model.Resource;
+
 /**
  * Management class for handling the I/O and memory contents of a .unity scene
  * file that has been saved in YAML format.
@@ -27,7 +29,7 @@ import org.yaml.snakeyaml.events.Event;
  * @author remiller
  * @author kschenk
  */
-public class Scene {
+public class Scene extends Resource {
 	// There's no point of having multiple parsers unless we were reading in
 	// scene files multi-threaded, which we aren't, so we just use one.
 	private static final Yaml parser = new Yaml();
@@ -152,48 +154,52 @@ public class Scene {
 			this.unityObjects.remove(object);
 
 			final int objectID;
-			final UnityResource ownerObject;
+			final Resource ownerObject;
 			final PropertyValue mComponentValue;
 			final List<PropertyValue> mComponentList;
 
 			objectID = object.getUniqueID();
 			ownerObject = object.getOwner();
-			mComponentValue = ownerObject.getPropertyMap().get(
-					UnityConstants.FIELD_M_COMPONENT);
-			mComponentList = mComponentValue.getList();
 
-			PropertyValue mComponentToRemove = null;
+			if (ownerObject instanceof UnityResource) {
+				mComponentValue = ((UnityResource) ownerObject)
+						.getPropertyMap().get(UnityConstants.FIELD_M_COMPONENT);
+				mComponentList = mComponentValue.getList();
 
-			for (PropertyValue value : mComponentList) {
-				if (mComponentToRemove != null)
-					break;
+				PropertyValue mComponentToRemove = null;
 
-				final Map<String, PropertyValue> valueMap;
+				for (PropertyValue value : mComponentList) {
+					if (mComponentToRemove != null)
+						break;
 
-				valueMap = value.getMap();
+					final Map<String, PropertyValue> valueMap;
 
-				for (Entry<String, PropertyValue> entry : valueMap.entrySet()) {
-					final int key = Integer.parseInt(entry.getKey());
-					if (key == UnityConstants.TYPE_LIST
-							.indexOf(UnityConstants.TYPE_MONOBEHAVIOUR)) {
+					valueMap = value.getMap();
 
-						final Map<String, PropertyValue> refMap;
-						final int fileID;
+					for (Entry<String, PropertyValue> entry : valueMap
+							.entrySet()) {
+						final int key = Integer.parseInt(entry.getKey());
+						if (key == UnityConstants.TYPE_LIST
+								.indexOf(UnityConstants.TYPE_MONOBEHAVIOUR)) {
 
-						refMap = entry.getValue().getMap();
-						fileID = Integer.parseInt(refMap.get(
-								UnityConstants.FIELD_FILEID).getString());
+							final Map<String, PropertyValue> refMap;
+							final int fileID;
 
-						if (fileID == objectID) {
-							mComponentToRemove = value;
-							break;
+							refMap = entry.getValue().getMap();
+							fileID = Integer.parseInt(refMap.get(
+									UnityConstants.FIELD_FILEID).getString());
+
+							if (fileID == objectID) {
+								mComponentToRemove = value;
+								break;
+							}
 						}
 					}
 				}
-			}
 
-			if (mComponentToRemove != null) {
-				mComponentList.remove(mComponentToRemove);
+				if (mComponentToRemove != null) {
+					mComponentList.remove(mComponentToRemove);
+				}
 			}
 		}
 
@@ -295,5 +301,55 @@ public class Scene {
 	public String toString() {
 		return "Scene <Location:" + this.location + ", Data:"
 				+ this.unityObjects.toString() + ">";
+	}
+
+	@Override
+	public Collection<String> getTypes() {
+		final Collection<String> type;
+		type = new ArrayList<String>();
+		type.add(UnityConstants.TYPE_SCENE);
+		return type;
+	}
+
+	@Override
+	public String getName() {
+		return this.location.getName();
+	}
+
+	@Override
+	public String getTag() {
+		return this.location.getPath();
+	}
+
+	@Override
+	public String getTemplateID() {
+		return this.location.getPath();
+	}
+
+	@Override
+	public String getCodeText() {
+		return this.location.getName();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Scene) {
+			return this.getTemplateID().equals(((Scene) obj).getTemplateID());
+		}
+
+		return false;
+	}
+
+	@Override
+	public List<Resource> getChildren() {
+		final List<Resource> resources = new ArrayList<Resource>();
+
+		for(Resource resource : this.unityObjects) {
+			if(resource.getOwner() == this) {
+				resources.add(resource);
+			}
+		}
+
+		return resources;
 	}
 }

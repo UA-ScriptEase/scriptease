@@ -23,7 +23,7 @@ public class UnityConstants {
 	 * The prefix for all tags. This is followed immediately by the type number.
 	 */
 	public static final String UNITY_TAG = "tag:unity3d.com,2011:";
-	
+
 	/**
 	 * The first line in any valid YAML file.
 	 */
@@ -34,12 +34,14 @@ public class UnityConstants {
 	public static final String TYPE_GAMEOBJECT = "GameObject";
 	public static final String TYPE_TRANSFORM = "Transform";
 	public static final String TYPE_MONOBEHAVIOUR = "MonoBehaviour";
+	public static final String TYPE_SCENE = "Scene";
 
 	// Fields that are called by other classes should have their own static
 	// Strings.
 	public static final String FIELD_M_COMPONENT = "m_Component";
 	public static final String FIELD_M_GAMEOBJECT = "m_GameObject";
 	public static final String FIELD_M_FATHER = "m_Father";
+	public static final Object FIELD_M_NAME = "m_Name";
 	public static final String FIELD_M_SCRIPT = "m_Script";
 
 	public static final String FIELD_FILEID = "fileID";
@@ -79,7 +81,7 @@ public class UnityConstants {
 		TYPE_LIST.set(26, "ParticleRenderer");
 		TYPE_LIST.set(27, "Texture");
 		TYPE_LIST.set(28, "Texture2D");
-		TYPE_LIST.set(29, "Scene");
+		TYPE_LIST.set(29, TYPE_SCENE);
 		TYPE_LIST.set(30, "RenderManager");
 		TYPE_LIST.set(33, "MeshFilter");
 		TYPE_LIST.set(41, "OcclusionPortal");
