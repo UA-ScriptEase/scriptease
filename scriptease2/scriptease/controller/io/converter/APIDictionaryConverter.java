@@ -100,7 +100,7 @@ public class APIDictionaryConverter implements Converter {
 			UnmarshallingContext context) {
 		final APIDictionary apiDictionary = new APIDictionary();
 
-		System.err.println("Unmarshaling APIDictionary");
+		System.out.println("Unmarshaling APIDictionary");
 
 		// name
 		apiDictionary.setName(reader.getAttribute(TAG_NAME));

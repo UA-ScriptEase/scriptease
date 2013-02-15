@@ -229,7 +229,10 @@ public final class UnityProject implements GameModule {
 		}
 
 		for (File sceneFile : sceneFiles) {
-			this.scenes.add(new Scene(sceneFile, seGeneratedGUIDs));
+			final Scene scene = Scene.buildScene(sceneFile, seGeneratedGUIDs);
+
+			if (scene != null)
+				this.scenes.add(scene);
 		}
 	}
 
