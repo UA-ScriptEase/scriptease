@@ -159,13 +159,18 @@ public final class UnityProject implements GameModule {
 
 		resources = new ArrayList<Resource>();
 
-		for (Scene scene : this.scenes) {
-			for (UnityResource resource : scene.getResources()) {
-				if (resource.getTypes().contains(type))
-					resources.add(resource);
+/*		// XXX
+		if (type.equals(UnityConstants.TYPE_GAMEOBJECT))
+			for (Scene scene : this.scenes) {
+				for (UnityResource resource : scene.getResources()) {
+					if (resource.getTypes().contains(type))
+						resources.add(resource);
+				}
 			}
-		}
+*/
 
+		if (type.equals(UnityConstants.TYPE_SCENE))
+			resources.addAll(this.scenes);
 		return resources;
 	}
 

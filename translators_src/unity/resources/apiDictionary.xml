@@ -527,6 +527,7 @@
       <Name>Scene</Name>
       <Keyword>Scene</Keyword>
       <CodeSymbol>Scene</CodeSymbol>
+      <WidgetName>S</WidgetName>
     </Type>
     <Type>
       <Name>Rigidbody</Name>

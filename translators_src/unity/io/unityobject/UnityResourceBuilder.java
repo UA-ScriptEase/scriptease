@@ -72,9 +72,8 @@ public class UnityResourceBuilder {
 				final MappingStartEvent mapEvent = (MappingStartEvent) event;
 
 				object = new UnityResource(Integer.parseInt(mapEvent
-						.getAnchor()), mapEvent.getTag(), this.scene);
-
-				object.setProperties(this.buildMap(eventIterator));
+						.getAnchor()), mapEvent.getTag(), this.scene,
+						this.buildMap(eventIterator));
 			}
 		}
 

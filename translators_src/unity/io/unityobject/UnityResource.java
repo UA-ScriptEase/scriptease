@@ -5,7 +5,6 @@ import io.UnityConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,21 +12,41 @@ import java.util.Map.Entry;
 import scriptease.translator.io.model.Resource;
 
 public class UnityResource extends Resource {
-	private final int uniqueID;
-	private final String tag;
-	private final Map<String, PropertyValue> topLevelPropertyMap;
 	private final Scene scene;
 
-	public UnityResource(int uniqueID, String tag, Scene scene) {
+	private final int uniqueID;
+	private final String name;
+	private final String tag;
+
+	private Resource owner;
+	private List<Resource> children;
+
+	private final Map<String, PropertyValue> topLevelPropertyMap;
+
+	public UnityResource(int uniqueID, String tag, Scene scene,
+			Map<String, PropertyValue> propertyMap) {
 		this.uniqueID = uniqueID;
 		this.tag = tag;
-		this.topLevelPropertyMap = new HashMap<String, PropertyValue>();
+		this.topLevelPropertyMap = propertyMap;
 		this.scene = scene;
-	}
 
-	public void setProperties(Map<String, PropertyValue> map) {
-		this.topLevelPropertyMap.clear();
-		this.topLevelPropertyMap.putAll(map);
+		final PropertyValue subMap;
+
+		subMap = this.topLevelPropertyMap.get(UnityConstants.TYPE_GAMEOBJECT);
+
+		if (subMap != null && subMap.isMap()) {
+			final PropertyValue mName;
+
+			mName = subMap.getMap().get(UnityConstants.FIELD_M_NAME);
+
+			final String mNameValueString = mName.getString();
+			if (mNameValueString != null && !mNameValueString.isEmpty())
+				this.name = mNameValueString;
+			else
+				this.name = UnityConstants.TYPE_GAMEOBJECT;
+		} else {
+			this.name = (String) this.topLevelPropertyMap.keySet().toArray()[0];
+		}
 	}
 
 	/**
@@ -86,22 +105,7 @@ public class UnityResource extends Resource {
 
 	@Override
 	public String getName() {
-		final PropertyValue subMap = this.topLevelPropertyMap.get("GameObject");
-		if (subMap != null && subMap.isMap()) {
-			final PropertyValue mName;
-
-			mName = subMap.getMap().get("m_Name");
-
-			if (mName.isString()) {
-				final String mNameValueString = mName.getString();
-				if (!mNameValueString.isEmpty())
-					return mNameValueString;
-			}
-		}
-
-		for (String key : this.topLevelPropertyMap.keySet())
-			return key;
-		return "";
+		return this.name;
 	}
 
 	/**
@@ -137,15 +141,21 @@ public class UnityResource extends Resource {
 
 	@Override
 	public List<Resource> getChildren() {
-		final List<Resource> children = new ArrayList<Resource>();
+		if (this.children == null) {
+			this.children = new ArrayList<Resource>();
 
-		for (UnityResource resource : this.scene.getResources()) {
-			final UnityResource owner = resource.getOwner();
-			if (owner != null && owner.getUniqueID() == this.getUniqueID())
-				children.add(resource);
+			for (UnityResource resource : this.scene.getResources()) {
+				// XXX
+				if (resource.getType().equals(UnityConstants.TYPE_GAMEOBJECT)) {
+					final Resource owner = resource.getOwner();
+					if (owner != null)
+						if (owner == this)
+							this.children.add(resource);
+				}
+			}
 		}
 
-		return children;
+		return this.children;
 	}
 
 	/**
@@ -219,59 +229,67 @@ public class UnityResource extends Resource {
 	 * @return
 	 */
 	@Override
-	public UnityResource getOwner() {
-		final int uniqueID;
+	public Resource getOwner() {
+		if (this.owner == null) {
+			final int uniqueID;
 
-		if (this.getType().equals(UnityConstants.TYPE_GAMEOBJECT)) {
-			// This is the ID of the Transform object.
-			final int transformTypeNumber;
-			final PropertyValue transformIDValue;
-			final String transformIDNumber;
+			if (this.getType().equals(UnityConstants.TYPE_GAMEOBJECT)) {
+				// This is the ID of the Transform object.
+				final int transformTypeNumber;
+				final PropertyValue transformIDValue;
+				final String transformIDNumber;
+				final UnityResource attachedTransform;
+				final PropertyValue fatherMap;
+				final int fatherID;
 
-			transformTypeNumber = UnityConstants.TYPE_LIST
-					.indexOf(UnityConstants.TYPE_TRANSFORM);
-			transformIDValue = this.getFirstOccuranceOfField(String
-					.valueOf(transformTypeNumber));
-			transformIDNumber = transformIDValue.getMap()
-					.get(UnityConstants.FIELD_FILEID).getString();
+				transformTypeNumber = UnityConstants.TYPE_LIST
+						.indexOf(UnityConstants.TYPE_TRANSFORM);
+				transformIDValue = this.getFirstOccuranceOfField(String
+						.valueOf(transformTypeNumber));
+				transformIDNumber = transformIDValue.getMap()
+						.get(UnityConstants.FIELD_FILEID).getString();
 
-			final UnityResource attachedTransform;
+				attachedTransform = this.scene.getObjectByUnityID(Integer
+						.parseInt(transformIDNumber));
 
-			attachedTransform = this.scene.getObjectByUnityID(Integer
-					.parseInt(transformIDNumber));
+				fatherMap = attachedTransform
+						.getFirstOccuranceOfField(UnityConstants.FIELD_M_FATHER);
 
-			final PropertyValue fatherMap = attachedTransform
-					.getFirstOccuranceOfField(UnityConstants.FIELD_M_FATHER);
+				fatherID = Integer.parseInt(fatherMap.getMap()
+						.get(UnityConstants.FIELD_FILEID).getString());
 
-			final int fatherID = Integer.parseInt(fatherMap.getMap()
-					.get(UnityConstants.FIELD_FILEID).getString());
+				if (fatherID != 0) {
+					final UnityResource fatherTransform;
+					final PropertyValue mGameObjectMapValue;
 
-			if (fatherID != 0) {
-				final UnityResource fatherTransform;
-				final PropertyValue mGameObjectMapValue;
+					fatherTransform = this.scene.getObjectByUnityID(fatherID);
 
-				fatherTransform = this.scene.getObjectByUnityID(fatherID);
+					mGameObjectMapValue = fatherTransform
+							.getFirstOccuranceOfField(UnityConstants.FIELD_M_GAMEOBJECT);
 
-				mGameObjectMapValue = fatherTransform
+					uniqueID = Integer.parseInt(mGameObjectMapValue.getMap()
+							.get(UnityConstants.FIELD_FILEID).getString());
+				} else
+					uniqueID = -1;
+			} else {
+				final PropertyValue gameObjectMapValue;
+
+				gameObjectMapValue = this
 						.getFirstOccuranceOfField(UnityConstants.FIELD_M_GAMEOBJECT);
 
-				uniqueID = Integer.parseInt(mGameObjectMapValue.getMap()
-						.get(UnityConstants.FIELD_FILEID).getString());
-			} else
-				uniqueID = -1;
-		} else {
-			final PropertyValue gameObjectMapValue;
+				if (gameObjectMapValue != null) {
+					uniqueID = Integer.parseInt(gameObjectMapValue.getMap()
+							.get(UnityConstants.FIELD_FILEID).getString());
+				} else
+					uniqueID = -1;
+			}
 
-			gameObjectMapValue = this
-					.getFirstOccuranceOfField(UnityConstants.FIELD_M_GAMEOBJECT);
-
-			if (gameObjectMapValue != null) {
-				uniqueID = Integer.parseInt(gameObjectMapValue.getMap()
-						.get(UnityConstants.FIELD_FILEID).getString());
-			} else
-				uniqueID = -1;
+			if (uniqueID != -1)
+				this.owner = this.scene.getObjectByUnityID(uniqueID);
+			else
+				this.owner = this.scene;
 		}
 
-		return this.scene.getObjectByUnityID(uniqueID);
+		return this.owner;
 	}
 }

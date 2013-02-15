@@ -3,6 +3,8 @@ package scriptease.gui.pane;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import javax.swing.JPanel;
 
 import scriptease.gui.cell.BindingWidget;
 import scriptease.gui.cell.ScriptWidgetFactory;
+import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.PatternModel;
 import scriptease.model.StoryModel;
@@ -259,7 +262,8 @@ public class ResourcePanel extends JPanel {
 	 *            The GameConstant to create a panel for
 	 * @return
 	 */
-	private JPanel createGameConstantPanel(Resource resource, int indent) {
+	private JPanel createGameConstantPanel(final Resource resource,
+			final int indent) {
 		final int STRUT_SIZE = 10 * indent;
 
 		final String resourceName;
@@ -279,6 +283,10 @@ public class ResourcePanel extends JPanel {
 		objectPanel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
 		objectPanel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 		objectPanel.setLayout(new BoxLayout(objectPanel, BoxLayout.X_AXIS));
+
+		if (resource.getChildren().size() > 0) {
+			objectPanel.add(this.createExpandChildButton(resource, indent));
+		}
 
 		if (resource.isLink()) {
 			gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
@@ -321,13 +329,44 @@ public class ResourcePanel extends JPanel {
 		objectPanel.add(gameObjectBindingWidget);
 		objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
-		for (Resource child : resource.getChildren()) {
-			final JPanel nodePanel = createGameConstantPanel(child, indent + 1);
-
-			this.panelMap.put(child, nodePanel);
-		}
-
 		return objectPanel;
+	}
+
+	private ExpansionButton createExpandChildButton(final Resource resource,
+			final int indent) {
+		final ExpansionButton button;
+
+		button = ScriptWidgetFactory.buildExpansionButton(true);
+
+		button.addActionListener(new ActionListener() {
+			private boolean collapsed = true;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				button.setCollapsed(collapsed ^= true);
+
+				for (Resource child : resource.getChildren()) {
+					if (collapsed) {
+						ResourcePanel.this.panelMap.get(child)
+								.setVisible(false);
+					} else {
+						final JPanel nodePanel;
+
+						nodePanel = ResourcePanel.this.panelMap.get(child);
+
+						if (nodePanel == null)
+							ResourcePanel.this.panelMap.put(child,
+									createGameConstantPanel(child, indent + 1));
+						else
+							nodePanel.setVisible(true);
+					}
+				}
+
+				ResourcePanel.this.redrawTree();
+			}
+		});
+
+		return button;
 	}
 
 	/**
