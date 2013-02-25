@@ -182,7 +182,7 @@ public class LibraryPanel extends JTabbedPane {
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
 		searchField = ComponentFactory.getInstance()
-				.buildJTextFieldWithTextBackground(20, "Library");
+				.buildJTextFieldWithTextBackground(20, "Library", "");
 
 		typeFilter = new TypeAction();
 

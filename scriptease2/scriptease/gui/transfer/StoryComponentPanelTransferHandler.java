@@ -184,7 +184,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 							&& this.canAcceptChildren(acceptingStoryComponent,
 									potentialChildren)) {
 
-						if (this.hoveredPanel != null)
+						if (this.hoveredPanel != null
+								&& this.hoveredPanel.getSelectionManager() != null)
 							this.hoveredPanel.getSelectionManager()
 									.updatePanelBackgrounds();
 						acceptingPanel.setBackground(Color.LIGHT_GRAY);
