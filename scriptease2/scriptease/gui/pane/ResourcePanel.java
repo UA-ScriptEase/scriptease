@@ -321,9 +321,7 @@ public class ResourcePanel extends JPanel {
 			objectPanel.add(prefixLabel);
 		}
 
-		// objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 		objectPanel.add(gameObjectBindingWidget);
-		// objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
 		return objectPanel;
 	}
@@ -337,15 +335,24 @@ public class ResourcePanel extends JPanel {
 		button.addActionListener(new ActionListener() {
 			private boolean collapsed = true;
 
+			private void setChildrenInvisible(List<Resource> children) {
+				for (Resource child : children) {
+					final JPanel panel = ResourcePanel.this.panelMap.get(child);
+					if (panel != null) {
+						ResourcePanel.this.panelMap.remove(child);
+						this.setChildrenInvisible(child.getChildren());
+					}
+				}
+			}
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				button.setCollapsed(collapsed ^= true);
+				button.setCollapsed(this.collapsed ^= true);
 
-				for (Resource child : resource.getChildren()) {
-					if (collapsed) {
-						ResourcePanel.this.panelMap.get(child)
-								.setVisible(false);
-					} else {
+				if (this.collapsed) {
+					this.setChildrenInvisible(resource.getChildren());
+				} else {
+					for (Resource child : resource.getChildren()) {
 						final JPanel nodePanel;
 
 						nodePanel = ResourcePanel.this.panelMap.get(child);
@@ -488,7 +495,9 @@ public class ResourcePanel extends JPanel {
 			this.add(constantPanel);
 
 			for (Resource child : constant.getChildren()) {
-				if (matchesFilters(child))
+				System.out.println("bild");
+				if (matchesFilters(child)
+						&& ResourcePanel.this.panelMap.containsKey(child))
 					this.addGameConstant(child);
 			}
 		}

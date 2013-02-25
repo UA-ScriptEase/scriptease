@@ -292,4 +292,10 @@ public class UnityResource extends Resource {
 
 		return this.owner;
 	}
+
+	@Override
+	public String toString() {
+		return "UnityResource [" + this.getName() + ", " + this.getType()
+				+ ", " + this.getUniqueID() + "]";
+	}
 }
