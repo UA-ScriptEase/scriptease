@@ -495,7 +495,6 @@ public class ResourcePanel extends JPanel {
 			this.add(constantPanel);
 
 			for (Resource child : constant.getChildren()) {
-				System.out.println("bild");
 				if (matchesFilters(child)
 						&& ResourcePanel.this.panelMap.containsKey(child))
 					this.addGameConstant(child);
