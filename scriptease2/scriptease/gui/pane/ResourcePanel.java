@@ -3,6 +3,7 @@ package scriptease.gui.pane;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -282,7 +283,7 @@ public class ResourcePanel extends JPanel {
 		objectPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		objectPanel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
 		objectPanel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
-		objectPanel.setLayout(new BoxLayout(objectPanel, BoxLayout.X_AXIS));
+		objectPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
 		if (resource.isLink()) {
 			gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
@@ -292,17 +293,12 @@ public class ResourcePanel extends JPanel {
 		gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(
 				resourceName, Color.WHITE));
 
-		gameObjectBindingWidget.setBorder(BorderFactory.createEmptyBorder(
-				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
-				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
-				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE,
-				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE));
-
 		objectPanel.add(Box.createHorizontalStrut(STRUT_SIZE));
 
-		if (resource.getChildren().size() > 0) {
+		if (resource.getChildren().size() > 0)
 			objectPanel.add(this.createExpandChildButton(resource, indent));
-		}
+		else
+			objectPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 		if (resourceOwnerName != null && !resourceOwnerName.isEmpty()) {
 			final Color LINE_COLOR_1 = Color.red;
@@ -325,9 +321,9 @@ public class ResourcePanel extends JPanel {
 			objectPanel.add(prefixLabel);
 		}
 
-		objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+		// objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 		objectPanel.add(gameObjectBindingWidget);
-		objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+		// objectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
 		return objectPanel;
 	}
@@ -337,7 +333,6 @@ public class ResourcePanel extends JPanel {
 		final ExpansionButton button;
 
 		button = ScriptWidgetFactory.buildExpansionButton(true);
-		button.setOpaque(false);
 
 		button.addActionListener(new ActionListener() {
 			private boolean collapsed = true;

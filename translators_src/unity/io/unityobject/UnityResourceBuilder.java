@@ -103,6 +103,7 @@ public class UnityResourceBuilder {
 	 * @param eventIterator
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	private Map<String, PropertyValue> buildMap(Iterator<Event> eventIterator) {
 		final Map<String, PropertyValue> map = new LinkedHashMap<String, PropertyValue>();
 
