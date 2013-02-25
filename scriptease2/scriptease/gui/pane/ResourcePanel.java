@@ -284,10 +284,6 @@ public class ResourcePanel extends JPanel {
 		objectPanel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 		objectPanel.setLayout(new BoxLayout(objectPanel, BoxLayout.X_AXIS));
 
-		if (resource.getChildren().size() > 0) {
-			objectPanel.add(this.createExpandChildButton(resource, indent));
-		}
-
 		if (resource.isLink()) {
 			gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
 					gameObjectBindingWidget.getBackground(), 1.24));
@@ -303,6 +299,10 @@ public class ResourcePanel extends JPanel {
 				ScriptWidgetFactory.TOTAL_ROW_BORDER_SIZE));
 
 		objectPanel.add(Box.createHorizontalStrut(STRUT_SIZE));
+
+		if (resource.getChildren().size() > 0) {
+			objectPanel.add(this.createExpandChildButton(resource, indent));
+		}
 
 		if (resourceOwnerName != null && !resourceOwnerName.isEmpty()) {
 			final Color LINE_COLOR_1 = Color.red;
@@ -337,6 +337,7 @@ public class ResourcePanel extends JPanel {
 		final ExpansionButton button;
 
 		button = ScriptWidgetFactory.buildExpansionButton(true);
+		button.setOpaque(false);
 
 		button.addActionListener(new ActionListener() {
 			private boolean collapsed = true;
