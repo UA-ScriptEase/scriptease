@@ -12,6 +12,10 @@ import scriptease.model.StoryComponent;
  */
 public final class Note extends StoryComponent {
 
+	public Note() {
+		this("");
+	}
+
 	public Note(String string) {
 		super();
 		this.setDisplayText(string);

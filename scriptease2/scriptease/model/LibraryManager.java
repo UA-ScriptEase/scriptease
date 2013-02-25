@@ -141,7 +141,7 @@ public class LibraryManager implements LibraryObserver {
 				LibraryManager.SCRIPTEASE_LIBRARY);
 
 		conditional = new AskIt();
-		note = new Note("Note");
+		note = new Note();
 
 		scriptEaseLibrary.add(conditional);
 		scriptEaseLibrary.add(note);

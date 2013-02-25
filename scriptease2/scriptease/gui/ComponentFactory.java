@@ -153,7 +153,8 @@ public final class ComponentFactory {
 	 * @return
 	 */
 	@SuppressWarnings("serial")
-	public JTextField buildJTextFieldWithTextBackground(int size, String label) {
+	public JTextField buildJTextFieldWithTextBackground(int size, String label,
+			final String initialText) {
 		final JTextField field;
 		final BufferedImage background;
 		final JLabel backgroundLabel;
@@ -163,9 +164,14 @@ public final class ComponentFactory {
 
 		background = GUIOp.getScreenshot(backgroundLabel);
 
-		field = new JTextField(size) {
-			private boolean drawLabel = true;
+		field = new JTextField(initialText, size) {
+			private boolean drawLabel = false;
 			{
+				if (initialText.isEmpty()) {
+					drawLabel = true;
+					repaint();
+				}
+
 				this.addFocusListener(new FocusListener() {
 					@Override
 					public void focusGained(FocusEvent e) {
