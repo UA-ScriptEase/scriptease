@@ -508,7 +508,7 @@ public final class PanelFactory {
 		tree = new ResourcePanel(PatternModelManager.getInstance()
 				.getActiveModel());
 		searchField = ComponentFactory.getInstance()
-				.buildJTextFieldWithTextBackground(20, "Game Objects");
+				.buildJTextFieldWithTextBackground(20, "Game Objects", "");
 
 		typeFilter = new TypeAction();
 

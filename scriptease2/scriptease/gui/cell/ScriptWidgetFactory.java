@@ -583,13 +583,15 @@ public class ScriptWidgetFactory {
 		final JTextField nameEditor;
 		final StoryComponentObserver observer;
 		final Runnable commitText;
+		final String displayText;
+
+		displayText = component.getDisplayText();
 
 		if (component instanceof Note) {
 			nameEditor = ComponentFactory.getInstance()
-					.buildJTextFieldWithTextBackground(0,
-							component.getDisplayText());
+					.buildJTextFieldWithTextBackground(0, "Note", displayText);
 		} else
-			nameEditor = new JTextField(component.getDisplayText());
+			nameEditor = new JTextField(displayText);
 
 		observer = new StoryComponentObserver() {
 			@Override
@@ -607,11 +609,11 @@ public class ScriptWidgetFactory {
 			public void run() {
 				final String newValue = nameEditor.getText();
 				if (PatternModelManager.getInstance().hasActiveModel()) {
-					final String oldValue = component.getDisplayText();
-					if (!oldValue.equals(newValue)) {
+					if (!component.getDisplayText().equals(newValue)) {
 						if (!UndoManager.getInstance().hasOpenUndoableAction()) {
 							UndoManager.getInstance().startUndoableAction(
-									"Change " + oldValue + " to " + newValue);
+									"Change " + component.getDisplayText()
+											+ " to " + newValue);
 							component.setDisplayText(newValue);
 							UndoManager.getInstance().endUndoableAction();
 						}
