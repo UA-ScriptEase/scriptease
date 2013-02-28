@@ -477,4 +477,9 @@ public class Context {
 		unimplemented("getSlotConditional");
 		return null;
 	}
+
+	public Iterator<KnowIt> getParametersWithSlot() {
+		unimplemented("getParameteresWithImplicits");
+		return null;
+	}
 }

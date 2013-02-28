@@ -90,6 +90,6 @@ public interface CodeGenerationKeywordConstants {
 		STORYPOINTS,
 		SCRIPTITS,
 		SLOTPARAMETERS,
-		VARIABLES
+		VARIABLES, PARAMETERSWITHSLOT
 	}
 }

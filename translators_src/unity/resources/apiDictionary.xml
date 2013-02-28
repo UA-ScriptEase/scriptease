@@ -6,24 +6,24 @@
       <CodeSymbol>CapsuleCollider</CodeSymbol>
     </Type>
     <Type>
-      <Name>CGProgram</Name>
-      <Keyword>CGProgram</Keyword>
-      <CodeSymbol>CGProgram</CodeSymbol>
-    </Type>
-    <Type>
       <Name>MeshCollider</Name>
       <Keyword>MeshCollider</Keyword>
       <CodeSymbol>MeshCollider</CodeSymbol>
     </Type>
     <Type>
-      <Name>DelayedCallManager</Name>
-      <Keyword>DelayedCallManager</Keyword>
-      <CodeSymbol>DelayedCallManager</CodeSymbol>
+      <Name>CGProgram</Name>
+      <Keyword>CGProgram</Keyword>
+      <CodeSymbol>CGProgram</CodeSymbol>
     </Type>
     <Type>
       <Name>AudioImporter</Name>
       <Keyword>AudioImporter</Keyword>
       <CodeSymbol>AudioImporter</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>DelayedCallManager</Name>
+      <Keyword>DelayedCallManager</Keyword>
+      <CodeSymbol>DelayedCallManager</CodeSymbol>
     </Type>
     <Type>
       <Name>NavMesh</Name>
@@ -36,9 +36,9 @@
       <CodeSymbol>EditorSettings</CodeSymbol>
     </Type>
     <Type>
-      <Name>RenderManager</Name>
-      <Keyword>RenderManager</Keyword>
-      <CodeSymbol>RenderManager</CodeSymbol>
+      <Name>PVRImporter</Name>
+      <Keyword>PVRImporter</Keyword>
+      <CodeSymbol>PVRImporter</CodeSymbol>
     </Type>
     <Type>
       <Name>AudioClip</Name>
@@ -46,9 +46,9 @@
       <CodeSymbol>AudioClip</CodeSymbol>
     </Type>
     <Type>
-      <Name>PVRImporter</Name>
-      <Keyword>PVRImporter</Keyword>
-      <CodeSymbol>PVRImporter</CodeSymbol>
+      <Name>RenderManager</Name>
+      <Keyword>RenderManager</Keyword>
+      <CodeSymbol>RenderManager</CodeSymbol>
     </Type>
     <Type>
       <Name>SkinnedCloth</Name>
@@ -138,14 +138,14 @@
       <CodeSymbol>TextMesh</CodeSymbol>
     </Type>
     <Type>
-      <Name>Projector</Name>
-      <Keyword>Projector</Keyword>
-      <CodeSymbol>Projector</CodeSymbol>
-    </Type>
-    <Type>
       <Name>Cubemap</Name>
       <Keyword>Cubemap</Keyword>
       <CodeSymbol>Cubemap</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>Projector</Name>
+      <Keyword>Projector</Keyword>
+      <CodeSymbol>Projector</CodeSymbol>
     </Type>
     <Type>
       <Name>MonoBehaviour</Name>
@@ -173,14 +173,14 @@
       <CodeSymbol>InspectorExpandedState</CodeSymbol>
     </Type>
     <Type>
-      <Name>NetworkView</Name>
-      <Keyword>NetworkView</Keyword>
-      <CodeSymbol>NetworkView</CodeSymbol>
-    </Type>
-    <Type>
       <Name>ModelImporter</Name>
       <Keyword>ModelImporter</Keyword>
       <CodeSymbol>ModelImporter</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>NetworkView</Name>
+      <Keyword>NetworkView</Keyword>
+      <CodeSymbol>NetworkView</CodeSymbol>
     </Type>
     <Type>
       <Name>AudioHighPassFilter</Name>
@@ -203,19 +203,19 @@
       <CodeSymbol>LightmapSettings</CodeSymbol>
     </Type>
     <Type>
-      <Name>LensFlare</Name>
-      <Keyword>LensFlare</Keyword>
-      <CodeSymbol>LensFlare</CodeSymbol>
-    </Type>
-    <Type>
       <Name>AudioListener</Name>
       <Keyword>AudioListener</Keyword>
       <CodeSymbol>AudioListener</CodeSymbol>
     </Type>
     <Type>
-      <Name>CharacterJoint</Name>
-      <Keyword>CharacterJoint</Keyword>
-      <CodeSymbol>CharacterJoint</CodeSymbol>
+      <Name>LensFlare</Name>
+      <Keyword>LensFlare</Keyword>
+      <CodeSymbol>LensFlare</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>LODGroup</Name>
+      <Keyword>LODGroup</Keyword>
+      <CodeSymbol>LODGroup</CodeSymbol>
     </Type>
     <Type>
       <Name>NamedObject</Name>
@@ -223,9 +223,9 @@
       <CodeSymbol>NamedObject</CodeSymbol>
     </Type>
     <Type>
-      <Name>LODGroup</Name>
-      <Keyword>LODGroup</Keyword>
-      <CodeSymbol>LODGroup</CodeSymbol>
+      <Name>CharacterJoint</Name>
+      <Keyword>CharacterJoint</Keyword>
+      <CodeSymbol>CharacterJoint</CodeSymbol>
     </Type>
     <Type>
       <Name>ClothRenderer</Name>
@@ -238,14 +238,14 @@
       <CodeSymbol>HaloLayer</CodeSymbol>
     </Type>
     <Type>
-      <Name>EditorBuildSettings</Name>
-      <Keyword>EditorBuildSettings</Keyword>
-      <CodeSymbol>EditorBuildSettings</CodeSymbol>
-    </Type>
-    <Type>
       <Name>WebCamTexture</Name>
       <Keyword>WebCamTexture</Keyword>
       <CodeSymbol>WebCamTexture</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>EditorBuildSettings</Name>
+      <Keyword>EditorBuildSettings</Keyword>
+      <CodeSymbol>EditorBuildSettings</CodeSymbol>
     </Type>
     <Type>
       <Name>HaloManager</Name>
@@ -424,6 +424,11 @@
       <CodeSymbol>TrailRenderer</CodeSymbol>
     </Type>
     <Type>
+      <Name>Collision</Name>
+      <Keyword>Collision</Keyword>
+      <CodeSymbol>Collision</CodeSymbol>
+    </Type>
+    <Type>
       <Name>Halo</Name>
       <Keyword>Halo</Keyword>
       <CodeSymbol>Halo</CodeSymbol>
@@ -489,14 +494,14 @@
       <CodeSymbol>MonoAssemblyImporter</CodeSymbol>
     </Type>
     <Type>
-      <Name>Light</Name>
-      <Keyword>Light</Keyword>
-      <CodeSymbol>Light</CodeSymbol>
-    </Type>
-    <Type>
       <Name>TagManager</Name>
       <Keyword>TagManager</Keyword>
       <CodeSymbol>TagManager</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>Light</Name>
+      <Keyword>Light</Keyword>
+      <CodeSymbol>Light</CodeSymbol>
     </Type>
     <Type>
       <Name>Component</Name>
@@ -545,24 +550,24 @@
       <CodeSymbol>Flare</CodeSymbol>
     </Type>
     <Type>
-      <Name>AudioDistortionFilter</Name>
-      <Keyword>AudioDistortionFilter</Keyword>
-      <CodeSymbol>AudioDistortionFilter</CodeSymbol>
-    </Type>
-    <Type>
       <Name>AssetServerCache</Name>
       <Keyword>AssetServerCache</Keyword>
       <CodeSymbol>AssetServerCache</CodeSymbol>
     </Type>
     <Type>
-      <Name>AudioBehaviour</Name>
-      <Keyword>AudioBehaviour</Keyword>
-      <CodeSymbol>AudioBehaviour</CodeSymbol>
+      <Name>AudioDistortionFilter</Name>
+      <Keyword>AudioDistortionFilter</Keyword>
+      <CodeSymbol>AudioDistortionFilter</CodeSymbol>
     </Type>
     <Type>
       <Name>LightProbeCloud</Name>
       <Keyword>LightProbeCloud</Keyword>
       <CodeSymbol>LightProbeCloud</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>AudioBehaviour</Name>
+      <Keyword>AudioBehaviour</Keyword>
+      <CodeSymbol>AudioBehaviour</CodeSymbol>
     </Type>
     <Type>
       <Name>GUIText</Name>
@@ -573,6 +578,19 @@
       <Name>MovieImporter</Name>
       <Keyword>MovieImporter</Keyword>
       <CodeSymbol>MovieImporter</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>Text</Name>
+      <Keyword>String</Keyword>
+      <CodeSymbol>String</CodeSymbol>
+      <Format>
+        <Literal>&quot;</Literal>
+        <Fragment data="value"/>
+        <Literal>&quot;</Literal>
+      </Format>
+      <LegalValues>[^\&quot;]*</LegalValues>
+      <GUI>JTEXTFIELD</GUI>
+      <WidgetName>Tx</WidgetName>
     </Type>
     <Type>
       <Name>RenderTexture</Name>
@@ -590,14 +608,14 @@
       <CodeSymbol>QualitySettings</CodeSymbol>
     </Type>
     <Type>
-      <Name>AudioSource</Name>
-      <Keyword>AudioSource</Keyword>
-      <CodeSymbol>AudioSource</CodeSymbol>
-    </Type>
-    <Type>
       <Name>AssetDatabase</Name>
       <Keyword>AssetDatabase</Keyword>
       <CodeSymbol>AssetDatabase</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>AudioSource</Name>
+      <Keyword>AudioSource</Keyword>
+      <CodeSymbol>AudioSource</CodeSymbol>
     </Type>
     <Type>
       <Name>Joint</Name>
@@ -639,14 +657,19 @@
       <CodeSymbol>Material</CodeSymbol>
     </Type>
     <Type>
-      <Name>TerrainCollider</Name>
-      <Keyword>TerrainCollider</Keyword>
-      <CodeSymbol>TerrainCollider</CodeSymbol>
+      <Name>ControllerColliderHit</Name>
+      <Keyword>ControllerColliderHit</Keyword>
+      <CodeSymbol>ControllerColliderHit</CodeSymbol>
     </Type>
     <Type>
       <Name>ConfigurableJoint</Name>
       <Keyword>ConfigurableJoint</Keyword>
       <CodeSymbol>ConfigurableJoint</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>TerrainCollider</Name>
+      <Keyword>TerrainCollider</Keyword>
+      <CodeSymbol>TerrainCollider</CodeSymbol>
     </Type>
     <Type>
       <Name>ProceduralMaterial</Name>
@@ -669,14 +692,9 @@
       <CodeSymbol>LevelGameManager</CodeSymbol>
     </Type>
     <Type>
-      <Name>Transform</Name>
-      <Keyword>Transform</Keyword>
-      <CodeSymbol>Transform</CodeSymbol>
-    </Type>
-    <Type>
-      <Name>GameManager</Name>
-      <Keyword>GameManager</Keyword>
-      <CodeSymbol>GameManager</CodeSymbol>
+      <Name>SubstanceArchive</Name>
+      <Keyword>SubstanceArchive</Keyword>
+      <CodeSymbol>SubstanceArchive</CodeSymbol>
     </Type>
     <Type>
       <Name>Mesh</Name>
@@ -684,19 +702,24 @@
       <CodeSymbol>Mesh</CodeSymbol>
     </Type>
     <Type>
-      <Name>SubstanceArchive</Name>
-      <Keyword>SubstanceArchive</Keyword>
-      <CodeSymbol>SubstanceArchive</CodeSymbol>
+      <Name>GameManager</Name>
+      <Keyword>GameManager</Keyword>
+      <CodeSymbol>GameManager</CodeSymbol>
     </Type>
     <Type>
-      <Name>PhysicMaterial</Name>
-      <Keyword>PhysicMaterial</Keyword>
-      <CodeSymbol>PhysicMaterial</CodeSymbol>
+      <Name>Transform</Name>
+      <Keyword>Transform</Keyword>
+      <CodeSymbol>Transform</CodeSymbol>
     </Type>
     <Type>
       <Name>AnnotationManager</Name>
       <Keyword>AnnotationManager</Keyword>
       <CodeSymbol>AnnotationManager</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>PhysicMaterial</Name>
+      <Keyword>PhysicMaterial</Keyword>
+      <CodeSymbol>PhysicMaterial</CodeSymbol>
     </Type>
     <Type>
       <Name>Mouse Button</Name>
@@ -706,14 +729,9 @@
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
-      <Name>CharacterController</Name>
-      <Keyword>CharacterController</Keyword>
-      <CodeSymbol>CharacterController</CodeSymbol>
-    </Type>
-    <Type>
-      <Name>TextureImporter</Name>
-      <Keyword>TextureImporter</Keyword>
-      <CodeSymbol>TextureImporter</CodeSymbol>
+      <Name>MonoImporter</Name>
+      <Keyword>MonoImporter</Keyword>
+      <CodeSymbol>MonoImporter</CodeSymbol>
     </Type>
     <Type>
       <Name>DefaultImporter</Name>
@@ -721,9 +739,14 @@
       <CodeSymbol>DefaultImporter</CodeSymbol>
     </Type>
     <Type>
-      <Name>MonoImporter</Name>
-      <Keyword>MonoImporter</Keyword>
-      <CodeSymbol>MonoImporter</CodeSymbol>
+      <Name>TextureImporter</Name>
+      <Keyword>TextureImporter</Keyword>
+      <CodeSymbol>TextureImporter</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>CharacterController</Name>
+      <Keyword>CharacterController</Keyword>
+      <CodeSymbol>CharacterController</CodeSymbol>
     </Type>
     <Type>
       <Name>Question</Name>
@@ -742,9 +765,9 @@
       <CodeSymbol>ParticleSystem</CodeSymbol>
     </Type>
     <Type>
-      <Name>SphereCollider</Name>
-      <Keyword>SphereCollider</Keyword>
-      <CodeSymbol>SphereCollider</CodeSymbol>
+      <Name>AudioFilter</Name>
+      <Keyword>AudioFilter</Keyword>
+      <CodeSymbol>AudioFilter</CodeSymbol>
     </Type>
     <Type>
       <Name>ParticleRenderer</Name>
@@ -752,9 +775,9 @@
       <CodeSymbol>ParticleRenderer</CodeSymbol>
     </Type>
     <Type>
-      <Name>AudioFilter</Name>
-      <Keyword>AudioFilter</Keyword>
-      <CodeSymbol>AudioFilter</CodeSymbol>
+      <Name>SphereCollider</Name>
+      <Keyword>SphereCollider</Keyword>
+      <CodeSymbol>SphereCollider</CodeSymbol>
     </Type>
     <Type>
       <Name>ShaderImporter</Name>
@@ -772,14 +795,14 @@
       <CodeSymbol>MeshRenderer</CodeSymbol>
     </Type>
     <Type>
-      <Name>GUILayer</Name>
-      <Keyword>GUILayer</Keyword>
-      <CodeSymbol>GUILayer</CodeSymbol>
-    </Type>
-    <Type>
       <Name>ParticleAnimator</Name>
       <Keyword>ParticleAnimator</Keyword>
       <CodeSymbol>ParticleAnimator</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>GUILayer</Name>
+      <Keyword>GUILayer</Keyword>
+      <CodeSymbol>GUILayer</CodeSymbol>
     </Type>
     <Type>
       <Name>NavMeshLayers</Name>
@@ -807,14 +830,14 @@
       <CodeSymbol>ParticleSystemRenderer</CodeSymbol>
     </Type>
     <Type>
-      <Name>AudioManager</Name>
-      <Keyword>AudioManager</Keyword>
-      <CodeSymbol>AudioManager</CodeSymbol>
-    </Type>
-    <Type>
       <Name>LightProbeGroup</Name>
       <Keyword>LightProbeGroup</Keyword>
       <CodeSymbol>LightProbeGroup</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>AudioManager</Name>
+      <Keyword>AudioManager</Keyword>
+      <CodeSymbol>AudioManager</CodeSymbol>
     </Type>
     <Type>
       <Name>FlareLayer</Name>
@@ -825,11 +848,6 @@
       <Name>AudioReverbZone</Name>
       <Keyword>AudioReverbZone</Keyword>
       <CodeSymbol>AudioReverbZone</CodeSymbol>
-    </Type>
-    <Type>
-    	<Name>Collision</Name>
-    	<Keyword>Collision</Keyword>
-    	<CodeSymbol>Collision</CodeSymbol>
     </Type>
   </Types>
   <Slots defaultFormat="SECause">
@@ -851,8 +869,54 @@
       <Name>OnCollisionExit</Name>
       <Keyword>OnCollisionExit</Keyword>
       <Condition>OnCollisionExit</Condition>
-      <Parameters/>
-      <Implicits/>
+      <Parameters>
+        <KnowIt>
+          <Name>collision</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>Collision</Type>
+          </Types>
+        </KnowIt>
+      </Parameters>
+      <Implicits>
+        <KnowIt>
+          <Name>Colliding Object</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>GameObject</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Colliding Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Colliding Object</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Id>108</Id>
+                  <Types>
+                    <Type>GameObject</Type>
+                  </Types>
+                  <Code>
+                    <Line>
+                      <Literal>return </Literal>
+                      <Scope data="slotparameter" ref="collision">
+                        <Fragment data="name"/>
+                      </Scope>
+                      <Literal>.gameObject;</Literal>
+                    </Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+      </Implicits>
     </Slot>
     <Slot format="UnityCause">
       <Name>OnConnectedToServer</Name>
@@ -865,8 +929,54 @@
       <Name>OnTriggerEnter</Name>
       <Keyword>OnTriggerEnter</Keyword>
       <Condition>OnTriggerEnter</Condition>
-      <Parameters/>
-      <Implicits/>
+      <Parameters>
+        <KnowIt>
+          <Name>other</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>Collider</Type>
+          </Types>
+        </KnowIt>
+      </Parameters>
+      <Implicits>
+        <KnowIt>
+          <Name>Triggering Object</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>GameObject</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Triggering Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Triggering Object</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Id>110</Id>
+                  <Types>
+                    <Type>GameObject</Type>
+                  </Types>
+                  <Code>
+                    <Line>
+                      <Literal>return </Literal>
+                      <Scope data="slotparameter" ref="other">
+                        <Fragment data="name"/>
+                      </Scope>
+                      <Literal>.gameObject;</Literal>
+                    </Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+      </Implicits>
     </Slot>
     <Slot format="UnityCause">
       <Name>OnAnimatorIK</Name>
@@ -1040,16 +1150,9 @@
       </Implicits>
     </Slot>
     <Slot format="UnityCause">
-      <Name>OnTriggerStay</Name>
-      <Keyword>OnTriggerStay</Keyword>
-      <Condition>OnTriggerStay</Condition>
-      <Parameters/>
-      <Implicits/>
-    </Slot>
-    <Slot format="UnityCause">
-      <Name>FixedUpdate</Name>
-      <Keyword>FixedUpdate</Keyword>
-      <Condition>FixedUpdate</Condition>
+      <Name>OnParticleCollision</Name>
+      <Keyword>OnParticleCollision</Keyword>
+      <Condition>OnParticleCollision</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -1115,28 +1218,81 @@
       </Implicits>
     </Slot>
     <Slot format="UnityCause">
-      <Name>OnParticleCollision</Name>
-      <Keyword>OnParticleCollision</Keyword>
-      <Condition>OnParticleCollision</Condition>
+      <Name>FixedUpdate</Name>
+      <Keyword>FixedUpdate</Keyword>
+      <Condition>FixedUpdate</Condition>
       <Parameters/>
       <Implicits/>
+    </Slot>
+    <Slot format="UnityCause">
+      <Name>OnTriggerStay</Name>
+      <Keyword>OnTriggerStay</Keyword>
+      <Condition>OnTriggerStay</Condition>
+      <Parameters>
+        <KnowIt>
+          <Name>other</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>Collider</Type>
+          </Types>
+        </KnowIt>
+      </Parameters>
+      <Implicits>
+        <KnowIt>
+          <Name>Triggering Object</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>GameObject</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Triggering Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Triggering Object</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Id>112</Id>
+                  <Types>
+                    <Type>GameObject</Type>
+                  </Types>
+                  <Code>
+                    <Line>
+                      <Literal>return </Literal>
+                      <Scope data="slotparameter" ref="other">
+                        <Fragment data="name"/>
+                      </Scope>
+                      <Literal>.gameObject;</Literal>
+                    </Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+      </Implicits>
     </Slot>
     <Slot format="UnityCause">
       <Name>OnCollisionEnter</Name>
       <Keyword>OnCollisionEnter</Keyword>
       <Condition>OnCollisionEnter</Condition>
       <Parameters>
-      	<KnowIt>
-         <Name>collision</Name>
-         <Visible>true</Visible>
-         <Labels/>
-         <Types>
- 			<Type>Collision</Type>
-         </Types>
-         </KnowIt>
+        <KnowIt>
+          <Name>collision</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>Collision</Type>
+          </Types>
+        </KnowIt>
       </Parameters>
       <Implicits>
-       <KnowIt>
+        <KnowIt>
           <Name>Colliding Object</Name>
           <Visible>true</Visible>
           <Labels/>
@@ -1160,10 +1316,10 @@
                   </Types>
                   <Code>
                     <Line>
-                      <Literal>return </Literal>    
+                      <Literal>return </Literal>
                       <Scope data="slotparameter" ref="collision">
-           	   				<Fragment data="name"/>
-           			 </Scope>
+                        <Fragment data="name"/>
+                      </Scope>
                       <Literal>.gameObject;</Literal>
                     </Line>
                   </Code>
@@ -1173,6 +1329,13 @@
           </Binding>
         </KnowIt>
       </Implicits>
+    </Slot>
+    <Slot format="UnityCause">
+      <Name>OnPreCull</Name>
+      <Keyword>OnPreCull</Keyword>
+      <Condition>OnPreCull</Condition>
+      <Parameters/>
+      <Implicits/>
     </Slot>
     <Slot format="UnityCause">
       <Name>OnMouseUp</Name>
@@ -1236,13 +1399,6 @@
       </Implicits>
     </Slot>
     <Slot format="UnityCause">
-      <Name>OnPreCull</Name>
-      <Keyword>OnPreCull</Keyword>
-      <Condition>OnPreCull</Condition>
-      <Parameters/>
-      <Implicits/>
-    </Slot>
-    <Slot format="UnityCause">
       <Name>Start</Name>
       <Keyword>Start</Keyword>
       <Condition>Start</Condition>
@@ -1257,16 +1413,16 @@
       <Implicits/>
     </Slot>
     <Slot format="UnityCause">
-      <Name>OnDestroy</Name>
-      <Keyword>OnDestroy</Keyword>
-      <Condition>OnDestroy</Condition>
+      <Name>Update</Name>
+      <Keyword>Update</Keyword>
+      <Condition>Update</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
     <Slot format="UnityCause">
-      <Name>Update</Name>
-      <Keyword>Update</Keyword>
-      <Condition>Update</Condition>
+      <Name>OnDestroy</Name>
+      <Keyword>OnDestroy</Keyword>
+      <Condition>OnDestroy</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -1288,8 +1444,54 @@
       <Name>OnTriggerExit</Name>
       <Keyword>OnTriggerExit</Keyword>
       <Condition>OnTriggerExit</Condition>
-      <Parameters/>
-      <Implicits/>
+      <Parameters>
+        <KnowIt>
+          <Name>other</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>Collider</Type>
+          </Types>
+        </KnowIt>
+      </Parameters>
+      <Implicits>
+        <KnowIt>
+          <Name>Triggering Object</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>GameObject</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Triggering Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Triggering Object</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Id>111</Id>
+                  <Types>
+                    <Type>GameObject</Type>
+                  </Types>
+                  <Code>
+                    <Line>
+                      <Literal>return </Literal>
+                      <Scope data="slotparameter" ref="other">
+                        <Fragment data="name"/>
+                      </Scope>
+                      <Literal>.gameObject;</Literal>
+                    </Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+      </Implicits>
     </Slot>
     <Slot format="UnityCause">
       <Name>OnRenderObject</Name>
@@ -1386,8 +1588,54 @@
       <Name>OnControllerColliderHit</Name>
       <Keyword>OnControllerColliderHit</Keyword>
       <Condition>OnControllerColliderHit</Condition>
-      <Parameters/>
-      <Implicits/>
+      <Parameters>
+        <KnowIt>
+          <Name>hit</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>ControllerColliderHit</Type>
+          </Types>
+        </KnowIt>
+      </Parameters>
+      <Implicits>
+        <KnowIt>
+          <Name>Rigid Object</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>GameObject</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Rigid Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Rigid Object</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Id>106</Id>
+                  <Types>
+                    <Type>GameObject</Type>
+                  </Types>
+                  <Code>
+                    <Line>
+                      <Literal>return </Literal>
+                      <Scope data="slotparameter" ref="hit">
+                        <Fragment data="name"/>
+                      </Scope>
+                      <Literal>.gameObject;</Literal>
+                    </Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+      </Implicits>
     </Slot>
     <Slot format="UnityCause">
       <Name>OnPlayerDisconnected</Name>
@@ -1453,9 +1701,9 @@
       <Implicits/>
     </Slot>
     <Slot format="UnityCause">
-      <Name>Reset</Name>
-      <Keyword>Reset</Keyword>
-      <Condition>Reset</Condition>
+      <Name>OnApplicationFocus</Name>
+      <Keyword>OnApplicationFocus</Keyword>
+      <Condition>OnApplicationFocus</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -1463,13 +1711,59 @@
       <Name>OnCollisionStay</Name>
       <Keyword>OnCollisionStay</Keyword>
       <Condition>OnCollisionStay</Condition>
-      <Parameters/>
-      <Implicits/>
+      <Parameters>
+        <KnowIt>
+          <Name>collision</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>Collision</Type>
+          </Types>
+        </KnowIt>
+      </Parameters>
+      <Implicits>
+        <KnowIt>
+          <Name>Colliding Object</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>GameObject</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Colliding Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Colliding Object</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Id>109</Id>
+                  <Types>
+                    <Type>GameObject</Type>
+                  </Types>
+                  <Code>
+                    <Line>
+                      <Literal>return </Literal>
+                      <Scope data="slotparameter" ref="collision">
+                        <Fragment data="name"/>
+                      </Scope>
+                      <Literal>.gameObject;</Literal>
+                    </Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+      </Implicits>
     </Slot>
     <Slot format="UnityCause">
-      <Name>OnApplicationFocus</Name>
-      <Keyword>OnApplicationFocus</Keyword>
-      <Condition>OnApplicationFocus</Condition>
+      <Name>Reset</Name>
+      <Keyword>Reset</Keyword>
+      <Condition>Reset</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -2609,7 +2903,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;subject&gt;'s GUI is updated</Name>
+      <Name>When &lt;subject&gt;&apos;s GUI is updated</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -2628,7 +2922,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt;'s GUI is updated</Name>
+          <Name>When &lt;subject&gt;&apos;s GUI is updated</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -4148,29 +4442,135 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
+    <ScriptIt>
+      <Name>Write &lt;Text&gt; to the Unity Console</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label></Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Write &lt;Text&gt; to the Unity Console</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>107</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Text</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>String</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>Debug.Log(</Literal>
+              <Scope data="argument" ref="Text">
+                <Fragment data="name"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>if button labelled &lt;Text&gt; on the screen at position &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is clicked</Name>
+      <Visible>false</Visible>
+      <Labels>
+        <Label></Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>if button labelled &lt;Text&gt; on the screen at position &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is clicked</Name>
+          <Visible>false</Visible>
+          <Labels/>
+          <Id>113</Id>
+          <Types>
+            <Type>question</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Text</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>String</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>y</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>width</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>height</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return GUI.Button(Rect(</Literal>
+              <Scope data="argument" ref="x">
+                <Fragment data="name"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="argument" ref="y">
+                <Fragment data="name"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="argument" ref="width">
+                <Fragment data="name"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="argument" ref="height">
+                <Fragment data="name"/>
+              </Scope>
+              <Literal>), </Literal>
+              <Scope data="argument" ref="Text">
+                <Fragment data="name"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
   </Effects>
   <DescribeIts>
-    <DescribeIt>
-      <Name>Mouse Button Pressed</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
     <DescribeIt>
       <Name>Clone</Name>
       <Types>
@@ -4183,9 +4583,27 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Mouse Button Pressed</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -4204,6 +4622,24 @@
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Button Clicked</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
