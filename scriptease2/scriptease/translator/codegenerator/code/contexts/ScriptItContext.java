@@ -174,7 +174,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 		return ((ScriptIt) this.component).getInactiveBlock();
 	}
 
-	private Collection<KnowIt> getSlotParameterCollection() {
+	protected Collection<KnowIt> getSlotParameterCollection() {
 		final EventSlotManager manager;
 		final String currentSlot;
 
