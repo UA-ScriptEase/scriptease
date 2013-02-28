@@ -730,7 +730,7 @@ public final class ErfFile implements GameModule {
 		journalResources = new ArrayList<NWNResource>();
 
 		for (NWNResource resource : ErfFile.this.resources) {
-			if (resource.getGFF() instanceof GeneratedJournalGFF)
+			if (resource.isGFF() && resource.getGFF() instanceof GeneratedJournalGFF)
 				journalResources.add(resource);
 		}
 		ErfFile.this.resources.removeAll(journalResources);
