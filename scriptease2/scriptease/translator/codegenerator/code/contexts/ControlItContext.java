@@ -1,5 +1,7 @@
 package scriptease.translator.codegenerator.code.contexts;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import scriptease.model.atomic.KnowIt;
@@ -40,6 +42,16 @@ public class ControlItContext extends ScriptItContext {
 	@Override
 	public Iterator<KnowIt> getParameters() {
 		return ((ControlIt) this.component).getRequiredParameters().iterator();
+	}
+	
+	@Override
+	public Iterator<KnowIt> getParametersWithSlot() {
+		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
+
+		parameters.addAll(this.getSlotParameterCollection());
+		parameters.addAll(((ControlIt) this.component).getRequiredParameters());
+
+		return parameters.iterator();
 	}
 
 	@Override
