@@ -218,7 +218,10 @@ public class GenericFileFormat {
 
 		index = new Integer(syncStruct.getString("Index"));
 
-		return dialogueStructList.get(index);
+		if (index >= 0 && index < dialogueStructList.size())
+			return dialogueStructList.get(index);
+		else
+			return null;
 	}
 
 	/**
@@ -493,6 +496,7 @@ public class GenericFileFormat {
 	private GameConstant getDialogLine(List<String> indexes) {
 		final GffStruct syncStruct;
 		final boolean isPlayerLine;
+		final GffStruct struct;
 
 		syncStruct = this.getDialogueLineStruct(indexes);
 
@@ -504,8 +508,13 @@ public class GenericFileFormat {
 		 * number of indexes must be referencing a player line, odd is NPC.
 		 */
 		isPlayerLine = indexes.size() % 2 == 0;
+		struct = this.resolveSyncStruct(syncStruct, isPlayerLine);
 
-		return new NWNDialogueLine(this, syncStruct, isPlayerLine, indexes);
+		if (struct != null)
+			return new NWNDialogueLine(this, syncStruct, isPlayerLine, indexes,
+					struct.getString("Text"));
+		else
+			return null;
 	}
 
 	private GffStruct getDialogueLineStruct(List<String> indexes) {
@@ -539,7 +548,8 @@ public class GenericFileFormat {
 			children = this.resolveSyncStruct(syncStruct, isPlayerLine)
 					.getFieldByLabel(childListLabel).getListData();
 
-			syncStruct = children.get(index);
+			if (index >= 0 && index < children.size())
+				syncStruct = children.get(index);
 		}
 		return syncStruct;
 	}
