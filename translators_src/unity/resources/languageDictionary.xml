@@ -262,7 +262,7 @@
 			<Literal>function </Literal>
 			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			<Literal>(</Literal>
-			<Series data="parameters" unique="true" separator=", ">
+			<Series data="parametersWithSlot" unique="true" separator=", ">
 				<!-- Parameters are just the type and the name -->
 				<FormatRef ref="variableWithType" />
 			</Series>
@@ -276,7 +276,7 @@
 		<Format id="functionHeader">
 			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			<Literal>(</Literal>
-			<Series data="parameters" unique="true" separator=", ">
+			<Series data="parametersWithSlot" unique="true" separator=", ">
 				<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			</Series>
 			<Literal>)</Literal>

@@ -136,6 +136,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 				.getCodeBlocksForLocation(this.locationInfo)) {
 			parameters.addAll(codeBlock.getParameters());
 		}
+
 		return parameters.iterator();
 	}
 
@@ -146,6 +147,16 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	@Override
 	public KnowIt getParameter(String displayName) {
 		return ((ScriptIt) this.component).getParameter(displayName);
+	}
+
+	@Override
+	public Iterator<KnowIt> getParametersWithSlot() {
+		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
+
+		parameters.addAll(this.getSlotParameterCollection());
+		parameters.addAll(((ScriptIt) this.component).getParameters());
+
+		return parameters.iterator();
 	}
 
 	@Override

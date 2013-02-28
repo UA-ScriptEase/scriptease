@@ -112,8 +112,7 @@ public class CodeBlockContext extends Context {
 		return knowItGetter.getObjects().iterator();
 	}
 
-	@Override
-	public Iterator<KnowIt> getParameters() {
+	private Collection<KnowIt> getParameterCollection() {
 		final ScriptIt owner = this.codeBlock.getOwner();
 		final Collection<KnowIt> parameters;
 
@@ -124,6 +123,25 @@ public class CodeBlockContext extends Context {
 		} else {
 			parameters.addAll(this.codeBlock.getParameters());
 		}
+
+		return parameters;
+	}
+
+	@Override
+	public Iterator<KnowIt> getParameters() {
+		return this.getParameterCollection().iterator();
+	}
+
+	@Override
+	public Iterator<KnowIt> getParametersWithSlot() {
+		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
+		final EventSlotManager manager;
+
+		manager = TranslatorManager.getInstance().getActiveAPIDictionary()
+				.getEventSlotManager();
+		parameters.addAll(manager.getParameters(this.codeBlock.getCause()
+				.getMainCodeBlock().getSlot()));
+		parameters.addAll(this.getParameterCollection());
 
 		return parameters.iterator();
 	}
