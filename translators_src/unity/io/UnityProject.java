@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import scriptease.controller.CodeBlockMapper;
+import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.translator.codegenerator.ScriptInfo;
@@ -228,6 +229,24 @@ public final class UnityProject implements GameModule {
 			if (scene != null)
 				this.scenes.add(scene);
 		}
+
+		if (this.scenes.size() <= 0)
+			WindowFactory
+					.getInstance()
+					.showInformationDialog(
+							"No Scene Files",
+							"<html>No Scene files were loaded. Either none exist in "
+									+ "the directory, or they were not saved as "
+									+ "a text file.<br><br>"
+									+ "To save a scene file as text:"
+									+ "<ol><li>Close the project in ScriptEase II.</li>"
+									+ "<li>Load the scene in a pro version of Unity.</li>"
+									+ "<li>Under the <b>Edit Menu</b>, open the <b>Project Settings</b> submenu.</li>"
+									+ "<li>Choose <b>Editor</b>. The settings will open up in the <b>Inspector</b>.</li>"
+									+ "<li>Change the <b>Version Control</b> mode to <b>Meta Files</b>.</li>"
+									+ "<li>Change the <b>Asset Serialization</b> mode to <b>Force Text</b>.</li>"
+									+ "<li>Reload the project in ScriptEase.</li>"
+									+ "<li>Celebrate with laser tag.</li></ol></html>");
 	}
 
 	@Override
