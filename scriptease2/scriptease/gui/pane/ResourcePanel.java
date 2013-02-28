@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -50,7 +49,19 @@ public class ResourcePanel extends JPanel {
 	private String filterText;
 	private final List<String> filterTypes;
 
-	private Map<Resource, JPanel> panelMap;
+	private final Map<Resource, JPanel> panelMap;
+
+	private static final Comparator<Resource> nameSorter = buildNameSorter();
+
+	private static Comparator<Resource> buildNameSorter() {
+		return new Comparator<Resource>() {
+			@Override
+			public int compare(Resource o1, Resource o2) {
+				return String.CASE_INSENSITIVE_ORDER.compare(o1.getName(),
+						o2.getName());
+			}
+		};
+	}
 
 	/**
 	 * Creates a new {@link ResourcePanel} with the passed in model.
@@ -175,13 +186,7 @@ public class ResourcePanel extends JPanel {
 
 			constantList = constantMap.get(type);
 
-			Collections.sort(constantList, new Comparator<Resource>() {
-				@Override
-				public int compare(Resource o1, Resource o2) {
-					return String.CASE_INSENSITIVE_ORDER.compare(o1.getName(),
-							o2.getName());
-				}
-			});
+			Collections.sort(constantList, nameSorter);
 
 			final GameTypeManager typeManager;
 			final String typeName;
@@ -494,7 +499,13 @@ public class ResourcePanel extends JPanel {
 
 			this.add(constantPanel);
 
-			for (Resource child : constant.getChildren()) {
+			final List<Resource> constantList;
+
+			constantList = new ArrayList<Resource>(constant.getChildren());
+
+			Collections.sort(constantList, nameSorter);
+
+			for (Resource child : constantList) {
 				if (matchesFilters(child)
 						&& ResourcePanel.this.panelMap.containsKey(child))
 					this.addGameConstant(child);

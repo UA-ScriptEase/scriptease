@@ -296,6 +296,11 @@ public class Context {
 		return new ArrayList<KnowIt>().iterator();
 	}
 
+	public Iterator<KnowIt> getSlotParameters() {
+		unimplemented("getSlotParameters");
+		return new ArrayList<KnowIt>().iterator();
+	}
+
 	public KnowIt getParameter(String keyword) {
 		unimplemented("getParameter (" + keyword + ")");
 		return null;
@@ -344,6 +349,11 @@ public class Context {
 
 	public ScriptIt getScriptIt(String keyword) {
 		unimplemented("getScriptIt: " + keyword);
+		return null;
+	}
+
+	public KnowIt getSlotParameter(String keyword) {
+		unimplemented("getKnowIt: " + keyword);
 		return null;
 	}
 

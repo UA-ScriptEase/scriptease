@@ -33,6 +33,7 @@ public interface CodeGenerationKeywordConstants {
 		INACTIVECHILD,
 		MAINCODEBLOCK,
 		OWNER,
+		SLOTPARAMETER,
 		SCRIPTIT,
 		START,
 		SUBJECT
@@ -88,6 +89,7 @@ public interface CodeGenerationKeywordConstants {
 		PARENTNODES,
 		STORYPOINTS,
 		SCRIPTITS,
+		SLOTPARAMETERS,
 		VARIABLES
 	}
 }

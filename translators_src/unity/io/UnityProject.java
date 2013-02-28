@@ -75,9 +75,9 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public Resource getModule() {
-		// TODO We need to return something that represents the module.
+		// TODO We need to return something that represents the module... Maybe.
 		// Modules are used mostly for "Automatics", so if we don't use those,
-		// we may not have to worry about this so much.
+		// we may not have to worry about this at all.
 		return null;
 	}
 
@@ -158,17 +158,6 @@ public final class UnityProject implements GameModule {
 		final List<Resource> resources;
 
 		resources = new ArrayList<Resource>();
-
-/*		// XXX
-		if (type.equals(UnityConstants.TYPE_GAMEOBJECT))
-			for (Scene scene : this.scenes) {
-				for (UnityResource resource : scene.getResources()) {
-					if (resource.getTypes().contains(type))
-						resources.add(resource);
-				}
-			}
-*/
-
 		if (type.equals(UnityConstants.TYPE_SCENE))
 			resources.addAll(this.scenes);
 		return resources;

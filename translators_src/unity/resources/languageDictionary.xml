@@ -533,7 +533,12 @@
 				<Line>
 					<Literal>function </Literal>
 					<Fragment data="slotConditional" />
-					<Literal>() {</Literal>
+					<Literal>(</Literal>
+						<Series data="slotParameters" unique="true" separator=", ">
+						<!-- Parameters are just the type and the name -->
+							<FormatRef ref="variableWithType" />
+						</Series>	
+					<Literal>) {</Literal>
 				</Line>
 				<Indent>
 					<Line>

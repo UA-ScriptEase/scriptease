@@ -6,24 +6,24 @@
       <CodeSymbol>CapsuleCollider</CodeSymbol>
     </Type>
     <Type>
-      <Name>MeshCollider</Name>
-      <Keyword>MeshCollider</Keyword>
-      <CodeSymbol>MeshCollider</CodeSymbol>
-    </Type>
-    <Type>
       <Name>CGProgram</Name>
       <Keyword>CGProgram</Keyword>
       <CodeSymbol>CGProgram</CodeSymbol>
     </Type>
     <Type>
-      <Name>AudioImporter</Name>
-      <Keyword>AudioImporter</Keyword>
-      <CodeSymbol>AudioImporter</CodeSymbol>
+      <Name>MeshCollider</Name>
+      <Keyword>MeshCollider</Keyword>
+      <CodeSymbol>MeshCollider</CodeSymbol>
     </Type>
     <Type>
       <Name>DelayedCallManager</Name>
       <Keyword>DelayedCallManager</Keyword>
       <CodeSymbol>DelayedCallManager</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>AudioImporter</Name>
+      <Keyword>AudioImporter</Keyword>
+      <CodeSymbol>AudioImporter</CodeSymbol>
     </Type>
     <Type>
       <Name>NavMesh</Name>
@@ -36,9 +36,9 @@
       <CodeSymbol>EditorSettings</CodeSymbol>
     </Type>
     <Type>
-      <Name>PVRImporter</Name>
-      <Keyword>PVRImporter</Keyword>
-      <CodeSymbol>PVRImporter</CodeSymbol>
+      <Name>RenderManager</Name>
+      <Keyword>RenderManager</Keyword>
+      <CodeSymbol>RenderManager</CodeSymbol>
     </Type>
     <Type>
       <Name>AudioClip</Name>
@@ -46,9 +46,9 @@
       <CodeSymbol>AudioClip</CodeSymbol>
     </Type>
     <Type>
-      <Name>RenderManager</Name>
-      <Keyword>RenderManager</Keyword>
-      <CodeSymbol>RenderManager</CodeSymbol>
+      <Name>PVRImporter</Name>
+      <Keyword>PVRImporter</Keyword>
+      <CodeSymbol>PVRImporter</CodeSymbol>
     </Type>
     <Type>
       <Name>SkinnedCloth</Name>
@@ -138,14 +138,14 @@
       <CodeSymbol>TextMesh</CodeSymbol>
     </Type>
     <Type>
-      <Name>Cubemap</Name>
-      <Keyword>Cubemap</Keyword>
-      <CodeSymbol>Cubemap</CodeSymbol>
-    </Type>
-    <Type>
       <Name>Projector</Name>
       <Keyword>Projector</Keyword>
       <CodeSymbol>Projector</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>Cubemap</Name>
+      <Keyword>Cubemap</Keyword>
+      <CodeSymbol>Cubemap</CodeSymbol>
     </Type>
     <Type>
       <Name>MonoBehaviour</Name>
@@ -173,14 +173,14 @@
       <CodeSymbol>InspectorExpandedState</CodeSymbol>
     </Type>
     <Type>
-      <Name>ModelImporter</Name>
-      <Keyword>ModelImporter</Keyword>
-      <CodeSymbol>ModelImporter</CodeSymbol>
-    </Type>
-    <Type>
       <Name>NetworkView</Name>
       <Keyword>NetworkView</Keyword>
       <CodeSymbol>NetworkView</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>ModelImporter</Name>
+      <Keyword>ModelImporter</Keyword>
+      <CodeSymbol>ModelImporter</CodeSymbol>
     </Type>
     <Type>
       <Name>AudioHighPassFilter</Name>
@@ -203,19 +203,19 @@
       <CodeSymbol>LightmapSettings</CodeSymbol>
     </Type>
     <Type>
-      <Name>AudioListener</Name>
-      <Keyword>AudioListener</Keyword>
-      <CodeSymbol>AudioListener</CodeSymbol>
-    </Type>
-    <Type>
       <Name>LensFlare</Name>
       <Keyword>LensFlare</Keyword>
       <CodeSymbol>LensFlare</CodeSymbol>
     </Type>
     <Type>
-      <Name>LODGroup</Name>
-      <Keyword>LODGroup</Keyword>
-      <CodeSymbol>LODGroup</CodeSymbol>
+      <Name>AudioListener</Name>
+      <Keyword>AudioListener</Keyword>
+      <CodeSymbol>AudioListener</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>CharacterJoint</Name>
+      <Keyword>CharacterJoint</Keyword>
+      <CodeSymbol>CharacterJoint</CodeSymbol>
     </Type>
     <Type>
       <Name>NamedObject</Name>
@@ -223,9 +223,9 @@
       <CodeSymbol>NamedObject</CodeSymbol>
     </Type>
     <Type>
-      <Name>CharacterJoint</Name>
-      <Keyword>CharacterJoint</Keyword>
-      <CodeSymbol>CharacterJoint</CodeSymbol>
+      <Name>LODGroup</Name>
+      <Keyword>LODGroup</Keyword>
+      <CodeSymbol>LODGroup</CodeSymbol>
     </Type>
     <Type>
       <Name>ClothRenderer</Name>
@@ -238,14 +238,14 @@
       <CodeSymbol>HaloLayer</CodeSymbol>
     </Type>
     <Type>
-      <Name>WebCamTexture</Name>
-      <Keyword>WebCamTexture</Keyword>
-      <CodeSymbol>WebCamTexture</CodeSymbol>
-    </Type>
-    <Type>
       <Name>EditorBuildSettings</Name>
       <Keyword>EditorBuildSettings</Keyword>
       <CodeSymbol>EditorBuildSettings</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>WebCamTexture</Name>
+      <Keyword>WebCamTexture</Keyword>
+      <CodeSymbol>WebCamTexture</CodeSymbol>
     </Type>
     <Type>
       <Name>HaloManager</Name>
@@ -489,14 +489,14 @@
       <CodeSymbol>MonoAssemblyImporter</CodeSymbol>
     </Type>
     <Type>
-      <Name>TagManager</Name>
-      <Keyword>TagManager</Keyword>
-      <CodeSymbol>TagManager</CodeSymbol>
-    </Type>
-    <Type>
       <Name>Light</Name>
       <Keyword>Light</Keyword>
       <CodeSymbol>Light</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>TagManager</Name>
+      <Keyword>TagManager</Keyword>
+      <CodeSymbol>TagManager</CodeSymbol>
     </Type>
     <Type>
       <Name>Component</Name>
@@ -545,24 +545,24 @@
       <CodeSymbol>Flare</CodeSymbol>
     </Type>
     <Type>
-      <Name>AssetServerCache</Name>
-      <Keyword>AssetServerCache</Keyword>
-      <CodeSymbol>AssetServerCache</CodeSymbol>
-    </Type>
-    <Type>
       <Name>AudioDistortionFilter</Name>
       <Keyword>AudioDistortionFilter</Keyword>
       <CodeSymbol>AudioDistortionFilter</CodeSymbol>
     </Type>
     <Type>
-      <Name>LightProbeCloud</Name>
-      <Keyword>LightProbeCloud</Keyword>
-      <CodeSymbol>LightProbeCloud</CodeSymbol>
+      <Name>AssetServerCache</Name>
+      <Keyword>AssetServerCache</Keyword>
+      <CodeSymbol>AssetServerCache</CodeSymbol>
     </Type>
     <Type>
       <Name>AudioBehaviour</Name>
       <Keyword>AudioBehaviour</Keyword>
       <CodeSymbol>AudioBehaviour</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>LightProbeCloud</Name>
+      <Keyword>LightProbeCloud</Keyword>
+      <CodeSymbol>LightProbeCloud</CodeSymbol>
     </Type>
     <Type>
       <Name>GUIText</Name>
@@ -590,14 +590,14 @@
       <CodeSymbol>QualitySettings</CodeSymbol>
     </Type>
     <Type>
-      <Name>AssetDatabase</Name>
-      <Keyword>AssetDatabase</Keyword>
-      <CodeSymbol>AssetDatabase</CodeSymbol>
-    </Type>
-    <Type>
       <Name>AudioSource</Name>
       <Keyword>AudioSource</Keyword>
       <CodeSymbol>AudioSource</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>AssetDatabase</Name>
+      <Keyword>AssetDatabase</Keyword>
+      <CodeSymbol>AssetDatabase</CodeSymbol>
     </Type>
     <Type>
       <Name>Joint</Name>
@@ -639,14 +639,14 @@
       <CodeSymbol>Material</CodeSymbol>
     </Type>
     <Type>
-      <Name>ConfigurableJoint</Name>
-      <Keyword>ConfigurableJoint</Keyword>
-      <CodeSymbol>ConfigurableJoint</CodeSymbol>
-    </Type>
-    <Type>
       <Name>TerrainCollider</Name>
       <Keyword>TerrainCollider</Keyword>
       <CodeSymbol>TerrainCollider</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>ConfigurableJoint</Name>
+      <Keyword>ConfigurableJoint</Keyword>
+      <CodeSymbol>ConfigurableJoint</CodeSymbol>
     </Type>
     <Type>
       <Name>ProceduralMaterial</Name>
@@ -669,14 +669,9 @@
       <CodeSymbol>LevelGameManager</CodeSymbol>
     </Type>
     <Type>
-      <Name>SubstanceArchive</Name>
-      <Keyword>SubstanceArchive</Keyword>
-      <CodeSymbol>SubstanceArchive</CodeSymbol>
-    </Type>
-    <Type>
-      <Name>Mesh</Name>
-      <Keyword>Mesh</Keyword>
-      <CodeSymbol>Mesh</CodeSymbol>
+      <Name>Transform</Name>
+      <Keyword>Transform</Keyword>
+      <CodeSymbol>Transform</CodeSymbol>
     </Type>
     <Type>
       <Name>GameManager</Name>
@@ -684,19 +679,24 @@
       <CodeSymbol>GameManager</CodeSymbol>
     </Type>
     <Type>
-      <Name>Transform</Name>
-      <Keyword>Transform</Keyword>
-      <CodeSymbol>Transform</CodeSymbol>
+      <Name>Mesh</Name>
+      <Keyword>Mesh</Keyword>
+      <CodeSymbol>Mesh</CodeSymbol>
     </Type>
     <Type>
-      <Name>AnnotationManager</Name>
-      <Keyword>AnnotationManager</Keyword>
-      <CodeSymbol>AnnotationManager</CodeSymbol>
+      <Name>SubstanceArchive</Name>
+      <Keyword>SubstanceArchive</Keyword>
+      <CodeSymbol>SubstanceArchive</CodeSymbol>
     </Type>
     <Type>
       <Name>PhysicMaterial</Name>
       <Keyword>PhysicMaterial</Keyword>
       <CodeSymbol>PhysicMaterial</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>AnnotationManager</Name>
+      <Keyword>AnnotationManager</Keyword>
+      <CodeSymbol>AnnotationManager</CodeSymbol>
     </Type>
     <Type>
       <Name>Mouse Button</Name>
@@ -706,14 +706,9 @@
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
-      <Name>MonoImporter</Name>
-      <Keyword>MonoImporter</Keyword>
-      <CodeSymbol>MonoImporter</CodeSymbol>
-    </Type>
-    <Type>
-      <Name>DefaultImporter</Name>
-      <Keyword>DefaultImporter</Keyword>
-      <CodeSymbol>DefaultImporter</CodeSymbol>
+      <Name>CharacterController</Name>
+      <Keyword>CharacterController</Keyword>
+      <CodeSymbol>CharacterController</CodeSymbol>
     </Type>
     <Type>
       <Name>TextureImporter</Name>
@@ -721,9 +716,14 @@
       <CodeSymbol>TextureImporter</CodeSymbol>
     </Type>
     <Type>
-      <Name>CharacterController</Name>
-      <Keyword>CharacterController</Keyword>
-      <CodeSymbol>CharacterController</CodeSymbol>
+      <Name>DefaultImporter</Name>
+      <Keyword>DefaultImporter</Keyword>
+      <CodeSymbol>DefaultImporter</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>MonoImporter</Name>
+      <Keyword>MonoImporter</Keyword>
+      <CodeSymbol>MonoImporter</CodeSymbol>
     </Type>
     <Type>
       <Name>Question</Name>
@@ -742,9 +742,9 @@
       <CodeSymbol>ParticleSystem</CodeSymbol>
     </Type>
     <Type>
-      <Name>AudioFilter</Name>
-      <Keyword>AudioFilter</Keyword>
-      <CodeSymbol>AudioFilter</CodeSymbol>
+      <Name>SphereCollider</Name>
+      <Keyword>SphereCollider</Keyword>
+      <CodeSymbol>SphereCollider</CodeSymbol>
     </Type>
     <Type>
       <Name>ParticleRenderer</Name>
@@ -752,9 +752,9 @@
       <CodeSymbol>ParticleRenderer</CodeSymbol>
     </Type>
     <Type>
-      <Name>SphereCollider</Name>
-      <Keyword>SphereCollider</Keyword>
-      <CodeSymbol>SphereCollider</CodeSymbol>
+      <Name>AudioFilter</Name>
+      <Keyword>AudioFilter</Keyword>
+      <CodeSymbol>AudioFilter</CodeSymbol>
     </Type>
     <Type>
       <Name>ShaderImporter</Name>
@@ -772,14 +772,14 @@
       <CodeSymbol>MeshRenderer</CodeSymbol>
     </Type>
     <Type>
-      <Name>ParticleAnimator</Name>
-      <Keyword>ParticleAnimator</Keyword>
-      <CodeSymbol>ParticleAnimator</CodeSymbol>
-    </Type>
-    <Type>
       <Name>GUILayer</Name>
       <Keyword>GUILayer</Keyword>
       <CodeSymbol>GUILayer</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>ParticleAnimator</Name>
+      <Keyword>ParticleAnimator</Keyword>
+      <CodeSymbol>ParticleAnimator</CodeSymbol>
     </Type>
     <Type>
       <Name>NavMeshLayers</Name>
@@ -807,14 +807,14 @@
       <CodeSymbol>ParticleSystemRenderer</CodeSymbol>
     </Type>
     <Type>
-      <Name>LightProbeGroup</Name>
-      <Keyword>LightProbeGroup</Keyword>
-      <CodeSymbol>LightProbeGroup</CodeSymbol>
-    </Type>
-    <Type>
       <Name>AudioManager</Name>
       <Keyword>AudioManager</Keyword>
       <CodeSymbol>AudioManager</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>LightProbeGroup</Name>
+      <Keyword>LightProbeGroup</Keyword>
+      <CodeSymbol>LightProbeGroup</CodeSymbol>
     </Type>
     <Type>
       <Name>FlareLayer</Name>
@@ -825,6 +825,11 @@
       <Name>AudioReverbZone</Name>
       <Keyword>AudioReverbZone</Keyword>
       <CodeSymbol>AudioReverbZone</CodeSymbol>
+    </Type>
+    <Type>
+    	<Name>Collision</Name>
+    	<Keyword>Collision</Keyword>
+    	<CodeSymbol>Collision</CodeSymbol>
     </Type>
   </Types>
   <Slots defaultFormat="SECause">
@@ -1035,9 +1040,16 @@
       </Implicits>
     </Slot>
     <Slot format="UnityCause">
-      <Name>OnParticleCollision</Name>
-      <Keyword>OnParticleCollision</Keyword>
-      <Condition>OnParticleCollision</Condition>
+      <Name>OnTriggerStay</Name>
+      <Keyword>OnTriggerStay</Keyword>
+      <Condition>OnTriggerStay</Condition>
+      <Parameters/>
+      <Implicits/>
+    </Slot>
+    <Slot format="UnityCause">
+      <Name>FixedUpdate</Name>
+      <Keyword>FixedUpdate</Keyword>
+      <Condition>FixedUpdate</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -1103,16 +1115,9 @@
       </Implicits>
     </Slot>
     <Slot format="UnityCause">
-      <Name>FixedUpdate</Name>
-      <Keyword>FixedUpdate</Keyword>
-      <Condition>FixedUpdate</Condition>
-      <Parameters/>
-      <Implicits/>
-    </Slot>
-    <Slot format="UnityCause">
-      <Name>OnTriggerStay</Name>
-      <Keyword>OnTriggerStay</Keyword>
-      <Condition>OnTriggerStay</Condition>
+      <Name>OnParticleCollision</Name>
+      <Keyword>OnParticleCollision</Keyword>
+      <Condition>OnParticleCollision</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -1120,15 +1125,54 @@
       <Name>OnCollisionEnter</Name>
       <Keyword>OnCollisionEnter</Keyword>
       <Condition>OnCollisionEnter</Condition>
-      <Parameters/>
-      <Implicits/>
-    </Slot>
-    <Slot format="UnityCause">
-      <Name>OnPreCull</Name>
-      <Keyword>OnPreCull</Keyword>
-      <Condition>OnPreCull</Condition>
-      <Parameters/>
-      <Implicits/>
+      <Parameters>
+      	<KnowIt>
+         <Name>collision</Name>
+         <Visible>true</Visible>
+         <Labels/>
+         <Types>
+ 			<Type>Collision</Type>
+         </Types>
+         </KnowIt>
+      </Parameters>
+      <Implicits>
+       <KnowIt>
+          <Name>Colliding Object</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>GameObject</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Colliding Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Colliding Object</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Id>105</Id>
+                  <Types>
+                    <Type>GameObject</Type>
+                  </Types>
+                  <Code>
+                    <Line>
+                      <Literal>return </Literal>    
+                      <Scope data="slotparameter" ref="collision">
+           	   				<Fragment data="name"/>
+           			 </Scope>
+                      <Literal>.gameObject;</Literal>
+                    </Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+      </Implicits>
     </Slot>
     <Slot format="UnityCause">
       <Name>OnMouseUp</Name>
@@ -1192,6 +1236,13 @@
       </Implicits>
     </Slot>
     <Slot format="UnityCause">
+      <Name>OnPreCull</Name>
+      <Keyword>OnPreCull</Keyword>
+      <Condition>OnPreCull</Condition>
+      <Parameters/>
+      <Implicits/>
+    </Slot>
+    <Slot format="UnityCause">
       <Name>Start</Name>
       <Keyword>Start</Keyword>
       <Condition>Start</Condition>
@@ -1206,16 +1257,16 @@
       <Implicits/>
     </Slot>
     <Slot format="UnityCause">
-      <Name>Update</Name>
-      <Keyword>Update</Keyword>
-      <Condition>Update</Condition>
+      <Name>OnDestroy</Name>
+      <Keyword>OnDestroy</Keyword>
+      <Condition>OnDestroy</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
     <Slot format="UnityCause">
-      <Name>OnDestroy</Name>
-      <Keyword>OnDestroy</Keyword>
-      <Condition>OnDestroy</Condition>
+      <Name>Update</Name>
+      <Keyword>Update</Keyword>
+      <Condition>Update</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -1402,9 +1453,9 @@
       <Implicits/>
     </Slot>
     <Slot format="UnityCause">
-      <Name>OnApplicationFocus</Name>
-      <Keyword>OnApplicationFocus</Keyword>
-      <Condition>OnApplicationFocus</Condition>
+      <Name>Reset</Name>
+      <Keyword>Reset</Keyword>
+      <Condition>Reset</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -1416,9 +1467,9 @@
       <Implicits/>
     </Slot>
     <Slot format="UnityCause">
-      <Name>Reset</Name>
-      <Keyword>Reset</Keyword>
-      <Condition>Reset</Condition>
+      <Name>OnApplicationFocus</Name>
+      <Keyword>OnApplicationFocus</Keyword>
+      <Condition>OnApplicationFocus</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -1606,7 +1657,7 @@
     </ScriptIt>
     <ScriptIt>
       <Name>OnAnimatorIKs on &lt;subject&gt;</Name>
-      <Visible>true</Visible>
+      <Visible>false</Visible>
       <Labels/>
       <Children>
         <StoryItemSequence>
@@ -1651,7 +1702,7 @@
     </ScriptIt>
     <ScriptIt>
       <Name>OnAnimatorMoves on &lt;subject&gt;</Name>
-      <Visible>true</Visible>
+      <Visible>false</Visible>
       <Labels/>
       <Children>
         <StoryItemSequence>
@@ -1831,7 +1882,7 @@
     </ScriptIt>
     <ScriptIt>
       <Name>OnAudioFilterRead on &lt;subject&gt;</Name>
-      <Visible>true</Visible>
+      <Visible>false</Visible>
       <Labels/>
       <Children>
         <StoryItemSequence>
@@ -1967,7 +2018,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;Game Object&gt; collides with &lt;subject&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
+      <Name>When &lt;subject&gt; collides with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -1986,7 +2037,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;Game Object&gt; collides with &lt;subject&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
+          <Name>When &lt;subject&gt; collides with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -2012,7 +2063,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>When &lt;Game Object&gt; stops colliding with &lt;subject&gt; with &lt;Velocity&gt; at &lt;Contact Points</Name>
+      <Name>When &lt;subject&gt; stops colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -2031,7 +2082,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;Game Object&gt; stops colliding with &lt;subject&gt; with &lt;Velocity&gt; at &lt;Contact Points</Name>
+          <Name>When &lt;subject&gt; stops colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -2057,7 +2108,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>While &lt;Object&gt; is colliding with &lt;subject&gt; with &lt;Velocity&gt; at &lt;Contact Points</Name>
+      <Name>While &lt;subject&gt; is colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -2076,7 +2127,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>While &lt;Object&gt; is colliding with &lt;subject&gt; with &lt;Velocity&gt; at &lt;Contact Points</Name>
+          <Name>While &lt;subject&gt; is colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -2147,7 +2198,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>OnControllerColliderHit on &lt;subject&gt;</Name>
+      <Name>When &lt;subject&gt; collides with &lt;Rigid Object&gt; while moving</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -2166,7 +2217,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>OnControllerColliderHit on &lt;subject&gt;</Name>
+          <Name>When &lt;subject&gt; collides with &lt;Rigid Object&gt; while moving</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -2329,9 +2380,11 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>OnDrawGizmos on &lt;subject&gt;</Name>
+      <Name>OnDrawGizmos on &lt;subject&gt; ... This is apparently used with waypoints. Check it out.</Name>
       <Visible>true</Visible>
-      <Labels/>
+      <Labels>
+        <Label>Research</Label>
+      </Labels>
       <Children>
         <StoryItemSequence>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
@@ -2348,7 +2401,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>OnDrawGizmos on &lt;subject&gt;</Name>
+          <Name>OnDrawGizmos on &lt;subject&gt; ... This is apparently used with waypoints. Check it out.</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -2374,9 +2427,11 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>OnDrawGizmosSelected on &lt;subject&gt;</Name>
+      <Name>OnDrawGizmosSelected on &lt;subject&gt; See OnDrawGizmos</Name>
       <Visible>true</Visible>
-      <Labels/>
+      <Labels>
+        <Label>Research</Label>
+      </Labels>
       <Children>
         <StoryItemSequence>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
@@ -2393,7 +2448,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>OnDrawGizmosSelected on &lt;subject&gt;</Name>
+          <Name>OnDrawGizmosSelected on &lt;subject&gt; See OnDrawGizmos</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -2554,7 +2609,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>OnGUI on &lt;subject&gt;</Name>
+      <Name>When &lt;subject&gt;'s GUI is updated</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -2573,7 +2628,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>OnGUI on &lt;subject&gt;</Name>
+          <Name>When &lt;subject&gt;'s GUI is updated</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -2690,7 +2745,7 @@
     </ScriptIt>
     <ScriptIt>
       <Name>When &lt;Master Server Event&gt; occurs on &lt;subject&gt;&apos;s MasterServer</Name>
-      <Visible>true</Visible>
+      <Visible>false</Visible>
       <Labels/>
       <Children>
         <StoryItemSequence>
@@ -3050,7 +3105,7 @@
     </ScriptIt>
     <ScriptIt>
       <Name>OnNetworkInstantiate on &lt;subject&gt;</Name>
-      <Visible>true</Visible>
+      <Visible>false</Visible>
       <Labels/>
       <Children>
         <StoryItemSequence>
@@ -3455,7 +3510,7 @@
     </ScriptIt>
     <ScriptIt>
       <Name>OnSerializeNetworkView on &lt;subject&gt;</Name>
-      <Visible>true</Visible>
+      <Visible>false</Visible>
       <Labels/>
       <Children>
         <StoryItemSequence>
@@ -3500,7 +3555,7 @@
     </ScriptIt>
     <ScriptIt>
       <Name>OnServerInitialized on &lt;subject&gt;</Name>
-      <Visible>true</Visible>
+      <Visible>false</Visible>
       <Labels/>
       <Children>
         <StoryItemSequence>
@@ -3544,7 +3599,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>OnTriggerEnter on &lt;subject&gt;</Name>
+      <Name>When &lt;subject&gt; is entered by &lt;Triggering Object&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -3563,7 +3618,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>OnTriggerEnter on &lt;subject&gt;</Name>
+          <Name>When &lt;subject&gt; is entered by &lt;Triggering Object&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -3589,7 +3644,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>OnTriggerExit on &lt;subject&gt;</Name>
+      <Name>When &lt;subject&gt; is exited by &lt;Triggering Object&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -3608,7 +3663,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>OnTriggerExit on &lt;subject&gt;</Name>
+          <Name>When &lt;subject&gt; is exited by &lt;Triggering Object&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -3634,7 +3689,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>OnTriggerStay on &lt;subject&gt;</Name>
+      <Name>While &lt;subject&gt; overlaps &lt;Triggering Object&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -3653,7 +3708,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>OnTriggerStay on &lt;subject&gt;</Name>
+          <Name>While &lt;subject&gt; overlaps &lt;Triggering Object&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -3680,7 +3735,7 @@
     </ScriptIt>
     <ScriptIt>
       <Name>OnWillRenderObject on &lt;subject&gt;</Name>
-      <Visible>true</Visible>
+      <Visible>false</Visible>
       <Labels/>
       <Children>
         <StoryItemSequence>
@@ -4093,6 +4148,9 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
   </Effects>
   <DescribeIts>
     <DescribeIt>
@@ -4114,24 +4172,6 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Mouse Button Clicked</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
       <Name>Clone</Name>
       <Types>
         <Type>GameObject</Type>
@@ -4143,9 +4183,27 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Mouse Button Clicked</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
         </Entry>
       </PathMap>
     </DescribeIt>

@@ -185,6 +185,10 @@ public class SeriesFragment extends AbstractContainerFragment {
 						.name()))
 			it = context.getParameters();
 		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.SLOTPARAMETERS
+						.name()))
+			it = context.getSlotParameters();
+		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.VARIABLES
 						.name()))
 			it = context.getVariables();
