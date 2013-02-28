@@ -93,6 +93,10 @@ public class ScopeFragment extends AbstractContainerFragment {
 						.name()))
 			return context.getParameter(this.nameRef);
 		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.SLOTPARAMETER
+						.name()))
+			return context.getSlotParameter(this.nameRef);
+		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.MAINCODEBLOCK
 						.name()))
 			return context.getMainCodeBlock();

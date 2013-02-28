@@ -163,6 +163,26 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 		return ((ScriptIt) this.component).getInactiveBlock();
 	}
 
+	private Collection<KnowIt> getSlotParameterCollection() {
+		final EventSlotManager manager;
+		final String currentSlot;
+
+		manager = TranslatorManager.getInstance().getActiveAPIDictionary()
+				.getEventSlotManager();
+		currentSlot = ((ScriptIt) this.component).getMainCodeBlock().getSlot();
+
+		if (currentSlot == null)
+			throw new NullPointerException("Encountered null slot in a Cause! "
+					+ "Call may be incorrect in Language Dictionary.");
+
+		return manager.getParameters(currentSlot);
+	}
+
+	@Override
+	public Iterator<KnowIt> getSlotParameters() {
+		return this.getSlotParameterCollection().iterator();
+	}
+
 	@Override
 	public String getSlotConditional() {
 		final EventSlotManager manager;

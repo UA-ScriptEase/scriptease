@@ -115,8 +115,8 @@ public class Scene extends Resource {
 			if (line.equals(UnityConstants.YAML_HEADER)) {
 				break;
 			}
-			System.err.println("Scene file has invalid line [" + line
-					+ "]. Skipping.");
+			System.err.println("Skipping " + this.location.getName()
+					+ "'s invalid line [" + line + "]");
 		}
 
 		if (line == null || !line.equals(UnityConstants.YAML_HEADER)) {
@@ -344,8 +344,10 @@ public class Scene extends Resource {
 	public List<Resource> getChildren() {
 		final List<Resource> resources = new ArrayList<Resource>();
 
-		for(Resource resource : this.unityObjects) {
-			if(resource.getOwner() == this) {
+		for (UnityResource resource : this.unityObjects) {
+			if (resource.getOwner() == this
+					&& resource.getType()
+							.equals(UnityConstants.TYPE_GAMEOBJECT)) {
 				resources.add(resource);
 			}
 		}

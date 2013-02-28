@@ -17,6 +17,7 @@ import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.EventSlotManager;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
@@ -196,6 +197,25 @@ public class CodeBlockContext extends Context {
 					"Attempted to get Story Point Inactive Block for a "
 							+ "CodeBlock without a Cause: " + this.codeBlock);
 		// CodeBlock Without A Cause. (Not) Starring James Dean
+	}
+
+	@Override
+	public KnowIt getSlotParameter(String keyword) {
+		final ScriptIt cause = this.codeBlock.getCause();
+		final EventSlotManager manager;
+		final Collection<KnowIt> parameters;
+
+		manager = TranslatorManager.getInstance().getActiveAPIDictionary()
+				.getEventSlotManager();
+
+		parameters = manager.getParameters(cause.getMainCodeBlock().getSlot());
+
+		for (KnowIt parameter : parameters) {
+			if (parameter.getDisplayText().equalsIgnoreCase(keyword))
+				return parameter;
+		}
+
+		return null;
 	}
 
 	@Override
