@@ -54,8 +54,13 @@ public class NWNConversation extends NWNGameConstant {
 		roots = new ArrayList<Resource>(rootStructs.size());
 
 		for (GffStruct rootStruct : rootStructs) {
-			roots.add(new NWNDialogueLine(this.convo, rootStruct, false, Arrays
-					.asList(Integer.toString(i))));
+			final String name;
+
+			name = this.convo.resolveSyncStruct(rootStruct, false).getString(
+					"Text");
+			if (name != null)
+				roots.add(new NWNDialogueLine(this.convo, rootStruct, false,
+						Arrays.asList(Integer.toString(i)), name));
 			i++;
 		}
 

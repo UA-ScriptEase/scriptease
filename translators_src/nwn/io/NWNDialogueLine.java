@@ -49,10 +49,9 @@ public class NWNDialogueLine extends NWNGameConstant {
 	 */
 	public NWNDialogueLine(GenericFileFormat convo,
 			GffStruct dialogueSyncStruct, boolean isPlayerLine,
-			List<String> indexes) {
+			List<String> indexes, String name) {
 		super(constructResRef(convo, dialogueSyncStruct, indexes),
-				TYPE_DIALOG_LINE, convo.resolveSyncStruct(dialogueSyncStruct,
-						isPlayerLine).getString("Text"), "");
+				TYPE_DIALOG_LINE, name, "");
 
 		this.conversation = convo;
 		this.dialogueSyncStruct = dialogueSyncStruct;
@@ -85,8 +84,13 @@ public class NWNDialogueLine extends NWNGameConstant {
 				indexes.add(Integer.toString(index));
 				index++;
 
+				final String name;
+
+				name = this.conversation.resolveSyncStruct(syncStruct,
+						isPlayerLine).getString("Text");
+
 				children.add(new NWNDialogueLine(this.conversation, syncStruct,
-						!this.isPlayerLine, indexes));
+						!this.isPlayerLine, indexes, name));
 			}
 		}
 
