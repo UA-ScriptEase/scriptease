@@ -189,6 +189,9 @@ public class StoryPoint extends ComplexStoryComponent {
 
 		descendants.add(this);
 		for (StoryPoint successor : this.successors) {
+			// TODO May not need to add successor here, since it would be
+			// returned by "successor.getDescendants" anyways. Needs testing,
+			// though, and I don't have time for that right now. - kschenk
 			descendants.add(successor);
 			descendants.addAll(successor.getDescendants());
 		}
@@ -218,15 +221,15 @@ public class StoryPoint extends ComplexStoryComponent {
 			nameTag = noWhiteSpace.substring(0, MAX_LEN / 2).toLowerCase();
 		} else
 			nameTag = noWhiteSpace.toLowerCase();
-		
+
 		String name = nameTag + this.getUniqueID();
 		// Handle Legal Values the type can take
-		final String regex = TranslatorManager.getInstance().getActiveTranslator().getGameTypeManager().getReg(
-				StoryPoint.STORY_POINT_TYPE);
+		final String regex = TranslatorManager.getInstance()
+				.getActiveTranslator().getGameTypeManager()
+				.getReg(StoryPoint.STORY_POINT_TYPE);
 		final Pattern regexPattern = Pattern.compile(regex);
-		name = StringOp.removeIllegalCharacters(name,
-				regexPattern, false);
-		
+		name = StringOp.removeIllegalCharacters(name, regexPattern, false);
+
 		return name;
 	}
 
