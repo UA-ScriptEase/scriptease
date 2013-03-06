@@ -19,6 +19,9 @@ static function RegisterRoot(uniqueName:String, fanIn:int) {
 	root = new StoryPoint(uniqueName, fanIn);
 }
 
+/**
+ * Registers a child node to the parent.
+ */
 static function RegisterChild(parentName:String, uniqueName:String, fanIn:int) {
 	var parent:StoryPoint = FindStoryPoint(parentName);
 	
@@ -67,7 +70,13 @@ static function FailStoryPoint(uniqueName:String) {
  * children to disabled.
  */
 static function ContinueAtStoryPoint(uniqueName:String) {
+	var storyPoint:StoryPoint = FindStoryPoint(uniqueName);
 	
+	if(storyPoint != null) {
+		storyPoint.ContinueAt();
+	} else
+		Debug.Log("SEStory Warning: Attempted to continue at nonexistant " + 
+			"Story Point " + uniqueName);
 }
 
 static function HasSucceeded(uniqueName:String):boolean {
@@ -146,6 +155,10 @@ private class StoryPoint {
 		DISABLED,
 	}
 
+	/*
+	 * Constructs a new StoryPoint based on the passed in unique name and
+	 * fanIn. Also automatically sets the StoryPoint's state to DISABLED.
+	 */
 	function StoryPoint(uniqueName:String, fanIn:int) {
 		this.uniqueName = uniqueName;
 		this.fanIn = fanIn;
@@ -154,11 +167,16 @@ private class StoryPoint {
 		this.state = State.DISABLED;
 	}
 	
+	/*
+	 * Enables the Story Point. If the Story Point was marked as succeeded,
+	 * we automatically succeed the point.
+	 */
 	function Enable() {
-		this.state = State.ENABLED;
-		
-		if(this.state == State.PRESUCCEEDED)
-			this.Succeed();	
+		if(this.state == State.PRESUCCEEDED) {
+			this.state = State.ENABLED;
+			this.Succeed();
+		} else 
+			this.state = State.ENABLED;
 	}
 	
 	/**
@@ -193,6 +211,26 @@ private class StoryPoint {
 		}		
 	}
 	
+	/*
+	 * Enables the story point and disables all of its descendants.
+	 */
+	function ContinueAt() {
+		this.DisableDescendants();
+		
+		this.Enable();
+	}
+	
+	/**
+	 * Disables all descendants of the story point.
+	 */
+	function DisableDescendants() {
+		for(child in this.children) {
+			child.state = State.DISABLED;
+			
+			child.DisableDescendants();
+		}
+	}
+	
 	/**
 	 * Sets the Story Point's state to failed and fails all of its children.
 	 * This will automatically fail all descendants of the first Story Point
@@ -214,54 +252,12 @@ private class StoryPoint {
 		return this.state == State.FAILED;
 	}
 	
-	// Add a child to the StoryPoint
+	/*
+     * Add a child to a Story Point, automatically adding the Story Point to
+     * the child's parents.
+     */
 	function AddChild(child:StoryPoint) {
 		this.children.Add(child);
 		child.parents.Add(this);
-	}
-
-
-
-
-
-
-
-	// MAY BE ABLE TO DELETE THESE
-	
-	/**
-	 * Returns all ancestors of the Story Point, not including the Story Point 
-	 * itself.
-	 */
-	function GetAncestors():List.<StoryPoint> {
-		var ancestors:List.<StoryPoint> = new List.<StoryPoint>();
-		
-		if(this.uniqueName != SEStory.root.uniqueName) {
-			ancestors.Add(SEStory.root);
-		
-			for(child in SEStory.root.children) {
-				if(child.GetDescendants().Contains(this))
-					ancestors.Add(child);
-			}	
-		}
-		
-		return ancestors;
-	}
-	
-	/**
-	 * Returns all descendants of the Story Point, including the Story Point itself.
-	 */
-	function GetDescendants():List.<StoryPoint> {
-		var descendants:List.<StoryPoint> = new List.<StoryPoint>();
-		
-		descendants.Add(this);
-		
-		for(child in children) {
-			for(descendant in child.GetDescendants()) {
-				if(!descendants.Contains(descendant))
-					descendants.Add(descendant);
-			}
-		}
-		
-		return descendants;
 	}
 }
