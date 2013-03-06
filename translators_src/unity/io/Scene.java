@@ -57,9 +57,18 @@ public class Scene extends Resource {
 	 */
 	public static Scene buildScene(File location,
 			Collection<String> seGeneratedGUIDs) throws IOException {
-		final Scene scene = new Scene(location);
-		if (scene.read(seGeneratedGUIDs))
-			return scene;
+		final String HIDDEN_SCENE_PREFIX = "._";
+		final String locationName = location.getName();
+
+		if (!locationName.startsWith(HIDDEN_SCENE_PREFIX)) {
+			final Scene scene = new Scene(location);
+			if (scene.read(seGeneratedGUIDs))
+				return scene;
+		} else
+			System.err.println("Did not read Scene file at " + locationName
+					+ " -- Scene files starting with " + HIDDEN_SCENE_PREFIX
+					+ " are hidden by Unity, and so we do not read them "
+					+ "either.");
 		return null;
 	}
 

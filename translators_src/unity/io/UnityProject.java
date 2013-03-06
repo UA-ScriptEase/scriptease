@@ -47,6 +47,7 @@ public final class UnityProject implements GameModule {
 	// directory where all of our ScriptEase generated stuff is stored.
 	private File scripteaseGeneratedDirectory;
 
+	private final Collection<File> includeFiles;
 	private final Collection<Scene> scenes;
 	private final Collection<UnityScript> scripts;
 
@@ -54,6 +55,7 @@ public final class UnityProject implements GameModule {
 	 * Creates a new UnityProjects with no scenes or scripts added.
 	 */
 	public UnityProject() {
+		this.includeFiles = new ArrayList<File>();
 		this.scenes = new ArrayList<Scene>();
 		this.scripts = new ArrayList<UnityScript>();
 	}
@@ -76,6 +78,10 @@ public final class UnityProject implements GameModule {
 
 	@Override
 	public Resource getModule() {
+		// TODO Since this is used for Automatics, we should rename it to
+		// something more appropriate. Like, getAutomaticHolder. That would also
+		// give people a bit of a clue that automatics even exist.
+
 		// TODO We need to return something that represents the module... Maybe.
 		// Modules are used mostly for "Automatics", so if we don't use those,
 		// we may not have to worry about this at all.
@@ -83,9 +89,13 @@ public final class UnityProject implements GameModule {
 	}
 
 	@Override
-	public void addIncludeFiles(Collection<File> scriptList) {
-		// TODO Once we have our own custom libraries, they are added using
-		// this.
+	public void addIncludeFiles(Collection<File> includeList) {
+		for (File include : includeList) {
+			if (include.getName().startsWith("."))
+				continue;
+
+			this.includeFiles.add(include);
+		}
 	}
 
 	@Override
@@ -269,8 +279,15 @@ public final class UnityProject implements GameModule {
 			script.removeFromScene();
 		}
 
+		for (File includeFile : this.includeFiles) {
+			final File includeCopy = new File(this.scripteaseGeneratedDirectory
+					+ "/" + includeFile.getName());
+			FileOp.copyFile(includeFile, includeCopy);
+		}
+
 		// Reset the story to the state it was at before the save.
 		this.scripts.clear();
+		this.includeFiles.clear();
 		UnityScript.resetScriptCounter();
 	}
 
