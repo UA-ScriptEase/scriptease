@@ -168,7 +168,7 @@ public interface GameModule {
 	 * 
 	 * @see #addScripts(Collection)
 	 */
-	public void addIncludeFiles(Collection<File> scriptList);
+	public void addIncludeFiles(Collection<File> includeFiles);
 
 	/**
 	 * Creates a list of String arguments for running a process that executes
