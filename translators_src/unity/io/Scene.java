@@ -247,7 +247,7 @@ public class Scene extends Resource {
 
 			this.unityResources.add(seGameObject);
 			this.unityResources.add(seGameObjectTransform);
-			
+
 			this.scriptEaseObject = seGameObject;
 		}
 
@@ -412,7 +412,8 @@ public class Scene extends Resource {
 		for (UnityResource resource : this.unityResources) {
 			if (resource.getOwner() == this
 					&& resource.getType()
-							.equals(UnityType.GAMEOBJECT.getName())) {
+							.equals(UnityType.GAMEOBJECT.getName())
+					&& resource != this.scriptEaseObject) {
 				resources.add(resource);
 			}
 		}
