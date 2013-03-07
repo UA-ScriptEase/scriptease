@@ -1,7 +1,7 @@
 package io.unityobject;
 
 import io.Scene;
-import io.UnityConstants.UnityConstants;
+import io.UnityProject;
 import io.UnityConstants.UnityField;
 import io.UnityConstants.UnityType;
 
@@ -125,7 +125,7 @@ public class UnityResource extends Resource {
 	}
 
 	public Integer getTypeNumber() {
-		return new Integer(this.tag.split(UnityConstants.UNITY_TAG)[1]);
+		return new Integer(this.tag.split(UnityProject.UNITY_TAG)[1]);
 	}
 
 	@Override
@@ -244,18 +244,17 @@ public class UnityResource extends Resource {
 				final PropertyValue fatherMap;
 				final int fatherID;
 
-				//XXX REMOVE
-				if(this.name.equals("ScriptEase"))
-					System.out.println();;
-				
+				// XXX REMOVE
+				if (this.name.equals("ScriptEase"))
+					System.out.println();
+				;
+
 				transformTypeNumber = UnityType.TRANSFORM.getID();
 				transformIDValue = this.getFirstOccuranceOfField(String
 						.valueOf(transformTypeNumber));
 				transformIDNumber = transformIDValue.getMap()
 						.get(UnityField.FILEID.getName()).getString();
 
-				
-				
 				attachedTransform = this.scene.getObjectByUnityID(Integer
 						.parseInt(transformIDNumber));
 

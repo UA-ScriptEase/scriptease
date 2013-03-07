@@ -187,10 +187,6 @@ public class PropertyValue {
 		return this.type == Type.LIST;
 	}
 
-	/*
-	 * TODO Add future "is___" methods as necessary.
-	 */
-
 	/**
 	 * Returns the value held by this object.
 	 * 
@@ -256,10 +252,6 @@ public class PropertyValue {
 		else
 			return null;
 	}
-
-	/*
-	 * TODO Add future "get____" methods as necessary.
-	 */
 
 	/**
 	 * Property values are equal if their values are equal. Property Valuse can
