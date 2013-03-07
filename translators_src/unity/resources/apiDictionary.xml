@@ -849,6 +849,18 @@
       <Keyword>AudioReverbZone</Keyword>
       <CodeSymbol>AudioReverbZone</CodeSymbol>
     </Type>
+    <Type>
+      <Name>Story Point</Name>
+      <Keyword>storyPoint</Keyword>
+      <CodeSymbol>String</CodeSymbol>
+      <Format>
+        <Literal>&quot;</Literal>
+        <Fragment data="unique32charname"/>
+        <Literal>&quot;</Literal>
+      </Format>
+      <LegalValues>[^\"]*</LegalValues>
+      <WidgetName>SP</WidgetName>
+    </Type>
   </Types>
   <Slots defaultFormat="SECause">
     <Slot format="UnityCause">
@@ -1769,6 +1781,89 @@
     </Slot>
   </Slots>
   <Causes>
+    <ScriptIt>
+      <Name>When &lt;subject&gt; starts</Name>
+      <Visible>false</Visible>
+      <Labels>
+        <Label>automatic</Label>
+      </Labels>
+      <Children>
+        <StoryItemSequence>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+        </StoryItemSequence>
+        <StoryItemSequence>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+        </StoryItemSequence>
+      </Children>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>When &lt;subject&gt; starts</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Subject>subject</Subject>
+          <Slot>Start</Slot>
+          <Id>114</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>subject</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Scope data="start">
+            	<Line>
+            		<Literal>if(!SEStory.storyInitialized){</Literal>
+            	</Line>
+            	<Indent>
+	            	<Line>
+	            		<Literal>SEStory.RegisterRoot(</Literal>
+	            		<Fragment data="formattedValue"/>
+	            		<Literal>, </Literal>
+	            		<Fragment data="fanIn" />
+	            		<Literal>);</Literal>
+					</Line>
+					<Line>
+						<Literal>var parentName:String;</Literal>
+					</Line>
+					<Series data="storyPoints" unique="true">
+						<Line>
+							<Literal>parentName = </Literal>
+							<Fragment data="formattedValue" />
+							<Literal>;</Literal>
+						</Line>
+					    <Series data="childrenNodes" unique="true">
+	                		<Line>
+								<Literal>SEStory.RegisterChild(parentName, </Literal>
+								<Fragment data="formattedValue"/>
+								<Literal>, </Literal>
+								<Fragment data="fanIn"/>
+								<Literal>);</Literal>
+							</Line>
+	              		</Series>
+					</Series>
+            	</Indent>
+            	<Line>
+            		<Literal>}</Literal>
+            	</Line>
+            </Scope>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    
     <ScriptIt>
       <Name>While &lt;subject&gt; exists, immediately</Name>
       <Visible>true</Visible>

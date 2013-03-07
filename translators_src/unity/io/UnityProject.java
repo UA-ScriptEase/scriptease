@@ -1,5 +1,8 @@
 package io;
 
+import io.UnityConstants.UnityConstants;
+import io.UnityConstants.UnityField;
+import io.UnityConstants.UnityType;
 import io.unityobject.UnityResource;
 
 import java.io.BufferedReader;
@@ -77,15 +80,14 @@ public final class UnityProject implements GameModule {
 	}
 
 	@Override
-	public Resource getModule() {
-		// TODO Since this is used for Automatics, we should rename it to
-		// something more appropriate. Like, getAutomaticHolder. That would also
-		// give people a bit of a clue that automatics even exist.
+	public Collection<Resource> getAutomaticHandlers() {
+		final Collection<Resource> automaticHandlers = new ArrayList<Resource>();
 
-		// TODO We need to return something that represents the module... Maybe.
-		// Modules are used mostly for "Automatics", so if we don't use those,
-		// we may not have to worry about this at all.
-		return null;
+		for (Scene scene : this.scenes) {
+			automaticHandlers.add(scene.getScriptEaseObject());
+		}
+
+		return automaticHandlers;
 	}
 
 	@Override
@@ -169,7 +171,7 @@ public final class UnityProject implements GameModule {
 		final List<Resource> resources;
 
 		resources = new ArrayList<Resource>();
-		if (type.equals(UnityConstants.TYPE_SCENE))
+		if (type.equals(UnityType.SCENE.getName()))
 			resources.addAll(this.scenes);
 		return resources;
 	}
@@ -217,7 +219,7 @@ public final class UnityProject implements GameModule {
 
 			String line;
 			while ((line = reader.readLine()) != null) {
-				final String guid = UnityConstants.FIELD_GUID;
+				final String guid = UnityField.GUID.getName();
 				// Format: [guid: 3d8e5b1dcb8f4f6c86fb7422b2e687df]
 				if (line.startsWith(guid)) {
 					final String guidValue = line.substring(guid.length() + 2);

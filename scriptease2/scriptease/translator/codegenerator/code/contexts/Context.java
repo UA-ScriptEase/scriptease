@@ -482,4 +482,9 @@ public class Context {
 		unimplemented("getParameteresWithImplicits");
 		return null;
 	}
+
+	public String getParentName() {
+		unimplemented("getParentName");
+		return null;
+	}
 }

@@ -1,7 +1,11 @@
 package io;
 
+import io.UnityConstants.UnityConstants;
+import io.UnityConstants.UnityField;
+import io.UnityConstants.UnityType;
 import io.unityobject.PropertyValue;
 import io.unityobject.UnityResource;
+import io.unityobject.UnityResourceFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -72,22 +76,16 @@ public class UnityScript {
 		this.attachedObject = this.scene.getObjectByTemplateID(subject
 				.getTemplateID());
 
-		int idNumber = 0;
-		for (UnityResource object : this.scene.getResources()) {
-			final int objectID = object.getUniqueID();
-			if (objectID >= idNumber) {
-				idNumber = objectID + 1;
-			}
-		}
+		this.idNumber = this.scene.getNextEmptyID();
 
-		this.idNumber = idNumber;
-
-		this.monoBehaviourObject = this.buildMonoBehaviourObject();
+		this.monoBehaviourObject = UnityResourceFactory.getInstance()
+				.buildMonoBehaviourObject(this.attachedObject.getUniqueID(),
+						this.guid, this.idNumber, this.scene);
 
 		final PropertyValue mComponentMapValue;
 
 		mComponentMapValue = this.attachedObject.getPropertyMap().get(
-				UnityConstants.FIELD_M_COMPONENT);
+				UnityField.M_COMPONENT.getName());
 
 		if (mComponentMapValue.isList()) {
 			this.mComponentList = mComponentMapValue.getList();
@@ -106,9 +104,8 @@ public class UnityScript {
 	 */
 	private void addToScene() {
 		this.scene.addObject(this.monoBehaviourObject);
-		final String fileID = UnityConstants.FIELD_FILEID;
-		final int fileIDNum = UnityConstants.TYPE_LIST
-				.indexOf(UnityConstants.TYPE_MONOBEHAVIOUR);
+		final String fileID = UnityField.FILEID.getName();
+		final int fileIDNum = UnityType.MONOBEHAVIOUR.getID();
 
 		final Map<String, PropertyValue> firstMap;
 		final Map<String, PropertyValue> secondMap;
@@ -152,60 +149,6 @@ public class UnityScript {
 		if (toBeRemoved != null) {
 			this.mComponentList.remove(toBeRemoved);
 		}
-	}
-
-	/**
-	 * Builds a MonoBehaviourObject in the scene file, which is what a script is
-	 * attached to.
-	 * 
-	 * @return
-	 */
-	private UnityResource buildMonoBehaviourObject() {
-		final String fileID = UnityConstants.FIELD_FILEID;
-		final PropertyValue zeroValue = new PropertyValue(0);
-		final int monoTypeNumber = UnityConstants.TYPE_LIST
-				.indexOf(UnityConstants.TYPE_MONOBEHAVIOUR);
-
-		final UnityResource monoObject;
-
-		final Map<String, PropertyValue> fileIDMap;
-		final Map<String, PropertyValue> mGameObjectMap;
-		final Map<String, PropertyValue> mScriptMap;
-		final Map<String, PropertyValue> propertiesMap;
-		final Map<String, PropertyValue> objectMap;
-
-		fileIDMap = new HashMap<String, PropertyValue>();
-		mGameObjectMap = new HashMap<String, PropertyValue>();
-		mScriptMap = new HashMap<String, PropertyValue>();
-		propertiesMap = new HashMap<String, PropertyValue>();
-		objectMap = new HashMap<String, PropertyValue>();
-
-		fileIDMap.put(fileID, zeroValue);
-
-		mGameObjectMap.put(fileID,
-				new PropertyValue(this.attachedObject.getUniqueID()));
-
-		mScriptMap.put(fileID, new PropertyValue(11500000));
-		mScriptMap.put(UnityConstants.FIELD_GUID, new PropertyValue(this.guid));
-		mScriptMap.put("type", new PropertyValue(1));
-
-		propertiesMap.put("m_ObjectHideFlags", zeroValue);
-		propertiesMap.put("m_PrefabParentObject", new PropertyValue(fileIDMap));
-		propertiesMap.put("m_PrefabInternal", new PropertyValue(fileIDMap));
-		propertiesMap.put(UnityConstants.FIELD_M_GAMEOBJECT, new PropertyValue(
-				mGameObjectMap));
-		propertiesMap.put("m_Enabled", new PropertyValue(1));
-		propertiesMap.put("m_EditorHideFlags", zeroValue);
-		propertiesMap.put("m_Script", new PropertyValue(mScriptMap));
-		propertiesMap.put("m_Name", new PropertyValue(""));
-
-		objectMap.put(UnityConstants.TYPE_MONOBEHAVIOUR, new PropertyValue(
-				propertiesMap));
-
-		monoObject = new UnityResource(this.idNumber, UnityConstants.UNITY_TAG
-				+ monoTypeNumber, this.scene, objectMap);
-
-		return monoObject;
 	}
 
 	/**

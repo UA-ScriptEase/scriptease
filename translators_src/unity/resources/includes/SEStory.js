@@ -11,12 +11,17 @@ import System.Collections.Generic;
 
 static var root:StoryPoint;
 
+static var storyInitialized:boolean = false;
+
 /**
  * Registers the root of the story. This should only be called when we first
  * start it.
  */
 static function RegisterRoot(uniqueName:String, fanIn:int) {
 	root = new StoryPoint(uniqueName, fanIn);
+	root.Enable();
+	
+	storyInitialized = true;
 }
 
 /**

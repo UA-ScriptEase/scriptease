@@ -132,6 +132,8 @@ public class SimpleDataFragment extends AbstractFragment {
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.NOTE
 							.name()))
 				resolveString = context.getDisplayText();
+			else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.PARENTNAME.name()))
+				resolveString = context.getParentName();
 			else if (dataLabel
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.UNIQUEID
 							.name()))

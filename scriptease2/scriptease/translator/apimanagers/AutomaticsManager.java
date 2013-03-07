@@ -27,41 +27,30 @@ public class AutomaticsManager {
 	}
 
 	/**
-	 * Adds all the automatic ScriptIts for the given translator to the given model
+	 * Adds all the automatic ScriptIts for the given translator to the given
+	 * model
 	 * 
 	 * @param translator
 	 * @param model
 	 */
-	public void resolveAndAddAutomatics(final GameModule gameModule, Translator translator, final StoryModel model) {
+	public void resolveAndAddAutomatics(final GameModule gameModule,
+			Translator translator, final StoryModel model) {
 		final Collection<LibraryModel> libraries = translator.getLibraries();
 		for (LibraryModel library : libraries) {
-			final Collection<ScriptIt> automatics = library
-					.getAutomatics();
-			for (ScriptIt automatic : automatics) {
+			final Collection<ScriptIt> automatics = library.getAutomatics();
+			for (Resource resource : gameModule.getAutomaticHandlers()) {
+				for (ScriptIt automatic : automatics) {
 					ScriptIt copy = automatic.clone();
-					resolveAutomaticParameters(copy, gameModule);
-					model.getRoot().addStoryChild(copy);
-			}
-		}
-	}
+					for (KnowIt parameter : copy.getParameters()) {
+						if (!parameter.getTypes().containsAll(
+								resource.getTypes()))
+							throw new IllegalArgumentException(
+									"Found invalid types for automatics");
+						parameter.setBinding(resource);
 
-	/**
-	 * Resolves the given automatic StoryComponent's parameters for the given
-	 * gameModule
-	 * 
-	 * @param automatic
-	 * @param gameModule
-	 */
-	private void resolveAutomaticParameters(ScriptIt automatic,
-			GameModule gameModule) {
-		final Collection<KnowIt> parameters = automatic.getParameters();
-		for (KnowIt parameter : parameters) {
-			final Collection<String> types = parameter.getTypes();
-			for (String type : types) {
-				// TODO iterate all special types supported
-				if (type.equalsIgnoreCase(MODULE_TYPE)) {
-					final Resource module = gameModule.getModule();
-					parameter.setBinding(module);
+						model.getRoot().addStoryChild(copy);
+
+					}
 				}
 			}
 		}
