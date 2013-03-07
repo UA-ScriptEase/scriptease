@@ -1,6 +1,5 @@
 package io;
 
-import io.UnityConstants.UnityConstants;
 import io.UnityConstants.UnityField;
 import io.UnityConstants.UnityType;
 import io.unityobject.PropertyValue;
@@ -282,7 +281,7 @@ public class Scene extends Resource {
 	public void write() throws IOException {
 		final BufferedWriter writer;
 		final String sceneHeader = "%YAML 1.1\n" + "%TAG !u! "
-				+ UnityConstants.UNITY_TAG + "\n";
+				+ UnityProject.UNITY_TAG + "\n";
 		writer = new BufferedWriter(new FileWriter(location));
 
 		writer.write(sceneHeader);

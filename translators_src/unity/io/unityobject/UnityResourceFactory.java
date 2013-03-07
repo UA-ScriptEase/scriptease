@@ -1,7 +1,7 @@
 package io.unityobject;
 
 import io.Scene;
-import io.UnityConstants.UnityConstants;
+import io.UnityProject;
 import io.UnityConstants.UnityField;
 import io.UnityConstants.UnityType;
 
@@ -121,7 +121,7 @@ public class UnityResourceFactory {
 			}
 		};
 
-		return new UnityResource(idNumber, UnityConstants.UNITY_TAG
+		return new UnityResource(idNumber, UnityProject.UNITY_TAG
 				+ UnityType.GAMEOBJECT.getID(), scene, objectMap);
 	}
 
@@ -204,7 +204,7 @@ public class UnityResourceFactory {
 			}
 		};
 
-		return new UnityResource(idNumber, UnityConstants.UNITY_TAG
+		return new UnityResource(idNumber, UnityProject.UNITY_TAG
 				+ UnityType.TRANSFORM.getID(), scene, objectMap);
 	}
 
@@ -255,7 +255,7 @@ public class UnityResourceFactory {
 			}
 		};
 
-		return new UnityResource(idNumber, UnityConstants.UNITY_TAG
+		return new UnityResource(idNumber, UnityProject.UNITY_TAG
 				+ UnityType.MONOBEHAVIOUR.getID(), scene, objectMap);
 	}
 

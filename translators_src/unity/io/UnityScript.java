@@ -1,6 +1,5 @@
 package io;
 
-import io.UnityConstants.UnityConstants;
 import io.UnityConstants.UnityField;
 import io.UnityConstants.UnityType;
 import io.unityobject.PropertyValue;
@@ -67,7 +66,7 @@ public class UnityScript {
 
 		this.scene = scene;
 		this.code = scriptInfo.getCode();
-		this.fileName = UnityConstants.SCRIPTEASE_FILE_PREFIX
+		this.fileName = UnityProject.SCRIPTEASE_FILE_PREFIX
 				+ Integer.toString(scriptCounter++, NAME_RADIX) + "_"
 				+ StringOp.makeAlphaNumeric(subject.getName());
 
@@ -130,12 +129,15 @@ public class UnityScript {
 		for (PropertyValue value : this.mComponentList) {
 			if (value.isMap()) {
 				final Map<String, PropertyValue> firstMap = value.getMap();
-				final PropertyValue secondMapValue = firstMap.get("114");
+				final PropertyValue secondMapValue = firstMap.get(String
+						.valueOf(UnityType.MONOBEHAVIOUR.getID()));
 
 				if (secondMapValue != null && secondMapValue.isMap()) {
 					final Map<String, PropertyValue> secondMap = secondMapValue
 							.getMap();
-					final PropertyValue fileID = secondMap.get("fileID");
+					final PropertyValue fileID;
+
+					fileID = secondMap.get(UnityField.FILEID.getName());
 
 					if (fileID != null && fileID.equals(this.idNumber)) {
 						// We have found the correct component.
