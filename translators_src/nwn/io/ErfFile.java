@@ -458,13 +458,14 @@ public final class ErfFile implements GameModule {
 				}
 			}
 		}
-		
+
 		return filteredObjects;
 	}
 
+	@SuppressWarnings("serial")
 	@Override
-	public Resource getModule() {
-		Resource module = null;
+	public Collection<Resource> getAutomaticHandlers() {
+		final Resource module;
 		final List<Resource> modules = this
 				.getResourcesOfType(GenericFileFormat.TYPE_MODULE);
 		if (modules.size() > 0) {
@@ -472,7 +473,12 @@ public final class ErfFile implements GameModule {
 		} else {
 			throw new IllegalStateException("Cannot retrieve Module");
 		}
-		return module;
+
+		return new ArrayList<Resource>() {
+			{
+				this.add(module);
+			}
+		};
 	}
 
 	@Override
@@ -733,7 +739,8 @@ public final class ErfFile implements GameModule {
 		journalResources = new ArrayList<NWNResource>();
 
 		for (NWNResource resource : ErfFile.this.resources) {
-			if (resource.isGFF() && resource.getGFF() instanceof GeneratedJournalGFF)
+			if (resource.isGFF()
+					&& resource.getGFF() instanceof GeneratedJournalGFF)
 				journalResources.add(resource);
 		}
 		ErfFile.this.resources.removeAll(journalResources);

@@ -49,6 +49,7 @@ public interface CodeGenerationKeywordConstants {
 		INCLUDE,
 		NAME,
 		NOTE,
+		PARENTNAME,
 		SLOTCONDITIONAL,
 		SUBJECT,
 		TEMPLATEID,

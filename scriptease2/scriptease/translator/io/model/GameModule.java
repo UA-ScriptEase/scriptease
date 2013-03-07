@@ -98,11 +98,13 @@ public interface GameModule {
 	public Resource getInstanceForObjectIdentifier(String id);
 
 	/**
-	 * Retrieves the Resource object that represents the module
+	 * Retrieves the resources that will have automatics attached to them. Make
+	 * sure that these match the types for the parameters of the automatic
+	 * causes, or else exceptions will be thrown.
 	 * 
 	 * @return
 	 */
-	public Resource getModule();
+	public Collection<Resource> getAutomaticHandlers();
 
 	/**
 	 * Gets the location of the GameModule.

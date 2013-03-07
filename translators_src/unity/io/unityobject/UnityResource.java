@@ -1,7 +1,9 @@
 package io.unityobject;
 
 import io.Scene;
-import io.UnityConstants;
+import io.UnityConstants.UnityConstants;
+import io.UnityConstants.UnityField;
+import io.UnityConstants.UnityType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,18 +34,18 @@ public class UnityResource extends Resource {
 
 		final PropertyValue subMap;
 
-		subMap = this.topLevelPropertyMap.get(UnityConstants.TYPE_GAMEOBJECT);
+		subMap = this.topLevelPropertyMap.get(UnityType.GAMEOBJECT.getName());
 
 		if (subMap != null && subMap.isMap()) {
 			final PropertyValue mName;
 
-			mName = subMap.getMap().get(UnityConstants.FIELD_M_NAME);
+			mName = subMap.getMap().get(UnityField.M_NAME.getName());
 
 			final String mNameValueString = mName.getString();
 			if (mNameValueString != null && !mNameValueString.isEmpty())
 				this.name = mNameValueString;
 			else
-				this.name = UnityConstants.TYPE_GAMEOBJECT;
+				this.name = UnityType.GAMEOBJECT.getName();
 		} else {
 			this.name = (String) this.topLevelPropertyMap.keySet().toArray()[0];
 		}
@@ -91,7 +93,7 @@ public class UnityResource extends Resource {
 	}
 
 	public String getType() {
-		return UnityConstants.TYPE_LIST.get(this.getTypeNumber());
+		return UnityType.getNameForID(this.getTypeNumber());
 	}
 
 	@Override
@@ -146,7 +148,7 @@ public class UnityResource extends Resource {
 
 			for (UnityResource resource : this.scene.getResources()) {
 				// XXX
-				if (resource.getType().equals(UnityConstants.TYPE_GAMEOBJECT)) {
+				if (resource.getType().equals(UnityType.GAMEOBJECT.getName())) {
 					final Resource owner = resource.getOwner();
 					if (owner != null)
 						if (owner == this)
@@ -233,7 +235,7 @@ public class UnityResource extends Resource {
 		if (this.owner == null) {
 			final int uniqueID;
 
-			if (this.getType().equals(UnityConstants.TYPE_GAMEOBJECT)) {
+			if (this.getType().equals(UnityType.GAMEOBJECT.getName())) {
 				// This is the ID of the Transform object.
 				final int transformTypeNumber;
 				final PropertyValue transformIDValue;
@@ -242,21 +244,26 @@ public class UnityResource extends Resource {
 				final PropertyValue fatherMap;
 				final int fatherID;
 
-				transformTypeNumber = UnityConstants.TYPE_LIST
-						.indexOf(UnityConstants.TYPE_TRANSFORM);
+				//XXX REMOVE
+				if(this.name.equals("ScriptEase"))
+					System.out.println();;
+				
+				transformTypeNumber = UnityType.TRANSFORM.getID();
 				transformIDValue = this.getFirstOccuranceOfField(String
 						.valueOf(transformTypeNumber));
 				transformIDNumber = transformIDValue.getMap()
-						.get(UnityConstants.FIELD_FILEID).getString();
+						.get(UnityField.FILEID.getName()).getString();
 
+				
+				
 				attachedTransform = this.scene.getObjectByUnityID(Integer
 						.parseInt(transformIDNumber));
 
 				fatherMap = attachedTransform
-						.getFirstOccuranceOfField(UnityConstants.FIELD_M_FATHER);
+						.getFirstOccuranceOfField(UnityField.M_FATHER.getName());
 
 				fatherID = Integer.parseInt(fatherMap.getMap()
-						.get(UnityConstants.FIELD_FILEID).getString());
+						.get(UnityField.FILEID.getName()).getString());
 
 				if (fatherID != 0) {
 					final UnityResource fatherTransform;
@@ -265,21 +272,23 @@ public class UnityResource extends Resource {
 					fatherTransform = this.scene.getObjectByUnityID(fatherID);
 
 					mGameObjectMapValue = fatherTransform
-							.getFirstOccuranceOfField(UnityConstants.FIELD_M_GAMEOBJECT);
+							.getFirstOccuranceOfField(UnityField.M_GAMEOBJECT
+									.getName());
 
 					uniqueID = Integer.parseInt(mGameObjectMapValue.getMap()
-							.get(UnityConstants.FIELD_FILEID).getString());
+							.get(UnityField.FILEID.getName()).getString());
 				} else
 					uniqueID = -1;
 			} else {
 				final PropertyValue gameObjectMapValue;
 
 				gameObjectMapValue = this
-						.getFirstOccuranceOfField(UnityConstants.FIELD_M_GAMEOBJECT);
+						.getFirstOccuranceOfField(UnityField.M_GAMEOBJECT
+								.getName());
 
 				if (gameObjectMapValue != null) {
 					uniqueID = Integer.parseInt(gameObjectMapValue.getMap()
-							.get(UnityConstants.FIELD_FILEID).getString());
+							.get(UnityField.FILEID.getName()).getString());
 				} else
 					uniqueID = -1;
 			}
