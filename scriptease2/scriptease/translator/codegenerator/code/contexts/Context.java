@@ -332,6 +332,10 @@ public class Context {
 		return this.model.getDescendants().iterator();
 	}
 
+	public Iterator<StoryPoint> getOrderedStoryPoints() {
+		return this.model.getOrderedDescendants().iterator();
+	}
+
 	public Iterator<StoryPoint> getStoryPointChildren() {
 		this.unimplemented("getStoryPointChildren");
 		return null;

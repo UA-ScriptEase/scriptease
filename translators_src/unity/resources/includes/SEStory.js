@@ -121,6 +121,7 @@ static function HasFailed(uniqueName:String):boolean  {
 	}
 }
 
+
 /**
  * Finds the Story Point that matches the unique name.
  */
@@ -131,8 +132,12 @@ private static function FindStoryPoint(uniqueName:String):StoryPoint {
 		for(child in root.children) {
 			if(child.uniqueName == uniqueName)
 				return child;
-			else
-				return FindStoryPoint(child.uniqueName);		
+			else {
+				var foundPoint:StoryPoint = FindStoryPoint(child.uniqueName);
+				
+				if(foundPoint != null)
+					return foundPoint;
+			}		
 		}
 	}
 	

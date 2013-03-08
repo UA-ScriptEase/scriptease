@@ -1,7 +1,9 @@
 package scriptease.model.complex;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -173,6 +175,32 @@ public class StoryPoint extends ComplexStoryComponent {
 	}
 
 	/**
+	 * Gets all descendants of the StoryPoint, including hte StoryPoint itself.
+	 * 
+	 * 
+	 * TODO Not sure if this is redundant with {@link #getDescendants()}. Check
+	 * if we can remove the set version. We do need an ordered list for some
+	 * methods, but maybe a set is preferable sometimes? Not sure, check it out.
+	 * 
+	 * @return
+	 */
+	public List<StoryPoint> getOrderedDescendants() {
+		final List<StoryPoint> descendants;
+
+		descendants = new ArrayList<StoryPoint>();
+
+		System.out.println(this);
+		
+		descendants.add(this);
+
+		for (StoryPoint successor : this.successors) {
+			descendants.addAll(successor.getOrderedDescendants());
+		}
+
+		return descendants;
+	}
+
+	/**
 	 * Gets all descendants of the StoryPoint, including the StoryPoint itself.
 	 * That is, the successors, the successors of the successors, etc.
 	 * 
@@ -191,7 +219,7 @@ public class StoryPoint extends ComplexStoryComponent {
 		for (StoryPoint successor : this.successors) {
 			// TODO May not need to add successor here, since it would be
 			// returned by "successor.getDescendants" anyways. Needs testing,
-			// though, and I don't have time for that right now. - kschenk
+			// though, and I can't work on that right now. - kschenk
 			descendants.add(successor);
 			descendants.addAll(successor.getDescendants());
 		}

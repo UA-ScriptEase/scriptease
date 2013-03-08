@@ -209,6 +209,10 @@ public class SeriesFragment extends AbstractContainerFragment {
 						.name()))
 			it = context.getStoryPoints();
 		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.ORDEREDSTORYPOINTS
+						.name()))
+			it = context.getOrderedStoryPoints();
+		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.PARENTNODES
 						.name())) {
 			it = context.getStoryPointParents();
