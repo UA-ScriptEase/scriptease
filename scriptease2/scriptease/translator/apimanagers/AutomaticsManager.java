@@ -15,12 +15,12 @@ import scriptease.translator.io.model.Resource;
  * specific automatic parameters.
  * 
  * @author mfchurch
+ * @author kschenk
  * 
  */
 public class AutomaticsManager {
 	// Special types that can automatically bound if provided by the GameModule
 	// implementation
-	public static final String MODULE_TYPE = "module";
 	public static final String AUTOMATIC_LABEL = "automatic";
 
 	public AutomaticsManager() {
@@ -33,8 +33,8 @@ public class AutomaticsManager {
 	 * @param translator
 	 * @param model
 	 */
-	public void resolveAndAddAutomatics(final GameModule gameModule,
-			Translator translator, final StoryModel model) {
+	public void resolveAndAddAutomatics(GameModule gameModule,
+			Translator translator, StoryModel model) {
 		final Collection<LibraryModel> libraries = translator.getLibraries();
 		for (LibraryModel library : libraries) {
 			final Collection<ScriptIt> automatics = library.getAutomatics();

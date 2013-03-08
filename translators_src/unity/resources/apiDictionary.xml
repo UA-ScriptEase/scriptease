@@ -213,6 +213,18 @@
       <CodeSymbol>AudioListener</CodeSymbol>
     </Type>
     <Type>
+      <Name>Story Point</Name>
+      <Keyword>storyPoint</Keyword>
+      <CodeSymbol>String</CodeSymbol>
+      <Format>
+        <Literal>&quot;</Literal>
+        <Fragment data="unique32charname"/>
+        <Literal>&quot;</Literal>
+      </Format>
+      <LegalValues>[^\&quot;]*</LegalValues>
+      <WidgetName>SP</WidgetName>
+    </Type>
+    <Type>
       <Name>CharacterJoint</Name>
       <Keyword>CharacterJoint</Keyword>
       <CodeSymbol>CharacterJoint</CodeSymbol>
@@ -238,14 +250,14 @@
       <CodeSymbol>HaloLayer</CodeSymbol>
     </Type>
     <Type>
-      <Name>EditorBuildSettings</Name>
-      <Keyword>EditorBuildSettings</Keyword>
-      <CodeSymbol>EditorBuildSettings</CodeSymbol>
-    </Type>
-    <Type>
       <Name>WebCamTexture</Name>
       <Keyword>WebCamTexture</Keyword>
       <CodeSymbol>WebCamTexture</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>EditorBuildSettings</Name>
+      <Keyword>EditorBuildSettings</Keyword>
+      <CodeSymbol>EditorBuildSettings</CodeSymbol>
     </Type>
     <Type>
       <Name>HaloManager</Name>
@@ -848,18 +860,6 @@
       <Name>AudioReverbZone</Name>
       <Keyword>AudioReverbZone</Keyword>
       <CodeSymbol>AudioReverbZone</CodeSymbol>
-    </Type>
-    <Type>
-      <Name>Story Point</Name>
-      <Keyword>storyPoint</Keyword>
-      <CodeSymbol>String</CodeSymbol>
-      <Format>
-        <Literal>&quot;</Literal>
-        <Fragment data="unique32charname"/>
-        <Literal>&quot;</Literal>
-      </Format>
-      <LegalValues>[^\"]*</LegalValues>
-      <WidgetName>SP</WidgetName>
     </Type>
   </Types>
   <Slots defaultFormat="SECause">
@@ -1824,46 +1824,45 @@
           </Parameters>
           <Code>
             <Scope data="start">
-            	<Line>
-            		<Literal>if(!SEStory.storyInitialized){</Literal>
-            	</Line>
-            	<Indent>
-	            	<Line>
-	            		<Literal>SEStory.RegisterRoot(</Literal>
-	            		<Fragment data="formattedValue"/>
-	            		<Literal>, </Literal>
-	            		<Fragment data="fanIn" />
-	            		<Literal>);</Literal>
-					</Line>
-					<Line>
-						<Literal>var parentName:String;</Literal>
-					</Line>
-					<Series data="storyPoints" unique="true">
-						<Line>
-							<Literal>parentName = </Literal>
-							<Fragment data="formattedValue" />
-							<Literal>;</Literal>
-						</Line>
-					    <Series data="childrenNodes" unique="true">
-	                		<Line>
-								<Literal>SEStory.RegisterChild(parentName, </Literal>
-								<Fragment data="formattedValue"/>
-								<Literal>, </Literal>
-								<Fragment data="fanIn"/>
-								<Literal>);</Literal>
-							</Line>
-	              		</Series>
-					</Series>
-            	</Indent>
-            	<Line>
-            		<Literal>}</Literal>
-            	</Line>
+              <Line>
+                <Literal>if(!SEStory.storyInitialized){</Literal>
+              </Line>
+              <Indent>
+                <Line>
+                  <Literal>SEStory.RegisterRoot(</Literal>
+                  <Fragment data="formattedValue"/>
+                  <Literal>, </Literal>
+                  <Fragment data="fanIn"/>
+                  <Literal>);</Literal>
+                </Line>
+                <Line>
+                  <Literal>var parentName:String;</Literal>
+                </Line>
+                <Series data="orderedStoryPoints" unique="true">
+                  <Line>
+                    <Literal>parentName = </Literal>
+                    <Fragment data="formattedValue"/>
+                    <Literal>;</Literal>
+                  </Line>
+                  <Series data="childrenNodes" unique="true">
+                    <Line>
+                      <Literal>SEStory.RegisterChild(parentName, </Literal>
+                      <Fragment data="formattedValue"/>
+                      <Literal>, </Literal>
+                      <Fragment data="fanIn"/>
+                      <Literal>);</Literal>
+                    </Line>
+                  </Series>
+                </Series>
+              </Indent>
+              <Line>
+                <Literal>}</Literal>
+              </Line>
             </Scope>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    
     <ScriptIt>
       <Name>While &lt;subject&gt; exists, immediately</Name>
       <Visible>true</Visible>
@@ -4541,7 +4540,7 @@
       <Name>Write &lt;Text&gt; to the Unity Console</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        <Label>NOW</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -4661,12 +4660,282 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
+    <ScriptIt>
+      <Name>Succeed &lt;Story Point&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Succeed &lt;Story Point&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>115</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Story Point</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>storyPoint</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEStory.SucceedStoryPoint(</Literal>
+              <Scope data="ARGUMENT" ref="Story Point">
+                <Fragment data="NAME" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Continue at &lt;Story Point&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Continue at &lt;Story Point&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>116</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Story Point</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>storyPoint</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEStory.ContinueAtStoryPoint(</Literal>
+              <Scope data="ARGUMENT" ref="Story Point">
+                <Fragment data="NAME" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Fail &lt;Story Point&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Fail &lt;Story Point&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>117</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Story Point</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>storyPoint</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEStory.FailStoryPoint(</Literal>
+              <Scope data="ARGUMENT" ref="Story Point">
+                <Fragment data="NAME" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
     <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
+    <ScriptIt>
+      <Name>if &lt;Story Point&gt; is active</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>if &lt;Story Point&gt; is active</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>118</Id>
+          <Types>
+            <Type>question</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Story Point</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>storyPoint</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return SEStory.IsEnabled(</Literal>
+              <Scope data="ARGUMENT" ref="Story Point">
+                <Fragment data="NAME" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>if &lt;Story Point&gt; has succeeded</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>if &lt;Story Point&gt; has succeeded</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>119</Id>
+          <Types>
+            <Type>question</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Story Point</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>storyPoint</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return SEStory.HasSucceeded(</Literal>
+              <Scope data="ARGUMENT" ref="Story Point">
+                <Fragment data="NAME" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>if &lt;Story Point&gt; has failed</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>if &lt;Story Point&gt; has failed</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>120</Id>
+          <Types>
+            <Type>question</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Story Point</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>storyPoint</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return SEStory.HasFailed(</Literal>
+              <Scope data="ARGUMENT" ref="Story Point">
+                <Fragment data="NAME" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
   </Effects>
   <DescribeIts>
+    <DescribeIt>
+      <Name>Button Clicked</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Is Active</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[18]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Clone</Name>
+      <Types>
+        <Type>GameObject</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
     <DescribeIt>
       <Name>Mouse Button Clicked</Name>
       <Types>
@@ -4679,7 +4948,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
         </Entry>
@@ -4697,14 +4966,14 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Button Clicked</Name>
+      <Name>Has Succeeded</Name>
       <Types>
         <Type>question</Type>
       </Types>
@@ -4715,16 +4984,16 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[6]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[19]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Clone</Name>
+      <Name>Has Failed</Name>
       <Types>
-        <Type>GameObject</Type>
+        <Type>question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -4733,9 +5002,9 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[7]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[20]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
