@@ -121,19 +121,34 @@ static function HasFailed(uniqueName:String):boolean  {
 	}
 }
 
-
 /**
  * Finds the Story Point that matches the unique name.
  */
 private static function FindStoryPoint(uniqueName:String):StoryPoint {
-	if(root.uniqueName == uniqueName) 
-		return root;
+	
+	var storyPoint = FindStoryPointInDescendants(root, uniqueName);
+	
+	if(storyPoint == null)
+		Debug.Log("SEStory Warning: Could not find Story Point with unique name "
+			+ uniqueName);
+		
+	return storyPoint;
+}
+
+/**
+ * Recursively searches for a Story Point in the descendants of the passed in point.
+ * This should only be called by FindStoryPoint(String).
+ */
+private static function FindStoryPointInDescendants(parent:StoryPoint, uniqueName:String):StoryPoint {
+
+	if(parent.uniqueName == uniqueName) 
+		return parent;
 	else {
-		for(child in root.children) {
+		for(child in parent.children) {
 			if(child.uniqueName == uniqueName)
 				return child;
 			else {
-				var foundPoint:StoryPoint = FindStoryPoint(child.uniqueName);
+				var foundPoint:StoryPoint = FindStoryPointInDescendants(child, uniqueName);
 				
 				if(foundPoint != null)
 					return foundPoint;
@@ -141,10 +156,8 @@ private static function FindStoryPoint(uniqueName:String):StoryPoint {
 		}
 	}
 	
-	Debug.Log("SEStory Warning: Could not find Story Point with unique name "
-		+ uniqueName);
-		
 	return null;
+
 }
 
 /**
@@ -207,7 +220,7 @@ private class StoryPoint {
 			
 				var succeededParents:int = 0;
 			
-				for(parent in this.parents) {
+				for(parent in child.parents) {
 					if(parent.HasSucceeded())
 						succeededParents++;		
 				}
