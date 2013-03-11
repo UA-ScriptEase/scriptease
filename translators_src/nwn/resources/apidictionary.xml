@@ -7437,7 +7437,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Play &lt;Sound&gt;</Name>
+      <Name>Play &lt;Sound Object&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -7445,7 +7445,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Play &lt;Sound&gt;</Name>
+          <Name>Play &lt;Sound Object&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>161</Id>
@@ -7454,7 +7454,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Sound</Name>
+              <Name>Sound Object</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -7463,9 +7463,12 @@
             </KnowIt>
           </Parameters>
           <Code>
+          	<Line>
+          		<Literal>// Note that we cannot name this play sound because that script already exists</Literal>
+          	</Line>
             <Line>
               <Literal>SoundObjectPlay(</Literal>
-              <Scope data="argument" ref="Sound">
+              <Scope data="argument" ref="Sound Object">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
               <Literal>);</Literal>
