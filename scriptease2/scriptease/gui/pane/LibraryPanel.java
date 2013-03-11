@@ -354,6 +354,12 @@ public class LibraryPanel extends JTabbedPane {
 							k2Widget = GameTypeManager.DEFAULT_LIST_WIDGET;
 						}
 					}
+					
+					if(k1Widget == null)
+						k1Widget = "";
+					
+					if(k2Widget == null)
+						k2Widget = "";
 
 					compare = k1Widget.compareTo(k2Widget);
 
