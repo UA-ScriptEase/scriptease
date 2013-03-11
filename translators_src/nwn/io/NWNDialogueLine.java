@@ -87,7 +87,7 @@ public class NWNDialogueLine extends NWNGameConstant {
 				final String name;
 
 				name = this.conversation.resolveSyncStruct(syncStruct,
-						isPlayerLine).getString("Text");
+						!isPlayerLine).getString("Text");
 
 				children.add(new NWNDialogueLine(this.conversation, syncStruct,
 						!this.isPlayerLine, indexes, name));
