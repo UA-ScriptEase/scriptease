@@ -127,9 +127,14 @@ public final class UnityProject implements GameModule {
 		// TODO We may not be aggregating these correctly, since I just ripped
 		// this directly from the NWN translator. It's working right now, but
 		// will likely break in one or more of these cases:
-		// 1. The user adds two same causes
-		// 2. The user adds two same causes with the same game object
-		// 3. The user adds two different causes with the same game object
+		// 1. The user adds two same causes (This works)
+		// 2. The user adds two same causes with the same game object (This
+		// works)
+		// 3. The user adds two different causes with the same game object (Need
+		// to try but likely works)
+
+		// TODO If this works, we should just make it the default behaviour in
+		// the super class.
 
 		final Map<String, List<CodeBlock>> codeBlocks;
 		final CodeBlockMapper codeBlockMapper;
