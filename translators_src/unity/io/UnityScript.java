@@ -99,7 +99,7 @@ public class UnityScript {
 	/**
 	 * Attaches the Script to the scene. This is private and should only be
 	 * called in the constructor. I've moved the code into a method since we may
-	 * move this type of code to the Scene file itself later.
+	 * move this type of code to the Scene file itself later...
 	 */
 	private void addToScene() {
 		this.scene.addObject(this.monoBehaviourObject);
