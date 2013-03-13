@@ -219,6 +219,10 @@ public class ScriptWidgetFactory {
 
 			if (editable) {
 				widget.add(ScriptWidgetFactory.buildNameEditor(storyComponent));
+				// This is another one of those moments where I wish we could
+				// use CSS. The blank JLabel adds some extra space at the end
+				// after a name editor so that we can still drag the widget.
+				widget.add(new JLabel("   "));
 			} else {
 				widget.add(ScriptWidgetFactory
 						.buildObservedNameLabel(storyComponent));
@@ -643,7 +647,6 @@ public class ScriptWidgetFactory {
 			}
 		};
 
-		// TODO Update graph panel so this isn't necessary
 		final boolean resizing;
 
 		if (component instanceof StoryPoint)
