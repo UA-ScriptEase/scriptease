@@ -77,10 +77,11 @@ public class DialogBuilder {
 	 */
 	public JDialog createProgressBar(Frame parent, String text) {
 		final JDialog dialog = new JDialog(parent, true);
+		final JProgressBar progressBar = new JProgressBar();
 
 		UIManager.put("ProgressBar.selectionForeground", Color.black);
 		UIManager.put("ProgressBar.selectionBackground", Color.black);
-		JProgressBar progressBar = new JProgressBar();
+
 		progressBar.setIndeterminate(true);
 		progressBar.setPreferredSize(new Dimension(200, 30));
 		// progressBar.setOpaque(false);

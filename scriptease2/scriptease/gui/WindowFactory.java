@@ -252,19 +252,28 @@ public final class WindowFactory {
 				.createProgressBar(this.currentFrame, progressBarText);
 
 		WindowFactory.progressShowing = true;
+
 		task.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent change) {
 				if ("state" == change.getPropertyName()) {
 					if (change.getNewValue() == StateValue.DONE) {
+
+						// TODO Should get rid of this message when we fix the
+						// exceptions.
+						System.out.println("Removing progress bar");
+
 						task.removePropertyChangeListener(this);
 						progressBar.setVisible(false);
-						progressBar.dispose();
+						// progressBar.dispose();
 						WindowFactory.progressShowing = false;
 					}
 				}
 			}
 		});
+
+		// TODO Should get rid of this message when we fix the exceptions.
+		System.out.println("Showing progress bar");
 
 		progressBar.setVisible(true);
 	}

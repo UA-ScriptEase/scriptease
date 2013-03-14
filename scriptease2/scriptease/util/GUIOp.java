@@ -231,12 +231,13 @@ public class GUIOp {
 	 * @return
 	 */
 	public static Point getMidRight(JComponent component) {
+		final Dimension componentSize = component.getPreferredSize();
+
 		Point point = new Point();
 		if (component != null) {
-			point.setLocation((int) (component.getX() + component
-					.getPreferredSize().getWidth()),
-					(int) (component.getY() + component.getPreferredSize()
-							.getHeight() / 2));
+			point.setLocation(
+					(int) (component.getX() + componentSize.getWidth()),
+					(int) (component.getY() + componentSize.getHeight() / 2));
 		}
 		return point;
 	}
