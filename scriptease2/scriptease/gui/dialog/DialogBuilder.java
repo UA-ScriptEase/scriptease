@@ -76,15 +76,15 @@ public class DialogBuilder {
 	 * @return
 	 */
 	public JDialog createProgressBar(Frame parent, String text) {
-		final JDialog dialog = new JDialog(parent, true);
-		final JProgressBar progressBar = new JProgressBar();
-
 		UIManager.put("ProgressBar.selectionForeground", Color.black);
 		UIManager.put("ProgressBar.selectionBackground", Color.black);
 
+		final JDialog dialog = new JDialog(parent, true);
+		final JProgressBar progressBar = new JProgressBar();
+
 		progressBar.setIndeterminate(true);
 		progressBar.setPreferredSize(new Dimension(200, 30));
-		// progressBar.setOpaque(false);
+		progressBar.setOpaque(false);
 		progressBar.setString(text);
 		progressBar.setStringPainted(true);
 
@@ -93,7 +93,7 @@ public class DialogBuilder {
 		dialog.setUndecorated(true);
 		dialog.getRootPane().setOpaque(false);
 		dialog.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
-		dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setSize(dialog.getPreferredSize());
 		dialog.setLocationRelativeTo(dialog.getParent());
 		return dialog;
