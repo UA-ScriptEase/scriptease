@@ -204,7 +204,11 @@ public class KnowItBindingConverter implements Converter {
 				ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR);
 
 		writer.startNode(StoryPointConverter.TAG_STORYPOINT);
-		context.convertAnother(binding.getValue());
+		final StoryPoint value = binding.getValue();
+		if (value == null)
+			System.err.println("Bug track: Null value assigned to binding "
+					+ binding);
+		context.convertAnother(binding);
 		writer.endNode();
 	}
 
