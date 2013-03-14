@@ -252,6 +252,7 @@ public final class WindowFactory {
 				.createProgressBar(this.currentFrame, progressBarText);
 
 		WindowFactory.progressShowing = true;
+
 		task.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent change) {
@@ -259,7 +260,6 @@ public final class WindowFactory {
 					if (change.getNewValue() == StateValue.DONE) {
 						task.removePropertyChangeListener(this);
 						progressBar.setVisible(false);
-						progressBar.dispose();
 						WindowFactory.progressShowing = false;
 					}
 				}

@@ -266,9 +266,10 @@ public class StoryComponentPanel extends JPanel implements
 						component);
 			}
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_CHILD_REMOVED)) {
-			component.removeStoryComponentObserverFromChildren(this);
 			if (component.getOwner() == null
-					|| component.getOwner() == this.component) {
+					|| component.getOwner() == this.component
+					&& component instanceof ComplexStoryComponent) {
+				component.removeStoryComponentObserverFromChildren(this);
 				StoryComponentPanelFactory.getInstance().removeChild(this,
 						component);
 			}
@@ -404,6 +405,7 @@ public class StoryComponentPanel extends JPanel implements
 						.getSelectionManager();
 				if (selectionManager != null)
 					selectionManager.toggleSelection(panel, e);
+				
 				e.consume();
 			}
 

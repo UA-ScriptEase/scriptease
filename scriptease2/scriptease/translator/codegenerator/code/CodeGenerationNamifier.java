@@ -55,6 +55,9 @@ public class CodeGenerationNamifier {
 	 * @return true if name is unique in scope
 	 */
 	protected boolean isNameUnique(String name) {
+		if(name.equals("Location_2"))
+			System.out.println("CHECK NOW");
+		
 		Collection<String> componentNameList = new ArrayList<String>(
 				this.componentsToNames.values());
 		Collection<String> codeBlockNameList = new ArrayList<String>(
@@ -253,7 +256,6 @@ public class CodeGenerationNamifier {
 		while (owner != null && ownerNamifier != null) {
 			// Propogate one level regardless of owner type.
 			ownerNamifier.componentsToNames.put(component, name);
-
 			ownerNamifier = ownerNamifier.parentNamifier;
 			owner = owner.getOwner();
 		}
