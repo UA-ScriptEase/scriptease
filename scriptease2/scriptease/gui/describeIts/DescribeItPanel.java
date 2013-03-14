@@ -43,7 +43,7 @@ import scriptease.util.GUIOp;
 public class DescribeItPanel extends JPanel {
 	private final SEGraph<DescribeItNode> describeItGraph;
 	private final ExpansionButton expansionButton;
-	private final JPanel boundScriptItPanel;
+	private final JPanel scriptItPanel;
 
 	private boolean isCollapsed;
 
@@ -62,7 +62,7 @@ public class DescribeItPanel extends JPanel {
 		final DescribeItNodeGraphModel describeItGraphModel;
 
 		this.isCollapsed = true;
-		this.boundScriptItPanel = new JPanel();
+		this.scriptItPanel = new JPanel();
 
 		dictionary = TranslatorManager.getInstance().getActiveAPIDictionary();
 		describeItManager = dictionary.getDescribeItManager();
@@ -98,7 +98,7 @@ public class DescribeItPanel extends JPanel {
 				path = describeIt.getPath(scriptIt);
 
 				StoryComponentPanelFactory.getInstance().parseDisplayText(
-						boundScriptItPanel, scriptIt);
+						scriptItPanel, scriptIt);
 
 				if (path.size() > 0)
 					describeItGraph.setSelectedNodes(path);
@@ -117,7 +117,7 @@ public class DescribeItPanel extends JPanel {
 			this.expansionButton.setVisible(false);
 
 		this.add(this.describeItGraph);
-		this.add(this.boundScriptItPanel);
+		this.add(this.scriptItPanel);
 	}
 
 	/**
@@ -165,10 +165,10 @@ public class DescribeItPanel extends JPanel {
 
 						knowIt.setBinding(clone);
 
-						boundScriptItPanel.removeAll();
+						scriptItPanel.removeAll();
 
 						StoryComponentPanelFactory.getInstance()
-								.parseDisplayText(boundScriptItPanel, clone);
+								.parseDisplayText(scriptItPanel, clone);
 
 						UndoManager.getInstance().endUndoableAction();
 					}
@@ -183,7 +183,7 @@ public class DescribeItPanel extends JPanel {
 							.getPath((ScriptIt) binding.getValue()));
 				}
 
-				boundScriptItPanel.setVisible(collapsed);
+				scriptItPanel.setVisible(collapsed);
 				describeItGraph.setVisible(!collapsed);
 				expansionButton.setCollapsed(collapsed);
 				DescribeItPanel.this.revalidate();
@@ -233,25 +233,20 @@ public class DescribeItPanel extends JPanel {
 		 * @return
 		 */
 		private Dimension minimumCollapsedLayoutSize(int xSize, int ySize) {
-			int buttonHeight = 0;
-			int buttonWidth = 0;
 			// Expansion button
 			if (expansionButton.isVisible()) {
-				buttonHeight += (int) expansionButton.getPreferredSize()
-						.getHeight();
-				buttonWidth += (int) expansionButton.getPreferredSize()
-						.getWidth();
+				final Dimension buttonSize = expansionButton.getPreferredSize();
+				ySize = Math.max(ySize, buttonSize.height);
+				xSize += buttonSize.width;
 			}
-
 			// Add the button indent
-			xSize += buttonWidth + BUTTON_X_INDENT;
-			ySize = Math.max(ySize, buttonHeight);
+			xSize += BUTTON_X_INDENT;
 
 			// Resolve the displayNamePanel's size
-			if (boundScriptItPanel.isVisible()) {
-				xSize += boundScriptItPanel.getPreferredSize().getWidth();
-				ySize = Math.max(ySize, (int) boundScriptItPanel
-						.getPreferredSize().getHeight());
+			if (scriptItPanel.isVisible()) {
+				final Dimension panelSize = scriptItPanel.getPreferredSize();
+				xSize += panelSize.width;
+				ySize = Math.max(ySize, panelSize.height);
 			}
 
 			return new Dimension(xSize, ySize);
@@ -263,29 +258,25 @@ public class DescribeItPanel extends JPanel {
 		 * @param parent
 		 */
 		private void layoutCollapsed(int xLocation, int yLocation) {
-			int buttonHeight = 0;
-			int buttonWidth = 0;
-
 			// Expansion button
 			if (expansionButton.isVisible()) {
-				buttonHeight += (int) DescribeItPanel.this.expansionButton
-						.getPreferredSize().getHeight();
-				buttonWidth += (int) DescribeItPanel.this.expansionButton
-						.getPreferredSize().getWidth();
-				expansionButton.setBounds(xLocation,
-						((int) DescribeItPanel.this.getPreferredSize()
-								.getHeight() - buttonHeight) / 2, buttonWidth,
-						buttonHeight);
+				final Dimension buttonSize = expansionButton.getPreferredSize();
+				final int buttonHeight = buttonSize.height;
+				final int buttonWidth = buttonSize.width;
+
+				expansionButton
+						.setBounds(
+								xLocation,
+								(DescribeItPanel.this.getPreferredSize().height - buttonHeight) / 2,
+								buttonWidth, buttonHeight);
 
 				xLocation += buttonWidth + BUTTON_X_INDENT;
 			}
 
-			if (boundScriptItPanel.isVisible()) {
-				boundScriptItPanel
-						.setBounds(xLocation, yLocation,
-								(int) boundScriptItPanel.getPreferredSize()
-										.getWidth(), (int) boundScriptItPanel
-										.getPreferredSize().getHeight());
+			if (scriptItPanel.isVisible()) {
+				final Dimension panelSize = scriptItPanel.getPreferredSize();
+				scriptItPanel.setBounds(xLocation, yLocation, panelSize.width,
+						panelSize.height);
 			}
 		}
 
@@ -296,24 +287,17 @@ public class DescribeItPanel extends JPanel {
 		 * @return
 		 */
 		protected Dimension minimumExpandedLayoutSize(int xSize, int ySize) {
-			int buttonHeight = 0;
-			int buttonWidth = 0;
 			if (DescribeItPanel.this.expansionButton.isVisible()) {
+				final Dimension buttonSize = expansionButton.getPreferredSize();
 				// Expansion button
-				buttonHeight += (int) DescribeItPanel.this.expansionButton
-						.getPreferredSize().getHeight();
-				buttonWidth += (int) DescribeItPanel.this.expansionButton
-						.getPreferredSize().getWidth();
+				ySize = Math.max(buttonSize.height, ySize);
+				xSize += buttonSize.width;
 			}
 
-			// Add the button indent
-			xSize += buttonWidth;
-			ySize = Math.max(buttonHeight, ySize);
-
 			// calculate the minimum size with the graphPanel
-			Dimension minimumSize = describeItGraph.getMinimumSize();
-			minimumSize.setSize(minimumSize.getWidth() + xSize,
-					Math.max(minimumSize.getHeight(), ySize));
+			final Dimension minimumSize = describeItGraph.getMinimumSize();
+			minimumSize.setSize(minimumSize.width + xSize,
+					Math.max(minimumSize.height, ySize));
 
 			return minimumSize;
 		}
@@ -325,14 +309,13 @@ public class DescribeItPanel extends JPanel {
 		 * @param yLocation
 		 */
 		protected void layoutExpanded(int xLocation, int yLocation) {
-			int buttonHeight = 0;
-			int buttonWidth = 0;
+			final Dimension buttonSize = expansionButton.getPreferredSize();
+			final Dimension graphSize = describeItGraph.getPreferredSize();
 
 			// Expansion button
-			buttonHeight = (int) DescribeItPanel.this.expansionButton
-					.getPreferredSize().getHeight();
-			buttonWidth = (int) DescribeItPanel.this.expansionButton
-					.getPreferredSize().getWidth();
+			final int buttonHeight = buttonSize.height;
+			final int buttonWidth = buttonSize.width;
+
 			DescribeItPanel.this.expansionButton
 					.setBounds(xLocation,
 							(((int) DescribeItPanel.this.getPreferredSize()
@@ -343,9 +326,8 @@ public class DescribeItPanel extends JPanel {
 			xLocation += buttonWidth;
 
 			// graphPanel does the rest
-			describeItGraph.setBounds(xLocation, yLocation,
-					(int) describeItGraph.getPreferredSize().getWidth(),
-					(int) describeItGraph.getPreferredSize().getHeight());
+			describeItGraph.setBounds(xLocation, yLocation, graphSize.width,
+					graphSize.height);
 		}
 
 		@Override

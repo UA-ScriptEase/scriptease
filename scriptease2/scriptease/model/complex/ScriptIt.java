@@ -203,7 +203,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 			StoryComponent sibling) {
 		boolean success = super.addStoryChildBefore(newChild, sibling);
 		// TODO See this? This "instanceof my subclass"? This is bad. This is
-		// everything that is wrong with this class. Atrocious.
+		// everything that is wrong with this class.
 		if (success && !(this instanceof ControlIt)) {
 			if (this.getChildren().iterator().next() == newChild)
 				this.setActiveBlock((StoryItemSequence) newChild);
