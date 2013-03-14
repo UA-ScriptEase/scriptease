@@ -38,19 +38,19 @@ import scriptease.util.GUIOp;
  * 
  * @author remiller
  */
-public class TypeWidgetUI extends BasicToggleButtonUI implements
-		ScriptEaseUI {
+public class TypeWidgetUI extends BasicToggleButtonUI implements ScriptEaseUI {
 	private static final int LINE_THICKNESS = 1;
-	
-	private static final GradientLineBorder BORDER = new GradientLineBorder(LINE_THICKNESS);
-	
+
+	private static final GradientLineBorder BORDER = new GradientLineBorder(
+			LINE_THICKNESS);
+
 	private static final TypeWidgetUI instance = new TypeWidgetUI();
-	
+
 	public static TypeWidgetUI getInstance() {
 		return instance;
 	}
-	
-	@Override 
+
+	@Override
 	public void installUI(JComponent comp) {
 		super.installUI(comp);
 
@@ -74,7 +74,7 @@ public class TypeWidgetUI extends BasicToggleButtonUI implements
 
 	@Override
 	public Dimension getPreferredSize(JComponent comp) {
-		Dimension size = super.getPreferredSize(comp);
+		final Dimension size = super.getPreferredSize(comp);
 
 		if (size.getWidth() < size.getHeight()) {
 			size.setSize(size.getHeight(), size.getHeight());
@@ -194,11 +194,11 @@ public class TypeWidgetUI extends BasicToggleButtonUI implements
 
 			float[] startDistances = { 0.0f, 0.8f };
 			Color[] gradient = { specularHue, diffuseHue };
-			
+
 			radius = button.getWidth() * 60 / 100;
 
-			paint = new RadialGradientPaint(centre,
-					radius, startDistances, gradient);
+			paint = new RadialGradientPaint(centre, radius, startDistances,
+					gradient);
 		}
 		// Concave gradient.
 		else {
@@ -212,9 +212,9 @@ public class TypeWidgetUI extends BasicToggleButtonUI implements
 			Color[] gradient = { diffuseHue, specularHue };
 
 			radius = button.getWidth() * 90 / 100;
-			
-			paint = new RadialGradientPaint(centre,
-					radius, startDistances, gradient);
+
+			paint = new RadialGradientPaint(centre, radius, startDistances,
+					gradient);
 		}
 
 		g.setPaint(paint);
