@@ -15,9 +15,6 @@ import javax.swing.JPanel;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.describeIts.DescribeItPanel;
@@ -393,7 +390,6 @@ public class StoryComponentPanelFactory {
 			@Override
 			public void processKnowIt(final KnowIt knowIt) {
 				final JPanel mainPanel;
-				final StoryComponentObserver bindingObserver;
 				final BindingAdapter adapter;
 
 				mainPanel = new JPanel();
@@ -420,23 +416,9 @@ public class StoryComponentPanelFactory {
 					}
 				};
 
-				bindingObserver = new StoryComponentObserver() {
-					@Override
-					public void componentChanged(StoryComponentEvent event) {
-						if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
-							mainPanel.removeAll();
-							StoryComponentPanelFactory.this.addWidget(
-									mainPanel, knowIt, true);
-							knowIt.getBinding().resolveBinding()
-									.process(adapter);
-						}
-					}
-				};
-
 				mainPanel.setOpaque(false);
 				mainPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 
-				knowIt.addStoryComponentObserver(bindingObserver);
 				StoryComponentPanelFactory.this.addWidget(mainPanel, knowIt,
 						true);
 

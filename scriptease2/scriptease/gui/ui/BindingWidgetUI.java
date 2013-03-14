@@ -263,9 +263,8 @@ public class BindingWidgetUI extends ComponentUI {
 	 *            the label whose binding type is to be painted
 	 */
 	private void paintType(Graphics2D g, BindingWidget comp) {
-		Color bgColor = comp.getBackground();
-		CellRendererPane renderer = new CellRendererPane();
-		Dimension preferredTypeSize;
+		final Color bgColor = comp.getBackground();
+		final CellRendererPane renderer = new CellRendererPane();
 
 		int i = 0;
 		// This is for BindingWidgets....
@@ -274,6 +273,7 @@ public class BindingWidgetUI extends ComponentUI {
 			this.typeRenderer = ScriptWidgetFactory.getTypeWidget(type);
 			this.typeRenderer.setBackground(bgColor);
 
+			final Dimension preferredTypeSize;
 			preferredTypeSize = this.typeRenderer.getPreferredSize();
 
 			renderer.paintComponent(

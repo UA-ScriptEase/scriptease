@@ -219,6 +219,10 @@ public class ScriptWidgetFactory {
 
 			if (editable) {
 				widget.add(ScriptWidgetFactory.buildNameEditor(storyComponent));
+				// This is another one of those moments where I wish we could
+				// use CSS. The blank JLabel adds some extra space at the end
+				// after a name editor so that we can still drag the widget.
+				widget.add(new JLabel("   "));
 			} else {
 				widget.add(ScriptWidgetFactory
 						.buildObservedNameLabel(storyComponent));
@@ -377,9 +381,12 @@ public class ScriptWidgetFactory {
 			final BindingWidget widget, final Resource constantValue,
 			final String bindingType) {
 
-		final Comparable<?> MIN = null; // default to no min limit
-		final Comparable<?> MAX = null; // default to no max limit
-		final Float STEP_SIZE = 1.0f; // default to int step size
+		// This comes from finding the highest number allowed for JSpinners.
+		final float MAX_NUMBER = 16777216.0f;
+
+		final Comparable<?> MAX = MAX_NUMBER;
+		final Comparable<?> MIN = -MAX_NUMBER;
+		final Float STEP_SIZE = 1.0f;
 
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
@@ -399,6 +406,17 @@ public class ScriptWidgetFactory {
 		model = new SpinnerNumberModel(initVal, MIN, MAX, STEP_SIZE);
 		spinner = new JSpinner(model);
 		scriptValue = knowIt.getBinding().getScriptValue();
+
+		final JTextField textField = ((JSpinner.DefaultEditor) spinner
+				.getEditor()).getTextField();
+
+		// For some annoying reason, JSpinners don't automatically resize when
+		// you set their max and min values...
+		int length = textField.getText().length();
+		if (length % 2 != 0) {
+			textField.setColumns((length + 1) / 2);
+		} else
+			textField.setColumns(length / 2);
 
 		// Handle the initial value case
 		if (scriptValue == null || scriptValue.isEmpty()) {
@@ -427,6 +445,12 @@ public class ScriptWidgetFactory {
 				value = (Float) spinner.getValue();
 				newBinding = SimpleResource.buildSimpleResource(bindingType,
 						value.toString());
+
+				int length = textField.getText().length();
+				if (length % 2 != 0) {
+					textField.setColumns((length + 1) / 2);
+				} else
+					textField.setColumns(length / 2);
 
 				// null check
 				if (newBinding == null)
@@ -622,7 +646,6 @@ public class ScriptWidgetFactory {
 			}
 		};
 
-		// TODO Update graph panel so this isn't necessary
 		final boolean resizing;
 
 		if (component instanceof StoryPoint)

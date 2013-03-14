@@ -1,6 +1,7 @@
 package scriptease.gui.filters;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -27,6 +28,7 @@ import scriptease.translator.apimanagers.GameTypeManager;
  * 
  * @author mfchurch
  * @author remiller
+ * @author kschenk
  */
 public class StoryComponentSearchFilter extends StoryComponentFilter {
 	private static final String WHITESPACE_AND_QUOTES = " \t\r\n\"";
@@ -163,17 +165,22 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 			return this.searchData;
 		}
 
-		private void addTypeData(Collection<String> typeTags) {
+		private void addTypeData(Collection<String> types) {
 			final GameTypeManager typeManager;
 
 			typeManager = TranslatorManager.getInstance()
 					.getActiveGameTypeManager();
 
-			for (String typeTag : typeTags) {
-				this.searchData.add(typeTag);
-				this.searchData.add(typeManager.getDisplayText(typeTag));
-				this.searchData.add(typeManager.getCodeSymbol(typeTag));
-				this.searchData.add(typeManager.getWidgetName(typeTag));
+			for (String type : types) {
+				this.searchData.add(type);
+				this.searchData.add(typeManager.getDisplayText(type));
+				this.searchData.add(typeManager.getCodeSymbol(type));
+				this.searchData.add(typeManager.getWidgetName(type));
+
+				final Map<String, String> enums = typeManager.getEnumMap(type);
+
+				this.searchData.addAll(enums.values());
+				this.searchData.addAll(enums.keySet());
 			}
 		}
 

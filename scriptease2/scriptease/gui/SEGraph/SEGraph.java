@@ -688,7 +688,7 @@ public class SEGraph<E> extends JComponent {
 					JComponent component = SEGraph.this
 							.createComponentForNode(node);
 					yNodeSize += VERTICAL_INDENT
-							+ component.getPreferredSize().getHeight();
+							+ component.getPreferredSize().height;
 				}
 				ySize = Math.max(ySize, yNodeSize);
 			}
@@ -732,17 +732,18 @@ public class SEGraph<E> extends JComponent {
 				for (int currentNode = 0; currentNode < numberOfNodes; currentNode++) {
 					final E node;
 					final JComponent component;
+					final Dimension componentSize;
 					final int nodeWidth;
 					final int yNodeLocation;
 
 					node = currentNodes.get(currentNode);
 					component = SEGraph.this.createComponentForNode(node);
 					// JComponent preferred width
-					nodeWidth = (int) component.getPreferredSize().getWidth();
+					componentSize = component.getPreferredSize();
+					nodeWidth = componentSize.width;
 					// The y Location for the node.
 					yNodeLocation = (int) (pixelsPerNode * (currentNode + 1)
-							- 0.5 * pixelsPerNode - 0.5 * component
-							.getPreferredSize().getHeight());
+							- 0.5 * pixelsPerNode - 0.5 * componentSize.height);
 
 					if (component.getMouseListeners().length <= 1) {
 						component.addMouseListener(SEGraph.this.mouseAdapter);
@@ -762,8 +763,8 @@ public class SEGraph<E> extends JComponent {
 
 					// Set the size and location of the component
 					component.setLocation(xOffset + xLocation, yNodeLocation);
-					component.setSize(new Dimension(nodeWidth, (int) component
-							.getPreferredSize().getHeight()));
+					component.setSize(new Dimension(nodeWidth,
+							componentSize.height));
 				}
 
 				// Update the x location for the next level.
@@ -832,11 +833,11 @@ public class SEGraph<E> extends JComponent {
 
 			for (E node : nodes) {
 				// Get the component for the node.
-				JComponent component = SEGraph.this
+				final JComponent component = SEGraph.this
 						.createComponentForNode(node);
 
 				// Get the size of the JComponent.
-				Dimension componentSize = component.getPreferredSize();
+				final Dimension componentSize = component.getPreferredSize();
 
 				// Check for a new maximum.
 				if (componentSize.getWidth() > maxWidth) {
