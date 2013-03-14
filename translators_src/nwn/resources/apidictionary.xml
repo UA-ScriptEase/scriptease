@@ -19772,13 +19772,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>a random creature with same tag as &lt;Object&gt;</Name>
+      <Name>a random object with same tag as &lt;Object&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>a random creature with same tag as &lt;Object&gt;</Name>
+          <Name>a random object with same tag as &lt;Object&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>422</Id>
@@ -26543,7 +26543,7 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Random Creature</Name>
+      <Name>Random Object</Name>
       <Types>
         <Type>door</Type>
         <Type>placeable</Type>
