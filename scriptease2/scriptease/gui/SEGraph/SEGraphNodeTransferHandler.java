@@ -1,4 +1,4 @@
-package scriptease.gui.SEGraph.renderers;
+package scriptease.gui.SEGraph;
 
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -11,7 +11,6 @@ import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.SEGraph.SEGraph;
 
 /**
  * Creates a new TransferHandler for the passed in graph.
@@ -21,12 +20,12 @@ import scriptease.gui.SEGraph.SEGraph;
  * @param <E>
  */
 @SuppressWarnings("serial")
-public class SEGraphNodeTransferHandler<E> extends TransferHandler {
+class SEGraphNodeTransferHandler<E> extends TransferHandler {
 	private DataFlavor nodeFlavour;
 
 	private final SEGraph<E> graph;
 
-	public SEGraphNodeTransferHandler(SEGraph<E> graph) {
+	protected SEGraphNodeTransferHandler(SEGraph<E> graph) {
 		this.graph = graph;
 
 		final E startNode = graph.getStartNode();

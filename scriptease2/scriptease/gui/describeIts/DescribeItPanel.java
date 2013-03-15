@@ -13,14 +13,11 @@ import javax.swing.JPanel;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.SEGraph.SEGraph.SelectionMode;
-import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
+import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
-import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
@@ -30,7 +27,6 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.DescribeItManager;
-import scriptease.util.GUIOp;
 
 /**
  * This view is used to allow the user to select various pathways from
@@ -59,8 +55,6 @@ public class DescribeItPanel extends JPanel {
 		final DescribeItManager describeItManager;
 		final DescribeIt describeIt;
 
-		final DescribeItNodeGraphModel describeItGraphModel;
-
 		this.isCollapsed = true;
 		this.scriptItPanel = new JPanel();
 
@@ -73,20 +67,10 @@ public class DescribeItPanel extends JPanel {
 					+ " when attempting to create DescribeItPanel!");
 		}
 
-		describeItGraphModel = new DescribeItNodeGraphModel(
-				describeIt.getStartNode());
-
-		this.describeItGraph = new SEGraph<DescribeItNode>(
-				describeItGraphModel, SelectionMode.SELECT_PATH_FROM_START,
-				true);
-		this.describeItGraph.setNodeRenderer(new DescribeItNodeRenderer(
-				this.describeItGraph));
-
 		this.expansionButton = ScriptWidgetFactory
 				.buildExpansionButton(this.isCollapsed);
-
-		this.describeItGraph.setBackground(GUIOp.scaleWhite(
-				ScriptEaseUI.COLOUR_KNOWN_OBJECT, 3.5));
+		this.describeItGraph = SEGraphFactory.buildDescribeItGraph(describeIt
+				.getStartNode());
 
 		knowIt.getBinding().process(new BindingAdapter() {
 			@Override

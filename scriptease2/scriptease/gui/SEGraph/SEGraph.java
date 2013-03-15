@@ -29,9 +29,9 @@ import javax.swing.plaf.ComponentUI;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
+import scriptease.gui.SEGraph.models.SEGraphModel;
 import scriptease.gui.SEGraph.observers.SEGraphObserver;
 import scriptease.gui.SEGraph.renderers.SEGraphNodeRenderer;
-import scriptease.gui.SEGraph.renderers.SEGraphNodeTransferHandler;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -42,7 +42,8 @@ import sun.awt.util.IdentityArrayList;
 /**
  * Builds a directed, acyclic graph that must have a start node. Each graph must
  * be created with a model. Depending on the mode chosen, the graph can be set
- * to only select individual nodes, or entire paths by holding shift.
+ * to only select individual nodes, or entire paths by holding shift. Graphs
+ * should be created using the {@link SEGraphFactory}.
  * 
  * @author mfchurch
  * @author kschenk
@@ -62,7 +63,7 @@ public class SEGraph<E> extends JComponent {
 	 * @author kschenk
 	 * 
 	 */
-	public static enum SelectionMode {
+	protected static enum SelectionMode {
 		SELECT_NODE, SELECT_PATH, SELECT_PATH_FROM_START
 	}
 
@@ -88,7 +89,7 @@ public class SEGraph<E> extends JComponent {
 	 * @param model
 	 *            The model used for the Graph.
 	 */
-	public SEGraph(SEGraphModel<E> model) {
+	protected SEGraph(SEGraphModel<E> model) {
 		this(model, SelectionMode.SELECT_NODE, false);
 	}
 
@@ -104,7 +105,7 @@ public class SEGraph<E> extends JComponent {
 	 * @param isReadOnly
 	 *            If the graph is read only, only selection will be allowed.
 	 */
-	public SEGraph(SEGraphModel<E> model, SelectionMode selectionMode,
+	protected SEGraph(SEGraphModel<E> model, SelectionMode selectionMode,
 			boolean isReadOnly) {
 		this.selectionMode = selectionMode;
 		this.selectedNodes = new LinkedHashSet<E>();
@@ -159,7 +160,7 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 * @param renderer
 	 */
-	public void setNodeRenderer(SEGraphNodeRenderer<E> renderer) {
+	protected void setNodeRenderer(SEGraphNodeRenderer<E> renderer) {
 		this.renderer = renderer;
 
 		this.repaint();
@@ -188,7 +189,7 @@ public class SEGraph<E> extends JComponent {
 	 * @return true if the addition was successful
 	 * @see SEGraphModel#addNode(Object, Object)
 	 */
-	public boolean addNewNodeTo(E parent) {
+	private boolean addNewNodeTo(E parent) {
 		final E newNode;
 
 		newNode = this.model.createNewNode();
@@ -228,7 +229,7 @@ public class SEGraph<E> extends JComponent {
 	 * @return true if the addition was successful
 	 * @see SEGraphModel#addNodeBetween(Object, Object, Object)
 	 */
-	public boolean addNewNodeBetween(E existingNode1, E existingNode2) {
+	private boolean addNewNodeBetween(E existingNode1, E existingNode2) {
 		final E newNode;
 
 		newNode = this.model.createNewNode();
@@ -262,7 +263,7 @@ public class SEGraph<E> extends JComponent {
 	 *            The new node
 	 * @return True if the replacement was successful
 	 */
-	public boolean replaceNode(E existingNode, E newNode) {
+	protected boolean replaceNode(E existingNode, E newNode) {
 		if (this.model.overwriteNodeData(existingNode, newNode)) {
 			for (SEGraphObserver<E> observer : this.observers) {
 				observer.nodeOverwritten(existingNode);
@@ -312,7 +313,7 @@ public class SEGraph<E> extends JComponent {
 	 * @return True if the nodes were successfully connected.
 	 * @see SEGraphModel#connectNodes(Object, Object)
 	 */
-	public boolean connectNodes(E child, E parent) {
+	private boolean connectNodes(E child, E parent) {
 		if (this.model.connectNodes(child, parent)) {
 			for (SEGraphObserver<E> observer : this.observers) {
 				observer.nodesConnected(child, parent);
@@ -337,7 +338,7 @@ public class SEGraph<E> extends JComponent {
 	 * @return True if the nodes were successfully disconnected.
 	 * @see SEGraphModel#disconnectNodes(Object, Object)
 	 */
-	public boolean disconnectNodes(E child, E parent) {
+	private boolean disconnectNodes(E child, E parent) {
 		if (this.model.disconnectNodes(child, parent)) {
 			for (SEGraphObserver<E> observer : this.observers) {
 				observer.nodesDisconnected(child, parent);
@@ -390,7 +391,7 @@ public class SEGraph<E> extends JComponent {
 	 * @param node
 	 * @return
 	 */
-	public boolean selectNodesUntil(E node) {
+	private boolean selectNodesUntil(E node) {
 		final E start;
 		final E end;
 

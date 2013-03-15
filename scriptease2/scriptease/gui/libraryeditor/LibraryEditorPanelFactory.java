@@ -37,11 +37,9 @@ import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.ComponentFactory;
 import scriptease.gui.WidgetDecorator;
-import scriptease.gui.SEGraph.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.SEGraph.SEGraph.SelectionMode;
+import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
-import scriptease.gui.SEGraph.renderers.EditableDescribeItNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.action.typemenus.TypeAction;
@@ -377,17 +375,15 @@ public class LibraryEditorPanelFactory {
 		final EffectHolderPanel effectHolder;
 		final SetEffectObserver effectObserver;
 		final SEGraph<DescribeItNode> graph;
-		final DescribeItNodeGraphModel describeItGraphModel;
 
 		bindingPanel = new JPanel();
 		describeItGraphPanel = new JPanel();
 		graphToolBar = ComponentFactory.getInstance().buildGraphEditorToolBar();
 
 		effectHolder = new EffectHolderPanel(describeIt.getTypes());
-		describeItGraphModel = new DescribeItNodeGraphModel(
-				describeIt.getStartNode());
-		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
-				SelectionMode.SELECT_PATH_FROM_START, false);
+
+		graph = SEGraphFactory.buildDescribeItEditorGraph(describeIt
+				.getStartNode());
 
 		// Set the effectHolder to reflect the initial path of the describeIt
 		// (since it doesn't throw a path selection even in SEGraph the
@@ -419,8 +415,6 @@ public class LibraryEditorPanelFactory {
 			}
 		};
 
-		graph.setNodeRenderer(new EditableDescribeItNodeRenderer(graph));
-
 		graph.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
 
 			@Override
@@ -444,7 +438,6 @@ public class LibraryEditorPanelFactory {
 		 */
 
 		// Reset the ToolBar to select and add the Graph to it.
-		GraphToolBarModeAction.useGraphCursorForJComponent(graph);
 		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
 
 		// Set up the JPanel containing the graph

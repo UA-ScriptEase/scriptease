@@ -51,9 +51,8 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.SEGraph.StoryPointGraphModel;
+import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
-import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.filters.CategoryFilter;
@@ -61,8 +60,8 @@ import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.pane.CloseableModelTab;
-import scriptease.gui.pane.ResourcePanel;
 import scriptease.gui.pane.LibraryPanel;
+import scriptease.gui.pane.ResourcePanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -142,8 +141,6 @@ public final class PanelFactory {
 		final JToolBar graphToolBar;
 
 		final SEGraph<StoryPoint> storyGraph;
-		final StoryPointGraphModel storyGraphModel;
-
 		final StoryComponentPanelTree storyComponentTree;
 		final StoryComponentObserver graphRedrawer;
 		final JPanel storyGraphPanel;
@@ -153,8 +150,7 @@ public final class PanelFactory {
 		storyPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		graphToolBar = ComponentFactory.getInstance().buildGraphEditorToolBar();
 
-		storyGraphModel = new StoryPointGraphModel(start);
-		storyGraph = new SEGraph<StoryPoint>(storyGraphModel);
+		storyGraph = SEGraphFactory.buildStoryGraph(start);
 
 		storyComponentTree = new StoryComponentPanelTree(start);
 		graphRedrawer = new StoryComponentObserver() {
@@ -209,7 +205,6 @@ public final class PanelFactory {
 		this.modelsToComponents.put(model, panes);
 
 		// Set up the Story Graph
-		storyGraph.setNodeRenderer(new StoryPointNodeRenderer(storyGraph));
 		storyGraph.addSEGraphObserver(new SEGraphAdapter<StoryPoint>() {
 
 			@Override
@@ -238,12 +233,9 @@ public final class PanelFactory {
 
 		start.addStoryComponentObserver(graphRedrawer);
 
-		storyGraph.setBackground(Color.WHITE);
-
 		storyGraphPanel.setLayout(new BorderLayout());
 
 		// Reset the ToolBar to select and add the Story Graph to it.
-		GraphToolBarModeAction.useGraphCursorForJComponent(storyGraph);
 		GraphToolBarModeAction.setMode(GraphToolBarModeAction.getMode());
 
 		final String orientation = ScriptEase.getInstance().getPreference(
