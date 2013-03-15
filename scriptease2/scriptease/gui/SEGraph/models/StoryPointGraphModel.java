@@ -1,4 +1,4 @@
-package scriptease.gui.SEGraph;
+package scriptease.gui.SEGraph.models;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -7,6 +7,13 @@ import java.util.Set;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryPoint;
 
+/**
+ * A graph model for Story Points. Shows them with binding widgets and fan in
+ * spinners.
+ * 
+ * @author kschenk
+ * 
+ */
 public class StoryPointGraphModel extends SEGraphModel<StoryPoint> {
 	public StoryPointGraphModel(StoryPoint start) {
 		super(start);
