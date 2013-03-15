@@ -208,7 +208,7 @@ public class KnowItBindingConverter implements Converter {
 		if (value == null)
 			System.err.println("Bug track: Null value assigned to binding "
 					+ binding);
-		context.convertAnother(binding);
+		context.convertAnother(value);
 		writer.endNode();
 	}
 
