@@ -181,8 +181,8 @@ public class LibraryPanel extends JTabbedPane {
 		tabPanel = new JPanel();
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
-		searchField = ComponentFactory.getInstance()
-				.buildJTextFieldWithTextBackground(20, "Library", "");
+		searchField = ComponentFactory.buildJTextFieldWithTextBackground(20,
+				"Library", "");
 
 		typeFilter = new TypeAction();
 
@@ -354,11 +354,11 @@ public class LibraryPanel extends JTabbedPane {
 							k2Widget = GameTypeManager.DEFAULT_LIST_WIDGET;
 						}
 					}
-					
-					if(k1Widget == null)
+
+					if (k1Widget == null)
 						k1Widget = "";
-					
-					if(k2Widget == null)
+
+					if (k2Widget == null)
 						k2Widget = "";
 
 					compare = k1Widget.compareTo(k2Widget);

@@ -148,7 +148,7 @@ public final class PanelFactory {
 		final JScrollPane storyGraphScrollPane;
 
 		storyPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		graphToolBar = ComponentFactory.getInstance().buildGraphEditorToolBar();
+		graphToolBar = ComponentFactory.buildGraphEditorToolBar();
 
 		storyGraph = SEGraphFactory.buildStoryGraph(start);
 
@@ -499,8 +499,8 @@ public final class PanelFactory {
 
 		tree = new ResourcePanel(PatternModelManager.getInstance()
 				.getActiveModel());
-		searchField = ComponentFactory.getInstance()
-				.buildJTextFieldWithTextBackground(20, "Game Objects", "");
+		searchField = ComponentFactory.buildJTextFieldWithTextBackground(20,
+				"Game Objects", "");
 
 		typeFilter = new TypeAction();
 

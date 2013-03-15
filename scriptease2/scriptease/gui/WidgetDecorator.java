@@ -23,17 +23,6 @@ import scriptease.util.GUIOp;
  * 
  */
 public class WidgetDecorator {
-	private static WidgetDecorator instance = new WidgetDecorator();
-
-	/**
-	 * Returns the sole instance of WidgetDecorator.
-	 * 
-	 * @return
-	 */
-	public static WidgetDecorator getInstance() {
-		return instance;
-	}
-
 	/**
 	 * Adds focus and action listeners to a JTextField so that it commits its
 	 * text to the model when focus is lost or enter is pressed. Also gives the
@@ -49,8 +38,9 @@ public class WidgetDecorator {
 	 *            caller will handle it.
 	 * @return
 	 */
-	public void decorateJTextFieldForFocusEvents(final JTextField textField,
-			final Runnable commitText, final boolean resizing) {
+	public static void decorateJTextFieldForFocusEvents(
+			final JTextField textField, final Runnable commitText,
+			final boolean resizing) {
 
 		final Border defaultBorder;
 
