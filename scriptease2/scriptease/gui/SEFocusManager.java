@@ -20,10 +20,10 @@ import scriptease.controller.observer.SEFocusObserver;
  * @author kschenk
  */
 public class SEFocusManager {
-	private static Component focus;
-	private static final SEFocusManager instance = new SEFocusManager();
+	private Component focus;
+	private final Map<Object, SEFocusObserver> observerMap;
 
-	private static Map<Object, SEFocusObserver> observerMap = new WeakHashMap<Object, SEFocusObserver>();
+	private static final SEFocusManager instance = new SEFocusManager();
 
 	/**
 	 * Gets the sole instance of the ComponentFocusManager.
@@ -34,13 +34,17 @@ public class SEFocusManager {
 		return SEFocusManager.instance;
 	}
 
+	private SEFocusManager() {
+		observerMap = new WeakHashMap<Object, SEFocusObserver>();
+	}
+
 	/**
 	 * Gets the currently focused on component.
 	 * 
 	 * @return
 	 */
 	public Component getFocus() {
-		return SEFocusManager.focus;
+		return this.focus;
 	}
 
 	/**
@@ -51,9 +55,9 @@ public class SEFocusManager {
 	public void setFocus(Component focus) {
 		final Component oldFocus;
 
-		oldFocus = SEFocusManager.focus;
+		oldFocus = this.focus;
 
-		SEFocusManager.focus = focus;
+		this.focus = focus;
 
 		for (Entry<Object, SEFocusObserver> entry : observerMap.entrySet()) {
 			if (entry.getKey() == focus)
@@ -72,19 +76,20 @@ public class SEFocusManager {
 	 * @param observer
 	 */
 	public void addSEFocusObserver(Object object, SEFocusObserver observer) {
-		SEFocusManager.observerMap.put(object, observer);
+		this.observerMap.put(object, observer);
 	}
 
 	/**
 	 * Add an observer to the SEFocusManager so that it will fire events when
 	 * SEFocus changes. This observer will get garbage collected if its
 	 * reference is removed elsewhere. If we are not storing this observer
-	 * elsewhere, use {@link #addSEFocusObserver(Object, SEFocusObserver)} instead.
+	 * elsewhere, use {@link #addSEFocusObserver(Object, SEFocusObserver)}
+	 * instead.
 	 * 
 	 * @param object
 	 * @param observer
 	 */
 	public void addSEFocusObserver(SEFocusObserver observer) {
-		SEFocusManager.observerMap.put(observer, observer);
+		this.observerMap.put(observer, observer);
 	}
 }

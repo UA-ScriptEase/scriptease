@@ -269,8 +269,8 @@ class ParameterPanel extends JPanel {
 			}
 		};
 
-		WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
-				nameField, commitText, false);
+		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField, commitText,
+				false);
 
 		return nameField;
 	}

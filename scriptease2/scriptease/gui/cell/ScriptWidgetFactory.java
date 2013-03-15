@@ -612,8 +612,8 @@ public class ScriptWidgetFactory {
 		displayText = component.getDisplayText();
 
 		if (component instanceof Note) {
-			nameEditor = ComponentFactory.getInstance()
-					.buildJTextFieldWithTextBackground(0, "Note", displayText);
+			nameEditor = ComponentFactory.buildJTextFieldWithTextBackground(0,
+					"Note", displayText);
 		} else
 			nameEditor = new JTextField(displayText);
 
@@ -653,8 +653,8 @@ public class ScriptWidgetFactory {
 		else
 			resizing = true;
 
-		WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
-				nameEditor, commitText, resizing);
+		WidgetDecorator.decorateJTextFieldForFocusEvents(nameEditor,
+				commitText, resizing);
 
 		component.addStoryComponentObserver(observer);
 
@@ -722,8 +722,8 @@ public class ScriptWidgetFactory {
 			};
 		};
 
-		WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
-				valueEditor, commitText, true);
+		WidgetDecorator.decorateJTextFieldForFocusEvents(valueEditor,
+				commitText, true);
 
 		knowIt.addStoryComponentObserver(observer);
 

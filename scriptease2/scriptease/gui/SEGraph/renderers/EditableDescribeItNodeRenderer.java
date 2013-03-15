@@ -86,8 +86,8 @@ public class EditableDescribeItNodeRenderer extends
 				}
 			};
 
-			WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
-					nodeNameEditor, commitText, true);
+			WidgetDecorator.decorateJTextFieldForFocusEvents(nodeNameEditor,
+					commitText, true);
 
 			component.add(knowItButton);
 			component.add(nodeNameEditor);

@@ -260,8 +260,8 @@ public class LibraryEditorPanelFactory {
 				typeAction.getTypeSelectionDialogBuilder().selectTypes(
 						knowIt.getTypes(), true);
 
-				WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
-						nameField, commitText, false);
+				WidgetDecorator.decorateJTextFieldForFocusEvents(nameField,
+						commitText, false);
 
 				nameField.setHorizontalAlignment(JTextField.LEADING);
 
@@ -378,7 +378,7 @@ public class LibraryEditorPanelFactory {
 
 		bindingPanel = new JPanel();
 		describeItGraphPanel = new JPanel();
-		graphToolBar = ComponentFactory.getInstance().buildGraphEditorToolBar();
+		graphToolBar = ComponentFactory.buildGraphEditorToolBar();
 
 		effectHolder = new EffectHolderPanel(describeIt.getTypes());
 
@@ -495,8 +495,8 @@ public class LibraryEditorPanelFactory {
 			}
 		};
 
-		WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
-				nameField, commitText, false);
+		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField, commitText,
+				false);
 
 		nameField.setHorizontalAlignment(JTextField.LEADING);
 
@@ -560,8 +560,8 @@ public class LibraryEditorPanelFactory {
 			}
 		};
 
-		WidgetDecorator.getInstance().decorateJTextFieldForFocusEvents(
-				labelField, commitText, false);
+		WidgetDecorator.decorateJTextFieldForFocusEvents(labelField,
+				commitText, false);
 
 		labelField.setToolTipText(labelToolTip);
 

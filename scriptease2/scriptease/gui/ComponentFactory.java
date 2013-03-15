@@ -36,18 +36,6 @@ import scriptease.util.GUIOp;
  * 
  */
 public final class ComponentFactory {
-
-	private static ComponentFactory instance = new ComponentFactory();
-
-	/**
-	 * Returns the sole instance of ComponentFactory.
-	 * 
-	 * @return
-	 */
-	public static ComponentFactory getInstance() {
-		return instance;
-	}
-
 	/**
 	 * Builds a ToolBar to edit graphs with. Includes buttons for selecting
 	 * nodes, adding and deleting nodes, and adding and deleting paths. The
@@ -56,7 +44,7 @@ public final class ComponentFactory {
 	 * 
 	 * @return
 	 */
-	public JToolBar buildGraphEditorToolBar() {
+	public static JToolBar buildGraphEditorToolBar() {
 		final JToolBar graphEditorToolBar;
 		final ButtonGroup graphEditorButtonGroup;
 		final ArrayList<JToggleButton> buttonList;
@@ -153,8 +141,8 @@ public final class ComponentFactory {
 	 * @return
 	 */
 	@SuppressWarnings("serial")
-	public JTextField buildJTextFieldWithTextBackground(int size, String label,
-			final String initialText) {
+	public static JTextField buildJTextFieldWithTextBackground(int size,
+			String label, final String initialText) {
 		final JTextField field;
 		final BufferedImage background;
 		final JLabel backgroundLabel;
