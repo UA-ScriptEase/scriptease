@@ -244,11 +244,6 @@ public class UnityResource extends Resource {
 				final PropertyValue fatherMap;
 				final int fatherID;
 
-				// XXX REMOVE
-				if (this.name.equals("ScriptEase"))
-					System.out.println();
-				;
-
 				transformTypeNumber = UnityType.TRANSFORM.getID();
 				transformIDValue = this.getFirstOccuranceOfField(String
 						.valueOf(transformTypeNumber));

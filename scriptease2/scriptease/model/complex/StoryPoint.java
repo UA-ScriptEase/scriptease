@@ -189,8 +189,6 @@ public class StoryPoint extends ComplexStoryComponent {
 
 		descendants = new ArrayList<StoryPoint>();
 
-		System.out.println(this);
-		
 		descendants.add(this);
 
 		for (StoryPoint successor : this.successors) {
