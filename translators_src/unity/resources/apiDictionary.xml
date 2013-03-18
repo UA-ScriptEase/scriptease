@@ -5070,13 +5070,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>the length of the screen</Name>
+      <Name>the height of the screen</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>the length of the screen</Name>
+          <Name>the height of the screen</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>124</Id>
@@ -5085,7 +5085,7 @@
           </Types>
           <Code>
             <Line>
-              <Literal>return Screen.length;</Literal>
+              <Literal>return Screen.height;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -5360,7 +5360,7 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Screen Length</Name>
+      <Name>Screen Height</Name>
       <Types>
         <Type>float</Type>
       </Types>

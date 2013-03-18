@@ -55,9 +55,6 @@ public class CodeGenerationNamifier {
 	 * @return true if name is unique in scope
 	 */
 	protected boolean isNameUnique(String name) {
-		if(name.equals("Location_2"))
-			System.out.println("CHECK NOW");
-		
 		Collection<String> componentNameList = new ArrayList<String>(
 				this.componentsToNames.values());
 		Collection<String> codeBlockNameList = new ArrayList<String>(

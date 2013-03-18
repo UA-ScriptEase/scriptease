@@ -480,7 +480,7 @@ public class ResourcePanel extends JPanel {
 				constantPanel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
 
 			if (constantPanel == null) {
-				System.out.println("Constant has null component: " + constant);
+				System.err.println("Constant has null component: " + constant);
 				return;
 			}
 
