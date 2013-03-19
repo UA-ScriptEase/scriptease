@@ -3,7 +3,7 @@ package scriptease.controller.undo;
 import java.util.Stack;
 
 import scriptease.ScriptEase;
-import scriptease.model.PatternModel;
+import scriptease.model.SEModel;
 
 /**
  * Stores the undo and redo modification histories for a Pattern Model.
@@ -23,7 +23,7 @@ public final class History {
 
 	protected final Stack<UndoableCommand> undoStack;
 	protected final Stack<UndoableCommand> redoStack;
-	private final PatternModel model;
+	private final SEModel model;
 	private UndoableCommand lastSavedAction;
 
 	/**
@@ -36,7 +36,7 @@ public final class History {
 	/**
 	 * Creates a new History object.
 	 */
-	protected History(PatternModel model) {
+	protected History(SEModel model) {
 		this.undoStack = new Stack<UndoableCommand>();
 		this.redoStack = new Stack<UndoableCommand>();
 		this.model = model;
@@ -64,7 +64,7 @@ public final class History {
 	 * 
 	 * @return the history's target model
 	 */
-	public final PatternModel getModel() {
+	public final SEModel getModel() {
 		return this.model;
 	}
 

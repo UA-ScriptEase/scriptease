@@ -4,8 +4,8 @@ import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
 import scriptease.controller.observer.PatternModelEvent;
-import scriptease.controller.observer.PatternModelObserver;
-import scriptease.model.PatternModelManager;
+import scriptease.controller.observer.SEModelObserver;
+import scriptease.model.SEModelManager;
 
 /**
  * Abstract Action implementation that defines a group of Actions whose enabled
@@ -33,9 +33,9 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction {
 	 */
 	protected ActiveModelSensitiveAction(String name) {
 		super(name);
-		final PatternModelObserver observer;
+		final SEModelObserver observer;
 
-		observer = new PatternModelObserver() {
+		observer = new SEModelObserver() {
 			@Override
 			public void modelChanged(final PatternModelEvent event) {
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED
@@ -51,7 +51,7 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction {
 		};
 
 		this.updateEnabledState();
-		PatternModelManager.getInstance().addPatternModelObserver(this,
+		SEModelManager.getInstance().addPatternModelObserver(this,
 				observer);
 	}
 
@@ -76,6 +76,6 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction {
 	 * @return True if this action is legal.
 	 */
 	protected boolean isLegal() {
-		return PatternModelManager.getInstance().hasActiveModel();
+		return SEModelManager.getInstance().hasActiveModel();
 	}
 }

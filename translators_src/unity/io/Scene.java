@@ -361,6 +361,10 @@ public class Scene extends Resource {
 		return idNumber;
 	}
 
+	public File getLocation() {
+		return this.location;
+	}
+
 	@Override
 	public String toString() {
 		return "Scene <Location:" + this.location + ", Data:"

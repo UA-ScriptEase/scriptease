@@ -270,6 +270,13 @@
       <CodeSymbol>InputManager</CodeSymbol>
     </Type>
     <Type>
+      <Name>WrapMode</Name>
+      <Keyword>WrapMode</Keyword>
+      <CodeSymbol>WrapMode</CodeSymbol>
+      <Enum>WrapMode.PingPong&lt;Ping Pong&gt;|WrapMode.Once&lt;Once&gt;|WrapMode.Default&lt;Default&gt;|WrapMode.Loop&lt;Loop&gt;|WrapMode.ClampForever&lt;Clamp Forever&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
       <Name>GlobalGameManager</Name>
       <Keyword>GlobalGameManager</Keyword>
       <CodeSymbol>GlobalGameManager</CodeSymbol>
@@ -459,6 +466,13 @@
       <Name>LibraryAssetImporter</Name>
       <Keyword>LibraryAssetImporter</Keyword>
       <CodeSymbol>LibraryAssetImporter</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>ShowHide</Name>
+      <Keyword>ShowHide</Keyword>
+      <CodeSymbol>boolean</CodeSymbol>
+      <Enum>false&lt;Show&gt;|true&lt;Hide&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
       <Name>AssetMetaData</Name>
@@ -689,6 +703,13 @@
       <CodeSymbol>ProceduralMaterial</CodeSymbol>
     </Type>
     <Type>
+      <Name>LockUnlock</Name>
+      <Keyword>LockUnlock</Keyword>
+      <CodeSymbol>boolean</CodeSymbol>
+      <Enum>false&lt;Unlock&gt;|true&lt;Lock&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
       <Name>NetworkManager</Name>
       <Keyword>NetworkManager</Keyword>
       <CodeSymbol>NetworkManager</CodeSymbol>
@@ -741,6 +762,18 @@
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
+      <Name>Animation Element</Name>
+      <Keyword>AnimationElement</Keyword>
+      <CodeSymbol>String</CodeSymbol>
+      <Format>
+        <Literal>&quot;</Literal>
+        <Fragment data="value"/>
+        <Literal>&quot;</Literal>
+      </Format>
+      <LegalValues>[^\&quot;]*</LegalValues>
+      <WidgetName>A</WidgetName>
+    </Type>
+    <Type>
       <Name>MonoImporter</Name>
       <Keyword>MonoImporter</Keyword>
       <CodeSymbol>MonoImporter</CodeSymbol>
@@ -790,6 +823,13 @@
       <Name>SphereCollider</Name>
       <Keyword>SphereCollider</Keyword>
       <CodeSymbol>SphereCollider</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>EnableDisable</Name>
+      <Keyword>EnableDisable</Keyword>
+      <CodeSymbol>boolean</CodeSymbol>
+      <Enum>false&lt;Disable&gt;|true&lt;Enable&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
       <Name>ShaderImporter</Name>
@@ -4981,7 +5021,9 @@
           <Visible>true</Visible>
           <Labels/>
           <Id>122</Id>
-          <Types/>
+          <Types>
+            <Type>void</Type>
+          </Types>
           <Parameters>
             <KnowIt>
               <Name>x</Name>
@@ -5040,13 +5082,6 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[15]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[14]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[16]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
     <ScriptIt>
       <Name>the width of the screen</Name>
       <Visible>false</Visible>
@@ -5285,26 +5320,531 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
+    <ScriptIt>
+      <Name>&lt;Lock&gt; &lt;Object&gt;&apos;s camera</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Lock&gt; &lt;Object&gt;&apos;s camera</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>129</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Lock</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>LockUnlock</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>LockUnlock</Type>
+                <Value>true</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.GetComponent(typeof(MouseLook)).locked = </Literal>
+              <Scope data="ARGUMENT" ref="Lock">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>&lt;Hide&gt; the Mouse Cursor</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Hide&gt; the Mouse Cursor</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>130</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Hide</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>ShowHide</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>ShowHide</Type>
+                <Value>true</Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>Screen.lockCursor = </Literal>
+              <Scope data="ARGUMENT" ref="Hide">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>&lt;Lock&gt; &lt;Object&gt;&apos;s movement</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Lock&gt; &lt;Object&gt;&apos;s movement</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>131</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Lock</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>LockUnlock</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>LockUnlock</Type>
+                <Value>true</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.GetComponent(typeof(CharacterMotor)).canControl = !</Literal>
+              <Scope data="ARGUMENT" ref="Lock">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>&lt;Disable&gt; &lt;Object&gt;&apos;s collider</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Disable&gt; &lt;Object&gt;&apos;s collider</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>132</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Disable</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>EnableDisable</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>EnableDisable</Type>
+                <Value>false</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.collider.enabled =</Literal>
+              <Scope data="ARGUMENT" ref="Disable">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Set &lt;Object&gt;&apos;s position to &lt;x&gt;, &lt;y&gt;, &lt;z&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Set &lt;Object&gt;&apos;s position to &lt;x&gt;, &lt;y&gt;, &lt;z&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>133</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>y</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>z</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform.localPosition = Vector3(</Literal>
+              <Scope data="ARGUMENT" ref="x">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>,</Literal>
+              <Scope data="ARGUMENT" ref="y">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>,</Literal>
+              <Scope data="ARGUMENT" ref="z">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Set &lt;Object&gt;&apos;s Euler Angles to &lt;x&gt;, &lt;y&gt;, &lt;z&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Set &lt;Object&gt;&apos;s Euler Angles to &lt;x&gt;, &lt;y&gt;, &lt;z&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>134</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>y</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>z</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform.localEulerAngles = Vector3(</Literal>
+              <Scope data="ARGUMENT" ref="x">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="y">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="z">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Set the &lt;Object&gt;&apos;s parent to &lt;Parent&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Set the &lt;Object&gt;&apos;s parent to &lt;Parent&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>135</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Parent</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform.parent = </Literal>
+              <Scope data="ARGUMENT" ref="Parent">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Play &lt;Object&gt;&apos;s &lt;Animation&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play &lt;Object&gt;&apos;s &lt;Animation&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>136</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Animation</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>AnimationElement</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.animation.Play(</Literal>
+              <Scope data="ARGUMENT" ref="Animation">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Set &lt;Object&gt;&apos;s &lt;Animation&gt; wrap mode to &lt;Wrap Mode&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Set &lt;Object&gt;&apos;s &lt;Animation&gt; wrap mode to &lt;Wrap Mode&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>137</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Animation</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>AnimationElement</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Wrap Mode</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>WrapMode</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>WrapMode</Type>
+                <Value>WrapMode.Loop</Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.animation[</Literal>
+              <Scope data="ARGUMENT" ref="Animation">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>].wrapMode = </Literal>
+              <Scope data="ARGUMENT" ref="Wrap Mode">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[16]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[21]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[24]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[19]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[14]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[23]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[22]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[15]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[20]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
   </Effects>
   <DescribeIts>
-    <DescribeIt>
-      <Name>Has Succeeded</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[15]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
     <DescribeIt>
       <Name>Mouse Button Pressed</Name>
       <Types>
@@ -5317,9 +5857,27 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Product</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[23]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -5342,9 +5900,9 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Sum</Name>
+      <Name>Mouse Button Clicked</Name>
       <Types>
-        <Type>float</Type>
+        <Type>question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -5355,12 +5913,12 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[28]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Screen Height</Name>
+      <Name>Sum</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -5373,7 +5931,7 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[27]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[21]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -5391,79 +5949,7 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[6]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[26]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Product</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[30]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Quotient</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[8]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[31]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Mouse Button Clicked</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Has Failed</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[10]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[16]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[19]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -5479,14 +5965,14 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[11]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[7]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[29]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[22]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Button Clicked</Name>
+      <Name>Has Failed</Name>
       <Types>
         <Type>question</Type>
       </Types>
@@ -5497,9 +5983,9 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[12]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[8]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[16]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -5515,9 +6001,81 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[13]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[14]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Screen Height</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[10]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[20]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Has Succeeded</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[11]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[15]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Quotient</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[12]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[24]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Button Clicked</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[13]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
         </Entry>
       </PathMap>
     </DescribeIt>

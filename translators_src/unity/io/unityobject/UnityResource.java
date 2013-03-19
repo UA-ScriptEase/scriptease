@@ -5,15 +5,30 @@ import io.UnityProject;
 import io.UnityConstants.UnityField;
 import io.UnityConstants.UnityType;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import scriptease.translator.io.model.Resource;
+import scriptease.translator.io.model.SimpleResource;
 
 public class UnityResource extends Resource {
+	@SuppressWarnings("serial")
+	private static final Collection<String> acceptedTypes = new ArrayList<String>() {
+		{
+			this.add(UnityType.GAMEOBJECT.getName());
+		}
+	};
+
 	private final Scene scene;
 
 	private final int uniqueID;
@@ -141,23 +156,85 @@ public class UnityResource extends Resource {
 		return false;
 	}
 
+	public void initializeChildren() {
+
+	}
+
 	@Override
 	public List<Resource> getChildren() {
 		if (this.children == null) {
 			this.children = new ArrayList<Resource>();
 
 			for (UnityResource resource : this.scene.getResources()) {
-				// XXX
-				if (resource.getType().equals(UnityType.GAMEOBJECT.getName())) {
-					final Resource owner = resource.getOwner();
-					if (owner != null)
-						if (owner == this)
-							this.children.add(resource);
+				final String type = resource.getType();
+				final Resource owner = resource.getOwner();
+				if (owner == this)
+					if (acceptedTypes.contains(type)) {
+						this.children.add(resource);
+					} else if (type.equals(UnityType.ANIMATION.getName())) {
+						this.children.addAll(this
+								.getAnimationChildren(resource));
+					}
+			}
+		}
+		return this.children;
+	}
+
+	private List<Resource> getAnimationChildren(UnityResource resource) {
+		final List<Resource> animationChildren = new ArrayList<Resource>();
+		final List<PropertyValue> animations;
+
+		animations = resource.getFirstOccuranceOfField(
+				UnityField.M_ANIMATIONS.getName()).getList();
+
+		final Map<String, File> guidsToMetaFiles;
+
+		guidsToMetaFiles = UnityProject.getActiveProject()
+				.getGUIDsToMetaFiles();
+
+		for (PropertyValue animation : animations) {
+			final Map<String, PropertyValue> animationMap;
+			final String guid;
+			final String fileID;
+			final File metaFile;
+			final BufferedReader reader;
+
+			animationMap = animation.getMap();
+			fileID = animationMap.get(UnityField.FILEID.getName()).getString();
+			guid = animationMap.get(UnityField.GUID.getName()).getString();
+			metaFile = guidsToMetaFiles.get(guid);
+			try {
+				reader = new BufferedReader(new FileReader(metaFile));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					if (line.contains(fileID)) {
+						final String animationName = line.split(": ")[1];
+
+						if (animationName.contains("@")
+								&& animationName.contains("_")) {
+							// The string looks like this: d@anim_222-222
+
+							// TODO Maybe we don't need this.. try without
+							// first.
+							// Get the string after the @
+							final String firstPart = animationName.split("@")[1];
+
+						}
+
+						animationChildren.add(SimpleResource
+								.buildSimpleResource("AnimationElement",
+										animationName));
+					}
 				}
+				reader.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 
-		return this.children;
+		return animationChildren;
 	}
 
 	/**
@@ -167,11 +244,11 @@ public class UnityResource extends Resource {
 	 * @return
 	 */
 	public PropertyValue getFirstOccuranceOfField(String fieldName) {
-		return this.getFirstOccuranceOfFieldInMap(this.topLevelPropertyMap,
-				fieldName);
+		return UnityResource.getFirstOccuranceOfFieldInMap(
+				this.topLevelPropertyMap, fieldName);
 	}
 
-	private PropertyValue getFirstOccuranceOfFieldInMap(
+	private static PropertyValue getFirstOccuranceOfFieldInMap(
 			Map<String, PropertyValue> map, String fieldName) {
 		for (Entry<String, PropertyValue> entry : map.entrySet()) {
 			final PropertyValue value = entry.getValue();
@@ -181,7 +258,7 @@ public class UnityResource extends Resource {
 			else if (value.isList()) {
 				final PropertyValue returnValue;
 
-				returnValue = this.getFirstOccuranceOfFieldInList(
+				returnValue = UnityResource.getFirstOccuranceOfFieldInList(
 						value.getList(), fieldName);
 
 				if (returnValue != null)
@@ -189,7 +266,7 @@ public class UnityResource extends Resource {
 			} else if (value.isMap()) {
 				final PropertyValue returnValue;
 
-				returnValue = this.getFirstOccuranceOfFieldInMap(
+				returnValue = UnityResource.getFirstOccuranceOfFieldInMap(
 						value.getMap(), fieldName);
 
 				if (returnValue != null)
@@ -200,13 +277,13 @@ public class UnityResource extends Resource {
 		return null;
 	}
 
-	private PropertyValue getFirstOccuranceOfFieldInList(
+	private static PropertyValue getFirstOccuranceOfFieldInList(
 			List<PropertyValue> list, String fieldName) {
 		for (PropertyValue value : list) {
 			if (value.isMap()) {
 				final PropertyValue returnValue;
 
-				returnValue = this.getFirstOccuranceOfFieldInMap(
+				returnValue = UnityResource.getFirstOccuranceOfFieldInMap(
 						value.getMap(), fieldName);
 
 				if (returnValue != null)
@@ -214,7 +291,7 @@ public class UnityResource extends Resource {
 			} else if (value.isList()) {
 				final PropertyValue returnValue;
 
-				returnValue = this.getFirstOccuranceOfFieldInList(
+				returnValue = UnityResource.getFirstOccuranceOfFieldInList(
 						value.getList(), fieldName);
 
 				if (returnValue != null)

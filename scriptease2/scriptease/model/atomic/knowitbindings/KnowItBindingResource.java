@@ -3,8 +3,8 @@ package scriptease.model.atomic.knowitbindings;
 import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.translator.io.model.Resource;
@@ -65,9 +65,9 @@ public class KnowItBindingResource extends KnowItBinding {
 		if (typeMatches(knowIt.getAcceptableTypes())) {
 			if (knowIt.getOwner() != null
 					&& !(this.getValue() instanceof SimpleResource)) {
-				final PatternModel model;
+				final SEModel model;
 
-				model = PatternModelManager.getInstance().getActiveModel();
+				model = SEModelManager.getInstance().getActiveModel();
 				if (model instanceof StoryModel) {
 					return ((StoryModel) model).getModule()
 							.getInstanceForObjectIdentifier(

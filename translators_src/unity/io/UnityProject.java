@@ -12,16 +12,21 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
 import scriptease.controller.CodeBlockMapper;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
+import scriptease.model.StoryModel;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
@@ -49,9 +54,11 @@ public final class UnityProject implements GameModule {
 	public static final String UNITY_TAG = "tag:unity3d.com,2011:";
 
 	private static final String SCENE_FILE_EXTENSION = ".unity";
-	private static final String SCRIPT_META_EXTENSION = ".js.meta";
+	private static final String META_EXTENSION = ".meta";
 
-	private static final Collection<String> guids = new ArrayList<String>();;
+	// Note: this used to be static, but we can't make it static since we want
+	// to be able to work on multiple projects at the same time.
+	private final Map<String, File> guidsToMetaFiles;
 
 	private File projectLocation;
 	// The nice thing about Unity is that it uses multiple files instead of one,
@@ -70,6 +77,35 @@ public final class UnityProject implements GameModule {
 		this.includeFiles = new ArrayList<File>();
 		this.scenes = new ArrayList<Scene>();
 		this.scripts = new ArrayList<UnityScript>();
+		this.guidsToMetaFiles = new HashMap<String, File>();
+	}
+
+	/**
+	 * Gets a map of GUIDs to meta files.
+	 * 
+	 * @param guids
+	 * @return
+	 */
+	public Map<String, File> getGUIDsToMetaFiles() {
+		return this.guidsToMetaFiles;
+	}
+
+	public static UnityProject getActiveProject() {
+		final SEModel model;
+
+		model = SEModelManager.getInstance().getActiveModel();
+
+		if (model instanceof StoryModel) {
+			final GameModule module = ((StoryModel) model).getModule();
+
+			if (module instanceof UnityProject)
+				return (UnityProject) module;
+		}
+
+		System.err.println("Attempted to get active Unity Project "
+				+ "when there is no Unity Project active. Active model is "
+				+ model);
+		return null;
 	}
 
 	/**
@@ -77,13 +113,14 @@ public final class UnityProject implements GameModule {
 	 * 
 	 * @return
 	 */
-	public static String generateGUID() {
+	public String generateGUIDForFile(File file) {
+		final Collection<String> existingGUIDs = this.guidsToMetaFiles.keySet();
 		String id;
 		do {
 			id = UUID.randomUUID().toString().replace("-", "");
-		} while (guids.contains(id));
+		} while (existingGUIDs.contains(id));
 
-		guids.add(id);
+		this.guidsToMetaFiles.put(id, file);
 
 		return id;
 	}
@@ -213,23 +250,22 @@ public final class UnityProject implements GameModule {
 		final FileFilter metaFileFilter = new FileFilter() {
 			@Override
 			public boolean accept(File pathname) {
-				return pathname.getName().endsWith(SCRIPT_META_EXTENSION);
+				return pathname.getName().endsWith(META_EXTENSION);
 			}
 		};
 		final Collection<File> sceneFiles;
-		final Collection<File> scriptMetaFiles;
+		final Collection<File> metaFiles;
 
 		// sniff out .unity files and read them all into memory
 		sceneFiles = FileOp.findFiles(this.projectLocation, sceneFileFilter);
-		scriptMetaFiles = FileOp
-				.findFiles(this.projectLocation, metaFileFilter);
+		metaFiles = FileOp.findFiles(this.projectLocation, metaFileFilter);
 
 		final Collection<String> seGeneratedGUIDs = new ArrayList<String>();
 
-		for (File scriptMetaFile : scriptMetaFiles) {
+		for (File metaFile : metaFiles) {
 			final BufferedReader reader;
 
-			reader = new BufferedReader(new FileReader(scriptMetaFile));
+			reader = new BufferedReader(new FileReader(metaFile));
 
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -238,10 +274,9 @@ public final class UnityProject implements GameModule {
 				if (line.startsWith(guid)) {
 					final String guidValue = line.substring(guid.length() + 2);
 
-					guids.add(guidValue);
+					this.guidsToMetaFiles.put(guidValue, metaFile);
 
-					if (scriptMetaFile.getName().startsWith(
-							SCRIPTEASE_FILE_PREFIX)) {
+					if (metaFile.getName().startsWith(SCRIPTEASE_FILE_PREFIX)) {
 						seGeneratedGUIDs.add(guidValue);
 					}
 				}

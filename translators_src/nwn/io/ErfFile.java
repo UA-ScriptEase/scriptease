@@ -29,7 +29,7 @@ import scriptease.controller.ModelAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.gui.StatusManager;
 import scriptease.model.CodeBlock;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
@@ -685,7 +685,7 @@ public final class ErfFile implements GameModule {
 		final long offsetToResourceList;
 
 		// Parse the model for create journal effects before it's saved.
-		PatternModelManager.getInstance().getActiveModel()
+		SEModelManager.getInstance().getActiveModel()
 				.process(new ModelAdapter() {
 					@Override
 					public void processStoryModel(StoryModel storyModel) {

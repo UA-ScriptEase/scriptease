@@ -15,8 +15,8 @@ import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 
 /**
  * Represents and performs the Cut command, as well as encapsulates its enabled
@@ -45,12 +45,12 @@ public final class CutAction extends ActiveModelSensitiveAction implements
 	 * current selection.
 	 */
 	protected boolean isLegal() {
-		final PatternModel activeModel;
+		final SEModel activeModel;
 		final Component focusOwner;
 		final boolean isLegal;
 
 		focusOwner = SEFocusManager.getInstance().getFocus();
-		activeModel = PatternModelManager.getInstance().getActiveModel();
+		activeModel = SEModelManager.getInstance().getActiveModel();
 
 		if (focusOwner instanceof StoryComponentPanel) {
 			isLegal = ((StoryComponentPanel) focusOwner).isRemovable();

@@ -1,10 +1,10 @@
 package scriptease.controller.observer;
 
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 
 /**
- * Encapsulates the possible changes in a {@link PatternModelManager}. An instance of
+ * Encapsulates the possible changes in a {@link SEModelManager}. An instance of
  * <code>PatternModelPoolEvent</code> will be passed to objects who are interested
  * in such changes, who can then query the event for more specific information
  * as to what has changed.
@@ -14,7 +14,7 @@ import scriptease.model.PatternModelManager;
  * 
  */
 public final class PatternModelEvent {
-	private final PatternModel source;
+	private final SEModel source;
 	private final short eventType;
 
 	public static final short PATTERN_MODEL_ADDED = 0;
@@ -32,12 +32,12 @@ public final class PatternModelEvent {
 	 *            The type constant that represents how the PatternModelPool
 	 *            changed. This should be one of <code>PATTERN_MODEL_*</code>
 	 */
-	public PatternModelEvent(PatternModel changed, short type) {
+	public PatternModelEvent(SEModel changed, short type) {
 		this.source = changed;
 		this.eventType = type;
 	}
 
-	public PatternModel getPatternModel() {
+	public SEModel getPatternModel() {
 		return this.source;
 	}
 

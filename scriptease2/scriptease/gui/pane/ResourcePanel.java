@@ -27,7 +27,7 @@ import scriptease.gui.cell.BindingWidget;
 import scriptease.gui.cell.ScriptWidgetFactory;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.ui.ScriptEaseUI;
-import scriptease.model.PatternModel;
+import scriptease.model.SEModel;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.translator.TranslatorManager;
@@ -51,17 +51,27 @@ public class ResourcePanel extends JPanel {
 
 	private final Map<Resource, JPanel> panelMap;
 
-	private static final Comparator<Resource> nameSorter = buildNameSorter();
+	private static final Comparator<Resource> constantSorter = new Comparator<Resource>() {
+		@Override
+		public int compare(Resource o1, Resource o2) {
+			String compareString1 = "";
+			String compareString2 = "";
 
-	private static Comparator<Resource> buildNameSorter() {
-		return new Comparator<Resource>() {
-			@Override
-			public int compare(Resource o1, Resource o2) {
-				return String.CASE_INSENSITIVE_ORDER.compare(o1.getName(),
-						o2.getName());
+			for (String type : o1.getTypes()) {
+				compareString1 += type;
 			}
-		};
-	}
+
+			for (String type : o2.getTypes()) {
+				compareString2 += type;
+			}
+
+			compareString1 += o1.getName();
+			compareString2 += o2.getName();
+
+			return String.CASE_INSENSITIVE_ORDER.compare(compareString1,
+					compareString2);
+		}
+	};
 
 	/**
 	 * Creates a new {@link ResourcePanel} with the passed in model.
@@ -72,7 +82,7 @@ public class ResourcePanel extends JPanel {
 	 *            then nothing is drawn. Use {@link #redrawTree(StoryModel)} to
 	 *            draw the tree later with a StoryModel.
 	 */
-	public ResourcePanel(PatternModel model) {
+	public ResourcePanel(SEModel model) {
 		super();
 		this.panelMap = new HashMap<Resource, JPanel>();
 		this.filterTypes = new ArrayList<String>();
@@ -101,7 +111,7 @@ public class ResourcePanel extends JPanel {
 	 * 
 	 * @param model
 	 */
-	public void fillTree(PatternModel model) {
+	public void fillTree(SEModel model) {
 		this.panelMap.clear();
 
 		if (!(model instanceof StoryModel))
@@ -186,7 +196,7 @@ public class ResourcePanel extends JPanel {
 
 			constantList = constantMap.get(type);
 
-			Collections.sort(constantList, nameSorter);
+			Collections.sort(constantList, constantSorter);
 
 			final GameTypeManager typeManager;
 			final String typeName;
@@ -503,7 +513,7 @@ public class ResourcePanel extends JPanel {
 
 			constantList = new ArrayList<Resource>(constant.getChildren());
 
-			Collections.sort(constantList, nameSorter);
+			Collections.sort(constantList, constantSorter);
 
 			for (Resource child : constantList) {
 				if (matchesFilters(child)

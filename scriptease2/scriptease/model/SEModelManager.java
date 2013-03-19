@@ -6,18 +6,18 @@ import java.util.List;
 
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.PatternModelEvent;
-import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.StatusManager;
 import scriptease.translator.Translator;
 
 /**
- * Very simple model object for storing all of the {@link PatternModel}s present
- * in ScriptEase. A model is designated as the "active" model and there can only
- * be <i>at most</i> one active model at any one time.<br>
+ * Very simple model object for storing all of the {@link SEModel}s present in
+ * ScriptEase. A model is designated as the "active" model and there can only be
+ * <i>at most</i> one active model at any one time.<br>
  * <br>
  * Interested parties can register themselves with <code>PatternModelPool</code>
- * as {@link PatternModelObserver}s and be notified of changes to the pool when
- * they occur.<br>
+ * as {@link SEModelObserver}s and be notified of changes to the pool when they
+ * occur.<br>
  * <br>
  * <code>PatternModelPool</code> is a Singleton class since it seems unlikely
  * that we will ever need more than one pool per application instance.
@@ -25,28 +25,28 @@ import scriptease.translator.Translator;
  * @author remiller
  * @author kschenk
  */
-public final class PatternModelManager {
-	private final List<PatternModel> models;
-	private final ObserverManager<PatternModelObserver> observerManager;
-	private PatternModel activeModel;
+public final class SEModelManager {
+	private final List<SEModel> models;
+	private final ObserverManager<SEModelObserver> observerManager;
+	private SEModel activeModel;
 
-	private final static PatternModelManager instance = new PatternModelManager();
+	private final static SEModelManager instance = new SEModelManager();
 
 	/**
 	 * Gets the sole instance of the PatternModelPool.
 	 * 
 	 * @return the PatternModel pool
 	 */
-	public static PatternModelManager getInstance() {
-		return PatternModelManager.instance;
+	public static SEModelManager getInstance() {
+		return SEModelManager.instance;
 	}
 
 	/**
-	 * Builds a new PatternModelPool that has no active model
+	 * Builds a new SEModelManager that has no active model
 	 */
-	private PatternModelManager() {
-		this.models = new ArrayList<PatternModel>();
-		this.observerManager = new ObserverManager<PatternModelObserver>();
+	private SEModelManager() {
+		this.models = new ArrayList<SEModel>();
+		this.observerManager = new ObserverManager<SEModelObserver>();
 		this.activeModel = null;
 	}
 
@@ -56,7 +56,7 @@ public final class PatternModelManager {
 	 * @return The active model. This can be null if no model has yet been
 	 *         activated.
 	 */
-	public PatternModel getActiveModel() {
+	public SEModel getActiveModel() {
 		return this.activeModel;
 	}
 
@@ -65,8 +65,8 @@ public final class PatternModelManager {
 	 * 
 	 * @return A collection of all of the models in the pool.
 	 */
-	public Collection<PatternModel> getModels() {
-		return new ArrayList<PatternModel>(this.models);
+	public Collection<SEModel> getModels() {
+		return new ArrayList<SEModel>(this.models);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public final class PatternModelManager {
 	 * @return
 	 */
 	public boolean usingTranslator(Translator translator) {
-		for (PatternModel model : this.models) {
+		for (SEModel model : this.models) {
 			if (model.getTranslator() == translator)
 				return true;
 		}
@@ -98,9 +98,9 @@ public final class PatternModelManager {
 	 * 
 	 * @param model
 	 *            The model to add.
-	 * @see #add(PatternModel, boolean)
+	 * @see #add(SEModel, boolean)
 	 */
-	public void add(PatternModel model) {
+	public void add(SEModel model) {
 		this.add(model, false);
 	}
 
@@ -114,9 +114,9 @@ public final class PatternModelManager {
 	 *            Set this to true if the added model should also become the
 	 *            active model or false to simply add the model without
 	 *            activating it.
-	 * @see #add(PatternModel)
+	 * @see #add(SEModel)
 	 */
-	public void add(PatternModel model, boolean activate) {
+	public void add(SEModel model, boolean activate) {
 		if (this.models.add(model))
 			this.notifyChange(model, PatternModelEvent.PATTERN_MODEL_ADDED);
 
@@ -130,7 +130,7 @@ public final class PatternModelManager {
 	 * @param model
 	 *            The model to remove.
 	 */
-	public void remove(PatternModel model) {
+	public void remove(SEModel model) {
 		if (this.activeModel == model)
 			this.activeModel = null;
 		if (this.models.remove(model))
@@ -143,7 +143,7 @@ public final class PatternModelManager {
 	 * @param model
 	 *            The model to activate.
 	 */
-	public void activate(PatternModel model) {
+	public void activate(SEModel model) {
 		if (this.activeModel == model)
 			return;
 		this.activeModel = model;
@@ -160,8 +160,7 @@ public final class PatternModelManager {
 	 * @param observer
 	 *            the listener to add
 	 */
-	public void addPatternModelObserver(Object object,
-			PatternModelObserver value) {
+	public void addPatternModelObserver(Object object, SEModelObserver value) {
 		this.observerManager.addObserver(object, value);
 	}
 
@@ -172,13 +171,12 @@ public final class PatternModelManager {
 	 * @param observer
 	 *            the listener to remove
 	 */
-	public void removePatternModelObserver(PatternModelObserver observer) {
+	public void removePatternModelObserver(SEModelObserver observer) {
 		this.observerManager.removeObserver(observer);
 	}
 
-	private void notifyChange(PatternModel model, short eventType) {
-		for (PatternModelObserver observer : this.observerManager
-				.getObservers())
+	private void notifyChange(SEModel model, short eventType) {
+		for (SEModelObserver observer : this.observerManager.getObservers())
 			observer.modelChanged(new PatternModelEvent(model, eventType));
 	}
 }

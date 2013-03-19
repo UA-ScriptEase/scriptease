@@ -70,7 +70,8 @@ public class UnityScript {
 				+ Integer.toString(scriptCounter++, NAME_RADIX) + "_"
 				+ StringOp.makeAlphaNumeric(subject.getName());
 
-		this.guid = UnityProject.generateGUID();
+		this.guid = UnityProject.getActiveProject().generateGUIDForFile(
+				new File(this.fileName + SCRIPT_META_EXTENSION));
 
 		this.attachedObject = this.scene.getObjectByTemplateID(subject
 				.getTemplateID());

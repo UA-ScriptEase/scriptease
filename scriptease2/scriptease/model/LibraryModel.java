@@ -40,7 +40,7 @@ import scriptease.translator.apimanagers.DescribeItManager;
  * @author remiller
  * @author mfchurch
  */
-public class LibraryModel extends PatternModel implements
+public class LibraryModel extends SEModel implements
 		StoryComponentObserver {
 	private Translator translator;
 	private final Collection<LibraryObserver> listeners;

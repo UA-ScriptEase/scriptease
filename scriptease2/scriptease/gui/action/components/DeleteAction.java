@@ -16,8 +16,8 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.model.LibraryModel;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
@@ -67,17 +67,17 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 	 * current selection.
 	 */
 	protected boolean isLegal() {
-		final PatternModel activeModel;
+		final SEModel activeModel;
 		final Component focusOwner;
 		final boolean isLegal;
 
 		focusOwner = SEFocusManager.getInstance().getFocus();
-		activeModel = PatternModelManager.getInstance().getActiveModel();
+		activeModel = SEModelManager.getInstance().getActiveModel();
 
 		if (focusOwner instanceof StoryComponentPanel) {
 			isLegal = ((StoryComponentPanel) focusOwner).isRemovable();
 		} else if (focusOwner instanceof StoryComponentPanelJList) {
-			isLegal = PatternModelManager.getInstance().getActiveModel() instanceof LibraryModel;
+			isLegal = SEModelManager.getInstance().getActiveModel() instanceof LibraryModel;
 		} else if (focusOwner instanceof SEGraph) {
 			isLegal = !((SEGraph<?>) focusOwner).isReadOnly();
 		} else

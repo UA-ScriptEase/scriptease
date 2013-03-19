@@ -43,14 +43,14 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.logger.NetworkHandler;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.PatternModelEvent;
-import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -437,7 +437,7 @@ public final class WindowFactory {
 	 *         <code>JOptionPane.NO_OPTION</code>, or
 	 *         <code>JOptionPane.CANCEL_OPTION</code>
 	 */
-	public int showConfirmClose(PatternModel model) {
+	public int showConfirmClose(SEModel model) {
 		int choice = JOptionPane.showConfirmDialog(this.currentFrame,
 				"The story \"" + model + "\" has been modified. "
 						+ WindowFactory.CONFIRM_CLOSE_TEXT,
@@ -887,7 +887,7 @@ public final class WindowFactory {
 		final GroupLayout contentLayout;
 		final String preferredLayout;
 
-		final PatternModelObserver modelObserver;
+		final SEModelObserver modelObserver;
 
 		frame = new JFrame(title) {
 			@Override
@@ -911,14 +911,14 @@ public final class WindowFactory {
 		preferredLayout = ScriptEase.getInstance().getPreference(
 				ScriptEase.PREFERRED_LAYOUT_KEY);
 
-		modelObserver = new PatternModelObserver() {
+		modelObserver = new SEModelObserver() {
 			@Override
 			public void modelChanged(PatternModelEvent event) {
 				final short eventType;
-				final PatternModel activeModel;
+				final SEModel activeModel;
 
 				eventType = event.getEventType();
-				activeModel = PatternModelManager.getInstance()
+				activeModel = SEModelManager.getInstance()
 						.getActiveModel();
 
 				if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED
@@ -979,7 +979,7 @@ public final class WindowFactory {
 			// when building of the Library Pane was moved to panelfactory.
 		}
 
-		PatternModelManager.getInstance().addPatternModelObserver(this,
+		SEModelManager.getInstance().addPatternModelObserver(this,
 				modelObserver);
 
 		frame.getContentPane().add(content);

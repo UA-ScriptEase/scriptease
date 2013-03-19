@@ -12,12 +12,12 @@ import scriptease.ScriptEase;
 import scriptease.ScriptEase.ConfigurationKeys;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.PatternModelEvent;
-import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 
@@ -69,13 +69,13 @@ public class TranslatorManager {
 		// scan for translators in the translators folder
 		this.fillTranslatorPool();
 
-		final PatternModelObserver observer;
+		final SEModelObserver observer;
 
-		observer = new PatternModelObserver() {
+		observer = new SEModelObserver() {
 			@Override
 			public void modelChanged(PatternModelEvent event) {
 				final short eventType = event.getEventType();
-				final PatternModel model = event.getPatternModel();
+				final SEModel model = event.getPatternModel();
 				Translator translator = (model == null ? null : model
 						.getTranslator());
 
@@ -84,14 +84,14 @@ public class TranslatorManager {
 						TranslatorManager.this.setActiveTranslator(translator);
 					}
 				} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED) {
-					if (!PatternModelManager.getInstance().usingTranslator(
+					if (!SEModelManager.getInstance().usingTranslator(
 							translator)) {
 						TranslatorManager.this.setActiveTranslator(null);
 					}
 				}
 			}
 		};
-		PatternModelManager.getInstance().addPatternModelObserver(this,
+		SEModelManager.getInstance().addPatternModelObserver(this,
 				observer);
 
 		System.out.println("Finished loading " + this.translatorPool.size()
