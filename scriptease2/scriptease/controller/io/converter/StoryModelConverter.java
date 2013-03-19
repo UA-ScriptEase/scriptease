@@ -3,7 +3,7 @@
 import java.io.File;
 
 import scriptease.controller.io.FileIO;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
@@ -115,7 +115,7 @@ public class StoryModelConverter implements Converter{
 		catch (XStreamException e) {
 			model = null;
 			// Unload the translator if not being used.
-			if (!PatternModelManager.getInstance().usingTranslator(translator))
+			if (!SEModelManager.getInstance().usingTranslator(translator))
 				translator.unloadTranslator();
 			TranslatorManager.getInstance().setActiveTranslator(null);
 			// Pass it back up

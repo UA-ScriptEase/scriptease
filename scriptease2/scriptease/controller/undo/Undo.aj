@@ -7,7 +7,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
-import scriptease.model.PatternModel;
+import scriptease.model.SEModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
@@ -173,13 +173,13 @@ public aspect Undo {
 	 * Defines the Set Title operation in PatternModels.
 	 */
 	public pointcut settingTitle():
-		within(PatternModel+) && execution(* setTitle(String));
+		within(SEModel+) && execution(* setTitle(String));
 
 	/**
 	 * Defines the Set Author operation in PatternModels.
 	 */
 	public pointcut settingAuthor():
-		within(PatternModel+) && execution(* setAuthor(String));
+		within(SEModel+) && execution(* setAuthor(String));
 
 	/**
 	 * Defines the Set Root operation in LibraryModels.
@@ -515,7 +515,7 @@ public aspect Undo {
 		this.addModification(mod);
 	}
 
-	before(final PatternModel owner, final String newTitle): settingTitle() && args(newTitle) && this(owner){
+	before(final SEModel owner, final String newTitle): settingTitle() && args(newTitle) && this(owner){
 		Modification mod = new FieldModification<String>(newTitle,
 				owner.getTitle()) {
 			@Override
@@ -531,7 +531,7 @@ public aspect Undo {
 		this.addModification(mod);
 	}
 
-	before(final PatternModel owner, final String newAuthor): settingAuthor() && args(newAuthor) && this(owner){
+	before(final SEModel owner, final String newAuthor): settingAuthor() && args(newAuthor) && this(owner){
 		Modification mod = new FieldModification<String>(newAuthor,
 				owner.getAuthor()) {
 			@Override

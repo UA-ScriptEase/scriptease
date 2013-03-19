@@ -13,7 +13,7 @@ import scriptease.translator.io.model.GameModule;
  * @author mfchurch
  * @author kschenk
  */
-public final class StoryModel extends PatternModel {
+public final class StoryModel extends SEModel {
 	private final GameModule module;
 	private final Translator translator;
 //	private final ModelVerifier modelVerifier;

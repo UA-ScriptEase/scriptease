@@ -43,7 +43,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
-import scriptease.model.PatternModel;
+import scriptease.model.SEModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
@@ -209,7 +209,7 @@ public class FileIO {
 	 * @param location
 	 *            the location to save to.
 	 */
-	public void writeStoryModel(PatternModel model, File location) {
+	public void writeStoryModel(SEModel model, File location) {
 		this.writeData(model, location, IoMode.STORY);
 	}
 

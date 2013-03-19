@@ -42,8 +42,8 @@ import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.LibraryModel;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -100,7 +100,7 @@ public class MenuFactory {
 	 * 
 	 * @return the top level menu bar.
 	 */
-	public static JMenuBar createMainMenuBar(PatternModel model) {
+	public static JMenuBar createMainMenuBar(SEModel model) {
 		final JMenuBar bar = new JMenuBar();
 
 		bar.add(MenuFactory.buildFileMenu(model));
@@ -131,7 +131,7 @@ public class MenuFactory {
 	 * 
 	 * @return The File menu.
 	 */
-	private static JMenu buildFileMenu(PatternModel model) {
+	private static JMenu buildFileMenu(SEModel model) {
 		final JMenu menu = new JMenu(MenuFactory.FILE);
 		menu.setMnemonic(KeyEvent.VK_F);
 
@@ -417,7 +417,7 @@ public class MenuFactory {
 					@Override
 					public void run() {
 						// Get the active model with which to generate code.
-						PatternModel activeModel = PatternModelManager
+						SEModel activeModel = SEModelManager
 								.getInstance().getActiveModel();
 						if (activeModel != null
 								&& activeModel instanceof StoryModel) {

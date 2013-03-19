@@ -39,7 +39,7 @@ import scriptease.gui.WidgetDecorator;
 import scriptease.gui.control.ExpansionButton;
 import scriptease.gui.transfer.BindingTransferHandlerExportOnly;
 import scriptease.gui.ui.ScriptEaseUI;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
@@ -632,7 +632,7 @@ public class ScriptWidgetFactory {
 			@Override
 			public void run() {
 				final String newValue = nameEditor.getText();
-				if (PatternModelManager.getInstance().hasActiveModel()) {
+				if (SEModelManager.getInstance().hasActiveModel()) {
 					if (!component.getDisplayText().equals(newValue)) {
 						if (!UndoManager.getInstance().hasOpenUndoableAction()) {
 							UndoManager.getInstance().startUndoableAction(
@@ -697,7 +697,7 @@ public class ScriptWidgetFactory {
 		commitText = new Runnable() {
 			public void run() {
 				final String newValue = valueEditor.getText();
-				if (PatternModelManager.getInstance().hasActiveModel()) {
+				if (SEModelManager.getInstance().hasActiveModel()) {
 					binding.process(new BindingAdapter() {
 						@Override
 						public void processConstant(

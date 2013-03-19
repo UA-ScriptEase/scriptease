@@ -40,7 +40,7 @@ import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.PatternModelEvent;
-import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.StatusObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.UndoManagerObserver;
@@ -67,8 +67,8 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
@@ -93,7 +93,7 @@ public final class PanelFactory {
 	private final JTabbedPane modelTabs;
 
 	// A mapping of models to components represented by the models
-	private final BiHashMap<PatternModel, List<JComponent>> modelsToComponents;
+	private final BiHashMap<SEModel, List<JComponent>> modelsToComponents;
 
 	/**
 	 * Gets the instance of PanelFactory.
@@ -107,7 +107,7 @@ public final class PanelFactory {
 	private PanelFactory() {
 		this.libraryPanel = new LibraryPanel();
 		this.modelTabs = new JTabbedPane();
-		this.modelsToComponents = new BiHashMap<PatternModel, List<JComponent>>();
+		this.modelsToComponents = new BiHashMap<SEModel, List<JComponent>>();
 
 		// Register a change listener
 		this.modelTabs.addChangeListener(new ChangeListener() {
@@ -120,9 +120,9 @@ public final class PanelFactory {
 				tab = (JComponent) pane.getSelectedComponent();
 
 				if (tab != null) {
-					PatternModel model = PanelFactory.getInstance()
+					SEModel model = PanelFactory.getInstance()
 							.getModelForComponent(tab);
-					PatternModelManager.getInstance().activate(model);
+					SEModelManager.getInstance().activate(model);
 				}
 			}
 		});
@@ -209,7 +209,7 @@ public final class PanelFactory {
 
 			@Override
 			public void nodesSelected(final Collection<StoryPoint> nodes) {
-				PatternModelManager.getInstance().getActiveModel()
+				SEModelManager.getInstance().getActiveModel()
 						.process(new ModelAdapter() {
 							@Override
 							public void processStoryModel(StoryModel storyModel) {
@@ -308,7 +308,7 @@ public final class PanelFactory {
 			this.modelsToComponents.put(model, components);
 		}
 		components.add(scbScrollPane);
-		PatternModelManager.getInstance().add(model);
+		SEModelManager.getInstance().add(model);
 
 		return scbScrollPane;
 	}
@@ -319,7 +319,7 @@ public final class PanelFactory {
 	 * @param modelComponent
 	 * @return
 	 */
-	public PatternModel getModelForComponent(JComponent modelComponent) {
+	public SEModel getModelForComponent(JComponent modelComponent) {
 		for (List<JComponent> jComponentList : this.modelsToComponents
 				.getValues())
 			if (jComponentList.contains(modelComponent))
@@ -337,7 +337,7 @@ public final class PanelFactory {
 	 * @param model
 	 * @return
 	 */
-	public List<JComponent> getComponentsForModel(PatternModel model) {
+	public List<JComponent> getComponentsForModel(SEModel model) {
 		final List<JComponent> panels = this.modelsToComponents.getValue(model);
 
 		if (panels == null) {
@@ -354,7 +354,7 @@ public final class PanelFactory {
 	 * @param model
 	 * @param component
 	 */
-	public void removeComponentForModel(PatternModel model, JComponent component) {
+	public void removeComponentForModel(SEModel model, JComponent component) {
 		final List<JComponent> components = new ArrayList<JComponent>();
 
 		if (this.modelsToComponents.getValue(model) == null)
@@ -390,7 +390,7 @@ public final class PanelFactory {
 		final StoryComponentPanelJList noteList;
 		final JScrollPane notePane;
 
-		final PatternModelObserver storyLibraryPaneObserver;
+		final SEModelObserver storyLibraryPaneObserver;
 		final Collection<JComponent> storyJComponents;
 
 		librarySplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -420,7 +420,7 @@ public final class PanelFactory {
 		storyJComponents.add(gameConstantPane);
 
 		librarySplitPane.setBottomComponent(gameConstantPane);
-		if (!(PatternModelManager.getInstance().getActiveModel() instanceof StoryModel)) {
+		if (!(SEModelManager.getInstance().getActiveModel() instanceof StoryModel)) {
 			for (JComponent component : storyJComponents)
 				component.setVisible(false);
 		}
@@ -431,7 +431,7 @@ public final class PanelFactory {
 			noteList.addStoryComponents(libraryModel.getNoteContainer()
 					.getChildren());
 
-		storyLibraryPaneObserver = new PatternModelObserver() {
+		storyLibraryPaneObserver = new SEModelObserver() {
 			public void modelChanged(PatternModelEvent event) {
 
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
@@ -457,7 +457,7 @@ public final class PanelFactory {
 						}
 					});
 				} else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED) {
-					if (PatternModelManager.getInstance().getActiveModel() == null) {
+					if (SEModelManager.getInstance().getActiveModel() == null) {
 						for (JComponent component : storyJComponents)
 							component.setVisible(false);
 					}
@@ -465,7 +465,7 @@ public final class PanelFactory {
 			}
 		};
 
-		PatternModelManager.getInstance().addPatternModelObserver(
+		SEModelManager.getInstance().addPatternModelObserver(
 				librarySplitPane, storyLibraryPaneObserver);
 
 		return librarySplitPane;
@@ -490,14 +490,14 @@ public final class PanelFactory {
 
 		final TypeAction typeFilter;
 
-		final PatternModelObserver modelObserver;
+		final SEModelObserver modelObserver;
 		final LibraryManagerObserver libraryObserver;
 
 		gameConstantPane = new JPanel();
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
 
-		tree = new ResourcePanel(PatternModelManager.getInstance()
+		tree = new ResourcePanel(SEModelManager.getInstance()
 				.getActiveModel());
 		searchField = ComponentFactory.buildJTextFieldWithTextBackground(20,
 				"Game Objects", "");
@@ -578,13 +578,13 @@ public final class PanelFactory {
 			}
 		};
 
-		modelObserver = new PatternModelObserver() {
+		modelObserver = new SEModelObserver() {
 			public void modelChanged(PatternModelEvent event) {
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
 					tree.fillTree(event.getPatternModel());
 					tree.filterByTypes(typeFilter.getSelectedTypes());
 				} else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED
-						&& PatternModelManager.getInstance().getActiveModel() == null) {
+						&& SEModelManager.getInstance().getActiveModel() == null) {
 					tree.fillTree(null);
 				}
 			}
@@ -592,7 +592,7 @@ public final class PanelFactory {
 
 		LibraryManager.getInstance().addLibraryManagerObserver(
 				gameConstantPane, libraryObserver);
-		PatternModelManager.getInstance().addPatternModelObserver(
+		SEModelManager.getInstance().addPatternModelObserver(
 				gameConstantPane, modelObserver);
 
 		return gameConstantPane;
@@ -612,7 +612,7 @@ public final class PanelFactory {
 	 * 
 	 * @param model
 	 */
-	public void createTabForModel(PatternModel model) {
+	public void createTabForModel(SEModel model) {
 		final JTabbedPane modelTabs = this.modelTabs;
 
 		final Icon icon;
@@ -748,7 +748,7 @@ public final class PanelFactory {
 	 * @param model
 	 */
 	public void removeModelComponent(final JComponent component,
-			PatternModel model) {
+			SEModel model) {
 		// check if there are any unsaved changes
 		if (FileManager.getInstance().hasUnsavedChanges(model)) {
 			// otherwise, close the StoryModel

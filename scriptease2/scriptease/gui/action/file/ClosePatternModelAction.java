@@ -10,8 +10,8 @@ import javax.swing.KeyStroke;
 import scriptease.gui.PanelFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 
 /**
  * Represents and performs the Close Model command, as well as encapsulates its
@@ -56,9 +56,9 @@ public final class ClosePatternModelAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final PatternModel activeModel;
+		final SEModel activeModel;
 
-		activeModel = PatternModelManager.getInstance().getActiveModel();
+		activeModel = SEModelManager.getInstance().getActiveModel();
 
 		if (activeModel != null) {
 			PanelFactory.getInstance().removeModelComponent(

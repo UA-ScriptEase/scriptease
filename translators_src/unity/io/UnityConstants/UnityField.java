@@ -12,10 +12,12 @@ public enum UnityField {
 
 	GUID("guid"),
 
+	M_ANIMATIONS("m_Animations"),
+
 	M_CHILDREN("m_Children"),
-	
+
 	M_COMPONENT("m_Component"),
-	
+
 	M_EDITORHIDEFLAGS("m_EditorHideFlags"),
 
 	M_ENABLED("m_Enabled"),
@@ -29,11 +31,11 @@ public enum UnityField {
 	M_ISACTIVE("m_IsActive"),
 
 	M_LAYER("m_Layer"),
-	
+
 	M_LOCALPOSITION("m_LocalPosition"),
-	
+
 	M_LOCALROTATION("m_LocalRotation"),
-	
+
 	M_LOCALSCALE("m_LocalScale"),
 
 	M_NAME("m_Name"),

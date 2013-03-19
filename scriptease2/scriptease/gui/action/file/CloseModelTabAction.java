@@ -10,7 +10,7 @@ import javax.swing.JComponent;
 import scriptease.gui.PanelFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.model.PatternModel;
+import scriptease.model.SEModel;
 
 /**
  * Represents and performs the Close Tab command, as well as encapsulates its
@@ -26,12 +26,12 @@ public class CloseModelTabAction extends ActiveModelSensitiveAction {
 	private static final String CLOSE_MODULE = Il8nResources
 			.getString("Close_Model");
 	private final JComponent component;
-	private final PatternModel model;
+	private final SEModel model;
 
 	/**
 	 * Defines an <code>CloseModelAction</code> object with a mnemonic.
 	 */
-	public CloseModelTabAction(JComponent component, PatternModel model) {
+	public CloseModelTabAction(JComponent component, SEModel model) {
 		super(CloseModelTabAction.CLOSE_MODULE);
 		this.component = component;
 		this.model = model;

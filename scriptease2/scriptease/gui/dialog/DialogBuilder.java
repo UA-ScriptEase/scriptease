@@ -37,7 +37,7 @@ import scriptease.gui.PanelFactory;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.model.LibraryModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
@@ -245,7 +245,7 @@ public class DialogBuilder {
 						model = new StoryModel(module, title, author,
 								selectedTranslator);
 
-						PatternModelManager.getInstance().add(model, true);
+						SEModelManager.getInstance().add(model, true);
 						PanelFactory.getInstance().createTabForModel(model);
 
 						// Process automatics and add them to the StoryModel

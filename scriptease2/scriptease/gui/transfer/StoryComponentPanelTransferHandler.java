@@ -26,7 +26,7 @@ import scriptease.gui.libraryeditor.EffectHolderPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -139,7 +139,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		 */
 		for (final JComponent component : PanelFactory.getInstance()
 				.getComponentsForModel(
-						PatternModelManager.getInstance().getActiveModel())) {
+						SEModelManager.getInstance().getActiveModel())) {
 			if (component instanceof JSplitPane) {
 				final Component bottomComponent;
 

@@ -56,7 +56,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 import scriptease.gui.action.file.CloseModelTabAction;
-import scriptease.model.PatternModel;
+import scriptease.model.SEModel;
 
 /**
  * Panel intended to be used as a closeable tab for a JTabbedPane.
@@ -77,7 +77,7 @@ public class CloseableModelTab extends JPanel {
 	 *            show no icon.
 	 */
 	public CloseableModelTab(final JTabbedPane parent,
-			final JComponent component, final PatternModel model, Icon icon) {
+			final JComponent component, final SEModel model, Icon icon) {
 		// unset the annoying gaps that come with default FlowLayout
 		super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 

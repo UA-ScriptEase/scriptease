@@ -17,8 +17,8 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 
 /**
  * Represents and performs the Copy command, as well as encapsulates its enabled
@@ -61,12 +61,12 @@ public final class CopyAction extends ActiveModelSensitiveAction implements
 	 */
 	@Override
 	protected boolean isLegal() {
-		final PatternModel activeModel;
+		final SEModel activeModel;
 		final Component focusOwner;
 		final boolean isLegal;
 
 		focusOwner = SEFocusManager.getInstance().getFocus();
-		activeModel = PatternModelManager.getInstance().getActiveModel();
+		activeModel = SEModelManager.getInstance().getActiveModel();
 
 		if (focusOwner instanceof StoryComponentPanel
 				|| focusOwner instanceof StoryComponentPanelJList

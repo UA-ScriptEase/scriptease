@@ -15,14 +15,14 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import scriptease.controller.observer.PatternModelEvent;
-import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.action.graphs.ConnectModeAction;
 import scriptease.gui.action.graphs.DeleteModeAction;
 import scriptease.gui.action.graphs.DisconnectModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.InsertModeAction;
 import scriptease.gui.action.graphs.SelectModeAction;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModelManager;
 import scriptease.util.GUIOp;
 
 /**
@@ -117,8 +117,8 @@ public final class ComponentFactory {
 			graphEditorToolBar.add(toolBarButton);
 		}
 
-		PatternModelManager.getInstance().addPatternModelObserver(
-				graphEditorToolBar, new PatternModelObserver() {
+		SEModelManager.getInstance().addPatternModelObserver(
+				graphEditorToolBar, new SEModelObserver() {
 					@Override
 					public void modelChanged(PatternModelEvent event) {
 						if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED)

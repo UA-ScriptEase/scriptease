@@ -27,7 +27,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import scriptease.controller.observer.PatternModelEvent;
-import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryManagerEvent;
@@ -45,8 +45,8 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
@@ -77,7 +77,7 @@ public class LibraryPanel extends JTabbedPane {
 	public LibraryPanel() {
 		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
 
-		final PatternModelObserver modelObserver;
+		final SEModelObserver modelObserver;
 		final LibraryManagerObserver libraryManagerObserver;
 		final TranslatorObserver translatorObserver;
 
@@ -96,7 +96,7 @@ public class LibraryPanel extends JTabbedPane {
 		controlsList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.CONTROLS));
 
-		modelObserver = new PatternModelObserver() {
+		modelObserver = new SEModelObserver() {
 			/**
 			 * This listener checks for when the model is changed. This usually
 			 * happens when you load a model, or when you switch them by
@@ -107,7 +107,7 @@ public class LibraryPanel extends JTabbedPane {
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED)
 					updateLists();
 				else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED
-						&& PatternModelManager.getInstance().getActiveModel() == null) {
+						&& SEModelManager.getInstance().getActiveModel() == null) {
 					updateLists();
 				}
 			}
@@ -156,7 +156,7 @@ public class LibraryPanel extends JTabbedPane {
 
 		LibraryManager.getInstance().addLibraryManagerObserver(this,
 				libraryManagerObserver);
-		PatternModelManager.getInstance().addPatternModelObserver(this,
+		SEModelManager.getInstance().addPatternModelObserver(this,
 				modelObserver);
 		TranslatorManager.getInstance().addTranslatorObserver(this,
 				translatorObserver);
@@ -416,11 +416,11 @@ public class LibraryPanel extends JTabbedPane {
 	 * @param list
 	 */
 	private void updateList(StoryComponentPanelJList list) {
-		final PatternModel model;
+		final SEModel model;
 		final Translator activeTranslator;
 		final boolean hideInvisible;
 
-		model = PatternModelManager.getInstance().getActiveModel();
+		model = SEModelManager.getInstance().getActiveModel();
 		activeTranslator = TranslatorManager.getInstance()
 				.getActiveTranslator();
 

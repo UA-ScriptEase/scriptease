@@ -21,7 +21,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.LibraryModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
@@ -69,7 +69,7 @@ public class LibraryEditorListenerFactory {
 		return new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if (PatternModelManager.getInstance().getActiveModel() instanceof LibraryModel)
+				if (SEModelManager.getInstance().getActiveModel() instanceof LibraryModel)
 					if (e.getSource() instanceof JList) {
 						final JList componentList;
 						final StoryComponentPanel componentPanel;

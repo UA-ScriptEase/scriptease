@@ -14,19 +14,19 @@ import scriptease.util.FileOp;
  * @author remiller
  * @author kschenk
  */
-public abstract class PatternModel {
+public abstract class SEModel {
 	private String name;
 	private String author;
 
-	public PatternModel() {
+	public SEModel() {
 		this("", "");
 	}
 
-	public PatternModel(String title) {
+	public SEModel(String title) {
 		this(title, "");
 	}
 
-	public PatternModel(String title, String author) {
+	public SEModel(String title, String author) {
 		this.name = title;
 		this.author = author;
 	}
@@ -97,8 +97,8 @@ public abstract class PatternModel {
 	/**
 	 * This is a double-dispatch hook for the
 	 * {@link scriptease.controller.ModelVisitor} family of controllers.
-	 * <code>visitor</code> implements each of: process[X] where [X]
-	 * is each of the leaf members of the <code>PatternModel</code> family. <BR>
+	 * <code>visitor</code> implements each of: process[X] where [X] is each of
+	 * the leaf members of the <code>PatternModel</code> family. <BR>
 	 * <BR>
 	 * To Use: Pass in a valid ModelVisitor to this method. The implementing
 	 * atom of this method will dispatch the appropriate

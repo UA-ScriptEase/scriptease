@@ -10,8 +10,8 @@ import scriptease.controller.FileManager;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 
 /**
  * Represents and performs the Save Model command, as well as encapsulates its
@@ -56,7 +56,7 @@ public final class SaveModelAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final PatternModel activeModel = PatternModelManager.getInstance()
+		final SEModel activeModel = SEModelManager.getInstance()
 				.getActiveModel();
 
 		if (activeModel == null)

@@ -29,8 +29,8 @@ import scriptease.gui.WindowFactory;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.GameCompilerException;
@@ -181,7 +181,7 @@ public final class FileManager {
 	 *            The model to be saved.
 	 * @see #saveAs(StoryModel)
 	 */
-	public void save(PatternModel model) {
+	public void save(SEModel model) {
 
 		model.process(new ModelAdapter() {
 			@Override
@@ -227,9 +227,9 @@ public final class FileManager {
 	 * 
 	 * @param model
 	 *            The model to be saved.
-	 * @see #save(PatternModel)
+	 * @see #save(SEModel)
 	 */
-	public void saveAs(PatternModel model) {
+	public void saveAs(SEModel model) {
 		model.process(new ModelAdapter() {
 			@Override
 			public void processLibraryModel(LibraryModel libraryModel) {
@@ -435,7 +435,7 @@ public final class FileManager {
 		String outputDir = ScriptEase.getInstance().getPreference(
 				ScriptEase.OUTPUT_DIRECTORY_KEY)
 				+ "/";
-		String storyName = PatternModelManager.getInstance().getActiveModel()
+		String storyName = SEModelManager.getInstance().getActiveModel()
 				.getName();
 
 		new File(outputDir + storyName).mkdirs();
@@ -487,7 +487,7 @@ public final class FileManager {
 
 	public void loadLibraryModel(File location) {
 		final FileIO reader = FileIO.getInstance();
-		PatternModel model = null;
+		SEModel model = null;
 
 		if (location == null || !location.exists())
 			return;
@@ -548,7 +548,7 @@ public final class FileManager {
 			// the menu items update themselves correctly - remiller
 			this.updateRecentFiles(location);
 
-			PatternModelManager.getInstance().add(model, true);
+			SEModelManager.getInstance().add(model, true);
 		}
 		this.notifyObservers(model, location);
 
@@ -601,7 +601,7 @@ public final class FileManager {
 	 * @return <code>true</code> only if the model can safely be closed without
 	 *         losing any desired unsaved changes.
 	 */
-	public boolean hasUnsavedChanges(PatternModel model) {
+	public boolean hasUnsavedChanges(SEModel model) {
 		if (!UndoManager.getInstance().isSaved(model)) {
 			int choice = WindowFactory.getInstance().showConfirmClose(model);
 
@@ -627,7 +627,7 @@ public final class FileManager {
 	 * @param model
 	 *            The model whose files should be closed.
 	 */
-	public boolean close(PatternModel model) {
+	public boolean close(SEModel model) {
 		if (model == null)
 			return false;
 
@@ -636,7 +636,7 @@ public final class FileManager {
 			public void processLibraryModel(LibraryModel libraryModel) {
 				if (PanelFactory.getInstance()
 						.getComponentsForModel(libraryModel).size() < 1) {
-					PatternModelManager.getInstance().remove(libraryModel);
+					SEModelManager.getInstance().remove(libraryModel);
 				}
 			}
 
@@ -658,7 +658,7 @@ public final class FileManager {
 
 				if (PanelFactory.getInstance()
 						.getComponentsForModel(storyModel).size() < 1) {
-					PatternModelManager.getInstance().remove(storyModel);
+					SEModelManager.getInstance().remove(storyModel);
 
 					FileManager.this.openFiles.removeValue(storyModel);
 
@@ -681,13 +681,13 @@ public final class FileManager {
 		// ensure that we won't be losing any unsaved changes. This has to be a
 		// separate loop from the closing loop because if we cancel the close,
 		// we need to be able to back out fully.
-		for (PatternModel model : PatternModelManager.getInstance().getModels()) {
+		for (SEModel model : SEModelManager.getInstance().getModels()) {
 			if (!this.hasUnsavedChanges(model))
 				return false;
 		}
 
 		// actually perform... The Closing. Cue dramatic music!
-		for (PatternModel model : PatternModelManager.getInstance().getModels()) {
+		for (SEModel model : SEModelManager.getInstance().getModels()) {
 			if (!this.close(model))
 				return false;
 		}

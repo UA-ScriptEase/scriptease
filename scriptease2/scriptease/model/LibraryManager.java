@@ -8,7 +8,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.PatternModelEvent;
-import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryManagerEvent;
@@ -74,10 +74,10 @@ public class LibraryManager implements LibraryObserver {
 
 		this.buildDefaultLibrary();
 
-		final PatternModelObserver modelObserver;
+		final SEModelObserver modelObserver;
 		final TranslatorObserver translatorObserver;
 
-		modelObserver = new PatternModelObserver() {
+		modelObserver = new SEModelObserver() {
 			/*
 			 * On StoryModelPoolEvent, If the StoryModelPool no longer uses the
 			 * translator, removes the translator from loadedTranslators.
@@ -87,7 +87,7 @@ public class LibraryManager implements LibraryObserver {
 				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED)
 					for (Translator translator : LibraryManager.this.loadedTranslators
 							.keySet()) {
-						if (!PatternModelManager.getInstance().usingTranslator(
+						if (!SEModelManager.getInstance().usingTranslator(
 								translator)) {
 							// this.remove(loadedTranslators.get(translator));
 							LibraryManager.this.loadedTranslators
@@ -125,7 +125,7 @@ public class LibraryManager implements LibraryObserver {
 
 		TranslatorManager.getInstance().addTranslatorObserver(this,
 				translatorObserver);
-		PatternModelManager.getInstance().addPatternModelObserver(this,
+		SEModelManager.getInstance().addPatternModelObserver(this,
 				modelObserver);
 	}
 

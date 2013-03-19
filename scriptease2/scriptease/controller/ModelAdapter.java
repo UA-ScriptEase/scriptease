@@ -1,7 +1,7 @@
 package scriptease.controller;
 
 import scriptease.model.LibraryModel;
-import scriptease.model.PatternModel;
+import scriptease.model.SEModel;
 import scriptease.model.StoryModel;
 
 /**
@@ -13,7 +13,7 @@ import scriptease.model.StoryModel;
  * of only having to override the methods they <i>do</i> support.<br>
  * <br>
  * Subclasses that wish to provide default behaviour for processing can override
- * {@link #defaultProcess(PatternModel)}. <br>
+ * {@link #defaultProcess(SEModel)}. <br>
  * <br>
  * AbstractNoOpStoryVisitor is an Adapter (of the Adapter design pattern) to
  * ModelVisitor.
@@ -44,6 +44,6 @@ public abstract class ModelAdapter implements ModelVisitor {
 	 * @param model 
 	 *            The PatternModel to process with a default behaviour.
 	 */
-	protected void defaultProcess(PatternModel model) {
+	protected void defaultProcess(SEModel model) {
 	}
 }

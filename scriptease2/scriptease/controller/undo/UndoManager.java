@@ -8,11 +8,11 @@ import scriptease.controller.FileManager;
 import scriptease.controller.observer.FileManagerObserver;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.PatternModelEvent;
-import scriptease.controller.observer.PatternModelObserver;
+import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.UndoManagerObserver;
 import scriptease.gui.StatusManager;
-import scriptease.model.PatternModel;
-import scriptease.model.PatternModelManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
 
 /**
@@ -71,14 +71,14 @@ public final class UndoManager {
 	private UndoManager() {
 		this.observerManager = new ObserverManager<UndoManagerObserver>();
 
-		final PatternModelObserver modelObserver;
+		final SEModelObserver modelObserver;
 		final FileManagerObserver fileObserver;
 
-		modelObserver = new PatternModelObserver() {
+		modelObserver = new SEModelObserver() {
 			@Override
 			public void modelChanged(PatternModelEvent event) {
 				final short eventType = event.getEventType();
-				final PatternModel model = event.getPatternModel();
+				final SEModel model = event.getPatternModel();
 
 				// Keep an up-to-date mapping of open models to their histories
 				if (eventType == PatternModelEvent.PATTERN_MODEL_ADDED) {
@@ -117,7 +117,7 @@ public final class UndoManager {
 			}
 		};
 
-		PatternModelManager.getInstance().addPatternModelObserver(this,
+		SEModelManager.getInstance().addPatternModelObserver(this,
 				modelObserver);
 		FileManager.getInstance().addObserver(this, fileObserver);
 	}
@@ -349,7 +349,7 @@ public final class UndoManager {
 	 * 
 	 * @return <code>true</code> if the given model's changes has been saved.
 	 */
-	public boolean isSaved(PatternModel model) {
+	public boolean isSaved(SEModel model) {
 		History history = this.findHistoryForModel(model);
 		if (history != null)
 			return history.isSaved();
@@ -415,7 +415,7 @@ public final class UndoManager {
 	 * 
 	 * @param model
 	 */
-	public void setActiveHistory(PatternModel model) {
+	public void setActiveHistory(SEModel model) {
 		if (model != null) {
 			History storyHistory = this.findHistoryForModel(model);
 			if (storyHistory != null) {
@@ -425,7 +425,7 @@ public final class UndoManager {
 		}
 	}
 
-	private History findHistoryForModel(PatternModel model) {
+	private History findHistoryForModel(SEModel model) {
 		for (History candidate : this.storyHistories) {
 			if (candidate.getModel() == model) {
 				return candidate;
