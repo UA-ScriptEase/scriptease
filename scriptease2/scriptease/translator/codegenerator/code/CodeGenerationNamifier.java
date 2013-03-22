@@ -26,6 +26,7 @@ import scriptease.util.StringOp;
  * 
  * @author jason
  * @author mfchurch
+ * @author kschenk
  */
 public class CodeGenerationNamifier {
 	private static final int ARBITRARY_STOP_SIZE = 10000;
@@ -55,9 +56,6 @@ public class CodeGenerationNamifier {
 	 * @return true if name is unique in scope
 	 */
 	protected boolean isNameUnique(String name) {
-		if(name.equals("Location_2"))
-			System.out.println("CHECK NOW");
-		
 		Collection<String> componentNameList = new ArrayList<String>(
 				this.componentsToNames.values());
 		Collection<String> codeBlockNameList = new ArrayList<String>(
@@ -87,9 +85,10 @@ public class CodeGenerationNamifier {
 		String currentName = "";
 
 		if (legalFormat == null || legalFormat.pattern().isEmpty())
-			legalFormat = Pattern.compile("[a-zA-Z_0-9]+");
+			legalFormat = Pattern.compile("[^\\\"]*");
 
 		currentName = getGeneratedNameFor(component);
+		
 		if (currentName == null || currentName.isEmpty()) {
 			currentName = buildLegalName(component, legalFormat);
 			propogateComponentName(component, currentName);
@@ -105,6 +104,7 @@ public class CodeGenerationNamifier {
 			legalFormat = Pattern.compile("[a-zA-Z_0-9]+");
 
 		currentName = getGeneratedNameFor(codeBlock);
+		
 		if (currentName == null || currentName.isEmpty()) {
 			currentName = buildLegalName(codeBlock.getOwner(), legalFormat);
 			propogateCodeBlockName(codeBlock, currentName);
