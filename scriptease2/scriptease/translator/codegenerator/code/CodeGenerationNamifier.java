@@ -1,6 +1,5 @@
 package scriptease.translator.codegenerator.code;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -26,8 +25,10 @@ import scriptease.util.StringOp;
  * 
  * @author jason
  * @author mfchurch
+ * @author kschenk
  */
 public class CodeGenerationNamifier {
+	private static final String defaultPattern = "[^\\\"]*";
 	private static final int ARBITRARY_STOP_SIZE = 10000;
 	private final CodeGenerationNamifier parentNamifier;
 	private final LanguageDictionary languageDictionary;
@@ -41,10 +42,10 @@ public class CodeGenerationNamifier {
 	public CodeGenerationNamifier(CodeGenerationNamifier existingNames,
 			LanguageDictionary languageDictionary) {
 		this.parentNamifier = existingNames;
+		this.languageDictionary = languageDictionary;
 
 		this.componentsToNames = new IdentityHashMap<StoryComponent, String>();
 		this.codeBlocksToNames = new HashMap<CodeBlock, String>();
-		this.languageDictionary = languageDictionary;
 	}
 
 	/**
@@ -55,18 +56,22 @@ public class CodeGenerationNamifier {
 	 * @return true if name is unique in scope
 	 */
 	protected boolean isNameUnique(String name) {
-		Collection<String> componentNameList = new ArrayList<String>(
-				this.componentsToNames.values());
-		Collection<String> codeBlockNameList = new ArrayList<String>(
-				this.codeBlocksToNames.values());
+		final Collection<String> componentNames;
+		final Collection<String> codeBlockNames;
+		final boolean isUniqueInScope;
+		boolean isUnique;
 
-		boolean isUniqueInScope = !(componentNameList.contains(name))
-				&& !(codeBlockNameList.contains(name));
+		componentNames = this.componentsToNames.values();
+		codeBlockNames = this.codeBlocksToNames.values();
 
-		boolean isUnique = isUniqueInScope
+		isUniqueInScope = !(componentNames.contains(name))
+				&& !(codeBlockNames.contains(name));
+		isUnique = isUniqueInScope
 				&& !this.languageDictionary.isReservedWord(name);
+
 		if (isUnique && this.parentNamifier != null)
 			isUnique = this.parentNamifier.isNameUnique(name);
+
 		return isUnique;
 	}
 
@@ -84,27 +89,18 @@ public class CodeGenerationNamifier {
 		String currentName = "";
 
 		if (legalFormat == null || legalFormat.pattern().isEmpty())
-			legalFormat = Pattern.compile("[a-zA-Z_0-9]+");
+			legalFormat = Pattern.compile(defaultPattern);
 
-		currentName = getGeneratedNameFor(component);
+		currentName = this.getGeneratedNameFor(component);
+
 		if (currentName == null || currentName.isEmpty()) {
-			currentName = buildLegalName(component, legalFormat);
-			propogateComponentName(component, currentName);
-		}
-
-		return currentName;
-	}
-
-	public String getUniqueName(CodeBlock codeBlock, Pattern legalFormat) {
-		String currentName = "";
-
-		if (legalFormat == null || legalFormat.pattern().isEmpty())
-			legalFormat = Pattern.compile("[a-zA-Z_0-9]+");
-
-		currentName = getGeneratedNameFor(codeBlock);
-		if (currentName == null || currentName.isEmpty()) {
-			currentName = buildLegalName(codeBlock.getOwner(), legalFormat);
-			propogateCodeBlockName(codeBlock, currentName);
+			if (component instanceof CodeBlock) {
+				currentName = this.buildLegalName(component.getOwner(),
+						legalFormat);
+			} else {
+				currentName = this.buildLegalName(component, legalFormat);
+			}
+			this.propogateComponentName(component, currentName);
 		}
 
 		return currentName;
@@ -127,7 +123,8 @@ public class CodeGenerationNamifier {
 
 		name = StringOp.removeIllegalCharacters(component.getDisplayText(),
 				legalFormat, true);
-		
+
+		// XXX Another possible problem point.. Maybe.
 		// make sure the name doesn't start with a number
 		name = StringOp.removeNonCharPrefix(name);
 
@@ -141,12 +138,10 @@ public class CodeGenerationNamifier {
 
 		if (counter >= ARBITRARY_STOP_SIZE) {
 			// We can't uniquify with letters either. Give up. And cry.
-			String message = "The name "
-					+ name
-					+ " already exists, and could not be uniquified given the naming rules in the current translator. Please choose a different name.";
-
-			WindowFactory.getInstance().showProblemDialog("Name exists",
-					message);
+			throw new IndexOutOfBoundsException("The name " + name
+					+ " already exists, and could not be uniquified"
+					+ " given the naming rules in the current translator. "
+					+ "Please choose a different name.");
 		}
 
 		return name;
@@ -161,40 +156,33 @@ public class CodeGenerationNamifier {
 	 */
 	public String getGeneratedNameFor(StoryComponent component) {
 		String name = "";
+		if (component instanceof CodeBlock) {
+			name = this.codeBlocksToNames.get((CodeBlock) component);
+		} else {
+			name = this.componentsToNames.get(component);
 
-		name = this.componentsToNames.get(component);
+			// We have a special case for KnowIts with function bindings because
+			// we do not want them to always have a unique name. If you guessed
+			// that this is because of implicits, it's a bingo! Aren't you a
+			// clever one.
+			if (!this.componentsToNames.isEmpty()
+					&& component instanceof KnowIt
+					&& ((KnowIt) component).getBinding() instanceof KnowItBindingFunction)
 
-		// We have a special case for KnowIts with function bindings because we
-		// do not want them to always have a unique name. If you guessed that
-		// this is because of implicits, it's a bingo! Aren't you a clever one.
-		if (!this.componentsToNames.isEmpty()
-				&& component instanceof KnowIt
-				&& ((KnowIt) component).getBinding() instanceof KnowItBindingFunction)
-
-			for (Entry<StoryComponent, String> entry : this.componentsToNames
-					.entrySet()) {
-				if (entry.getKey().equals(component)) {
-					name = entry.getValue();
-					break;
+				// XXX This may be where the bug is actually happening
+				for (Entry<StoryComponent, String> entry : this.componentsToNames
+						.entrySet()) {
+					if (entry.getKey().equals(component)) {
+						name = entry.getValue();
+						break;
+					}
 				}
-			}
-
+		}
 		if (name != null)
 			return name;
 
 		return this.parentNamifier != null ? this.parentNamifier
 				.getGeneratedNameFor(component) : null;
-	}
-
-	public String getGeneratedNameFor(CodeBlock codeBlock) {
-		String name = "";
-		name = this.codeBlocksToNames.get(codeBlock);
-		if (name != null)
-			return name;
-		name = this.codeBlocksToNames.get(codeBlock);
-
-		return this.parentNamifier != null ? this.parentNamifier
-				.getGeneratedNameFor(codeBlock) : null;
 	}
 
 	/**
@@ -234,27 +222,27 @@ public class CodeGenerationNamifier {
 		}
 	}
 
-	private void propogateCodeBlockName(CodeBlock codeBlock, String name) {
-		CodeGenerationNamifier ownerNamifier = this;
-
-		while (ownerNamifier != null) {
-			ownerNamifier.codeBlocksToNames.put(codeBlock, name);
-			ownerNamifier = ownerNamifier.parentNamifier;
-		}
-	}
-
-	// used by process methods to propagate component up to the ScriptIt parent
+	/**
+	 * Used by process methods to propagate component up to the ScriptIt parent
+	 * 
+	 * @param component
+	 * @param name
+	 */
 	private void propogateComponentName(StoryComponent component, String name) {
-		StoryComponent owner = component;
 		CodeGenerationNamifier ownerNamifier = this;
+		StoryComponent owner = component;
 
-		// Put it in the current componentsToNames, then iterate up to a
-		// ComplexStoryComponent and break after
 		while (owner != null && ownerNamifier != null) {
 			// Propogate one level regardless of owner type.
-			ownerNamifier.componentsToNames.put(component, name);
+			if (component instanceof CodeBlock) {
+				ownerNamifier.codeBlocksToNames
+						.put((CodeBlock) component, name);
+			} else {
+				ownerNamifier.componentsToNames.put(component, name);
+				owner = owner.getOwner();
+			}
+
 			ownerNamifier = ownerNamifier.parentNamifier;
-			owner = owner.getOwner();
 		}
 	}
 

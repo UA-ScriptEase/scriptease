@@ -24,6 +24,7 @@ import java.util.zip.ZipInputStream;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import scriptease.controller.FileManager;
@@ -47,7 +48,7 @@ public final class ScriptEase implements Runnable {
 	// property and configuration keys
 	public static final String LOOK_AND_FEEL_KEY = "UseJavaUI";
 	public static final String TITLE = "ScriptEase II Beta 5";
-	
+
 	private final String version;
 	private final String specificVersion;
 
@@ -139,7 +140,7 @@ public final class ScriptEase implements Runnable {
 	 */
 	private static final File SCRIPTEASE_USER_DATA_DIR = new File(
 			System.getProperty("user.home"), "ScriptEase");
-	
+
 	/**
 	 * This is private because of the singleton pattern. Use getInstance()
 	 * instead.
@@ -500,6 +501,9 @@ public final class ScriptEase implements Runnable {
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			// If you want to experiment with making SEII look like garbage,
+			// uncomment this line!
+			// UIManager.setLookAndFeel(UIManager.getInstalledLookAndFeels()[1].getClassName());
 		} catch (ClassNotFoundException e) {
 			this.handleUIFailure();
 			return;
