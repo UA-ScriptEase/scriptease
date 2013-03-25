@@ -103,6 +103,23 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		return matching;
 	}
 
+	/**
+	 * Gets the cause that contains this ScriptIt.
+	 * 
+	 * @return
+	 */
+	public ScriptIt getCause() {
+		if (this.isCause())
+			return this;
+		else
+			for (CodeBlock block : this.codeBlocks) {
+				final ScriptIt cause = block.getCause();
+				if (cause != null)
+					return cause;
+			}
+		return null;
+	}
+
 	@Override
 	public boolean equals(Object other) {
 		if (super.equals(other) && other instanceof ScriptIt) {
