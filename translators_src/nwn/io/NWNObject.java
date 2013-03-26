@@ -20,7 +20,8 @@ public final class NWNObject extends NWNGameConstant {
 
 	@Override
 	public String getCodeText() {
-		return "Get Nearest Object By Tag Include Self";
+		return "SE_AUX_GetNearestObjectByTagIncludeSelf(\"" + this.getTag()
+				+ "\")";
 	}
 
 	@Override

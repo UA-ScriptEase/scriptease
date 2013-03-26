@@ -21,7 +21,7 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.CodeGenerationException;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingConstantContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingResourceContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingFunctionContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingNullContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingReferenceContext;
@@ -116,7 +116,7 @@ public class ContextFactory {
 
 			@Override
 			public void processConstant(KnowItBindingResource constant) {
-				ContextFactory.this.activeContext = new KnowItBindingConstantContext(
+				ContextFactory.this.activeContext = new KnowItBindingResourceContext(
 						pastContext, constant);
 			}
 

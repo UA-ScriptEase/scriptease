@@ -218,13 +218,14 @@
 				<Literal>"</Literal>
 			</Line>
 		</Format>
-		<!-- Series of all includes. i_se_story is always included -->
+		<!-- Series of all includes. i_se_story and i_se_aux are always included -->
 		<Format id="includes">
 			<Line>
 				<Literal>// Includes</Literal>
 			</Line>
 			<Line>
 				<Literal>#include "i_se_story"</Literal>
+				<Literal>#include "i_se_aux"</Literal>
 			</Line>
 			<Series data="includes" unique="true">
 				<FormatRef ref="include" />

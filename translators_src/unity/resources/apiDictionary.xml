@@ -4310,7 +4310,7 @@
       <Name>Find Object with Name</Name>
       <Visible>false</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label>UNUSED</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -4324,19 +4324,19 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Name</Name>
+              <Name>Object</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>String</Type>
+                <Type>GameObject</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Literal>GameObject.Find(&quot;</Literal>
-            <Scope data="argument" ref="Name">
-              <Fragment data="name" legalValues="[^\&quot;]*"/>
-            </Scope>
+          		<Scope data="argument" ref="Object">
+              		<Fragment data="DisplayText" legalValues="[^\&quot;]*"/>
+           		</Scope>
             <Literal>&quot;)</Literal>
           </Code>
         </CodeBlockSource>

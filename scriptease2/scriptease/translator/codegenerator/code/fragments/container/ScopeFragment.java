@@ -7,6 +7,7 @@ import java.util.List;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
+import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingResourceContext;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 public class ScopeFragment extends AbstractContainerFragment {
@@ -58,6 +59,9 @@ public class ScopeFragment extends AbstractContainerFragment {
 		super.resolve(context);
 		final Object scope;
 
+		if(context instanceof KnowItBindingResourceContext)
+			System.out.println(context);
+		
 		scope = this.getScope(context);
 
 		if (scope != null) {

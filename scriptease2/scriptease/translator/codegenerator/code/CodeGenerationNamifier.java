@@ -36,7 +36,7 @@ public class CodeGenerationNamifier {
 	private final LanguageDictionary languageDictionary;
 	private final Map<StoryComponent, String> componentsToNames;
 	private final Map<CodeBlock, String> codeBlocksToNames;
-	
+
 	public CodeGenerationNamifier(LanguageDictionary languageDictionary) {
 		this(null, languageDictionary);
 	}
@@ -142,6 +142,9 @@ public class CodeGenerationNamifier {
 		// there isn't already a name, we need to generate one.
 		counter = 0;
 
+		if (component.getDisplayText().equals("*Rebecca"))
+			System.out.println("Debughere");
+
 		name = StringOp.removeIllegalCharacters(component.getDisplayText(),
 				legalFormat, true);
 
@@ -215,8 +218,8 @@ public class CodeGenerationNamifier {
 			return name;
 
 		return this.parentNamifier != null ? this.parentNamifier
-				.getGeneratedNameFor(component) : null; 
-				//null;
+				.getGeneratedNameFor(component) : null;
+		// null;
 	}
 
 	/**
