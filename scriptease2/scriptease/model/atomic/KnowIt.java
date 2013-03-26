@@ -273,7 +273,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 				addObservers(knowIt);
 			}
-
+			
 			@Override
 			protected void defaultProcess(KnowItBinding newBinding) {
 				/*

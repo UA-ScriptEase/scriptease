@@ -75,6 +75,10 @@ public class SimpleDataFragment extends AbstractFragment {
 				resolveString = context.getUniqueName(Pattern
 						.compile(this.legalRange));
 			else if (dataLabel
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.DISPLAYTEXT
+							.name())) {
+				resolveString = context.getDisplayText();
+			} else if (dataLabel
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.TYPE
 							.name())) {
 				try {
@@ -122,7 +126,9 @@ public class SimpleDataFragment extends AbstractFragment {
 							.name()))
 				resolveString = context.getSubject().getBinding()
 						.getScriptValue();
-			else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.SLOTCONDITIONAL.name()))
+			else if (dataLabel
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.SLOTCONDITIONAL
+							.name()))
 				resolveString = context.getSlotConditional();
 			else if (dataLabel
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.FANIN
@@ -132,7 +138,9 @@ public class SimpleDataFragment extends AbstractFragment {
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.NOTE
 							.name()))
 				resolveString = context.getDisplayText();
-			else if (dataLabel.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.PARENTNAME.name()))
+			else if (dataLabel
+					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.PARENTNAME
+							.name()))
 				resolveString = context.getParentName();
 			else if (dataLabel
 					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.UNIQUEID

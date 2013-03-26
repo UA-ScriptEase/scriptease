@@ -1,19 +1,14 @@
 package scriptease.translator.codegenerator.code.contexts.knowitbindingcontext;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import scriptease.model.CodeBlock;
-import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
-import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -27,21 +22,21 @@ import scriptease.util.StringOp;
  * @author mfchurch
  * 
  */
-public class KnowItBindingConstantContext extends KnowItBindingContext {
+public class KnowItBindingResourceContext extends KnowItBindingContext {
 
-	public KnowItBindingConstantContext(StoryPoint model, String indent,
+	public KnowItBindingResourceContext(StoryPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInformation) {
 		super(model, indent, existingNames, translator, locationInformation);
 	}
 
-	public KnowItBindingConstantContext(Context other) {
+	public KnowItBindingResourceContext(Context other) {
 		this(other.getStartStoryPoint(), other.getIndent(),
 				other.getNamifier(), other.getTranslator(), other
 						.getLocationInfo());
 	}
 
-	public KnowItBindingConstantContext(Context other, KnowItBinding source) {
+	public KnowItBindingResourceContext(Context other, KnowItBinding source) {
 		this(other);
 		this.binding = source;
 	}
@@ -52,42 +47,17 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 	 */
 	@Override
 	public String getFormattedValue() {
-		Collection<AbstractFragment> typeFormat = new ArrayList<AbstractFragment>();
-		if (this.binding instanceof KnowItBindingResource) {
-			final String type = ((KnowItBindingResource) this.binding)
-					.getFirstType();
-			typeFormat = this.translator.getGameTypeManager().getFormat(type);
-			if (typeFormat == null || typeFormat.isEmpty()) {
-				final List<CodeBlock> codeBlocks = this.getBindingCodeBlocks();
-				if (codeBlocks.size() <= 0)
-					throw new CodeGenerationException(
-							"Couldn't find code block for "
-									+ this.binding
-									+ ". Maybe it's missing from the API library?");
+		final Collection<AbstractFragment> typeFormat;
+		final String type;
 
-				// Finds the correct binding block in the list.
-				for (CodeBlock codeBlock : codeBlocks) {
-					if (this.binding.getScriptValue().equals(
-							codeBlock.getDisplayText())) {
-						final String bindingCode;
+		type = this.binding.getFirstType();
+		typeFormat = this.translator.getGameTypeManager().getFormat(type);
 
-						bindingCode = AbstractFragment.resolveFormat(
-								codeBlock.getCode(), this);
-
-						return bindingCode;
-					}
-				}
-
-				return this.getValue();
-			}
+		if (typeFormat == null || typeFormat.isEmpty()) {
+			return this.getValue();
 		}
 
 		return AbstractFragment.resolveFormat(typeFormat, this);
-	}
-
-	@Override
-	public KnowIt getParameter(String parameter) {
-		return new KnowIt(((KnowItBindingResource) this.binding).getTag());
 	}
 
 	/**
@@ -103,6 +73,7 @@ public class KnowItBindingConstantContext extends KnowItBindingContext {
 		// Handles Escaped Characters
 		final Set<Entry<String, String>> entrySet = this.translator
 				.getGameTypeManager().getEscapes(type).entrySet();
+
 		for (Entry<String, String> escape : entrySet) {
 			final String key = escape.getKey();
 			final String value = escape.getValue();

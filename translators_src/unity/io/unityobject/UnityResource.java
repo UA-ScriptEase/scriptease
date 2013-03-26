@@ -12,8 +12,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -136,7 +134,8 @@ public class UnityResource extends Resource {
 
 	@Override
 	public String getCodeText() {
-		return "Find Object with Name";
+		// TODO Get the whole path
+		return "GameObject.Find(\"" + this.getName() + "\")";
 	}
 
 	public Integer getTypeNumber() {
@@ -152,12 +151,13 @@ public class UnityResource extends Resource {
 					&& this.tag.equals(other.tag)
 					&& this.uniqueID == other.uniqueID;
 		}
-
 		return false;
 	}
 
 	public void initializeChildren() {
-
+		// TODO Initialize the children of the resource when we first load so
+		// we don't have to constantly load these whenever we use the method
+		// #getChildren.
 	}
 
 	@Override
@@ -206,24 +206,43 @@ public class UnityResource extends Resource {
 			try {
 				reader = new BufferedReader(new FileReader(metaFile));
 				String line;
+				final String animType = "AnimationElement";
+				final String nameStart = "@";
+				final String nameEnd = "_";
+
 				while ((line = reader.readLine()) != null) {
 					if (line.contains(fileID)) {
-						final String animationName = line.split(": ")[1];
+						final String originalName = line.split(": ")[1];
 
-						if (animationName.contains("@")
-								&& animationName.contains("_")) {
+						final Resource animationChild;
+						// TODO Change this into a regex.
+
+						if (originalName.contains(nameStart)) {
+							// Get the string after the @. It's now anim_222-222
+							final String splitName = originalName
+									.split(nameStart)[1];
+
 							// The string looks like this: d@anim_222-222
+							if (splitName.contains(nameEnd)) {
+								// Get the string before the _. It's now just
+								// anims
+								final String name = splitName.split(nameEnd)[0];
 
-							// TODO Maybe we don't need this.. try without
-							// first.
-							// Get the string after the @
-							final String firstPart = animationName.split("@")[1];
-
+								animationChild = SimpleResource
+										.buildSimpleResource(animType, name);
+							} else
+								animationChild = SimpleResource
+										.buildSimpleResource(
+												"AnimationElement",
+												originalName);
 						}
 
-						animationChildren.add(SimpleResource
-								.buildSimpleResource("AnimationElement",
-										animationName));
+						else
+							animationChild = SimpleResource
+									.buildSimpleResource("AnimationElement",
+											originalName);
+
+						animationChildren.add(animationChild);
 					}
 				}
 				reader.close();

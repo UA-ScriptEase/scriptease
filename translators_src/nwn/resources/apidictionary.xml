@@ -11008,9 +11008,7 @@
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_aux</Include>
-          </Includes>
+          <Includes/>
           <Code>
             <Line>
               <Literal>float originalFacing = GetFacing(</Literal>
@@ -15313,9 +15311,7 @@
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_aux</Include>
-          </Includes>
+          <Includes/>
           <Code>
             <Line>
               <Literal>object aCreature = </Literal>
@@ -19805,9 +19801,7 @@
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_aux</Include>
-          </Includes>
+          <Includes/>
           <Code>
             <Line>
               <Literal>return SE_AUX_GetRandomObjectWithoutSelf(GetTag(</Literal>
@@ -20160,9 +20154,7 @@
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_aux</Include>
-          </Includes>
+          <Includes/>
           <Code>
             <Literal>SE_AUX_GetNearestObjectWithoutSelf(&quot;</Literal>
             <Scope data="argument" ref="Tag">
@@ -20199,9 +20191,7 @@
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_aux</Include>
-          </Includes>
+          <Includes/>
           <Code>
             <Literal>SE_AUX_GetRandomObjectWithoutSelf(&quot;</Literal>
             <Scope data="argument" ref="Tag">
@@ -20240,9 +20230,7 @@
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_aux</Include>
-          </Includes>
+          <Includes />
           <Code>
             <Literal>SE_AUX_GetNearestObjectByTagIncludeSelf(&quot;</Literal>
             <Scope data="argument" ref="Tag">
@@ -20279,9 +20267,7 @@
               </Types>
             </KnowIt>
           </Parameters>
-          <Includes>
-            <Include>i_se_aux</Include>
-          </Includes>
+          <Includes/>
           <Code>
             <Literal>SE_AUX_GetRandomObjectWithSelf(&quot;</Literal>
             <Scope data="argument" ref="Tag">
@@ -24340,7 +24326,7 @@
             <Line>
               <Literal>return GetFacingFromLocation(</Literal>
               <Scope data="ARGUMENT" ref="Location">
-                <Fragment data="VALUE"/>
+                <Fragment data="NAME"/>
               </Scope>
               <Literal>);</Literal>
             </Line>

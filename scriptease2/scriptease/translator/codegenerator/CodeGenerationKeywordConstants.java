@@ -56,6 +56,7 @@ public interface CodeGenerationKeywordConstants {
 		TYPE,
 		UNIQUEID,
 		UNIQUE32CHARNAME,
+		DISPLAYTEXT,
 		VALUE,
 		CURRENTSTORYPOINT
 	}
