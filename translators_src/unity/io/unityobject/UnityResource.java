@@ -134,8 +134,21 @@ public class UnityResource extends Resource {
 
 	@Override
 	public String getCodeText() {
-		// TODO Get the whole path
-		return "GameObject.Find(\"" + this.getName() + "\")";
+		String name = this.name;
+		Resource owner = this.getOwner();
+
+		while (!(owner instanceof Scene)) {
+			if (owner.getTypes().contains(UnityType.GAMEOBJECT.getName())) {
+				name = owner.getName() + "/" + name;
+			}
+			owner = owner.getOwner();
+		}
+		
+		if(name.split("/").length <= 2) {
+			name = this.name;
+		}
+
+		return "GameObject.Find(\"" + name + "\")";
 	}
 
 	public Integer getTypeNumber() {
