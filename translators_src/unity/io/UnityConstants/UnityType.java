@@ -336,20 +336,18 @@ public enum UnityType {
 	}
 
 	/**
-	 * Returns the name of the type that corresponds to the id. This is much
-	 * slower than just calling {@link #getName()} on the relevant type, so use
-	 * this only if the type is not known.
+	 * Returns the type that corresponds to the id.
 	 * 
 	 * @param id
 	 * @return
 	 */
-	public static String getNameForID(int id) {
+	public static UnityType getTypeForID(int id) {
 		for (UnityType type : UnityType.values()) {
 			if (type.getID() == id)
-				return type.getName();
+				return type;
 		}
 
-		return null;
+		throw new IllegalArgumentException("No type found for id " + id);
 	}
 
 	/**

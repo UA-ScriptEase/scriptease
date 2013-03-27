@@ -260,8 +260,6 @@ public final class UnityProject implements GameModule {
 		sceneFiles = FileOp.findFiles(this.projectLocation, sceneFileFilter);
 		metaFiles = FileOp.findFiles(this.projectLocation, metaFileFilter);
 
-		final Collection<String> seGeneratedGUIDs = new ArrayList<String>();
-
 		for (File metaFile : metaFiles) {
 			final BufferedReader reader;
 
@@ -275,17 +273,15 @@ public final class UnityProject implements GameModule {
 					final String guidValue = line.substring(guid.length() + 2);
 
 					this.guidsToMetaFiles.put(guidValue, metaFile);
-
-					if (metaFile.getName().startsWith(SCRIPTEASE_FILE_PREFIX)) {
-						seGeneratedGUIDs.add(guidValue);
-					}
 				}
 			}
 			reader.close();
 		}
 
 		for (File sceneFile : sceneFiles) {
-			final Scene scene = Scene.buildScene(sceneFile, seGeneratedGUIDs);
+			final Scene scene;
+
+			scene = Scene.buildScene(sceneFile, this.guidsToMetaFiles);
 
 			if (scene != null)
 				this.scenes.add(scene);

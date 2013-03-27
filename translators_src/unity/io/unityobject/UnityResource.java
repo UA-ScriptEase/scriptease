@@ -20,15 +20,7 @@ import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
 
 public class UnityResource extends Resource {
-	@SuppressWarnings("serial")
-	private static final Collection<String> acceptedTypes = new ArrayList<String>() {
-		{
-			this.add(UnityType.GAMEOBJECT.getName());
-		}
-	};
-
-	private final Scene scene;
-
+	private final UnityType type;
 	private final int uniqueID;
 	private final String name;
 	private final String tag;
@@ -38,16 +30,17 @@ public class UnityResource extends Resource {
 
 	private final Map<String, PropertyValue> topLevelPropertyMap;
 
-	public UnityResource(int uniqueID, String tag, Scene scene,
+	public UnityResource(int uniqueID, String tag,
 			Map<String, PropertyValue> propertyMap) {
 		this.uniqueID = uniqueID;
 		this.tag = tag;
 		this.topLevelPropertyMap = propertyMap;
-		this.scene = scene;
 
 		final PropertyValue subMap;
+		final int typeID;
 
 		subMap = this.topLevelPropertyMap.get(UnityType.GAMEOBJECT.getName());
+		typeID = new Integer(this.tag.split(UnityProject.UNITY_TAG)[1]);
 
 		if (subMap != null && subMap.isMap()) {
 			final PropertyValue mName;
@@ -62,15 +55,8 @@ public class UnityResource extends Resource {
 		} else {
 			this.name = (String) this.topLevelPropertyMap.keySet().toArray()[0];
 		}
-	}
 
-	/**
-	 * Returns the tag of the object. Tags always start with {@link #UNITY_TAG}.
-	 * Tags for UnityObjects are not unique and only serve to define the type.
-	 */
-	@Override
-	public String getTag() {
-		return this.getName();
+		this.type = UnityType.getTypeForID(typeID);
 	}
 
 	/**
@@ -102,104 +88,106 @@ public class UnityResource extends Resource {
 	 * @return
 	 */
 	public Map<String, PropertyValue> getPropertyMap() {
-		return this.topLevelPropertyMap.get(this.getType()).getMap();
+		return this.topLevelPropertyMap.get(this.getType().getName()).getMap();
 	}
 
-	public String getType() {
-		return UnityType.getNameForID(this.getTypeNumber());
-	}
-
-	@Override
-	public Collection<String> getTypes() {
-		final Collection<String> types = new ArrayList<String>();
-
-		types.add(this.getType());
-
-		return types;
-	}
-
-	@Override
-	public String getName() {
-		return this.name;
+	public UnityType getType() {
+		return this.type;
 	}
 
 	/**
-	 * This combines the tag and uniqueID to provide the strongest
-	 * representation of the object as a String.
+	 * Initializes the owner of the UnityResource. Must be called after loading
+	 * the entire scene in order to detect all children.
 	 */
-	@Override
-	public String getTemplateID() {
-		return this.tag + " &" + this.uniqueID;
-	}
+	public void initializeOwner(Scene scene) {
+		final int uniqueID;
 
-	@Override
-	public String getCodeText() {
-		String name = this.name;
-		
-		Resource owner = this.getOwner();
-		while (!(owner instanceof Scene)) {
-			if (owner.getTypes().contains(UnityType.GAMEOBJECT.getName())) {
-				name = owner.getName() + "/" + name;
-			}
-			owner = owner.getOwner();
+		if (this.getType() == UnityType.GAMEOBJECT) {
+			// This is the ID of the Transform object.
+			final int transformTypeNumber;
+			final PropertyValue transformIDValue;
+			final String transformIDNumber;
+			final UnityResource attachedTransform;
+			final PropertyValue fatherMap;
+			final int fatherID;
+
+			transformTypeNumber = UnityType.TRANSFORM.getID();
+			transformIDValue = this.getFirstOccuranceOfField(String
+					.valueOf(transformTypeNumber));
+			transformIDNumber = transformIDValue.getMap()
+					.get(UnityField.FILEID.getName()).getString();
+
+			attachedTransform = scene.getObjectByUnityID(Integer
+					.parseInt(transformIDNumber));
+
+			fatherMap = attachedTransform
+					.getFirstOccuranceOfField(UnityField.M_FATHER.getName());
+
+			fatherID = Integer.parseInt(fatherMap.getMap()
+					.get(UnityField.FILEID.getName()).getString());
+
+			if (fatherID != 0) {
+				final UnityResource fatherTransform;
+				final PropertyValue mGameObjectMapValue;
+
+				fatherTransform = scene.getObjectByUnityID(fatherID);
+
+				mGameObjectMapValue = fatherTransform
+						.getFirstOccuranceOfField(UnityField.M_GAMEOBJECT
+								.getName());
+
+				uniqueID = Integer.parseInt(mGameObjectMapValue.getMap()
+						.get(UnityField.FILEID.getName()).getString());
+			} else
+				uniqueID = -1;
+		} else {
+			final PropertyValue gameObjectMapValue;
+
+			gameObjectMapValue = this
+					.getFirstOccuranceOfField(UnityField.M_GAMEOBJECT.getName());
+
+			if (gameObjectMapValue != null) {
+				uniqueID = Integer.parseInt(gameObjectMapValue.getMap()
+						.get(UnityField.FILEID.getName()).getString());
+			} else
+				uniqueID = -1;
 		}
-		
-		return "GameObject.Find(\"" + name + "\")";
+
+		if (uniqueID != -1)
+			this.owner = scene.getObjectByUnityID(uniqueID);
+		else
+			this.owner = scene;
 	}
 
-	public Integer getTypeNumber() {
-		return new Integer(this.tag.split(UnityProject.UNITY_TAG)[1]);
-	}
+	/**
+	 * Initializes the children of the resource. Must be called after all
+	 * resources have their owners initialized. Sorry.
+	 * 
+	 * @param scene
+	 */
+	public void initializeChildren(Scene scene, Map<String, File> guidsToMetas) {
+		this.children = new ArrayList<Resource>();
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof UnityResource) {
-			final UnityResource other = (UnityResource) obj;
-
-			return this.topLevelPropertyMap.equals(other.topLevelPropertyMap)
-					&& this.tag.equals(other.tag)
-					&& this.uniqueID == other.uniqueID;
+		for (UnityResource resource : scene.getResources()) {
+			final UnityType type = resource.getType();
+			final Resource owner = resource.getOwner();
+			if (owner == this)
+				if (type == UnityType.GAMEOBJECT) {
+					this.children.add(resource);
+				} else if (type == UnityType.ANIMATION) {
+					this.children.addAll(this.getAnimationChildren(resource,
+							guidsToMetas));
+				}
 		}
-		return false;
 	}
 
-	public void initializeChildren() {
-		// TODO Initialize the children of the resource when we first load so
-		// we don't have to constantly load these whenever we use the method
-		// #getChildren.
-	}
-
-	@Override
-	public List<Resource> getChildren() {
-		if (this.children == null) {
-			this.children = new ArrayList<Resource>();
-
-			for (UnityResource resource : this.scene.getResources()) {
-				final String type = resource.getType();
-				final Resource owner = resource.getOwner();
-				if (owner == this)
-					if (acceptedTypes.contains(type)) {
-						this.children.add(resource);
-					} else if (type.equals(UnityType.ANIMATION.getName())) {
-						this.children.addAll(this
-								.getAnimationChildren(resource));
-					}
-			}
-		}
-		return this.children;
-	}
-
-	private List<Resource> getAnimationChildren(UnityResource resource) {
+	private List<Resource> getAnimationChildren(UnityResource resource,
+			Map<String, File> guidsToMetas) {
 		final List<Resource> animationChildren = new ArrayList<Resource>();
 		final List<PropertyValue> animations;
 
 		animations = resource.getFirstOccuranceOfField(
 				UnityField.M_ANIMATIONS.getName()).getList();
-
-		final Map<String, File> guidsToMetaFiles;
-
-		guidsToMetaFiles = UnityProject.getActiveProject()
-				.getGUIDsToMetaFiles();
 
 		for (PropertyValue animation : animations) {
 			final Map<String, PropertyValue> animationMap;
@@ -211,7 +199,7 @@ public class UnityResource extends Resource {
 			animationMap = animation.getMap();
 			fileID = animationMap.get(UnityField.FILEID.getName()).getString();
 			guid = animationMap.get(UnityField.GUID.getName()).getString();
-			metaFile = guidsToMetaFiles.get(guid);
+			metaFile = guidsToMetas.get(guid);
 			try {
 				reader = new BufferedReader(new FileReader(metaFile));
 				String line;
@@ -276,6 +264,13 @@ public class UnityResource extends Resource {
 				this.topLevelPropertyMap, fieldName);
 	}
 
+	/**
+	 * Gets the value of the first occurrence of the passed in field name.
+	 * 
+	 * @param map
+	 * @param fieldName
+	 * @return
+	 */
 	private static PropertyValue getFirstOccuranceOfFieldInMap(
 			Map<String, PropertyValue> map, String fieldName) {
 		for (Entry<String, PropertyValue> entry : map.entrySet()) {
@@ -305,6 +300,13 @@ public class UnityResource extends Resource {
 		return null;
 	}
 
+	/**
+	 * Gets the value of the first occurrence of the passed in field name.
+	 * 
+	 * @param list
+	 * @param fieldName
+	 * @return
+	 */
 	private static PropertyValue getFirstOccuranceOfFieldInList(
 			List<PropertyValue> list, String fieldName) {
 		for (PropertyValue value : list) {
@@ -330,75 +332,73 @@ public class UnityResource extends Resource {
 		return null;
 	}
 
-	/**
-	 * Gets the unique ID of the owner of the component.
-	 * 
-	 * @return
-	 */
 	@Override
-	public Resource getOwner() {
-		if (this.owner == null) {
-			final int uniqueID;
+	public String getCodeText() {
+		String name = this.name;
+		Resource owner = this.owner;
 
-			if (this.getType().equals(UnityType.GAMEOBJECT.getName())) {
-				// This is the ID of the Transform object.
-				final int transformTypeNumber;
-				final PropertyValue transformIDValue;
-				final String transformIDNumber;
-				final UnityResource attachedTransform;
-				final PropertyValue fatherMap;
-				final int fatherID;
-
-				transformTypeNumber = UnityType.TRANSFORM.getID();
-				transformIDValue = this.getFirstOccuranceOfField(String
-						.valueOf(transformTypeNumber));
-				transformIDNumber = transformIDValue.getMap()
-						.get(UnityField.FILEID.getName()).getString();
-
-				attachedTransform = this.scene.getObjectByUnityID(Integer
-						.parseInt(transformIDNumber));
-
-				fatherMap = attachedTransform
-						.getFirstOccuranceOfField(UnityField.M_FATHER.getName());
-
-				fatherID = Integer.parseInt(fatherMap.getMap()
-						.get(UnityField.FILEID.getName()).getString());
-
-				if (fatherID != 0) {
-					final UnityResource fatherTransform;
-					final PropertyValue mGameObjectMapValue;
-
-					fatherTransform = this.scene.getObjectByUnityID(fatherID);
-
-					mGameObjectMapValue = fatherTransform
-							.getFirstOccuranceOfField(UnityField.M_GAMEOBJECT
-									.getName());
-
-					uniqueID = Integer.parseInt(mGameObjectMapValue.getMap()
-							.get(UnityField.FILEID.getName()).getString());
-				} else
-					uniqueID = -1;
-			} else {
-				final PropertyValue gameObjectMapValue;
-
-				gameObjectMapValue = this
-						.getFirstOccuranceOfField(UnityField.M_GAMEOBJECT
-								.getName());
-
-				if (gameObjectMapValue != null) {
-					uniqueID = Integer.parseInt(gameObjectMapValue.getMap()
-							.get(UnityField.FILEID.getName()).getString());
-				} else
-					uniqueID = -1;
+		while (!(owner instanceof Scene)) {
+			if (owner.getTypes().contains(UnityType.GAMEOBJECT.getName())) {
+				name = owner.getName() + "/" + name;
 			}
-
-			if (uniqueID != -1)
-				this.owner = this.scene.getObjectByUnityID(uniqueID);
-			else
-				this.owner = this.scene;
+			owner = owner.getOwner();
 		}
 
+		return "GameObject.Find(\"" + name + "\")";
+	}
+
+	@Override
+	public Collection<String> getTypes() {
+		final Collection<String> types = new ArrayList<String>();
+
+		types.add(this.type.getName());
+
+		return types;
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * This combines the tag and uniqueID to provide the strongest
+	 * representation of the object as a String.
+	 */
+	@Override
+	public String getTemplateID() {
+		return this.tag + " &" + this.uniqueID;
+	}
+
+	@Override
+	public Resource getOwner() {
 		return this.owner;
+	}
+
+	@Override
+	public List<Resource> getChildren() {
+		return this.children;
+	}
+
+	/**
+	 * Returns the tag of the object. Tags always start with {@link #UNITY_TAG}.
+	 * Tags for UnityObjects are not unique and only serve to define the type.
+	 */
+	@Override
+	public String getTag() {
+		return this.getName();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof UnityResource) {
+			final UnityResource other = (UnityResource) obj;
+
+			return this.topLevelPropertyMap.equals(other.topLevelPropertyMap)
+					&& this.tag.equals(other.tag)
+					&& this.uniqueID == other.uniqueID;
+		}
+		return false;
 	}
 
 	@Override
