@@ -64,13 +64,13 @@ public class Scene extends Resource {
 	 *             streams.
 	 */
 	public static Scene buildScene(File location,
-			Collection<String> seGeneratedGUIDs) throws IOException {
+			Map<String, File> guidsToMetaFiles) throws IOException {
 		final String HIDDEN_SCENE_PREFIX = "._";
 		final String locationName = location.getName();
 
 		if (!locationName.startsWith(HIDDEN_SCENE_PREFIX)) {
 			final Scene scene = new Scene(location);
-			if (scene.read(seGeneratedGUIDs))
+			if (scene.read(guidsToMetaFiles))
 				return scene;
 		} else
 			System.err.println("Did not read Scene file at " + locationName
@@ -130,8 +130,8 @@ public class Scene extends Resource {
 	 * @param seGeneratedGUIDs
 	 * @throws IOException
 	 */
-	private boolean read(Collection<String> seGeneratedGUIDs)
-			throws IOException {
+	private boolean read(Map<String, File> guidsToMetaFiles) throws IOException {
+		final Collection<String> seGeneratedGUIDs = new ArrayList<String>();
 		final Iterable<Event> eventIterable;
 		final Collection<UnityResource> objectsToRemove;
 
@@ -155,10 +155,18 @@ public class Scene extends Resource {
 		objectsToRemove = new ArrayList<UnityResource>();
 
 		this.unityResources.addAll(UnityResourceFactory.getInstance()
-				.buildResources(this, eventIterable.iterator()));
+				.buildResources(eventIterable.iterator()));
+
+		for (Entry<String, File> entry : guidsToMetaFiles.entrySet()) {
+			final String metaName = entry.getValue().getName();
+			final String guid = entry.getKey();
+			if (metaName.startsWith(UnityProject.SCRIPTEASE_FILE_PREFIX)) {
+				seGeneratedGUIDs.add(guid);
+			}
+		}
 
 		for (UnityResource object : this.unityResources) {
-			if (object.getType().equals(UnityType.MONOBEHAVIOUR.getName())) {
+			if (object.getType() == UnityType.MONOBEHAVIOUR) {
 				final Map<String, PropertyValue> propertyMap;
 				final PropertyValue scriptMapValue;
 				final Map<String, PropertyValue> scriptMap;
@@ -239,10 +247,10 @@ public class Scene extends Resource {
 			final UnityResource seGameObjectTransform;
 
 			seGameObject = UnityResourceFactory.getInstance()
-					.buildEmptyGameObject(this, transformID,
-							SCRIPTEASE_OBJECT_NAME, gameObjectID);
+					.buildEmptyGameObject(transformID, SCRIPTEASE_OBJECT_NAME,
+							gameObjectID);
 			seGameObjectTransform = UnityResourceFactory.getInstance()
-					.buildTransformObject(this, gameObjectID, transformID);
+					.buildTransformObject(gameObjectID, transformID);
 
 			this.unityResources.add(seGameObject);
 			this.unityResources.add(seGameObjectTransform);
@@ -250,16 +258,26 @@ public class Scene extends Resource {
 			this.scriptEaseObject = seGameObject;
 		}
 
+		for (UnityResource resource : this.unityResources) {
+			resource.initializeOwner(this);
+		}
+
+		for (UnityResource resource : this.unityResources) {
+			resource.initializeChildren(this, guidsToMetaFiles);
+		}
+
 		return true;
 	}
 
 	/**
 	 * Adds a UnityResource to the list of resources in the scene. Does not add
-	 * anything to the scene's code or change the model in any other way.
+	 * anything to the scene's code or change the model in any other way. Does
+	 * not initialize children or owner of the new resource. This is primarily
+	 * used to add script objects.
 	 * 
 	 * @param object
 	 */
-	public void addObject(UnityResource object) {
+	public void addResource(UnityResource object) {
 		this.unityResources.add(object);
 	}
 
@@ -269,7 +287,7 @@ public class Scene extends Resource {
 	 * 
 	 * @param object
 	 */
-	public void removeObject(UnityResource object) {
+	public void removeResource(UnityResource object) {
 		this.unityResources.remove(object);
 	}
 
@@ -289,14 +307,14 @@ public class Scene extends Resource {
 		// Add an arbitrary number
 		for (Object data : this.unityResources) {
 			if (data instanceof UnityResource) {
-				final UnityResource unityObj = (UnityResource) data;
+				final UnityResource resource = (UnityResource) data;
 
-				final String number = "" + unityObj.getTypeNumber();
+				final String number = "" + resource.getType().getID();
 
-				writer.write("--- !u!" + number + " &" + unityObj.getUniqueID()
+				writer.write("--- !u!" + number + " &" + resource.getUniqueID()
 						+ "\n");
 
-				parser.dump(PropertyValue.convertToValueMap(unityObj
+				parser.dump(PropertyValue.convertToValueMap(resource
 						.getTopLevelPropertyMap()), writer);
 			}
 		}
@@ -414,8 +432,7 @@ public class Scene extends Resource {
 
 		for (UnityResource resource : this.unityResources) {
 			if (resource.getOwner() == this
-					&& resource.getType()
-							.equals(UnityType.GAMEOBJECT.getName())
+					&& resource.getType() == UnityType.GAMEOBJECT
 					&& resource != this.scriptEaseObject) {
 				resources.add(resource);
 			}

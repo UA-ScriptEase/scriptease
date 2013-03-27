@@ -1,6 +1,5 @@
 package io.unityobject;
 
-import io.Scene;
 import io.UnityProject;
 import io.UnityConstants.UnityField;
 import io.UnityConstants.UnityType;
@@ -55,8 +54,6 @@ public class UnityResourceFactory {
 	 * requires an attached transform object, which can be created with
 	 * {@link #buildTransformObject(Scene, int, int)}.
 	 * 
-	 * @param scene
-	 *            The scene that the Game Object will be attached to.
 	 * @param childTransformID
 	 *            This is the id number of the child Transform. Note that this
 	 *            method will NOT check if this is a valid ID number, since we
@@ -67,8 +64,8 @@ public class UnityResourceFactory {
 	 *            The unique ID number of the Game Object.
 	 * @return
 	 */
-	public UnityResource buildEmptyGameObject(Scene scene,
-			final int childTransformID, final String name, int idNumber) {
+	public UnityResource buildEmptyGameObject(final int childTransformID,
+			final String name, int idNumber) {
 		final PropertyValue transformID;
 		final PropertyValue transformMap;
 		final PropertyValue mComponentList;
@@ -122,14 +119,12 @@ public class UnityResourceFactory {
 		};
 
 		return new UnityResource(idNumber, UnityProject.UNITY_TAG
-				+ UnityType.GAMEOBJECT.getID(), scene, objectMap);
+				+ UnityType.GAMEOBJECT.getID(), objectMap);
 	}
 
 	/**
 	 * Creates an empty transform object at position 0,0,0.
 	 * 
-	 * @param scene
-	 *            The scene that the Transform is attached to
 	 * @param parentGameObjectID
 	 *            This is the id number of the parent game object. Note that
 	 *            this method will NOT check if this is a valid ID number, since
@@ -138,8 +133,8 @@ public class UnityResourceFactory {
 	 *            The unique ID number of the Transform.
 	 * @return
 	 */
-	public UnityResource buildTransformObject(Scene scene,
-			final int parentGameObjectID, int idNumber) {
+	public UnityResource buildTransformObject(final int parentGameObjectID,
+			int idNumber) {
 		final PropertyValue gameObjectID;
 
 		final PropertyValue properties;
@@ -205,7 +200,7 @@ public class UnityResourceFactory {
 		};
 
 		return new UnityResource(idNumber, UnityProject.UNITY_TAG
-				+ UnityType.TRANSFORM.getID(), scene, objectMap);
+				+ UnityType.TRANSFORM.getID(), objectMap);
 	}
 
 	/**
@@ -214,7 +209,7 @@ public class UnityResourceFactory {
 	 * @return
 	 */
 	public UnityResource buildMonoBehaviourObject(final int attachedObjectID,
-			final String guid, int idNumber, Scene scene) {
+			final String guid, int idNumber) {
 		final PropertyValue mGameObject;
 		final PropertyValue mScript;
 		final PropertyValue properties;
@@ -256,7 +251,7 @@ public class UnityResourceFactory {
 		};
 
 		return new UnityResource(idNumber, UnityProject.UNITY_TAG
-				+ UnityType.MONOBEHAVIOUR.getID(), scene, objectMap);
+				+ UnityType.MONOBEHAVIOUR.getID(), objectMap);
 	}
 
 	/**
@@ -266,8 +261,7 @@ public class UnityResourceFactory {
 	 * 
 	 * @param eventIterator
 	 */
-	public List<UnityResource> buildResources(Scene scene,
-			Iterator<Event> eventIterator) {
+	public List<UnityResource> buildResources(Iterator<Event> eventIterator) {
 
 		final List<UnityResource> unityObjects = new ArrayList<UnityResource>();
 
@@ -277,7 +271,7 @@ public class UnityResourceFactory {
 			if (event.is(Event.ID.DocumentStart)) {
 				final UnityResource object;
 
-				object = this.buildResource(scene, eventIterator);
+				object = this.buildResource(eventIterator);
 
 				if (object != null)
 					unityObjects.add(object);
@@ -308,8 +302,7 @@ public class UnityResourceFactory {
 	 * @param eventIterator
 	 * @return
 	 */
-	private UnityResource buildResource(Scene scene,
-			Iterator<Event> eventIterator) {
+	private UnityResource buildResource(Iterator<Event> eventIterator) {
 		UnityResource object = null;
 
 		if (eventIterator.hasNext()) {
@@ -319,7 +312,7 @@ public class UnityResourceFactory {
 				final MappingStartEvent mapEvent = (MappingStartEvent) event;
 
 				object = new UnityResource(Integer.parseInt(mapEvent
-						.getAnchor()), mapEvent.getTag(), scene,
+						.getAnchor()), mapEvent.getTag(),
 						this.buildMap(eventIterator));
 			}
 		}

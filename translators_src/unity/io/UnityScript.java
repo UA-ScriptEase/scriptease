@@ -80,7 +80,7 @@ public class UnityScript {
 
 		this.monoBehaviourObject = UnityResourceFactory.getInstance()
 				.buildMonoBehaviourObject(this.attachedObject.getUniqueID(),
-						this.guid, this.idNumber, this.scene);
+						this.guid, this.idNumber);
 
 		final PropertyValue mComponentMapValue;
 
@@ -103,7 +103,7 @@ public class UnityScript {
 	 * move this type of code to the Scene file itself later...
 	 */
 	private void addToScene() {
-		this.scene.addObject(this.monoBehaviourObject);
+		this.scene.addResource(this.monoBehaviourObject);
 		final String fileID = UnityField.FILEID.getName();
 		final int fileIDNum = UnityType.MONOBEHAVIOUR.getID();
 
@@ -123,7 +123,7 @@ public class UnityScript {
 	 * nothing can be done with it.
 	 */
 	public void removeFromScene() {
-		this.scene.removeObject(this.monoBehaviourObject);
+		this.scene.removeResource(this.monoBehaviourObject);
 
 		PropertyValue toBeRemoved = null;
 
