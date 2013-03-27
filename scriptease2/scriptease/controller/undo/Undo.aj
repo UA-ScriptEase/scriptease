@@ -16,6 +16,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /*
  * This aspect inserts Undo-specific code into any model object that must
@@ -142,14 +143,17 @@ public aspect Undo {
 	public pointcut removingType():
 		within (KnowIt+) && execution(* removeType(String));
 
-	/**
-	 * Defines the Clear Types operation in KnowIts.
-	 */
-	public pointcut clearingTypes():
-		within (KnowIt+) && execution(* clearTypes());
+	public pointcut addingCodeBlockType():
+		within (CodeBlock+) && execution(* addType(String));
 
-	public pointcut settingCodeBlockTypes():
-		within (CodeBlock+) && execution(* setTypes(Collection<String>));
+	public pointcut removingCodeBlockType():
+		within (CodeBlock+) && execution(* removeType(String));
+
+	public pointcut addingCodeBlockCode():
+		within (CodeBlock+) && execution(* addCode(AbstractFragment));
+
+	public pointcut removingCodeBlockCode():
+		within (CodeBlock+) && execution(* removeCode(AbstractFragment));
 
 	/**
 	 * Defines the Add Story Child operation in ComplexStoryComponents.
@@ -579,17 +583,85 @@ public aspect Undo {
 		this.addModification(mod);
 	}
 
-	before(final CodeBlock codeBlock, final Collection<String> types): settingCodeBlockTypes() && args(types) && this(codeBlock){
-		Modification mod = new FieldModification<Collection<String>>(types,
-				codeBlock.getTypes()) {
+	before(final CodeBlock codeBlock, final String type): addingCodeBlockType() && args(type) && this(codeBlock) {
+		Modification mod = new Modification() {
+
 			@Override
-			public void setOp(Collection<String> value) {
-				codeBlock.setTypes(value);
+			public void redo() {
+				codeBlock.addType(type);
+			}
+
+			@Override
+			public void undo() {
+				codeBlock.removeType(type);
 			}
 
 			@Override
 			public String toString() {
-				return "setting " + codeBlock + "'s types to " + types;
+				return "adding type " + type + " to " + codeBlock;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final CodeBlock codeBlock, final String type): removingCodeBlockType() && args(type) && this(codeBlock) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				codeBlock.removeType(type);
+			}
+
+			@Override
+			public void undo() {
+				codeBlock.addType(type);
+			}
+
+			@Override
+			public String toString() {
+				return "removing type " + type + " to " + codeBlock;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final CodeBlock codeBlock, final AbstractFragment code): addingCodeBlockCode() && args(code) && this(codeBlock) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				codeBlock.addCode(code);
+			}
+
+			@Override
+			public void undo() {
+				codeBlock.removeCode(code);
+			}
+
+			@Override
+			public String toString() {
+				return "adding " + code + " to " + codeBlock;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final CodeBlock codeBlock, final AbstractFragment code): removingCodeBlockCode() && args(code) && this(codeBlock) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				codeBlock.removeCode(code);
+			}
+
+			@Override
+			public void undo() {
+				codeBlock.addCode(code);
+			}
+
+			@Override
+			public String toString() {
+				return "removing " + code + " from " + codeBlock;
 			}
 		};
 		this.addModification(mod);
