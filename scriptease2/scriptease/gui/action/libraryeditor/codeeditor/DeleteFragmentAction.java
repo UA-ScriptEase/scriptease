@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.gui.libraryeditor.FormatFragmentSelectionManager;
 import scriptease.model.CodeBlock;
@@ -20,7 +21,7 @@ import sun.awt.util.IdentityArrayList;
  * @author kschenk
  * 
  */
-@SuppressWarnings("serial") 
+@SuppressWarnings("serial")
 public class DeleteFragmentAction extends ActiveTranslatorSensitiveAction {
 	private static final String DELETE_FRAGMENT_TEXT = "Delete";
 
@@ -100,8 +101,11 @@ public class DeleteFragmentAction extends ActiveTranslatorSensitiveAction {
 
 			if (selectedFragment != null) {
 				this.deleteFragment(fragments, selectedFragment, null);
-				FormatFragmentSelectionManager.getInstance().getCodeBlock()
-						.setCode(fragments);
+				UndoManager.getInstance().startUndoableAction(
+						"Setting CodeBlock " + codeBlock + " code to "
+								+ fragments);
+				codeBlock.setCode(fragments);
+				UndoManager.getInstance().endUndoableAction();
 			}
 		}
 	}

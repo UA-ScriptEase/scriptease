@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import javax.swing.Action;
 
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.gui.libraryeditor.FormatFragmentSelectionManager;
 import scriptease.model.CodeBlock;
@@ -99,8 +100,11 @@ public abstract class AbstractMoveFragmentAction extends
 
 			if (selectedFragment != null) {
 				this.moveFragment(fragments, selectedFragment, null);
-				FormatFragmentSelectionManager.getInstance().getCodeBlock()
-						.setCode(fragments);
+				UndoManager.getInstance().startUndoableAction(
+						"Setting CodeBlock " + codeBlock + " code to "
+								+ fragments);
+				codeBlock.setCode(fragments);
+				UndoManager.getInstance().endUndoableAction();
 			}
 		}
 	}
