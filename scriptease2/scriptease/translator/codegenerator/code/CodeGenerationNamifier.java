@@ -1,12 +1,8 @@
 package scriptease.translator.codegenerator.code;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import scriptease.model.CodeBlock;
@@ -32,6 +28,7 @@ import scriptease.util.StringOp;
 public class CodeGenerationNamifier {
 	private static final String defaultPattern = "^[a-zA-Z]+[0-9a-zA-Z_]*";
 	private static final int ARBITRARY_STOP_SIZE = 10000;
+
 	private final CodeGenerationNamifier parentNamifier;
 	private final LanguageDictionary languageDictionary;
 	private final Map<StoryComponent, String> componentsToNames;
@@ -46,7 +43,7 @@ public class CodeGenerationNamifier {
 		this.parentNamifier = existingNames;
 		this.languageDictionary = languageDictionary;
 
-		this.componentsToNames = new IdentityHashMap<StoryComponent, String>();
+		this.componentsToNames = new HashMap<StoryComponent, String>();
 		this.codeBlocksToNames = new HashMap<CodeBlock, String>();
 	}
 
@@ -62,8 +59,6 @@ public class CodeGenerationNamifier {
 	 */
 	public String getUniqueName(StoryComponent component, Pattern legalFormat) {
 		String currentName = "";
-
-		// TODO Step through this.
 
 		if (legalFormat == null || legalFormat.pattern().isEmpty())
 			legalFormat = Pattern.compile(defaultPattern);
@@ -88,7 +83,6 @@ public class CodeGenerationNamifier {
 					ownerNamifier.codeBlocksToNames.put((CodeBlock) component,
 							currentName);
 					ownerNamifier.componentsToNames.put(component, currentName);
-
 				} else {
 					ownerNamifier.componentsToNames.put(component, currentName);
 					owner = owner.getOwner();
@@ -108,22 +102,32 @@ public class CodeGenerationNamifier {
 	 *            the name to check if unique
 	 * @return true if name is unique in scope
 	 */
-	private boolean isNameUnique(String name) {
-		final Collection<String> componentNames;
-		final Collection<String> codeBlockNames;
-		final boolean isUniqueInScope;
-		boolean isUnique;
+	private boolean isNameUnique(String name, StoryComponent component) {
+		boolean isUnique = !this.languageDictionary.isReservedWord(name);
 
-		componentNames = new ArrayList<String>(this.componentsToNames.values());
-		codeBlockNames = new ArrayList<String>(this.codeBlocksToNames.values());
+		if (isUnique)
+			for (Entry<StoryComponent, String> entry : this.componentsToNames
+					.entrySet()) {
+				if (entry.getValue().equals(name)
+						&& !entry.getKey().equals(component)) {
+					isUnique = false;
+					break;
+				}
+			}
 
-		isUniqueInScope = !(componentNames.contains(name))
-				&& !(codeBlockNames.contains(name));
-		isUnique = isUniqueInScope
-				&& !this.languageDictionary.isReservedWord(name);
+		if (isUnique)
+			for (Entry<CodeBlock, String> entry : this.codeBlocksToNames
+					.entrySet()) {
+				if (entry.getValue().equals(name)
+						&& !entry.getKey().equals(component)) {
+					isUnique = false;
+					break;
+				}
+			}
 
 		if (isUnique && this.parentNamifier != null)
-			isUnique = this.parentNamifier.isNameUnique(name);
+			isUnique = this.parentNamifier.isNameUnique(name, component);
+
 		return isUnique;
 	}
 
@@ -136,28 +140,20 @@ public class CodeGenerationNamifier {
 	 * @return
 	 */
 	private String buildLegalName(StoryComponent component, Pattern legalFormat) {
+		final String displayText = component.getDisplayText();
+		int counter = 0;
 		String name;
-		int counter;
 
-		// there isn't already a name, we need to generate one.
-		counter = 0;
+		name = StringOp.removeIllegalCharacters(displayText, legalFormat, true);
 
-		if (component.getDisplayText().equals("*Rebecca"))
-			System.out.println("Debughere");
-
-		name = StringOp.removeIllegalCharacters(component.getDisplayText(),
-				legalFormat, true);
-
-		// XXX Another possible problem point.. Maybe.
-		// make sure the name doesn't start with a number
 		name = StringOp.removeNonCharPrefix(name);
 
-		while (!this.isNameUnique(name) && counter < ARBITRARY_STOP_SIZE) {
+		while (!this.isNameUnique(name, component)
+				&& counter < ARBITRARY_STOP_SIZE) {
 			// tack on a counter to the end of the name,
-			name = component.getDisplayText() + "_"
-					+ Integer.toString(counter++, 36).toUpperCase();
+			name = displayText + "_" + Integer.toString(counter++, 36);
 
-			name = this.removeIllegalCharacters(name, legalFormat);
+			name = StringOp.removeIllegalCharacters(name, legalFormat, true);
 		}
 
 		if (counter >= ARBITRARY_STOP_SIZE) {
@@ -219,40 +215,6 @@ public class CodeGenerationNamifier {
 
 		return this.parentNamifier != null ? this.parentNamifier
 				.getGeneratedNameFor(component) : null;
-		// null;
-	}
-
-	/**
-	 * Recursively removes characters which do not match the legalFormat regex.
-	 * If 'source' does not match as is, the first offending character is
-	 * removed. The system recurses, removing one character at a time, until the
-	 * result matches, or is empty.
-	 * 
-	 * @param source
-	 * @param legalFormat
-	 * @return
-	 */
-	private String removeIllegalCharacters(String source, Pattern legalFormat) {
-		Matcher legalMatcher = legalFormat.matcher(source);
-
-		if (source.isEmpty()) {
-			// The given name is completely useless.
-			throw new IllegalArgumentException("The name " + source
-					+ " is illegal in the target game language, and has no "
-					+ "legal substrings. "
-					+ "Please change the name and try again.");
-		}
-		if (legalMatcher.matches()) {
-			return source;
-		} else {
-			String newSource = "";
-			for (char curChar : source.toCharArray()) {
-				legalMatcher = legalFormat.matcher(newSource + curChar);
-				newSource += legalMatcher.matches() ? curChar : "";
-			}
-
-			return newSource;
-		}
 	}
 
 	@Override

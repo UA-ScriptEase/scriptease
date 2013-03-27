@@ -135,8 +135,8 @@ public class UnityResource extends Resource {
 	@Override
 	public String getCodeText() {
 		String name = this.name;
+		
 		Resource owner = this.getOwner();
-
 		while (!(owner instanceof Scene)) {
 			if (owner.getTypes().contains(UnityType.GAMEOBJECT.getName())) {
 				name = owner.getName() + "/" + name;
@@ -144,10 +144,6 @@ public class UnityResource extends Resource {
 			owner = owner.getOwner();
 		}
 		
-		if(name.split("/").length <= 2) {
-			name = this.name;
-		}
-
 		return "GameObject.Find(\"" + name + "\")";
 	}
 
