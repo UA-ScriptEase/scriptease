@@ -30,6 +30,12 @@ public class FileContext extends Context {
 	private Set<String> includeFiles;
 	private Iterator<String> includeFilesIterator;
 
+	public FileContext(StoryPoint model, Translator translator,
+			LocationInformation locationInfo) {
+		this(model, "", new CodeGenerationNamifier(
+				translator.getLanguageDictionary()), translator, locationInfo);
+	}
+
 	public FileContext(StoryPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
 			LocationInformation locationInfo) {
@@ -66,11 +72,6 @@ public class FileContext extends Context {
 			return this.includeFilesIterator.next();
 		else
 			return "ERROR while getting Include File in FileContext.java";
-	}
-
-	public FileContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
-				.getTranslator(), other.getLocationInfo());
 	}
 
 	@Override

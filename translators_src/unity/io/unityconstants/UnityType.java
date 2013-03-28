@@ -1,4 +1,4 @@
-package io.UnityConstants;
+package io.unityconstants;
 
 /**
  * A list of types. Note that not all numbers have a valid type, so they may

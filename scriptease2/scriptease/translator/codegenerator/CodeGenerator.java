@@ -17,6 +17,7 @@ import scriptease.model.complex.StoryPoint;
 import scriptease.translator.LanguageDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.contexts.Context;
+import scriptease.translator.codegenerator.code.contexts.FileContext;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.SimpleDataFragment;
 import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
@@ -143,7 +144,8 @@ public class CodeGenerator {
 	 */
 	private Collection<ScriptInfo> compileMultiThread(
 			Collection<Set<CodeBlock>> scriptBuckets,
-			final SemanticAnalyzer analyzer, Translator translator) {
+			final SemanticAnalyzer analyzer, final Translator translator,
+			final StoryPoint root) {
 
 		final Collection<ScriptInfo> scriptInfos;
 
@@ -189,7 +191,8 @@ public class CodeGenerator {
 					// subject, so we can just use the first one
 					codeBlock = bucket.iterator().next();
 					locationInfo = new LocationInformation(codeBlock);
-					context = analyzer.buildContext(locationInfo);
+					context = CodeGenerator.this.buildFileContext(root,
+							translator, locationInfo);
 					generated = generateScriptFile(context);
 
 					scriptInfos.add(generated);
@@ -217,7 +220,7 @@ public class CodeGenerator {
 	 */
 	private Collection<ScriptInfo> compileSingleThread(
 			Collection<Set<CodeBlock>> scriptBuckets,
-			SemanticAnalyzer analyzer, Translator translator) {
+			SemanticAnalyzer analyzer, Translator translator, StoryPoint root) {
 
 		final Collection<ScriptInfo> scriptInfos;
 
@@ -238,13 +241,18 @@ public class CodeGenerator {
 			// subject, so we can just use the first one
 			codeBlock = bucket.iterator().next();
 			locationInfo = new LocationInformation(codeBlock);
-			context = analyzer.buildContext(locationInfo);
+			context = this.buildFileContext(root, translator, locationInfo);
 			generated = this.generateScriptFile(context);
 
 			scriptInfos.add(generated);
 		}
 
 		return scriptInfos;
+	}
+
+	public Context buildFileContext(StoryPoint root, Translator translator,
+			LocationInformation locationInfo) {
+		return new FileContext(root, translator, locationInfo);
 	}
 
 	/**
@@ -269,7 +277,7 @@ public class CodeGenerator {
 		scriptInfos = new ArrayList<ScriptInfo>();
 		root = model.getRoot();
 		// do the first pass (semantic analysis) for the given story
-		analyzer = new SemanticAnalyzer(root, translator);
+		analyzer = new SemanticAnalyzer(root);
 
 		// Find problems with code gen, such as slots missing bindings, etc.
 		problems.addAll(analyzer.getProblems());
@@ -286,10 +294,10 @@ public class CodeGenerator {
 			if (scriptBuckets.size() > 0) {
 				if (CodeGenerator.THREAD_MODE == ThreadMode.SINGLE)
 					scriptInfos.addAll(this.compileSingleThread(scriptBuckets,
-							analyzer, translator));
+							analyzer, translator, root));
 				else if (CodeGenerator.THREAD_MODE == ThreadMode.MULTI)
 					scriptInfos.addAll(this.compileMultiThread(scriptBuckets,
-							analyzer, translator));
+							analyzer, translator, root));
 			}
 
 		} else {

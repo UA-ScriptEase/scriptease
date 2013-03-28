@@ -24,7 +24,6 @@ import java.util.zip.ZipInputStream;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import scriptease.controller.FileManager;
