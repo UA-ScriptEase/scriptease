@@ -1,10 +1,10 @@
 package io;
 
-import io.UnityConstants.UnityField;
-import io.UnityConstants.UnityType;
-import io.unityobject.PropertyValue;
-import io.unityobject.UnityResource;
-import io.unityobject.UnityResourceFactory;
+import io.unityconstants.UnityField;
+import io.unityconstants.UnityType;
+import io.unityresource.PropertyValue;
+import io.unityresource.UnityResource;
+import io.unityresource.UnityResourceFactory;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -44,8 +44,11 @@ public class Scene extends Resource {
 	}
 
 	private final BufferedReader reader;
-	private final List<UnityResource> unityResources;
 	private final File location;
+
+	private final Collection<String> types;
+	private final List<UnityResource> unityResources;
+	private final List<Resource> visibleChildren;
 
 	private UnityResource scriptEaseObject = null;
 
@@ -98,9 +101,12 @@ public class Scene extends Resource {
 					+ location.getAbsolutePath() + " went missing!");
 
 		this.reader = new BufferedReader(new FileReader(location));
-
+		this.visibleChildren = new ArrayList<Resource>();
 		this.unityResources = new ArrayList<UnityResource>();
+		this.types = new ArrayList<String>();
 		this.location = location;
+
+		this.types.add(UnityType.SCENE.getName());
 	}
 
 	/**
@@ -131,12 +137,8 @@ public class Scene extends Resource {
 	 * @throws IOException
 	 */
 	private boolean read(Map<String, File> guidsToMetaFiles) throws IOException {
-		final Collection<String> seGeneratedGUIDs = new ArrayList<String>();
-		final Iterable<Event> eventIterable;
-		final Collection<UnityResource> objectsToRemove;
-
+		// First check if the first line is a valid Unity YAML header
 		String line;
-
 		while ((line = reader.readLine()) != null) {
 			if (line.equals(YAML_HEADER)) {
 				break;
@@ -151,12 +153,19 @@ public class Scene extends Resource {
 			return false;
 		}
 
+		final Collection<String> seGeneratedGUIDs;
+		final Iterable<Event> eventIterable;
+		final Collection<UnityResource> objectsToRemove;
+
 		eventIterable = parser.parse(reader);
 		objectsToRemove = new ArrayList<UnityResource>();
+		seGeneratedGUIDs = new ArrayList<String>();
 
+		// Build all of the resources
 		this.unityResources.addAll(UnityResourceFactory.getInstance()
 				.buildResources(eventIterable.iterator()));
 
+		// Get all GUIDs from scriptease generated files and save them.
 		for (Entry<String, File> entry : guidsToMetaFiles.entrySet()) {
 			final String metaName = entry.getValue().getName();
 			final String guid = entry.getKey();
@@ -165,6 +174,8 @@ public class Scene extends Resource {
 			}
 		}
 
+		// Go through the unity resources and determine if they should be
+		// removed from our list.
 		for (UnityResource object : this.unityResources) {
 			if (object.getType() == UnityType.MONOBEHAVIOUR) {
 				final Map<String, PropertyValue> propertyMap;
@@ -177,9 +188,12 @@ public class Scene extends Resource {
 				scriptMap = scriptMapValue.getMap();
 				guid = scriptMap.get(UnityField.GUID.getName()).getString();
 
+				// We remove ScriptEase generated MonoBehaviours
 				if (seGeneratedGUIDs.contains(guid)) {
 					objectsToRemove.add(object);
 				}
+				
+			// Initialize the ScriptEase object
 			} else if (object.getType().equals(UnityType.GAMEOBJECT.getName())
 					&& object.getName().equals(SCRIPTEASE_OBJECT_NAME)) {
 				this.scriptEaseObject = object;
@@ -239,6 +253,7 @@ public class Scene extends Resource {
 			}
 		}
 
+		// Create a ScriptEase object if none exists
 		if (this.scriptEaseObject == null) {
 			final int gameObjectID = this.getNextEmptyID();
 			final int transformID = gameObjectID + 1;
@@ -258,12 +273,23 @@ public class Scene extends Resource {
 			this.scriptEaseObject = seGameObject;
 		}
 
+		// Initialize the owners. Needs to be done after all resources loaded
 		for (UnityResource resource : this.unityResources) {
 			resource.initializeOwner(this);
 		}
 
+		// Likewise for children.
 		for (UnityResource resource : this.unityResources) {
 			resource.initializeChildren(this, guidsToMetaFiles);
+		}
+
+		// Initialize the scene's visible children resources.
+		for (UnityResource resource : this.unityResources) {
+			if (resource.getOwner() == this
+					&& resource.getType() == UnityType.GAMEOBJECT
+					&& resource != this.scriptEaseObject) {
+				this.visibleChildren.add(resource);
+			}
 		}
 
 		return true;
@@ -384,17 +410,8 @@ public class Scene extends Resource {
 	}
 
 	@Override
-	public String toString() {
-		return "Scene <Location:" + this.location + ", Data:"
-				+ this.unityResources.toString() + ">";
-	}
-
-	@Override
 	public Collection<String> getTypes() {
-		final Collection<String> type;
-		type = new ArrayList<String>();
-		type.add(UnityType.SCENE.getName());
-		return type;
+		return this.types;
 	}
 
 	@Override
@@ -418,26 +435,23 @@ public class Scene extends Resource {
 	}
 
 	@Override
+	public List<Resource> getChildren() {
+		// Only returns the visible resources so they can be seen in the
+		// game object pane.
+		return this.visibleChildren;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Scene) {
 			return this.getTemplateID().equals(((Scene) obj).getTemplateID());
 		}
-
 		return false;
 	}
 
 	@Override
-	public List<Resource> getChildren() {
-		final List<Resource> resources = new ArrayList<Resource>();
-
-		for (UnityResource resource : this.unityResources) {
-			if (resource.getOwner() == this
-					&& resource.getType() == UnityType.GAMEOBJECT
-					&& resource != this.scriptEaseObject) {
-				resources.add(resource);
-			}
-		}
-
-		return resources;
+	public String toString() {
+		return "Scene <Location:" + this.location + ", Data:"
+				+ this.unityResources.toString() + ">";
 	}
 }

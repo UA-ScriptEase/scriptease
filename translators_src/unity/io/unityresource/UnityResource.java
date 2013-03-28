@@ -1,9 +1,9 @@
-package io.unityobject;
+package io.unityresource;
 
 import io.Scene;
 import io.UnityProject;
-import io.UnityConstants.UnityField;
-import io.UnityConstants.UnityType;
+import io.unityconstants.UnityField;
+import io.unityconstants.UnityType;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,7 +30,16 @@ public class UnityResource extends Resource {
 
 	private final Map<String, PropertyValue> topLevelPropertyMap;
 
-	public UnityResource(int uniqueID, String tag,
+	/**
+	 * Creates a UnityResource with the Unique ID, tag, and PropertyMap.
+	 * UnityResources should generally only be made in the
+	 * {@link UnityResourceFactory}.
+	 * 
+	 * @param uniqueID
+	 * @param tag
+	 * @param propertyMap
+	 */
+	protected UnityResource(int uniqueID, String tag,
 			Map<String, PropertyValue> propertyMap) {
 		this.uniqueID = uniqueID;
 		this.tag = tag;

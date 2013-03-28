@@ -3,10 +3,14 @@ package scriptease.translator.io.model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import scriptease.controller.CodeBlockMapper;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.translator.codegenerator.ScriptInfo;
@@ -21,8 +25,9 @@ import scriptease.translator.codegenerator.ScriptInfo;
  * 
  * @author jtduncan
  * @author remiller
+ * @author kschenk
  */
-public interface GameModule {
+public abstract class GameModule {
 	/**
 	 * Reads the game data into memory.<br>
 	 * <br>
@@ -45,7 +50,7 @@ public interface GameModule {
 	 * @see #close()
 	 * @see #setLocation(File)
 	 */
-	public void load(boolean readOnly) throws IOException;
+	public abstract void load(boolean readOnly) throws IOException;
 
 	/**
 	 * Writes the GameModule to disk. If the module is a database, then this is
@@ -64,7 +69,7 @@ public interface GameModule {
 	 * @see #getLocation()
 	 * @see #setLocation(File)
 	 */
-	public void save(boolean compile) throws IOException;
+	public abstract void save(boolean compile) throws IOException;
 
 	/**
 	 * Closes this GameModule. If the module is a file, then this will free the
@@ -78,7 +83,7 @@ public interface GameModule {
 	 * @see #getLocation()
 	 * @see #setLocation(File)
 	 */
-	public void close() throws IOException;
+	public abstract void close() throws IOException;
 
 	/**
 	 * Gets a list of all {@link Resource}s that have the specified type.
@@ -87,7 +92,7 @@ public interface GameModule {
 	 *            The type to filter by.
 	 * @return A list of all {@link Resource}s that have the supplied type.
 	 */
-	public List<Resource> getResourcesOfType(String type);
+	public abstract List<Resource> getResourcesOfType(String type);
 
 	/**
 	 * Retrieves the Resource object that represents the game data that is
@@ -95,7 +100,7 @@ public interface GameModule {
 	 * 
 	 * @return the Resource whose identifier matches the given identifier.
 	 */
-	public Resource getInstanceForObjectIdentifier(String id);
+	public abstract Resource getInstanceForObjectIdentifier(String id);
 
 	/**
 	 * Retrieves the resources that will have automatics attached to them. Make
@@ -104,7 +109,7 @@ public interface GameModule {
 	 * 
 	 * @return
 	 */
-	public Collection<Resource> getAutomaticHandlers();
+	public abstract Collection<Resource> getAutomaticHandlers();
 
 	/**
 	 * Gets the location of the GameModule.
@@ -113,7 +118,7 @@ public interface GameModule {
 	 *         <code>null</code>. If there is no location, this method returns a
 	 *         <code>File("")</code>.
 	 */
-	public File getLocation();
+	public abstract File getLocation();
 
 	/**
 	 * Gets a name for this GameModule. This could be the specific module's
@@ -122,7 +127,7 @@ public interface GameModule {
 	 * 
 	 * @return The name for this GameModule.
 	 */
-	public String getName();
+	public abstract String getName();
 
 	/**
 	 * Sets the file system location of this GameModule to <code>location</code>
@@ -135,7 +140,7 @@ public interface GameModule {
 	 * @throws IllegalArgumentException
 	 *             if <code>location</code> is null.
 	 */
-	public void setLocation(File location);
+	public abstract void setLocation(File location);
 
 	/**
 	 * Writes the given script to this GameModule module, and attaches a script
@@ -147,22 +152,7 @@ public interface GameModule {
 	 *            A list of scripts to be written to file.
 	 * @see ScriptInfo
 	 */
-	public void addScripts(Collection<ScriptInfo> scripts);
-
-	/**
-	 * Breaks a story tree into groups of components whose output is related.
-	 * That is, if there are multiple pieces of code that need to be written to
-	 * the same file, this is where the code generating components are matched
-	 * up with each other.
-	 * 
-	 * @param root
-	 *            The root of the tree to aggregate from.
-	 * @return The collection of StartItOwner objects that should all be
-	 *         generating into the same file. This must <b>never</b> be
-	 *         <code>null</code>, but may be empty.
-	 */
-	public Collection<Set<CodeBlock>> aggregateScripts(
-			Collection<StoryComponent> root);
+	public abstract void addScripts(Collection<ScriptInfo> scripts);
 
 	/**
 	 * Adds the collection of include files to the resources list. It does this
@@ -170,7 +160,7 @@ public interface GameModule {
 	 * 
 	 * @see #addScripts(Collection)
 	 */
-	public void addIncludeFiles(Collection<File> includeFiles);
+	public abstract void addIncludeFiles(Collection<File> includeFiles);
 
 	/**
 	 * Creates a list of String arguments for running a process that executes
@@ -195,6 +185,49 @@ public interface GameModule {
 	 *             if the translator does not support testing. Testing support
 	 *             should be declared in translator.ini under SUPPORTS_TESTING.
 	 */
-	public void configureTester(ProcessBuilder builder)
+	public abstract void configureTester(ProcessBuilder builder)
 			throws FileNotFoundException, UnsupportedOperationException;
+
+	/**
+	 * Breaks a story tree into groups of components whose output is related.
+	 * That is, if there are multiple pieces of code that need to be written to
+	 * the same file, this is where the code generating components are matched
+	 * up with each other. <br>
+	 * <br>
+	 * The default behaviour will usually work, so this method likely won't need
+	 * to be overwritten apart from strange circumstances.
+	 * 
+	 * @param root
+	 *            The root of the tree to aggregate from.
+	 * @return The collection of StartItOwner objects that should all be
+	 *         generating into the same file. This must <b>never</b> be
+	 *         <code>null</code>, but may be empty.
+	 */
+	public Collection<Set<CodeBlock>> aggregateScripts(
+			Collection<StoryComponent> roots) {
+		final Map<String, List<CodeBlock>> codeBlocks;
+		final CodeBlockMapper codeBlockMapper;
+		final List<Set<CodeBlock>> scriptBuckets;
+
+		scriptBuckets = new ArrayList<Set<CodeBlock>>();
+
+		// Split the story tree into groups by CodeBlock info.
+		codeBlockMapper = new CodeBlockMapper();
+		for (StoryComponent root : roots) {
+			root.process(codeBlockMapper);
+		}
+
+		// Now that we've found all the CodeBlockComponents, sort them into
+		// groups.
+		codeBlocks = codeBlockMapper.getCodeBlocks();
+		for (String key : codeBlocks.keySet()) {
+			final Set<CodeBlock> codeBlockGroup = new HashSet<CodeBlock>();
+			for (CodeBlock codeBlockStoryComponent : codeBlocks.get(key)) {
+				codeBlockGroup.add(codeBlockStoryComponent);
+			}
+			scriptBuckets.add(codeBlockGroup);
+		}
+
+		return scriptBuckets;
+	}
 }

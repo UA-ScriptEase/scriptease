@@ -1,4 +1,4 @@
-package io.unityobject;
+package io.unityresource;
 
 import java.util.ArrayList;
 import java.util.HashMap;

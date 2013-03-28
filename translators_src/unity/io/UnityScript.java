@@ -1,10 +1,10 @@
 package io;
 
-import io.UnityConstants.UnityField;
-import io.UnityConstants.UnityType;
-import io.unityobject.PropertyValue;
-import io.unityobject.UnityResource;
-import io.unityobject.UnityResourceFactory;
+import io.unityconstants.UnityField;
+import io.unityconstants.UnityType;
+import io.unityresource.PropertyValue;
+import io.unityresource.UnityResource;
+import io.unityresource.UnityResourceFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;

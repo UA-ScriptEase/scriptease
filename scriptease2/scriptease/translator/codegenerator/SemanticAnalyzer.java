@@ -19,12 +19,8 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
-import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.TypeConverter;
-import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
-import scriptease.translator.codegenerator.code.contexts.Context;
-import scriptease.translator.codegenerator.code.contexts.FileContext;
 
 /**
  * Code generation phase where recursive analysis of the StoryComponent tree
@@ -41,7 +37,6 @@ import scriptease.translator.codegenerator.code.contexts.FileContext;
  */
 public class SemanticAnalyzer extends StoryAdapter {
 	private final StoryPoint root;
-	private final Translator translator;
 	private final Collection<StoryRule> rules;
 
 	/**
@@ -53,9 +48,8 @@ public class SemanticAnalyzer extends StoryAdapter {
 	 * Creates a new instance that will recursively analyze the StoryComponent
 	 * tree.
 	 */
-	public SemanticAnalyzer(StoryPoint root, Translator translator) {
+	public SemanticAnalyzer(StoryPoint root) {
 		this.problems = new ArrayList<StoryProblem>();
-		this.translator = translator;
 		this.rules = new ArrayList<StoryRule>();
 		this.root = root;
 
@@ -69,11 +63,6 @@ public class SemanticAnalyzer extends StoryAdapter {
 				child.process(this);
 			}
 		}
-	}
-
-	public Context buildContext(LocationInformation locationInfo) {
-		return new FileContext(this.root, "", new CodeGenerationNamifier(
-				this.translator.getLanguageDictionary()), this.translator, locationInfo);
 	}
 
 	/**

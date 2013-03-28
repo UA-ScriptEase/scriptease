@@ -1,6 +1,5 @@
 package scriptease.translator.codegenerator.code.contexts;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -18,7 +17,6 @@ import scriptease.translator.apimanagers.TypeConverter;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
-import scriptease.translator.io.model.Resource;
 
 /**
  * KnowItContext is Context for a KnowIt object.

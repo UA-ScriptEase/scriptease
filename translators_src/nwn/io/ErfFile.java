@@ -16,19 +16,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 import scriptease.controller.BindingAdapter;
-import scriptease.controller.CodeBlockMapper;
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.gui.StatusManager;
-import scriptease.model.CodeBlock;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
@@ -68,11 +64,11 @@ import scriptease.util.FileOp;
  * @author remiller
  * @author kschenk
  */
-public final class ErfFile implements GameModule {
+public final class ErfFile extends GameModule {
 
 	public static Translator getTranslator() {
-		return TranslatorManager.getInstance().getTranslator(
-				"Neverwinter Nights");
+		return TranslatorManager.getInstance()
+				.getTranslator(NEVERWINTER_NIGHTS);
 	}
 
 	/**
@@ -1001,35 +997,6 @@ public final class ErfFile implements GameModule {
 			dataChunkOffset += resource.writeResourceListData(this.fileAccess,
 					offsetToResourceList + elementOffset, dataChunkOffset);
 		}
-	}
-
-	@Override
-	public Collection<Set<CodeBlock>> aggregateScripts(
-			Collection<StoryComponent> roots) {
-		final Map<String, List<CodeBlock>> codeBlocks;
-		final CodeBlockMapper codeBlockMapper;
-		final List<Set<CodeBlock>> scriptBuckets;
-
-		scriptBuckets = new ArrayList<Set<CodeBlock>>();
-
-		// Split the story tree into groups by CodeBlock info.
-		codeBlockMapper = new CodeBlockMapper();
-		for (StoryComponent root : roots) {
-			root.process(codeBlockMapper);
-		}
-
-		// Now that we've found all the CodeBlockComponents, sort them into
-		// groups.
-		codeBlocks = codeBlockMapper.getCodeBlocks();
-		for (String key : codeBlocks.keySet()) {
-			final Set<CodeBlock> codeBlockGroup = new HashSet<CodeBlock>();
-			for (CodeBlock codeBlockStoryComponent : codeBlocks.get(key)) {
-				codeBlockGroup.add(codeBlockStoryComponent);
-			}
-			scriptBuckets.add(codeBlockGroup);
-		}
-
-		return scriptBuckets;
 	}
 
 	@Override

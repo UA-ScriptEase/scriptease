@@ -1,8 +1,9 @@
-package io.unityobject;
+package io.unityresource;
 
+import io.Scene;
 import io.UnityProject;
-import io.UnityConstants.UnityField;
-import io.UnityConstants.UnityType;
+import io.unityconstants.UnityField;
+import io.unityconstants.UnityType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
