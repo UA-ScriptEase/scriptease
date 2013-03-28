@@ -225,4 +225,10 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 		throw new NullPointerException("Could not find Story Point for "
 				+ "ScriptIt: " + scriptIt);
 	}
+	
+//	@Override
+	protected ScriptIt getObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
