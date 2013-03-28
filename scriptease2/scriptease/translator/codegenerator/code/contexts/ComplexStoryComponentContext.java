@@ -5,11 +5,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import scriptease.controller.StoryAdapter;
-import scriptease.controller.get.AskItGetter;
 import scriptease.controller.get.VariableGetter;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
@@ -80,19 +78,5 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	@Override
 	public Iterator<StoryComponent> getChildren() {
 		return ((ComplexStoryComponent) this.component).getChildren().iterator();
-	}
-
-	/**
-	 * Get all the AskIt children of the ComplexStoryComponent
-	 */
-	@Override
-	public Iterator<AskIt> getAskIts() {
-		AskItGetter askItGetter = new AskItGetter();
-		Collection<StoryComponent> children = ((ComplexStoryComponent) this.component)
-				.getChildren();
-		for (StoryComponent child : children) {
-			child.process(askItGetter);
-		}
-		return askItGetter.getObjects().iterator();
 	}
 }

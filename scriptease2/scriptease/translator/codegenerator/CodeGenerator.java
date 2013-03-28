@@ -14,7 +14,6 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.complex.StoryPoint;
-import scriptease.translator.LanguageDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.FileContext;
@@ -85,49 +84,45 @@ public class CodeGenerator {
 		// Privatized constructor
 	}
 
-	private ScriptInfo generateScriptFile(Context context) {
-
+	private ScriptInfo generateScript(Context context) {
 		// generate the script file
-		final String scriptContent;
 		final LocationInformation location;
+		final Translator translator;
 
-		scriptContent = this.generateScript(context);
-		location = context.getLocationInfo();
-
-		return new ScriptInfo(scriptContent, location);
-	}
-
-	/**
-	 * Generates the actual final script code that will reside in the script
-	 * file.
-	 * 
-	 * @return the code for the script.
-	 */
-	private String generateScript(Context context) {
+		final String slotName;
+		final Slot slot;
+		final String format;
 		final List<AbstractFragment> fileFormat;
-		final Translator translator = context.getTranslator();
-		final LanguageDictionary languageDictionary = translator
-				.getLanguageDictionary();
-		final String slotName = context.getLocationInfo().getSlot();
-		final Slot slot = translator.getApiDictionary().getEventSlotManager()
-				.getEventSlot(slotName);
 
+		location = context.getLocationInfo();
+		translator = context.getTranslator();
+
+		slotName = context.getLocationInfo().getSlot();
+		slot = translator.getApiDictionary().getEventSlotManager()
+				.getEventSlot(slotName);
 		if (slot == null) {
 			throw new IllegalStateException("Unable to find slot " + slotName
 					+ ". Check that it exists in the ApiDictionary.");
 		}
-
 		// Get the format keyword from the slot and get the format from the
 		// language dictionary
-		fileFormat = languageDictionary.getFormat(slot.getFormatKeyword()
-				.toUpperCase());
+		format = slot.getFormatKeyword().toUpperCase();
+		fileFormat = translator.getLanguageDictionary().getFormat(format);
 
 		// resolve the format into code
 		try {
-			return AbstractFragment.resolveFormat(fileFormat, context);
+			final String scriptContent;
+
+			scriptContent = AbstractFragment.resolveFormat(fileFormat, context);
+
+			return new ScriptInfo(scriptContent, location);
 		} catch (CodeGenerationException e) {
-			return "CodeGenerationException occured at the script generating level with message: "
+			final String scriptContent;
+
+			scriptContent = "CodeGenerationException occured at the script generating level with message: "
 					+ e.getMessage();
+
+			return new ScriptInfo(scriptContent, location);
 		}
 	}
 
@@ -144,8 +139,7 @@ public class CodeGenerator {
 	 */
 	private Collection<ScriptInfo> compileMultiThread(
 			Collection<Set<CodeBlock>> scriptBuckets,
-			final SemanticAnalyzer analyzer, final Translator translator,
-			final StoryPoint root) {
+			final Translator translator, final StoryPoint root) {
 
 		final Collection<ScriptInfo> scriptInfos;
 
@@ -193,7 +187,7 @@ public class CodeGenerator {
 					locationInfo = new LocationInformation(codeBlock);
 					context = CodeGenerator.this.buildFileContext(root,
 							translator, locationInfo);
-					generated = generateScriptFile(context);
+					generated = generateScript(context);
 
 					scriptInfos.add(generated);
 				}
@@ -219,12 +213,10 @@ public class CodeGenerator {
 	 * @return
 	 */
 	private Collection<ScriptInfo> compileSingleThread(
-			Collection<Set<CodeBlock>> scriptBuckets,
-			SemanticAnalyzer analyzer, Translator translator, StoryPoint root) {
+			Collection<Set<CodeBlock>> scriptBuckets, Translator translator,
+			StoryPoint root) {
 
-		final Collection<ScriptInfo> scriptInfos;
-
-		scriptInfos = new ArrayList<ScriptInfo>();
+		final Collection<ScriptInfo> scriptInfos = new ArrayList<ScriptInfo>();
 		/*
 		 * This method is called so that we load the Language Dictionary if it
 		 * has not been loaded before.
@@ -242,7 +234,7 @@ public class CodeGenerator {
 			codeBlock = bucket.iterator().next();
 			locationInfo = new LocationInformation(codeBlock);
 			context = this.buildFileContext(root, translator, locationInfo);
-			generated = this.generateScriptFile(context);
+			generated = this.generateScript(context);
 
 			scriptInfos.add(generated);
 		}
@@ -250,6 +242,14 @@ public class CodeGenerator {
 		return scriptInfos;
 	}
 
+	/**
+	 * Builds the initial file context for the script file.
+	 * 
+	 * @param root
+	 * @param translator
+	 * @param locationInfo
+	 * @return
+	 */
 	public Context buildFileContext(StoryPoint root, Translator translator,
 			LocationInformation locationInfo) {
 		return new FileContext(root, translator, locationInfo);
@@ -294,10 +294,10 @@ public class CodeGenerator {
 			if (scriptBuckets.size() > 0) {
 				if (CodeGenerator.THREAD_MODE == ThreadMode.SINGLE)
 					scriptInfos.addAll(this.compileSingleThread(scriptBuckets,
-							analyzer, translator, root));
+							translator, root));
 				else if (CodeGenerator.THREAD_MODE == ThreadMode.MULTI)
 					scriptInfos.addAll(this.compileMultiThread(scriptBuckets,
-							analyzer, translator, root));
+							translator, root));
 			}
 
 		} else {
@@ -313,7 +313,6 @@ public class CodeGenerator {
 					+ translator.getCompiler().getName()
 					+ " could not be found.");
 		}
-
 		return scriptInfos;
 	}
 }

@@ -338,6 +338,9 @@ public class ResourcePanel extends JPanel {
 
 		objectPanel.add(gameObjectBindingWidget);
 
+		// Need to do this because BoxLayout respects maximum size.
+		objectPanel.setMaximumSize(objectPanel.getPreferredSize());
+
 		return objectPanel;
 	}
 

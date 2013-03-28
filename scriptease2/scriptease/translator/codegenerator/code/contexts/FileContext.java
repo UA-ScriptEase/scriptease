@@ -49,13 +49,13 @@ public class FileContext extends Context {
 
 	@Override
 	public Set<String> getIncludeFiles() {
-		Iterator<CodeBlock> codeBlocks = this.getCodeBlocks();
+		final Iterator<CodeBlock> codeBlocks = this.getCodeBlocks();
 
 		while (codeBlocks.hasNext()) {
 			this.includeFiles.addAll(codeBlocks.next().getIncludes());
 		}
 
-		List<CodeBlock> bindingCodeBlocks = this.getBindingCodeBlocks();
+		final List<CodeBlock> bindingCodeBlocks = this.getBindingCodeBlocks();
 
 		for (CodeBlock bindingCodeBlock : bindingCodeBlocks) {
 			this.includeFiles.addAll(bindingCodeBlock.getIncludes());

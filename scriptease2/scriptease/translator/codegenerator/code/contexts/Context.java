@@ -44,7 +44,7 @@ import scriptease.translator.io.model.Resource;
  * @author kschenk
  * 
  */
-public class Context {
+public abstract class Context {
 	private String indent = "";
 	private final StoryPoint model;
 	protected final Translator translator;
@@ -229,11 +229,6 @@ public class Context {
 	public CodeBlock getMainCodeBlock() {
 		unimplemented("getMainCodeBlock");
 		return null;
-	}
-
-	public Iterator<AskIt> getAskIts() {
-		unimplemented("getAskIts");
-		return new ArrayList<AskIt>().iterator();
 	}
 
 	public KnowItBinding getBinding() {
@@ -481,7 +476,7 @@ public class Context {
 		unimplemented("getSlotConditional");
 		return null;
 	}
-
+	
 	public Iterator<KnowIt> getParametersWithSlot() {
 		unimplemented("getParameteresWithImplicits");
 		return null;

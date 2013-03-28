@@ -32,7 +32,7 @@ public abstract class AbstractFragment {
 	private Context context;
 
 	/**
-	 * Builds a new FormatFragment with the given directive label.
+	 * Builds a new Fragment with the given directive label.
 	 * 
 	 * @param text
 	 *            The specific directive text to be used in
@@ -49,7 +49,7 @@ public abstract class AbstractFragment {
 	 * @param context
 	 *            The context that will be used to resolve the directive in a
 	 *            code-safe way. Must not be <code>null</code>
-	 * @return The code text that replaces this code fragment stands for.
+	 * @return The code text that replaces this code fragment.
 	 */
 	public String resolve(Context context) {
 		// Set the global context, to be used by strategy pattern in

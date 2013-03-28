@@ -587,11 +587,7 @@ public class Translator {
 	 *         compiler is defined.
 	 */
 	public File getCompiler() {
-		final File compiler;
-		
-		compiler = this.getPathProperty(DescriptionKeys.COMPILER_PATH);
-		
-		return compiler; 
+		return this.getPathProperty(DescriptionKeys.COMPILER_PATH);
 	}
 
 	/**
