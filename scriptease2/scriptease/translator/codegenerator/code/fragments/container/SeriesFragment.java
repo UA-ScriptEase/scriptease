@@ -169,10 +169,6 @@ public class SeriesFragment extends AbstractContainerFragment {
 						.name())) {
 			it = context.getIncludeFiles().iterator();
 		} else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.SCRIPTITS
-						.name()))
-			it = context.getScriptIts();
-		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.CODEBLOCKS
 						.name()))
 			it = (context.getCodeBlocks());

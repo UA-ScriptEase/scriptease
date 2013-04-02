@@ -142,7 +142,7 @@ public class CodeBlockContext extends Context {
 		parameters.addAll(manager.getParameters(this.codeBlock.getCause()
 				.getMainCodeBlock().getSlot()));
 		parameters.addAll(this.getParameterCollection());
-		
+
 		return parameters.iterator();
 	}
 
@@ -162,7 +162,7 @@ public class CodeBlockContext extends Context {
 	}
 
 	@Override
-	public Object getCause() {
+	public ScriptIt getCause() {
 		return this.codeBlock.getCause();
 	}
 

@@ -8,14 +8,10 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryPoint;
-import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.apimanagers.TypeConverter;
 import scriptease.translator.codegenerator.CodeGenerationException;
-import scriptease.translator.codegenerator.LocationInformation;
-import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 
 /**
  * KnowItContext is Context for a KnowIt object.
@@ -26,22 +22,8 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  * 
  */
 public class KnowItContext extends StoryComponentContext {
-
-	public KnowItContext(StoryPoint model, String indent,
-			CodeGenerationNamifier existingNames, Translator translator,
-			LocationInformation locationInformation) {
-		super(model, indent, existingNames, translator, locationInformation);
-	}
-
-	public KnowItContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(),
-				other.getNamifier(), other.getTranslator(), other
-						.getLocationInfo());
-	}
-
 	public KnowItContext(Context other, KnowIt source) {
-		this(other);
-		this.setComponent(source);
+		super(other, source);
 	}
 
 	/**

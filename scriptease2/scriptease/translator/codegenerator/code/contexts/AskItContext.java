@@ -6,10 +6,6 @@ import scriptease.controller.get.VariableGetter;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.StoryItemSequence;
-import scriptease.model.complex.StoryPoint;
-import scriptease.translator.Translator;
-import scriptease.translator.codegenerator.LocationInformation;
-import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 
 /**
  * AskItContext is Context for a AskIt object.
@@ -20,21 +16,15 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  */
 public class AskItContext extends StoryComponentContext {
 
-	public AskItContext(StoryPoint model, String indent,
-			CodeGenerationNamifier existingNames, Translator translator,
-			LocationInformation locationInfo) {
-		super(model, indent, existingNames, translator, locationInfo);
-	}
-
-	public AskItContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(),
-				other.getNamifier(), other.getTranslator(), other
-						.getLocationInfo());
-	}
-
+	/**
+	 * Creates a new AskItContext with the source AskIt based on the context
+	 * passed in.
+	 * 
+	 * @param other
+	 * @param source
+	 */
 	public AskItContext(Context other, AskIt source) {
-		this(other);
-		this.setComponent(source);
+		super(other, source);
 	}
 
 	/**
