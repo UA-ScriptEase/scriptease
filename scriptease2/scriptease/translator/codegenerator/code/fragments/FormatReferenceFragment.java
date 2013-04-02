@@ -8,8 +8,8 @@ import scriptease.translator.codegenerator.code.contexts.AskItContext;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ControlItContext;
 import scriptease.translator.codegenerator.code.contexts.KnowItContext;
-import scriptease.translator.codegenerator.code.contexts.NoteContext;
 import scriptease.translator.codegenerator.code.contexts.ScriptItContext;
+import scriptease.translator.codegenerator.code.contexts.StoryComponentContext;
 
 /**
  * Represents a code location where another format from the format dictionary is
@@ -58,7 +58,7 @@ public class FormatReferenceFragment extends AbstractFragment {
 		case KNOWIT:
 			return context instanceof KnowItContext;
 		case NOTE:
-			return context instanceof NoteContext;
+			return context instanceof StoryComponentContext;
 		case CONTROLIT:
 			return context instanceof ControlItContext;
 		default:

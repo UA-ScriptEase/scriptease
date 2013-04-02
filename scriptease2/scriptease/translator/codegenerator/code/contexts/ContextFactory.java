@@ -5,12 +5,11 @@ import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
@@ -21,10 +20,10 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.CodeGenerationException;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingResourceContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingFunctionContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingNullContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingReferenceContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingResourceContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingRunTimeContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingStoryPointContext;
 
@@ -159,9 +158,16 @@ public class ContextFactory {
 	private Context createContext(final Context pastContext,
 			final StoryComponent source) {
 		source.process(new StoryAdapter() {
+			/* Default Processes */
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
 				ContextFactory.this.activeContext = new ComplexStoryComponentContext(
 						pastContext, complex);
+			}
+
+			@Override
+			protected void defaultProcessAtomic(StoryComponent atom) {
+				ContextFactory.this.activeContext = new StoryComponentContext(
+						pastContext, atom);
 			}
 
 			/* COMPLEX TYPES */
@@ -175,12 +181,6 @@ public class ContextFactory {
 			public void processControlIt(ControlIt controlIt) {
 				ContextFactory.this.activeContext = new ControlItContext(
 						pastContext, controlIt);
-			}
-
-			@Override
-			public void processStoryItemSequence(StoryItemSequence sequence) {
-				ContextFactory.this.activeContext = new StoryItemSequenceContext(
-						pastContext, sequence);
 			}
 
 			@Override
@@ -200,12 +200,6 @@ public class ContextFactory {
 			public void processKnowIt(KnowIt knowIt) {
 				ContextFactory.this.activeContext = new KnowItContext(
 						pastContext, knowIt);
-			}
-
-			@Override
-			public void processNote(Note note) {
-				ContextFactory.this.activeContext = new NoteContext(
-						pastContext, note);
 			}
 		});
 
