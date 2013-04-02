@@ -91,7 +91,6 @@ public interface CodeGenerationKeywordConstants {
 		PARAMETERS,
 		PARENTNODES,
 		STORYPOINTS,
-		SCRIPTITS,
 		SLOTPARAMETERS,
 		VARIABLES, 
 		PARAMETERSWITHSLOT

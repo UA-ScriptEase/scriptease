@@ -7,9 +7,6 @@ import java.util.regex.Pattern;
 
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryPoint;
-import scriptease.translator.Translator;
-import scriptease.translator.codegenerator.LocationInformation;
-import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -21,21 +18,8 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  */
 public class StoryPointContext extends ComplexStoryComponentContext {
 
-	public StoryPointContext(StoryPoint model, String indent,
-			CodeGenerationNamifier existingNames, Translator translator,
-			LocationInformation locationInfo) {
-		super(model, indent, existingNames, translator, locationInfo);
-	}
-
-	public StoryPointContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(),
-				other.getNamifier(), other.getTranslator(), other
-						.getLocationInfo());
-	}
-
 	public StoryPointContext(Context other, StoryPoint source) {
-		this(other);
-		this.setComponent(source);
+		super(other, source);
 	}
 
 	@Override

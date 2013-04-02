@@ -35,10 +35,24 @@ public class Slot {
 		this.condition = condition;
 	}
 
+	/**
+	 * Returns the display name of the slot.
+	 * 
+	 * @return
+	 */
 	public String getDisplayName() {
 		return this.displayName;
 	}
 
+	/**
+	 * Gets the condition of the slot. The condition is a special piece of code
+	 * that can be inserted when a slot is used. The original purpose of a
+	 * condition was for Unity, where some Causes are in a "update()" function
+	 * and fire when certain if conditions are met (such as if the mouse button
+	 * is down).
+	 * 
+	 * @return
+	 */
 	public String getCondition() {
 		return this.condition;
 	}

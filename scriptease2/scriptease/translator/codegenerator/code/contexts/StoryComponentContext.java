@@ -3,13 +3,11 @@ package scriptease.translator.codegenerator.code.contexts;
 import java.util.regex.Pattern;
 
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.StoryPoint;
-import scriptease.translator.Translator;
-import scriptease.translator.codegenerator.LocationInformation;
-import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 
 /**
- * StoryComponentContext is Context for a StoryComponent.
+ * StoryComponentContext is Context for a StoryComponent. This class is abstract
+ * and must be extended. Story Component contexts can only be created from
+ * another context, with the final parent usually being a {@link FileContext}.
  * 
  * 
  * @see Context
@@ -17,28 +15,26 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  * 
  */
 public abstract class StoryComponentContext extends Context {
-	private StoryComponent component;
+	private final StoryComponent component;
 
-	public StoryComponentContext(StoryPoint model, String indent,
-			CodeGenerationNamifier existingNames, Translator translator,
-			LocationInformation locationInfo) {
-		super(model, indent, existingNames, translator);
-		this.setLocationInfo(locationInfo);
-	}
-
-	public StoryComponentContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(),
-				other.getNamifier(), other.getTranslator(), other
-						.getLocationInfo());
-	}
-
+	/**
+	 * Creates a new StoryComponentContext from another Context.
+	 * 
+	 * @param other
+	 *            The context to base this one off of.
+	 * @param source
+	 *            The source StoryComponent associated with the context.
+	 */
 	public StoryComponentContext(Context other, StoryComponent source) {
-		this(other);
+		super(other.getStartStoryPoint(), other.getIndent(), other
+				.getNamifier(), other.getTranslator());
+
+		this.setLocationInfo(other.getLocationInfo());
 		this.component = source;
 	}
 
 	/**
-	 * Get the StoryComponent's generated name
+	 * Get the StoryComponent's generated name.
 	 * 
 	 * @see getGeneratedName()
 	 */
@@ -64,7 +60,7 @@ public abstract class StoryComponentContext extends Context {
 	}
 
 	/**
-	 * Get the StoryComponent's unique name
+	 * Get the owned StoryComponent's unique name.
 	 * 
 	 * @see getGeneratedName()
 	 */
@@ -74,7 +70,7 @@ public abstract class StoryComponentContext extends Context {
 	}
 
 	/**
-	 * Get the StoryComponent's generated name
+	 * Get the passed in StoryComponent's unique name.
 	 * 
 	 * @see getUniqueName()
 	 */
@@ -83,10 +79,11 @@ public abstract class StoryComponentContext extends Context {
 		return this.getNamifier().getUniqueName(component, null);
 	}
 
-	protected void setComponent(StoryComponent component) {
-		this.component = component;
-	}
-
+	/**
+	 * Returns the component associated with the context.
+	 * 
+	 * @return
+	 */
 	protected StoryComponent getComponent() {
 		return this.component;
 	}

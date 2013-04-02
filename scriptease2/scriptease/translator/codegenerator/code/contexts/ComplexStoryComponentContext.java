@@ -10,10 +10,6 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryPoint;
-import scriptease.translator.Translator;
-import scriptease.translator.codegenerator.LocationInformation;
-import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 
 /**
  * Context representing a ComplexStoryComponent
@@ -23,26 +19,14 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  */
 public class ComplexStoryComponentContext extends StoryComponentContext {
 
-	public ComplexStoryComponentContext(StoryPoint model, String indent,
-			CodeGenerationNamifier existingNames, Translator translator,
-			LocationInformation locationInfo) {
-		super(model, indent, existingNames, translator, locationInfo);
-	}
-
-	public ComplexStoryComponentContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(),
-				other.getNamifier(), other.getTranslator(), other
-						.getLocationInfo());
-	}
-
 	public ComplexStoryComponentContext(Context other,
 			ComplexStoryComponent source) {
-		this(other);
-		this.setComponent(source);
+		super(other, source);
 	}
 
 	/**
-	 * Get all the ScriptIt children of the ComplexStoryComponent
+	 * Get all the ScriptIt children of the ComplexStoryComponent. This is used
+	 * to get all of the Causes.
 	 */
 	@Override
 	public Iterator<ScriptIt> getScriptIts() {
