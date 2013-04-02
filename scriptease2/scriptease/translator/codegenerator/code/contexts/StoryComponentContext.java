@@ -16,8 +16,8 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  * @author mfchurch
  * 
  */
-public class StoryComponentContext extends Context {
-	protected StoryComponent component;
+public abstract class StoryComponentContext extends Context {
+	private StoryComponent component;
 
 	public StoryComponentContext(StoryPoint model, String indent,
 			CodeGenerationNamifier existingNames, Translator translator,
@@ -27,8 +27,9 @@ public class StoryComponentContext extends Context {
 	}
 
 	public StoryComponentContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
-				.getTranslator(), other.getLocationInfo());
+		this(other.getStartStoryPoint(), other.getIndent(),
+				other.getNamifier(), other.getTranslator(), other
+						.getLocationInfo());
 	}
 
 	public StoryComponentContext(Context other, StoryComponent source) {
@@ -82,7 +83,11 @@ public class StoryComponentContext extends Context {
 		return this.getNamifier().getUniqueName(component, null);
 	}
 
-	public void setComponent(StoryComponent component) {
+	protected void setComponent(StoryComponent component) {
 		this.component = component;
+	}
+
+	protected StoryComponent getComponent() {
+		return this.component;
 	}
 }

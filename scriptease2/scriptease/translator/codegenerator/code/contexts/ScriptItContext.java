@@ -35,29 +35,28 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 
 	public ScriptItContext(Context other, ScriptIt source) {
 		this(other);
-		this.component = source;
+		this.setComponent(source);
 	}
 
 	@Override
 	public CodeBlock getMainCodeBlock() {
-		return ((ScriptIt) this.component).getMainCodeBlock();
+		return this.getComponent().getMainCodeBlock();
 	}
 
 	@Override
 	public Iterator<CodeBlock> getCodeBlocks() {
-		return ((ScriptIt) this.component).getCodeBlocksForLocation(
-				this.locationInfo).iterator();
+		return this.getComponent().getCodeBlocksForLocation(this.locationInfo)
+				.iterator();
 	}
 
 	@Override
 	public String getType() {
-		final CodeBlock mainCodeBlock = ((ScriptIt) this.component)
-				.getMainCodeBlock();
+		final Context codeBlockContext;
 
-		final Context createContext = ContextFactory.getInstance()
-				.createContext(this, mainCodeBlock);
+		codeBlockContext = ContextFactory.getInstance().createContext(this,
+				this.getMainCodeBlock());
 
-		return createContext.getType();
+		return codeBlockContext.getType();
 
 	}
 
@@ -66,8 +65,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 		final Collection<KnowIt> used = new ArrayList<KnowIt>();
 
 		// Only return implicits that are used in this Context
-		for (KnowIt implicit : ((ScriptIt) this.component).getMainCodeBlock()
-				.getImplicits()) {
+		for (KnowIt implicit : this.getMainCodeBlock().getImplicits()) {
 			if (getComponents().contains(implicit))
 				used.add(implicit);
 		}
@@ -85,17 +83,15 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	 */
 	@Override
 	public String getUniqueName(Pattern legalFormat) {
-		final CodeBlock mainCodeBlock = ((ScriptIt) this.component)
-				.getMainCodeBlock();
-		final ContextFactory factory = ContextFactory.getInstance();
-		final Context createContext = factory
+		final CodeBlock mainCodeBlock = this.getMainCodeBlock();
+		final Context createContext = ContextFactory.getInstance()
 				.createContext(this, mainCodeBlock);
 		return createContext.getUniqueName(legalFormat);
 	}
 
 	@Override
 	public Iterator<String> getIncludes() {
-		final Collection<CodeBlock> codeBlocks = ((ScriptIt) this.component)
+		final Collection<CodeBlock> codeBlocks = this.getComponent()
 				.getCodeBlocksForLocation(this.locationInfo);
 
 		final List<String> includes = new ArrayList<String>();
@@ -112,12 +108,11 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	 */
 	@Override
 	public String getCode() {
-		final ScriptIt scriptIt;
 		final Collection<CodeBlock> codeBlocks;
 		final Collection<AbstractFragment> code;
 
-		scriptIt = (ScriptIt) this.component;
-		codeBlocks = scriptIt.getCodeBlocksForLocation(this.locationInfo);
+		codeBlocks = this.getComponent().getCodeBlocksForLocation(
+				this.locationInfo);
 		code = new ArrayList<AbstractFragment>();
 
 		// Combine codeBlocks with the same slot
@@ -130,9 +125,8 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 
 	@Override
 	public Iterator<KnowIt> getVariables() {
-		final ScriptIt scriptIt = (ScriptIt) this.component;
 		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
-		for (CodeBlock codeBlock : scriptIt
+		for (CodeBlock codeBlock : this.getComponent()
 				.getCodeBlocksForLocation(this.locationInfo)) {
 			parameters.addAll(codeBlock.getParameters());
 		}
@@ -146,7 +140,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	 */
 	@Override
 	public KnowIt getParameter(String displayName) {
-		return ((ScriptIt) this.component).getParameter(displayName);
+		return this.getComponent().getParameter(displayName);
 	}
 
 	@Override
@@ -154,24 +148,24 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
 
 		parameters.addAll(this.getSlotParameterCollection());
-		parameters.addAll(((ScriptIt) this.component).getParameters());
+		parameters.addAll(this.getComponent().getParameters());
 
 		return parameters.iterator();
 	}
 
 	@Override
 	public Iterator<KnowIt> getParameters() {
-		return ((ScriptIt) this.component).getParameters().iterator();
+		return this.getComponent().getParameters().iterator();
 	}
 
 	@Override
 	public StoryItemSequence getActiveChild() {
-		return ((ScriptIt) this.component).getActiveBlock();
+		return this.getComponent().getActiveBlock();
 	}
 
 	@Override
 	public StoryItemSequence getInactiveChild() {
-		return ((ScriptIt) this.component).getInactiveBlock();
+		return this.getComponent().getInactiveBlock();
 	}
 
 	protected Collection<KnowIt> getSlotParameterCollection() {
@@ -180,7 +174,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 
 		manager = TranslatorManager.getInstance().getActiveAPIDictionary()
 				.getEventSlotManager();
-		currentSlot = ((ScriptIt) this.component).getMainCodeBlock().getSlot();
+		currentSlot = this.getMainCodeBlock().getSlot();
 
 		if (currentSlot == null)
 			throw new NullPointerException("Encountered null slot in a Cause! "
@@ -201,7 +195,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 
 		manager = TranslatorManager.getInstance().getActiveAPIDictionary()
 				.getEventSlotManager();
-		currentSlot = ((ScriptIt) this.component).getMainCodeBlock().getSlot();
+		currentSlot = this.getMainCodeBlock().getSlot();
 
 		if (currentSlot == null)
 			throw new NullPointerException("Encountered null slot in a Cause! "
@@ -212,23 +206,21 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 
 	@Override
 	public String getUnique32CharName() {
-		final ScriptIt scriptIt;
-
-		scriptIt = (ScriptIt) this.component;
-
-		StoryComponent owner = scriptIt.getOwner();
+		StoryComponent owner = this.getComponent().getOwner();
 		while (owner != null) {
 			if (owner instanceof StoryPoint)
 				return ((StoryPoint) owner).getUnique32CharName();
 		}
-
-		throw new NullPointerException("Could not find Story Point for "
-				+ "ScriptIt: " + scriptIt);
+		throw new NullPointerException("Could not find Story Point for " + this);
 	}
-	
-//	@Override
-	protected ScriptIt getObject() {
-		// TODO Auto-generated method stub
-		return null;
+
+	@Override
+	protected ScriptIt getComponent() {
+		return (ScriptIt) super.getComponent();
+	}
+
+	@Override
+	public String toString() {
+		return "ScriptItContext[" + this.getComponent() + "]";
 	}
 }

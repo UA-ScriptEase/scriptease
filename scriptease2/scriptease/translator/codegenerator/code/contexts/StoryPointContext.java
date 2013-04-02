@@ -35,12 +35,12 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 
 	public StoryPointContext(Context other, StoryPoint source) {
 		this(other);
-		this.component = source;
+		this.setComponent(source);
 	}
 
 	@Override
 	public Iterator<StoryPoint> getStoryPointChildren() {
-		return ((StoryPoint) this.component).getSuccessors().iterator();
+		return this.getComponent().getSuccessors().iterator();
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 		parents = new ArrayList<StoryPoint>();
 
 		for (StoryPoint point : this.getStartStoryPoint().getDescendants()) {
-			if (point.getSuccessors().contains(this.component)) {
+			if (point.getSuccessors().contains(this.getComponent())) {
 				parents.add(point);
 			}
 		}
@@ -60,7 +60,7 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 
 	@Override
 	public String getName() {
-		return this.getNameOf(this.component);
+		return this.getNameOf(this.getComponent());
 	}
 
 	@Override
@@ -70,17 +70,18 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 
 	@Override
 	public String getUniqueID() {
-		return ((StoryPoint) this.component).getUniqueID().toString();
+		return this.getComponent().getUniqueID().toString();
 	}
 
 	@Override
 	public String getUnique32CharName() {
-		return ((StoryPoint) this.component).getUnique32CharName();
+		return this.getComponent().getUnique32CharName();
 	}
 
 	@Override
 	public String getUniqueName(Pattern legalFormat) {
-		return this.getNamifier().getUniqueName(this.component, legalFormat);
+		return this.getNamifier().getUniqueName(this.getComponent(),
+				legalFormat);
 	}
 
 	@Override
@@ -102,6 +103,11 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 
 	@Override
 	public String getFanIn() {
-		return ((StoryPoint) this.component).getFanIn().toString();
+		return this.getComponent().getFanIn().toString();
+	}
+
+	@Override
+	protected StoryPoint getComponent() {
+		return (StoryPoint) super.getComponent();
 	}
 }

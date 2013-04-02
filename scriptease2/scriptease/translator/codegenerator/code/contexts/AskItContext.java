@@ -27,13 +27,14 @@ public class AskItContext extends StoryComponentContext {
 	}
 
 	public AskItContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
-				.getTranslator(), other.getLocationInfo());
+		this(other.getStartStoryPoint(), other.getIndent(),
+				other.getNamifier(), other.getTranslator(), other
+						.getLocationInfo());
 	}
 
 	public AskItContext(Context other, AskIt source) {
 		this(other);
-		this.component = source;
+		this.setComponent(source);
 	}
 
 	/**
@@ -41,7 +42,7 @@ public class AskItContext extends StoryComponentContext {
 	 */
 	@Override
 	public String getCondition() {
-		KnowIt condition = ((AskIt) this.component).getCondition();
+		final KnowIt condition = this.getComponent().getCondition();
 		if (condition != null)
 			return this.getNameOf(condition);
 		return "";
@@ -52,7 +53,7 @@ public class AskItContext extends StoryComponentContext {
 	 */
 	@Override
 	public StoryItemSequence getIfChild() {
-		return ((AskIt) this.component).getIfBlock();
+		return this.getComponent().getIfBlock();
 	}
 
 	/**
@@ -60,7 +61,7 @@ public class AskItContext extends StoryComponentContext {
 	 */
 	@Override
 	public StoryItemSequence getElseChild() {
-		return ((AskIt) this.component).getElseBlock();
+		return this.getComponent().getElseBlock();
 	}
 
 	/**
@@ -68,9 +69,15 @@ public class AskItContext extends StoryComponentContext {
 	 */
 	@Override
 	public Iterator<KnowIt> getVariables() {
-		VariableGetter knowItGetter = new VariableGetter();
-		((AskIt) this.component).process(knowItGetter); 
+		final VariableGetter knowItGetter = new VariableGetter();
+
+		this.getComponent().process(knowItGetter);
 
 		return knowItGetter.getObjects().iterator();
+	}
+
+	@Override
+	protected AskIt getComponent() {
+		return (AskIt) super.getComponent();
 	}
 }

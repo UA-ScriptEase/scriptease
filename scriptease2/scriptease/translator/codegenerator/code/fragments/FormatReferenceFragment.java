@@ -1,5 +1,7 @@
 package scriptease.translator.codegenerator.code.fragments;
 
+import java.util.List;
+
 import scriptease.translator.codegenerator.CharacterRange;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.FormatReferenceType;
 import scriptease.translator.codegenerator.code.contexts.AskItContext;
@@ -39,25 +41,50 @@ public class FormatReferenceFragment extends AbstractFragment {
 	}
 
 	/**
+	 * Checks if the context is of the same type.
+	 * 
+	 * @param context
+	 * @return
+	 */
+	private boolean typeMatchesContext(Context context) {
+		switch (this.type) {
+		case NONE:
+			return true;
+		case ASKIT:
+			return context instanceof AskItContext;
+		case SCRIPTIT:
+			return context instanceof ScriptItContext
+					&& !(context instanceof ControlItContext);
+		case KNOWIT:
+			return context instanceof KnowItContext;
+		case NOTE:
+			return context instanceof NoteContext;
+		case CONTROLIT:
+			return context instanceof ControlItContext;
+		default:
+			throw new IllegalStateException(this + " has " + this.type
+					+ " type, which is unsupported.");
+		}
+	}
+
+	/**
 	 * Retrieves the format that this fragment represents and forwards the call
 	 * to it.
 	 */
 	@Override
 	public String resolve(Context context) {
-		final String format = this.getDirectiveText();
+		final String formatID = this.getDirectiveText().toUpperCase();
 
-		if ((this.type == FormatReferenceType.NONE)
-				|| (this.type == FormatReferenceType.ASKIT && context instanceof AskItContext)
-				|| (this.type == FormatReferenceType.SCRIPTIT
-						&& context instanceof ScriptItContext && !(context instanceof ControlItContext))
-				|| (this.type == FormatReferenceType.KNOWIT && context instanceof KnowItContext)
-				|| (this.type == FormatReferenceType.NOTE && context instanceof NoteContext)
-				|| (this.type == FormatReferenceType.CONTROLIT && context instanceof ControlItContext)) {
+		if (this.typeMatchesContext(context)) {
+			final List<AbstractFragment> format;
 
-			return AbstractFragment.resolveFormat(context.getTranslator()
-					.getLanguageDictionary().getFormat(format.toUpperCase()),
-					context);
+			format = context.getTranslator().getLanguageDictionary()
+					.getFormat(formatID);
+
+			return AbstractFragment.resolveFormat(format, context);
 		} else
+			// If the type of the context doesn't match the format, we just
+			// return nothing.
 			return "";
 	}
 

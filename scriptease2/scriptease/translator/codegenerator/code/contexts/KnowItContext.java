@@ -1,6 +1,5 @@
 package scriptease.translator.codegenerator.code.contexts;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import scriptease.controller.get.VariableGetter;
@@ -10,9 +9,9 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.apimanagers.TypeConverter;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
@@ -42,7 +41,7 @@ public class KnowItContext extends StoryComponentContext {
 
 	public KnowItContext(Context other, KnowIt source) {
 		this(other);
-		this.component = source;
+		this.setComponent(source);
 	}
 
 	/**
@@ -50,35 +49,38 @@ public class KnowItContext extends StoryComponentContext {
 	 */
 	@Override
 	public KnowItBinding getBinding() {
-		return ((KnowIt) this.component).getBinding();
+		return this.getComponent().getBinding();
 	}
 
 	@Override
 	public String getValue() {
-		Context binding = ContextFactory.getInstance().createContext(this,
-				((KnowIt) this.component).getBinding());
-		return binding.getValue();
+		final KnowItBinding binding = this.getBinding();
+		final Context bindingContext;
+
+		bindingContext = ContextFactory.getInstance().createContext(this,
+				binding);
+
+		return bindingContext.getValue();
 	}
 
 	@Override
 	public String getTemplateID() {
-		String templateID = "Error when generating Template ID in "
-				+ this.getClass().toString();
-		final KnowIt knowIt = (KnowIt) this.component;
-		final KnowItBinding binding = knowIt.getBinding();
+		final KnowItBinding binding = this.getBinding();
+
 		if (binding instanceof KnowItBindingResource) {
-			templateID = ((KnowItBindingResource) binding).getTemplateID();
+			return ((KnowItBindingResource) binding).getTemplateID();
 		}
-		return templateID;
+		return "Error when generating Template ID in " + this;
 	}
 
 	@Override
 	public String getFormattedValue() {
-		final KnowIt knowIt = (KnowIt) this.component;
-		final KnowItBinding binding = knowIt.getBinding();
-		final Collection<String> types = knowIt.getTypes();
-		final Context bindingContext = ContextFactory.getInstance()
-				.createContext(this, knowIt.getBinding());
+		final KnowIt knowIt = this.getComponent();
+		final KnowItBinding binding = this.getBinding();
+		final Context bindingContext;
+
+		bindingContext = ContextFactory.getInstance().createContext(this,
+				binding);
 
 		final String formattedValue = bindingContext.getFormattedValue();
 		if (formattedValue.isEmpty()) {
@@ -86,24 +88,31 @@ public class KnowItContext extends StoryComponentContext {
 					+ " resolved to an empty string.");
 		}
 
-		if (binding.explicitlyCompatibleWith((KnowIt) this.component)) {
+		if (binding.explicitlyCompatibleWith(knowIt)) {
 			return formattedValue;
 		} else {
 			// the binding type isn't a listed type for this KnowIt, so try to
 			// convert it
-			final TypeConverter converter = TranslatorManager.getInstance()
-					.getActiveTranslator().getGameTypeManager()
-					.getTypeConverter();
-			final ScriptIt scriptIt = converter.convert(knowIt);
+			final TypeConverter converter;
+			final ScriptIt scriptIt;
+
+			converter = TranslatorManager.getInstance()
+					.getActiveGameTypeManager().getTypeConverter();
+			scriptIt = converter.convert(knowIt);
+
 			if (scriptIt != null) {
-				final Context converterContext = ContextFactory.getInstance()
-						.createContext(this, scriptIt);
-				String converterContextName = converterContext.getName() + "("
+				final Context scriptItContext;
+				final String scriptItContextName;
+
+				scriptItContext = ContextFactory.getInstance().createContext(
+						this, scriptIt);
+				scriptItContextName = scriptItContext.getName() + "("
 						+ formattedValue + ")";
-				return converterContextName;
+				return scriptItContextName;
 			} else
 				throw new CodeGenerationException("<Cannot convert binding("
-						+ binding + ") to expected types(" + types + ")>");
+						+ binding + ") to expected types(" + knowIt.getTypes()
+						+ ")>");
 		}
 	}
 
@@ -112,15 +121,17 @@ public class KnowItContext extends StoryComponentContext {
 	 */
 	@Override
 	public String getType() {
-		final APIDictionary apiDictionary = this.translator.getApiDictionary();
-		return apiDictionary.getGameTypeManager().getCodeSymbol(
-				((KnowIt) this.component).getDefaultType());
+		final GameTypeManager typeManager;
+		final String defaultType = this.getComponent().getDefaultType();
+
+		typeManager = this.translator.getGameTypeManager();
+
+		return typeManager.getCodeSymbol(defaultType);
 	}
 
 	@Override
 	public String getUniqueID() {
-		final KnowIt knowIt = (KnowIt) this.component;
-		final KnowItBinding binding = knowIt.getBinding();
+		final KnowItBinding binding = this.getComponent().getBinding();
 
 		if (binding instanceof KnowItBindingStoryPoint) {
 			return ((KnowItBindingStoryPoint) binding).getValue().getUniqueID()
@@ -136,13 +147,18 @@ public class KnowItContext extends StoryComponentContext {
 		 * Get all of the dependent variables for the KnowIt (since we are
 		 * probably defining it)
 		 */
-		VariableGetter getter = new VariableGetter();
-		this.component.process(getter);
+		final VariableGetter getter = new VariableGetter();
+		this.getComponent().process(getter);
 		return getter.getObjects().iterator();
 	}
 
 	@Override
 	public String toString() {
-		return "KnowItContext [" + this.component + "]";
+		return "KnowItContext [" + this.getComponent() + "]";
+	}
+
+	@Override
+	protected KnowIt getComponent() {
+		return (KnowIt) super.getComponent();
 	}
 }
