@@ -30,14 +30,15 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	}
 
 	public ComplexStoryComponentContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
-				.getTranslator(), other.getLocationInfo());
+		this(other.getStartStoryPoint(), other.getIndent(),
+				other.getNamifier(), other.getTranslator(), other
+						.getLocationInfo());
 	}
 
 	public ComplexStoryComponentContext(Context other,
 			ComplexStoryComponent source) {
 		this(other);
-		this.component = source;
+		this.setComponent(source);
 	}
 
 	/**
@@ -46,8 +47,7 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	@Override
 	public Iterator<ScriptIt> getScriptIts() {
 		final Collection<ScriptIt> scriptIts = new ArrayList<ScriptIt>();
-		for (StoryComponent child : ((ComplexStoryComponent) this.component)
-				.getChildren()) {
+		for (StoryComponent child : this.getComponent().getChildren()) {
 			child.process(new StoryAdapter() {
 				@Override
 				public void processScriptIt(ScriptIt scriptIt) {
@@ -63,12 +63,12 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	 */
 	@Override
 	public Iterator<KnowIt> getVariables() {
-		VariableGetter variableGetter = new VariableGetter();
-		Collection<StoryComponent> children = ((ComplexStoryComponent) this.component)
-				.getChildren();
-		for (StoryComponent child : children) {
+		final VariableGetter variableGetter = new VariableGetter();
+
+		for (StoryComponent child : this.getComponent().getChildren()) {
 			child.process(variableGetter);
 		}
+
 		return variableGetter.getObjects().iterator();
 	}
 
@@ -77,6 +77,11 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	 */
 	@Override
 	public Iterator<StoryComponent> getChildren() {
-		return ((ComplexStoryComponent) this.component).getChildren().iterator();
+		return this.getComponent().getChildren().iterator();
+	}
+
+	@Override
+	protected ComplexStoryComponent getComponent() {
+		return (ComplexStoryComponent) super.getComponent();
 	}
 }

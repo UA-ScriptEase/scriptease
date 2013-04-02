@@ -22,12 +22,13 @@ public class StoryItemSequenceContext extends ComplexStoryComponentContext {
 	}
 
 	public StoryItemSequenceContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
-				.getTranslator(), other.getLocationInfo());
+		this(other.getStartStoryPoint(), other.getIndent(),
+				other.getNamifier(), other.getTranslator(), other
+						.getLocationInfo());
 	}
-	
+
 	public StoryItemSequenceContext(Context other, StoryItemSequence source) {
 		this(other);
-		this.component = source;
+		this.setComponent(source);
 	}
 }

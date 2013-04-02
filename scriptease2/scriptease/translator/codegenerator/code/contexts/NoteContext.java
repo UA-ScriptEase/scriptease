@@ -23,17 +23,23 @@ public class NoteContext extends StoryComponentContext {
 	}
 
 	public NoteContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
-				.getTranslator(), other.getLocationInfo());
+		this(other.getStartStoryPoint(), other.getIndent(),
+				other.getNamifier(), other.getTranslator(), other
+						.getLocationInfo());
 	}
 
 	public NoteContext(Context other, Note source) {
 		this(other);
-		this.component = source;
+		this.setComponent(source);
 	}
 
 	@Override
 	public String toString() {
-		return "NoteContext [" + this.component + "]";
+		return "NoteContext [" + this.getComponent() + "]";
+	}
+
+	@Override
+	protected Note getComponent() {
+		return (Note) super.getComponent();
 	}
 }

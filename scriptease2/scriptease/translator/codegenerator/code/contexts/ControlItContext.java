@@ -28,28 +28,31 @@ public class ControlItContext extends ScriptItContext {
 						.getLocationInfo());
 	}
 
+	public ControlItContext(Context other, ControlIt source) {
+		this(other);
+		this.setComponent(source);
+	}
+
 	@Override
 	public Iterator<KnowIt> getImplicits() {
-		final ControlIt controlIt;
 		final ScriptIt cause;
 
-		controlIt = (ControlIt) this.component;
-		cause = controlIt.getMainCodeBlock().getCause();
+		cause = this.getComponent().getMainCodeBlock().getCause();
 
 		return cause.getImplicits().iterator();
 	}
 
 	@Override
 	public Iterator<KnowIt> getParameters() {
-		return ((ControlIt) this.component).getRequiredParameters().iterator();
+		return this.getComponent().getRequiredParameters().iterator();
 	}
-	
+
 	@Override
 	public Iterator<KnowIt> getParametersWithSlot() {
 		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
 
 		parameters.addAll(this.getSlotParameterCollection());
-		parameters.addAll(((ControlIt) this.component).getRequiredParameters());
+		parameters.addAll(this.getComponent().getRequiredParameters());
 
 		return parameters.iterator();
 	}
@@ -59,15 +62,15 @@ public class ControlItContext extends ScriptItContext {
 		final String reference;
 		final FormatReferenceFragment fragment;
 
-		reference = ((ControlIt) this.component).getFormat().name();
+		reference = this.getComponent().getFormat().name();
 		fragment = new FormatReferenceFragment(reference,
 				FormatReferenceType.CONTROLIT);
 
 		return fragment.resolve(this);
 	}
 
-	public ControlItContext(Context other, ControlIt source) {
-		this(other);
-		this.component = source;
+	@Override
+	protected ControlIt getComponent() {
+		return (ControlIt) super.getComponent();
 	}
 }
