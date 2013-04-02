@@ -5,16 +5,16 @@ import java.util.regex.Pattern;
 import scriptease.model.StoryComponent;
 
 /**
- * StoryComponentContext is Context for a StoryComponent. This class is abstract
- * and must be extended. Story Component contexts can only be created from
- * another context, with the final parent usually being a {@link FileContext}.
+ * StoryComponentContext is Context for a StoryComponent. Story Component
+ * contexts can only be created from another context, with the final parent
+ * usually being a {@link FileContext}.
  * 
  * 
  * @see Context
  * @author mfchurch
  * 
  */
-public abstract class StoryComponentContext extends Context {
+public  class StoryComponentContext extends Context {
 	private final StoryComponent component;
 
 	/**

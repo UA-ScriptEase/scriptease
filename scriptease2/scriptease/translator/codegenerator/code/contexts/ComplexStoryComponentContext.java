@@ -19,6 +19,12 @@ import scriptease.model.complex.ScriptIt;
  */
 public class ComplexStoryComponentContext extends StoryComponentContext {
 
+	/**
+	 * Creates a new ComplexStoryComponentContext.
+	 * 
+	 * @param other
+	 * @param source
+	 */
 	public ComplexStoryComponentContext(Context other,
 			ComplexStoryComponent source) {
 		super(other, source);
