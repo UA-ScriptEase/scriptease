@@ -192,10 +192,16 @@ public class Scene extends Resource {
 				if (seGeneratedGUIDs.contains(guid)) {
 					objectsToRemove.add(object);
 				}
-				
-			// Initialize the ScriptEase object
-			} else if (object.getType().equals(UnityType.GAMEOBJECT.getName())
+
+				// Initialize the ScriptEase object
+			} else if (object.getType().equals(UnityType.GAMEOBJECT)
 					&& object.getName().equals(SCRIPTEASE_OBJECT_NAME)) {
+				if (this.scriptEaseObject != null) {
+					System.err.println("Found more than one ScriptEase Game "
+							+ "Object in Scene " + this
+							+ ". Removing previous.");
+					objectsToRemove.add(object);
+				}
 				this.scriptEaseObject = object;
 			}
 		}
