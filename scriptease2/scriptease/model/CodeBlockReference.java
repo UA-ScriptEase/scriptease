@@ -264,9 +264,29 @@ public class CodeBlockReference extends CodeBlock {
 	}
 
 	@Override
+	public void addType(String type) {
+		this.getTarget().addType(type);
+	}
+
+	@Override
+	public void removeType(String type) {
+		this.getTarget().removeType(type);
+	}
+
+	@Override
 	public String getSubjectName() {
 		return this.getTarget().getSubjectName();
 	}
+
+	@Override
+	public void addCode(AbstractFragment code) {
+		this.getTarget().addCode(code);
+	}
+
+	@Override
+	public void removeCode(AbstractFragment code) {
+		this.getTarget().removeCode(code);
+	};
 
 	@Override
 	public void setCode(Collection<AbstractFragment> code) {

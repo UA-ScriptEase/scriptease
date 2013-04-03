@@ -141,10 +141,34 @@ public class CodeBlockSource extends CodeBlock {
 	}
 
 	@Override
+	/**
+	 * Accomodating AspectJ
+	 */
 	public void setTypes(Collection<String> types) {
-		this.returnTypes = new ArrayList<String>(types);
-		this.notifyObservers(new StoryComponentEvent(this,
-				StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES));
+		Collection<String> oldTypes = new ArrayList<String>(this.returnTypes);
+		for (String type : oldTypes) {
+			removeType(type);
+		}
+
+		for (String type : types) {
+			addType(type);
+		}
+	}
+
+	@Override
+	public void addType(String type) {
+		if (this.returnTypes.add(type)) {
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES));
+		}
+	}
+
+	@Override
+	public void removeType(String type) {
+		if (this.returnTypes.remove(type)) {
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES));
+		}
 	}
 
 	protected void init(int id) {
@@ -153,7 +177,7 @@ public class CodeBlockSource extends CodeBlock {
 		this.slot = "";
 		this.returnTypes = new ArrayList<String>();
 		this.id = id;
-
+		this.code = new ArrayList<AbstractFragment>();
 		this.references = new HashSet<WeakReference<CodeBlockReference>>();
 	}
 
@@ -310,11 +334,32 @@ public class CodeBlockSource extends CodeBlock {
 	}
 
 	@Override
-	public void setCode(Collection<AbstractFragment> code) {
-		this.code = new ArrayList<AbstractFragment>(code);
-		this.notifyObservers(new StoryComponentEvent(this,
-				StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
+	public void setCode(Collection<AbstractFragment> newCode) {
+		final Collection<AbstractFragment> oldCode = new ArrayList<AbstractFragment>(
+				this.code);
+		for (AbstractFragment codeFragment : oldCode) {
+			this.removeCode(codeFragment);
+		}
+		for (AbstractFragment codeFragment : newCode) {
+			this.addCode(codeFragment);
+		}
 	}
+
+	@Override
+	public void addCode(AbstractFragment code) {
+		if (this.code.add(code)) {
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
+		}
+	}
+
+	@Override
+	public void removeCode(AbstractFragment code) {
+		if (this.code.remove(code)) {
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
+		}
+	};
 
 	@Override
 	public Collection<AbstractFragment> getCode() {

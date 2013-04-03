@@ -77,14 +77,14 @@ public abstract class CodeBlock extends StoryComponent implements
 				hashCode += binding.hashCode();
 		}
 		final ScriptIt owner = this.getOwner();
-		if(owner instanceof ControlIt) {
-			for(KnowIt param : ((ControlIt) owner).getRequiredParameters()) {
+		if (owner instanceof ControlIt) {
+			for (KnowIt param : ((ControlIt) owner).getRequiredParameters()) {
 				hashCode += param.getBinding().hashCode();
 			}
-			
+
 			hashCode += owner.hashCode();
 		}
-		
+
 		return hashCode;
 	}
 
@@ -123,6 +123,10 @@ public abstract class CodeBlock extends StoryComponent implements
 	 */
 	public abstract void setTypes(Collection<String> types);
 
+	public abstract void addType(String type);
+
+	public abstract void removeType(String type);
+
 	/**
 	 * Sets the parameters for this code block to the contents of the given
 	 * list.
@@ -151,11 +155,15 @@ public abstract class CodeBlock extends StoryComponent implements
 	public abstract void setIncludes(Collection<String> includes);
 
 	/**
-	 * Sets the code to the given code.
+	 * Workaround for pointcuts complaining about type erasure for methods that
+	 * use Collections
 	 * 
 	 * @param code
-	 *            The new code.
 	 */
+	public abstract void addCode(AbstractFragment code);
+
+	public abstract void removeCode(AbstractFragment code);
+
 	public abstract void setCode(Collection<AbstractFragment> code);
 
 	/**
@@ -352,4 +360,5 @@ public abstract class CodeBlock extends StoryComponent implements
 	public void componentChanged(StoryComponentEvent event) {
 		this.notifyObservers(event);
 	}
+
 }
