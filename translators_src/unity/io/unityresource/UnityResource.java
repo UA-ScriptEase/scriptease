@@ -100,6 +100,10 @@ public class UnityResource extends Resource {
 		return this.topLevelPropertyMap.get(this.getType().getName()).getMap();
 	}
 
+	/**
+	 * Returns the {@link UnityType} of the resource.
+	 * @return
+	 */
 	public UnityType getType() {
 		return this.type;
 	}
