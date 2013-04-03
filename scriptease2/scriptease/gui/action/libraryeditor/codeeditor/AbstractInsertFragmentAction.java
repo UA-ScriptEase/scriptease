@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.gui.libraryeditor.FormatFragmentSelectionManager;
 import scriptease.model.CodeBlock;
@@ -110,9 +111,7 @@ public abstract class AbstractInsertFragmentAction extends
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		final CodeBlock codeBlock;
-
 		codeBlock = FormatFragmentSelectionManager.getInstance().getCodeBlock();
-
 		if (codeBlock != null) {
 			final AbstractFragment selectedFragment;
 			final IdentityArrayList<AbstractFragment> fragments;
@@ -120,27 +119,23 @@ public abstract class AbstractInsertFragmentAction extends
 			selectedFragment = FormatFragmentSelectionManager.getInstance()
 					.getFormatFragment();
 			fragments = new IdentityArrayList<AbstractFragment>();
-
 			fragments.addAll(codeBlock.getCode());
 
 			if (selectedFragment != null) {
-				
 				if (selectedFragment instanceof AbstractContainerFragment) {
 					this.insertFragmentIntoContainerFragment((AbstractContainerFragment) selectedFragment);
-					FormatFragmentSelectionManager.getInstance().getCodeBlock()
-							.setCode(fragments);
-					
 				} else {
 					this.insertFragmentAfterFragment(fragments,
 							selectedFragment, null);
-					FormatFragmentSelectionManager.getInstance().getCodeBlock()
-							.setCode(fragments);
 				}
 			} else {
 				this.insertFragmentAtEnd(fragments);
-				FormatFragmentSelectionManager.getInstance().getCodeBlock()
-						.setCode(fragments);
 			}
+
+			UndoManager.getInstance().startUndoableAction(
+					"Setting CodeBlock " + codeBlock + " code to " + fragments);
+			codeBlock.setCode(fragments);
+			UndoManager.getInstance().endUndoableAction();
 		}
 	}
 }
