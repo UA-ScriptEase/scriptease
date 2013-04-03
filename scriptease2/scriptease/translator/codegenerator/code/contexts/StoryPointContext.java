@@ -2,7 +2,6 @@ package scriptease.translator.codegenerator.code.contexts;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import scriptease.model.StoryComponent;
@@ -18,17 +17,24 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  */
 public class StoryPointContext extends ComplexStoryComponentContext {
 
+	/**
+	 * Creates a new StoryPointContext with a previous context and the
+	 * {@link StoryPoint} source.
+	 * 
+	 * @param other
+	 * @param source
+	 */
 	public StoryPointContext(Context other, StoryPoint source) {
 		super(other, source);
 	}
 
 	@Override
-	public Iterator<StoryPoint> getStoryPointChildren() {
-		return this.getComponent().getSuccessors().iterator();
+	public Collection<StoryPoint> getStoryPointChildren() {
+		return this.getComponent().getSuccessors();
 	}
 
 	@Override
-	public Iterator<StoryPoint> getStoryPointParents() {
+	public Collection<StoryPoint> getStoryPointParents() {
 		final Collection<StoryPoint> parents;
 
 		parents = new ArrayList<StoryPoint>();
@@ -39,7 +45,7 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 			}
 		}
 
-		return parents.iterator();
+		return parents;
 	}
 
 	@Override

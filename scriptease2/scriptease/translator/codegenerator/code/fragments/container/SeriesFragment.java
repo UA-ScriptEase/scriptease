@@ -161,71 +161,74 @@ public class SeriesFragment extends AbstractContainerFragment {
 	 */
 	private Iterator<? extends Object> buildDataIterator(Context context) {
 		final String dataLabel = this.getDirectiveText();
+		final Collection<? extends Object> data;
 		Iterator<? extends Object> it;
 
 		// IF+ELSE BLOCK ( series ... data= <dataLabel> )
 		if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.INCLUDES
 						.name())) {
-			it = context.getIncludeFiles().iterator();
+			data = context.getIncludeFiles();
 		} else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.CODEBLOCKS
 						.name()))
-			it = (context.getCodeBlocks());
+			data = context.getCodeBlocks();
 		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.CAUSES
 						.name()))
-			it = context.getCauses();
+			data = context.getCauses();
 		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.PARAMETERS
 						.name()))
-			it = context.getParameters();
+			data = context.getParameters();
 		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.PARAMETERSWITHSLOT
 						.name()))
-			it = context.getParametersWithSlot();
+			data = context.getParametersWithSlot();
 		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.SLOTPARAMETERS
 						.name()))
-			it = context.getSlotParameters();
+			data = context.getSlotParameters();
 		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.VARIABLES
 						.name()))
-			it = context.getVariables();
+			data = context.getVariables();
 		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.IMPLICITS
 						.name()))
-			it = context.getImplicits();
+			data = context.getImplicits();
 		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.CHILDREN
 						.name()))
-			it = context.getChildren();
+			data = context.getChildren();
 		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.STORYPOINTS
 						.name()))
-			it = context.getStoryPoints();
+			data = context.getStoryPoints();
 		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.ORDEREDSTORYPOINTS
 						.name()))
-			it = context.getOrderedStoryPoints();
+			data = context.getOrderedStoryPoints();
 		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.PARENTNODES
 						.name())) {
-			it = context.getStoryPointParents();
+			data = context.getStoryPointParents();
 		} else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.CHILDRENNODES
 						.name())) {
-			it = context.getStoryPointChildren();
+			data = context.getStoryPointChildren();
 		} else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.IDENTICALCAUSES
 						.name())) {
-			it = context.getIdenticalCauses();
+			data = context.getIdenticalCauses();
 		} else {
 			// Default return 'cuz they didn't tell us a real label!
 			System.err.println("Series was unable to be resolved for data: "
 					+ dataLabel + " >");
 			return new ArrayList<String>().iterator();
 		}
+		
+		it = data.iterator();
 
 		if (this.isUnique) {
 			it = uniquify(it);

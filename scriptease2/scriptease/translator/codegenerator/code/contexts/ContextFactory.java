@@ -17,7 +17,6 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingFunctionContext;
@@ -36,6 +35,7 @@ import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.Kn
  * ContextFactory implements the singleton and factory design pattern.
  * 
  * @author mfchurch
+ * @author remiller
  * 
  */
 public class ContextFactory {
@@ -49,7 +49,15 @@ public class ContextFactory {
 	}
 
 	/**
-	 * Creates a context dependent on
+	 * Creates a new context. If the object is not supported, this method will
+	 * throw a {@link CodeGenerationException}. <br>
+	 * <br>
+	 * <b>Currently Supported Types:</b>
+	 * <ul>
+	 * <li>CodeBlock</li>
+	 * <li>KnowItBinding</li>
+	 * <li>StoryPoint</li>
+	 * </ul>
 	 * 
 	 * @param context
 	 * @param source
@@ -63,9 +71,7 @@ public class ContextFactory {
 		 * determining which context to create, and type erasure loses that
 		 * info. - remiller
 		 */
-		if (source instanceof String) {
-			created = this.createContext(context, (String) source);
-		} else if (source instanceof CodeBlock) {
+		if (source instanceof CodeBlock) {
 			created = this.createContext(context, (CodeBlock) source);
 		} else if (source instanceof KnowItBinding) {
 			created = this.createContext(context, (KnowItBinding) source);
@@ -85,20 +91,8 @@ public class ContextFactory {
 	}
 
 	/**
-	 * Fabricates a new Context based on the pastContext and the source.
-	 * 
-	 * @param pastContext
-	 * @param source
-	 * @return
-	 */
-	private Context createContext(final Context pastContext, final String source) {
-		this.activeContext = pastContext;
-
-		return this.activeContext;
-	}
-
-	/**
-	 * Fabricates a new Context based on the pastContext and the source.
+	 * Creates a new Context based on the pastContext and the source
+	 * {@link KnowItBinding}.
 	 * 
 	 * @param pastContext
 	 * @param source
@@ -149,7 +143,8 @@ public class ContextFactory {
 	}
 
 	/**
-	 * Fabricates a new Context based on the pastContext and the source.
+	 * Creates a new Context based on the pastContext and the source
+	 * {@link StoryComponent}.
 	 * 
 	 * @param pastContext
 	 * @param source
@@ -207,7 +202,8 @@ public class ContextFactory {
 	}
 
 	/**
-	 * Fabricates a new Context based on the pastContext and the source.
+	 * Creates a new Context based on the pastContext and the source
+	 * {@link CodeBlock}.
 	 * 
 	 * @param pastContext
 	 * @param source
@@ -221,7 +217,8 @@ public class ContextFactory {
 	}
 
 	/**
-	 * Fabricates a new Context based on the pastContext and the source.
+	 * Creates a new Context based on the pastContext and the source
+	 * {@link StoryPoint}.
 	 * 
 	 * @param pastContext
 	 * @param source
@@ -230,6 +227,7 @@ public class ContextFactory {
 	private Context createContext(final Context pastContext,
 			final StoryPoint source) {
 		this.activeContext = new StoryPointContext(pastContext, source);
+
 		return this.activeContext;
 	}
 }

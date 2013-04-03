@@ -2,7 +2,6 @@ package scriptease.translator.codegenerator.code.contexts;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -134,7 +133,7 @@ public abstract class Context {
 	 * 
 	 * @return
 	 */
-	protected Collection<StoryComponent> getComponents() {
+	protected final Collection<StoryComponent> getComponents() {
 		final Collection<StoryComponent> components = new ArrayList<StoryComponent>();
 		final Collection<StoryPoint> storyPoints;
 
@@ -157,7 +156,7 @@ public abstract class Context {
 	 * 
 	 * @return
 	 */
-	public Iterator<ScriptIt> getScriptIts() {
+	public Collection<ScriptIt> getScriptIts() {
 		final Collection<ScriptIt> scriptIts = new ArrayList<ScriptIt>();
 
 		for (StoryComponent key : this.getComponents()) {
@@ -169,7 +168,7 @@ public abstract class Context {
 					scriptIts.add(scriptIt);
 			}
 		}
-		return scriptIts.iterator();
+		return scriptIts;
 	}
 
 	/**
@@ -177,7 +176,7 @@ public abstract class Context {
 	 * 
 	 * @return
 	 */
-	public Iterator<CodeBlock> getCodeBlocks() {
+	public Collection<CodeBlock> getCodeBlocks() {
 		final Collection<CodeBlock> codeBlocks = new ArrayList<CodeBlock>();
 
 		for (StoryComponent key : this.getComponents()) {
@@ -188,7 +187,7 @@ public abstract class Context {
 				codeBlocks.addAll(codeBlocksForSlot);
 			}
 		}
-		return codeBlocks.iterator();
+		return codeBlocks;
 	}
 
 	/**
@@ -236,9 +235,9 @@ public abstract class Context {
 		return null;
 	}
 
-	public Iterator<StoryComponent> getChildren() {
+	public Collection<StoryComponent> getChildren() {
 		unimplemented("getChildren");
-		return new ArrayList<StoryComponent>().iterator();
+		return null;
 	}
 
 	public StoryItemSequence getIfChild() {
@@ -261,24 +260,14 @@ public abstract class Context {
 		return null;
 	}
 
-	public Iterator<KnowIt> getImplicits() {
+	public Collection<KnowIt> getImplicits() {
 		unimplemented("getImplicits");
 		return null;
 	}
 
-	public Iterator<String> getIncludes() {
-		final List<String> includes = new ArrayList<String>();
-		Iterator<CodeBlock> codeBlocks = this.getCodeBlocks();
-		while (codeBlocks.hasNext()) {
-			final CodeBlock codeBlock = codeBlocks.next();
-			includes.addAll(codeBlock.getIncludes());
-		}
-		return includes.iterator();
-	}
-
-	public Iterator<KnowIt> getVariables() {
+	public Collection<KnowIt> getVariables() {
 		unimplemented("getKnowIts");
-		return new ArrayList<KnowIt>().iterator();
+		return null;
 	}
 
 	public StoryComponent getOwner() {
@@ -286,14 +275,14 @@ public abstract class Context {
 		return null;
 	}
 
-	public Iterator<KnowIt> getParameters() {
+	public Collection<KnowIt> getParameters() {
 		unimplemented("getParameters");
-		return new ArrayList<KnowIt>().iterator();
+		return null;
 	}
 
-	public Iterator<KnowIt> getSlotParameters() {
+	public Collection<KnowIt> getSlotParameters() {
 		unimplemented("getSlotParameters");
-		return new ArrayList<KnowIt>().iterator();
+		return null;
 	}
 
 	public KnowIt getParameter(String keyword) {
@@ -301,11 +290,9 @@ public abstract class Context {
 		return null;
 	}
 
-	public Iterator<ScriptIt> getCauses() {
+	public Collection<ScriptIt> getCauses() {
 		final Collection<ScriptIt> causes = new ArrayList<ScriptIt>();
-		Iterator<ScriptIt> scriptIts = this.getScriptIts();
-		while (scriptIts.hasNext()) {
-			final ScriptIt scriptIt = scriptIts.next();
+		for (ScriptIt scriptIt : this.getScriptIts()) {
 			if (scriptIt.isCause()) {
 				boolean causeExists = false;
 
@@ -320,23 +307,33 @@ public abstract class Context {
 					causes.add(scriptIt);
 			}
 		}
-		return causes.iterator();
+		return causes;
 	}
 
-	public Iterator<StoryPoint> getStoryPoints() {
-		return this.model.getDescendants().iterator();
+	public Collection<StoryPoint> getStoryPoints() {
+		return this.model.getDescendants();
 	}
 
-	public Iterator<StoryPoint> getOrderedStoryPoints() {
-		return this.model.getOrderedDescendants().iterator();
+	public Collection<StoryPoint> getOrderedStoryPoints() {
+		return this.model.getOrderedDescendants();
 	}
 
-	public Iterator<StoryPoint> getStoryPointChildren() {
+	/**
+	 * Returns the immediate children of the {@link StoryPoint}.
+	 * 
+	 * @return
+	 */
+	public Collection<StoryPoint> getStoryPointChildren() {
 		this.unimplemented("getStoryPointChildren");
 		return null;
 	}
 
-	public Iterator<StoryPoint> getStoryPointParents() {
+	/**
+	 * Returns the immediate parents of the {@link StoryPoint}.
+	 * 
+	 * @return
+	 */
+	public Collection<StoryPoint> getStoryPointParents() {
 		this.unimplemented("getStoryPointParents");
 		return null;
 	}
@@ -451,18 +448,7 @@ public abstract class Context {
 		return null;
 	}
 
-	/**
-	 * Throws a CodeGenerationException if the called method is not implemented
-	 * in a subclass, or the implementation is not correctly called.
-	 * 
-	 * @param methodName
-	 */
-	private void unimplemented(String methodName) {
-		throw (new CodeGenerationException(UNIMPLEMENTED + ": " + methodName
-				+ " unimplemented in " + this.getClass().getName()));
-	}
-
-	public Iterator<? extends Object> getIdenticalCauses() {
+	public Collection<ScriptIt> getIdenticalCauses() {
 		unimplemented("getIdenticalCauses");
 		return null;
 	}
@@ -476,8 +462,8 @@ public abstract class Context {
 		unimplemented("getSlotConditional");
 		return null;
 	}
-	
-	public Iterator<KnowIt> getParametersWithSlot() {
+
+	public Collection<KnowIt> getParametersWithSlot() {
 		unimplemented("getParameteresWithImplicits");
 		return null;
 	}
@@ -485,5 +471,16 @@ public abstract class Context {
 	public String getParentName() {
 		unimplemented("getParentName");
 		return null;
+	}
+
+	/**
+	 * Throws a CodeGenerationException if the called method is not implemented
+	 * in a subclass, or the implementation is not correctly called.
+	 * 
+	 * @param methodName
+	 */
+	private void unimplemented(String methodName) {
+		throw (new CodeGenerationException(UNIMPLEMENTED + ": " + methodName
+				+ " unimplemented in " + this.getClass().getName()));
 	}
 }
