@@ -1,45 +1,56 @@
 package scriptease.translator.codegenerator.code.contexts;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.ControlIt.ControlItFormat;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.FormatReferenceType;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 
+/**
+ * Context for {@link ControlIt}s. This overrides some methods of
+ * {@link ScriptItContext} that act differently for {@link ControlIt}s.
+ * 
+ * @author kschenk
+ * 
+ */
 public class ControlItContext extends ScriptItContext {
 
+	/**
+	 * Creates a new {@link ControlItContext} from a previous Context and a
+	 * source {@link ControlIt}.
+	 * 
+	 * @param other
+	 * @param source
+	 */
 	public ControlItContext(Context other, ControlIt source) {
 		super(other, source);
 	}
 
+	/**
+	 * In {@link ScriptItContext}, only used implicits are returned. With
+	 * ControlIts, we return all implicits.
+	 */
 	@Override
-	public Iterator<KnowIt> getImplicits() {
-		final ScriptIt cause;
-
-		cause = this.getComponent().getMainCodeBlock().getCause();
-
-		return cause.getImplicits().iterator();
+	public Collection<KnowIt> getImplicits() {
+		return this.getCause().getImplicits();
 	}
 
+	/**
+	 * ControlIts have some special parameters in them so they need to return
+	 * those as well.
+	 */
 	@Override
-	public Iterator<KnowIt> getParameters() {
-		return this.getComponent().getRequiredParameters().iterator();
+	public Collection<KnowIt> getParameters() {
+		return this.getComponent().getRequiredParameters();
 	}
 
-	@Override
-	public Iterator<KnowIt> getParametersWithSlot() {
-		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
-
-		parameters.addAll(this.getSlotParameterCollection());
-		parameters.addAll(this.getComponent().getRequiredParameters());
-
-		return parameters.iterator();
-	}
-
+	/**
+	 * A ControlIt has a special format in the Language Dictionary. This is one
+	 * of {@link ControlItFormat}. This method returns the
+	 * {@link ControlItFormat} as a String.
+	 */
 	@Override
 	public String getControlItFormat() {
 		final String reference;

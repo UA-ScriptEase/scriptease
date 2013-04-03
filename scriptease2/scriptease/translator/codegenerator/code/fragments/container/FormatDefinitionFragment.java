@@ -26,7 +26,7 @@ public class FormatDefinitionFragment extends AbstractContainerFragment {
 	public void setSubFragments(List<AbstractFragment> subFragments) {
 		this.subFragments = subFragments;
 	}
-	
+
 	public Collection<AbstractFragment> getSubFragments() {
 		return this.subFragments;
 	}

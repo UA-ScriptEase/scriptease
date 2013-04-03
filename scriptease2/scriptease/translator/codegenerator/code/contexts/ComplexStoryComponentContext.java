@@ -2,7 +2,6 @@ package scriptease.translator.codegenerator.code.contexts;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.get.VariableGetter;
@@ -31,13 +30,21 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	}
 
 	/**
+	 * Get all of the ComplexStoryComponent's children
+	 */
+	@Override
+	public final Collection<StoryComponent> getChildren() {
+		return this.getComponent().getChildren();
+	}
+
+	/**
 	 * Get all the ScriptIt children of the ComplexStoryComponent. This is used
 	 * to get all of the Causes.
 	 */
 	@Override
-	public Iterator<ScriptIt> getScriptIts() {
+	public final Collection<ScriptIt> getScriptIts() {
 		final Collection<ScriptIt> scriptIts = new ArrayList<ScriptIt>();
-		for (StoryComponent child : this.getComponent().getChildren()) {
+		for (StoryComponent child : this.getChildren()) {
 			child.process(new StoryAdapter() {
 				@Override
 				public void processScriptIt(ScriptIt scriptIt) {
@@ -45,29 +52,21 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 				}
 			});
 		}
-		return scriptIts.iterator();
+		return scriptIts;
 	}
 
 	/**
 	 * Get all of the ComplexStoryComponent's knowIt children
 	 */
 	@Override
-	public Iterator<KnowIt> getVariables() {
+	public Collection<KnowIt> getVariables() {
 		final VariableGetter variableGetter = new VariableGetter();
 
-		for (StoryComponent child : this.getComponent().getChildren()) {
+		for (StoryComponent child : this.getChildren()) {
 			child.process(variableGetter);
 		}
 
-		return variableGetter.getObjects().iterator();
-	}
-
-	/**
-	 * Get all of the ComplexStoryComponent's children
-	 */
-	@Override
-	public Iterator<StoryComponent> getChildren() {
-		return this.getComponent().getChildren().iterator();
+		return variableGetter.getObjects();
 	}
 
 	@Override

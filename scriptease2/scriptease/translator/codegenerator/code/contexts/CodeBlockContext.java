@@ -2,7 +2,6 @@ package scriptease.translator.codegenerator.code.contexts;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
@@ -65,8 +64,8 @@ public class CodeBlockContext extends Context {
 	}
 
 	@Override
-	public Iterator<StoryComponent> getChildren() {
-		return this.codeBlock.getOwner().getChildren().iterator();
+	public Collection<StoryComponent> getChildren() {
+		return this.codeBlock.getOwner().getChildren();
 	}
 
 	@Override
@@ -102,14 +101,14 @@ public class CodeBlockContext extends Context {
 	}
 
 	@Override
-	public Iterator<KnowIt> getVariables() {
+	public Collection<KnowIt> getVariables() {
 		VariableGetter knowItGetter = new VariableGetter();
 		Collection<StoryComponent> children = ((ComplexStoryComponent) this.codeBlock
 				.getOwner()).getChildren();
 		for (StoryComponent child : children) {
 			child.process(knowItGetter);
 		}
-		return knowItGetter.getObjects().iterator();
+		return knowItGetter.getObjects();
 	}
 
 	private Collection<KnowIt> getParameterCollection() {
@@ -128,12 +127,12 @@ public class CodeBlockContext extends Context {
 	}
 
 	@Override
-	public Iterator<KnowIt> getParameters() {
-		return this.getParameterCollection().iterator();
+	public Collection<KnowIt> getParameters() {
+		return this.getParameterCollection();
 	}
 
 	@Override
-	public Iterator<KnowIt> getParametersWithSlot() {
+	public Collection<KnowIt> getParametersWithSlot() {
 		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
 		final EventSlotManager manager;
 
@@ -143,14 +142,14 @@ public class CodeBlockContext extends Context {
 				.getMainCodeBlock().getSlot()));
 		parameters.addAll(this.getParameterCollection());
 
-		return parameters.iterator();
+		return parameters;
 	}
 
 	/**
 	 * Gets the implicit KnowIts of the CodeBlock in context.
 	 */
 	@Override
-	public Iterator<KnowIt> getImplicits() {
+	public Collection<KnowIt> getImplicits() {
 		final Collection<KnowIt> used = new ArrayList<KnowIt>();
 
 		// Only return implicits that are used in this Context
@@ -158,7 +157,7 @@ public class CodeBlockContext extends Context {
 			if (getComponents().contains(implicit))
 				used.add(implicit);
 		}
-		return used.iterator();
+		return used;
 	}
 
 	@Override
@@ -237,7 +236,7 @@ public class CodeBlockContext extends Context {
 	}
 
 	@Override
-	public Iterator<? extends Object> getIdenticalCauses() {
+	public Collection<ScriptIt> getIdenticalCauses() {
 		final Collection<ScriptIt> identicalCauses;
 		final ScriptIt scriptIt;
 
@@ -254,6 +253,6 @@ public class CodeBlockContext extends Context {
 			}
 		}
 
-		return identicalCauses.iterator();
+		return identicalCauses;
 	}
 }

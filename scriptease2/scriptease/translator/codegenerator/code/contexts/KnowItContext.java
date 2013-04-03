@@ -1,6 +1,6 @@
 package scriptease.translator.codegenerator.code.contexts;
 
-import java.util.Iterator;
+import java.util.Collection;
 
 import scriptease.controller.get.VariableGetter;
 import scriptease.model.atomic.KnowIt;
@@ -124,14 +124,14 @@ public class KnowItContext extends StoryComponentContext {
 	}
 
 	@Override
-	public Iterator<KnowIt> getVariables() {
+	public Collection<KnowIt> getVariables() {
 		/**
 		 * Get all of the dependent variables for the KnowIt (since we are
 		 * probably defining it)
 		 */
 		final VariableGetter getter = new VariableGetter();
 		this.getComponent().process(getter);
-		return getter.getObjects().iterator();
+		return getter.getObjects();
 	}
 
 	@Override

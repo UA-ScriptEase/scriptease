@@ -49,10 +49,8 @@ public class FileContext extends Context {
 
 	@Override
 	public Set<String> getIncludeFiles() {
-		final Iterator<CodeBlock> codeBlocks = this.getCodeBlocks();
-
-		while (codeBlocks.hasNext()) {
-			this.includeFiles.addAll(codeBlocks.next().getIncludes());
+		for(CodeBlock codeBlock : this.getCodeBlocks()) {
+			this.includeFiles.addAll(codeBlock.getIncludes());
 		}
 
 		final List<CodeBlock> bindingCodeBlocks = this.getBindingCodeBlocks();
