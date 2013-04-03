@@ -102,6 +102,7 @@ public class UnityResource extends Resource {
 
 	/**
 	 * Returns the {@link UnityType} of the resource.
+	 * 
 	 * @return
 	 */
 	public UnityType getType() {
@@ -194,6 +195,14 @@ public class UnityResource extends Resource {
 		}
 	}
 
+	/**
+	 * Finds all FBX files and turns them into animation objects that can then
+	 * be dragged into slots.
+	 * 
+	 * @param resource
+	 * @param guidsToMetas
+	 * @return
+	 */
 	private List<Resource> getAnimationChildren(UnityResource resource,
 			Map<String, File> guidsToMetas) {
 		final List<Resource> animationChildren = new ArrayList<Resource>();

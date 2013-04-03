@@ -47,9 +47,6 @@ public final class UnityProject extends GameModule {
 	 */
 	public static final String UNITY_TAG = "tag:unity3d.com,2011:";
 
-	private static final String SCENE_FILE_EXTENSION = ".unity";
-	private static final String META_EXTENSION = ".meta";
-
 	// Note: this used to be static, but we can't make it static since we want
 	// to be able to work on multiple projects at the same time.
 	private final Map<String, File> guidsToMetaFiles;
@@ -188,17 +185,22 @@ public final class UnityProject extends GameModule {
 	@Override
 	public void load(boolean readOnly) throws IOException {
 		final FileFilter sceneFileFilter = new FileFilter() {
+			private final String SCENE_FILE_EXTENSION = ".unity";
+
 			@Override
 			public boolean accept(File pathname) {
 				return pathname.getName().endsWith(SCENE_FILE_EXTENSION);
 			}
 		};
 		final FileFilter metaFileFilter = new FileFilter() {
+			private static final String META_EXTENSION = ".meta";
+
 			@Override
 			public boolean accept(File pathname) {
 				return pathname.getName().endsWith(META_EXTENSION);
 			}
 		};
+
 		final Collection<File> sceneFiles;
 		final Collection<File> metaFiles;
 
@@ -250,6 +252,69 @@ public final class UnityProject extends GameModule {
 									+ "<li>Change the <b>Asset Serialization</b> mode to <b>Force Text</b>.</li>"
 									+ "<li>Reload the project in ScriptEase.</li>"
 									+ "<li>Celebrate with laser tag.</li></ol></html>");
+
+		// TODO Load other objects in "Resources" folders.
+
+		final FileFilter resourceFolderFilter = new FileFilter() {
+			private static final String RESOURCE_FOLDER_NAME = "Resources";
+
+			@Override
+			public boolean accept(File file) {
+				return file.getName().endsWith(RESOURCE_FOLDER_NAME)
+						&& file.isDirectory();
+			}
+		};
+
+		final Collection<String> imageExtensions = new ArrayList<String>();
+		// PSD, TIFF, JPG, TGA, PNG, GIF, BMP, IFF, PICT
+
+		imageExtensions.add("psd");
+		imageExtensions.add("tiff");
+		imageExtensions.add("jpg");
+		imageExtensions.add("tga");
+		imageExtensions.add("png");
+		imageExtensions.add("gif");
+		imageExtensions.add("bmp");
+		imageExtensions.add("iff");
+		imageExtensions.add("pict");
+
+		final FileFilter textureFilter = new FileFilter() {
+
+			@Override
+			public boolean accept(File file) {
+				final String extension;
+
+				extension = FileOp.getExtension(file).toLowerCase();
+
+				return imageExtensions.contains(extension);
+			}
+		};
+
+		final Collection<File> resourceFolders;
+
+		resourceFolders = FileOp.findFiles(this.projectLocation,
+				resourceFolderFilter);
+
+		final Collection<File> textureFiles = new ArrayList<File>();
+
+		for (File resourceFolder : resourceFolders) {
+			textureFiles
+					.addAll(FileOp.findFiles(resourceFolder, textureFilter));
+		}
+
+		for (File textureFile : textureFiles) {
+			System.out.println(textureFile);
+		}
+
+		// These may be in other paths! e.g. folder/file
+
+		// We do not need the file extension in code, but we do need
+		// their type.
+
+		// Load texture2da files
+		// Should show the extension on game object.
+
+		// Load .guiskin files
 	}
 
 	@Override
