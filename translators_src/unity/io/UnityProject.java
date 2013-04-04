@@ -24,6 +24,7 @@ import scriptease.model.StoryModel;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
+import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.FileOp;
 
 /**
@@ -59,6 +60,7 @@ public final class UnityProject extends GameModule {
 
 	private final Collection<File> includeFiles;
 	private final Collection<Scene> scenes;
+	private final Collection<Resource> resources;
 	private final Collection<UnityScript> scripts;
 
 	/**
@@ -67,6 +69,7 @@ public final class UnityProject extends GameModule {
 	public UnityProject() {
 		this.includeFiles = new ArrayList<File>();
 		this.scenes = new ArrayList<Scene>();
+		this.resources = new ArrayList<Resource>();
 		this.scripts = new ArrayList<UnityScript>();
 		this.guidsToMetaFiles = new HashMap<String, File>();
 	}
@@ -161,12 +164,25 @@ public final class UnityProject extends GameModule {
 	}
 
 	@Override
-	public List<Resource> getResourcesOfType(String type) {
+	public List<Resource> getResourcesOfType(String typeName) {
 		// TODO Add any other resources we need to load (e.g. textures) here
 		final List<Resource> resources;
 		resources = new ArrayList<Resource>();
-		if (type.equals(UnityType.SCENE.getName()))
+		if (typeName.equals(UnityType.SCENE.getName()))
 			resources.addAll(this.scenes);
+		else {
+			final UnityType type = UnityType.getTypeForName(typeName);
+			if (type.getID() == UnityType.SCRIPTEASE_TYPE) {
+				for (Scene scene : this.scenes) {
+					for (UnityResource resource : scene.getResources()) {
+						if (resource.getType() == type) {
+							resources.add(resource);
+						}
+					}
+				}
+			}
+		}
+
 		return resources;
 	}
 
@@ -253,11 +269,37 @@ public final class UnityProject extends GameModule {
 									+ "<li>Reload the project in ScriptEase.</li>"
 									+ "<li>Celebrate with laser tag.</li></ol></html>");
 
-		// TODO Load other objects in "Resources" folders.
+		this.resources.addAll(this.loadResources());
+	}
 
-		final FileFilter resourceFolderFilter = new FileFilter() {
-			private static final String RESOURCE_FOLDER_NAME = "Resources";
+	@SuppressWarnings("serial")
+	private Collection<Resource> loadResources() {
+		final String RESOURCE_FOLDER_NAME = "Resources";
 
+		final Collection<Resource> resources = new ArrayList<Resource>();
+
+		final Collection<String> imageExtensions;
+		final FileFilter resourceFolderFilter;
+		final FileFilter imageFilter;
+
+		final Collection<File> imageFiles = new ArrayList<File>();
+		final Collection<File> resourceFolders;
+
+		imageExtensions = new ArrayList<String>() {
+			{
+				this.add("psd");
+				this.add("tiff");
+				this.add("jpg");
+				this.add("tga");
+				this.add("png");
+				this.add("gif");
+				this.add("bmp");
+				this.add("iff");
+				this.add("pict");
+			}
+		};
+
+		resourceFolderFilter = new FileFilter() {
 			@Override
 			public boolean accept(File file) {
 				return file.getName().endsWith(RESOURCE_FOLDER_NAME)
@@ -265,45 +307,38 @@ public final class UnityProject extends GameModule {
 			}
 		};
 
-		final Collection<String> imageExtensions = new ArrayList<String>();
-		// PSD, TIFF, JPG, TGA, PNG, GIF, BMP, IFF, PICT
-
-		imageExtensions.add("psd");
-		imageExtensions.add("tiff");
-		imageExtensions.add("jpg");
-		imageExtensions.add("tga");
-		imageExtensions.add("png");
-		imageExtensions.add("gif");
-		imageExtensions.add("bmp");
-		imageExtensions.add("iff");
-		imageExtensions.add("pict");
-
-		final FileFilter textureFilter = new FileFilter() {
-
+		imageFilter = new FileFilter() {
 			@Override
 			public boolean accept(File file) {
-				final String extension;
+				final String ext = FileOp.getExtension(file).toLowerCase();
 
-				extension = FileOp.getExtension(file).toLowerCase();
-
-				return imageExtensions.contains(extension);
+				return imageExtensions.contains(ext);
 			}
 		};
-
-		final Collection<File> resourceFolders;
 
 		resourceFolders = FileOp.findFiles(this.projectLocation,
 				resourceFolderFilter);
 
-		final Collection<File> textureFiles = new ArrayList<File>();
-
 		for (File resourceFolder : resourceFolders) {
-			textureFiles
-					.addAll(FileOp.findFiles(resourceFolder, textureFilter));
+			imageFiles.addAll(FileOp.findFiles(resourceFolder, imageFilter));
 		}
 
-		for (File textureFile : textureFiles) {
-			System.out.println(textureFile);
+		for (File imageFile : imageFiles) {
+			// EG C:\Documents and Settings\TEMP.UOFADOCS.006\My
+			// Documents\TestSceneReDo No
+			// Scripts\Assets\Art\Resources\arrows.png
+
+			String name = FileOp.removeExtension(imageFile.getName());
+			name = name.split("\\" + RESOURCE_FOLDER_NAME + "\\")[1];
+
+			// Now we need to load these files.
+
+			final SimpleResource imageResource;
+
+			imageResource = SimpleResource.buildSimpleResource(
+					UnityType.SE_IMAGE.getName(), name);
+
+			resources.add(imageResource);
 		}
 
 		// These may be in other paths! e.g. folder/file
@@ -315,6 +350,8 @@ public final class UnityProject extends GameModule {
 		// Should show the extension on game object.
 
 		// Load .guiskin files
+
+		return resources;
 	}
 
 	@Override

@@ -4,7 +4,11 @@ package io.unityconstants;
  * A list of types. Note that not all numbers have a valid type, so they may
  * return null. A full list of types can be found at <a href=
  * "http://docs.unity3d.com/Documentation/Manual/ClassIDReference.html">the
- * Unity Manual page.</a>
+ * Unity Manual page.</a> <br>
+ * <br>
+ * Some types are ScriptEase types. The proper way of creating one is to append
+ * SE_ in front. They should not have a type number in their constructor since
+ * that is specific to Unity generated types.
  */
 public enum UnityType {
 	GAMEOBJECT(1, "GameObject"),
@@ -325,29 +329,73 @@ public enum UnityType {
 
 	PVRIMPORTER(1052, "PVRImporter"),
 
-	SUBSTANCEIMPORTER(1112, "SubstanceImporter");
+	SUBSTANCEIMPORTER(1112, "SubstanceImporter"),
+
+	SE_ANIMATIONELEMENT("AnimationElement"),
+
+	SE_IMAGE("Image");
+
+	public static final int SCRIPTEASE_TYPE = 0;
 
 	private final String name;
 	private final int id;
 
+	/**
+	 * Creates a new ScriptEase UnityType with the name. ScriptEase types have
+	 * an invalid ID number that should not be accessed.
+	 * 
+	 * @param name
+	 */
+	private UnityType(String name) {
+		this.name = name;
+		this.id = SCRIPTEASE_TYPE;
+	}
+
+	/**
+	 * Creates a new UnityType with the passed in id and name.
+	 * 
+	 * @param id
+	 * @param name
+	 */
 	private UnityType(int id, String name) {
 		this.name = name;
 		this.id = id;
 	}
 
 	/**
-	 * Returns the type that corresponds to the id.
+	 * Returns the type that corresponds to the id. Throws an
+	 * {@link IllegalArgumentException} if the type is not valid in Unity, since
+	 * type numbers are not unique for ScriptEase types.
 	 * 
 	 * @param id
 	 * @return
 	 */
 	public static UnityType getTypeForID(int id) {
+		if (id == SCRIPTEASE_TYPE)
+			throw new IllegalArgumentException(
+					"Cannot get a ScriptEase type for its id as they are not unique.");
+
 		for (UnityType type : UnityType.values()) {
 			if (type.getID() == id)
 				return type;
 		}
 
 		throw new IllegalArgumentException("No type found for id " + id);
+	}
+
+	/**
+	 * Returns the type with the name.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public static UnityType getTypeForName(String name) {
+		for (UnityType type : UnityType.values()) {
+			if (type.getName().equals(name))
+				return type;
+		}
+
+		throw new IllegalArgumentException("No type found for name " + name);
 	}
 
 	/**

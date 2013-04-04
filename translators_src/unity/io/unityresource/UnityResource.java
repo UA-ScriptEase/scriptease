@@ -207,61 +207,53 @@ public class UnityResource extends Resource {
 			Map<String, File> guidsToMetas) {
 		final List<Resource> animationChildren = new ArrayList<Resource>();
 		final List<PropertyValue> animations;
+		final String animType = UnityType.SE_ANIMATIONELEMENT.getName();
+		final String nameStart = "@";
+		final String nameEnd = "_";
 
 		animations = resource.getFirstOccuranceOfField(
 				UnityField.M_ANIMATIONS.getName()).getList();
 
-		for (PropertyValue animation : animations) {
+		for (PropertyValue animationValue : animations) {
 			final Map<String, PropertyValue> animationMap;
 			final String guid;
 			final String fileID;
 			final File metaFile;
 			final BufferedReader reader;
 
-			animationMap = animation.getMap();
+			animationMap = animationValue.getMap();
 			fileID = animationMap.get(UnityField.FILEID.getName()).getString();
 			guid = animationMap.get(UnityField.GUID.getName()).getString();
 			metaFile = guidsToMetas.get(guid);
 			try {
 				reader = new BufferedReader(new FileReader(metaFile));
 				String line;
-				final String animType = "AnimationElement";
-				final String nameStart = "@";
-				final String nameEnd = "_";
 
 				while ((line = reader.readLine()) != null) {
 					if (line.contains(fileID)) {
-						final String originalName = line.split(": ")[1];
+						String name = line.split(": ")[1];
 
-						final Resource animationChild;
-						// TODO Change this into a regex.
+						final Resource animationElement;
 
-						if (originalName.contains(nameStart)) {
+						if (name.contains(nameStart)) {
+							// TODO Change this into a regex. There may be other
+							// wacky fringe cases.
+
 							// Get the string after the @. It's now anim_222-222
-							final String splitName = originalName
-									.split(nameStart)[1];
+							name = name.split(nameStart)[1];
 
 							// The string looks like this: d@anim_222-222
-							if (splitName.contains(nameEnd)) {
+							if (name.contains(nameEnd)) {
 								// Get the string before the _. It's now just
 								// anims
-								final String name = splitName.split(nameEnd)[0];
-
-								animationChild = SimpleResource
-										.buildSimpleResource(animType, name);
-							} else
-								animationChild = SimpleResource
-										.buildSimpleResource(
-												"AnimationElement",
-												originalName);
+								name = name.split(nameEnd)[0];
+							}
 						}
 
-						else
-							animationChild = SimpleResource
-									.buildSimpleResource("AnimationElement",
-											originalName);
+						animationElement = SimpleResource.buildSimpleResource(
+								animType, name);
 
-						animationChildren.add(animationChild);
+						animationChildren.add(animationElement);
 					}
 				}
 				reader.close();
