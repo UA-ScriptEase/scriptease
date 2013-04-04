@@ -774,6 +774,18 @@
       <WidgetName>A</WidgetName>
     </Type>
     <Type>
+       <Name>Image</Name>
+      <Keyword>Image</Keyword>
+      <CodeSymbol>String</CodeSymbol>
+      <Format>
+        <Literal>&quot;</Literal>
+        <Fragment data="value"/>
+        <Literal>&quot;</Literal>
+      </Format>
+      <LegalValues>[^\&quot;]*</LegalValues>
+      <WidgetName>Im</WidgetName>
+    </Type>
+    <Type>
       <Name>MonoImporter</Name>
       <Keyword>MonoImporter</Keyword>
       <CodeSymbol>MonoImporter</CodeSymbol>
