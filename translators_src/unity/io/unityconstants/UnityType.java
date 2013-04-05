@@ -365,7 +365,7 @@ public enum UnityType {
 	/**
 	 * Returns the type that corresponds to the id. Throws an
 	 * {@link IllegalArgumentException} if the type is not valid in Unity, since
-	 * type numbers are not unique for ScriptEase types.
+	 * type numbers are not unique for ScriptEase types. Returns null if no type found.
 	 * 
 	 * @param id
 	 * @return
@@ -380,11 +380,11 @@ public enum UnityType {
 				return type;
 		}
 
-		throw new IllegalArgumentException("No type found for id " + id);
+		return null;
 	}
 
 	/**
-	 * Returns the type with the name.
+	 * Returns the type with the name. Returns null if no type found.
 	 * 
 	 * @param name
 	 * @return
@@ -395,7 +395,7 @@ public enum UnityType {
 				return type;
 		}
 
-		throw new IllegalArgumentException("No type found for name " + name);
+		return null;
 	}
 
 	/**

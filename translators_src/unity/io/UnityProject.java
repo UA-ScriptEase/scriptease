@@ -171,15 +171,9 @@ public final class UnityProject extends GameModule {
 		if (typeName.equals(UnityType.SCENE.getName()))
 			resources.addAll(this.scenes);
 		else {
-			final UnityType type = UnityType.getTypeForName(typeName);
-			if (type.getID() == UnityType.SCRIPTEASE_TYPE) {
-				for (Scene scene : this.scenes) {
-					for (UnityResource resource : scene.getResources()) {
-						if (resource.getType() == type) {
-							resources.add(resource);
-						}
-					}
-				}
+			for (Resource resource : this.resources) {
+				if (resource.getTypes().contains(typeName))
+					resources.add(resource);
 			}
 		}
 
@@ -324,12 +318,9 @@ public final class UnityProject extends GameModule {
 		}
 
 		for (File imageFile : imageFiles) {
-			// EG C:\Documents and Settings\TEMP.UOFADOCS.006\My
-			// Documents\TestSceneReDo No
-			// Scripts\Assets\Art\Resources\arrows.png
-
-			String name = FileOp.removeExtension(imageFile.getName());
-			name = name.split("\\" + RESOURCE_FOLDER_NAME + "\\")[1];
+			String name = FileOp.removeExtension(imageFile.getAbsolutePath());
+			// Since split takes a regex, we need to escape \ twice
+			name = name.split("\\\\" + RESOURCE_FOLDER_NAME + "\\\\")[1];
 
 			// Now we need to load these files.
 
