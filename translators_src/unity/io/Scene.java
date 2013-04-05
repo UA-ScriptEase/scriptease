@@ -206,7 +206,48 @@ public class Scene extends Resource {
 			}
 		}
 
+		// Create a ScriptEase object if none exists
+		if (this.scriptEaseObject == null) {
+			final int gameObjectID = this.getNextEmptyID();
+			final int transformID = gameObjectID + 1;
+
+			final UnityResource seGameObject;
+			final UnityResource seGameObjectTransform;
+
+			seGameObject = UnityResourceFactory.getInstance()
+					.buildEmptyGameObject(transformID, SCRIPTEASE_OBJECT_NAME,
+							gameObjectID);
+			seGameObjectTransform = UnityResourceFactory.getInstance()
+					.buildTransformObject(gameObjectID, transformID);
+
+			this.unityResources.add(seGameObject);
+			this.unityResources.add(seGameObjectTransform);
+
+			this.scriptEaseObject = seGameObject;
+		}
+
+		// Initialize the owners. Needs to be done after all resources loaded
+		for (UnityResource resource : this.unityResources) {
+			resource.initializeOwner(this);
+		}
+
+		// Likewise for children.
+		for (UnityResource resource : this.unityResources) {
+			resource.initializeChildren(this, guidsToMetaFiles);
+		}
+
+		// Initialize the scene's visible children resources.
+		for (UnityResource resource : this.unityResources) {
+			if (resource.getOwner() == this
+					&& resource.getType() == UnityType.GAMEOBJECT
+					&& resource != this.scriptEaseObject) {
+				this.visibleChildren.add(resource);
+			}
+		}
+
 		// Remove all previous ScriptEase generated script references
+		// We need to do this after initializing the owners because we have to
+		// find the owner of the MonoBehaviour objects.
 		for (UnityResource object : objectsToRemove) {
 			this.unityResources.remove(object);
 
@@ -256,45 +297,6 @@ public class Scene extends Resource {
 				if (mComponentToRemove != null) {
 					mComponentList.remove(mComponentToRemove);
 				}
-			}
-		}
-
-		// Create a ScriptEase object if none exists
-		if (this.scriptEaseObject == null) {
-			final int gameObjectID = this.getNextEmptyID();
-			final int transformID = gameObjectID + 1;
-
-			final UnityResource seGameObject;
-			final UnityResource seGameObjectTransform;
-
-			seGameObject = UnityResourceFactory.getInstance()
-					.buildEmptyGameObject(transformID, SCRIPTEASE_OBJECT_NAME,
-							gameObjectID);
-			seGameObjectTransform = UnityResourceFactory.getInstance()
-					.buildTransformObject(gameObjectID, transformID);
-
-			this.unityResources.add(seGameObject);
-			this.unityResources.add(seGameObjectTransform);
-
-			this.scriptEaseObject = seGameObject;
-		}
-
-		// Initialize the owners. Needs to be done after all resources loaded
-		for (UnityResource resource : this.unityResources) {
-			resource.initializeOwner(this);
-		}
-
-		// Likewise for children.
-		for (UnityResource resource : this.unityResources) {
-			resource.initializeChildren(this, guidsToMetaFiles);
-		}
-
-		// Initialize the scene's visible children resources.
-		for (UnityResource resource : this.unityResources) {
-			if (resource.getOwner() == this
-					&& resource.getType() == UnityType.GAMEOBJECT
-					&& resource != this.scriptEaseObject) {
-				this.visibleChildren.add(resource);
 			}
 		}
 
