@@ -14,7 +14,7 @@ import scriptease.model.StoryComponent;
  * @author mfchurch
  * 
  */
-public  class StoryComponentContext extends Context {
+public class StoryComponentContext extends Context {
 	private final StoryComponent component;
 
 	/**

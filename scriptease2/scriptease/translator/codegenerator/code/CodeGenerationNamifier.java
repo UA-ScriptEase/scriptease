@@ -26,7 +26,7 @@ import scriptease.util.StringOp;
  */
 public class CodeGenerationNamifier {
 	private static final String defaultPattern = "^[a-zA-Z]+[0-9a-zA-Z_]*";
-	private static final int ARBITRARY_STOP_SIZE = 10000;
+	private static final int UNIQUIFY_LIMIT = 10000;
 
 	private final LanguageDictionary languageDictionary;
 	private final Map<StoryComponent, String> componentsToNames;
@@ -70,18 +70,17 @@ public class CodeGenerationNamifier {
 	 * @return true if name is unique in scope
 	 */
 	private boolean isNameUnique(String name, StoryComponent component) {
-		if (!this.languageDictionary.isReservedWord(name)) {
-			for (Entry<StoryComponent, String> entry : this.componentsToNames
-					.entrySet()) {
-				if (entry.getValue().equals(name)
-						&& entry.getKey() != (component)) {
-					return false;
-				}
-			}
+		if (this.languageDictionary.isReservedWord(name))
+			return false;
 
-			return true;
+		for (Entry<StoryComponent, String> entry : this.componentsToNames
+				.entrySet()) {
+			if (entry.getValue().equals(name) && entry.getKey() != (component)) {
+				return false;
+			}
 		}
-		return false;
+
+		return true;
 	}
 
 	/**
@@ -94,28 +93,25 @@ public class CodeGenerationNamifier {
 	 */
 	private String buildLegalName(StoryComponent component, Pattern legalFormat) {
 		final String displayText = component.getDisplayText();
-		int counter = 0;
 		String name;
 
 		name = StringOp.removeIllegalCharacters(displayText, legalFormat, true);
 
 		name = StringOp.removeNonCharPrefix(name);
 
-		while (!this.isNameUnique(name, component)
-				&& counter < ARBITRARY_STOP_SIZE) {
+		int counter = 0;
+		while (!this.isNameUnique(name, component) && counter < UNIQUIFY_LIMIT) {
 			// tack on a counter to the end of the name,
 			name = displayText + "_" + Integer.toString(counter++, 36);
 
 			name = StringOp.removeIllegalCharacters(name, legalFormat, true);
 		}
 
-		if (counter >= ARBITRARY_STOP_SIZE) {
+		if (counter >= UNIQUIFY_LIMIT)
 			// We can't uniquify with letters either. Give up. And cry.
 			throw new IndexOutOfBoundsException("The name " + name
 					+ " already exists, and could not be uniquified"
-					+ " given the naming rules in the current translator. "
-					+ "Please choose a different name.");
-		}
+					+ " given the naming rules in the current translator.");
 
 		return name;
 	}
@@ -139,7 +135,7 @@ public class CodeGenerationNamifier {
 		 * This obviously represents a larger issue with how code is generated,
 		 * and should be looked into.
 		 */
-		if (component instanceof KnowIt && !this.componentsToNames.isEmpty()) {
+		if (component instanceof KnowIt) {
 			final KnowItBinding binding = ((KnowIt) component).getBinding();
 
 			if (binding instanceof KnowItBindingFunction
