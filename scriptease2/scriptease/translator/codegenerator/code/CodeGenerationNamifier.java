@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
@@ -29,22 +28,13 @@ public class CodeGenerationNamifier {
 	private static final String defaultPattern = "^[a-zA-Z]+[0-9a-zA-Z_]*";
 	private static final int ARBITRARY_STOP_SIZE = 10000;
 
-	private final CodeGenerationNamifier parentNamifier;
 	private final LanguageDictionary languageDictionary;
 	private final Map<StoryComponent, String> componentsToNames;
-	private final Map<CodeBlock, String> codeBlocksToNames;
 
 	public CodeGenerationNamifier(LanguageDictionary languageDictionary) {
-		this(null, languageDictionary);
-	}
-
-	public CodeGenerationNamifier(CodeGenerationNamifier existingNames,
-			LanguageDictionary languageDictionary) {
-		this.parentNamifier = existingNames;
 		this.languageDictionary = languageDictionary;
 
 		this.componentsToNames = new HashMap<StoryComponent, String>();
-		this.codeBlocksToNames = new HashMap<CodeBlock, String>();
 	}
 
 	/**
@@ -58,38 +48,15 @@ public class CodeGenerationNamifier {
 	 * @return a code-safe, unique string for the given StoryComponent
 	 */
 	public String getUniqueName(StoryComponent component, Pattern legalFormat) {
-		String currentName = "";
-
 		if (legalFormat == null || legalFormat.pattern().isEmpty())
 			legalFormat = Pattern.compile(defaultPattern);
 
-		currentName = this.getGeneratedNameFor(component);
+		String currentName = this.getGeneratedNameFor(component);
 
 		if (currentName == null || currentName.isEmpty()) {
-			if (component instanceof CodeBlock) {
-				currentName = this.buildLegalName(component.getOwner(),
-						legalFormat);
-			} else {
-				currentName = this.buildLegalName(component, legalFormat);
-			}
+			currentName = this.buildLegalName(component, legalFormat);
 
-			// Propagate the name to the parents.
-			CodeGenerationNamifier ownerNamifier = this;
-			StoryComponent owner = component;
-
-			while (owner != null && ownerNamifier != null) {
-				// Propogate one level regardless of owner type.
-				if (component instanceof CodeBlock) {
-					ownerNamifier.codeBlocksToNames.put((CodeBlock) component,
-							currentName);
-					ownerNamifier.componentsToNames.put(component, currentName);
-				} else {
-					ownerNamifier.componentsToNames.put(component, currentName);
-					owner = owner.getOwner();
-				}
-
-				ownerNamifier = ownerNamifier.parentNamifier;
-			}
+			this.componentsToNames.put(component, currentName);
 		}
 
 		return currentName;
@@ -103,32 +70,18 @@ public class CodeGenerationNamifier {
 	 * @return true if name is unique in scope
 	 */
 	private boolean isNameUnique(String name, StoryComponent component) {
-		boolean isUnique = !this.languageDictionary.isReservedWord(name);
-
-		if (isUnique)
+		if (!this.languageDictionary.isReservedWord(name)) {
 			for (Entry<StoryComponent, String> entry : this.componentsToNames
 					.entrySet()) {
 				if (entry.getValue().equals(name)
-						&& !entry.getKey().equals(component)) {
-					isUnique = false;
-					break;
+						&& entry.getKey() != (component)) {
+					return false;
 				}
 			}
 
-		if (isUnique)
-			for (Entry<CodeBlock, String> entry : this.codeBlocksToNames
-					.entrySet()) {
-				if (entry.getValue().equals(name)
-						&& !entry.getKey().equals(component)) {
-					isUnique = false;
-					break;
-				}
-			}
-
-		if (isUnique && this.parentNamifier != null)
-			isUnique = this.parentNamifier.isNameUnique(name, component);
-
-		return isUnique;
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -175,51 +128,39 @@ public class CodeGenerationNamifier {
 	 * @return
 	 */
 	private String getGeneratedNameFor(StoryComponent component) {
-		String name = "";
-		if (component instanceof CodeBlock) {
-			name = this.codeBlocksToNames.get((CodeBlock) component);
-		} else {
-			name = this.componentsToNames.get(component);
+		/*
+		 * Hack for Implicits:
+		 * 
+		 * If we add implicits to two identical causes, the second one will have
+		 * it's name changed even though it should reference the same code. All
+		 * implicits should have the same variable name since we're not defining
+		 * them every time.
+		 * 
+		 * This obviously represents a larger issue with how code is generated,
+		 * and should be looked into.
+		 */
+		if (component instanceof KnowIt && !this.componentsToNames.isEmpty()) {
+			final KnowItBinding binding = ((KnowIt) component).getBinding();
 
-			/*
-			 * This lovely hack is in here for one reason:
-			 * 
-			 * If we add implicits to two identical causes, the second one will
-			 * have it's name changed even though it should reference the same
-			 * code. All implicits should have the same variable name since
-			 * we're not defining them every time.
-			 * 
-			 * This obviously represents a larger issue with how code is
-			 * generated, and should be looked into.
-			 */
-			if (component instanceof KnowIt
-					&& !this.componentsToNames.isEmpty()) {
-				final KnowItBinding binding = ((KnowIt) component).getBinding();
+			if (binding instanceof KnowItBindingFunction
+					&& ((ScriptIt) binding.getValue()).getCause()
+							.getImplicits().contains(component)) {
 
-				if (binding instanceof KnowItBindingFunction
-						&& ((ScriptIt) binding.getValue()).getCause()
-								.getImplicits().contains(component)) {
-
-					for (Entry<StoryComponent, String> entry : this.componentsToNames
-							.entrySet()) {
-						if (entry.getKey().equals(component)) {
-							name = entry.getValue();
-							break;
-						}
+				for (Entry<StoryComponent, String> entry : this.componentsToNames
+						.entrySet()) {
+					if (entry.getKey().equals(component)) {
+						return entry.getValue();
 					}
 				}
 			}
 		}
-		if (name != null)
-			return name;
 
-		return this.parentNamifier != null ? this.parentNamifier
-				.getGeneratedNameFor(component) : null;
+		return this.componentsToNames.get(component);
 	}
 
 	@Override
 	public String toString() {
-		return "CodeGenerationNamifier [" + this.codeBlocksToNames.values()
-				+ ", " + this.componentsToNames.values() + "]";
+		return "CodeGenerationNamifier [" + this.componentsToNames.values()
+				+ "]";
 	}
 }

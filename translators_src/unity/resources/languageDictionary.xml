@@ -222,7 +222,7 @@
 			<Line>
 				<Literal>// Variables Declaration</Literal>
 			</Line>
-			<Series data="variables" unique="true">
+			<Series data="variables">
 				<FormatRef ref="variableDeclaration" />
 			</Series>
 			<Line />
@@ -241,7 +241,7 @@
 			<Line>
 				<Literal>// Variables Definition</Literal>
 			</Line>
-			<Series data="variables" unique="true">
+			<Series data="variables">
 				<FormatRef ref="variableDefinition" />
 			</Series>
 			<Line />
@@ -506,12 +506,7 @@
 						<Literal>) {</Literal>
 					</Line>
 					<Indent>
-						<Line>
-							<Literal>//Variable Declarations</Literal>
-						</Line>
-						<Series data="variables" unique="true">
-							<FormatRef ref="variableDeclaration" />
-						</Series>
+						<FormatRef ref="variablesDeclaration" />
 						<Line>
 							<Literal>//Function Calls</Literal>
 						</Line>
@@ -543,12 +538,7 @@
 					<Literal>) {</Literal>
 				</Line>
 				<Indent>
-					<Line>
-						<Literal>//Variable Declarations</Literal>
-					</Line>
-					<Series data="variables" unique="true">
-						<FormatRef ref="variableDeclaration" />
-					</Series>
+					<FormatRef ref="variablesDeclaration" />
 					<Line>
 						<Literal>//Function Calls</Literal>
 					</Line>
