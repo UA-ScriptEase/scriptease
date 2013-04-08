@@ -2,13 +2,15 @@ package scriptease.translator.codegenerator.code.fragments;
 
 import java.util.List;
 
+import scriptease.controller.StoryAdapter;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
+import scriptease.model.complex.AskIt;
+import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.ScriptIt;
 import scriptease.translator.codegenerator.CharacterRange;
 import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.FormatReferenceType;
-import scriptease.translator.codegenerator.code.contexts.AskItContext;
 import scriptease.translator.codegenerator.code.contexts.Context;
-import scriptease.translator.codegenerator.code.contexts.ControlItContext;
-import scriptease.translator.codegenerator.code.contexts.KnowItContext;
-import scriptease.translator.codegenerator.code.contexts.ScriptItContext;
 import scriptease.translator.codegenerator.code.contexts.StoryComponentContext;
 
 /**
@@ -16,6 +18,7 @@ import scriptease.translator.codegenerator.code.contexts.StoryComponentContext;
  * to be inserted.
  * 
  * @author remiller
+ * @author kschenk
  */
 public class FormatReferenceFragment extends AbstractFragment {
 	private final FormatReferenceType type;
@@ -41,41 +44,15 @@ public class FormatReferenceFragment extends AbstractFragment {
 	}
 
 	/**
-	 * Checks if the context is of the same type.
-	 * 
-	 * @param context
-	 * @return
-	 */
-	private boolean typeMatchesContext(Context context) {
-		switch (this.type) {
-		case NONE:
-			return true;
-		case ASKIT:
-			return context instanceof AskItContext;
-		case SCRIPTIT:
-			return context instanceof ScriptItContext
-					&& !(context instanceof ControlItContext);
-		case KNOWIT:
-			return context instanceof KnowItContext;
-		case NOTE:
-			return context instanceof StoryComponentContext;
-		case CONTROLIT:
-			return context instanceof ControlItContext;
-		default:
-			throw new IllegalStateException(this + " has " + this.type
-					+ " type, which is unsupported.");
-		}
-	}
-
-	/**
 	 * Retrieves the format that this fragment represents and forwards the call
 	 * to it.
 	 */
 	@Override
 	public String resolve(Context context) {
 		final String formatID = this.getDirectiveText().toUpperCase();
+		final TypeChecker typeChecker = new TypeChecker(context);
 
-		if (this.typeMatchesContext(context)) {
+		if (typeChecker.getResult()) {
 			final List<AbstractFragment> format;
 
 			format = context.getTranslator().getLanguageDictionary()
@@ -91,5 +68,52 @@ public class FormatReferenceFragment extends AbstractFragment {
 	@Override
 	public String toString() {
 		return this.getDirectiveText();
+	}
+
+	/**
+	 * Checks if the context is of the same type.
+	 */
+	private class TypeChecker extends StoryAdapter {
+		private boolean typeMatches;
+		private FormatReferenceType type;
+
+		private TypeChecker(Context context) {
+			this.type = FormatReferenceFragment.this.type;
+			this.typeMatches = this.type == FormatReferenceType.NONE;
+
+			if (!this.typeMatches && context instanceof StoryComponentContext) {
+				((StoryComponentContext) context).getComponent().process(this);
+			}
+
+		}
+
+		@Override
+		public void processAskIt(AskIt questionIt) {
+			this.typeMatches = this.type == FormatReferenceType.ASKIT;
+		}
+
+		@Override
+		public void processNote(Note note) {
+			this.typeMatches = this.type == FormatReferenceType.NOTE;
+		}
+
+		@Override
+		public void processControlIt(ControlIt controlIt) {
+			this.typeMatches = this.type == FormatReferenceType.CONTROLIT;
+		}
+
+		@Override
+		public void processScriptIt(ScriptIt scriptIt) {
+			this.typeMatches = this.type == FormatReferenceType.SCRIPTIT;
+		}
+
+		@Override
+		public void processKnowIt(KnowIt knowIt) {
+			this.typeMatches = this.type == FormatReferenceType.KNOWIT;
+		}
+
+		private boolean getResult() {
+			return this.typeMatches;
+		}
 	}
 }

@@ -67,7 +67,7 @@ public class AskItContext extends StoryComponentContext {
 	}
 
 	@Override
-	protected AskIt getComponent() {
+	public AskIt getComponent() {
 		return (AskIt) super.getComponent();
 	}
 }

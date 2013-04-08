@@ -84,7 +84,7 @@ public  class StoryComponentContext extends Context {
 	 * 
 	 * @return
 	 */
-	protected StoryComponent getComponent() {
+	public StoryComponent getComponent() {
 		return this.component;
 	}
 }

@@ -248,7 +248,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	}
 
 	@Override
-	protected ScriptIt getComponent() {
+	public ScriptIt getComponent() {
 		return (ScriptIt) super.getComponent();
 	}
 

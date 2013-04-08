@@ -140,7 +140,7 @@ public class KnowItContext extends StoryComponentContext {
 	}
 
 	@Override
-	protected KnowIt getComponent() {
+	public KnowIt getComponent() {
 		return (KnowIt) super.getComponent();
 	}
 }

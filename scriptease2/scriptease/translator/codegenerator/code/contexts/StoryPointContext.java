@@ -97,7 +97,7 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 	}
 
 	@Override
-	protected StoryPoint getComponent() {
+	public StoryPoint getComponent() {
 		return (StoryPoint) super.getComponent();
 	}
 }
