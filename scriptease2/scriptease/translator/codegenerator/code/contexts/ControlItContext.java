@@ -64,7 +64,7 @@ public class ControlItContext extends ScriptItContext {
 	}
 
 	@Override
-	protected ControlIt getComponent() {
+	public ControlIt getComponent() {
 		return (ControlIt) super.getComponent();
 	}
 }

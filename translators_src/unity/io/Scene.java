@@ -245,9 +245,9 @@ public class Scene extends Resource {
 			}
 		}
 
-		// Remove all previous ScriptEase generated script references
-		// We need to do this after initializing the owners because we have to
-		// find the owner of the MonoBehaviour objects.
+		// Remove all previous ScriptEase generated script references.
+		// We do this after initializing the owners because we have to find the
+		// owner of the MonoBehaviour objects.
 		for (UnityResource object : objectsToRemove) {
 			this.unityResources.remove(object);
 

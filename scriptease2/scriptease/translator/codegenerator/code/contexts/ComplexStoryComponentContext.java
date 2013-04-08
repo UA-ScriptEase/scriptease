@@ -70,7 +70,7 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	}
 
 	@Override
-	protected ComplexStoryComponent getComponent() {
+	public ComplexStoryComponent getComponent() {
 		return (ComplexStoryComponent) super.getComponent();
 	}
 }
