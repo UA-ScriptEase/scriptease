@@ -47,7 +47,7 @@ public abstract class Context {
 	private String indent = "";
 	private final StoryPoint model;
 	protected final Translator translator;
-	private CodeGenerationNamifier namifier;
+	private final CodeGenerationNamifier namifier;
 	protected LocationInformation locationInfo;
 
 	private static final String UNIMPLEMENTED = "<unimplemented in context>";
@@ -59,8 +59,7 @@ public abstract class Context {
 		this.indent = indent;
 
 		this.model = model;
-		this.setNamifier(new CodeGenerationNamifier(existingNames, translator
-				.getLanguageDictionary()));
+		this.namifier = existingNames;
 	}
 
 	/**
@@ -91,10 +90,6 @@ public abstract class Context {
 	 */
 	public final StoryPoint getStartStoryPoint() {
 		return this.model;
-	}
-
-	protected final void setNamifier(CodeGenerationNamifier namifier) {
-		this.namifier = namifier;
 	}
 
 	public final CodeGenerationNamifier getNamifier() {
