@@ -2,8 +2,8 @@ package io.unityresource;
 
 import io.Scene;
 import io.UnityProject;
-import io.unityconstants.UnityField;
-import io.unityconstants.UnityType;
+import io.constants.UnityField;
+import io.constants.UnityType;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,7 +1,7 @@
 package io;
 
-import io.unityconstants.UnityField;
-import io.unityconstants.UnityType;
+import io.constants.UnityField;
+import io.constants.UnityType;
 import io.unityresource.UnityResource;
 
 import java.io.BufferedReader;
