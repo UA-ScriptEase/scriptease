@@ -217,6 +217,18 @@ public class CodeBlockContext extends Context {
 	}
 
 	@Override
+	public StoryItemSequence getAlwaysChild() {
+		ScriptIt cause = this.codeBlock.getCause();
+		if (cause != null)
+			return cause.getAlwaysBlock();
+		else
+			throw new CodeGenerationException(
+					"Attempted to get Story Point Inactive Block for a "
+							+ "CodeBlock without a Cause: " + this.codeBlock);
+
+	}
+
+	@Override
 	public KnowIt getSlotParameter(String keyword) {
 		final ScriptIt cause = this.codeBlock.getCause();
 		final EventSlotManager manager;

@@ -205,6 +205,11 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 		return this.getComponent().getInactiveBlock();
 	}
 
+	@Override
+	public StoryItemSequence getAlwaysChild() {
+		return this.getComponent().getAlwaysBlock();
+	}
+
 	/**
 	 * Returns all of the parameters in the slot.
 	 * 

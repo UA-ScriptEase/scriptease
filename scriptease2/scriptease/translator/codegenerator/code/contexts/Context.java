@@ -255,6 +255,11 @@ public abstract class Context {
 		return null;
 	}
 
+	public StoryItemSequence getAlwaysChild() {
+		unimplemented("getAlwaysChild");
+		return null;
+	}
+
 	public Collection<KnowIt> getImplicits() {
 		unimplemented("getImplicits");
 		return null;

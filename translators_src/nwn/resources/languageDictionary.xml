@@ -298,6 +298,11 @@
 				<Line>
 					<Literal>}</Literal>
 				</Line>
+				<Line>
+					<Scope data="alwaysChild">
+						<FormatRef ref="childrenWithoutImplicits" />
+					</Scope>
+				</Line>
 			</Series>
 		</Format>
 
@@ -343,9 +348,7 @@
 					<Literal>//Variable Declarations</Literal>
 				</Line>
 				<Series data="causes" unique="true">
-					<Series data="variables" unique="true">
-						<FormatRef ref="variableDeclaration" />
-					</Series>
+					<FormatRef ref="variablesDeclaration" />
 				</Series>
 				<Line>
 					<Literal>//Function Calls</Literal>
