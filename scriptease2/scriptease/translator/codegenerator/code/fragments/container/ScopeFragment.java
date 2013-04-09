@@ -137,6 +137,10 @@ public class ScopeFragment extends AbstractContainerFragment {
 						.name()))
 			return context.getInactiveChild();
 		else if (dataLabel
+				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.ALWAYSCHILD
+						.name()))
+			return context.getAlwaysChild();
+		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationKeywordConstants.ScopeTypes.CAUSE
 						.name()))
 			return context.getCause();

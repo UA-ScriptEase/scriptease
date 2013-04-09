@@ -455,6 +455,12 @@
 			<Line> 
 				<Literal>}</Literal> 
 			</Line>
+			<Line />
+			<Line>
+				<Scope data="alwaysChild">
+					<FormatRef ref="childrenWithoutImplicits" />
+				</Scope>
+			</Line>
 			</Series>
 		</Format>
 

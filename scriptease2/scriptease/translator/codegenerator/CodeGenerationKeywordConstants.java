@@ -23,6 +23,7 @@ public interface CodeGenerationKeywordConstants {
 	// Used in ScopeFragment.
 	public static enum ScopeTypes {
 		ACTIVECHILD,
+		ALWAYSCHILD,
 		ARGUMENT,
 		ASKIT,
 		BINDING,
