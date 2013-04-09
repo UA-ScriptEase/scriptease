@@ -1,4 +1,4 @@
-package io.unityconstants;
+package io.constants;
 
 /**
  * Enumerations of possible fields in Unity. Use {@link #getName()} to get the
