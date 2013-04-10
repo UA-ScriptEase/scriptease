@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import scriptease.controller.observer.ObserverManager;
-import scriptease.controller.observer.PatternModelEvent;
+import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.library.LibraryEvent;
@@ -83,8 +83,8 @@ public class LibraryManager implements LibraryObserver {
 			 * translator, removes the translator from loadedTranslators.
 			 */
 			@Override
-			public void modelChanged(PatternModelEvent event) {
-				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED)
+			public void modelChanged(SEModelEvent event) {
+				if (event.getEventType() == SEModelEvent.Type.REMOVED)
 					for (Translator translator : LibraryManager.this.loadedTranslators
 							.keySet()) {
 						if (!SEModelManager.getInstance().usingTranslator(

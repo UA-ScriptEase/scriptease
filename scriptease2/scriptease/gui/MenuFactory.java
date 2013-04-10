@@ -22,7 +22,6 @@ import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
-import scriptease.controller.undo.UndoManager;
 import scriptease.gui.action.components.CopyAction;
 import scriptease.gui.action.components.CutAction;
 import scriptease.gui.action.components.DeleteAction;
@@ -41,6 +40,7 @@ import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.gui.pane.PanelFactory;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
@@ -417,8 +417,8 @@ public class MenuFactory {
 					@Override
 					public void run() {
 						// Get the active model with which to generate code.
-						SEModel activeModel = SEModelManager
-								.getInstance().getActiveModel();
+						SEModel activeModel = SEModelManager.getInstance()
+								.getActiveModel();
 						if (activeModel != null
 								&& activeModel instanceof StoryModel) {
 							final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
@@ -452,7 +452,6 @@ public class MenuFactory {
 		consoleOutputItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				UndoManager.getInstance().clear();
 			}
 		});
 

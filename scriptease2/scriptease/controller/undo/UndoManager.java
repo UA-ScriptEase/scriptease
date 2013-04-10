@@ -7,7 +7,7 @@ import java.util.List;
 import scriptease.controller.FileManager;
 import scriptease.controller.observer.FileManagerObserver;
 import scriptease.controller.observer.ObserverManager;
-import scriptease.controller.observer.PatternModelEvent;
+import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.UndoManagerObserver;
 import scriptease.gui.StatusManager;
@@ -76,14 +76,14 @@ public final class UndoManager {
 
 		modelObserver = new SEModelObserver() {
 			@Override
-			public void modelChanged(PatternModelEvent event) {
-				final short eventType = event.getEventType();
+			public void modelChanged(SEModelEvent event) {
+				final SEModelEvent.Type eventType = event.getEventType();
 				final SEModel model = event.getPatternModel();
 
 				// Keep an up-to-date mapping of open models to their histories
-				if (eventType == PatternModelEvent.PATTERN_MODEL_ADDED) {
+				if (eventType == SEModelEvent.Type.ADDED) {
 					UndoManager.this.storyHistories.add(new History(model));
-				} else if (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED) {
+				} else if (eventType == SEModelEvent.Type.REMOVED) {
 					History removed = UndoManager.this
 							.findHistoryForModel(model);
 
@@ -100,7 +100,7 @@ public final class UndoManager {
 								&& (removed.undoStack.peek() == UndoManager.this.unfinishedCommand))
 							UndoManager.this.unfinishedCommand = null;
 					}
-				} else if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
+				} else if (eventType == SEModelEvent.Type.ACTIVATED) {
 					UndoManager.this.setActiveHistory(model);
 				}
 			}

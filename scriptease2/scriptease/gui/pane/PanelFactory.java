@@ -1,14 +1,10 @@
-package scriptease.gui;
+package scriptease.gui.pane;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,40 +12,35 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import scriptease.ScriptEase;
-import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
-import scriptease.controller.observer.PatternModelEvent;
+import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.StatusObserver;
 import scriptease.controller.observer.TranslatorObserver;
-import scriptease.controller.observer.UndoManagerObserver;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.controller.undo.UndoManager;
+import scriptease.gui.ComponentFactory;
+import scriptease.gui.StatusManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
@@ -59,9 +50,6 @@ import scriptease.gui.filters.CategoryFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
-import scriptease.gui.pane.CloseableModelTab;
-import scriptease.gui.pane.LibraryPanel;
-import scriptease.gui.pane.ResourcePanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -73,8 +61,6 @@ import scriptease.model.StoryModel;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
-import scriptease.util.BiHashMap;
-import scriptease.util.GUIOp;
 
 /**
  * A factory class for different panels. All major panel construction should go
@@ -86,15 +72,6 @@ import scriptease.util.GUIOp;
 public final class PanelFactory {
 	private static PanelFactory instance = new PanelFactory();
 
-	// We keep one common library panel so we do not have to load it each time.
-	private final LibraryPanel libraryPanel;
-
-	// The tabbed pane for all of the models
-	private final JTabbedPane modelTabs;
-
-	// A mapping of models to components represented by the models
-	private final BiHashMap<SEModel, List<JComponent>> modelsToComponents;
-
 	/**
 	 * Gets the instance of PanelFactory.
 	 * 
@@ -105,27 +82,6 @@ public final class PanelFactory {
 	}
 
 	private PanelFactory() {
-		this.libraryPanel = new LibraryPanel();
-		this.modelTabs = new JTabbedPane();
-		this.modelsToComponents = new BiHashMap<SEModel, List<JComponent>>();
-
-		// Register a change listener
-		this.modelTabs.addChangeListener(new ChangeListener() {
-			// This method is called whenever the selected tab changes
-			public void stateChanged(ChangeEvent evt) {
-				final JComponent tab;
-
-				JTabbedPane pane = (JTabbedPane) evt.getSource();
-				// Get the activated frame
-				tab = (JComponent) pane.getSelectedComponent();
-
-				if (tab != null) {
-					SEModel model = PanelFactory.getInstance()
-							.getModelForComponent(tab);
-					SEModelManager.getInstance().activate(model);
-				}
-			}
-		});
 	}
 
 	/**
@@ -196,13 +152,10 @@ public final class PanelFactory {
 		}
 
 		// Put the new pane to the map
-		List<JComponent> panes;
-		panes = this.modelsToComponents.getValue(model);
-		if (panes == null) {
-			panes = new ArrayList<JComponent>();
-		}
-		panes.add(storyPanel);
-		this.modelsToComponents.put(model, panes);
+
+		// TODO This ugly.
+		ModelTabPanel.getInstance().getModelsToComponents()
+				.put(model, storyPanel);
 
 		// Set up the Story Graph
 		storyGraph.addSEGraphObserver(new SEGraphAdapter<StoryPoint>() {
@@ -285,6 +238,14 @@ public final class PanelFactory {
 		return storyPanel;
 	}
 
+	public ModelTabPanel buildModelTabPanel() {
+		return ModelTabPanel.getInstance();
+	}
+
+	public void createTabForModel(SEModel model) {
+		ModelTabPanel.getInstance().createTabForModel(model);
+	}
+
 	/**
 	 * Builds a panel for a LibraryModel. This panel allows one to edit the
 	 * Library.
@@ -296,81 +257,16 @@ public final class PanelFactory {
 		final JPanel scbPanel;
 		final JScrollPane scbScrollPane;
 
-		List<JComponent> components;
-
-		components = this.modelsToComponents.getValue(model);
+		// TODO This seems weird
 		scbPanel = LibraryEditorPanelFactory.getInstance()
-				.buildLibraryEditorPanel(this.libraryPanel);
+				.buildLibraryEditorPanel(LibraryPanel.getInstance());
 		scbScrollPane = new JScrollPane(scbPanel);
 
-		if (components == null) {
-			components = new ArrayList<JComponent>();
-			this.modelsToComponents.put(model, components);
-		}
-		components.add(scbScrollPane);
+		ModelTabPanel.getInstance().getModelsToComponents()
+				.put(model, scbScrollPane);
 		SEModelManager.getInstance().add(model);
 
 		return scbScrollPane;
-	}
-
-	/**
-	 * Returns the model represented by the passed in component.
-	 * 
-	 * @param modelComponent
-	 * @return
-	 */
-	public SEModel getModelForComponent(JComponent modelComponent) {
-		for (List<JComponent> jComponentList : this.modelsToComponents
-				.getValues())
-			if (jComponentList.contains(modelComponent))
-				return this.modelsToComponents.getKey(jComponentList);
-
-		throw new IllegalStateException(
-				"Encountered null model when attempting to get model for "
-						+ modelComponent.getName());
-	}
-
-	/**
-	 * Gets the collection of panes that are currently displaying the given
-	 * model. Cannot be null.
-	 * 
-	 * @param model
-	 * @return
-	 */
-	public List<JComponent> getComponentsForModel(SEModel model) {
-		final List<JComponent> panels = this.modelsToComponents.getValue(model);
-
-		if (panels == null) {
-			return new ArrayList<JComponent>();
-		}
-
-		return panels;
-	}
-
-	/**
-	 * Removes the given component from the list of the component's associated
-	 * with the given model.
-	 * 
-	 * @param model
-	 * @param component
-	 */
-	public void removeComponentForModel(SEModel model, JComponent component) {
-		final List<JComponent> components = new ArrayList<JComponent>();
-
-		if (this.modelsToComponents.getValue(model) == null)
-			throw new IllegalStateException(
-					"Encountered null list of model display panels "
-							+ "when attempting to remove panels for "
-							+ model.getName());
-
-		components.addAll(this.modelsToComponents.getValue(model));
-
-		components.remove(component);
-
-		if (!components.isEmpty())
-			this.modelsToComponents.put(model, components);
-		else
-			this.modelsToComponents.removeKey(model);
 	}
 
 	/**
@@ -410,7 +306,7 @@ public final class PanelFactory {
 
 		libraryPanel
 				.setLayout(new BoxLayout(libraryPanel, BoxLayout.PAGE_AXIS));
-		libraryPanel.add(this.libraryPanel);
+		libraryPanel.add(LibraryPanel.getInstance());
 
 		libraryPanel.add(notePane);
 
@@ -432,9 +328,9 @@ public final class PanelFactory {
 					.getChildren());
 
 		storyLibraryPaneObserver = new SEModelObserver() {
-			public void modelChanged(PatternModelEvent event) {
+			public void modelChanged(SEModelEvent event) {
 
-				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
+				if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
 					event.getPatternModel().process(new ModelAdapter() {
 
 						@Override
@@ -456,7 +352,7 @@ public final class PanelFactory {
 							});
 						}
 					});
-				} else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED) {
+				} else if (event.getEventType() == SEModelEvent.Type.REMOVED) {
 					if (SEModelManager.getInstance().getActiveModel() == null) {
 						for (JComponent component : storyJComponents)
 							component.setVisible(false);
@@ -465,8 +361,8 @@ public final class PanelFactory {
 			}
 		};
 
-		SEModelManager.getInstance().addPatternModelObserver(
-				librarySplitPane, storyLibraryPaneObserver);
+		SEModelManager.getInstance().addPatternModelObserver(librarySplitPane,
+				storyLibraryPaneObserver);
 
 		return librarySplitPane;
 	}
@@ -497,8 +393,7 @@ public final class PanelFactory {
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
 
-		tree = new ResourcePanel(SEModelManager.getInstance()
-				.getActiveModel());
+		tree = new ResourcePanel(SEModelManager.getInstance().getActiveModel());
 		searchField = ComponentFactory.buildJTextFieldWithTextBackground(20,
 				"Game Objects", "");
 
@@ -579,11 +474,11 @@ public final class PanelFactory {
 		};
 
 		modelObserver = new SEModelObserver() {
-			public void modelChanged(PatternModelEvent event) {
-				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED) {
+			public void modelChanged(SEModelEvent event) {
+				if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
 					tree.fillTree(event.getPatternModel());
 					tree.filterByTypes(typeFilter.getSelectedTypes());
-				} else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED
+				} else if (event.getEventType() == SEModelEvent.Type.REMOVED
 						&& SEModelManager.getInstance().getActiveModel() == null) {
 					tree.fillTree(null);
 				}
@@ -592,190 +487,10 @@ public final class PanelFactory {
 
 		LibraryManager.getInstance().addLibraryManagerObserver(
 				gameConstantPane, libraryObserver);
-		SEModelManager.getInstance().addPatternModelObserver(
-				gameConstantPane, modelObserver);
+		SEModelManager.getInstance().addPatternModelObserver(gameConstantPane,
+				modelObserver);
 
 		return gameConstantPane;
-	}
-
-	/**
-	 * Returns all tabs in the JTabbedPane.
-	 * 
-	 * @return
-	 */
-	public JTabbedPane getModelTabPane() {
-		return this.modelTabs;
-	}
-
-	/**
-	 * Creates a tab for the given model.
-	 * 
-	 * @param model
-	 */
-	public void createTabForModel(SEModel model) {
-		final JTabbedPane modelTabs = this.modelTabs;
-
-		final Icon icon;
-
-		if (model.getTranslator() != null)
-			icon = model.getTranslator().getIcon();
-		else
-			icon = null;
-
-		model.process(new ModelAdapter() {
-			@Override
-			public void processLibraryModel(final LibraryModel libraryModel) {
-				// Creates a Library Editor panel
-				final JScrollPane scbScrollPane;
-				final CloseableModelTab newTab;
-				final String savedTitle;
-				final String unsavedTitle;
-
-				scbScrollPane = PanelFactory.getInstance()
-						.buildLibraryEditorPanel(libraryModel);
-				newTab = new CloseableModelTab(modelTabs, scbScrollPane,
-						libraryModel, icon);
-
-				savedTitle = libraryModel.getName() + "[Editor]";
-				unsavedTitle = "*" + savedTitle;
-
-				scbScrollPane.getVerticalScrollBar().setUnitIncrement(
-						ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
-
-				modelTabs.addTab(savedTitle, icon, scbScrollPane);
-
-				modelTabs.setTabComponentAt(
-						modelTabs.indexOfComponent(scbScrollPane), newTab);
-
-				UndoManager.getInstance().addUndoManagerObserver(libraryModel,
-						new UndoManagerObserver() {
-							@Override
-							public void stackChanged() {
-								final int index = modelTabs
-										.indexOfComponent(scbScrollPane);
-
-								if (index < 0)
-									return;
-
-								if (UndoManager.getInstance().isSaved(
-										libraryModel)) {
-									modelTabs.setTitleAt(index, savedTitle);
-								} else {
-									modelTabs.setTitleAt(index, unsavedTitle);
-								}
-							}
-						});
-
-				modelTabs.setFocusable(false);
-			}
-
-			@Override
-			public void processStoryModel(final StoryModel storyModel) {
-				// Creates a story editor panel with a story graph
-				final StoryPoint startStoryPoint;
-				final JSplitPane newPanel;
-				final CloseableModelTab newTab;
-				String modelTitle;
-
-				startStoryPoint = storyModel.getRoot();
-				newPanel = PanelFactory.getInstance().buildStoryPanel(
-						storyModel, startStoryPoint);
-				newTab = new CloseableModelTab(modelTabs, newPanel, storyModel,
-						icon);
-				modelTitle = storyModel.getTitle();
-
-				if (modelTitle == null || modelTitle.equals(""))
-					modelTitle = "<Untitled>";
-
-				final String savedTitle = modelTitle + "("
-						+ storyModel.getModule().getLocation().getName() + ")";
-
-				final String unsavedTitle = "*" + savedTitle;
-
-				modelTabs.addTab(savedTitle, icon, newPanel);
-
-				modelTabs.setTabComponentAt(
-						modelTabs.indexOfComponent(newPanel), newTab);
-				modelTabs.setSelectedComponent(newPanel);
-
-				modelTabs.setFocusable(false);
-
-				UndoManager.getInstance().addUndoManagerObserver(storyModel,
-						new UndoManagerObserver() {
-							@Override
-							public void stackChanged() {
-								final int index = modelTabs
-										.indexOfComponent(newPanel);
-
-								if (index < 0)
-									return;
-
-								if (UndoManager.getInstance().isSaved(
-										storyModel)) {
-									modelTabs.setTitleAt(index, savedTitle);
-								} else {
-									modelTabs.setTitleAt(index, unsavedTitle);
-								}
-							}
-						});
-				/*
-				 * Setting the divider needs to occur here because the
-				 * JSplitPane needs to actually be drawn before this works.
-				 * According to Sun, this is WAD. I would tend to disagree, but
-				 * at least this is nicer than subclassing JSplitPane.
-				 */
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						// Need this code for the divider to be set at the right
-						// location for different screen resolutions.
-						final double top = newPanel.getTopComponent().getSize().height;
-						final double bottom = newPanel.getSize().height;
-						final double ratio = top / bottom;
-						newPanel.setDividerLocation(ratio);
-					}
-				});
-			}
-		});
-	}
-
-	/**
-	 * Removes the given model component from list of ModelTabs and the list of
-	 * model components for the given model. modelTabs.remove should not be
-	 * called outside of this method.
-	 * 
-	 * @param component
-	 * @param model
-	 */
-	public void removeModelComponent(final JComponent component,
-			SEModel model) {
-		// check if there are any unsaved changes
-		if (FileManager.getInstance().hasUnsavedChanges(model)) {
-			// otherwise, close the StoryModel
-
-			model.process(new ModelAdapter() {
-				@Override
-				public void processLibraryModel(LibraryModel libraryModel) {
-					PanelFactory.getInstance().removeComponentForModel(
-							libraryModel, component);
-
-					PanelFactory.this.modelTabs.remove(component);
-
-					FileManager.getInstance().close(libraryModel);
-				};
-
-				@Override
-				public void processStoryModel(StoryModel storyModel) {
-					// remove the panel
-					PanelFactory.getInstance().removeComponentForModel(
-							storyModel, component);
-
-					PanelFactory.this.modelTabs.remove(component);
-
-					FileManager.getInstance().close(storyModel);
-				}
-			});
-		}
 	}
 
 	/**
@@ -842,49 +557,4 @@ public final class PanelFactory {
 		return statusPanel;
 	}
 
-	/**
-	 * Creates a new JPanel that has a gradient as a background. The gradient
-	 * colour comes from the component's background colour.
-	 * 
-	 * @param factor
-	 *            The factor by which the bottom colour should be scaled to
-	 *            white.
-	 * @return
-	 */
-	@SuppressWarnings("serial")
-	public JPanel buildGradientPanel(final double factor) {
-		final JPanel gradientPanel;
-
-		gradientPanel = new JPanel() {
-
-			@Override
-			protected void paintComponent(Graphics grphcs) {
-				final Color topColour;
-				final Color bottomColour;
-
-				final Graphics2D g2d;
-				final GradientPaint gp;
-
-				topColour = this.getBackground();
-				bottomColour = GUIOp.scaleWhite(topColour, factor);
-
-				g2d = (Graphics2D) grphcs;
-				gp = new GradientPaint(0, 0, topColour, 0, this.getHeight(),
-						bottomColour);
-
-				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-						RenderingHints.VALUE_ANTIALIAS_ON);
-
-				g2d.setPaint(gp);
-
-				g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
-				super.paintComponent(grphcs);
-
-			}
-		};
-
-		gradientPanel.setOpaque(false);
-
-		return gradientPanel;
-	}
 }

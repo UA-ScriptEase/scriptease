@@ -11,7 +11,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.border.Border;
 
-import scriptease.gui.PanelFactory;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
@@ -52,7 +51,7 @@ public class SEGraphNodeRenderer<E> {
 	public final JComponent createComponentForNode(E node) {
 		final JComponent component;
 
-		component = PanelFactory.getInstance().buildGradientPanel(1.3);
+		component = GUIOp.buildGradientPanel(1.3);
 
 		this.reconfigureAppearance(component, node);
 		this.configureInternalComponents(component, node);

@@ -7,9 +7,10 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
-import scriptease.gui.PanelFactory;
+import scriptease.controller.FileManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.gui.pane.ModelTabPanel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 
@@ -61,9 +62,11 @@ public final class ClosePatternModelAction extends ActiveModelSensitiveAction {
 		activeModel = SEModelManager.getInstance().getActiveModel();
 
 		if (activeModel != null) {
-			PanelFactory.getInstance().removeModelComponent(
-					(JComponent) PanelFactory.getInstance().getModelTabPane()
-							.getSelectedComponent(), activeModel);
+			FileManager.getInstance().close(activeModel);
+
+///			ModelTabPanel.getInstance().removeModelComponent(
+	//				(JComponent) ModelTabPanel.getInstance()
+	//						.getSelectedComponent(), activeModel);
 
 		}
 	}

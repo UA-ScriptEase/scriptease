@@ -6,9 +6,9 @@ import java.lang.Thread.UncaughtExceptionHandler;
 
 import javax.swing.SwingWorker;
 
-import scriptease.gui.PanelFactory;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.dialog.WizardDialog;
+import scriptease.gui.pane.PanelFactory;
 import scriptease.model.StoryModel;
 
 /**
