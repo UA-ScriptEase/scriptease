@@ -20,9 +20,9 @@ import javax.swing.JSplitPane;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.PanelFactory;
 import scriptease.gui.cell.BindingWidget;
 import scriptease.gui.libraryeditor.EffectHolderPanel;
+import scriptease.gui.pane.ModelTabPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
@@ -137,18 +137,19 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		/*
 		 * Scrolls the StoryComponentTree if we are hovering over one.
 		 */
-		for (final JComponent component : PanelFactory.getInstance()
+		
+		// TODO UGLY ! Refactor
+		final JComponent component = ModelTabPanel.getInstance()
 				.getComponentsForModel(
-						SEModelManager.getInstance().getActiveModel())) {
-			if (component instanceof JSplitPane) {
-				final Component bottomComponent;
+						SEModelManager.getInstance().getActiveModel());
+		if (component instanceof JSplitPane) {
+			final Component bottomComponent;
 
-				bottomComponent = ((JSplitPane) component).getBottomComponent();
-				if (bottomComponent instanceof StoryComponentPanelTree) {
-					final JScrollPane pane = (StoryComponentPanelTree) bottomComponent;
+			bottomComponent = ((JSplitPane) component).getBottomComponent();
+			if (bottomComponent instanceof StoryComponentPanelTree) {
+				final JScrollPane pane = (StoryComponentPanelTree) bottomComponent;
 
-					GUIOp.scrollJScrollPaneToMousePosition(pane);
-				}
+				GUIOp.scrollJScrollPaneToMousePosition(pane);
 			}
 		}
 	}

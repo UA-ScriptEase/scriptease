@@ -42,9 +42,10 @@ import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.logger.NetworkHandler;
 import scriptease.controller.modelverifier.problem.StoryProblem;
-import scriptease.controller.observer.PatternModelEvent;
+import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.dialog.DialogBuilder;
+import scriptease.gui.pane.PanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.LibraryManager;
@@ -913,16 +914,15 @@ public final class WindowFactory {
 
 		modelObserver = new SEModelObserver() {
 			@Override
-			public void modelChanged(PatternModelEvent event) {
-				final short eventType;
+			public void modelChanged(SEModelEvent event) {
+				final SEModelEvent.Type eventType;
 				final SEModel activeModel;
 
 				eventType = event.getEventType();
-				activeModel = SEModelManager.getInstance()
-						.getActiveModel();
+				activeModel = SEModelManager.getInstance().getActiveModel();
 
-				if (eventType == PatternModelEvent.PATTERN_MODEL_ACTIVATED
-						|| (eventType == PatternModelEvent.PATTERN_MODEL_REMOVED && activeModel == null)) {
+				if (eventType == SEModelEvent.Type.ACTIVATED
+						|| (eventType == SEModelEvent.Type.REMOVED && activeModel == null)) {
 					final JMenuBar bar;
 
 					bar = MenuFactory.createMainMenuBar(activeModel);
@@ -951,7 +951,7 @@ public final class WindowFactory {
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 
 		middlePane.setLayout(new GridLayout(1, 1));
-		middlePane.add(PanelFactory.getInstance().getModelTabPane());
+		middlePane.add(PanelFactory.getInstance().buildModelTabPanel());
 
 		content.setLayout(contentLayout);
 

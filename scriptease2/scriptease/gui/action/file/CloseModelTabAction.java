@@ -7,9 +7,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JComponent;
 
-import scriptease.gui.PanelFactory;
+import scriptease.controller.FileManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.gui.pane.ModelTabPanel;
 import scriptease.model.SEModel;
 
 /**
@@ -39,7 +40,10 @@ public class CloseModelTabAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		PanelFactory.getInstance().removeModelComponent(this.component,
-				this.model);
+	//	ModelTabPanel.getInstance().removeModelComponent(this.component,
+	//			this.model);
+		
+		FileManager.getInstance().close(this.model);
+
 	}
 }

@@ -3,7 +3,7 @@ package scriptease.gui.action;
 import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
-import scriptease.controller.observer.PatternModelEvent;
+import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.model.SEModelManager;
 
@@ -37,9 +37,9 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction {
 
 		observer = new SEModelObserver() {
 			@Override
-			public void modelChanged(final PatternModelEvent event) {
-				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED
-						|| event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED) {
+			public void modelChanged(final SEModelEvent event) {
+				if (event.getEventType() == SEModelEvent.Type.ACTIVATED
+						|| event.getEventType() == SEModelEvent.Type.REMOVED) {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
 							ActiveModelSensitiveAction.this
@@ -51,8 +51,7 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction {
 		};
 
 		this.updateEnabledState();
-		SEModelManager.getInstance().addPatternModelObserver(this,
-				observer);
+		SEModelManager.getInstance().addPatternModelObserver(this, observer);
 	}
 
 	/**

@@ -6,6 +6,7 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -463,5 +464,51 @@ public class GUIOp {
 			horizontalScrollBar.setValue(horizontalScrollBarValue
 					+ ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 		}
+	}
+
+	/**
+	 * Creates a new JPanel that has a gradient as a background. The gradient
+	 * colour comes from the component's background colour.
+	 * 
+	 * @param factor
+	 *            The factor by which the bottom colour should be scaled to
+	 *            white.
+	 * @return
+	 */
+	@SuppressWarnings("serial")
+	public static JPanel buildGradientPanel(final double factor) {
+		final JPanel gradientPanel;
+
+		gradientPanel = new JPanel() {
+
+			@Override
+			protected void paintComponent(Graphics grphcs) {
+				final Color topColour;
+				final Color bottomColour;
+
+				final Graphics2D g2d;
+				final GradientPaint gp;
+
+				topColour = this.getBackground();
+				bottomColour = GUIOp.scaleWhite(topColour, factor);
+
+				g2d = (Graphics2D) grphcs;
+				gp = new GradientPaint(0, 0, topColour, 0, this.getHeight(),
+						bottomColour);
+
+				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+						RenderingHints.VALUE_ANTIALIAS_ON);
+
+				g2d.setPaint(gp);
+
+				g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
+				super.paintComponent(grphcs);
+
+			}
+		};
+
+		gradientPanel.setOpaque(false);
+
+		return gradientPanel;
 	}
 }

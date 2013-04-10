@@ -23,10 +23,10 @@ import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.PanelFactory;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.gui.pane.PanelFactory;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
@@ -634,10 +634,7 @@ public final class FileManager {
 		model.process(new ModelAdapter() {
 			@Override
 			public void processLibraryModel(LibraryModel libraryModel) {
-				if (PanelFactory.getInstance()
-						.getComponentsForModel(libraryModel).size() < 1) {
-					SEModelManager.getInstance().remove(libraryModel);
-				}
+				SEModelManager.getInstance().remove(libraryModel);
 			}
 
 			@Override
@@ -656,13 +653,9 @@ public final class FileManager {
 									new IOError(e));
 				}
 
-				if (PanelFactory.getInstance()
-						.getComponentsForModel(storyModel).size() < 1) {
-					SEModelManager.getInstance().remove(storyModel);
+				SEModelManager.getInstance().remove(storyModel);
 
-					FileManager.this.openFiles.removeValue(storyModel);
-
-				}
+				FileManager.this.openFiles.removeValue(storyModel);
 			}
 		});
 

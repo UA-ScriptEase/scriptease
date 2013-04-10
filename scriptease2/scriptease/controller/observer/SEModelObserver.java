@@ -16,5 +16,5 @@ public interface SEModelObserver {
 	 * @param event
 	 *            The {@link SEModel} that was added.
 	 */
-	public void modelChanged(PatternModelEvent event);
+	public void modelChanged(SEModelEvent event);
 }

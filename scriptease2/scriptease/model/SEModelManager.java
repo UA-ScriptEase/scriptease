@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.observer.ObserverManager;
-import scriptease.controller.observer.PatternModelEvent;
+import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.StatusManager;
 import scriptease.translator.Translator;
@@ -118,7 +118,7 @@ public final class SEModelManager {
 	 */
 	public void add(SEModel model, boolean activate) {
 		if (this.models.add(model))
-			this.notifyChange(model, PatternModelEvent.PATTERN_MODEL_ADDED);
+			this.notifyChange(model, SEModelEvent.Type.ADDED);
 
 		if (activate)
 			this.activate(model);
@@ -134,7 +134,7 @@ public final class SEModelManager {
 		if (this.activeModel == model)
 			this.activeModel = null;
 		if (this.models.remove(model))
-			this.notifyChange(model, PatternModelEvent.PATTERN_MODEL_REMOVED);
+			this.notifyChange(model, SEModelEvent.Type.REMOVED);
 	}
 
 	/**
@@ -150,7 +150,7 @@ public final class SEModelManager {
 		if (model != null)
 			StatusManager.getInstance().setStatus(model + " activated");
 
-		this.notifyChange(model, PatternModelEvent.PATTERN_MODEL_ACTIVATED);
+		this.notifyChange(model, SEModelEvent.Type.ACTIVATED);
 	}
 
 	/**
@@ -175,8 +175,8 @@ public final class SEModelManager {
 		this.observerManager.removeObserver(observer);
 	}
 
-	private void notifyChange(SEModel model, short eventType) {
+	private void notifyChange(SEModel model, SEModelEvent.Type eventType) {
 		for (SEModelObserver observer : this.observerManager.getObservers())
-			observer.modelChanged(new PatternModelEvent(model, eventType));
+			observer.modelChanged(new SEModelEvent(model, eventType));
 	}
 }

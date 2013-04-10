@@ -26,7 +26,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import scriptease.controller.observer.PatternModelEvent;
+import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.library.LibraryEvent;
@@ -69,12 +69,23 @@ public class LibraryPanel extends JTabbedPane {
 
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
 
+	private static final LibraryPanel instance = new LibraryPanel();
+
+	/**
+	 * Returns the only instance of LibraryPanel.
+	 * 
+	 * @return
+	 */
+	public static LibraryPanel getInstance() {
+		return instance;
+	}
+
 	/**
 	 * Creates a new LibraryPane with default filters, and configures its
 	 * display. Also configures its listeners.
 	 * 
 	 */
-	public LibraryPanel() {
+	private LibraryPanel() {
 		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
 
 		final SEModelObserver modelObserver;
@@ -103,10 +114,10 @@ public class LibraryPanel extends JTabbedPane {
 			 * switching tabs.
 			 */
 			@Override
-			public void modelChanged(PatternModelEvent event) {
-				if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED)
+			public void modelChanged(SEModelEvent event) {
+				if (event.getEventType() == SEModelEvent.Type.ACTIVATED)
 					updateLists();
-				else if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_REMOVED
+				else if (event.getEventType() == SEModelEvent.Type.REMOVED
 						&& SEModelManager.getInstance().getActiveModel() == null) {
 					updateLists();
 				}

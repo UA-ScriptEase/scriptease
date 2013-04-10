@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
-import scriptease.controller.observer.PatternModelEvent;
+import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.action.graphs.ConnectModeAction;
 import scriptease.gui.action.graphs.DeleteModeAction;
@@ -120,8 +120,8 @@ public final class ComponentFactory {
 		SEModelManager.getInstance().addPatternModelObserver(
 				graphEditorToolBar, new SEModelObserver() {
 					@Override
-					public void modelChanged(PatternModelEvent event) {
-						if (event.getEventType() == PatternModelEvent.PATTERN_MODEL_ACTIVATED)
+					public void modelChanged(SEModelEvent event) {
+						if (event.getEventType() == SEModelEvent.Type.ACTIVATED)
 							selectButtonRunnable.run();
 					}
 				});
