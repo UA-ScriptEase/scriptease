@@ -7,9 +7,13 @@ import javax.swing.JToggleButton;
 
 import scriptease.ScriptEase;
 import scriptease.controller.MouseForwardingAdapter;
+import scriptease.controller.observer.SEModelEvent;
+import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.gui.ui.TypeWidgetUI;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
@@ -64,30 +68,47 @@ public class TypeWidget extends JToggleButton {
 		typeName = (activeTranslator != null && activeTranslator
 				.loadedAPIDictionary()) ? activeTranslator.getGameTypeManager()
 				.getDisplayText(this.type) : "";
-		observer = new TranslatorObserver() {
-			/**
-			 * When a new translator is loaded, update the TypeText to match
-			 * whether the type exists or not.
-			 */
-			@Override
-			public void translatorLoaded(Translator newTranslator) {
-				String typeName = "";
-				typeName = newTranslator != null ? newTranslator
-						.getGameTypeManager().getDisplayText(
-								TypeWidget.this.type) : "";
-
-				if (typeName == null || typeName.equals(""))
-					setTypeText("");
-			}
-		};
 
 		this.setTypeText(type);
 		this.setToolTipText(typeName);
 
 		this.setSize(this.getPreferredSize());
 
-		TranslatorManager.getInstance().addTranslatorObserver(this, observer);
-	}
+		SEModelManager.getInstance().addPatternModelObserver(this,
+				new SEModelObserver() {
+
+					@Override
+					public void modelChanged(SEModelEvent event) {
+						final SEModel model = event.getPatternModel();
+						final Translator translator = model.getTranslator();
+
+						final String typeName;
+
+						typeName = translator != null ? translator
+								.getGameTypeManager().getDisplayText(
+										TypeWidget.this.type) : "";
+
+						if (typeName == null || typeName.equals(""))
+							setTypeText("");
+
+					}
+				});
+
+		/*
+		 * TranslatorManager.getInstance().addTranslatorObserver(this, new
+		 * TranslatorObserver() {
+		 *//**
+		 * When a new translator is loaded, update the TypeText to match
+		 * whether the type exists or not.
+		 */
+		/*
+		 * @Override public void translatorLoaded(Translator newTranslator) {
+		 * String typeName = ""; typeName = newTranslator != null ?
+		 * newTranslator .getGameTypeManager().getDisplayText(
+		 * TypeWidget.this.type) : "";
+		 * 
+		 * if (typeName == null || typeName.equals("")) setTypeText(""); } });
+		 */}
 
 	private void setTypeText(String type) {
 		if (type.equals("")) {

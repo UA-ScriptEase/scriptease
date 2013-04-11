@@ -147,10 +147,15 @@ public final class SEModelManager {
 		if (this.activeModel == model)
 			return;
 		this.activeModel = model;
-		if (model != null)
-			StatusManager.getInstance().setStatus(model + " activated");
 
-		this.notifyChange(model, SEModelEvent.Type.ACTIVATED);
+		if (model != null && this.models.contains(model)) {
+			StatusManager.getInstance().setStatus(model + " activated");
+			this.notifyChange(model, SEModelEvent.Type.ACTIVATED);
+		} else {
+			throw new IllegalArgumentException("Model " + model
+					+ " not found in list of active models. "
+					+ "Could not activate it.");
+		}
 	}
 
 	/**
