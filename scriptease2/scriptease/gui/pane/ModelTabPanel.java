@@ -86,10 +86,11 @@ class ModelTabPanel extends JTabbedPane {
 			// This method is called whenever the selected tab changes
 			public void stateChanged(ChangeEvent evt) {
 				final Component tab = ModelTabPanel.this.getSelectedComponent();
+				final SEModel model = ModelTabPanel.this.modelToComponent
+						.getKey(tab);
 
 				if (tab != null) {
-					SEModelManager.getInstance().activate(
-							ModelTabPanel.this.modelToComponent.getKey(tab));
+					SEModelManager.getInstance().activate(model);
 				}
 			}
 		});

@@ -352,6 +352,9 @@ public class LibraryPanel extends JTabbedPane {
 					final GameTypeManager typeManager = TranslatorManager
 							.getInstance().getActiveGameTypeManager();
 
+					if (typeManager == null)
+						return compare;
+
 					String k1Widget = typeManager.getWidgetName(k1Type);
 					String k2Widget = typeManager.getWidgetName(k2Type);
 
@@ -431,11 +434,9 @@ public class LibraryPanel extends JTabbedPane {
 
 		list.removeAllStoryComponents();
 
-		if (model != null) {
+		if (model != null
+				&& TranslatorManager.getInstance().getActiveTranslator() != null) {
 			final Translator translator = model.getTranslator();
-
-			if (translator == null)
-				return;
 
 			final Collection<LibraryModel> libraries;
 			final boolean hideInvisible;
