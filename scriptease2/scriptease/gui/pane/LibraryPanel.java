@@ -427,28 +427,28 @@ public class LibraryPanel extends JTabbedPane {
 	 * @param list
 	 */
 	private void updateList(StoryComponentPanelJList list) {
-		final SEModel model;
-		final Translator activeTranslator;
-		final boolean hideInvisible;
+		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
-		model = SEModelManager.getInstance().getActiveModel();
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-
-		// Show invisible components if we're editing a library model.
-		if (model instanceof LibraryModel)
-			hideInvisible = false;
-		else
-			hideInvisible = true;
-
-		list.updateFilter(new TranslatorFilter(activeTranslator));
-		list.updateFilter(new VisibilityFilter(hideInvisible));
 		list.removeAllStoryComponents();
 
-		if (activeTranslator != null && model != null) {
-			final Collection<LibraryModel> libraries;
+		if (model != null) {
+			final Translator translator = model.getTranslator();
 
-			libraries = activeTranslator.getLibraries();
+			if (translator == null)
+				return;
+
+			final Collection<LibraryModel> libraries;
+			final boolean hideInvisible;
+
+			libraries = translator.getLibraries();
+			// Show invisible components if we're editing a library model.
+			if (model instanceof LibraryModel)
+				hideInvisible = false;
+			else
+				hideInvisible = true;
+
+			list.updateFilter(new TranslatorFilter(translator));
+			list.updateFilter(new VisibilityFilter(hideInvisible));
 
 			final int index = this.storyComponentPanelJLists.indexOf(list);
 
