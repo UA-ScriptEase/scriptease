@@ -2,6 +2,7 @@ package scriptease.gui.transfer;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Point;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -22,11 +23,9 @@ import javax.swing.TransferHandler;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.cell.BindingWidget;
 import scriptease.gui.libraryeditor.EffectHolderPanel;
-import scriptease.gui.pane.ModelTabPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
-import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -133,24 +132,25 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	/**
 	 * Scrolls the story component tree if we are hovering over one.
 	 */
-	private void scrollForMousePosition() {
+	private void scrollForMousePosition(Component component) {
 		/*
 		 * Scrolls the StoryComponentTree if we are hovering over one.
 		 */
-		
-		// TODO UGLY ! Refactor
-		final JComponent component = ModelTabPanel.getInstance()
-				.getComponentsForModel(
-						SEModelManager.getInstance().getActiveModel());
-		if (component instanceof JSplitPane) {
-			final Component bottomComponent;
+		Container parent = component.getParent();
+		while (parent != null) {
+			if (parent instanceof JSplitPane) {
+				final Component bottomComponent;
 
-			bottomComponent = ((JSplitPane) component).getBottomComponent();
-			if (bottomComponent instanceof StoryComponentPanelTree) {
-				final JScrollPane pane = (StoryComponentPanelTree) bottomComponent;
+				bottomComponent = ((JSplitPane) parent).getBottomComponent();
+				if (bottomComponent instanceof StoryComponentPanelTree) {
+					final JScrollPane pane = (StoryComponentPanelTree) bottomComponent;
 
-				GUIOp.scrollJScrollPaneToMousePosition(pane);
+					GUIOp.scrollJScrollPaneToMousePosition(pane);
+
+					break;
+				}
 			}
+			parent = parent.getParent();
 		}
 	}
 
@@ -158,14 +158,14 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 	@Override
 	public boolean canImport(TransferSupport support) {
-		this.scrollForMousePosition();
+		final Component supportComponent = support.getComponent();
+
+		this.scrollForMousePosition(supportComponent);
 
 		if (isBinding(support)) {
 			// Handles the case where the user drags a Binding (delete)
 			return true;
 		} else {
-			final Component supportComponent = support.getComponent();
-
 			if (supportComponent instanceof StoryComponentPanel) {
 				final StoryComponentPanel acceptingPanel;
 				final StoryComponent acceptingStoryComponent;

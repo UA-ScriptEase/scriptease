@@ -26,7 +26,7 @@ import scriptease.gui.action.components.CopyAction;
 import scriptease.gui.action.components.CutAction;
 import scriptease.gui.action.components.DeleteAction;
 import scriptease.gui.action.components.PasteAction;
-import scriptease.gui.action.file.ClosePatternModelAction;
+import scriptease.gui.action.file.CloseActiveModelAction;
 import scriptease.gui.action.file.NewStoryModelAction;
 import scriptease.gui.action.file.OpenRecentFileAction;
 import scriptease.gui.action.file.OpenStoryModelAction;
@@ -40,7 +40,6 @@ import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.pane.PanelFactory;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
@@ -162,7 +161,7 @@ public class MenuFactory {
 		}
 
 		menu.add(OpenStoryModelAction.getInstance());
-		menu.add(ClosePatternModelAction.getInstance());
+		menu.add(CloseActiveModelAction.getInstance());
 		menu.addSeparator();
 
 		if (model == null || !(model instanceof LibraryModel)) {
@@ -324,9 +323,7 @@ public class MenuFactory {
 				public void actionPerformed(ActionEvent e) {
 					TranslatorManager.getInstance().setActiveTranslator(
 							translator);
-
-					PanelFactory.getInstance().createTabForModel(
-							translator.getLibrary());
+					SEModelManager.getInstance().add(translator.getLibrary());
 				}
 			});
 

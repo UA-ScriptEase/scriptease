@@ -1,6 +1,7 @@
 package scriptease.gui.pane;
 
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -10,6 +11,8 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -22,18 +25,32 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
+import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.UndoManagerObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.action.file.CloseModelTabAction;
+import scriptease.gui.ComponentFactory;
+import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.SEGraph.SEGraphFactory;
+import scriptease.gui.SEGraph.observers.SEGraphAdapter;
+import scriptease.gui.action.file.CloseModelAction;
+import scriptease.gui.action.graphs.GraphToolBarModeAction;
+import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
@@ -43,22 +60,11 @@ import scriptease.model.complex.StoryPoint;
 import scriptease.util.BiHashMap;
 
 @SuppressWarnings("serial")
-public class ModelTabPanel extends JTabbedPane {
-
+class ModelTabPanel extends JTabbedPane {
 	// A mapping of models to components represented by the models
 	private final BiHashMap<SEModel, JComponent> modelToComponent;
 
-	private static final ModelTabPanel instance = new ModelTabPanel();
-
-	public static ModelTabPanel getInstance() {
-		return instance;
-	}
-
-	public BiHashMap<SEModel, JComponent> getModelsToComponents() {
-		return this.modelToComponent;
-	}
-
-	public ModelTabPanel() {
+	protected ModelTabPanel() {
 		this.modelToComponent = new BiHashMap<SEModel, JComponent>();
 
 		// Register a change listener
@@ -85,22 +91,12 @@ public class ModelTabPanel extends JTabbedPane {
 				new SEModelObserver() {
 					@Override
 					public void modelChanged(SEModelEvent event) {
+						final SEModel model = event.getPatternModel();
 
 						if (event.getEventType() == SEModelEvent.Type.REMOVED) {
-							final SEModel model = event.getPatternModel();
-							final BiHashMap<SEModel, JComponent> modelToComponent;
-							final JComponent component;
-
-							modelToComponent = ModelTabPanel.this.modelToComponent;
-							component = modelToComponent.getValue(model);
-
-							if (FileManager.getInstance().hasUnsavedChanges(
-									model)) {
-								// otherwise, close the StoryModel
-								modelToComponent.removeKey(model);
-
-								ModelTabPanel.this.remove(component);
-							}
+							ModelTabPanel.this.removeTabForModel(model);
+						} else if (event.getEventType() == SEModelEvent.Type.ADDED) {
+							ModelTabPanel.this.createTabForModel(model);
 						}
 
 					}
@@ -108,15 +104,23 @@ public class ModelTabPanel extends JTabbedPane {
 	}
 
 	/**
-	 * Gets the collection of panes that are currently displaying the given
-	 * model. Cannot be null.
+	 * Removes the tab for the given model.
 	 * 
 	 * @param model
-	 * @return
 	 */
-	public JComponent getComponentsForModel(SEModel model) {
-		// TODO We shouldn't be getting this from any other class...
-		return this.modelToComponent.getValue(model);
+	private void removeTabForModel(SEModel model) {
+		final BiHashMap<SEModel, JComponent> modelToComponent;
+		final JComponent component;
+
+		modelToComponent = ModelTabPanel.this.modelToComponent;
+		component = modelToComponent.getValue(model);
+
+		if (FileManager.getInstance().hasUnsavedChanges(model)) {
+			// otherwise, close the StoryModel
+			modelToComponent.removeKey(model);
+
+			ModelTabPanel.this.remove(component);
+		}
 	}
 
 	/**
@@ -124,76 +128,40 @@ public class ModelTabPanel extends JTabbedPane {
 	 * 
 	 * @param model
 	 */
-	public void createTabForModel(SEModel model) {
-		final ModelTabPanel tabPanel = this;
-
-		final Icon icon;
-
-		if (model.getTranslator() != null)
-			icon = model.getTranslator().getIcon();
-		else
-			icon = null;
-
+	private void createTabForModel(SEModel model) {
 		model.process(new ModelAdapter() {
 			@Override
 			public void processLibraryModel(final LibraryModel libraryModel) {
 				// Creates a Library Editor panel
+				final JPanel scbPanel;
 				final JScrollPane scbScrollPane;
-				final CloseableModelTab newTab;
 				final String savedTitle;
-				final String unsavedTitle;
 
-				scbScrollPane = PanelFactory.getInstance()
-						.buildLibraryEditorPanel(libraryModel);
-				newTab = new CloseableModelTab(tabPanel, scbScrollPane,
-						libraryModel, icon);
+				scbPanel = LibraryEditorPanelFactory.getInstance()
+						.buildLibraryEditorPanel(LibraryPanel.getInstance());
+				scbScrollPane = new JScrollPane(scbPanel);
+
+				ModelTabPanel.this.modelToComponent.put(libraryModel,
+						scbScrollPane);
 
 				savedTitle = libraryModel.getName() + "[Editor]";
-				unsavedTitle = "*" + savedTitle;
 
 				scbScrollPane.getVerticalScrollBar().setUnitIncrement(
 						ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
-				tabPanel.addTab(savedTitle, icon, scbScrollPane);
-
-				tabPanel.setTabComponentAt(
-						tabPanel.indexOfComponent(scbScrollPane), newTab);
-
-				UndoManager.getInstance().addUndoManagerObserver(libraryModel,
-						new UndoManagerObserver() {
-							@Override
-							public void stackChanged() {
-								final int index = tabPanel
-										.indexOfComponent(scbScrollPane);
-
-								if (index < 0)
-									return;
-
-								if (UndoManager.getInstance().isSaved(
-										libraryModel)) {
-									tabPanel.setTitleAt(index, savedTitle);
-								} else {
-									tabPanel.setTitleAt(index, unsavedTitle);
-								}
-							}
-						});
-
-				tabPanel.setFocusable(false);
+				ModelTabPanel.this.buildTab(savedTitle, libraryModel,
+						scbScrollPane);
 			}
 
 			@Override
 			public void processStoryModel(final StoryModel storyModel) {
 				// Creates a story editor panel with a story graph
-				final StoryPoint startStoryPoint;
+				final StoryPoint root;
 				final JSplitPane newPanel;
-				final CloseableModelTab newTab;
 				String modelTitle;
 
-				startStoryPoint = storyModel.getRoot();
-				newPanel = PanelFactory.getInstance().buildStoryPanel(
-						storyModel, startStoryPoint);
-				newTab = new CloseableModelTab(tabPanel, newPanel, storyModel,
-						icon);
+				root = storyModel.getRoot();
+				newPanel = ModelTabPanel.this.buildStoryPanel(storyModel, root);
 				modelTitle = storyModel.getTitle();
 
 				if (modelTitle == null || modelTitle.equals(""))
@@ -202,34 +170,7 @@ public class ModelTabPanel extends JTabbedPane {
 				final String savedTitle = modelTitle + "("
 						+ storyModel.getModule().getLocation().getName() + ")";
 
-				final String unsavedTitle = "*" + savedTitle;
-
-				tabPanel.addTab(savedTitle, icon, newPanel);
-
-				tabPanel.setTabComponentAt(tabPanel.indexOfComponent(newPanel),
-						newTab);
-				tabPanel.setSelectedComponent(newPanel);
-
-				tabPanel.setFocusable(false);
-
-				UndoManager.getInstance().addUndoManagerObserver(storyModel,
-						new UndoManagerObserver() {
-							@Override
-							public void stackChanged() {
-								final int index = tabPanel
-										.indexOfComponent(newPanel);
-
-								if (index < 0)
-									return;
-
-								if (UndoManager.getInstance().isSaved(
-										storyModel)) {
-									tabPanel.setTitleAt(index, savedTitle);
-								} else {
-									tabPanel.setTitleAt(index, unsavedTitle);
-								}
-							}
-						});
+				ModelTabPanel.this.buildTab(savedTitle, storyModel, newPanel);
 				/*
 				 * Setting the divider needs to occur here because the
 				 * JSplitPane needs to actually be drawn before this works.
@@ -249,6 +190,198 @@ public class ModelTabPanel extends JTabbedPane {
 				});
 			}
 		});
+	}
+
+	private void buildTab(final String title, final SEModel model,
+			final JComponent tabContents) {
+		final CloseableModelTab newTab;
+		final Icon icon;
+
+		if (model.getTranslator() != null)
+			icon = model.getTranslator().getIcon();
+		else
+			icon = null;
+
+		newTab = new CloseableModelTab(this, tabContents, model, icon);
+
+		this.addTab(title, icon, tabContents);
+
+		this.setTabComponentAt(this.indexOfComponent(tabContents), newTab);
+
+		this.setSelectedComponent(tabContents);
+
+		this.setFocusable(false);
+
+		UndoManager.getInstance().addUndoManagerObserver(model,
+				new UndoManagerObserver() {
+					@Override
+					public void stackChanged() {
+						final ModelTabPanel tabPanel = ModelTabPanel.this;
+						final int index = tabPanel
+								.indexOfComponent(tabContents);
+
+						if (index < 0)
+							return;
+
+						if (UndoManager.getInstance().isSaved(model)) {
+							tabPanel.setTitleAt(index, title);
+						} else {
+							tabPanel.setTitleAt(index, "*" + title);
+						}
+					}
+				});
+	}
+
+	/**
+	 * Builds a panel for a StoryModel. This panel includes an {@link SEGraph}
+	 * and a {@link StoryComponentPanelTree}.
+	 * 
+	 * @param model
+	 * @param start
+	 * @return
+	 */
+	private JSplitPane buildStoryPanel(StoryModel model, final StoryPoint start) {
+		final JSplitPane storyPanel;
+		final JToolBar graphToolBar;
+
+		final SEGraph<StoryPoint> storyGraph;
+		final StoryComponentPanelTree storyComponentTree;
+		final StoryComponentObserver graphRedrawer;
+		final JPanel storyGraphPanel;
+
+		final JScrollPane storyGraphScrollPane;
+
+		storyPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		graphToolBar = ComponentFactory.buildGraphEditorToolBar();
+
+		storyGraph = SEGraphFactory.buildStoryGraph(start);
+
+		storyComponentTree = new StoryComponentPanelTree(start);
+		graphRedrawer = new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				final StoryComponentChangeEnum type;
+
+				type = event.getType();
+
+				if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED) {
+					event.getSource().addStoryComponentObserver(this);
+					storyGraph.repaint();
+					storyGraph.revalidate();
+				} else if (type == StoryComponentChangeEnum.CHANGE_FAN_IN
+						|| type == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+					storyGraph.repaint();
+					storyGraph.revalidate();
+				} else if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED) {
+					storyGraph.repaint();
+					storyGraph.revalidate();
+
+					// Set root to start node if we remove the selected node.
+					if (event.getSource() == storyComponentTree.getRoot()) {
+						final Collection<StoryPoint> nodes;
+
+						nodes = new ArrayList<StoryPoint>();
+
+						nodes.add(storyGraph.getStartNode());
+
+						storyGraph.setSelectedNodes(nodes);
+						storyComponentTree.setRoot(storyGraph.getStartNode());
+					}
+				}
+
+			}
+		};
+		storyGraphPanel = new JPanel();
+
+		storyGraphScrollPane = new JScrollPane(storyGraph);
+
+		for (StoryPoint point : start.getDescendants()) {
+			point.addStoryComponentObserver(graphRedrawer);
+		}
+
+		// Put the new pane to the map
+
+		ModelTabPanel.this.modelToComponent.put(model, storyPanel);
+
+		// Set up the Story Graph
+		storyGraph.addSEGraphObserver(new SEGraphAdapter<StoryPoint>() {
+
+			@Override
+			public void nodesSelected(final Collection<StoryPoint> nodes) {
+				SEModelManager.getInstance().getActiveModel()
+						.process(new ModelAdapter() {
+							@Override
+							public void processStoryModel(StoryModel storyModel) {
+								storyComponentTree.setRoot(nodes.iterator()
+										.next());
+							}
+						});
+			}
+
+			@Override
+			public void nodeOverwritten(StoryPoint node) {
+				node.revalidateKnowItBindings();
+			}
+
+			@Override
+			public void nodeRemoved(StoryPoint removedNode) {
+				start.revalidateKnowItBindings();
+			}
+
+		});
+
+		start.addStoryComponentObserver(graphRedrawer);
+
+		storyGraphPanel.setLayout(new BorderLayout());
+
+		// Reset the ToolBar to select and add the Story Graph to it.
+		GraphToolBarModeAction.setMode(GraphToolBarModeAction.getMode());
+
+		final String orientation = ScriptEase.getInstance().getPreference(
+				ScriptEase.PREFERRED_ORIENTATION_KEY);
+
+		if (orientation != null
+				&& orientation.equalsIgnoreCase(ScriptEase.HORIZONTAL_TOOLBAR)) {
+			storyGraphScrollPane.setBorder(BorderFactory
+					.createEtchedBorder(EtchedBorder.LOWERED));
+
+			storyGraphPanel.add(graphToolBar, BorderLayout.PAGE_START);
+		} else {// if toolbar is vertical
+			storyGraphScrollPane.setBorder(BorderFactory.createEmptyBorder());
+			storyGraphPanel.setBorder(BorderFactory
+					.createEtchedBorder(EtchedBorder.LOWERED));
+
+			graphToolBar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,
+					Color.LIGHT_GRAY));
+
+			storyGraphPanel.add(graphToolBar, BorderLayout.WEST);
+		}
+
+		storyGraphPanel.add(storyGraphScrollPane, BorderLayout.CENTER);
+
+		storyComponentTree.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.LOWERED));
+
+		// Set up the split pane
+		storyPanel.setBorder(null);
+		storyPanel.setOpaque(true);
+		storyPanel.setTopComponent(storyGraphPanel);
+		storyPanel.setBottomComponent(storyComponentTree);
+
+		// Set up the divider
+		for (Component component : storyPanel.getComponents()) {
+			if (component instanceof BasicSplitPaneDivider) {
+				final BasicSplitPaneDivider divider;
+
+				divider = (BasicSplitPaneDivider) component;
+				divider.setBackground(Color.WHITE);
+				divider.setBorder(null);
+
+				break;
+			}
+		}
+
+		return storyPanel;
 	}
 
 	/**
@@ -290,7 +423,7 @@ public class ModelTabPanel extends JTabbedPane {
 	 * @author remiller
 	 * @author mfchurch
 	 */
-	public class CloseableModelTab extends JPanel {
+	private class CloseableModelTab extends JPanel {
 		/**
 		 * Builds a new Closeable Tab that will draw title information from the
 		 * given parent and will display the given icon.
@@ -301,21 +434,22 @@ public class ModelTabPanel extends JTabbedPane {
 		 *            The icon to display in the tab. Passing <code>null</code>
 		 *            will show no icon.
 		 */
-		public CloseableModelTab(final JTabbedPane parent,
+		private CloseableModelTab(final JTabbedPane parent,
 				final JComponent component, final SEModel model, Icon icon) {
 			// unset the annoying gaps that come with default FlowLayout
 			super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
-			final JLabel iconLabel;
-			final TabButton closeButton;
-
 			if (parent == null)
 				throw new NullPointerException("TabbedPane is null");
+
+			final JLabel iconLabel;
+			final TabButton closeButton;
+			final JLabel label;
 
 			this.setOpaque(false);
 
 			// make JLabel read titles from JTabbedPane
-			JLabel label = new JLabel() {
+			label = new JLabel() {
 				public String getText() {
 					int i = parent.indexOfTabComponent(CloseableModelTab.this);
 
@@ -337,8 +471,7 @@ public class ModelTabPanel extends JTabbedPane {
 			// add more space between the label and the button
 			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
-			closeButton = new TabButton(new CloseModelTabAction(component,
-					model));
+			closeButton = new TabButton(new CloseModelAction(model));
 			closeButton.setHideActionText(true);
 			this.add(closeButton);
 
