@@ -26,7 +26,6 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.pane.PanelFactory;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
@@ -552,7 +551,7 @@ public final class FileManager {
 		}
 		this.notifyObservers(model, location);
 
-		PanelFactory.getInstance().createTabForModel(model);
+	//	PanelFactory.getInstance().createTabForModel(model);
 
 	}
 

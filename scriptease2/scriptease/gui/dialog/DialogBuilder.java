@@ -35,7 +35,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import scriptease.gui.ExceptionDialog;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
-import scriptease.gui.pane.PanelFactory;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
@@ -246,7 +245,6 @@ public class DialogBuilder {
 								selectedTranslator);
 
 						SEModelManager.getInstance().add(model, true);
-						PanelFactory.getInstance().createTabForModel(model);
 
 						// Process automatics and add them to the StoryModel
 						AutomaticsManager automaticsManager = new AutomaticsManager();

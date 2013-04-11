@@ -5,12 +5,9 @@ package scriptease.gui.action.file;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JComponent;
-
 import scriptease.controller.FileManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.pane.ModelTabPanel;
 import scriptease.model.SEModel;
 
 /**
@@ -23,27 +20,21 @@ import scriptease.model.SEModel;
  * @author remiller
  */
 @SuppressWarnings("serial")
-public class CloseModelTabAction extends ActiveModelSensitiveAction {
-	private static final String CLOSE_MODULE = Il8nResources
+public class CloseModelAction extends ActiveModelSensitiveAction {
+	private static final String CLOSE_MODEL = Il8nResources
 			.getString("Close_Model");
-	private final JComponent component;
 	private final SEModel model;
 
 	/**
 	 * Defines an <code>CloseModelAction</code> object with a mnemonic.
 	 */
-	public CloseModelTabAction(JComponent component, SEModel model) {
-		super(CloseModelTabAction.CLOSE_MODULE);
-		this.component = component;
+	public CloseModelAction(SEModel model) {
+		super(CloseModelAction.CLOSE_MODEL);
 		this.model = model;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-	//	ModelTabPanel.getInstance().removeModelComponent(this.component,
-	//			this.model);
-		
 		FileManager.getInstance().close(this.model);
-
 	}
 }

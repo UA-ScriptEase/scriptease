@@ -1,13 +1,10 @@
 package scriptease.gui.pane;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -19,16 +16,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
-import scriptease.ScriptEase;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
@@ -36,29 +29,18 @@ import scriptease.controller.observer.StatusObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.ComponentFactory;
 import scriptease.gui.StatusManager;
-import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.SEGraph.SEGraphFactory;
-import scriptease.gui.SEGraph.observers.SEGraphAdapter;
-import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.filters.CategoryFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
-import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
-import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
-import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
@@ -84,189 +66,8 @@ public final class PanelFactory {
 	private PanelFactory() {
 	}
 
-	/**
-	 * Builds a panel for a StoryModel. This panel includes an {@link SEGraph}
-	 * and a {@link StoryComponentPanelTree}.
-	 * 
-	 * @param model
-	 * @param start
-	 * @return
-	 */
-	public JSplitPane buildStoryPanel(StoryModel model, final StoryPoint start) {
-		final JSplitPane storyPanel;
-		final JToolBar graphToolBar;
-
-		final SEGraph<StoryPoint> storyGraph;
-		final StoryComponentPanelTree storyComponentTree;
-		final StoryComponentObserver graphRedrawer;
-		final JPanel storyGraphPanel;
-
-		final JScrollPane storyGraphScrollPane;
-
-		storyPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		graphToolBar = ComponentFactory.buildGraphEditorToolBar();
-
-		storyGraph = SEGraphFactory.buildStoryGraph(start);
-
-		storyComponentTree = new StoryComponentPanelTree(start);
-		graphRedrawer = new StoryComponentObserver() {
-			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				final StoryComponentChangeEnum type;
-
-				type = event.getType();
-
-				if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED) {
-					event.getSource().addStoryComponentObserver(this);
-					storyGraph.repaint();
-					storyGraph.revalidate();
-				} else if (type == StoryComponentChangeEnum.CHANGE_FAN_IN
-						|| type == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
-					storyGraph.repaint();
-					storyGraph.revalidate();
-				} else if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED) {
-					storyGraph.repaint();
-					storyGraph.revalidate();
-
-					// Set root to start node if we remove the selected node.
-					if (event.getSource() == storyComponentTree.getRoot()) {
-						final Collection<StoryPoint> nodes;
-
-						nodes = new ArrayList<StoryPoint>();
-
-						nodes.add(storyGraph.getStartNode());
-
-						storyGraph.setSelectedNodes(nodes);
-						storyComponentTree.setRoot(storyGraph.getStartNode());
-					}
-				}
-
-			}
-		};
-		storyGraphPanel = new JPanel();
-
-		storyGraphScrollPane = new JScrollPane(storyGraph);
-
-		for (StoryPoint point : start.getDescendants()) {
-			point.addStoryComponentObserver(graphRedrawer);
-		}
-
-		// Put the new pane to the map
-
-		// TODO This ugly.
-		ModelTabPanel.getInstance().getModelsToComponents()
-				.put(model, storyPanel);
-
-		// Set up the Story Graph
-		storyGraph.addSEGraphObserver(new SEGraphAdapter<StoryPoint>() {
-
-			@Override
-			public void nodesSelected(final Collection<StoryPoint> nodes) {
-				SEModelManager.getInstance().getActiveModel()
-						.process(new ModelAdapter() {
-							@Override
-							public void processStoryModel(StoryModel storyModel) {
-								storyComponentTree.setRoot(nodes.iterator()
-										.next());
-							}
-						});
-			}
-
-			@Override
-			public void nodeOverwritten(StoryPoint node) {
-				node.revalidateKnowItBindings();
-			}
-
-			@Override
-			public void nodeRemoved(StoryPoint removedNode) {
-				start.revalidateKnowItBindings();
-			}
-
-		});
-
-		start.addStoryComponentObserver(graphRedrawer);
-
-		storyGraphPanel.setLayout(new BorderLayout());
-
-		// Reset the ToolBar to select and add the Story Graph to it.
-		GraphToolBarModeAction.setMode(GraphToolBarModeAction.getMode());
-
-		final String orientation = ScriptEase.getInstance().getPreference(
-				ScriptEase.PREFERRED_ORIENTATION_KEY);
-
-		if (orientation != null
-				&& orientation.equalsIgnoreCase(ScriptEase.HORIZONTAL_TOOLBAR)) {
-			storyGraphScrollPane.setBorder(BorderFactory
-					.createEtchedBorder(EtchedBorder.LOWERED));
-
-			storyGraphPanel.add(graphToolBar, BorderLayout.PAGE_START);
-		} else {// if toolbar is vertical
-			storyGraphScrollPane.setBorder(BorderFactory.createEmptyBorder());
-			storyGraphPanel.setBorder(BorderFactory
-					.createEtchedBorder(EtchedBorder.LOWERED));
-
-			graphToolBar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,
-					Color.LIGHT_GRAY));
-
-			storyGraphPanel.add(graphToolBar, BorderLayout.WEST);
-		}
-
-		storyGraphPanel.add(storyGraphScrollPane, BorderLayout.CENTER);
-
-		storyComponentTree.setBorder(BorderFactory
-				.createEtchedBorder(EtchedBorder.LOWERED));
-
-		// Set up the split pane
-		storyPanel.setBorder(null);
-		storyPanel.setOpaque(true);
-		storyPanel.setTopComponent(storyGraphPanel);
-		storyPanel.setBottomComponent(storyComponentTree);
-
-		// Set up the divider
-		for (Component component : storyPanel.getComponents()) {
-			if (component instanceof BasicSplitPaneDivider) {
-				final BasicSplitPaneDivider divider;
-
-				divider = (BasicSplitPaneDivider) component;
-				divider.setBackground(Color.WHITE);
-				divider.setBorder(null);
-
-				break;
-			}
-		}
-
-		return storyPanel;
-	}
-
 	public ModelTabPanel buildModelTabPanel() {
-		return ModelTabPanel.getInstance();
-	}
-
-	public void createTabForModel(SEModel model) {
-		ModelTabPanel.getInstance().createTabForModel(model);
-	}
-
-	/**
-	 * Builds a panel for a LibraryModel. This panel allows one to edit the
-	 * Library.
-	 * 
-	 * @param model
-	 * @return
-	 */
-	public JScrollPane buildLibraryEditorPanel(LibraryModel model) {
-		final JPanel scbPanel;
-		final JScrollPane scbScrollPane;
-
-		// TODO This seems weird
-		scbPanel = LibraryEditorPanelFactory.getInstance()
-				.buildLibraryEditorPanel(LibraryPanel.getInstance());
-		scbScrollPane = new JScrollPane(scbPanel);
-
-		ModelTabPanel.getInstance().getModelsToComponents()
-				.put(model, scbScrollPane);
-		SEModelManager.getInstance().add(model);
-
-		return scbScrollPane;
+		return new ModelTabPanel();
 	}
 
 	/**

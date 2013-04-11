@@ -4,13 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
-import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
 import scriptease.controller.FileManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.pane.ModelTabPanel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 
@@ -24,10 +22,10 @@ import scriptease.model.SEModelManager;
  * @author remiller
  */
 @SuppressWarnings("serial")
-public final class ClosePatternModelAction extends ActiveModelSensitiveAction {
+public final class CloseActiveModelAction extends ActiveModelSensitiveAction {
 	private static final String CLOSE = Il8nResources.getString("Close_Model");
 
-	private static final Action instance = new ClosePatternModelAction();
+	private static final Action instance = new CloseActiveModelAction();
 
 	/**
 	 * Gets the sole instance of this particular type of Action
@@ -35,15 +33,15 @@ public final class ClosePatternModelAction extends ActiveModelSensitiveAction {
 	 * @return The sole instance of this particular type of Action
 	 */
 	public static Action getInstance() {
-		return ClosePatternModelAction.instance;
+		return CloseActiveModelAction.instance;
 	}
 
 	/**
 	 * Defines a <code>SaveModelAction</code> object with a mnemonic and
 	 * accelerator.
 	 */
-	private ClosePatternModelAction() {
-		super(ClosePatternModelAction.CLOSE);
+	private CloseActiveModelAction() {
+		super(CloseActiveModelAction.CLOSE);
 
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_W);
 		this.putValue(Action.ACCELERATOR_KEY,
@@ -63,11 +61,6 @@ public final class ClosePatternModelAction extends ActiveModelSensitiveAction {
 
 		if (activeModel != null) {
 			FileManager.getInstance().close(activeModel);
-
-///			ModelTabPanel.getInstance().removeModelComponent(
-	//				(JComponent) ModelTabPanel.getInstance()
-	//						.getSelectedComponent(), activeModel);
-
 		}
 	}
 }
