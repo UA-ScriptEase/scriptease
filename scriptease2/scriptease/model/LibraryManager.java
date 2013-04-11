@@ -113,13 +113,13 @@ public class LibraryManager implements LibraryObserver {
 					LibraryManager.this.add(translatorLibrary);
 					LibraryManager.this.loadedTranslators.put(newTranslator,
 							translatorLibrary);
-				} else {
+				} /*else {
 					for (LibraryModel model : LibraryManager.this.loadedTranslators
 							.values()) {
 						LibraryManager.this.remove(model);
 					}
 					LibraryManager.this.loadedTranslators.clear();
-				}
+				}*/
 			}
 		};
 

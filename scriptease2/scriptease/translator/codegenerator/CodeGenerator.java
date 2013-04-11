@@ -309,8 +309,8 @@ public class CodeGenerator {
 		if (compiler != null && !compiler.exists()
 				&& !compiler.getName().equalsIgnoreCase(Translator.FALSE)) {
 
-			System.err.println("Compiler: "
-					+ translator.getCompiler().getName()
+			System.err.println("Compiler at "
+					+ translator.getCompiler().getAbsolutePath()
 					+ " could not be found.");
 		}
 		return scriptInfos;
