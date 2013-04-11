@@ -59,30 +59,37 @@ import scriptease.model.StoryModel;
 import scriptease.model.complex.StoryPoint;
 import scriptease.util.BiHashMap;
 
+/**
+ * The model tab panel creates a new tab for each new model created. Using an
+ * observer, the tabs are removed when the model is removed. This makes the
+ * model tabs MVC. Theoretically, we could have multiple ModelTabPanels, but
+ * this has only been tested with one so far.
+ * 
+ * ModelTabPanels are created from the {@link PanelFactory}.
+ * 
+ * @author kschenk
+ * 
+ */
 @SuppressWarnings("serial")
 class ModelTabPanel extends JTabbedPane {
 	// A mapping of models to components represented by the models
-	private final BiHashMap<SEModel, JComponent> modelToComponent;
+	private final BiHashMap<SEModel, Component> modelToComponent;
 
+	/**
+	 * Creates a new ModelTabPanel and initializes its change listener.
+	 */
 	protected ModelTabPanel() {
-		this.modelToComponent = new BiHashMap<SEModel, JComponent>();
+		this.modelToComponent = new BiHashMap<SEModel, Component>();
 
 		// Register a change listener
 		this.addChangeListener(new ChangeListener() {
 			// This method is called whenever the selected tab changes
 			public void stateChanged(ChangeEvent evt) {
-				final JComponent tab;
-
-				JTabbedPane pane = (JTabbedPane) evt.getSource();
-				// Get the activated frame
-				tab = (JComponent) pane.getSelectedComponent();
+				final Component tab = ModelTabPanel.this.getSelectedComponent();
 
 				if (tab != null) {
-					final SEModel model;
-
-					model = ModelTabPanel.this.modelToComponent.getKey(tab);
-
-					SEModelManager.getInstance().activate(model);
+					SEModelManager.getInstance().activate(
+							ModelTabPanel.this.modelToComponent.getKey(tab));
 				}
 			}
 		});
@@ -109,17 +116,9 @@ class ModelTabPanel extends JTabbedPane {
 	 * @param model
 	 */
 	private void removeTabForModel(SEModel model) {
-		final BiHashMap<SEModel, JComponent> modelToComponent;
-		final JComponent component;
-
-		modelToComponent = ModelTabPanel.this.modelToComponent;
-		component = modelToComponent.getValue(model);
-
 		if (FileManager.getInstance().hasUnsavedChanges(model)) {
-			// otherwise, close the StoryModel
-			modelToComponent.removeKey(model);
-
-			ModelTabPanel.this.remove(component);
+			ModelTabPanel.this.remove(this.modelToComponent.getValue(model));
+			this.modelToComponent.removeKey(model);
 		}
 	}
 
@@ -131,46 +130,45 @@ class ModelTabPanel extends JTabbedPane {
 	private void createTabForModel(SEModel model) {
 		model.process(new ModelAdapter() {
 			@Override
-			public void processLibraryModel(final LibraryModel libraryModel) {
+			public void processLibraryModel(final LibraryModel model) {
 				// Creates a Library Editor panel
-				final JPanel scbPanel;
-				final JScrollPane scbScrollPane;
+				final JPanel panel;
+				final JScrollPane scrollPane;
 				final String savedTitle;
 
-				scbPanel = LibraryEditorPanelFactory.getInstance()
+				panel = LibraryEditorPanelFactory.getInstance()
 						.buildLibraryEditorPanel(LibraryPanel.getInstance());
-				scbScrollPane = new JScrollPane(scbPanel);
+				scrollPane = new JScrollPane(panel);
 
-				ModelTabPanel.this.modelToComponent.put(libraryModel,
-						scbScrollPane);
+				ModelTabPanel.this.modelToComponent.put(model, scrollPane);
 
-				savedTitle = libraryModel.getName() + "[Editor]";
+				savedTitle = model.getName() + "[Editor]";
 
-				scbScrollPane.getVerticalScrollBar().setUnitIncrement(
+				scrollPane.getVerticalScrollBar().setUnitIncrement(
 						ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
-				ModelTabPanel.this.buildTab(savedTitle, libraryModel,
-						scbScrollPane);
+				ModelTabPanel.this.buildTab(savedTitle, model, scrollPane);
 			}
 
 			@Override
 			public void processStoryModel(final StoryModel storyModel) {
 				// Creates a story editor panel with a story graph
 				final StoryPoint root;
-				final JSplitPane newPanel;
+				final JSplitPane panel;
+				final String savedTitle;
 				String modelTitle;
 
 				root = storyModel.getRoot();
-				newPanel = ModelTabPanel.this.buildStoryPanel(storyModel, root);
-				modelTitle = storyModel.getTitle();
+				panel = ModelTabPanel.this.buildStoryPanel(storyModel, root);
 
+				modelTitle = storyModel.getTitle();
 				if (modelTitle == null || modelTitle.equals(""))
 					modelTitle = "<Untitled>";
 
-				final String savedTitle = modelTitle + "("
+				savedTitle = modelTitle + "("
 						+ storyModel.getModule().getLocation().getName() + ")";
 
-				ModelTabPanel.this.buildTab(savedTitle, storyModel, newPanel);
+				ModelTabPanel.this.buildTab(savedTitle, storyModel, panel);
 				/*
 				 * Setting the divider needs to occur here because the
 				 * JSplitPane needs to actually be drawn before this works.
@@ -182,16 +180,26 @@ class ModelTabPanel extends JTabbedPane {
 					public void run() {
 						// Need this code for the divider to be set at the right
 						// location for different screen resolutions.
-						final double top = newPanel.getTopComponent().getSize().height;
-						final double bottom = newPanel.getSize().height;
+						final double top = panel.getTopComponent().getSize().height;
+						final double bottom = panel.getSize().height;
 						final double ratio = top / bottom;
-						newPanel.setDividerLocation(ratio);
+						panel.setDividerLocation(ratio);
 					}
 				});
 			}
 		});
 	}
 
+	/**
+	 * Sets up a new tab with the title, model, and contents. This is not
+	 * dependent on type of model. Tabs have a {@link CloseableModelTab} and are
+	 * set to the selected tab when this is called. They also update their name
+	 * based on if there are any unsaved changes.
+	 * 
+	 * @param title
+	 * @param model
+	 * @param tabContents
+	 */
 	private void buildTab(final String title, final SEModel model,
 			final JComponent tabContents) {
 		final CloseableModelTab newTab;
@@ -202,7 +210,7 @@ class ModelTabPanel extends JTabbedPane {
 		else
 			icon = null;
 
-		newTab = new CloseableModelTab(this, tabContents, model, icon);
+		newTab = new CloseableModelTab(this, model, icon);
 
 		this.addTab(title, icon, tabContents);
 
@@ -435,7 +443,7 @@ class ModelTabPanel extends JTabbedPane {
 		 *            will show no icon.
 		 */
 		private CloseableModelTab(final JTabbedPane parent,
-				final JComponent component, final SEModel model, Icon icon) {
+				final SEModel model, Icon icon) {
 			// unset the annoying gaps that come with default FlowLayout
 			super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
