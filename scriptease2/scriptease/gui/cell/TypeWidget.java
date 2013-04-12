@@ -99,18 +99,24 @@ public class TypeWidget extends JToggleButton {
 			this.setText("!");
 			this.setEnabled(false);
 		} else {
-			final GameTypeManager gameTypeManager;
+			try {
+				GameTypeManager gameTypeManager;
 
-			gameTypeManager = TranslatorManager.getInstance()
-					.getActiveGameTypeManager();
+				gameTypeManager = TranslatorManager.getInstance()
+						.getActiveGameTypeManager();
 
-			if (gameTypeManager != null && gameTypeManager.hasWidgetName(type)) {
-				this.setText(gameTypeManager.getWidgetName(type));
-			} else {
-				if (gameTypeManager != null && gameTypeManager.hasEnum(type))
-					this.setText(GameTypeManager.DEFAULT_LIST_WIDGET);
-				else
-					this.setText(type.substring(0, 2).toUpperCase());
+				if (gameTypeManager != null
+						&& gameTypeManager.hasWidgetName(type)) {
+					this.setText(gameTypeManager.getWidgetName(type));
+				} else {
+					if (gameTypeManager != null
+							&& gameTypeManager.hasEnum(type))
+						this.setText(GameTypeManager.DEFAULT_LIST_WIDGET);
+					else
+						this.setText(type.substring(0, 2).toUpperCase());
+				}
+			} catch (IllegalStateException e) {
+				System.out.println("ERRORWARINGOMG" + type);
 			}
 		}
 	}

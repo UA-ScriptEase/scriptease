@@ -83,17 +83,17 @@ class ModelTabPanel extends JTabbedPane {
 		this.modelToComponent = new BiHashMap<SEModel, Component>();
 
 		// Register a change listener for the tabs
-//		this.addChangeListener(new ChangeListener() {
-//			public void stateChanged(ChangeEvent evt) {
-//				final Component tab = ModelTabPanel.this.getSelectedComponent();
-//				final SEModel model = ModelTabPanel.this.modelToComponent
-//						.getKey(tab);
-//
-//				if (tab != null) {
-//					SEModelManager.getInstance().activate(model);
-//				}
-//			}
-//		});
+		this.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent evt) {
+				final Component tab = ModelTabPanel.this.getSelectedComponent();
+				final SEModel model = ModelTabPanel.this.modelToComponent
+						.getKey(tab);
+
+				if (tab != null) {
+					SEModelManager.getInstance().activate(model);
+				}
+			}
+		});
 
 		SEModelManager.getInstance().addPatternModelObserver(this,
 				new SEModelObserver() {
@@ -105,10 +105,18 @@ class ModelTabPanel extends JTabbedPane {
 						if (event.getEventType() == SEModelEvent.Type.REMOVED) {
 							tabs.removeTabForModel(model);
 						} else if (event.getEventType() == SEModelEvent.Type.ADDED) {
-							tabs.createTabForModel(model);
-						} else if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
-							tabs.setSelectedComponent(tabs.modelToComponent
-									.getValue(model));
+							// We need to delay this until the model is
+							// completely loaded because it switches tabs to the
+							// new tab, which fires the previously created
+							// change listener, which causes a
+							// ConcurrentModificationException, which kills the
+							// ScriptEase.
+							SwingUtilities.invokeLater(new Runnable() {
+								@Override
+								public void run() {
+									tabs.createTabForModel(model);
+								}
+							});
 						}
 					}
 				});
@@ -220,9 +228,6 @@ class ModelTabPanel extends JTabbedPane {
 
 		this.setTabComponentAt(this.indexOfComponent(tabContents), newTab);
 
-		// TODO This exceptions since switching activates the model.
-		// this.setSelectedComponent(tabContents);
-
 		this.setFocusable(false);
 
 		UndoManager.getInstance().addUndoManagerObserver(model,
@@ -243,6 +248,8 @@ class ModelTabPanel extends JTabbedPane {
 						}
 					}
 				});
+
+		this.setSelectedComponent(tabContents);
 	}
 
 	/**
