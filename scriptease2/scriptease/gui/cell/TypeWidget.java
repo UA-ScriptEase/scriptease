@@ -9,7 +9,6 @@ import scriptease.ScriptEase;
 import scriptease.controller.MouseForwardingAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
-import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.gui.ui.TypeWidgetUI;
 import scriptease.model.SEModel;
@@ -36,7 +35,6 @@ public class TypeWidget extends JToggleButton {
 		final int fontSize;
 		final String typeName;
 		final Translator activeTranslator;
-		final TranslatorObserver observer;
 
 		this.setUI(TypeWidgetUI.getInstance());
 		this.setEnabled(false);
@@ -93,22 +91,7 @@ public class TypeWidget extends JToggleButton {
 
 					}
 				});
-
-		/*
-		 * TranslatorManager.getInstance().addTranslatorObserver(this, new
-		 * TranslatorObserver() {
-		 *//**
-		 * When a new translator is loaded, update the TypeText to match
-		 * whether the type exists or not.
-		 */
-		/*
-		 * @Override public void translatorLoaded(Translator newTranslator) {
-		 * String typeName = ""; typeName = newTranslator != null ?
-		 * newTranslator .getGameTypeManager().getDisplayText(
-		 * TypeWidget.this.type) : "";
-		 * 
-		 * if (typeName == null || typeName.equals("")) setTypeText(""); } });
-		 */}
+	}
 
 	private void setTypeText(String type) {
 		if (type.equals("")) {

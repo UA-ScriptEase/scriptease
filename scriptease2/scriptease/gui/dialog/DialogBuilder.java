@@ -129,11 +129,11 @@ public class DialogBuilder {
 		final JComboBox gameComboBox;
 		final GroupLayout layout;
 		final Vector<Translator> translators;
-		
+
 		// Sort it like a boss.
-		translators = new Vector<Translator>(
-				TranslatorManager.getInstance().getTranslators());
-		
+		translators = new Vector<Translator>(TranslatorManager.getInstance()
+				.getTranslators());
+
 		Collections.sort(translators, new Comparator<Translator>() {
 			@Override
 			public int compare(Translator t1, Translator t2) {
@@ -319,12 +319,11 @@ public class DialogBuilder {
 				if (selectedTranslator != null) {
 					legalExtensions = selectedTranslator.getLegalExtensions();
 
-					
-					if(legalExtensions.length != 0){
+					if (legalExtensions.length != 0) {
 						filter = new FileNameExtensionFilter(selectedTranslator
-							.getName() + " Game Files", legalExtensions);
+								.getName() + " Game Files", legalExtensions);
 					}
-					
+
 					defaultLocation = selectedTranslator
 							.getPathProperty(DescriptionKeys.GAME_DIRECTORY);
 

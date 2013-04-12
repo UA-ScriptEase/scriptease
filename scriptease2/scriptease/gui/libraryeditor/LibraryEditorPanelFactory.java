@@ -480,7 +480,9 @@ public class LibraryEditorPanelFactory {
 								"Change " + component + "'s display text to "
 										+ text);
 						component.setDisplayText(text);
-						UndoManager.getInstance().endUndoableAction();
+
+						if (UndoManager.getInstance().hasOpenUndoableAction())
+							UndoManager.getInstance().endUndoableAction();
 					}
 				}
 			}

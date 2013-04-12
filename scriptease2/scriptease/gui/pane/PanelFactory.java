@@ -27,8 +27,6 @@ import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.StatusObserver;
 import scriptease.controller.observer.TranslatorObserver;
-import scriptease.controller.observer.library.LibraryManagerEvent;
-import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.gui.ComponentFactory;
 import scriptease.gui.StatusManager;
 import scriptease.gui.action.typemenus.TypeAction;
@@ -187,9 +185,6 @@ public final class PanelFactory {
 
 		final TypeAction typeFilter;
 
-		final SEModelObserver modelObserver;
-		final LibraryManagerObserver libraryObserver;
-
 		gameConstantPane = new JPanel();
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
@@ -264,32 +259,20 @@ public final class PanelFactory {
 			}
 		});
 
-		libraryObserver = new LibraryManagerObserver() {
-			@Override
-			public void modelChanged(LibraryManagerEvent event) {
-				if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
-					tree.fillTree(event.getSource());
-					tree.filterByTypes(typeFilter.getSelectedTypes());
-				}
-			}
-		};
-
-		modelObserver = new SEModelObserver() {
-			public void modelChanged(SEModelEvent event) {
-				if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
-					tree.fillTree(event.getPatternModel());
-					tree.filterByTypes(typeFilter.getSelectedTypes());
-				} else if (event.getEventType() == SEModelEvent.Type.REMOVED
-						&& SEModelManager.getInstance().getActiveModel() == null) {
-					tree.fillTree(null);
-				}
-			}
-		};
-
-		LibraryManager.getInstance().addLibraryManagerObserver(
-				gameConstantPane, libraryObserver);
 		SEModelManager.getInstance().addPatternModelObserver(gameConstantPane,
-				modelObserver);
+				new SEModelObserver() {
+
+					public void modelChanged(SEModelEvent event) {
+						if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
+							tree.fillTree(event.getPatternModel());
+							tree.filterByTypes(typeFilter.getSelectedTypes());
+						} else if (event.getEventType() == SEModelEvent.Type.REMOVED
+								&& SEModelManager.getInstance()
+										.getActiveModel() == null) {
+							tree.fillTree(null);
+						}
+					}
+				});
 
 		return gameConstantPane;
 	}

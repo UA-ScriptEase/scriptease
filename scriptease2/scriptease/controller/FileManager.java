@@ -542,17 +542,13 @@ public final class FileManager {
 
 			this.openFiles.put(location, model);
 
-			// this needs to happen before we add it to the model pool
-			// so that
+			// this needs to happen before we add it to the model pool so that
 			// the menu items update themselves correctly - remiller
 			this.updateRecentFiles(location);
 
 			SEModelManager.getInstance().add(model, true);
 		}
 		this.notifyObservers(model, location);
-
-	//	PanelFactory.getInstance().createTabForModel(model);
-
 	}
 
 	private void updateRecentFiles(File opened) {

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
@@ -116,12 +118,21 @@ public final class SEModelManager {
 	 *            activating it.
 	 * @see #add(SEModel)
 	 */
-	public void add(SEModel model, boolean activate) {
+	public void add(final SEModel model, boolean activate) {
 		if (this.models.add(model))
 			this.notifyChange(model, SEModelEvent.Type.ADDED);
 
 		if (activate)
-			this.activate(model);
+			// We need to wait for all observers to be notified before calling
+			// this, or we'll end up notifying them while they're being
+			// notified. That leads to a ConcurrentThreadException and general
+			// mayhem.
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					SEModelManager.this.activate(model);
+				}
+			});
 	}
 
 	/**
@@ -181,7 +192,8 @@ public final class SEModelManager {
 	}
 
 	private void notifyChange(SEModel model, SEModelEvent.Type eventType) {
-		for (SEModelObserver observer : this.observerManager.getObservers())
+		for (SEModelObserver observer : this.observerManager.getObservers()) {
 			observer.modelChanged(new SEModelEvent(model, eventType));
+		}
 	}
 }

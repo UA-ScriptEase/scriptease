@@ -71,9 +71,7 @@ public final class ObserverManager<O> {
 	 * @return
 	 */
 	public Collection<O> getObservers() {
-		final Collection<O> observers;
-
-		observers = new ArrayList<O>();
+		final Collection<O> observers = new ArrayList<O>();
 
 		for (Collection<O> value : this.observerMap.values()) {
 			observers.addAll(value);
