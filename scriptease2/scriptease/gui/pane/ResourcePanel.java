@@ -114,13 +114,13 @@ public class ResourcePanel extends JPanel {
 	public void fillTree(SEModel model) {
 		this.panelMap.clear();
 
-		if (!(model instanceof StoryModel))
-			return;
-
 		final GameTypeManager typeManager;
 
 		typeManager = TranslatorManager.getInstance()
 				.getActiveGameTypeManager();
+
+		if (!(model instanceof StoryModel) || typeManager == null)
+			return;
 
 		for (String type : typeManager.getKeywords()) {
 			final Collection<Resource> gameObjects;

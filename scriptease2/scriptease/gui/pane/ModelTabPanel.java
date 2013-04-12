@@ -67,7 +67,8 @@ import scriptease.util.BiHashMap;
  * 
  * ModelTabPanels are created from the {@link PanelFactory}.
  * 
- * @author kschenk
+ * @author ScriptEase Team
+ * @author kschenk - major refactor to make it MVC and less buggy
  * 
  */
 @SuppressWarnings("serial")
@@ -81,32 +82,34 @@ class ModelTabPanel extends JTabbedPane {
 	protected ModelTabPanel() {
 		this.modelToComponent = new BiHashMap<SEModel, Component>();
 
-		// Register a change listener
-		this.addChangeListener(new ChangeListener() {
-			// This method is called whenever the selected tab changes
-			public void stateChanged(ChangeEvent evt) {
-				final Component tab = ModelTabPanel.this.getSelectedComponent();
-				final SEModel model = ModelTabPanel.this.modelToComponent
-						.getKey(tab);
-
-				if (tab != null) {
-					SEModelManager.getInstance().activate(model);
-				}
-			}
-		});
+		// Register a change listener for the tabs
+//		this.addChangeListener(new ChangeListener() {
+//			public void stateChanged(ChangeEvent evt) {
+//				final Component tab = ModelTabPanel.this.getSelectedComponent();
+//				final SEModel model = ModelTabPanel.this.modelToComponent
+//						.getKey(tab);
+//
+//				if (tab != null) {
+//					SEModelManager.getInstance().activate(model);
+//				}
+//			}
+//		});
 
 		SEModelManager.getInstance().addPatternModelObserver(this,
 				new SEModelObserver() {
 					@Override
 					public void modelChanged(SEModelEvent event) {
+						final ModelTabPanel tabs = ModelTabPanel.this;
 						final SEModel model = event.getPatternModel();
 
 						if (event.getEventType() == SEModelEvent.Type.REMOVED) {
-							ModelTabPanel.this.removeTabForModel(model);
+							tabs.removeTabForModel(model);
 						} else if (event.getEventType() == SEModelEvent.Type.ADDED) {
-							ModelTabPanel.this.createTabForModel(model);
+							tabs.createTabForModel(model);
+						} else if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
+							tabs.setSelectedComponent(tabs.modelToComponent
+									.getValue(model));
 						}
-
 					}
 				});
 	}
@@ -217,7 +220,8 @@ class ModelTabPanel extends JTabbedPane {
 
 		this.setTabComponentAt(this.indexOfComponent(tabContents), newTab);
 
-		this.setSelectedComponent(tabContents);
+		// TODO This exceptions since switching activates the model.
+		// this.setSelectedComponent(tabContents);
 
 		this.setFocusable(false);
 
