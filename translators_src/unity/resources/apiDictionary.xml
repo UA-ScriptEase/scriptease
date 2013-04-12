@@ -5230,11 +5230,11 @@
           <Code>
             <Line>
               <Literal>return </Literal>
-              <Scope data="ARGUMENT" ref="">
+              <Scope data="ARGUMENT" ref="Number One">
                 <Fragment data="NAME"/>
               </Scope>
               <Literal> - </Literal>
-              <Scope data="ARGUMENT" ref="">
+              <Scope data="ARGUMENT" ref="Number Two">
                 <Fragment data="NAME"/>
               </Scope>
               <Literal>;</Literal>
