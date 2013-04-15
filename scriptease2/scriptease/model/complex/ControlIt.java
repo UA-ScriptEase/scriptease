@@ -80,12 +80,15 @@ public class ControlIt extends ScriptIt {
 	/**
 	 * Overridden to allow children to be added.
 	 * 
-	 * TODO This should no longer be necessary once we remove Causes from this.
 	 */
 	@Override
 	public boolean addStoryChildBefore(StoryComponent newChild,
 			StoryComponent sibling) {
 
+		/*
+		 * TODO This should no longer be necessary once we remove Causes from
+		 * this.
+		 */
 		if (!(newChild instanceof ScriptIt && ((ScriptIt) newChild).isCause()))
 			return super.addStoryChildBefore(newChild, sibling);
 
@@ -97,10 +100,12 @@ public class ControlIt extends ScriptIt {
 	 * ControlIts end up at the same level as Causes, they need to have some
 	 * variables passed in as parameters.
 	 * 
-	 * TODO Only pass in required variables instead of all of the preceding
-	 * ones.
 	 */
 	public Collection<KnowIt> getRequiredParameters() {
+		/*
+		 * TODO Only pass in required variables instead of all of the preceding
+		 * ones.
+		 */
 		final Collection<KnowIt> parameters;
 
 		parameters = new ArrayList<KnowIt>();

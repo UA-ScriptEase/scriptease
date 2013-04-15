@@ -94,14 +94,16 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 	 * actual implicits. Before, we were generating new knowits to be bound
 	 * here, which obliterated code gen..
 	 * 
-	 * 
-	 * TODO Abstract this somehow, according to ticket #40870537. We only call
-	 * this method on causes while in story mode. However, we also go over the
-	 * entire model in the NWN translator to find journal effects. We should
-	 * just make one pass through the entire module and run a bunch of runnables
-	 * at appropriate times.
-	 * 
 	 * @param scriptIt
+	 */
+
+	/*
+	 * TODO Abstract this somehow. We only call this method on causes while in
+	 * story mode. However, we also go over the entire model in the NWN
+	 * translator to find journal effects. We should just make one pass through
+	 * the entire module and run a bunch of runnables at appropriate times.
+	 * 
+	 * Ticket: 40870537
 	 */
 	private void rebindKnowItBindingReferences(final ScriptIt scriptIt) {
 		final StoryAdapter adapter;

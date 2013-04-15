@@ -114,7 +114,11 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 			if (manager != null)
 				manager.deleteSelected();
 		} else if (focusOwner instanceof StoryComponentPanelJList) {
-			// TODO Needs undoability
+			/*
+			 * TODO Needs undoability
+			 * 
+			 * Ticket: 48089063
+			 */
 
 			// Delete elements from StoryComponentPanelJList
 			final StoryComponentPanelJList list;

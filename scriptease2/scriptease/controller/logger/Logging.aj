@@ -39,7 +39,6 @@ public aspect Logging {
 
 	// Initialization of Logging
 	static {
-		// TODO: USE CONFIG FILE TO IMPORT LEVEL SETTINGS
 		// create loggers
 		Logging.consoleLog.setLevel(Logging.CONSOLE_LEVEL);
 		Logging.consoleLog.setUseParentHandlers(false);
@@ -56,7 +55,7 @@ public aspect Logging {
 			System.out.println("Handler Error");
 		}
 		networkHandler = NetworkHandler.getInstance();
-		
+
 		// set handlers level
 		consoleHandler.setLevel(Logging.CONSOLE_LEVEL);
 		fileHandler.setLevel(Logging.OUTPUT_LEVEL);
@@ -82,13 +81,14 @@ public aspect Logging {
 		Logging.outputLog.addHandler(memoryHandler);
 	}
 
-	// ==================================== POINT CUTS ====================================
+	// ==================================== POINT CUTS
+	// ====================================
 	/**
 	 * Pointcut for system print method calls.
 	 */
 	pointcut system(PrintStream ps, String txt, Object caller):
 		call(void print*(String)) && target(ps) && args(txt) && this(caller);
-	
+
 	/**
 	 * Pointcut for static system print method calls
 	 */
@@ -97,6 +97,7 @@ public aspect Logging {
 
 	/**
 	 * Pointcut for unimplemented context
+	 * 
 	 * @param methodName
 	 * @param caller
 	 */
@@ -104,7 +105,8 @@ public aspect Logging {
 		within(Context) && (execution(* unimplemented(String))) && args (methodName) && this(caller);
 
 	/**
-	 *  pointcut for actionPerformed method calls
+	 * pointcut for actionPerformed method calls
+	 * 
 	 * @param owner
 	 */
 	pointcut actions(Action owner):
@@ -114,6 +116,7 @@ public aspect Logging {
 
 	/**
 	 * Pointcut for context creation calls
+	 * 
 	 * @param pastContext
 	 * @param source
 	 */
@@ -123,6 +126,7 @@ public aspect Logging {
 
 	/**
 	 * Pointcut for ScriptEaseExceptionHandler uncaughtException calls
+	 * 
 	 * @param thread
 	 * @param exception
 	 */
@@ -130,53 +134,57 @@ public aspect Logging {
 		within(ScriptEaseExceptionHandler) && execution(* uncaughtException(Thread ,Throwable)) && args(thread, exception)
 		;
 
-	// ==================================== ADVICE ====================================
+	// ==================================== ADVICE
+	// ====================================
 	// advice for context pointcut
 	after(Context pastContext, Object source) : context(pastContext, source) {
-		Logging.outputLog.log(Level.FINEST,
-				" CONTEXT SCOPING INTO >> " + pastContext.getIndent()
-						+ this.GetSimpleName(source));
+		Logging.outputLog.log(Level.FINEST, " CONTEXT SCOPING INTO >> "
+				+ pastContext.getIndent() + this.GetSimpleName(source));
 	}
 
 	// advice for unimplemented pointcut
 	after(String methodName, Object caller) : unimplemented(methodName, caller) {
-		Logging.outputLog.log(Level.WARNING, "UNIMPLEMENTED CALL TO " + methodName
-				+ " IN " + this.GetSimpleName(caller));
+		Logging.outputLog.log(Level.WARNING, "UNIMPLEMENTED CALL TO "
+				+ methodName + " IN " + this.GetSimpleName(caller));
 	}
 
 	// advice for action pointcut
 	before(Action owner): actions(owner){
-		Logging.outputLog.log(Level.FINEST, "ACTION " + this.GetSimpleName(owner));
+		Logging.outputLog.log(Level.FINEST,
+				"ACTION " + this.GetSimpleName(owner));
 	}
 
 	// advice for exception pointcut
 	before(Thread thread, Throwable exception): exception(thread, exception) {
-		Logging.outputLog.log(Level.SEVERE, "EXCEPTION " + Logging.makeTraceString(exception));
+		Logging.outputLog.log(Level.SEVERE,
+				"EXCEPTION " + Logging.makeTraceString(exception));
 	}
 
 	// advice for system pointcut
 	void around(PrintStream ps, String txt, Object caller): system(ps,txt,caller)	{
-		final Level lvl = (ps == System.out)? Level.INFO : Level.WARNING;
-		final String msg = "\t" + txt + "\t(reported by " + GetSimpleName(caller) + " class)";
-		
+		final Level lvl = (ps == System.out) ? Level.INFO : Level.WARNING;
+		final String msg = "\t" + txt + "\t(reported by "
+				+ GetSimpleName(caller) + " class)";
+
 		Logging.outputLog.log(lvl, msg);
 	}
-	
+
 	// advice for system pointcut
 	void around(PrintStream ps, String txt): systemStatic(ps,txt)	{
-		final Level lvl = (ps == System.out)? Level.INFO : Level.WARNING;
-		
+		final Level lvl = (ps == System.out) ? Level.INFO : Level.WARNING;
+
 		Logging.outputLog.log(lvl, "\t" + txt + "\t(Unknown class)");
 	}
 
-	// ==================================== HELPERS ====================================
+	// ==================================== HELPERS
+	// ====================================
 	// helper method which returns the simple name of the given object
 	private String GetSimpleName(Object object) {
 		String className = object.getClass().getSimpleName();
-		
-		if(className == null || className.equals(""))
+
+		if (className == null || className.equals(""))
 			className = object.getClass().getName();
-		
+
 		return object == null ? null : className;
 	}
 

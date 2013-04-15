@@ -33,7 +33,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
-import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.SEModelEvent;
@@ -357,25 +356,14 @@ class ModelTabPanel extends JTabbedPane {
 		// Reset the ToolBar to select and add the Story Graph to it.
 		GraphToolBarModeAction.setMode(GraphToolBarModeAction.getMode());
 
-		final String orientation = ScriptEase.getInstance().getPreference(
-				ScriptEase.PREFERRED_ORIENTATION_KEY);
+		storyGraphScrollPane.setBorder(BorderFactory.createEmptyBorder());
+		storyGraphPanel.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.LOWERED));
 
-		if (orientation != null
-				&& orientation.equalsIgnoreCase(ScriptEase.HORIZONTAL_TOOLBAR)) {
-			storyGraphScrollPane.setBorder(BorderFactory
-					.createEtchedBorder(EtchedBorder.LOWERED));
+		graphToolBar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,
+				Color.LIGHT_GRAY));
 
-			storyGraphPanel.add(graphToolBar, BorderLayout.PAGE_START);
-		} else {// if toolbar is vertical
-			storyGraphScrollPane.setBorder(BorderFactory.createEmptyBorder());
-			storyGraphPanel.setBorder(BorderFactory
-					.createEtchedBorder(EtchedBorder.LOWERED));
-
-			graphToolBar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,
-					Color.LIGHT_GRAY));
-
-			storyGraphPanel.add(graphToolBar, BorderLayout.WEST);
-		}
+		storyGraphPanel.add(graphToolBar, BorderLayout.WEST);
 
 		storyGraphPanel.add(storyGraphScrollPane, BorderLayout.CENTER);
 

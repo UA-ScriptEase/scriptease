@@ -165,7 +165,7 @@ public final class UnityProject extends GameModule {
 
 	@Override
 	public List<Resource> getResourcesOfType(String typeName) {
-		// TODO Add any other resources we need to load (e.g. textures) here
+		// Add any other resources we need to load (e.g. textures) here
 		final List<Resource> resources;
 		resources = new ArrayList<Resource>();
 		if (typeName.equals(UnityType.SCENE.getName()))
