@@ -25,8 +25,8 @@ import javax.swing.TransferHandler;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 
-import scriptease.gui.cell.BindingWidget;
-import scriptease.gui.cell.ScriptWidgetFactory;
+import scriptease.gui.component.BindingWidget;
+import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.ui.border.GradientLineBorder;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.util.GUIOp;

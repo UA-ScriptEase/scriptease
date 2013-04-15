@@ -43,10 +43,10 @@ import scriptease.gui.action.libraryeditor.codeeditor.MoveFragmentUpAction;
 import scriptease.gui.libraryeditor.FormatFragmentSelectionManager;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.CodeBlock;
-import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
-import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.ScopeTypes;
-import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.SeriesFilterType;
-import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.SeriesTypes;
+import scriptease.translator.codegenerator.CodeGenerationConstants;
+import scriptease.translator.codegenerator.CodeGenerationConstants.ScopeTypes;
+import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
+import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesTypes;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
@@ -588,7 +588,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		directiveLabel.setLabelFor(directiveBox);
 		legalRangeLabel.setLabelFor(legalRangeField);
 
-		for (CodeGenerationKeywordConstants.DataTypes directiveType : CodeGenerationKeywordConstants.DataTypes
+		for (CodeGenerationConstants.DataTypes directiveType : CodeGenerationConstants.DataTypes
 				.values())
 			directiveBox.addItem(directiveType.name());
 

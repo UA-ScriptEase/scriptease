@@ -5,7 +5,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.LanguageDictionary;
 import scriptease.translator.Translator;
-import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
+import scriptease.translator.codegenerator.CodeGenerationConstants;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -50,7 +50,7 @@ public class KnowItBindingFunctionContext extends KnowItBindingContext {
 		// TODO 'functionHeader' should not be hardcoded here. Figure out
 		// why it is, and get it out of here.
 		return AbstractFragment.resolveFormat(languageDictionary
-				.getFormat(CodeGenerationKeywordConstants.FunctionConstants.FUNCTION_AS_VALUE.name()),
+				.getFormat(CodeGenerationConstants.FunctionConstants.FUNCTION_AS_VALUE.name()),
 				scriptItContext);
 	}
 }

@@ -37,8 +37,8 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import scriptease.gui.WindowFactory;
-import scriptease.gui.cell.ScriptWidgetFactory;
-import scriptease.gui.cell.TypeWidget;
+import scriptease.gui.component.ScriptWidgetFactory;
+import scriptease.gui.component.TypeWidget;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;

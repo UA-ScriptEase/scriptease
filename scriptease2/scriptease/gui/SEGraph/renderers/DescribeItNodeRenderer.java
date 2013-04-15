@@ -8,8 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.cell.ScriptWidgetFactory;
-import scriptease.gui.cell.TypeWidget;
+import scriptease.gui.component.ScriptWidgetFactory;
+import scriptease.gui.component.TypeWidget;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeItNode;

@@ -16,6 +16,8 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -464,6 +466,28 @@ public class GUIOp {
 			horizontalScrollBar.setValue(horizontalScrollBarValue
 					+ ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 		}
+	}
+
+	/**
+	 * Get all components inside of a container, including components in
+	 * containers within that component and so on.
+	 * 
+	 * @param container
+	 * @return
+	 */
+	public static Collection<Component> getContainerComponents(
+			Container container) {
+		final Collection<Component> allComponents = new ArrayList<Component>();
+		final Component[] components = container.getComponents();
+
+		for (Component component : components) {
+			allComponents.add(component);
+			if (component instanceof Container)
+				allComponents.addAll(GUIOp
+						.getContainerComponents((Container) component));
+		}
+
+		return allComponents;
 	}
 
 	/**

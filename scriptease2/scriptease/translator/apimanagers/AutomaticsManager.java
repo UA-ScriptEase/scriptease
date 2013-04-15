@@ -40,7 +40,7 @@ public class AutomaticsManager {
 			final Collection<ScriptIt> automatics = library.getAutomatics();
 			for (Resource resource : gameModule.getAutomaticHandlers()) {
 				for (ScriptIt automatic : automatics) {
-					ScriptIt copy = automatic.clone();
+					final ScriptIt copy = automatic.clone();
 					for (KnowIt parameter : copy.getParameters()) {
 						if (!parameter.getTypes().containsAll(
 								resource.getTypes()))

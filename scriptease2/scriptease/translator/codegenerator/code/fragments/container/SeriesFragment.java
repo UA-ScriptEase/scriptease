@@ -15,9 +15,8 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
-import scriptease.translator.codegenerator.CharacterRange;
-import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
-import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.SeriesFilterType;
+import scriptease.translator.codegenerator.CodeGenerationConstants;
+import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -166,59 +165,59 @@ public class SeriesFragment extends AbstractContainerFragment {
 
 		// IF+ELSE BLOCK ( series ... data= <dataLabel> )
 		if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.INCLUDES
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.INCLUDES
 						.name())) {
 			data = context.getIncludeFiles();
 		} else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.CODEBLOCKS
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.CODEBLOCKS
 						.name()))
 			data = context.getCodeBlocks();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.CAUSES
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.CAUSES
 						.name()))
 			data = context.getCauses();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.PARAMETERS
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.PARAMETERS
 						.name()))
 			data = context.getParameters();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.PARAMETERSWITHSLOT
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.PARAMETERSWITHSLOT
 						.name()))
 			data = context.getParametersWithSlot();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.SLOTPARAMETERS
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.SLOTPARAMETERS
 						.name()))
 			data = context.getSlotParameters();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.VARIABLES
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.VARIABLES
 						.name()))
 			data = context.getVariables();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.IMPLICITS
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.IMPLICITS
 						.name()))
 			data = context.getImplicits();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.CHILDREN
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.CHILDREN
 						.name()))
 			data = context.getChildren();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.STORYPOINTS
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.STORYPOINTS
 						.name()))
 			data = context.getStoryPoints();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.ORDEREDSTORYPOINTS
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.ORDEREDSTORYPOINTS
 						.name()))
 			data = context.getOrderedStoryPoints();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.PARENTNODES
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.PARENTNODES
 						.name())) {
 			data = context.getStoryPointParents();
 		} else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.CHILDRENNODES
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.CHILDRENNODES
 						.name())) {
 			data = context.getStoryPointChildren();
 		} else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationKeywordConstants.SeriesTypes.IDENTICALCAUSES
+				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.IDENTICALCAUSES
 						.name())) {
 			data = context.getIdenticalCauses();
 		} else {

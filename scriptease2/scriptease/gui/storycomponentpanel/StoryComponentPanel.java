@@ -19,14 +19,13 @@ import javax.swing.Timer;
 import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputListener;
 
-import scriptease.controller.ContainerCollector;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEFocusManager;
-import scriptease.gui.control.ExpansionButton;
+import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -156,8 +155,8 @@ public class StoryComponentPanel extends JPanel implements
 
 	public void setEditable(boolean editable) {
 		this.editable = editable;
-		Collection<Component> components = new ContainerCollector()
-				.getAllComponents(this);
+		final Collection<Component> components = GUIOp
+				.getContainerComponents(this);
 		for (Component component : components) {
 			if (!(component instanceof JLabel))
 				component.setEnabled(editable);
@@ -405,7 +404,7 @@ public class StoryComponentPanel extends JPanel implements
 						.getSelectionManager();
 				if (selectionManager != null)
 					selectionManager.toggleSelection(panel, e);
-				
+
 				e.consume();
 			}
 

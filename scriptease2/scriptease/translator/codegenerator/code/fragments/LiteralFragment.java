@@ -1,6 +1,5 @@
 package scriptease.translator.codegenerator.code.fragments;
 
-import scriptease.translator.codegenerator.CharacterRange;
 import scriptease.translator.codegenerator.code.contexts.Context;
 
 /**

@@ -15,9 +15,9 @@ import javax.swing.JPanel;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
-import scriptease.gui.cell.ScriptWidgetFactory;
-import scriptease.gui.control.ExpansionButton;
-import scriptease.gui.describeIts.DescribeItPanel;
+import scriptease.gui.component.ExpansionButton;
+import scriptease.gui.component.ScriptWidgetFactory;
+import scriptease.gui.pane.DescribeItPanel;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;

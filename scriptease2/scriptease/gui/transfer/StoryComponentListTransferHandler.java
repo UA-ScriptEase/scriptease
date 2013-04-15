@@ -17,7 +17,7 @@ import javax.swing.JList;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.cell.BindingWidget;
+import scriptease.gui.component.BindingWidget;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
