@@ -189,7 +189,7 @@ public final class PanelFactory {
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
 
-		tree = new ResourcePanel(SEModelManager.getInstance().getActiveModel());
+		tree = new ResourcePanel();
 		searchField = ComponentFactory.buildJTextFieldWithTextBackground(20,
 				"Game Objects", "");
 
@@ -264,12 +264,14 @@ public final class PanelFactory {
 
 					public void modelChanged(SEModelEvent event) {
 						if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
-							tree.fillTree(event.getPatternModel());
-							tree.filterByTypes(typeFilter.getSelectedTypes());
+							tree.fillTree();
+							tree.filterByTypes(event.getPatternModel()
+									.getTranslator().getGameTypeManager()
+									.getKeywords());
 						} else if (event.getEventType() == SEModelEvent.Type.REMOVED
 								&& SEModelManager.getInstance()
 										.getActiveModel() == null) {
-							tree.fillTree(null);
+							tree.fillTree();
 						}
 					}
 				});

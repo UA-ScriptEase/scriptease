@@ -82,7 +82,7 @@ public class ResourcePanel extends JPanel {
 	 *            then nothing is drawn. Use {@link #redrawTree(StoryModel)} to
 	 *            draw the tree later with a StoryModel.
 	 */
-	public ResourcePanel(SEModel model) {
+	public ResourcePanel() {
 		super();
 		this.panelMap = new HashMap<Resource, JPanel>();
 		this.filterTypes = new ArrayList<String>();
@@ -90,18 +90,7 @@ public class ResourcePanel extends JPanel {
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-		if (model != null) {
-			final GameTypeManager typeManager;
-
-			typeManager = model.getTranslator().getGameTypeManager();
-
-			if (typeManager != null) {
-				this.filterTypes.addAll(typeManager.getKeywords());
-			}
-		}
-
-		this.fillTree(model);
-		this.filterByTypes(this.filterTypes);
+		this.fillTree();
 	}
 
 	/**
@@ -112,8 +101,10 @@ public class ResourcePanel extends JPanel {
 	 * 
 	 * @param model
 	 */
-	public void fillTree(SEModel model) {
+	public void fillTree() {
 		this.panelMap.clear();
+
+		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
 		if (!(model instanceof StoryModel))
 			return;
@@ -166,7 +157,7 @@ public class ResourcePanel extends JPanel {
 	 * Since that method calls this method, it is usually a better idea to just
 	 * use it instead.
 	 */
-	public void redrawTree() {
+	private void redrawTree() {
 		this.removeAll();
 
 		final Map<String, List<Resource>> constantMap;
@@ -190,9 +181,6 @@ public class ResourcePanel extends JPanel {
 				}
 			}
 		}
-
-		if (constantMap.size() <= 0)
-			return;
 
 		for (String type : constantMap.keySet()) {
 			final List<Resource> constantList;

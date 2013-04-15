@@ -411,12 +411,11 @@ public class TypeDialogBuilder {
 	 */
 	public Collection<String> getSelectedTypes() {
 		final List<String> checked = new ArrayList<String>();
-		Boolean isAccepted;
 
 		for (String key : this.typesToSelected.keySet()) {
-			isAccepted = this.typesToSelected.get(key);
+			final Boolean isAccepted = this.typesToSelected.get(key);
 
-			if (isAccepted.booleanValue())
+			if (isAccepted)
 				checked.add(key);
 		}
 		return checked;
