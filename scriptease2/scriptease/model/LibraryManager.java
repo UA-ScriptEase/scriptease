@@ -119,7 +119,7 @@ public class LibraryManager implements LibraryObserver {
 
 		TranslatorManager.getInstance().addTranslatorObserver(this,
 				translatorObserver);
-		SEModelManager.getInstance().addPatternModelObserver(this,
+		SEModelManager.getInstance().addSEModelObserver(this,
 				modelObserver);
 	}
 

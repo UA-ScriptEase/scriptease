@@ -160,7 +160,7 @@ public final class PanelFactory {
 			}
 		};
 
-		SEModelManager.getInstance().addPatternModelObserver(librarySplitPane,
+		SEModelManager.getInstance().addSEModelObserver(librarySplitPane,
 				storyLibraryPaneObserver);
 
 		return librarySplitPane;
@@ -259,7 +259,7 @@ public final class PanelFactory {
 			}
 		});
 
-		SEModelManager.getInstance().addPatternModelObserver(gameConstantPane,
+		SEModelManager.getInstance().addSEModelObserver(gameConstantPane,
 				new SEModelObserver() {
 
 					public void modelChanged(SEModelEvent event) {

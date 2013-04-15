@@ -91,7 +91,7 @@ public class TranslatorManager {
 				}
 			}
 		};
-		SEModelManager.getInstance().addPatternModelObserver(this, observer);
+		SEModelManager.getInstance().addSEModelObserver(this, observer);
 
 		System.out.println("Finished loading " + this.translatorPool.size()
 				+ " translators.");

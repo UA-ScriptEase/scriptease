@@ -117,7 +117,7 @@ public final class UndoManager {
 			}
 		};
 
-		SEModelManager.getInstance().addPatternModelObserver(this,
+		SEModelManager.getInstance().addSEModelObserver(this,
 				modelObserver);
 		FileManager.getInstance().addObserver(this, fileObserver);
 	}

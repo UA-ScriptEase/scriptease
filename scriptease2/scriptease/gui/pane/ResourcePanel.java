@@ -28,9 +28,9 @@ import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.GUIOp;
@@ -90,13 +90,14 @@ public class ResourcePanel extends JPanel {
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-		final GameTypeManager typeManager;
+		if (model != null) {
+			final GameTypeManager typeManager;
 
-		typeManager = TranslatorManager.getInstance()
-				.getActiveGameTypeManager();
+			typeManager = model.getTranslator().getGameTypeManager();
 
-		if (typeManager != null) {
-			this.filterTypes.addAll(typeManager.getKeywords());
+			if (typeManager != null) {
+				this.filterTypes.addAll(typeManager.getKeywords());
+			}
 		}
 
 		this.fillTree(model);
@@ -114,10 +115,12 @@ public class ResourcePanel extends JPanel {
 	public void fillTree(SEModel model) {
 		this.panelMap.clear();
 
+		if (!(model instanceof StoryModel))
+			return;
+
 		final GameTypeManager typeManager;
 
-		typeManager = TranslatorManager.getInstance()
-				.getActiveGameTypeManager();
+		typeManager = model.getTranslator().getGameTypeManager();
 
 		if (!(model instanceof StoryModel) || typeManager == null)
 			return;
@@ -201,13 +204,18 @@ public class ResourcePanel extends JPanel {
 			final GameTypeManager typeManager;
 			final String typeName;
 			final ResourceContainer container;
+			final SEModel model;
 
-			typeManager = TranslatorManager.getInstance()
-					.getActiveGameTypeManager();
-			typeName = typeManager.getDisplayText(type);
-			container = new ResourceContainer(typeName, constantList);
+			model = SEModelManager.getInstance().getActiveModel();
 
-			this.add(container);
+			if (model != null) {
+				typeManager = model.getTranslator().getGameTypeManager();
+
+				typeName = typeManager.getDisplayText(type);
+				container = new ResourceContainer(typeName, constantList);
+
+				this.add(container);
+			}
 		}
 
 		this.repaint();

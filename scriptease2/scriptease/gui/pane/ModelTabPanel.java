@@ -94,7 +94,7 @@ class ModelTabPanel extends JTabbedPane {
 			}
 		});
 
-		SEModelManager.getInstance().addPatternModelObserver(this,
+		SEModelManager.getInstance().addSEModelObserver(this,
 				new SEModelObserver() {
 					@Override
 					public void modelChanged(SEModelEvent event) {

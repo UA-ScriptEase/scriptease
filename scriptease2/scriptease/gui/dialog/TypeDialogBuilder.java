@@ -79,21 +79,18 @@ public class TypeDialogBuilder {
 	/**
 	 * Creates a new TypeSelectionDialogBuilder, intializing the variables.
 	 */
-	public TypeDialogBuilder() {
+	public TypeDialogBuilder(Translator translator) {
 		this.allButton = new JButton("Deselect All");
 		this.typesToSelected = new HashMap<String, Boolean>();
 		this.checkBoxPanels = new ArrayList<CheckBoxPanel>();
 
-		final Translator activeTranslator;
 		final Collection<String> types;
 		// Create the translator and populate lists.
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
 
-		if (activeTranslator == null)
+		if (translator == null)
 			return;
 
-		types = activeTranslator.getGameTypeManager().getKeywords();
+		types = translator.getGameTypeManager().getKeywords();
 
 		for (String type : types) {
 			this.typesToSelected.put(type, Boolean.TRUE);
@@ -106,8 +103,8 @@ public class TypeDialogBuilder {
 	 * 
 	 * @param closeAction
 	 */
-	public TypeDialogBuilder(Runnable closeAction) {
-		this();
+	public TypeDialogBuilder(Translator translator, Runnable closeAction) {
+		this(translator);
 		this.closeAction = closeAction;
 	}
 

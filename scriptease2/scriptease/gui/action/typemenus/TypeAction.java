@@ -7,12 +7,15 @@ import javax.swing.AbstractAction;
 import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 
-import scriptease.controller.observer.TranslatorObserver;
+import scriptease.controller.observer.SEModelEvent;
+import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryManagerEvent;
 import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.gui.dialog.TypeDialogBuilder;
 import scriptease.model.LibraryManager;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
@@ -54,7 +57,7 @@ public final class TypeAction extends AbstractAction {
 		this.setAction(action);
 
 		final LibraryManagerObserver libraryObserver;
-		final TranslatorObserver translatorObserver;
+		final SEModelObserver modelObserver;
 
 		libraryObserver = new LibraryManagerObserver() {
 			@Override
@@ -73,21 +76,28 @@ public final class TypeAction extends AbstractAction {
 				});
 			}
 		};
-		translatorObserver = new TranslatorObserver() {
-			@Override
-			public void translatorLoaded(Translator newTranslator) {
-				TypeAction.this.updateEnabledState();
 
-				TypeAction.this.typeBuilder = new TypeDialogBuilder(
-						TypeAction.this.action);
-				TypeAction.this.updateName();
+		modelObserver = new SEModelObserver() {
+			@Override
+			public void modelChanged(SEModelEvent event) {
+				if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
+					TypeAction.this.updateEnabledState();
+					final SEModel model = event.getPatternModel();
+
+					Translator translator = null;
+					if (model != null)
+						translator = model.getTranslator();
+
+					TypeAction.this.typeBuilder = new TypeDialogBuilder(
+							translator, TypeAction.this.action);
+					TypeAction.this.updateName();
+				}
 			}
 		};
 
 		LibraryManager.getInstance().addLibraryManagerObserver(this,
 				libraryObserver);
-		TranslatorManager.getInstance().addTranslatorObserver(this,
-				translatorObserver);
+		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 
 		this.updateName();
 		this.putValue(SHORT_DESCRIPTION, "Select Type");
@@ -116,7 +126,13 @@ public final class TypeAction extends AbstractAction {
 		if (this.typeBuilder != null)
 			this.typeBuilder.setCloseAction(newAction);
 		else {
-			this.typeBuilder = new TypeDialogBuilder(newAction);
+			final SEModel model = SEModelManager.getInstance().getActiveModel();
+
+			Translator translator = null;
+			if (model != null)
+				translator = model.getTranslator();
+
+			this.typeBuilder = new TypeDialogBuilder(translator, newAction);
 		}
 
 		this.updateName();
