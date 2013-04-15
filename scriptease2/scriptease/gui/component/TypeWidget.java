@@ -79,7 +79,7 @@ public class TypeWidget extends JToggleButton {
 
 			active = TranslatorManager.getInstance().getActiveTranslator();
 
-			if (active.loadedAPIDictionary()) {
+			if (active != null && active.loadedAPIDictionary()) {
 				final GameTypeManager gameTypeManager;
 
 				gameTypeManager = active.getGameTypeManager();

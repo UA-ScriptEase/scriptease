@@ -118,7 +118,7 @@ public final class ComponentFactory {
 			graphEditorToolBar.add(toolBarButton);
 		}
 
-		SEModelManager.getInstance().addPatternModelObserver(
+		SEModelManager.getInstance().addSEModelObserver(
 				graphEditorToolBar, new SEModelObserver() {
 					@Override
 					public void modelChanged(SEModelEvent event) {

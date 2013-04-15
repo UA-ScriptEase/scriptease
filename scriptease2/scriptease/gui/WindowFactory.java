@@ -962,7 +962,7 @@ public final class WindowFactory {
 								GroupLayout.PREFERRED_SIZE,
 								GroupLayout.PREFERRED_SIZE));
 
-		SEModelManager.getInstance().addPatternModelObserver(this,
+		SEModelManager.getInstance().addSEModelObserver(this,
 				modelObserver);
 
 		frame.getContentPane().add(content);

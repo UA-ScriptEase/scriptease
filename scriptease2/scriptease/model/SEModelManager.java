@@ -176,7 +176,7 @@ public final class SEModelManager {
 	 * @param observer
 	 *            the listener to add
 	 */
-	public void addPatternModelObserver(Object object, SEModelObserver value) {
+	public void addSEModelObserver(Object object, SEModelObserver value) {
 		this.observerManager.addObserver(object, value);
 	}
 

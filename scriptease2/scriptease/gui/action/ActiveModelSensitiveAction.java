@@ -51,7 +51,7 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction {
 		};
 
 		this.updateEnabledState();
-		SEModelManager.getInstance().addPatternModelObserver(this, observer);
+		SEModelManager.getInstance().addSEModelObserver(this, observer);
 	}
 
 	/**

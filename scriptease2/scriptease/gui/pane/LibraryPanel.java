@@ -167,7 +167,7 @@ public class LibraryPanel extends JTabbedPane {
 
 		LibraryManager.getInstance().addLibraryManagerObserver(this,
 				libraryManagerObserver);
-		SEModelManager.getInstance().addPatternModelObserver(this,
+		SEModelManager.getInstance().addSEModelObserver(this,
 				modelObserver);
 		TranslatorManager.getInstance().addTranslatorObserver(this,
 				translatorObserver);
