@@ -11,7 +11,7 @@ import javax.swing.JToggleButton;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.typemenus.TypeAction;
-import scriptease.gui.cell.ScriptWidgetFactory;
+import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 

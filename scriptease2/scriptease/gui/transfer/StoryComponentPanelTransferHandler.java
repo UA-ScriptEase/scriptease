@@ -21,7 +21,7 @@ import javax.swing.JSplitPane;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.cell.BindingWidget;
+import scriptease.gui.component.BindingWidget;
 import scriptease.gui.libraryeditor.EffectHolderPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;

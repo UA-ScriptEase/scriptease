@@ -5,7 +5,7 @@ import java.util.Collection;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ControlIt.ControlItFormat;
-import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.FormatReferenceType;
+import scriptease.translator.codegenerator.CodeGenerationConstants.FormatReferenceType;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 
 /**

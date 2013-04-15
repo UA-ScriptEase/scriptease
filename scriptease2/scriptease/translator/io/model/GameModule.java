@@ -5,14 +5,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import scriptease.controller.CodeBlockMapper;
+import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ScriptIt;
 import scriptease.translator.codegenerator.ScriptInfo;
 
 /**
@@ -205,25 +209,53 @@ public abstract class GameModule {
 	 */
 	public Collection<Set<CodeBlock>> aggregateScripts(
 			Collection<StoryComponent> roots) {
-		final Map<String, List<CodeBlock>> codeBlocks;
-		final CodeBlockMapper codeBlockMapper;
+		final Map<String, List<CodeBlock>> subjectToCodeBlocks;
+		final StoryAdapter codeBlockMapper;
 		final List<Set<CodeBlock>> scriptBuckets;
 
+		subjectToCodeBlocks = new HashMap<String, List<CodeBlock>>();
 		scriptBuckets = new ArrayList<Set<CodeBlock>>();
 
 		// Split the story tree into groups by CodeBlock info.
-		codeBlockMapper = new CodeBlockMapper();
+		codeBlockMapper = new StoryAdapter() {
+
+			@Override
+			protected void defaultProcessComplex(ComplexStoryComponent complex) {
+				complex.processChildren(this);
+			}
+
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
+					final String slot;
+					final KnowIt subject;
+					final String key;
+
+					slot = codeBlock.getSlot();
+					subject = codeBlock.getSubject();
+					key = subject.getBinding().toString() + slot;
+
+					List<CodeBlock> bucket = subjectToCodeBlocks.get(key);
+					if (bucket == null) {
+						bucket = new ArrayList<CodeBlock>();
+					}
+
+					bucket.add(codeBlock);
+					subjectToCodeBlocks.put(key, bucket);
+				}
+				this.defaultProcessComplex(scriptIt);
+			}
+		};
+
 		for (StoryComponent root : roots) {
 			root.process(codeBlockMapper);
 		}
 
-		// Now that we've found all the CodeBlockComponents, sort them into
-		// groups.
-		codeBlocks = codeBlockMapper.getCodeBlocks();
-		for (String key : codeBlocks.keySet()) {
+		// Sort CodeBlocks into groups.
+		for (String key : subjectToCodeBlocks.keySet()) {
 			final Set<CodeBlock> codeBlockGroup = new HashSet<CodeBlock>();
-			for (CodeBlock codeBlockStoryComponent : codeBlocks.get(key)) {
-				codeBlockGroup.add(codeBlockStoryComponent);
+			for (CodeBlock codeBlock : subjectToCodeBlocks.get(key)) {
+				codeBlockGroup.add(codeBlock);
 			}
 			scriptBuckets.add(codeBlockGroup);
 		}

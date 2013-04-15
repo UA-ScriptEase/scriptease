@@ -45,6 +45,7 @@ import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.dialog.DialogBuilder;
+import scriptease.gui.dialog.PreferencesDialog;
 import scriptease.gui.pane.PanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;

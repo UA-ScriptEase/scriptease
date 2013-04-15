@@ -23,9 +23,9 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import scriptease.gui.cell.BindingWidget;
-import scriptease.gui.cell.ScriptWidgetFactory;
-import scriptease.gui.control.ExpansionButton;
+import scriptease.gui.component.BindingWidget;
+import scriptease.gui.component.ExpansionButton;
+import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.SEModel;
 import scriptease.model.StoryModel;

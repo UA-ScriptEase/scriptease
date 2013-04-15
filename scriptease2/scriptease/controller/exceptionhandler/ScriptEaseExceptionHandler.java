@@ -29,16 +29,8 @@ public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 
 	@Override
 	public void uncaughtException(final Thread t, final Throwable e) {
-//		if (SwingUtilities.isEventDispatchThread()) {
-			this.handle(e);
-//		} else {
-//			SwingUtilities.invokeLater(new Runnable() {
-//				public void run() {
-//					ScriptEaseExceptionHandler.this.handle(e);
-//				}
-//			});
-//		}
-				}
+		this.handle(e);
+	}
 
 	/**
 	 * Sorts the Throwable object by its subtype (Error or Exception) and calls
@@ -53,10 +45,12 @@ public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 		if (thrown instanceof java.lang.Error) {
 			// Very Bad Things are happening. Duck and cover.
 			try {
-			WindowFactory.getInstance().showErrorDialog();
+				WindowFactory.getInstance().showErrorDialog();
 			} catch (Throwable t) {
-				JOptionPane.showMessageDialog(null,
-						"ScriptEase has encountered a critical error: "+ t.getMessage());
+				JOptionPane.showMessageDialog(
+						null,
+						"ScriptEase has encountered a critical error: "
+								+ t.getMessage());
 			} finally {
 				System.exit(-1);
 			}

@@ -1,6 +1,6 @@
 package scriptease.controller.io.converter.fragment;
 
-import scriptease.translator.codegenerator.CodeGenerationKeywordConstants.FormatReferenceType;
+import scriptease.translator.codegenerator.CodeGenerationConstants.FormatReferenceType;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 
 import com.thoughtworks.xstream.converters.Converter;

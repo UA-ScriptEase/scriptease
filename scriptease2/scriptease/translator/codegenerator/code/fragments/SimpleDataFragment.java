@@ -2,9 +2,8 @@ package scriptease.translator.codegenerator.code.fragments;
 
 import java.util.regex.Pattern;
 
-import scriptease.translator.codegenerator.CharacterRange;
+import scriptease.translator.codegenerator.CodeGenerationConstants;
 import scriptease.translator.codegenerator.CodeGenerationException;
-import scriptease.translator.codegenerator.CodeGenerationKeywordConstants;
 import scriptease.translator.codegenerator.code.contexts.Context;
 
 /**
@@ -70,16 +69,16 @@ public class SimpleDataFragment extends AbstractFragment {
 		try {
 			// IF+ELSE BLOCK (fragment data = <dataLabel>)
 			if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.NAME
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.NAME
 							.name()))
 				resolveString = context.getUniqueName(Pattern
 						.compile(this.legalRange));
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.DISPLAYTEXT
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.DISPLAYTEXT
 							.name())) {
 				resolveString = context.getDisplayText();
 			} else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.TYPE
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.TYPE
 							.name())) {
 				try {
 					resolveString = context.getType();
@@ -90,64 +89,64 @@ public class SimpleDataFragment extends AbstractFragment {
 						throw e;
 				}
 			} else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.CODE
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.CODE
 							.name()))
 				resolveString = context.getCode();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.TEMPLATEID
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.TEMPLATEID
 							.name()))
 				resolveString = context.getTemplateID();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.VALUE
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.VALUE
 							.name()))
 				resolveString = context.getValue();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.CONDITION
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.CONDITION
 							.name()))
 				resolveString = context.getCondition();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.CONTROLITFORMAT
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.CONTROLITFORMAT
 							.name())) {
 				resolveString = context.getControlItFormat();
 			} else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.CURRENTSTORYPOINT
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.CURRENTSTORYPOINT
 							.name()))
 				resolveString = context.getUnique32CharName();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.FORMATTEDVALUE
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.FORMATTEDVALUE
 							.name()))
 				resolveString = context.getFormattedValue();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.INCLUDE
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.INCLUDE
 							.name()))
 				resolveString = context.getInclude();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.SUBJECT
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.SUBJECT
 							.name()))
 				resolveString = context.getSubject().getBinding()
 						.getScriptValue();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.SLOTCONDITIONAL
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.SLOTCONDITIONAL
 							.name()))
 				resolveString = context.getSlotConditional();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.FANIN
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.FANIN
 							.name()))
 				resolveString = context.getFanIn();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.NOTE
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.NOTE
 							.name()))
 				resolveString = context.getDisplayText();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.PARENTNAME
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.PARENTNAME
 							.name()))
 				resolveString = context.getParentName();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.UNIQUEID
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.UNIQUEID
 							.name()))
 				resolveString = context.getUniqueID();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationKeywordConstants.DataTypes.UNIQUE32CHARNAME
+					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.UNIQUE32CHARNAME
 							.name()))
 				resolveString = context.getUnique32CharName();
 			else
