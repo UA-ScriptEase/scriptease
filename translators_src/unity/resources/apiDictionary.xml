@@ -6675,7 +6675,7 @@
           <Types>
             <Type>void</Type>
           </Types>
-          <Parameters>
+          <Parameters>A
             <KnowIt>
               <Name>Number</Name>
               <Visible>true</Visible>
