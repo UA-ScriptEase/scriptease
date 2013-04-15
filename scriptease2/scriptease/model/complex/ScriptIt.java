@@ -40,9 +40,11 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 	private static final String ALWAYS_BLOCK_TEXT = "Always:";
 
 	/*
-	 * TODO Eventually, we should move out all of the cause specific stuff and
-	 * call it a "CauseIt". We are removing functionality when we create the
-	 * ControlIt subclass from ScriptIt, which violates the Liskov principle.
+	 * TODO We should move out all of the cause specific stuff and call it a
+	 * "CauseIt". We are removing functionality when we create the ControlIt
+	 * subclass from ScriptIt, which violates the Liskov principle.
+	 * 
+	 * Ticket: 42583119
 	 */
 
 	// The group of children that are in the Story Point Active block

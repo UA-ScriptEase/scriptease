@@ -18,9 +18,6 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 	// ResRef must be module for journal.
 	private static final String RESREF = "module";
 
-	// TODO Not sure if there's an easier way to reference these effects.
-	// I almost feel like we should have tags in our APIDictionary, especially
-	// since these should be implemented in all translators ever.
 	public static final String EFFECT_CREATE_JOURNAL_TEXT = "Add Journal Record for <Story Point>";
 	public static final String PARAMETER_STORY_POINT_TEXT = "Story Point";
 

@@ -37,7 +37,6 @@ public abstract class Resource implements TypedComponent {
 	 * 
 	 * @return
 	 */
-	// TODO Make this by default return tag. Or the other way around. Determine
 	public abstract String getTemplateID();
 
 	/**
@@ -45,7 +44,6 @@ public abstract class Resource implements TypedComponent {
 	 * 
 	 * @return The code string that represents the method of object resolution
 	 */
-	// TODO Default behaviour?
 	public abstract String getCodeText();
 
 	/**
@@ -73,6 +71,7 @@ public abstract class Resource implements TypedComponent {
 	 * to be useful.
 	 * 
 	 * TODO We should return the link instead of checking for one.
+	 * Ticket: 48086075
 	 * 
 	 * @return <code>true</code> if the node is a link.
 	 */

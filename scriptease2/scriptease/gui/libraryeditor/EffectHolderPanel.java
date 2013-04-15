@@ -65,6 +65,8 @@ public class EffectHolderPanel extends JPanel {
 		 * changes to the DescribeIt, not the other way around. That way, this
 		 * should automatically not accept invalid types, etc. We shouldn't be
 		 * checking for that stuff in the View classes!
+		 * 
+		 * Ticket: 48085701
 		 */
 		this.effect = effect;
 		this.removeAll();

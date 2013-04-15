@@ -21,15 +21,16 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  */
 public class KnowItBindingFunctionContext extends KnowItBindingContext {
 
-	public KnowItBindingFunctionContext(StoryPoint model,
-			String indent, CodeGenerationNamifier existingNames,
-			Translator translator, LocationInformation locationInfo) {
+	public KnowItBindingFunctionContext(StoryPoint model, String indent,
+			CodeGenerationNamifier existingNames, Translator translator,
+			LocationInformation locationInfo) {
 		super(model, indent, existingNames, translator, locationInfo);
 	}
 
 	public KnowItBindingFunctionContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(),
-				other.getTranslator(), other.getLocationInfo());
+		this(other.getStartStoryPoint(), other.getIndent(),
+				other.getNamifier(), other.getTranslator(), other
+						.getLocationInfo());
 	}
 
 	public KnowItBindingFunctionContext(Context other, KnowItBinding source) {
@@ -47,10 +48,16 @@ public class KnowItBindingFunctionContext extends KnowItBindingContext {
 						((KnowItBindingFunction) this.binding).getValue());
 		final LanguageDictionary languageDictionary = this.getTranslator()
 				.getLanguageDictionary();
-		// TODO 'functionHeader' should not be hardcoded here. Figure out
-		// why it is, and get it out of here.
-		return AbstractFragment.resolveFormat(languageDictionary
-				.getFormat(CodeGenerationConstants.FunctionConstants.FUNCTION_AS_VALUE.name()),
-				scriptItContext);
+		/*
+		 * TODO 'functionHeader' should not be hardcoded here. Figure out why it
+		 * is, and get it out of here.
+		 * 
+		 * Ticket: 32213279
+		 */
+		return AbstractFragment
+				.resolveFormat(
+						languageDictionary
+								.getFormat(CodeGenerationConstants.FunctionConstants.FUNCTION_AS_VALUE
+										.name()), scriptItContext);
 	}
 }

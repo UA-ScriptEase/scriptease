@@ -72,7 +72,13 @@ public class StoryPoint extends ComplexStoryComponent {
 
 	@Override
 	public ComplexStoryComponent clone() {
-		// TODO We are not cloning Story Points properly! Could cause problems?
+		/*
+		 * TODO We are not cloning Story Points properly! Add in when we
+		 * refactor to use constructors. This hasn't caused issues yet because
+		 * we never have to completely copy and paste story points.
+		 * 
+		 * Ticket: 13127149
+		 */
 		return super.clone();
 	}
 
@@ -175,16 +181,16 @@ public class StoryPoint extends ComplexStoryComponent {
 	}
 
 	/**
-	 * Gets all descendants of the StoryPoint, including hte StoryPoint itself.
-	 * 
-	 * 
-	 * TODO Not sure if this is redundant with {@link #getDescendants()}. Check
-	 * if we can remove the set version. We do need an ordered list for some
-	 * methods, but maybe a set is preferable sometimes? Not sure, check it out.
+	 * Gets all descendants of the StoryPoint, including the StoryPoint itself.
 	 * 
 	 * @return
 	 */
 	public List<StoryPoint> getOrderedDescendants() {
+		/*
+		 * TODO Not sure if this is redundant with {@link #getDescendants()}.
+		 * Check if we can remove the set version. We do need an ordered list
+		 * for some methods, but why would we need an unordered set as well?
+		 */
 		final List<StoryPoint> descendants;
 
 		descendants = new ArrayList<StoryPoint>();
@@ -215,10 +221,6 @@ public class StoryPoint extends ComplexStoryComponent {
 
 		descendants.add(this);
 		for (StoryPoint successor : this.successors) {
-			// TODO May not need to add successor here, since it would be
-			// returned by "successor.getDescendants" anyways. Needs testing,
-			// though, and I can't work on that right now. - kschenk
-			descendants.add(successor);
 			descendants.addAll(successor.getDescendants());
 		}
 

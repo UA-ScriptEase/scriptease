@@ -236,8 +236,12 @@ public class UnityResource extends Resource {
 						final Resource animationElement;
 
 						if (name.contains(nameStart)) {
-							// TODO Change this into a regex. There may be other
-							// wacky fringe cases.
+							/*
+							 * TODO Change this into a regex. There may be other
+							 * wacky fringe cases.
+							 * 
+							 * Ticket: 48086177
+							 */
 
 							// Get the string after the @. It's now anim_222-222
 							name = name.split(nameStart)[1];

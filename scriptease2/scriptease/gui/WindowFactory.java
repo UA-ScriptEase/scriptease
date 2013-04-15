@@ -105,15 +105,7 @@ public final class WindowFactory {
 	private static final String RETRY_TITLE_START = "Problem with";
 	private static final String CANCEL = "Cancel";
 
-	/*
-	 * This is never actually set, so it's just null. All of these windows are
-	 * thus just created on the root pane. However, if we ever have multiple
-	 * windows, this will be useful.
-	 * 
-	 * TODO Either implmement this so it can be "useful" or get rid of it (i.e.
-	 * rename it to "mainFrame" or something).
-	 */
-	private JFrame currentFrame = null;
+	private JFrame mainFrame = null;
 
 	/**
 	 * The sole instance of this class as per the singleton pattern.
@@ -147,7 +139,7 @@ public final class WindowFactory {
 		if (!frame.isVisible())
 			frame.setVisible(true);
 
-		this.currentFrame = frame;
+		this.mainFrame = frame;
 	}
 
 	/**
@@ -162,7 +154,7 @@ public final class WindowFactory {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(WindowFactory.this.currentFrame,
+				JOptionPane.showMessageDialog(WindowFactory.this.mainFrame,
 						WindowFactory.ERROR_MESSAGE,
 						WindowFactory.CRITICAL_ERROR_TITLE,
 						JOptionPane.ERROR_MESSAGE);
@@ -187,7 +179,7 @@ public final class WindowFactory {
 	 *         {@link JOptionPane#CLOSED_OPTION} if the user closed the dialog
 	 */
 	public int showOptionsDialog(String message, String title, Object[] options) {
-		return JOptionPane.showOptionDialog(this.currentFrame, message, title,
+		return JOptionPane.showOptionDialog(this.mainFrame, message, title,
 				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
 				options, null);
 	}
@@ -202,8 +194,8 @@ public final class WindowFactory {
 	public boolean showYesNoConfirmDialog(String message, String title) {
 		final int option;
 
-		option = JOptionPane.showConfirmDialog(this.currentFrame, message,
-				title, JOptionPane.YES_NO_OPTION);
+		option = JOptionPane.showConfirmDialog(this.mainFrame, message, title,
+				JOptionPane.YES_NO_OPTION);
 
 		return option == JOptionPane.YES_OPTION;
 	}
@@ -218,7 +210,7 @@ public final class WindowFactory {
 			return;
 
 		JDialog dialog = DialogBuilder.getInstance().createExceptionDialog(
-				this.currentFrame);
+				this.mainFrame);
 		WindowFactory.exceptionShowing = true;
 
 		dialog.setLocationRelativeTo(dialog.getParent());
@@ -228,7 +220,7 @@ public final class WindowFactory {
 	}
 
 	public void showNewStoryWizardDialog() {
-		DialogBuilder.getInstance().showNewStoryWizard(this.currentFrame);
+		DialogBuilder.getInstance().showNewStoryWizard(this.mainFrame);
 	}
 
 	/**
@@ -251,7 +243,7 @@ public final class WindowFactory {
 			return;
 
 		final JDialog progressBar = DialogBuilder.getInstance()
-				.createProgressBar(this.currentFrame, progressBarText);
+				.createProgressBar(this.mainFrame, progressBarText);
 
 		WindowFactory.progressShowing = true;
 
@@ -281,8 +273,7 @@ public final class WindowFactory {
 	 * @return
 	 */
 	public LibraryModel buildNewLibraryWizardDialog() {
-		return DialogBuilder.getInstance().showNewLibraryWizard(
-				this.currentFrame);
+		return DialogBuilder.getInstance().showNewLibraryWizard(this.mainFrame);
 	}
 
 	/**
@@ -301,7 +292,7 @@ public final class WindowFactory {
 		}
 		options[libraries.size()] = "New Library...";
 		// libraries.add("test");
-		return JOptionPane.showInputDialog(this.currentFrame,
+		return JOptionPane.showInputDialog(this.mainFrame,
 				"Select a Library: ", "Library Selector",
 				JOptionPane.PLAIN_MESSAGE, null, options, null);
 	}
@@ -339,7 +330,7 @@ public final class WindowFactory {
 			panel.add(problemPanel);
 		}
 
-		JOptionPane.showMessageDialog(this.currentFrame, panel,
+		JOptionPane.showMessageDialog(this.mainFrame, panel,
 				WindowFactory.CODE_GENERATION_PROBLEM,
 				JOptionPane.WARNING_MESSAGE);
 	}
@@ -412,7 +403,7 @@ public final class WindowFactory {
 
 		panel.add(new JLabel("Do you wish to continue?"));
 
-		int choice = JOptionPane.showConfirmDialog(this.currentFrame, panel,
+		int choice = JOptionPane.showConfirmDialog(this.mainFrame, panel,
 				WindowFactory.CONFIRM_MODEL_TITLE, JOptionPane.YES_NO_OPTION);
 		return choice == JOptionPane.OK_OPTION;
 	}
@@ -423,7 +414,7 @@ public final class WindowFactory {
 	 * @return True if the user confirmed the overwrite, false otherwise.
 	 */
 	public boolean showConfirmOverwrite(File location) {
-		int choice = JOptionPane.showConfirmDialog(this.currentFrame,
+		int choice = JOptionPane.showConfirmDialog(this.mainFrame,
 				"The file: \"" + location.getAbsolutePath()
 						+ "\" already exists.\n"
 						+ WindowFactory.CONFIRM_OVERWRITE_TEXT,
@@ -440,7 +431,7 @@ public final class WindowFactory {
 	 *         <code>JOptionPane.CANCEL_OPTION</code>
 	 */
 	public int showConfirmClose(SEModel model) {
-		int choice = JOptionPane.showConfirmDialog(this.currentFrame,
+		int choice = JOptionPane.showConfirmDialog(this.mainFrame,
 				"The story \"" + model + "\" has been modified. "
 						+ WindowFactory.CONFIRM_CLOSE_TEXT,
 				WindowFactory.CONFIRM_CLOSE_TITLE,
@@ -464,7 +455,7 @@ public final class WindowFactory {
 	 * (version, authors, etc.)
 	 */
 	public void showAboutScreen() {
-		JOptionPane.showMessageDialog(this.currentFrame,
+		JOptionPane.showMessageDialog(this.mainFrame,
 				WindowFactory.ABOUT_SCRIPTEASE_MESSAGE,
 				WindowFactory.ABOUT_SCRIPTEASE_TITLE,
 				JOptionPane.INFORMATION_MESSAGE);
@@ -496,7 +487,7 @@ public final class WindowFactory {
 
 		String[] values = { acceptText, WindowFactory.CANCEL };
 
-		int choice = JOptionPane.showOptionDialog(this.currentFrame, message,
+		int choice = JOptionPane.showOptionDialog(this.mainFrame, message,
 				WindowFactory.RETRY_TITLE_START + " " + operationName,
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
 				null, values, values[0]);
@@ -521,7 +512,7 @@ public final class WindowFactory {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(WindowFactory.this.currentFrame,
+				JOptionPane.showMessageDialog(WindowFactory.this.mainFrame,
 						message, "ScriptEase: " + title,
 						JOptionPane.ERROR_MESSAGE);
 			}
@@ -546,7 +537,7 @@ public final class WindowFactory {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(WindowFactory.this.currentFrame,
+				JOptionPane.showMessageDialog(WindowFactory.this.mainFrame,
 						message, "ScriptEase: " + title,
 						JOptionPane.WARNING_MESSAGE);
 			}
@@ -567,7 +558,7 @@ public final class WindowFactory {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(WindowFactory.this.currentFrame,
+				JOptionPane.showMessageDialog(WindowFactory.this.mainFrame,
 						message, "ScriptEase: " + title,
 						JOptionPane.INFORMATION_MESSAGE);
 			}
@@ -631,7 +622,7 @@ public final class WindowFactory {
 		// usually the correct extension)
 		chooser.setSelectedFile(new File(defaultFileName));
 
-		buttonChoice = chooser.showDialog(this.currentFrame, operation);
+		buttonChoice = chooser.showDialog(this.mainFrame, operation);
 
 		if (buttonChoice == JFileChooser.APPROVE_OPTION) {
 			choice = chooser.getSelectedFile();
@@ -649,7 +640,7 @@ public final class WindowFactory {
 	 */
 	public void showPreferencesDialog() {
 		PreferencesDialog preferencesDialog = new PreferencesDialog(
-				this.currentFrame);
+				this.mainFrame);
 		preferencesDialog.display();
 	}
 
@@ -660,7 +651,7 @@ public final class WindowFactory {
 	 * @return
 	 */
 	public JDialog buildDialog(String title) {
-		final JDialog dialog = new JDialog(this.currentFrame, title,
+		final JDialog dialog = new JDialog(this.mainFrame, title,
 				Dialog.ModalityType.DOCUMENT_MODAL);
 
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -865,7 +856,7 @@ public final class WindowFactory {
 	 * @return
 	 */
 	public JFrame getCurrentFrame() {
-		return this.currentFrame;
+		return this.mainFrame;
 	}
 
 	/**
@@ -887,7 +878,6 @@ public final class WindowFactory {
 
 		final JComponent statusBar;
 		final GroupLayout contentLayout;
-		final String preferredLayout;
 
 		final SEModelObserver modelObserver;
 
@@ -909,9 +899,6 @@ public final class WindowFactory {
 		statusBar = PanelFactory.getInstance().buildStatusPanel();
 
 		contentLayout = new GroupLayout(content);
-		// Get the preferred layout.
-		preferredLayout = ScriptEase.getInstance().getPreference(
-				ScriptEase.PREFERRED_LAYOUT_KEY);
 
 		modelObserver = new SEModelObserver() {
 			@Override
@@ -974,11 +961,6 @@ public final class WindowFactory {
 						.addComponent(statusBar, GroupLayout.PREFERRED_SIZE,
 								GroupLayout.PREFERRED_SIZE,
 								GroupLayout.PREFERRED_SIZE));
-		if (preferredLayout.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
-			// Uncompressed Layout.
-			// TODO Do something special if layout is uncompressed. Removed this
-			// when building of the Library Pane was moved to panelfactory.
-		}
 
 		SEModelManager.getInstance().addPatternModelObserver(this,
 				modelObserver);

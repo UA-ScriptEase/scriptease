@@ -71,12 +71,6 @@ public final class ScriptEase implements Runnable {
 	public static final String RECENT_FILE_PREFIX = "recentFile";
 	public static final String DEBUG_KEY = "debug";
 	public static final String OUTPUT_DIRECTORY_KEY = "outputDirectory";
-	public static final String PREFERRED_LAYOUT_KEY = "PreferredLayout";
-	public static final String COMPRESSED_LAYOUT = "Compressed";
-	public static final String UNCOMPRESSED_LAYOUT = "Uncompressed";
-	public static final String PREFERRED_ORIENTATION_KEY = "GraphToolsOrientation";
-	public static final String VERTICAL_TOOLBAR = "Vertical";
-	public static final String HORIZONTAL_TOOLBAR = "Horizontal";
 	public static final String FONT_SIZE_KEY = "FontSize";
 	public static final String UNDO_STACK_SIZE_KEY = "MaxUndoSteps";
 
@@ -129,7 +123,6 @@ public final class ScriptEase implements Runnable {
 	 * it.
 	 */
 	public static final int ERROR_CODE_UNSPECIFIED = -1;
-
 	// TODO: make this a hidden file. Left undone since this is OS-dependent and
 	// will be easier to do in Java 1.7
 	/**
@@ -368,10 +361,10 @@ public final class ScriptEase implements Runnable {
 		 * "java 1.7" issues.
 		 * 
 		 * NOTE! This is sometimes not respected by Java, in which case
-		 * exceptions get thrown around anyways, because why not? So we'll
-		 * either have to fix this eventually, although I have no idea how, or
-		 * maybe the issue is on Sun's end, and they'll update Java for this one
-		 * day.
+		 * exceptions get thrown around anyways, because why not? So we'll have
+		 * to fix all of our compare methods, although I have no idea how.
+		 * 
+		 * Ticket: 31529443
 		 */
 		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
 

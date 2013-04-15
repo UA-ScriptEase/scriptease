@@ -4,17 +4,14 @@ import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -53,8 +50,6 @@ public class PreferencesDialog {
 	private Integer fontSize;
 	private String outputDirectory;
 	private Boolean debugMode;
-	private String preferredLayout;
-	private String preferredOrientation;
 
 	private void loadCurrentPreferences() {
 		ScriptEase instance = ScriptEase.getInstance();
@@ -77,27 +72,6 @@ public class PreferencesDialog {
 		this.debugMode = Boolean.parseBoolean(instance
 				.getPreference(ScriptEase.DEBUG_KEY));
 
-		this.preferredLayout = instance
-				.getPreference(ScriptEase.PREFERRED_LAYOUT_KEY);
-
-		// If the input is invalid, set it to the default.
-		if (this.preferredLayout == null
-				|| !(this.preferredLayout
-						.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT) || this.preferredLayout
-						.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT))) {
-			this.preferredLayout = ScriptEase.COMPRESSED_LAYOUT;
-		}
-
-		this.preferredOrientation = instance
-				.getPreference(ScriptEase.PREFERRED_ORIENTATION_KEY);
-
-		if (this.preferredOrientation == null
-				|| !(this.preferredOrientation
-						.equalsIgnoreCase(ScriptEase.HORIZONTAL_TOOLBAR) || this.preferredLayout
-						.equalsIgnoreCase(ScriptEase.VERTICAL_TOOLBAR))) {
-			this.preferredLayout = ScriptEase.VERTICAL_TOOLBAR;
-		}
-
 		this.outputDirectory = instance
 				.getPreference(ScriptEase.OUTPUT_DIRECTORY_KEY);
 		if (this.outputDirectory == null)
@@ -111,9 +85,6 @@ public class PreferencesDialog {
 		final JTabbedPane preferencesPane;
 		final JPanel generalPanel;
 		final JPanel appearancePanel;
-		final JRadioButton uncompressedLayoutButton;
-		final JRadioButton compressedLayoutButton;
-		final ButtonGroup layoutsGroup;
 
 		// Load the current preferences settings before starting.
 		this.loadCurrentPreferences();
@@ -144,10 +115,6 @@ public class PreferencesDialog {
 						PreferencesDialog.this.outputDirectory);
 				instance.setPreference(ScriptEase.DEBUG_KEY,
 						PreferencesDialog.this.debugMode.toString());
-				instance.setPreference(ScriptEase.PREFERRED_LAYOUT_KEY,
-						PreferencesDialog.this.preferredLayout);
-				instance.setPreference(ScriptEase.PREFERRED_ORIENTATION_KEY,
-						PreferencesDialog.this.preferredOrientation);
 
 				// Write the preferences to file.
 				instance.saveUserPrefs();
@@ -236,66 +203,10 @@ public class PreferencesDialog {
 		debugModePanel.add(debugModeCheckBox);
 		generalPanel.add(debugModePanel);
 
-		// TODO: Add new preferences here.
-
 		// Create the panel for the appearance preferences.
 		appearancePanel = new JPanel();
 		appearancePanel.setLayout(new BoxLayout(appearancePanel,
 				BoxLayout.Y_AXIS));
-
-		// Create the radio buttons for selecting preferred layout.
-		final JPanel preferredLayoutPanel = new JPanel(new FlowLayout(
-				FlowLayout.LEFT));
-		preferredLayoutPanel.add(new JLabel(Il8nResources.getString("Layout")
-				+ ":"));
-
-		final JPanel layoutSelectionPanel = new JPanel();
-		layoutSelectionPanel.setLayout(new BoxLayout(layoutSelectionPanel,
-				BoxLayout.Y_AXIS));
-
-		// Create the radio button for the uncompressed layout.
-		uncompressedLayoutButton = new JRadioButton(
-				Il8nResources.getString("Uncompressed_Layout"));
-		uncompressedLayoutButton.setMnemonic(KeyEvent.VK_T);
-		uncompressedLayoutButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Set the preferred layout to be the uncompressed layout.
-				PreferencesDialog.this.preferredLayout = ScriptEase.UNCOMPRESSED_LAYOUT;
-			}
-		});
-
-		// Create the radio button for the compressed layout.
-		compressedLayoutButton = new JRadioButton(
-				Il8nResources.getString("Compressed_Layout"));
-		compressedLayoutButton.setMnemonic(KeyEvent.VK_C);
-		compressedLayoutButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Set the preferred layout to be the compressed layout.
-				PreferencesDialog.this.preferredLayout = ScriptEase.COMPRESSED_LAYOUT;
-			}
-		});
-
-		// Create the button group for the layout radio buttons.
-		layoutsGroup = new ButtonGroup();
-		layoutsGroup.add(compressedLayoutButton);
-		layoutsGroup.add(uncompressedLayoutButton);
-
-		// Initially select the proper radio button.
-		if (this.preferredLayout
-				.equalsIgnoreCase(ScriptEase.UNCOMPRESSED_LAYOUT)) {
-			layoutsGroup.setSelected(uncompressedLayoutButton.getModel(), true);
-		} else if (this.preferredLayout
-				.equalsIgnoreCase(ScriptEase.COMPRESSED_LAYOUT)) {
-			layoutsGroup.setSelected(compressedLayoutButton.getModel(), true);
-		}
-
-		// Add the radio buttons to the appearance panel.
-		layoutSelectionPanel.add(uncompressedLayoutButton);
-		layoutSelectionPanel.add(compressedLayoutButton);
-		preferredLayoutPanel.add(layoutSelectionPanel);
-		appearancePanel.add(preferredLayoutPanel);
 
 		// Create the useJavaUI checkbox.
 		final JPanel useJavaUIPanel = new JPanel(

@@ -24,15 +24,19 @@ import scriptease.util.StringOp;
  * {@link #removeFromScene()}. The Scene does not need to store references to
  * these UnityScripts.
  * 
- * TODO It may be better design to have the Scene store the UnityScripts as a
- * collection of objects. We could have the scene deal with itself, rather than
- * the UnityScripts altering the scene. The Scene would likely have to refresh
- * the GUID each time.
- * 
  * @author kschenk
  * 
  */
 public class UnityScript {
+	/*
+	 * TODO It may be better design to have the Scene store the UnityScripts as
+	 * a collection of objects. We could have the scene deal with itself, rather
+	 * than the UnityScripts altering the scene. The Scene would likely have to
+	 * refresh the GUID each time.
+	 * 
+	 * Ticket: 48088411
+	 */
+
 	private static final int NAME_RADIX = 36;
 	private static final String SCRIPT_EXTENSION = ".js";
 	private static final String SCRIPT_META_EXTENSION = ".js.meta";

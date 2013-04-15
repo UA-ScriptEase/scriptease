@@ -852,8 +852,12 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		}
 	}
 
-	// TODO Might want to edit this a bit more.. add more things here
-	// instead of up there. This gets fired when a fragment is added.
+	/*
+	 * TODO Add more things here instead of up there. This gets fired when a
+	 * fragment is added.
+	 * 
+	 * Ticket: 48088867
+	 */
 	@Override
 	public void componentChanged(StoryComponentEvent event) {
 		fillCodeEditorPanel();
