@@ -1,9 +1,9 @@
 package scriptease.translator.codegenerator.code.fragments.container;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import scriptease.controller.AbstractFragmentVisitor;
 import scriptease.translator.codegenerator.CodeGenerationConstants;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
@@ -11,14 +11,11 @@ import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.Kn
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 public class ScopeFragment extends AbstractContainerFragment {
-
 	private String nameRef = "";
-	private List<AbstractFragment> subFragments;
 
 	public ScopeFragment() {
-		super("");
+		super("", new ArrayList<AbstractFragment>());
 		this.nameRef = "";
-		this.subFragments = new ArrayList<AbstractFragment>();
 	}
 
 	/**
@@ -31,19 +28,15 @@ public class ScopeFragment extends AbstractContainerFragment {
 	 */
 	public ScopeFragment(String data, String nameRef,
 			List<AbstractFragment> subFragments) {
-		super(data);
+		super(data, subFragments);
 		this.nameRef = nameRef;
-		this.subFragments = subFragments;
 	}
 
 	@Override
-	public Collection<AbstractFragment> getSubFragments() {
-		return this.subFragments;
-	}
-
-	@Override
-	public void setSubFragments(List<AbstractFragment> subFragments) {
-		this.subFragments = subFragments;
+	public ScopeFragment clone() {
+		final ScopeFragment clone = (ScopeFragment) super.clone();
+		clone.setNameRef(this.nameRef);
+		return clone;
 	}
 
 	public void setNameRef(String nameRef) {
@@ -59,9 +52,9 @@ public class ScopeFragment extends AbstractContainerFragment {
 		super.resolve(context);
 		final Object scope;
 
-		if(context instanceof KnowItBindingResourceContext)
+		if (context instanceof KnowItBindingResourceContext)
 			System.out.println(context);
-		
+
 		scope = this.getScope(context);
 
 		if (scope != null) {
@@ -169,5 +162,10 @@ public class ScopeFragment extends AbstractContainerFragment {
 		if (this.nameRef != null)
 			hash += this.nameRef.hashCode();
 		return hash + this.subFragments.hashCode();
+	}
+
+	@Override
+	public void process(AbstractFragmentVisitor visitor) {
+		visitor.processScopeFragment(this);
 	}
 }

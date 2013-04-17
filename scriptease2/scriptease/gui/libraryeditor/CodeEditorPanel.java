@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -28,6 +30,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import scriptease.controller.AbstractFragmentAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.action.libraryeditor.codeeditor.DeleteFragmentAction;
@@ -40,7 +43,6 @@ import scriptease.gui.action.libraryeditor.codeeditor.InsertSeriesAction;
 import scriptease.gui.action.libraryeditor.codeeditor.InsertSimpleAction;
 import scriptease.gui.action.libraryeditor.codeeditor.MoveFragmentDownAction;
 import scriptease.gui.action.libraryeditor.codeeditor.MoveFragmentUpAction;
-import scriptease.gui.libraryeditor.FormatFragmentSelectionManager;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.CodeBlock;
 import scriptease.translator.codegenerator.CodeGenerationConstants;
@@ -125,7 +127,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 				new Font("SansSerif", Font.PLAIN, 12),
 				ScriptEaseUI.CODE_EDITOR_COLOR);
 
-		this.codeEditorPanel = objectContainerPanel(CODE_EDITOR_PANEL_NAME);
+		this.codeEditorPanel = buildObjectContainerPanel(CODE_EDITOR_PANEL_NAME);
 		this.codeEditorScrollPane = new JScrollPane(this.codeEditorPanel);
 
 		listerineButton.setOpaque(false);
@@ -160,7 +162,6 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 				BoxLayout.PAGE_AXIS));
 		this.codeEditorPanel.setBorder(titledBorder);
 
-		this.panelToFragmentMap.put(this.codeEditorPanel, null);
 		this.add(toolbar, BorderLayout.PAGE_START);
 		this.add(this.codeEditorScrollPane, BorderLayout.CENTER);
 
@@ -182,7 +183,19 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		visibleRectangle = this.codeEditorScrollPane.getVisibleRect();
 
 		this.codeEditorPanel.removeAll();
-		this.buildDefaultPanes(this.codeEditorPanel, codeFragments);
+		this.panelToFragmentMap.clear();
+		final AbstractFragment selectedFragment = FormatFragmentSelectionManager
+				.getInstance().getFormatFragment();
+
+		if (selectedFragment == null) {
+			this.codeEditorPanel.setBackground(GUIOp.scaleWhite(
+					ScriptEaseUI.CODE_EDITOR_COLOR, 1.7));
+		} else {
+			this.codeEditorPanel
+					.setBackground(ScriptEaseUI.FRAGMENT_DEFAULT_COLOR);
+		}
+		buildDefaultPanes(this.codeEditorPanel, codeFragments);
+		updatePanelSelectionHighlight(selectedFragment);
 		this.codeEditorPanel.repaint();
 		this.codeEditorPanel.revalidate();
 
@@ -198,7 +211,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	 * @param color
 	 * @return
 	 */
-	private JPanel objectContainerPanel(final String title) {
+	private JPanel buildObjectContainerPanel(final String title) {
 		final JPanel objectContainerPanel;
 
 		objectContainerPanel = new JPanel();
@@ -210,11 +223,11 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		objectContainerPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
+				final AbstractFragment selectedFragment = CodeEditorPanel.this.panelToFragmentMap
+						.get(objectContainerPanel);
 				FormatFragmentSelectionManager.getInstance().setFormatFragment(
-						CodeEditorPanel.this.panelToFragmentMap
-								.get(objectContainerPanel),
-						CodeEditorPanel.this.codeBlock);
-				fillCodeEditorPanel();
+						selectedFragment, CodeEditorPanel.this.codeBlock);
+				updatePanelSelectionHighlight(selectedFragment);
 			}
 		});
 		return objectContainerPanel;
@@ -228,7 +241,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	 * 
 	 * @return
 	 */
-	private JPanel linePanel() {
+	private JPanel buildLinePanel() {
 		final String TITLE = "Line";
 		final JPanel linePanel;
 		final Border lineBorder;
@@ -236,7 +249,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		lineBorder = BorderFactory
 				.createLineBorder(ScriptEaseUI.LINE_FRAGMENT_COLOR);
 
-		linePanel = objectContainerPanel(TITLE);
+		linePanel = buildObjectContainerPanel(TITLE);
 
 		linePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		linePanel.setBorder(lineBorder);
@@ -255,7 +268,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	 * 
 	 * @return
 	 */
-	private JPanel indentPanel(IndentFragment indentFragment) {
+	private JPanel buildIndentPanel(IndentFragment indentFragment) {
 		final String TITLE = "Indent";
 
 		final JPanel indentPanel;
@@ -263,7 +276,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		final JLabel indentLabel;
 		final Border lineBorder;
 
-		indentPanel = objectContainerPanel(TITLE);
+		indentPanel = buildObjectContainerPanel(TITLE);
 		subFragmentsPanel = new JPanel();
 		indentLabel = new JLabel(String.valueOf('\u21e5'));
 		lineBorder = BorderFactory
@@ -317,7 +330,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	 *            completely new ScopeFragment.
 	 * @return
 	 */
-	private JPanel scopePanel(final ScopeFragment scopeFragment) {
+	private JPanel buildScopePanel(final ScopeFragment scopeFragment) {
 		final String TITLE = "Scope";
 
 		final JPanel scopePanel;
@@ -335,7 +348,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 				TitledBorder.LEADING, TitledBorder.TOP, new Font("SansSerif",
 						Font.BOLD, 12), ScriptEaseUI.SCOPE_FRAGMENT_COLOR);
 
-		scopePanel = objectContainerPanel(TITLE);
+		scopePanel = buildObjectContainerPanel(TITLE);
 		scopeComponentPanel = new JPanel();
 		directiveBox = new JComboBox();
 		nameRefField = new JTextField();
@@ -401,7 +414,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	 * @param seriesFragment
 	 * @return
 	 */
-	private JPanel seriesPanel(final SeriesFragment seriesFragment) {
+	private JPanel buildSeriesPanel(final SeriesFragment seriesFragment) {
 		final String TITLE = "Series";
 
 		final JPanel seriesPanel;
@@ -429,7 +442,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 				TitledBorder.LEADING, TitledBorder.TOP, new Font("SansSerif",
 						Font.BOLD, 12), ScriptEaseUI.SERIES_FRAGMENT_COLOR);
 
-		seriesPanel = objectContainerPanel(TITLE);
+		seriesPanel = buildObjectContainerPanel(TITLE);
 		seriesComponentPanel = new JPanel();
 		filterComponentPanel = new JPanel();
 
@@ -560,7 +573,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	 * @param simpleFragment
 	 * @return
 	 */
-	private JPanel simplePanel(final SimpleDataFragment simpleFragment) {
+	private JPanel buildSimplePanel(final SimpleDataFragment simpleFragment) {
 		final String TITLE = "Simple Data";
 
 		final JPanel simplePanel;
@@ -571,7 +584,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		final Border lineBorder;
 		final Border titledBorder;
 
-		simplePanel = objectContainerPanel(TITLE);
+		simplePanel = buildObjectContainerPanel(TITLE);
 
 		lineBorder = BorderFactory
 				.createLineBorder(ScriptEaseUI.SIMPLE_FRAGMENT_COLOR);
@@ -641,7 +654,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	 * @param literalFragment
 	 * @return
 	 */
-	private JPanel literalPanel(final LiteralFragment literalFragment) {
+	private JPanel buildLiteralPanel(final LiteralFragment literalFragment) {
 		final String TITLE = "Literal";
 
 		final JPanel literalPanel;
@@ -655,7 +668,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 				TitledBorder.LEADING, TitledBorder.TOP, new Font("SansSerif",
 						Font.BOLD, 12), ScriptEaseUI.LITERAL_FRAGMENT_COLOR);
 
-		literalPanel = objectContainerPanel(TITLE);
+		literalPanel = buildObjectContainerPanel(TITLE);
 		literalField = new JTextField(literalFragment.getDirectiveText());
 
 		literalField.setMinimumSize(new Dimension(15, literalField
@@ -694,7 +707,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	 * @param referenceFragment
 	 * @return
 	 */
-	private JPanel referencePanel(
+	private JPanel buildReferencePanel(
 			final FormatReferenceFragment referenceFragment) {
 		final String TITLE = "Format Reference";
 
@@ -709,7 +722,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 				TitledBorder.LEADING, TitledBorder.TOP, new Font("SansSerif",
 						Font.BOLD, 12), ScriptEaseUI.REFERENCE_FRAGMENT_COLOR);
 
-		referencePanel = objectContainerPanel(TITLE);
+		referencePanel = buildObjectContainerPanel(TITLE);
 		referenceField = new JTextField(referenceFragment.getDirectiveText());
 
 		referenceField.setMinimumSize(new Dimension(15, referenceField
@@ -745,6 +758,72 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		return referencePanel;
 	}
 
+	private void updatePanelSelectionHighlight(final AbstractFragment fragment) {
+
+		final Set<Entry<JPanel, AbstractFragment>> entrySet = this.panelToFragmentMap
+				.entrySet();
+		for (Entry<JPanel, AbstractFragment> entry : entrySet) {
+			final JPanel panel = entry.getKey();
+			final AbstractFragment value = entry.getValue();
+			if ((fragment != null) && (value.equals(fragment))) {
+				highlightPanel(panel, value);
+			} else {
+				panel.setBackground(ScriptEaseUI.FRAGMENT_DEFAULT_COLOR);
+			}
+			panel.revalidate();
+			panel.repaint();
+		}
+	}
+
+	private void highlightPanel(final JPanel panel,
+			final AbstractFragment fragment) {
+		final AbstractFragmentAdapter adapter = new AbstractFragmentAdapter() {
+			@Override
+			public void processLineFragment(LineFragment fragment) {
+				panel.setBackground(GUIOp.scaleWhite(
+						ScriptEaseUI.LINE_FRAGMENT_COLOR, 1.2));
+			}
+
+			@Override
+			public void processIndentFragment(IndentFragment fragment) {
+				panel.setBackground(GUIOp.scaleWhite(
+						ScriptEaseUI.INDENT_FRAGMENT_COLOR, 1.2));
+			}
+
+			@Override
+			public void processScopeFragment(ScopeFragment fragment) {
+				panel.setBackground(GUIOp.scaleWhite(
+						ScriptEaseUI.SCOPE_FRAGMENT_COLOR, 5.0));
+			}
+
+			@Override
+			public void processLiteralFragment(LiteralFragment fragment) {
+				panel.setBackground(GUIOp.scaleWhite(
+						ScriptEaseUI.LITERAL_FRAGMENT_COLOR, 1.7));
+			}
+
+			@Override
+			public void processSeriesFragment(SeriesFragment fragment) {
+				panel.setBackground(GUIOp.scaleWhite(
+						ScriptEaseUI.SERIES_FRAGMENT_COLOR, 3.0));
+			}
+
+			@Override
+			public void processFormatReferenceFragment(
+					FormatReferenceFragment fragment) {
+				panel.setBackground(GUIOp.scaleWhite(
+						ScriptEaseUI.REFERENCE_FRAGMENT_COLOR, 3.0));
+			}
+
+			@Override
+			public void processSimpleDataFragment(SimpleDataFragment fragment) {
+				panel.setBackground(GUIOp.scaleWhite(
+						ScriptEaseUI.SIMPLE_FRAGMENT_COLOR, 3.5));
+			}
+		};
+		fragment.process(adapter);
+	}
+
 	/**
 	 * Recursively builds the default panel according to the passed code
 	 * fragments.
@@ -755,26 +834,18 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	private void buildDefaultPanes(JPanel panel,
 			Collection<AbstractFragment> codeFragments) {
 
+		// this.codeEditorPanel.setBackground(ScriptEaseUI.FRAGMENT_DEFAULT_COLOR);
 		for (AbstractFragment codeFragment : codeFragments) {
 			JPanel fragmentPanel = new JPanel();
-
-			final AbstractFragment selectedFragment;
-
-			selectedFragment = FormatFragmentSelectionManager.getInstance()
-					.getFormatFragment();
-
-			this.codeEditorPanel
-					.setBackground(ScriptEaseUI.FRAGMENT_DEFAULT_COLOR);
-
 			if (codeFragment instanceof LineFragment) {
 				final JLabel lineLabel;
 
 				lineLabel = new JLabel("\\n");
-				fragmentPanel = linePanel();
+				fragmentPanel = buildLinePanel();
 
-				if (codeFragment == selectedFragment)
-					fragmentPanel.setBackground(GUIOp.scaleWhite(
-							ScriptEaseUI.LINE_FRAGMENT_COLOR, 1.2));
+				// if (codeFragment.equals(selectedFragment))
+				// fragmentPanel.setBackground(GUIOp.scaleWhite(
+				// ScriptEaseUI.LINE_FRAGMENT_COLOR, 1.2));
 
 				lineLabel.setForeground(ScriptEaseUI.LINE_FRAGMENT_COLOR);
 				lineLabel.setFont(new Font("SansSerif", Font.PLAIN, 32));
@@ -787,69 +858,71 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 				panel.add(fragmentPanel);
 				this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 			} else if (codeFragment instanceof IndentFragment) {
-				fragmentPanel = indentPanel((IndentFragment) codeFragment);
+				fragmentPanel = buildIndentPanel((IndentFragment) codeFragment);
 
-				if (codeFragment == selectedFragment)
-					fragmentPanel.setBackground(GUIOp.scaleWhite(
-							ScriptEaseUI.INDENT_FRAGMENT_COLOR, 1.2));
+				// if (codeFragment.equals(selectedFragment))
+				// fragmentPanel.setBackground(GUIOp.scaleWhite(
+				// ScriptEaseUI.INDENT_FRAGMENT_COLOR, 1.2));
 
 				panel.add(fragmentPanel);
 				this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 			} else if (codeFragment instanceof LiteralFragment) {
-				fragmentPanel = literalPanel((LiteralFragment) codeFragment);
+				fragmentPanel = buildLiteralPanel((LiteralFragment) codeFragment);
 
-				if (codeFragment == selectedFragment)
-					fragmentPanel.setBackground(GUIOp.scaleWhite(
-							ScriptEaseUI.LITERAL_FRAGMENT_COLOR, 1.7));
+				// if (codeFragment.equals(selectedFragment))
+				// fragmentPanel.setBackground(GUIOp.scaleWhite(
+				// ScriptEaseUI.LITERAL_FRAGMENT_COLOR, 1.7));
 
 				panel.add(fragmentPanel);
 				this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 			} else if (codeFragment instanceof ScopeFragment) {
-				fragmentPanel = scopePanel((ScopeFragment) codeFragment);
+				fragmentPanel = buildScopePanel((ScopeFragment) codeFragment);
 
-				if (codeFragment == selectedFragment)
-					fragmentPanel.setBackground(GUIOp.scaleWhite(
-							ScriptEaseUI.SCOPE_FRAGMENT_COLOR, 5.0));
+				// if (codeFragment.equals(selectedFragment))
+				// fragmentPanel.setBackground(GUIOp.scaleWhite(
+				// ScriptEaseUI.SCOPE_FRAGMENT_COLOR, 5.0));
 
 				buildDefaultPanes(fragmentPanel,
 						((ScopeFragment) codeFragment).getSubFragments());
 				panel.add(fragmentPanel);
 				this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 			} else if (codeFragment instanceof SeriesFragment) {
-				fragmentPanel = seriesPanel((SeriesFragment) codeFragment);
+				fragmentPanel = buildSeriesPanel((SeriesFragment) codeFragment);
 
-				if (codeFragment == selectedFragment)
-					fragmentPanel.setBackground(GUIOp.scaleWhite(
-							ScriptEaseUI.SERIES_FRAGMENT_COLOR, 3.0));
+				// if (codeFragment.equals(selectedFragment))
+				// fragmentPanel.setBackground(GUIOp.scaleWhite(
+				// ScriptEaseUI.SERIES_FRAGMENT_COLOR, 3.0));
 
 				buildDefaultPanes(fragmentPanel,
 						((SeriesFragment) codeFragment).getSubFragments());
 				panel.add(fragmentPanel);
 				this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 			} else if (codeFragment instanceof FormatReferenceFragment) {
-				fragmentPanel = referencePanel((FormatReferenceFragment) codeFragment);
+				fragmentPanel = buildReferencePanel((FormatReferenceFragment) codeFragment);
 
-				if (codeFragment == selectedFragment)
-					fragmentPanel.setBackground(GUIOp.scaleWhite(
-							ScriptEaseUI.REFERENCE_FRAGMENT_COLOR, 3.0));
+				// if (codeFragment.equals(selectedFragment))
+				// fragmentPanel.setBackground(GUIOp.scaleWhite(
+				// ScriptEaseUI.REFERENCE_FRAGMENT_COLOR, 3.0));
 
 				panel.add(fragmentPanel);
 				this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 			} else if (codeFragment instanceof SimpleDataFragment) {
-				fragmentPanel = simplePanel((SimpleDataFragment) codeFragment);
+				fragmentPanel = buildSimplePanel((SimpleDataFragment) codeFragment);
 
-				if (codeFragment == selectedFragment)
-					fragmentPanel.setBackground(GUIOp.scaleWhite(
-							ScriptEaseUI.SIMPLE_FRAGMENT_COLOR, 3.5));
+				// if (codeFragment.equals(selectedFragment))
+				// fragmentPanel.setBackground(GUIOp.scaleWhite(
+				// ScriptEaseUI.SIMPLE_FRAGMENT_COLOR, 3.5));
 
 				panel.add(fragmentPanel);
 				this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 			}
 
-			if (selectedFragment == null)
-				this.codeEditorPanel.setBackground(GUIOp.scaleWhite(
-						ScriptEaseUI.CODE_EDITOR_COLOR, 1.7));
+			// if (selectedFragment == null)
+			// this.codeEditorPanel.setBackground(GUIOp.scaleWhite(
+			// ScriptEaseUI.CODE_EDITOR_COLOR, 1.7));
 		}
+
+		// updatePanelSelectionHighlight(selectedFragment);
 	}
 
 	/*

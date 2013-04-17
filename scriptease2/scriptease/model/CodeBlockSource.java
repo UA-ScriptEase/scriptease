@@ -363,7 +363,12 @@ public class CodeBlockSource extends CodeBlock {
 
 	@Override
 	public Collection<AbstractFragment> getCode() {
-		return new ArrayList<AbstractFragment>(this.code);
+		Collection<AbstractFragment> clonedCode = new ArrayList<AbstractFragment>(
+				this.code.size());
+		for (AbstractFragment fragment : this.code) {
+			clonedCode.add(fragment.clone());
+		}
+		return clonedCode;
 	}
 
 	/**

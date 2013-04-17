@@ -90,7 +90,7 @@ public interface ScriptEaseUI {
 	 * The colour (Grey) used for the code editor in Story Component Builder.
 	 */
 	public static final Color CODE_EDITOR_COLOR = Color.GRAY;
-
+	
 	/**
 	 * The colour (Light Grey) used for Line Fragments in Story Component
 	 * Builder.
