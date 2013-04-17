@@ -1,9 +1,9 @@
 package scriptease.translator.codegenerator.code.fragments.container;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import scriptease.controller.AbstractFragmentVisitor;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -19,12 +19,8 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  */
 public class IndentFragment extends AbstractContainerFragment {
 
-	// The list of FormatFragment contained herein.
-	private List<AbstractFragment> subFragments = new ArrayList<AbstractFragment>();
-
 	public IndentFragment() {
-		super("");
-		this.subFragments = new ArrayList<AbstractFragment>();
+		this(new ArrayList<AbstractFragment>());
 	}
 
 	/**
@@ -34,27 +30,9 @@ public class IndentFragment extends AbstractContainerFragment {
 	 * @param indentChar
 	 */
 	public IndentFragment(List<AbstractFragment> subFragments) {
-		super("");
-		this.subFragments = new ArrayList<AbstractFragment>(subFragments);
+		super("", subFragments);
 	}
 
-	@Override
-	public Collection<AbstractFragment> getSubFragments() {
-		return this.subFragments;
-	}
-
-	@Override
-	public void setSubFragments(List<AbstractFragment> subFragments) {
-		this.subFragments = subFragments;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * scriptease.translator.codegenerator.code.FormatFragment#resolve(scriptease
-	 * .translator.codegenerator.code.CodeGenerationContext)
-	 */
 	@Override
 	public String resolve(Context context) {
 		super.resolve(context);
@@ -89,5 +67,10 @@ public class IndentFragment extends AbstractContainerFragment {
 	@Override
 	public int hashCode() {
 		return super.hashCode() + this.subFragments.hashCode();
+	}
+	
+	@Override
+	public void process(AbstractFragmentVisitor visitor) {
+		visitor.processIndentFragment(this);
 	}
 }

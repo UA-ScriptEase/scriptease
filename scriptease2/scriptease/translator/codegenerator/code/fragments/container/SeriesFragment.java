@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.regex.PatternSyntaxException;
 
+import scriptease.controller.AbstractFragmentVisitor;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
@@ -35,7 +36,6 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  */
 public class SeriesFragment extends AbstractContainerFragment {
 	private String separator;
-	private List<AbstractFragment> subFragments;
 	private SeriesFilter seriesFilter;
 	private boolean isUnique;
 	private String filter;
@@ -64,9 +64,8 @@ public class SeriesFragment extends AbstractContainerFragment {
 	public SeriesFragment(String data, String separator,
 			List<AbstractFragment> format, String filter,
 			SeriesFilterType filterType, boolean isUnique) {
-		super(data);
+		super(data, format);
 		this.separator = separator;
-		this.subFragments = format;
 		this.filter = filter;
 		this.filterType = filterType;
 		this.seriesFilter = new SeriesFilter(filter, filterType);
@@ -74,13 +73,16 @@ public class SeriesFragment extends AbstractContainerFragment {
 	}
 
 	@Override
-	public Collection<AbstractFragment> getSubFragments() {
-		return this.subFragments;
-	}
+	public SeriesFragment clone() {
+		final SeriesFragment clone = (SeriesFragment) super.clone();
 
-	@Override
-	public void setSubFragments(List<AbstractFragment> subFragments) {
-		this.subFragments = subFragments;
+		clone.setSeparator(this.separator);
+		clone.setUnique(this.isUnique);
+		clone.setFilterType(this.filterType);
+		clone.setFilter(this.filter);
+		clone.setSeriesFilter(this.filter, this.filterType);
+
+		return clone;
 	}
 
 	public String getSeparator() {
@@ -88,7 +90,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 	}
 
 	public void setSeparator(String separator) {
-		this.separator = separator;
+		this.separator = new String(separator);
 	}
 
 	public String getFilter() {
@@ -96,8 +98,12 @@ public class SeriesFragment extends AbstractContainerFragment {
 	}
 
 	public void setFilter(String filter) {
-		this.filter = filter;
-		this.seriesFilter = new SeriesFilter(filter, this.filterType);
+		this.filter = new String(filter);
+		setSeriesFilter(filter, this.filterType);
+	}
+
+	public void setSeriesFilter(String filter, SeriesFilterType filterType) {
+		this.seriesFilter = new SeriesFilter(filter, filterType);
 	}
 
 	public SeriesFilterType getFilterType() {
@@ -226,7 +232,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 					+ dataLabel + " >");
 			return new ArrayList<String>().iterator();
 		}
-		
+
 		it = data.iterator();
 
 		if (this.isUnique) {
@@ -280,7 +286,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 		}
 
 		public SeriesFilter(String value, SeriesFilterType type) {
-			this.value = value;
+			this.value = new String(value);
 			this.type = type;
 		}
 
@@ -373,5 +379,10 @@ public class SeriesFragment extends AbstractContainerFragment {
 		public String toString() {
 			return "SeriesFilter[" + this.value + ", " + this.type + "]";
 		}
+	}
+
+	@Override
+	public void process(AbstractFragmentVisitor visitor) {
+		visitor.processSeriesFragment(this);
 	}
 }

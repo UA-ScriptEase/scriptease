@@ -1,5 +1,6 @@
 package scriptease.translator.codegenerator.code.fragments;
 
+import scriptease.controller.AbstractFragmentVisitor;
 import scriptease.translator.codegenerator.code.contexts.Context;
 
 /**
@@ -31,13 +32,18 @@ public class LiteralFragment extends AbstractFragment {
 
 	@Override
 	public String toString() {
-		return this.getDirectiveText();
+		return "\"" + this.getDirectiveText() + "\"";
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof LiteralFragment)
 			return this.hashCode() == obj.hashCode();
 		return false;
+	}
+
+	@Override
+	public void process(AbstractFragmentVisitor visitor) {
+		visitor.processLiteralFragment(this);
 	}
 }

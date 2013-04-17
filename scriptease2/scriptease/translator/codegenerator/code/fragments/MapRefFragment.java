@@ -1,5 +1,6 @@
 package scriptease.translator.codegenerator.code.fragments;
 
+import scriptease.controller.AbstractFragmentVisitor;
 import scriptease.translator.codegenerator.code.contexts.Context;
 
 /**
@@ -9,6 +10,9 @@ import scriptease.translator.codegenerator.code.contexts.Context;
  * data specified which field to use as a key. For example: <mapRef
  * ref="eventInstaller" data="subject" /> would use the subject (based on
  * context) as the key in the map eventInstaller, and return the value.
+ * 
+ * mfchurch TODO candidate for deletion. Not sure if used since Pinball
+ * translator.
  * 
  * @author mfchurch
  * 
@@ -23,6 +27,17 @@ public class MapRefFragment extends AbstractFragment {
 
 	public String getRef() {
 		return this.ref;
+	}
+
+	public void setRef(String ref) {
+		this.ref = ref;
+	}
+
+	@Override
+	public MapRefFragment clone() {
+		final MapRefFragment clone = (MapRefFragment) super.clone();
+		clone.setRef(this.ref);
+		return clone;
 	}
 
 	@Override
@@ -54,5 +69,10 @@ public class MapRefFragment extends AbstractFragment {
 	@Override
 	public int hashCode() {
 		return super.hashCode() + this.ref.hashCode();
+	}
+	
+	@Override
+	public void process(AbstractFragmentVisitor visitor) {
+		visitor.processMapRefFragment(this);
 	}
 }

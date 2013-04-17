@@ -123,6 +123,8 @@ public abstract class AbstractInsertFragmentAction extends
 
 			if (selectedFragment != null) {
 				if (selectedFragment instanceof AbstractContainerFragment) {
+					// mfchurch TODO this needs to reference the deep copied
+					// fragment that happened above...
 					this.insertFragmentIntoContainerFragment((AbstractContainerFragment) selectedFragment);
 				} else {
 					this.insertFragmentAfterFragment(fragments,
