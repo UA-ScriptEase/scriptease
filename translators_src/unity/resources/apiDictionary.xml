@@ -36,6 +36,17 @@
       <CodeSymbol>EditorSettings</CodeSymbol>
     </Type>
     <Type>
+      <Name>Method</Name>
+      <Keyword>Method</Keyword>
+      <CodeSymbol>String</CodeSymbol>
+      <Format>
+        <Literal>&quot;&quot;</Literal>
+      </Format>
+      <LegalValues>[^\n]*</LegalValues>
+      <GUI>JTEXTFIELD</GUI>
+      <WidgetName>M</WidgetName>
+    </Type>
+    <Type>
       <Name>RenderManager</Name>
       <Keyword>RenderManager</Keyword>
       <CodeSymbol>RenderManager</CodeSymbol>
@@ -81,6 +92,13 @@
       <Name>BuildSettings</Name>
       <Keyword>BuildSettings</Keyword>
       <CodeSymbol>BuildSettings</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>AllowDisallow</Name>
+      <Keyword>AllowDisallow</Keyword>
+      <CodeSymbol>boolean</CodeSymbol>
+      <Enum>false&lt;Disallow&gt;|true&lt;Allow&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
       <Name>Texture3D</Name>
@@ -428,6 +446,12 @@
       <Name>ParticleEmitter</Name>
       <Keyword>ParticleEmitter</Keyword>
       <CodeSymbol>ParticleEmitter</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>Position</Name>
+      <Keyword>Vector3</Keyword>
+      <CodeSymbol>Vector3</CodeSymbol>
+      <WidgetName>P</WidgetName>
     </Type>
     <Type>
       <Name>PreloadedData</Name>
@@ -6180,7 +6204,9 @@
           <Visible>true</Visible>
           <Labels/>
           <Id>138</Id>
-          <Types/>
+          <Types>
+            <Type>void</Type>
+          </Types>
           <Parameters>
             <KnowIt>
               <Name>Enable</Name>
@@ -6231,7 +6257,9 @@
           <Visible>true</Visible>
           <Labels/>
           <Id>139</Id>
-          <Types/>
+          <Types>
+            <Type>void</Type>
+          </Types>
           <Parameters>
             <KnowIt>
               <Name>Image</Name>
@@ -6314,27 +6342,14 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[15]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[16]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[24]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[14]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[23]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[20]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[22]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[21]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[19]"/>
     <ScriptIt>
-      <Name>if &lt;Game Object 1&gt; and &lt;Game Object 2&gt; are equal</Name>
+      <Name>if &lt;Object 1&gt; and &lt;Object 2&gt; are equal</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;Game Object 1&gt; and &lt;Game Object 2&gt; are equal</Name>
+          <Name>if &lt;Object 1&gt; and &lt;Object 2&gt; are equal</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>140</Id>
@@ -6343,7 +6358,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Game Object 1</Name>
+              <Name>Object 1</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -6351,7 +6366,7 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Game Object 2</Name>
+              <Name>Object 2</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -6362,11 +6377,11 @@
           <Code>
             <Line>
               <Literal>return </Literal>
-              <Scope data="ARGUMENT" ref="Game Object 1">
+              <Scope data="ARGUMENT" ref="Object 1">
                 <Fragment data="NAME"/>
               </Scope>
               <Literal> == </Literal>
-              <Scope data="ARGUMENT" ref="Game Object 2">
+              <Scope data="ARGUMENT" ref="Object 2">
                 <Fragment data="NAME"/>
               </Scope>
               <Literal>;</Literal>
@@ -6375,62 +6390,1075 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
+    <ScriptIt>
+      <Name>Remember &lt;Text&gt; as &lt;Key&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Remember &lt;Text&gt; as &lt;Key&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>141</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Text</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>String</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Key</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>String</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEVariable.PutString(</Literal>
+              <Scope data="ARGUMENT" ref="Key">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Text">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Remember &lt;Number&gt; as &lt;Key&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Remember &lt;Number&gt; as &lt;Key&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>142</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Number</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Key</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>String</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEVariable.PutFloat(</Literal>
+              <Scope data="ARGUMENT" ref="Key">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Number">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Remember &lt;Object&gt; as &lt;Key&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Remember &lt;Object&gt; as &lt;Key&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>143</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Key</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>String</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEVariable.PutGameObject(</Literal>
+              <Scope data="ARGUMENT" ref="Key">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>remembered &lt;Key&gt;</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>remembered &lt;Key&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>145</Id>
+          <Types>
+            <Type>String</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Key</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>String</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return SEVariable.GetString(</Literal>
+              <Scope data="ARGUMENT" ref="Key">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>remembered &lt;Key&gt;</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>remembered &lt;Key&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>146</Id>
+          <Types>
+            <Type>float</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Key</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>String</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return SEVariable.GetFloat(</Literal>
+              <Scope data="ARGUMENT" ref="Key">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>remembered &lt;Key&gt;</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>remembered &lt;Key&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>147</Id>
+          <Types>
+            <Type>GameObject</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Key</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>String</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return SEVariable.GetGameObject(</Literal>
+              <Scope data="ARGUMENT" ref="Key">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Execute the method &lt;Method&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Execute the method &lt;Method&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>148</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Method</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>Method</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Method">
+                <Fragment data="VALUE"/>
+              </Scope>
+              <Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>&lt;Position&gt;&apos;s x coordinate</Name>
+      <Visible>false</Visible>
+      <Labels>
+        <Label></Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Position&gt;&apos;s x coordinate</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>149</Id>
+          <Types>
+            <Type>float</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Position</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>Vector3</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return </Literal>
+              <Scope data="ARGUMENT" ref="Position">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.x;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>&lt;Position&gt;&apos;s y coordinate</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Position&gt;&apos;s y coordinate</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>150</Id>
+          <Types>
+            <Type>float</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Position</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>Vector3</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return </Literal>
+              <Scope data="ARGUMENT" ref="Position">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.y;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>&lt;Position&gt;&apos;s z coordinate</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Position&gt;&apos;s z coordinate</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>151</Id>
+          <Types>
+            <Type>float</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Position</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>Vector3</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return </Literal>
+              <Scope data="ARGUMENT" ref="Position">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.z;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>&lt;Object&gt;&apos;s position</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Object&gt;&apos;s position</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>152</Id>
+          <Types>
+            <Type>Vector3</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return </Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform.position;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>a number between &lt;First Number&gt; and &lt;Second Number&gt;</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>a number between &lt;First Number&gt; and &lt;Second Number&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>153</Id>
+          <Types>
+            <Type>float</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>First Number</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Second Number</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return Random.Range(</Literal>
+              <Scope data="ARGUMENT" ref="First Number">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Second Number">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>&lt;Number&gt; as text</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Number&gt; as text</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>154</Id>
+          <Types>
+            <Type>String</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Number</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return </Literal>
+              <Scope data="ARGUMENT" ref="Number">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.ToString();</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>&lt;Text 1&gt; followed by &lt;Text 2&gt;</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Text 1&gt; followed by &lt;Text 2&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>155</Id>
+          <Types>
+            <Type>String</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Text 1</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>String</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Text 2</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>String</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return </Literal>
+              <Scope data="ARGUMENT" ref="Text 1">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal> + </Literal>
+              <Scope data="ARGUMENT" ref="Text 2">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>if &lt;Object&gt;&apos;s &lt;Animation&gt; is playing</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>if &lt;Object&gt;&apos;s &lt;Animation&gt; is playing</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>156</Id>
+          <Types>
+            <Type>question</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Animation</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>AnimationElement</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return </Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.animation.IsPlaying(</Literal>
+              <Scope data="ARGUMENT" ref="Animation">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Play &lt;Object&gt;&apos;s default animation</Name>
+      <Visible>true</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play &lt;Object&gt;&apos;s default animation</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>157</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.animation.Play();</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Stop playing all of &lt;Object&gt;&apos;s animations</Name>
+      <Visible>true</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Stop playing all of &lt;Object&gt;&apos;s animations</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>158</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ALWAYSCHILD" ref="Object">
+                <Fragment data="INCLUDE"/>
+              </Scope>
+              <Literal>.animation.Stop();</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Stop playing &lt;Object&gt;&apos;s &lt;Animation&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label></Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Stop playing &lt;Object&gt;&apos;s &lt;Animation&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>159</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Animation</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>AnimationElement</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.animation.Stop(</Literal>
+              <Scope data="ARGUMENT" ref="Animation">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Fade in &lt;Object&gt;&apos;s &lt;Animation&gt; over &lt;Number&gt; seconds</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label></Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Fade in &lt;Object&gt;&apos;s &lt;Animation&gt; over &lt;Number&gt; seconds</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>160</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Animation</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>AnimationElement</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Number</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.animation.CrossFade(</Literal>
+              <Scope data="ARGUMENT" ref="Animation">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Number">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[14]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[24]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[44]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[20]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[22]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[48]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[23]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[41]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[46]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[21]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[16]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[36]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[15]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[47]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[51]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[49]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[40]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[50]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[42]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[19]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[45]"/>
+    <ScriptIt>
+      <Name>&lt;Allow&gt; &lt;Object&gt;&apos;s default animation to play automatically</Name>
+      <Visible>true</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Allow&gt; &lt;Object&gt;&apos;s default animation to play automatically</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>161</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Allow</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>AllowDisallow</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>AllowDisallow</Type>
+                <Value>true</Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.animation.playAutomatically = </Literal>
+              <Scope data="ARGUMENT" ref="Allow">
+                <Fragment data="NAME"/>
+              </Scope>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>&lt;Object&gt;&apos;s name</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Object&gt;&apos;s name</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>162</Id>
+          <Types>
+            <Type>String</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return </Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.name;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Rewind &lt;Object&gt;&apos;s &lt;Animation&gt; to start</Name>
+      <Visible>true</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Rewind &lt;Object&gt;&apos;s &lt;Animation&gt; to start</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>163</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Animation</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>AnimationElement</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.animation.Rewind(</Literal>
+              <Scope data="ARGUMENT" ref="Animation">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Rewind all of &lt;Object&gt;&apos;s animations to start</Name>
+      <Visible>true</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Rewind all of &lt;Object&gt;&apos;s animations to start</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>164</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.animation.Rewind();</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Blend &lt;Object&gt;&apos;s &lt;Animation&gt; towards a weight of &lt;Weight&gt; over the next &lt;Seconds&gt; seconds</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label></Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Blend &lt;Object&gt;&apos;s &lt;Animation&gt; towards a weight of &lt;Weight&gt; over the next &lt;Seconds&gt; seconds</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>165</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Animation</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>AnimationElement</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Weight</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Seconds</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.animation.Blend(</Literal>
+              <Scope data="ARGUMENT" ref="Animation">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Weight">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Seconds">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
   </Effects>
   <DescribeIts>
-    <DescribeIt>
-      <Name>Mouse Button Clicked</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Product</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[23]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Screen Width</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[19]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
     <DescribeIt>
       <Name>Has Failed</Name>
       <Types>
@@ -6443,16 +7471,16 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[16]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Has Succeeded</Name>
+      <Name>Game Object</Name>
       <Types>
-        <Type>question</Type>
+        <Type>GameObject</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -6461,27 +7489,9 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[15]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Mouse Button Pressed</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[6]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[42]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -6497,14 +7507,87 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[7]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[3]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[21]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Quotient</Name>
+      <Name>z</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[46]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Text</Name>
+      <Types>
+        <Type>float</Type>
+        <Type>String</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[49]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Screen Width</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[6]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[19]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Position</Name>
+      <Types>
+        <Type>Vector3</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[7]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[47]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>y</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -6517,14 +7600,14 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[8]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[24]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[45]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Button Clicked</Name>
+      <Name>Name</Name>
       <Types>
-        <Type>question</Type>
+        <Type>String</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -6535,7 +7618,43 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[82]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Product</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[10]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[23]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Number</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[11]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[41]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -6551,63 +7670,9 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[10]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[20]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Clone</Name>
-      <Types>
-        <Type>GameObject</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[11]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Difference</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[12]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[22]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Is Active</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[13]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[14]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[20]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -6623,9 +7688,243 @@
       <PathMap>
         <Entry>
           <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[13]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[36]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Quotient</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[49]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[24]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Is Playing</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[51]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Mouse Button Pressed</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[16]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>x</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[17]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[44]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Difference</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[22]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Mouse Button Clicked</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[19]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Has Succeeded</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[20]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[15]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Random Number</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[21]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[48]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Button Clicked</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[22]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Text</Name>
+      <Types>
+        <Type>String</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[23]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[40]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Clone</Name>
+      <Types>
+        <Type>GameObject</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[24]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Combined Text</Name>
+      <Types>
+        <Type>String</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[25]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[50]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Is Active</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[26]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[14]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -6675,7 +7974,7 @@
           <Types>
             <Type>void</Type>
           </Types>
-          <Parameters>A
+          <Parameters>
             <KnowIt>
               <Name>Number</Name>
               <Visible>true</Visible>
