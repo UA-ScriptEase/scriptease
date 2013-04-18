@@ -135,7 +135,7 @@
       <Name>NumberOperator</Name>
       <Keyword>number_operator</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>2&lt;Equal To&gt;|1&lt;Less Than&gt;|0&lt;Greater Than&gt;|4&lt;Less Than or Equal To&gt;</Enum>
+      <Enum>2&lt;Equal To&gt;|1&lt;Less Than&gt;|0&lt;Greater Than&gt;|3&lt;Greater Than or Equal To&gt;|4&lt;Less Than or Equal To&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
