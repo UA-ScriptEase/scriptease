@@ -544,7 +544,7 @@
       <Name>NumberOperator</Name>
       <Keyword>number_operator</Keyword>
       <CodeSymbol>int</CodeSymbol>
-      <Enum>2&lt;Equal To&gt;|1&lt;Less Than&gt;|0&lt;Greater Than&gt;|3&lt;Greater Than or Equal To&gt;|4&lt;Less Than or Equal To&gt;</Enum>
+      <Enum>3&lt;Greater Than or Equal To&gt;|2&lt;Equal To&gt;|1&lt;Less Than&gt;|0&lt;Greater Than&gt;|4&lt;Less Than or Equal To&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -7021,7 +7021,9 @@
     <ScriptIt>
       <Name>Play &lt;Object&gt;&apos;s default animation</Name>
       <Visible>true</Visible>
-      <Labels/>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
@@ -7056,7 +7058,9 @@
     <ScriptIt>
       <Name>Stop playing all of &lt;Object&gt;&apos;s animations</Name>
       <Visible>true</Visible>
-      <Labels/>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
@@ -7092,7 +7096,7 @@
       <Name>Stop playing &lt;Object&gt;&apos;s &lt;Animation&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        <Label>NOW</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -7141,7 +7145,7 @@
       <Name>Fade in &lt;Object&gt;&apos;s &lt;Animation&gt; over &lt;Number&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        <Label>NOW</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -7201,7 +7205,9 @@
     <ScriptIt>
       <Name>&lt;Allow&gt; &lt;Object&gt;&apos;s default animation to play automatically</Name>
       <Visible>true</Visible>
-      <Labels/>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
@@ -7287,7 +7293,9 @@
     <ScriptIt>
       <Name>Rewind &lt;Object&gt;&apos;s &lt;Animation&gt; to start</Name>
       <Visible>true</Visible>
-      <Labels/>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
@@ -7334,7 +7342,9 @@
     <ScriptIt>
       <Name>Rewind all of &lt;Object&gt;&apos;s animations to start</Name>
       <Visible>true</Visible>
-      <Labels/>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
@@ -7370,7 +7380,7 @@
       <Name>Blend &lt;Object&gt;&apos;s &lt;Animation&gt; towards a weight of &lt;Weight&gt; over the next &lt;Seconds&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        <Label>NOW</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -7439,40 +7449,14 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[16]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[42]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[21]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[46]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[49]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[19]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[47]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[45]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[57]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[23]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[41]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[20]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[36]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[24]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[51]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[44]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[22]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[15]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[48]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[40]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[50]"/>
-    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[14]"/>
     <ScriptIt>
-      <Name>if &lt;Number 1&gt; is &lt;Operator&gt; &lt;Number 2&gt;</Name>
+      <Name>if &lt;Number One&gt; is &lt;Operator&gt; &lt;Number Two&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;Number 1&gt; is &lt;Operator&gt; &lt;Number 2&gt;</Name>
+          <Name>if &lt;Number One&gt; is &lt;Operator&gt; &lt;Number Two&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>166</Id>
@@ -7481,7 +7465,7 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Number 1</Name>
+              <Name>Number One</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -7501,7 +7485,7 @@
               </Binding>
             </KnowIt>
             <KnowIt>
-              <Name>Number 2</Name>
+              <Name>Number Two</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
@@ -7510,7 +7494,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-             <Line>
+            <Line>
               <Literal>var numberOperator:int = </Literal>
               <Scope data="argument" ref="Number Operator">
                 <Fragment data="name"/>
@@ -7523,11 +7507,11 @@
             <Indent>
               <Line>
                 <Literal>return </Literal>
-                <Scope data="argument" ref="X">
+                <Scope data="argument" ref="Number One">
                   <Fragment data="name"/>
                 </Scope>
                 <Literal> &gt; </Literal>
-                <Scope data="argument" ref="Y">
+                <Scope data="argument" ref="Number Two">
                   <Fragment data="name"/>
                 </Scope>
                 <Literal>;</Literal>
@@ -7539,11 +7523,11 @@
             <Indent>
               <Line>
                 <Literal>return </Literal>
-                <Scope data="argument" ref="X">
+                <Scope data="argument" ref="Number One">
                   <Fragment data="name"/>
                 </Scope>
                 <Literal> &lt; </Literal>
-                <Scope data="argument" ref="Y">
+                <Scope data="argument" ref="Number Two">
                   <Fragment data="name"/>
                 </Scope>
                 <Literal>;</Literal>
@@ -7555,11 +7539,11 @@
             <Indent>
               <Line>
                 <Literal>return </Literal>
-                <Scope data="argument" ref="X">
+                <Scope data="argument" ref="Number One">
                   <Fragment data="name"/>
                 </Scope>
                 <Literal> == </Literal>
-                <Scope data="argument" ref="Y">
+                <Scope data="argument" ref="Number Two">
                   <Fragment data="name"/>
                 </Scope>
                 <Literal>;</Literal>
@@ -7571,11 +7555,11 @@
             <Indent>
               <Line>
                 <Literal>return </Literal>
-                <Scope data="argument" ref="X">
+                <Scope data="argument" ref="Number One">
                   <Fragment data="name"/>
                 </Scope>
                 <Literal> &gt;= </Literal>
-                <Scope data="argument" ref="Y">
+                <Scope data="argument" ref="Number Two">
                   <Fragment data="name"/>
                 </Scope>
                 <Literal>;</Literal>
@@ -7587,11 +7571,11 @@
             <Indent>
               <Line>
                 <Literal>return </Literal>
-                <Scope data="argument" ref="X">
+                <Scope data="argument" ref="Number One">
                   <Fragment data="name"/>
                 </Scope>
                 <Literal> &lt;= </Literal>
-                <Scope data="argument" ref="Y">
+                <Scope data="argument" ref="Number Two">
                   <Fragment data="name"/>
                 </Scope>
                 <Literal>;</Literal>
@@ -7609,10 +7593,183 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
+    <ScriptIt>
+      <Name>Add force to make &lt;Object&gt; move &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Add force to make &lt;Object&gt; move &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>168</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>y</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>z</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.rigidbody.AddForce(</Literal>
+              <Scope data="ARGUMENT" ref="x">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="y">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="z">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+       <ScriptIt>
+      <Name>Add torque to make &lt;Object&gt; spin &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Add torque to make &lt;Object&gt; spin &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>169</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>y</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>z</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.rigidbody.AddTorque(</Literal>
+              <Scope data="ARGUMENT" ref="x">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="y">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="z">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[21]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[23]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[15]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[49]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[36]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[57]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[41]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[14]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[51]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[22]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[44]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[24]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[61]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[19]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[50]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[40]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[46]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[16]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[42]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[45]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[47]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[20]"/>
+    <ScriptIt reference="/APIDictionary/Effects/ScriptIt[48]"/>
   </Effects>
   <DescribeIts>
     <DescribeIt>
-      <Name>Mouse Button Clicked</Name>
+      <Name>Are Equal</Name>
       <Types>
         <Type>question</Type>
       </Types>
@@ -7625,12 +7782,12 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[36]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Sum</Name>
+      <Name>z</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -7643,7 +7800,7 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[2]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[21]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[46]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -7666,25 +7823,7 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Screen Width</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[19]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Is Playing</Name>
+      <Name>Is Active</Name>
       <Types>
         <Type>question</Type>
       </Types>
@@ -7695,9 +7834,27 @@
       <PathMap>
         <Entry>
           <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[14]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Clone</Name>
+      <Types>
+        <Type>GameObject</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[5]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[51]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -7720,9 +7877,9 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Position</Name>
+      <Name>Is Playing</Name>
       <Types>
-        <Type>Vector3</Type>
+        <Type>question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -7733,7 +7890,25 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[7]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[47]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[51]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Difference</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[8]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[22]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -7749,14 +7924,32 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[8]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[41]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>z</Name>
+      <Name>Number Comparison</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[10]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[61]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Random Number</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -7767,9 +7960,117 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[9]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[11]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[46]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[48]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Text</Name>
+      <Types>
+        <Type>String</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[12]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[40]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Mouse Button Clicked</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[13]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[8]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Game Object</Name>
+      <Types>
+        <Type>GameObject</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[42]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Mouse Button Pressed</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Position</Name>
+      <Types>
+        <Type>Vector3</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[16]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[47]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Screen Width</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[17]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[19]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -7786,45 +8087,9 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[10]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[49]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Difference</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[11]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[22]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>x</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[12]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[44]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -7840,124 +8105,16 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[13]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[19]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[20]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Quotient</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[14]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[24]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Are Equal</Name>
+      <Name>Has Failed</Name>
       <Types>
         <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[15]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[36]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Combined Text</Name>
-      <Types>
-        <Type>String</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[16]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[50]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Game Object</Name>
-      <Types>
-        <Type>GameObject</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[17]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[42]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Button Clicked</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[18]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Mouse Button Pressed</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[19]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[7]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Clone</Name>
-      <Types>
-        <Type>GameObject</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -7968,7 +8125,7 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[20]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[4]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[16]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -7991,9 +8148,9 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Number Comparison</Name>
+      <Name>x</Name>
       <Types>
-        <Type>question</Type>
+        <Type>float</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -8004,12 +8161,12 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[22]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[87]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[44]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Random Number</Name>
+      <Name>Quotient</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -8022,14 +8179,14 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[23]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[48]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[24]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Has Failed</Name>
+      <Name>Sum</Name>
       <Types>
-        <Type>question</Type>
+        <Type>float</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -8040,12 +8197,12 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[24]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[16]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[21]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Text</Name>
+      <Name>Combined Text</Name>
       <Types>
         <Type>String</Type>
       </Types>
@@ -8058,25 +8215,7 @@
           <Path>
             <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[25]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[40]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Is Active</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[26]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[14]"/>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[50]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -8092,9 +8231,27 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[27]/DescribeItNode"/>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[26]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/APIDictionary/Effects/ScriptIt[45]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Button Clicked</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/APIDictionary/DescribeIts/DescribeIt[27]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/APIDictionary/Effects/ScriptIt[10]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
