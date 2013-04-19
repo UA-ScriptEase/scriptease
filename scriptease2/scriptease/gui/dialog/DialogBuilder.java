@@ -325,7 +325,6 @@ public class DialogBuilder {
 							selectedTranslator.createModuleFileFilter(),
 							defaultLocation);
 				else
-					// TODO Add stuff
 					location = WindowFactory
 							.getInstance()
 							.showDirectoryChooser("Select", "", defaultLocation);

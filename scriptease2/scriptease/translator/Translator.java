@@ -67,6 +67,7 @@ import scriptease.util.FileOp;
  * @author graves
  * @author remiller
  * @author mfchurch
+ * @author kschenk
  */
 public class Translator {
 	/**
@@ -673,24 +674,12 @@ public class Translator {
 		try {
 			module = this.gameModuleClass.newInstance();
 		} catch (InstantiationException e) {
-			// WindowManager.getInstance().showProblemDialog(
-			// "Problem loading GameModule.",
-			// "Instantiation Exception while loading:\nResource: "
-			// + location + "\nDetails: ");
 			e.printStackTrace();
 			module = null;
 		} catch (IllegalAccessException e) {
-			// WindowManager.getInstance().showProblemDialog(
-			// "Problem loading GameModule.",
-			// "Illegal Access Exception while loading:\nResource: "
-			// + location + "\nDetails: ");
 			e.printStackTrace();
 			module = null;
 		} catch (NullPointerException e) {
-			// WindowManager.getInstance().showProblemDialog(
-			// "Problem loading GameModule.",
-			// "Null Pointer Exception while loading:\nResource: "
-			// + location + "\nDetails: ");
 			e.printStackTrace();
 			module = null;
 		}
