@@ -558,16 +558,13 @@ public final class WindowFactory {
 	}
 
 	/**
-	 * Shows a customised file chooser that is child of the main ScriptEase
-	 * frame. The chooser is customised to use the given operation name as the
-	 * button's text and frame title. For that reason, the operation name should
-	 * be short, like "Save Story".
+	 * Shows a directory chooser that is child of the main ScriptEase frame. The
+	 * chooser is customised to use the given operation name as the button's
+	 * text and frame title. For that reason, the operation name should be
+	 * short, like "Save Story".
 	 * 
 	 * @param operation
 	 *            The name of the operation to be performed.
-	 * @param extensions
-	 *            The file extensions to accept in the filter
-	 * 
 	 * 
 	 * @return The file selected. This <b>can</b> be null if the chooser window
 	 *         is dismissed without accepting (closed or cancelled).
@@ -596,7 +593,7 @@ public final class WindowFactory {
 	}
 
 	/**
-	 * Shows a customised file chooser that is child of the main ScriptEase
+	 * Shows a customised file chooser that is a child of the main ScriptEase
 	 * frame. The chooser is customised to use the given operation name as the
 	 * button's text and frame title. For that reason, the operation name should
 	 * be short, like "Save Story".
