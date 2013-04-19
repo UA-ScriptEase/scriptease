@@ -30,12 +30,10 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.gui.ExceptionDialog;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
-import scriptease.model.LibraryModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
@@ -291,15 +289,13 @@ public class DialogBuilder {
 				final Translator selectedTranslator = (Translator) gameComboBox
 						.getSelectedItem();
 				if (location.exists() && selectedTranslator != null) {
-					if (selectedTranslator.supportsModuleFile(location)) {
-						statusLabel.setText("");
-						statusLabel.setIcon(null);
-						wizard.pack();
-						if (!titleField.getText().isEmpty())
-							wizard.setFinishEnabled(true);
-						else
-							wizard.setFinishEnabled(false);
-					}
+					statusLabel.setText("");
+					statusLabel.setIcon(null);
+					wizard.pack();
+					if (!titleField.getText().isEmpty())
+						wizard.setFinishEnabled(true);
+					else
+						wizard.setFinishEnabled(false);
 				} else
 					wizard.setFinishEnabled(false);
 			}
@@ -310,20 +306,11 @@ public class DialogBuilder {
 			public void actionPerformed(ActionEvent e) {
 				final Translator selectedTranslator = ((Translator) gameComboBox
 						.getSelectedItem());
-				final String[] legalExtensions;
-				FileNameExtensionFilter filter = null;
 				File defaultLocation = null;
-				File location;
+				final File location;
 
 				// Build the filter based on the translator selected
 				if (selectedTranslator != null) {
-					legalExtensions = selectedTranslator.getLegalExtensions();
-
-					if (legalExtensions.length != 0) {
-						filter = new FileNameExtensionFilter(selectedTranslator
-								.getName() + " Game Files", legalExtensions);
-					}
-
 					defaultLocation = selectedTranslator
 							.getPathProperty(DescriptionKeys.GAME_DIRECTORY);
 
@@ -332,8 +319,16 @@ public class DialogBuilder {
 								.getParentFile();
 				}
 
-				location = WindowFactory.getInstance().showFileChooser(
-						"Select", "", filter, defaultLocation);
+				if (!selectedTranslator.moduleLoadsDirectories())
+					location = WindowFactory.getInstance().showFileChooser(
+							"Select", "",
+							selectedTranslator.createModuleFileFilter(),
+							defaultLocation);
+				else
+					// TODO Add stuff
+					location = WindowFactory
+							.getInstance()
+							.showDirectoryChooser("Select", "", defaultLocation);
 
 				if (location != null)
 					moduleField.setText(location.getAbsolutePath());
@@ -361,22 +356,14 @@ public class DialogBuilder {
 						.getSelectedItem();
 				if (location.exists()) {
 					if (selectedTranslator != null) {
-						if (selectedTranslator.supportsModuleFile(location)) {
-							statusLabel.setText("");
-							statusLabel.setIcon(null);
-							wizard.pack();
-							if (!titleField.getText().isEmpty())
-								wizard.setFinishEnabled(true);
-							else
-								wizard.setFinishEnabled(false);
-						} else {
-							statusLabel
-									.setText("Module is not valid for the selected Game");
-							statusLabel.setIcon(UIManager
-									.getIcon("OptionPane.errorIcon"));
-							wizard.pack();
+						statusLabel.setText("");
+						statusLabel.setIcon(null);
+						wizard.pack();
+
+						if (!titleField.getText().isEmpty())
+							wizard.setFinishEnabled(true);
+						else
 							wizard.setFinishEnabled(false);
-						}
 					} else {
 						statusLabel.setText("Select a Game");
 						statusLabel.setIcon(UIManager
@@ -409,99 +396,5 @@ public class DialogBuilder {
 
 		// Display the wizard
 		wizard.display();
-	}
-
-	/**
-	 * This is never used. Translator assigned to new Library Model may be
-	 * wrong. Check before implementing this.
-	 * 
-	 * @deprecated
-	 * 
-	 * @param parent
-	 * @return
-	 */
-	public LibraryModel showNewLibraryWizard(Frame parent) {
-		final JPanel newLibraryPanel;
-		final JLabel authorLabel;
-		final JTextField authorField;
-		final JLabel titleLabel;
-		final JTextField titleField;
-		final GroupLayout layout;
-		final LibraryModel model;
-
-		// Construct the New Library JPanel
-		newLibraryPanel = new JPanel();
-
-		model = new LibraryModel();
-
-		authorLabel = new JLabel("Author: ");
-		authorField = new JTextField(20);
-
-		titleLabel = new JLabel("Title: ");
-		titleField = new JTextField(20);
-
-		// Construct the content panel
-		layout = new GroupLayout(newLibraryPanel);
-		newLibraryPanel.setLayout(layout);
-
-		// horizontal perspective
-		layout.setHorizontalGroup(layout.createParallelGroup()
-				.addComponent(titleLabel).addComponent(titleField)
-				.addComponent(authorLabel).addComponent(authorField));
-
-		// vertical perspective
-		layout.setVerticalGroup(layout.createSequentialGroup()
-				.addComponent(titleLabel).addComponent(titleField)
-				.addComponent(authorLabel).addComponent(authorField));
-
-		newLibraryPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
-
-		Runnable onFinish = new Runnable() {
-			@Override
-			public void run() {
-				model.setTitle(titleField.getText());
-				model.setAuthor(authorField.getText());
-			}
-		};
-
-		// Build the pages
-		Collection<JPanel> pages = new ArrayList<JPanel>();
-		pages.add(newLibraryPanel);
-
-		// Create the wizard
-		final WizardDialog wizard = new WizardDialog(parent,
-				"New Library Wizard", pages, onFinish);
-
-		// Listeners
-		titleField.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				updateButton();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				updateButton();
-			}
-
-			private void updateButton() {
-				if (!titleField.getText().isEmpty())
-					wizard.setFinishEnabled(true);
-				else
-					wizard.setFinishEnabled(false);
-			}
-		});
-
-		// Display the wizard
-		wizard.display();
-		// If the title wasn't set, return null
-		if (!model.getTitle().isEmpty())
-			return model;
-		else
-			return null;
 	}
 }
