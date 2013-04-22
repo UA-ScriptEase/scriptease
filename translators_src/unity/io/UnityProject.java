@@ -48,6 +48,8 @@ public final class UnityProject extends GameModule {
 	 */
 	public static final String UNITY_TAG = "tag:unity3d.com,2011:";
 
+	private static final String RESOURCE_FOLDER_NAME = "Resources";
+
 	// Note: this used to be static, but we can't make it static since we want
 	// to be able to work on multiple projects at the same time.
 	private final Map<String, File> guidsToMetaFiles;
@@ -268,15 +270,16 @@ public final class UnityProject extends GameModule {
 
 	@SuppressWarnings("serial")
 	private Collection<Resource> loadResources() {
-		final String RESOURCE_FOLDER_NAME = "Resources";
 
 		final Collection<Resource> resources = new ArrayList<Resource>();
 
 		final Collection<String> imageExtensions;
 		final FileFilter resourceFolderFilter;
 		final FileFilter imageFilter;
+		final FileFilter guiSkinFilter;
 
-		final Collection<File> imageFiles = new ArrayList<File>();
+		final Collection<File> images = new ArrayList<File>();
+		final Collection<File> guiSkins = new ArrayList<File>();
 		final Collection<File> resourceFolders;
 
 		imageExtensions = new ArrayList<String>() {
@@ -310,38 +313,53 @@ public final class UnityProject extends GameModule {
 			}
 		};
 
+		guiSkinFilter = new FileFilter() {
+			@Override
+			public boolean accept(File file) {
+				final String ext = FileOp.getExtension(file).toLowerCase();
+
+				return ext.equals("guiskin");
+			}
+		};
+
 		resourceFolders = FileOp.findFiles(this.projectLocation,
 				resourceFolderFilter);
 
 		for (File resourceFolder : resourceFolders) {
-			imageFiles.addAll(FileOp.findFiles(resourceFolder, imageFilter));
+			images.addAll(FileOp.findFiles(resourceFolder, imageFilter));
+			guiSkins.addAll(FileOp.findFiles(resourceFolder, guiSkinFilter));
 		}
 
-		for (File imageFile : imageFiles) {
-			String name = FileOp.removeExtension(imageFile.getAbsolutePath());
+		resources.addAll(this.buildSimpleUnityResources(images,
+				UnityType.SE_IMAGE));
+		resources.addAll(this.buildSimpleUnityResources(guiSkins,
+				UnityType.SE_GUISKIN));
+
+		return resources;
+	}
+
+	/**
+	 * Builds a unity resource from an asset file inside of the resources
+	 * folder, such as an image.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	private final Collection<Resource> buildSimpleUnityResources(
+			final Collection<File> files, final UnityType type) {
+		final Collection<Resource> resources = new ArrayList<Resource>();
+
+		for (File file : files) {
+			final SimpleResource resource;
+
+			String name = FileOp.removeExtension(file.getAbsolutePath());
 			// Since split takes a regex, we need to escape \ twice
 			name = name.split("\\\\" + RESOURCE_FOLDER_NAME + "\\\\")[1];
 
-			// Now we need to load these files.
+			resource = SimpleResource.buildSimpleResource(type.getName(), name);
 
-			final SimpleResource imageResource;
-
-			imageResource = SimpleResource.buildSimpleResource(
-					UnityType.SE_IMAGE.getName(), name);
-
-			resources.add(imageResource);
+			resources.add(resource);
 		}
-
-		// These may be in other paths! e.g. folder/file
-
-		// We do not need the file extension in code, but we do need
-		// their type.
-
-		// Load texture2da files
-		// Should show the extension on game object.
-
-		// Load .guiskin files
-
 		return resources;
 	}
 
