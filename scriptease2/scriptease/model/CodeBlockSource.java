@@ -335,40 +335,14 @@ public class CodeBlockSource extends CodeBlock {
 
 	@Override
 	public void setCode(Collection<AbstractFragment> newCode) {
-		final Collection<AbstractFragment> oldCode = new ArrayList<AbstractFragment>(
-				this.code);
-		for (AbstractFragment codeFragment : oldCode) {
-			this.removeCode(codeFragment);
-		}
-		for (AbstractFragment codeFragment : newCode) {
-			this.addCode(codeFragment);
-		}
+		this.code = new ArrayList<AbstractFragment>(newCode);
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
 	}
-
-	@Override
-	public void addCode(AbstractFragment code) {
-		if (this.code.add(code)) {
-			this.notifyObservers(new StoryComponentEvent(this,
-					StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
-		}
-	}
-
-	@Override
-	public void removeCode(AbstractFragment code) {
-		if (this.code.remove(code)) {
-			this.notifyObservers(new StoryComponentEvent(this,
-					StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
-		}
-	};
 
 	@Override
 	public Collection<AbstractFragment> getCode() {
-		Collection<AbstractFragment> clonedCode = new ArrayList<AbstractFragment>(
-				this.code.size());
-		for (AbstractFragment fragment : this.code) {
-			clonedCode.add(fragment.clone());
-		}
-		return clonedCode;
+		return new ArrayList<AbstractFragment>(this.code);
 	}
 
 	/**

@@ -154,16 +154,6 @@ public abstract class CodeBlock extends StoryComponent implements
 	 */
 	public abstract void setIncludes(Collection<String> includes);
 
-	/**
-	 * Workaround for pointcuts complaining about type erasure for methods that
-	 * use Collections
-	 * 
-	 * @param code
-	 */
-	public abstract void addCode(AbstractFragment code);
-
-	public abstract void removeCode(AbstractFragment code);
-
 	public abstract void setCode(Collection<AbstractFragment> code);
 
 	/**
