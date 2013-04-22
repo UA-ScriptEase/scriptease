@@ -49,20 +49,25 @@ public class SlotConverter implements Converter {
 		writer.endNode();
 
 		// Write Condition
-		writer.startNode(TAG_CONDITION);
-		writer.setValue(slot.getCondition());
-		writer.endNode();
-		
+		final String condition = slot.getCondition();
+		if (condition != null && !condition.isEmpty()) {
+			writer.startNode(TAG_CONDITION);
+			writer.setValue(slot.getCondition());
+			writer.endNode();
+		}
+
 		// Write Parameters
+		final Collection<KnowIt> parameters = slot.getParameters();
 		writer.startNode(TAG_PARAMETERS);
-		if (slot.getParameters() != null && !slot.getParameters().isEmpty())
-			context.convertAnother(slot.getParameters());
+		if (parameters != null && !parameters.isEmpty())
+			context.convertAnother(parameters);
 		writer.endNode();
 
 		// Write Implicits
+		final Collection<KnowIt> implicits = slot.getImplicits();
 		writer.startNode(TAG_IMPLICITS);
-		if (slot.getImplicits() != null && !slot.getImplicits().isEmpty())
-			context.convertAnother(slot.getImplicits());
+		if (implicits != null && !implicits.isEmpty())
+			context.convertAnother(implicits);
 		writer.endNode();
 	}
 

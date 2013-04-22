@@ -67,6 +67,7 @@ import scriptease.util.FileOp;
  * @author graves
  * @author remiller
  * @author mfchurch
+ * @author kschenk
  */
 public class Translator {
 	/**
@@ -91,6 +92,8 @@ public class Translator {
 	 * Java class file extension.
 	 */
 	private static final String CLASS_FILE_EXTENSION = ".class";
+
+	private static final String DIRECTORY = "directory";
 
 	private final Properties properties;
 
@@ -631,29 +634,38 @@ public class Translator {
 	}
 
 	/**
-	 * Gets the Game Module extensions that this translator supports.
+	 * Returns true if the module loads directories instead of files with
+	 * extensions.
 	 * 
-	 * @return the legalExtensions
+	 * @return
 	 */
-	public String[] getLegalExtensions() {
-		return new ArrayList<String>(this.legalExtensions)
-				.toArray(new String[this.legalExtensions.size()]);
+	public boolean moduleLoadsDirectories() {
+		return this.legalExtensions.size() == 1
+				&& this.legalExtensions.contains(DIRECTORY);
 	}
 
 	/**
-	 * Determines if this translator can open the given file as a GameModule.
+	 * Creates a new file filter for the translator. This will throw an
+	 * exception if the translator only allows modules. It is recommended to use
+	 * {@link #moduleLoadsDirectories()} to check before using this method.
 	 * 
-	 * @return <code>true</code> if the translator supports reading the given
-	 *         file.
+	 * @return
 	 */
-	public boolean supportsModuleFile(File location) {
-		if (!this.legalExtensions.isEmpty()) {
-			return this.legalExtensions.contains(FileOp.getExtension(location));
-		} else {
-			// at the moment, we don't have any better information, so we just
-			// have to blindly accept.
-			return true;
-		}
+	public javax.swing.filechooser.FileFilter createModuleFileFilter() {
+		final javax.swing.filechooser.FileFilter filter;
+
+		if (this.moduleLoadsDirectories()) {
+			throw new IllegalArgumentException("Cannot filter files for this"
+					+ " translator because it accepts directories.");
+		} else if (this.legalExtensions.size() > 0)
+			filter = new FileNameExtensionFilter(
+					this.getName() + " Game Files",
+					this.legalExtensions
+							.toArray(new String[this.legalExtensions.size()]));
+		else
+			filter = null;
+
+		return filter;
 	}
 
 	private GameModule createGameModuleInstance() {
@@ -662,24 +674,12 @@ public class Translator {
 		try {
 			module = this.gameModuleClass.newInstance();
 		} catch (InstantiationException e) {
-			// WindowManager.getInstance().showProblemDialog(
-			// "Problem loading GameModule.",
-			// "Instantiation Exception while loading:\nResource: "
-			// + location + "\nDetails: ");
 			e.printStackTrace();
 			module = null;
 		} catch (IllegalAccessException e) {
-			// WindowManager.getInstance().showProblemDialog(
-			// "Problem loading GameModule.",
-			// "Illegal Access Exception while loading:\nResource: "
-			// + location + "\nDetails: ");
 			e.printStackTrace();
 			module = null;
 		} catch (NullPointerException e) {
-			// WindowManager.getInstance().showProblemDialog(
-			// "Problem loading GameModule.",
-			// "Null Pointer Exception while loading:\nResource: "
-			// + location + "\nDetails: ");
 			e.printStackTrace();
 			module = null;
 		}
@@ -754,15 +754,14 @@ public class Translator {
 
 	private File requestNewLocation() {
 		final File newLocation;
-		final String[] extensions = this.getLegalExtensions();
-		FileNameExtensionFilter filter = null;
 
-		if (extensions != null && extensions.length != 0)
-			filter = new FileNameExtensionFilter(
-					this.getName() + " Game Files", extensions);
-		// Otherwise pass in a null filter (defaults to accept all)
-		newLocation = WindowFactory.getInstance().showFileChooser("Select", "",
-				filter, this.getLocation());
+		if (!this.moduleLoadsDirectories())
+			// Otherwise pass in a null filter (defaults to accept all)
+			newLocation = WindowFactory.getInstance().showFileChooser("Select",
+					"", this.createModuleFileFilter(), this.getLocation());
+		else
+			newLocation = WindowFactory.getInstance().showDirectoryChooser(
+					"Select", "", this.getLocation());
 
 		return newLocation;
 	}

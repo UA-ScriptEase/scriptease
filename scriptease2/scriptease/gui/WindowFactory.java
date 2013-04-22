@@ -264,19 +264,6 @@ public final class WindowFactory {
 	}
 
 	/**
-	 * This is never used. Translator assigned to new Library Model in
-	 * DialogBuilder.showNewLibraryWizard may be wrong. Check before
-	 * implementing this.
-	 * 
-	 * @deprecated
-	 * 
-	 * @return
-	 */
-	public LibraryModel buildNewLibraryWizardDialog() {
-		return DialogBuilder.getInstance().showNewLibraryWizard(this.mainFrame);
-	}
-
-	/**
 	 * Shows a Library Picker and returns the choice may return null if no
 	 * selection is made
 	 * 
@@ -571,7 +558,42 @@ public final class WindowFactory {
 	}
 
 	/**
-	 * Shows a customised file chooser that is child of the main ScriptEase
+	 * Shows a directory chooser that is child of the main ScriptEase frame. The
+	 * chooser is customised to use the given operation name as the button's
+	 * text and frame title. For that reason, the operation name should be
+	 * short, like "Save Story".
+	 * 
+	 * @param operation
+	 *            The name of the operation to be performed.
+	 * 
+	 * @return The file selected. This <b>can</b> be null if the chooser window
+	 *         is dismissed without accepting (closed or cancelled).
+	 */
+	public File showDirectoryChooser(String operation, String defaultFileName,
+			File directoryPath) {
+		final JFileChooser chooser = new JFileChooser();
+
+		chooser.resetChoosableFileFilters();
+		chooser.setAcceptAllFileFilterUsed(false);
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+		chooser.setCurrentDirectory(directoryPath);
+
+		final int buttonChoice;
+		final File choice;
+
+		buttonChoice = chooser.showDialog(this.mainFrame, operation);
+
+		if (buttonChoice == JFileChooser.APPROVE_OPTION) {
+			choice = chooser.getSelectedFile();
+		} else
+			choice = null;
+
+		return choice;
+	}
+
+	/**
+	 * Shows a customised file chooser that is a child of the main ScriptEase
 	 * frame. The chooser is customised to use the given operation name as the
 	 * button's text and frame title. For that reason, the operation name should
 	 * be short, like "Save Story".
@@ -591,20 +613,16 @@ public final class WindowFactory {
 
 		chooser = new JFileChooser();
 
-		// disable "All Files" option
-		chooser.setAcceptAllFileFilterUsed(false);
-
 		final ScriptEase se = ScriptEase.getInstance();
 		final int buttonChoice;
 		final File choice;
 		File lastChoicePath = null;
-		final boolean isNullFilter = (filter == null);
 		String lastDirectory = null;
 		String lastDirectoryKey = null;
 
 		chooser.resetChoosableFileFilters();
 		chooser.setAcceptAllFileFilterUsed(true);
-		if (!isNullFilter) {
+		if (filter != null) {
 			lastDirectoryKey = WindowFactory.LAST_DIRECTORY_KEY
 					+ StringOp.makeAlphaNumeric(filter.getDescription());
 			lastDirectory = se.getPreference(lastDirectoryKey);
@@ -962,8 +980,7 @@ public final class WindowFactory {
 								GroupLayout.PREFERRED_SIZE,
 								GroupLayout.PREFERRED_SIZE));
 
-		SEModelManager.getInstance().addSEModelObserver(this,
-				modelObserver);
+		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 
 		frame.getContentPane().add(content);
 
