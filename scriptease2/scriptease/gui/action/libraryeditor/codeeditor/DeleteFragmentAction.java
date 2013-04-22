@@ -6,12 +6,10 @@ import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.gui.libraryeditor.FormatFragmentSelectionManager;
 import scriptease.model.CodeBlock;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
-import sun.awt.util.IdentityArrayList;
 
 /**
  * Represents and performs the Delete Fragment command, as well as encapsulating
@@ -22,7 +20,7 @@ import sun.awt.util.IdentityArrayList;
  * 
  */
 @SuppressWarnings("serial")
-public class DeleteFragmentAction extends ActiveTranslatorSensitiveAction {
+public class DeleteFragmentAction extends AbstractFragmentAction {
 	private static final String DELETE_FRAGMENT_TEXT = "Delete";
 
 	private static final DeleteFragmentAction instance = new DeleteFragmentAction();
@@ -71,7 +69,6 @@ public class DeleteFragmentAction extends ActiveTranslatorSensitiveAction {
 					subFragments = ((AbstractContainerFragment) formatFragment)
 							.getSubFragments();
 					subFragmentsList = new ArrayList<AbstractFragment>();
-
 					subFragmentsList.addAll(subFragments);
 
 					deleteFragment(subFragmentsList, selectedFragment,
@@ -83,22 +80,14 @@ public class DeleteFragmentAction extends ActiveTranslatorSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final CodeBlock codeBlock;
-
-		codeBlock = FormatFragmentSelectionManager.getInstance().getCodeBlock();
-
+		final CodeBlock codeBlock = FormatFragmentSelectionManager
+				.getInstance().getCodeBlock();
 		if (codeBlock != null) {
-			final AbstractFragment selectedFragment;
-			final Collection<AbstractFragment> code;
-			final IdentityArrayList<AbstractFragment> fragments;
-
-			selectedFragment = FormatFragmentSelectionManager.getInstance()
-					.getFormatFragment();
-			code = codeBlock.getCode();
-			fragments = new IdentityArrayList<AbstractFragment>();
-
-			fragments.addAll(code);
-
+			final List<AbstractFragment> fragments = cloneFragments(codeBlock
+					.getCode());
+			final AbstractFragment selectedFragment = getClonedSelectedFragment(
+					FormatFragmentSelectionManager.getInstance()
+							.getFormatFragment(), fragments);
 			if (selectedFragment != null) {
 				this.deleteFragment(fragments, selectedFragment, null);
 				UndoManager.getInstance().startUndoableAction(

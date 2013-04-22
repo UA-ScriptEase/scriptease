@@ -695,7 +695,6 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		});
 
 		literalPanel.setBorder(titledBorder);
-
 		literalPanel.add(literalField);
 
 		return literalPanel;
@@ -752,7 +751,6 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 				});
 
 		referencePanel.setBorder(titledBorder);
-
 		referencePanel.add(referenceField);
 
 		return referencePanel;
@@ -834,7 +832,6 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	private void buildDefaultPanes(JPanel panel,
 			Collection<AbstractFragment> codeFragments) {
 
-		// this.codeEditorPanel.setBackground(ScriptEaseUI.FRAGMENT_DEFAULT_COLOR);
 		for (AbstractFragment codeFragment : codeFragments) {
 			JPanel fragmentPanel = new JPanel();
 			if (codeFragment instanceof LineFragment) {
@@ -842,10 +839,6 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 
 				lineLabel = new JLabel("\\n");
 				fragmentPanel = buildLinePanel();
-
-				// if (codeFragment.equals(selectedFragment))
-				// fragmentPanel.setBackground(GUIOp.scaleWhite(
-				// ScriptEaseUI.LINE_FRAGMENT_COLOR, 1.2));
 
 				lineLabel.setForeground(ScriptEaseUI.LINE_FRAGMENT_COLOR);
 				lineLabel.setFont(new Font("SansSerif", Font.PLAIN, 32));
@@ -860,27 +853,15 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 			} else if (codeFragment instanceof IndentFragment) {
 				fragmentPanel = buildIndentPanel((IndentFragment) codeFragment);
 
-				// if (codeFragment.equals(selectedFragment))
-				// fragmentPanel.setBackground(GUIOp.scaleWhite(
-				// ScriptEaseUI.INDENT_FRAGMENT_COLOR, 1.2));
-
 				panel.add(fragmentPanel);
 				this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 			} else if (codeFragment instanceof LiteralFragment) {
 				fragmentPanel = buildLiteralPanel((LiteralFragment) codeFragment);
 
-				// if (codeFragment.equals(selectedFragment))
-				// fragmentPanel.setBackground(GUIOp.scaleWhite(
-				// ScriptEaseUI.LITERAL_FRAGMENT_COLOR, 1.7));
-
 				panel.add(fragmentPanel);
 				this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 			} else if (codeFragment instanceof ScopeFragment) {
 				fragmentPanel = buildScopePanel((ScopeFragment) codeFragment);
-
-				// if (codeFragment.equals(selectedFragment))
-				// fragmentPanel.setBackground(GUIOp.scaleWhite(
-				// ScriptEaseUI.SCOPE_FRAGMENT_COLOR, 5.0));
 
 				buildDefaultPanes(fragmentPanel,
 						((ScopeFragment) codeFragment).getSubFragments());
@@ -889,10 +870,6 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 			} else if (codeFragment instanceof SeriesFragment) {
 				fragmentPanel = buildSeriesPanel((SeriesFragment) codeFragment);
 
-				// if (codeFragment.equals(selectedFragment))
-				// fragmentPanel.setBackground(GUIOp.scaleWhite(
-				// ScriptEaseUI.SERIES_FRAGMENT_COLOR, 3.0));
-
 				buildDefaultPanes(fragmentPanel,
 						((SeriesFragment) codeFragment).getSubFragments());
 				panel.add(fragmentPanel);
@@ -900,29 +877,15 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 			} else if (codeFragment instanceof FormatReferenceFragment) {
 				fragmentPanel = buildReferencePanel((FormatReferenceFragment) codeFragment);
 
-				// if (codeFragment.equals(selectedFragment))
-				// fragmentPanel.setBackground(GUIOp.scaleWhite(
-				// ScriptEaseUI.REFERENCE_FRAGMENT_COLOR, 3.0));
-
 				panel.add(fragmentPanel);
 				this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 			} else if (codeFragment instanceof SimpleDataFragment) {
 				fragmentPanel = buildSimplePanel((SimpleDataFragment) codeFragment);
 
-				// if (codeFragment.equals(selectedFragment))
-				// fragmentPanel.setBackground(GUIOp.scaleWhite(
-				// ScriptEaseUI.SIMPLE_FRAGMENT_COLOR, 3.5));
-
 				panel.add(fragmentPanel);
 				this.panelToFragmentMap.put(fragmentPanel, codeFragment);
 			}
-
-			// if (selectedFragment == null)
-			// this.codeEditorPanel.setBackground(GUIOp.scaleWhite(
-			// ScriptEaseUI.CODE_EDITOR_COLOR, 1.7));
 		}
-
-		// updatePanelSelectionHighlight(selectedFragment);
 	}
 
 	/*
