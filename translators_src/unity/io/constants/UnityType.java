@@ -333,7 +333,9 @@ public enum UnityType {
 
 	SE_ANIMATIONELEMENT("AnimationElement"),
 
-	SE_IMAGE("Image");
+	SE_IMAGE("Image"),
+
+	SE_GUISKIN("GUISkin");
 
 	public static final int SCRIPTEASE_TYPE = 0;
 
@@ -365,7 +367,8 @@ public enum UnityType {
 	/**
 	 * Returns the type that corresponds to the id. Throws an
 	 * {@link IllegalArgumentException} if the type is not valid in Unity, since
-	 * type numbers are not unique for ScriptEase types. Returns null if no type found.
+	 * type numbers are not unique for ScriptEase types. Returns null if no type
+	 * found.
 	 * 
 	 * @param id
 	 * @return
