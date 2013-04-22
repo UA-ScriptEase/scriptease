@@ -308,7 +308,8 @@ public class TranslatorManager {
 		final Collection<Translator> supporters = new ArrayList<Translator>();
 
 		for (Translator translator : this.translatorPool) {
-			if (translator.supportsModuleFile(moduleFile))
+			if (!translator.moduleLoadsDirectories()
+					&& translator.createModuleFileFilter().accept(moduleFile))
 				supporters.add(translator);
 		}
 
