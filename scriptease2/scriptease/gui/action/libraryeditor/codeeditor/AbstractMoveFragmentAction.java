@@ -3,11 +3,11 @@ package scriptease.gui.action.libraryeditor.codeeditor;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.Action;
 
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.gui.libraryeditor.FormatFragmentSelectionManager;
 import scriptease.model.CodeBlock;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -21,8 +21,7 @@ import scriptease.translator.codegenerator.code.fragments.container.AbstractCont
  * 
  */
 @SuppressWarnings("serial")
-public abstract class AbstractMoveFragmentAction extends
-		ActiveTranslatorSensitiveAction {
+public abstract class AbstractMoveFragmentAction extends AbstractFragmentAction {
 
 	protected AbstractMoveFragmentAction(String name) {
 		super(name);
@@ -42,7 +41,7 @@ public abstract class AbstractMoveFragmentAction extends
 	 * @return
 	 */
 	private void moveFragment(
-			final ArrayList<AbstractFragment> topLevelFormatFragments,
+			final List<AbstractFragment> topLevelFormatFragments,
 			final AbstractFragment selectedFragment,
 			final AbstractContainerFragment parentFragment) {
 
@@ -89,15 +88,11 @@ public abstract class AbstractMoveFragmentAction extends
 		codeBlock = FormatFragmentSelectionManager.getInstance().getCodeBlock();
 
 		if (codeBlock != null) {
-			final AbstractFragment selectedFragment;
-			final ArrayList<AbstractFragment> fragments;
-
-			selectedFragment = FormatFragmentSelectionManager.getInstance()
-					.getFormatFragment();
-			fragments = new ArrayList<AbstractFragment>();
-
-			fragments.addAll(codeBlock.getCode());
-
+			final List<AbstractFragment> fragments = cloneFragments(codeBlock
+					.getCode());
+			final AbstractFragment selectedFragment = getClonedSelectedFragment(
+					FormatFragmentSelectionManager.getInstance()
+							.getFormatFragment(), fragments);
 			if (selectedFragment != null) {
 				this.moveFragment(fragments, selectedFragment, null);
 				UndoManager.getInstance().startUndoableAction(

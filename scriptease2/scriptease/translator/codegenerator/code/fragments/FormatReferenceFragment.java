@@ -2,6 +2,7 @@ package scriptease.translator.codegenerator.code.fragments;
 
 import java.util.List;
 
+import scriptease.controller.AbstractFragmentVisitor;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
@@ -20,7 +21,7 @@ import scriptease.translator.codegenerator.code.contexts.StoryComponentContext;
  * @author kschenk
  */
 public class FormatReferenceFragment extends AbstractFragment {
-	private final FormatReferenceType type;
+	private FormatReferenceType type;
 
 	public FormatReferenceFragment(String text) {
 		this(text, FormatReferenceType.NONE);
@@ -38,8 +39,20 @@ public class FormatReferenceFragment extends AbstractFragment {
 		this.type = type;
 	}
 
+	@Override
+	public FormatReferenceFragment clone() {
+		final FormatReferenceFragment clone = (FormatReferenceFragment) super
+				.clone();
+		clone.setType(this.type);
+		return clone;
+	}
+
 	public FormatReferenceType getType() {
 		return this.type;
+	}
+
+	public void setType(FormatReferenceType type) {
+		this.type = type;
 	}
 
 	/**
@@ -114,5 +127,10 @@ public class FormatReferenceFragment extends AbstractFragment {
 		private boolean getResult() {
 			return this.typeMatches;
 		}
+	}
+
+	@Override
+	public void process(AbstractFragmentVisitor visitor) {
+		visitor.processFormatReferenceFragment(this);
 	}
 }
