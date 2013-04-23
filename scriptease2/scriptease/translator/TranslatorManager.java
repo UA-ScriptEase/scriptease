@@ -129,8 +129,9 @@ public class TranslatorManager {
 				contents = translator.listFiles(iniFilter);
 
 				// We use only the first "translator.ini"
-				if (contents != null && contents.length > 0)
+				if (contents != null && contents.length > 0) {
 					this.addTranslator(contents[0]);
+				}
 			}
 		}
 

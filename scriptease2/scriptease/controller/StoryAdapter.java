@@ -27,7 +27,7 @@ import scriptease.model.complex.StoryPoint;
  * ComplexStroyComponents, or {@link #defaultProcess(StoryComponent)} for
  * anything. <br>
  * <br>
- * AbstractNoOpStoryVisitor is an Adapter (of the Adapter design pattern) to
+ * StoryAdapter is an Adapter (of the Adapter design pattern) to
  * StoryVisitor.
  * 
  * @author jtduncan

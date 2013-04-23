@@ -1,9 +1,9 @@
 package scriptease.translator.codegenerator.code.fragments.container;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import scriptease.controller.AbstractFragmentVisitor;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
@@ -16,10 +16,6 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * 
  */
 public class LineFragment extends AbstractContainerFragment {
-
-	// These are the fragments which are contained within this line.
-	private List<AbstractFragment> subFragments;
-
 	// This is a string because a new line is not necessarily expressable as a
 	// single character. This is the case, for example, with HTML, which uses
 	// '<br />'.
@@ -32,11 +28,10 @@ public class LineFragment extends AbstractContainerFragment {
 	 *            the character to mark a new line.
 	 */
 	public LineFragment(String nlChar) {
-		super("");
+		super("", new ArrayList<AbstractFragment>());
 		this.newLineChar = nlChar;
-		this.subFragments = new ArrayList<AbstractFragment>();
 	}
-	
+
 	/**
 	 * Constructor with FormatFragment list specified.
 	 * 
@@ -46,28 +41,21 @@ public class LineFragment extends AbstractContainerFragment {
 	 *            the child fragments
 	 */
 	public LineFragment(String nlChar, List<AbstractFragment> fragments) {
-		super("");
+		super("", fragments);
 		this.newLineChar = nlChar;
-		this.subFragments = new ArrayList<AbstractFragment>(fragments);
-	}
-	
-	@Override
-	public void setSubFragments(List<AbstractFragment> subFragments) {
-		this.subFragments = subFragments;
 	}
 
 	@Override
-	public Collection<AbstractFragment> getSubFragments() {
-		return this.subFragments;
+	public LineFragment clone() {
+		final LineFragment clone = (LineFragment) super.clone();
+		clone.setNewLineChar(this.newLineChar);
+		return clone;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * scriptease.translator.codegenerator.code.FormatFragment#resolve(scriptease
-	 * .translator.codegenerator.code.CodeGenerationContext)
-	 */
+	public void setNewLineChar(String newLineChar) {
+		this.newLineChar = newLineChar;
+	}
+
 	@Override
 	public String resolve(Context context) {
 		super.resolve(context);
@@ -95,5 +83,10 @@ public class LineFragment extends AbstractContainerFragment {
 	public int hashCode() {
 		return super.hashCode() + this.subFragments.hashCode()
 				+ this.newLineChar.hashCode();
+	}
+
+	@Override
+	public void process(AbstractFragmentVisitor visitor) {
+		visitor.processLineFragment(this);
 	}
 }

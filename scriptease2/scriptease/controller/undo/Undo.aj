@@ -142,6 +142,7 @@ public aspect Undo {
 	 */
 	public pointcut removingType():
 		within (KnowIt+) && execution(* removeType(String));
+	
 
 	public pointcut addingCodeBlockType():
 		within (CodeBlock+) && execution(* addType(String));
@@ -149,6 +150,9 @@ public aspect Undo {
 	public pointcut removingCodeBlockType():
 		within (CodeBlock+) && execution(* removeType(String));
 
+	public pointcut settingCodeBlockCode():
+		within(CodeBlock+) && execution(* setCode(Collection<AbstractFragment>));
+	
 	public pointcut addingCodeBlockCode():
 		within (CodeBlock+) && execution(* addCode(AbstractFragment));
 
@@ -624,46 +628,20 @@ public aspect Undo {
 		};
 		this.addModification(mod);
 	}
-
-	before(final CodeBlock codeBlock, final AbstractFragment code): addingCodeBlockCode() && args(code) && this(codeBlock) {
-		Modification mod = new Modification() {
-
-			@Override
-			public void redo() {
-				codeBlock.addCode(code);
-			}
-
-			@Override
-			public void undo() {
-				codeBlock.removeCode(code);
-			}
+	
+	before(final CodeBlock codeBlock, final Collection<AbstractFragment> code): settingCodeBlockCode() && args(code) && this(codeBlock) {
+		Modification mod = new FieldModification<Collection<AbstractFragment>>(code,
+				codeBlock.getCode()) {
+			public void setOp(Collection<AbstractFragment> newCode) {
+				codeBlock.setCode(newCode);
+			};
 
 			@Override
 			public String toString() {
-				return "adding " + code + " to " + codeBlock;
+				return "setting " + codeBlock + "'s code to " + code;
 			}
 		};
-		this.addModification(mod);
-	}
 
-	before(final CodeBlock codeBlock, final AbstractFragment code): removingCodeBlockCode() && args(code) && this(codeBlock) {
-		Modification mod = new Modification() {
-
-			@Override
-			public void redo() {
-				codeBlock.removeCode(code);
-			}
-
-			@Override
-			public void undo() {
-				codeBlock.addCode(code);
-			}
-
-			@Override
-			public String toString() {
-				return "removing " + code + " from " + codeBlock;
-			}
-		};
 		this.addModification(mod);
 	}
 
