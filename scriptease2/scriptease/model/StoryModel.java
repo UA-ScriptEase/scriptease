@@ -1,9 +1,14 @@
 package scriptease.model;
 
+import java.util.Collection;
+
 import scriptease.controller.ModelVisitor;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.io.model.GameModule;
+import scriptease.translator.io.model.Resource;
 
 /**
  * A StoryModel is the binding object that associates a GameModule with a
@@ -16,23 +21,8 @@ import scriptease.translator.io.model.GameModule;
 public final class StoryModel extends SEModel {
 	private final GameModule module;
 	private final Translator translator;
-//	private final ModelVerifier modelVerifier;
+	private final Collection<LibraryModel> libraries;
 	private StoryPoint startPoint;
-
-	/**
-	 * Builds a StoryModel with the supplied module and translator, and defaults
-	 * for all other properties
-	 * 
-	 * @param module
-	 *            The {@link GameModule} associated with the model objects. The
-	 *            StoryModel's model objects can access only the game data from
-	 *            this module.
-	 * @param translator
-	 *            The Translator to use to interpret this story.
-	 */
-	public StoryModel(GameModule module, Translator translator) {
-		this(module, "", "", translator);
-	}
 
 	/**
 	 * Full constructor for {@code ScriptEaseStoryModule}. Builds a
@@ -52,49 +42,47 @@ public final class StoryModel extends SEModel {
 	 *            The Translator to use to interpret this story.
 	 */
 	public StoryModel(GameModule module, String title, String author,
-			Translator translator) {
+			Translator translator, Collection<LibraryModel> libraries) {
 		super(title, author);
 
-		// Temporary code to make a new story model with a start and end node.
+		// TODO Where this gets called, need to add libraries ^
+
 		this.startPoint = new StoryPoint("Start");
 		this.module = module;
 		this.translator = translator;
-//		this.modelVerifier = new ModelVerifier(this.modelRoot);
-//		this.createModelRules();
-	}
-	
-	public void setStartPoint(StoryPoint startPoint){
-		if(startPoint == null)
-			throw new IllegalArgumentException("Cannot give StoryModel a null tree root.");
-		this.startPoint = startPoint;
-	}
-	
-	public StoryPoint getRoot(){
-		return this.startPoint;
+		this.libraries = libraries;
+
+		// Adds all of the automatic causes to the start point.
+		for (LibraryModel library : translator.getLibraries()) {
+			for (Resource resource : module.getAutomaticHandlers()) {
+				for (ScriptIt automatic : library.getAutomatics()) {
+
+					final ScriptIt copy = automatic.clone();
+
+					for (KnowIt parameter : copy.getParameters()) {
+						if (!parameter.getTypes().containsAll(
+								resource.getTypes()))
+							throw new IllegalArgumentException(
+									"Found invalid types for automatics");
+						parameter.setBinding(resource);
+
+						this.startPoint.addStoryChild(copy);
+					}
+				}
+			}
+		}
 	}
 
-	/**
-	 * Creation and addition of rules that need to be maintained in the model.
-	 */
-//	private void createModelRules() {
-//		if (modelVerifier == null)
-//			throw new IllegalStateException(
-//					"Model Verification was not initialized correctly");
-//
-//		Collection<StoryComponentChangeEnum> uniqueNameEvents = new ArrayList<StoryComponentChangeEnum>(
-//				1);
-//		uniqueNameEvents.add(StoryComponentChangeEnum.CHANGE_TEXT_NAME);
-//		uniqueNameEvents.add(StoryComponentChangeEnum.CHANGE_CHILD_ADDED);
-//
-//		Collection<StoryComponentChangeEnum> referenceEvents = new ArrayList<StoryComponentChangeEnum>(
-//				1);
-//		referenceEvents.add(StoryComponentChangeEnum.CHANGE_CHILD_ADDED);
-//		referenceEvents.add(StoryComponentChangeEnum.CHANGE_CHILD_REMOVED);
-//		referenceEvents.add(StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND);
-//
-//		this.modelVerifier.addRule(new UniqueNameRule(), uniqueNameEvents);
-//		this.modelVerifier.addRule(new ReferenceRule(), referenceEvents);
-//	}
+	public void setStartPoint(StoryPoint startPoint) {
+		if (startPoint == null)
+			throw new IllegalArgumentException(
+					"Cannot give StoryModel a null tree root.");
+		this.startPoint = startPoint;
+	}
+
+	public StoryPoint getRoot() {
+		return this.startPoint;
+	}
 
 	/**
 	 * Gets the module used for bindings in this Story.
