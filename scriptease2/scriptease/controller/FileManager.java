@@ -26,7 +26,6 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
@@ -482,24 +481,6 @@ public final class FileManager {
 		}
 
 		return false;
-	}
-
-	public void loadLibraryModel(File location) {
-		final FileIO reader = FileIO.getInstance();
-		SEModel model = null;
-
-		if (location == null || !location.exists())
-			return;
-
-		try {
-			model = reader.readLibrary(location);
-		} catch (Throwable e) {
-			Thread.currentThread().getUncaughtExceptionHandler()
-					.uncaughtException(Thread.currentThread(), e);
-		}
-
-		if (model != null)
-			LibraryManager.getInstance().add((LibraryModel) model);
 	}
 
 	/**

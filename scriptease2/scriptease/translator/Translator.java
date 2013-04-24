@@ -22,7 +22,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
-import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.translator.apimanagers.EventSlotManager;
 import scriptease.translator.apimanagers.GameTypeManager;
@@ -774,14 +773,10 @@ public class Translator {
 	 * @return
 	 */
 	public Collection<LibraryModel> getLibraries() {
-		final Collection<LibraryModel> libraries;
+		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
 
-		libraries = new ArrayList<LibraryModel>();
-
-		for (LibraryModel library : LibraryManager.getInstance().getLibraries())
-			if (library.getTranslator() == this
-					|| library.getTranslator() == null)
-				libraries.add(library);
+		libraries.add(this.getApiDictionary().getLibrary());
+		libraries.add(LibraryModel.getCommonLibrary());
 
 		return libraries;
 	}
@@ -796,12 +791,6 @@ public class Translator {
 	 * @return
 	 */
 	public LibraryModel getLibrary() {
-		for (LibraryModel library : LibraryManager.getInstance().getLibraries())
-			if (library.getTranslator() == this)
-				return library;
-
-		System.err.println("Warning: No libraries found for translator "
-				+ this.getName());
-		return null;
+		return this.getApiDictionary().getLibrary();
 	}
 }

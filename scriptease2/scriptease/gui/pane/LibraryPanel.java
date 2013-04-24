@@ -30,8 +30,7 @@ import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.library.LibraryEvent;
-import scriptease.controller.observer.library.LibraryManagerEvent;
-import scriptease.controller.observer.library.LibraryManagerObserver;
+import scriptease.controller.observer.library.LibraryObserver;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.filters.CategoryFilter;
@@ -43,7 +42,6 @@ import scriptease.gui.filters.VisibilityFilter;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
-import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
@@ -89,7 +87,7 @@ public class LibraryPanel extends JTabbedPane {
 		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
 
 		final SEModelObserver modelObserver;
-		final LibraryManagerObserver libraryManagerObserver;
+		final LibraryObserver libraryObserver;
 		final TranslatorObserver translatorObserver;
 
 		final StoryComponentPanelJList causesList;
@@ -107,6 +105,26 @@ public class LibraryPanel extends JTabbedPane {
 		controlsList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.CONTROLS));
 
+		libraryObserver = new LibraryObserver() {
+			/**
+			 * Keep the display of the library up to date with the changes to
+			 * Libraries. This listener is updates the library view when changes
+			 * are made in the Library Editor.
+			 */
+			@Override
+			public void modelChanged(LibraryModel changed, LibraryEvent event) {
+				final StoryComponent storyComponent = event.getEvent()
+						.getSource();
+				if (event.getEventType() == LibraryEvent.STORYCOMPONENT_CHANGED) {
+					updateElement(storyComponent);
+				} else if (event.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED) {
+					addElement(storyComponent);
+				} else if (event.getEventType() == LibraryEvent.STORYCOMPONENT_REMOVED) {
+					removeElement(storyComponent);
+				}
+			}
+		};
+
 		modelObserver = new SEModelObserver() {
 			/**
 			 * This listener checks for when the model is changed. This usually
@@ -115,7 +133,12 @@ public class LibraryPanel extends JTabbedPane {
 			 */
 			@Override
 			public void modelChanged(SEModelEvent event) {
-				if (event.getEventType() == SEModelEvent.Type.ACTIVATED)
+				if (event.getEventType() == SEModelEvent.Type.ADDED) {
+					for (LibraryModel library : event.getPatternModel()
+							.getLibraries()) {
+						library.addLibraryChangeListener(libraryObserver);
+					}
+				} else if (event.getEventType() == SEModelEvent.Type.ACTIVATED)
 					updateLists();
 				else if (event.getEventType() == SEModelEvent.Type.REMOVED
 						&& SEModelManager.getInstance().getActiveModel() == null) {
@@ -127,8 +150,9 @@ public class LibraryPanel extends JTabbedPane {
 
 			@Override
 			public void translatorLoaded(Translator newTranslator) {
-				if (newTranslator == null)
+				if (newTranslator == null) {
 					updateLists();
+				}
 			}
 		};
 
@@ -137,36 +161,11 @@ public class LibraryPanel extends JTabbedPane {
 		this.storyComponentPanelJLists.add(descriptionsList);
 		this.storyComponentPanelJLists.add(controlsList);
 
-		libraryManagerObserver = new LibraryManagerObserver() {
-			/**
-			 * Keep the display of the library up to date with the changes to
-			 * Libraries. This listener is updates the library view when changes
-			 * are made in the Library Editor.
-			 */
-			@Override
-			public void modelChanged(LibraryManagerEvent event) {
-				if (event.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
-					final LibraryEvent libraryEvent = event.getEvent();
-					final StoryComponent storyComponent = libraryEvent
-							.getEvent().getSource();
-					if (libraryEvent.getEventType() == LibraryEvent.STORYCOMPONENT_CHANGED) {
-						updateElement(storyComponent);
-					} else if (libraryEvent.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED) {
-						addElement(storyComponent);
-					} else if (libraryEvent.getEventType() == LibraryEvent.STORYCOMPONENT_REMOVED) {
-						removeElement(storyComponent);
-					}
-				}
-			}
-		};
-
 		this.add("Causes", this.createTab(causesList));
 		this.add("Effects", this.createTab(effectsList));
 		this.add("Descriptions", this.createTab(descriptionsList));
 		this.add("Controls", this.createTab(controlsList));
 
-		LibraryManager.getInstance().addLibraryManagerObserver(this,
-				libraryManagerObserver);
 		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 		TranslatorManager.getInstance().addTranslatorObserver(this,
 				translatorObserver);

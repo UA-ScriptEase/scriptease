@@ -35,7 +35,6 @@ import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
-import scriptease.model.LibraryManager;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
@@ -121,8 +120,8 @@ public final class PanelFactory {
 		}
 		librarySplitPane.setResizeWeight(0.5);
 
-		noteList.addStoryComponents(LibraryManager.getInstance()
-				.getScriptEaseLibrary().getNoteContainer().getChildren());
+		noteList.addStoryComponents(LibraryModel.getCommonLibrary()
+				.getNoteContainer().getChildren());
 
 		storyLibraryPaneObserver = new SEModelObserver() {
 			public void modelChanged(SEModelEvent event) {
