@@ -1,5 +1,6 @@
 package scriptease.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.ModelVisitor;
@@ -53,6 +54,7 @@ public final class StoryModel extends SEModel {
 		this.libraries = libraries;
 
 		// Adds all of the automatic causes to the start point.
+		// Note that automatics can only be defined in an apidictionary for now
 		for (LibraryModel library : translator.getLibraries()) {
 			for (Resource resource : module.getAutomaticHandlers()) {
 				for (ScriptIt automatic : library.getAutomatics()) {
@@ -96,6 +98,15 @@ public final class StoryModel extends SEModel {
 	@Override
 	public Translator getTranslator() {
 		return this.translator;
+	}
+
+	public Collection<LibraryModel> getLibraries() {
+		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
+
+		libraries.addAll(translator.getLibraries());
+		libraries.addAll(this.libraries);
+
+		return libraries;
 	}
 
 	@Override

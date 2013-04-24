@@ -587,4 +587,9 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public void process(ModelVisitor processController) {
 		processController.processLibraryModel(this);
 	}
+
+	@Override
+	public Collection<LibraryModel> getLibraries() {
+		return this.translator.getLibraries();
+	}
 }

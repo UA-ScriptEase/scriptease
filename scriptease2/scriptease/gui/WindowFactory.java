@@ -49,8 +49,6 @@ import scriptease.gui.dialog.PreferencesDialog;
 import scriptease.gui.pane.PanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
-import scriptease.model.LibraryManager;
-import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
@@ -261,27 +259,6 @@ public final class WindowFactory {
 		});
 
 		progressBar.setVisible(true);
-	}
-
-	/**
-	 * Shows a Library Picker and returns the choice may return null if no
-	 * selection is made
-	 * 
-	 * @return
-	 */
-	public Object showLibraryPicker() {
-		Collection<LibraryModel> libraries = LibraryManager.getInstance()
-				.getUserLibraries();
-		Object[] options = new Object[libraries.size() + 1];
-		Object[] libraryArray = libraries.toArray();
-		for (int i = 0; i < libraries.size(); i++) {
-			options[i] = libraryArray[i];
-		}
-		options[libraries.size()] = "New Library...";
-		// libraries.add("test");
-		return JOptionPane.showInputDialog(this.mainFrame,
-				"Select a Library: ", "Library Selector",
-				JOptionPane.PLAIN_MESSAGE, null, options, null);
 	}
 
 	public void showCompileProblems(Collection<StoryProblem> storyProblems) {

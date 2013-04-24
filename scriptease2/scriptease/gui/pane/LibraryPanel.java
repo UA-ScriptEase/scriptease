@@ -167,8 +167,7 @@ public class LibraryPanel extends JTabbedPane {
 
 		LibraryManager.getInstance().addLibraryManagerObserver(this,
 				libraryManagerObserver);
-		SEModelManager.getInstance().addSEModelObserver(this,
-				modelObserver);
+		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 		TranslatorManager.getInstance().addTranslatorObserver(this,
 				translatorObserver);
 	}
@@ -441,7 +440,7 @@ public class LibraryPanel extends JTabbedPane {
 			final Collection<LibraryModel> libraries;
 			final boolean hideInvisible;
 
-			libraries = translator.getLibraries();
+			libraries = model.getLibraries();
 			// Show invisible components if we're editing a library model.
 			if (model instanceof LibraryModel)
 				hideInvisible = false;
