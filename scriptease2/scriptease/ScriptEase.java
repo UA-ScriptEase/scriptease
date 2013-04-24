@@ -57,7 +57,7 @@ public final class ScriptEase implements Runnable {
 	 * @author remiller
 	 */
 	public enum ConfigurationKeys {
-		PatternsDirectory, TranslatorsDirectory, BugServer;
+		TranslatorsDirectory, BugServer;
 	}
 
 	// /**
@@ -353,7 +353,6 @@ public final class ScriptEase implements Runnable {
 		 * between files and directories by the path alone. - remiller
 		 */
 		requiredLocationKeys.add(ConfigurationKeys.TranslatorsDirectory);
-		requiredLocationKeys.add(ConfigurationKeys.PatternsDirectory);
 
 		for (ConfigurationKeys key : requiredLocationKeys) {
 			path = this.getConfiguration(key);

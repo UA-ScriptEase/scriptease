@@ -143,26 +143,31 @@ public class ExceptionDialog extends JDialog {
 		this.commentBox.setVisible(false);
 
 		// horizontal perspective
-		contentLayout.setHorizontalGroup(contentLayout.createSequentialGroup()
-				.addComponent(iconLabel).addPreferredGap(
-						ComponentPlacement.UNRELATED).addGroup(
+		contentLayout.setHorizontalGroup(contentLayout
+				.createSequentialGroup()
+				.addComponent(iconLabel)
+				.addPreferredGap(ComponentPlacement.UNRELATED)
+				.addGroup(
 						contentLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(messageLabel).addComponent(
-										this.detailsButton).addComponent(
-										this.separatorOrTrace).addComponent(buttons)
-								.addComponent(this.commentLabel).addComponent(
-										this.commentBox)));
+								.addComponent(messageLabel)
+								.addComponent(this.detailsButton)
+								.addComponent(this.separatorOrTrace)
+								.addComponent(buttons)
+								.addComponent(this.commentLabel)
+								.addComponent(this.commentBox)));
 
 		// vertical perspective
-		contentLayout.setVerticalGroup(contentLayout.createSequentialGroup()
+		contentLayout.setVerticalGroup(contentLayout
+				.createSequentialGroup()
 				.addGroup(
-						contentLayout.createParallelGroup().addComponent(
-								iconLabel).addComponent(messageLabel))
+						contentLayout.createParallelGroup()
+								.addComponent(iconLabel)
+								.addComponent(messageLabel))
 				.addComponent(this.detailsButton)
 				.addComponent(this.separatorOrTrace)
 				// space out details from other buttons
-				.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(
-						buttons, GroupLayout.PREFERRED_SIZE,
+				.addPreferredGap(ComponentPlacement.UNRELATED)
+				.addComponent(buttons, GroupLayout.PREFERRED_SIZE,
 						GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 				.addComponent(this.commentLabel).addComponent(this.commentBox));
 
@@ -184,11 +189,12 @@ public class ExceptionDialog extends JDialog {
 		this.reportButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (ExceptionDialog.this.reportButton.getText().equals("Report"))
+				if (ExceptionDialog.this.reportButton.getText()
+						.equals("Report"))
 					ExceptionDialog.this.showCommentBox();
 				else {
 
-					NetworkHandler.getInstance().sendBugReport(
+					NetworkHandler.getInstance().sendReport(
 							ExceptionDialog.this.commentText.getText());
 					ExceptionDialog.this.reportButton.setText("Report");
 					ExceptionDialog.this.setVisible(false);

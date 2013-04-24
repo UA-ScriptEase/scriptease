@@ -306,8 +306,10 @@ public class CodeGenerator {
 
 		final File compiler = translator.getCompiler();
 
-		if (compiler != null && !compiler.exists()
-				&& !compiler.getName().equalsIgnoreCase(Translator.FALSE)) {
+		if (compiler != null
+				&& !compiler.exists()
+				&& !compiler.getName().equalsIgnoreCase(
+						Translator.DescriptionKeys.FALSE)) {
 
 			System.err.println("Compiler at "
 					+ translator.getCompiler().getAbsolutePath()

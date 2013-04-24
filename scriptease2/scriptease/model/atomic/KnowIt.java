@@ -231,7 +231,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 						.getInstance().getActiveModel();
 				if (activeModel != null) {
 					final Translator translator = activeModel.getTranslator();
-					if (translator != null && translator.loadedAPIDictionary()) {
+					if (translator != null && translator.apiDictionaryIsLoaded()) {
 						GameTypeManager typeManager = translator
 								.getApiDictionary().getGameTypeManager();
 						for (String type : KnowIt.this.types) {
@@ -374,7 +374,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 		// Acceptable Types also include types that can be converted from
 		if (activeTranslator != null) {
-			if (activeTranslator.loadedAPIDictionary()) {
+			if (activeTranslator.apiDictionaryIsLoaded()) {
 				final TypeConverter typeConverter = activeTranslator
 						.getGameTypeManager().getTypeConverter();
 

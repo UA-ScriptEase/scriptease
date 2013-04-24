@@ -17,8 +17,8 @@ import scriptease.gui.ExceptionDialog;
 import scriptease.gui.WindowFactory;
 
 /**
- * NetworkHandler provides bug report handling for ScriptEase. It connects to
- * the server and then sends each log as needed using the publish method.
+ * NetworkHandler provides report handling for ScriptEase. It connects to the
+ * server and then sends each log as needed using the publish method.
  * 
  * @author mfchurch
  * 
@@ -50,7 +50,7 @@ public class NetworkHandler extends Handler {
 	}
 
 	/**
-	 * Connects to the BUG_SERVER and provides a handle to the server client
+	 * Connects to the server and provides a handle to the server client
 	 * 
 	 * @author mfchurch
 	 */
@@ -77,7 +77,7 @@ public class NetworkHandler extends Handler {
 
 	/**
 	 * This method does not contain system information. If you need system
-	 * information, use {@link #sendBugReport(String)}
+	 * information, use {@link #sendReport(String)}
 	 * 
 	 * @param comment
 	 */
@@ -91,13 +91,13 @@ public class NetworkHandler extends Handler {
 	}
 
 	/**
-	 * Sends a bug report to the server.
+	 * Sends a report to the server.
 	 * 
 	 * @param comment
 	 *            the user comment taken from ExceptionDialog
 	 * @see ExceptionDialog
 	 */
-	public void sendBugReport(String comment) {
+	public void sendReport(String comment) {
 		final String report;
 
 		this.connect();
@@ -107,7 +107,7 @@ public class NetworkHandler extends Handler {
 	}
 
 	/**
-	 * Connects to the bugserver, creates a log and sends it to Httpclient.
+	 * Connects to the server, creates a log and sends it to Httpclient.
 	 * serverlog.cgi is used serverside to handle reporting.
 	 * 
 	 * @param servable
@@ -136,7 +136,7 @@ public class NetworkHandler extends Handler {
 	 * 
 	 * @param comment
 	 *            user comments
-	 * @return String representing the bug report
+	 * @return String representing the report
 	 */
 	public String generateReport(String comment) {
 		String report;
@@ -176,7 +176,7 @@ public class NetworkHandler extends Handler {
 	private void error() {
 		final String errorMessage;
 
-		errorMessage = "The bug reporting system was unable to connect to the server.\n"
+		errorMessage = "The reporting system was unable to connect to the server.\n"
 				+ "Please email the latest log file to scriptease@cs.ualberta.ca.";
 
 		WindowFactory.getInstance().showProblemDialog("Error Report Failed",
@@ -190,9 +190,9 @@ public class NetworkHandler extends Handler {
 	private void success() {
 		final String successMessage;
 
-		successMessage = "The bug report was successfully sent!\n";
+		successMessage = "The report was successfully sent!\n";
 
-		WindowFactory.getInstance().showInformationDialog(
-				"Error Report Success", successMessage);
+		WindowFactory.getInstance().showInformationDialog("Report Success",
+				successMessage);
 	}
 }

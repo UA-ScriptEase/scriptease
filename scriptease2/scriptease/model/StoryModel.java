@@ -22,7 +22,7 @@ import scriptease.translator.io.model.Resource;
 public final class StoryModel extends SEModel {
 	private final GameModule module;
 	private final Translator translator;
-	private final Collection<LibraryModel> libraries;
+	private final Collection<LibraryModel> optionalLibraries;
 	private StoryPoint startPoint;
 
 	/**
@@ -43,7 +43,7 @@ public final class StoryModel extends SEModel {
 	 *            The Translator to use to interpret this story.
 	 */
 	public StoryModel(GameModule module, String title, String author,
-			Translator translator, Collection<LibraryModel> libraries) {
+			Translator translator, Collection<LibraryModel> optionalLibraries) {
 		super(title, author);
 
 		// TODO Where this gets called, need to add libraries ^
@@ -51,11 +51,11 @@ public final class StoryModel extends SEModel {
 		this.startPoint = new StoryPoint("Start");
 		this.module = module;
 		this.translator = translator;
-		this.libraries = libraries;
+		this.optionalLibraries = optionalLibraries;
 
 		// Adds all of the automatic causes to the start point.
 		// Note that automatics can only be defined in an apidictionary for now
-		for (LibraryModel library : translator.getLibraries()) {
+		for (LibraryModel library : this.getLibraries()) {
 			for (Resource resource : module.getAutomaticHandlers()) {
 				for (ScriptIt automatic : library.getAutomatics()) {
 
@@ -86,6 +86,11 @@ public final class StoryModel extends SEModel {
 		return this.startPoint;
 	}
 
+	public void addLibrary(LibraryModel library) {
+		this.optionalLibraries.add(library);
+		// TODO Need to notify something.
+	}
+
 	/**
 	 * Gets the module used for bindings in this Story.
 	 * 
@@ -103,8 +108,9 @@ public final class StoryModel extends SEModel {
 	public Collection<LibraryModel> getLibraries() {
 		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
 
-		libraries.addAll(translator.getLibraries());
-		libraries.addAll(this.libraries);
+		libraries.add(LibraryModel.getCommonLibrary());
+		libraries.add(this.translator.getApiDictionary().getLibrary());
+		libraries.addAll(this.optionalLibraries);
 
 		return libraries;
 	}

@@ -611,6 +611,11 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 	@Override
 	public Collection<LibraryModel> getLibraries() {
-		return this.translator.getLibraries();
+		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
+
+		libraries.add(LibraryModel.getCommonLibrary());
+		libraries.add(this.translator.getApiDictionary().getLibrary());
+
+		return libraries;
 	}
 }

@@ -807,8 +807,7 @@ public final class WindowFactory {
 		sendButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				NetworkHandler.getInstance().sendBugReport(
-						commentArea.getText());
+				NetworkHandler.getInstance().sendReport(commentArea.getText());
 				bugReportDialog.setVisible(false);
 				bugReportDialog.dispose();
 			}
