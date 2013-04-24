@@ -73,6 +73,7 @@ public class Translator {
 	 * The expected file name of the Translator Description file.
 	 */
 	public static final String TRANSLATOR_DESCRIPTION_FILE_NAME = "translator.ini";
+	private static final String CLASS_FILE_EXTENSION = ".class";
 
 	/**
 	 * Enumerates all required and some common optional keys for Translator
@@ -84,15 +85,15 @@ public class Translator {
 		// Mandatory keys
 		NAME, API_DICTIONARY_PATH, LANGUAGE_DICTIONARY_PATH, GAME_MODULE_PATH,
 		// Suggested keys
-		SUPPORTED_FILE_EXTENSIONS, INCLUDES_PATH, ICON_PATH, COMPILER_PATH, CUSTOM_PICKER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY;
+		SUPPORTED_FILE_EXTENSIONS, INCLUDES_PATH, ICON_PATH, COMPILER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY;
+
+		public static final String FALSE = "false";
+		private static final String DIRECTORY = "directory";
 	}
 
-	/**
-	 * Java class file extension.
-	 */
-	private static final String CLASS_FILE_EXTENSION = ".class";
-
-	private static final String DIRECTORY = "directory";
+	private static final String LANGUAGE_DICT_SCHEMA_LOCATION = "scriptease/resources/schema/LanguageDictionarySchema.xsd";
+	private static final String API_DICT_SCHEMA_LOCATION = "scriptease/resources/schema/ApiDictionarySchema.xsd";
+	private static final String CODE_ELEMENT_SCHEMA_LOCATION = "scriptease/resources/schema/CodeElementSchema.xsd";
 
 	private final Properties properties;
 
@@ -103,18 +104,14 @@ public class Translator {
 
 	private final Collection<String> legalExtensions;
 
+	private final Collection<LibraryModel> optionalLibraries;
+
 	// special class loader that knows to look in the translators for their
 	// GameModule implementation and required java libaries.
 	private final ClassLoader loader;
 
 	// either the location of the jar, or the location of the description file.
 	private final File location;
-
-	private static final String LANGUAGE_DICT_SCHEMA_LOCATION = "scriptease/resources/schema/LanguageDictionarySchema.xsd";
-	private static final String API_DICT_SCHEMA_LOCATION = "scriptease/resources/schema/ApiDictionarySchema.xsd";
-	private static final String CODE_ELEMENT_SCHEMA_LOCATION = "scriptease/resources/schema/CodeElementSchema.xsd";
-
-	public static final String FALSE = "false";
 
 	/**
 	 * Builds a new Translator from the given translator Jar or description
@@ -139,6 +136,7 @@ public class Translator {
 
 		this.properties = new Properties();
 		this.legalExtensions = new ArrayList<String>();
+		this.optionalLibraries = new ArrayList<LibraryModel>();
 
 		this.location = descriptionFile;
 
@@ -509,21 +507,15 @@ public class Translator {
 	 * 
 	 * @return <code>true</code> if the API dictionary is in memory.
 	 */
-	public boolean loadedAPIDictionary() {
+	public boolean apiDictionaryIsLoaded() {
 		return this.apiDictionary != null;
 	}
 
 	/**
-	 * Returns true if the APIDictionary attached to the translator is not null.
-	 * 
-	 * @return
-	 */
-	public boolean hasActiveApiDictionary() {
-		return this.apiDictionary != null;
-	}
-
-	/**
-	 * Gets the API Dictionary for this translator.
+	 * Gets the API Dictionary for this translator. The APIDictionary is lazy
+	 * loaded because translator objects are created when ScriptEase is run,
+	 * whereas APIDictionarys are only created when we load something that needs
+	 * it.
 	 * 
 	 * @return the apiDictionary
 	 */
@@ -641,7 +633,7 @@ public class Translator {
 	 */
 	public boolean moduleLoadsDirectories() {
 		return this.legalExtensions.size() == 1
-				&& this.legalExtensions.contains(DIRECTORY);
+				&& this.legalExtensions.contains(DescriptionKeys.DIRECTORY);
 	}
 
 	/**
@@ -764,22 +756,6 @@ public class Translator {
 					"Select", "", this.getLocation());
 
 		return newLocation;
-	}
-
-	/**
-	 * Returns the libraries associated with the translator, including the
-	 * default libraries that are marked by having a null translator. These are
-	 * obtained from the Library Manager.
-	 * 
-	 * @return
-	 */
-	public Collection<LibraryModel> getLibraries() {
-		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
-
-		libraries.add(this.getApiDictionary().getLibrary());
-		libraries.add(LibraryModel.getCommonLibrary());
-
-		return libraries;
 	}
 
 	/**

@@ -373,7 +373,7 @@ public final class FileManager {
 
 		if (compiler == null
 				|| (!compiler.exists() && !compiler.getName().equalsIgnoreCase(
-						Translator.FALSE)))
+						Translator.DescriptionKeys.FALSE)))
 			WindowFactory
 					.getInstance()
 					.showWarningDialog(
