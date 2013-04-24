@@ -46,36 +46,27 @@ public class LibraryManager implements LibraryObserver {
 
 	final private static LibraryManager instance = new LibraryManager();
 	private static final String SCRIPTEASE_LIBRARY = "ScriptEase";
+	private final LibraryModel scriptEaseLibrary;
 	private Collection<LibraryModel> libraries;
 	private final Map<Translator, LibraryModel> loadedTranslators;
-	private final StoryComponentContainer masterRoot;
 
 	private final ObserverManager<LibraryManagerObserver> observerManager;
 
 	private LibraryManager() {
 		this.libraries = new CopyOnWriteArraySet<LibraryModel>();
 		this.loadedTranslators = new HashMap<Translator, LibraryModel>();
-		this.masterRoot = new StoryComponentContainer("Library");
-
 		this.observerManager = new ObserverManager<LibraryManagerObserver>();
-
-		this.masterRoot.registerChildType(ScriptIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.masterRoot.registerChildType(AskIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.masterRoot.registerChildType(KnowIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.masterRoot.registerChildType(StoryComponentContainer.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.masterRoot.registerChildType(Note.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.masterRoot.registerChildType(ControlIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-
-		this.buildDefaultLibrary();
 
 		final SEModelObserver modelObserver;
 		final TranslatorObserver translatorObserver;
+
+		this.scriptEaseLibrary = new LibraryModel(SCRIPTEASE_LIBRARY,
+				SCRIPTEASE_LIBRARY);
+
+		this.scriptEaseLibrary.add(new AskIt());
+		this.scriptEaseLibrary.add(new Note());
+
+		this.add(this.scriptEaseLibrary);
 
 		modelObserver = new SEModelObserver() {
 			/*
@@ -119,35 +110,11 @@ public class LibraryManager implements LibraryObserver {
 
 		TranslatorManager.getInstance().addTranslatorObserver(this,
 				translatorObserver);
-		SEModelManager.getInstance().addSEModelObserver(this,
-				modelObserver);
-	}
-
-	/**
-	 * Builds and adds the default ScriptEaseLibrary
-	 */
-	private void buildDefaultLibrary() {
-		final LibraryModel scriptEaseLibrary;
-		final AskIt conditional;
-		final Note note;
-
-		scriptEaseLibrary = new LibraryModel(LibraryManager.SCRIPTEASE_LIBRARY,
-				LibraryManager.SCRIPTEASE_LIBRARY);
-
-		conditional = new AskIt();
-		note = new Note();
-
-		scriptEaseLibrary.add(conditional);
-		scriptEaseLibrary.add(note);
-
-		this.add(scriptEaseLibrary);
+		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 	}
 
 	public void add(LibraryModel library) {
 		this.libraries.add(library);
-
-		this.masterRoot.addStoryChild(library.getRoot());
-
 		library.addLibraryChangeListener(this);
 		this.notifyChange(new LibraryManagerEvent(library,
 				LibraryManagerEvent.LIBRARYMODEL_ADDED, null));
@@ -155,9 +122,6 @@ public class LibraryManager implements LibraryObserver {
 
 	public void remove(LibraryModel library) {
 		this.libraries.remove(library);
-
-		this.masterRoot.removeStoryChild(library.getRoot());
-
 		library.removeLibraryChangeListener(this);
 		this.notifyChange(new LibraryManagerEvent(library,
 				LibraryManagerEvent.LIBRARYMODEL_REMOVED, null));
@@ -168,60 +132,14 @@ public class LibraryManager implements LibraryObserver {
 	}
 
 	/**
-	 * Checks if the LibraryManager has any Libraries
-	 * 
-	 * @return
-	 */
-	public boolean hasLibraries() {
-		return !this.libraries.isEmpty();
-	}
-
-	/**
-	 * Get's the name of the Libraries where the given StoryComponent is
-	 * located. Returns null if the component does not belong to any Libraries
-	 * 
-	 * @param component
-	 * @return
-	 */
-	public String getLibraryNameFromComponent(StoryComponent component) {
-		String name = "";
-		for (LibraryModel library : this.libraries) {
-			if (library.containsStoryComponent(component))
-				name = library.getName() + ", ";
-		}
-		if (name.isEmpty())
-			return null;
-		else
-			return name.substring(0, name.length() - 2);
-	}
-
-	/**
 	 * Gets a collection of references to all of the libraries, including user
-	 * libs and API dictionaries. For a tree of all StoryComponents from all
-	 * libraries use {@link #getLibraryMasterRoot()}.
+	 * libs and API dictionaries.
 	 * 
 	 * @return a collection of the libraries
-	 * @see #getLibraryMasterRoot()
 	 */
 	public Collection<LibraryModel> getLibraries() {
+		// TODO Check where this gets called
 		return new ArrayList<LibraryModel>(this.libraries);
-	}
-
-	/**
-	 * Gets the root that has as children the contents of all available
-	 * libraries.
-	 * 
-	 * @return
-	 */
-	public StoryComponentContainer getLibraryMasterRoot() {
-		if (this.masterRoot.getChildCount() <= 0) {
-			for (LibraryModel model : this.libraries) {
-				if (model != null)
-					this.masterRoot.addStoryChild(model.getRoot());
-			}
-		}
-
-		return this.masterRoot;
 	}
 
 	/**
@@ -230,15 +148,18 @@ public class LibraryManager implements LibraryObserver {
 	 * @return
 	 */
 	public Collection<LibraryModel> getUserLibraries() {
-		Collection<LibraryModel> libraries = this.getLibraries();
+		// TODO This may not work as intended
 		Collection<LibraryModel> userLibraries = new ArrayList<LibraryModel>();
-		for (LibraryModel library : libraries) {
+		for (LibraryModel library : this.libraries) {
 			if (!this.loadedTranslators.containsValue(library)
-					&& !library.getName().equals(
-							LibraryManager.SCRIPTEASE_LIBRARY))
+					&& library != scriptEaseLibrary)
 				userLibraries.add(library);
 		}
 		return userLibraries;
+	}
+
+	public LibraryModel getScriptEaseLibrary() {
+		return this.scriptEaseLibrary;
 	}
 
 	/**
@@ -249,16 +170,6 @@ public class LibraryManager implements LibraryObserver {
 	public void addLibraryManagerObserver(Object object,
 			LibraryManagerObserver observer) {
 		this.observerManager.addObserver(object, observer);
-	}
-
-	/**
-	 * Removes the given observer as a observer of all LibraryManager's
-	 * libraries
-	 * 
-	 * @param observer
-	 */
-	public void removeLibraryChangeListener(LibraryManagerObserver observer) {
-		this.observerManager.removeObserver(observer);
 	}
 
 	/**
@@ -278,15 +189,5 @@ public class LibraryManager implements LibraryObserver {
 	public void modelChanged(LibraryModel changed, LibraryEvent event) {
 		this.notifyChange(new LibraryManagerEvent(changed,
 				LibraryManagerEvent.LIBRARYMODEL_CHANGED, event));
-	}
-
-	/**
-	 * Returns if the LibraryManager contains the given LibraryModel
-	 * 
-	 * @param model
-	 * @return
-	 */
-	public boolean contains(LibraryModel model) {
-		return this.libraries.contains(model);
 	}
 }

@@ -18,6 +18,7 @@ import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 
 /**
  * The Action for showing the Select Type selection dialog. This action is added
@@ -165,8 +166,8 @@ public final class TypeAction extends AbstractAction {
 	public void updateName() {
 		final int selectedCount = this.typeBuilder.getSelectedTypes().size();
 		String name;
-		final Translator activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
+		final GameTypeManager gameTypeManager = TranslatorManager.getInstance()
+				.getActiveGameTypeManager();
 
 		if (selectedCount <= 0) {
 			name = "No Types";
@@ -174,8 +175,8 @@ public final class TypeAction extends AbstractAction {
 			name = "All Types";
 		} else if (selectedCount == 1) {
 			// show just the first one
-			name = activeTranslator.getGameTypeManager().getDisplayText(
-					this.typeBuilder.getSelectedTypes().iterator().next());
+			name = gameTypeManager.getDisplayText(this.typeBuilder
+					.getSelectedTypes().iterator().next());
 		} else {
 			// show the number of selected types
 			name = selectedCount + " Types";
@@ -210,11 +211,12 @@ public final class TypeAction extends AbstractAction {
 	 * @return True if this action is legal.
 	 */
 	protected boolean isLegal() {
-		Translator activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-		return (activeTranslator != null
-				&& !activeTranslator.getGameTypeManager().getKeywords()
-						.isEmpty() && LibraryManager.getInstance()
-				.hasLibraries());
+		final GameTypeManager gameTypeManager;
+
+		gameTypeManager = TranslatorManager.getInstance()
+				.getActiveGameTypeManager();
+
+		return gameTypeManager != null
+				&& !gameTypeManager.getKeywords().isEmpty();
 	}
 }

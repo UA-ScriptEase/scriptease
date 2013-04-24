@@ -121,10 +121,8 @@ public final class PanelFactory {
 		}
 		librarySplitPane.setResizeWeight(0.5);
 
-		for (LibraryModel libraryModel : LibraryManager.getInstance()
-				.getLibraries())
-			noteList.addStoryComponents(libraryModel.getNoteContainer()
-					.getChildren());
+		noteList.addStoryComponents(LibraryManager.getInstance()
+				.getScriptEaseLibrary().getNoteContainer().getChildren());
 
 		storyLibraryPaneObserver = new SEModelObserver() {
 			public void modelChanged(SEModelEvent event) {
