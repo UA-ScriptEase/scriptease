@@ -24,7 +24,6 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.Translator;
-import scriptease.translator.apimanagers.AutomaticsManager;
 import scriptease.translator.apimanagers.DescribeItManager;
 
 /**
@@ -40,8 +39,9 @@ import scriptease.translator.apimanagers.DescribeItManager;
  * @author remiller
  * @author mfchurch
  */
-public class LibraryModel extends SEModel implements
-		StoryComponentObserver {
+public class LibraryModel extends SEModel implements StoryComponentObserver {
+	private static final String AUTOMATIC_LABEL = "automatic";
+
 	private Translator translator;
 	private final Collection<LibraryObserver> listeners;
 	private StoryComponentContainer effectsCategory;
@@ -190,15 +190,12 @@ public class LibraryModel extends SEModel implements
 	 * @return
 	 */
 	public Collection<ScriptIt> getAutomatics() {
-		Collection<ScriptIt> automatics = new ArrayList<ScriptIt>();
-		final Collection<StoryComponent> causes = getCausesCategory()
-				.getChildren();
-		for (StoryComponent cause : causes) {
+		final Collection<ScriptIt> automatics = new ArrayList<ScriptIt>();
+
+		for (StoryComponent cause : this.getCausesCategory().getChildren()) {
 			if (cause instanceof ScriptIt) {
-				final Collection<String> labels = cause.getLabels();
-				for (String label : labels) {
-					if (label
-							.equalsIgnoreCase(AutomaticsManager.AUTOMATIC_LABEL)) {
+				for (String label : cause.getLabels()) {
+					if (label.equalsIgnoreCase(AUTOMATIC_LABEL)) {
 						automatics.add((ScriptIt) cause);
 					}
 				}

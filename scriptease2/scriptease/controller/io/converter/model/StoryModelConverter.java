@@ -1,8 +1,10 @@
- package scriptease.controller.io.converter.model;
+package scriptease.controller.io.converter.model;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import scriptease.controller.io.FileIO;
+import scriptease.model.LibraryModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
 import scriptease.model.complex.StoryPoint;
@@ -17,7 +19,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-public class StoryModelConverter implements Converter{
+public class StoryModelConverter implements Converter {
 	private static final String TAG_TITLE = "Title";
 	private static final String TAG_AUTHOR = "Author";
 	private static final String TAG_STORY_START_POINT = "StartStoryPoint";
@@ -76,8 +78,7 @@ public class StoryModelConverter implements Converter{
 		translator = TranslatorManager.getInstance().getTranslator(
 				FileIO.readValue(reader, TAG_TRANSLATOR));
 		if (translator == null)
-			throw new IllegalStateException(
-					"Translator could not be found.");
+			throw new IllegalStateException("Translator could not be found.");
 
 		// Try to open the Pattern Model
 		try {
@@ -85,21 +86,23 @@ public class StoryModelConverter implements Converter{
 			TranslatorManager.getInstance().setActiveTranslator(translator);
 			System.out.println(translator + " loaded");
 
-			module = translator.loadModule(new File(FileIO.readValue(
-					reader, TAG_GAME_MODULE)));
+			module = translator.loadModule(new File(FileIO.readValue(reader,
+					TAG_GAME_MODULE)));
 
 			if (module == null)
-				throw new XStreamException(
-						"Game module could not be loaded.");
+				throw new XStreamException("Game module could not be loaded.");
 
 			System.out.println(module + " loaded");
 			currentModule = module;
 
-			model = new StoryModel(module, title, author, translator);
+			// TODO Import libraries here.
+			model = new StoryModel(module, title, author, translator,
+					new ArrayList<LibraryModel>());
 
 			reader.moveDown();
-			
-			newRoot = (StoryPoint) context.convertAnother(model, StoryPoint.class);
+
+			newRoot = (StoryPoint) context.convertAnother(model,
+					StoryPoint.class);
 
 			if (newRoot == null)
 				throw new IllegalStateException(

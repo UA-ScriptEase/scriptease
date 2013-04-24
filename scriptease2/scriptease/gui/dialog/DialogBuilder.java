@@ -7,7 +7,6 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,12 +33,12 @@ import javax.swing.event.DocumentListener;
 import scriptease.gui.ExceptionDialog;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
+import scriptease.model.LibraryModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.AutomaticsManager;
 import scriptease.translator.io.model.GameModule;
 
 public class DialogBuilder {
@@ -212,50 +211,37 @@ public class DialogBuilder {
 				 * Do everything inside a try block because otherwise the fact
 				 * that this is in a runnable will hide any exceptions.
 				 */
-				try {
-					statusManager.setStatus("Creating New Story ...");
-					selectedTranslator = (Translator) gameComboBox
-							.getSelectedItem();
-					oldTranslator = translatorMgr.getActiveTranslator();
+				statusManager.setStatus("Creating New Story ...");
+				selectedTranslator = (Translator) gameComboBox
+						.getSelectedItem();
+				oldTranslator = translatorMgr.getActiveTranslator();
 
-					translatorMgr.setActiveTranslator(selectedTranslator);
+				translatorMgr.setActiveTranslator(selectedTranslator);
 
-					if (selectedTranslator == null) {
-						WindowFactory
-								.getInstance()
-								.showProblemDialog("No translator",
-										"No translator was chosen. I can't make a story without it.");
-						statusManager
-								.setStatus("Story creation aborted: no translator chosen.");
-						return;
-					}
-					module = selectedTranslator.loadModule(location);
+				if (selectedTranslator == null) {
+					WindowFactory
+							.getInstance()
+							.showProblemDialog("No translator",
+									"No translator was chosen. I can't make a story without it.");
+					statusManager
+							.setStatus("Story creation aborted: no translator chosen.");
+					return;
+				}
+				module = selectedTranslator.loadModule(location);
 
-					if (module == null) {
-						translatorMgr.setActiveTranslator(oldTranslator);
-						statusManager
-								.setStatus("Story creation aborted: module failed to load.");
+				if (module == null) {
+					translatorMgr.setActiveTranslator(oldTranslator);
+					statusManager
+							.setStatus("Story creation aborted: module failed to load.");
 
-						return;
-					} else {
+					return;
+				} else {
 
-						model = new StoryModel(module, title, author,
-								selectedTranslator);
+					// TODO add all of the libraries here
+					model = new StoryModel(module, title, author,
+							selectedTranslator, new ArrayList<LibraryModel>());
 
-						SEModelManager.getInstance().add(model, true);
-
-						// Process automatics and add them to the StoryModel
-						AutomaticsManager automaticsManager = new AutomaticsManager();
-						automaticsManager.resolveAndAddAutomatics(module,
-								selectedTranslator, model);
-					}
-				} catch (Throwable e) {
-					UncaughtExceptionHandler handler = Thread
-							.getDefaultUncaughtExceptionHandler();
-					handler.uncaughtException(
-							Thread.currentThread(),
-							new IllegalStateException(
-									"Exception while creating a new Story. ", e));
+					SEModelManager.getInstance().add(model, true);
 				}
 			}
 		};

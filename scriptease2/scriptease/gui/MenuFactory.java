@@ -82,7 +82,7 @@ import scriptease.util.FileOp;
 public class MenuFactory {
 	private static final String FILE = Il8nResources.getString("File");
 	private static final String ADD = Il8nResources.getString("Add");
-	private static final String TOOLS = Il8nResources.getString("Tools");
+	private static final String LIBRARY = "Library";
 	private static final String HELP = Il8nResources.getString("Help");
 	private static final String NEW = Il8nResources.getString("New");
 	private static final String DEBUG = "Debug";
@@ -106,7 +106,7 @@ public class MenuFactory {
 		bar.add(MenuFactory.buildEditMenu());
 
 		if (TOOLS_MENU_ENABLED)
-			bar.add(MenuFactory.buildToolsMenu());
+			bar.add(MenuFactory.buildLibraryMenu());
 
 		bar.add(MenuFactory.buildHelpMenu());
 		if (ScriptEase.DEBUG_MODE)
@@ -304,13 +304,17 @@ public class MenuFactory {
 		return menu;
 	}
 
-	private static JMenu buildToolsMenu() {
-		final JMenu menu = new JMenu(MenuFactory.TOOLS);
-		menu.setMnemonic(KeyEvent.VK_T);
+	private static JMenu buildLibraryMenu() {
+		final JMenu menu = new JMenu(MenuFactory.LIBRARY);
+		menu.setMnemonic(KeyEvent.VK_L);
 
-		final JMenu libraryEditorMenu;
+		final JMenuItem addLibrary;
+		final JMenuItem manageLibraries;
+		final JMenu libraryEditors;
 
-		libraryEditorMenu = new JMenu("Library Editor");
+		addLibrary = new JMenuItem("Add Library");
+		manageLibraries = new JMenuItem("Manage Libraries");
+		libraryEditors = new JMenu("Library Editor");
 
 		for (final Translator translator : TranslatorManager.getInstance()
 				.getTranslators()) {
@@ -327,9 +331,12 @@ public class MenuFactory {
 				}
 			});
 
-			libraryEditorMenu.add(translatorItem);
+			libraryEditors.add(translatorItem);
 		}
-		menu.add(libraryEditorMenu);
+
+		menu.add(addLibrary);
+		menu.add(manageLibraries);
+		menu.add(libraryEditors);
 
 		return menu;
 	}
