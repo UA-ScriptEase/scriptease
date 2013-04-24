@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
@@ -267,40 +266,7 @@ public final class ScriptEase implements Runnable {
 
 	@Override
 	public void run() {
-		this.preLoadUserLibraries();
-
 		WindowFactory.getInstance().buildAndShowMainFrame();
-	}
-
-	/**
-	 * Loads whatever user libraries that exist.
-	 */
-	private void preLoadUserLibraries() {
-		File patternsDir;
-		final FilenameFilter filter = new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				return FileOp.getExtension(new File(dir, name)).equals(
-						FileManager.FILE_EXTENSION_LIBRARY);
-			}
-		};
-
-		patternsDir = new File(
-				this.getConfiguration(ConfigurationKeys.PatternsDirectory));
-
-		// non-explicit patterns directories should live in the user data
-		// directory
-		if (!patternsDir.isAbsolute())
-			patternsDir = new File(ScriptEase.SCRIPTEASE_USER_DATA_DIR,
-					patternsDir.getPath());
-
-		if (!patternsDir.exists() && !patternsDir.mkdirs())
-			throw new IOError(new IOException(
-					"Failed to create patterns directory."));
-
-		for (File location : patternsDir.listFiles(filter)) {
-			FileManager.getInstance().loadLibraryModel(location);
-		}
 	}
 
 	/**

@@ -41,15 +41,35 @@ import scriptease.translator.apimanagers.DescribeItManager;
  */
 public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private static final String AUTOMATIC_LABEL = "automatic";
+	private static final String COMMON_LIBRARY_NAME = "ScriptEase";
+
+	private final Collection<LibraryObserver> listeners;
 
 	private Translator translator;
-	private final Collection<LibraryObserver> listeners;
 	private StoryComponentContainer effectsCategory;
 	private StoryComponentContainer causesCategory;
 	private StoryComponentContainer descriptionsCategory;
 	private StoryComponentContainer controllersCategory;
 	private StoryComponentContainer noteContainer;
 	private StoryComponentContainer modelRoot;
+
+	private static final LibraryModel COMMON_LIBRARY = new LibraryModel(
+			COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME) {
+		{
+			this.add(new AskIt());
+			this.add(new Note());
+		}
+	};
+
+	/**
+	 * The common library contains components common to all translators, such as
+	 * notes.
+	 * 
+	 * @return
+	 */
+	public static LibraryModel getCommonLibrary() {
+		return COMMON_LIBRARY;
+	}
 
 	/**
 	 * Builds a new Library model with a blank author and title, and null

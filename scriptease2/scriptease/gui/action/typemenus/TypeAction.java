@@ -5,15 +5,10 @@ import java.util.Collection;
 
 import javax.swing.AbstractAction;
 import javax.swing.JDialog;
-import javax.swing.SwingUtilities;
 
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
-import scriptease.controller.observer.library.LibraryEvent;
-import scriptease.controller.observer.library.LibraryManagerEvent;
-import scriptease.controller.observer.library.LibraryManagerObserver;
 import scriptease.gui.dialog.TypeDialogBuilder;
-import scriptease.model.LibraryManager;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.translator.Translator;
@@ -57,26 +52,7 @@ public final class TypeAction extends AbstractAction {
 
 		this.setAction(action);
 
-		final LibraryManagerObserver libraryObserver;
 		final SEModelObserver modelObserver;
-
-		libraryObserver = new LibraryManagerObserver() {
-			@Override
-			public void modelChanged(final LibraryManagerEvent managerEvent) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						if (managerEvent.getEventType() == LibraryManagerEvent.LIBRARYMODEL_CHANGED) {
-							final LibraryEvent event = managerEvent.getEvent();
-							if (event != null)
-								if (event.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED
-										|| event.getEventType() == LibraryEvent.STORYCOMPONENT_REMOVED) {
-									TypeAction.this.updateEnabledState();
-								}
-						}
-					}
-				});
-			}
-		};
 
 		modelObserver = new SEModelObserver() {
 			@Override
@@ -96,8 +72,6 @@ public final class TypeAction extends AbstractAction {
 			}
 		};
 
-		LibraryManager.getInstance().addLibraryManagerObserver(this,
-				libraryObserver);
 		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 
 		this.updateName();
