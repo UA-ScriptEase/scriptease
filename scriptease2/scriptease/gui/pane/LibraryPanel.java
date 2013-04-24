@@ -113,13 +113,13 @@ public class LibraryPanel extends JTabbedPane {
 			 */
 			@Override
 			public void modelChanged(LibraryModel changed, LibraryEvent event) {
-				final StoryComponent storyComponent = event.getEvent()
-						.getSource();
-				if (event.getEventType() == LibraryEvent.STORYCOMPONENT_CHANGED) {
+				final StoryComponent storyComponent = event.getSource();
+
+				if (event.getEventType() == LibraryEvent.Type.CHANGE) {
 					updateElement(storyComponent);
-				} else if (event.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED) {
+				} else if (event.getEventType() == LibraryEvent.Type.ADDITION) {
 					addElement(storyComponent);
-				} else if (event.getEventType() == LibraryEvent.STORYCOMPONENT_REMOVED) {
+				} else if (event.getEventType() == LibraryEvent.Type.REMOVAL) {
 					removeElement(storyComponent);
 				}
 			}

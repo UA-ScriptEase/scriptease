@@ -369,10 +369,9 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.listeners.remove(observer);
 	}
 
-	private void notifyChange(short eventType, StoryComponentEvent event) {
+	private void notifyChange(StoryComponent source, LibraryEvent.Type type) {
 		for (LibraryObserver observer : this.listeners) {
-			observer.modelChanged(this,
-					new LibraryEvent(this, eventType, event));
+			observer.modelChanged(this, new LibraryEvent(source, type));
 		}
 	}
 
@@ -382,12 +381,14 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 */
 	@Override
 	public void componentChanged(StoryComponentEvent event) {
+		final StoryComponent source = event.getSource();
+
 		if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED) {
-			this.notifyChange(LibraryEvent.STORYCOMPONENT_REMOVED, event);
+			this.notifyChange(source, LibraryEvent.Type.REMOVAL);
 		} else if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
-			this.notifyChange(LibraryEvent.STORYCOMPONENT_ADDED, event);
+			this.notifyChange(source, LibraryEvent.Type.ADDITION);
 		} else {
-			this.notifyChange(LibraryEvent.STORYCOMPONENT_CHANGED, event);
+			this.notifyChange(source, LibraryEvent.Type.CHANGE);
 		}
 	}
 

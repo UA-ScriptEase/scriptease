@@ -61,9 +61,9 @@ public class APIDictionary implements LibraryObserver {
 
 	@Override
 	public void modelChanged(LibraryModel model, LibraryEvent event) {
-		final StoryComponent source = event.getEvent().getSource();
+		final StoryComponent source = event.getSource();
 
-		if (event.getEventType() == LibraryEvent.STORYCOMPONENT_ADDED) {
+		if (event.getEventType() == LibraryEvent.Type.ADDITION) {
 			if (source instanceof ScriptIt) {
 				final List<CodeBlock> codeBlocks;
 

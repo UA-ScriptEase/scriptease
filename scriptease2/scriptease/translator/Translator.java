@@ -537,6 +537,7 @@ public class Translator {
 	private void loadAPIDictionary() {
 		final FileIO xmlReader;
 		final File apiFile;
+
 		xmlReader = FileIO.getInstance();
 		// load the apiDictionary
 		apiFile = this.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH);
