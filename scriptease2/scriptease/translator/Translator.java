@@ -104,8 +104,6 @@ public class Translator {
 
 	private final Collection<String> legalExtensions;
 
-	private final Collection<LibraryModel> optionalLibraries;
-
 	// special class loader that knows to look in the translators for their
 	// GameModule implementation and required java libaries.
 	private final ClassLoader loader;
@@ -123,10 +121,6 @@ public class Translator {
 	 */
 	@SuppressWarnings("unchecked")
 	protected Translator(File descriptionFile) throws IOException {
-		final String extensionsString;
-		final Reader descriptionReader;
-		final String gameModuleClassLocation;
-
 		if (descriptionFile == null
 				|| !descriptionFile.getName().equalsIgnoreCase(
 						Translator.TRANSLATOR_DESCRIPTION_FILE_NAME)) {
@@ -136,14 +130,18 @@ public class Translator {
 
 		this.properties = new Properties();
 		this.legalExtensions = new ArrayList<String>();
-		this.optionalLibraries = new ArrayList<LibraryModel>();
 
 		this.location = descriptionFile;
+
+		final String extensionsString;
+		final Reader descriptionReader;
+		final String gameModuleClassLocation;
 
 		// load up the properties
 		descriptionReader = new BufferedReader(new FileReader(descriptionFile));
 
 		this.properties.load(descriptionReader);
+
 		descriptionReader.close();
 
 		// load legal file extensions
