@@ -351,11 +351,12 @@ public class TranslatorManager {
 	public void setActiveTranslator(Translator translator) {
 		if (this.activeTranslator == translator)
 			return;
-		this.activeTranslator = translator;
-		if (translator != null)
+		this.activeTranslator = translator; 
+		if (translator != null) {
 			StatusManager.getInstance().setStatus(
 					translator.getName() + " translator loaded");
 
+		}
 		this.notifyObservers();
 	}
 }

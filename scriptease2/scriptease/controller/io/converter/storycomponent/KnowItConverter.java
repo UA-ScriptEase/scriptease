@@ -92,23 +92,25 @@ public class KnowItConverter extends StoryComponentConverter {
 					translator = TranslatorManager.getInstance()
 							.getActiveTranslator();
 
-					final DescribeItManager describeItManager;
-					final ScriptIt bindingScriptIt;
+					if (translator.apiDictionaryIsLoaded()) {
+						final DescribeItManager describeItManager;
+						final ScriptIt bindingScriptIt;
 
-					describeItManager = translator.getApiDictionary()
-							.getDescribeItManager();
-					bindingScriptIt = (ScriptIt) binding.getValue();
+						describeItManager = translator.getApiDictionary()
+								.getDescribeItManager();
+						bindingScriptIt = (ScriptIt) binding.getValue();
 
-					bindingScriptIt.setOwner(knowIt);
+						bindingScriptIt.setOwner(knowIt);
 
-					describeItLoop: for (DescribeIt describeIt : describeItManager
-							.getDescribeIts()) {
-						for (ScriptIt scriptIt : describeIt.getScriptIts()) {
-							if (scriptIt.getDisplayText().equals(
-									bindingScriptIt.getDisplayText())) {
-								describeItManager.addDescribeIt(describeIt,
-										knowIt);
-								break describeItLoop;
+						describeItLoop: for (DescribeIt describeIt : describeItManager
+								.getDescribeIts()) {
+							for (ScriptIt scriptIt : describeIt.getScriptIts()) {
+								if (scriptIt.getDisplayText().equals(
+										bindingScriptIt.getDisplayText())) {
+									describeItManager.addDescribeIt(describeIt,
+											knowIt);
+									break describeItLoop;
+								}
 							}
 						}
 					}
