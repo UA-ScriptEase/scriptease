@@ -33,6 +33,7 @@ import scriptease.gui.action.file.OpenStoryModelAction;
 import scriptease.gui.action.file.SaveModelAction;
 import scriptease.gui.action.file.SaveModelExplicitlyAction;
 import scriptease.gui.action.file.TestStoryAction;
+import scriptease.gui.action.library.OpenAPIDictionaryEditorAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
 import scriptease.gui.action.libraryeditor.NewDescriptionAction;
 import scriptease.gui.action.libraryeditor.NewEffectAction;
@@ -306,7 +307,6 @@ public class MenuFactory {
 
 	private static JMenu buildLibraryMenu() {
 		final JMenu menu = new JMenu(MenuFactory.LIBRARY);
-		menu.setMnemonic(KeyEvent.VK_L);
 
 		final JMenuItem addLibrary;
 		final JMenuItem manageLibraries;
@@ -318,21 +318,16 @@ public class MenuFactory {
 
 		for (final Translator translator : TranslatorManager.getInstance()
 				.getTranslators()) {
+			final OpenAPIDictionaryEditorAction action;
 			final JMenuItem translatorItem;
 
-			translatorItem = new JMenuItem(translator.getName());
-
-			translatorItem.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					TranslatorManager.getInstance().setActiveTranslator(
-							translator);
-					SEModelManager.getInstance().add(translator.getLibrary());
-				}
-			});
+			action = new OpenAPIDictionaryEditorAction(translator);
+			translatorItem = new JMenuItem(action);
 
 			libraryEditors.add(translatorItem);
 		}
+
+		menu.setMnemonic(KeyEvent.VK_L);
 
 		menu.add(addLibrary);
 		menu.add(manageLibraries);
