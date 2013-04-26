@@ -1,0 +1,48 @@
+<APIDictionary name="TestOptionalNWNDictionary" author="Testing">
+  <Types/>
+  <Slots/>
+  <Causes/>
+  <Effects>
+      <ScriptIt>
+      <Name>Show &lt;Text&gt; above the PC 2 from Optional</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Show &lt;Text&gt; above the PC 2 from Optional</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>580</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Text</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>string</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>FloatingTextStringOnCreature(</Literal>
+              <Scope data="argument" ref="Text">
+                <Fragment data="name"/>
+              </Scope>
+              <Literal>, GetFirstPC(), FALSE);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+  </Effects>
+  <DescribeIts/>
+  <ControlIts/>
+  <TypeConverters/>
+</APIDictionary>
