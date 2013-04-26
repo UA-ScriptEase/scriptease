@@ -52,28 +52,10 @@ public final class OpenStoryModelAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		File location = null;
-		boolean tryAgain = false;
-		do {
-			location = WindowFactory.getInstance().showFileChooser(OPEN_MODEL,
-					"", FileManager.STORY_FILTER);
-
-			if (location == null) {
-				return;
-				// TODO: The ScriptEase extensions (".ses" and ".sel" currently)
-				// should be in a centralized config file or filemanager so the
-				// save logic can use them too.
-			} else if (!FileOp.getExtension(location).equalsIgnoreCase("ses")
-					&& !FileOp.getExtension(location).equalsIgnoreCase("sel")) {
-				tryAgain = WindowFactory
-						.getInstance()
-						.showRetryProblemDialog(
-								"Opening File",
-								"The file does not have a ScriptEase-readable file extension (\".ses\" or \".sel\").\nWould you like to open a different file?",
-								"Yes");
-			}
-
-		} while (tryAgain);
+		final File location;
+		
+		location = WindowFactory.getInstance().showFileChooser(OPEN_MODEL, "",
+				FileManager.STORY_FILTER);
 
 		if (location != null) {
 			FileManager.getInstance().openStoryModel(location);

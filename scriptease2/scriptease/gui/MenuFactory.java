@@ -33,6 +33,7 @@ import scriptease.gui.action.file.OpenStoryModelAction;
 import scriptease.gui.action.file.SaveModelAction;
 import scriptease.gui.action.file.SaveModelExplicitlyAction;
 import scriptease.gui.action.file.TestStoryAction;
+import scriptease.gui.action.library.AddLibraryToStoryModelAction;
 import scriptease.gui.action.library.OpenAPIDictionaryEditorAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
 import scriptease.gui.action.libraryeditor.NewDescriptionAction;
@@ -312,7 +313,7 @@ public class MenuFactory {
 		final JMenuItem manageLibraries;
 		final JMenu libraryEditors;
 
-		addLibrary = new JMenuItem("Add Library");
+		addLibrary = new JMenuItem(AddLibraryToStoryModelAction.getInstance());
 		manageLibraries = new JMenuItem("Manage Libraries");
 		libraryEditors = new JMenu("Library Editor");
 

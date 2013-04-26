@@ -54,7 +54,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 		final Collection<AbstractFragment> code = block.getCode();
 
 		// make sure Very Bad Things aren't happening.
-		if (FileIO.getInstance().getMode() != FileIO.IoMode.API_DICTIONARY)
+		if (FileIO.getInstance().getMode() != FileIO.IoMode.LIBRARY)
 			throw new XStreamException(
 					"CodeBlockSources can only live in the Translator! Aaaaaaaaugh!");
 
@@ -125,7 +125,8 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 		final Collection<AbstractFragment> code;
 		final Collection<String> types;
 
-		if (FileIO.getInstance().getMode() != FileIO.IoMode.API_DICTIONARY)
+		final FileIO.IoMode mode = FileIO.getInstance().getMode();
+		if (mode != FileIO.IoMode.LIBRARY)
 			throw new XStreamException(
 					"CodeBlockSources can only live in the Translator! Aaaaaaaaugh!");
 
