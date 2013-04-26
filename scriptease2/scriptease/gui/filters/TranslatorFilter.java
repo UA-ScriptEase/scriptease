@@ -2,6 +2,7 @@ package scriptease.gui.filters;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
+import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
@@ -48,6 +49,14 @@ public class TranslatorFilter extends StoryComponentFilter {
 			this.acceptable = (TranslatorFilter.this.translator
 					.getApiDictionary().getLibrary()
 					.retrieveScriptIt(scriptIt.getDisplayText()) != null);
+
+			if (!this.acceptable) {
+				for (LibraryModel library : TranslatorFilter.this.translator
+						.getOptionalLibraries()) {
+					if (library.retrieveScriptIt(scriptIt.getDisplayText()) != null)
+						this.acceptable = true;
+				}
+			}
 		}
 
 		@Override

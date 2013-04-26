@@ -147,8 +147,9 @@ public class FileIO {
 	 */
 	public LibraryModel readLibrary(File location) {
 		final LibraryModel lib;
-		APIDictionary dictionary = (APIDictionary) this.readData(location,
-				IoMode.LIBRARY);
+		final APIDictionary dictionary;
+
+		dictionary = (APIDictionary) this.readData(location, IoMode.LIBRARY);
 
 		lib = dictionary.getLibrary();
 

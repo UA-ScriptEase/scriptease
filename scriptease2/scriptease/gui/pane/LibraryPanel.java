@@ -452,6 +452,8 @@ public class LibraryPanel extends JTabbedPane {
 			final int index = this.storyComponentPanelJLists.indexOf(list);
 
 			for (LibraryModel libraryModel : libraries) {
+				if(libraryModel.getName().contains("Test"))
+					System.out.println("TEST");
 				final List<StoryComponent> components;
 
 				if (index == 0) {

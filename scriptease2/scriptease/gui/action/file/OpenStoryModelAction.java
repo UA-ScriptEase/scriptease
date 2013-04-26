@@ -11,7 +11,6 @@ import javax.swing.KeyStroke;
 import scriptease.controller.FileManager;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.util.FileOp;
 
 /**
  * Represents and performs the Open Model command, as well as encapsulates its

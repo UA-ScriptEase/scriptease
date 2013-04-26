@@ -19,6 +19,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import scriptease.controller.FileManager;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
@@ -85,7 +86,7 @@ public class Translator {
 		// Mandatory keys
 		NAME, API_DICTIONARY_PATH, LANGUAGE_DICTIONARY_PATH, GAME_MODULE_PATH,
 		// Suggested keys
-		SUPPORTED_FILE_EXTENSIONS, INCLUDES_PATH, ICON_PATH, COMPILER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY;
+		SUPPORTED_FILE_EXTENSIONS, INCLUDES_PATH, ICON_PATH, COMPILER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY, OPTIONAL_LIBRARIES_PATH;
 
 		public static final String FALSE = "false";
 		private static final String DIRECTORY = "directory";
@@ -257,6 +258,46 @@ public class Translator {
 
 		return includeDir != null ? Arrays.asList(includeDir.listFiles(filter))
 				: new ArrayList<File>();
+	}
+
+	/**
+	 * Finds and returns the optional libraries.
+	 * 
+	 * @return
+	 */
+	public Collection<LibraryModel> getOptionalLibraries() {
+		final Collection<LibraryModel> optionalLibraries;
+		final File optionalLibraryDir;
+
+		optionalLibraries = new ArrayList<LibraryModel>();
+		optionalLibraryDir = this
+				.getPathProperty(DescriptionKeys.OPTIONAL_LIBRARIES_PATH);
+
+		final FileFilter filter = new FileFilter() {
+			@Override
+			public boolean accept(File file) {
+				return file.getName().endsWith(
+						FileManager.FILE_EXTENSION_LIBRARY);
+			}
+		};
+
+		if (optionalLibraryDir != null && optionalLibraryDir.exists()) {
+			final Collection<File> optionalFiles;
+
+			optionalFiles = FileOp.findFiles(optionalLibraryDir, filter);
+
+			for (File file : optionalFiles) {
+				final LibraryModel optionalLibrary;
+
+				optionalLibrary = FileIO.getInstance().readLibrary(file);
+
+				optionalLibrary.setTranslator(this);
+				
+				optionalLibraries.add(optionalLibrary);
+			}
+		}
+
+		return optionalLibraries;
 	}
 
 	/**

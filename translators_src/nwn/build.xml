@@ -49,6 +49,7 @@ Use 'ant zip' to create a distributable zip package. Use flag -Ddebug.mode=true 
 		<copy todir="${build.dir}" verbose="false">
 			<fileset dir=".">
 				<include name="${resources.dir}/includes/**" />
+				<include name="${resources.dir}/libraries/**" />
 				<include name="${resources.dir}/apidictionary.xml" />
 				<include name="${resources.dir}/languageDictionary.xml" />
 				<include name="${resources.dir}/*.gif" />

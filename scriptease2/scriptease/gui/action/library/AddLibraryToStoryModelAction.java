@@ -2,14 +2,10 @@ package scriptease.gui.action.library;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.File;
 
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.controller.FileManager;
-import scriptease.controller.io.FileIO;
-import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
@@ -24,21 +20,12 @@ import scriptease.model.StoryModel;
  */
 @SuppressWarnings("serial")
 public class AddLibraryToStoryModelAction extends ActiveModelSensitiveAction {
-	private static final String ADD_LIBRARY = "Add Library";
+	private final LibraryModel library;
 
-	private static final Action instance = new AddLibraryToStoryModelAction();
+	public AddLibraryToStoryModelAction(LibraryModel library) {
+		super(library.getName());
 
-	/**
-	 * Returns the only instance of the action.
-	 * 
-	 * @return
-	 */
-	public static Action getInstance() {
-		return instance;
-	}
-
-	private AddLibraryToStoryModelAction() {
-		super(ADD_LIBRARY);
+		this.library = library;
 
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
 		this.putValue(
@@ -56,20 +43,10 @@ public class AddLibraryToStoryModelAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final File location;
+		final StoryModel model;
 
-		location = WindowFactory.getInstance().showFileChooser(ADD_LIBRARY, "",
-				FileManager.LIBRARY_FILTER);
+		model = (StoryModel) SEModelManager.getInstance().getActiveModel();
 
-		if (location != null) {
-			final StoryModel model;
-			final LibraryModel library;
-
-			model = (StoryModel) SEModelManager.getInstance().getActiveModel();
-			library = FileIO.getInstance().readLibrary(location);
-
-			if (library != null)
-				model.addLibrary(library);
-		}
+		model.addLibrary(this.library);
 	}
 }
