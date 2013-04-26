@@ -125,8 +125,7 @@ public final class SEModelManager {
 		if (activate)
 			// We need to wait for all observers to be notified before calling
 			// this, or we'll end up notifying them while they're being
-			// notified. That leads to a ConcurrentThreadException and general
-			// mayhem.
+			// notified. Otherwise we get a ConcurrentThreadException.
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
