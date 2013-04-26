@@ -56,7 +56,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 			writer.startNode(TAG_TARGET_ID);
 			writer.setValue(Integer.toString(codeBlock.getId()));
 			writer.endNode();
-		} else if (ioMode == IoMode.API_DICTIONARY) {
+		} else if (ioMode == IoMode.LIBRARY) {
 			writer.startNode(TAG_TARGET);
 			writer.startNode(CodeBlockSourceConverter.TAG_CODE_BLOCK_SOURCE);
 			context.convertAnother(codeBlock.getTarget());
@@ -100,7 +100,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 			targetId = Integer.parseInt(reader.getValue());
 
 			target = translator.getApiDictionary().getCodeBlockByID(targetId);
-		} else if (ioMode == IoMode.API_DICTIONARY) {
+		} else if (ioMode == IoMode.LIBRARY) {
 			if (!nodeName.equals(TAG_TARGET))
 				dieMissingTarget(TAG_TARGET, nodeName);
 

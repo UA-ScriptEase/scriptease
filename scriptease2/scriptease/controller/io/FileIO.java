@@ -100,7 +100,7 @@ public class FileIO {
 	 * @author remiller
 	 */
 	public enum IoMode {
-		API_DICTIONARY, LANGUAGE_DICTIONARY, STORY, LIBRARY, NONE;
+		LIBRARY, LANGUAGE_DICTIONARY, STORY, NONE;
 	}
 
 	private static FileIO instance;
@@ -147,7 +147,10 @@ public class FileIO {
 	 */
 	public LibraryModel readLibrary(File location) {
 		final LibraryModel lib;
-		lib = (LibraryModel) this.readData(location, IoMode.LIBRARY);
+		APIDictionary dictionary = (APIDictionary) this.readData(location,
+				IoMode.LIBRARY);
+
+		lib = dictionary.getLibrary();
 
 		BindingFixer.fixBindings(lib.getRoot());
 
@@ -169,12 +172,12 @@ public class FileIO {
 		 * 
 		 * - remiller
 		 */
-		if (this.mode == IoMode.API_DICTIONARY)
+		if (this.mode == IoMode.LIBRARY)
 			throw new IllegalStateException(
 					"Loop detected in APIDictionary Loading");
 
 		APIDictionary apiDictionary = (APIDictionary) this.readData(location,
-				IoMode.API_DICTIONARY);
+				IoMode.LIBRARY);
 
 		apiDictionary.setTranslator(translator);
 
@@ -222,7 +225,7 @@ public class FileIO {
 	 *            The file path to write to.
 	 */
 	public void writeAPIDictionary(APIDictionary dictionary, File location) {
-		this.writeData(dictionary, location, IoMode.API_DICTIONARY);
+		this.writeData(dictionary, location, IoMode.LIBRARY);
 	}
 
 	private void writeData(Object dataModel, File location, IoMode mode) {

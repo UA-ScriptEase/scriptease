@@ -62,28 +62,17 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	 * @return
 	 */
 	private int search(StoryComponent component, String key) {
-		final Collection<String> searchableData;
 		Integer count = 1;
 
 		if (key != null && !key.trim().isEmpty()) {
-			searchableData = getSearchDataForComponent(component);
-			count = countKeyMatches(searchableData, key);
+			final SearchDataCompiler searchData = new SearchDataCompiler();
+
+			component.process(searchData);
+
+			count = countKeyMatches(searchData.getData(), key);
 		}
 
 		return count;
-	}
-
-	/**
-	 * Creates a Collection of String tokens which can be compared with the key
-	 * 
-	 * @param component
-	 * @return
-	 */
-	private Collection<String> getSearchDataForComponent(
-			StoryComponent component) {
-		SearchDataCompiler searchData = new SearchDataCompiler();
-		component.process(searchData);
-		return searchData.getData();
 	}
 
 	/**
