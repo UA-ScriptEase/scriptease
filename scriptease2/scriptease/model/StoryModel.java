@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.ModelVisitor;
+import scriptease.gui.WindowFactory;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
@@ -87,7 +88,14 @@ public final class StoryModel extends SEModel {
 	}
 
 	public void addLibrary(LibraryModel library) {
-		this.optionalLibraries.add(library);
+		if (!this.optionalLibraries.contains(library))
+			this.optionalLibraries.add(library);
+		else
+			WindowFactory.getInstance().showWarningDialog(
+					"Library Already Exists",
+					"The Library, " + library.getName()
+							+ ", has already been added to the model.");
+
 		// TODO Need to notify something.
 	}
 

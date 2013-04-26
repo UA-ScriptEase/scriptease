@@ -24,7 +24,7 @@ public class OpenAPIDictionaryEditorAction extends AbstractAction {
 	 * @param translator
 	 */
 	public OpenAPIDictionaryEditorAction(Translator translator) {
-		super(translator.getName());
+		super(translator.getName() + " Default Library");
 
 		this.translator = translator;
 	}

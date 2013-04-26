@@ -306,18 +306,42 @@ public class MenuFactory {
 		return menu;
 	}
 
+	/**
+	 * Builds the library menu, with options to add and edit libraries.
+	 * 
+	 * @return
+	 */
 	private static JMenu buildLibraryMenu() {
 		final JMenu menu = new JMenu(MenuFactory.LIBRARY);
-
-		final JMenuItem addLibrary;
+		final Translator activeTranslator;
+		final SEModel activeModel;
+		final JMenu addLibrary;
 		final JMenuItem manageLibraries;
 		final JMenu libraryEditors;
 
-		addLibrary = new JMenuItem(AddLibraryToStoryModelAction.getInstance());
+		activeTranslator = TranslatorManager.getInstance()
+				.getActiveTranslator();
+		activeModel = SEModelManager.getInstance().getActiveModel();
+		addLibrary = new JMenu("Add Library");
 		manageLibraries = new JMenuItem("Manage Libraries");
 		libraryEditors = new JMenu("Library Editor");
 
-		for (final Translator translator : TranslatorManager.getInstance()
+		if (activeTranslator != null && activeModel instanceof StoryModel) {
+			final Collection<LibraryModel> optionalLibraries;
+
+			optionalLibraries = activeTranslator.getOptionalLibraries();
+
+			if (!optionalLibraries.isEmpty())
+				for (LibraryModel library : activeTranslator
+						.getOptionalLibraries()) {
+					addLibrary.add(new AddLibraryToStoryModelAction(library));
+				}
+			else
+				addLibrary.setEnabled(false);
+		} else
+			addLibrary.setEnabled(false);
+
+		for (Translator translator : TranslatorManager.getInstance()
 				.getTranslators()) {
 			final OpenAPIDictionaryEditorAction action;
 			final JMenuItem translatorItem;
