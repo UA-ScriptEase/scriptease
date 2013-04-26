@@ -28,6 +28,7 @@ import javax.swing.event.DocumentListener;
 
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
+import scriptease.controller.observer.StoryModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryObserver;
@@ -46,6 +47,7 @@ import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
+import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
@@ -133,10 +135,24 @@ public class LibraryPanel extends JTabbedPane {
 			 */
 			@Override
 			public void modelChanged(SEModelEvent event) {
+				final SEModel model = event.getPatternModel();
+
 				if (event.getEventType() == SEModelEvent.Type.ADDED) {
-					for (LibraryModel library : event.getPatternModel()
-							.getLibraries()) {
+					for (LibraryModel library : model.getLibraries()) {
 						library.addLibraryChangeListener(libraryObserver);
+					}
+
+					if (model instanceof StoryModel) {
+						final StoryModelObserver observer;
+
+						observer = new StoryModelObserver() {
+							@Override
+							public void libraryAdded(LibraryModel library) {
+								LibraryPanel.this.updateLists();
+							}
+						};
+
+						((StoryModel) model).addStoryModelObserver(observer);
 					}
 				} else if (event.getEventType() == SEModelEvent.Type.ACTIVATED)
 					updateLists();
@@ -452,7 +468,7 @@ public class LibraryPanel extends JTabbedPane {
 			final int index = this.storyComponentPanelJLists.indexOf(list);
 
 			for (LibraryModel libraryModel : libraries) {
-				if(libraryModel.getName().contains("Test"))
+				if (libraryModel.getName().contains("Test"))
 					System.out.println("TEST");
 				final List<StoryComponent> components;
 

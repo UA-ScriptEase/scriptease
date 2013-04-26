@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.ModelVisitor;
+import scriptease.controller.observer.ObserverManager;
+import scriptease.controller.observer.StoryModelObserver;
 import scriptease.gui.WindowFactory;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
@@ -24,6 +26,7 @@ public final class StoryModel extends SEModel {
 	private final GameModule module;
 	private final Translator translator;
 	private final Collection<LibraryModel> optionalLibraries;
+	private final ObserverManager<StoryModelObserver> observerManager;
 	private StoryPoint startPoint;
 
 	/**
@@ -53,6 +56,7 @@ public final class StoryModel extends SEModel {
 		this.module = module;
 		this.translator = translator;
 		this.optionalLibraries = optionalLibraries;
+		this.observerManager = new ObserverManager<StoryModelObserver>();
 
 		// Adds all of the automatic causes to the start point.
 		// Note that automatics can only be defined in an apidictionary for now
@@ -88,15 +92,18 @@ public final class StoryModel extends SEModel {
 	}
 
 	public void addLibrary(LibraryModel library) {
-		if (!this.optionalLibraries.contains(library))
+		if (!this.optionalLibraries.contains(library)) {
 			this.optionalLibraries.add(library);
-		else
+
+			for (StoryModelObserver observer : this.observerManager
+					.getObservers()) {
+				observer.libraryAdded(library);
+			}
+		} else
 			WindowFactory.getInstance().showWarningDialog(
 					"Library Already Exists",
 					"The Library, " + library.getName()
 							+ ", has already been added to the model.");
-
-		// TODO Need to notify something.
 	}
 
 	/**
@@ -121,6 +128,14 @@ public final class StoryModel extends SEModel {
 		libraries.addAll(this.optionalLibraries);
 
 		return libraries;
+	}
+
+	/**
+	 * Adds a {@link StoryModelObserver} that remains for the lifetime of the model.
+	 * @param observer
+	 */
+	public void addStoryModelObserver(StoryModelObserver observer) {
+		this.observerManager.addObserver(this, observer);
 	}
 
 	@Override

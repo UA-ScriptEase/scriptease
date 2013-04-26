@@ -196,4 +196,14 @@ public final class SEModelManager {
 			observer.modelChanged(new SEModelEvent(model, eventType));
 		}
 	}
+
+	/**
+	 * Notifies a change.
+	 * 
+	 * @param model
+	 * @param library
+	 */
+	public void libraryAdded(StoryModel model, LibraryModel library) {
+		this.notifyChange(model, SEModelEvent.Type.LIBRARY_ADDED);
+	}
 }
