@@ -303,6 +303,20 @@ public class Translator {
 		return this.optionalLibraries;
 	}
 
+	public LibraryModel findLibrary(String name) {
+		final LibraryModel defaultLibrary = this.getLibrary();
+
+		if (defaultLibrary.getName().equals(name))
+			return defaultLibrary;
+
+		for (LibraryModel library : this.getOptionalLibraries()) {
+			if (library.getName().equals(name))
+				return library;
+		}
+
+		return null;
+	}
+
 	/**
 	 * Gets a property specific to a particular Translator. Properties that are
 	 * required by all Translators should be acquired instead through
@@ -811,5 +825,10 @@ public class Translator {
 	 */
 	public LibraryModel getLibrary() {
 		return this.getApiDictionary().getLibrary();
+	}
+
+	@Override
+	public String toString() {
+		return "Translator [" + this.getName() + "]";
 	}
 }

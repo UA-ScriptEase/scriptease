@@ -130,8 +130,14 @@ public final class StoryModel extends SEModel {
 		return libraries;
 	}
 
+	public Collection<LibraryModel> getOptionalLibraries() {
+		return this.optionalLibraries;
+	}
+
 	/**
-	 * Adds a {@link StoryModelObserver} that remains for the lifetime of the model.
+	 * Adds a {@link StoryModelObserver} that remains for the lifetime of the
+	 * model.
+	 * 
 	 * @param observer
 	 */
 	public void addStoryModelObserver(StoryModelObserver observer) {
