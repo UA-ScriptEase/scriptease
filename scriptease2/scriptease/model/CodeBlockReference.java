@@ -124,7 +124,7 @@ public class CodeBlockReference extends CodeBlock {
 		this.target = newTarget;
 
 		this.target.addReference(this);
-
+		
 		this.setParameters(this.target.getParameters());
 	}
 

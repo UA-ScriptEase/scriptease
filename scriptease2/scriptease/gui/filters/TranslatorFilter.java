@@ -46,16 +46,14 @@ public class TranslatorFilter extends StoryComponentFilter {
 		 */
 		@Override
 		public void processScriptIt(ScriptIt scriptIt) {
+			final LibraryModel library = scriptIt.getLibrary();
+
 			this.acceptable = (TranslatorFilter.this.translator
-					.getApiDictionary().getLibrary()
-					.retrieveScriptIt(scriptIt.getDisplayText()) != null);
+					.getApiDictionary().getLibrary() == scriptIt.getLibrary());
 
 			if (!this.acceptable) {
-				for (LibraryModel library : TranslatorFilter.this.translator
-						.getOptionalLibraries()) {
-					if (library.retrieveScriptIt(scriptIt.getDisplayText()) != null)
-						this.acceptable = true;
-				}
+				this.acceptable = TranslatorFilter.this.translator
+						.getOptionalLibraries().contains(library);
 			}
 		}
 
