@@ -55,6 +55,8 @@ public abstract class StoryComponent implements Cloneable {
 	private Collection<String> labels;
 	private Boolean isVisible;
 
+	private LibraryModel library;
+
 	public StoryComponent ownerComponent;
 
 	private ObserverManager<StoryComponentObserver> observerManager;
@@ -306,6 +308,8 @@ public abstract class StoryComponent implements Cloneable {
 		clone.setVisible(this.isVisible);
 		clone.setOwner(this.ownerComponent);
 
+		clone.setLibrary(this.library);
+		
 		// add all of the labels
 		for (String label : this.labels) {
 			clone.addLabel(new String(label));
@@ -382,6 +386,14 @@ public abstract class StoryComponent implements Cloneable {
 				this.defaultProcessComplex(sequence);
 			}
 		});
+	}
+
+	public void setLibrary(LibraryModel library) {
+		this.library = library;
+	}
+
+	public LibraryModel getLibrary() {
+		return this.library;
 	}
 
 	/**

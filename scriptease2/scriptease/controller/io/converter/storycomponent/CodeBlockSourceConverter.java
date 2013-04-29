@@ -11,7 +11,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 import com.thoughtworks.xstream.XStreamException;
-import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -24,8 +23,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  * @author remiller
  */
-public class CodeBlockSourceConverter extends StoryComponentConverter implements
-		Converter {
+public class CodeBlockSourceConverter extends StoryComponentConverter {
 	public static final String TAG_CODE_BLOCK_SOURCE = "CodeBlockSource";
 
 	private static final String TAG_SUBJECT = "Subject";
@@ -57,7 +55,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter implements
 		if (FileIO.getInstance().getMode() != FileIO.IoMode.LIBRARY)
 			throw new XStreamException(
 					"CodeBlockSources can only live in the Translator! Aaaaaaaaugh!");
-
+		
 		super.marshal(source, writer, context);
 
 		// Subject

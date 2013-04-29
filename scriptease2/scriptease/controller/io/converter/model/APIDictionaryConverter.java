@@ -3,6 +3,7 @@ package scriptease.controller.io.converter.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
@@ -11,6 +12,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.translator.apimanagers.EventSlotManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
 
@@ -41,6 +43,13 @@ public class APIDictionaryConverter implements Converter {
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final APIDictionary apiDictionary = (APIDictionary) source;
+		final LibraryModel library = apiDictionary.getLibrary();
+		final GameTypeManager typeManager = apiDictionary.getGameTypeManager();
+
+		final DescribeItManager describeItManager = apiDictionary
+				.getDescribeItManager();
+		final EventSlotManager eventSlotManager = apiDictionary
+				.getEventSlotManager();
 
 		// name
 		writer.addAttribute(TAG_NAME, apiDictionary.getName());
@@ -50,13 +59,10 @@ public class APIDictionaryConverter implements Converter {
 
 		// types
 		writer.startNode(TAG_TYPES);
-		context.convertAnother(apiDictionary.getGameTypeManager()
-				.getGameTypes());
+		context.convertAnother(typeManager.getGameTypes());
 		writer.endNode();
 
 		// slots
-		final EventSlotManager eventSlotManager = apiDictionary
-				.getEventSlotManager();
 		writer.startNode(TAG_SLOTS);
 		writer.addAttribute(TAG_SLOT_DEFAULT_FORMAT_KEYWORD,
 				eventSlotManager.getDefaultFormatKeyword());
@@ -65,32 +71,27 @@ public class APIDictionaryConverter implements Converter {
 
 		// causes
 		writer.startNode(TAG_CAUSES);
-		context.convertAnother(apiDictionary.getLibrary().getCausesCategory()
-				.getChildren());
+		context.convertAnother(library.getCausesCategory().getChildren());
 		writer.endNode();
 
 		// effects
 		writer.startNode(TAG_EFFECTS);
-		context.convertAnother(apiDictionary.getLibrary().getEffectsCategory()
-				.getChildren());
+		context.convertAnother(library.getEffectsCategory().getChildren());
 		writer.endNode();
 
-		final DescribeItManager describeItManager = apiDictionary
-				.getDescribeItManager();
 		// descriptions
 		writer.startNode(TAG_DESCRIBE_ITS);
 		context.convertAnother(describeItManager.getDescribeIts());
 		writer.endNode();
 
 		writer.startNode(TAG_CONTROL_ITS);
-		context.convertAnother(apiDictionary.getLibrary()
-				.getControllersCategory().getChildren());
+		context.convertAnother(library.getControllersCategory().getChildren());
 		writer.endNode();
 
 		// typeconverters
 		writer.startNode(TAG_TYPE_CONVERTERS);
-		context.convertAnother(apiDictionary.getGameTypeManager()
-				.getTypeConverter().getConverterDoIts());
+		context.convertAnother(typeManager.getTypeConverter()
+				.getConverterDoIts());
 		writer.endNode();
 	}
 
@@ -99,6 +100,10 @@ public class APIDictionaryConverter implements Converter {
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final APIDictionary apiDictionary = new APIDictionary();
+		final LibraryModel library = apiDictionary.getLibrary();
+
+		final EventSlotManager eventSlotManager = apiDictionary
+				.getEventSlotManager();
 
 		System.out.println("Unmarshaling APIDictionary");
 
@@ -123,8 +128,6 @@ public class APIDictionaryConverter implements Converter {
 		reader.moveUp();
 
 		// slots
-		final EventSlotManager eventSlotManager = apiDictionary
-				.getEventSlotManager();
 		reader.moveDown();
 		eventSlotManager.setDefaultFormatKeyword(reader
 				.getAttribute(TAG_SLOT_DEFAULT_FORMAT_KEYWORD));
@@ -141,10 +144,8 @@ public class APIDictionaryConverter implements Converter {
 				System.err.println("Expected " + TAG_CAUSES + ", but found "
 						+ reader.getNodeName());
 			else {
-				apiDictionary
-						.getLibrary()
-						.addAll(((Collection<? extends StoryComponent>) context
-								.convertAnother(apiDictionary, ArrayList.class)));
+				library.addAll((Collection<? extends StoryComponent>) context
+						.convertAnother(apiDictionary, ArrayList.class));
 			}
 		}
 		reader.moveUp();
@@ -156,10 +157,8 @@ public class APIDictionaryConverter implements Converter {
 				System.err.println("Expected " + TAG_EFFECTS + ", but found "
 						+ reader.getNodeName());
 			else {
-				apiDictionary
-						.getLibrary()
-						.addAll(((Collection<? extends StoryComponent>) context
-								.convertAnother(apiDictionary, ArrayList.class)));
+				library.addAll((Collection<? extends StoryComponent>) context
+						.convertAnother(apiDictionary, ArrayList.class));
 			}
 		}
 		reader.moveUp();
@@ -191,7 +190,7 @@ public class APIDictionaryConverter implements Converter {
 					knowIt = describeItManager
 							.createKnowItForDescribeIt(describeIt);
 
-					apiDictionary.getLibrary().add(knowIt);
+					library.add(knowIt);
 					describeItManager.addDescribeIt(describeIt, knowIt);
 				}
 			}
@@ -205,9 +204,8 @@ public class APIDictionaryConverter implements Converter {
 				System.err.println("Expected " + TAG_CONTROL_ITS
 						+ ", but found " + reader.getNodeName());
 			else {
-				apiDictionary.getLibrary().addAll(
-						((Collection<ControlIt>) context.convertAnother(
-								apiDictionary, ArrayList.class)));
+				library.addAll(((Collection<ControlIt>) context.convertAnother(
+						apiDictionary, ArrayList.class)));
 			}
 		}
 		reader.moveUp();

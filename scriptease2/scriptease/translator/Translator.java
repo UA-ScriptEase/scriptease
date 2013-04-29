@@ -112,6 +112,8 @@ public class Translator {
 	// either the location of the jar, or the location of the description file.
 	private final File location;
 
+	private Collection<LibraryModel> optionalLibraries;
+
 	/**
 	 * Builds a new Translator from the given translator Jar or description
 	 * file.
@@ -266,38 +268,39 @@ public class Translator {
 	 * @return
 	 */
 	public Collection<LibraryModel> getOptionalLibraries() {
-		final Collection<LibraryModel> optionalLibraries;
-		final File optionalLibraryDir;
+		if (this.optionalLibraries == null) {
+			final File optionalLibraryDir;
 
-		optionalLibraries = new ArrayList<LibraryModel>();
-		optionalLibraryDir = this
-				.getPathProperty(DescriptionKeys.OPTIONAL_LIBRARIES_PATH);
+			this.optionalLibraries = new ArrayList<LibraryModel>();
+			optionalLibraryDir = this
+					.getPathProperty(DescriptionKeys.OPTIONAL_LIBRARIES_PATH);
 
-		final FileFilter filter = new FileFilter() {
-			@Override
-			public boolean accept(File file) {
-				return file.getName().endsWith(
-						FileManager.FILE_EXTENSION_LIBRARY);
-			}
-		};
+			final FileFilter filter = new FileFilter() {
+				@Override
+				public boolean accept(File file) {
+					return file.getName().endsWith(
+							FileManager.FILE_EXTENSION_LIBRARY);
+				}
+			};
 
-		if (optionalLibraryDir != null && optionalLibraryDir.exists()) {
-			final Collection<File> optionalFiles;
+			if (optionalLibraryDir != null && optionalLibraryDir.exists()) {
+				final Collection<File> optionalFiles;
 
-			optionalFiles = FileOp.findFiles(optionalLibraryDir, filter);
+				optionalFiles = FileOp.findFiles(optionalLibraryDir, filter);
 
-			for (File file : optionalFiles) {
-				final LibraryModel optionalLibrary;
+				for (File file : optionalFiles) {
+					final LibraryModel optionalLibrary;
 
-				optionalLibrary = FileIO.getInstance().readLibrary(file);
+					optionalLibrary = FileIO.getInstance().readLibrary(file);
 
-				optionalLibrary.setTranslator(this);
-				
-				optionalLibraries.add(optionalLibrary);
+					optionalLibrary.setTranslator(this);
+
+					this.optionalLibraries.add(optionalLibrary);
+				}
 			}
 		}
 
-		return optionalLibraries;
+		return this.optionalLibraries;
 	}
 
 	/**

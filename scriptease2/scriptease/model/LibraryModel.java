@@ -44,6 +44,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private static final String COMMON_LIBRARY_NAME = "ScriptEase";
 
 	private final Collection<LibraryObserver> listeners;
+	// We save this as a variable since add is called many times.
+	private final StoryAdapter categoryAdder;
 
 	private Translator translator;
 	private StoryComponentContainer effectsCategory;
@@ -138,6 +140,77 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 		this.registerCategoryChildTypes();
 		this.listeners = new ArrayList<LibraryObserver>();
+
+		this.categoryAdder = new StoryAdapter() {
+			final LibraryModel model = LibraryModel.this;
+
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				final boolean success;
+				if (scriptIt.isCause()) {
+					success = this.model.causesCategory.addStoryChild(scriptIt);
+					if (success)
+						scriptIt.addStoryComponentObserver(this.model);
+				} else {
+					success = this.model.effectsCategory
+							.addStoryChild(scriptIt);
+					if (success)
+						scriptIt.addStoryComponentObserver(this.model);
+				}
+			}
+
+			@Override
+			public void processAskIt(AskIt askIt) {
+				final boolean success = this.model.controllersCategory
+						.addStoryChild(askIt);
+				if (success)
+					askIt.addStoryComponentObserver(this.model);
+			}
+
+			@Override
+			public void processControlIt(ControlIt controlIt) {
+				final boolean success = this.model.controllersCategory
+						.addStoryChild(controlIt);
+				if (success)
+					controlIt.addStoryComponentObserver(this.model);
+			}
+
+			@Override
+			public void processNote(Note note) {
+				final boolean success = this.model.noteContainer
+						.addStoryChild(note);
+				if (success)
+					note.addStoryComponentObserver(this.model);
+			}
+
+			@Override
+			public void processKnowIt(KnowIt knowIt) {
+				final boolean success = this.model.descriptionsCategory
+						.addStoryChild(knowIt);
+				if (success) {
+					knowIt.addStoryComponentObserver(this.model);
+
+					final KnowItBinding binding = knowIt.getBinding();
+					binding.process(new BindingAdapter() {
+						@Override
+						public void processFunction(
+								KnowItBindingFunction function) {
+							final ScriptIt doIt = function.getValue();
+							LibraryModel.this.add(doIt);
+						}
+					});
+				}
+			}
+
+			@Override
+			public void processStoryComponentContainer(
+					StoryComponentContainer container) {
+				final boolean success = this.model.controllersCategory
+						.addStoryChild(container);
+				if (success)
+					container.addStoryComponentObserver(this.model);
+			}
+		};
 	}
 
 	private void registerCategoryChildTypes() {
@@ -270,12 +343,14 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	/**
-	 * Adds the given StoryComponent to the appropriate category
+	 * Adds the given StoryComponent to the appropriate category. Also sets the
+	 * component's library to the library.
 	 * 
 	 * @param component
 	 */
 	public void add(StoryComponent component) {
-		component.process(new CategoryAdder());
+		component.process(this.categoryAdder);
+		component.setLibrary(this);
 	}
 
 	/**
@@ -440,168 +515,9 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 	}
 
-	/**
-	 * Adds StoryComponents to their proper category
-	 * 
-	 * @author mfchurch
-	 * 
-	 */
-	private class CategoryAdder extends StoryAdapter {
-		@Override
-		public void processScriptIt(ScriptIt scriptIt) {
-			final boolean success;
-			if (scriptIt.isCause()) {
-				success = LibraryModel.this.causesCategory
-						.addStoryChild(scriptIt);
-				if (success)
-					scriptIt.addStoryComponentObserver(LibraryModel.this);
-			} else {
-				success = LibraryModel.this.effectsCategory
-						.addStoryChild(scriptIt);
-				if (success)
-					scriptIt.addStoryComponentObserver(LibraryModel.this);
-			}
-		}
-
-		@Override
-		public void processAskIt(AskIt askIt) {
-			final boolean success = LibraryModel.this.controllersCategory
-					.addStoryChild(askIt);
-			if (success)
-				askIt.addStoryComponentObserver(LibraryModel.this);
-		}
-
-		@Override
-		public void processControlIt(ControlIt controlIt) {
-			final boolean success = LibraryModel.this.controllersCategory
-					.addStoryChild(controlIt);
-			if (success)
-				controlIt.addStoryComponentObserver(LibraryModel.this);
-		}
-
-		@Override
-		public void processNote(Note note) {
-			final boolean success = LibraryModel.this.noteContainer
-					.addStoryChild(note);
-			if (success)
-				note.addStoryComponentObserver(LibraryModel.this);
-		}
-
-		@Override
-		public void processKnowIt(KnowIt knowIt) {
-			final boolean success = LibraryModel.this.descriptionsCategory
-					.addStoryChild(knowIt);
-			if (success) {
-				knowIt.addStoryComponentObserver(LibraryModel.this);
-
-				final KnowItBinding binding = knowIt.getBinding();
-				binding.process(new BindingAdapter() {
-					@Override
-					public void processFunction(KnowItBindingFunction function) {
-						final ScriptIt doIt = function.getValue();
-						LibraryModel.this.add(doIt);
-					}
-				});
-			}
-		}
-
-		@Override
-		public void processStoryComponentContainer(
-				StoryComponentContainer container) {
-			final boolean success = LibraryModel.this.controllersCategory
-					.addStoryChild(container);
-			if (success)
-				container.addStoryComponentObserver(LibraryModel.this);
-		}
-	}
-
 	@Override
 	public String toString() {
 		return this.getName();
-	}
-
-	public ScriptIt retrieveScriptIt(String displayName) {
-		ScriptItRetriever retriever = new ScriptItRetriever();
-		return retriever.retrieveScriptIt(displayName);
-	}
-
-	/**
-	 * Finds a ScriptIt in the LibraryModel with the given displayName
-	 * 
-	 * @author mfchurch
-	 * 
-	 */
-	private class ScriptItRetriever extends StoryAdapter {
-		private String displayName;
-		private ScriptIt scriptIt;
-
-		public ScriptIt retrieveScriptIt(String displayName) {
-			this.displayName = displayName;
-			StoryComponentContainer causesCategory = LibraryModel.this
-					.getCausesCategory();
-			for (StoryComponent cause : causesCategory.getChildren()) {
-				if (this.scriptIt != null)
-					return this.scriptIt;
-				else
-					cause.process(this);
-			}
-			StoryComponentContainer effectsCategory = LibraryModel.this
-					.getEffectsCategory();
-			for (StoryComponent effect : effectsCategory.getChildren()) {
-				if (this.scriptIt != null)
-					return this.scriptIt;
-				else
-					effect.process(this);
-			}
-			StoryComponentContainer descriptionsCategory = LibraryModel.this
-					.getDescriptionsCategory();
-			for (StoryComponent effect : descriptionsCategory.getChildren()) {
-				if (this.scriptIt != null)
-					return this.scriptIt;
-				else
-					effect.process(this);
-			}
-			StoryComponentContainer controllersCategory = LibraryModel.this
-					.getControllersCategory();
-			for (StoryComponent effect : controllersCategory.getChildren()) {
-				if (this.scriptIt != null)
-					return this.scriptIt;
-				else
-					effect.process(this);
-			}
-			return this.scriptIt;
-		}
-
-		@Override
-		public void processAskIt(AskIt questionIt) {
-			this.defaultProcessComplex(questionIt);
-			questionIt.getCondition().process(this);
-		}
-
-		@Override
-		public void processScriptIt(ScriptIt scriptIt) {
-			for (KnowIt parameter : scriptIt.getParameters())
-				parameter.process(this);
-			if (scriptIt.getDisplayText().equals(this.displayName))
-				this.scriptIt = scriptIt;
-			this.defaultProcessComplex(scriptIt);
-		}
-
-		@Override
-		protected void defaultProcessComplex(ComplexStoryComponent complex) {
-			complex.processChildren(this);
-		}
-
-		@Override
-		public void processKnowIt(KnowIt knowIt) {
-			knowIt.getBinding().process(new BindingAdapter() {
-				@Override
-				public void processFunction(KnowItBindingFunction function) {
-					final ScriptIt scriptIt = function.getValue();
-					scriptIt.process(ScriptItRetriever.this);
-				}
-			});
-		}
 	}
 
 	@Override
