@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.StoryAdapter;
@@ -459,6 +460,51 @@ public class FileIO {
 		reader.moveUp();
 
 		return value;
+	}
+
+	/**
+	 * Reads a simple collection of text values from the reader, provided that
+	 * the XML elements that we're reading from actually have the correct tags
+	 * (ignoring case).
+	 * 
+	 * @param reader
+	 *            the reader to read from.
+	 * @param collectionTag
+	 *            The tag that we expect to see for the collection.
+	 * @param itemTag
+	 *            The tag that we expect to see for each item in the collection.
+	 * @return the values read in from the reader.
+	 */
+	public static Collection<String> readValues(
+			HierarchicalStreamReader reader, String collectionTag,
+			String itemTag) {
+		final Collection<String> values = new ArrayList<String>();
+		final String tag;
+
+		reader.moveDown();
+		tag = reader.getNodeName();
+
+		if (!tag.equalsIgnoreCase(collectionTag))
+			throw new ConversionException(
+					"XML element was not as expected. Expected "
+							+ collectionTag + ", but received " + tag);
+
+		while (reader.hasMoreChildren()) {
+			reader.moveDown();
+
+			if (reader.getNodeName().equalsIgnoreCase(itemTag))
+				values.add(reader.getValue());
+			else
+				throw new ConversionException(
+						"XML element was not as expected. Expected " + itemTag
+								+ ", but received " + tag);
+
+			reader.moveUp();
+		}
+
+		reader.moveUp();
+
+		return values;
 	}
 
 	/**

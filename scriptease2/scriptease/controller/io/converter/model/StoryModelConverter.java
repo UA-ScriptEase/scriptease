@@ -2,8 +2,10 @@ package scriptease.controller.io.converter.model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
+import scriptease.gui.WindowFactory;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
@@ -22,6 +24,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class StoryModelConverter implements Converter {
 	private static final String TAG_TITLE = "Title";
 	private static final String TAG_AUTHOR = "Author";
+	private static final String TAG_OPTIONAL_LIBRARIES = "OptionalLibraries";
+	private static final String TAG_OPTIONAL_LIBRARY = "OptionalLibrary";
 	private static final String TAG_STORY_START_POINT = "StartStoryPoint";
 	private static final String TAG_TRANSLATOR = "Translator";
 	private static final String TAG_GAME_MODULE = "GameModule";
@@ -51,6 +55,14 @@ public class StoryModelConverter implements Converter {
 		writer.setValue(model.getTranslator().getName());
 		writer.endNode();
 
+		writer.startNode(TAG_OPTIONAL_LIBRARIES);
+		for (LibraryModel library : model.getOptionalLibraries()) {
+			writer.startNode(TAG_OPTIONAL_LIBRARY);
+			writer.setValue(library.getName());
+			writer.endNode();
+		}
+		writer.endNode();
+
 		writer.startNode(TAG_GAME_MODULE);
 		writer.setValue(model.getModule().getLocation().getAbsolutePath());
 		writer.endNode();
@@ -64,66 +76,85 @@ public class StoryModelConverter implements Converter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		StoryModel model = null;
+		final StoryModel model;
 		final String title;
 		final String author;
 		final Translator translator;
 		final GameModule module;
 		final StoryPoint newRoot;
+		final Collection<String> libraryNames;
+		final Collection<LibraryModel> optionalLibraries;
 
 		title = FileIO.readValue(reader, TAG_TITLE);
-
 		author = FileIO.readValue(reader, TAG_AUTHOR);
 
 		translator = TranslatorManager.getInstance().getTranslator(
 				FileIO.readValue(reader, TAG_TRANSLATOR));
+
 		if (translator == null)
 			throw new IllegalStateException("Translator could not be found.");
 
-		// Try to open the Pattern Model
-		try {
-			// Load the Translator
-			TranslatorManager.getInstance().setActiveTranslator(translator);
-			System.out.println(translator + " loaded");
+		// Load the Translator
+		TranslatorManager.getInstance().setActiveTranslator(translator);
+		System.out.println(translator + " loaded");
 
-			module = translator.loadModule(new File(FileIO.readValue(reader,
-					TAG_GAME_MODULE)));
+		libraryNames = FileIO.readValues(reader, TAG_OPTIONAL_LIBRARIES,
+				TAG_OPTIONAL_LIBRARY);
 
-			if (module == null)
-				throw new XStreamException("Game module could not be loaded.");
+		optionalLibraries = new ArrayList<LibraryModel>();
 
-			System.out.println(module + " loaded");
-			currentModule = module;
+		for (String libraryName : libraryNames) {
+			final LibraryModel library = translator.findLibrary(libraryName);
 
-			// TODO Import libraries here.
-			model = new StoryModel(module, title, author, translator,
-					new ArrayList<LibraryModel>());
+			if (library == null) {
+				System.err.println("Could not find optional library "
+						+ libraryName + " for " + translator.getName());
 
-			reader.moveDown();
-
-			newRoot = (StoryPoint) context.convertAnother(model,
-					StoryPoint.class);
-
-			if (newRoot == null)
-				throw new IllegalStateException(
-						"Model root could not be loaded.");
-
-			model.setStartPoint(newRoot);
-
-			System.out.println(model + " loaded");
-
-			reader.moveUp();
+				WindowFactory.getInstance().showWarningDialog(
+						"Library Not Found",
+						"The library with the name " + libraryName
+								+ " was not found in the "
+								+ translator.getName()
+								+ " translator's optional library directory. "
+								+ "\nPlease add the library and reload "
+								+ "the story, or save the story to "
+								+ "remove the library from it.");
+			} else {
+				System.out.println("Loaded library " + libraryName);
+				optionalLibraries.add(library);
+			}
 		}
-		// If the Pattern Model failed to load
-		catch (XStreamException e) {
-			model = null;
-			// Unload the translator if not being used.
+
+		// Try to open the Pattern Model
+		module = translator.loadModule(new File(FileIO.readValue(reader,
+				TAG_GAME_MODULE)));
+
+		if (module == null) {
 			if (!SEModelManager.getInstance().usingTranslator(translator))
 				translator.unloadTranslator();
 			TranslatorManager.getInstance().setActiveTranslator(null);
-			// Pass it back up
-			throw e;
+
+			throw new XStreamException("Game module could not be loaded.");
 		}
+		System.out.println(module + " loaded");
+
+		currentModule = module;
+
+		// TODO Import libraries here.
+		model = new StoryModel(module, title, author, translator,
+				optionalLibraries);
+
+		reader.moveDown();
+
+		newRoot = (StoryPoint) context.convertAnother(model, StoryPoint.class);
+
+		if (newRoot == null)
+			throw new IllegalStateException("Model root could not be loaded.");
+
+		model.setStartPoint(newRoot);
+		System.out.println(model + " loaded");
+
+		reader.moveUp();
 		// reset these to free the memory.
 		currentModule = null;
 		return model;

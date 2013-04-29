@@ -97,22 +97,18 @@ public class SlotConverter implements Converter {
 			reader.moveDown();
 
 			final String node = reader.getNodeName();
-			// Read Parameters
+
 			if (node.equals(TAG_PARAMETERS)) {
 				if (reader.hasMoreChildren())
 					parameters.addAll((Collection<KnowIt>) context
 							.convertAnother(slot, ArrayList.class));
-			} else
 
-			// Read Implicits
-			if (node.equals(TAG_IMPLICITS)) {
+			} else if (node.equals(TAG_IMPLICITS)) {
 				if (reader.hasMoreChildren())
 					implicits.addAll((Collection<KnowIt>) context
 							.convertAnother(slot, ArrayList.class));
-			}
 
-			// Read Condition
-			if (node.equals(TAG_CONDITION))
+			} else if (node.equals(TAG_CONDITION))
 				condition = reader.getValue();
 
 			reader.moveUp();
