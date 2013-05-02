@@ -52,6 +52,7 @@ public class CodeBlockReference extends CodeBlock {
 	 */
 	public CodeBlockReference(CodeBlockSource target) {
 		this.setTarget(target);
+		this.setLibrary(target.getLibrary());
 		// don't set parameters here because setTarget does that for us.
 	}
 
@@ -124,7 +125,7 @@ public class CodeBlockReference extends CodeBlock {
 		this.target = newTarget;
 
 		this.target.addReference(this);
-		
+
 		this.setParameters(this.target.getParameters());
 	}
 

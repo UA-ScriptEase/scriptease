@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.BindingAdapter;
+import scriptease.controller.BindingVisitor;
 import scriptease.controller.ModelVisitor;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.library.LibraryEvent;
@@ -17,6 +18,8 @@ import scriptease.model.atomic.Note;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
@@ -25,6 +28,7 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.Translator;
 import scriptease.translator.apimanagers.DescribeItManager;
+import scriptease.translator.io.model.Slot;
 
 /**
  * A collection of abstract patterns that are somehow related, either because
@@ -38,6 +42,7 @@ import scriptease.translator.apimanagers.DescribeItManager;
  * 
  * @author remiller
  * @author mfchurch
+ * @author kschenk
  */
 public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private static final String AUTOMATIC_LABEL = "automatic";
@@ -533,5 +538,128 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		libraries.add(this.translator.getApiDictionary().getLibrary());
 
 		return libraries;
+	}
+
+	/**
+	 * Finds a CodeBlockSource by its ID number.
+	 * 
+	 * @param targetId
+	 *            The ID number of the CodeBlockSource to locate.
+	 * 
+	 * @return The CodeBlockSource that has the given id.
+	 */
+	public CodeBlockSource getCodeBlockByID(int targetId) {
+		final CodeBlockFinder finder = new CodeBlockFinder();
+		CodeBlockSource found;
+
+		found = finder.findByID(targetId, this);
+
+		return found;
+	}
+
+	private class CodeBlockFinder extends StoryAdapter {
+		private CodeBlockSource found = null;
+		private int targetId;
+
+		/**
+		 * Finds a CodeBlockSource by ID.
+		 * 
+		 * @param targetId
+		 *            The ID to search by.
+		 * @param dictionary
+		 *            The dictionary to search in.
+		 * 
+		 * @return The source with the given id.
+		 */
+		public CodeBlockSource findByID(int targetId, LibraryModel library) {
+			this.targetId = targetId;
+
+			// let's start snooping about. Quick, someone play Pink Panther or
+			// Mission Impossible! - remiller
+			library.getRoot().process(this);
+
+			// not in the library. Try the slots next?
+			if (this.found == null) {
+				final Collection<KnowIt> knowIts = new ArrayList<KnowIt>();
+
+				for (Slot slot : library.getTranslator().getApiDictionary()
+						.getEventSlotManager().getEventSlots()) {
+					// gotta collect 'em together first.
+					knowIts.addAll(slot.getImplicits());
+					knowIts.addAll(slot.getParameters());
+
+					for (KnowIt knowIt : knowIts) {
+						knowIt.process(this);
+
+						if (this.found != null) {
+							return this.found;
+						}
+					}
+					// keep looking
+					knowIts.clear();
+				}
+			}
+
+			return this.found;
+		}
+
+		@Override
+		public void processScriptIt(ScriptIt scriptIt) {
+			if (this.found != null)
+				return;
+
+			super.processScriptIt(scriptIt);
+
+			for (CodeBlock block : scriptIt.getCodeBlocks()) {
+				if (block.getId() == this.targetId
+						&& block instanceof CodeBlockSource) {
+					this.found = (CodeBlockSource) block;
+					return;
+				}
+			}
+		}
+
+		@Override
+		public void processKnowIt(KnowIt knowIt) {
+			if (this.found != null)
+				return;
+
+			super.processKnowIt(knowIt);
+
+			final CodeBlockFinder searcher = this;
+			final BindingVisitor bindingSearcher;
+
+			bindingSearcher = new BindingAdapter() {
+				@Override
+				public void processFunction(KnowItBindingFunction function) {
+					function.getValue().process(searcher);
+				}
+
+				@Override
+				public void processReference(KnowItBindingReference reference) {
+					reference.getValue().process(searcher);
+				}
+
+				@Override
+				public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
+					storyPoint.getValue().process(searcher);
+				}
+			};
+
+			knowIt.getBinding().process(bindingSearcher);
+		}
+
+		@Override
+		protected void defaultProcessComplex(ComplexStoryComponent complex) {
+			super.defaultProcessComplex(complex);
+
+			for (StoryComponent child : complex.getChildren()) {
+				child.process(this);
+
+				// Found it. All craft, pull up!
+				if (this.found != null)
+					return;
+			}
+		}
 	}
 }
