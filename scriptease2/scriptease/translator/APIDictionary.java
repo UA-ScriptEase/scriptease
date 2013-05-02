@@ -1,28 +1,17 @@
 package scriptease.translator;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import scriptease.controller.BindingAdapter;
-import scriptease.controller.BindingVisitor;
-import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryObserver;
 import scriptease.model.CodeBlock;
-import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
-import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
-import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
-import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.translator.apimanagers.EventSlotManager;
 import scriptease.translator.apimanagers.GameTypeManager;
-import scriptease.translator.io.model.Slot;
 
 /**
  * APIDictionary represents the API dictionary used by a Translator to represent
