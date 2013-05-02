@@ -231,12 +231,10 @@
 	<xsd:complexType name="CodeBlockReference_Type">
 		<xsd:sequence minOccurs="0" maxOccurs="1">
 			<xsd:group ref="StoryComponentDataGroup" />
-			<xsd:choice>
-				<xsd:element name="TargetId" type="xsd:integer" />
-				<xsd:element name="Target" type="CodeBlockSource_Type" />
-			</xsd:choice>
+			<xsd:element name="TargetId" type="xsd:integer" />
 			<xsd:element minOccurs="0" name="Parameters" type="ParameterList_Type" />
 		</xsd:sequence>
+		<xsd:attribute name="library" type="xsd:string" use="optional" />
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
 	</xsd:complexType>
 

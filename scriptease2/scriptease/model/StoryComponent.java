@@ -309,7 +309,7 @@ public abstract class StoryComponent implements Cloneable {
 		clone.setOwner(this.ownerComponent);
 
 		clone.setLibrary(this.library);
-		
+
 		// add all of the labels
 		for (String label : this.labels) {
 			clone.addLabel(new String(label));
@@ -388,12 +388,17 @@ public abstract class StoryComponent implements Cloneable {
 		});
 	}
 
+	// TODO Refactor this ugliness once it works
 	public void setLibrary(LibraryModel library) {
 		this.library = library;
 	}
 
 	public LibraryModel getLibrary() {
-		return this.library;
+		final StoryComponent owner = this.getOwner();
+		if (this.library == null && owner != null)
+			return owner.getLibrary();
+		else
+			return this.library;
 	}
 
 	/**

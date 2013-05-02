@@ -26,6 +26,10 @@ import scriptease.gui.libraryeditor.EffectHolderPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
+import scriptease.model.CodeBlock;
+import scriptease.model.LibraryModel;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -382,18 +386,36 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 */
 	private boolean canAcceptChildren(StoryComponent potentialParent,
 			Collection<StoryComponent> potentialChildren) {
+		final SEModel model;
+
+		model = SEModelManager.getInstance().getActiveModel();
+
 		boolean acceptable = true;
 
 		for (StoryComponent child : potentialChildren) {
-			acceptable &= potentialParent instanceof ComplexStoryComponent
-					&& ((ComplexStoryComponent) potentialParent)
-							.canAcceptChild(child)
-					&& !(child instanceof StoryItemSequence);
+			if (child instanceof ScriptIt) {
+				for (CodeBlock codeBlock : ((ScriptIt) child).getCodeBlocks()) {
+					final LibraryModel library = codeBlock.getLibrary();
 
-			// TODO Shouldn't be necessary once CauseIts are created
-			if (potentialParent instanceof ControlIt)
-				acceptable &= !(child instanceof ScriptIt && ((ScriptIt) child)
-						.isCause());
+					acceptable &= model != null
+							&& model.getLibraries().contains(library);
+				}
+			}
+
+			if (acceptable) {
+				acceptable &= potentialParent instanceof ComplexStoryComponent
+						&& ((ComplexStoryComponent) potentialParent)
+								.canAcceptChild(child)
+						&& !(child instanceof StoryItemSequence);
+
+				// TODO Shouldn't be necessary once CauseIts are created
+				if (potentialParent instanceof ControlIt)
+					acceptable &= !(child instanceof ScriptIt && ((ScriptIt) child)
+							.isCause());
+			}
+
+			if (!acceptable)
+				break;
 		}
 
 		return acceptable;
@@ -465,19 +487,21 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 */
 	private boolean isBinding(TransferSupport support) {
 		Transferable transferable = support.getTransferable();
-		KnowItBinding binding = null;
+		final KnowItBinding binding;
 
 		try {
 			binding = ((BindingWidget) transferable
 					.getTransferData(BindingWidgetTransferHandler.KnowItBindingFlavor))
 					.getBinding();
-			return binding != null;
+
 		} catch (UnsupportedFlavorException e) {
 			// No chocolate for you!
 			return false;
 		} catch (IOException e) {
 			return false;
 		}
+
+		return binding != null;
 	}
 
 	/**

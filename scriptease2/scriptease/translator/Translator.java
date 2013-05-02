@@ -303,7 +303,18 @@ public class Translator {
 		return this.optionalLibraries;
 	}
 
+	/**
+	 * Finds a library in the translator by name.
+	 * 
+	 * @param name
+	 *            The name to find for the library name. If this is null, null
+	 *            will be returned.
+	 * @return
+	 */
 	public LibraryModel findLibrary(String name) {
+		if (name == null)
+			return null;
+
 		final LibraryModel defaultLibrary = this.getLibrary();
 
 		if (defaultLibrary.getName().equals(name))
