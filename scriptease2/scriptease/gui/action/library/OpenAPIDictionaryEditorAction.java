@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import scriptease.gui.WindowFactory;
 import scriptease.model.SEModelManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -31,6 +32,10 @@ public class OpenAPIDictionaryEditorAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		WindowFactory.getInstance().showInformationDialog("Warning", 
+				"Be warned: the builder is provided without any sort of " +
+				"guarantee or expectation as to its structural integrity.");
+		
 		TranslatorManager.getInstance().setActiveTranslator(this.translator);
 		SEModelManager.getInstance().add(this.translator.getLibrary());
 	}

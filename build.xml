@@ -144,7 +144,7 @@ Some important targets to read up on are:
 	<available file="${SLOCCountDirectory}/sloccount" property="SLOCCount.present" />
 
 	<!-- This should be updated if we ever change AspectJ versions -->
-	<property name="aspectj.home" value="${user.home}/aspectj1.6" />
+	<property name="aspectj.home" value="${user.home}/work" />
 
 	<available file="${aspectj.home}" property="AspectJ.present" />
 
