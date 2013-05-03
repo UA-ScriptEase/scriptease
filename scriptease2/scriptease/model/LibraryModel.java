@@ -11,7 +11,6 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
@@ -423,6 +422,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 					container.removeStoryComponentObserver(LibraryModel.this);
 			}
 		});
+
+		this.notifyChange(component, LibraryEvent.Type.REMOVAL);
 	}
 
 	public void addAll(Collection<? extends StoryComponent> components) {
@@ -451,15 +452,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 */
 	@Override
 	public void componentChanged(StoryComponentEvent event) {
-		final StoryComponent source = event.getSource();
-
-		if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED) {
-			this.notifyChange(source, LibraryEvent.Type.REMOVAL);
-		} else if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
-			this.notifyChange(source, LibraryEvent.Type.ADDITION);
-		} else {
-			this.notifyChange(source, LibraryEvent.Type.CHANGE);
-		}
+		this.notifyChange(event.getSource(), LibraryEvent.Type.CHANGE);
 	}
 
 	/**
@@ -468,9 +461,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @return
 	 */
 	public List<StoryComponent> getAllStoryComponents() {
-		final List<StoryComponent> components;
-
-		components = new ArrayList<StoryComponent>();
+		final List<StoryComponent> components = new ArrayList<StoryComponent>();
 
 		components.addAll(this.effectsCategory.getChildren());
 		components.addAll(this.causesCategory.getChildren());
