@@ -38,6 +38,7 @@ import scriptease.gui.action.library.OpenAPIDictionaryEditorAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
 import scriptease.gui.action.libraryeditor.NewDescriptionAction;
 import scriptease.gui.action.libraryeditor.NewEffectAction;
+import scriptease.gui.action.metrics.StoryComponentMetricsAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
@@ -395,7 +396,7 @@ public class MenuFactory {
 		throwExceptionItem = new JMenuItem("Throw Exception!");
 		throwErrorItem = new JMenuItem("Throw Error!");
 		generateCodeItem = new JMenuItem("Generate Code");
-		consoleOutputItem = new JMenuItem("Clear Undo!");
+		consoleOutputItem = new JMenuItem(StoryComponentMetricsAction.getInstance());
 
 		throwExceptionItem.addActionListener(new ActionListener() {
 
