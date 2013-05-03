@@ -37,7 +37,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.GameCompilerException;
@@ -188,8 +187,7 @@ public final class ErfFile extends GameModule {
 		adapter = new StoryAdapter() {
 			@Override
 			public void processStoryPoint(StoryPoint storyPoint) {
-				for (StoryComponent child : storyPoint.getChildren())
-					child.process(this);
+				this.defaultProcessComplex(storyPoint);
 
 				for (StoryPoint successor : storyPoint.getSuccessors())
 					successor.process(this);
@@ -200,12 +198,6 @@ public final class ErfFile extends GameModule {
 				for (StoryComponent child : complex.getChildren()) {
 					child.process(this);
 				}
-			}
-
-			@Override
-			public void processStoryComponentContainer(
-					StoryComponentContainer storyComponentContainer) {
-				this.defaultProcessComplex(storyComponentContainer);
 			}
 
 			@Override
