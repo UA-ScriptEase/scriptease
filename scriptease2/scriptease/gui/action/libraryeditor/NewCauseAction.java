@@ -69,11 +69,11 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 
 		GameType type;
 
-	//	libraryModel = (LibraryModel) SEModelManager.getInstance()
-	//			.getActiveModel();
+		libraryModel = (LibraryModel) SEModelManager.getInstance()
+				.getActiveModel();
+		
 		apiDictionary = TranslatorManager.getInstance()
 				.getActiveAPIDictionary();
-		 libraryModel = apiDictionary.getLibrary();
 		gameTypeManager = TranslatorManager.getInstance()
 				.getActiveGameTypeManager();
 

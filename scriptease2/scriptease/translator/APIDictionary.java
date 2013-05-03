@@ -138,14 +138,4 @@ public class APIDictionary implements LibraryObserver {
 	public int getNextCodeBlockID() {
 		return this.nextID++;
 	}
-
-	/**
-	 * Increases the NextCodeBlockID to the passed int. If the current id is
-	 * larger than the passed int, nothing is changed.
-	 * 
-	 * @param ID
-	 */
-	public void increaseNextCodeBlockIDTo(int ID) {
-		this.nextID = Math.max(this.nextID, ID);
-	}
 }
