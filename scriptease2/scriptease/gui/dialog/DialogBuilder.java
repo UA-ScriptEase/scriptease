@@ -114,26 +114,24 @@ public class DialogBuilder {
 		return exceptionDialog;
 	}
 
+	/**
+	 * Creates a new library wizard that lets the user create a new library.
+	 */
 	public void showNewLibraryWizard() {
 		final String TITLE = "New Library Wizard";
 		final int TEXTFIELD_COLUMNS = 20;
 
 		final JPanel newStoryPanel = new JPanel();
-		final JPanel modulePanel = new JPanel();
 
-		final JLabel statusLabel = new JLabel();
 		final JLabel authorLabel = new JLabel("Author: ");
 		final JLabel titleLabel = new JLabel("Title: ");
 		final JLabel descriptionLabel = new JLabel("Description: ");
-		final JLabel moduleLabel = new JLabel("Module: ");
 		final JLabel gameLabel = new JLabel("Game: ");
 
 		final JTextField authorField = new JTextField(TEXTFIELD_COLUMNS);
 		final JTextField titleField = new JTextField(TEXTFIELD_COLUMNS);
 		final JTextField descriptionField = new JTextField(TEXTFIELD_COLUMNS);
-		final JTextField moduleField = new JTextField(TEXTFIELD_COLUMNS);
 
-		final JButton moduleButton = new JButton("Browse...");
 		final JComboBox translatorBox = this.createTranslatorSelectionBox();
 
 		final GroupLayout layout = new GroupLayout(newStoryPanel);
@@ -141,33 +139,21 @@ public class DialogBuilder {
 		final WizardDialog wizard;
 		final Runnable onFinish;
 
-		moduleField.setEnabled(false);
-		moduleButton.setEnabled(false);
-
-		modulePanel.setLayout(new BoxLayout(modulePanel, BoxLayout.LINE_AXIS));
-		modulePanel.add(moduleField);
-		modulePanel.add(moduleButton);
-
 		newStoryPanel.setLayout(layout);
 
-		moduleField.setEditable(false);
 		// horizontal perspective
 		layout.setHorizontalGroup(layout.createParallelGroup()
-				.addComponent(statusLabel).addComponent(titleLabel)
-				.addComponent(titleField).addComponent(authorLabel)
-				.addComponent(authorField).addComponent(descriptionLabel)
-				.addComponent(descriptionField).addComponent(gameLabel)
-				.addComponent(translatorBox).addComponent(moduleLabel)
-				.addComponent(modulePanel));
+				.addComponent(titleLabel).addComponent(titleField)
+				.addComponent(authorLabel).addComponent(authorField)
+				.addComponent(descriptionLabel).addComponent(gameLabel)
+				.addComponent(descriptionField).addComponent(translatorBox));
 
 		// vertical perspective
 		layout.setVerticalGroup(layout.createSequentialGroup()
-				.addComponent(statusLabel).addComponent(titleLabel)
-				.addComponent(titleField).addComponent(authorLabel)
-				.addComponent(authorField).addComponent(descriptionLabel)
-				.addComponent(descriptionField).addComponent(gameLabel)
-				.addComponent(translatorBox).addComponent(moduleLabel)
-				.addComponent(modulePanel));
+				.addComponent(titleLabel).addComponent(titleField)
+				.addComponent(authorLabel).addComponent(authorField)
+				.addComponent(descriptionLabel).addComponent(descriptionField)
+				.addComponent(gameLabel).addComponent(translatorBox));
 
 		onFinish = new Runnable() {
 			@Override
@@ -176,26 +162,22 @@ public class DialogBuilder {
 				final String author = authorField.getText();
 
 				final StatusManager statusManager = StatusManager.getInstance();
-				final TranslatorManager translatorManager;
 				final Translator selectedTranslator;
-				final Translator oldTranslator;
-
-				translatorManager = TranslatorManager.getInstance();
 
 				selectedTranslator = (Translator) translatorBox
 						.getSelectedItem();
-				oldTranslator = translatorManager.getActiveTranslator();
 
-				statusManager.setStatus("Creating New Story ...");
-				translatorManager.setActiveTranslator(selectedTranslator);
+				statusManager.setStatus("Creating New Library ...");
+				TranslatorManager.getInstance().setActiveTranslator(
+						selectedTranslator);
 
 				if (selectedTranslator == null) {
 					WindowFactory
 							.getInstance()
 							.showProblemDialog("No translator",
-									"No translator was chosen. I can't make a story without it.");
+									"No translator was chosen. I can't make a library without it.");
 					statusManager
-							.setStatus("Story creation aborted: no translator chosen.");
+							.setStatus("Library creation aborted: no translator chosen.");
 					return;
 				}
 
@@ -227,108 +209,22 @@ public class DialogBuilder {
 			}
 
 			private void updateButton() {
-				final File location = new File(moduleField.getText());
-
-				if (location.exists()
-						&& translatorBox.getSelectedItem() != null) {
-					statusLabel.setText("");
-					statusLabel.setIcon(null);
-					wizard.pack();
-					if (!titleField.getText().isEmpty())
-						wizard.setFinishEnabled(true);
-					else
-						wizard.setFinishEnabled(false);
+				if (translatorBox.getSelectedItem() != null) {
+					wizard.setFinishEnabled(!titleField.getText().isEmpty());
 				} else
 					wizard.setFinishEnabled(false);
-			}
-		});
-
-		moduleButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final Translator translator;
-				final File location;
-				File defaultLocation;
-
-				translator = ((Translator) translatorBox.getSelectedItem());
-
-				if (translator == null)
-					return;
-
-				// Build the filter based on the translator selected
-				defaultLocation = translator
-						.getPathProperty(DescriptionKeys.GAME_DIRECTORY);
-
-				if (defaultLocation == null || !defaultLocation.exists())
-					defaultLocation = translator.getLocation().getParentFile();
-
-				if (!translator.moduleLoadsDirectories()) {
-					location = WindowFactory.getInstance().showFileChooser(
-							"Select", "", translator.createModuleFileFilter(),
-							defaultLocation);
-				} else {
-					location = WindowFactory
-							.getInstance()
-							.showDirectoryChooser("Select", "", defaultLocation);
-				}
-
-				if (location != null)
-					moduleField.setText(location.getAbsolutePath());
-			}
-		});
-
-		moduleField.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				this.updateButton();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				this.updateButton();
-			}
-
-			private void updateButton() {
-				final File location = new File(moduleField.getText());
-
-				final String status;
-				final Icon icon;
-				final boolean finishEnabled;
-
-				if (location.exists()) {
-					status = "";
-					icon = null;
-					finishEnabled = !titleField.getText().isEmpty();
-				} else {
-					status = "Module does not exist";
-					icon = UIManager.getIcon("OptionPane.errorIcon");
-					finishEnabled = false;
-				}
-
-				statusLabel.setText(status);
-				statusLabel.setIcon(icon);
-
-				wizard.pack();
-
-				wizard.setFinishEnabled(finishEnabled);
-
 			}
 		});
 
 		translatorBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// a bit of a hack to force the module text field to revalidate
-				moduleField.setText(moduleField.getText());
+				final boolean finishEnabled;
 
-				if (translatorBox.getSelectedItem() != null) {
-					moduleField.setEnabled(true);
-					moduleButton.setEnabled(true);
-				}
+				finishEnabled = translatorBox.getSelectedItem() != null
+						&& !titleField.getText().isEmpty();
+
+				wizard.setFinishEnabled(finishEnabled);
 			}
 		});
 
@@ -376,7 +272,6 @@ public class DialogBuilder {
 
 		newStoryPanel.setLayout(layout);
 
-		moduleField.setEditable(false);
 		// horizontal perspective
 		layout.setHorizontalGroup(layout.createParallelGroup()
 				.addComponent(statusLabel).addComponent(titleLabel)
@@ -473,11 +368,7 @@ public class DialogBuilder {
 						&& translatorBox.getSelectedItem() != null) {
 					statusLabel.setText("");
 					statusLabel.setIcon(null);
-					wizard.pack();
-					if (!titleField.getText().isEmpty())
-						wizard.setFinishEnabled(true);
-					else
-						wizard.setFinishEnabled(false);
+					wizard.setFinishEnabled(!titleField.getText().isEmpty());
 				} else
 					wizard.setFinishEnabled(false);
 			}
@@ -552,10 +443,7 @@ public class DialogBuilder {
 				statusLabel.setText(status);
 				statusLabel.setIcon(icon);
 
-				wizard.pack();
-
 				wizard.setFinishEnabled(finishEnabled);
-
 			}
 		});
 
@@ -664,10 +552,8 @@ public class DialogBuilder {
 			this.add(panel, BorderLayout.NORTH);
 			this.add(buttonPanel, BorderLayout.SOUTH);
 
-			this.finishButton.setEnabled(false);
-
 			this.setResizable(false);
-			this.pack();
+			this.setFinishEnabled(false);
 			this.setLocationRelativeTo(this.getParent());
 			this.setTitle(title);
 		}
@@ -679,6 +565,7 @@ public class DialogBuilder {
 		 */
 		private void setFinishEnabled(boolean value) {
 			this.finishButton.setEnabled(value);
+			this.pack();
 		}
 
 		private void finishWizard(Runnable runnable) {
