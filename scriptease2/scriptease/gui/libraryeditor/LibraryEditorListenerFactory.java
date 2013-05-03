@@ -74,20 +74,15 @@ public class LibraryEditorListenerFactory {
 						final JList componentList;
 						final StoryComponentPanel componentPanel;
 						final StoryComponent component;
+						final Object selected;
 
 						componentList = (JList) e.getSource();
+						selected = componentList.getSelectedValue();
 
-						if (componentList.getSelectedValue() instanceof StoryComponentPanel) {
-							componentPanel = (StoryComponentPanel) componentList
-									.getSelectedValue();
+						if (selected instanceof StoryComponentPanel) {
+							componentPanel = (StoryComponentPanel) selected;
 							component = componentPanel.getStoryComponent();
-
 							component.process(storyVisitor);
-						} else if (componentList.getSelectedValue() != null) {
-							throw new ClassCastException(
-									"StoryComponentPanel expected but "
-											+ e.getSource().getClass()
-											+ " found.");
 						}
 					}
 			}
