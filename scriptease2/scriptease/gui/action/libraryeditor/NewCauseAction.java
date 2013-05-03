@@ -9,10 +9,11 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.gui.WindowFactory;
-import scriptease.gui.action.ActiveTranslatorSensitiveAction;
+import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
@@ -29,7 +30,7 @@ import scriptease.translator.io.model.GameType;
  * 
  */
 @SuppressWarnings("serial")
-public class NewCauseAction extends ActiveTranslatorSensitiveAction {
+public class NewCauseAction extends ActiveModelSensitiveAction {
 	private static final String NEW_CAUSE_NAME = "Cause";
 
 	private static final NewCauseAction instance = new NewCauseAction();
@@ -48,6 +49,12 @@ public class NewCauseAction extends ActiveTranslatorSensitiveAction {
 	}
 
 	@Override
+	protected boolean isLegal() {
+		return super.isLegal()
+				&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel;
+	}
+
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		final APIDictionary apiDictionary;
 		final LibraryModel libraryModel;
@@ -62,9 +69,11 @@ public class NewCauseAction extends ActiveTranslatorSensitiveAction {
 
 		GameType type;
 
+	//	libraryModel = (LibraryModel) SEModelManager.getInstance()
+	//			.getActiveModel();
 		apiDictionary = TranslatorManager.getInstance()
 				.getActiveAPIDictionary();
-		libraryModel = apiDictionary.getLibrary();
+		 libraryModel = apiDictionary.getLibrary();
 		gameTypeManager = TranslatorManager.getInstance()
 				.getActiveGameTypeManager();
 

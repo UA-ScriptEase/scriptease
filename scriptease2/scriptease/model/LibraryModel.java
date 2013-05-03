@@ -87,17 +87,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	/**
-	 * Builds a new Library model with a blank author and title, and the passed
-	 * translator.
-	 * 
-	 * @param translator
-	 *            The translator that the library belongs to.
-	 */
-	public LibraryModel(Translator translator) {
-		this("", "", translator);
-	}
-
-	/**
 	 * Builds a new Library model with the supplied author and title, and a null
 	 * translator.
 	 * 
@@ -356,6 +345,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public void add(StoryComponent component) {
 		component.process(this.categoryAdder);
 		component.setLibrary(this);
+		this.notifyChange(component, LibraryEvent.Type.ADDITION);
 	}
 
 	/**
@@ -534,8 +524,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public Collection<LibraryModel> getLibraries() {
 		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
 
-		libraries.add(LibraryModel.getCommonLibrary());
-		libraries.add(this.translator.getApiDictionary().getLibrary());
+		libraries.add(this);
 
 		return libraries;
 	}
