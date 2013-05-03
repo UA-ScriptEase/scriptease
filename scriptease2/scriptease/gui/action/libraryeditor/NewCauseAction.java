@@ -16,7 +16,6 @@ import scriptease.model.LibraryModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameType;
@@ -56,7 +55,6 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final APIDictionary apiDictionary;
 		final LibraryModel libraryModel;
 		final GameTypeManager gameTypeManager;
 
@@ -71,9 +69,6 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 
 		libraryModel = (LibraryModel) SEModelManager.getInstance()
 				.getActiveModel();
-		
-		apiDictionary = TranslatorManager.getInstance()
-				.getActiveAPIDictionary();
 		gameTypeManager = TranslatorManager.getInstance()
 				.getActiveGameTypeManager();
 
@@ -99,7 +94,7 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 		}
 
 		if (type != null) {
-			final int id = apiDictionary.getNextCodeBlockID();
+			final int id = libraryModel.getNextCodeBlockID();
 			final String slot = type.getSlots().iterator().next();
 
 			codeBlock = new CodeBlockSource(SUBJECT, slot, parameters, id);
