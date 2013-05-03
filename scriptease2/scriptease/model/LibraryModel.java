@@ -59,6 +59,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private StoryComponentContainer noteContainer;
 	private StoryComponentContainer modelRoot;
 
+	private int nextID;
+
 	private static final LibraryModel COMMON_LIBRARY = new LibraryModel(
 			COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME) {
 		{
@@ -344,6 +346,18 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public void add(StoryComponent component) {
 		component.process(this.categoryAdder);
 		component.setLibrary(this);
+
+		if (component instanceof ScriptIt) {
+			final List<CodeBlock> codeBlocks;
+
+			codeBlocks = new ArrayList<CodeBlock>(
+					((ScriptIt) component).getCodeBlocks());
+
+			for (CodeBlock codeBlock : codeBlocks) {
+				this.nextID = Math.max(codeBlock.getId() + 1, this.nextID);
+			}
+		}
+
 		this.notifyChange(component, LibraryEvent.Type.ADDITION);
 	}
 
@@ -511,15 +525,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		processController.processLibraryModel(this);
 	}
 
-	@Override
-	public Collection<LibraryModel> getLibraries() {
-		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
-
-		libraries.add(this);
-
-		return libraries;
-	}
-
 	/**
 	 * Finds a CodeBlockSource by its ID number.
 	 * 
@@ -641,5 +646,14 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 					return;
 			}
 		}
+	}
+
+	/**
+	 * Retrieves the next code block unique ID for this library.
+	 * 
+	 * @return The next available unique id for a code block.
+	 */
+	public int getNextCodeBlockID() {
+		return this.nextID++;
 	}
 }
