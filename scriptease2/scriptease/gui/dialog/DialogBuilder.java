@@ -186,6 +186,7 @@ public class DialogBuilder {
 				model = new LibraryModel(title, author, selectedTranslator);
 
 				SEModelManager.getInstance().add(model);
+				selectedTranslator.addOptionalLibrary(model);
 			}
 		};
 
