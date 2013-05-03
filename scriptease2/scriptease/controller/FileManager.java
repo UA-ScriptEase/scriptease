@@ -527,7 +527,7 @@ public final class FileManager {
 			// the menu items update themselves correctly - remiller
 			this.updateRecentFiles(location);
 
-			SEModelManager.getInstance().add(model, true);
+			SEModelManager.getInstance().add(model);
 		}
 		this.notifyObservers(model, location);
 	}

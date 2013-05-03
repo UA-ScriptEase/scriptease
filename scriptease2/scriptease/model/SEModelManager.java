@@ -95,43 +95,25 @@ public final class SEModelManager {
 	}
 
 	/**
-	 * Adds the given <code>PatternModel</code> to the model pool without
-	 * activating it.
-	 * 
-	 * @param model
-	 *            The model to add.
-	 * @see #add(SEModel, boolean)
-	 */
-	public void add(SEModel model) {
-		this.add(model, false);
-	}
-
-	/**
 	 * Adds the given <code>PatternModel</code> to the model pool and
-	 * immediately activates it if <code>activate</code> is true.
+	 * immediately activates it.
 	 * 
 	 * @param model
 	 *            The model to add.
-	 * @param activate
-	 *            Set this to true if the added model should also become the
-	 *            active model or false to simply add the model without
-	 *            activating it.
-	 * @see #add(SEModel)
 	 */
-	public void add(final SEModel model, boolean activate) {
+	public void add(final SEModel model) {
 		if (this.models.add(model))
 			this.notifyChange(model, SEModelEvent.Type.ADDED);
 
-		if (activate)
-			// We need to wait for all observers to be notified before calling
-			// this, or we'll end up notifying them while they're being
-			// notified. Otherwise we get a ConcurrentThreadException.
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					SEModelManager.this.activate(model);
-				}
-			});
+		// We need to wait for all observers to be notified before calling
+		// this, or we'll end up notifying them while they're being
+		// notified. Otherwise we get a ConcurrentThreadException.
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				SEModelManager.this.activate(model);
+			}
+		});
 	}
 
 	/**

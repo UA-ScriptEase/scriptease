@@ -218,7 +218,11 @@ public final class WindowFactory {
 	}
 
 	public void showNewStoryWizardDialog() {
-		DialogBuilder.getInstance().showNewStoryWizard(this.mainFrame);
+		DialogBuilder.getInstance().showNewStoryWizard();
+	}
+
+	public void showNewLibraryWizardDialog() {
+		DialogBuilder.getInstance().showNewLibraryWizard();
 	}
 
 	/**
