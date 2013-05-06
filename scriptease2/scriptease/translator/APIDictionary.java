@@ -24,7 +24,7 @@ import scriptease.translator.apimanagers.GameTypeManager;
  * @author mfchurch
  * @author remiller
  */
-public class APIDictionary  {
+public class APIDictionary {
 	private final LibraryModel library;
 	private final DescribeItManager describeItManager;
 	private final GameTypeManager typeManager;
