@@ -3,6 +3,7 @@ package scriptease.gui.action.metrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,18 +36,19 @@ import scriptease.model.complex.StoryPoint;
  * @author jyuen
  */
 public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
-	private static final String METRICS = "OPEN_METRICS";
+	private static final String METRICS = "Metrics";
 
-	private final static StoryComponentMetricsAction instance = new StoryComponentMetricsAction();
-
-	private static List<AskIt> askIts;
-	private static List<ScriptIt> effects;
-	private static List<ScriptIt> causes;
-	private static List<ControlIt> delays;
-	private static List<ControlIt> repeats;
-	private static List<StoryPoint> storyPoints;
-	private static List<KnowIt> knowIts;
-	private static List<Note> notes;
+	// Singleton
+	private static StoryComponentMetricsAction instance = null;
+	
+	private final List<AskIt> askIts;
+	private final List<ScriptIt> effects;
+	private final List<ScriptIt> causes;
+	private final List<ControlIt> delays;
+	private final List<ControlIt> repeats;
+	private final List<StoryPoint> storyPoints;
+	private final List<KnowIt> knowIts;
+	private final List<Note> notes;
 
 	/**
 	 * Gets the sole instance of this particular type of Action
@@ -54,15 +56,10 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * @return The sole instance of this particular type of Action
 	 */
 	public static StoryComponentMetricsAction getInstance() {
-		askIts = new ArrayList<AskIt>();
-		effects = new ArrayList<ScriptIt>();
-		causes = new ArrayList<ScriptIt>();
-		delays = new ArrayList<ControlIt>();
-		repeats = new ArrayList<ControlIt>();
-		storyPoints = new ArrayList<StoryPoint>();
-		knowIts = new ArrayList<KnowIt>();
-		notes = new ArrayList<Note>();
-
+		if (instance == null) {
+			instance = new StoryComponentMetricsAction();
+		} 
+		
 		return StoryComponentMetricsAction.instance;
 	}
 
@@ -73,6 +70,15 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	private StoryComponentMetricsAction() {
 		super(StoryComponentMetricsAction.METRICS);
 
+		this.askIts = new ArrayList<AskIt>();
+		this.effects = new ArrayList<ScriptIt>();
+		this.causes = new ArrayList<ScriptIt>();
+		this.delays = new ArrayList<ControlIt>();
+		this.repeats = new ArrayList<ControlIt>();
+		this.storyPoints = new ArrayList<StoryPoint>();
+		this.knowIts = new ArrayList<KnowIt>();
+		this.notes = new ArrayList<Note>();
+		
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_M);
 		this.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
@@ -81,7 +87,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		WindowFactory.getInstance().buildAndShowCustomFrame(new MetricsPanel(),
-				"Metrics", false);
+				"Metrics", true);
 	}
 
 	/**
@@ -91,18 +97,10 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * @return A map containing the metric values in each of their respective
 	 *         categories.
 	 */
-	public Map<String, Integer> calculateMetrics() {
-		SEModel model = SEModelManager.getInstance().getActiveModel();
+	public Map<String, Integer> calculateGeneralMetrics() {
 		Map<String, Integer> metrics = new HashMap<String, Integer>();
-
-		model.process(new ModelAdapter() {
-			@Override
-			public void processStoryModel(StoryModel storyModel) {
-
-				StoryPoint root = storyModel.getRoot();
-				parseStoryComponents(root);
-			}
-		});
+		
+		processStoryComponents();
 
 		metrics.put("AskIts", askIts.size());
 		metrics.put("Effects", effects.size());
@@ -114,6 +112,116 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 		metrics.put("Notes", notes.size());
 
 		return metrics;
+	}
+
+	/**
+	 * Calculates the frequency of specific causes.
+	 * 
+	 * @return A map containing each cause and their occurrence.
+	 */
+	public Map<String, Integer> calculateFavouriteCauses() {
+		processStoryComponents();
+		return calculateFavouriteMetricsFor(causes);
+	}
+
+	/**
+	 * Calculates the frequency of specific effects.
+	 * 
+	 * @return A map containing each effect and their occurrence.
+	 */
+	public Map<String, Integer> calculateFavouriteEffects() {
+		processStoryComponents();
+		return calculateFavouriteMetricsFor(effects);
+	}
+
+	/**
+	 * Calculates the frequency of specific descriptions.
+	 * 
+	 * @return A map containing each description and their occurrence.
+	 */
+	public Map<String, Integer> calculateFavouriteKnowIts() {
+		processStoryComponents();
+		return calculateFavouriteMetricsFor(knowIts);
+	}
+
+	/**
+	 * Calculates the frequency of specific questions.
+	 * 
+	 * @return A map containing each question and their occurrence.
+	 */
+	public Map<String, Integer> calculateFavouriteAskIts() {
+		processStoryComponents();
+		return calculateFavouriteMetricsFor(askIts);
+	}
+
+	/**
+	 * Calculates the frequency of specific repeats.
+	 * 
+	 * @return A map containing each repeat and their occurrence.
+	 */
+	public Map<String, Integer> calculateFavouriteRepeats() {
+		processStoryComponents();
+		return calculateFavouriteMetricsFor(repeats);
+	}
+
+	/**
+	 * Calculates the frequency of specific delays.
+	 * 
+	 * @return A map containing each delay and their occurrence.
+	 */
+	public Map<String, Integer> calculateFavouriteDelays() {
+		processStoryComponents();
+		return calculateFavouriteMetricsFor(delays);
+	}
+	
+	/**
+	 * Calculates the frequency of a specific story component.
+	 * 
+	 * @return A map containing each component and their occurrence.
+	 */
+	private Map<String, Integer> calculateFavouriteMetricsFor(
+			Collection<? extends StoryComponent> storyComponents) {
+		
+		Map<String, Integer> metrics = new HashMap<String, Integer>();
+		
+		for (StoryComponent storyComponent : storyComponents) {
+			String stringComponent = storyComponent.getDisplayText();
+			
+			// Increment value if story component already exists.
+			if (metrics.containsKey(stringComponent)) {
+				int frequency = metrics.get(stringComponent);
+				frequency++;
+
+				metrics.put(stringComponent, frequency);
+
+			// Add count to existing story component.
+			} else 
+				metrics.put(stringComponent, 1);
+		}
+		
+		return metrics;
+	}
+	
+	private void processStoryComponents() {
+		SEModel model = SEModelManager.getInstance().getActiveModel();
+		
+		this.askIts.clear();
+		this.effects.clear();
+		this.causes.clear();
+		this.delays.clear();
+		this.repeats.clear();
+		this.storyPoints.clear();
+		this.knowIts.clear();
+		this.notes.clear();
+
+		model.process(new ModelAdapter() {
+			@Override
+			public void processStoryModel(StoryModel storyModel) {
+
+				StoryPoint root = storyModel.getRoot();
+				parseStoryComponents(root);
+			}
+		});
 	}
 
 	private void parseStoryComponents(final StoryPoint root) {
