@@ -16,7 +16,7 @@ import scriptease.util.FileOp;
  * @author kschenk
  */
 public abstract class SEModel {
-	private String name;
+	private String title;
 	private String author;
 
 	public SEModel() {
@@ -28,7 +28,7 @@ public abstract class SEModel {
 	}
 
 	public SEModel(String title, String author) {
-		this.name = title;
+		this.title = title;
 		this.author = author;
 	}
 
@@ -38,28 +38,31 @@ public abstract class SEModel {
 	 * @return
 	 */
 	public final String getName() {
-		return FileOp.removeExtension(new File(this.name)).getName();
+		/*
+		 * TODO: This likely isn't necessary. Ticket: 49301361 
+		 */
+		return FileOp.removeExtension(new File(this.title)).getName();
 	}
 
 	/**
-	 * @param name
+	 * @param title
 	 *            The StoryModel's new title. Cannot be null.
 	 * @throws IllegalArgumentException
-	 *             if <code>author</code> is null.
+	 *             if <code>title</code> is null.
 	 */
 	public final void setTitle(String title) {
-		if (this.name == null)
+		if (this.title == null)
 			throw new IllegalArgumentException(
 					"Cannot give a StoryModel a null name.");
 
-		this.name = title;
+		this.title = title;
 	}
 
 	/**
 	 * @return The author of the StoryModel
 	 */
 	public final String getTitle() {
-		return this.name;
+		return this.title;
 	}
 
 	/**
