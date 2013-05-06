@@ -71,6 +71,7 @@ import scriptease.util.StringOp;
  * @author remiller
  * @author lari
  * @author kschenk
+ * @author jyuen
  */
 public final class WindowFactory {
 	private static final String CODE_GENERATION_PROBLEM = "Code Generation Problem";
@@ -88,7 +89,7 @@ public final class WindowFactory {
 			+ "<b>Contributors:</b><br>"
 			+ "<br><b>Professors:</b> Mike Carbonaro, Jonathan Schaeffer, Duane Szafron"
 			+ "<br><b>Ph.D. Students:</b> Neesha Desai, Richard Zhao"
-			+ "<br><b>Programmer Analysts:</b> Matthew Church, Jason Duncan, Eric Graves, Adel Lari, Robin Miller, Kevin Schenk"
+			+ "<br><b>Programmer Analysts:</b> Matthew Church, Jason Duncan, Eric Graves, Adel Lari, Robin Miller, Kevin Schenk, Jessica Yuen"
 			+ "<br><b>Artists:</b> Wei Li, Jamie Schmitt"
 			+ "<br><b>Interns:</b> Alex Czeto, Kirsten Svidal"
 			+ "<br><br>Visit us online at http://www.cs.ualberta.ca/~script/<br></html>";
@@ -138,6 +139,30 @@ public final class WindowFactory {
 			frame.setVisible(true);
 
 		this.mainFrame = frame;
+	}
+
+	/**
+	 * Builds and shows a custom Frame where the panel content is provided by
+	 * the user.
+	 * 
+	 * @param panel
+	 * 		The panel contents to be displayed on the frame.
+	 * 
+	 * @param title
+	 * 		The title of the window.
+	 * 
+	 * @param resizable
+	 * 		Whether the window should be resizable.		
+	 */
+	public void buildAndShowCustomFrame(JPanel panel, String title,
+			boolean resizable) {
+		JFrame frame = new JFrame(title);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.getContentPane().add(panel);
+		frame.pack();
+		frame.setVisible(true);
+		frame.setResizable(resizable);
+		frame.setLocationRelativeTo(null);
 	}
 
 	/**
