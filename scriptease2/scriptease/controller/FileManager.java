@@ -190,6 +190,9 @@ public final class FileManager {
 
 				active = TranslatorManager.getInstance().getActiveTranslator();
 				apiDictionary = active.getApiDictionary();
+
+				// TODO This just saves the library in the api dicitonary's
+				// location...
 				location = active
 						.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH
 								.toString());
