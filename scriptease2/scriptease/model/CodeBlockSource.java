@@ -191,8 +191,9 @@ public class CodeBlockSource extends CodeBlock {
 	public void setSubject(String subject) {
 		if (subject == null)
 			subject = "";
-
 		this.subjectName = subject;
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
 	}
 
 	@Override
@@ -203,6 +204,9 @@ public class CodeBlockSource extends CodeBlock {
 		this.slot = slot;
 		this.updateReferences();
 		this.resetImplicits();
+		
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
 	}
 
 	@Override
@@ -222,14 +226,17 @@ public class CodeBlockSource extends CodeBlock {
 
 	@Override
 	public String getSlot() {
-		final ScriptIt cause;
+		String slot = null;
 		if (this.hasSlot()) {
-			return this.slot;
+			slot = this.slot;
 		} else {
-			cause = this.getCause();
-			final CodeBlock parentBlock = cause.getMainCodeBlock();
-			return parentBlock.getSlot();
+			final ScriptIt cause = this.getCause();
+			if (cause != null) {
+				final CodeBlock parentBlock = cause.getMainCodeBlock();
+				slot = parentBlock.getSlot();
+			}
 		}
+		return slot;
 	}
 
 	@Override

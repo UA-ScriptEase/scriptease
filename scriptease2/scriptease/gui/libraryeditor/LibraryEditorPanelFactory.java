@@ -802,7 +802,7 @@ public class LibraryEditorPanelFactory {
 							subjectBox, slotBox));
 
 			scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-					.getInstance().buildSlotBoxObserver(codeBlock,
+					.getInstance().buildSlotBoxObserver(codeBlock, slotBox,
 							implicitsLabel));
 
 			scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
@@ -874,7 +874,10 @@ public class LibraryEditorPanelFactory {
 							for (String label : labelArray) {
 								labels.add(label.trim());
 							}
-							codeBlock.setIncludes(labels);
+							
+							if (!labels.equals(codeBlock.getIncludes())) {
+								codeBlock.setIncludes(labels);
+							}
 						}
 
 						@Override
@@ -919,70 +922,89 @@ public class LibraryEditorPanelFactory {
 			slotBox.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					String selectedSlot = (String) slotBox.getSelectedItem();
+					final String selectedSlot = (String) slotBox
+							.getSelectedItem();
+					final String actualSlot = codeBlock.getSlot();
+					if ((selectedSlot != null)
+							&& (!selectedSlot.equals(actualSlot))) {
+						if (!UndoManager.getInstance().hasOpenUndoableAction())
+							UndoManager.getInstance()
+									.startUndoableAction(
+											"Setting CodeBlock slot to "
+													+ selectedSlot);
+						codeBlock.setSlot(selectedSlot);
 
-					if (selectedSlot != null)
-						codeBlock.setSlot((String) slotBox.getSelectedItem());
-					else
-						codeBlock.setSlot("");
-
-					scriptIt.updateStoryChildren();
-					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
-							StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
+						scriptIt.updateStoryChildren();
+						UndoManager.getInstance().endUndoableAction();
+					}
 				}
 			});
 
-			if (scriptIt.isCause()) {
-				deleteCodeBlockButton.setVisible(false);
-				subjectLabel.setVisible(false);
-				subjectBox.setVisible(false);
+			deleteCodeBlockButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (!UndoManager.getInstance().hasOpenUndoableAction())
+						UndoManager.getInstance().startUndoableAction(
+								"Removing CodeBlock from "
+										+ scriptIt.getDisplayText());
+					scriptIt.removeCodeBlock(codeBlock);
+					UndoManager.getInstance().endUndoableAction();
+				}
+			});
 
-				slotLabel.setVisible(false);
-				slotBox.setVisible(false);
-				implicitsLabel.setVisible(false);
-				implicitsLabelLabel.setVisible(false);
-			} else {
-				deleteCodeBlockButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
+			subjectBox.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final String selectedSubject = (String) subjectBox
+							.getSelectedItem();
+					final String actualSubject = codeBlock.getSubjectName();
+					if (!actualSubject.equals(selectedSubject)) {
 						if (!UndoManager.getInstance().hasOpenUndoableAction())
 							UndoManager.getInstance().startUndoableAction(
-									"Adding CodeBlock to "
-											+ scriptIt.getDisplayText());
-						scriptIt.removeCodeBlock(codeBlock);
+									"Setting CodeBlock subject to "
+											+ selectedSubject);
+						codeBlock.setSubject(selectedSubject);
+						scriptIt.updateStoryChildren();
 						UndoManager.getInstance().endUndoableAction();
 					}
-				});
-
-				if (!scriptIt.getMainCodeBlock().equals(codeBlock)) {
-					subjectBox.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							final String subjectName;
-							subjectName = (String) subjectBox.getSelectedItem();
-
-							codeBlock.setSubject(subjectName);
-
-							scriptIt.updateStoryChildren();
-							scriptIt.notifyObservers(new StoryComponentEvent(
-									scriptIt,
-									StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
-						}
-					});
-				} else {
-					subjectLabel.setVisible(false);
-					subjectBox.setVisible(false);
-
-					slotLabel.setVisible(false);
-					slotBox.setVisible(false);
-					implicitsLabel.setVisible(false);
-					implicitsLabelLabel.setVisible(false);
 				}
+			});
 
-				if (scriptIt.getCodeBlocks().size() < 2) {
-					deleteCodeBlockButton.setEnabled(false);
-				}
+			if (scriptIt.getCodeBlocks().size() < 2) {
+				deleteCodeBlockButton.setEnabled(false);
+				deleteCodeBlockButton.setVisible(false);
 			}
+
+			// TODO mfchurch fix logic for displaying Subject, Slot and
+			// Implicits. Can Effects have a subject, slot that varies from
+			// parent?
+			// if (scriptIt.isCause()) {
+			// deleteCodeBlockButton.setVisible(false);
+			// subjectLabel.setVisible(true);
+			// subjectBox.setVisible(true);
+			//
+			// slotLabel.setVisible(true);
+			// slotBox.setVisible(true);
+			// implicitsLabel.setVisible(true);
+			// implicitsLabelLabel.setVisible(true);
+			// } else {
+			//
+			// if (!scriptIt.getMainCodeBlock().equals(codeBlock)) {
+			//
+			// } else {
+			// subjectLabel.setVisible(false);
+			// subjectBox.setVisible(false);
+			//
+			// slotLabel.setVisible(false);
+			// slotBox.setVisible(false);
+			// implicitsLabel.setVisible(false);
+			// implicitsLabelLabel.setVisible(false);
+			// }
+			//
+			// if (scriptIt.getCodeBlocks().size() < 2) {
+			// deleteCodeBlockButton.setEnabled(false);
+			// }
+			// }
 
 			for (KnowIt parameter : parameters) {
 				parameterPanel.add(buildParameterPanel(scriptIt, codeBlock,

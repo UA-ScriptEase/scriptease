@@ -286,9 +286,24 @@ public class LibraryEditorListenerFactory {
 										codeBlock.setSlot("");
 
 									slotBox.revalidate();
+
+									// Update the subjectBox to reflect the
+									// subject
+									final String selectedSubject = (String) subjectBox
+											.getSelectedItem();
+									final String actualSubject = codeBlock
+											.getSubjectName();
+									if (!actualSubject.equals(selectedSubject)) {
+										subjectBox
+												.setSelectedItem(actualSubject);
+									}
 								}
+							} else
+							{
+								subjectBox.setSelectedItem(null);
 							}
 						}
+						subjectBox.revalidate(); 
 					}
 				};
 				component.process(storyVisitor);
@@ -308,7 +323,8 @@ public class LibraryEditorListenerFactory {
 	 * @return
 	 */
 	protected StoryComponentObserver buildSlotBoxObserver(
-			final CodeBlock codeBlock, final JLabel implicitsLabel) {
+			final CodeBlock codeBlock, final JComboBox slotBox,
+			final JLabel implicitsLabel) {
 		final StoryComponentObserver subjectBoxObserver;
 
 		subjectBoxObserver = new StoryComponentObserver() {
@@ -331,8 +347,16 @@ public class LibraryEditorListenerFactory {
 										+ "] ";
 
 							implicitsLabel.setText(implicits.trim());
-
 							implicitsLabel.revalidate();
+
+							// Update the slotBox to reflect the slot
+							final String selectedSlot = (String) slotBox
+									.getSelectedItem();
+							final String actualSlot = codeBlock.getSlot();
+							if (!actualSlot.equals(selectedSlot)) {
+								slotBox.setSelectedItem(actualSlot);
+								slotBox.revalidate();
+							}
 						}
 					}
 				};
@@ -420,14 +444,9 @@ public class LibraryEditorListenerFactory {
 						case CHANGE_PARAMETER_NAME_SET:
 							final List<String> parameterNames;
 							final List<String> subjectBoxContents;
-							KnowIt previousSubject;
 
 							parameterNames = new ArrayList<String>();
 							subjectBoxContents = new ArrayList<String>();
-							previousSubject = null;
-
-							if (codeBlock.hasSubject())
-								previousSubject = codeBlock.getSubject();
 
 							for (KnowIt parameter : scriptIt.getParameters()) {
 								final Collection<String> subjectSlots = TranslatorManager
@@ -457,15 +476,9 @@ public class LibraryEditorListenerFactory {
 									subjectBox.addItem(parameterName);
 							}
 
-							if (codeBlock.getParameters().contains(
-									previousSubject)) {
-								final String subjectName;
-								subjectName = previousSubject.getDisplayText();
-								subjectBox.setSelectedItem(subjectName);
-							} else if (!scriptIt.isCause()) {
-								subjectBox.setSelectedItem(null);
-							}
-
+							final String actualSubject = codeBlock
+									.getSubjectName();
+							subjectBox.setSelectedItem(actualSubject);
 							subjectBox.revalidate();
 							break;
 						default:

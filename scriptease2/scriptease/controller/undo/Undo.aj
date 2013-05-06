@@ -142,7 +142,6 @@ public aspect Undo {
 	 */
 	public pointcut removingType():
 		within (KnowIt+) && execution(* removeType(String));
-	
 
 	public pointcut addingCodeBlockType():
 		within (CodeBlock+) && execution(* addType(String));
@@ -152,12 +151,12 @@ public aspect Undo {
 
 	public pointcut settingCodeBlockCode():
 		within(CodeBlock+) && execution(* setCode(Collection<AbstractFragment>));
-	
-	public pointcut addingCodeBlockCode():
-		within (CodeBlock+) && execution(* addCode(AbstractFragment));
 
-	public pointcut removingCodeBlockCode():
-		within (CodeBlock+) && execution(* removeCode(AbstractFragment));
+	public pointcut settingCodeBlockSubject():
+		within (CodeBlock+) && execution(* setSubject(String));
+	
+	public pointcut settingCodeBlockSlot():
+		within (CodeBlock+) && execution(* setSlot(String));
 
 	/**
 	 * Defines the Add Story Child operation in ComplexStoryComponents.
@@ -628,10 +627,10 @@ public aspect Undo {
 		};
 		this.addModification(mod);
 	}
-	
+
 	before(final CodeBlock codeBlock, final Collection<AbstractFragment> code): settingCodeBlockCode() && args(code) && this(codeBlock) {
-		Modification mod = new FieldModification<Collection<AbstractFragment>>(code,
-				codeBlock.getCode()) {
+		Modification mod = new FieldModification<Collection<AbstractFragment>>(
+				code, codeBlock.getCode()) {
 			public void setOp(Collection<AbstractFragment> newCode) {
 				codeBlock.setCode(newCode);
 			};
@@ -639,6 +638,38 @@ public aspect Undo {
 			@Override
 			public String toString() {
 				return "setting " + codeBlock + "'s code to " + code;
+			}
+		};
+
+		this.addModification(mod);
+	}
+
+	before(final CodeBlock codeBlock, final String subject): settingCodeBlockSubject() && args(subject) && this(codeBlock) {
+		Modification mod = new FieldModification<String>(subject,
+				codeBlock.getSubjectName()) {
+			public void setOp(String newSubject) {
+				codeBlock.setSubject(newSubject);
+			};
+
+			@Override
+			public String toString() {
+				return "setting " + codeBlock + "'s subject to " + subject;
+			}
+		};
+
+		this.addModification(mod);
+	}
+	
+	before(final CodeBlock codeBlock, final String slot): settingCodeBlockSlot() && args(slot) && this(codeBlock) {
+		Modification mod = new FieldModification<String>(slot,
+				codeBlock.getSlot()) {
+			public void setOp(String newSlot) {
+				codeBlock.setSlot(newSlot);
+			};
+
+			@Override
+			public String toString() {
+				return "setting " + codeBlock + "'s slot to " + slot;
 			}
 		};
 
