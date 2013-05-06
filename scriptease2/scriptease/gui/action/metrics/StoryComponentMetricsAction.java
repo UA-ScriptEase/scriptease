@@ -4,9 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.swing.Action;
 import javax.swing.KeyStroke;
@@ -40,7 +43,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 
 	// Singleton
 	private static StoryComponentMetricsAction instance = null;
-	
+
 	private final List<AskIt> askIts;
 	private final List<ScriptIt> effects;
 	private final List<ScriptIt> causes;
@@ -58,8 +61,8 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	public static StoryComponentMetricsAction getInstance() {
 		if (instance == null) {
 			instance = new StoryComponentMetricsAction();
-		} 
-		
+		}
+
 		return StoryComponentMetricsAction.instance;
 	}
 
@@ -78,7 +81,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 		this.storyPoints = new ArrayList<StoryPoint>();
 		this.knowIts = new ArrayList<KnowIt>();
 		this.notes = new ArrayList<Note>();
-		
+
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_M);
 		this.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
@@ -99,7 +102,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 */
 	public Map<String, Integer> calculateGeneralMetrics() {
 		Map<String, Integer> metrics = new HashMap<String, Integer>();
-		
+
 		processStoryComponents();
 
 		metrics.put("AskIts", askIts.size());
@@ -119,7 +122,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @return A map containing each cause and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteCauses() {
+	public SortedMap<String, Integer> calculateFavouriteCauses() {
 		processStoryComponents();
 		return calculateFavouriteMetricsFor(causes);
 	}
@@ -129,7 +132,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @return A map containing each effect and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteEffects() {
+	public SortedMap<String, Integer> calculateFavouriteEffects() {
 		processStoryComponents();
 		return calculateFavouriteMetricsFor(effects);
 	}
@@ -139,7 +142,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @return A map containing each description and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteKnowIts() {
+	public SortedMap<String, Integer> calculateFavouriteKnowIts() {
 		processStoryComponents();
 		return calculateFavouriteMetricsFor(knowIts);
 	}
@@ -149,7 +152,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @return A map containing each question and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteAskIts() {
+	public SortedMap<String, Integer> calculateFavouriteAskIts() {
 		processStoryComponents();
 		return calculateFavouriteMetricsFor(askIts);
 	}
@@ -159,7 +162,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @return A map containing each repeat and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteRepeats() {
+	public SortedMap<String, Integer> calculateFavouriteRepeats() {
 		processStoryComponents();
 		return calculateFavouriteMetricsFor(repeats);
 	}
@@ -169,24 +172,25 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @return A map containing each delay and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteDelays() {
+	public SortedMap<String, Integer> calculateFavouriteDelays() {
 		processStoryComponents();
 		return calculateFavouriteMetricsFor(delays);
 	}
-	
+
 	/**
 	 * Calculates the frequency of a specific story component.
 	 * 
 	 * @return A map containing each component and their occurrence.
 	 */
-	private Map<String, Integer> calculateFavouriteMetricsFor(
+	private SortedMap<String, Integer> calculateFavouriteMetricsFor(
 			Collection<? extends StoryComponent> storyComponents) {
-		
+
 		Map<String, Integer> metrics = new HashMap<String, Integer>();
-		
+		SortedMap<String, Integer> sortedMetrics;
+
 		for (StoryComponent storyComponent : storyComponents) {
 			String stringComponent = storyComponent.getDisplayText();
-			
+
 			// Increment value if story component already exists.
 			if (metrics.containsKey(stringComponent)) {
 				int frequency = metrics.get(stringComponent);
@@ -194,17 +198,22 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 
 				metrics.put(stringComponent, frequency);
 
-			// Add count to existing story component.
-			} else 
+				// Add count to existing story component.
+			} else
 				metrics.put(stringComponent, 1);
 		}
+
+		// Sort the story components based on occurrence.
+		sortedMetrics = new TreeMap<String, Integer>(
+				new StoryComponentMetricsAction.FrequencyComparator(metrics));
+		sortedMetrics.putAll(metrics);
 		
-		return metrics;
+		return sortedMetrics;
 	}
-	
+
 	private void processStoryComponents() {
 		SEModel model = SEModelManager.getInstance().getActiveModel();
-		
+
 		this.askIts.clear();
 		this.effects.clear();
 		this.causes.clear();
@@ -290,5 +299,27 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 		};
 
 		root.process(adapter);
+	}
+
+	/**
+	 * Inner class used to sort map values by descending order.
+	 * 
+	 * @author jyuen
+	 */
+	private static class FrequencyComparator implements Comparator<String> {
+
+		private Map<String, Integer> data;
+
+		public FrequencyComparator(Map<String, Integer> data) {
+			super();
+			this.data = data;
+		}
+
+		@Override
+		public int compare(String storyComponent1, String storyComponent2) {
+			Integer frequency1 = this.data.get(storyComponent1);
+			Integer frequency2 = this.data.get(storyComponent2);
+			return -frequency1.compareTo(frequency2);
+		}
 	}
 }
