@@ -324,10 +324,10 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		if (this.codeBlocks.remove(codeBlock)) {
 			codeBlock.removeStoryComponentObserver(this);
 			codeBlock.setOwner(null);
+			codeBlock.removeStoryComponentObserver(this);
 			this.notifyObservers(new StoryComponentEvent(this,
 					StoryComponentChangeEnum.CHANGE_CODEBLOCK_REMOVED));
 		}
-
 		this.updateStoryChildren();
 	}
 
@@ -335,10 +335,10 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		if (this.codeBlocks.add(codeBlock)) {
 			codeBlock.addStoryComponentObserver(this);
 			codeBlock.setOwner(this);
+			codeBlock.addStoryComponentObserver(this);
 			this.notifyObservers(new StoryComponentEvent(this,
 					StoryComponentChangeEnum.CHANGE_CODEBLOCK_ADDED));
 		}
-
 		this.updateStoryChildren();
 	}
 
@@ -463,7 +463,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 	public void componentChanged(StoryComponentEvent event) {
 		final StoryComponentChangeEnum type = event.getType();
 		final StoryComponent source = event.getSource();
-		// The ScriptIt hijacks the event and sends it to it's observers
+		// The ScriptIt hijacks CodeBlock events and sends it to it's observers
 		if (this.codeBlocks.contains(source)) {
 			if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_ADD) {
 				this.notifyObservers(new StoryComponentEvent(this,
@@ -474,6 +474,15 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 			} else if (type == StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES) {
 				this.notifyObservers(new StoryComponentEvent(this,
 						StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES));
+			} else if (type == StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET) {
+				this.notifyObservers(new StoryComponentEvent(this,
+						StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
+			} else if (type == StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE) {
+				this.notifyObservers(new StoryComponentEvent(this,
+						StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
+			} else if (type == StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET) {
+				this.notifyObservers(new StoryComponentEvent(this,
+						StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
 			}
 		}
 	}
