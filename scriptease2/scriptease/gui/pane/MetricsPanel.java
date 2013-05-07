@@ -26,6 +26,19 @@ public class MetricsPanel extends JPanel {
 
 	private final StoryComponentMetricsAction metrics;
 
+	private static final String STORY_COMPONENT_STRING = "Story Component";
+	private static final String GENERAL_STRING = "General";
+	private static final String METRICS_STRING = "Metrics";
+	private static final String FAVOURITE_STRING = "Favourite";
+	private static final String FREQUENCY_STRING = "Frequency";
+	private static final String CAUSES_STRING = "Causes";
+	private static final String EFFECTS_STRING = "Effects";
+	private static final String KNOWITS_STRING = "Descriptions";
+	private static final String ASKIT_STRING = "Questions";
+	private static final String REPEATS_STRING = "Repeats";
+	private static final String DELAY_STRING = "Delays";
+	private static final String BLOCKS_STRING = "Blocks";
+
 	/**
 	 * Creates a new MetricsPanel with the default tabs and histograms.
 	 */
@@ -34,10 +47,27 @@ public class MetricsPanel extends JPanel {
 
 		this.metrics = StoryComponentMetricsAction.getInstance();
 
-		tabs.addTab("General", createGeneralPage());
-		tabs.addTab("Favorites", createFavoriteCausesPage());
+		tabs.addTab(GENERAL_STRING, createGeneralPage());
+		tabs.addTab(FAVOURITE_STRING, createFavoriteCausesPage());
+		tabs.addTab(CAUSES_STRING + " " + BLOCKS_STRING,
+				createCauseBlocksPage());
 
 		add(tabs);
+	}
+
+	private JPanel createCauseBlocksPage() {
+		final JFreeChart causesBlockChart;
+		final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		final Map<String, Integer> values = metrics
+				.calculateCauseBlockMetrics();
+
+		processValues(values, dataset);
+
+		causesBlockChart = ChartFactory.createBarChart(CAUSES_STRING + " "
+				+ BLOCKS_STRING, BLOCKS_STRING, FREQUENCY_STRING, dataset,
+				PlotOrientation.VERTICAL, false, false, false);
+
+		return new ChartPanel(causesBlockChart);
 	}
 
 	/**
@@ -47,15 +77,6 @@ public class MetricsPanel extends JPanel {
 	 * @return the page body.
 	 */
 	private JTabbedPane createFavoriteCausesPage() {
-		final String favouriteString = "Favourite";
-		final String frequencyString = "Frequency";
-		final String causesString = "Causes";
-		final String effectsString = "Effects";
-		final String knowItsString = "Descriptions";
-		final String askItsString = "Questions";
-		final String repeatsString = "Repeats";
-		final String delaysString = "Delays";
-
 		final JTabbedPane jTabbedPane = new JTabbedPane();
 
 		final JFreeChart causesChart;
@@ -93,23 +114,28 @@ public class MetricsPanel extends JPanel {
 		processValues(delaysValues, delaysDataset);
 
 		// Create the histograms
-		causesChart = ChartFactory.createBarChart(favouriteString + " "
-				+ causesString, causesString, frequencyString, causesDataset,
-				PlotOrientation.VERTICAL, false, false, false);
-		effectsChart = ChartFactory.createBarChart(favouriteString + " "
-				+ effectsString, effectsString, frequencyString,
+		causesChart = ChartFactory.createBarChart(FAVOURITE_STRING + " "
+				+ CAUSES_STRING, CAUSES_STRING, FREQUENCY_STRING,
+				causesDataset, PlotOrientation.VERTICAL, false, false, false);
+
+		effectsChart = ChartFactory.createBarChart(FAVOURITE_STRING + " "
+				+ EFFECTS_STRING, EFFECTS_STRING, FREQUENCY_STRING,
 				effectsDataset, PlotOrientation.VERTICAL, false, false, false);
-		knowItsChart = ChartFactory.createBarChart(favouriteString + " "
-				+ knowItsString, knowItsString, frequencyString,
+
+		knowItsChart = ChartFactory.createBarChart(FAVOURITE_STRING + " "
+				+ KNOWITS_STRING, KNOWITS_STRING, FREQUENCY_STRING,
 				knowItsDataset, PlotOrientation.VERTICAL, false, false, false);
-		askItsChart = ChartFactory.createBarChart(favouriteString + " "
-				+ askItsString, askItsString, frequencyString, askItsDataset,
+
+		askItsChart = ChartFactory.createBarChart(FAVOURITE_STRING + " "
+				+ ASKIT_STRING, ASKIT_STRING, FREQUENCY_STRING, askItsDataset,
 				PlotOrientation.VERTICAL, false, false, false);
-		repeatsChart = ChartFactory.createBarChart(favouriteString + " "
-				+ favouriteString, repeatsString, frequencyString,
+
+		repeatsChart = ChartFactory.createBarChart(FAVOURITE_STRING + " "
+				+ FAVOURITE_STRING, REPEATS_STRING, FREQUENCY_STRING,
 				repeatsDataset, PlotOrientation.VERTICAL, false, false, false);
-		delaysChart = ChartFactory.createBarChart(favouriteString + " "
-				+ delaysString, delaysString, frequencyString, delaysDataset,
+
+		delaysChart = ChartFactory.createBarChart(FAVOURITE_STRING + " "
+				+ DELAY_STRING, DELAY_STRING, FREQUENCY_STRING, delaysDataset,
 				PlotOrientation.VERTICAL, false, false, false);
 
 		jTabbedPane.addTab("Causes", new ChartPanel(causesChart));
@@ -140,10 +166,10 @@ public class MetricsPanel extends JPanel {
 		processValues(values, generalDataset);
 
 		// Create the histogram
-		chart = ChartFactory.createBarChart("Metrics Chart", "Story Component",
-				"Frequency", generalDataset, PlotOrientation.VERTICAL, false,
-				false, false);
-
+		chart = ChartFactory.createBarChart(GENERAL_STRING + " "
+				+ METRICS_STRING, STORY_COMPONENT_STRING, FREQUENCY_STRING,
+				generalDataset, PlotOrientation.VERTICAL, false, false, false);
+		
 		histogram = new ChartPanel(chart);
 
 		return histogram;
