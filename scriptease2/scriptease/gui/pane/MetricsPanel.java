@@ -12,7 +12,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import scriptease.gui.action.metrics.StoryComponentMetricsAction;
+import scriptease.controller.MetricAnalyzer;
 
 @SuppressWarnings("serial")
 /**
@@ -24,7 +24,7 @@ import scriptease.gui.action.metrics.StoryComponentMetricsAction;
  */
 public class MetricsPanel extends JPanel {
 
-	private final StoryComponentMetricsAction metrics;
+	private final MetricAnalyzer metrics;
 
 	private static final String STORY_COMPONENT_STRING = "Story Component";
 	private static final String GENERAL_STRING = "General";
@@ -45,7 +45,7 @@ public class MetricsPanel extends JPanel {
 	public MetricsPanel() {
 		final JTabbedPane tabs = new JTabbedPane();
 
-		this.metrics = StoryComponentMetricsAction.getInstance();
+		this.metrics = MetricAnalyzer.getInstance();
 
 		tabs.addTab(GENERAL_STRING, createGeneralPage());
 		tabs.addTab(FAVOURITE_STRING, createFavoriteCausesPage());
