@@ -27,6 +27,7 @@ public class MetricsPanel extends JPanel {
 	private final MetricAnalyzer metrics;
 
 	private static final String STORY_COMPONENT_STRING = "Story Component";
+	private static final String COMPLEXITY_STRING = "Complexity";
 	private static final String GENERAL_STRING = "General";
 	private static final String METRICS_STRING = "Metrics";
 	private static final String FAVOURITE_STRING = "Favourite";
@@ -49,12 +50,32 @@ public class MetricsPanel extends JPanel {
 
 		tabs.addTab(GENERAL_STRING, createGeneralPage());
 		tabs.addTab(FAVOURITE_STRING, createFavoriteCausesPage());
-		tabs.addTab(CAUSES_STRING + " " + BLOCKS_STRING,
-				createCauseBlocksPage());
+		tabs.addTab(CAUSES_STRING + " " + BLOCKS_STRING, createCauseBlocksPage());
+		tabs.addTab(COMPLEXITY_STRING, createComplexityPage());
 
 		add(tabs);
 	}
 
+	private JPanel createComplexityPage() {
+		final JFreeChart complexityChart;
+		final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		final Map<String, Float> values = metrics.calculateComplexityMetrics();
+
+		processValues(values, dataset);
+
+		complexityChart = ChartFactory.createBarChart("Average"
+				+ COMPLEXITY_STRING, BLOCKS_STRING, FREQUENCY_STRING, dataset,
+				PlotOrientation.VERTICAL, false, false, false);
+
+		return new ChartPanel(complexityChart);
+	}
+
+	/**
+	 * Create the body for the cause blocks page. I.e. The number of times a
+	 * specific cause block was used (active/inactive/always).
+	 * 
+	 * @return the page body.
+	 */
 	private JPanel createCauseBlocksPage() {
 		final JFreeChart causesBlockChart;
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -98,9 +119,9 @@ public class MetricsPanel extends JPanel {
 		final Map<String, Integer> effectsValues = metrics
 				.calculateFavouriteEffects();
 		final Map<String, Integer> knowItsValues = metrics
-				.calculateFavouriteKnowIts();
+				.calculateFavouriteDescriptions();
 		final Map<String, Integer> askItsValues = metrics
-				.calculateFavouriteAskIts();
+				.calculateFavouriteQuestions();
 		final Map<String, Integer> repeatsValues = metrics
 				.calculateFavouriteRepeats();
 		final Map<String, Integer> delaysValues = metrics
@@ -169,7 +190,7 @@ public class MetricsPanel extends JPanel {
 		chart = ChartFactory.createBarChart(GENERAL_STRING + " "
 				+ METRICS_STRING, STORY_COMPONENT_STRING, FREQUENCY_STRING,
 				generalDataset, PlotOrientation.VERTICAL, false, false, false);
-		
+
 		histogram = new ChartPanel(chart);
 
 		return histogram;
@@ -181,11 +202,12 @@ public class MetricsPanel extends JPanel {
 	 * @param values
 	 * @param dataset
 	 */
-	private void processValues(Map<String, Integer> values,
+	private void processValues(Map<String, ? extends Number> values,
 			DefaultCategoryDataset dataset) {
 
-		for (Entry<String, Integer> entry : values.entrySet()) {
-			dataset.addValue(entry.getValue(), "", entry.getKey());
+		for (Entry<String, ?> entry : values.entrySet()) {
+			dataset.addValue((Number) entry.getValue(), "", entry.getKey());
 		}
 	}
+
 }

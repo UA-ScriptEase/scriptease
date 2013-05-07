@@ -13,7 +13,7 @@ import scriptease.gui.pane.MetricsPanel;
 
 @SuppressWarnings("serial")
 /**
- * Calculates metrics in the active model.
+ * Listens for prompt to open metrics.
  * 
  * @author jyuen
  */
