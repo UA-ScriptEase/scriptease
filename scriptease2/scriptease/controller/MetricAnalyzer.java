@@ -25,18 +25,23 @@ import scriptease.model.complex.StoryPoint;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.DescribeItManager;
 
+/**
+ * Calculates metrics in the active model.
+ * 
+ * @author jyuen
+ */
 public class MetricAnalyzer {
 
 	// Singleton
 	private static MetricAnalyzer instance = null;
 
-	private final List<AskIt> askIts;
+	private final List<AskIt> questions;
 	private final List<ScriptIt> effects;
 	private final List<ScriptIt> causes;
 	private final List<ControlIt> delays;
 	private final List<ControlIt> repeats;
 	private final List<StoryPoint> storyPoints;
-	private final List<KnowIt> knowIts;
+	private final List<KnowIt> descriptions;
 	private final List<Note> notes;
 
 	/**
@@ -51,15 +56,15 @@ public class MetricAnalyzer {
 
 		return MetricAnalyzer.instance;
 	}
-	
+
 	protected MetricAnalyzer() {
-		this.askIts = new ArrayList<AskIt>();
+		this.questions = new ArrayList<AskIt>();
 		this.effects = new ArrayList<ScriptIt>();
 		this.causes = new ArrayList<ScriptIt>();
 		this.delays = new ArrayList<ControlIt>();
 		this.repeats = new ArrayList<ControlIt>();
 		this.storyPoints = new ArrayList<StoryPoint>();
-		this.knowIts = new ArrayList<KnowIt>();
+		this.descriptions = new ArrayList<KnowIt>();
 		this.notes = new ArrayList<Note>();
 	}
 
@@ -69,13 +74,13 @@ public class MetricAnalyzer {
 	public void processStoryComponents() {
 		SEModel model = SEModelManager.getInstance().getActiveModel();
 
-		this.askIts.clear();
+		this.questions.clear();
 		this.effects.clear();
 		this.causes.clear();
 		this.delays.clear();
 		this.repeats.clear();
 		this.storyPoints.clear();
-		this.knowIts.clear();
+		this.descriptions.clear();
 		this.notes.clear();
 
 		model.process(new ModelAdapter() {
@@ -98,15 +103,104 @@ public class MetricAnalyzer {
 	public Map<String, Integer> calculateGeneralMetrics() {
 		Map<String, Integer> metrics = new HashMap<String, Integer>();
 
-		metrics.put("AskIts", askIts.size());
+		metrics.put("Questions", questions.size());
 		metrics.put("Effects", effects.size());
 		metrics.put("Causes", causes.size());
 		metrics.put("Delays", delays.size());
 		metrics.put("Repeats", repeats.size());
 		metrics.put("StoryPoints", storyPoints.size());
-		metrics.put("KnowIts", knowIts.size());
+		metrics.put("Descriptions", descriptions.size());
 		metrics.put("Notes", notes.size());
 
+		return metrics;
+	}
+
+	/**
+	 * Calculates the average complexity of story components. 
+	 * i.e. The average number of effects per cause, average number of
+	 * causes per story point, etc.
+	 * 
+	 * @return A map containing the metric values in each of the respective
+	 * 		   categories.
+	 */
+	public Map<String, Float> calculateComplexityMetrics() {
+		Map<String, Float> metrics = new HashMap<String, Float>();
+
+		float totalDelaysInCauses = 0;
+		float totalRepeatsInCauses = 0;
+		float totalEffectsInCauses = 0;
+		float totalQuestionsInCauses = 0;
+		float totalDescriptionsInCauses = 0;
+		float totalCausesInStoryPoints = 0;
+		
+		int numCauses = causes.size();
+		int numStoryPoints = storyPoints.size();
+
+		// Return if there are no causes or story points.
+		if (numCauses == 0 || numStoryPoints == 0)
+			return metrics;
+		
+		// Check the complexity of causes.
+		for (ScriptIt cause : causes) {
+
+			final List<StoryComponent> children = new ArrayList<StoryComponent>();
+			
+			final List<StoryComponent> activeChildren = cause.getActiveBlock().getChildren();
+			final List<StoryComponent> inactiveChildren = cause.getInactiveBlock().getChildren();
+			final List<StoryComponent> alwaysChildren = cause.getAlwaysBlock().getChildren();
+			
+			children.addAll(activeChildren);
+			children.addAll(inactiveChildren);
+			children.addAll(alwaysChildren);
+			
+			for (StoryComponent child : children) {
+				System.out.println(child.getDisplayText());
+
+				if (child instanceof ControlIt) {
+					ControlIt controlIt = (ControlIt) child;
+
+					if (controlIt.getFormat() == ControlIt.ControlItFormat.DELAY)
+						totalDelaysInCauses++;
+					else if (controlIt.getFormat() == ControlIt.ControlItFormat.REPEAT)
+						totalRepeatsInCauses++;
+				}
+				
+				else if (child instanceof ScriptIt) {
+					totalEffectsInCauses++;
+				}
+				
+				else if (child instanceof AskIt) {
+					totalQuestionsInCauses++;
+				}
+				
+				else if (child instanceof KnowIt) {
+					DescribeItManager describeItManager = TranslatorManager
+							.getInstance().getActiveDescribeItManager();
+					
+					if (describeItManager.getDescribeIt(child) != null)
+						totalDescriptionsInCauses++;
+				}
+			}
+		}
+		
+		// Check the complexity of story points.
+		for (StoryPoint storyPoint : storyPoints) {
+			
+			List<StoryComponent> children = storyPoint.getChildren();
+			
+			for (StoryComponent child : children) {
+				if (child instanceof ScriptIt) 
+					totalCausesInStoryPoints++;
+			}
+		}
+		
+		metrics.put("Effects/Cause", totalEffectsInCauses/numCauses);
+		metrics.put("Questions/Cause", totalQuestionsInCauses/numCauses);
+		metrics.put("Delays/Cause", totalDelaysInCauses/numCauses);
+		metrics.put("Repeats/Cause", totalRepeatsInCauses/numCauses);
+		metrics.put("Descriptions/Cause", totalDescriptionsInCauses/numCauses);
+		metrics.put("Causes/Story Point", totalCausesInStoryPoints/numStoryPoints);
+		
 		return metrics;
 	}
 
@@ -162,8 +256,8 @@ public class MetricAnalyzer {
 	 * 
 	 * @return A map containing each description and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteKnowIts() {
-		return calculateFavouriteMetricsFor(knowIts);
+	public Map<String, Integer> calculateFavouriteDescriptions() {
+		return calculateFavouriteMetricsFor(descriptions);
 	}
 
 	/**
@@ -171,8 +265,8 @@ public class MetricAnalyzer {
 	 * 
 	 * @return A map containing each question and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteAskIts() {
-		return calculateFavouriteMetricsFor(askIts);
+	public Map<String, Integer> calculateFavouriteQuestions() {
+		return calculateFavouriteMetricsFor(questions);
 	}
 
 	/**
@@ -225,7 +319,7 @@ public class MetricAnalyzer {
 
 		return sortedMetrics;
 	}
-	
+
 	private void parseStoryComponents(final StoryPoint root) {
 		final StoryAdapter adapter;
 
@@ -274,14 +368,15 @@ public class MetricAnalyzer {
 			}
 
 			@Override
-			public void processKnowIt(KnowIt knowIt) {
+			public void processKnowIt(KnowIt description) {
 				DescribeItManager describeItManager = TranslatorManager
 						.getInstance().getActiveDescribeItManager();
 
-				if (describeItManager.getDescribeIt(knowIt) != null)
-					knowIts.add(knowIt);
+				if (describeItManager.getDescribeIt(description) != null)
+					descriptions.add(description);
 				else {
-					knowIt.getBinding().process(new BindingAdapter() {
+					description.getBinding().process(new BindingAdapter() {
+
 						@Override
 						public void processReference(
 								KnowItBindingReference reference) {
@@ -293,7 +388,7 @@ public class MetricAnalyzer {
 
 			@Override
 			public void processAskIt(AskIt askIt) {
-				askIts.add(askIt);
+				questions.add(askIt);
 
 				this.defaultProcessComplex(askIt);
 			}
