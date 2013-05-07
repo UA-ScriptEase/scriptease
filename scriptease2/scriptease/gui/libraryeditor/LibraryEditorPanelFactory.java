@@ -98,9 +98,7 @@ public class LibraryEditorPanelFactory {
 		final MouseListener librarySelectionListener;
 
 		final JPanel editorPanel;
-
 		editorPanel = new JPanel();
-
 		editorPanel.setLayout(new BoxLayout(editorPanel, BoxLayout.PAGE_AXIS));
 
 		/*
@@ -116,7 +114,6 @@ public class LibraryEditorPanelFactory {
 					@Override
 					public void run() {
 						final Collection<CodeBlock> codeBlocks;
-
 						codeBlocks = scriptIt.getCodeBlocks();
 
 						editingPanel.removeAll();
@@ -720,8 +717,8 @@ public class LibraryEditorPanelFactory {
 			final JScrollPane parameterScrollPane;
 
 			final JTextField includesField;
-			final JComboBox subjectBox;
-			final JComboBox slotBox;
+			final SubjectComboBox subjectBox;
+			final SlotComboBox slotBox;
 			final JLabel implicitsLabel;
 			final CodeEditorPanel codePanel;
 
@@ -750,8 +747,8 @@ public class LibraryEditorPanelFactory {
 
 			typeAction = new TypeAction();
 			includesField = new JTextField();
-			subjectBox = new JComboBox();
-			slotBox = new JComboBox();
+			subjectBox = new SubjectComboBox(codeBlock);
+			slotBox = new SlotComboBox(codeBlock);
 			implicitsLabel = new JLabel();
 			codePanel = new CodeEditorPanel(codeBlock);
 
@@ -794,29 +791,11 @@ public class LibraryEditorPanelFactory {
 							deleteCodeBlockButton));
 
 			scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-					.getInstance().buildParameterPanelObserver(codeBlock,
-							parameterPanel, subjectBox));
+					.getInstance().buildParameterObserver(codeBlock,
+							parameterPanel));
 
 			scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-					.getInstance().buildSubjectBoxObserver(codeBlock,
-							subjectBox, slotBox));
-
-			scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-					.getInstance().buildSlotBoxObserver(codeBlock, slotBox,
-							implicitsLabel));
-
-			scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-					.getInstance().buildParameterNameObserver(codeBlock,
-							subjectBox));
-
-			subjectBox.addItem(null);
-
-			for (KnowIt parameter : scriptIt.getParameters()) {
-				final Collection<String> slots = getCommonSlotsForTypes(parameter);
-
-				if (!slots.isEmpty())
-					subjectBox.addItem(parameter.getDisplayText());
-			}
+					.getInstance().buildSlotObserver(codeBlock, implicitsLabel));
 
 			implicitsLabel.setForeground(Color.DARK_GRAY);
 
@@ -827,30 +806,6 @@ public class LibraryEditorPanelFactory {
 					codeBlock.getTypes());
 			typeAction.getTypeSelectionDialogBuilder().deselectAll();
 			typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
-
-			final String initialSlot;
-
-			if (codeBlock.hasSlot())
-				initialSlot = codeBlock.getSlot();
-			else
-				initialSlot = "";
-
-			if (codeBlock.hasSubject()) {
-				KnowIt subject = codeBlock.getSubject();
-				if (subject != null) {
-					final Collection<String> slots;
-					final String subjectName;
-
-					subjectName = codeBlock.getSubjectName();
-					slots = getCommonSlotsForTypes(subject);
-
-					for (String slot : slots) {
-						slotBox.addItem(slot);
-					}
-					subjectBox.setSelectedItem(subjectName);
-					slotBox.setSelectedItem(initialSlot);
-				}
-			}
 
 			String implicits = "";
 
@@ -874,7 +829,7 @@ public class LibraryEditorPanelFactory {
 							for (String label : labelArray) {
 								labels.add(label.trim());
 							}
-							
+
 							if (!labels.equals(codeBlock.getIncludes())) {
 								codeBlock.setIncludes(labels);
 							}
@@ -919,27 +874,6 @@ public class LibraryEditorPanelFactory {
 				}
 			});
 
-			slotBox.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					final String selectedSlot = (String) slotBox
-							.getSelectedItem();
-					final String actualSlot = codeBlock.getSlot();
-					if ((selectedSlot != null)
-							&& (!selectedSlot.equals(actualSlot))) {
-						if (!UndoManager.getInstance().hasOpenUndoableAction())
-							UndoManager.getInstance()
-									.startUndoableAction(
-											"Setting CodeBlock slot to "
-													+ selectedSlot);
-						codeBlock.setSlot(selectedSlot);
-
-						scriptIt.updateStoryChildren();
-						UndoManager.getInstance().endUndoableAction();
-					}
-				}
-			});
-
 			deleteCodeBlockButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -952,59 +886,10 @@ public class LibraryEditorPanelFactory {
 				}
 			});
 
-			subjectBox.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					final String selectedSubject = (String) subjectBox
-							.getSelectedItem();
-					final String actualSubject = codeBlock.getSubjectName();
-					if (!actualSubject.equals(selectedSubject)) {
-						if (!UndoManager.getInstance().hasOpenUndoableAction())
-							UndoManager.getInstance().startUndoableAction(
-									"Setting CodeBlock subject to "
-											+ selectedSubject);
-						codeBlock.setSubject(selectedSubject);
-						scriptIt.updateStoryChildren();
-						UndoManager.getInstance().endUndoableAction();
-					}
-				}
-			});
-
 			if (scriptIt.getCodeBlocks().size() < 2) {
 				deleteCodeBlockButton.setEnabled(false);
 				deleteCodeBlockButton.setVisible(false);
 			}
-
-			// TODO mfchurch fix logic for displaying Subject, Slot and
-			// Implicits. Can Effects have a subject, slot that varies from
-			// parent?
-			// if (scriptIt.isCause()) {
-			// deleteCodeBlockButton.setVisible(false);
-			// subjectLabel.setVisible(true);
-			// subjectBox.setVisible(true);
-			//
-			// slotLabel.setVisible(true);
-			// slotBox.setVisible(true);
-			// implicitsLabel.setVisible(true);
-			// implicitsLabelLabel.setVisible(true);
-			// } else {
-			//
-			// if (!scriptIt.getMainCodeBlock().equals(codeBlock)) {
-			//
-			// } else {
-			// subjectLabel.setVisible(false);
-			// subjectBox.setVisible(false);
-			//
-			// slotLabel.setVisible(false);
-			// slotBox.setVisible(false);
-			// implicitsLabel.setVisible(false);
-			// implicitsLabelLabel.setVisible(false);
-			// }
-			//
-			// if (scriptIt.getCodeBlocks().size() < 2) {
-			// deleteCodeBlockButton.setEnabled(false);
-			// }
-			// }
 
 			for (KnowIt parameter : parameters) {
 				parameterPanel.add(buildParameterPanel(scriptIt, codeBlock,
@@ -1142,5 +1027,151 @@ public class LibraryEditorPanelFactory {
 	protected JPanel buildParameterPanel(ScriptIt scriptIt,
 			CodeBlock codeBlock, KnowIt knowIt) {
 		return new ParameterPanel(scriptIt, codeBlock, knowIt);
+	}
+
+	@SuppressWarnings("serial")
+	private class SlotComboBox extends JComboBox implements
+			StoryComponentObserver {
+		private boolean undoEnabled = false;
+		private CodeBlock codeBlock;
+
+		public SlotComboBox(final CodeBlock codeBlock) {
+			this.codeBlock = codeBlock;
+			buildItems();
+			this.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final String currentlySelected = (String) getSelectedItem();
+					if (!isCurrentSlotSelected(currentlySelected)) {
+						if (undoEnabled
+								&& !UndoManager.getInstance()
+										.hasOpenUndoableAction()) {
+							UndoManager.getInstance().startUndoableAction(
+									"Setting CodeBlock slot to "
+											+ currentlySelected);
+						}
+						codeBlock.setSlot(currentlySelected);
+						if (undoEnabled) {
+							UndoManager.getInstance().endUndoableAction();
+						}
+					}
+				}
+			});
+			this.codeBlock.addStoryComponentObserver(this);
+		}
+
+		private void buildItems() {
+			undoEnabled = false;
+			this.removeAllItems();
+			final Collection<String> slots = getCommonSlotsForTypes(codeBlock
+					.getSubject());
+			for (String slot : slots) {
+				this.addItem(slot);
+			}
+			this.setSelectedItem(codeBlock.getSlot());
+			undoEnabled = true;
+		}
+
+		private boolean isCurrentSlotSelected(String value) {
+			final String currentSlot = codeBlock.getSlot();
+			if (currentSlot != null) {
+				return currentSlot.equals(value);
+			} else {
+				return currentSlot == value;
+			}
+		}
+
+		@Override
+		public void componentChanged(StoryComponentEvent event) {
+			final StoryComponentChangeEnum type = event.getType();
+			if (type == StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET) {
+				buildItems();
+			}
+			if (type == StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET) {
+				buildItems();
+			}
+			this.revalidate();
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private class SubjectComboBox extends JComboBox implements
+			StoryComponentObserver {
+		private boolean undoEnabled = false;
+		private CodeBlock codeBlock;
+
+		public SubjectComboBox(final CodeBlock codeBlock) {
+			this.codeBlock = codeBlock;
+			buildItems();
+			this.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final String currentlySelected = (String) getSelectedItem();
+					if (!isCurrentSubjectSelected(currentlySelected)) {
+						if (undoEnabled
+								&& !UndoManager.getInstance()
+										.hasOpenUndoableAction()) {
+							UndoManager.getInstance().startUndoableAction(
+									"Setting CodeBlock subject to "
+											+ currentlySelected);
+						}
+						codeBlock.setSubject(currentlySelected);
+						if (undoEnabled) {
+							UndoManager.getInstance().endUndoableAction();
+						}
+					}
+				}
+			});
+			this.codeBlock.addStoryComponentObserver(this);
+			final ScriptIt scriptIt = codeBlock.getOwner();
+			if (scriptIt != null) {
+				scriptIt.addStoryComponentObserver(this);
+			} else {
+				throw new IllegalArgumentException("CodeBlock " + codeBlock
+						+ " has no owner");
+			}
+		}
+
+		private void buildItems() {
+			undoEnabled = false;
+			this.removeAllItems();
+			final ScriptIt scriptIt = codeBlock.getOwner();
+			if (scriptIt != null) {
+				final Collection<KnowIt> parameters = scriptIt.getParameters();
+				for (KnowIt parameter : parameters) {
+					final Collection<String> slots = getCommonSlotsForTypes(parameter);
+
+					if (!slots.isEmpty())
+						this.addItem(parameter.getDisplayText());
+				}
+				this.addItem(null);
+				this.setSelectedItem(codeBlock.getSubjectName());
+			}
+			undoEnabled = true;
+		}
+
+		private boolean isCurrentSubjectSelected(String value) {
+			final String currentSubject = codeBlock.getSubjectName();
+			if (currentSubject != null) {
+				return currentSubject.equals(value);
+			} else {
+				return currentSubject == value;
+			}
+		}
+
+		@Override
+		public void componentChanged(StoryComponentEvent event) {
+			final StoryComponentChangeEnum type = event.getType();
+			if (type == StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET) {
+				buildItems();
+			} else if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_ADD) {
+				buildItems();
+			} else if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_REMOVE) {
+				buildItems();
+			} else if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET) {
+				buildItems();
+			}
+			this.revalidate();
+		}
 	}
 }

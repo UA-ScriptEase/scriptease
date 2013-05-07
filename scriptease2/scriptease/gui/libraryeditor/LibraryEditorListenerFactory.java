@@ -4,7 +4,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -16,8 +15,8 @@ import javax.swing.JPanel;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.LibraryModel;
@@ -128,9 +127,8 @@ public class LibraryEditorListenerFactory {
 	 * @param parameterPanel
 	 * @return
 	 */
-	protected StoryComponentObserver buildParameterPanelObserver(
-			final CodeBlock codeBlock, final JPanel parameterPanel,
-			final JComboBox subjectBox) {
+	protected StoryComponentObserver buildParameterObserver(
+			final CodeBlock codeBlock, final JPanel parameterPanel) {
 		final StoryComponentObserver parameterPanelObserver;
 
 		parameterPanelObserver = new StoryComponentObserver() {
@@ -149,75 +147,24 @@ public class LibraryEditorListenerFactory {
 						switch (type) {
 						case CHANGE_PARAMETER_LIST_ADD:
 							final List<KnowIt> knowIts;
-							final Collection<String> slots;
 							final KnowIt knowItToAdd;
 
 							knowIts = codeBlock.getParameters();
 							knowItToAdd = knowIts.get(knowIts.size() - 1);
-							slots = TranslatorManager.getInstance()
-									.getActiveTranslator().getGameTypeManager()
-									.getSlots(knowItToAdd.getDefaultType());
-
 							parameterPanel.add(LibraryEditorPanelFactory
 									.getInstance().buildParameterPanel(
 											scriptIt, codeBlock, knowItToAdd));
-
-							if (!slots.isEmpty())
-								subjectBox
-										.addItem(knowItToAdd.getDisplayText());
-
-							subjectBox.revalidate();
 
 							parameterPanel.repaint();
 							parameterPanel.revalidate();
 							break;
 						case CHANGE_PARAMETER_LIST_REMOVE:
-							final List<String> parameterNames;
-							KnowIt previousSubject;
-
-							parameterNames = new ArrayList<String>();
-							previousSubject = null;
-
-							if (codeBlock.hasSubject())
-								previousSubject = codeBlock.getSubject();
-
-							parameterNames.add(null);
-							for (KnowIt parameter : scriptIt.getParameters()) {
-								final Collection<String> subjectSlots = TranslatorManager
-										.getInstance().getActiveTranslator()
-										.getGameTypeManager()
-										.getSlots(parameter.getDefaultType());
-
-								if (!subjectSlots.isEmpty())
-									parameterNames.add(parameter
-											.getDisplayText());
-							}
-
-							for (int index = 0; index < subjectBox
-									.getItemCount(); index++) {
-								String boxContent = (String) subjectBox
-										.getItemAt(index);
-								if (!parameterNames.contains(boxContent))
-									subjectBox.removeItem(boxContent);
-							}
-
-							if (codeBlock.getParameters().contains(
-									previousSubject)) {
-								final String subjectName;
-								subjectName = previousSubject.getDisplayText();
-								subjectBox.setSelectedItem(subjectName);
-							} else if (!scriptIt.isCause()) {
-								subjectBox.setSelectedItem(null);
-							}
-
 							parameterPanel.removeAll();
 							for (KnowIt knowIt : codeBlock.getParameters()) {
 								parameterPanel.add(LibraryEditorPanelFactory
 										.getInstance().buildParameterPanel(
 												scriptIt, codeBlock, knowIt));
 							}
-
-							subjectBox.revalidate();
 
 							parameterPanel.repaint();
 							parameterPanel.revalidate();
@@ -236,85 +183,6 @@ public class LibraryEditorListenerFactory {
 	}
 
 	/**
-	 * Observer that observes the subject box and adjusts the slot box
-	 * accordingly.
-	 * 
-	 * @param codeBlock
-	 * @param slotBox
-	 * @return
-	 */
-	protected StoryComponentObserver buildSubjectBoxObserver(
-			final CodeBlock codeBlock, final JComboBox subjectBox,
-			final JComboBox slotBox) {
-		final StoryComponentObserver subjectBoxObserver;
-
-		subjectBoxObserver = new StoryComponentObserver() {
-			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				final StoryComponentChangeEnum type;
-				final StoryComponent component;
-				final StoryVisitor storyVisitor;
-
-				type = event.getType();
-				component = event.getSource();
-				storyVisitor = new StoryAdapter() {
-					@Override
-					public void processScriptIt(ScriptIt scriptIt) {
-						if (type == StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET) {
-							if (codeBlock.hasSubject()) {
-								KnowIt subject = codeBlock.getSubject();
-								if (subject != null
-										&& !codeBlock.getSubjectName().equals(
-												subjectBox.getSelectedItem())) {
-									final Collection<String> subjectSlots;
-
-									subjectSlots = TranslatorManager
-											.getInstance()
-											.getActiveTranslator()
-											.getGameTypeManager()
-											.getSlots(subject.getDefaultType());
-
-									slotBox.removeAllItems();
-
-									for (String slot : subjectSlots) {
-										slotBox.addItem(slot);
-									}
-									if (!subjectSlots.isEmpty())
-										slotBox.setSelectedItem(subjectSlots
-												.toArray()[0]);
-									else
-										codeBlock.setSlot("");
-
-									slotBox.revalidate();
-
-									// Update the subjectBox to reflect the
-									// subject
-									final String selectedSubject = (String) subjectBox
-											.getSelectedItem();
-									final String actualSubject = codeBlock
-											.getSubjectName();
-									if (!actualSubject.equals(selectedSubject)) {
-										subjectBox
-												.setSelectedItem(actualSubject);
-									}
-								}
-							} else
-							{
-								subjectBox.setSelectedItem(null);
-							}
-						}
-						subjectBox.revalidate(); 
-					}
-				};
-				component.process(storyVisitor);
-			}
-		};
-		this.codeBlockComponentObservers.add(subjectBoxObserver);
-
-		return subjectBoxObserver;
-	}
-
-	/**
 	 * Observer that observes the slot box and adjusts the implicits label
 	 * accordingly.
 	 * 
@@ -322,9 +190,8 @@ public class LibraryEditorListenerFactory {
 	 * @param implicitsLabel
 	 * @return
 	 */
-	protected StoryComponentObserver buildSlotBoxObserver(
-			final CodeBlock codeBlock, final JComboBox slotBox,
-			final JLabel implicitsLabel) {
+	protected StoryComponentObserver buildSlotObserver(
+			final CodeBlock codeBlock, final JLabel implicitsLabel) {
 		final StoryComponentObserver subjectBoxObserver;
 
 		subjectBoxObserver = new StoryComponentObserver() {
@@ -348,15 +215,6 @@ public class LibraryEditorListenerFactory {
 
 							implicitsLabel.setText(implicits.trim());
 							implicitsLabel.revalidate();
-
-							// Update the slotBox to reflect the slot
-							final String selectedSlot = (String) slotBox
-									.getSelectedItem();
-							final String actualSlot = codeBlock.getSlot();
-							if (!actualSlot.equals(selectedSlot)) {
-								slotBox.setSelectedItem(actualSlot);
-								slotBox.revalidate();
-							}
 						}
 					}
 				};
@@ -413,85 +271,6 @@ public class LibraryEditorListenerFactory {
 		this.codeBlockComponentObservers.add(codeBlockObserver);
 
 		return codeBlockObserver;
-	}
-
-	/**
-	 * Creates an observer for the parameter's name.
-	 * 
-	 * @param scriptIt
-	 * @param codeBlock
-	 * @param parameterPanel
-	 * @return
-	 */
-	protected StoryComponentObserver buildParameterNameObserver(
-			final CodeBlock codeBlock, final JComboBox subjectBox) {
-		final StoryComponentObserver parameterPanelObserver;
-
-		parameterPanelObserver = new StoryComponentObserver() {
-			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				final StoryComponentChangeEnum type;
-				final StoryComponent component;
-				final StoryVisitor storyVisitor;
-
-				type = event.getType();
-				component = event.getSource();
-
-				storyVisitor = new StoryAdapter() {
-					@Override
-					public void processScriptIt(ScriptIt scriptIt) {
-						switch (type) {
-						case CHANGE_PARAMETER_NAME_SET:
-							final List<String> parameterNames;
-							final List<String> subjectBoxContents;
-
-							parameterNames = new ArrayList<String>();
-							subjectBoxContents = new ArrayList<String>();
-
-							for (KnowIt parameter : scriptIt.getParameters()) {
-								final Collection<String> subjectSlots = TranslatorManager
-										.getInstance().getActiveTranslator()
-										.getGameTypeManager()
-										.getSlots(parameter.getDefaultType());
-
-								if (!subjectSlots.isEmpty())
-									parameterNames.add(parameter
-											.getDisplayText());
-							}
-
-							parameterNames.add(null);
-							for (int index = 0; index < subjectBox
-									.getItemCount(); index++) {
-								subjectBoxContents.add((String) subjectBox
-										.getItemAt(index));
-							}
-
-							for (String boxContent : subjectBoxContents) {
-								if (!parameterNames.contains(boxContent))
-									subjectBox.removeItem(boxContent);
-							}
-
-							for (String parameterName : parameterNames) {
-								if (!subjectBoxContents.contains(parameterName))
-									subjectBox.addItem(parameterName);
-							}
-
-							final String actualSubject = codeBlock
-									.getSubjectName();
-							subjectBox.setSelectedItem(actualSubject);
-							subjectBox.revalidate();
-							break;
-						default:
-							break;
-						}
-					}
-				};
-				component.process(storyVisitor);
-			}
-		};
-		this.codeBlockComponentObservers.add(parameterPanelObserver);
-
-		return parameterPanelObserver;
 	}
 
 	/**
