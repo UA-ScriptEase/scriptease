@@ -346,7 +346,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 	 * Updates the ScriptIt to display the Story Point Active and Inactive
 	 * blocks, depending on if it is a cause or not.
 	 */
-	public void updateStoryChildren() {
+	private void updateStoryChildren() {
 		if (this.isCause()) {
 			if (!this.childComponents.contains(this.activeBlock))
 				this.addStoryChild(this.activeBlock);
@@ -484,6 +484,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 				this.notifyObservers(new StoryComponentEvent(this,
 						StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
 			}
+			updateStoryChildren();
 		}
 	}
 }
