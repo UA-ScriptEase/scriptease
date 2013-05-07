@@ -89,6 +89,8 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		processStoryComponents();
+
 		WindowFactory.getInstance().buildAndShowCustomFrame(new MetricsPanel(),
 				"Metrics", true);
 	}
@@ -103,8 +105,6 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	public Map<String, Integer> calculateGeneralMetrics() {
 		Map<String, Integer> metrics = new HashMap<String, Integer>();
 
-		processStoryComponents();
-
 		metrics.put("AskIts", askIts.size());
 		metrics.put("Effects", effects.size());
 		metrics.put("Causes", causes.size());
@@ -118,12 +118,37 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	}
 
 	/**
+	 * Calculates the use of the cause sections (inactive, active, and always)
+	 * 
+	 * @return A map containing metric values for the frequency each block is
+	 *         used.
+	 */
+	public Map<String, Integer> calculateCauseBlockMetrics() {
+		Map<String, Integer> metrics = new HashMap<String, Integer>();
+
+		metrics.put("Active", 0);
+		metrics.put("Inactive", 0);
+		metrics.put("Always", 0);
+		
+		for (ScriptIt cause : causes) {
+			StoryItemSequence activeBlock = cause.getActiveBlock();
+			StoryItemSequence inactiveBlock = cause.getInactiveBlock();
+			StoryItemSequence alwaysBlock = cause.getAlwaysBlock();
+
+			metrics.put("Active", metrics.get("Active") + activeBlock.getChildren().size());
+			metrics.put("Inactive", metrics.get("Inactive") + inactiveBlock.getChildren().size());
+			metrics.put("Always", metrics.get("Always") + alwaysBlock.getChildren().size());
+		}
+
+		return metrics;
+	}
+
+	/**
 	 * Calculates the frequency of specific causes.
 	 * 
 	 * @return A map containing each cause and their occurrence.
 	 */
-	public SortedMap<String, Integer> calculateFavouriteCauses() {
-		processStoryComponents();
+	public Map<String, Integer> calculateFavouriteCauses() {
 		return calculateFavouriteMetricsFor(causes);
 	}
 
@@ -132,8 +157,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @return A map containing each effect and their occurrence.
 	 */
-	public SortedMap<String, Integer> calculateFavouriteEffects() {
-		processStoryComponents();
+	public Map<String, Integer> calculateFavouriteEffects() {
 		return calculateFavouriteMetricsFor(effects);
 	}
 
@@ -142,8 +166,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @return A map containing each description and their occurrence.
 	 */
-	public SortedMap<String, Integer> calculateFavouriteKnowIts() {
-		processStoryComponents();
+	public Map<String, Integer> calculateFavouriteKnowIts() {
 		return calculateFavouriteMetricsFor(knowIts);
 	}
 
@@ -152,8 +175,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @return A map containing each question and their occurrence.
 	 */
-	public SortedMap<String, Integer> calculateFavouriteAskIts() {
-		processStoryComponents();
+	public Map<String, Integer> calculateFavouriteAskIts() {
 		return calculateFavouriteMetricsFor(askIts);
 	}
 
@@ -162,8 +184,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @return A map containing each repeat and their occurrence.
 	 */
-	public SortedMap<String, Integer> calculateFavouriteRepeats() {
-		processStoryComponents();
+	public Map<String, Integer> calculateFavouriteRepeats() {
 		return calculateFavouriteMetricsFor(repeats);
 	}
 
@@ -172,17 +193,16 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @return A map containing each delay and their occurrence.
 	 */
-	public SortedMap<String, Integer> calculateFavouriteDelays() {
-		processStoryComponents();
+	public Map<String, Integer> calculateFavouriteDelays() {
 		return calculateFavouriteMetricsFor(delays);
 	}
 
 	/**
 	 * Calculates the frequency of a specific story component.
 	 * 
-	 * @return A map containing each component and their occurrence.
+	 * @return A sorted map containing each component and their occurrence.
 	 */
-	private SortedMap<String, Integer> calculateFavouriteMetricsFor(
+	private Map<String, Integer> calculateFavouriteMetricsFor(
 			Collection<? extends StoryComponent> storyComponents) {
 
 		Map<String, Integer> metrics = new HashMap<String, Integer>();
@@ -193,9 +213,8 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 
 			// Increment value if story component already exists.
 			if (metrics.containsKey(stringComponent)) {
-				int frequency = metrics.get(stringComponent);
-				frequency++;
 
+				int frequency = metrics.get(stringComponent) + 1;
 				metrics.put(stringComponent, frequency);
 
 				// Add count to existing story component.
@@ -204,11 +223,12 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 		}
 
 		// Sort the story components based on occurrence.
-		sortedMetrics = new TreeMap<String, Integer>(
-				new StoryComponentMetricsAction.FrequencyComparator(metrics));
-		sortedMetrics.putAll(metrics);
+		sortedMetrics = new TreeMap<String, Integer>(new FrequencyComparator(
+				metrics));
+		//sortedMetrics.putAll(metrics);
+
 		
-		return sortedMetrics;
+		return metrics;
 	}
 
 	private void processStoryComponents() {
@@ -306,7 +326,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	 * 
 	 * @author jyuen
 	 */
-	private static class FrequencyComparator implements Comparator<String> {
+	private class FrequencyComparator implements Comparator<String> {
 
 		private Map<String, Integer> data;
 
@@ -319,7 +339,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 		public int compare(String storyComponent1, String storyComponent2) {
 			Integer frequency1 = this.data.get(storyComponent1);
 			Integer frequency2 = this.data.get(storyComponent2);
-			return -frequency1.compareTo(frequency2);
+			return frequency2.compareTo(frequency1);
 		}
 	}
 }
