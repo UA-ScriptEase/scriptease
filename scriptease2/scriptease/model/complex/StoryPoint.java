@@ -2,8 +2,11 @@ package scriptease.model.complex;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -225,6 +228,19 @@ public class StoryPoint extends ComplexStoryComponent {
 		}
 
 		return descendants;
+	}
+	
+	public List<List<StoryPoint>> getPaths() {
+		Map<StoryPoint, Boolean> successors = new HashMap<StoryPoint, Boolean>();
+		
+		// Mark the successors to non-visited.
+		for (StoryPoint successor : this.getSuccessors()) {
+			successors.put(successor, false);
+		}
+		
+		for (Entry<StoryPoint, Boolean> successor : successors.entrySet()) {
+			
+		}
 	}
 
 	/**

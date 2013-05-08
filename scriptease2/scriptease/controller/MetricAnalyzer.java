@@ -6,16 +6,17 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
-import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
@@ -43,6 +44,8 @@ public class MetricAnalyzer {
 	private final List<StoryPoint> storyPoints;
 	private final List<KnowIt> descriptions;
 	private final List<Note> notes;
+	private final List<KnowIt> gameObjects;
+	private final List<KnowIt> implicits;
 
 	/**
 	 * Gets the sole instance of this particular type of Action
@@ -66,14 +69,14 @@ public class MetricAnalyzer {
 		this.storyPoints = new ArrayList<StoryPoint>();
 		this.descriptions = new ArrayList<KnowIt>();
 		this.notes = new ArrayList<Note>();
+		this.gameObjects = new ArrayList<KnowIt>();
+		this.implicits = new ArrayList<KnowIt>();
 	}
 
 	/**
 	 * Processes the story components in the active model.
 	 */
 	public void processStoryComponents() {
-		SEModel model = SEModelManager.getInstance().getActiveModel();
-
 		this.questions.clear();
 		this.effects.clear();
 		this.causes.clear();
@@ -83,14 +86,7 @@ public class MetricAnalyzer {
 		this.descriptions.clear();
 		this.notes.clear();
 
-		model.process(new ModelAdapter() {
-			@Override
-			public void processStoryModel(StoryModel storyModel) {
-
-				StoryPoint root = storyModel.getRoot();
-				parseStoryComponents(root);
-			}
-		});
+		parseStoryComponents(SEModelManager.getInstance().getActiveRoot());
 	}
 
 	/**
@@ -101,7 +97,7 @@ public class MetricAnalyzer {
 	 *         categories.
 	 */
 	public Map<String, Integer> calculateGeneralMetrics() {
-		Map<String, Integer> metrics = new HashMap<String, Integer>();
+		final Map<String, Integer> metrics = new HashMap<String, Integer>();
 
 		metrics.put("Questions", questions.size());
 		metrics.put("Effects", effects.size());
@@ -111,10 +107,26 @@ public class MetricAnalyzer {
 		metrics.put("StoryPoints", storyPoints.size());
 		metrics.put("Descriptions", descriptions.size());
 		metrics.put("Notes", notes.size());
-
+		metrics.put("Game Objects", gameObjects.size());
+		metrics.put("Implicits", implicits.size());
+		
 		return metrics;
 	}
 
+	/**
+	 * Calculates longest Story Point path values 
+	 * and other branch metrics to be added ..
+	 * 
+	 * @return
+	 */
+	public Map<String, Integer> calculateBranchMetrics() {
+		final Map<String, Float> metrics = new HashMap<String, Float>();
+		final StoryPoint root;
+		final Set<StoryPoint> descendants;
+		
+		descendants = root.getDescendants();
+	}
+	
 	/**
 	 * Calculates the average complexity of story components. 
 	 * i.e. The average number of effects per cause, average number of
@@ -150,7 +162,6 @@ public class MetricAnalyzer {
 			children.addAll(cause.getAlwaysBlock().getChildren());
 			
 			for (StoryComponent child : children) {
-				System.out.println(child.getDisplayText());
 
 				if (child instanceof ControlIt) {
 					ControlIt controlIt = (ControlIt) child;
@@ -349,6 +360,7 @@ public class MetricAnalyzer {
 				else if (controlIt.getFormat() == ControlIt.ControlItFormat.REPEAT)
 					repeats.add(controlIt);
 
+				controlIt.processParameters(this);
 				this.defaultProcessComplex(controlIt);
 			}
 
@@ -360,24 +372,40 @@ public class MetricAnalyzer {
 					effects.add(scriptIt);
 				}
 
+				scriptIt.processParameters(this);
 				this.defaultProcessComplex(scriptIt);
 			}
 
 			@Override
-			public void processKnowIt(KnowIt description) {
+			public void processKnowIt(final KnowIt knowIt) {
 				DescribeItManager describeItManager = TranslatorManager
 						.getInstance().getActiveDescribeItManager();
 
-				if (describeItManager.getDescribeIt(description) != null)
-					descriptions.add(description);
+				if (describeItManager.getDescribeIt(knowIt) != null)
+					descriptions.add(knowIt);
 				else {
-					description.getBinding().process(new BindingAdapter() {
+					knowIt.getBinding().process(new BindingAdapter() {
 
 						@Override
 						public void processReference(
 								KnowItBindingReference reference) {
-							super.processReference(reference);
+							reference.getValue().getBinding().process(this);
 						}
+						
+						@Override
+						public void processFunction(
+								KnowItBindingFunction function) {
+							implicits.add(knowIt);
+						};
+						
+						public void processConstant(
+								KnowItBindingResource resource) {
+							if (resource.isIdentifiableGameConstant()) {
+								System.out.println(resource.getName());
+								gameObjects.add(knowIt);
+							}
+						};
+						
 					});
 				}
 			}
@@ -386,6 +414,7 @@ public class MetricAnalyzer {
 			public void processAskIt(AskIt askIt) {
 				questions.add(askIt);
 
+				askIt.getCondition().process(this);
 				this.defaultProcessComplex(askIt);
 			}
 

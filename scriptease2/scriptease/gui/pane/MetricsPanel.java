@@ -13,6 +13,7 @@ import javax.swing.JTabbedPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
@@ -23,7 +24,7 @@ import scriptease.controller.MetricAnalyzer;
 /**
  * MetricsPanel represents the JPanel used to display story component
  * metrics. Each summary is displayed in separate tabs with their
- * respective histogram.
+ * respective histogram and pie charts.
  * 
  * @author jyuen
  */
@@ -244,6 +245,8 @@ public class MetricsPanel extends JPanel {
 				processHistogramValues(values), PlotOrientation.VERTICAL,
 				false, false, false);
 		
+		//histogram.getXYPlot().getRangeAxis().setMinorTickCount(1);
+		
 		return histogram;
 	}
 	
@@ -262,6 +265,10 @@ public class MetricsPanel extends JPanel {
 		pieChart = ChartFactory.createPieChart(title, 
 				processPieValues(values), true, true, false);
 		
+		// Don't show categories with 0 values.
+		PiePlot plot = (PiePlot) pieChart.getPlot();
+		plot.setIgnoreZeroValues(true);
+		
 		return pieChart;
 	}
 	
@@ -274,7 +281,7 @@ public class MetricsPanel extends JPanel {
 			Map<String, ? extends Number> values) {
 
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
+		
 		for (Entry<String, ?> entry : values.entrySet()) {
 			dataset.addValue((Number) entry.getValue(), "", entry.getKey());
 		}
@@ -306,7 +313,6 @@ public class MetricsPanel extends JPanel {
 	 * @author jyuen
 	 */
 	private class ChartManager {
-
 		final JPanel panel;
 		final ButtonGroup buttonGroup;
 		final JRadioButton histogramButton;
@@ -346,7 +352,7 @@ public class MetricsPanel extends JPanel {
 		}
 
 		private void setupPanel() {
-			this.panel.add(this.pieChart);
+			this.panel.add(this.histogramChart);
 
 			this.panel.add(this.histogramButton);
 			this.panel.add(this.pieChartButton);
