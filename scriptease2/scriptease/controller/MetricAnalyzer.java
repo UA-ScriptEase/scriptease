@@ -145,13 +145,9 @@ public class MetricAnalyzer {
 
 			final List<StoryComponent> children = new ArrayList<StoryComponent>();
 			
-			final List<StoryComponent> activeChildren = cause.getActiveBlock().getChildren();
-			final List<StoryComponent> inactiveChildren = cause.getInactiveBlock().getChildren();
-			final List<StoryComponent> alwaysChildren = cause.getAlwaysBlock().getChildren();
-			
-			children.addAll(activeChildren);
-			children.addAll(inactiveChildren);
-			children.addAll(alwaysChildren);
+			children.addAll(cause.getActiveBlock().getChildren());
+			children.addAll(cause.getInactiveBlock().getChildren());
+			children.addAll(cause.getAlwaysBlock().getChildren());
 			
 			for (StoryComponent child : children) {
 				System.out.println(child.getDisplayText());
