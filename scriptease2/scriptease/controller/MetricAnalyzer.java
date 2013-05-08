@@ -124,6 +124,25 @@ public class MetricAnalyzer {
 	}
 
 	/**
+	 * Gets the number of story points with no children.
+	 * 
+	 * @return
+	 */
+	public int calculateStoryPointLeaves() {
+		int count = 0;
+		
+		List<StoryPoint> storyPoints = SEModelManager.getInstance()
+				.getActiveRoot().getOrderedDescendants();
+		
+		for (StoryPoint storypoint : storyPoints) {
+			if (storypoint.getSuccessors().isEmpty())
+				count++;
+		}
+		
+		return count;
+	} 
+
+	/**
 	 * Calculates the average complexity of story components. i.e. The average
 	 * number of effects per cause, average number of causes per story point,
 	 * etc.
