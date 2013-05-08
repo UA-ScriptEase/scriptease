@@ -9,6 +9,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 import org.jfree.chart.ChartFactory;
@@ -58,11 +59,9 @@ public class MetricsPanel extends JPanel {
 
 		tabs.addTab(GENERAL_STRING, createGeneralPage());
 		tabs.addTab(FAVOURITE_STRING, createFavoriteCausesPage());
-		tabs.addTab(CAUSES_STRING + " " + BLOCKS_STRING,
-				createCauseBlocksPage());
+		tabs.addTab(CAUSES_STRING + " " + BLOCKS_STRING, createCauseBlocksPage());
 		tabs.addTab(COMPLEXITY_STRING, createComplexityPage());
-		tabs.addTab(STORY_POINT_STRING + " " + COMPLEXITY_STRING,
-				storyPointComplexityPage());
+		tabs.addTab(STORY_POINT_STRING + " " + COMPLEXITY_STRING, storyPointComplexityPage());
 
 		add(tabs);
 	}
@@ -74,15 +73,15 @@ public class MetricsPanel extends JPanel {
 				+ "story point branch: " + metrics.calculateLongestBranch());
 
 		final JLabel storyPointLeavesText = new JLabel("Number of story point "
-				+ "leaves. (Childless story points): "
+				+ "leaves (Childless story points): "
 				+ metrics.calculateStoryPointLeaves());
 
 		panel.add(longestBranchText);
-		panel.add(storyPointLeavesText);
+		panel.add(storyPointLeavesText, 1);
 		return panel;
 	}
 
-	private JPanel createComplexityPage() {
+	private JSplitPane createComplexityPage() {
 		final JFreeChart histogram;
 		final JFreeChart pieChart;
 		final Map<String, Float> values;
@@ -95,7 +94,7 @@ public class MetricsPanel extends JPanel {
 				BLOCKS_STRING, FREQUENCY_STRING, values);
 
 		// Create the Pie Chart
-		pieChart = createPieChart("Average" + COMPLEXITY_STRING, values);
+		pieChart = createPieChart("Average " + COMPLEXITY_STRING, values);
 
 		chartManager = new ChartManager(new ChartPanel(histogram),
 				new ChartPanel(pieChart));
@@ -109,7 +108,7 @@ public class MetricsPanel extends JPanel {
 	 * 
 	 * @return the page body.
 	 */
-	private JPanel createCauseBlocksPage() {
+	private JSplitPane createCauseBlocksPage() {
 		final JFreeChart histogram;
 		final JFreeChart pieChart;
 		final Map<String, Integer> values;
@@ -232,7 +231,7 @@ public class MetricsPanel extends JPanel {
 	 * 
 	 * @return the page body.
 	 */
-	private JPanel createGeneralPage() {
+	private JSplitPane createGeneralPage() {
 		final Map<String, Integer> values;
 
 		final JFreeChart histogram;
@@ -272,8 +271,6 @@ public class MetricsPanel extends JPanel {
 		histogram = ChartFactory.createBarChart(title, xAxisTitle, yAxisTitle,
 				processHistogramValues(values), PlotOrientation.VERTICAL,
 				false, false, false);
-
-		// histogram.getXYPlot().getRangeAxis().setMinorTickCount(1);
 
 		return histogram;
 	}
@@ -341,14 +338,17 @@ public class MetricsPanel extends JPanel {
 	 * @author jyuen
 	 */
 	private class ChartManager {
-		final JPanel panel;
+		final JSplitPane splitPanel;
+		
+		final JPanel buttonPanel;
+		
 		final ButtonGroup buttonGroup;
 		final JRadioButton histogramButton;
 		final JRadioButton pieChartButton;
 
 		final ChartPanel histogramChart;
 		final ChartPanel pieChart;
-
+		
 		/**
 		 * Initialize the radio buttons and panels for the Charts.
 		 * 
@@ -359,7 +359,8 @@ public class MetricsPanel extends JPanel {
 			this.histogramChart = histogramChart;
 			this.pieChart = pieChart;
 
-			this.panel = new JPanel();
+			this.splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+			this.buttonPanel = new JPanel();
 
 			this.histogramButton = new JRadioButton("Histogram");
 			this.pieChartButton = new JRadioButton("Pie Chart");
@@ -375,15 +376,17 @@ public class MetricsPanel extends JPanel {
 		 * 
 		 * @return
 		 */
-		public JPanel getChartPanel() {
-			return this.panel;
+		public JSplitPane getChartPanel() {
+			return this.splitPanel;
 		}
 
 		private void setupPanel() {
-			this.panel.add(this.histogramChart);
-
-			this.panel.add(this.histogramButton);
-			this.panel.add(this.pieChartButton);
+			this.buttonPanel.add(this.histogramButton);
+			this.buttonPanel.add(this.pieChartButton);
+			
+			splitPanel.setTopComponent(this.histogramChart);
+			splitPanel.setBottomComponent(this.buttonPanel);
+			splitPanel.setDividerLocation(0.8);
 		}
 
 		private void initializeButtonGroup() {
@@ -408,11 +411,8 @@ public class MetricsPanel extends JPanel {
 		}
 
 		private void repaintPanel(ChartPanel chart) {
-			panel.removeAll();
-			panel.add(chart);
-			panel.add(histogramButton);
-			panel.add(pieChartButton);
-			panel.repaint();
+			splitPanel.setTopComponent(chart);
+			splitPanel.repaint();
 		}
 	}
 }
