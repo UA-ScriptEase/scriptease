@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
@@ -33,6 +34,7 @@ public class MetricsPanel extends JPanel {
 	private final MetricAnalyzer metrics;
 
 	private static final String STORY_COMPONENT_STRING = "Story Component";
+	private static final String STORY_POINT_STRING = "Story Point";
 	private static final String COMPLEXITY_STRING = "Complexity";
 	private static final String GENERAL_STRING = "General";
 	private static final String METRICS_STRING = "Metrics";
@@ -56,10 +58,28 @@ public class MetricsPanel extends JPanel {
 
 		tabs.addTab(GENERAL_STRING, createGeneralPage());
 		tabs.addTab(FAVOURITE_STRING, createFavoriteCausesPage());
-		tabs.addTab(CAUSES_STRING + " " + BLOCKS_STRING, createCauseBlocksPage());
+		tabs.addTab(CAUSES_STRING + " " + BLOCKS_STRING,
+				createCauseBlocksPage());
 		tabs.addTab(COMPLEXITY_STRING, createComplexityPage());
+		tabs.addTab(STORY_POINT_STRING + " " + COMPLEXITY_STRING,
+				storyPointComplexityPage());
 
 		add(tabs);
+	}
+
+	private JPanel storyPointComplexityPage() {
+		final JPanel panel = new JPanel();
+
+		final JLabel longestBranchText = new JLabel("Longest "
+				+ "story point branch: " + metrics.calculateLongestBranch());
+
+		final JLabel storyPointLeavesText = new JLabel("Number of story point "
+				+ "leaves. (Childless story points): "
+				+ metrics.calculateStoryPointLeaves());
+
+		panel.add(longestBranchText);
+		panel.add(storyPointLeavesText);
+		return panel;
 	}
 
 	private JPanel createComplexityPage() {
@@ -67,19 +87,19 @@ public class MetricsPanel extends JPanel {
 		final JFreeChart pieChart;
 		final Map<String, Float> values;
 		final ChartManager chartManager;
-		
+
 		values = metrics.calculateComplexityMetrics();
 
 		// Create the Histogram
-		histogram = createHistogram("Average"
-				+ COMPLEXITY_STRING, BLOCKS_STRING, FREQUENCY_STRING, values);
+		histogram = createHistogram("Average " + COMPLEXITY_STRING,
+				BLOCKS_STRING, FREQUENCY_STRING, values);
 
 		// Create the Pie Chart
 		pieChart = createPieChart("Average" + COMPLEXITY_STRING, values);
-		
+
 		chartManager = new ChartManager(new ChartPanel(histogram),
 				new ChartPanel(pieChart));
-		
+
 		return chartManager.getChartPanel();
 	}
 
@@ -96,14 +116,14 @@ public class MetricsPanel extends JPanel {
 		final ChartManager chartManager;
 
 		values = metrics.calculateCauseBlockMetrics();
-		
+
 		// Create the Histogram
-		histogram = createHistogram(CAUSES_STRING + " "
-				+ BLOCKS_STRING, BLOCKS_STRING, FREQUENCY_STRING, values);
+		histogram = createHistogram(CAUSES_STRING + " " + BLOCKS_STRING,
+				BLOCKS_STRING, FREQUENCY_STRING, values);
 
 		// Create the Pie Chart
 		pieChart = createPieChart(CAUSES_STRING + " " + BLOCKS_STRING, values);
-		
+
 		chartManager = new ChartManager(new ChartPanel(histogram),
 				new ChartPanel(pieChart));
 
@@ -125,14 +145,14 @@ public class MetricsPanel extends JPanel {
 		final JFreeChart askItsHistogram, askItsPieChart;
 		final JFreeChart repeatsHistogram, repeatsPieChart;
 		final JFreeChart delaysHistogram, delaysPieChart;
-		
+
 		final ChartManager causesChartManager;
 		final ChartManager effectsChartManager;
 		final ChartManager knowItsChartManager;
 		final ChartManager askItsChartManager;
 		final ChartManager repeatsChartManager;
 		final ChartManager delaysChartManager;
-		
+
 		final Map<String, Integer> causesValues = metrics
 				.calculateFavouriteCauses();
 		final Map<String, Integer> effectsValues = metrics
@@ -150,44 +170,52 @@ public class MetricsPanel extends JPanel {
 		causesHistogram = createHistogram(FAVOURITE_STRING + " "
 				+ CAUSES_STRING, CAUSES_STRING, FREQUENCY_STRING, causesValues);
 		effectsHistogram = createHistogram(FAVOURITE_STRING + " "
-				+ EFFECTS_STRING, EFFECTS_STRING, FREQUENCY_STRING, effectsValues);
+				+ EFFECTS_STRING, EFFECTS_STRING, FREQUENCY_STRING,
+				effectsValues);
 		knowItsHistogram = createHistogram(FAVOURITE_STRING + " "
-				+ KNOWITS_STRING, KNOWITS_STRING, FREQUENCY_STRING, knowItsValues);
-		askItsHistogram = createHistogram(FAVOURITE_STRING + " "
-				+ ASKIT_STRING, ASKIT_STRING, FREQUENCY_STRING, askItsValues);
+				+ KNOWITS_STRING, KNOWITS_STRING, FREQUENCY_STRING,
+				knowItsValues);
+		askItsHistogram = createHistogram(
+				FAVOURITE_STRING + " " + ASKIT_STRING, ASKIT_STRING,
+				FREQUENCY_STRING, askItsValues);
 		repeatsHistogram = createHistogram(FAVOURITE_STRING + " "
-				+ REPEATS_STRING, REPEATS_STRING, FREQUENCY_STRING, repeatsValues);
-		delaysHistogram = createHistogram(FAVOURITE_STRING + " "
-				+ DELAY_STRING, DELAY_STRING, FREQUENCY_STRING, delaysValues);
-		
+				+ REPEATS_STRING, REPEATS_STRING, FREQUENCY_STRING,
+				repeatsValues);
+		delaysHistogram = createHistogram(
+				FAVOURITE_STRING + " " + DELAY_STRING, DELAY_STRING,
+				FREQUENCY_STRING, delaysValues);
+
 		// Create the pie charts
-		causesPieChart = createPieChart(FAVOURITE_STRING + " "
-				+ CAUSES_STRING, causesValues);
+		causesPieChart = createPieChart(FAVOURITE_STRING + " " + CAUSES_STRING,
+				causesValues);
 		effectsPieChart = createPieChart(FAVOURITE_STRING + " "
 				+ EFFECTS_STRING, effectsValues);
 		knowItsPieChart = createPieChart(FAVOURITE_STRING + " "
 				+ KNOWITS_STRING, knowItsValues);
-		askItsPieChart = createPieChart(FAVOURITE_STRING + " "
-				+ ASKIT_STRING, askItsValues);
+		askItsPieChart = createPieChart(FAVOURITE_STRING + " " + ASKIT_STRING,
+				askItsValues);
 		repeatsPieChart = createPieChart(FAVOURITE_STRING + " "
 				+ REPEATS_STRING, repeatsValues);
-		delaysPieChart = createPieChart(FAVOURITE_STRING + " "
-				+ DELAY_STRING, delaysValues);
-		
+		delaysPieChart = createPieChart(FAVOURITE_STRING + " " + DELAY_STRING,
+				delaysValues);
+
 		// Create chart managers
-		causesChartManager = new ChartManager(new ChartPanel(causesHistogram), 
+		causesChartManager = new ChartManager(new ChartPanel(causesHistogram),
 				new ChartPanel(causesPieChart));
-		effectsChartManager = new ChartManager(new ChartPanel(effectsHistogram), 
-				new ChartPanel(effectsPieChart));
-		knowItsChartManager = new ChartManager(new ChartPanel(knowItsHistogram), 
-				new ChartPanel(knowItsPieChart));
-		askItsChartManager = new ChartManager(new ChartPanel(askItsHistogram), 
+		effectsChartManager = new ChartManager(
+				new ChartPanel(effectsHistogram), new ChartPanel(
+						effectsPieChart));
+		knowItsChartManager = new ChartManager(
+				new ChartPanel(knowItsHistogram), new ChartPanel(
+						knowItsPieChart));
+		askItsChartManager = new ChartManager(new ChartPanel(askItsHistogram),
 				new ChartPanel(askItsPieChart));
-		repeatsChartManager = new ChartManager(new ChartPanel(repeatsHistogram), 
-				new ChartPanel(repeatsPieChart));
-		delaysChartManager = new ChartManager(new ChartPanel(delaysHistogram), 
+		repeatsChartManager = new ChartManager(
+				new ChartPanel(repeatsHistogram), new ChartPanel(
+						repeatsPieChart));
+		delaysChartManager = new ChartManager(new ChartPanel(delaysHistogram),
 				new ChartPanel(delaysPieChart));
-		
+
 		jTabbedPane.addTab("Causes", causesChartManager.getChartPanel());
 		jTabbedPane.addTab("Effects", effectsChartManager.getChartPanel());
 		jTabbedPane.addTab("KnowIts", knowItsChartManager.getChartPanel());
@@ -215,8 +243,8 @@ public class MetricsPanel extends JPanel {
 		values = metrics.calculateGeneralMetrics();
 
 		// Create the histogram
-		histogram = createHistogram(GENERAL_STRING + " "
-				+ METRICS_STRING, STORY_COMPONENT_STRING, FREQUENCY_STRING, values);
+		histogram = createHistogram(GENERAL_STRING + " " + METRICS_STRING,
+				STORY_COMPONENT_STRING, FREQUENCY_STRING, values);
 
 		// Create the pie chart
 		pieChart = createPieChart(GENERAL_STRING + " " + METRICS_STRING, values);
@@ -236,20 +264,20 @@ public class MetricsPanel extends JPanel {
 	 * @param values
 	 * @return The Histogram
 	 */
-	private JFreeChart createHistogram(String title, String xAxisTitle, 
+	private JFreeChart createHistogram(String title, String xAxisTitle,
 			String yAxisTitle, Map<String, ? extends Number> values) {
-		
+
 		JFreeChart histogram;
-		
+
 		histogram = ChartFactory.createBarChart(title, xAxisTitle, yAxisTitle,
 				processHistogramValues(values), PlotOrientation.VERTICAL,
 				false, false, false);
-		
-		//histogram.getXYPlot().getRangeAxis().setMinorTickCount(1);
-		
+
+		// histogram.getXYPlot().getRangeAxis().setMinorTickCount(1);
+
 		return histogram;
 	}
-	
+
 	/**
 	 * Create the Pie Chart
 	 * 
@@ -257,21 +285,21 @@ public class MetricsPanel extends JPanel {
 	 * @param values
 	 * @return the Pie Chart
 	 */
-	private JFreeChart createPieChart(String title, 
+	private JFreeChart createPieChart(String title,
 			Map<String, ? extends Number> values) {
-		
+
 		JFreeChart pieChart;
-		
-		pieChart = ChartFactory.createPieChart(title, 
-				processPieValues(values), true, true, false);
-		
+
+		pieChart = ChartFactory.createPieChart(title, processPieValues(values),
+				true, true, false);
+
 		// Don't show categories with 0 values.
 		PiePlot plot = (PiePlot) pieChart.getPlot();
 		plot.setIgnoreZeroValues(true);
-		
+
 		return pieChart;
 	}
-	
+
 	/**
 	 * Process the Map values so that they can be used in the histogram dataset.
 	 * 
@@ -281,7 +309,7 @@ public class MetricsPanel extends JPanel {
 			Map<String, ? extends Number> values) {
 
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		
+
 		for (Entry<String, ?> entry : values.entrySet()) {
 			dataset.addValue((Number) entry.getValue(), "", entry.getKey());
 		}
@@ -305,7 +333,7 @@ public class MetricsPanel extends JPanel {
 
 		return dataset;
 	}
-	
+
 	/**
 	 * Inner class used to set up and listen for changes between Histogram and
 	 * Pie Chart radio button clicks.
@@ -366,7 +394,7 @@ public class MetricsPanel extends JPanel {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					ChartManager.this.repaintPanel(histogramChart);	
+					ChartManager.this.repaintPanel(histogramChart);
 				}
 			});
 
@@ -378,13 +406,13 @@ public class MetricsPanel extends JPanel {
 				}
 			});
 		}
-		
+
 		private void repaintPanel(ChartPanel chart) {
 			panel.removeAll();
 			panel.add(chart);
 			panel.add(histogramButton);
 			panel.add(pieChartButton);
-			panel.repaint();	
+			panel.repaint();
 		}
 	}
 }
