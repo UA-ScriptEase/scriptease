@@ -206,6 +206,8 @@ public final class ErfFile extends GameModule {
 						GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT))
 					ErfFile.this.addJournalCategory(scriptIt);
 
+				// TODO: processSubjects might be redundant.
+				// Ticket 49524483
 				scriptIt.processSubjects(this);
 				scriptIt.processParameters(this);
 				this.defaultProcessComplex(scriptIt);
