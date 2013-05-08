@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -109,31 +108,28 @@ public class MetricAnalyzer {
 		metrics.put("Notes", notes.size());
 		metrics.put("Game Objects", gameObjects.size());
 		metrics.put("Implicits", implicits.size());
-		
+
+		calculateLongestBranch();
+
 		return metrics;
 	}
 
 	/**
-	 * Calculates longest Story Point path values 
-	 * and other branch metrics to be added ..
+	 * Calculates longest Story Point path.
 	 * 
-	 * @return
+	 * @return The longest path
 	 */
-	public Map<String, Integer> calculateBranchMetrics() {
-		final Map<String, Float> metrics = new HashMap<String, Float>();
-		final StoryPoint root;
-		final Set<StoryPoint> descendants;
-		
-		descendants = root.getDescendants();
+	public int calculateLongestBranch() {
+		return SEModelManager.getInstance().getActiveRoot().getLongestPath();
 	}
-	
+
 	/**
-	 * Calculates the average complexity of story components. 
-	 * i.e. The average number of effects per cause, average number of
-	 * causes per story point, etc.
+	 * Calculates the average complexity of story components. i.e. The average
+	 * number of effects per cause, average number of causes per story point,
+	 * etc.
 	 * 
 	 * @return A map containing the metric values in each of the respective
-	 * 		   categories.
+	 *         categories.
 	 */
 	public Map<String, Float> calculateComplexityMetrics() {
 		Map<String, Float> metrics = new HashMap<String, Float>();
@@ -144,23 +140,23 @@ public class MetricAnalyzer {
 		float totalQuestionsInCauses = 0;
 		float totalDescriptionsInCauses = 0;
 		float totalCausesInStoryPoints = 0;
-		
+
 		int numCauses = causes.size();
 		int numStoryPoints = storyPoints.size();
 
 		// Return if there are no causes or story points.
 		if (numCauses == 0 || numStoryPoints == 0)
 			return metrics;
-		
+
 		// Check the complexity of causes.
 		for (ScriptIt cause : causes) {
 
 			final List<StoryComponent> children = new ArrayList<StoryComponent>();
-			
+
 			children.addAll(cause.getActiveBlock().getChildren());
 			children.addAll(cause.getInactiveBlock().getChildren());
 			children.addAll(cause.getAlwaysBlock().getChildren());
-			
+
 			for (StoryComponent child : children) {
 
 				if (child instanceof ControlIt) {
@@ -171,43 +167,44 @@ public class MetricAnalyzer {
 					else if (controlIt.getFormat() == ControlIt.ControlItFormat.REPEAT)
 						totalRepeatsInCauses++;
 				}
-				
+
 				else if (child instanceof ScriptIt) {
 					totalEffectsInCauses++;
 				}
-				
+
 				else if (child instanceof AskIt) {
 					totalQuestionsInCauses++;
 				}
-				
+
 				else if (child instanceof KnowIt) {
 					DescribeItManager describeItManager = TranslatorManager
 							.getInstance().getActiveDescribeItManager();
-					
+
 					if (describeItManager.getDescribeIt(child) != null)
 						totalDescriptionsInCauses++;
 				}
 			}
 		}
-		
+
 		// Check the complexity of story points.
 		for (StoryPoint storyPoint : storyPoints) {
-			
+
 			List<StoryComponent> children = storyPoint.getChildren();
-			
+
 			for (StoryComponent child : children) {
-				if (child instanceof ScriptIt) 
+				if (child instanceof ScriptIt)
 					totalCausesInStoryPoints++;
 			}
 		}
-		
-		metrics.put("Effects/Cause", totalEffectsInCauses/numCauses);
-		metrics.put("Questions/Cause", totalQuestionsInCauses/numCauses);
-		metrics.put("Delays/Cause", totalDelaysInCauses/numCauses);
-		metrics.put("Repeats/Cause", totalRepeatsInCauses/numCauses);
-		metrics.put("Descriptions/Cause", totalDescriptionsInCauses/numCauses);
-		metrics.put("Causes/Story Point", totalCausesInStoryPoints/numStoryPoints);
-		
+
+		metrics.put("Effects/Cause", totalEffectsInCauses / numCauses);
+		metrics.put("Questions/Cause", totalQuestionsInCauses / numCauses);
+		metrics.put("Delays/Cause", totalDelaysInCauses / numCauses);
+		metrics.put("Repeats/Cause", totalRepeatsInCauses / numCauses);
+		metrics.put("Descriptions/Cause", totalDescriptionsInCauses / numCauses);
+		metrics.put("Causes/Story Point", totalCausesInStoryPoints
+				/ numStoryPoints);
+
 		return metrics;
 	}
 
@@ -391,21 +388,19 @@ public class MetricAnalyzer {
 								KnowItBindingReference reference) {
 							reference.getValue().getBinding().process(this);
 						}
-						
+
 						@Override
 						public void processFunction(
 								KnowItBindingFunction function) {
 							implicits.add(knowIt);
 						};
-						
+
 						public void processConstant(
 								KnowItBindingResource resource) {
-							if (resource.isIdentifiableGameConstant()) {
-								System.out.println(resource.getName());
+							if (resource.isIdentifiableGameConstant())
 								gameObjects.add(knowIt);
-							}
 						};
-						
+
 					});
 				}
 			}
