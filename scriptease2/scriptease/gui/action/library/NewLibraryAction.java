@@ -34,8 +34,10 @@ public class NewLibraryAction extends AbstractAction {
 	private NewLibraryAction() {
 		super(NEW_LIBRARY + "...");
 
-		this.putValue(Action.ACCELERATOR_KEY,
-				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+		this.putValue(
+				Action.ACCELERATOR_KEY,
+				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.SHIFT_MASK
+						+ ActionEvent.CTRL_MASK));
 	}
 
 	@Override
