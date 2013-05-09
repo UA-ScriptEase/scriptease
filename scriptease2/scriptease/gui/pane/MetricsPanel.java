@@ -2,6 +2,9 @@ package scriptease.gui.pane;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -12,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -22,6 +26,8 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import scriptease.controller.MetricAnalyzer;
+import scriptease.controller.io.FileIO;
+import scriptease.gui.WindowFactory;
 
 @SuppressWarnings("serial")
 /**
@@ -51,31 +57,117 @@ public class MetricsPanel extends JPanel {
 	private static final String DELAY_STRING = "Delays";
 	private static final String BLOCKS_STRING = "Blocks";
 
+	private final Map<String, Integer> generalValues;
+	private final Map<String, Integer> causeBlockValues;
+	private final Map<String, Integer> causesValues;
+	private final Map<String, Integer> effectsValues;
+	private final Map<String, Integer> knowItsValues;
+	private final Map<String, Integer> askItsValues;
+	private final Map<String, Integer> repeatsValues;
+	private final Map<String, Integer> delaysValues;
+	private final Map<String, Float> complexityValues;
+
 	/**
 	 * Creates a new MetricsPanel with the default tabs and histograms.
 	 */
 	public MetricsPanel() {
 		final JTabbedPane tabs = new JTabbedPane();
-		final JButton export = new JButton(EXPORT_STRING);
+		final JButton exportButton = new JButton(EXPORT_STRING);
 
 		this.metrics = MetricAnalyzer.getInstance();
 
+		this.generalValues = metrics.calculateGeneralMetrics();
+		this.complexityValues = metrics.calculateComplexityMetrics();
+		this.causeBlockValues = metrics.calculateCauseBlockMetrics();
+		this.causesValues = metrics.calculateFavouriteCauses();
+		this.effectsValues = metrics.calculateFavouriteEffects();
+		this.knowItsValues = metrics.calculateFavouriteDescriptions();
+		this.askItsValues = metrics.calculateFavouriteQuestions();
+		this.repeatsValues = metrics.calculateFavouriteRepeats();
+		this.delaysValues = metrics.calculateFavouriteDelays();
+
 		tabs.addTab(GENERAL_STRING, createGeneralPage());
 		tabs.addTab(FAVOURITE_STRING, createFavoriteCausesPage());
-		tabs.addTab(CAUSES_STRING + " " + BLOCKS_STRING, createCauseBlocksPage());
+		tabs.addTab(CAUSES_STRING + " " + BLOCKS_STRING,
+				createCauseBlocksPage());
 		tabs.addTab(COMPLEXITY_STRING, createComplexityPage());
-		tabs.addTab(STORY_POINT_STRING + " " + COMPLEXITY_STRING, storyPointComplexityPage());
+		tabs.addTab(STORY_POINT_STRING + " " + COMPLEXITY_STRING,
+				storyPointComplexityPage());
 
-		export.addActionListener(new ActionListener() {
+		exportButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
+				exportMetrics();
 			}
 		});
-		
-		
+
 		add(tabs);
+		add(exportButton);
+	}
+	
+	/**
+	 * Creates a new file filter for export
+	 * 
+	 * @return
+	 */
+	private javax.swing.filechooser.FileFilter createMetricsFilter() {
+		final javax.swing.filechooser.FileFilter filter;
+
+		filter = new FileNameExtensionFilter(".csv", ".csv");
+
+		return filter;
+	}
+
+	/**
+	 * Export the .csv file to the user's requested directory.
+	 */
+	public void exportMetrics() {
+		final File metricsFile;
+		final Collection<ArrayList<String>> data;
+
+		data = new ArrayList<ArrayList<String>>();
+
+		metricsFile = WindowFactory.getInstance().showFileChooser("Save",
+				"story_metrics.csv", createMetricsFilter());
+
+		processDataToCSV(STORY_COMPONENT_STRING, FREQUENCY_STRING,
+				this.generalValues, data);
+		processDataToCSV(COMPLEXITY_STRING, FREQUENCY_STRING,
+				this.complexityValues, data);
+		processDataToCSV(CAUSES_STRING + " " + BLOCKS_STRING, FREQUENCY_STRING,
+				this.causeBlockValues, data);
+		// processDataToCSV(STORY_COMPONENT_STRING, FREQUENCY_STRING,
+		// this.generalValues, data);
+		// processDataToCSV(STORY_COMPONENT_STRING, FREQUENCY_STRING,
+		// this.generalValues, data);
+		// processDataToCSV(STORY_COMPONENT_STRING, FREQUENCY_STRING,
+		// this.generalValues, data);
+
+		FileIO.getInstance().saveCSV(data, metricsFile);
+	}
+
+	private void processDataToCSV(String xComponent, String yComponent,
+			Map<String, ? extends Number> values,
+			final Collection<ArrayList<String>> data) {
+
+		ArrayList<String> tempRow = new ArrayList<String>();
+
+		tempRow.add(xComponent);
+		tempRow.add(yComponent);
+		data.add(tempRow);
+
+		for (Entry<String, ?> entry : values.entrySet()) {
+			tempRow = new ArrayList<String>();
+			tempRow.add(entry.getKey());
+
+			if (entry.getValue() instanceof Float)
+				tempRow.add(Float.toString((Float) entry.getValue()));
+			else if (entry.getValue() instanceof Integer)
+				tempRow.add(Integer.toString((Integer) entry.getValue()));
+
+			data.add(tempRow);
+		}
 	}
 
 	private JPanel storyPointComplexityPage() {
@@ -96,17 +188,15 @@ public class MetricsPanel extends JPanel {
 	private JSplitPane createComplexityPage() {
 		final JFreeChart histogram;
 		final JFreeChart pieChart;
-		final Map<String, Float> values;
 		final ChartManager chartManager;
-
-		values = metrics.calculateComplexityMetrics();
 
 		// Create the Histogram
 		histogram = createHistogram("Average " + COMPLEXITY_STRING,
-				BLOCKS_STRING, FREQUENCY_STRING, values);
+				BLOCKS_STRING, FREQUENCY_STRING, complexityValues);
 
 		// Create the Pie Chart
-		pieChart = createPieChart("Average " + COMPLEXITY_STRING, values);
+		pieChart = createPieChart("Average " + COMPLEXITY_STRING,
+				complexityValues);
 
 		chartManager = new ChartManager(new ChartPanel(histogram),
 				new ChartPanel(pieChart));
@@ -123,17 +213,15 @@ public class MetricsPanel extends JPanel {
 	private JSplitPane createCauseBlocksPage() {
 		final JFreeChart histogram;
 		final JFreeChart pieChart;
-		final Map<String, Integer> values;
 		final ChartManager chartManager;
-
-		values = metrics.calculateCauseBlockMetrics();
 
 		// Create the Histogram
 		histogram = createHistogram(CAUSES_STRING + " " + BLOCKS_STRING,
-				BLOCKS_STRING, FREQUENCY_STRING, values);
+				BLOCKS_STRING, FREQUENCY_STRING, causeBlockValues);
 
 		// Create the Pie Chart
-		pieChart = createPieChart(CAUSES_STRING + " " + BLOCKS_STRING, values);
+		pieChart = createPieChart(CAUSES_STRING + " " + BLOCKS_STRING,
+				causeBlockValues);
 
 		chartManager = new ChartManager(new ChartPanel(histogram),
 				new ChartPanel(pieChart));
@@ -163,19 +251,6 @@ public class MetricsPanel extends JPanel {
 		final ChartManager askItsChartManager;
 		final ChartManager repeatsChartManager;
 		final ChartManager delaysChartManager;
-
-		final Map<String, Integer> causesValues = metrics
-				.calculateFavouriteCauses();
-		final Map<String, Integer> effectsValues = metrics
-				.calculateFavouriteEffects();
-		final Map<String, Integer> knowItsValues = metrics
-				.calculateFavouriteDescriptions();
-		final Map<String, Integer> askItsValues = metrics
-				.calculateFavouriteQuestions();
-		final Map<String, Integer> repeatsValues = metrics
-				.calculateFavouriteRepeats();
-		final Map<String, Integer> delaysValues = metrics
-				.calculateFavouriteDelays();
 
 		// Create the histograms
 		causesHistogram = createHistogram(FAVOURITE_STRING + " "
@@ -244,21 +319,17 @@ public class MetricsPanel extends JPanel {
 	 * @return the page body.
 	 */
 	private JSplitPane createGeneralPage() {
-		final Map<String, Integer> values;
-
 		final JFreeChart histogram;
 		final JFreeChart pieChart;
-
 		final ChartManager chartManager;
-
-		values = metrics.calculateGeneralMetrics();
 
 		// Create the histogram
 		histogram = createHistogram(GENERAL_STRING + " " + METRICS_STRING,
-				STORY_COMPONENT_STRING, FREQUENCY_STRING, values);
+				STORY_COMPONENT_STRING, FREQUENCY_STRING, generalValues);
 
 		// Create the pie chart
-		pieChart = createPieChart(GENERAL_STRING + " " + METRICS_STRING, values);
+		pieChart = createPieChart(GENERAL_STRING + " " + METRICS_STRING,
+				generalValues);
 
 		chartManager = new ChartManager(new ChartPanel(histogram),
 				new ChartPanel(pieChart));
@@ -351,16 +422,16 @@ public class MetricsPanel extends JPanel {
 	 */
 	private class ChartManager {
 		final JSplitPane splitPanel;
-		
+
 		final JPanel buttonPanel;
-		
+
 		final ButtonGroup buttonGroup;
 		final JRadioButton histogramButton;
 		final JRadioButton pieChartButton;
 
 		final ChartPanel histogramChart;
 		final ChartPanel pieChart;
-		
+
 		/**
 		 * Initialize the radio buttons and panels for the Charts.
 		 * 
@@ -395,7 +466,7 @@ public class MetricsPanel extends JPanel {
 		private void setupPanel() {
 			this.buttonPanel.add(this.histogramButton);
 			this.buttonPanel.add(this.pieChartButton);
-			
+
 			splitPanel.setTopComponent(this.histogramChart);
 			splitPanel.setBottomComponent(this.buttonPanel);
 			splitPanel.setDividerLocation(0.8);
