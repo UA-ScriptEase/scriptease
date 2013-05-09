@@ -2,9 +2,6 @@ package scriptease.gui.pane;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -15,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -26,8 +22,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import scriptease.controller.MetricAnalyzer;
-import scriptease.controller.io.FileIO;
-import scriptease.gui.WindowFactory;
+import scriptease.controller.MetricsExporter;
 
 @SuppressWarnings("serial")
 /**
@@ -38,14 +33,14 @@ import scriptease.gui.WindowFactory;
  * @author jyuen
  */
 public class MetricsPanel extends JPanel {
-
+	
 	private final MetricAnalyzer metrics;
 
 	private static final String EXPORT_STRING = "Export as CSV";
 	private static final String STORY_COMPONENT_STRING = "Story Component";
 	private static final String STORY_POINT_STRING = "Story Point";
 	private static final String COMPLEXITY_STRING = "Complexity";
-	private static final String GENERAL_STRING = "General";
+	private static final String GENERAL_STRING = "Component Count";
 	private static final String METRICS_STRING = "Metrics";
 	private static final String FAVOURITE_STRING = "Favourite";
 	private static final String FREQUENCY_STRING = "Frequency";
@@ -98,76 +93,12 @@ public class MetricsPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				exportMetrics();
+				MetricsExporter.getInstance().exportMetrics();
 			}
 		});
 
 		add(tabs);
 		add(exportButton);
-	}
-	
-	/**
-	 * Creates a new file filter for export
-	 * 
-	 * @return
-	 */
-	private javax.swing.filechooser.FileFilter createMetricsFilter() {
-		final javax.swing.filechooser.FileFilter filter;
-
-		filter = new FileNameExtensionFilter(".csv", ".csv");
-
-		return filter;
-	}
-
-	/**
-	 * Export the .csv file to the user's requested directory.
-	 */
-	public void exportMetrics() {
-		final File metricsFile;
-		final Collection<ArrayList<String>> data;
-
-		data = new ArrayList<ArrayList<String>>();
-
-		metricsFile = WindowFactory.getInstance().showFileChooser("Save",
-				"story_metrics.csv", createMetricsFilter());
-
-		processDataToCSV(STORY_COMPONENT_STRING, FREQUENCY_STRING,
-				this.generalValues, data);
-		processDataToCSV(COMPLEXITY_STRING, FREQUENCY_STRING,
-				this.complexityValues, data);
-		processDataToCSV(CAUSES_STRING + " " + BLOCKS_STRING, FREQUENCY_STRING,
-				this.causeBlockValues, data);
-		// processDataToCSV(STORY_COMPONENT_STRING, FREQUENCY_STRING,
-		// this.generalValues, data);
-		// processDataToCSV(STORY_COMPONENT_STRING, FREQUENCY_STRING,
-		// this.generalValues, data);
-		// processDataToCSV(STORY_COMPONENT_STRING, FREQUENCY_STRING,
-		// this.generalValues, data);
-
-		FileIO.getInstance().saveCSV(data, metricsFile);
-	}
-
-	private void processDataToCSV(String xComponent, String yComponent,
-			Map<String, ? extends Number> values,
-			final Collection<ArrayList<String>> data) {
-
-		ArrayList<String> tempRow = new ArrayList<String>();
-
-		tempRow.add(xComponent);
-		tempRow.add(yComponent);
-		data.add(tempRow);
-
-		for (Entry<String, ?> entry : values.entrySet()) {
-			tempRow = new ArrayList<String>();
-			tempRow.add(entry.getKey());
-
-			if (entry.getValue() instanceof Float)
-				tempRow.add(Float.toString((Float) entry.getValue()));
-			else if (entry.getValue() instanceof Integer)
-				tempRow.add(Integer.toString((Integer) entry.getValue()));
-
-			data.add(tempRow);
-		}
 	}
 
 	private JPanel storyPointComplexityPage() {

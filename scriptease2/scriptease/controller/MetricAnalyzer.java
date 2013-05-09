@@ -109,8 +109,6 @@ public class MetricAnalyzer {
 		metrics.put("Game Objects", gameObjects.size());
 		metrics.put("Implicits", implicits.size());
 
-		calculateLongestBranch();
-
 		return metrics;
 	}
 
