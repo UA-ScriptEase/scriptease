@@ -3,6 +3,7 @@ package scriptease.controller.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -89,6 +90,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
  * 
  * @author remiller
  * @author mfchurch
+ * @author jyuen
  */
 public class FileIO {
 	/**
@@ -121,11 +123,37 @@ public class FileIO {
 	/**
 	 * Saves a CSV file to disk.
 	 * 
-	 * @param values
-	 *            The values to generate in the CSV file.
+	 * @param data
+	 *            The data to generate in the CSV file.
+	 * @param file
+	 *            The file path to save the CSV in.
 	 */
-	public void saveCSV(Collection<Collection<String>> values) {
-		
+	public void saveCSV(Collection<? extends Collection<String>> data, File file) {
+		final FileWriter out;
+		String output;
+
+		try {
+			out = new FileWriter(file);
+
+			for (Collection<String> row : data) {
+				output = "";
+				
+				for (String value : row)
+					output += value + ",";
+
+				// Remove the last comma.
+				output = output.substring(0, output.length() - 1);
+
+				output += "\n";
+
+				out.append(output);
+			}
+
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
