@@ -11,7 +11,6 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
@@ -60,6 +59,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private StoryComponentContainer noteContainer;
 	private StoryComponentContainer modelRoot;
 
+	private int nextID;
+
 	private static final LibraryModel COMMON_LIBRARY = new LibraryModel(
 			COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME) {
 		{
@@ -84,17 +85,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 */
 	public LibraryModel() {
 		this("", "", null);
-	}
-
-	/**
-	 * Builds a new Library model with a blank author and title, and the passed
-	 * translator.
-	 * 
-	 * @param translator
-	 *            The translator that the library belongs to.
-	 */
-	public LibraryModel(Translator translator) {
-		this("", "", translator);
 	}
 
 	/**
@@ -356,6 +346,19 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public void add(StoryComponent component) {
 		component.process(this.categoryAdder);
 		component.setLibrary(this);
+
+		if (component instanceof ScriptIt) {
+			final List<CodeBlock> codeBlocks;
+
+			codeBlocks = new ArrayList<CodeBlock>(
+					((ScriptIt) component).getCodeBlocks());
+
+			for (CodeBlock codeBlock : codeBlocks) {
+				this.nextID = Math.max(codeBlock.getId() + 1, this.nextID);
+			}
+		}
+
+		this.notifyChange(component, LibraryEvent.Type.ADDITION);
 	}
 
 	/**
@@ -433,6 +436,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 					container.removeStoryComponentObserver(LibraryModel.this);
 			}
 		});
+
+		this.notifyChange(component, LibraryEvent.Type.REMOVAL);
 	}
 
 	public void addAll(Collection<? extends StoryComponent> components) {
@@ -461,15 +466,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 */
 	@Override
 	public void componentChanged(StoryComponentEvent event) {
-		final StoryComponent source = event.getSource();
-
-		if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_REMOVED) {
-			this.notifyChange(source, LibraryEvent.Type.REMOVAL);
-		} else if (event.getType() == StoryComponentChangeEnum.CHANGE_CHILD_ADDED) {
-			this.notifyChange(source, LibraryEvent.Type.ADDITION);
-		} else {
-			this.notifyChange(source, LibraryEvent.Type.CHANGE);
-		}
+		this.notifyChange(event.getSource(), LibraryEvent.Type.CHANGE);
 	}
 
 	/**
@@ -478,9 +475,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @return
 	 */
 	public List<StoryComponent> getAllStoryComponents() {
-		final List<StoryComponent> components;
-
-		components = new ArrayList<StoryComponent>();
+		final List<StoryComponent> components = new ArrayList<StoryComponent>();
 
 		components.addAll(this.effectsCategory.getChildren());
 		components.addAll(this.causesCategory.getChildren());
@@ -528,16 +523,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	@Override
 	public void process(ModelVisitor processController) {
 		processController.processLibraryModel(this);
-	}
-
-	@Override
-	public Collection<LibraryModel> getLibraries() {
-		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
-
-		libraries.add(LibraryModel.getCommonLibrary());
-		libraries.add(this.translator.getApiDictionary().getLibrary());
-
-		return libraries;
 	}
 
 	/**
@@ -661,5 +646,14 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 					return;
 			}
 		}
+	}
+
+	/**
+	 * Retrieves the next code block unique ID for this library.
+	 * 
+	 * @return The next available unique id for a code block.
+	 */
+	public int getNextCodeBlockID() {
+		return this.nextID++;
 	}
 }

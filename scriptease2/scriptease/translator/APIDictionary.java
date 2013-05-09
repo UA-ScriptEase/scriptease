@@ -1,28 +1,15 @@
 package scriptease.translator;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import scriptease.controller.BindingAdapter;
-import scriptease.controller.BindingVisitor;
-import scriptease.controller.StoryAdapter;
-import scriptease.controller.observer.library.LibraryEvent;
-import scriptease.controller.observer.library.LibraryObserver;
 import scriptease.model.CodeBlock;
-import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
-import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
-import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
-import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.translator.apimanagers.EventSlotManager;
 import scriptease.translator.apimanagers.GameTypeManager;
-import scriptease.translator.io.model.Slot;
 
 /**
  * APIDictionary represents the API dictionary used by a Translator to represent
@@ -37,12 +24,11 @@ import scriptease.translator.io.model.Slot;
  * @author mfchurch
  * @author remiller
  */
-public class APIDictionary implements LibraryObserver {
+public class APIDictionary {
 	private final LibraryModel library;
 	private final DescribeItManager describeItManager;
 	private final GameTypeManager typeManager;
 	private final EventSlotManager slotManager;
-	private int nextID;
 
 	/**
 	 * Builds a new API Dictionary with the given next ID.
@@ -55,27 +41,7 @@ public class APIDictionary implements LibraryObserver {
 		this.typeManager = new GameTypeManager();
 		this.slotManager = new EventSlotManager();
 		this.describeItManager = new DescribeItManager();
-
-		this.library.addLibraryChangeListener(this);
 	}
-
-	@Override
-	public void modelChanged(LibraryModel model, LibraryEvent event) {
-		final StoryComponent source = event.getSource();
-
-		if (event.getEventType() == LibraryEvent.Type.ADDITION) {
-			if (source instanceof ScriptIt) {
-				final List<CodeBlock> codeBlocks;
-
-				codeBlocks = new ArrayList<CodeBlock>(
-						((ScriptIt) source).getCodeBlocks());
-
-				for (CodeBlock codeBlock : codeBlocks) {
-					this.nextID = Math.max(codeBlock.getId() + 1, this.nextID);
-				}
-			}
-		}
-	};
 
 	// //////////////////////
 	// Getters and Setters //
@@ -139,24 +105,5 @@ public class APIDictionary implements LibraryObserver {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Retrieves the next code block unique ID for this translator.
-	 * 
-	 * @return The next available unique id for a code block.
-	 */
-	public int getNextCodeBlockID() {
-		return this.nextID++;
-	}
-
-	/**
-	 * Increases the NextCodeBlockID to the passed int. If the current id is
-	 * larger than the passed int, nothing is changed.
-	 * 
-	 * @param ID
-	 */
-	public void increaseNextCodeBlockIDTo(int ID) {
-		this.nextID = Math.max(this.nextID, ID);
 	}
 }

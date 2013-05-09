@@ -10,10 +10,8 @@ import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.APIDictionary;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 
 /**
  * Inserts a new ScriptIt into the library. The new ScriptIt contains one empty
@@ -43,22 +41,18 @@ public class NewEffectAction extends ActiveTranslatorSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final Translator activeTranslator;
-		final APIDictionary apiDictionary;
 		final LibraryModel libraryModel;
 
 		final ScriptIt newCause;
+		final int codeBlockID;
 		final CodeBlock codeBlock;
 
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-		apiDictionary = activeTranslator.getApiDictionary();
-		libraryModel = apiDictionary.getLibrary();
+		libraryModel = (LibraryModel) SEModelManager.getInstance()
+				.getActiveModel();
 
 		newCause = new ScriptIt("Do Something");
-
-		final int id = apiDictionary.getNextCodeBlockID();
-		codeBlock = new CodeBlockSource(id);
+		codeBlockID = libraryModel.getNextCodeBlockID();
+		codeBlock = new CodeBlockSource(codeBlockID);
 
 		newCause.addCodeBlock(codeBlock);
 		newCause.setDisplayText("Do Something");

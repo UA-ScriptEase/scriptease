@@ -268,6 +268,25 @@ public class Translator {
 	 * @return
 	 */
 	public Collection<LibraryModel> getOptionalLibraries() {
+		this.initializeOptionalLibraries();
+		return this.optionalLibraries;
+	}
+
+	/**
+	 * Adds a new optional library to the translator.
+	 * 
+	 * @param library
+	 */
+	public void addOptionalLibrary(LibraryModel library) {
+		this.initializeOptionalLibraries();
+		this.optionalLibraries.add(library);
+	}
+
+	/**
+	 * This needs to get called here so we don't accidentally load the api
+	 * dictionary at the same time as the translator itself is loading.
+	 */
+	private void initializeOptionalLibraries() {
 		if (this.optionalLibraries == null) {
 			final File optionalLibraryDir;
 
@@ -299,8 +318,6 @@ public class Translator {
 				}
 			}
 		}
-
-		return this.optionalLibraries;
 	}
 
 	/**

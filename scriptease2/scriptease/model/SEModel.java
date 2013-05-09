@@ -1,7 +1,6 @@
 package scriptease.model;
 
 import java.io.File;
-import java.util.Collection;
 
 import scriptease.controller.ModelVisitor;
 import scriptease.translator.Translator;
@@ -92,13 +91,6 @@ public abstract class SEModel {
 	 * @return the translator
 	 */
 	public abstract Translator getTranslator();
-
-	/**
-	 * Gets the libraries used by the model.
-	 * 
-	 * @return
-	 */
-	public abstract Collection<LibraryModel> getLibraries();
 
 	@Override
 	public String toString() {

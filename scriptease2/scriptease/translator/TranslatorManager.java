@@ -351,11 +351,14 @@ public class TranslatorManager {
 	public void setActiveTranslator(Translator translator) {
 		if (this.activeTranslator == translator)
 			return;
-		this.activeTranslator = translator; 
+		this.activeTranslator = translator;
 		if (translator != null) {
 			StatusManager.getInstance().setStatus(
 					translator.getName() + " translator loaded");
 
+			// We have this here so we don't run into issues later where the api
+			// dictionary isn't loaded.
+			translator.getApiDictionary();
 		}
 		this.notifyObservers();
 	}
