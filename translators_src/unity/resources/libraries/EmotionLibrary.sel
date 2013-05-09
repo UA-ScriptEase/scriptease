@@ -6,14 +6,17 @@
   <ScriptIt>
       <Name>Allow &lt;Object&gt; to have emotions</Name>
       <Visible>true</Visible>
-      <Labels/>
+      <Labels>
+      	<Label>NOW</Label>
+      	<Label>E</Label>
+      </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>Allow &lt;Object&gt; to have emotions</Name>
           <Visible>true</Visible>
           <Labels/>
-          <Id>194</Id>
+          <Id>1</Id>
           <Types>
             <Type>void</Type>
           </Types>
