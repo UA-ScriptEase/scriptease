@@ -119,6 +119,16 @@ public class FileIO {
 	private IoMode mode;
 
 	/**
+	 * Saves a CSV file to disk.
+	 * 
+	 * @param values
+	 *            The values to generate in the CSV file.
+	 */
+	public void saveCSV(Collection<Collection<String>> values) {
+		
+	}
+
+	/**
 	 * Reads a Story from disk.
 	 * 
 	 * @param location
