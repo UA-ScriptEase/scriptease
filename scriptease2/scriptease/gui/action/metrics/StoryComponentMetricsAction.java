@@ -52,7 +52,7 @@ public class StoryComponentMetricsAction extends ActiveModelSensitiveAction {
 	public void actionPerformed(ActionEvent arg0) {
 		MetricAnalyzer.getInstance().processStoryComponents();
 
-		WindowFactory.getInstance().buildAndShowCustomFrame(new MetricsPanel(),
-				"Metrics", false);
+		WindowFactory.getInstance().buildAndShowDialog("Metrics",
+				new MetricsPanel(), false);
 	}
 }
