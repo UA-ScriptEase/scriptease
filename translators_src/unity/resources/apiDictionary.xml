@@ -1884,7 +1884,7 @@
   </Slots>
   <Causes>
     <ScriptIt>
-      <Name>When &lt;subject&gt; starts</Name>
+      <Name>When &lt;subject&gt; wakes up initialize the story system</Name>
       <Visible>false</Visible>
       <Labels>
         <Label>automatic</Label>
@@ -1911,11 +1911,11 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt; starts</Name>
+          <Name>When &lt;subject&gt; wakes up initialize the story system</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
-          <Slot>Start</Slot>
+          <Slot>Awake</Slot>
           <Id>114</Id>
           <Types>
             <Type>void</Type>
