@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -34,6 +35,7 @@ public class MetricsPanel extends JPanel {
 
 	private final MetricAnalyzer metrics;
 
+	private static final String EXPORT_STRING = "Export as CSV";
 	private static final String STORY_COMPONENT_STRING = "Story Component";
 	private static final String STORY_POINT_STRING = "Story Point";
 	private static final String COMPLEXITY_STRING = "Complexity";
@@ -54,6 +56,7 @@ public class MetricsPanel extends JPanel {
 	 */
 	public MetricsPanel() {
 		final JTabbedPane tabs = new JTabbedPane();
+		final JButton export = new JButton(EXPORT_STRING);
 
 		this.metrics = MetricAnalyzer.getInstance();
 
@@ -63,6 +66,15 @@ public class MetricsPanel extends JPanel {
 		tabs.addTab(COMPLEXITY_STRING, createComplexityPage());
 		tabs.addTab(STORY_POINT_STRING + " " + COMPLEXITY_STRING, storyPointComplexityPage());
 
+		export.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		
+		
 		add(tabs);
 	}
 
