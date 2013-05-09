@@ -8,11 +8,9 @@ import javax.swing.KeyStroke;
 
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.model.LibraryModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
-import scriptease.translator.APIDictionary;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 
 /**
  * Inserts a new Description into the Library.
@@ -44,17 +42,12 @@ public class NewDescriptionAction extends ActiveTranslatorSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final Translator activeTranslator;
-		final APIDictionary apiDictionary;
 		final LibraryModel libraryModel;
-
 		final DescribeItNode describeItNode;
 		final DescribeIt describeIt;
 
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-		apiDictionary = activeTranslator.getApiDictionary();
-		libraryModel = apiDictionary.getLibrary();
+		libraryModel = (LibraryModel) SEModelManager.getInstance()
+				.getActiveModel();
 
 		describeItNode = new DescribeItNode("Placeholder Node");
 		describeIt = new DescribeIt("New DescribeIt", describeItNode);

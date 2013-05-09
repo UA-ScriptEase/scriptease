@@ -1,0 +1,48 @@
+<APIDictionary name="EmotionLibrary" author="ScriptEase Team">
+  <Types/>
+  <Slots/>
+  <Causes/>
+  <Effects>
+  <ScriptIt>
+      <Name>Allow &lt;Object&gt; to have emotions</Name>
+      <Visible>true</Visible>
+      <Labels>
+      	<Label>NOW</Label>
+      	<Label>E</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Allow &lt;Object&gt; to have emotions</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>1</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.AddComponent(&quot;EmotionController&quot;);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+  </Effects>
+  <DescribeIts/>
+  <ControlIts/>
+  <TypeConverters/>
+</APIDictionary>

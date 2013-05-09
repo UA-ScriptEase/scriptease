@@ -70,24 +70,25 @@ public class CodeBlockReference extends CodeBlock {
 
 	@Override
 	public CodeBlockReference clone() {
-		CodeBlockReference clone = null;
+		final CodeBlockReference clone;
+		final Collection<KnowIt> originalParameters;
 		final Collection<KnowIt> clonedParameters;
 
 		clone = (CodeBlockReference) super.clone();
+		originalParameters = this.getParameters();
+		clonedParameters = new ArrayList<KnowIt>(originalParameters.size());
 
 		clone.setTarget(this.getTarget());
 
 		clone.init();
 
 		// parameters
-		clonedParameters = new ArrayList<KnowIt>(this.getParameters().size());
-		for (KnowIt parameter : this.getParameters()) {
-			final KnowIt clonedParameter;
-
-			clonedParameter = parameter.clone();
+		for (KnowIt parameter : originalParameters) {
+			final KnowIt clonedParameter = parameter.clone();
 
 			clonedParameters.add(clonedParameter);
 		}
+
 		clone.setParameters(clonedParameters);
 
 		// Poof! Tadaa!

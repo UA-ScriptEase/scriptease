@@ -1,0 +1,114 @@
+<APIDictionary name="A* Pathfinding Library" author="ScriptEase Team">
+	<Types/>
+	<Slots/>
+	<Causes/>
+	<Effects>
+	<ScriptIt>
+		<Name>Allow &lt;Object&gt; to find paths</Name>
+		<Visible>true</Visible>
+		<Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+		<Children/>
+		<CodeBlocks>
+        <CodeBlockSource>
+          <Name>Allow &lt;Object&gt; to find paths</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>1</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+		  <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.AddComponent(&quot;RVOController&quot;);</Literal>
+            </Line>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.AddComponent(&quot;Seeker&quot;);</Literal>
+            </Line>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.AddComponent(&quot;AIPath&quot;);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt>
+      <Name>&lt;Object&gt; walks to &lt;Other Object&gt;</Name>
+      <Visible>true</Visible>
+     <Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Object&gt; walks to &lt;Other Object&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>2</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Other Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Literal>var aiPath:AIPath = </Literal>
+				<Scope data="ARGUMENT" ref="Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.GetComponent(typeof(AIPath));</Literal>
+			</Line>
+            <Line>
+              <Literal>aiPath.target = </Literal>
+			  <Scope data="ARGUMENT" ref="Other Object">
+					<Fragment data="NAME"/>
+			  </Scope>
+			  <Literal>.transform;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+  </Effects>
+  <DescribeIts/>
+  <ControlIts/>
+  <TypeConverters/>
+</APIDictionary>
