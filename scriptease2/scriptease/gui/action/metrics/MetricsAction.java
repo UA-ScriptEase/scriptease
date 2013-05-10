@@ -56,38 +56,41 @@ public class MetricsAction extends ActiveModelSensitiveAction {
 	}
 
 	@Override
+	/**
+	 * Create the metrics dialog and call Metric Analyzer to process the story
+	 * components so we can make data out of it!
+	 */
 	public void actionPerformed(ActionEvent arg0) {
 		MetricAnalyzer.getInstance().processStoryComponents();
-		
+
 		createDialogPane();
 	}
-	
+
 	private void createDialogPane() {
 		final int WIDTH = 800;
 		final int HEIGHT = 600;
-		
+
 		final String EXPORT = "Export as CSV";
 		final String CLOSE = "Close";
-		
+
 		final JDialog dialog;
 		final JPanel buttonsPanel;
 		final JButton exportButton = new JButton(EXPORT);
 		final JButton closeButton = new JButton(CLOSE);
-		
+
 		buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
 		dialog = WindowFactory.getInstance().buildDialog("Metrics",
 				new MetricsPanel(), false);
-		
-		
+
 		buttonsPanel.add(exportButton);
 		buttonsPanel.add(closeButton);
 
-		dialog.getContentPane().add(buttonsPanel);	
+		dialog.getContentPane().add(buttonsPanel);
 		dialog.setSize(WIDTH, HEIGHT);
 		dialog.getContentPane().setLayout(
 				new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
-		
+
 		exportButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -95,7 +98,7 @@ public class MetricsAction extends ActiveModelSensitiveAction {
 				MetricsExporter.getInstance().exportMetrics();
 			}
 		});
-		
+
 		closeButton.addActionListener(new ActionListener() {
 
 			@Override
