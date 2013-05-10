@@ -1,12 +1,12 @@
 package scriptease.gui.pane;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
@@ -15,13 +15,13 @@ import javax.swing.JTabbedPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import scriptease.controller.MetricAnalyzer;
-import scriptease.controller.MetricsExporter;
 
 @SuppressWarnings("serial")
 /**
@@ -35,12 +35,10 @@ public class MetricsPanel extends JPanel {
 
 	private final MetricAnalyzer metrics;
 
-	private static final String EXPORT = "Export as CSV";
 	private static final String STORY_COMPONENT = "Story Component";
 	private static final String STORY_POINT = "Story Point";
 	private static final String COMPLEXITY = "Complexity";
 	private static final String COMPONENT_COUNT = "Component Count";
-	private static final String METRICS = "Metrics";
 	private static final String FAVOURITE = "Favourite";
 	private static final String FREQUENCY = "Frequency";
 	private static final String CAUSES = "Causes";
@@ -56,7 +54,6 @@ public class MetricsPanel extends JPanel {
 	 */
 	public MetricsPanel() {
 		final JTabbedPane tabs = new JTabbedPane();
-		final JButton exportButton = new JButton(EXPORT);
 
 		this.metrics = MetricAnalyzer.getInstance();
 
@@ -67,16 +64,7 @@ public class MetricsPanel extends JPanel {
 		tabs.addTab(STORY_POINT + " " + COMPLEXITY,
 				createStoryPointComplexityPage());
 
-		exportButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				MetricsExporter.getInstance().exportMetrics();
-			}
-		});
-
 		add(tabs);
-		add(exportButton);
 	}
 
 	/**
@@ -96,7 +84,7 @@ public class MetricsPanel extends JPanel {
 
 		// Create the Histogram
 		histogram = createHistogram("StoryPoint Complexity", "", FREQUENCY,
-				values);
+				values, true);
 
 		// Create the Pie Chart
 		pieChart = createPieChart("StoryPoint Complexity", values);
@@ -123,7 +111,7 @@ public class MetricsPanel extends JPanel {
 
 		// Create the Histogram
 		histogram = createHistogram("Average " + COMPLEXITY, BLOCKS, FREQUENCY,
-				complexityValues);
+				complexityValues, false);
 
 		// Create the Pie Chart
 		pieChart = createPieChart("Average " + COMPLEXITY, complexityValues);
@@ -150,7 +138,7 @@ public class MetricsPanel extends JPanel {
 
 		// Create the Histogram
 		histogram = createHistogram(CAUSES + " " + BLOCKS, BLOCKS, FREQUENCY,
-				causeBlockValues);
+				causeBlockValues, true);
 
 		// Create the Pie Chart
 		pieChart = createPieChart(CAUSES + " " + BLOCKS, causeBlockValues);
@@ -199,17 +187,17 @@ public class MetricsPanel extends JPanel {
 
 		// Create the histograms
 		causesHistogram = createHistogram(FAVOURITE + " " + CAUSES, CAUSES,
-				FREQUENCY, causesValues);
+				FREQUENCY, causesValues, true);
 		effectsHistogram = createHistogram(FAVOURITE + " " + EFFECTS, EFFECTS,
-				FREQUENCY, effectsValues);
+				FREQUENCY, effectsValues, true);
 		knowItsHistogram = createHistogram(FAVOURITE + " " + DESCRIPTIONS,
-				DESCRIPTIONS, FREQUENCY, knowItsValues);
+				DESCRIPTIONS, FREQUENCY, knowItsValues, true);
 		askItsHistogram = createHistogram(FAVOURITE + " " + QUESTIONS,
-				QUESTIONS, FREQUENCY, askItsValues);
+				QUESTIONS, FREQUENCY, askItsValues, true);
 		repeatsHistogram = createHistogram(FAVOURITE + " " + REPEATS, REPEATS,
-				FREQUENCY, repeatsValues);
+				FREQUENCY, repeatsValues, true);
 		delaysHistogram = createHistogram(FAVOURITE + " " + DELAYS, DELAYS,
-				FREQUENCY, delaysValues);
+				FREQUENCY, delaysValues, true);
 
 		// Create the pie charts
 		causesPieChart = createPieChart(FAVOURITE + " " + CAUSES, causesValues);
@@ -259,12 +247,11 @@ public class MetricsPanel extends JPanel {
 		generalValues = metrics.getNumStoryComponents();
 
 		// Create the histogram
-		histogram = createHistogram(COMPONENT_COUNT + " " + METRICS,
-				STORY_COMPONENT, FREQUENCY, generalValues);
+		histogram = createHistogram(COMPONENT_COUNT, STORY_COMPONENT,
+				FREQUENCY, generalValues, true);
 
 		// Create the pie chart
-		pieChart = createPieChart(COMPONENT_COUNT + " " + METRICS,
-				generalValues);
+		pieChart = createPieChart(COMPONENT_COUNT, generalValues);
 
 		chartManager = new ChartManager(histogram, pieChart);
 
@@ -281,7 +268,8 @@ public class MetricsPanel extends JPanel {
 	 * @return The Histogram
 	 */
 	private ChartPanel createHistogram(String title, String xAxisTitle,
-			String yAxisTitle, Map<String, ? extends Number> values) {
+			String yAxisTitle, Map<String, ? extends Number> values,
+			boolean yAxisIntegerScale) {
 
 		final ChartPanel histogramPanel;
 		final JFreeChart histogram;
@@ -289,6 +277,13 @@ public class MetricsPanel extends JPanel {
 		histogram = ChartFactory.createBarChart(title, xAxisTitle, yAxisTitle,
 				processHistogramValues(values), PlotOrientation.VERTICAL,
 				false, false, false);
+
+		// Allow only integers on y-axis if requested.
+		if (yAxisIntegerScale) {
+			NumberAxis rangeAxis = (NumberAxis) histogram.getCategoryPlot()
+					.getRangeAxis();
+			rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+		}
 
 		histogramPanel = new ChartPanel(histogram);
 		histogramPanel.setPopupMenu(null);
@@ -409,9 +404,15 @@ public class MetricsPanel extends JPanel {
 			this.buttonPanel.add(this.histogramButton);
 			this.buttonPanel.add(this.pieChartButton);
 
+			this.histogramButton.setBackground(Color.WHITE);
+			this.pieChartButton.setBackground(Color.WHITE);
+			this.buttonPanel.setBackground(Color.WHITE);
+
 			this.splitPanel.setTopComponent(this.histogramChart);
 			this.splitPanel.setBottomComponent(this.buttonPanel);
-			this.splitPanel.setDividerLocation(0.9);
+			this.splitPanel.setEnabled(false);
+			this.splitPanel.setDividerLocation(0.95);
+			this.splitPanel.setDividerSize(0);
 		}
 
 		private void initializeButtonGroup() {
