@@ -11,6 +11,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.WindowFactory;
 
+/**
+ * Responsible for exporting metric data to .cvs file so that it can be used in
+ * Excel etc.
+ * 
+ * @author jyuen
+ */
 public class MetricsExporter {
 
 	// Singleton
@@ -28,7 +34,7 @@ public class MetricsExporter {
 
 		return MetricsExporter.instance;
 	}
-	
+
 	/**
 	 * Creates a new file filter for export
 	 * 
@@ -46,31 +52,61 @@ public class MetricsExporter {
 	 * Export the .csv file to the user's requested directory.
 	 */
 	public void exportMetrics() {
+		final MetricAnalyzer metricAnalyzer;
 		final File metricsFile;
 		final Collection<ArrayList<String>> data;
+
+		final String STORY_COMPONENTS = "Story Components";
+		final String FREQUENCY = "Frequency";
+		final String AVERAGE = "Average";
+		final String COMPLEXITY = "Complexity";
+		final String CAUSE_BLOCK = "Cause Block";
+		final String FAVOURITE = "Favourite";
+		final String CAUSES = "Causes";
+		final String EFFECTS = "Effects";
+		final String DESCRIPTIONS = "Descriptions";
+		final String QUESTIONS = "Questions";
+		final String REPEATS = "Repeats";
+		final String DELAYS = "Delays";
+		final String STORY_POINT_COMPLEXITY = "Story Point Complexity";
+		
+		metricAnalyzer = MetricAnalyzer.getInstance();
 
 		data = new ArrayList<ArrayList<String>>();
 
 		metricsFile = WindowFactory.getInstance().showFileChooser("Save",
 				"story_metrics.csv", createMetricsFilter());
 
-//		processDataToCSV(GENERAL_STRING, FREQUENCY_STRING, this.generalValues,
-//				data);
-//		processDataToCSV(COMPLEXITY_STRING, FREQUENCY_STRING,
-//				this.complexityValues, data);
-//		processDataToCSV(CAUSES_STRING + " " + BLOCKS_STRING, FREQUENCY_STRING,
-//				this.causeBlockValues, data);
-//		processDataToCSV(FAVOURITE_STRING + " " + CAUSES_STRING,
-//				FREQUENCY_STRING, this.causesValues, data);
-//		processDataToCSV(FAVOURITE_STRING + " " + KNOWITS_STRING,
-//				FREQUENCY_STRING, this.knowItsValues, data);
-//		processDataToCSV(FAVOURITE_STRING + " " + ASKIT_STRING,
-//				FREQUENCY_STRING, this.askItsValues, data);
-//		processDataToCSV(FAVOURITE_STRING + " " + REPEATS_STRING,
-//				FREQUENCY_STRING, this.repeatsValues, data);
-//		processDataToCSV(FAVOURITE_STRING + " " + DELAY_STRING,
-//				FREQUENCY_STRING, this.delaysValues, data);
+		processDataToCSV(STORY_COMPONENTS, FREQUENCY,
+				metricAnalyzer.getNumStoryComponents(), data);
 
+		processDataToCSV(COMPLEXITY, AVERAGE + " " + FREQUENCY,
+				metricAnalyzer.getStoryComponentComplexity(), data);
+
+		processDataToCSV(CAUSE_BLOCK, FREQUENCY,
+				metricAnalyzer.getCauseBlockMetrics(), data);
+
+		processDataToCSV(FAVOURITE + " " + CAUSES, FREQUENCY,
+				metricAnalyzer.getFavouriteCauses(), data);
+
+		processDataToCSV(FAVOURITE + " " + EFFECTS, FREQUENCY,
+				metricAnalyzer.getFavouriteEffects(), data);
+
+		processDataToCSV(FAVOURITE + " " + DESCRIPTIONS, FREQUENCY,
+				metricAnalyzer.getFavouriteDescriptions(), data);
+
+		processDataToCSV(FAVOURITE + " " + QUESTIONS, FREQUENCY,
+				metricAnalyzer.getFavouriteQuestions(), data);
+
+		processDataToCSV(FAVOURITE + " " + REPEATS, FREQUENCY,
+				metricAnalyzer.getFavouriteRepeats(), data);
+
+		processDataToCSV(FAVOURITE + " " + DELAYS, FREQUENCY,
+				metricAnalyzer.getFavouriteDelays(), data);
+
+		processDataToCSV(STORY_POINT_COMPLEXITY, FREQUENCY,
+				metricAnalyzer.getStoryPointComplexity(), data);
+		
 		FileIO.getInstance().saveCSV(data, metricsFile);
 	}
 
@@ -95,6 +131,9 @@ public class MetricsExporter {
 
 			data.add(tempRow);
 		}
-	}
 
+		tempRow = new ArrayList<String>();
+		tempRow.add("");
+		data.add(tempRow);
+	}
 }

@@ -95,7 +95,7 @@ public class MetricAnalyzer {
 	 * @return A map containing the metric values in each of their respective
 	 *         categories.
 	 */
-	public Map<String, Integer> calculateGeneralMetrics() {
+	public Map<String, Integer> getNumStoryComponents() {
 		final Map<String, Integer> metrics = new HashMap<String, Integer>();
 
 		metrics.put("Questions", questions.size());
@@ -112,12 +112,21 @@ public class MetricAnalyzer {
 		return metrics;
 	}
 
+	public Map<String, Integer> getStoryPointComplexity() {
+		final Map<String, Integer> metrics = new HashMap<String, Integer>();
+		
+		metrics.put("Longest Branch", this.getLongestBranch());
+		metrics.put("Story Point Leaves", this.getStoryPointLeaves());
+		
+		return metrics;
+	}
+	
 	/**
 	 * Calculates longest Story Point path.
 	 * 
 	 * @return The longest path
 	 */
-	public int calculateLongestBranch() {
+	public int getLongestBranch() {
 		return SEModelManager.getInstance().getActiveRoot().getLongestPath();
 	}
 
@@ -126,19 +135,19 @@ public class MetricAnalyzer {
 	 * 
 	 * @return
 	 */
-	public int calculateStoryPointLeaves() {
+	public int getStoryPointLeaves() {
 		int count = 0;
-		
+
 		List<StoryPoint> storyPoints = SEModelManager.getInstance()
 				.getActiveRoot().getOrderedDescendants();
-		
+
 		for (StoryPoint storypoint : storyPoints) {
 			if (storypoint.getSuccessors().isEmpty())
 				count++;
 		}
-		
+
 		return count;
-	} 
+	}
 
 	/**
 	 * Calculates the average complexity of story components. i.e. The average
@@ -148,7 +157,7 @@ public class MetricAnalyzer {
 	 * @return A map containing the metric values in each of the respective
 	 *         categories.
 	 */
-	public Map<String, Float> calculateComplexityMetrics() {
+	public Map<String, Float> getStoryComponentComplexity() {
 		Map<String, Float> metrics = new HashMap<String, Float>();
 
 		float totalDelaysInCauses = 0;
@@ -231,7 +240,7 @@ public class MetricAnalyzer {
 	 * @return A map containing metric values for the frequency each block is
 	 *         used.
 	 */
-	public Map<String, Integer> calculateCauseBlockMetrics() {
+	public Map<String, Integer> getCauseBlockMetrics() {
 		Map<String, Integer> metrics = new HashMap<String, Integer>();
 
 		metrics.put("Active", 0);
@@ -259,7 +268,7 @@ public class MetricAnalyzer {
 	 * 
 	 * @return A map containing each cause and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteCauses() {
+	public Map<String, Integer> getFavouriteCauses() {
 		return calculateFavouriteMetricsFor(causes);
 	}
 
@@ -268,7 +277,7 @@ public class MetricAnalyzer {
 	 * 
 	 * @return A map containing each effect and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteEffects() {
+	public Map<String, Integer> getFavouriteEffects() {
 		return calculateFavouriteMetricsFor(effects);
 	}
 
@@ -277,7 +286,7 @@ public class MetricAnalyzer {
 	 * 
 	 * @return A map containing each description and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteDescriptions() {
+	public Map<String, Integer> getFavouriteDescriptions() {
 		return calculateFavouriteMetricsFor(descriptions);
 	}
 
@@ -286,7 +295,7 @@ public class MetricAnalyzer {
 	 * 
 	 * @return A map containing each question and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteQuestions() {
+	public Map<String, Integer> getFavouriteQuestions() {
 		return calculateFavouriteMetricsFor(questions);
 	}
 
@@ -295,7 +304,7 @@ public class MetricAnalyzer {
 	 * 
 	 * @return A map containing each repeat and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteRepeats() {
+	public Map<String, Integer> getFavouriteRepeats() {
 		return calculateFavouriteMetricsFor(repeats);
 	}
 
@@ -304,7 +313,7 @@ public class MetricAnalyzer {
 	 * 
 	 * @return A map containing each delay and their occurrence.
 	 */
-	public Map<String, Integer> calculateFavouriteDelays() {
+	public Map<String, Integer> getFavouriteDelays() {
 		return calculateFavouriteMetricsFor(delays);
 	}
 

@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
@@ -33,61 +32,39 @@ import scriptease.controller.MetricsExporter;
  * @author jyuen
  */
 public class MetricsPanel extends JPanel {
-	
+
 	private final MetricAnalyzer metrics;
 
-	private static final String EXPORT_STRING = "Export as CSV";
-	private static final String STORY_COMPONENT_STRING = "Story Component";
-	private static final String STORY_POINT_STRING = "Story Point";
-	private static final String COMPLEXITY_STRING = "Complexity";
-	private static final String GENERAL_STRING = "Component Count";
-	private static final String METRICS_STRING = "Metrics";
-	private static final String FAVOURITE_STRING = "Favourite";
-	private static final String FREQUENCY_STRING = "Frequency";
-	private static final String CAUSES_STRING = "Causes";
-	private static final String EFFECTS_STRING = "Effects";
-	private static final String KNOWITS_STRING = "Descriptions";
-	private static final String ASKIT_STRING = "Questions";
-	private static final String REPEATS_STRING = "Repeats";
-	private static final String DELAY_STRING = "Delays";
-	private static final String BLOCKS_STRING = "Blocks";
-
-	private final Map<String, Integer> generalValues;
-	private final Map<String, Integer> causeBlockValues;
-	private final Map<String, Integer> causesValues;
-	private final Map<String, Integer> effectsValues;
-	private final Map<String, Integer> knowItsValues;
-	private final Map<String, Integer> askItsValues;
-	private final Map<String, Integer> repeatsValues;
-	private final Map<String, Integer> delaysValues;
-	private final Map<String, Float> complexityValues;
+	private static final String EXPORT = "Export as CSV";
+	private static final String STORY_COMPONENT = "Story Component";
+	private static final String STORY_POINT = "Story Point";
+	private static final String COMPLEXITY = "Complexity";
+	private static final String COMPONENT_COUNT = "Component Count";
+	private static final String METRICS = "Metrics";
+	private static final String FAVOURITE = "Favourite";
+	private static final String FREQUENCY = "Frequency";
+	private static final String CAUSES = "Causes";
+	private static final String EFFECTS = "Effects";
+	private static final String DESCRIPTIONS = "Descriptions";
+	private static final String QUESTIONS = "Questions";
+	private static final String REPEATS = "Repeats";
+	private static final String DELAYS = "Delays";
+	private static final String BLOCKS = "Blocks";
 
 	/**
 	 * Creates a new MetricsPanel with the default tabs and histograms.
 	 */
 	public MetricsPanel() {
 		final JTabbedPane tabs = new JTabbedPane();
-		final JButton exportButton = new JButton(EXPORT_STRING);
+		final JButton exportButton = new JButton(EXPORT);
 
 		this.metrics = MetricAnalyzer.getInstance();
 
-		this.generalValues = metrics.calculateGeneralMetrics();
-		this.complexityValues = metrics.calculateComplexityMetrics();
-		this.causeBlockValues = metrics.calculateCauseBlockMetrics();
-		this.causesValues = metrics.calculateFavouriteCauses();
-		this.effectsValues = metrics.calculateFavouriteEffects();
-		this.knowItsValues = metrics.calculateFavouriteDescriptions();
-		this.askItsValues = metrics.calculateFavouriteQuestions();
-		this.repeatsValues = metrics.calculateFavouriteRepeats();
-		this.delaysValues = metrics.calculateFavouriteDelays();
-
-		tabs.addTab(GENERAL_STRING, createGeneralPage());
-		tabs.addTab(FAVOURITE_STRING, createFavoriteCausesPage());
-		tabs.addTab(CAUSES_STRING + " " + BLOCKS_STRING,
-				createCauseBlocksPage());
-		tabs.addTab(COMPLEXITY_STRING, createComplexityPage());
-		tabs.addTab(STORY_POINT_STRING + " " + COMPLEXITY_STRING,
-				storyPointComplexityPage());
+		tabs.addTab(COMPONENT_COUNT, createNumComponentsPage());
+		tabs.addTab(FAVOURITE, createFavoriteCausesPage());
+		tabs.addTab(CAUSES + " " + BLOCKS, createCauseBlocksPage());
+		tabs.addTab(COMPLEXITY, createStoryComponentComplexityPage());
+		tabs.addTab(STORY_POINT + " " + COMPLEXITY, createStoryPointComplexityPage());
 
 		exportButton.addActionListener(new ActionListener() {
 
@@ -101,33 +78,54 @@ public class MetricsPanel extends JPanel {
 		add(exportButton);
 	}
 
-	private JPanel storyPointComplexityPage() {
-		final JPanel panel = new JPanel();
+	/**
+	 * Create the body for the story point complexity related page. 
+	 * I.e. The longest branch, number of child story points ...
+	 * 
+	 * @return the page body.
+	 */
+	private JSplitPane createStoryPointComplexityPage() {
+		final Map<String, Integer> values;
+		
+		final JFreeChart histogram;
+		final JFreeChart pieChart;
+		final ChartManager chartManager;
+		
+		values = metrics.getStoryPointComplexity();
 
-		final JLabel longestBranchText = new JLabel("Longest "
-				+ "story point branch: " + metrics.calculateLongestBranch());
+		// Create the Histogram
+		histogram = createHistogram("StoryPoint Complexity", "", FREQUENCY, values);
 
-		final JLabel storyPointLeavesText = new JLabel("Number of story point "
-				+ "leaves (Childless story points): "
-				+ metrics.calculateStoryPointLeaves());
+		// Create the Pie Chart
+		pieChart = createPieChart("StoryPoint Complexity", values);
+		
+		chartManager = new ChartManager(new ChartPanel(histogram),
+				new ChartPanel(pieChart));
 
-		panel.add(longestBranchText);
-		panel.add(storyPointLeavesText, 1);
-		return panel;
+		return chartManager.getChartPanel();
 	}
 
-	private JSplitPane createComplexityPage() {
+	/**
+	 * Create the body for the story component complexity page
+	 * I.e. The average number of effects in all causes.
+	 * 
+	 * @return the page body.
+	 */
+	private JSplitPane createStoryComponentComplexityPage() {
+		final Map<String, Float> complexityValues;
+
 		final JFreeChart histogram;
 		final JFreeChart pieChart;
 		final ChartManager chartManager;
 
+		complexityValues = metrics.getStoryComponentComplexity();
+
 		// Create the Histogram
-		histogram = createHistogram("Average " + COMPLEXITY_STRING,
-				BLOCKS_STRING, FREQUENCY_STRING, complexityValues);
+		histogram = createHistogram("Average " + COMPLEXITY, BLOCKS, FREQUENCY,
+				complexityValues);
 
 		// Create the Pie Chart
-		pieChart = createPieChart("Average " + COMPLEXITY_STRING,
-				complexityValues);
+		pieChart = createPieChart("Average " + COMPLEXITY, complexityValues);
 
 		chartManager = new ChartManager(new ChartPanel(histogram),
 				new ChartPanel(pieChart));
@@ -142,17 +140,20 @@ public class MetricsPanel extends JPanel {
 	 * @return the page body.
 	 */
 	private JSplitPane createCauseBlocksPage() {
+		final Map<String, Integer> causeBlockValues;
+
 		final JFreeChart histogram;
 		final JFreeChart pieChart;
 		final ChartManager chartManager;
 
+		causeBlockValues = metrics.getCauseBlockMetrics();
+
 		// Create the Histogram
-		histogram = createHistogram(CAUSES_STRING + " " + BLOCKS_STRING,
-				BLOCKS_STRING, FREQUENCY_STRING, causeBlockValues);
+		histogram = createHistogram(CAUSES + " " + BLOCKS, BLOCKS, FREQUENCY,
+				causeBlockValues);
 
 		// Create the Pie Chart
-		pieChart = createPieChart(CAUSES_STRING + " " + BLOCKS_STRING,
-				causeBlockValues);
+		pieChart = createPieChart(CAUSES + " " + BLOCKS, causeBlockValues);
 
 		chartManager = new ChartManager(new ChartPanel(histogram),
 				new ChartPanel(pieChart));
@@ -183,38 +184,45 @@ public class MetricsPanel extends JPanel {
 		final ChartManager repeatsChartManager;
 		final ChartManager delaysChartManager;
 
+		final Map<String, Integer> causesValues;
+		final Map<String, Integer> effectsValues;
+		final Map<String, Integer> knowItsValues;
+		final Map<String, Integer> askItsValues;
+		final Map<String, Integer> repeatsValues;
+		final Map<String, Integer> delaysValues;
+
+		causesValues = metrics.getFavouriteCauses();
+		effectsValues = metrics.getFavouriteEffects();
+		knowItsValues = metrics.getFavouriteDescriptions();
+		askItsValues = metrics.getFavouriteQuestions();
+		repeatsValues = metrics.getFavouriteRepeats();
+		delaysValues = metrics.getFavouriteDelays();
+
 		// Create the histograms
-		causesHistogram = createHistogram(FAVOURITE_STRING + " "
-				+ CAUSES_STRING, CAUSES_STRING, FREQUENCY_STRING, causesValues);
-		effectsHistogram = createHistogram(FAVOURITE_STRING + " "
-				+ EFFECTS_STRING, EFFECTS_STRING, FREQUENCY_STRING,
-				effectsValues);
-		knowItsHistogram = createHistogram(FAVOURITE_STRING + " "
-				+ KNOWITS_STRING, KNOWITS_STRING, FREQUENCY_STRING,
-				knowItsValues);
-		askItsHistogram = createHistogram(
-				FAVOURITE_STRING + " " + ASKIT_STRING, ASKIT_STRING,
-				FREQUENCY_STRING, askItsValues);
-		repeatsHistogram = createHistogram(FAVOURITE_STRING + " "
-				+ REPEATS_STRING, REPEATS_STRING, FREQUENCY_STRING,
-				repeatsValues);
-		delaysHistogram = createHistogram(
-				FAVOURITE_STRING + " " + DELAY_STRING, DELAY_STRING,
-				FREQUENCY_STRING, delaysValues);
+		causesHistogram = createHistogram(FAVOURITE + " " + CAUSES, CAUSES,
+				FREQUENCY, causesValues);
+		effectsHistogram = createHistogram(FAVOURITE + " " + EFFECTS, EFFECTS,
+				FREQUENCY, effectsValues);
+		knowItsHistogram = createHistogram(FAVOURITE + " " + DESCRIPTIONS,
+				DESCRIPTIONS, FREQUENCY, knowItsValues);
+		askItsHistogram = createHistogram(FAVOURITE + " " + QUESTIONS,
+				QUESTIONS, FREQUENCY, askItsValues);
+		repeatsHistogram = createHistogram(FAVOURITE + " " + REPEATS, REPEATS,
+				FREQUENCY, repeatsValues);
+		delaysHistogram = createHistogram(FAVOURITE + " " + DELAYS, DELAYS,
+				FREQUENCY, delaysValues);
 
 		// Create the pie charts
-		causesPieChart = createPieChart(FAVOURITE_STRING + " " + CAUSES_STRING,
-				causesValues);
-		effectsPieChart = createPieChart(FAVOURITE_STRING + " "
-				+ EFFECTS_STRING, effectsValues);
-		knowItsPieChart = createPieChart(FAVOURITE_STRING + " "
-				+ KNOWITS_STRING, knowItsValues);
-		askItsPieChart = createPieChart(FAVOURITE_STRING + " " + ASKIT_STRING,
+		causesPieChart = createPieChart(FAVOURITE + " " + CAUSES, causesValues);
+		effectsPieChart = createPieChart(FAVOURITE + " " + EFFECTS,
+				effectsValues);
+		knowItsPieChart = createPieChart(FAVOURITE + " " + DESCRIPTIONS,
+				knowItsValues);
+		askItsPieChart = createPieChart(FAVOURITE + " " + QUESTIONS,
 				askItsValues);
-		repeatsPieChart = createPieChart(FAVOURITE_STRING + " "
-				+ REPEATS_STRING, repeatsValues);
-		delaysPieChart = createPieChart(FAVOURITE_STRING + " " + DELAY_STRING,
-				delaysValues);
+		repeatsPieChart = createPieChart(FAVOURITE + " " + REPEATS,
+				repeatsValues);
+		delaysPieChart = createPieChart(FAVOURITE + " " + DELAYS, delaysValues);
 
 		// Create chart managers
 		causesChartManager = new ChartManager(new ChartPanel(causesHistogram),
@@ -249,17 +257,20 @@ public class MetricsPanel extends JPanel {
 	 * 
 	 * @return the page body.
 	 */
-	private JSplitPane createGeneralPage() {
+	private JSplitPane createNumComponentsPage() {
+		final Map<String, Integer> generalValues;
 		final JFreeChart histogram;
 		final JFreeChart pieChart;
 		final ChartManager chartManager;
 
+		generalValues = metrics.getNumStoryComponents();
+
 		// Create the histogram
-		histogram = createHistogram(GENERAL_STRING + " " + METRICS_STRING,
-				STORY_COMPONENT_STRING, FREQUENCY_STRING, generalValues);
+		histogram = createHistogram(COMPONENT_COUNT + " " + METRICS,
+				STORY_COMPONENT, FREQUENCY, generalValues);
 
 		// Create the pie chart
-		pieChart = createPieChart(GENERAL_STRING + " " + METRICS_STRING,
+		pieChart = createPieChart(COMPONENT_COUNT + " " + METRICS,
 				generalValues);
 
 		chartManager = new ChartManager(new ChartPanel(histogram),
@@ -400,7 +411,7 @@ public class MetricsPanel extends JPanel {
 
 			splitPanel.setTopComponent(this.histogramChart);
 			splitPanel.setBottomComponent(this.buttonPanel);
-			splitPanel.setDividerLocation(0.8);
+			splitPanel.setDividerLocation(0.9);
 		}
 
 		private void initializeButtonGroup() {

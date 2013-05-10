@@ -684,21 +684,22 @@ public final class WindowFactory {
 	
 
 	/**
-	 * Create and show a dialog with the provided panel.
+	 * Create a dialog with the provided panel.
 	 * 
 	 * @param title
 	 * @param panel
 	 * @param resizable
 	 * @return
 	 */
-	public void buildAndShowDialog(String title, JPanel panel, boolean resizable) {
+	public JDialog buildDialog(String title, JPanel panel, boolean resizable) {
 		final JDialog dialog = this.buildDialog(title);
 		
 		dialog.setContentPane(panel);
 		dialog.pack();
 		dialog.setResizable(resizable);
 		dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
+		
+		return dialog;
 	}
 
 	/**
