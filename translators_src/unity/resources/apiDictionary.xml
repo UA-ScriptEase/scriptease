@@ -4642,7 +4642,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Shoot out a &lt;Game Object&gt; at speed &lt;Speed&gt;</Name>
+          <Name>Give &lt;Game Object&gt; a push forward at speed &lt;Speed&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>1</Id>
@@ -4669,14 +4669,10 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>var gameObj:GameObject = </Literal>
               <Scope data="argument" ref="Game Object">
                 <Fragment data="name"/>
               </Scope>
-              <Literal>;</Literal>
-            </Line>
-            <Line>
-              <Literal>gameObj.rigidbody.velocity = transform.TransformDirection (Vector3.forward * </Literal>
+              <Literal>.rigidbody.velocity = transform.TransformDirection (Vector3.forward * </Literal>
               <Scope data="argument" ref="Speed">
                 <Fragment data="name"/>
               </Scope>
