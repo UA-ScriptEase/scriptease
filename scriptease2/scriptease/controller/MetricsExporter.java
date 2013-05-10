@@ -69,7 +69,7 @@ public class MetricsExporter {
 		final String REPEATS = "Repeats";
 		final String DELAYS = "Delays";
 		final String STORY_POINT_COMPLEXITY = "Story Point Complexity";
-		
+
 		metricAnalyzer = MetricAnalyzer.getInstance();
 
 		data = new ArrayList<ArrayList<String>>();
@@ -106,7 +106,7 @@ public class MetricsExporter {
 
 		processDataToCSV(STORY_POINT_COMPLEXITY, FREQUENCY,
 				metricAnalyzer.getStoryPointComplexity(), data);
-		
+
 		FileIO.getInstance().saveCSV(data, metricsFile);
 	}
 
