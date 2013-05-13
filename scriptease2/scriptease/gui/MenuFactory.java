@@ -25,6 +25,7 @@ import scriptease.controller.observer.FileManagerObserver;
 import scriptease.gui.action.components.CopyAction;
 import scriptease.gui.action.components.CutAction;
 import scriptease.gui.action.components.DeleteAction;
+import scriptease.gui.action.components.DuplicateAction;
 import scriptease.gui.action.components.PasteAction;
 import scriptease.gui.action.file.CloseActiveModelAction;
 import scriptease.gui.action.file.NewStoryModelAction;
@@ -242,6 +243,7 @@ public class MenuFactory {
 
 		// delete item
 		editMenu.add(DeleteAction.getInstance());
+		editMenu.add(DuplicateAction.getInstance());
 
 		editMenu.addSeparator();
 

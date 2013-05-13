@@ -150,6 +150,39 @@ public class StoryComponentPanelManager {
 	}
 
 	/**
+	 * Duplicates the selected StoryComponentPanels
+	 */
+	public void duplicateSelected() {
+		List<StoryComponentPanel> toDuplicate = getSelectedParents();
+
+		// Get the UndoManager.
+		UndoManager undoManager = UndoManager.getInstance();
+
+		// Start a new UndoableAction.
+		if (!undoManager.hasOpenUndoableAction()) {
+			undoManager.startUndoableAction("Duplicate");
+		}
+
+		// Duplicate all selected storyComponents
+		for (StoryComponentPanel panel : toDuplicate) {
+			final StoryComponent child = panel.getStoryComponent();
+			final StoryComponent owner = child.getOwner();
+			// if the owner is its parent, remove the child
+			if (owner instanceof ComplexStoryComponent
+					&& ((ComplexStoryComponent) owner).hasChild(child)) {
+				final StoryComponent clone = child.clone();
+				((ComplexStoryComponent) owner).addStoryChild(clone);
+				this.setSelection(panel, true, false);
+			}
+		}
+
+		// End the UndoableAction.
+		if (undoManager.hasOpenUndoableAction()) {
+			undoManager.endUndoableAction();
+		}
+	}
+
+	/**
 	 * Clear the selection then select all of the StoryComponentPanels from
 	 * 'from' until 'to'. If 'from' is null, it will select all panels until
 	 * 'to' starting from the first child of 'to's parent. If they don't share
