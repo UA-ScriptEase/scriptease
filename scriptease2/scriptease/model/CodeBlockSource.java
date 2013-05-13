@@ -187,6 +187,38 @@ public class CodeBlockSource extends CodeBlock {
 		return new CodeBlockReference(this);
 	}
 
+	/**
+	 * Creates a duplicate of the CodeBlock with the given ID assigned. This is
+	 * similar to cloning however should only be used with regards to making
+	 * CodeBlocks modifications that we do not wish to be reflected in the
+	 * original (LibraryEditor).
+	 * 
+	 * @author mfchurch
+	 * @return
+	 */
+	public CodeBlockSource duplicate(int uniqueId) {
+		final CodeBlockSource duplicate = new CodeBlockSource(uniqueId);
+		duplicate.setSubject(this.subjectName);
+		duplicate.setSlot(this.slot);
+		duplicate.setTypes(this.returnTypes);
+
+		final Collection<KnowIt> clonedParameters = new ArrayList<KnowIt>();
+		final Collection<KnowIt> parameters = this.getParameters();
+		for (KnowIt parameter : parameters) {
+			clonedParameters.add(parameter.clone());
+		}
+		duplicate.setParameters(clonedParameters);
+
+		final Collection<AbstractFragment> clonedCode = new ArrayList<AbstractFragment>(
+				this.code.size());
+		for (AbstractFragment fragment : this.code) {
+			clonedCode.add(fragment.clone());
+		}
+		duplicate.setCode(clonedCode);
+
+		return duplicate;
+	}
+
 	@Override
 	public void setSubject(String subject) {
 		if (subject == null)
@@ -204,7 +236,7 @@ public class CodeBlockSource extends CodeBlock {
 		this.slot = slot;
 		this.updateReferences();
 		this.resetImplicits();
-		
+
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
 	}
@@ -334,7 +366,7 @@ public class CodeBlockSource extends CodeBlock {
 		} else {
 			// if you get here, Very Bad Things have happened and you need to
 			// fix them. These IDs must never change once set; they must be
-			// unique and this si an excellent way to enforce that. - remiller
+			// unique and this is an excellent way to enforce that. - remiller
 			throw new IllegalStateException(
 					"Cannot change a CodeBlockSource's ID.");
 		}

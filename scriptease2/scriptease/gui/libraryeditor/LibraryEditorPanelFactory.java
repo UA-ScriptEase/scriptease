@@ -1053,12 +1053,14 @@ public class LibraryEditorPanelFactory {
 
 		private void buildItems() {
 			this.removeAllItems();
-			final Collection<String> slots = getCommonSlotsForTypes(codeBlock
-					.getSubject());
-			for (String slot : slots) {
-				this.addItem(slot);
+			final KnowIt subject = codeBlock.getSubject();
+			if (subject != null) {
+				final Collection<String> slots = getCommonSlotsForTypes(subject);
+				for (String slot : slots) {
+					this.addItem(slot);
+				}
+				this.setSelectedItem(codeBlock.getSlot());
 			}
-			this.setSelectedItem(codeBlock.getSlot());
 		}
 
 		private boolean isCurrentSlotSelected(String value) {
