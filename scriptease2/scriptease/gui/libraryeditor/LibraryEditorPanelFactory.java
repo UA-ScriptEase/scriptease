@@ -46,6 +46,8 @@ import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
+import scriptease.model.LibraryModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
@@ -166,9 +168,10 @@ public class LibraryEditorPanelFactory {
 
 							final CodeBlock codeBlock;
 
-							codeBlock = new CodeBlockSource(TranslatorManager
-									.getInstance().getActiveTranslator()
-									.getApiDictionary().getNextCodeBlockID());
+							codeBlock = new CodeBlockSource(
+									((LibraryModel) SEModelManager
+											.getInstance().getActiveModel())
+											.getNextCodeBlockID());
 
 							scriptIt.addCodeBlock(codeBlock);
 

@@ -1,0 +1,636 @@
+<APIDictionary name="A* Pathfinding Library" author="ScriptEase Team">
+	<Types/>
+	<Slots/>
+	<Causes/>
+	<Effects>
+	<ScriptIt>
+		<Name>Allow &lt;Object&gt; to find paths</Name>
+		<Visible>true</Visible>
+		<Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+		<Children/>
+		<CodeBlocks>
+        <CodeBlockSource>
+          <Name>Allow &lt;Object&gt; to find paths</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>1</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+		  <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.AddComponent(&quot;RVOController&quot;);</Literal>
+            </Line>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.AddComponent(&quot;Seeker&quot;);</Literal>
+            </Line>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.AddComponent(&quot;AIPath&quot;);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+		</CodeBlocks>
+	</ScriptIt>
+	<ScriptIt>
+      <Name>&lt;Object&gt; walks to &lt;Other Object&gt;</Name>
+      <Visible>true</Visible>
+     <Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Object&gt; walks to &lt;Other Object&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>2</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Other Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Scope data="ARGUMENT" ref="Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.GetComponent(typeof(AIPath)).target = </Literal>
+				<Scope data="ARGUMENT" ref="Other Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.transform;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+	<ScriptIt>
+		<Name>Set &lt;Object&gt;'s walking speed to &lt;Speed&gt;</Name>
+		<Visible>true</Visible>
+		<Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+		<Children/>
+		<CodeBlocks>
+        <CodeBlockSource>
+			<Name>Set &lt;Object&gt;'s walking speed to &lt;Speed&gt;</Name>
+			<Visible>true</Visible>
+			<Labels/>
+			<Id>3</Id>
+			<Types>
+				<Type>void</Type>
+			</Types>
+			<Parameters>
+			<KnowIt>
+				<Name>Object</Name>
+				<Visible>true</Visible>
+				<Labels/>
+				<Types>
+					<Type>GameObject</Type>
+				</Types>
+			</KnowIt>
+			<KnowIt>
+              <Name>Speed</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Scope data="ARGUMENT" ref="Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.GetComponent(typeof(AIPath)).speed = </Literal>
+				<Scope data="ARGUMENT" ref="Speed">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+	<ScriptIt>
+		<Name>Set &lt;Object&gt;'s maximum walking speed to &lt;Speed&gt;</Name>
+		<Visible>true</Visible>
+		<Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+		<Children/>
+		<CodeBlocks>
+        <CodeBlockSource>
+			<Name>Set &lt;Object&gt;'s maximum walking speed to &lt;Speed&gt;</Name>
+			<Visible>true</Visible>
+			<Labels/>
+			<Id>4</Id>
+			<Types>
+				<Type>void</Type>
+			</Types>
+			<Parameters>
+			<KnowIt>
+				<Name>Object</Name>
+				<Visible>true</Visible>
+				<Labels/>
+				<Types>
+					<Type>GameObject</Type>
+				</Types>
+			</KnowIt>
+			<KnowIt>
+              <Name>Speed</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Scope data="ARGUMENT" ref="Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.GetComponent(typeof(RVOController)).maxSpeed = </Literal>
+				<Scope data="ARGUMENT" ref="Speed">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+	<ScriptIt>
+		<Name>&lt;Object&gt; attempts to find its path again</Name>
+		<Visible>true</Visible>
+		<Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+		<Children/>
+		<CodeBlocks>
+        <CodeBlockSource>
+			<Name>&lt;Object&gt; attempts to find its path again</Name>
+			<Visible>true</Visible>
+			<Labels/>
+			<Id>5</Id>
+			<Types>
+				<Type>void</Type>
+			</Types>
+			<Parameters>
+			<KnowIt>
+				<Name>Object</Name>
+				<Visible>true</Visible>
+				<Labels/>
+				<Types>
+					<Type>GameObject</Type>
+				</Types>
+			</KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Scope data="ARGUMENT" ref="Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.GetComponent(typeof(AIPath)).StartCoroutine(RepeatTrySearchPath());</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>	
+	<ScriptIt>
+		<Name>&lt;Object&gt; reaches its target at &lt;Distance&gt; from target</Name>
+		<Visible>true</Visible>
+		<Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+		<Children/>
+		<CodeBlocks>
+        <CodeBlockSource>
+			<Name>&lt;Object&gt; reaches its target at &lt;Distance&gt; from target</Name>
+			<Visible>true</Visible>
+			<Labels/>
+			<Id>6</Id>
+			<Types>
+				<Type>void</Type>
+			</Types>
+			<Parameters>
+			<KnowIt>
+				<Name>Object</Name>
+				<Visible>true</Visible>
+				<Labels/>
+				<Types>
+					<Type>GameObject</Type>
+				</Types>
+			</KnowIt>
+			<KnowIt>
+              <Name>Distance</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Scope data="ARGUMENT" ref="Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.GetComponent(typeof(AIPath)).endReachedDistance = </Literal>
+				<Scope data="ARGUMENT" ref="Distance">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>	
+	<ScriptIt>
+		<Name>&lt;Object&gt; looks for a new path to its target at a rate of &lt;Rate&gt;</Name>
+		<Visible>true</Visible>
+		<Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+		<Children/>
+		<CodeBlocks>
+        <CodeBlockSource>
+			<Name>&lt;Object&gt; looks for a new path to its target at a rate of &lt;Rate&gt;</Name>
+			<Visible>true</Visible>
+			<Labels/>
+			<Id>7</Id>
+			<Types>
+				<Type>void</Type>
+			</Types>
+			<Parameters>
+			<KnowIt>
+				<Name>Object</Name>
+				<Visible>true</Visible>
+				<Labels/>
+				<Types>
+					<Type>GameObject</Type>
+				</Types>
+			</KnowIt>
+			<KnowIt>
+              <Name>Rate</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Scope data="ARGUMENT" ref="Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.GetComponent(typeof(AIPath)).repathRate = </Literal>
+				<Scope data="ARGUMENT" ref="Rate">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>	
+	<ScriptIt>
+		<Name>&lt;Allow&gt; &lt;Object&gt; to look for a new path to its target</Name>
+		<Visible>true</Visible>
+		<Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+		<Children/>
+		<CodeBlocks>
+        <CodeBlockSource>
+			<Name>&lt;Allow&gt; &lt;Object&gt; to look for a new path to its target</Name>
+			<Visible>true</Visible>
+			<Labels/>
+			<Id>8</Id>
+			<Types>
+				<Type>void</Type>
+			</Types>
+			<Parameters>
+			<KnowIt>
+				<Name>Object</Name>
+				<Visible>true</Visible>
+				<Labels/>
+				<Types>
+					<Type>GameObject</Type>
+				</Types>
+			</KnowIt>
+			<KnowIt>
+              <Name>Allow</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>AllowDisallow</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Scope data="ARGUMENT" ref="Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.GetComponent(typeof(AIPath)).canSearch = </Literal>
+				<Scope data="ARGUMENT" ref="Allow">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>	
+	<ScriptIt>
+		<Name>&lt;Allow&gt; &lt;Object&gt; to move to its target</Name>
+		<Visible>true</Visible>
+		<Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+		<Children/>
+		<CodeBlocks>
+        <CodeBlockSource>
+			<Name>&lt;Allow&gt; &lt;Object&gt; to move to its target</Name>
+			<Visible>true</Visible>
+			<Labels/>
+			<Id>9</Id>
+			<Types>
+				<Type>void</Type>
+			</Types>
+			<Parameters>
+			<KnowIt>
+				<Name>Object</Name>
+				<Visible>true</Visible>
+				<Labels/>
+				<Types>
+					<Type>GameObject</Type>
+				</Types>
+			</KnowIt>
+			<KnowIt>
+              <Name>Allow</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>AllowDisallow</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Scope data="ARGUMENT" ref="Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.GetComponent(typeof(AIPath)).canMove = </Literal>
+				<Scope data="ARGUMENT" ref="Allow">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+	<ScriptIt>
+		<Name>Set &lt;Object&gt;'s turning speed to &lt;Speed&gt;</Name>
+		<Visible>true</Visible>
+		<Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+		<Children/>
+		<CodeBlocks>
+        <CodeBlockSource>
+			<Name>Set &lt;Object&gt;'s turning speed to &lt;Speed&gt;</Name>
+			<Visible>true</Visible>
+			<Labels/>
+			<Id>10</Id>
+			<Types>
+				<Type>void</Type>
+			</Types>
+			<Parameters>
+			<KnowIt>
+				<Name>Object</Name>
+				<Visible>true</Visible>
+				<Labels/>
+				<Types>
+					<Type>GameObject</Type>
+				</Types>
+			</KnowIt>
+			<KnowIt>
+              <Name>Speed</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Scope data="ARGUMENT" ref="Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.GetComponent(typeof(AIPath)).turningSpeed = </Literal>
+				<Scope data="ARGUMENT" ref="Speed">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>		
+	<ScriptIt>
+		<Name>&lt;Object&gt; starts to slow down when it is &lt;Distance&gt; from target</Name>
+		<Visible>true</Visible>
+		<Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+		<Children/>
+		<CodeBlocks>
+        <CodeBlockSource>
+			<Name>&lt;Object&gt; starts to slow down when it is &lt;Distance&gt; from target</Name>
+			<Visible>true</Visible>
+			<Labels/>
+			<Id>11</Id>
+			<Types>
+				<Type>void</Type>
+			</Types>
+			<Parameters>
+			<KnowIt>
+				<Name>Object</Name>
+				<Visible>true</Visible>
+				<Labels/>
+				<Types>
+					<Type>GameObject</Type>
+				</Types>
+			</KnowIt>
+			<KnowIt>
+              <Name>Distance</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Scope data="ARGUMENT" ref="Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.GetComponent(typeof(AIPath)).slowdownDistance = </Literal>
+				<Scope data="ARGUMENT" ref="Distance">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>	
+	<ScriptIt>
+		<Name>&lt;Object&gt; switches to a new target when it is &lt;Distance&gt; from its current target</Name>
+		<Visible>true</Visible>
+		<Labels>
+			<Label>NOW</Label>
+			<Label>A</Label>
+		</Labels>
+		<Children/>
+		<CodeBlocks>
+        <CodeBlockSource>
+			<Name>&lt;Object&gt; switches to a new target when it is &lt;Distance&gt; from its current target</Name>
+			<Visible>true</Visible>
+			<Labels/>
+			<Id>12</Id>
+			<Types>
+				<Type>void</Type>
+			</Types>
+			<Parameters>
+			<KnowIt>
+				<Name>Object</Name>
+				<Visible>true</Visible>
+				<Labels/>
+				<Types>
+					<Type>GameObject</Type>
+				</Types>
+			</KnowIt>
+			<KnowIt>
+              <Name>Distance</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Scope data="ARGUMENT" ref="Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.GetComponent(typeof(AIPath)).pickNextWaypointDist = </Literal>
+				<Scope data="ARGUMENT" ref="Distance">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+	<ScriptIt>
+		<Name>if &lt;Object&gt; has reached its target</Name>
+		<Visible>false</Visible>
+		<Labels>
+			<Label>A</Label>
+		</Labels>
+		<Children/>
+		<CodeBlocks>
+        <CodeBlockSource>
+			<Name>if &lt;Object&gt; has reached its target</Name>
+			<Visible>true</Visible>
+			<Labels/>
+			<Id>13</Id>
+			<Types>
+				<Type>question</Type>
+			</Types>
+			<Parameters>
+			<KnowIt>
+				<Name>Object</Name>
+				<Visible>true</Visible>
+				<Labels/>
+				<Types>
+					<Type>GameObject</Type>
+				</Types>
+			</KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Literal>return </Literal>
+				<Scope data="ARGUMENT" ref="Object">
+					<Fragment data="NAME"/>
+				</Scope>
+				<Literal>.GetComponent(typeof(AIPath)).TargetReached();</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>	
+  </Effects>
+  <DescribeIts/>
+  <ControlIts/>
+  <TypeConverters/>
+</APIDictionary>

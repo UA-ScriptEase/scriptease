@@ -26,6 +26,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.StoryModelObserver;
@@ -138,22 +139,26 @@ public class LibraryPanel extends JTabbedPane {
 				final SEModel model = event.getPatternModel();
 
 				if (event.getEventType() == SEModelEvent.Type.ADDED) {
-					for (LibraryModel library : model.getLibraries()) {
-						library.addLibraryChangeListener(libraryObserver);
-					}
+					model.process(new ModelAdapter() {
+						@Override
+						public void processLibraryModel(LibraryModel library) {
+							library.addLibraryChangeListener(libraryObserver);
+						}
 
-					if (model instanceof StoryModel) {
-						final StoryModelObserver observer;
-
-						observer = new StoryModelObserver() {
-							@Override
-							public void libraryAdded(LibraryModel library) {
-								LibraryPanel.this.updateLists();
+						@Override
+						public void processStoryModel(StoryModel story) {
+							for (LibraryModel library : story.getLibraries()) {
+								library.addLibraryChangeListener(libraryObserver);
 							}
-						};
 
-						((StoryModel) model).addStoryModelObserver(observer);
-					}
+							story.addStoryModelObserver(new StoryModelObserver() {
+								@Override
+								public void libraryAdded(LibraryModel library) {
+									LibraryPanel.this.updateLists();
+								}
+							});
+						}
+					});
 				} else if (event.getEventType() == SEModelEvent.Type.ACTIVATED)
 					updateLists();
 				else if (event.getEventType() == SEModelEvent.Type.REMOVED
@@ -452,15 +457,17 @@ public class LibraryPanel extends JTabbedPane {
 				&& TranslatorManager.getInstance().getActiveTranslator() != null) {
 			final Translator translator = model.getTranslator();
 
-			final Collection<LibraryModel> libraries;
+			final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
 			final boolean hideInvisible;
 
-			libraries = model.getLibraries();
 			// Show invisible components if we're editing a library model.
-			if (model instanceof LibraryModel)
+			if (model instanceof LibraryModel) {
 				hideInvisible = false;
-			else
+				libraries.add((LibraryModel) model);
+			} else {
 				hideInvisible = true;
+				libraries.addAll(((StoryModel) model).getLibraries());
+			}
 
 			list.updateFilter(new TranslatorFilter(translator));
 			list.updateFilter(new VisibilityFilter(hideInvisible));

@@ -85,8 +85,6 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 
 		libraryName = reader.getAttribute(ATTRIBUTE_LIBRARY);
 
-		System.out.println(libraryName);
-
 		block = (CodeBlockReference) super.unmarshal(reader, context);
 
 		reader.moveDown();

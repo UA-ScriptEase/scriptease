@@ -31,6 +31,7 @@ import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
+import scriptease.model.StoryModel;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
@@ -397,8 +398,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				for (CodeBlock codeBlock : ((ScriptIt) child).getCodeBlocks()) {
 					final LibraryModel library = codeBlock.getLibrary();
 
-					acceptable &= model != null
-							&& model.getLibraries().contains(library);
+					acceptable &= (model instanceof LibraryModel && model == library)
+							|| (model instanceof StoryModel && ((StoryModel) model)
+									.getLibraries().contains(library));
 				}
 			}
 
