@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,8 +26,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
@@ -717,8 +717,8 @@ public class LibraryEditorPanelFactory {
 			final JScrollPane parameterScrollPane;
 
 			final JTextField includesField;
-			final SubjectComboBox subjectBox;
-			final SlotComboBox slotBox;
+			final JComboBox subjectBox;
+			final JComboBox slotBox;
 			final JLabel implicitsLabel;
 			final CodeEditorPanel codePanel;
 
@@ -741,15 +741,30 @@ public class LibraryEditorPanelFactory {
 			typesLabel = new JLabel("Types: ");
 			parametersLabel = new JLabel("Parameters: ");
 			codeLabel = new JLabel("Code: ");
+			implicitsLabel = new JLabel();
 
 			parameterPanel = new JPanel();
 			parameterScrollPane = new JScrollPane(parameterPanel);
 
 			typeAction = new TypeAction();
-			includesField = new JTextField();
-			subjectBox = new SubjectComboBox(codeBlock);
-			slotBox = new SlotComboBox(codeBlock);
-			implicitsLabel = new JLabel();
+			includesField = new IncludesField(codeBlock);
+
+			if (scriptIt.isCause()) {
+				subjectBox = new SubjectComboBox(codeBlock);
+				slotBox = new SlotComboBox(codeBlock);
+			} else {
+				subjectBox = new JComboBox();
+				subjectLabel.setVisible(false);
+				subjectBox.setVisible(false);
+				slotLabel.setVisible(false);
+				slotBox = new JComboBox();
+				slotBox.setVisible(false);
+				implicitsLabel.setVisible(false);
+				implicitsLabelLabel.setVisible(false);
+				includesLabel.setVisible(false);
+				includesField.setVisible(false);
+			}
+
 			codePanel = new CodeEditorPanel(codeBlock);
 
 			deleteCodeBlockButton = new JButton("Delete CodeBlock");
@@ -799,9 +814,6 @@ public class LibraryEditorPanelFactory {
 
 			implicitsLabel.setForeground(Color.DARK_GRAY);
 
-			includesField.setText(StringOp.getCollectionAsString(
-					codeBlock.getIncludes(), ", "));
-
 			final ArrayList<String> types = new ArrayList<String>(
 					codeBlock.getTypes());
 			typeAction.getTypeSelectionDialogBuilder().deselectAll();
@@ -813,37 +825,6 @@ public class LibraryEditorPanelFactory {
 				implicits += "[" + implicit.getDisplayText() + "] ";
 
 			implicitsLabel.setText(implicits.trim());
-
-			includesField.getDocument().addDocumentListener(
-					new DocumentListener() {
-						@Override
-						public void insertUpdate(DocumentEvent e) {
-							final String labelFieldText;
-							final String[] labelArray;
-							final Collection<String> labels;
-
-							labelFieldText = includesField.getText();
-							labelArray = labelFieldText.split(",");
-							labels = new ArrayList<String>();
-
-							for (String label : labelArray) {
-								labels.add(label.trim());
-							}
-
-							if (!labels.equals(codeBlock.getIncludes())) {
-								codeBlock.setIncludes(labels);
-							}
-						}
-
-						@Override
-						public void removeUpdate(DocumentEvent e) {
-							insertUpdate(e);
-						}
-
-						@Override
-						public void changedUpdate(DocumentEvent e) {
-						}
-					});
 
 			typeAction.setAction(new Runnable() {
 				@Override
@@ -1032,26 +1013,26 @@ public class LibraryEditorPanelFactory {
 	@SuppressWarnings("serial")
 	private class SlotComboBox extends JComboBox implements
 			StoryComponentObserver {
-		private boolean undoEnabled = false;
+		private boolean backgroundUpdate;
 		private CodeBlock codeBlock;
 
 		public SlotComboBox(final CodeBlock codeBlock) {
 			this.codeBlock = codeBlock;
+			backgroundUpdate = false;
 			buildItems();
 			this.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final String currentlySelected = (String) getSelectedItem();
-					if (!isCurrentSlotSelected(currentlySelected)) {
-						if (undoEnabled
-								&& !UndoManager.getInstance()
-										.hasOpenUndoableAction()) {
-							UndoManager.getInstance().startUndoableAction(
-									"Setting CodeBlock slot to "
-											+ currentlySelected);
-						}
-						codeBlock.setSlot(currentlySelected);
-						if (undoEnabled) {
+					if (!backgroundUpdate) {
+						final String currentlySelected = (String) getSelectedItem();
+						if (!isCurrentSlotSelected(currentlySelected)) {
+							if (!UndoManager.getInstance()
+									.hasOpenUndoableAction()) {
+								UndoManager.getInstance().startUndoableAction(
+										"Setting CodeBlock slot to "
+												+ currentlySelected);
+							}
+							codeBlock.setSlot(currentlySelected);
 							UndoManager.getInstance().endUndoableAction();
 						}
 					}
@@ -1061,7 +1042,6 @@ public class LibraryEditorPanelFactory {
 		}
 
 		private void buildItems() {
-			undoEnabled = false;
 			this.removeAllItems();
 			final Collection<String> slots = getCommonSlotsForTypes(codeBlock
 					.getSubject());
@@ -1069,7 +1049,6 @@ public class LibraryEditorPanelFactory {
 				this.addItem(slot);
 			}
 			this.setSelectedItem(codeBlock.getSlot());
-			undoEnabled = true;
 		}
 
 		private boolean isCurrentSlotSelected(String value) {
@@ -1083,6 +1062,7 @@ public class LibraryEditorPanelFactory {
 
 		@Override
 		public void componentChanged(StoryComponentEvent event) {
+			backgroundUpdate = true;
 			final StoryComponentChangeEnum type = event.getType();
 			if (type == StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET) {
 				buildItems();
@@ -1091,32 +1071,33 @@ public class LibraryEditorPanelFactory {
 				buildItems();
 			}
 			this.revalidate();
+			backgroundUpdate = false;
 		}
 	}
 
 	@SuppressWarnings("serial")
 	private class SubjectComboBox extends JComboBox implements
 			StoryComponentObserver {
-		private boolean undoEnabled = false;
+		private boolean backgroundUpdate;
 		private CodeBlock codeBlock;
 
 		public SubjectComboBox(final CodeBlock codeBlock) {
 			this.codeBlock = codeBlock;
+			backgroundUpdate = false;
 			buildItems();
 			this.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final String currentlySelected = (String) getSelectedItem();
-					if (!isCurrentSubjectSelected(currentlySelected)) {
-						if (undoEnabled
-								&& !UndoManager.getInstance()
-										.hasOpenUndoableAction()) {
-							UndoManager.getInstance().startUndoableAction(
-									"Setting CodeBlock subject to "
-											+ currentlySelected);
-						}
-						codeBlock.setSubject(currentlySelected);
-						if (undoEnabled) {
+					if (!backgroundUpdate) {
+						final String currentlySelected = (String) getSelectedItem();
+						if (!isCurrentSubjectSelected(currentlySelected)) {
+							if (!UndoManager.getInstance()
+									.hasOpenUndoableAction()) {
+								UndoManager.getInstance().startUndoableAction(
+										"Setting CodeBlock subject to "
+												+ currentlySelected);
+							}
+							codeBlock.setSubject(currentlySelected);
 							UndoManager.getInstance().endUndoableAction();
 						}
 					}
@@ -1133,7 +1114,6 @@ public class LibraryEditorPanelFactory {
 		}
 
 		private void buildItems() {
-			undoEnabled = false;
 			this.removeAllItems();
 			final ScriptIt scriptIt = codeBlock.getOwner();
 			if (scriptIt != null) {
@@ -1144,10 +1124,9 @@ public class LibraryEditorPanelFactory {
 					if (!slots.isEmpty())
 						this.addItem(parameter.getDisplayText());
 				}
-				this.addItem(null);
+				// this.addItem(null);
 				this.setSelectedItem(codeBlock.getSubjectName());
 			}
-			undoEnabled = true;
 		}
 
 		private boolean isCurrentSubjectSelected(String value) {
@@ -1161,6 +1140,7 @@ public class LibraryEditorPanelFactory {
 
 		@Override
 		public void componentChanged(StoryComponentEvent event) {
+			backgroundUpdate = true;
 			final StoryComponentChangeEnum type = event.getType();
 			if (type == StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET) {
 				buildItems();
@@ -1172,6 +1152,71 @@ public class LibraryEditorPanelFactory {
 				buildItems();
 			}
 			this.revalidate();
+			backgroundUpdate = false;
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private class IncludesField extends JTextField implements
+			StoryComponentObserver, ActionListener, FocusListener {
+		private CodeBlock codeBlock;
+
+		public IncludesField(CodeBlock codeBlock) {
+			this.codeBlock = codeBlock;
+			codeBlock.addStoryComponentObserver(this);
+			this.addActionListener(this);
+			this.addFocusListener(this);
+		}
+
+		@Override
+		public void focusGained(FocusEvent e) {
+		}
+
+		@Override
+		public void focusLost(FocusEvent e) {
+			updateIncludes();
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			updateIncludes();
+		}
+
+		@Override
+		public void componentChanged(StoryComponentEvent event) {
+			final StoryComponent source = event.getSource();
+			if (source == codeBlock) {
+				updateField();
+			}
+		}
+
+		private void updateField() {
+			this.setText(StringOp.getCollectionAsString(
+					codeBlock.getIncludes(), ", "));
+			this.revalidate();
+		}
+
+		private void updateIncludes() {
+			final String labelFieldText;
+			final String[] labelArray;
+			final Collection<String> labels;
+
+			labelFieldText = this.getText();
+			labelArray = labelFieldText.split(",");
+			labels = new ArrayList<String>();
+
+			for (String label : labelArray) {
+				labels.add(label.trim());
+			}
+
+			if (!labels.equals(codeBlock.getIncludes())) {
+				// mfchurch TODO method type erasure problem with AspectJ
+				// if (!UndoManager.getInstance().hasOpenUndoableAction())
+				// UndoManager.getInstance().startUndoableAction(
+				// "Setting Codeblock Includes to " + labels);
+				codeBlock.setIncludes(labels);
+				// UndoManager.getInstance().endUndoableAction();
+			}
 		}
 	}
 }
