@@ -585,7 +585,6 @@ public class LibraryEditorPanelFactory {
 
 		visibleBox = new JCheckBox();
 		visibleBox.setSelected(component.isVisible());
-
 		visibleBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -594,6 +593,14 @@ public class LibraryEditorPanelFactory {
 							"Toggle " + component + "'s visiblity");
 					component.setVisible(visibleBox.isSelected());
 					UndoManager.getInstance().endUndoableAction();
+				}
+			}
+		});
+		component.addStoryComponentObserver(new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				if (event.getType() == StoryComponentChangeEnum.CHANGE_VISIBILITY) {
+					visibleBox.setSelected(component.isVisible());
 				}
 			}
 		});
