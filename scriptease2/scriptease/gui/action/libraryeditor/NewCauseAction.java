@@ -9,13 +9,13 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.gui.WindowFactory;
-import scriptease.gui.action.ActiveTranslatorSensitiveAction;
+import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameType;
@@ -29,7 +29,7 @@ import scriptease.translator.io.model.GameType;
  * 
  */
 @SuppressWarnings("serial")
-public class NewCauseAction extends ActiveTranslatorSensitiveAction {
+public class NewCauseAction extends ActiveModelSensitiveAction {
 	private static final String NEW_CAUSE_NAME = "Cause";
 
 	private static final NewCauseAction instance = new NewCauseAction();
@@ -48,8 +48,13 @@ public class NewCauseAction extends ActiveTranslatorSensitiveAction {
 	}
 
 	@Override
+	protected boolean isLegal() {
+		return super.isLegal()
+				&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel;
+	}
+
+	@Override
 	public void actionPerformed(ActionEvent e) {
-		final APIDictionary apiDictionary;
 		final LibraryModel libraryModel;
 		final GameTypeManager gameTypeManager;
 
@@ -62,9 +67,8 @@ public class NewCauseAction extends ActiveTranslatorSensitiveAction {
 
 		GameType type;
 
-		apiDictionary = TranslatorManager.getInstance()
-				.getActiveAPIDictionary();
-		libraryModel = apiDictionary.getLibrary();
+		libraryModel = (LibraryModel) SEModelManager.getInstance()
+				.getActiveModel();
 		gameTypeManager = TranslatorManager.getInstance()
 				.getActiveGameTypeManager();
 
@@ -90,7 +94,7 @@ public class NewCauseAction extends ActiveTranslatorSensitiveAction {
 		}
 
 		if (type != null) {
-			final int id = apiDictionary.getNextCodeBlockID();
+			final int id = libraryModel.getNextCodeBlockID();
 			final String slot = type.getSlots().iterator().next();
 
 			codeBlock = new CodeBlockSource(SUBJECT, slot, parameters, id);

@@ -34,6 +34,7 @@ import scriptease.gui.action.file.SaveModelAction;
 import scriptease.gui.action.file.SaveModelExplicitlyAction;
 import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.library.AddLibraryToStoryModelAction;
+import scriptease.gui.action.library.NewLibraryAction;
 import scriptease.gui.action.library.OpenAPIDictionaryEditorAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
 import scriptease.gui.action.libraryeditor.NewDescriptionAction;
@@ -323,7 +324,7 @@ public class MenuFactory {
 				.getActiveTranslator();
 		activeModel = SEModelManager.getInstance().getActiveModel();
 		addLibrary = new JMenu("Add Library");
-		manageLibraries = new JMenuItem("Manage Libraries");
+		manageLibraries = new JMenuItem(NewLibraryAction.getInstance());
 		libraryEditors = new JMenu("Library Editor");
 
 		if (activeTranslator != null && activeModel instanceof StoryModel) {

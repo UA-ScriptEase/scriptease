@@ -1,13 +1,12 @@
 package scriptease.controller;
 
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import javax.swing.SwingWorker;
 
 import scriptease.gui.WindowFactory;
-import scriptease.gui.dialog.WizardDialog;
+import scriptease.gui.dialog.DialogBuilder.WizardDialog;
 import scriptease.gui.pane.PanelFactory;
 import scriptease.model.StoryModel;
 
@@ -23,14 +22,14 @@ public aspect Progress {
 		within(FileManager) && execution(* writeStoryModelFile(StoryModel, File));
 
 	public pointcut finishWizard():
-		within(WizardDialog) && execution(* actionPerformed(ActionEvent));
+		within(WizardDialog) && execution(* finishWizard(Runnable));
 
 	public pointcut openStoryModel():
 		within(FileManager) && execution(* openStoryModel(File));
 
 	public pointcut loadTranslator():
 		within(PanelFactory) && execution(* setTranslator(..));
-	
+
 	private pointcut showProgress():
 		writeStory() || 
 		finishWizard() ||
@@ -49,7 +48,7 @@ public aspect Progress {
 				} catch (Throwable t) {
 					final UncaughtExceptionHandler handler = Thread
 							.getDefaultUncaughtExceptionHandler();
-					
+
 					handler.uncaughtException(mainThread, t);
 				}
 				return null;

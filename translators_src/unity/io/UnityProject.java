@@ -402,18 +402,29 @@ public final class UnityProject extends GameModule {
 
 	@Override
 	public void setLocation(File location) {
-		final String SCRIPTEASE_FOLDER_NAME = "/ScriptEase Scripts";
-		if (this.projectLocation == null) {
-			if (!location.isDirectory())
-				location = location.getParentFile();
-			this.projectLocation = location;
-			this.scripteaseGeneratedDirectory = new File(
-					location.getAbsolutePath() + SCRIPTEASE_FOLDER_NAME);
-			// Seriously Java? mkdir()? What kind of name for a method is that!?
-			this.scripteaseGeneratedDirectory.mkdir();
-		} else {
+		if (this.projectLocation != null) {
 			throw new IllegalStateException(
 					"Cannot change Unity project location after it is set.");
 		}
+
+		if (location.isDirectory())
+			this.projectLocation = location;
+		else
+			// Not sure why this wouldn't be a directory, but let's be safe.
+			this.projectLocation = location.getParentFile();
+
+		final String locationPath = this.projectLocation.getAbsolutePath();
+		final String SCRIPTEASE_FOLDER = "\\ScriptEase Scripts";
+		final String ASSETS_FOLDER = "\\Assets";
+		final String folderName;
+
+		if (locationPath.endsWith(ASSETS_FOLDER)) {
+			folderName = locationPath + SCRIPTEASE_FOLDER;
+		} else
+			folderName = locationPath + ASSETS_FOLDER + SCRIPTEASE_FOLDER;
+
+		this.scripteaseGeneratedDirectory = new File(folderName);
+		// Seriously Java? mkdir()? What kind of method name is that!?
+		this.scripteaseGeneratedDirectory.mkdir();
 	}
 }
