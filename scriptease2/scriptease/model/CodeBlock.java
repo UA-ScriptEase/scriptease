@@ -92,6 +92,9 @@ public abstract class CodeBlock extends StoryComponent implements
 	public CodeBlock clone() {
 		final CodeBlock clone = (CodeBlock) super.clone();
 		clone.init();
+		for (KnowIt parameter : parameters) {
+			clone.addParameter(parameter.clone());
+		}
 		return clone;
 	}
 

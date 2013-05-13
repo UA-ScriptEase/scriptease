@@ -324,7 +324,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		if (this.codeBlocks.remove(codeBlock)) {
 			codeBlock.removeStoryComponentObserver(this);
 			codeBlock.setOwner(null);
-			codeBlock.removeStoryComponentObserver(this);
 			this.notifyObservers(new StoryComponentEvent(this,
 					StoryComponentChangeEnum.CHANGE_CODEBLOCK_REMOVED));
 		}
@@ -335,7 +334,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		if (this.codeBlocks.add(codeBlock)) {
 			codeBlock.addStoryComponentObserver(this);
 			codeBlock.setOwner(this);
-			codeBlock.addStoryComponentObserver(this);
 			this.notifyObservers(new StoryComponentEvent(this,
 					StoryComponentChangeEnum.CHANGE_CODEBLOCK_ADDED));
 		}

@@ -2,11 +2,11 @@ package scriptease.gui.action.components;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
+import java.util.Collection;
 
 import javax.swing.Action;
-import javax.swing.KeyStroke;
 
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
@@ -14,10 +14,14 @@ import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
+import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockReference;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
+import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -49,9 +53,6 @@ public final class DuplicateAction extends ActiveModelSensitiveAction implements
 	 */
 	private DuplicateAction() {
 		super(DuplicateAction.DUPLICATE_TEXT);
-		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_P);
-		this.putValue(Action.ACCELERATOR_KEY,
-				KeyStroke.getKeyStroke(KeyEvent.VK_P, 0));
 
 		SEFocusManager.getInstance().addSEFocusObserver(this);
 	}
@@ -72,8 +73,6 @@ public final class DuplicateAction extends ActiveModelSensitiveAction implements
 			isLegal = ((StoryComponentPanel) focusOwner).isRemovable();
 		} else if (focusOwner instanceof StoryComponentPanelJList) {
 			isLegal = SEModelManager.getInstance().getActiveModel() instanceof LibraryModel;
-		} else if (focusOwner instanceof SEGraph) {
-			isLegal = !((SEGraph<?>) focusOwner).isReadOnly();
 		} else
 			isLegal = false;
 
@@ -127,9 +126,46 @@ public final class DuplicateAction extends ActiveModelSensitiveAction implements
 				selectedPanel = (StoryComponentPanel) selectedObject;
 				selectedComponent = selectedPanel.getStoryComponent();
 
-				// TODO mfchurch should cloning a ScriptIt clone codeblocks as
-				// well? Or just reference them?
-				libraryModel.add(selectedComponent.clone());
+				selectedComponent.process(new StoryAdapter() {
+
+					// Clone ScriptIts, then replace the referenced codeBlocks
+					// with modifiable duplicates since we want them to be
+					// unique
+					@Override
+					public void processScriptIt(ScriptIt scriptIt) {
+						final ScriptIt clone = scriptIt.clone();
+						final Collection<CodeBlock> codeBlocks = clone
+								.getCodeBlocks();
+						for (CodeBlock codeBlock : codeBlocks) {
+							clone.removeCodeBlock(codeBlock);
+							codeBlock.process(new StoryAdapter() {
+
+								@Override
+								public void processCodeBlockSource(
+										CodeBlockSource codeBlockSource) {
+									final CodeBlockSource duplicate = codeBlockSource
+											.duplicate(libraryModel
+													.getNextCodeBlockID());
+									clone.addCodeBlock(duplicate);
+								}
+
+								@Override
+								public void processCodeBlockReference(
+										CodeBlockReference codeBlockReference) {
+									codeBlockReference.getTarget()
+											.process(this);
+								}
+							});
+						}
+						libraryModel.add(clone);
+					}
+
+					@Override
+					protected void defaultProcess(StoryComponent component) {
+						final StoryComponent clone = component.clone();
+						libraryModel.add(clone);
+					}
+				});
 			}
 		}
 

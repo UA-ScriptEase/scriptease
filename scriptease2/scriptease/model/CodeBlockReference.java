@@ -94,7 +94,7 @@ public class CodeBlockReference extends CodeBlock {
 		// Poof! Tadaa!
 		return clone;
 	}
-
+	
 	/**
 	 * Gets the target CodeBlockSource.
 	 * 
