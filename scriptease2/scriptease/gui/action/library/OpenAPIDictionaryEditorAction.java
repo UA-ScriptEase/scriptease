@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import scriptease.model.LibraryModel;
 import scriptease.model.SEModelManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -25,7 +26,6 @@ public class OpenAPIDictionaryEditorAction extends AbstractAction {
 	 */
 	public OpenAPIDictionaryEditorAction(Translator translator) {
 		super(translator.getName() + " Default Library");
-
 		this.translator = translator;
 	}
 
@@ -33,5 +33,15 @@ public class OpenAPIDictionaryEditorAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		TranslatorManager.getInstance().setActiveTranslator(this.translator);
 		SEModelManager.getInstance().add(this.translator.getLibrary());
+	}
+
+	@Override
+	public boolean isEnabled() {
+		boolean isEnabled = super.isEnabled();
+		if (this.translator.apiDictionaryIsLoaded()) {
+			final LibraryModel library = this.translator.getLibrary();
+			isEnabled &= !SEModelManager.getInstance().hasModel(library);
+		}
+		return isEnabled;
 	}
 }
