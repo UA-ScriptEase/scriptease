@@ -37,15 +37,11 @@ public aspect Progress {
 	public pointcut modelActivated():
 		within(SEModelManager) && execution(* activate(SEModel));
 	
-	public pointcut editAPIDictionary():
-		within(OpenAPIDictionaryEditorAction) && execution(* actionPerformed(ActionEvent));
-
 	private pointcut showProgress():
 		writeStory() || 
 		finishWizard() ||
 		openStoryModel() ||
 		modelActivated() ||
-		editAPIDictionary() ||
 		loadAPIDictionary();
 
 	void around(): showProgress() {
