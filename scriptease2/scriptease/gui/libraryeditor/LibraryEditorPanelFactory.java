@@ -530,20 +530,18 @@ public class LibraryEditorPanelFactory {
 			@Override
 			public void run() {
 				if (!UndoManager.getInstance().hasOpenUndoableAction()) {
-					final String labelFieldText;
-					final String[] labelArray;
-					final Collection<String> labels;
-
-					labelFieldText = labelField.getText();
-					labelArray = labelFieldText.split(SEPARATOR);
-					labels = new ArrayList<String>();
-
-					for (String label : labelArray) {
-						labels.add(label.trim());
+					final Collection<String> labels = new ArrayList<String>();
+					final String labelFieldText = labelField.getText();
+					if (!labelFieldText.isEmpty()) {
+						final String[] labelArray = labelFieldText
+								.split(SEPARATOR);
+						for (String label : labelArray) {
+							labels.add(label.trim());
+						}
 					}
 
 					final Collection<String> oldLabels = component.getLabels();
-					if (oldLabels.equals(labels)) {
+					if (!oldLabels.containsAll(labels)) {
 						UndoManager.getInstance().startUndoableAction(
 								"Setting " + component + "'s labels to "
 										+ labelFieldText);
