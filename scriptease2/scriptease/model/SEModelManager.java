@@ -177,4 +177,12 @@ public final class SEModelManager {
 			observer.modelChanged(new SEModelEvent(model, eventType));
 		}
 	}
+
+	public boolean hasModel(final SEModel aModel) {
+		for (final SEModel model : this.models) {
+			if (aModel == model)
+				return true;
+		}
+		return false;
+	}
 }

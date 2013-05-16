@@ -912,7 +912,6 @@ public final class WindowFactory {
 					final JMenuBar bar;
 
 					bar = MenuFactory.createMainMenuBar(activeModel);
-
 					frame.setJMenuBar(bar);
 
 					// Create the title for the frame
