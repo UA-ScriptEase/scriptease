@@ -69,10 +69,14 @@ public class CategoryFilter extends StoryComponentFilter {
 
 		@Override
 		public void processScriptIt(ScriptIt scriptIt) {
-			if (CategoryFilter.this.category.equals(Category.CAUSES))
-				this.acceptable = scriptIt instanceof CauseIt;
-			else if (CategoryFilter.this.category.equals(Category.EFFECTS))
-				this.acceptable = !(scriptIt instanceof CauseIt);
+			this.acceptable = CategoryFilter.this.category
+					.equals(Category.EFFECTS);
+		}
+		
+		@Override
+		public void processCauseIt(CauseIt causeIt) {
+			this.acceptable = CategoryFilter.this.category
+					.equals(Category.CAUSES);
 		}
 
 		@Override
