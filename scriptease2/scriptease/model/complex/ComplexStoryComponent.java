@@ -33,7 +33,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 	}
 
 	/**
-	 * Initialises the ComplexStoryComponent variables. This logic is separate
+	 * Initializes the ComplexStoryComponent variables. This logic is separate
 	 * from constructors to allow for Cloning to reset the variables the same
 	 * way they are built in the constructor.
 	 */
