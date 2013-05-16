@@ -1,14 +1,18 @@
 package scriptease.controller;
 
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import javax.swing.SwingWorker;
 
 import scriptease.gui.WindowFactory;
+import scriptease.gui.action.library.OpenAPIDictionaryEditorAction;
 import scriptease.gui.dialog.DialogBuilder.WizardDialog;
-import scriptease.gui.pane.PanelFactory;
+import scriptease.model.SEModel;
+import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
+import scriptease.translator.Translator;
 
 /**
  * Progress.aj is used to define methods which should be wrapped with a progress
@@ -27,14 +31,22 @@ public aspect Progress {
 	public pointcut openStoryModel():
 		within(FileManager) && execution(* openStoryModel(File));
 
-	public pointcut loadTranslator():
-		within(PanelFactory) && execution(* setTranslator(..));
+	public pointcut loadAPIDictionary():
+		within(Translator) && execution(* loadAPIDictionary());
+	
+	public pointcut modelActivated():
+		within(SEModelManager) && execution(* activate(SEModel));
+	
+	public pointcut editAPIDictionary():
+		within(OpenAPIDictionaryEditorAction) && execution(* actionPerformed(ActionEvent));
 
 	private pointcut showProgress():
 		writeStory() || 
 		finishWizard() ||
 		openStoryModel() ||
-		loadTranslator();
+		modelActivated() ||
+		editAPIDictionary() ||
+		loadAPIDictionary();
 
 	void around(): showProgress() {
 		// this is being marked as unused even though it appears below.
@@ -48,7 +60,6 @@ public aspect Progress {
 				} catch (Throwable t) {
 					final UncaughtExceptionHandler handler = Thread
 							.getDefaultUncaughtExceptionHandler();
-
 					handler.uncaughtException(mainThread, t);
 				}
 				return null;

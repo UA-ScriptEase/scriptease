@@ -1079,7 +1079,10 @@ public class LibraryEditorPanelFactory {
 			if (type == StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET) {
 				buildItems();
 			}
-			if (type == StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET) {
+			else if (type == StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET) {
+				buildItems();
+			}
+			else if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_DEFAULT_TYPE_SET) {
 				buildItems();
 			}
 			this.revalidate();
@@ -1161,6 +1164,8 @@ public class LibraryEditorPanelFactory {
 			} else if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_REMOVE) {
 				buildItems();
 			} else if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET) {
+				buildItems();
+			} else if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_DEFAULT_TYPE_SET) {
 				buildItems();
 			}
 			this.revalidate();
