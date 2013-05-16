@@ -542,11 +542,14 @@ public class LibraryEditorPanelFactory {
 						labels.add(label.trim());
 					}
 
-					UndoManager.getInstance().startUndoableAction(
-							"Setting " + component + "'s labels to "
-									+ labelFieldText);
-					component.setLabels(labels);
-					UndoManager.getInstance().endUndoableAction();
+					final Collection<String> oldLabels = component.getLabels();
+					if (oldLabels.equals(labels)) {
+						UndoManager.getInstance().startUndoableAction(
+								"Setting " + component + "'s labels to "
+										+ labelFieldText);
+						component.setLabels(labels);
+						UndoManager.getInstance().endUndoableAction();
+					}
 				}
 			}
 		};
@@ -1078,11 +1081,9 @@ public class LibraryEditorPanelFactory {
 			final StoryComponentChangeEnum type = event.getType();
 			if (type == StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET) {
 				buildItems();
-			}
-			else if (type == StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET) {
+			} else if (type == StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET) {
 				buildItems();
-			}
-			else if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_DEFAULT_TYPE_SET) {
+			} else if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_DEFAULT_TYPE_SET) {
 				buildItems();
 			}
 			this.revalidate();
