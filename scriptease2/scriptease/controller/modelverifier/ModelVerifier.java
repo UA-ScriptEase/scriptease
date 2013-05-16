@@ -26,6 +26,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -184,15 +185,10 @@ public class ModelVerifier implements StoryComponentObserver {
 					if (UndoManager.getInstance().hasOpenUndoableAction())
 						UndoManager.getInstance().endUndoableAction();
 				} else {
-					// SwingUtilities.invokeLater(new Runnable() {
-					// @Override
-					// public void run() {
 					if (UndoManager.getInstance().hasOpenUndoableAction())
 						UndoManager.getInstance().endUndoableAction();
 					UndoManager.getInstance().undo();
 					UndoManager.getInstance().clearRedo();
-					// }
-					// });
 				}
 				this.isSolving = false;
 			}
@@ -244,6 +240,14 @@ public class ModelVerifier implements StoryComponentObserver {
 				scriptIt.processSubjects(this);
 				scriptIt.processParameters(this);
 				this.defaultProcessComplex(scriptIt);
+			}
+
+			@Override
+			public void processCauseIt(CauseIt causeIt) {
+				causeIt.addStoryComponentObserver(observer);
+				causeIt.processSubjects(this);
+				causeIt.processParameters(this);
+				this.defaultProcessComplex(causeIt);
 			}
 
 			@Override

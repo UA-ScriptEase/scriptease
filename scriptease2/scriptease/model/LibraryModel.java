@@ -219,20 +219,14 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
 
 		this.effectsCategory.registerChildType(ScriptIt.class, max);
-
 		this.causesCategory.registerChildType(CauseIt.class, max);
-
 		this.descriptionsCategory.registerChildType(KnowIt.class, max);
-
 		this.controllersCategory.registerChildType(
 				StoryComponentContainer.class, max);
 		this.controllersCategory.registerChildType(ScriptIt.class, max);
 		this.controllersCategory.registerChildType(AskIt.class, max);
-		this.controllersCategory.registerChildType(
-				StoryComponentContainer.class, max);
 		this.controllersCategory.registerChildType(KnowIt.class, max);
 		this.controllersCategory.registerChildType(ControlIt.class, max);
-
 		this.noteContainer.registerChildType(Note.class, 1);
 	}
 
