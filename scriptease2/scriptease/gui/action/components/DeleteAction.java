@@ -96,7 +96,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 		this.updateEnabledState();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;

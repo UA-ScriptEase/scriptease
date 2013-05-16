@@ -330,7 +330,6 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	 *            completely new ScopeFragment.
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JPanel buildScopePanel(final ScopeFragment scopeFragment) {
 		final String TITLE = "Scope";
 
@@ -415,7 +414,6 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	 * @param seriesFragment
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JPanel buildSeriesPanel(final SeriesFragment seriesFragment) {
 		final String TITLE = "Series";
 
@@ -575,7 +573,6 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	 * @param simpleFragment
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JPanel buildSimplePanel(final SimpleDataFragment simpleFragment) {
 		final String TITLE = "Simple Data";
 

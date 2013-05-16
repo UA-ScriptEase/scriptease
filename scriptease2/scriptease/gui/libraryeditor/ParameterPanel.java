@@ -69,7 +69,6 @@ class ParameterPanel extends JPanel {
 	 * 
 	 * @param knowIt
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected ParameterPanel(final ScriptIt scriptIt,
 			final CodeBlock codeBlock, final KnowIt knowIt) {
 		super();
@@ -302,7 +301,6 @@ class ParameterPanel extends JPanel {
 	 * 
 	 * @param bindingConstantComponent
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void updateBindingConstantComponent(
 			JComponent bindingConstantComponent) {
 		final JTextField inactiveTextField;

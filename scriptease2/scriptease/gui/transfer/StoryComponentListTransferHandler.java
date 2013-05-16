@@ -56,7 +56,6 @@ public class StoryComponentListTransferHandler extends TransferHandler {
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@Override
 	public boolean canImport(TransferSupport support) {
 		// Handles the case where the user drags a Binding (delete)
@@ -253,7 +252,6 @@ public class StoryComponentListTransferHandler extends TransferHandler {
 		return data;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void exportToClipboard(JComponent comp, Clipboard clip, int action)
 			throws IllegalStateException {
@@ -268,7 +266,6 @@ public class StoryComponentListTransferHandler extends TransferHandler {
 		super.exportToClipboard(comp, clip, action);
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void exportAsDrag(JComponent comp, InputEvent e, int action) {
 		// Start an undoable action for the move.
@@ -376,7 +373,6 @@ public class StoryComponentListTransferHandler extends TransferHandler {
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public int getSourceActions(JComponent c) {
 		if (c instanceof JList)

@@ -711,7 +711,6 @@ public class LibraryEditorPanelFactory {
 		private TypeAction typeAction;
 		private CodeBlock codeBlock;
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public CodeBlockPanel(final CodeBlock codeBlock, final ScriptIt scriptIt) {
 			final JLabel subjectLabel;
 			final JLabel slotLabel;
