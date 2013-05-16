@@ -25,6 +25,7 @@ import scriptease.translator.codegenerator.LocationInformation;
  * 
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  * 
  */
 public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
