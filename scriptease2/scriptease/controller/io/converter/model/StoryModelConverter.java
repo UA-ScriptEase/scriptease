@@ -58,7 +58,7 @@ public class StoryModelConverter implements Converter {
 		writer.startNode(TAG_OPTIONAL_LIBRARIES);
 		for (LibraryModel library : model.getOptionalLibraries()) {
 			writer.startNode(TAG_OPTIONAL_LIBRARY);
-			writer.setValue(library.getName());
+			writer.setValue(library.getTitle());
 			writer.endNode();
 		}
 		writer.endNode();

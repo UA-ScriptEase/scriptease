@@ -7,6 +7,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 
@@ -124,7 +125,7 @@ public class ScopeVisitor extends StoryAdapter {
 
 		this.defaultProcess(scriptIt);
 
-		if (scriptIt != this.targetComponent && scriptIt.isCause()) {
+		if (scriptIt != this.targetComponent && scriptIt instanceof CauseIt) {
 
 			for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
 				subject = codeBlock.getSubject();

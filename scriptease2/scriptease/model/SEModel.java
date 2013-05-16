@@ -1,10 +1,7 @@
 package scriptease.model;
 
-import java.io.File;
-
 import scriptease.controller.ModelVisitor;
 import scriptease.translator.Translator;
-import scriptease.util.FileOp;
 
 /**
  * Abstract tree model of related patterns, either for a Story or a Library. A
@@ -32,15 +29,10 @@ public abstract class SEModel {
 	}
 
 	/**
-	 * Get's the PatternModel Name from the file with the extension removed
-	 * 
-	 * @return
+	 * @return The title of the StoryModel
 	 */
-	public final String getName() {
-		/*
-		 * TODO: This likely isn't necessary. Ticket: 49301361 
-		 */
-		return FileOp.removeExtension(new File(this.title)).getName();
+	public final String getTitle() {
+		return this.title;
 	}
 
 	/**
@@ -55,13 +47,6 @@ public abstract class SEModel {
 					"Cannot give a StoryModel a null name.");
 
 		this.title = title;
-	}
-
-	/**
-	 * @return The author of the StoryModel
-	 */
-	public final String getTitle() {
-		return this.title;
 	}
 
 	/**
@@ -94,7 +79,7 @@ public abstract class SEModel {
 
 	@Override
 	public String toString() {
-		return this.getName();
+		return this.getTitle();
 	}
 
 	/**

@@ -30,8 +30,7 @@ public class ControlIt extends ScriptIt {
 	 * 
 	 */
 	public enum ControlItFormat {
-		// TODO we need to add askits here once we add them.
-		NONE, DELAY, REPEAT
+		NONE, DELAY, REPEAT, QUESTION
 	}
 
 	private ControlItFormat format;
@@ -53,7 +52,6 @@ public class ControlIt extends ScriptIt {
 
 		this.registerChildType(ScriptIt.class, max);
 		this.registerChildType(KnowIt.class, max);
-		this.registerChildType(AskIt.class, max);
 		this.registerChildType(StoryComponentContainer.class, max);
 		this.registerChildType(Note.class, max);
 		this.registerChildType(ControlIt.class, max);
@@ -75,24 +73,6 @@ public class ControlIt extends ScriptIt {
 	 */
 	public void setFormat(ControlItFormat format) {
 		this.format = format;
-	}
-
-	/**
-	 * Overridden to allow children to be added.
-	 * 
-	 */
-	@Override
-	public boolean addStoryChildBefore(StoryComponent newChild,
-			StoryComponent sibling) {
-
-		/*
-		 * TODO This should no longer be necessary once we remove Causes from
-		 * this.
-		 */
-		if (!(newChild instanceof ScriptIt && ((ScriptIt) newChild).isCause()))
-			return super.addStoryChildBefore(newChild, sibling);
-
-		return false;
 	}
 
 	/**
@@ -161,8 +141,7 @@ public class ControlIt extends ScriptIt {
 
 				if (owner != null
 						&& owner instanceof ComplexStoryComponent
-						&& !(owner instanceof ScriptIt && ((ScriptIt) owner)
-								.isCause())) {
+						&& !(owner instanceof CauseIt)) {
 					owner.process(this);
 				}
 			}

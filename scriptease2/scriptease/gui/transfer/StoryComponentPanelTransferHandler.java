@@ -33,10 +33,11 @@ import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryComponentContainer;
 import scriptease.util.GUIOp;
 
 /**
@@ -99,6 +100,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 * selectedNodes is null since calling control-x without a selected node
 	 * will still fire this.
 	 */
+	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@Override
 	protected Transferable createTransferable(JComponent comp) {
 		final List<StoryComponent> data;
@@ -215,7 +217,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 					scriptIt = (ScriptIt) component;
 
-					if (scriptIt.isCause())
+					if (scriptIt instanceof CauseIt)
 						return false;
 
 					for (String type : scriptIt.getTypes()) {
@@ -408,12 +410,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				acceptable &= potentialParent instanceof ComplexStoryComponent
 						&& ((ComplexStoryComponent) potentialParent)
 								.canAcceptChild(child)
-						&& !(child instanceof StoryItemSequence);
+						&& !(child instanceof StoryComponentContainer);
 
 				// TODO Shouldn't be necessary once CauseIts are created
 				if (potentialParent instanceof ControlIt)
-					acceptable &= !(child instanceof ScriptIt && ((ScriptIt) child)
-							.isCause());
+					acceptable &= !(child instanceof CauseIt);
 			}
 
 			if (!acceptable)

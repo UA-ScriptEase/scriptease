@@ -21,7 +21,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
-import scriptease.controller.MetricAnalyzer;
+import scriptease.controller.MetricsAnalyzer;
 
 @SuppressWarnings("serial")
 /**
@@ -33,7 +33,7 @@ import scriptease.controller.MetricAnalyzer;
  */
 public class MetricsPanel extends JPanel {
 
-	private final MetricAnalyzer metrics;
+	private final MetricsAnalyzer metrics;
 
 	private static final String STORY_COMPONENT = "Story Component";
 	private static final String STORY_POINT = "Story Point";
@@ -55,7 +55,7 @@ public class MetricsPanel extends JPanel {
 	public MetricsPanel() {
 		final JTabbedPane tabs = new JTabbedPane();
 
-		this.metrics = MetricAnalyzer.getInstance();
+		this.metrics = MetricsAnalyzer.getInstance();
 
 		tabs.addTab(COMPONENT_COUNT, createNumComponentsPage());
 		tabs.addTab(FAVOURITE, createFavoriteCausesPage());
@@ -204,7 +204,7 @@ public class MetricsPanel extends JPanel {
 		effectsPieChart = createPieChart(FAVOURITE + " " + EFFECTS,
 				effectsValues);
 		knowItsPieChart = createPieChart(FAVOURITE + " " + DESCRIPTIONS,
-				knowItsValues);
+				knowItsValues);  
 		askItsPieChart = createPieChart(FAVOURITE + " " + QUESTIONS,
 				askItsValues);
 		repeatsPieChart = createPieChart(FAVOURITE + " " + REPEATS,

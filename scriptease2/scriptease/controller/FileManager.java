@@ -22,6 +22,7 @@ import scriptease.controller.io.FileIO;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.FileManagerObserver;
 import scriptease.controller.observer.ObserverManager;
+import scriptease.controller.observer.RecentFileObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
@@ -55,6 +56,7 @@ import scriptease.util.FileOp;
  * FileManager is a singleton.
  * 
  * @author remiller
+ * @author jyuen
  */
 public final class FileManager {
 	private static final String SAVE_AS = Il8nResources
@@ -85,7 +87,9 @@ public final class FileManager {
 
 	private final Map<File, FileChannel> filesToChannels;
 
-	private final ObserverManager<FileManagerObserver> observerManager;
+	private final ObserverManager<FileManagerObserver> modelObserverManager;
+
+	private final ObserverManager<RecentFileObserver> recentFileObserverManager;
 
 	/**
 	 * The sole instance of this class as per the singleton pattern.
@@ -108,7 +112,9 @@ public final class FileManager {
 
 		this.filesToChannels = new HashMap<File, FileChannel>();
 
-		this.observerManager = new ObserverManager<FileManagerObserver>();
+		this.modelObserverManager = new ObserverManager<FileManagerObserver>();
+
+		this.recentFileObserverManager = new ObserverManager<RecentFileObserver>();
 	}
 
 	/**
@@ -242,7 +248,7 @@ public final class FileManager {
 				apiDictionary = active.getApiDictionary();
 
 				File location = windowManager.showFileChooser(
-						FileManager.SAVE_AS, libraryModel.getName(),
+						FileManager.SAVE_AS, libraryModel.getTitle(),
 						FileManager.LIBRARY_FILTER);
 
 				if (location == null) {
@@ -268,7 +274,7 @@ public final class FileManager {
 				final WindowFactory windowManager = WindowFactory.getInstance();
 
 				File location = windowManager.showFileChooser(
-						FileManager.SAVE_AS, storyModel.getName(),
+						FileManager.SAVE_AS, storyModel.getTitle(),
 						FileManager.STORY_FILTER);
 
 				// make sure the user didn't cancel/close window.
@@ -349,10 +355,10 @@ public final class FileManager {
 		this.writeCode(model, true);
 
 		// update the recent files list in the preferences file.
-		this.updateRecentFiles(location);
+		this.updateRecentFiles(location, true);
 
 		// update the recent files menu items in the GUI.
-		this.notifyObservers(model, location);
+		this.notifyModelObservers(model, location);
 	}
 
 	private void writeCode(StoryModel model, boolean compile) {
@@ -437,7 +443,7 @@ public final class FileManager {
 				ScriptEase.OUTPUT_DIRECTORY_KEY)
 				+ "/";
 		String storyName = SEModelManager.getInstance().getActiveModel()
-				.getName();
+				.getTitle();
 
 		new File(outputDir + storyName).mkdirs();
 		File outputFile = new File(outputDir + storyName + "/" + storyName
@@ -510,6 +516,13 @@ public final class FileManager {
 					"File Not Found",
 					"I could not locate the file \""
 							+ location.getAbsolutePath() + "\".");
+
+			// remove the file from our recent file list.
+			this.updateRecentFiles(location, false);
+
+			// refresh the menu bar
+			this.notifyRecentFileObservers();
+
 			return;
 		}
 
@@ -517,7 +530,8 @@ public final class FileManager {
 		// load it again.
 		if (this.openFiles.containsKey(location)) {
 			model = this.openFiles.getValue(location);
-			this.updateRecentFiles(location);
+			this.updateRecentFiles(location, true);
+
 		} else {
 			reader = FileIO.getInstance();
 			model = reader.readStory(location);
@@ -528,28 +542,30 @@ public final class FileManager {
 
 			// this needs to happen before we add it to the model pool so that
 			// the menu items update themselves correctly - remiller
-			this.updateRecentFiles(location);
+			this.updateRecentFiles(location, true);
 
 			SEModelManager.getInstance().add(model);
 		}
-		this.notifyObservers(model, location);
+		this.notifyModelObservers(model, location);
 	}
 
-	private void updateRecentFiles(File opened) {
+	private void updateRecentFiles(File opened, boolean addFile) {
 		final ScriptEase se = ScriptEase.getInstance();
 		final int recentFileCount = this.getRecentFileCount();
 
 		List<String> recentFilePaths = new ArrayList<String>();
 
-		recentFilePaths.add(opened.getAbsolutePath());
+		if (addFile)
+			recentFilePaths.add(opened.getAbsolutePath());
 
 		// gather up all the old 'list' elements
 		for (int i = 0; i < recentFileCount; i++) {
 			final File recentFile = new File(
 					se.getPreference(ScriptEase.RECENT_FILE_PREFIX + i));
 
-			if (recentFile.exists() && !recentFile.equals(opened)
-					&& (recentFile != opened))
+			if (recentFile.exists()
+					&& !recentFile.getAbsolutePath().equals(
+							opened.getAbsolutePath()))
 				recentFilePaths.add(recentFile.getAbsolutePath());
 
 			// clear out the old saved list entry
@@ -567,6 +583,8 @@ public final class FileManager {
 			se.setPreference(ScriptEase.RECENT_FILE_PREFIX + i, recentPath);
 			i++;
 		}
+
+		se.saveUserPrefs();
 	}
 
 	/**
@@ -924,16 +942,31 @@ public final class FileManager {
 		return deleted;
 	}
 
-	public void addObserver(Object object, FileManagerObserver observer) {
-		this.observerManager.addObserver(object, observer);
+	public void addModelObserver(Object object, FileManagerObserver observer) {
+		this.modelObserverManager.addObserver(object, observer);
 	}
 
-	public void removeObserver(FileManagerObserver observer) {
-		this.observerManager.removeObserver(observer);
+	public void removeModelObserver(FileManagerObserver observer) {
+		this.modelObserverManager.removeObserver(observer);
 	}
 
-	private void notifyObservers(StoryModel model, File location) {
-		for (FileManagerObserver observer : this.observerManager.getObservers())
+	public void addRecentFileObserver(Object object, RecentFileObserver observer) {
+		this.recentFileObserverManager.addObserver(object, observer);
+	}
+
+	public void removeRecentFileObserver(RecentFileObserver observer) {
+		this.recentFileObserverManager.removeObserver(observer);
+	}
+
+	private void notifyRecentFileObservers() {
+		for (RecentFileObserver observer : this.recentFileObserverManager
+				.getObservers())
+			observer.updateRecentFiles();
+	}
+
+	private void notifyModelObservers(StoryModel model, File location) {
+		for (FileManagerObserver observer : this.modelObserverManager
+				.getObservers())
 			observer.fileReferenced(model, location);
 	}
 }

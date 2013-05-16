@@ -90,9 +90,8 @@ public class StoryPoint extends ComplexStoryComponent {
 	@Override
 	public boolean canAcceptChild(StoryComponent potentialChild) {
 		// Only accept causes, not effects
-		if (potentialChild instanceof ScriptIt) {
-			if (((ScriptIt) potentialChild).isCause())
-				return super.canAcceptChild(potentialChild);
+		if (potentialChild instanceof CauseIt) {
+			return super.canAcceptChild(potentialChild);
 		} else if (potentialChild instanceof Note) {
 			return super.canAcceptChild(potentialChild);
 		}
@@ -252,37 +251,6 @@ public class StoryPoint extends ComplexStoryComponent {
 				int length = lengths.get(descendents.indexOf(storypoint)) + 1;
 
 				if (lengths.get(descendents.indexOf(successor)) <= length) {
-					lengths.set(descendents.indexOf(successor), length);
-				}
-			}
-		}
-
-		return Collections.max(lengths) + 1;
-	}
-	
-	/**
-	 * Gets the shortest path from the current StoryPoint, including the StoryPoint itself.
-	 * This means that the path ends when a StoryPoint with no children is reached. If the
-	 * StoryPoint being traversed does not have any children, its shortest path will be 1.
-	 * 
-	 * @return
-	 */
-	public int getShortestPath() {
-		List<StoryPoint> descendents = this.getOrderedDescendants();
-
-		// Initialize an array of 0 of size equivalent to the number of
-		// descendents
-		List<Integer> lengths = new ArrayList<Integer>(Collections.nCopies(
-				descendents.size(), 0));
-
-		for (StoryPoint storypoint : descendents) {
-			Collection<StoryPoint> successors = storypoint.getSuccessors();
-
-			for (StoryPoint successor : successors) {
-
-				int length = lengths.get(descendents.indexOf(storypoint)) + 1;
-
-				if (lengths.get(descendents.indexOf(successor)) > length) {
 					lengths.set(descendents.indexOf(successor), length);
 				}
 			}

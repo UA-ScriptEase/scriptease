@@ -53,6 +53,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.TranslatorManager;
@@ -147,7 +148,7 @@ public class LibraryEditorPanelFactory {
 				codeBlockEditingPanel.setLayout(new BoxLayout(
 						codeBlockEditingPanel, BoxLayout.PAGE_AXIS));
 
-				if (!scriptIt.isCause()) {
+				if (!(scriptIt instanceof CauseIt)) {
 					final JPanel scriptItControlPanel;
 					final JButton addCodeBlockButton;
 
@@ -264,7 +265,7 @@ public class LibraryEditorPanelFactory {
 						knowIt.getTypes(), true);
 
 				WidgetDecorator.decorateJTextFieldForFocusEvents(nameField,
-						commitText, false);
+						commitText, false, Color.white);
 
 				nameField.setHorizontalAlignment(JTextField.LEADING);
 
@@ -501,7 +502,7 @@ public class LibraryEditorPanelFactory {
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField, commitText,
-				false);
+				false, Color.white);
 
 		nameField.setHorizontalAlignment(JTextField.LEADING);
 
@@ -566,7 +567,7 @@ public class LibraryEditorPanelFactory {
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(labelField,
-				commitText, false);
+				commitText, false, Color.white);
 
 		labelField.setToolTipText(labelToolTip);
 
@@ -710,6 +711,7 @@ public class LibraryEditorPanelFactory {
 		private TypeAction typeAction;
 		private CodeBlock codeBlock;
 
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public CodeBlockPanel(final CodeBlock codeBlock, final ScriptIt scriptIt) {
 			final JLabel subjectLabel;
 			final JLabel slotLabel;
@@ -929,13 +931,16 @@ public class LibraryEditorPanelFactory {
 					else
 						codeBlock.setSlot("");
 
-					scriptIt.updateStoryChildren();
+					if (scriptIt instanceof CauseIt) {
+						CauseIt causeIt = (CauseIt) scriptIt;
+						causeIt.updateStoryChildren();
+					}
 					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
 							StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
 				}
 			});
 
-			if (scriptIt.isCause()) {
+			if (scriptIt instanceof CauseIt) {
 				deleteCodeBlockButton.setVisible(false);
 				subjectLabel.setVisible(false);
 				subjectBox.setVisible(false);
@@ -966,7 +971,6 @@ public class LibraryEditorPanelFactory {
 
 							codeBlock.setSubject(subjectName);
 
-							scriptIt.updateStoryChildren();
 							scriptIt.notifyObservers(new StoryComponentEvent(
 									scriptIt,
 									StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));

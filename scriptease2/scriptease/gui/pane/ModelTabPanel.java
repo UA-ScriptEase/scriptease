@@ -153,7 +153,7 @@ class ModelTabPanel extends JTabbedPane {
 
 				ModelTabPanel.this.modelToComponent.put(model, scrollPane);
 
-				savedTitle = model.getName() + "[Editor]";
+				savedTitle = model.getTitle() + "[Editor]";
 
 				scrollPane.getVerticalScrollBar().setUnitIncrement(
 						ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);

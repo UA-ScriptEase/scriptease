@@ -52,7 +52,7 @@ public class MetricsExporter {
 	 * Export the .csv file to the user's requested directory.
 	 */
 	public void exportMetrics() {
-		final MetricAnalyzer metricAnalyzer;
+		final MetricsAnalyzer metricAnalyzer;
 		final File metricsFile;
 		final Collection<ArrayList<String>> data;
 
@@ -70,7 +70,7 @@ public class MetricsExporter {
 		final String DELAYS = "Delays";
 		final String STORY_POINT_COMPLEXITY = "Story Point Complexity";
 
-		metricAnalyzer = MetricAnalyzer.getInstance();
+		metricAnalyzer = MetricsAnalyzer.getInstance();
 
 		data = new ArrayList<ArrayList<String>>();
 

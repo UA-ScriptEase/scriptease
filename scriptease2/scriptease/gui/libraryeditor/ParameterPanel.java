@@ -34,12 +34,13 @@ import scriptease.gui.WidgetDecorator;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.GameTypeManager;
-import scriptease.translator.io.model.SimpleResource;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
+import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.GUIOp;
 import scriptease.util.StringOp;
 
@@ -68,6 +69,7 @@ class ParameterPanel extends JPanel {
 	 * 
 	 * @param knowIt
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected ParameterPanel(final ScriptIt scriptIt,
 			final CodeBlock codeBlock, final KnowIt knowIt) {
 		super();
@@ -274,7 +276,7 @@ class ParameterPanel extends JPanel {
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField, commitText,
-				false);
+				false, Color.white);
 
 		return nameField;
 	}
@@ -289,7 +291,7 @@ class ParameterPanel extends JPanel {
 	 * @return
 	 */
 	private boolean isSubjectInCause(ScriptIt scriptIt, CodeBlock codeBlock) {
-		return scriptIt.isCause()
+		return scriptIt instanceof CauseIt
 				&& (scriptIt.getMainCodeBlock().equals(codeBlock))
 				&& (this.knowIt.equals(codeBlock.getSubject()));
 	}
@@ -300,6 +302,7 @@ class ParameterPanel extends JPanel {
 	 * 
 	 * @param bindingConstantComponent
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void updateBindingConstantComponent(
 			JComponent bindingConstantComponent) {
 		final JTextField inactiveTextField;

@@ -503,6 +503,7 @@ public class ScriptWidgetFactory {
 		return spinner;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static JComponent buildComboEditor(final KnowIt knowIt,
 			final BindingWidget bindingWidget, final String bindingType) {
 		final Map<String, String> enumMap;
@@ -606,14 +607,18 @@ public class ScriptWidgetFactory {
 		final StoryComponentObserver observer;
 		final Runnable commitText;
 		final String displayText;
+		final Color color;
 
 		displayText = component.getDisplayText();
 
 		if (component instanceof Note) {
 			nameEditor = ComponentFactory.buildJTextFieldWithTextBackground(0,
 					"Note", displayText);
-		} else
+			color = new Color(255, 252, 161);
+		} else {
 			nameEditor = new JTextField(displayText);
+			color = new Color(213, 255, 201);
+		}
 
 		observer = new StoryComponentObserver() {
 			@Override
@@ -652,7 +657,7 @@ public class ScriptWidgetFactory {
 			resizing = true;
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameEditor,
-				commitText, resizing);
+				commitText, resizing, color);
 
 		component.addStoryComponentObserver(observer);
 
@@ -721,7 +726,7 @@ public class ScriptWidgetFactory {
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(valueEditor,
-				commitText, true);
+				commitText, true, new Color(237, 186, 128));
 
 		knowIt.addStoryComponentObserver(observer);
 

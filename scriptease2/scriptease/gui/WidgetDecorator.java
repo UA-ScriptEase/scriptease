@@ -36,17 +36,19 @@ public class WidgetDecorator {
 	 * @param resizing
 	 *            Determines if the JTextField should resize itself or if the
 	 *            caller will handle it.
+	 * @param color
+	 *            The color to set the JTextField.
 	 * @return
 	 */
 	public static void decorateJTextFieldForFocusEvents(
 			final JTextField textField, final Runnable commitText,
-			final boolean resizing) {
+			final boolean resizing, final Color color) {
 
 		final Border defaultBorder;
 
 		defaultBorder = textField.getBorder();
 
-		textField.setBackground(Color.white);
+		textField.setBackground(color);
 		textField.setHorizontalAlignment(JTextField.CENTER);
 
 		textField.addFocusListener(new FocusListener() {

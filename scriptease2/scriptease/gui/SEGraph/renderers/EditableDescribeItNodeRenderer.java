@@ -1,5 +1,6 @@
 package scriptease.gui.SEGraph.renderers;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -87,7 +88,7 @@ public class EditableDescribeItNodeRenderer extends
 			};
 
 			WidgetDecorator.decorateJTextFieldForFocusEvents(nodeNameEditor,
-					commitText, true);
+					commitText, true, Color.white);
 
 			component.add(knowItButton);
 			component.add(nodeNameEditor);

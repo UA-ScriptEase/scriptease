@@ -13,8 +13,9 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.CodeGenerationException;
@@ -235,27 +236,27 @@ public abstract class Context {
 		return null;
 	}
 
-	public StoryItemSequence getIfChild() {
+	public StoryComponentContainer getIfChild() {
 		unimplemented("getIfChild");
 		return null;
 	}
 
-	public StoryItemSequence getElseChild() {
+	public StoryComponentContainer getElseChild() {
 		unimplemented("getElseChild");
 		return null;
 	}
 
-	public StoryItemSequence getActiveChild() {
+	public StoryComponentContainer getActiveChild() {
 		unimplemented("getActiveChild");
 		return null;
 	}
 
-	public StoryItemSequence getInactiveChild() {
+	public StoryComponentContainer getInactiveChild() {
 		unimplemented("getInactiveChild");
 		return null;
 	}
 
-	public StoryItemSequence getAlwaysChild() {
+	public StoryComponentContainer getAlwaysChild() {
 		unimplemented("getAlwaysChild");
 		return null;
 	}
@@ -290,21 +291,21 @@ public abstract class Context {
 		return null;
 	}
 
-	public Collection<ScriptIt> getCauses() {
-		final Collection<ScriptIt> causes = new ArrayList<ScriptIt>();
+	public Collection<CauseIt> getCauses() {
+		final Collection<CauseIt> causes = new ArrayList<CauseIt>();
 		for (ScriptIt scriptIt : this.getScriptIts()) {
-			if (scriptIt.isCause()) {
+			if (scriptIt instanceof CauseIt) {
 				boolean causeExists = false;
 
-				for (ScriptIt cause : causes) {
-					if (cause.isEquivalentToCause(scriptIt)) {
+				for (CauseIt cause : causes) {
+					if (cause.isEquivalentToCause((CauseIt) scriptIt)) {
 						causeExists = true;
 						break;
 					}
 				}
 
 				if (!causeExists)
-					causes.add(scriptIt);
+					causes.add((CauseIt) scriptIt);
 			}
 		}
 		return causes;

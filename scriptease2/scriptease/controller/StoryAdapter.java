@@ -6,11 +6,11 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 
 /**
@@ -48,11 +48,6 @@ public abstract class StoryAdapter implements StoryVisitor {
 	}
 
 	@Override
-	public void processStoryItemSequence(StoryItemSequence sequence) {
-		this.defaultProcessComplex(sequence);
-	}
-
-	@Override
 	public void processScriptIt(ScriptIt scriptIt) {
 		this.defaultProcessComplex(scriptIt);
 	}
@@ -60,6 +55,10 @@ public abstract class StoryAdapter implements StoryVisitor {
 	public void processControlIt(ControlIt controlIt) {
 		this.processScriptIt(controlIt);
 	};
+	
+	public void processCauseIt(CauseIt causeIt) {
+		this.defaultProcessComplex(causeIt);
+	}
 
 	@Override
 	public void processAskIt(AskIt questionIt) {

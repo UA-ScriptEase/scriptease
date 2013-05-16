@@ -52,6 +52,7 @@ public class DialogBuilder {
 	 */
 	@SuppressWarnings("serial")
 	private class TranslatorListRenderer extends DefaultListCellRenderer {
+		@SuppressWarnings("rawtypes")
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
@@ -117,6 +118,7 @@ public class DialogBuilder {
 	/**
 	 * Creates a new library wizard that lets the user create a new library.
 	 */
+	@SuppressWarnings("rawtypes")
 	public void showNewLibraryWizard() {
 		final String TITLE = "New Library Wizard";
 		final int TEXTFIELD_COLUMNS = 20;
@@ -237,6 +239,7 @@ public class DialogBuilder {
 	 * Creates a new story wizard that lets people create a story.
 	 * 
 	 */
+	@SuppressWarnings("rawtypes")
 	public void showNewStoryWizard() {
 		final String TITLE = "New Story Wizard";
 		final int TEXTFIELD_COLUMNS = 20;
@@ -470,6 +473,7 @@ public class DialogBuilder {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JComboBox createTranslatorSelectionBox() {
 		final Vector<Translator> translators;
 		final JComboBox translatorBox;

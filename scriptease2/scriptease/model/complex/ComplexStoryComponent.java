@@ -106,7 +106,6 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 			System.err.println("ComplexStoryComponent '"
 					+ this.getDisplayText() + "' has rejected '" + newChild
 					+ "' because it is not an acceptable child type.");
-			this.canAcceptChild(newChild);
 			return false;
 		}
 
@@ -232,6 +231,13 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 		this.allowableChildMap.put(newType, numAllowed);
 	}
 
+	public final void registerChildType(
+			Collection<Class<? extends StoryComponent>> newTypes, Integer numAllowed) {
+		
+		for (Class<? extends StoryComponent> type : newTypes)
+			this.allowableChildMap.put(type, numAllowed);
+	}
+	
 	public final void clearAllowableChildren() {
 		this.allowableChildMap.clear();
 	}
@@ -377,7 +383,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 		boolean isValid = true;
 		if (newChild == null)
 			return false;
-
+		
 		/**
 		 * If the newChild is a StoryComponentContainer, make sure it's children
 		 * are all valid
