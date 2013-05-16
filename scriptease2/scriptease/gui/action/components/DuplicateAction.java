@@ -9,7 +9,6 @@ import javax.swing.Action;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
-import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
