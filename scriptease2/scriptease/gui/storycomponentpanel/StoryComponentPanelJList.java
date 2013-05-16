@@ -38,7 +38,7 @@ import scriptease.util.GUIOp;
  * @author kschenk
  * 
  */
-@SuppressWarnings({ "serial", "rawtypes" })
+@SuppressWarnings("serial")
 public class StoryComponentPanelJList extends JList implements Filterable {
 	private Filter filterRule;
 
@@ -96,7 +96,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * @param hideInvisible
 	 *            If true, invisible components will be shown as well.
 	 */
-	@SuppressWarnings("unchecked")
 	public StoryComponentPanelJList(StoryComponentFilter filter,
 			boolean hideInvisible) {
 		super();
@@ -157,7 +156,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * 
 	 * @param storyComponentList
 	 */
-	@SuppressWarnings("unchecked")
 	public void addStoryComponents(Collection<StoryComponent> storyComponentList) {
 		final DefaultListModel listModel = (DefaultListModel) this.getModel();
 		listModel.removeElement(noResultsPanel);
@@ -170,7 +168,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 			listModel.addElement(noResultsPanel);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void addStoryComponent(StoryComponent component) {
 		if ((this.filterRule == null)
 				|| ((this.filterRule != null) && (this.filterRule
@@ -244,7 +241,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * 
 	 * @param component
 	 */
-	@SuppressWarnings("unchecked")
 	public void updateStoryComponentPanel(StoryComponent component) {
 		final DefaultListModel listModel = (DefaultListModel) this.getModel();
 		final int panelIndex = getIndexOfStoryComponent(component);

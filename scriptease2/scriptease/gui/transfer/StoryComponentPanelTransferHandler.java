@@ -100,7 +100,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 * selectedNodes is null since calling control-x without a selected node
 	 * will still fire this.
 	 */
-	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@Override
 	protected Transferable createTransferable(JComponent comp) {
 		final List<StoryComponent> data;
