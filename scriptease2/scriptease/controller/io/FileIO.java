@@ -30,6 +30,7 @@ import scriptease.controller.io.converter.model.LibraryModelConverter;
 import scriptease.controller.io.converter.model.SlotConverter;
 import scriptease.controller.io.converter.model.StoryModelConverter;
 import scriptease.controller.io.converter.storycomponent.AskItConverter;
+import scriptease.controller.io.converter.storycomponent.CauseItConverter;
 import scriptease.controller.io.converter.storycomponent.CodeBlockReferenceConverter;
 import scriptease.controller.io.converter.storycomponent.CodeBlockSourceConverter;
 import scriptease.controller.io.converter.storycomponent.ControlItConverter;
@@ -428,6 +429,7 @@ public class FileIO {
 		stream.alias("StoryPoint", StoryPoint.class);
 		stream.alias("Note", Note.class);
 		stream.alias("ControlIt", ControlIt.class);
+		stream.alias("CauseIt", CauseIt.class);
 
 		// the below are aliased for backwards compatibility
 
@@ -457,6 +459,7 @@ public class FileIO {
 		stream.registerConverter(new CodeBlockSourceConverter());
 		stream.registerConverter(new CodeBlockReferenceConverter());
 		stream.registerConverter(new ScriptItConverter());
+		stream.registerConverter(new CauseItConverter());
 		stream.registerConverter(new StoryPointConverter());
 		stream.registerConverter(new NoteConverter());
 		stream.registerConverter(new DescribeItConverter());

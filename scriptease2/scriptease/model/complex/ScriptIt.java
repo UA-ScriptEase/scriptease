@@ -14,7 +14,6 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.translator.codegenerator.LocationInformation;
@@ -36,15 +35,15 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 	public ScriptIt(String name) {
 		super(name);
 
-		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
+//		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
 		
 		this.codeBlocks = new ArrayList<CodeBlock>();
 
-		this.registerChildType(ScriptIt.class, max);
-		this.registerChildType(KnowIt.class, max);
-		this.registerChildType(StoryComponentContainer.class, max);
-		this.registerChildType(Note.class, max);
-		this.registerChildType(ControlIt.class, max);
+//		this.registerChildType(ScriptIt.class, max);
+//		this.registerChildType(KnowIt.class, max);
+//		this.registerChildType(StoryComponentContainer.class, max);
+//		this.registerChildType(Note.class, max);
+//		this.registerChildType(ControlIt.class, max);
 	}
 
 	public Collection<CodeBlock> getCodeBlocks() {
