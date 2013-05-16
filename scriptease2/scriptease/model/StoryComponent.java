@@ -16,7 +16,6 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 
 /**
  * Abstract Class that defines all pattern-related model components in
@@ -378,12 +377,6 @@ public abstract class StoryComponent implements Cloneable {
 				askIt.removeStoryComponentObserver(observer);
 				askIt.getCondition().process(this);
 				this.defaultProcessComplex(askIt);
-			}
-
-			@Override
-			public void processStoryItemSequence(StoryItemSequence sequence) {
-				sequence.removeStoryComponentObserver(observer);
-				this.defaultProcessComplex(sequence);
 			}
 		});
 	}

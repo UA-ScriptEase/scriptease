@@ -50,6 +50,7 @@ import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -396,12 +397,9 @@ public class LibraryPanel extends JTabbedPane {
 
 					compare = k1Widget.compareTo(k2Widget);
 
-				} else if (c1 instanceof ScriptIt && c2 instanceof ScriptIt) {
+				} else if (c1 instanceof CauseIt && c2 instanceof CauseIt) {
 					final ScriptIt s1 = (ScriptIt) c1;
 					final ScriptIt s2 = (ScriptIt) c2;
-
-					if (!s1.isCause() || !s2.isCause())
-						return 0;
 
 					final Collection<KnowIt> params1 = s1.getParameters();
 					final Collection<KnowIt> params2 = s2.getParameters();
@@ -427,6 +425,7 @@ public class LibraryPanel extends JTabbedPane {
 					compare = c1.getDisplayText()
 							.compareTo(c2.getDisplayText());
 				}
+				
 				return compare;
 			}
 		};

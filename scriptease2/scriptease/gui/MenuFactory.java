@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
 import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.modelverifier.problem.StoryProblem;
-import scriptease.controller.observer.FileManagerObserver;
+import scriptease.controller.observer.RecentFileObserver;
 import scriptease.gui.action.components.CopyAction;
 import scriptease.gui.action.components.CutAction;
 import scriptease.gui.action.components.DeleteAction;
@@ -82,6 +82,7 @@ import scriptease.util.FileOp;
  * 
  * @author remiller
  * @author kschenk
+ * @author jyuen
  */
 public class MenuFactory {
 	private static final String FILE = Il8nResources.getString("File");
@@ -188,37 +189,52 @@ public class MenuFactory {
 
 		menu.add(ExitScriptEaseAction.getInstance());
 
-		FileManager.getInstance().addObserver(menu, new FileManagerObserver() {
+		FileManager.getInstance().addRecentFileObserver(menu, new RecentFileObserver() {
+
 			@Override
-			public void fileReferenced(StoryModel model, File location) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						MenuFactory.rebuildRecentFiles(menu);
-					}
-				});
+			public void updateRecentFiles() {
+				rebuildRecentFiles(menu);
 			}
 		});
 
 		return menu;
 	}
 
+	/**
+	 * Rebuilds the file menu.
+	 * 
+	 * @param menu
+	 */
 	private static void rebuildRecentFiles(JMenu menu) {
 		final Component[] menuItems = menu.getPopupMenu().getComponents();
-		int startIndex = -1;
+
 		for (int i = 0; i < menuItems.length; i++) {
+
+			// check for the first recent file entry.
 			if (menuItems[i] instanceof JMenuItem
 					&& ((AbstractButton) menuItems[i]).getAction() instanceof OpenRecentFileAction) {
-				if (startIndex == -1) {
-					startIndex = i;
+				
+				// remove the remainder of the components following the first recent file entry.
+				while (i < menuItems.length) {
+					menu.remove(menuItems[i]);
+					i++;
 				}
-				// remove current entry from menu
-				menu.remove(menuItems[i]);
-
-				// add new entry to menu
-				menu.add(new JMenuItem(new OpenRecentFileAction(
-						(short) (i - startIndex))), i);
+				
+				break;
 			}
 		}
+
+		// add the new recent files list.
+		int recentFileCount = FileManager.getInstance().getRecentFileCount();
+		short i;
+		for (i = 0; i < recentFileCount; i++) {
+			menu.add(new OpenRecentFileAction(i));
+		}
+
+		if (i > 0)
+			menu.addSeparator();
+
+		menu.add(ExitScriptEaseAction.getInstance());
 	}
 
 	/**

@@ -11,9 +11,9 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 
 public abstract class GroupVisitor extends StoryAdapter {
 
@@ -43,7 +43,7 @@ public abstract class GroupVisitor extends StoryAdapter {
 		StoryComponent owner = component;
 
 		while (owner != null
-				&& !(owner instanceof ScriptIt && ((ScriptIt) owner).isCause())) {
+				&& !(owner instanceof CauseIt)) {
 			owner = owner.getOwner();
 		}
 		return (ScriptIt) owner;
@@ -83,13 +83,6 @@ public abstract class GroupVisitor extends StoryAdapter {
 	public void processAskIt(AskIt askIt) {
 		askIt.getCondition().process(this);
 		for (StoryComponent component : askIt.getChildren()) {
-			component.process(this);
-		}
-	}
-
-	@Override
-	public void processStoryItemSequence(StoryItemSequence sequence) {
-		for (StoryComponent component : sequence.getChildren()) {
 			component.process(this);
 		}
 	}

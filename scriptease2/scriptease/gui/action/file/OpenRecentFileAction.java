@@ -26,9 +26,14 @@ import scriptease.model.StoryModel;
  * access the same instance easily.
  * 
  * @author remiller
+ * @author jyuen
  */
 @SuppressWarnings("serial")
-public final class OpenRecentFileAction extends AbstractAction implements FileManagerObserver {
+public final class OpenRecentFileAction extends AbstractAction implements
+		FileManagerObserver {
+
+	private final static int RECENT_FILE_EXPOSE_LEN = 40;
+
 	private final short recentFileIndex;
 
 	/**
@@ -59,14 +64,44 @@ public final class OpenRecentFileAction extends AbstractAction implements FileMa
 	 * Index
 	 */
 	private void updateName() {
-		this.putValue(Action.NAME, this.recentFileIndex
-				+ 1
-				+ " - ..."
-				+ File.separator
-				+ FileManager.getInstance().getRecentFile(this.recentFileIndex)
-						.getName());
-		this.putValue(Action.SHORT_DESCRIPTION, FileManager.getInstance()
-				.getRecentFile(this.recentFileIndex).getAbsolutePath());
+		String path = FileManager.getInstance()
+				.getRecentFile(this.recentFileIndex).getAbsolutePath();
+
+		String[] pathVariables = path.split("\\\\");
+
+		if (path.length() > RECENT_FILE_EXPOSE_LEN) {
+			String firstHalf = "";
+			String secondHalf = "";
+			int startLen = 0;
+			int i = 0;
+
+			while (startLen < RECENT_FILE_EXPOSE_LEN/2
+					&& i < pathVariables.length - 2) {
+				firstHalf += pathVariables[i] + File.separator;
+				startLen += pathVariables[i].length() + 1;
+				i++;
+			}
+
+			if (pathVariables.length > 2) {
+				secondHalf = "..." + File.separator
+						+ pathVariables[pathVariables.length - 2]
+						+ File.separator
+						+ pathVariables[pathVariables.length - 1];
+			} else if (pathVariables.length == 2) {
+				secondHalf = pathVariables[pathVariables.length - 2]
+						+ File.separator
+						+ pathVariables[pathVariables.length - 1];
+			} else {
+				secondHalf = pathVariables[pathVariables.length - 1];
+			}
+			
+			this.putValue(Action.NAME, this.recentFileIndex + 1 + " - "
+					+ firstHalf + secondHalf);
+			
+		} else
+			this.putValue(Action.NAME, this.recentFileIndex + 1 + " - " + path);
+
+		this.putValue(Action.SHORT_DESCRIPTION, path);
 	}
 
 	@Override
@@ -75,10 +110,10 @@ public final class OpenRecentFileAction extends AbstractAction implements FileMa
 
 		fileSys.openStoryModel(fileSys.getRecentFile(this.recentFileIndex));
 	}
-	
+
 	@Override
 	public void fileReferenced(StoryModel model, File location) {
 		this.updateName();
 	}
-	
+
 }

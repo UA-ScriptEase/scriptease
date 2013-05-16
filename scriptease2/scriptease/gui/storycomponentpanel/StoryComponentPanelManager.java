@@ -16,6 +16,7 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
@@ -337,7 +338,7 @@ public class StoryComponentPanelManager {
 
 				@Override
 				public void processScriptIt(ScriptIt scriptIt) {
-					if (scriptIt.isCause())
+					if (scriptIt instanceof CauseIt)
 						panel.setBorder(BorderFactory
 								.createLineBorder(Color.LIGHT_GRAY));
 					else

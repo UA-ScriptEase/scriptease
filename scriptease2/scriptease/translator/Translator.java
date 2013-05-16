@@ -334,11 +334,11 @@ public class Translator {
 
 		final LibraryModel defaultLibrary = this.getLibrary();
 
-		if (defaultLibrary.getName().equals(name))
+		if (defaultLibrary.getTitle().equals(name))
 			return defaultLibrary;
 
 		for (LibraryModel library : this.getOptionalLibraries()) {
-			if (library.getName().equals(name))
+			if (library.getTitle().equals(name))
 				return library;
 		}
 

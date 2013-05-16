@@ -5,9 +5,9 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -37,8 +37,9 @@ public class StoryComponentContainerConverter extends
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final StoryComponentContainer container;
+
 		int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
+		final StoryComponentContainer container;
 
 		container = new StoryComponentContainer();
 
@@ -46,8 +47,8 @@ public class StoryComponentContainerConverter extends
 		container.registerChildType(KnowIt.class, max);
 		container.registerChildType(ScriptIt.class, max);
 		container.registerChildType(AskIt.class, max);
-		container.registerChildType(StoryItemSequence.class, max);
 		container.registerChildType(Note.class, max);
+		container.registerChildType(ControlIt.class, max);
 
 		return container;
 	}

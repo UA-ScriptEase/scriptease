@@ -5,7 +5,7 @@ import java.util.Collection;
 import scriptease.controller.get.VariableGetter;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
-import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryComponentContainer;
 
 /**
  * AskItContext is Context for a AskIt object.
@@ -42,7 +42,7 @@ public class AskItContext extends StoryComponentContext {
 	 * Get the AskIt's IfChild
 	 */
 	@Override
-	public StoryItemSequence getIfChild() {
+	public StoryComponentContainer getIfChild() {
 		return this.getComponent().getIfBlock();
 	}
 
@@ -50,7 +50,7 @@ public class AskItContext extends StoryComponentContext {
 	 * Get the AskIt's ElseChild
 	 */
 	@Override
-	public StoryItemSequence getElseChild() {
+	public StoryComponentContainer getElseChild() {
 		return this.getComponent().getElseBlock();
 	}
 

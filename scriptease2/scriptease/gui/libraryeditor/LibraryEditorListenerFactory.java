@@ -16,14 +16,15 @@ import javax.swing.JPanel;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -67,6 +68,7 @@ public class LibraryEditorListenerFactory {
 	protected MouseListener buildStoryComponentMouseListener(
 			final StoryVisitor storyVisitor) {
 		return new MouseAdapter() {
+			@SuppressWarnings("rawtypes")
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				if (SEModelManager.getInstance().getActiveModel() instanceof LibraryModel)
@@ -123,6 +125,7 @@ public class LibraryEditorListenerFactory {
 	 * @param parameterPanel
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	protected StoryComponentObserver buildParameterPanelObserver(
 			final CodeBlock codeBlock, final JPanel parameterPanel,
 			final JComboBox subjectBox) {
@@ -139,6 +142,7 @@ public class LibraryEditorListenerFactory {
 				component = event.getSource();
 
 				storyVisitor = new StoryAdapter() {
+					@SuppressWarnings("unchecked")
 					@Override
 					public void processScriptIt(ScriptIt scriptIt) {
 						switch (type) {
@@ -201,7 +205,7 @@ public class LibraryEditorListenerFactory {
 								final String subjectName;
 								subjectName = previousSubject.getDisplayText();
 								subjectBox.setSelectedItem(subjectName);
-							} else if (!scriptIt.isCause()) {
+							} else if (!(scriptIt instanceof CauseIt)) {
 								subjectBox.setSelectedItem(null);
 							}
 
@@ -238,6 +242,7 @@ public class LibraryEditorListenerFactory {
 	 * @param slotBox
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	protected StoryComponentObserver buildSubjectBoxObserver(
 			final CodeBlock codeBlock, final JComboBox subjectBox,
 			final JComboBox slotBox) {
@@ -253,6 +258,7 @@ public class LibraryEditorListenerFactory {
 				type = event.getType();
 				component = event.getSource();
 				storyVisitor = new StoryAdapter() {
+					@SuppressWarnings("unchecked")
 					@Override
 					public void processScriptIt(ScriptIt scriptIt) {
 						if (type == StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET) {
@@ -394,6 +400,7 @@ public class LibraryEditorListenerFactory {
 	 * @param parameterPanel
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	protected StoryComponentObserver buildParameterNameObserver(
 			final CodeBlock codeBlock, final JComboBox subjectBox) {
 		final StoryComponentObserver parameterPanelObserver;
@@ -409,6 +416,7 @@ public class LibraryEditorListenerFactory {
 				component = event.getSource();
 
 				storyVisitor = new StoryAdapter() {
+					@SuppressWarnings("unchecked")
 					@Override
 					public void processScriptIt(ScriptIt scriptIt) {
 						switch (type) {
@@ -457,7 +465,7 @@ public class LibraryEditorListenerFactory {
 								final String subjectName;
 								subjectName = previousSubject.getDisplayText();
 								subjectBox.setSelectedItem(subjectName);
-							} else if (!scriptIt.isCause()) {
+							} else if (!(scriptIt instanceof CauseIt)) {
 								subjectBox.setSelectedItem(null);
 							}
 
@@ -484,6 +492,7 @@ public class LibraryEditorListenerFactory {
 	 * @param codeBlockComponent
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	protected StoryComponentObserver buildParameterTypeObserver(
 			final KnowIt knowIt, final JComboBox defaultTypeBox) {
 		final StoryComponentObserver codeBlockObserver;
@@ -505,6 +514,7 @@ public class LibraryEditorListenerFactory {
 				type = event.getType();
 				component = event.getSource();
 				storyVisitor = new StoryAdapter() {
+					@SuppressWarnings("unchecked")
 					@Override
 					public void processScriptIt(ScriptIt ScriptIt) {
 						switch (type) {

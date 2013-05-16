@@ -24,7 +24,7 @@ import scriptease.gui.filters.VisibilityFilter;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.util.GUIOp;
 
 /**
@@ -38,7 +38,7 @@ import scriptease.util.GUIOp;
  * @author kschenk
  * 
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "rawtypes" })
 public class StoryComponentPanelJList extends JList implements Filterable {
 	private Filter filterRule;
 
@@ -96,6 +96,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * @param hideInvisible
 	 *            If true, invisible components will be shown as well.
 	 */
+	@SuppressWarnings("unchecked")
 	public StoryComponentPanelJList(StoryComponentFilter filter,
 			boolean hideInvisible) {
 		super();
@@ -156,6 +157,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * 
 	 * @param storyComponentList
 	 */
+	@SuppressWarnings("unchecked")
 	public void addStoryComponents(Collection<StoryComponent> storyComponentList) {
 		final DefaultListModel listModel = (DefaultListModel) this.getModel();
 		listModel.removeElement(noResultsPanel);
@@ -168,6 +170,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 			listModel.addElement(noResultsPanel);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void addStoryComponent(StoryComponent component) {
 		if ((this.filterRule == null)
 				|| ((this.filterRule != null) && (this.filterRule
@@ -241,6 +244,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * 
 	 * @param component
 	 */
+	@SuppressWarnings("unchecked")
 	public void updateStoryComponentPanel(StoryComponent component) {
 		final DefaultListModel listModel = (DefaultListModel) this.getModel();
 		final int panelIndex = getIndexOfStoryComponent(component);
@@ -310,8 +314,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				else if (!isSelected && isVisible)
 					valuePanel.setBackground(list.getBackground());
 
-				if (valueComponent instanceof ScriptIt
-						&& ((ScriptIt) valueComponent).isCause()) {
+				if (valueComponent instanceof CauseIt) {
 					valuePanel.setShowChildren(false);
 					valuePanel.getExpansionButton().setCollapsed(true);
 				}

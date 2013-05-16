@@ -37,7 +37,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
@@ -240,8 +240,8 @@ public final class ErfFile extends GameModule {
 			}
 
 			@Override
-			public void processStoryItemSequence(StoryItemSequence sequence) {
-				this.defaultProcessComplex(sequence);
+			public void processStoryComponentContainer(StoryComponentContainer container) {
+				this.defaultProcessComplex(container);
 			}
 		};
 

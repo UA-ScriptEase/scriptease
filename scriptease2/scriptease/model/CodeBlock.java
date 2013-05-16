@@ -9,6 +9,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.Translator;
@@ -266,7 +267,7 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * @return The concrete subject KnowIt.
 	 */
 	public KnowIt getSubject() {
-		final ScriptIt cause = this.getCause();
+		final CauseIt cause = this.getCause();
 		if (!this.hasSubject()) {
 			final CodeBlock parentBlock = cause.getMainCodeBlock();
 			return parentBlock.getSubject();
@@ -288,18 +289,18 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * 
 	 * @return The encapsulating Cause.
 	 */
-	public ScriptIt getCause() {
+	public CauseIt getCause() {
 		/*
 		 * This is a || because sometimes while editing we can have only one.
 		 * It's not a valid cause-codeblock while in that state, but this is as
 		 * close as we can get. - remiller
 		 */
 		if (this.hasSubject() && this.hasSlot())
-			return this.getOwner();
+			return (CauseIt) this.getOwner();
 		else {
 			StoryComponent parent = this.getOwner().getOwner();
 			while (parent != null) {
-				if (parent instanceof ScriptIt && ((ScriptIt) parent).isCause())
+				if (parent instanceof CauseIt)
 					break;
 
 				parent = parent.getOwner();
@@ -310,7 +311,7 @@ public abstract class CodeBlock extends StoryComponent implements
 						"Failed to locate enclosing Cause for CodeBlock "
 								+ this.toString());
 			}
-			return (ScriptIt) parent;
+			return (CauseIt) parent;
 		}
 	}
 

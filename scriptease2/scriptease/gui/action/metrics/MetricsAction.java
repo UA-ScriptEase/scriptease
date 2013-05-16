@@ -12,7 +12,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-import scriptease.controller.MetricAnalyzer;
+import scriptease.controller.MetricsAnalyzer;
 import scriptease.controller.MetricsExporter;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
@@ -61,7 +61,7 @@ public class MetricsAction extends ActiveModelSensitiveAction {
 	 * components so we can make data out of it!
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		MetricAnalyzer.getInstance().processStoryComponents();
+		MetricsAnalyzer.getInstance().processStoryComponents();
 
 		createDialogPane();
 	}

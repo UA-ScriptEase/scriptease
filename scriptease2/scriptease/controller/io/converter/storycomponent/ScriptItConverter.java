@@ -13,10 +13,10 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -75,7 +75,7 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 		/*
 		 * A wild hack appears!
 		 */
-		if (scriptIt.isCause()
+		if (scriptIt instanceof CauseIt
 				&& FileIO.getInstance().getMode() == FileIO.IoMode.STORY) {
 			// Go down through and rebind references to what they should really
 			// be bound to: implicits
@@ -158,11 +158,6 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 			public void processAskIt(AskIt askIt) {
 				askIt.getCondition().process(this);
 				this.defaultProcessComplex(askIt);
-			}
-
-			@Override
-			public void processStoryItemSequence(StoryItemSequence sequence) {
-				this.defaultProcessComplex(sequence);
 			}
 		};
 

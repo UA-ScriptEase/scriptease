@@ -53,7 +53,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		final LibraryModel library = codeBlock.getLibrary();
 
 		if (library != null)
-			writer.addAttribute(ATTRIBUTE_LIBRARY, library.getName());
+			writer.addAttribute(ATTRIBUTE_LIBRARY, library.getTitle());
 		else
 			System.err.println("No library found for " + source
 					+ ". Library attribute will be left blank.");

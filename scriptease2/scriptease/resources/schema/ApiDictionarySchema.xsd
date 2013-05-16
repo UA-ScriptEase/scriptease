@@ -173,7 +173,7 @@
 	<xsd:complexType name="ScriptIt_Type">
 		<xsd:sequence minOccurs="0">
 			<xsd:group ref="StoryComponentDataGroup" />
-			<xsd:element name="Children" type="StoryItemSequenceList_Type" />
+			<xsd:element name="Children" type="StoryComponentContainerList_Type" />
 			<xsd:element name="CodeBlocks" type="CodeBlockList_Type" />
 		</xsd:sequence>
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
@@ -196,7 +196,7 @@
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
 	</xsd:complexType>
 
-	<!-- Defines a StoryItemSequence -->
+	<!-- Defines a StoryComponentContainer-->
 	<xsd:complexType name="StoryComponentList_Type">
 		<xsd:sequence minOccurs="0">
 			<xsd:group ref="StoryComponentDataGroup" />
@@ -204,8 +204,8 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
-	<!-- Defines a StoryItemSequence -->
-	<xsd:complexType name="StoryItemSequence_Type">
+	<!-- Defines a StoryComponentContainer-->
+	<xsd:complexType name="StoryComponentContainer_Type">
 		<xsd:sequence minOccurs="0" maxOccurs="2">
 			<xsd:group ref="StoryComponentDataGroup" />
 			<xsd:element name="Children" type="xsd:string" />
@@ -292,11 +292,11 @@
 		</xsd:choice>
 	</xsd:complexType>
 
-	<!-- Defines a list of StoryItemSequences -->
-	<xsd:complexType name="StoryItemSequenceList_Type">
+	<!-- Defines a list of StoryComponentContainers -->
+	<xsd:complexType name="StoryComponentContainerList_Type">
 		<xsd:choice>
 			<xsd:sequence>
-				<xsd:element name="StoryItemSequence" type="StoryItemSequence_Type"
+				<xsd:element name="StoryComponentContainer" type="StoryComponentContainer_Type"
 					maxOccurs="unbounded" minOccurs="0" />
 			</xsd:sequence>
 		</xsd:choice>

@@ -38,7 +38,6 @@ import scriptease.controller.io.converter.storycomponent.KnowItConverter;
 import scriptease.controller.io.converter.storycomponent.NoteConverter;
 import scriptease.controller.io.converter.storycomponent.ScriptItConverter;
 import scriptease.controller.io.converter.storycomponent.StoryComponentContainerConverter;
-import scriptease.controller.io.converter.storycomponent.StoryItemSequenceConverter;
 import scriptease.controller.io.converter.storycomponent.StoryPointConverter;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
@@ -55,11 +54,11 @@ import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.APIDictionary;
 import scriptease.translator.LanguageDictionary;
@@ -400,7 +399,7 @@ public class FileIO {
 		stream.alias("KnowIt", KnowIt.class);
 		stream.alias("StoryComponentContainer", StoryComponentContainer.class);
 		stream.alias("AskIt", AskIt.class);
-		stream.alias("StoryItemSequence", StoryItemSequence.class);
+		stream.alias("StoryItemSequence", StoryComponentContainer.class);
 		stream.alias("KnowItBinding", KnowItBinding.class);
 		stream.alias("Type", GameType.class);
 		stream.alias("Slot", Slot.class);
@@ -440,7 +439,6 @@ public class FileIO {
 		stream.registerConverter(new StoryComponentContainerConverter());
 		stream.registerConverter(new KnowItConverter());
 		stream.registerConverter(new AskItConverter());
-		stream.registerConverter(new StoryItemSequenceConverter());
 		stream.registerConverter(new KnowItBindingConverter());
 		stream.registerConverter(new GameTypeConverter());
 		stream.registerConverter(new SlotConverter());
@@ -645,15 +643,12 @@ public class FileIO {
 			}
 		}
 
-		private ScriptIt getCause(KnowIt reference) {
+		private CauseIt getCause(KnowIt reference) {
 			StoryComponent parent = reference;
-			ScriptIt scriptIt;
 
 			while (parent != null) {
-				if (parent instanceof ScriptIt) {
-					scriptIt = (ScriptIt) parent;
-					if (scriptIt.isCause())
-						return scriptIt;
+				if (parent instanceof CauseIt) {
+					return (CauseIt) parent;
 				}
 
 				parent = parent.getOwner();

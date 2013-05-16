@@ -17,7 +17,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.TypeConverter;
@@ -130,13 +129,6 @@ public class SemanticAnalyzer extends StoryAdapter {
 		this.verifyRules(container);
 
 		container.processChildren(this);
-	}
-
-	@Override
-	public void processStoryItemSequence(StoryItemSequence sequence) {
-		this.verifyRules(sequence);
-
-		sequence.processChildren(this);
 	}
 
 	private void verifyRules(StoryComponent component) {

@@ -29,7 +29,6 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.TranslatorManager;
 
@@ -273,12 +272,6 @@ public class ModelVerifier implements StoryComponentObserver {
 				askIt.addStoryComponentObserver(observer);
 				askIt.getCondition().process(this);
 				this.defaultProcessComplex(askIt);
-			}
-
-			@Override
-			public void processStoryItemSequence(StoryItemSequence sequence) {
-				sequence.addStoryComponentObserver(observer);
-				this.defaultProcessComplex(sequence);
 			}
 		};
 	}
