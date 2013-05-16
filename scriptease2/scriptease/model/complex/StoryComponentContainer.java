@@ -34,8 +34,6 @@ public class StoryComponentContainer extends ComplexStoryComponent {
 	public StoryComponentContainer(
 			Collection<Class<? extends StoryComponent>> validTypes) {
 
-		this("");
-
 		for (Class<? extends StoryComponent> validType : validTypes) {
 			registerChildType(validType,
 					ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);

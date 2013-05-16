@@ -35,15 +35,13 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 	public ScriptIt(String name) {
 		super(name);
 
-//		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
+		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
 		
 		this.codeBlocks = new ArrayList<CodeBlock>();
 
-//		this.registerChildType(ScriptIt.class, max);
-//		this.registerChildType(KnowIt.class, max);
-//		this.registerChildType(StoryComponentContainer.class, max);
-//		this.registerChildType(Note.class, max);
-//		this.registerChildType(ControlIt.class, max);
+		this.registerChildType(ScriptIt.class, max);
+		this.registerChildType(KnowIt.class, max);
+		this.registerChildType(StoryComponentContainer.class, max);
 	}
 
 	public Collection<CodeBlock> getCodeBlocks() {

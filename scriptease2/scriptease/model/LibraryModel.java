@@ -142,9 +142,9 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
 				final boolean success = this.model.effectsCategory
-							.addStoryChild(scriptIt);
+						.addStoryChild(scriptIt);
 				if (success)
-						scriptIt.addStoryComponentObserver(this.model);
+					scriptIt.addStoryComponentObserver(this.model);
 			}
 
 			@Override
@@ -162,10 +162,11 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 				if (success)
 					controlIt.addStoryComponentObserver(this.model);
 			}
-			
+
 			@Override
 			public void processCauseIt(CauseIt causeIt) {
-				final boolean success = this.model.causesCategory.addStoryChild(causeIt);
+				final boolean success = this.model.causesCategory
+						.addStoryChild(causeIt);
 				if (success)
 					causeIt.addStoryComponentObserver(this.model);
 			}
@@ -219,7 +220,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 		this.effectsCategory.registerChildType(ScriptIt.class, max);
 
-		this.causesCategory.registerChildType(ScriptIt.class, max);
+		this.causesCategory.registerChildType(CauseIt.class, max);
 
 		this.descriptionsCategory.registerChildType(KnowIt.class, max);
 
@@ -227,8 +228,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 				StoryComponentContainer.class, max);
 		this.controllersCategory.registerChildType(ScriptIt.class, max);
 		this.controllersCategory.registerChildType(AskIt.class, max);
-		this.controllersCategory
-				.registerChildType(StoryComponentContainer.class, max);
+		this.controllersCategory.registerChildType(
+				StoryComponentContainer.class, max);
 		this.controllersCategory.registerChildType(KnowIt.class, max);
 		this.controllersCategory.registerChildType(ControlIt.class, max);
 
@@ -273,18 +274,18 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	/**
-	 * Retrieves the automatics scriptIts from the causes
+	 * Retrieves the automatics causeIts
 	 * 
 	 * @return
 	 */
-	public Collection<ScriptIt> getAutomatics() {
-		final Collection<ScriptIt> automatics = new ArrayList<ScriptIt>();
+	public Collection<CauseIt> getAutomatics() {
+		final Collection<CauseIt> automatics = new ArrayList<CauseIt>();
 
 		for (StoryComponent cause : this.getCausesCategory().getChildren()) {
-			if (cause instanceof ScriptIt) {
+			if (cause instanceof CauseIt) {
 				for (String label : cause.getLabels()) {
 					if (label.equalsIgnoreCase(AUTOMATIC_LABEL)) {
-						automatics.add((ScriptIt) cause);
+						automatics.add((CauseIt) cause);
 					}
 				}
 			}
@@ -389,18 +390,19 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		component.process(new StoryAdapter() {
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
-				final boolean success;
-				if (scriptIt instanceof CauseIt) {
-					success = LibraryModel.this.causesCategory
-							.removeStoryChild(scriptIt);
-					if (success)
-						scriptIt.removeStoryComponentObserver(LibraryModel.this);
-				} else {
-					success = LibraryModel.this.effectsCategory
-							.removeStoryChild(scriptIt);
-					if (success)
-						scriptIt.removeStoryComponentObserver(LibraryModel.this);
-				}
+				final boolean success = LibraryModel.this.effectsCategory
+						.removeStoryChild(scriptIt);
+				if (success)
+					scriptIt.removeStoryComponentObserver(LibraryModel.this);
+
+			}
+
+			@Override
+			public void processCauseIt(CauseIt causeIt) {
+				final boolean success = LibraryModel.this.causesCategory
+						.removeStoryChild(causeIt);
+				if (success)
+					causeIt.removeStoryComponentObserver(LibraryModel.this);
 			}
 
 			@Override

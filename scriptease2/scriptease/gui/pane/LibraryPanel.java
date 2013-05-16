@@ -425,7 +425,7 @@ public class LibraryPanel extends JTabbedPane {
 					compare = c1.getDisplayText()
 							.compareTo(c2.getDisplayText());
 				}
-				
+
 				return compare;
 			}
 		};

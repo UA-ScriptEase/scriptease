@@ -4,6 +4,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
@@ -49,7 +50,19 @@ public class StoryComponentContainerConverter extends
 		container.registerChildType(AskIt.class, max);
 		container.registerChildType(Note.class, max);
 		container.registerChildType(ControlIt.class, max);
+		container.registerChildType(CauseIt.class, max);
 
 		return container;
+	}
+
+	@Override
+	public Object unmarshal(HierarchicalStreamReader reader,
+			UnmarshallingContext context) {
+		StoryComponentContainer storyComponentContainer;
+
+		storyComponentContainer = (StoryComponentContainer) super.unmarshal(
+				reader, context);
+
+		return storyComponentContainer;
 	}
 }
