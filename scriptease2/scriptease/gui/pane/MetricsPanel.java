@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -47,7 +48,7 @@ public class MetricsPanel extends JPanel {
 	private static final String QUESTIONS = "Questions";
 	private static final String REPEATS = "Repeats";
 	private static final String DELAYS = "Delays";
-	private static final String BLOCKS = "Blocks";
+	private static final String CAUSE_BLOCKS = "Cause Blocks";
 
 	/**
 	 * Creates a new MetricsPanel with the default tabs and histograms.
@@ -59,10 +60,13 @@ public class MetricsPanel extends JPanel {
 
 		tabs.addTab(COMPONENT_COUNT, createNumComponentsPage());
 		tabs.addTab(FAVOURITE, createFavoriteCausesPage());
-		tabs.addTab(CAUSES + " " + BLOCKS, createCauseBlocksPage());
-		tabs.addTab(COMPLEXITY, createStoryComponentComplexityPage());
+		tabs.addTab(CAUSE_BLOCKS, createCauseBlocksPage());
+		tabs.addTab(STORY_COMPONENT + " " + COMPLEXITY,
+				createStoryComponentComplexityPage());
 		tabs.addTab(STORY_POINT + " " + COMPLEXITY,
 				createStoryPointComplexityPage());
+
+		tabs.setBorder(BorderFactory.createEmptyBorder());
 
 		add(tabs);
 	}
@@ -96,7 +100,8 @@ public class MetricsPanel extends JPanel {
 
 	/**
 	 * Create the body for the story component complexity page I.e. The average
-	 * number of effects in all causes.
+	 * number of effects in all causes. The Average number of causes in all
+	 * story points ...
 	 * 
 	 * @return the page body.
 	 */
@@ -110,7 +115,7 @@ public class MetricsPanel extends JPanel {
 		complexityValues = metrics.getStoryComponentComplexity();
 
 		// Create the Histogram
-		histogram = createHistogram("Average " + COMPLEXITY, BLOCKS, FREQUENCY,
+		histogram = createHistogram("Average " + COMPLEXITY, "", FREQUENCY,
 				complexityValues, false);
 
 		// Create the Pie Chart
@@ -137,11 +142,11 @@ public class MetricsPanel extends JPanel {
 		causeBlockValues = metrics.getCauseBlockMetrics();
 
 		// Create the Histogram
-		histogram = createHistogram(CAUSES + " " + BLOCKS, BLOCKS, FREQUENCY,
+		histogram = createHistogram(CAUSE_BLOCKS, CAUSE_BLOCKS, FREQUENCY,
 				causeBlockValues, true);
 
 		// Create the Pie Chart
-		pieChart = createPieChart(CAUSES + " " + BLOCKS, causeBlockValues);
+		pieChart = createPieChart(CAUSE_BLOCKS, causeBlockValues);
 
 		chartManager = new ChartManager(histogram, pieChart);
 
@@ -204,7 +209,7 @@ public class MetricsPanel extends JPanel {
 		effectsPieChart = createPieChart(FAVOURITE + " " + EFFECTS,
 				effectsValues);
 		knowItsPieChart = createPieChart(FAVOURITE + " " + DESCRIPTIONS,
-				knowItsValues);  
+				knowItsValues);
 		askItsPieChart = createPieChart(FAVOURITE + " " + QUESTIONS,
 				askItsValues);
 		repeatsPieChart = createPieChart(FAVOURITE + " " + REPEATS,
@@ -228,6 +233,8 @@ public class MetricsPanel extends JPanel {
 		jTabbedPane.addTab("AskIts", askItsChartManager.getChartPanel());
 		jTabbedPane.addTab("Repeats", repeatsChartManager.getChartPanel());
 		jTabbedPane.addTab("Delays", delaysChartManager.getChartPanel());
+
+		jTabbedPane.setBorder(BorderFactory.createEmptyBorder());
 
 		return jTabbedPane;
 	}
@@ -265,6 +272,8 @@ public class MetricsPanel extends JPanel {
 	 * @param xAxisTitle
 	 * @param yAxisTitle
 	 * @param values
+	 * @param yAxisIntegerScale
+	 *            Set to true if this histogram requires integer only scaling.
 	 * @return The Histogram
 	 */
 	private ChartPanel createHistogram(String title, String xAxisTitle,
@@ -284,9 +293,11 @@ public class MetricsPanel extends JPanel {
 					.getRangeAxis();
 			rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 		}
-
+		
 		histogramPanel = new ChartPanel(histogram);
 		histogramPanel.setPopupMenu(null);
+		histogramPanel.setDomainZoomable(false);
+		histogramPanel.setRangeZoomable(false);
 
 		return histogramPanel;
 	}
@@ -413,6 +424,7 @@ public class MetricsPanel extends JPanel {
 			this.splitPanel.setEnabled(false);
 			this.splitPanel.setDividerLocation(0.95);
 			this.splitPanel.setDividerSize(0);
+			this.splitPanel.setBorder(BorderFactory.createEmptyBorder());
 		}
 
 		private void initializeButtonGroup() {

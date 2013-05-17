@@ -110,14 +110,14 @@ public class MetricsExporter {
 		FileIO.getInstance().saveCSV(data, metricsFile);
 	}
 
-	private void processDataToCSV(String xComponent, String yComponent,
+	private void processDataToCSV(String xComponentName, String yComponentName,
 			Map<String, ? extends Number> values,
 			final Collection<ArrayList<String>> data) {
 
 		ArrayList<String> tempRow = new ArrayList<String>();
 
-		tempRow.add(xComponent);
-		tempRow.add(yComponent);
+		tempRow.add(xComponentName);
+		tempRow.add(yComponentName);
 		data.add(tempRow);
 
 		for (Entry<String, ?> entry : values.entrySet()) {
