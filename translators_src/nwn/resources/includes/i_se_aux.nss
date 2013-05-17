@@ -158,8 +158,6 @@ object SE_AUX_GetRandomObjectWithoutSelf(string tag) {
   return obj;
 }
 
-
-
 // Derivative of CreateItemOnObject that can be placed on an action queue.
 void SE_AUX_CreateItemOnObject(string blueprint, object target)
 {

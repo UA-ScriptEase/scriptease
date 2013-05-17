@@ -396,10 +396,7 @@ public class MetricsAnalyzer {
 
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
-				if (!(scriptIt instanceof ControlIt)
-						&& !(scriptIt instanceof CauseIt)) {
-					effects.add(scriptIt);
-				}
+				effects.add(scriptIt);
 
 				scriptIt.processParameters(this);
 				this.defaultProcessComplex(scriptIt);
