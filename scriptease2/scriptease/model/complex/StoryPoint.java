@@ -60,7 +60,7 @@ public class StoryPoint extends ComplexStoryComponent {
 
 		StoryPoint.storyPointCounter++;
 
-		this.registerChildType(ScriptIt.class,
+		this.registerChildType(CauseIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		this.registerChildType(Note.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
