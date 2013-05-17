@@ -15,12 +15,20 @@ import scriptease.util.GUIOp;
  * Common interface for all of the ScriptEase UI classes.
  * 
  * @author remiller
+ * @author jyuen
  */
 public interface ScriptEaseUI {
 	/**
 	 * The colour (green) used to display known object bindings.
 	 */
 	public static final Color COLOUR_KNOWN_OBJECT = new Color(20, 175, 0);
+
+	/**
+	 * The colour (lighter green) used to display the background of text fields
+	 * with known object bindings.
+	 */
+	public static final Color COLOUR_KNOWN_OBJECT_INNER = new Color(213, 255,
+			201);
 
 	/**
 	 * The colour (sort of a light blue) used to display game object bindings.
@@ -37,6 +45,11 @@ public interface ScriptEaseUI {
 	 */
 	public static final Color COLOUR_SIMPLE = new Color(164, 78, 18);
 
+	/**
+	 * The coulour (light brown) used to display text in simple bindings.
+	 */
+	public static final Color COLOUR_SIMPLE_TEXT = new Color(237, 186, 128);
+	
 	/**
 	 * The colour (Light Grey) used for bound type widgets
 	 */
@@ -61,17 +74,17 @@ public interface ScriptEaseUI {
 	 * The colour (dark blue) used for selected graph nodes
 	 */
 	public static final Color COLOUR_SELECTED_NODE = new Color(89, 147, 255);
-	
+
 	/**
 	 * The colour (darker blue) used for parent of selected node
 	 */
 	public static final Color COLOUR_PARENT_NODE = new Color(190, 180, 255);
-	
+
 	/**
 	 * The colour (lighter blue) used for children of selected node
 	 */
 	public static final Color COLOUR_CHILD_NODE = new Color(180, 255, 185);
-	
+
 	/**
 	 * The colour (red) used for the delete node tool
 	 */
@@ -90,7 +103,7 @@ public interface ScriptEaseUI {
 	 * The colour (Grey) used for the code editor in Story Component Builder.
 	 */
 	public static final Color CODE_EDITOR_COLOR = Color.GRAY;
-	
+
 	/**
 	 * The colour (Light Grey) used for Line Fragments in Story Component
 	 * Builder.
@@ -142,6 +155,11 @@ public interface ScriptEaseUI {
 	public static final Color COLOUR_NOTE_TEXT = new Color(133, 133, 133);
 
 	/**
+	 * The color used for the background of the text field for Notes.
+	 */
+	public static final Color COLOUR_NOTE_TEXT_BG = new Color(255, 252, 161);
+
+	/**
 	 * The standard increment that should usually be used for vertical
 	 * scrollbars.
 	 */
@@ -186,8 +204,8 @@ public interface ScriptEaseUI {
 	 * Cursor to represent unavailable actions. A circle with a line through it,
 	 * like in No Smoking or No Pie signs.
 	 */
-	public static final Cursor CURSOR_UNAVAILABLE = GUIOp
-			.createCursor("unavailable", new Point(15, 15));
+	public static final Cursor CURSOR_UNAVAILABLE = GUIOp.createCursor(
+			"unavailable", new Point(15, 15));
 
 	/**
 	 * The maximum screen width that ScriptEase can support. Can be increased if

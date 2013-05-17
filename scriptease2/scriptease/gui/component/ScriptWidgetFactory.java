@@ -521,7 +521,7 @@ public class ScriptWidgetFactory {
 		Collections.sort(list);
 
 		combo = new JComboBox(list.toArray());
-
+		
 		scriptValue = knowIt.getBinding().getScriptValue();
 
 		if (scriptValue != null && !scriptValue.isEmpty())
@@ -613,10 +613,10 @@ public class ScriptWidgetFactory {
 		if (component instanceof Note) {
 			nameEditor = ComponentFactory.buildJTextFieldWithTextBackground(0,
 					"Note", displayText);
-			color = new Color(255, 252, 161);
+			color = ScriptEaseUI.COLOUR_NOTE_TEXT_BG;
 		} else {
 			nameEditor = new JTextField(displayText);
-			color = new Color(213, 255, 201);
+			color = ScriptEaseUI.COLOUR_KNOWN_OBJECT_INNER;
 		}
 
 		observer = new StoryComponentObserver() {
@@ -725,7 +725,7 @@ public class ScriptWidgetFactory {
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(valueEditor,
-				commitText, true, new Color(237, 186, 128));
+				commitText, true, ScriptEaseUI.COLOUR_SIMPLE_TEXT);
 
 		knowIt.addStoryComponentObserver(observer);
 
