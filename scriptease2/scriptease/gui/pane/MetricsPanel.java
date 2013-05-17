@@ -3,6 +3,7 @@ package scriptease.gui.pane;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,7 +17,10 @@ import javax.swing.JTabbedPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -276,24 +280,37 @@ public class MetricsPanel extends JPanel {
 	 *            Set to true if this histogram requires integer only scaling.
 	 * @return The Histogram
 	 */
+	@SuppressWarnings("unchecked")
 	private ChartPanel createHistogram(String title, String xAxisTitle,
 			String yAxisTitle, Map<String, ? extends Number> values,
 			boolean yAxisIntegerScale) {
 
 		final ChartPanel histogramPanel;
 		final JFreeChart histogram;
+		final CategoryPlot categoryPlot;
+		final CategoryAxis domainAxis;
+		final List<String> categories;
 
 		histogram = ChartFactory.createBarChart(title, xAxisTitle, yAxisTitle,
 				processHistogramValues(values), PlotOrientation.VERTICAL,
 				false, false, false);
 
+		categoryPlot = histogram.getCategoryPlot();
+		domainAxis = categoryPlot.getDomainAxis();
+		categories = categoryPlot.getCategories();
+
+		// Add tooltips for each category so that by hovering over it, you are
+		// able to read its entirety.
+		for (String category : categories) {
+			domainAxis.addCategoryLabelToolTip(category, category);
+		}
+
 		// Allow only integers on y-axis if requested.
 		if (yAxisIntegerScale) {
-			NumberAxis rangeAxis = (NumberAxis) histogram.getCategoryPlot()
-					.getRangeAxis();
+			final ValueAxis rangeAxis = categoryPlot.getRangeAxis();
 			rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 		}
-		
+
 		histogramPanel = new ChartPanel(histogram);
 		histogramPanel.setPopupMenu(null);
 		histogramPanel.setDomainZoomable(false);
