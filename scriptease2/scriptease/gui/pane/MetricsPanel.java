@@ -27,6 +27,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import scriptease.controller.MetricsAnalyzer;
+import scriptease.gui.ui.ScriptEaseUI;
 
 @SuppressWarnings("serial")
 /**
@@ -231,12 +232,12 @@ public class MetricsPanel extends JPanel {
 				repeatsPieChart);
 		delaysChartManager = new ChartManager(delaysHistogram, delaysPieChart);
 
-		jTabbedPane.addTab("Causes", causesChartManager.getChartPanel());
-		jTabbedPane.addTab("Effects", effectsChartManager.getChartPanel());
-		jTabbedPane.addTab("KnowIts", knowItsChartManager.getChartPanel());
-		jTabbedPane.addTab("AskIts", askItsChartManager.getChartPanel());
-		jTabbedPane.addTab("Repeats", repeatsChartManager.getChartPanel());
-		jTabbedPane.addTab("Delays", delaysChartManager.getChartPanel());
+		jTabbedPane.addTab(CAUSES, causesChartManager.getChartPanel());
+		jTabbedPane.addTab(EFFECTS, effectsChartManager.getChartPanel());
+		jTabbedPane.addTab(DESCRIPTIONS, knowItsChartManager.getChartPanel());
+		jTabbedPane.addTab(QUESTIONS, askItsChartManager.getChartPanel());
+		jTabbedPane.addTab(REPEATS, repeatsChartManager.getChartPanel());
+		jTabbedPane.addTab(DELAYS, delaysChartManager.getChartPanel());
 
 		jTabbedPane.setBorder(BorderFactory.createEmptyBorder());
 
@@ -298,6 +299,10 @@ public class MetricsPanel extends JPanel {
 		categoryPlot = histogram.getCategoryPlot();
 		domainAxis = categoryPlot.getDomainAxis();
 		categories = categoryPlot.getCategories();
+
+		// Set the bar colors
+		categoryPlot.getRenderer().setSeriesPaint(0,
+				ScriptEaseUI.COLOUR_GAME_OBJECT);
 
 		// Add tooltips for each category so that by hovering over it, you are
 		// able to read its entirety.

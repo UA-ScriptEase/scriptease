@@ -392,6 +392,9 @@ public class MetricsAnalyzer {
 			@Override
 			public void processCauseIt(CauseIt causeIt) {
 				causes.add(causeIt);
+				
+				causeIt.processParameters(this);
+				this.defaultProcessComplex(causeIt);
 			}
 
 			@Override
