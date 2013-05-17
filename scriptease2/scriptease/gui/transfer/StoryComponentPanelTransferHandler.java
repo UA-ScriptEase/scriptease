@@ -35,7 +35,6 @@ import scriptease.model.StoryModel;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.util.GUIOp;
@@ -410,10 +409,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 						&& ((ComplexStoryComponent) potentialParent)
 								.canAcceptChild(child)
 						&& !(child instanceof StoryComponentContainer);
-
-				// TODO Shouldn't be necessary once CauseIts are created
-				if (potentialParent instanceof ControlIt)
-					acceptable &= !(child instanceof CauseIt);
 			}
 
 			if (!acceptable)
