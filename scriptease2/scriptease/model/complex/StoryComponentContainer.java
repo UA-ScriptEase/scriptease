@@ -31,17 +31,19 @@ public class StoryComponentContainer extends ComplexStoryComponent {
 		this("");
 	}
 
+	public StoryComponentContainer(String displayName) {
+		this.setDisplayText(displayName);
+	}
+	
 	public StoryComponentContainer(
 			Collection<Class<? extends StoryComponent>> validTypes) {
 
+		this("");
+		
 		for (Class<? extends StoryComponent> validType : validTypes) {
 			registerChildType(validType,
 					ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		}
-	}
-
-	public StoryComponentContainer(String displayName) {
-		this.setDisplayText(displayName);
 	}
 
 	@Override
