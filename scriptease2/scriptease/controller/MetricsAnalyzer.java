@@ -9,8 +9,11 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import scriptease.model.LibraryModel;
+import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
+import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -25,6 +28,8 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.DescribeItManager;
+import scriptease.translator.apimanagers.GameTypeManager;
+import scriptease.translator.io.model.Resource;
 
 /**
  * Calculates metrics in the active model.
@@ -264,6 +269,47 @@ public class MetricsAnalyzer {
 		return metrics;
 	}
 
+	/**
+	 * Returns the game objects currently used by the active story model.
+	 * @return
+	 */
+	public Collection<KnowIt> getGameObjectsInUse() {
+		return this.gameObjects;
+	}
+	
+	/**
+	 * Returns all the game objects in the module.
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+//	public Collection<KnowIt> getAllGameObjects() {
+//		Collection<KnowIt> gameObjects;
+//		final GameTypeManager typeManager;
+//		final SEModel model = SEModelManager.getInstance().getActiveModel();
+//
+//		if (!(model instanceof StoryModel))
+//			return new ArrayList<KnowIt>();
+//
+//		typeManager = model.getTranslator().getGameTypeManager();
+//
+//		if (!(model instanceof StoryModel) || typeManager == null)
+//			return new ArrayList<KnowIt>();
+//
+//		for (String type : typeManager.getKeywords()) {
+//			final Collection<Resource> gameObjectResources;
+//
+//			gameObjectResources = ((StoryModel) model).getModule().getResourcesOfType(
+//					type);
+//
+//			for (Resource constant : gameObjectResources) {
+//		//		if (constant.getOwner() == null)
+//		//			gameObjects.add(new KnowIt())
+//			}
+//		}
+//		
+//		return gameObjects;
+//	}
+	
 	/**
 	 * Calculates the frequency of specific causes.
 	 * 
