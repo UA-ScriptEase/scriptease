@@ -114,9 +114,11 @@ public class TlkManager {
 
 			// ensure the correct file type and version
 			if (!fileType.trim().equals(TLK_FILE_TYPE)) {
+				reader.close();
 				throw new IllegalArgumentException(
 						"Illegal file type passed to TLK constructor.");
 			} else if (!version.trim().equals(TLK_VERSION)) {
+				reader.close();
 				throw new IllegalArgumentException("Unknown version. Expected "
 						+ TLK_VERSION + " but received " + version + ".");
 			}
