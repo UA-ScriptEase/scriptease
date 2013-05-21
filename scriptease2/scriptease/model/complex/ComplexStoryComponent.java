@@ -332,9 +332,6 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 		valid &= this.roomForMoreOf(potentialChild);
 		valid &= !this.isDescendantOf(potentialChild);
 
-		if (!valid)
-			valid = this.isValidChild(potentialChild);
-
 		return valid;
 	}
 

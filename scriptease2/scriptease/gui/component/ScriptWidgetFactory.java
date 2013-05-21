@@ -404,10 +404,12 @@ public class ScriptWidgetFactory {
 		model = new SpinnerNumberModel(initVal, MIN, MAX, STEP_SIZE);
 		spinner = new JSpinner(model);
 		scriptValue = knowIt.getBinding().getScriptValue();
-
+		
 		final JTextField textField = ((JSpinner.DefaultEditor) spinner
 				.getEditor()).getTextField();
 
+		textField.setBackground(ScriptEaseUI.COLOUR_SIMPLE_TEXT);
+		
 		// For some annoying reason, JSpinners don't automatically resize when
 		// you set their max and min values...
 		int length = textField.getText().length();
@@ -495,7 +497,7 @@ public class ScriptWidgetFactory {
 		};
 
 		spinner.addChangeListener(changeListener);
-
+		
 		knowIt.addStoryComponentObserver(observer);
 
 		widgetsToStoryComponents.put(spinner, knowIt);
@@ -521,6 +523,7 @@ public class ScriptWidgetFactory {
 		Collections.sort(list);
 
 		combo = new JComboBox(list.toArray());
+		combo.setBackground(ScriptEaseUI.COLOUR_SIMPLE_TEXT);
 		
 		scriptValue = knowIt.getBinding().getScriptValue();
 
