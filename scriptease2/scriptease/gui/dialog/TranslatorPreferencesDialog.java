@@ -149,7 +149,7 @@ public class TranslatorPreferencesDialog extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				final File filePath;
 
-				filePath = WindowFactory.getInstance().showFileChooser(
+				filePath = WindowFactory.getInstance().showDirectoryChooser(
 						"Select", "", null);
 
 				if (filePath != null)
