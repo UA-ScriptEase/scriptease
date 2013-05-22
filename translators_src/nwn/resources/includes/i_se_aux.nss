@@ -217,10 +217,40 @@ int SE_AUX_Once(string var, int nEntities, int shouldDelete)
   return ! bFound;
 }
 
-// Derivative of CreateObject that can be placed on an action queue.
-void SE_AUX_CreateObject(int objectType, string blueprint, location loc)
+// Return the resref based on the template ID
+string SE_AUX_GetResRef(string templateID) 
 {
-  CreateObject(objectType, blueprint, loc);
+	int dotLoc = FindSubString(templateID, ".");
+	return GetStringLeft(templateID, dotLoc);
+}
+
+// Return the type of the object based on the template ID
+int SE_AUX_GetType(string templateID) 
+{
+	int type;
+
+	int dotLoc = FindSubString(templateID, ".");
+	string typeExtension = GetStringRight(templateID, GetStringLength(templateID) - (dotLoc + 1));
+	
+	   	// Cleverly determine that pesky constant from the template id (resref) extension.
+    if(typeExt == "utc" || typeExt == "UTC"){
+        // this little piggy was a piggy
+        type = OBJECT_TYPE_CREATURE;
+    } else if(typeExt == "uti" || typeExt == "UTI"){
+        // this little piggy was a meal
+        type = OBJECT_TYPE_ITEM;
+    } else if(typeExt == "utp" || typeExt == "UTP"){
+        // this little piggy was a statue
+        type = OBJECT_TYPE_PLACEABLE;
+    } else if(typeExt == "uts" || typeExt == "UTS"){
+        // this little piggy was a butcher's shop
+        type = OBJECT_TYPE_STORE;
+    } else if(typeExt == "utw" || typeExt == "UTW"){
+        // and this little piggy went wee wee wee, to the waypoint home.
+        type = OBJECT_TYPE_WAYPOINT;
+    }
+    
+    return type;
 }
 
 /***SUPERHEARTBEAT STUFF***/
