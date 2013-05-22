@@ -1,54 +1,68 @@
 package scriptease.controller;
 
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import javax.swing.SwingWorker;
 
+import scriptease.controller.io.FileIO;
 import scriptease.gui.WindowFactory;
-import scriptease.gui.action.library.OpenAPIDictionaryEditorAction;
-import scriptease.gui.dialog.DialogBuilder.WizardDialog;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
+import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
+import scriptease.translator.io.model.GameModule;
 
 /**
  * Progress.aj is used to define methods which should be wrapped with a progress
  * bar.
  * 
+ * We should make the progress bar appear at the lowest level possible to
+ * prevent multiple progress bars from appearing on top of each other.
+ * Especially watch out when adding a pointcut for a GUI class. This caused a
+ * problem once where the model creation dialog would get a progress bar, then
+ * it would try to load an APIDictionary within that which would call another
+ * progress bar, which separated those two operations into separate stacks. The
+ * dialog stack would return a null APIDictionary, and the APIDictionary stack
+ * would throw an exception because it looks like we're loading the
+ * APIDictionary twice. Watch out for that. - kschenk
+ * 
  * @author mfchurch
+ * @author kschenk
  * 
  */
 public aspect Progress {
 	public pointcut writeStory():
 		within(FileManager) && execution(* writeStoryModelFile(StoryModel, File));
 
-	public pointcut finishWizard():
-		within(WizardDialog) && execution(* finishWizard(Runnable));
+	public pointcut writeAPIDictionary():
+		within(FileIO) && execution(* writeAPIDictionary(APIDictionary, File));
 
 	public pointcut openStoryModel():
 		within(FileManager) && execution(* openStoryModel(File));
 
 	public pointcut loadAPIDictionary():
 		within(Translator) && execution(* loadAPIDictionary());
-	
+
+	public pointcut loadModule(): 
+		within(Translator) && execution(* loadModule(GameModule));
+
 	public pointcut modelActivated():
 		within(SEModelManager) && execution(* activate(SEModel));
-	
+
 	private pointcut showProgress():
 		writeStory() || 
-		finishWizard() ||
+		writeAPIDictionary() || 
 		openStoryModel() ||
 		modelActivated() ||
+		loadModule() ||
 		loadAPIDictionary();
 
 	void around(): showProgress() {
 		// this is being marked as unused even though it appears below.
-		// Java/AspectJ compiler bug, I guess. - remiller
 		final Thread mainThread = Thread.currentThread();
-		SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
+		final SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
 				try {
