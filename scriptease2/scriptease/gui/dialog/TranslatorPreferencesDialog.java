@@ -170,11 +170,13 @@ public class TranslatorPreferencesDialog extends JDialog {
 
 		this.add(gameDirectoryPanel);
 		this.add(compilerPathPanel);
-		this.add(createButtons(compilerPathTextField, gameDirectoryTextField));
+		this.add(createButtons(compilerPathTextField, gameDirectoryTextField,
+				compilerCheckBox));
 	}
 
 	private Box createButtons(final JTextField compilerPathTextField,
-			final JTextField gameDirectoryTextField) {
+			final JTextField gameDirectoryTextField,
+			final JCheckBox compilerPathCheckBox) {
 		final String PROGRAM_RESTART_REQUIRED_TEXT = "Changes to Preferences may not take effect until ScriptEase is restarted.";
 		final String PROGRAM_RESTART_REQUIRED_TITLE = "Program restart required.";
 
@@ -194,13 +196,18 @@ public class TranslatorPreferencesDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				// Set the preferences.
 				final Translator translator;
+				final String compilerPath;
 
 				translator = TranslatorManager.getInstance()
 						.getActiveTranslator();
 
+				if (!compilerPathCheckBox.isSelected())
+					compilerPath = "false";
+				else
+					compilerPath = compilerPathTextField.getText();
+
 				translator.setPreference(
-						Translator.DescriptionKeys.COMPILER_PATH,
-						compilerPathTextField.getText());
+						Translator.DescriptionKeys.COMPILER_PATH, compilerPath);
 				translator.setPreference(
 						Translator.DescriptionKeys.GAME_DIRECTORY,
 						gameDirectoryTextField.getText());
