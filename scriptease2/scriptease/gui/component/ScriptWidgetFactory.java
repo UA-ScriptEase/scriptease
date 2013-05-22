@@ -388,7 +388,8 @@ public class ScriptWidgetFactory {
 
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
-
+		final JTextField textField;
+		
 		final String scriptValue;
 
 		final StoryComponentObserver observer;
@@ -405,9 +406,8 @@ public class ScriptWidgetFactory {
 		spinner = new JSpinner(model);
 		scriptValue = knowIt.getBinding().getScriptValue();
 		
-		final JTextField textField = ((JSpinner.DefaultEditor) spinner
+		textField = ((JSpinner.DefaultEditor) spinner
 				.getEditor()).getTextField();
-
 		textField.setBackground(ScriptEaseUI.COLOUR_SIMPLE_TEXT);
 		
 		// For some annoying reason, JSpinners don't automatically resize when
@@ -524,7 +524,7 @@ public class ScriptWidgetFactory {
 
 		combo = new JComboBox(list.toArray());
 		combo.setBackground(ScriptEaseUI.COLOUR_SIMPLE_TEXT);
-		
+
 		scriptValue = knowIt.getBinding().getScriptValue();
 
 		if (scriptValue != null && !scriptValue.isEmpty())
