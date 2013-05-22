@@ -20777,87 +20777,18 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>string templateID = &quot;</Literal>
+              <Literal>string resref = SE_AUX_GetResRef(&quot;</Literal>
+           	  <Scope data="argument" ref="Object">
+              	<Fragment data="templateID"/>
+              </Scope>
+              <Literal>&quot;)</Literal>
+            </Line>
+            <Line>
+              <Literal>int type = SE_AUX_GetType(&quot;</Literal>
               <Scope data="argument" ref="Object">
                 <Fragment data="templateID"/>
               </Scope>
-              <Literal>&quot;;</Literal>
-            </Line>
-            <Line>
-              <Literal>int dotLoc = FindSubString(templateID, &quot;.&quot;);</Literal>
-            </Line>
-            <Line>
-              <Literal>string resref = GetStringLeft(templateID, dotLoc);</Literal>
-            </Line>
-            <Line>
-              <Literal>string typeExt = GetStringRight(templateID, GetStringLength(templateID) - (dotLoc + 1));</Literal>
-            </Line>
-            <Line>
-              <Literal>int type;</Literal>
-            </Line>
-            <Line>
-              <Literal>// Cleverly determine that pesky constant from the template id (resref) extension.</Literal>
-            </Line>
-            <Line>
-              <Literal>if(typeExt == &quot;utc&quot; || typeExt == &quot;UTC&quot;){</Literal>
-            </Line>
-            <Indent>
-              <Line>
-                <Literal>// this little piggy was a piggy</Literal>
-              </Line>
-              <Line>
-                <Literal>type = OBJECT_TYPE_CREATURE;</Literal>
-              </Line>
-            </Indent>
-            <Line>
-              <Literal>} else if(typeExt == &quot;uti&quot; || typeExt == &quot;UTI&quot;){</Literal>
-            </Line>
-            <Indent>
-              <Line>
-                <Literal>// this little piggy was a meal</Literal>
-              </Line>
-              <Line>
-                <Literal>type = OBJECT_TYPE_ITEM;</Literal>
-              </Line>
-            </Indent>
-            <Line>
-              <Literal>} else if(typeExt == &quot;utp&quot; || typeExt == &quot;UTP&quot;){</Literal>
-            </Line>
-            <Indent>
-              <Line>
-                <Literal>// this little piggy was a statue</Literal>
-              </Line>
-              <Line>
-                <Literal>type = OBJECT_TYPE_PLACEABLE;</Literal>
-              </Line>
-            </Indent>
-            <Line>
-              <Literal>} else if(typeExt == &quot;uts&quot; || typeExt == &quot;UTS&quot;){</Literal>
-            </Line>
-            <Indent>
-              <Line>
-                <Literal>// this little piggy was a butcher&apos;s shop</Literal>
-              </Line>
-              <Line>
-                <Literal>type = OBJECT_TYPE_STORE;</Literal>
-              </Line>
-            </Indent>
-            <Line>
-              <Literal>} else if(typeExt == &quot;utw&quot; || typeExt == &quot;UTW&quot;){</Literal>
-            </Line>
-            <Indent>
-              <Line>
-                <Literal>// and this little piggy went wee wee wee, to the waypoint home.</Literal>
-              </Line>
-              <Line>
-                <Literal>type = OBJECT_TYPE_WAYPOINT;</Literal>
-              </Line>
-            </Indent>
-            <Line>
-              <Literal>}</Literal>
-            </Line>
-            <Line>
-              <Literal>// Now we can actually do the thing with the stuff.</Literal>
+              <Literal>&quot;)</Literal>
             </Line>
             <Line>
               <Literal>CreateObject(type, resref, </Literal>
