@@ -189,6 +189,8 @@ public final class FileManager {
 				final File location;
 
 				active = TranslatorManager.getInstance().getActiveTranslator();
+				
+				// TODO We are saving the api dictionary. Why not the library model?
 				apiDictionary = active.getApiDictionary();
 
 				// TODO This just saves the library in the api dicitonary's

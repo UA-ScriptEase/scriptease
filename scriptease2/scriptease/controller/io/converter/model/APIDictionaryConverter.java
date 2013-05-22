@@ -105,7 +105,7 @@ public class APIDictionaryConverter implements Converter {
 		final EventSlotManager eventSlotManager = apiDictionary
 				.getEventSlotManager();
 
-		System.out.println("Unmarshaling APIDictionary");
+		System.out.println("Unmarshalling APIDictionary");
 
 		// name
 		apiDictionary.setName(reader.getAttribute(TAG_NAME));

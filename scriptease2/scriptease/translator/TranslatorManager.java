@@ -353,8 +353,10 @@ public class TranslatorManager {
 			return;
 		this.activeTranslator = translator;
 		if (translator != null) {
-			StatusManager.getInstance().setStatus(
-					translator.getName() + " translator loaded");
+			final String message = translator.getName() + " translator loaded.";
+			
+			StatusManager.getInstance().setStatus(message);
+			System.out.println(message);
 
 			// We have this here so we don't run into issues later where the api
 			// dictionary isn't loaded.
