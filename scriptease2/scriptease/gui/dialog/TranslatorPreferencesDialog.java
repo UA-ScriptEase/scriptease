@@ -1,17 +1,21 @@
 package scriptease.gui.dialog;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -46,9 +50,8 @@ public class TranslatorPreferencesDialog extends JDialog {
 
 	public TranslatorPreferencesDialog() {
 		final String TRANS_PREFERENCES_TEXT = "Translator Preferences";
-		final String COMPILER_PATH_TEXT = "Compiler path:";
-		final String GAME_DIRECTORY_TEXT = "Game directory:";
 		final String BROWSE_TEXT = "Browse";
+		final int TEXT_WIDTH = 30;
 
 		final JPanel compilerPathPanel;
 		final JPanel gameDirectoryPanel;
@@ -58,6 +61,8 @@ public class TranslatorPreferencesDialog extends JDialog {
 
 		final JButton compilerPathBrowseButton;
 		final JButton gameDirectoryBrowseButton;
+
+		final JCheckBox compilerCheckBox;
 
 		// Load the current settings before starting.
 		this.loadPreferences();
@@ -71,7 +76,34 @@ public class TranslatorPreferencesDialog extends JDialog {
 		compilerPathBrowseButton = new JButton(BROWSE_TEXT);
 		gameDirectoryBrowseButton = new JButton(BROWSE_TEXT);
 
+		compilerCheckBox = new JCheckBox();
+
 		// Set up the compiler path panel
+
+		// Set compiler path to deselected by default if there is no available
+		// compiler
+		if (TranslatorManager.getInstance().getActiveTranslator()
+				.getProperty(Translator.DescriptionKeys.COMPILER_PATH)
+				.equals(false)) {
+			compilerCheckBox.setSelected(false);
+			compilerPathTextField.setEnabled(false);
+			compilerPathBrowseButton.setEnabled(false);
+		} else
+			compilerCheckBox.setSelected(true);
+		compilerCheckBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!compilerCheckBox.isSelected()) {
+					compilerPathTextField.setEnabled(false);
+					compilerPathBrowseButton.setEnabled(false);
+				} else {
+					compilerPathTextField.setEnabled(true);
+					compilerPathBrowseButton.setEnabled(true);
+				}
+			}
+		});
+		compilerPathTextField.setColumns(TEXT_WIDTH);
 		compilerPathTextField.addCaretListener(new CaretListener() {
 
 			@Override
@@ -93,11 +125,16 @@ public class TranslatorPreferencesDialog extends JDialog {
 					compilerPathTextField.setText(filePath.getAbsolutePath());
 			}
 		});
-		compilerPathPanel.add(new JLabel(COMPILER_PATH_TEXT));
+		compilerPathPanel.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createLineBorder(Color.gray), "Compiler Path",
+				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
+						"SansSerif", Font.PLAIN, 12), Color.black));
+		compilerPathPanel.add(compilerCheckBox);
 		compilerPathPanel.add(compilerPathTextField);
 		compilerPathPanel.add(compilerPathBrowseButton);
 
 		// Set up the game directory path panel
+		gameDirectoryTextField.setColumns(TEXT_WIDTH);
 		gameDirectoryTextField.addCaretListener(new CaretListener() {
 
 			@Override
@@ -112,14 +149,17 @@ public class TranslatorPreferencesDialog extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				final File filePath;
 
-				filePath = WindowFactory.getInstance().showFileChooser("Select",
-						"", null);
+				filePath = WindowFactory.getInstance().showFileChooser(
+						"Select", "", null);
 
 				if (filePath != null)
 					gameDirectoryTextField.setText(filePath.getAbsolutePath());
 			}
 		});
-		gameDirectoryPanel.add(new JLabel(GAME_DIRECTORY_TEXT));
+		gameDirectoryPanel.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createLineBorder(Color.gray), "Game Directory",
+				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
+						"SansSerif", Font.PLAIN, 12), Color.black));
 		gameDirectoryPanel.add(gameDirectoryTextField);
 		gameDirectoryPanel.add(gameDirectoryBrowseButton);
 
@@ -128,8 +168,8 @@ public class TranslatorPreferencesDialog extends JDialog {
 		this.getContentPane().setLayout(
 				new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 
-		this.add(compilerPathPanel);
 		this.add(gameDirectoryPanel);
+		this.add(compilerPathPanel);
 		this.add(createButtons(compilerPathTextField, gameDirectoryTextField));
 	}
 
