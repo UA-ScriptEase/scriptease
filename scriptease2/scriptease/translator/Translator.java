@@ -790,7 +790,8 @@ public class Translator {
 			try {
 				module.setLocation(location);
 				// read the module to memory.
-				module.load(false);
+				this.loadModule(module);
+				//module.load(false);
 			} catch (FileNotFoundException e) {
 				// This should only actually be called if module is read only.
 				System.err.println("Module not found at [" + location + "]");
@@ -826,6 +827,10 @@ public class Translator {
 		}
 
 		return module;
+	}
+	
+	private void loadModule(GameModule module) throws IOException {
+		module.load(false);
 	}
 
 	private File requestNewLocation() {

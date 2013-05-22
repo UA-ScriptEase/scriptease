@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.swing.SwingUtilities;
+
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.io.converter.IdentityArrayListConverter;
 import scriptease.controller.io.converter.fragment.FormatDefinitionFragmentConverter;
@@ -174,12 +176,14 @@ public class FileIO {
 		 * 
 		 * - remiller
 		 */
-		if (this.mode == IoMode.LIBRARY)
+		if (this.mode == IoMode.LIBRARY) {
 			throw new IllegalStateException(
 					"Loop detected in APIDictionary Loading");
+		}
 
-		APIDictionary apiDictionary = (APIDictionary) this.readData(location,
-				IoMode.LIBRARY);
+		final APIDictionary apiDictionary;
+
+		apiDictionary = (APIDictionary) this.readData(location, IoMode.LIBRARY);
 
 		apiDictionary.setTranslator(translator);
 

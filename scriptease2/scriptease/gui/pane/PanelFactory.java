@@ -36,6 +36,7 @@ import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.LibraryModel;
+import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
 import scriptease.translator.Translator;
@@ -260,12 +261,18 @@ public final class PanelFactory {
 				new SEModelObserver() {
 
 					public void modelChanged(SEModelEvent event) {
-						if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
+						final SEModelEvent.Type eventType = event.getEventType();
+
+						if (eventType == SEModelEvent.Type.ACTIVATED) {
 							tree.fillTree();
-							tree.filterByTypes(event.getPatternModel()
-									.getTranslator().getGameTypeManager()
-									.getKeywords());
-						} else if (event.getEventType() == SEModelEvent.Type.REMOVED
+
+							final SEModel model = event.getPatternModel();
+
+							if (model instanceof StoryModel) {
+								tree.filterByTypes(model.getTranslator()
+										.getGameTypeManager().getKeywords());
+							}
+						} else if (eventType == SEModelEvent.Type.REMOVED
 								&& SEModelManager.getInstance()
 										.getActiveModel() == null) {
 							tree.fillTree();
