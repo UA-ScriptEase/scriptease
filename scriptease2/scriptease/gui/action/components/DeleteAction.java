@@ -111,8 +111,9 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 			panel = (StoryComponentPanel) focusOwner;
 			manager = panel.getSelectionManager();
 
-			if (manager != null)
+			if (manager != null) {
 				manager.deleteSelected();
+			}
 		} else if (focusOwner instanceof StoryComponentPanelJList) {
 			/*
 			 * TODO Needs undoability

@@ -111,8 +111,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			final StoryComponentPanel panel;
 
 			// Get the parent selected StoryComponents, since the children
-			// will
-			// be grabbed implicitly from the model
+			// will be grabbed implicitly from the model
 			panel = (StoryComponentPanel) comp;
 			final StoryComponentPanelManager selectionManager = panel
 					.getSelectionManager();
@@ -281,8 +280,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			// handle invalid child indexes
 			if (insertionIndex == -1) {
 				// Insert to the end of the parent's child list in the case of
-				// an
-				// illegal index.
+				// an illegal index.
 				insertionIndex = ((ComplexStoryComponent) panel
 						.getStoryComponent()).getChildCount();
 			}

@@ -5,9 +5,9 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.Collection;
 
 import javax.swing.Action;
-import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 
@@ -17,12 +17,14 @@ import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
+import scriptease.model.complex.StoryComponentContainer;
 
 /**
  * Represents and performs the Cut command, as well as encapsulates its enabled
  * and name display state.
  * 
  * @author kschenk
+ * @author jyuen
  */
 @SuppressWarnings("serial")
 public final class CutAction extends ActiveModelSensitiveAction implements
@@ -78,10 +80,25 @@ public final class CutAction extends ActiveModelSensitiveAction implements
 	 * 
 	 * @param component
 	 */
-	private void cutComponent(JComponent component) {
-		component.getTransferHandler().exportToClipboard(component,
-				Toolkit.getDefaultToolkit().getSystemClipboard(),
-				TransferHandler.MOVE);
+	private void cutComponent(StoryComponentPanel component) {
+		// If the component is a StoryComponentContainer, we only want
+		// it's contents.
+		if (component.getStoryComponent() instanceof StoryComponentContainer) {
+			final Collection<StoryComponentPanel> childComponents;
+			
+			childComponents = component.getChildrenPanels();
+
+			for (StoryComponentPanel child : childComponents) {
+				component.getTransferHandler().exportToClipboard(child,
+						Toolkit.getDefaultToolkit().getSystemClipboard(),
+						TransferHandler.MOVE);
+			}
+	
+		} else {
+			component.getTransferHandler().exportToClipboard(component,
+					Toolkit.getDefaultToolkit().getSystemClipboard(),
+					TransferHandler.MOVE);
+		}
 	}
 
 	@Override
