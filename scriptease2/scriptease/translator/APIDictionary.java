@@ -1,12 +1,6 @@
 package scriptease.translator;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import scriptease.model.CodeBlock;
 import scriptease.model.LibraryModel;
-import scriptease.model.StoryComponent;
-import scriptease.model.complex.ScriptIt;
 import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.translator.apimanagers.EventSlotManager;
 import scriptease.translator.apimanagers.GameTypeManager;
@@ -31,13 +25,31 @@ public class APIDictionary {
 	private final EventSlotManager slotManager;
 
 	/**
-	 * Builds a new API Dictionary with the given next ID.
+	 * Builds a new API Dictionary with no name, author, or translator set.
 	 * 
-	 * @param nextId
-	 *            the next id available to be assigned to a CodeBlockSource.
 	 */
 	public APIDictionary() {
-		this.library = new LibraryModel();
+		this(new LibraryModel());
+	}
+
+	/**
+	 * Builds a new API Dictionary with the given title, author, and translator.
+	 * 
+	 * @param title
+	 * @param author
+	 * @param translator
+	 */
+	public APIDictionary(String title, String author, Translator translator) {
+		this(new LibraryModel(title, author, translator));
+	}
+
+	/**
+	 * Builds a new API Dictionary with the given library.
+	 * 
+	 * @param library
+	 */
+	public APIDictionary(LibraryModel library) {
+		this.library = library;
 		this.typeManager = new GameTypeManager();
 		this.slotManager = new EventSlotManager();
 		this.describeItManager = new DescribeItManager();
@@ -62,26 +74,59 @@ public class APIDictionary {
 		return this.library;
 	}
 
+	/**
+	 * Returns the name of the APIDictionary, which is the name of its library.
+	 * 
+	 * @return
+	 */
 	public String getName() {
 		return this.library.getTitle();
 	}
 
+	/**
+	 * Returns the author of the APIDictionary, which is the author of its
+	 * library.
+	 * 
+	 * @return
+	 */
 	public String getAuthor() {
 		return this.library.getAuthor();
 	}
 
+	/**
+	 * Returns the translator of the APIDictionary, which is the translator of
+	 * its library.
+	 * 
+	 * @return
+	 */
 	public Translator getTranslator() {
 		return this.library.getTranslator();
 	}
 
+	/**
+	 * Sets the name of the APIDictionary, which is the name of its library.
+	 * 
+	 * @return
+	 */
 	public void setName(String name) {
 		this.library.setTitle(name);
 	}
 
+	/**
+	 * Sets the author of the APIDictionary, which is the author of its library.
+	 * 
+	 * @return
+	 */
 	public void setAuthor(String author) {
 		this.library.setAuthor(author);
 	}
 
+	/**
+	 * Sets the translator of the APIDictionary, which is the translator of its
+	 * library.
+	 * 
+	 * @return
+	 */
 	public void setTranslator(Translator translator) {
 		this.library.setTranslator(translator);
 	}
@@ -89,21 +134,5 @@ public class APIDictionary {
 	@Override
 	public String toString() {
 		return "APIDictionary [" + this.getName() + "]";
-	}
-
-	public List<CodeBlock> getCodeBlocksByName(String scriptValue) {
-		final List<StoryComponent> componentList;
-
-		componentList = this.library.getEffectsCategory().getChildren();
-
-		for (StoryComponent component : componentList) {
-			if (component instanceof ScriptIt
-					&& component.getDisplayText().equals(scriptValue)) {
-				return new ArrayList<CodeBlock>(
-						((ScriptIt) component).getCodeBlocks());
-			}
-		}
-
-		return null;
 	}
 }

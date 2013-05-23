@@ -189,18 +189,22 @@ public final class FileManager {
 				final File location;
 
 				active = TranslatorManager.getInstance().getActiveTranslator();
-				
-				// TODO We are saving the api dictionary. Why not the library model?
+
+				// TODO We are saving the api dictionary. Why not the library
+				// model?
 				apiDictionary = active.getApiDictionary();
 
-				// TODO This just saves the library in the api dicitonary's
-				// location...
-				location = active
-						.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH
-								.toString());
+				if (apiDictionary.getLibrary() == libraryModel) {
+					location = active
+							.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH
+									.toString());
 
-				FileIO.getInstance()
-						.writeAPIDictionary(apiDictionary, location);
+					FileIO.getInstance().writeAPIDictionary(apiDictionary,
+							location);
+
+					// TODO This just saves the library in the api dicitonary's
+					// location...
+				}
 			}
 
 			@Override
@@ -304,7 +308,7 @@ public final class FileManager {
 	 * @param location
 	 *            The location to save the model.
 	 */
-	private void writeStoryModelFile(StoryModel model, File location) {
+	private void writeStoryModelFile(final StoryModel model, final File location) {
 		final StoryModel storedModel = this.openFiles.getValue(location);
 		final WindowFactory windowManager = WindowFactory.getInstance();
 		final FileIO writer = FileIO.getInstance();
@@ -340,15 +344,26 @@ public final class FileManager {
 				return;
 		}
 
-		// Write the Story's patterns to XML
-		writer.writeStoryModel(model, location);
+		WindowFactory.showProgressBar("Saving Story...", new Runnable() {
+			@Override
+			public void run() {
+				// Write the Story's patterns to XML
+				writer.writeStoryModel(model, location);
+
+			}
+		});
 
 		// update the map of open files/models to reflect the new file location.
 		// remove the entry corresponding to the model, not the location.
 		this.openFiles.removeValue(model);
 		this.openFiles.put(location, model);
 
-		this.writeCode(model, true);
+		WindowFactory.showProgressBar("Writing Code...", new Runnable() {
+			@Override
+			public void run() {
+				FileManager.this.writeCode(model, true);
+			}
+		});
 
 		// update the recent files list in the preferences file.
 		this.updateRecentFiles(location);
@@ -515,6 +530,7 @@ public final class FileManager {
 			return;
 		}
 
+		// ProgressBar.showProgressBar("Loading Story...");
 		// if we've already got the model open, then we don't need to
 		// load it again.
 		if (this.openFiles.containsKey(location)) {

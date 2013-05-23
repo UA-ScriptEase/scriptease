@@ -194,6 +194,10 @@ public abstract class Context {
 	 */
 	public List<CodeBlock> getBindingCodeBlocks() {
 		final List<CodeBlock> codeBlocks = new ArrayList<CodeBlock>();
+		final List<StoryComponent> effectList;
+
+		effectList = this.translator.getLibrary().getEffectsCategory()
+				.getChildren();
 
 		for (StoryComponent key : this.getComponents()) {
 			// The method first checks if there is a Resource for the
@@ -203,17 +207,20 @@ public abstract class Context {
 				if (binding instanceof KnowItBindingResource) {
 					final KnowItBindingResource kibConstant;
 					final String referenceValue;
-					final List<CodeBlock> specialCodeBlocks;
 
 					kibConstant = (KnowItBindingResource) binding;
 					referenceValue = kibConstant.getScriptValue();
-					// Gets the code block from the API Dictionary using the
-					// reference string.
-					specialCodeBlocks = this.translator.getApiDictionary()
-							.getCodeBlocksByName(referenceValue);
 
-					if (specialCodeBlocks != null)
-						codeBlocks.addAll(specialCodeBlocks);
+					// Gets the code blocks from the API Dictionary from a
+					// ScriptIt whose display text matches the reference string.
+					for (StoryComponent component : effectList) {
+						if (component instanceof ScriptIt
+								&& component.getDisplayText().equals(
+										referenceValue)) {
+							codeBlocks.addAll(new ArrayList<CodeBlock>(
+									((ScriptIt) component).getCodeBlocks()));
+						}
+					}
 				}
 			}
 		}

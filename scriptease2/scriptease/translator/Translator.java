@@ -112,7 +112,7 @@ public class Translator {
 	// either the location of the jar, or the location of the description file.
 	private final File location;
 
-	private Collection<LibraryModel> optionalLibraries;
+	private Collection<APIDictionary> optionalAPIs;
 
 	/**
 	 * Builds a new Translator from the given translator Jar or description
@@ -267,9 +267,9 @@ public class Translator {
 	 * 
 	 * @return
 	 */
-	public Collection<LibraryModel> getOptionalLibraries() {
-		this.initializeOptionalLibraries();
-		return this.optionalLibraries;
+	public Collection<APIDictionary> getOptionalAPIs() {
+		this.initializeOptionalAPIs();
+		return this.optionalAPIs;
 	}
 
 	/**
@@ -277,20 +277,20 @@ public class Translator {
 	 * 
 	 * @param library
 	 */
-	public void addOptionalLibrary(LibraryModel library) {
-		this.initializeOptionalLibraries();
-		this.optionalLibraries.add(library);
+	public void addOptionalAPI(APIDictionary api) {
+		this.initializeOptionalAPIs();
+		this.optionalAPIs.add(api);
 	}
 
 	/**
 	 * This needs to get called here so we don't accidentally load the api
 	 * dictionary at the same time as the translator itself is loading.
 	 */
-	private void initializeOptionalLibraries() {
-		if (this.optionalLibraries == null) {
+	private void initializeOptionalAPIs() {
+		if (this.optionalAPIs == null) {
 			final File optionalLibraryDir;
 
-			this.optionalLibraries = new ArrayList<LibraryModel>();
+			this.optionalAPIs = new ArrayList<APIDictionary>();
 			optionalLibraryDir = this
 					.getPathProperty(DescriptionKeys.OPTIONAL_LIBRARIES_PATH);
 
@@ -308,13 +308,12 @@ public class Translator {
 				optionalFiles = FileOp.findFiles(optionalLibraryDir, filter);
 
 				for (File file : optionalFiles) {
-					final LibraryModel optionalLibrary;
+					final APIDictionary optionalAPI;
 
-					optionalLibrary = FileIO.getInstance().readLibrary(file);
+					optionalAPI = FileIO.getInstance()
+							.readOptionalAPIDictionary(this, file);
 
-					optionalLibrary.setTranslator(this);
-
-					this.optionalLibraries.add(optionalLibrary);
+					this.optionalAPIs.add(optionalAPI);
 				}
 			}
 		}
@@ -337,9 +336,26 @@ public class Translator {
 		if (defaultLibrary.getName().equals(name))
 			return defaultLibrary;
 
-		for (LibraryModel library : this.getOptionalLibraries()) {
-			if (library.getName().equals(name))
-				return library;
+		for (APIDictionary api : this.getOptionalAPIs()) {
+			if (api.getName().equals(name))
+				return api.getLibrary();
+		}
+
+		return null;
+	}
+
+	public APIDictionary findAPIDictionary(String name) {
+		if (name == null)
+			return null;
+
+		final APIDictionary defaultAPI = this.getApiDictionary();
+
+		if (defaultAPI.getName().equals(name))
+			return defaultAPI;
+
+		for (APIDictionary api : this.getOptionalAPIs()) {
+			if (api.getName().equals(name))
+				return api;
 		}
 
 		return null;
@@ -618,7 +634,14 @@ public class Translator {
 		// load the apiDictionary
 		apiFile = this.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH);
 
-		this.apiDictionary = xmlReader.readAPIDictionary(this, apiFile);
+		WindowFactory.showProgressBar("Loading Library...", new Runnable() {
+			@Override
+			public void run() {
+				Translator.this.apiDictionary = xmlReader
+						.readDefaultAPIDictionary(Translator.this, apiFile);
+
+			}
+		});
 
 		if (this.apiDictionary == null)
 			throw new IllegalStateException("Unable to load the APIDictionary.");
@@ -773,6 +796,7 @@ public class Translator {
 	 */
 	public GameModule loadModule(File location) {
 		StatusManager.getInstance().setStatus("Loading Module ...");
+
 		GameModule module = this.createGameModuleInstance();
 
 		if (!location.exists()) {
@@ -790,8 +814,7 @@ public class Translator {
 			try {
 				module.setLocation(location);
 				// read the module to memory.
-				this.loadModule(module);
-				//module.load(false);
+				module.load(false);
 			} catch (FileNotFoundException e) {
 				// This should only actually be called if module is read only.
 				System.err.println("Module not found at [" + location + "]");
@@ -806,13 +829,11 @@ public class Translator {
 				module = null;
 			} catch (IOException e) {
 				e.printStackTrace();
-				WindowFactory
-						.getInstance()
-						.showProblemDialog(
-								"Problem loading GameModule",
-								"I can't read the Game Module at \""
-										+ location
-										+ "\".\n\n It might be corrupt. Please give me another file to try instead.");
+				WindowFactory.getInstance().showProblemDialog(
+						"Problem loading GameModule",
+						"I can't read the Game Module at \"" + location
+								+ "\".\n\n It might be corrupt. Please "
+								+ "give me another file to try instead.");
 				module = null;
 			}
 
@@ -828,10 +849,6 @@ public class Translator {
 
 		return module;
 	}
-	
-	private void loadModule(GameModule module) throws IOException {
-		module.load(false);
-	}
 
 	private File requestNewLocation() {
 		final File newLocation;
@@ -845,6 +862,25 @@ public class Translator {
 					"Select", "", this.getLocation());
 
 		return newLocation;
+	}
+
+	/**
+	 * Gets all of the optional libraries from the optional API dictionaries.
+	 * Multiple calls to this method will parse over all of the APIDictionaries
+	 * every time.
+	 * 
+	 * @return
+	 */
+	public Collection<LibraryModel> getOptionalLibraries() {
+		final Collection<LibraryModel> optionalLibraries;
+
+		optionalLibraries = new ArrayList<LibraryModel>();
+
+		for (APIDictionary api : this.getOptionalAPIs()) {
+			optionalLibraries.add(api.getLibrary());
+		}
+
+		return optionalLibraries;
 	}
 
 	/**

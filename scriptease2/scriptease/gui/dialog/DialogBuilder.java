@@ -1,9 +1,7 @@
 package scriptease.gui.dialog;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -25,8 +23,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JRootPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -34,13 +30,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import scriptease.controller.Progress;
 import scriptease.gui.ExceptionDialog;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
+import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.TranslatorManager;
@@ -70,36 +66,6 @@ public class DialogBuilder {
 	}
 
 	private DialogBuilder() {
-	}
-
-	/**
-	 * Creates a progress bar in a JDialog for the given task.
-	 * 
-	 * @param parent
-	 * @return
-	 */
-	public JDialog createProgressBar(Frame parent, String text) {
-		UIManager.put("ProgressBar.selectionForeground", Color.black);
-		UIManager.put("ProgressBar.selectionBackground", Color.black);
-
-		final JDialog dialog = new JDialog(parent, true);
-		final JProgressBar progressBar = new JProgressBar();
-
-		progressBar.setIndeterminate(true);
-		progressBar.setPreferredSize(new Dimension(200, 30));
-		progressBar.setOpaque(false);
-		progressBar.setString(text);
-		progressBar.setStringPainted(true);
-
-		dialog.add(progressBar);
-
-		dialog.setUndecorated(true);
-		dialog.getRootPane().setOpaque(false);
-		dialog.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
-		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		dialog.setSize(dialog.getPreferredSize());
-		dialog.setLocationRelativeTo(dialog.getParent());
-		return dialog;
 	}
 
 	/**
@@ -182,11 +148,13 @@ public class DialogBuilder {
 				}
 
 				final LibraryModel model;
+				final APIDictionary dictionary;
 
 				model = new LibraryModel(title, author, selectedTranslator);
+				dictionary = new APIDictionary(model);
 
 				SEModelManager.getInstance().add(model);
-				selectedTranslator.addOptionalLibrary(model);
+				selectedTranslator.addOptionalAPI(dictionary);
 			}
 		};
 
@@ -535,7 +503,9 @@ public class DialogBuilder {
 			this.finishButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					finishWizard(finish);
+					WizardDialog.this.setVisible(false);
+					WizardDialog.this.dispose();
+					WindowFactory.showProgressBar("Loading...", finish);
 				}
 			});
 
@@ -567,12 +537,6 @@ public class DialogBuilder {
 		private void setFinishEnabled(boolean value) {
 			this.finishButton.setEnabled(value);
 			this.pack();
-		}
-
-		private void finishWizard(Runnable runnable) {
-			WizardDialog.this.setVisible(false);
-			WizardDialog.this.dispose();
-			runnable.run();
 		}
 	}
 }
