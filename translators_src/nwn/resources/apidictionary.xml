@@ -20781,14 +20781,14 @@
            	  <Scope data="argument" ref="Object">
               	<Fragment data="templateID"/>
               </Scope>
-              <Literal>&quot;)</Literal>
+              <Literal>&quot;);</Literal>
             </Line>
             <Line>
               <Literal>int type = SE_AUX_GetType(&quot;</Literal>
               <Scope data="argument" ref="Object">
                 <Fragment data="templateID"/>
               </Scope>
-              <Literal>&quot;)</Literal>
+              <Literal>&quot;);</Literal>
             </Line>
             <Line>
               <Literal>CreateObject(type, resref, </Literal>
