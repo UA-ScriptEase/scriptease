@@ -230,7 +230,7 @@ int SE_AUX_GetType(string templateID)
 	int type;
 
 	int dotLoc = FindSubString(templateID, ".");
-	string typeExtension = GetStringRight(templateID, GetStringLength(templateID) - (dotLoc + 1));
+	string typeExt = GetStringRight(templateID, GetStringLength(templateID) - (dotLoc + 1));
 	
 	   	// Cleverly determine that pesky constant from the template id (resref) extension.
     if(typeExt == "utc" || typeExt == "UTC"){
