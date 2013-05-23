@@ -14,7 +14,6 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
-import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
@@ -26,7 +25,6 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.Translator;
-import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.translator.io.model.Slot;
 
 /**
@@ -359,30 +357,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		}
 
 		this.notifyChange(component, LibraryEvent.Type.ADDITION);
-	}
-
-	/**
-	 * Adds a KnowIt representing a DescribeIt to the LibraryModel. Adds the
-	 * DescribeIt to the DescribeItManager if it is not already in there.
-	 * 
-	 * This should only ever be called when we are creating an entirely new
-	 * DescribeIt.
-	 * 
-	 * @param describeIt
-	 */
-	public void add(DescribeIt describeIt) {
-		final DescribeItManager describeItManager;
-
-		describeItManager = this.translator.getApiDictionary()
-				.getDescribeItManager();
-
-		final KnowIt knowIt;
-
-		knowIt = describeItManager.createKnowItForDescribeIt(describeIt);
-
-		this.add(knowIt);
-
-		describeItManager.addDescribeIt(describeIt, knowIt);
 	}
 
 	public void remove(StoryComponent component) {

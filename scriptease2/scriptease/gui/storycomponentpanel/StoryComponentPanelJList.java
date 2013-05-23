@@ -211,7 +211,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * @param component
 	 * @return
 	 */
-	private int getIndexOfStoryComponent(StoryComponent component) {
+	public int getIndexOfStoryComponent(StoryComponent component) {
 		final DefaultListModel listModel = (DefaultListModel) this.getModel();
 		int returnIndex = -1;
 		for (int panelIndex = 0; panelIndex < listModel.size(); panelIndex++) {

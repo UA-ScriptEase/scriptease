@@ -7,10 +7,13 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
+import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModelManager;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
+import scriptease.translator.apimanagers.DescribeItManager;
 
 /**
  * Inserts a new Description into the Library.
@@ -48,10 +51,16 @@ public class NewDescriptionAction extends ActiveTranslatorSensitiveAction {
 
 		libraryModel = (LibraryModel) SEModelManager.getInstance()
 				.getActiveModel();
-
 		describeItNode = new DescribeItNode("Placeholder Node");
 		describeIt = new DescribeIt("New DescribeIt", describeItNode);
 
-		libraryModel.add(describeIt);
+		final DescribeItManager describeItManager = libraryModel
+				.getTranslator().getApiDictionary().getDescribeItManager();
+		final KnowIt knowIt = describeItManager
+				.createKnowItForDescribeIt(describeIt);
+		describeItManager.addDescribeIt(describeIt, knowIt);
+
+		libraryModel.add(knowIt);
+		LibraryPanel.getInstance().navigateToComponent(knowIt);
 	}
 }

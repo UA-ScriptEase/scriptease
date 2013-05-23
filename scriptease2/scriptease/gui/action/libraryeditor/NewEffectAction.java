@@ -7,6 +7,7 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
+import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.LibraryModel;
@@ -43,21 +44,22 @@ public class NewEffectAction extends ActiveTranslatorSensitiveAction {
 	public void actionPerformed(ActionEvent e) {
 		final LibraryModel libraryModel;
 
-		final ScriptIt newCause;
+		final ScriptIt newEffect;
 		final int codeBlockID;
 		final CodeBlock codeBlock;
 
 		libraryModel = (LibraryModel) SEModelManager.getInstance()
 				.getActiveModel();
 
-		newCause = new ScriptIt("Do Something");
+		newEffect = new ScriptIt("Do Something");
 		codeBlockID = libraryModel.getNextCodeBlockID();
 		codeBlock = new CodeBlockSource(codeBlockID);
 
-		newCause.addCodeBlock(codeBlock);
-		newCause.setDisplayText("Do Something");
-		newCause.setVisible(true);
+		newEffect.addCodeBlock(codeBlock);
+		newEffect.setDisplayText("Do Something");
+		newEffect.setVisible(true);
 
-		libraryModel.add(newCause);
+		libraryModel.add(newEffect);
+		LibraryPanel.getInstance().navigateToComponent(newEffect);
 	}
 }
