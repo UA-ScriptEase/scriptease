@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,8 +24,11 @@ import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import scriptease.controller.ModelAdapter;
+import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.StoryModelObserver;
@@ -42,6 +44,7 @@ import scriptease.gui.filters.TranslatorFilter;
 import scriptease.gui.filters.TypeFilter;
 import scriptease.gui.filters.VisibilityFilter;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.LibraryModel;
@@ -303,17 +306,21 @@ public class LibraryPanel extends JTabbedPane {
 		return tabPanel;
 	}
 
-	/**
-	 * Adds a list mouse listener to each of the tabs. This listens on the
-	 * entire list, not just individual cells, so cells will have to be dealt
-	 * with separately.
-	 * 
-	 * @param listener
-	 * @see StoryComponentPanelJList#addMouseListener(MouseListener)
-	 */
-	public void addListMouseListener(MouseListener listener) {
-		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			list.addMouseListener(listener);
+	public void assignListSelectionListener(final StoryVisitor storyVisitor) {
+		for (final StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			final ListSelectionListener listSelectionListener = new ListSelectionListener() {
+				@Override
+				public void valueChanged(ListSelectionEvent e) {
+					final Object selected = list.getSelectedValue();
+					if (selected instanceof StoryComponentPanel) {
+						final StoryComponentPanel componentPanel = (StoryComponentPanel) selected;
+						final StoryComponent component = componentPanel
+								.getStoryComponent();
+						component.process(storyVisitor);
+					}
+				}
+			};
+			list.addListSelectionListener(listSelectionListener);
 		}
 	}
 
@@ -326,6 +333,26 @@ public class LibraryPanel extends JTabbedPane {
 	private void updateElement(StoryComponent changed) {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
 			list.updateStoryComponentPanel(changed);
+		}
+	}
+
+	/**
+	 * Navigates to the StoryComponentPanelJList tab, selects the component in
+	 * the list, and scrolls to it's position.
+	 * 
+	 * @param component
+	 */
+	public void navigateToComponent(StoryComponent component) {
+		for (final StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			final int listIndex = list.getIndexOfStoryComponent(component);
+			if (listIndex != -1) {
+				final int tabIndex = this.storyComponentPanelJLists
+						.indexOf(list);
+				this.setSelectedIndex(tabIndex);
+				list.setSelectedIndex(listIndex);
+				list.ensureIndexIsVisible(listIndex);
+				break;
+			}
 		}
 	}
 
