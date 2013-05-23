@@ -12,6 +12,7 @@ import java.awt.event.InputEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -54,6 +55,7 @@ import scriptease.util.GUIOp;
  * @author remiller
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  * @see TransferHandler
  */
 @SuppressWarnings("serial")
@@ -107,7 +109,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		if (comp instanceof StoryComponentPanel) {
 			final StoryComponentPanel panel;
-			// Get the parent selected StoryComponents, since the children will
+
+			// Get the parent selected StoryComponents, since the children
+			// will
 			// be grabbed implicitly from the model
 			panel = (StoryComponentPanel) comp;
 			final StoryComponentPanelManager selectionManager = panel
@@ -249,7 +253,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			// variables
 			int insertionIndex;
-			boolean success = false;
 
 			final Collection<StoryComponent> transferData;
 			final StoryComponentPanel panel;
@@ -286,23 +289,26 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			// Now we actually add the transfer data
 			for (StoryComponent newChild : transferData) {
-				final StoryComponent clone;
-				clone = newChild.clone();
 
-				StoryComponent sibling = parent.getChildAt(insertionIndex);
-				if (sibling != null) {
-					// add in the middle
-					success = parent.addStoryChildBefore(clone, sibling);
+				// We want to transfer all the story component's children
+				// instead if the newChild is a StoryComponentContainer.
+				if (newChild instanceof StoryComponentContainer) {
+					final List<StoryComponent> children;
+					final StoryComponentContainer component;
+
+					component = (StoryComponentContainer) newChild;
+					children = component.getChildren();
+
+					// We don't want these child components to be added
+					// backwards so we reverse them.
+					Collections.reverse(children);
+
+					for (StoryComponent child : children)
+						addTransferData(child, parent, insertionIndex);
+
 				} else {
-					success = parent.addStoryChild(clone);
+					addTransferData(newChild, parent, insertionIndex);
 				}
-
-				clone.revalidateKnowItBindings();
-
-				if (!success)
-					throw new IllegalStateException("Was unable to add "
-							+ newChild + " to " + parent
-							+ ". This should have been prevented by canImport.");
 			}
 
 			// End the recording of the paste
@@ -325,6 +331,28 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		}
 
 		return false;
+	}
+
+	private void addTransferData(StoryComponent child,
+			ComplexStoryComponent parent, int insertionIndex) {
+
+		final StoryComponent clone = child.clone();
+		final boolean success;
+
+		StoryComponent sibling = parent.getChildAt(insertionIndex);
+		if (sibling != null) {
+			// add in the middle
+			success = parent.addStoryChildBefore(clone, sibling);
+		} else {
+			success = parent.addStoryChild(clone);
+		}
+
+		clone.revalidateKnowItBindings();
+
+		if (!success)
+			throw new IllegalStateException("Was unable to add " + child
+					+ " to " + parent
+					+ ". This should have been prevented by canImport.");
 	}
 
 	@Override
@@ -407,8 +435,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			if (acceptable) {
 				acceptable &= potentialParent instanceof ComplexStoryComponent
 						&& ((ComplexStoryComponent) potentialParent)
-								.canAcceptChild(child)
-						&& !(child instanceof StoryComponentContainer);
+								.canAcceptChild(child);
 			}
 
 			if (!acceptable)
@@ -492,7 +519,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					.getBinding();
 
 		} catch (UnsupportedFlavorException e) {
-			// No chocolate for you!
 			return false;
 		} catch (IOException e) {
 			return false;
