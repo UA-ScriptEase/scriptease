@@ -19,7 +19,6 @@ import scriptease.controller.io.converter.fragment.MapRefFragmentConverter;
 import scriptease.controller.io.converter.fragment.ScopeFragmentConverter;
 import scriptease.controller.io.converter.fragment.SeriesFragmentConverter;
 import scriptease.controller.io.converter.fragment.SimpleDataFragmentConverter;
-import scriptease.controller.io.converter.model.APIDictionaryConverter;
 import scriptease.controller.io.converter.model.DescribeItConverter;
 import scriptease.controller.io.converter.model.DescribeItNodeConverter;
 import scriptease.controller.io.converter.model.GameMapConverter;
@@ -60,7 +59,6 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.LanguageDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
@@ -146,54 +144,44 @@ public class FileIO {
 	 *            The file to read from
 	 * @return The read-in Library.
 	 */
-	public APIDictionary readOptionalAPIDictionary(Translator translator,
-			File location) {
-
-		// TODO
+	public LibraryModel readOptionalLibrary(Translator translator, File location) {
 		final LibraryModel lib;
-		final APIDictionary dictionary;
 
-		dictionary = (APIDictionary) this.readData(location, IoMode.LIBRARY);
-
-		lib = dictionary.getLibrary();
+		lib = (LibraryModel) this.readData(location, IoMode.LIBRARY);
 
 		BindingFixer.fixBindings(lib.getRoot());
 
-		return dictionary;
+		return lib;
 	}
 
 	/**
-	 * Read the API dictionary file from the given location.
+	 * Read the Library file from the given location.
 	 * 
 	 * @param location
 	 *            The file path to read from.
-	 * @return The API dictionary as read from disk.
+	 * @return The LibraryModel as read from disk.
 	 */
-	public APIDictionary readDefaultAPIDictionary(Translator translator,
-			File location) {
-
-		// TODO
+	public LibraryModel readDefaultLibrary(Translator translator, File location) {
 		/*
 		 * Check against inifiniloops. This is usually caused by trying to get
-		 * something from the API dictionary while the API dictionary isn't done
-		 * loading yet.
+		 * something from the library while the library isn't done loading yet.
 		 * 
 		 * - remiller
 		 */
 		if (this.mode == IoMode.LIBRARY) {
 			throw new IllegalStateException(
-					"Loop detected in APIDictionary Loading");
+					"Loop detected in LibraryModel Loading");
 		}
 
-		final APIDictionary apiDictionary;
+		final LibraryModel library;
 
-		apiDictionary = (APIDictionary) this.readData(location, IoMode.LIBRARY);
+		library = (LibraryModel) this.readData(location, IoMode.LIBRARY);
 
-		apiDictionary.setTranslator(translator);
+		library.setTranslator(translator);
 
-		BindingFixer.fixBindings(apiDictionary.getLibrary().getRoot());
+		BindingFixer.fixBindings(library.getRoot());
 
-		return apiDictionary;
+		return library;
 	}
 
 	/**
@@ -227,19 +215,19 @@ public class FileIO {
 	}
 
 	/**
-	 * Writes an API Dictionary to disk at the given location.
+	 * Writes a LibraryModel to disk at the given location.
 	 * 
 	 * @param dictionary
 	 *            The dictionary to write.
 	 * @param location
 	 *            The file path to write to.
 	 */
-	public void writeAPIDictionary(final APIDictionary dictionary,
+	public void writeLibraryModel(final LibraryModel library,
 			final File location) {
 		WindowFactory.showProgressBar("Saving Library...", new Runnable() {
 			@Override
 			public void run() {
-				FileIO.this.writeData(dictionary, location, IoMode.LIBRARY);
+				FileIO.this.writeData(library, location, IoMode.LIBRARY);
 			}
 		});
 	}
@@ -384,7 +372,7 @@ public class FileIO {
 		stream.alias("Value", String.class);
 
 		// Language Dictionary Fragments
-		stream.alias("APIDictionary", APIDictionary.class);
+		stream.alias("LibraryModel", LibraryModel.class);
 		stream.alias("LanguageDictionary", LanguageDictionary.class);
 		stream.alias("Map", GameMap.class);
 		stream.alias("Format", FormatDefinitionFragment.class);
@@ -412,7 +400,6 @@ public class FileIO {
 
 		// now register all of the leaf-level converters
 		stream.registerConverter(new StoryModelConverter());
-		stream.registerConverter(new LibraryModelConverter());
 		stream.registerConverter(new StoryComponentContainerConverter());
 		stream.registerConverter(new KnowItConverter());
 		stream.registerConverter(new AskItConverter());
@@ -429,7 +416,7 @@ public class FileIO {
 		stream.registerConverter(new ScopeFragmentConverter());
 		stream.registerConverter(new SeriesFragmentConverter());
 		stream.registerConverter(new SimpleDataFragmentConverter());
-		stream.registerConverter(new APIDictionaryConverter());
+		stream.registerConverter(new LibraryModelConverter());
 		stream.registerConverter(new LanguageDictionaryConverter());
 		stream.registerConverter(new GameMapConverter());
 		stream.registerConverter(new CodeBlockSourceConverter());

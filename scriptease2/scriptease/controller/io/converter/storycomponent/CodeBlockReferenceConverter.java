@@ -22,7 +22,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 /**
  * Converts {@link CodeBlockReference}s for file I/O. References have their own
  * parameter list, and a target that they must rebind to on load. References are
- * allowed to exist in Stories as well as in the API dictionary.<br>
+ * allowed to exist in Stories as well as in the LibraryModel.<br>
  * <br>
  * Story-side References store their target's ID number, but Translator-side
  * References store the actual target.

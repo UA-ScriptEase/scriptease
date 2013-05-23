@@ -21,7 +21,6 @@ import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.DescribeItManager;
@@ -96,7 +95,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 		this.updateEnabledState();
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;
@@ -129,15 +128,13 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 				final StoryComponent selectedComponent;
 
 				final Translator activeTranslator;
-				final APIDictionary apiDictionary;
 				final LibraryModel libraryModel;
 				final DescribeItManager describeItManager;
 
 				activeTranslator = TranslatorManager.getInstance()
 						.getActiveTranslator();
-				apiDictionary = activeTranslator.getApiDictionary();
-				libraryModel = apiDictionary.getLibrary();
-				describeItManager = apiDictionary.getDescribeItManager();
+				libraryModel = activeTranslator.getLibrary();
+				describeItManager = libraryModel.getDescribeItManager();
 
 				selectedPanel = (StoryComponentPanel) selectedObject;
 				selectedComponent = selectedPanel.getStoryComponent();
@@ -171,6 +168,6 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 		}
 
 		// Reset the focus after we delete something.
-		//SEFocusManager.getInstance().setFocus(null);
+		// SEFocusManager.getInstance().setFocus(null);
 	}
 }

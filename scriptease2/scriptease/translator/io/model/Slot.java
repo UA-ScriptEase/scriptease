@@ -67,8 +67,7 @@ public class Slot {
 	 */
 	public String getFormatKeyword() {
 		if (this.formatKeyword == null || this.formatKeyword.isEmpty())
-			return TranslatorManager.getInstance().getActiveTranslator()
-					.getApiDictionary().getEventSlotManager()
+			return TranslatorManager.getInstance().getActiveEventSlotManager()
 					.getDefaultFormatKeyword();
 		return this.formatKeyword;
 	}

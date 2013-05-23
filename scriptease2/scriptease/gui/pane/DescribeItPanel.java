@@ -24,7 +24,6 @@ import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.DescribeItManager;
 
@@ -51,15 +50,14 @@ public class DescribeItPanel extends JPanel {
 	 * @param knowIt
 	 */
 	public DescribeItPanel(final KnowIt knowIt) {
-		final APIDictionary dictionary;
 		final DescribeItManager describeItManager;
 		final DescribeIt describeIt;
 
 		this.isCollapsed = true;
 		this.scriptItPanel = new JPanel();
 
-		dictionary = TranslatorManager.getInstance().getActiveAPIDictionary();
-		describeItManager = dictionary.getDescribeItManager();
+		describeItManager = TranslatorManager.getInstance()
+				.getActiveDescribeItManager();
 		describeIt = describeItManager.getDescribeIt(knowIt);
 
 		if (describeIt == null) {

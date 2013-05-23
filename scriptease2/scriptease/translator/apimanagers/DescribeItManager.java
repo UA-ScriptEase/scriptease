@@ -14,7 +14,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.util.BiHashMap;
 
 /**
- * A manager that contains all of the DescribeIts in an APIDictionary mapped to
+ * A manager that contains all of the DescribeIts in a LibraryModel mapped to
  * the StoryComponents that use it. One DescribeIt can be mapped to multiple
  * story components.<br>
  * <br>

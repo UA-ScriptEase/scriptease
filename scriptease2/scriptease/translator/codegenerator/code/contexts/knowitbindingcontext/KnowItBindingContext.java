@@ -25,8 +25,9 @@ public class KnowItBindingContext extends Context {
 	}
 
 	public KnowItBindingContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(), other
-				.getTranslator(), other.getLocationInfo());
+		this(other.getStartStoryPoint(), other.getIndent(),
+				other.getNamifier(), other.getTranslator(), other
+						.getLocationInfo());
 	}
 
 	public KnowItBindingContext(Context other, KnowItBinding source) {
@@ -39,7 +40,7 @@ public class KnowItBindingContext extends Context {
 	 */
 	@Override
 	public String getType() {
-		return this.getTranslator().getApiDictionary().getGameTypeManager()
+		return this.getTranslator().getGameTypeManager()
 				.getCodeSymbol(this.binding.getFirstType());
 	}
 

@@ -211,7 +211,7 @@ public abstract class Context {
 					kibConstant = (KnowItBindingResource) binding;
 					referenceValue = kibConstant.getScriptValue();
 
-					// Gets the code blocks from the API Dictionary from a
+					// Gets the code blocks from the LibraryModel from a
 					// ScriptIt whose display text matches the reference string.
 					for (StoryComponent component : effectList) {
 						if (component instanceof ScriptIt

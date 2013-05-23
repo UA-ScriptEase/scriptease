@@ -24,7 +24,7 @@ public class EventSlotManager {
 
 	/**
 	 * Creates a new {@link #EventSlotManager()}. These should have a one to one
-	 * relationship with API Dictionaries.
+	 * relationship with Libraries.
 	 */
 	public EventSlotManager() {
 		this.slots = new HashMap<String, Slot>();

@@ -92,11 +92,11 @@ public class KnowItConverter extends StoryComponentConverter {
 					translator = TranslatorManager.getInstance()
 							.getActiveTranslator();
 
-					if (translator.apiDictionaryIsLoaded()) {
+					if (translator.defaultLibraryIsLoaded()) {
 						final DescribeItManager describeItManager;
 						final ScriptIt bindingScriptIt;
 
-						describeItManager = translator.getApiDictionary()
+						describeItManager = translator.getLibrary()
 								.getDescribeItManager();
 						bindingScriptIt = (ScriptIt) binding.getValue();
 

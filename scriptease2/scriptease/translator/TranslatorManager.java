@@ -16,9 +16,11 @@ import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
+import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.translator.apimanagers.DescribeItManager;
+import scriptease.translator.apimanagers.EventSlotManager;
 import scriptease.translator.apimanagers.GameTypeManager;
 
 /**
@@ -27,7 +29,7 @@ import scriptease.translator.apimanagers.GameTypeManager;
  * <br>
  * <ul>
  * <li>The "translator.ini" file itself.</li>
- * <li>An <code>APIXMLInterpreter</code> XML file.</li>
+ * <li>A <code>LibraryInterpreter</code> XML file.</li>
  * <li>A <code>FormatXMLInterpreter</code> XML file.</li>
  * <li>A .class file containing an implementation of the <code>GameModule</code>
  * interface.</li>
@@ -229,28 +231,41 @@ public class TranslatorManager {
 	}
 
 	/**
-	 * Shortcut method to get the active API Dictionary of the current active
+	 * Shortcut method to get the active default library of the current active
 	 * translator.
 	 * 
 	 * @return
 	 */
-	public APIDictionary getActiveAPIDictionary() {
+	public LibraryModel getActiveDefaultLibrary() {
 		if (this.activeTranslator == null)
 			return null;
-		return this.activeTranslator.getApiDictionary();
+		return this.activeTranslator.getLibrary();
 	}
 
 	/**
 	 * Shortcut method to get the active DescribeItManager of the current active
-	 * translator and APIdictionary.
+	 * translator and library.
 	 * 
 	 * @return
 	 */
 	public DescribeItManager getActiveDescribeItManager() {
-		final APIDictionary dictionary = this.getActiveAPIDictionary();
-		if (dictionary == null)
+		final LibraryModel library = this.getActiveDefaultLibrary();
+		if (library == null)
 			return null;
-		return dictionary.getDescribeItManager();
+		return library.getDescribeItManager();
+	}
+
+	/**
+	 * Shortcut method to get the active EventSlotManager of the current active
+	 * translator and library.
+	 * 
+	 * @return
+	 */
+	public EventSlotManager getActiveEventSlotManager() {
+		final LibraryModel library = this.getActiveDefaultLibrary();
+		if (library == null)
+			return null;
+		return library.getEventSlotManager();
 	}
 
 	/**
@@ -354,14 +369,13 @@ public class TranslatorManager {
 		this.activeTranslator = translator;
 		if (translator != null) {
 			final String message = translator.getName() + " translator loaded.";
-			
+
 			StatusManager.getInstance().setStatus(message);
 			System.out.println(message);
 
-			// We have this here so we don't run into issues later where the api
-			// dictionary isn't loaded.
-			translator.getApiDictionary();
-			translator.getOptionalAPIs();
+			// We have this here so we don't run into issues later if the
+			translator.getLibrary();
+			translator.getOptionalLibraries();
 		}
 		this.notifyObservers();
 	}

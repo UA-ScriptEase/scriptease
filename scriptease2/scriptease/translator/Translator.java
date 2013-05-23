@@ -38,7 +38,7 @@ import scriptease.util.FileOp;
  * valid, it <b>must</b> contain the following information:
  * <ul>
  * <li>A name</li>
- * <li>A path to the <i>API Dictionary</i> file.</li>
+ * <li>A path to the <i>Library</i> file.</li>
  * <li>A path to the <i>Language Dictionary</i> file.</li>
  * <li>A path to the <code>.class</code> file which is the Translator's
  * implementation of {@link scriptease.translator.io.model.GameModule}.</li>
@@ -93,14 +93,14 @@ public class Translator {
 	}
 
 	private static final String LANGUAGE_DICT_SCHEMA_LOCATION = "scriptease/resources/schema/LanguageDictionarySchema.xsd";
-	private static final String API_DICT_SCHEMA_LOCATION = "scriptease/resources/schema/ApiDictionarySchema.xsd";
+	private static final String LIBRARY_SCHEMA_LOCATION = "scriptease/resources/schema/LibrarySchema.xsd";
 	private static final String CODE_ELEMENT_SCHEMA_LOCATION = "scriptease/resources/schema/CodeElementSchema.xsd";
 
 	private final Properties properties;
 
 	// data loaded from the translator.ini file
 	private final Class<? extends GameModule> gameModuleClass;
-	private APIDictionary apiDictionary;
+	private LibraryModel defaultLibrary;
 	private LanguageDictionary languageDictionary;
 
 	private final Collection<String> legalExtensions;
@@ -112,7 +112,7 @@ public class Translator {
 	// either the location of the jar, or the location of the description file.
 	private final File location;
 
-	private Collection<APIDictionary> optionalAPIs;
+	private Collection<LibraryModel> optionalLibraries;
 
 	/**
 	 * Builds a new Translator from the given translator Jar or description
@@ -267,9 +267,9 @@ public class Translator {
 	 * 
 	 * @return
 	 */
-	public Collection<APIDictionary> getOptionalAPIs() {
-		this.initializeOptionalAPIs();
-		return this.optionalAPIs;
+	public Collection<LibraryModel> getOptionalLibraries() {
+		this.initializeOptionalLibraries();
+		return this.optionalLibraries;
 	}
 
 	/**
@@ -277,20 +277,20 @@ public class Translator {
 	 * 
 	 * @param library
 	 */
-	public void addOptionalAPI(APIDictionary api) {
-		this.initializeOptionalAPIs();
-		this.optionalAPIs.add(api);
+	public void addOptionalLibrary(LibraryModel library) {
+		this.initializeOptionalLibraries();
+		this.optionalLibraries.add(library);
 	}
 
 	/**
-	 * This needs to get called here so we don't accidentally load the api
-	 * dictionary at the same time as the translator itself is loading.
+	 * This needs to get called here so we don't accidentally load the library
+	 * at the same time as the translator itself is loading.
 	 */
-	private void initializeOptionalAPIs() {
-		if (this.optionalAPIs == null) {
+	private void initializeOptionalLibraries() {
+		if (this.optionalLibraries == null) {
 			final File optionalLibraryDir;
 
-			this.optionalAPIs = new ArrayList<APIDictionary>();
+			this.optionalLibraries = new ArrayList<LibraryModel>();
 			optionalLibraryDir = this
 					.getPathProperty(DescriptionKeys.OPTIONAL_LIBRARIES_PATH);
 
@@ -308,12 +308,11 @@ public class Translator {
 				optionalFiles = FileOp.findFiles(optionalLibraryDir, filter);
 
 				for (File file : optionalFiles) {
-					final APIDictionary optionalAPI;
+					final LibraryModel lib;
 
-					optionalAPI = FileIO.getInstance()
-							.readOptionalAPIDictionary(this, file);
+					lib = FileIO.getInstance().readOptionalLibrary(this, file);
 
-					this.optionalAPIs.add(optionalAPI);
+					this.optionalLibraries.add(lib);
 				}
 			}
 		}
@@ -336,26 +335,9 @@ public class Translator {
 		if (defaultLibrary.getName().equals(name))
 			return defaultLibrary;
 
-		for (APIDictionary api : this.getOptionalAPIs()) {
-			if (api.getName().equals(name))
-				return api.getLibrary();
-		}
-
-		return null;
-	}
-
-	public APIDictionary findAPIDictionary(String name) {
-		if (name == null)
-			return null;
-
-		final APIDictionary defaultAPI = this.getApiDictionary();
-
-		if (defaultAPI.getName().equals(name))
-			return defaultAPI;
-
-		for (APIDictionary api : this.getOptionalAPIs()) {
-			if (api.getName().equals(name))
-				return api;
+		for (LibraryModel library : this.getOptionalLibraries()) {
+			if (library.getName().equals(name))
+				return library;
 		}
 
 		return null;
@@ -470,7 +452,7 @@ public class Translator {
 	 * @return the Type Manager
 	 */
 	public GameTypeManager getGameTypeManager() {
-		return this.getApiDictionary().getGameTypeManager();
+		return this.getLibrary().getGameTypeManager();
 	}
 
 	/**
@@ -480,7 +462,7 @@ public class Translator {
 	 * @return the Slot Manager
 	 */
 	public EventSlotManager getSlotManager() {
-		return this.getApiDictionary().getEventSlotManager();
+		return this.getLibrary().getEventSlotManager();
 	}
 
 	/**
@@ -491,7 +473,7 @@ public class Translator {
 	 * @return Whether the translator is valid or not.
 	 */
 	public boolean isValid() {
-		final File apiDictPath;
+		final File libraryPath;
 		final File languageDictPath;
 		final File gameModulePath;
 		final GameModule testGameModule;
@@ -504,25 +486,25 @@ public class Translator {
 			return false;
 		}
 
-		apiDictPath = this.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH);
+		libraryPath = this.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH);
 		languageDictPath = this
 				.getPathProperty(DescriptionKeys.LANGUAGE_DICTIONARY_PATH);
 		gameModulePath = this.getPathProperty(DescriptionKeys.GAME_MODULE_PATH);
 
 		/*
-		 * The "translator.ini" file *must* contain a name and references to an
-		 * apiDictionary, a languageDictionary, and a GameModule implementation.
-		 * All references must exist in the file system. Any other references
-		 * are optional and will not be checked. See javadoc and/or wiki for
+		 * The "translator.ini" file *must* contain a name and references to a
+		 * library, a languageDictionary, and a GameModule implementation. All
+		 * references must exist in the file system. Any other references are
+		 * optional and will not be checked. See javadoc and/or wiki for
 		 * details.
 		 */
 		if (this.getName() == null) {
 			System.err.println("The translator at " + this.getLocation()
 					+ " is missing its name definition in translator.ini.");
 			return false;
-		} else if (apiDictPath == null || !apiDictPath.exists()) {
+		} else if (libraryPath == null || !libraryPath.exists()) {
 			System.err
-					.println("The API Dictionary Path definition in translator.ini for translator "
+					.println("The Library Path definition in translator.ini for translator "
 							+ this.getLocation()
 							+ " is missing or the dictionary file does not exist there.");
 			return false;
@@ -559,14 +541,10 @@ public class Translator {
 		FileOp.getFileResource(Translator.CODE_ELEMENT_SCHEMA_LOCATION);
 
 		try {
-			if (!FileOp
-					.validateXML(
-							apiDictPath,
-							FileOp.getFileResource(Translator.API_DICT_SCHEMA_LOCATION))) {
-				System.err
-						.println("The "
-								+ this.getName()
-								+ " translator's API dictionary does not pass validation.");
+			if (!FileOp.validateXML(libraryPath,
+					FileOp.getFileResource(Translator.LIBRARY_SCHEMA_LOCATION))) {
+				System.err.println("The " + this.getName()
+						+ " translator's Library does not pass validation.");
 				return false;
 			} else if (!FileOp.validateXML(languageDictPath, FileOp
 					.getFileResource(Translator.LANGUAGE_DICT_SCHEMA_LOCATION))) {
@@ -603,52 +581,37 @@ public class Translator {
 	}
 
 	/**
-	 * Returns whether the API dictionary is loaded.
+	 * Returns whether the Library is loaded.
 	 * 
-	 * @return <code>true</code> if the API dictionary is in memory.
+	 * @return <code>true</code> if the Library is in memory.
 	 */
-	public boolean apiDictionaryIsLoaded() {
-		return this.apiDictionary != null;
+	public boolean defaultLibraryIsLoaded() {
+		return this.defaultLibrary != null;
 	}
 
-	/**
-	 * Gets the API Dictionary for this translator. The APIDictionary is lazy
-	 * loaded because translator objects are created when ScriptEase is run,
-	 * whereas APIDictionarys are only created when we load something that needs
-	 * it.
-	 * 
-	 * @return the apiDictionary
-	 */
-	public APIDictionary getApiDictionary() {
-		if (this.apiDictionary == null)
-			this.loadAPIDictionary();
-
-		return this.apiDictionary;
-	}
-
-	private void loadAPIDictionary() {
+	private void loadDefaultLibrary() {
 		final FileIO xmlReader;
-		final File apiFile;
+		final File libraryFile;
 
 		xmlReader = FileIO.getInstance();
-		// load the apiDictionary
-		apiFile = this.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH);
+		// load the library
+		libraryFile = this.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH);
 
 		WindowFactory.showProgressBar("Loading Library...", new Runnable() {
 			@Override
 			public void run() {
-				Translator.this.apiDictionary = xmlReader
-						.readDefaultAPIDictionary(Translator.this, apiFile);
+				Translator.this.defaultLibrary = xmlReader.readDefaultLibrary(
+						Translator.this, libraryFile);
 
 			}
 		});
 
-		if (this.apiDictionary == null)
-			throw new IllegalStateException("Unable to load the APIDictionary.");
+		if (this.defaultLibrary == null)
+			throw new IllegalStateException("Unable to load the Library.");
 	}
 
 	public void unloadTranslator() {
-		this.apiDictionary = null;
+		this.defaultLibrary = null;
 		this.languageDictionary = null;
 	}
 
@@ -795,56 +758,37 @@ public class Translator {
 	 *         problem during loading.
 	 */
 	public GameModule loadModule(File location) {
-		StatusManager.getInstance().setStatus("Loading Module ...");
+		final String LOADING_MODULE = "Loading Module...";
+		final GameModule module = this.createGameModuleInstance();
+		final GameModuleLoader loader = new GameModuleLoader();
 
-		GameModule module = this.createGameModuleInstance();
+		StatusManager.getInstance().setStatus(LOADING_MODULE);
 
 		if (!location.exists()) {
 			// We need to do this separately, because otherwise "open" creates a
 			// new, empty file for the module.
 			System.err.println("Module not found at [" + location + "]");
+		} else {
+			module.setLocation(location);
+			WindowFactory.showProgressBar(LOADING_MODULE, new Runnable() {
+				@Override
+				public void run() {
+					loader.load(module);
+				}
+			});
+		}
+
+		// If the module could not be found, ask the user for its location
+		if (!loader.loadedSuccessfully()) {
+			final File newLocation = this.requestNewLocation();
 
 			WindowFactory.getInstance().showProblemDialog(
 					"Problem loading Game Module",
-					"I couldn't find a Game Module at \"" + location + "\"."
-							+ " \n\nPlease tell me a new location to use.");
+					"I couldn't find a Game File at \"" + location + "\"."
+							+ loader.getErrorMessage()
+							+ "\n\nPlease tell me a new location to use.");
 
-			module = null;
-		} else
-			try {
-				module.setLocation(location);
-				// read the module to memory.
-				module.load(false);
-			} catch (FileNotFoundException e) {
-				// This should only actually be called if module is read only.
-				System.err.println("Module not found at [" + location + "]");
-				e.printStackTrace();
-
-				WindowFactory.getInstance().showProblemDialog(
-						"Problem loading Game Module",
-						"I couldn't find a Game Module at \"" + location
-								+ "\". It may no longer exist or be in use."
-								+ " \n\nPlease tell me a new location to use.");
-
-				module = null;
-			} catch (IOException e) {
-				e.printStackTrace();
-				WindowFactory.getInstance().showProblemDialog(
-						"Problem loading GameModule",
-						"I can't read the Game Module at \"" + location
-								+ "\".\n\n It might be corrupt. Please "
-								+ "give me another file to try instead.");
-				module = null;
-			}
-
-		// If the module could not be found, ask the user for its location
-		if (module == null) {
-			File newLocation = this.requestNewLocation();
-
-			if (newLocation == null)
-				module = null;
-			else
-				module = this.loadModule(newLocation);
+			return this.loadModule(newLocation);
 		}
 
 		return module;
@@ -865,39 +809,82 @@ public class Translator {
 	}
 
 	/**
-	 * Gets all of the optional libraries from the optional API dictionaries.
-	 * Multiple calls to this method will parse over all of the APIDictionaries
-	 * every time.
-	 * 
-	 * @return
-	 */
-	public Collection<LibraryModel> getOptionalLibraries() {
-		final Collection<LibraryModel> optionalLibraries;
-
-		optionalLibraries = new ArrayList<LibraryModel>();
-
-		for (APIDictionary api : this.getOptionalAPIs()) {
-			optionalLibraries.add(api.getLibrary());
-		}
-
-		return optionalLibraries;
-	}
-
-	/**
 	 * Returns only the library associated with the translator. This is obtained
 	 * from the Library Manager.
 	 * 
 	 * Note that this method does not return default libraries that should be
 	 * common across all translators.
 	 * 
+	 * The Library is lazy loaded because translator objects are created when
+	 * ScriptEase is run, whereas libraries only created when we load something
+	 * that needs it.
+	 * 
 	 * @return
 	 */
 	public LibraryModel getLibrary() {
-		return this.getApiDictionary().getLibrary();
+		if (this.defaultLibrary == null)
+			this.loadDefaultLibrary();
+
+		return this.defaultLibrary;
 	}
 
 	@Override
 	public String toString() {
 		return "Translator [" + this.getName() + "]";
+	}
+
+	/**
+	 * This class deals with module loading, and error handling. I had to make
+	 * this to let us pass in a runnable to the progress bar. It's a bit of a
+	 * hack, although it does separate module error handling nicely.
+	 * 
+	 * @author kschenk
+	 * 
+	 */
+	private class GameModuleLoader {
+		private boolean loadSuccess = false;
+		private String errorMessage = "";
+
+		/**
+		 * Returns true if the module loaded successfully.
+		 * 
+		 * @return
+		 */
+		private boolean loadedSuccessfully() {
+			return this.loadSuccess;
+		}
+
+		/**
+		 * Returns an error message if one was generated.
+		 * 
+		 * @return
+		 */
+		private String getErrorMessage() {
+			return this.errorMessage;
+		}
+
+		/**
+		 * Attempts to load the module.
+		 * 
+		 * @param module
+		 */
+		private void load(GameModule module) {
+			try {
+				// read the module to memory.
+				module.load(false);
+				loadSuccess = true;
+			} catch (FileNotFoundException e) {
+				// This should only actually be called if module is read only.
+				e.printStackTrace();
+				System.err.println("Module not found at "
+						+ module.getLocation());
+				this.errorMessage = " It may no longer exist or be in use.";
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.err.println("Possibly corrupt module at "
+						+ module.getLocation());
+				this.errorMessage = "\n\n It might be corrupt.";
+			}
+		}
 	}
 }

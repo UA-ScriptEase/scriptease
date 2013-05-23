@@ -16,14 +16,13 @@ import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.DescribeItManager;
@@ -93,22 +92,19 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 	@Override
 	public KnowIt clone() {
-		final KnowIt clone = (KnowIt) super.clone();
+		final KnowIt clone;
+		final DescribeItManager describeItManager;
+		final DescribeIt describeIt;
+
+		clone = (KnowIt) super.clone();
+		describeItManager = TranslatorManager.getInstance()
+				.getActiveDescribeItManager();
+		describeIt = describeItManager.getDescribeIt(this);
 
 		// Add the types before setting the binding, or it may be rejected
 		clone.types = new ArrayList<String>(this.types);
 
 		clone.setBinding(this.knowItBinding.clone());
-
-		final APIDictionary apiDictionary;
-		final DescribeItManager describeItManager;
-		final DescribeIt describeIt;
-
-		apiDictionary = TranslatorManager.getInstance()
-				.getActiveAPIDictionary();
-
-		describeItManager = apiDictionary.getDescribeItManager();
-		describeIt = describeItManager.getDescribeIt(this);
 
 		if (describeIt != null) {
 			describeItManager.addDescribeIt(describeIt, clone);
@@ -227,13 +223,16 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
 				// Find an appropriate Default binding for the type.
-				final SEModel activeModel = SEModelManager
-						.getInstance().getActiveModel();
+				final SEModel activeModel = SEModelManager.getInstance()
+						.getActiveModel();
 				if (activeModel != null) {
 					final Translator translator = activeModel.getTranslator();
-					if (translator != null && translator.apiDictionaryIsLoaded()) {
-						GameTypeManager typeManager = translator
-								.getApiDictionary().getGameTypeManager();
+					if (translator != null
+							&& translator.defaultLibraryIsLoaded()) {
+						final GameTypeManager typeManager;
+
+						typeManager = translator.getGameTypeManager();
+
 						for (String type : KnowIt.this.types) {
 							if (typeManager.hasGUI(type)) {
 								final Resource resource;
@@ -273,7 +272,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 				addObservers(knowIt);
 			}
-			
+
 			@Override
 			protected void defaultProcess(KnowItBinding newBinding) {
 				/*
@@ -374,7 +373,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 		// Acceptable Types also include types that can be converted from
 		if (activeTranslator != null) {
-			if (activeTranslator.apiDictionaryIsLoaded()) {
+			if (activeTranslator.defaultLibraryIsLoaded()) {
 				final TypeConverter typeConverter = activeTranslator
 						.getGameTypeManager().getTypeConverter();
 

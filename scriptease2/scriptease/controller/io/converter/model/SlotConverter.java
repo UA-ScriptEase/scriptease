@@ -33,8 +33,8 @@ public class SlotConverter implements Converter {
 		final Slot slot = (Slot) source;
 
 		if (!slot.getFormatKeyword().equals(
-				TranslatorManager.getInstance().getActiveAPIDictionary()
-						.getEventSlotManager().getDefaultFormatKeyword())) {
+				TranslatorManager.getInstance().getActiveEventSlotManager()
+						.getDefaultFormatKeyword())) {
 			writer.addAttribute(TAG_FORMAT, slot.getFormatKeyword());
 		}
 

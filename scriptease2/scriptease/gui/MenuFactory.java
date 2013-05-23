@@ -36,7 +36,7 @@ import scriptease.gui.action.file.SaveModelExplicitlyAction;
 import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.library.AddLibraryToStoryModelAction;
 import scriptease.gui.action.library.NewLibraryAction;
-import scriptease.gui.action.library.OpenAPIDictionaryEditorAction;
+import scriptease.gui.action.library.OpenLibraryEditorAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
 import scriptease.gui.action.libraryeditor.NewDescriptionAction;
 import scriptease.gui.action.libraryeditor.NewEffectAction;
@@ -345,10 +345,10 @@ public class MenuFactory {
 
 		for (Translator translator : TranslatorManager.getInstance()
 				.getTranslators()) {
-			final OpenAPIDictionaryEditorAction action;
+			final OpenLibraryEditorAction action;
 			final JMenuItem translatorItem;
 
-			action = new OpenAPIDictionaryEditorAction(translator);
+			action = new OpenLibraryEditorAction(translator);
 			translatorItem = new JMenuItem(action);
 
 			libraryEditors.add(translatorItem);

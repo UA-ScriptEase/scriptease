@@ -11,11 +11,10 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
- * Concrete representation of a specific code block in the API Dictionary.
+ * Concrete representation of a specific code block in the LibraryModel.
  * {@link CodeBlockReference}s will point to a shared instance of
  * <code>CodeBlockSource</code>, eliminating redundant data and keeping
  * game-specific data translator-side.<br>
@@ -69,9 +68,7 @@ public class CodeBlockSource extends CodeBlock {
 	 * Creates a new CodeBlockSource with the given property.
 	 * 
 	 * @param id
-	 *            The unique ID of this codeblock. If not being read from a
-	 *            file, then clients should use
-	 *            {@link APIDictionary#getNextCodeBlockID()}
+	 *            The unique ID of this codeblock.
 	 */
 	public CodeBlockSource(int id) {
 		this("", "", new ArrayList<String>(), new ArrayList<KnowIt>(),
@@ -91,9 +88,7 @@ public class CodeBlockSource extends CodeBlock {
 	 * @param parameters
 	 *            The parameter list of this code block.
 	 * @param id
-	 *            The unique ID of this codeblock. If not being read from a
-	 *            file, then clients should use
-	 *            {@link APIDictionary#getNextCodeBlockID()}
+	 *            The unique ID of this codeblock.
 	 */
 	public CodeBlockSource(String subject, String slot,
 			Collection<KnowIt> parameters, int id) {
@@ -123,9 +118,7 @@ public class CodeBlockSource extends CodeBlock {
 	 * @param code
 	 *            The core code to generate for this code block.
 	 * @param id
-	 *            The unique ID of this codeblock. If not being read from a
-	 *            file, then clients should use
-	 *            {@link APIDictionary#getNextCodeBlockID()}
+	 *            The unique ID of this codeblock.
 	 */
 	public CodeBlockSource(String subject, String slot,
 			Collection<String> returnTypes, Collection<KnowIt> parameters,
@@ -354,8 +347,8 @@ public class CodeBlockSource extends CodeBlock {
 	}
 
 	/**
-	 * IDs are unique, so this must only be called on loading from the API
-	 * dictionary. They may not be reset or changed or modified. Ever.
+	 * IDs are unique, so this must only be called on loading from the Library.
+	 * They may not be reset or changed or modified. Ever.
 	 * 
 	 * @param id
 	 *            the id for this CodeBlock.

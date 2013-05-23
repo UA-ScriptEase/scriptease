@@ -27,6 +27,8 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.Translator;
 import scriptease.translator.apimanagers.DescribeItManager;
+import scriptease.translator.apimanagers.EventSlotManager;
+import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.Slot;
 
 /**
@@ -50,6 +52,10 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private final Collection<LibraryObserver> listeners;
 	// We save this as a variable since add is called many times.
 	private final StoryAdapter categoryAdder;
+
+	private final DescribeItManager describeItManager;
+	private final GameTypeManager typeManager;
+	private final EventSlotManager slotManager;
 
 	private Translator translator;
 	private StoryComponentContainer effectsCategory;
@@ -114,8 +120,10 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		super(title, author);
 
 		this.translator = translator;
-
 		this.modelRoot = new StoryComponentContainer(title);
+		this.typeManager = new GameTypeManager();
+		this.slotManager = new EventSlotManager();
+		this.describeItManager = new DescribeItManager();
 
 		Collection<StoryComponentContainer> categories = new ArrayList<StoryComponentContainer>();
 
@@ -371,14 +379,9 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @param describeIt
 	 */
 	public void add(DescribeIt describeIt) {
-		final DescribeItManager describeItManager;
-
-		describeItManager = this.translator.getApiDictionary()
-				.getDescribeItManager();
-
 		final KnowIt knowIt;
 
-		knowIt = describeItManager.createKnowItForDescribeIt(describeIt);
+		knowIt = this.describeItManager.createKnowItForDescribeIt(describeIt);
 
 		this.add(knowIt);
 
@@ -567,8 +570,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			if (this.found == null) {
 				final Collection<KnowIt> knowIts = new ArrayList<KnowIt>();
 
-				for (Slot slot : library.getTranslator().getApiDictionary()
-						.getEventSlotManager().getEventSlots()) {
+				for (Slot slot : library.getEventSlotManager().getEventSlots()) {
 					// gotta collect 'em together first.
 					knowIts.addAll(slot.getImplicits());
 					knowIts.addAll(slot.getParameters());
@@ -655,5 +657,32 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 */
 	public int getNextCodeBlockID() {
 		return this.nextID++;
+	}
+
+	/**
+	 * Returns the {@link DescribeItManager} for the model.
+	 * 
+	 * @return
+	 */
+	public DescribeItManager getDescribeItManager() {
+		return this.describeItManager;
+	}
+
+	/**
+	 * Returns the {@link GameTypeManager} for the model.
+	 * 
+	 * @return
+	 */
+	public GameTypeManager getGameTypeManager() {
+		return this.typeManager;
+	}
+
+	/**
+	 * Returns the {@link EventSlotManager} for the model.
+	 * 
+	 * @return
+	 */
+	public EventSlotManager getEventSlotManager() {
+		return this.slotManager;
 	}
 }
