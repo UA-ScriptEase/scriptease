@@ -3,7 +3,7 @@ package scriptease.gui.action.translator;
 import java.awt.event.ActionEvent;
 
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
-import scriptease.gui.dialog.TranslatorPreferencesDialog;
+import scriptease.gui.dialog.DialogBuilder;
 
 @SuppressWarnings("serial")
 public class TranslatorPreferencesAction extends ActiveTranslatorSensitiveAction {
@@ -36,7 +36,6 @@ public class TranslatorPreferencesAction extends ActiveTranslatorSensitiveAction
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final TranslatorPreferencesDialog translatorPreferencesDialog = new TranslatorPreferencesDialog();
-		translatorPreferencesDialog.display();
+		DialogBuilder.getInstance().showTranslatorPreferencesDialog();
 	}
 }
