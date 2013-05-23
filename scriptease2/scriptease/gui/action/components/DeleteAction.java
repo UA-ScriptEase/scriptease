@@ -171,6 +171,6 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 		}
 
 		// Reset the focus after we delete something.
-		SEFocusManager.getInstance().setFocus(null);
+		//SEFocusManager.getInstance().setFocus(null);
 	}
 }
