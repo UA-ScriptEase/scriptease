@@ -53,17 +53,16 @@ public class SEFocusManager {
 	 * @param focus
 	 */
 	public void setFocus(Component focus) {
-		final Component oldFocus;
-
-		oldFocus = this.focus;
-
-		this.focus = focus;
-
-		for (Entry<Object, SEFocusObserver> entry : observerMap.entrySet()) {
-			if (entry.getKey() == focus)
-				entry.getValue().gainFocus(oldFocus);
-			else
-				entry.getValue().loseFocus(oldFocus);
+		if (focus != this.focus) {
+			final Component oldFocus = this.focus;
+			this.focus = focus;
+			for (Entry<Object, SEFocusObserver> entry : observerMap.entrySet()) {
+				if (entry.getKey() == focus) {
+					entry.getValue().gainFocus(oldFocus);
+				} else {
+					entry.getValue().loseFocus(oldFocus);
+				}
+			}
 		}
 	}
 
