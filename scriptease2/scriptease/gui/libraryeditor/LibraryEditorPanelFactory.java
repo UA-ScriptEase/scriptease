@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -97,7 +96,6 @@ public class LibraryEditorPanelFactory {
 	 */
 	public JPanel buildLibraryEditorPanel(final LibraryPanel libraryPane) {
 		final StoryVisitor storyVisitor;
-		final MouseListener librarySelectionListener;
 
 		final JPanel editorPanel;
 		editorPanel = new JPanel();
@@ -350,11 +348,8 @@ public class LibraryEditorPanelFactory {
 			}
 		};
 
-		librarySelectionListener = LibraryEditorListenerFactory.getInstance()
-				.buildStoryComponentMouseListener(storyVisitor);
-
 		// Add the tree listener
-		libraryPane.addListMouseListener(librarySelectionListener);
+		libraryPane.assignListSelectionListener(storyVisitor);
 
 		return editorPanel;
 	}
