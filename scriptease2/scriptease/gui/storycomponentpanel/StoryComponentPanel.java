@@ -29,7 +29,6 @@ import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.util.GUIOp;
 
@@ -338,12 +337,6 @@ public class StoryComponentPanel extends JPanel implements
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
 				panel.setSelectable(true);
 				panel.setRemovable(true);
-			}
-
-			@Override
-			public void processStoryComponentContainer(StoryComponentContainer container) {
-				panel.setSelectable(true);
-				panel.setRemovable(false);
 			}
 		});
 
