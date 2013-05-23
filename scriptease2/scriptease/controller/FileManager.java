@@ -30,7 +30,6 @@ import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
@@ -184,25 +183,24 @@ public final class FileManager {
 		model.process(new ModelAdapter() {
 			@Override
 			public void processLibraryModel(LibraryModel libraryModel) {
+				final LibraryModel library;
 				final Translator active;
-				final APIDictionary apiDictionary;
 				final File location;
 
 				active = TranslatorManager.getInstance().getActiveTranslator();
+				library = active.getLibrary();
 
-				// TODO We are saving the api dictionary. Why not the library
-				// model?
-				apiDictionary = active.getApiDictionary();
+				// TODO We are saving the default library model when we should
+				// be saving the passed in library model
 
-				if (apiDictionary.getLibrary() == libraryModel) {
+				if (library == libraryModel) {
 					location = active
 							.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH
 									.toString());
 
-					FileIO.getInstance().writeAPIDictionary(apiDictionary,
-							location);
+					FileIO.getInstance().writeLibraryModel(library, location);
 
-					// TODO This just saves the library in the api dicitonary's
+					// TODO This just saves the library in the default library's
 					// location...
 				}
 			}
@@ -242,10 +240,10 @@ public final class FileManager {
 			public void processLibraryModel(LibraryModel libraryModel) {
 				final WindowFactory windowManager = WindowFactory.getInstance();
 				final Translator active;
-				final APIDictionary apiDictionary;
+				final LibraryModel library;
 
 				active = TranslatorManager.getInstance().getActiveTranslator();
-				apiDictionary = active.getApiDictionary();
+				library = active.getLibrary();
 
 				File location = windowManager.showFileChooser(
 						FileManager.SAVE_AS, libraryModel.getName(),
@@ -265,8 +263,7 @@ public final class FileManager {
 						&& !windowManager.showConfirmOverwrite(location))
 					return;
 
-				FileIO.getInstance()
-						.writeAPIDictionary(apiDictionary, location);
+				FileIO.getInstance().writeLibraryModel(library, location);
 			}
 
 			@Override

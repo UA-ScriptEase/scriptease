@@ -21,8 +21,6 @@ import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.APIDictionary;
-import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
 /**
@@ -113,14 +111,10 @@ public final class DuplicateAction extends ActiveModelSensitiveAction implements
 				final StoryComponentPanel selectedPanel;
 				final StoryComponent selectedComponent;
 
-				final Translator activeTranslator;
-				final APIDictionary apiDictionary;
 				final LibraryModel libraryModel;
 
-				activeTranslator = TranslatorManager.getInstance()
-						.getActiveTranslator();
-				apiDictionary = activeTranslator.getApiDictionary();
-				libraryModel = apiDictionary.getLibrary();
+				libraryModel = TranslatorManager.getInstance()
+						.getActiveDefaultLibrary();
 
 				selectedPanel = (StoryComponentPanel) selectedObject;
 				selectedComponent = selectedPanel.getStoryComponent();

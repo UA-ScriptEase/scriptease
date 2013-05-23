@@ -1,4 +1,4 @@
-<APIDictionary name="TestOptionalNWNDictionary" author="Testing">
+<LibraryModel name="TestOptionalNWNDictionary" author="Testing">
   <Types/>
   <Slots/>
   <Causes/>
@@ -45,4 +45,4 @@
   <DescribeIts/>
   <ControlIts/>
   <TypeConverters/>
-</APIDictionary>
+</LibraryModel>

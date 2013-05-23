@@ -36,7 +36,6 @@ import scriptease.gui.WindowFactory;
 import scriptease.model.LibraryModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryModel;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.TranslatorManager;
@@ -148,13 +147,11 @@ public class DialogBuilder {
 				}
 
 				final LibraryModel model;
-				final APIDictionary dictionary;
 
 				model = new LibraryModel(title, author, selectedTranslator);
-				dictionary = new APIDictionary(model);
 
 				SEModelManager.getInstance().add(model);
-				selectedTranslator.addOptionalAPI(dictionary);
+				selectedTranslator.addOptionalLibrary(model);
 			}
 		};
 
@@ -271,6 +268,8 @@ public class DialogBuilder {
 				final Translator selectedTranslator;
 				final Translator oldTranslator;
 
+				final GameModule module;
+
 				translatorManager = TranslatorManager.getInstance();
 
 				selectedTranslator = (Translator) translatorBox
@@ -289,8 +288,6 @@ public class DialogBuilder {
 							.setStatus("Story creation aborted: no translator chosen.");
 					return;
 				}
-
-				final GameModule module;
 
 				module = selectedTranslator.loadModule(location);
 

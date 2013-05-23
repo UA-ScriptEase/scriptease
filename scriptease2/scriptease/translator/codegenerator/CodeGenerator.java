@@ -98,11 +98,11 @@ public class CodeGenerator {
 		translator = context.getTranslator();
 
 		slotName = context.getLocationInfo().getSlot();
-		slot = translator.getApiDictionary().getEventSlotManager()
+		slot = translator.getLibrary().getEventSlotManager()
 				.getEventSlot(slotName);
 		if (slot == null) {
 			throw new IllegalStateException("Unable to find slot " + slotName
-					+ ". Check that it exists in the ApiDictionary.");
+					+ ". Check that it exists in the Library.");
 		}
 		// Get the format keyword from the slot and get the format from the
 		// language dictionary

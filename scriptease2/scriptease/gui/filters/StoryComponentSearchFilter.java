@@ -246,7 +246,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 			final DescribeIt describeIt;
 
 			describeItManager = TranslatorManager.getInstance()
-					.getActiveAPIDictionary().getDescribeItManager();
+					.getActiveDescribeItManager();
 			describeIt = describeItManager.getDescribeIt(knowIt);
 
 			if (describeIt != null) {

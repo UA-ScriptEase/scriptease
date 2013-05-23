@@ -1,4 +1,4 @@
-<APIDictionary name="A* Pathfinding Library" author="ScriptEase Team">
+<LibraryModel name="A* Pathfinding Library" author="ScriptEase Team">
 	<Types/>
 	<Slots/>
 	<Causes/>
@@ -633,4 +633,4 @@
   <DescribeIts/>
   <ControlIts/>
   <TypeConverters/>
-</APIDictionary>
+</LibraryModel>

@@ -59,7 +59,7 @@ public final class StoryModel extends SEModel {
 		this.observerManager = new ObserverManager<StoryModelObserver>();
 
 		// Adds all of the automatic causes to the start point.
-		// Note that automatics can only be defined in an apidictionary for now
+		// Note that automatics can only be defined in a library model for now
 		for (LibraryModel library : this.getLibraries()) {
 			for (Resource resource : module.getAutomaticHandlers()) {
 				for (ScriptIt automatic : library.getAutomatics()) {
@@ -124,7 +124,7 @@ public final class StoryModel extends SEModel {
 		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
 
 		libraries.add(LibraryModel.getCommonLibrary());
-		libraries.add(this.translator.getApiDictionary().getLibrary());
+		libraries.add(this.translator.getLibrary());
 		libraries.addAll(this.optionalLibraries);
 
 		return libraries;

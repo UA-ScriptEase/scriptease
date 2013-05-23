@@ -136,8 +136,7 @@ public class CodeBlockContext extends Context {
 		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
 		final EventSlotManager manager;
 
-		manager = TranslatorManager.getInstance().getActiveAPIDictionary()
-				.getEventSlotManager();
+		manager = TranslatorManager.getInstance().getActiveEventSlotManager();
 		parameters.addAll(manager.getParameters(this.codeBlock.getCause()
 				.getMainCodeBlock().getSlot()));
 		parameters.addAll(this.getParameterCollection());
@@ -234,8 +233,7 @@ public class CodeBlockContext extends Context {
 		final EventSlotManager manager;
 		final Collection<KnowIt> parameters;
 
-		manager = TranslatorManager.getInstance().getActiveAPIDictionary()
-				.getEventSlotManager();
+		manager = TranslatorManager.getInstance().getActiveEventSlotManager();
 
 		parameters = manager.getParameters(cause.getMainCodeBlock().getSlot());
 

@@ -60,7 +60,7 @@ public class TypeWidget extends JToggleButton {
 				.getActiveTranslator();
 
 		typeName = (activeTranslator != null && activeTranslator
-				.apiDictionaryIsLoaded()) ? activeTranslator
+				.defaultLibraryIsLoaded()) ? activeTranslator
 				.getGameTypeManager().getDisplayText(this.type) : "";
 
 		this.setTypeText(type);
@@ -80,7 +80,7 @@ public class TypeWidget extends JToggleButton {
 			active = TranslatorManager.getInstance().getActiveTranslator();
 
 			// Need to check these due to order of operations.
-			if (active != null && active.apiDictionaryIsLoaded()) {
+			if (active != null && active.defaultLibraryIsLoaded()) {
 				final GameTypeManager gameTypeManager;
 
 				gameTypeManager = active.getGameTypeManager();

@@ -10,21 +10,21 @@ import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
 /**
- * Opens the editor for the API Dictionary.
+ * Opens the editor for a Library.
  * 
  * @author kschenk
  * 
  */
 @SuppressWarnings("serial")
-public class OpenAPIDictionaryEditorAction extends AbstractAction {
+public class OpenLibraryEditorAction extends AbstractAction {
 	private final Translator translator;
 
 	/**
-	 * Creates an open editor action for the translator's api dictionary.
+	 * Creates an open editor action for the translator's library.
 	 * 
 	 * @param translator
 	 */
-	public OpenAPIDictionaryEditorAction(Translator translator) {
+	public OpenLibraryEditorAction(Translator translator) {
 		super(translator.getName() + " Default Library");
 		this.translator = translator;
 	}
@@ -38,7 +38,7 @@ public class OpenAPIDictionaryEditorAction extends AbstractAction {
 	@Override
 	public boolean isEnabled() {
 		boolean isEnabled = super.isEnabled();
-		if (this.translator.apiDictionaryIsLoaded()) {
+		if (this.translator.defaultLibraryIsLoaded()) {
 			final LibraryModel library = this.translator.getLibrary();
 			isEnabled &= !SEModelManager.getInstance().hasModel(library);
 		}

@@ -54,7 +54,6 @@ import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.APIDictionary;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.util.StringOp;
@@ -217,7 +216,6 @@ public class LibraryEditorPanelFactory {
 				final JLabel nameLabel;
 				final JLabel typesLabel;
 
-				final APIDictionary apiDictionary;
 				final DescribeItManager describeItManager;
 
 				final DescribeIt describeIt;
@@ -228,9 +226,8 @@ public class LibraryEditorPanelFactory {
 				typeAction = new TypeAction();
 				typesButton = new JButton(typeAction);
 
-				apiDictionary = TranslatorManager.getInstance()
-						.getActiveTranslator().getApiDictionary();
-				describeItManager = apiDictionary.getDescribeItManager();
+				describeItManager = TranslatorManager.getInstance()
+						.getActiveDescribeItManager();
 
 				describeIt = describeItManager.getDescribeIt(knowIt);
 

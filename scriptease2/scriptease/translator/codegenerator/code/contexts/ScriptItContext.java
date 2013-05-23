@@ -223,8 +223,8 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 			throw new NullPointerException("Encountered null slot in a Cause! "
 					+ "Call may be incorrect in Language Dictionary.");
 
-		return TranslatorManager.getInstance().getActiveAPIDictionary()
-				.getEventSlotManager().getParameters(currentSlot);
+		return TranslatorManager.getInstance().getActiveEventSlotManager()
+				.getParameters(currentSlot);
 	}
 
 	/**
@@ -238,8 +238,8 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 			throw new NullPointerException("Encountered null slot in a Cause! "
 					+ "Call may be incorrect in Language Dictionary.");
 
-		return TranslatorManager.getInstance().getActiveAPIDictionary()
-				.getEventSlotManager().getCondition(currentSlot);
+		return TranslatorManager.getInstance().getActiveEventSlotManager()
+				.getCondition(currentSlot);
 	};
 
 	@Override

@@ -1,4 +1,4 @@
-<!-- This is the schema for describing API dictionary files. Everything uses 
+<!-- This is the schema for describing Library Model files. Everything uses 
 	'sequences' because order matters in reading. -->
 <xsd:schema attributeFormDefault="unqualified"
 	elementFormDefault="qualified" version="1.0"
@@ -15,10 +15,10 @@
 	</xsd:complexType>
 
 	<!-- Start with the overall file type -->
-	<xsd:element name="APIDictionary" type="APIDictionaryFile_Type" />
+	<xsd:element name="LibraryModel" type="LibraryModel_Type" />
 
 	<!-- Defines an api Dictionary file -->
-	<xsd:complexType name="APIDictionaryFile_Type">
+	<xsd:complexType name="LibraryModel_Type">
 		<xsd:sequence>
 			<xsd:element name="Types" type="TypeList_Type" />
 			<xsd:element name="Slots" type="SlotList_Type" />
