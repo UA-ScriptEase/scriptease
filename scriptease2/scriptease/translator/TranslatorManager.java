@@ -361,6 +361,7 @@ public class TranslatorManager {
 			// We have this here so we don't run into issues later where the api
 			// dictionary isn't loaded.
 			translator.getApiDictionary();
+			translator.getOptionalAPIs();
 		}
 		this.notifyObservers();
 	}

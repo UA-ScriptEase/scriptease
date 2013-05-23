@@ -8,8 +8,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.swing.SwingUtilities;
-
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.io.converter.IdentityArrayListConverter;
 import scriptease.controller.io.converter.fragment.FormatDefinitionFragmentConverter;
@@ -148,7 +146,10 @@ public class FileIO {
 	 *            The file to read from
 	 * @return The read-in Library.
 	 */
-	public LibraryModel readLibrary(File location) {
+	public APIDictionary readOptionalAPIDictionary(Translator translator,
+			File location) {
+
+		// TODO
 		final LibraryModel lib;
 		final APIDictionary dictionary;
 
@@ -158,7 +159,7 @@ public class FileIO {
 
 		BindingFixer.fixBindings(lib.getRoot());
 
-		return lib;
+		return dictionary;
 	}
 
 	/**
@@ -168,7 +169,10 @@ public class FileIO {
 	 *            The file path to read from.
 	 * @return The API dictionary as read from disk.
 	 */
-	public APIDictionary readAPIDictionary(Translator translator, File location) {
+	public APIDictionary readDefaultAPIDictionary(Translator translator,
+			File location) {
+
+		// TODO
 		/*
 		 * Check against inifiniloops. This is usually caused by trying to get
 		 * something from the API dictionary while the API dictionary isn't done
@@ -230,8 +234,14 @@ public class FileIO {
 	 * @param location
 	 *            The file path to write to.
 	 */
-	public void writeAPIDictionary(APIDictionary dictionary, File location) {
-		this.writeData(dictionary, location, IoMode.LIBRARY);
+	public void writeAPIDictionary(final APIDictionary dictionary,
+			final File location) {
+		WindowFactory.showProgressBar("Saving Library...", new Runnable() {
+			@Override
+			public void run() {
+				FileIO.this.writeData(dictionary, location, IoMode.LIBRARY);
+			}
+		});
 	}
 
 	private void writeData(Object dataModel, File location, IoMode mode) {

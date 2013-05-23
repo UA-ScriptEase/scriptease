@@ -1,6 +1,7 @@
 package scriptease.gui;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -12,8 +13,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,13 +28,15 @@ import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-import javax.swing.SwingWorker.StateValue;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
 import scriptease.ScriptEase;
@@ -73,6 +74,11 @@ import scriptease.util.StringOp;
  * @author kschenk
  */
 public final class WindowFactory {
+	static {
+		UIManager.put("ProgressBar.selectionForeground", Color.black);
+		UIManager.put("ProgressBar.selectionBackground", Color.black);
+	}
+
 	private static final String CODE_GENERATION_PROBLEM = "Code Generation Problem";
 	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase II";
 
@@ -115,7 +121,6 @@ public final class WindowFactory {
 	 * being opened simultaneously.
 	 */
 	private static boolean exceptionShowing = false;
-	public static boolean progressShowing = false;
 
 	/**
 	 * @return the sole instance of WindowManager
@@ -199,6 +204,71 @@ public final class WindowFactory {
 	}
 
 	/**
+	 * Shows the progress bar with the passed in text for the duration of the
+	 * passed in runnable. Calling this method when a progress bar is already
+	 * showing will create a new progress bar in front of it, giving the effect
+	 * of the text changing.
+	 * 
+	 * @param progressBarText
+	 *            The text to be shown on the progress bar. This is commonly
+	 *            "Loading...", but can be anything you set it to.
+	 * 
+	 * @param runnable
+	 *            The runnable to run. The progress bar will show as long as
+	 *            this is running.
+	 * 
+	 * @see #hideProgressBar()
+	 */
+	public static void showProgressBar(String progressBarText,
+			final Runnable runnable) {
+		WindowFactory.getInstance().getCurrentFrame()
+				.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+		final JProgressBar progressBar;
+		final JDialog progressBarDialog;
+		final SwingWorker<Void, Void> worker;
+
+		progressBar = new JProgressBar();
+		progressBarDialog = new JDialog(WindowFactory.getInstance()
+				.getCurrentFrame(), true);
+
+		// The SwingWorker allows us to use the runnable in a new thread, which
+		// prevents the JDialog from blocking the program.
+		worker = new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() throws Exception {
+				runnable.run();
+				return null;
+			}
+
+			@Override
+			protected void done() {
+				progressBarDialog.setVisible(false);
+				WindowFactory.getInstance().getCurrentFrame()
+						.setCursor(Cursor.getDefaultCursor());
+			}
+		};
+
+		progressBar.setIndeterminate(true);
+		progressBar.setPreferredSize(new Dimension(200, 30));
+		progressBar.setOpaque(false);
+		progressBar.setString(progressBarText);
+		progressBar.setStringPainted(true);
+
+		progressBarDialog.add(progressBar);
+
+		progressBarDialog.setUndecorated(true);
+		progressBarDialog.getRootPane().setOpaque(false);
+		progressBarDialog.getRootPane()
+				.setWindowDecorationStyle(JRootPane.NONE);
+		progressBarDialog.setSize(progressBarDialog.getPreferredSize());
+		progressBarDialog.setLocationRelativeTo(progressBarDialog.getParent());
+
+		worker.execute();
+		progressBarDialog.setVisible(true);
+	}
+
+	/**
 	 * Shows the Exception Dialog if it is not already showing. The Error Dialog
 	 * is modal and will sit on top of any other window when shown.
 	 */
@@ -223,46 +293,6 @@ public final class WindowFactory {
 
 	public void showNewLibraryWizardDialog() {
 		DialogBuilder.getInstance().showNewLibraryWizard();
-	}
-
-	/**
-	 * Shows a progressBar in a JDialog for the given task. Only one progressBar
-	 * can be shown at a time. NOTE: The provided task should start executing
-	 * before the progressBar is shown (Swing will block otherwise).
-	 * 
-	 * @param task
-	 *            The task to run while displaying the progress bar.
-	 * @param taskName
-	 *            The name of the task to be displayed in the progress bar.
-	 * 
-	 * @param progressBarText
-	 *            The text to be shown on the progress bar. This is commonly
-	 *            "Loading...", but can be anything you set it to.
-	 */
-	public void showProgressBar(final SwingWorker<Void, Void> task,
-			String progressBarText) {
-		if (WindowFactory.progressShowing)
-			return;
-
-		final JDialog progressBar = DialogBuilder.getInstance()
-				.createProgressBar(this.mainFrame, progressBarText);
-
-		WindowFactory.progressShowing = true;
-
-		task.addPropertyChangeListener(new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent change) {
-				if ("state" == change.getPropertyName()) {
-					if (change.getNewValue() == StateValue.DONE) {
-						task.removePropertyChangeListener(this);
-						progressBar.setVisible(false);
-						WindowFactory.progressShowing = false;
-					}
-				}
-			}
-		});
-
-		progressBar.setVisible(true);
 	}
 
 	public void showCompileProblems(Collection<StoryProblem> storyProblems) {

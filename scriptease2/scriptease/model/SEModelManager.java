@@ -10,6 +10,7 @@ import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.StatusManager;
+import scriptease.gui.WindowFactory;
 import scriptease.translator.Translator;
 
 /**
@@ -135,14 +136,22 @@ public final class SEModelManager {
 	 * @param model
 	 *            The model to activate.
 	 */
-	public void activate(SEModel model) {
+	public void activate(final SEModel model) {
 		if (this.activeModel == model)
 			return;
 		this.activeModel = model;
 
 		if (model != null && this.models.contains(model)) {
 			StatusManager.getInstance().setStatus(model + " activated");
-			this.notifyChange(model, SEModelEvent.Type.ACTIVATED);
+			WindowFactory.showProgressBar("Activating " + model.getName()
+					+ "...", new Runnable() {
+
+				@Override
+				public void run() {
+					SEModelManager.this.notifyChange(model,
+							SEModelEvent.Type.ACTIVATED);
+				}
+			});
 		} else {
 			throw new IllegalArgumentException("Model " + model
 					+ " not found in list of active models. "

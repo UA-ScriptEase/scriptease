@@ -335,8 +335,7 @@ public class MenuFactory {
 			optionalLibraries = activeTranslator.getOptionalLibraries();
 
 			if (!optionalLibraries.isEmpty())
-				for (LibraryModel library : activeTranslator
-						.getOptionalLibraries()) {
+				for (LibraryModel library : optionalLibraries) {
 					addLibrary.add(new AddLibraryToStoryModelAction(library));
 				}
 			else
