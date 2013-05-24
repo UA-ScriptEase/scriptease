@@ -40,7 +40,6 @@ public class NewDescriptionAction extends ActiveTranslatorSensitiveAction {
 				Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK
 						+ ActionEvent.SHIFT_MASK));
-
 	}
 
 	@Override

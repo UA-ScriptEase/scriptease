@@ -1,6 +1,6 @@
 <LibraryModel name="A* Pathfinding Library" author="ScriptEase Team">
 	<Types/>
-	<Slots/>
+	<Slots defaultFormat="SECause"/>
 	<Causes/>
 	<Effects>
 	<ScriptIt>

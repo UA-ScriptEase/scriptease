@@ -164,4 +164,25 @@ public class DescribeItManager {
 
 		return knowIt;
 	}
+
+	/**
+	 * Searches through the describe its to find a script it with the same
+	 * display text as the one passed in. Since this is based off display text,
+	 * results may not be accurate. Be warned.
+	 * 
+	 * @param scriptIt
+	 * @return
+	 */
+	public DescribeIt findDescribeItWithScriptIt(ScriptIt scriptIt) {
+		final String name = scriptIt.getDisplayText();
+
+		for (DescribeIt describeIt : this.getDescribeIts()) {
+			for (ScriptIt describeItScriptIt : describeIt.getScriptIts()) {
+				if (describeItScriptIt.getDisplayText().equals(name))
+					return describeIt;
+			}
+		}
+
+		return null;
+	}
 }

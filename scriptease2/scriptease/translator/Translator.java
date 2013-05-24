@@ -288,33 +288,47 @@ public class Translator {
 	 */
 	private void initializeOptionalLibraries() {
 		if (this.optionalLibraries == null) {
-			final File optionalLibraryDir;
+			final String PROGRESS_BAR_TEXT = "Loading Optional Libraries...";
 
-			this.optionalLibraries = new ArrayList<LibraryModel>();
-			optionalLibraryDir = this
-					.getPathProperty(DescriptionKeys.OPTIONAL_LIBRARIES_PATH);
+			final Translator translator = this;
 
-			final FileFilter filter = new FileFilter() {
+			WindowFactory.showProgressBar(PROGRESS_BAR_TEXT, new Runnable() {
 				@Override
-				public boolean accept(File file) {
-					return file.getName().endsWith(
-							FileManager.FILE_EXTENSION_LIBRARY);
+				public void run() {
+					translator.optionalLibraries = FileManager.getInstance()
+							.openOptionalLibraries(translator);
 				}
-			};
+			});
 
-			if (optionalLibraryDir != null && optionalLibraryDir.exists()) {
-				final Collection<File> optionalFiles;
-
-				optionalFiles = FileOp.findFiles(optionalLibraryDir, filter);
-
-				for (File file : optionalFiles) {
-					final LibraryModel lib;
-
-					lib = FileIO.getInstance().readOptionalLibrary(this, file);
-
-					this.optionalLibraries.add(lib);
-				}
+			if (this.optionalLibraries == null) {
+				// If it's still null, something crazy is going on.
+				throw new IllegalStateException(
+						"Unable to load the Optional Libraries.");
 			}
+		}
+	}
+
+	/**
+	 * This loads the default library if it isn't already loaded.
+	 */
+	private void initializeDefaultLibrary() {
+		if (this.defaultLibrary == null) {
+			final String PROGRESS_BAR_TEXT = "Loading Library...";
+
+			final Translator translator = this;
+
+			WindowFactory.showProgressBar(PROGRESS_BAR_TEXT, new Runnable() {
+				@Override
+				public void run() {
+					translator.defaultLibrary = FileManager.getInstance()
+							.openDefaultLibrary(translator);
+
+				}
+			});
+
+			if (this.defaultLibrary == null)
+				// If it's still null, something crazy is going on.
+				throw new IllegalStateException("Unable to load the Library.");
 		}
 	}
 
@@ -589,27 +603,6 @@ public class Translator {
 		return this.defaultLibrary != null;
 	}
 
-	private void loadDefaultLibrary() {
-		final FileIO xmlReader;
-		final File libraryFile;
-
-		xmlReader = FileIO.getInstance();
-		// load the library
-		libraryFile = this.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH);
-
-		WindowFactory.showProgressBar("Loading Library...", new Runnable() {
-			@Override
-			public void run() {
-				Translator.this.defaultLibrary = xmlReader.readDefaultLibrary(
-						Translator.this, libraryFile);
-
-			}
-		});
-
-		if (this.defaultLibrary == null)
-			throw new IllegalStateException("Unable to load the Library.");
-	}
-
 	public void unloadTranslator() {
 		this.defaultLibrary = null;
 		this.languageDictionary = null;
@@ -822,9 +815,7 @@ public class Translator {
 	 * @return
 	 */
 	public LibraryModel getLibrary() {
-		if (this.defaultLibrary == null)
-			this.loadDefaultLibrary();
-
+		this.initializeDefaultLibrary();
 		return this.defaultLibrary;
 	}
 
