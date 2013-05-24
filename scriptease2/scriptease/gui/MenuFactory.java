@@ -35,7 +35,6 @@ import scriptease.gui.action.file.SaveModelAction;
 import scriptease.gui.action.file.SaveModelExplicitlyAction;
 import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.library.AddLibraryToStoryModelAction;
-import scriptease.gui.action.library.NewLibraryAction;
 import scriptease.gui.action.library.OpenLibraryEditorAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
 import scriptease.gui.action.libraryeditor.NewDescriptionAction;
@@ -316,32 +315,28 @@ public class MenuFactory {
 	 */
 	private static JMenu buildLibraryMenu() {
 		final JMenu menu = new JMenu(MenuFactory.LIBRARY);
-		final Translator activeTranslator;
+
 		final SEModel activeModel;
-		final JMenu addLibrary;
-		final JMenuItem manageLibraries;
-		final JMenu libraryEditors;
 
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
 		activeModel = SEModelManager.getInstance().getActiveModel();
-		addLibrary = new JMenu("Add Library");
-		manageLibraries = new JMenuItem(NewLibraryAction.getInstance());
-		libraryEditors = new JMenu("Library Editor");
 
-		if (activeTranslator != null && activeModel instanceof StoryModel) {
+		if (activeModel instanceof StoryModel) {
 			final Collection<LibraryModel> optionalLibraries;
+			final JMenu addLibrary;
 
-			optionalLibraries = activeTranslator.getOptionalLibraries();
+			addLibrary = new JMenu("Add Library");
 
-			if (!optionalLibraries.isEmpty())
-				for (LibraryModel library : optionalLibraries) {
-					addLibrary.add(new AddLibraryToStoryModelAction(library));
-				}
-			else
-				addLibrary.setEnabled(false);
-		} else
-			addLibrary.setEnabled(false);
+			optionalLibraries = activeModel.getTranslator()
+					.getOptionalLibraries();
+
+			addLibrary.setEnabled(!optionalLibraries.isEmpty());
+
+			for (LibraryModel library : optionalLibraries) {
+				addLibrary.add(new AddLibraryToStoryModelAction(library));
+			}
+
+			menu.add(addLibrary);
+		}
 
 		for (Translator translator : TranslatorManager.getInstance()
 				.getTranslators()) {
@@ -351,14 +346,10 @@ public class MenuFactory {
 			action = new OpenLibraryEditorAction(translator);
 			translatorItem = new JMenuItem(action);
 
-			libraryEditors.add(translatorItem);
+			menu.add(translatorItem);
 		}
 
 		menu.setMnemonic(KeyEvent.VK_L);
-
-		menu.add(addLibrary);
-		menu.add(manageLibraries);
-		menu.add(libraryEditors);
 
 		return menu;
 	}

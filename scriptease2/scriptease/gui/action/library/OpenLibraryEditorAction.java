@@ -4,13 +4,11 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import scriptease.model.LibraryModel;
-import scriptease.model.SEModelManager;
+import scriptease.gui.WindowFactory;
 import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 
 /**
- * Opens the editor for a Library.
+ * Opens the a dialog that allows the user to choose a Library to edit.
  * 
  * @author kschenk
  * 
@@ -25,23 +23,14 @@ public class OpenLibraryEditorAction extends AbstractAction {
 	 * @param translator
 	 */
 	public OpenLibraryEditorAction(Translator translator) {
-		super(translator.getName() + " Default Library");
+		super("Edit " + translator.getName() + " Libraries");
 		this.translator = translator;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		TranslatorManager.getInstance().setActiveTranslator(this.translator);
-		SEModelManager.getInstance().add(this.translator.getLibrary());
-	}
-
-	@Override
-	public boolean isEnabled() {
-		boolean isEnabled = super.isEnabled();
-		if (this.translator.defaultLibraryIsLoaded()) {
-			final LibraryModel library = this.translator.getLibrary();
-			isEnabled &= !SEModelManager.getInstance().hasModel(library);
-		}
-		return isEnabled;
+		WindowFactory.getInstance()
+				.buildLibraryEditorChoiceDialog(this.translator)
+				.setVisible(true);
 	}
 }

@@ -1,6 +1,7 @@
 package scriptease.controller;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOError;
@@ -33,7 +34,6 @@ import scriptease.model.StoryModel;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerator;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameModule;
@@ -78,7 +78,7 @@ public final class FileManager {
 	 * Set of all openFiles currently open. Strictly speaking, the model itself
 	 * isn't open, its module and patterns are.
 	 */
-	private final BiHashMap<File, StoryModel> openFiles;
+	private final BiHashMap<File, SEModel> openFiles;
 
 	private final Set<File> tempFiles;
 
@@ -103,7 +103,7 @@ public final class FileManager {
 	private FileManager() {
 		this.tempFiles = new HashSet<File>();
 
-		this.openFiles = new BiHashMap<File, StoryModel>();
+		this.openFiles = new BiHashMap<File, SEModel>();
 
 		this.filesToChannels = new HashMap<File, FileChannel>();
 
@@ -179,46 +179,27 @@ public final class FileManager {
 	 * @see #saveAs(StoryModel)
 	 */
 	public void save(SEModel model) {
+		final File location = this.openFiles.getKey(model);
+		final String saveMessage;
+
+		saveMessage = "Saving story " + model.getTitle() + " to " + location;
+
+		System.out.println(saveMessage);
+		StatusManager.getInstance().setStatus(saveMessage + " ...");
+
+		if (location == null) {
+			FileManager.this.saveAs(model);
+			return;
+		}
 
 		model.process(new ModelAdapter() {
 			@Override
-			public void processLibraryModel(LibraryModel libraryModel) {
-				final LibraryModel library;
-				final Translator active;
-				final File location;
-
-				active = TranslatorManager.getInstance().getActiveTranslator();
-				library = active.getLibrary();
-
-				// TODO We are saving the default library model when we should
-				// be saving the passed in library model
-
-				if (library == libraryModel) {
-					location = active
-							.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH
-									.toString());
-
-					FileIO.getInstance().writeLibraryModel(library, location);
-
-					// TODO This just saves the library in the default library's
-					// location...
-				}
+			public void processLibraryModel(final LibraryModel library) {
+				FileManager.this.writeLibraryModelFile(library, location);
 			}
 
 			@Override
 			public void processStoryModel(StoryModel storyModel) {
-				final File location = FileManager.this.openFiles
-						.getKey(storyModel);
-				final String saveMessage = "Saving story "
-						+ storyModel.getTitle() + " to " + location;
-
-				System.out.println(saveMessage);
-				StatusManager.getInstance().setStatus(saveMessage + " ...");
-				if (location == null) {
-					FileManager.this.saveAs(storyModel);
-					return;
-				}
-
 				FileManager.this.writeStoryModelFile(storyModel, location);
 			}
 		});
@@ -237,16 +218,11 @@ public final class FileManager {
 	public void saveAs(SEModel model) {
 		model.process(new ModelAdapter() {
 			@Override
-			public void processLibraryModel(LibraryModel libraryModel) {
+			public void processLibraryModel(LibraryModel library) {
 				final WindowFactory windowManager = WindowFactory.getInstance();
-				final Translator active;
-				final LibraryModel library;
-
-				active = TranslatorManager.getInstance().getActiveTranslator();
-				library = active.getLibrary();
 
 				File location = windowManager.showFileChooser(
-						FileManager.SAVE_AS, libraryModel.getName(),
+						FileManager.SAVE_AS, library.getName(),
 						FileManager.LIBRARY_FILTER);
 
 				if (location == null) {
@@ -263,7 +239,7 @@ public final class FileManager {
 						&& !windowManager.showConfirmOverwrite(location))
 					return;
 
-				FileIO.getInstance().writeLibraryModel(library, location);
+				FileManager.this.writeLibraryModelFile(library, location);
 			}
 
 			@Override
@@ -297,6 +273,22 @@ public final class FileManager {
 		});
 	}
 
+	private void writeLibraryModelFile(final LibraryModel library,
+			final File location) {
+		WindowFactory.showProgressBar("Saving Library...", new Runnable() {
+			@Override
+			public void run() {
+				// Write the Story's patterns to XML
+				FileIO.getInstance().writeLibraryModel(library, location);
+			}
+		});
+
+		// update the open files/models map to reflect the new location.
+		// remove the entry for the model, not the location.
+		this.openFiles.removeValue(library);
+		this.openFiles.put(location, library);
+	}
+
 	/**
 	 * Saves the given model to the given location.
 	 * 
@@ -306,9 +298,15 @@ public final class FileManager {
 	 *            The location to save the model.
 	 */
 	private void writeStoryModelFile(final StoryModel model, final File location) {
-		final StoryModel storedModel = this.openFiles.getValue(location);
+		final SEModel storedModel = this.openFiles.getValue(location);
 		final WindowFactory windowManager = WindowFactory.getInstance();
 		final FileIO writer = FileIO.getInstance();
+
+		if (!(storedModel instanceof StoryModel))
+			// This would be freaky. Shouldn't happen, but let's check in case.
+			throw new IllegalArgumentException("Location passed in for "
+					+ model + " is being used by a library model at "
+					+ location);
 
 		// make sure the file isn't already being used by another model.
 		if (storedModel != null && storedModel != model) {
@@ -489,11 +487,13 @@ public final class FileManager {
 		final File location = toTest.getModule().getLocation();
 		File openLocation;
 
-		for (StoryModel model : this.openFiles.getValues()) {
-			openLocation = model.getModule().getLocation();
+		for (SEModel model : this.openFiles.getValues()) {
+			if (model instanceof StoryModel) {
+				openLocation = ((StoryModel) model).getModule().getLocation();
 
-			if (openLocation.equals(location) && model != toTest) {
-				return true;
+				if (openLocation.equals(location) && model != toTest) {
+					return true;
+				}
 			}
 		}
 
@@ -516,8 +516,7 @@ public final class FileManager {
 	 *            <code>null</code> will have no effect.
 	 */
 	public void openStoryModel(final File location) {
-		final StoryModel model;
-		final FileIO reader;
+		final StoryModel story;
 
 		if (location == null || !location.exists()) {
 			WindowFactory.getInstance().showProblemDialog(
@@ -527,27 +526,97 @@ public final class FileManager {
 			return;
 		}
 
-		// ProgressBar.showProgressBar("Loading Story...");
 		// if we've already got the model open, then we don't need to
 		// load it again.
 		if (this.openFiles.containsKey(location)) {
-			model = this.openFiles.getValue(location);
-			this.updateRecentFiles(location);
+			final SEModel model = this.openFiles.getValue(location);
+			if (model instanceof StoryModel) {
+				story = (StoryModel) model;
+				this.updateRecentFiles(location);
+			} else {
+				throw new IllegalArgumentException("Attempted to open " + model
+						+ " as a StoryModel when it is not.");
+			}
 		} else {
-			reader = FileIO.getInstance();
-			model = reader.readStory(location);
-			if (model == null)
+			story = FileIO.getInstance().readStory(location);
+
+			if (story == null)
 				return;
 
-			this.openFiles.put(location, model);
+			this.openFiles.put(location, story);
 
 			// this needs to happen before we add it to the model pool so that
 			// the menu items update themselves correctly - remiller
 			this.updateRecentFiles(location);
 
-			SEModelManager.getInstance().add(model);
+			SEModelManager.getInstance().add(story);
 		}
-		this.notifyObservers(model, location);
+		this.notifyObservers(story, location);
+	}
+
+	public LibraryModel openDefaultLibrary(Translator translator) {
+		final LibraryModel library;
+		final File location;
+
+		location = translator
+				.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH);
+
+		// load the library
+		library = FileIO.getInstance().readDefaultLibrary(translator, location);
+
+		if (this.openFiles.containsKey(location)) {
+			throw new IllegalArgumentException("There is already a library,"
+					+ this.openFiles.getValue(location) + ", open at "
+					+ location + " that we are trying to replace with "
+					+ library);
+		}
+
+		this.openFiles.put(location, library);
+
+		return library;
+	}
+
+	public Collection<LibraryModel> openOptionalLibraries(Translator translator) {
+		final File location;
+		final Collection<LibraryModel> optionalLibraries;
+
+		optionalLibraries = new ArrayList<LibraryModel>();
+		location = translator
+				.getPathProperty(DescriptionKeys.OPTIONAL_LIBRARIES_PATH);
+
+		final FileFilter filter = new FileFilter() {
+			@Override
+			public boolean accept(File file) {
+				return file.getName().endsWith(
+						FileManager.FILE_EXTENSION_LIBRARY);
+			}
+		};
+
+		if (location != null && location.exists()) {
+			final Collection<File> optionalFiles;
+
+			optionalFiles = FileOp.findFiles(location, filter);
+
+			for (File file : optionalFiles) {
+				final LibraryModel lib;
+
+				lib = FileIO.getInstance().readLibrary(translator, file);
+
+				if (this.openFiles.containsKey(location)) {
+					throw new IllegalArgumentException(
+							"There is already a library,"
+									+ this.openFiles.getValue(location)
+									+ ", open at " + file
+									+ " that we are trying to replace with "
+									+ lib);
+				} else if (lib != null) {
+					optionalLibraries.add(lib);
+					this.openFiles.put(file, lib);
+				}
+			}
+		}
+
+		return optionalLibraries;
 	}
 
 	private void updateRecentFiles(File opened) {
@@ -627,15 +696,8 @@ public final class FileManager {
 
 		model.process(new ModelAdapter() {
 			@Override
-			public void processLibraryModel(LibraryModel libraryModel) {
-				SEModelManager.getInstance().remove(libraryModel);
-			}
-
-			@Override
 			public void processStoryModel(StoryModel storyModel) {
-				final GameModule module;
-
-				module = storyModel.getModule();
+				final GameModule module = storyModel.getModule();
 
 				try {
 					module.close();
@@ -646,12 +708,11 @@ public final class FileManager {
 							.uncaughtException(Thread.currentThread(),
 									new IOError(e));
 				}
-
-				SEModelManager.getInstance().remove(storyModel);
-
-				FileManager.this.openFiles.removeValue(storyModel);
 			}
 		});
+
+		SEModelManager.getInstance().remove(model);
+		this.openFiles.removeValue(model);
 
 		return true;
 	}

@@ -138,16 +138,18 @@ public class FileIO {
 	}
 
 	/**
-	 * Reads a Patterns Library from disk.
+	 * Reads a Library from the given location.
 	 * 
 	 * @param location
 	 *            The file to read from
 	 * @return The read-in Library.
 	 */
-	public LibraryModel readOptionalLibrary(Translator translator, File location) {
+	public LibraryModel readLibrary(Translator translator, File location) {
 		final LibraryModel lib;
 
 		lib = (LibraryModel) this.readData(location, IoMode.LIBRARY);
+
+		lib.setTranslator(translator);
 
 		BindingFixer.fixBindings(lib.getRoot());
 
@@ -172,16 +174,7 @@ public class FileIO {
 			throw new IllegalStateException(
 					"Loop detected in LibraryModel Loading");
 		}
-
-		final LibraryModel library;
-
-		library = (LibraryModel) this.readData(location, IoMode.LIBRARY);
-
-		library.setTranslator(translator);
-
-		BindingFixer.fixBindings(library.getRoot());
-
-		return library;
+		return this.readLibrary(translator, location);
 	}
 
 	/**

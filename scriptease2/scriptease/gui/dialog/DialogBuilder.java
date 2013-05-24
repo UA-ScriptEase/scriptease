@@ -80,9 +80,18 @@ public class DialogBuilder {
 	}
 
 	/**
-	 * Creates a new library wizard that lets the user create a new library.
+	 * Creates a new library wizard that lets the user create a new library for
+	 * the passed in translator.
+	 * 
+	 * @param translator
+	 *            The translator to create a library for. This must not be null.
+	 * 
 	 */
-	public void showNewLibraryWizard() {
+	public void showNewLibraryWizard(final Translator translator) {
+		if (translator == null)
+			throw new IllegalArgumentException("We can't create a library for "
+					+ "a null translator.");
+
 		final String TITLE = "New Library Wizard";
 		final int TEXTFIELD_COLUMNS = 20;
 
@@ -91,13 +100,10 @@ public class DialogBuilder {
 		final JLabel authorLabel = new JLabel("Author: ");
 		final JLabel titleLabel = new JLabel("Title: ");
 		final JLabel descriptionLabel = new JLabel("Description: ");
-		final JLabel gameLabel = new JLabel("Game: ");
 
 		final JTextField authorField = new JTextField(TEXTFIELD_COLUMNS);
 		final JTextField titleField = new JTextField(TEXTFIELD_COLUMNS);
 		final JTextField descriptionField = new JTextField(TEXTFIELD_COLUMNS);
-
-		final JComboBox translatorBox = this.createTranslatorSelectionBox();
 
 		final GroupLayout layout = new GroupLayout(newStoryPanel);
 
@@ -110,15 +116,13 @@ public class DialogBuilder {
 		layout.setHorizontalGroup(layout.createParallelGroup()
 				.addComponent(titleLabel).addComponent(titleField)
 				.addComponent(authorLabel).addComponent(authorField)
-				.addComponent(descriptionLabel).addComponent(gameLabel)
-				.addComponent(descriptionField).addComponent(translatorBox));
+				.addComponent(descriptionLabel).addComponent(descriptionField));
 
 		// vertical perspective
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addComponent(titleLabel).addComponent(titleField)
 				.addComponent(authorLabel).addComponent(authorField)
-				.addComponent(descriptionLabel).addComponent(descriptionField)
-				.addComponent(gameLabel).addComponent(translatorBox));
+				.addComponent(descriptionLabel).addComponent(descriptionField));
 
 		onFinish = new Runnable() {
 			@Override
@@ -127,31 +131,21 @@ public class DialogBuilder {
 				final String author = authorField.getText();
 
 				final StatusManager statusManager = StatusManager.getInstance();
-				final Translator selectedTranslator;
-
-				selectedTranslator = (Translator) translatorBox
-						.getSelectedItem();
 
 				statusManager.setStatus("Creating New Library ...");
-				TranslatorManager.getInstance().setActiveTranslator(
-						selectedTranslator);
-
-				if (selectedTranslator == null) {
-					WindowFactory
-							.getInstance()
-							.showProblemDialog("No translator",
-									"No translator was chosen. I can't make a library without it.");
-					statusManager
-							.setStatus("Library creation aborted: no translator chosen.");
-					return;
-				}
+				TranslatorManager.getInstance().setActiveTranslator(translator);
 
 				final LibraryModel model;
 
-				model = new LibraryModel(title, author, selectedTranslator);
+				model = new LibraryModel(title, author, translator);
+
+				// Set the default format to the same one we use in the default
+				// library.
+				model.getEventSlotManager().setDefaultFormatKeyword(
+						translator.getSlotManager().getDefaultFormatKeyword());
 
 				SEModelManager.getInstance().add(model);
-				selectedTranslator.addOptionalLibrary(model);
+				translator.addOptionalLibrary(model);
 			}
 		};
 
@@ -175,22 +169,7 @@ public class DialogBuilder {
 			}
 
 			private void updateButton() {
-				if (translatorBox.getSelectedItem() != null) {
-					wizard.setFinishEnabled(!titleField.getText().isEmpty());
-				} else
-					wizard.setFinishEnabled(false);
-			}
-		});
-
-		translatorBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final boolean finishEnabled;
-
-				finishEnabled = translatorBox.getSelectedItem() != null
-						&& !titleField.getText().isEmpty();
-
-				wizard.setFinishEnabled(finishEnabled);
+				wizard.setFinishEnabled(!titleField.getText().isEmpty());
 			}
 		});
 

@@ -20,6 +20,7 @@ import java.util.Collection;
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -50,11 +51,14 @@ import scriptease.gui.dialog.PreferencesDialog;
 import scriptease.gui.pane.PanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
+import scriptease.model.LibraryModel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.translator.Translator;
+import scriptease.translator.TranslatorManager;
 import scriptease.util.StringOp;
 
 /**
@@ -133,16 +137,13 @@ public final class WindowFactory {
 	 * Shows the main ScriptEase frame.
 	 */
 	public void buildAndShowMainFrame() {
-		final JFrame frame;
 
-		frame = this.buildScriptEaseFrame(ScriptEase.TITLE);
+		this.mainFrame = this.buildScriptEaseFrame(ScriptEase.TITLE);
+		this.mainFrame.setJMenuBar(MenuFactory.createMainMenuBar(null));
 
-		frame.setJMenuBar(MenuFactory.createMainMenuBar(null));
+		if (!this.mainFrame.isVisible())
+			this.mainFrame.setVisible(true);
 
-		if (!frame.isVisible())
-			frame.setVisible(true);
-
-		this.mainFrame = frame;
 	}
 
 	/**
@@ -291,8 +292,14 @@ public final class WindowFactory {
 		DialogBuilder.getInstance().showNewStoryWizard();
 	}
 
-	public void showNewLibraryWizardDialog() {
-		DialogBuilder.getInstance().showNewLibraryWizard();
+	/**
+	 * Creates a new library for the passed in translator.
+	 * 
+	 * @param translator
+	 *            The translator to create a library for. This must not be null.
+	 */
+	public void showNewLibraryWizardDialog(Translator translator) {
+		DialogBuilder.getInstance().showNewLibraryWizard(translator);
 	}
 
 	public void showCompileProblems(Collection<StoryProblem> storyProblems) {
@@ -684,6 +691,104 @@ public final class WindowFactory {
 				Dialog.ModalityType.DOCUMENT_MODAL);
 
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		return dialog;
+	}
+
+	/**
+	 * Opens the Library Model that the user chooses from the libraries in the
+	 * translator.
+	 * 
+	 * @param translator
+	 * @return
+	 */
+	public JDialog buildLibraryEditorChoiceDialog(final Translator translator) {
+		final String TITLE = "Choose a Library";
+
+		final JDialog dialog;
+
+		final JPanel content;
+		final JLabel message;
+		final JComboBox libraryChoice;
+		final JButton sendButton;
+		final JButton cancelButton;
+
+		final GroupLayout layout;
+
+		final String newLibrary;
+
+		dialog = this.buildDialog(TITLE);
+
+		content = new JPanel();
+		message = new JLabel("Which Library would you like to edit?");
+		libraryChoice = new JComboBox();
+		sendButton = new JButton("Edit");
+		cancelButton = new JButton("Cancel");
+
+		layout = new GroupLayout(content);
+
+		newLibrary = "New...";
+
+		content.setLayout(layout);
+
+		libraryChoice.addItem(translator.getLibrary());
+
+		for (LibraryModel library : translator.getOptionalLibraries()) {
+			libraryChoice.addItem(library);
+		}
+
+		libraryChoice.addItem(newLibrary);
+
+		sendButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final Object selectedItem = libraryChoice.getSelectedItem();
+
+				if (selectedItem == newLibrary) {
+					WindowFactory.getInstance().showNewLibraryWizardDialog(
+							translator);
+				} else if (selectedItem instanceof LibraryModel) {
+					TranslatorManager.getInstance().setActiveTranslator(
+							translator);
+					SEModelManager.getInstance().add(
+							(LibraryModel) selectedItem);
+
+				}
+
+				dialog.setVisible(false);
+				dialog.dispose();
+			}
+		});
+
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dialog.setVisible(false);
+				dialog.dispose();
+			}
+		});
+
+		layout.setHorizontalGroup(layout
+				.createParallelGroup()
+				.addComponent(message)
+				.addComponent(libraryChoice)
+				.addGroup(
+						GroupLayout.Alignment.TRAILING,
+						layout.createSequentialGroup().addComponent(sendButton)
+								.addComponent(cancelButton)));
+
+		layout.setVerticalGroup(layout
+				.createSequentialGroup()
+				.addComponent(message)
+				.addComponent(libraryChoice)
+				.addGroup(
+						layout.createParallelGroup().addComponent(sendButton)
+								.addComponent(cancelButton)));
+
+		dialog.setContentPane(content);
+		dialog.pack();
+		dialog.setResizable(false);
+		dialog.setLocationRelativeTo(dialog.getParent());
+
 		return dialog;
 	}
 

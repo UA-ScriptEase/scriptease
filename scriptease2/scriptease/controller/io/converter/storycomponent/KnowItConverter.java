@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
+import scriptease.model.CodeBlock;
+import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
@@ -12,8 +14,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.apimanagers.DescribeItManager;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -87,30 +87,26 @@ public class KnowItConverter extends StoryComponentConverter {
 
 				// Check if a DescribeIt exists for the binding. If so, map it
 				if (binding instanceof KnowItBindingFunction) {
-					final Translator translator;
+					final ScriptIt bindingScriptIt;
 
-					translator = TranslatorManager.getInstance()
-							.getActiveTranslator();
+					bindingScriptIt = (ScriptIt) binding.getValue();
 
-					if (translator.defaultLibraryIsLoaded()) {
-						final DescribeItManager describeItManager;
-						final ScriptIt bindingScriptIt;
+					bindingScriptIt.setOwner(knowIt);
 
-						describeItManager = translator.getLibrary()
-								.getDescribeItManager();
-						bindingScriptIt = (ScriptIt) binding.getValue();
+					for (CodeBlock block : bindingScriptIt.getCodeBlocks()) {
+						final LibraryModel library = block.getLibrary();
 
-						bindingScriptIt.setOwner(knowIt);
+						if (library != null) {
+							final DescribeItManager describeItMan;
+							final DescribeIt describeIt;
 
-						describeItLoop: for (DescribeIt describeIt : describeItManager
-								.getDescribeIts()) {
-							for (ScriptIt scriptIt : describeIt.getScriptIts()) {
-								if (scriptIt.getDisplayText().equals(
-										bindingScriptIt.getDisplayText())) {
-									describeItManager.addDescribeIt(describeIt,
-											knowIt);
-									break describeItLoop;
-								}
+							describeItMan = library.getDescribeItManager();
+							describeIt = describeItMan
+									.findDescribeItWithScriptIt(bindingScriptIt);
+
+							if (describeIt != null) {
+								describeItMan.addDescribeIt(describeIt, knowIt);
+								break;
 							}
 						}
 					}

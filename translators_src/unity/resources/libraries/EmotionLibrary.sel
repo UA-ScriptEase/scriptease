@@ -1,6 +1,6 @@
-<APIDictionary name="EmotionLibrary" author="ScriptEase Team">
+<LibraryModel name="EmotionLibrary" author="ScriptEase Team">
   <Types/>
-  <Slots/>
+  <Slots defaultFormat="SECause"/>
   <Causes/>
   <Effects>
   <ScriptIt>
@@ -45,4 +45,4 @@
   <DescribeIts/>
   <ControlIts/>
   <TypeConverters/>
-</APIDictionary>
+</LibraryModel>
