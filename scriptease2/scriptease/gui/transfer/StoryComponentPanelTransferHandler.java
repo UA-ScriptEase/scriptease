@@ -380,8 +380,23 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			if (action == TransferHandler.MOVE) {
 				Collection<StoryComponent> components = this
 						.extractStoryComponents(data);
+
 				for (StoryComponent component : components) {
-					removedComponents.add(component);
+
+					// If the component being extracted has a story component
+					// container, we don't want to remove it - only
+					// its components.
+					if (component instanceof StoryComponentContainer) {
+						final Collection<StoryComponent> children;
+						children = ((StoryComponentContainer) component)
+								.getChildren();
+
+						for (StoryComponent child : children)
+							removedComponents.add(child);
+
+					} else {
+						removedComponents.add(component);
+					}
 				}
 
 				for (StoryComponent child : removedComponents) {

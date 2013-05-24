@@ -24,7 +24,6 @@ import scriptease.model.complex.StoryComponentContainer;
  * and name display state.
  * 
  * @author kschenk
- * @author jyuen
  */
 @SuppressWarnings("serial")
 public final class CutAction extends ActiveModelSensitiveAction implements
@@ -82,18 +81,17 @@ public final class CutAction extends ActiveModelSensitiveAction implements
 	 */
 	private void cutComponent(StoryComponentPanel component) {
 		// If the component is a StoryComponentContainer, we only want
-		// it's contents.
+		// its contents. Calls the method recursively on each child.
 		if (component.getStoryComponent() instanceof StoryComponentContainer) {
 			final Collection<StoryComponentPanel> childComponents;
 			
 			childComponents = component.getChildrenPanels();
 
 			for (StoryComponentPanel child : childComponents) {
-				component.getTransferHandler().exportToClipboard(child,
-						Toolkit.getDefaultToolkit().getSystemClipboard(),
-						TransferHandler.MOVE);
+				cutComponent(child);
 			}
-	
+
+			
 		} else {
 			component.getTransferHandler().exportToClipboard(component,
 					Toolkit.getDefaultToolkit().getSystemClipboard(),
