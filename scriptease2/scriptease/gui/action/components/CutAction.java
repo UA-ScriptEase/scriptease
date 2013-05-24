@@ -5,7 +5,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.Collection;
 
 import javax.swing.Action;
 import javax.swing.KeyStroke;
@@ -17,7 +16,6 @@ import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
-import scriptease.model.complex.StoryComponentContainer;
 
 /**
  * Represents and performs the Cut command, as well as encapsulates its enabled
@@ -80,23 +78,9 @@ public final class CutAction extends ActiveModelSensitiveAction implements
 	 * @param component
 	 */
 	private void cutComponent(StoryComponentPanel component) {
-		// If the component is a StoryComponentContainer, we only want
-		// its contents. Calls the method recursively on each child.
-		if (component.getStoryComponent() instanceof StoryComponentContainer) {
-			final Collection<StoryComponentPanel> childComponents;
-			
-			childComponents = component.getChildrenPanels();
-
-			for (StoryComponentPanel child : childComponents) {
-				cutComponent(child);
-			}
-
-			
-		} else {
-			component.getTransferHandler().exportToClipboard(component,
-					Toolkit.getDefaultToolkit().getSystemClipboard(),
-					TransferHandler.MOVE);
-		}
+		component.getTransferHandler().exportToClipboard(component,
+				Toolkit.getDefaultToolkit().getSystemClipboard(),
+				TransferHandler.MOVE);
 	}
 
 	@Override

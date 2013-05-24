@@ -360,6 +360,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (!UndoManager.getInstance().hasOpenUndoableAction()
 				&& action == TransferHandler.MOVE)
 			UndoManager.getInstance().startUndoableAction("Cut");
+
 		super.exportToClipboard(comp, clip, action);
 	}
 
@@ -374,7 +375,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	@Override
 	protected void exportDone(JComponent source, Transferable data, int action) {
 		final List<StoryComponent> removedComponents = new ArrayList<StoryComponent>();
-
+		
 		if (data != null) {
 			// if we're moving, we need to clean up the old nodes from the model
 			if (action == TransferHandler.MOVE) {
