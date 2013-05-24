@@ -33,6 +33,7 @@ import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -177,21 +178,21 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			if (supportComponent instanceof StoryComponentPanel) {
 				final StoryComponentPanel acceptingPanel;
 				final StoryComponent acceptingStoryComponent;
+				final Collection<StoryComponent> potentialChildren;
 
 				acceptingPanel = (StoryComponentPanel) supportComponent;
 				acceptingStoryComponent = acceptingPanel.getStoryComponent();
 
-				// Only import to complex story components which are editable
-				if (acceptingPanel.isEditable()
-						&& acceptingStoryComponent instanceof ComplexStoryComponent) {
+				potentialChildren = this.extractStoryComponents(support);
 
-					final Collection<StoryComponent> potentialChildren;
+				if (potentialChildren != null) {
 
-					potentialChildren = this.extractStoryComponents(support);
-
-					if (potentialChildren != null
-							&& this.canAcceptChildren(acceptingStoryComponent,
-									potentialChildren)) {
+					// The regular case - where the item being imported is a
+					// valid child type of the accepting StoryComponent
+					if (this.canAcceptChildren(acceptingStoryComponent,
+							potentialChildren)
+							&& acceptingPanel.isEditable()
+							&& acceptingStoryComponent instanceof ComplexStoryComponent) {
 
 						if (this.hoveredPanel != null
 								&& this.hoveredPanel.getSelectionManager() != null)
@@ -200,6 +201,29 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 						acceptingPanel.setBackground(Color.LIGHT_GRAY);
 
 						this.hoveredPanel = acceptingPanel;
+
+						return true;
+					}
+					// The case where effects and descriptions are being
+					// dragged over other components in a block.
+					// It seems more natural for them to go to the parent
+					// block instead of denying the User this option.
+					else if (isEffectOrDescription(acceptingStoryComponent,
+							potentialChildren)) {
+						if (this.hoveredPanel != null
+								&& this.hoveredPanel.getSelectionManager() != null)
+							this.hoveredPanel.getSelectionManager()
+									.updatePanelBackgrounds();
+
+						StoryComponentPanel parentPanel = acceptingPanel
+								.getParentStoryComponentPanel();
+
+						parentPanel.setBackground(Color.LIGHT_GRAY);
+						for (StoryComponentPanel childPanel : parentPanel
+								.getChildrenPanels())
+							childPanel.setBackground(Color.LIGHT_GRAY);
+
+						this.hoveredPanel = parentPanel;
 
 						return true;
 					}
@@ -242,10 +266,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 	@Override
 	public boolean importData(TransferSupport support) {
-		// sanity check
-		if (!this.canImport(support))
-			return false;
-
 		final Component supportComponent = support.getComponent();
 
 		if (supportComponent instanceof StoryComponentPanel) {
@@ -303,6 +323,26 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 					for (StoryComponent child : children)
 						addTransferData(child, parent, insertionIndex);
+
+					// Handle the case where Effects or Descriptions are being
+					// dragged over other components in the intentional Block.
+				} else if ((newChild instanceof ScriptIt && !(newChild instanceof CauseIt))
+						|| newChild instanceof KnowIt) {
+					ComplexStoryComponent destination = (ComplexStoryComponent) parent
+							.getOwner();
+
+					// The user drags it properly anyway - proceed.
+					if ((parent instanceof StoryComponentContainer))
+						addTransferData(newChild, parent, insertionIndex);
+					// Help the user out if they drag it over other components
+					// by adding it to the block instead.
+					else {
+						if (support.isDrop())
+							insertionIndex = this.getInsertionIndex(
+									panel.getParentStoryComponentPanel(),
+									support);
+						addTransferData(newChild, destination, insertionIndex);
+					}
 
 				} else {
 					addTransferData(newChild, parent, insertionIndex);
@@ -375,7 +415,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	@Override
 	protected void exportDone(JComponent source, Transferable data, int action) {
 		final List<StoryComponent> removedComponents = new ArrayList<StoryComponent>();
-		
+
 		if (data != null) {
 			// if we're moving, we need to clean up the old nodes from the model
 			if (action == TransferHandler.MOVE) {
@@ -459,6 +499,33 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		return acceptable;
 	}
 
+	private boolean isEffectOrDescription(StoryComponent potentialParent,
+			Collection<StoryComponent> potentialChildren) {
+		final SEModel model = SEModelManager.getInstance().getActiveModel();
+
+		for (StoryComponent child : potentialChildren) {
+
+			if (!(child instanceof KnowIt) && !(child instanceof ScriptIt))
+				return false;
+
+			if (child instanceof CauseIt)
+				return false;
+
+			if (child instanceof ScriptIt) {
+				for (CodeBlock codeBlock : ((ScriptIt) child).getCodeBlocks()) {
+					final LibraryModel library = codeBlock.getLibrary();
+
+					if (!(model instanceof LibraryModel && model == library)
+							&& !(model instanceof StoryModel && ((StoryModel) model)
+									.getLibraries().contains(library)))
+						return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
 	/**
 	 * Determines where the transfer will be inserting into.
 	 * 
@@ -505,8 +572,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		final Collection<StoryComponentPanel> children = parentPanel
 				.getChildrenPanels();
-		// for each child, check if it is closer than the current closest
 
+		// for each child, check if it is closer than the current closest
 		for (StoryComponentPanel child : children) {
 			double yChildLocation = child.getLocation().getY();
 			if (yChildLocation < yLocation) {
