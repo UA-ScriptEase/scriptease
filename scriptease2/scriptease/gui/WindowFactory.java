@@ -32,9 +32,11 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
@@ -746,16 +748,14 @@ public final class WindowFactory {
 				if (selectedItem == newLibrary) {
 					WindowFactory.getInstance().showNewLibraryWizardDialog(
 							translator);
+					dialog.dispose();
 				} else if (selectedItem instanceof LibraryModel) {
 					TranslatorManager.getInstance().setActiveTranslator(
 							translator);
 					SEModelManager.getInstance().add(
 							(LibraryModel) selectedItem);
-
+					dialog.dispose();
 				}
-
-				dialog.setVisible(false);
-				dialog.dispose();
 			}
 		});
 
@@ -767,10 +767,13 @@ public final class WindowFactory {
 			}
 		});
 
+		final JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+
 		layout.setHorizontalGroup(layout
 				.createParallelGroup()
 				.addComponent(message)
 				.addComponent(libraryChoice)
+				.addComponent(separator)
 				.addGroup(
 						GroupLayout.Alignment.TRAILING,
 						layout.createSequentialGroup().addComponent(sendButton)
@@ -780,9 +783,15 @@ public final class WindowFactory {
 				.createSequentialGroup()
 				.addComponent(message)
 				.addComponent(libraryChoice)
+				.addComponent(separator)
 				.addGroup(
 						layout.createParallelGroup().addComponent(sendButton)
-								.addComponent(cancelButton)));
+								.addComponent(cancelButton))
+				// this removes the gap between buttons & bottom of dialog
+				.addGap(0));
+
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
 
 		dialog.setContentPane(content);
 		dialog.pack();
