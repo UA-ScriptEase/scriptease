@@ -2,8 +2,7 @@ package scriptease.translator.codegenerator.code.contexts.knowitbindingcontext;
 
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.complex.StoryPoint;
-import scriptease.translator.Translator;
+import scriptease.model.semodel.StoryModel;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -17,15 +16,15 @@ import scriptease.translator.codegenerator.code.contexts.Context;
  */
 public class KnowItBindingNullContext extends KnowItBindingContext {
 
-	public KnowItBindingNullContext(StoryPoint model,
-			String indent, CodeGenerationNamifier existingNames,
-			Translator translator, LocationInformation locationInfo) {
-		super(model, indent, existingNames, translator, locationInfo);
+	public KnowItBindingNullContext(StoryModel model, String indent,
+			CodeGenerationNamifier existingNames,
+			LocationInformation locationInfo) {
+		super(model, indent, existingNames, locationInfo);
 	}
 
 	public KnowItBindingNullContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(), other.getNamifier(),
-				other.getTranslator(), other.getLocationInfo());
+		this(other.getModel(), other.getIndent(), other.getNamifier(), other
+				.getLocationInfo());
 	}
 
 	public KnowItBindingNullContext(Context other, KnowItBinding source) {

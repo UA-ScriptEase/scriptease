@@ -14,8 +14,8 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.EventSlotManager;
-import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
@@ -30,17 +30,16 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 public class CodeBlockContext extends Context {
 	private CodeBlock codeBlock;
 
-	public CodeBlockContext(StoryPoint model, String indent,
-			CodeGenerationNamifier existingNames, Translator translator,
+	public CodeBlockContext(StoryModel model, String indent,
+			CodeGenerationNamifier existingNames,
 			LocationInformation locationInfo) {
-		super(model, indent, existingNames, translator);
+		super(model, indent, existingNames);
 		this.setLocationInfo(locationInfo);
 	}
 
 	public CodeBlockContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(),
-				other.getNamifier(), other.getTranslator(), other
-						.getLocationInfo());
+		this(other.getModel(), other.getIndent(), other.getNamifier(), other
+				.getLocationInfo());
 	}
 
 	public CodeBlockContext(Context other, CodeBlock source) {

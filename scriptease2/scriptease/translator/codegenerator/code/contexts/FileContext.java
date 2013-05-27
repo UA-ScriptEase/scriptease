@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import scriptease.model.CodeBlock;
-import scriptease.model.complex.StoryPoint;
-import scriptease.translator.Translator;
+import scriptease.model.semodel.StoryModel;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 
@@ -30,16 +29,15 @@ public class FileContext extends Context {
 	private Set<String> includeFiles;
 	private Iterator<String> includeFilesIterator;
 
-	public FileContext(StoryPoint model, Translator translator,
-			LocationInformation locationInfo) {
-		this(model, "", new CodeGenerationNamifier(
-				translator.getLanguageDictionary()), translator, locationInfo);
+	public FileContext(StoryModel model, LocationInformation locationInfo) {
+		this(model, "", new CodeGenerationNamifier(model.getTranslator()
+				.getLanguageDictionary()), locationInfo);
 	}
 
-	public FileContext(StoryPoint model, String indent,
-			CodeGenerationNamifier existingNames, Translator translator,
+	public FileContext(StoryModel model, String indent,
+			CodeGenerationNamifier existingNames,
 			LocationInformation locationInfo) {
-		super(model, indent, existingNames, translator);
+		super(model, indent, existingNames);
 		this.setLocationInfo(locationInfo);
 
 		this.includeFiles = new HashSet<String>();
@@ -49,7 +47,7 @@ public class FileContext extends Context {
 
 	@Override
 	public Set<String> getIncludeFiles() {
-		for(CodeBlock codeBlock : this.getCodeBlocks()) {
+		for (CodeBlock codeBlock : this.getCodeBlocks()) {
 			this.includeFiles.addAll(codeBlock.getIncludes());
 		}
 

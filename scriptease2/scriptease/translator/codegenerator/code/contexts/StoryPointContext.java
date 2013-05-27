@@ -78,7 +78,7 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 	public String getFormattedValue() {
 		final Collection<AbstractFragment> typeFormat;
 
-		typeFormat = this.translator.getLibrary().getTypeFormat(
+		typeFormat = this.getTranslator().getLibrary().getTypeFormat(
 				StoryPoint.STORY_POINT_TYPE);
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();

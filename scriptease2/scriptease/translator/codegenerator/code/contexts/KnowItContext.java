@@ -107,7 +107,7 @@ public class KnowItContext extends StoryComponentContext {
 		final GameTypeManager typeManager;
 		final String defaultType = this.getComponent().getDefaultType();
 
-		typeManager = this.translator.getGameTypeManager();
+		typeManager = this.getTranslator().getGameTypeManager();
 
 		return typeManager.getCodeSymbol(defaultType);
 	}

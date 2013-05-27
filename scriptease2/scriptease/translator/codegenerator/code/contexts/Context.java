@@ -16,6 +16,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.StoryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
@@ -45,20 +46,19 @@ import scriptease.translator.io.model.Resource;
  */
 public abstract class Context {
 	private String indent = "";
-	private final StoryPoint model;
-	protected final Translator translator;
+	// private final StoryPoint model;
+	// protected final Translator translator;
 	private final CodeGenerationNamifier namifier;
+	private final StoryModel model;
+
 	protected LocationInformation locationInfo;
 
 	private static final String UNIMPLEMENTED = "<unimplemented in context>";
 
-	public Context(StoryPoint model, String indent,
-			CodeGenerationNamifier existingNames, Translator translator) {
-
-		this.translator = translator;
-		this.indent = indent;
-
+	public Context(StoryModel model, String indent,
+			CodeGenerationNamifier existingNames) {
 		this.model = model;
+		this.indent = indent;
 		this.namifier = existingNames;
 	}
 
@@ -82,14 +82,21 @@ public abstract class Context {
 	 *         patterns into game code.
 	 */
 	public final Translator getTranslator() {
-		return this.translator;
+		return this.model.getTranslator();
+	}
+
+	/**
+	 * @return The model that is being translated into code.
+	 */
+	public final StoryModel getModel() {
+		return this.model;
 	}
 
 	/**
 	 * @return the Context's model
 	 */
 	public final StoryPoint getStartStoryPoint() {
-		return this.model;
+		return this.model.getRoot();
 	}
 
 	public final CodeGenerationNamifier getNamifier() {
@@ -133,7 +140,7 @@ public abstract class Context {
 		final Collection<StoryPoint> storyPoints;
 
 		// Get all the StoryPoints from the model
-		storyPoints = this.model.getDescendants();
+		storyPoints = this.getStartStoryPoint().getDescendants();
 
 		// for each story point
 		for (StoryPoint storyPoint : storyPoints) {
@@ -196,7 +203,7 @@ public abstract class Context {
 		final List<CodeBlock> codeBlocks = new ArrayList<CodeBlock>();
 		final List<StoryComponent> effectList;
 
-		effectList = this.translator.getLibrary().getEffectsCategory()
+		effectList = this.getTranslator().getLibrary().getEffectsCategory()
 				.getChildren();
 
 		for (StoryComponent key : this.getComponents()) {
@@ -318,11 +325,11 @@ public abstract class Context {
 	}
 
 	public Collection<StoryPoint> getStoryPoints() {
-		return this.model.getDescendants();
+		return this.getStartStoryPoint().getDescendants();
 	}
 
 	public Collection<StoryPoint> getOrderedStoryPoints() {
-		return this.model.getOrderedDescendants();
+		return this.getStartStoryPoint().getOrderedDescendants();
 	}
 
 	/**

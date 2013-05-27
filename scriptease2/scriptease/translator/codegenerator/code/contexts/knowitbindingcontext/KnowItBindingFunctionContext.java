@@ -2,9 +2,8 @@ package scriptease.translator.codegenerator.code.contexts.knowitbindingcontext;
 
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.StoryModel;
 import scriptease.translator.LanguageDictionary;
-import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.CodeGenerationConstants;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
@@ -21,16 +20,15 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  */
 public class KnowItBindingFunctionContext extends KnowItBindingContext {
 
-	public KnowItBindingFunctionContext(StoryPoint model, String indent,
-			CodeGenerationNamifier existingNames, Translator translator,
+	public KnowItBindingFunctionContext(StoryModel model, String indent,
+			CodeGenerationNamifier existingNames,
 			LocationInformation locationInfo) {
-		super(model, indent, existingNames, translator, locationInfo);
+		super(model, indent, existingNames, locationInfo);
 	}
 
 	public KnowItBindingFunctionContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(),
-				other.getNamifier(), other.getTranslator(), other
-						.getLocationInfo());
+		this(other.getModel(), other.getIndent(), other.getNamifier(), other
+				.getLocationInfo());
 	}
 
 	public KnowItBindingFunctionContext(Context other, KnowItBinding source) {

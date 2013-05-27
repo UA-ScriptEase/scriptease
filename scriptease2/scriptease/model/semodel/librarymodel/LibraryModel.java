@@ -756,22 +756,13 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 	/**
 	 * Returns the format for the type as a collection of
-	 * {@link AbstractFragment}s. Searches for the type in this Library's type
-	 * manager, and then in the default library's.
+	 * {@link AbstractFragment}s.
 	 * 
 	 * @param keyword
 	 * @return
 	 */
 	public Collection<AbstractFragment> getTypeFormat(String keyword) {
-		final LibraryModel defaultLibrary = this.getTranslator().getLibrary();
-		final Collection<AbstractFragment> format;
-
-		format = this.typeManager.getTypeFormat(keyword);
-
-		if (format.isEmpty() && this != defaultLibrary)
-			format.addAll(defaultLibrary.getTypeFormat(keyword));
-
-		return format;
+		return this.typeManager.getTypeFormat(keyword);
 	}
 
 	/**
