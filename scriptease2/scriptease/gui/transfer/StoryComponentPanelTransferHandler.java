@@ -111,12 +111,13 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		if (comp instanceof StoryComponentPanel) {
 			final StoryComponentPanel panel;
+			final StoryComponentPanelManager selectionManager;
+
+			panel = (StoryComponentPanel) comp;
+			selectionManager = panel.getSelectionManager();
 
 			// Get the parent selected StoryComponents, since the children
 			// will be grabbed implicitly from the model
-			panel = (StoryComponentPanel) comp;
-			final StoryComponentPanelManager selectionManager = panel
-					.getSelectionManager();
 			if (selectionManager != null) {
 				for (StoryComponentPanel aPanel : selectionManager
 						.getSelectedParents())
@@ -170,8 +171,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	public boolean canImport(TransferSupport support) {
 		final Component supportComponent = support.getComponent();
 
-		System.out.println("COMPONENT: " + supportComponent.toString());
-		
 		this.scrollForMousePosition(supportComponent);
 
 		if (isBinding(support)) {
@@ -180,7 +179,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		}
 
 		if (supportComponent instanceof StoryComponentPanel) {
-			
+
 			final StoryComponentPanel acceptingPanel;
 			final StoryComponent acceptingStoryComponent;
 			final Collection<StoryComponent> potentialChildren;
@@ -227,9 +226,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 							.getParentStoryComponentPanel();
 
 					parentPanel.setBackground(Color.LIGHT_GRAY);
-					for (StoryComponentPanel childPanel : parentPanel
-							.getChildrenPanels())
-						childPanel.setBackground(Color.LIGHT_GRAY);
 
 					this.hoveredPanel = parentPanel;
 
