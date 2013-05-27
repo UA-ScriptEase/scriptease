@@ -12,6 +12,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
 
@@ -151,15 +152,43 @@ public final class StoryModel extends SEModel {
 	public void addStoryModelObserver(StoryModelObserver observer) {
 		this.observerManager.addObserver(this, observer);
 	}
-	
+
+	/**
+	 * Returns the type keywords for all of the libraries containd in this
+	 * story.
+	 * 
+	 * @return
+	 */
 	public Collection<String> getTypeKeywords() {
 		final Collection<String> keywords = new ArrayList<String>();
-		
-		for(LibraryModel library : this.getLibraries()) {
+
+		for (LibraryModel library : this.getLibraries()) {
 			keywords.addAll(library.getTypeKeywords());
 		}
-		
+
 		return keywords;
+	}
+
+	/**
+	 * Searches for the type format in all of the libraries contained in this
+	 * story.
+	 * 
+	 * @param keyword
+	 * @return
+	 */
+	public Collection<AbstractFragment> getTypeFormat(String keyword) {
+		final Collection<AbstractFragment> format;
+
+		format = new ArrayList<AbstractFragment>();
+
+		for (LibraryModel library : this.getLibraries()) {
+			format.addAll(library.getTypeFormat(keyword));
+
+			if (!format.isEmpty())
+				break;
+		}
+
+		return format;
 	}
 
 	@Override

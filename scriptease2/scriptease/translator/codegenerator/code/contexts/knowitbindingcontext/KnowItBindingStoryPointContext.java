@@ -5,7 +5,7 @@ import java.util.Collection;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.StoryPoint;
-import scriptease.translator.Translator;
+import scriptease.model.semodel.StoryModel;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -21,10 +21,10 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  */
 public class KnowItBindingStoryPointContext extends KnowItBindingContext {
 
-	public KnowItBindingStoryPointContext(StoryPoint model, String indent,
-			CodeGenerationNamifier existingNames, Translator translator,
+	public KnowItBindingStoryPointContext(StoryModel model, String indent,
+			CodeGenerationNamifier existingNames,
 			LocationInformation locationInfo) {
-		super(model, indent, existingNames, translator, locationInfo);
+		super(model, indent, existingNames, locationInfo);
 	}
 
 	public KnowItBindingStoryPointContext(Context other) {
@@ -48,8 +48,8 @@ public class KnowItBindingStoryPointContext extends KnowItBindingContext {
 	public String getFormattedValue() {
 		final Collection<AbstractFragment> typeFormat;
 
-		typeFormat = this.translator.getLibrary().getTypeFormat(
-				StoryPoint.STORY_POINT_TYPE);
+		typeFormat = this.getTranslator().getLibrary()
+				.getTypeFormat(StoryPoint.STORY_POINT_TYPE);
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();
 

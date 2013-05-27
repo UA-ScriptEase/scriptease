@@ -26,8 +26,7 @@ public class StoryComponentContext extends Context {
 	 *            The source StoryComponent associated with the context.
 	 */
 	public StoryComponentContext(Context other, StoryComponent source) {
-		super(other.getStartStoryPoint(), other.getIndent(), other
-				.getNamifier(), other.getTranslator());
+		super(other.getModel(), other.getIndent(), other.getNamifier());
 
 		this.setLocationInfo(other.getLocationInfo());
 		this.component = source;

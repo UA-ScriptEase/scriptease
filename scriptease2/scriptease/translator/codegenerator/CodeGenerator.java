@@ -138,8 +138,7 @@ public class CodeGenerator {
 	 * @return
 	 */
 	private Collection<ScriptInfo> compileMultiThread(
-			Collection<Set<CodeBlock>> scriptBuckets,
-			final Translator translator, final StoryPoint root) {
+			Collection<Set<CodeBlock>> scriptBuckets, final StoryModel model) {
 
 		final Collection<ScriptInfo> scriptInfos;
 
@@ -159,7 +158,7 @@ public class CodeGenerator {
 		 * code will attempt to load the language dictionary in each thread,
 		 * creating a race condition.
 		 */
-		translator.getLanguageDictionary();
+		model.getTranslator().getLanguageDictionary();
 
 		/*
 		 * A note on debugging:
@@ -185,8 +184,8 @@ public class CodeGenerator {
 					// subject, so we can just use the first one
 					codeBlock = bucket.iterator().next();
 					locationInfo = new LocationInformation(codeBlock);
-					context = CodeGenerator.this.buildFileContext(root,
-							translator, locationInfo);
+					context = CodeGenerator.this.buildFileContext(model,
+							locationInfo);
 					generated = generateScript(context);
 
 					scriptInfos.add(generated);
@@ -213,15 +212,14 @@ public class CodeGenerator {
 	 * @return
 	 */
 	private Collection<ScriptInfo> compileSingleThread(
-			Collection<Set<CodeBlock>> scriptBuckets, Translator translator,
-			StoryPoint root) {
+			Collection<Set<CodeBlock>> scriptBuckets, StoryModel model) {
 
 		final Collection<ScriptInfo> scriptInfos = new ArrayList<ScriptInfo>();
 		/*
 		 * This method is called so that we load the Language Dictionary if it
 		 * has not been loaded before.
 		 */
-		translator.getLanguageDictionary();
+		model.getTranslator().getLanguageDictionary();
 
 		for (final Set<CodeBlock> bucket : scriptBuckets) {
 			final CodeBlock codeBlock;
@@ -233,7 +231,7 @@ public class CodeGenerator {
 			// subject, so we can just use the first one
 			codeBlock = bucket.iterator().next();
 			locationInfo = new LocationInformation(codeBlock);
-			context = this.buildFileContext(root, translator, locationInfo);
+			context = this.buildFileContext(model, locationInfo);
 			generated = this.generateScript(context);
 
 			scriptInfos.add(generated);
@@ -250,9 +248,9 @@ public class CodeGenerator {
 	 * @param locationInfo
 	 * @return
 	 */
-	public Context buildFileContext(StoryPoint root, Translator translator,
+	public Context buildFileContext(StoryModel model,
 			LocationInformation locationInfo) {
-		return new FileContext(root, translator, locationInfo);
+		return new FileContext(model, locationInfo);
 	}
 
 	/**
@@ -294,10 +292,10 @@ public class CodeGenerator {
 			if (scriptBuckets.size() > 0) {
 				if (CodeGenerator.THREAD_MODE == ThreadMode.SINGLE)
 					scriptInfos.addAll(this.compileSingleThread(scriptBuckets,
-							translator, root));
+							model));
 				else if (CodeGenerator.THREAD_MODE == ThreadMode.MULTI)
 					scriptInfos.addAll(this.compileMultiThread(scriptBuckets,
-							translator, root));
+							model));
 			}
 
 		} else {

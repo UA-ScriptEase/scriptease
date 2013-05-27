@@ -7,8 +7,7 @@ import java.util.regex.Pattern;
 
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
-import scriptease.model.complex.StoryPoint;
-import scriptease.translator.Translator;
+import scriptease.model.semodel.StoryModel;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -24,16 +23,15 @@ import scriptease.util.StringOp;
  */
 public class KnowItBindingResourceContext extends KnowItBindingContext {
 
-	public KnowItBindingResourceContext(StoryPoint model, String indent,
-			CodeGenerationNamifier existingNames, Translator translator,
+	public KnowItBindingResourceContext(StoryModel model, String indent,
+			CodeGenerationNamifier existingNames,
 			LocationInformation locationInformation) {
-		super(model, indent, existingNames, translator, locationInformation);
+		super(model, indent, existingNames, locationInformation);
 	}
 
 	public KnowItBindingResourceContext(Context other) {
-		this(other.getStartStoryPoint(), other.getIndent(),
-				other.getNamifier(), other.getTranslator(), other
-						.getLocationInfo());
+		this(other.getModel(), other.getIndent(), other.getNamifier(), other
+				.getLocationInfo());
 	}
 
 	public KnowItBindingResourceContext(Context other, KnowItBinding source) {
@@ -51,7 +49,8 @@ public class KnowItBindingResourceContext extends KnowItBindingContext {
 		final String type;
 
 		type = this.binding.getFirstType();
-		typeFormat = this.translator.getLibrary().getTypeFormat(type);
+
+		typeFormat = this.getModel().getTypeFormat(type);
 
 		if (typeFormat == null || typeFormat.isEmpty()) {
 			return this.getValue();
@@ -71,7 +70,7 @@ public class KnowItBindingResourceContext extends KnowItBindingContext {
 				.getFirstType();
 
 		// Handles Escaped Characters
-		final Set<Entry<String, String>> entrySet = this.translator
+		final Set<Entry<String, String>> entrySet = this.getTranslator()
 				.getGameTypeManager().getEscapes(type).entrySet();
 
 		for (Entry<String, String> escape : entrySet) {
@@ -81,7 +80,8 @@ public class KnowItBindingResourceContext extends KnowItBindingContext {
 		}
 
 		// Handle Legal Values the type can take
-		final String regex = this.translator.getGameTypeManager().getReg(type);
+		final String regex = this.getTranslator().getGameTypeManager()
+				.getReg(type);
 		if (regex != null && !regex.isEmpty() && !scriptValue.isEmpty()) {
 			final Pattern regexPattern = Pattern.compile(regex);
 			scriptValue = StringOp.removeIllegalCharacters(scriptValue,
