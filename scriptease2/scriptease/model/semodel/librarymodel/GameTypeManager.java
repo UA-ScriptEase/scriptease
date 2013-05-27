@@ -29,24 +29,30 @@ public class GameTypeManager {
 	private final Map<String, GameType> gameTypes;
 	private final TypeConverter typeConverter;
 
-	public GameTypeManager() {
+	protected GameTypeManager() {
 		this.gameTypes = new HashMap<String, GameType>();
 		this.typeConverter = new TypeConverter();
 	}
 
-	public Collection<GameType> getGameTypes() {
+	/**
+	 * Returns all of the {@link GameType}s stored by the
+	 * {@link GameTypeManager}.
+	 * 
+	 * @return
+	 */
+	protected Collection<GameType> getGameTypes() {
 		return new ArrayList<GameType>(this.gameTypes.values());
 	}
 
-	public TypeConverter getTypeConverter() {
+	protected TypeConverter getTypeConverter() {
 		return this.typeConverter;
 	}
 
-	public void addGameType(GameType type) {
+	protected void addGameType(GameType type) {
 		this.gameTypes.put(type.getKeyword(), type);
 	}
 
-	public Collection<AbstractFragment> getFormat(String keyword) {
+	protected Collection<AbstractFragment> getTypeFormat(String keyword) {
 		final GameType type = this.gameTypes.get(keyword);
 		final Collection<AbstractFragment> format = new ArrayList<AbstractFragment>();
 		if (type != null)
@@ -59,7 +65,7 @@ public class GameTypeManager {
 	 * 
 	 * @return A collection of the GameTypeManager's keyword
 	 */
-	public Collection<String> getKeywords() {
+	protected Collection<String> getKeywords() {
 		return new ArrayList<String>(this.gameTypes.keySet());
 	}
 

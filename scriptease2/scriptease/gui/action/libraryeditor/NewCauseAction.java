@@ -16,7 +16,6 @@ import scriptease.model.CodeBlockSource;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModelManager;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameType;
@@ -56,8 +55,7 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final LibraryModel libraryModel;
-		final GameTypeManager gameTypeManager;
+		final LibraryModel library;
 
 		final ScriptIt newCause;
 		final CodeBlock codeBlock;
@@ -68,10 +66,7 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 
 		GameType type;
 
-		libraryModel = (LibraryModel) SEModelManager.getInstance()
-				.getActiveModel();
-		gameTypeManager = TranslatorManager.getInstance()
-				.getActiveGameTypeManager();
+		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
 		newCause = new ScriptIt("When <" + SUBJECT + ">");
 
@@ -81,7 +76,10 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 
 		parameters.add(parameter);
 
-		for (GameType gameType : gameTypeManager.getGameTypes()) {
+		for (GameType gameType : TranslatorManager.getInstance()
+				.getActiveDefaultLibrary().getGameTypes()) {
+			// We just need the first cause with slots, so we can just search
+			// the default library.
 			if (!gameType.getSlots().isEmpty()) {
 				final Collection<String> types;
 
@@ -95,7 +93,7 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 		}
 
 		if (type != null) {
-			final int id = libraryModel.getNextCodeBlockID();
+			final int id = library.getNextCodeBlockID();
 			final String slot = type.getSlots().iterator().next();
 
 			codeBlock = new CodeBlockSource(SUBJECT, slot, parameters, id);
@@ -104,7 +102,7 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 			newCause.setDisplayText("When <" + SUBJECT + ">");
 			newCause.setVisible(true);
 
-			libraryModel.add(newCause);
+			library.add(newCause);
 			LibraryPanel.getInstance().navigateToComponent(newCause);
 		} else {
 			WindowFactory.getInstance().showWarningDialog(

@@ -109,14 +109,7 @@ public class ResourcePanel extends JPanel {
 		if (!(model instanceof StoryModel))
 			return;
 
-		final GameTypeManager typeManager;
-
-		typeManager = model.getTranslator().getGameTypeManager();
-
-		if (!(model instanceof StoryModel) || typeManager == null)
-			return;
-
-		for (String type : typeManager.getKeywords()) {
+		for (String type : ((StoryModel) model).getTypeKeywords()) {
 			final Collection<Resource> gameObjects;
 
 			gameObjects = ((StoryModel) model).getModule().getResourcesOfType(

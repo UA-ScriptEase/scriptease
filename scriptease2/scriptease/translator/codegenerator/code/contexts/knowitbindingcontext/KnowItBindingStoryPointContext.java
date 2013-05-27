@@ -40,7 +40,7 @@ public class KnowItBindingStoryPointContext extends KnowItBindingContext {
 	public String getUnique32CharName() {
 		final StoryPoint qp = ((KnowItBindingStoryPoint) this.binding)
 				.getValue();
-		
+
 		return qp.getUnique32CharName();
 	}
 
@@ -48,7 +48,7 @@ public class KnowItBindingStoryPointContext extends KnowItBindingContext {
 	public String getFormattedValue() {
 		final Collection<AbstractFragment> typeFormat;
 
-		typeFormat = this.translator.getGameTypeManager().getFormat(
+		typeFormat = this.translator.getLibrary().getTypeFormat(
 				StoryPoint.STORY_POINT_TYPE);
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();

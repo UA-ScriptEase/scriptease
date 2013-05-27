@@ -111,7 +111,7 @@ class DescribeItManager {
 	 * @param node
 	 * @return
 	 */
-	protected boolean isEndNode(DescribeItNode node) {
+	protected boolean isDescribeItEndNode(DescribeItNode node) {
 		final DescribeIt describeIt = this.getDescribeItForNode(node);
 
 		for (Collection<DescribeItNode> path : describeIt.getPaths()) {

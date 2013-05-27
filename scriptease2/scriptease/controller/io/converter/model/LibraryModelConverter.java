@@ -9,7 +9,6 @@ import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.EventSlotManager;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
@@ -41,8 +40,6 @@ public class LibraryModelConverter implements Converter {
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final LibraryModel library = (LibraryModel) source;
-		final GameTypeManager typeManager = library.getGameTypeManager();
-
 		final EventSlotManager eventSlotManager;
 
 		eventSlotManager = library.getEventSlotManager();
@@ -55,7 +52,7 @@ public class LibraryModelConverter implements Converter {
 
 		// types
 		writer.startNode(TAG_TYPES);
-		context.convertAnother(typeManager.getGameTypes());
+		context.convertAnother(library.getGameTypes());
 		writer.endNode();
 
 		// slots
@@ -86,8 +83,7 @@ public class LibraryModelConverter implements Converter {
 
 		// typeconverters
 		writer.startNode(TAG_TYPE_CONVERTERS);
-		context.convertAnother(typeManager.getTypeConverter()
-				.getConverterDoIts());
+		context.convertAnother(library.getTypeConverter().getConverterDoIts());
 		writer.endNode();
 	}
 
@@ -207,11 +203,9 @@ public class LibraryModelConverter implements Converter {
 				System.err.println("Expected " + TAG_TYPE_CONVERTERS
 						+ ", but found " + reader.getNodeName());
 			else {
-				library.getGameTypeManager()
-						.getTypeConverter()
-						.addConverterScriptIts(
-								((Collection<ScriptIt>) context.convertAnother(
-										library, ArrayList.class)));
+				library.getTypeConverter().addConverterScriptIts(
+						((Collection<ScriptIt>) context.convertAnother(library,
+								ArrayList.class)));
 			}
 		}
 		reader.moveUp();
