@@ -134,71 +134,83 @@ class ModelTabPanel extends JTabbedPane {
 	}
 
 	/**
-	 * Creates a tab for the given model.
+	 * Creates a tab for the given model if one does not already exist
 	 * 
 	 * @param model
 	 */
 	private void createTabForModel(SEModel model) {
-		model.process(new ModelAdapter() {
-			@Override
-			public void processLibraryModel(final LibraryModel model) {
-				// Creates a Library Editor panel
-				final JPanel panel;
-				final JScrollPane scrollPane;
-				final String savedTitle;
+		final boolean tabExistsForModel = ModelTabPanel.this.modelToComponent
+				.containsKey(model);
+		if (!tabExistsForModel) {
+			model.process(new ModelAdapter() {
+				@Override
+				public void processLibraryModel(final LibraryModel model) {
+					// Creates a Library Editor panel
+					final JPanel panel;
+					final JScrollPane scrollPane;
+					final String savedTitle;
 
-				panel = LibraryEditorPanelFactory.getInstance()
-						.buildLibraryEditorPanel(LibraryPanel.getInstance());
-				scrollPane = new JScrollPane(panel);
+					panel = LibraryEditorPanelFactory
+							.getInstance()
+							.buildLibraryEditorPanel(LibraryPanel.getInstance());
+					scrollPane = new JScrollPane(panel);
 
-				ModelTabPanel.this.modelToComponent.put(model, scrollPane);
+					ModelTabPanel.this.modelToComponent.put(model, scrollPane);
 
-				savedTitle = model.getName() + "[Editor]";
+					savedTitle = model.getName() + "[Editor]";
 
-				scrollPane.getVerticalScrollBar().setUnitIncrement(
-						ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+					scrollPane.getVerticalScrollBar().setUnitIncrement(
+							ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
-				ModelTabPanel.this.buildTab(savedTitle, model, scrollPane);
-			}
+					ModelTabPanel.this.buildTab(savedTitle, model, scrollPane);
+				}
 
-			@Override
-			public void processStoryModel(final StoryModel storyModel) {
-				// Creates a story editor panel with a story graph
-				final StoryPoint root;
-				final JSplitPane panel;
-				final String savedTitle;
-				String modelTitle;
+				@Override
+				public void processStoryModel(final StoryModel storyModel) {
+					// Creates a story editor panel with a story graph
+					final StoryPoint root;
+					final JSplitPane panel;
+					final String savedTitle;
+					String modelTitle;
 
-				root = storyModel.getRoot();
-				panel = ModelTabPanel.this.buildStoryPanel(storyModel, root);
+					root = storyModel.getRoot();
+					panel = ModelTabPanel.this
+							.buildStoryPanel(storyModel, root);
 
-				modelTitle = storyModel.getTitle();
-				if (modelTitle == null || modelTitle.equals(""))
-					modelTitle = "<Untitled>";
+					modelTitle = storyModel.getTitle();
+					if (modelTitle == null || modelTitle.equals(""))
+						modelTitle = "<Untitled>";
 
-				savedTitle = modelTitle + "("
-						+ storyModel.getModule().getLocation().getName() + ")";
+					savedTitle = modelTitle + "("
+							+ storyModel.getModule().getLocation().getName()
+							+ ")";
 
-				ModelTabPanel.this.buildTab(savedTitle, storyModel, panel);
-				/*
-				 * Setting the divider needs to occur here because the
-				 * JSplitPane needs to actually be drawn before this works.
-				 * According to Sun, this is WAD. I would tend to disagree, but
-				 * at least this is nicer than subclassing JSplitPane.
-				 */
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						// Need this code for the divider to be set at the right
-						// location for different screen resolutions.
-						final double top = panel.getTopComponent().getSize().height;
-						final double bottom = panel.getSize().height;
-						final double ratio = top / bottom;
-						panel.setDividerLocation(ratio);
-					}
-				});
-			}
-		});
+					ModelTabPanel.this.buildTab(savedTitle, storyModel, panel);
+					/*
+					 * Setting the divider needs to occur here because the
+					 * JSplitPane needs to actually be drawn before this works.
+					 * According to Sun, this is WAD. I would tend to disagree,
+					 * but at least this is nicer than subclassing JSplitPane.
+					 */
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							// Need this code for the divider to be set at the
+							// right
+							// location for different screen resolutions.
+							final double top = panel.getTopComponent()
+									.getSize().height;
+							final double bottom = panel.getSize().height;
+							final double ratio = top / bottom;
+							panel.setDividerLocation(ratio);
+						}
+					});
+				}
+			});
+		} else {
+			throw new IllegalStateException("Tab already exists for model "
+					+ model);
+		}
 	}
 
 	/**
@@ -319,7 +331,6 @@ class ModelTabPanel extends JTabbedPane {
 		}
 
 		// Put the new pane to the map
-
 		ModelTabPanel.this.modelToComponent.put(model, storyPanel);
 
 		// Set up the Story Graph
