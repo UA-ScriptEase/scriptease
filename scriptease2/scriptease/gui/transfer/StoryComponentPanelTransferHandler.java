@@ -170,91 +170,93 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	public boolean canImport(TransferSupport support) {
 		final Component supportComponent = support.getComponent();
 
+		System.out.println("COMPONENT: " + supportComponent.toString());
+		
 		this.scrollForMousePosition(supportComponent);
 
 		if (isBinding(support)) {
 			// Handles the case where the user drags a Binding (delete)
 			return true;
-		} else {
-			if (supportComponent instanceof StoryComponentPanel) {
-				final StoryComponentPanel acceptingPanel;
-				final StoryComponent acceptingStoryComponent;
+		}
 
-				acceptingPanel = (StoryComponentPanel) supportComponent;
-				acceptingStoryComponent = acceptingPanel.getStoryComponent();
+		if (supportComponent instanceof StoryComponentPanel) {
+			
+			final StoryComponentPanel acceptingPanel;
+			final StoryComponent acceptingStoryComponent;
+			final Collection<StoryComponent> potentialChildren;
 
-				// Only import to complex story components which are editable
-				if (acceptingPanel.isEditable()
-						&& acceptingStoryComponent instanceof ComplexStoryComponent) {
+			acceptingPanel = (StoryComponentPanel) supportComponent;
+			acceptingStoryComponent = acceptingPanel.getStoryComponent();
+			potentialChildren = this.extractStoryComponents(support);
 
-					final Collection<StoryComponent> potentialChildren;
+			// Only import to complex story components which are editable
+			if (acceptingPanel.isEditable() && potentialChildren != null) {
 
-					potentialChildren = this.extractStoryComponents(support);
+				// The regular case - where the item being imported is a
+				// valid child type of the accepting StoryComponent
+				if (acceptingStoryComponent instanceof ComplexStoryComponent) {
 
-					if (potentialChildren != null) {
+					if (this.canAcceptChildren(acceptingStoryComponent,
+							potentialChildren)) {
 
-						// The regular case - where the item being imported is a
-						// valid child type of the accepting StoryComponent
-						if (this.canAcceptChildren(acceptingStoryComponent,
-								potentialChildren)) {
-							if (this.hoveredPanel != null
-									&& this.hoveredPanel.getSelectionManager() != null)
-								this.hoveredPanel.getSelectionManager()
-										.updatePanelBackgrounds();
-							acceptingPanel.setBackground(Color.LIGHT_GRAY);
+						if (this.hoveredPanel != null
+								&& this.hoveredPanel.getSelectionManager() != null)
 
-							this.hoveredPanel = acceptingPanel;
+							this.hoveredPanel.getSelectionManager()
+									.updatePanelBackgrounds();
+						acceptingPanel.setBackground(Color.LIGHT_GRAY);
 
-							return true;
-						}
-						// The case where effects and descriptions are being
-						// dragged over other components in a block.
-						// It seems more natural for them to go to the parent
-						// block instead of denying the User this option.
-						else if (isEffectOrDescription(acceptingStoryComponent,
-								potentialChildren)) {
-							if (this.hoveredPanel != null
-									&& this.hoveredPanel.getSelectionManager() != null)
-								this.hoveredPanel.getSelectionManager()
-										.updatePanelBackgrounds();
+						this.hoveredPanel = acceptingPanel;
 
-							StoryComponentPanel parentPanel = acceptingPanel
-									.getParentStoryComponentPanel();
-
-							parentPanel.setBackground(Color.LIGHT_GRAY);
-							for (StoryComponentPanel childPanel : parentPanel
-									.getChildrenPanels())
-								childPanel.setBackground(Color.LIGHT_GRAY);
-
-							this.hoveredPanel = parentPanel;
-
-							return true;
-						}
+						return true;
 					}
 				}
 
-			} else if (supportComponent instanceof EffectHolderPanel) {
-				final EffectHolderPanel effectHolder;
-				final StoryComponent component;
+				// The case where effects and descriptions are being
+				// dragged over other components in a block.
+				// It seems more natural for them to go to the parent
+				// block instead of denying the User this option.
+				if (isEffectOrDescription(acceptingStoryComponent,
+						potentialChildren)) {
+					if (this.hoveredPanel != null
+							&& this.hoveredPanel.getSelectionManager() != null)
+						this.hoveredPanel.getSelectionManager()
+								.updatePanelBackgrounds();
 
-				effectHolder = (EffectHolderPanel) supportComponent;
-				component = this.extractStoryComponents(support).iterator()
-						.next();
+					StoryComponentPanel parentPanel = acceptingPanel
+							.getParentStoryComponentPanel();
 
-				if (component instanceof ScriptIt) {
-					final ScriptIt scriptIt;
+					parentPanel.setBackground(Color.LIGHT_GRAY);
+					for (StoryComponentPanel childPanel : parentPanel
+							.getChildrenPanels())
+						childPanel.setBackground(Color.LIGHT_GRAY);
 
-					scriptIt = (ScriptIt) component;
+					this.hoveredPanel = parentPanel;
 
-					if (scriptIt instanceof CauseIt)
-						return false;
-
-					for (String type : scriptIt.getTypes()) {
-						if (!effectHolder.getAllowableTypes().contains(type))
-							return false;
-					}
 					return true;
 				}
+			}
+
+		} else if (supportComponent instanceof EffectHolderPanel) {
+			final EffectHolderPanel effectHolder;
+			final StoryComponent component;
+
+			effectHolder = (EffectHolderPanel) supportComponent;
+			component = this.extractStoryComponents(support).iterator().next();
+
+			if (component instanceof ScriptIt) {
+				final ScriptIt scriptIt;
+
+				scriptIt = (ScriptIt) component;
+
+				if (scriptIt instanceof CauseIt)
+					return false;
+
+				for (String type : scriptIt.getTypes()) {
+					if (!effectHolder.getAllowableTypes().contains(type))
+						return false;
+				}
+				return true;
 			}
 		}
 
