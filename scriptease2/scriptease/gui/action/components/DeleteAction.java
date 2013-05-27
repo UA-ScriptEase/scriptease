@@ -15,15 +15,15 @@ import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
-import scriptease.model.LibraryModel;
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.DescribeItManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.DescribeItManager;
 
 /**
  * Represents and performs the Delete command, as well as encapsulates its
@@ -123,21 +123,17 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 			final StoryComponentPanelJList list;
 			list = (StoryComponentPanelJList) focusOwner;
 
-			for (Object selectedObject : list.getSelectedValues()) {
-				final StoryComponentPanel selectedPanel;
+			for (Object value : list.getSelectedValues()) {
 				final StoryComponent selectedComponent;
 
-				final Translator activeTranslator;
 				final LibraryModel libraryModel;
 				final DescribeItManager describeItManager;
 
-				activeTranslator = TranslatorManager.getInstance()
-						.getActiveTranslator();
-				libraryModel = activeTranslator.getLibrary();
-				describeItManager = libraryModel.getDescribeItManager();
+				selectedComponent = ((StoryComponentPanel) value)
+						.getStoryComponent();
 
-				selectedPanel = (StoryComponentPanel) selectedObject;
-				selectedComponent = selectedPanel.getStoryComponent();
+				libraryModel = selectedComponent.getLibrary();
+				describeItManager = libraryModel.getDescribeItManager();
 
 				if (selectedComponent instanceof KnowIt) {
 					final DescribeIt describeIt;

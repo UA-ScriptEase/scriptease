@@ -3,15 +3,15 @@ package scriptease.controller.io.converter.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.apimanagers.DescribeItManager;
-import scriptease.translator.apimanagers.EventSlotManager;
-import scriptease.translator.apimanagers.GameTypeManager;
+import scriptease.model.semodel.librarymodel.DescribeItManager;
+import scriptease.model.semodel.librarymodel.EventSlotManager;
+import scriptease.model.semodel.librarymodel.GameTypeManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
 

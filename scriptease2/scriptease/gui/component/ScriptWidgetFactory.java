@@ -37,7 +37,6 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.transfer.BindingTransferHandlerExportOnly;
 import scriptease.gui.ui.ScriptEaseUI;
-import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
@@ -46,6 +45,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.SEModelManager;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
@@ -515,8 +515,8 @@ public class ScriptWidgetFactory {
 
 		final String scriptValue;
 
-		enumMap = TranslatorManager.getInstance().getActiveTranslator()
-				.getGameTypeManager().getEnumMap(bindingType);
+		enumMap = knowIt.getLibrary().getGameTypeManager()
+				.getEnumMap(bindingType);
 		list = new ArrayList<String>(enumMap.values());
 		Collections.sort(list);
 

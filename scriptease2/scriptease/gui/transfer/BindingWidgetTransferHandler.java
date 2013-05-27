@@ -18,10 +18,10 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.SlotPanel;
-import scriptease.model.SEModelManager;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.semodel.SEModelManager;
 
 /**
  * The Transfer Handler for all BindingWidgets. Performs all of the

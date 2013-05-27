@@ -27,11 +27,11 @@ import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.ui.ScriptEaseUI;
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
-import scriptease.model.StoryModel;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
-import scriptease.translator.apimanagers.GameTypeManager;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.GUIOp;
 

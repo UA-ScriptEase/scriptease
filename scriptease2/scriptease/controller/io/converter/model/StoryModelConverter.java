@@ -6,10 +6,10 @@ import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
 import scriptease.gui.WindowFactory;
-import scriptease.model.LibraryModel;
-import scriptease.model.SEModelManager;
-import scriptease.model.StoryModel;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameModule;

@@ -5,7 +5,7 @@ import javax.swing.SwingUtilities;
 
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
-import scriptease.model.SEModelManager;
+import scriptease.model.semodel.SEModelManager;
 
 /**
  * Abstract Action implementation that defines a group of Actions whose enabled

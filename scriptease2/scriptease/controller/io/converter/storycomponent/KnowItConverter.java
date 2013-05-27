@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
 import scriptease.model.CodeBlock;
-import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
@@ -14,7 +13,8 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.apimanagers.DescribeItManager;
+import scriptease.model.semodel.librarymodel.DescribeItManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;

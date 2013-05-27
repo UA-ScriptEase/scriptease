@@ -23,9 +23,9 @@ import scriptease.controller.FileManager;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
-import scriptease.model.LibraryModel;
-import scriptease.translator.apimanagers.EventSlotManager;
-import scriptease.translator.apimanagers.GameTypeManager;
+import scriptease.model.semodel.librarymodel.EventSlotManager;
+import scriptease.model.semodel.librarymodel.GameTypeManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameModule;
 import scriptease.util.FileOp;
 

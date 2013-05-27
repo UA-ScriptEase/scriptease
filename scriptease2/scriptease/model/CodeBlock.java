@@ -11,8 +11,8 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.librarymodel.EventSlotManager;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.EventSlotManager;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**

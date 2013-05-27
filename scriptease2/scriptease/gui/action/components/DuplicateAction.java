@@ -16,11 +16,11 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
-import scriptease.model.LibraryModel;
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.TranslatorManager;
 
 /**

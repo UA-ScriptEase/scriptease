@@ -19,8 +19,8 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.TypeConverter;
 
 /**
  * Code generation phase where recursive analysis of the StoryComponent tree

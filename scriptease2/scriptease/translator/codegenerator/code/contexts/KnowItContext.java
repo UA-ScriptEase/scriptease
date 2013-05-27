@@ -8,9 +8,9 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.librarymodel.GameTypeManager;
+import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.GameTypeManager;
-import scriptease.translator.apimanagers.TypeConverter;
 import scriptease.translator.codegenerator.CodeGenerationException;
 
 /**

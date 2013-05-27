@@ -23,9 +23,9 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
@@ -110,11 +110,6 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 		// Build the input component
 		binding.process(new BindingAdapter() {
-			Translator translator = TranslatorManager.getInstance()
-					.getActiveTranslator();
-			GameTypeManager typeManager = this.translator == null ? null
-					: this.translator.getGameTypeManager();
-
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
 				if (isNameEditable)
@@ -145,12 +140,18 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 			@Override
 			public void processConstant(KnowItBindingResource constant) {
-				Resource constantValue = constant.getValue();
-				String name = constantValue.getName();
+				final Resource constantValue = constant.getValue();
+				final String name = constantValue.getName();
+				
 				if (constantValue instanceof SimpleResource) {
-					final String bindingType = binding.getFirstType();
-					TypeValueWidgets widgetName = this.typeManager == null ? null
-							: this.typeManager.getGui(bindingType);
+					final String bindingType;
+
+					final GameTypeManager typeManager;
+					final TypeValueWidgets widgetName;
+
+					bindingType = binding.getFirstType();
+					typeManager = knowIt.getLibrary().getGameTypeManager();
+					widgetName = typeManager.getGui(bindingType);
 
 					if (widgetName == null)
 						bindingWidget.add(ScriptWidgetFactory.buildLabel(name,

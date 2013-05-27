@@ -8,12 +8,12 @@ import javax.swing.KeyStroke;
 
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.gui.pane.LibraryPanel;
-import scriptease.model.LibraryModel;
-import scriptease.model.SEModelManager;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
-import scriptease.translator.apimanagers.DescribeItManager;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.DescribeItManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Inserts a new Description into the Library.

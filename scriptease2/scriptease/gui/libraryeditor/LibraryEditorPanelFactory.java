@@ -45,16 +45,16 @@ import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
-import scriptease.model.LibraryModel;
-import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.DescribeItManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.DescribeItManager;
 import scriptease.util.StringOp;
 
 /**

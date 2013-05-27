@@ -3,7 +3,7 @@ package scriptease.controller.undo;
 import java.util.Stack;
 
 import scriptease.ScriptEase;
-import scriptease.model.SEModel;
+import scriptease.model.semodel.SEModel;
 
 /**
  * Stores the undo and redo modification histories for a Pattern Model.

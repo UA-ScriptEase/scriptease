@@ -40,9 +40,9 @@ import scriptease.gui.WindowFactory;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.TypeWidget;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.util.GUIOp;
 
 /**

@@ -10,8 +10,8 @@ import scriptease.controller.FileManager;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
 
 /**
  * Represents and performs the Save Model Explicitly (Save As...) command, as

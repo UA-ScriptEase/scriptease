@@ -1,7 +1,7 @@
 package scriptease.controller.observer;
 
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
 
 /**
  * Encapsulates the possible changes in a {@link SEModelManager}. An instance of

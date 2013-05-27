@@ -17,6 +17,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Abstract Class that defines all pattern-related model components in

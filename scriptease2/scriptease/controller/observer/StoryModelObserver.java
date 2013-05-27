@@ -1,6 +1,6 @@
 package scriptease.controller.observer;
 
-import scriptease.model.LibraryModel;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Observers are notified of changes to the story model.

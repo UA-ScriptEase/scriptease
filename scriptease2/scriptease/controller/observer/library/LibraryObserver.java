@@ -1,6 +1,6 @@
 package scriptease.controller.observer.library;
 
-import scriptease.model.LibraryModel;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Observer interface for the {@link LibraryManager}.

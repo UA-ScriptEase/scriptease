@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import scriptease.gui.WindowFactory;
-import scriptease.translator.apimanagers.GameTypeManager;
+import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.Slot;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;

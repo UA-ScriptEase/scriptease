@@ -11,7 +11,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.translator.apimanagers.GameTypeManager;
+import scriptease.model.semodel.librarymodel.GameTypeManager;
 
 /**
  * Represents the "if/else" programming construct.<br>
