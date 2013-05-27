@@ -38,6 +38,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
@@ -327,10 +328,12 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					for (StoryComponent child : children)
 						addTransferData(child, parent, insertionIndex);
 
-					// Handle the case where Effects or Descriptions are being
+					// Handle the case where Effects, Descriptions, or Controls are being
 					// dragged over other components in the intentional Block.
 				} else if ((newChild instanceof ScriptIt && !(newChild instanceof CauseIt))
-						|| newChild instanceof KnowIt) {
+						|| newChild instanceof KnowIt
+						|| newChild instanceof AskIt
+						|| newChild instanceof ControlIt) {
 					ComplexStoryComponent destination = (ComplexStoryComponent) parent
 							.getOwner();
 
@@ -338,10 +341,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					if ((parent instanceof StoryComponentContainer))
 						addTransferData(newChild, parent, insertionIndex);
 					// Help the user out if they drag it over other components
-					// by adding it to the block instead.
-					else {
-						addTransferData(newChild, destination, insertionIndex);
-					}
+					// by adding it to the end of the block instead.
+					else
+						destination.addStoryChild(newChild.clone());
 
 				} else {
 					addTransferData(newChild, parent, insertionIndex);
@@ -508,7 +510,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				return false;
 			}
 
-			if (!(child instanceof KnowIt) && !(child instanceof ScriptIt) &&!(child instanceof AskIt))
+			if (!(child instanceof KnowIt) && !(child instanceof ScriptIt)
+					&& !(child instanceof AskIt))
 				return false;
 
 			if (child instanceof CauseIt)
