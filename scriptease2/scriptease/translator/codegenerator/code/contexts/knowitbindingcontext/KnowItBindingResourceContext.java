@@ -51,7 +51,7 @@ public class KnowItBindingResourceContext extends KnowItBindingContext {
 		final String type;
 
 		type = this.binding.getFirstType();
-		typeFormat = this.translator.getGameTypeManager().getFormat(type);
+		typeFormat = this.translator.getLibrary().getTypeFormat(type);
 
 		if (typeFormat == null || typeFormat.isEmpty()) {
 			return this.getValue();

@@ -340,15 +340,6 @@ public class TranslatorManager {
 		return null;
 	}
 
-	/**
-	 * Returns the type keywords active for the current translator.
-	 * 
-	 * @return
-	 */
-	public Collection<String> getActiveTypeKeywords() {
-		return this.getActiveTranslator().getGameTypeManager().getKeywords();
-	}
-
 	public void setActiveTranslator(Translator translator) {
 		if (this.activeTranslator == translator)
 			return;

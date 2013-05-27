@@ -116,9 +116,9 @@ public class SemanticAnalyzer extends StoryAdapter {
 		 * codegen time
 		 */
 		if (!binding.explicitlyCompatibleWith(knowIt)) {
+			// TODO we aren't checking optional libraries that may be loaded.
 			final TypeConverter converter = TranslatorManager.getInstance()
-					.getActiveTranslator().getGameTypeManager()
-					.getTypeConverter();
+					.getActiveTranslator().getLibrary().getTypeConverter();
 			final ScriptIt doIt = converter.convert(knowIt);
 			if (doIt != null)
 				doIt.process(SemanticAnalyzer.this);

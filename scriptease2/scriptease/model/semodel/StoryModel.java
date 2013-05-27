@@ -121,6 +121,13 @@ public final class StoryModel extends SEModel {
 		return this.translator;
 	}
 
+	/**
+	 * Returns all of the libraries associated with the story model, including
+	 * the ScriptEase common library, the translator's default library, and all
+	 * loaded optional libraries.
+	 * 
+	 * @return
+	 */
 	public Collection<LibraryModel> getLibraries() {
 		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
 
@@ -143,6 +150,16 @@ public final class StoryModel extends SEModel {
 	 */
 	public void addStoryModelObserver(StoryModelObserver observer) {
 		this.observerManager.addObserver(this, observer);
+	}
+	
+	public Collection<String> getTypeKeywords() {
+		final Collection<String> keywords = new ArrayList<String>();
+		
+		for(LibraryModel library : this.getLibraries()) {
+			keywords.addAll(library.getTypeKeywords());
+		}
+		
+		return keywords;
 	}
 
 	@Override

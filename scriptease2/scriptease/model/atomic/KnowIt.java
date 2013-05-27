@@ -98,7 +98,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 		clone = (KnowIt) super.clone();
 		library = this.getLibrary();
-		
+
 		describeIt = library.getDescribeIt(this);
 
 		// Add the types before setting the binding, or it may be rejected
@@ -374,8 +374,12 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		// Acceptable Types also include types that can be converted from
 		if (activeTranslator != null) {
 			if (activeTranslator.defaultLibraryIsLoaded()) {
+				// TODO This isn't checking the optional libraries we have
+				// loaded. If we ever fix these typeconverters, we'll need
+				// to do something about that here.
+
 				final TypeConverter typeConverter = activeTranslator
-						.getGameTypeManager().getTypeConverter();
+						.getLibrary().getTypeConverter();
 
 				for (String type : this.types) {
 					acceptableTypes.addAll(typeConverter

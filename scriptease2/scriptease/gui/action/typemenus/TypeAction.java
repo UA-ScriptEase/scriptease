@@ -1,6 +1,7 @@
 package scriptease.gui.action.typemenus;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.AbstractAction;
@@ -11,8 +12,9 @@ import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.dialog.TypeDialogBuilder;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.GameTypeManager;
-import scriptease.translator.Translator;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.TranslatorManager;
 
 /**
@@ -48,7 +50,7 @@ public final class TypeAction extends AbstractAction {
 	 *            changes
 	 */
 	public TypeAction(Runnable action) {
-		super();
+		super("Type");
 
 		this.setAction(action);
 
@@ -59,14 +61,19 @@ public final class TypeAction extends AbstractAction {
 			public void modelChanged(SEModelEvent event) {
 				if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
 					TypeAction.this.updateEnabledState();
-					final SEModel model = event.getPatternModel();
 
-					Translator translator = null;
-					if (model != null)
-						translator = model.getTranslator();
+					final SEModel model = event.getPatternModel();
+					final Collection<String> keywords;
+
+					if (model instanceof StoryModel) {
+						keywords = ((StoryModel) model).getTypeKeywords();
+					} else if (model instanceof LibraryModel) {
+						keywords = ((LibraryModel) model).getAllTypeKeywords();
+					} else
+						keywords = new ArrayList<String>();
 
 					TypeAction.this.typeBuilder = new TypeDialogBuilder(
-							translator, TypeAction.this.action);
+							keywords, TypeAction.this.action);
 					TypeAction.this.updateName();
 				}
 			}
@@ -98,18 +105,19 @@ public final class TypeAction extends AbstractAction {
 
 		this.action = newAction;
 
-		if (this.typeBuilder != null)
+		if (this.typeBuilder != null) {
 			this.typeBuilder.setCloseAction(newAction);
-		else {
+		} else {
 			final SEModel model = SEModelManager.getInstance().getActiveModel();
 
-			Translator translator = null;
-			if (model != null)
-				translator = model.getTranslator();
-
-			this.typeBuilder = new TypeDialogBuilder(translator, newAction);
+			if (model instanceof StoryModel) {
+				this.typeBuilder = new TypeDialogBuilder(
+						((StoryModel) model).getTypeKeywords(), newAction);
+			} else if (model instanceof LibraryModel) {
+				this.typeBuilder = new TypeDialogBuilder(
+						((LibraryModel) model).getAllTypeKeywords(), newAction);
+			}
 		}
-
 		this.updateName();
 	}
 
@@ -138,6 +146,9 @@ public final class TypeAction extends AbstractAction {
 	 * will display the number of types plus " Types".
 	 */
 	public void updateName() {
+		if (this.typeBuilder == null)
+			return;
+
 		final int selectedCount = this.typeBuilder.getSelectedTypes().size();
 		String name;
 		final GameTypeManager gameTypeManager = TranslatorManager.getInstance()
@@ -185,12 +196,6 @@ public final class TypeAction extends AbstractAction {
 	 * @return True if this action is legal.
 	 */
 	protected boolean isLegal() {
-		final GameTypeManager gameTypeManager;
-
-		gameTypeManager = TranslatorManager.getInstance()
-				.getActiveGameTypeManager();
-
-		return gameTypeManager != null
-				&& !gameTypeManager.getKeywords().isEmpty();
+		return SEModelManager.getInstance().hasActiveModel();
 	}
 }

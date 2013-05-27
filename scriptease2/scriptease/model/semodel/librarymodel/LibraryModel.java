@@ -31,6 +31,8 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.semodel.SEModel;
 import scriptease.translator.Translator;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
 
 /**
@@ -706,8 +708,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @param node
 	 * @return
 	 */
-	public boolean isEndNode(DescribeItNode node) {
-		return this.describeItManager.isEndNode(node);
+	public boolean isDescribeItEndNode(DescribeItNode node) {
+		return this.describeItManager.isDescribeItEndNode(node);
 	}
 
 	/**
@@ -731,6 +733,66 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 */
 	public DescribeIt findDescribeItWithScriptIt(ScriptIt scriptIt) {
 		return this.describeItManager.findDescribeItWithScriptIt(scriptIt);
+	}
+
+	/**
+	 * Returns all of the {@link GameType}s stored by the
+	 * {@link GameTypeManager}.
+	 * 
+	 * @return
+	 */
+	public Collection<GameType> getGameTypes() {
+		return this.typeManager.getGameTypes();
+	}
+
+	/**
+	 * Returns the {@link TypeConverter}.
+	 * 
+	 * @return
+	 */
+	public TypeConverter getTypeConverter() {
+		return this.typeManager.getTypeConverter();
+	}
+
+	/**
+	 * Returns the format for the type as a collection of
+	 * {@link AbstractFragment}s.
+	 * 
+	 * @param keyword
+	 * @return
+	 */
+	public Collection<AbstractFragment> getTypeFormat(String keyword) {
+		return this.typeManager.getTypeFormat(keyword);
+	}
+
+	/**
+	 * Returns a collection of keywords associated with types for this library
+	 * model and the translator's default library model.
+	 * 
+	 * @return
+	 */
+	public Collection<String> getAllTypeKeywords() {
+		final LibraryModel defaultLibrary = this.getTranslator().getLibrary();
+		final Collection<String> keywords = new ArrayList<String>();
+
+		if (defaultLibrary != this) {
+			keywords.addAll(defaultLibrary.getTypeKeywords());
+		}
+
+		keywords.addAll(this.getTypeKeywords());
+
+		return keywords;
+	}
+
+	/**
+	 * Returns a collection of keywords associated with types for only this
+	 * library.
+	 */
+	public Collection<String> getTypeKeywords() {
+		// Note that this is not abstracted into SEModel even though StoryModel
+		// has the same method because they are actually different methods with
+		// different purposes.
+		return this.typeManager.getKeywords();
 	}
 
 	/**

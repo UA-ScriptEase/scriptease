@@ -41,7 +41,6 @@ import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.TypeWidget;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.semodel.librarymodel.GameTypeManager;
-import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.util.GUIOp;
 
@@ -79,20 +78,12 @@ public class TypeDialogBuilder {
 	/**
 	 * Creates a new TypeSelectionDialogBuilder, intializing the variables.
 	 */
-	public TypeDialogBuilder(Translator translator) {
+	public TypeDialogBuilder(Collection<String> keywords) {
 		this.allButton = new JButton("Deselect All");
 		this.typesToSelected = new HashMap<String, Boolean>();
 		this.checkBoxPanels = new ArrayList<CheckBoxPanel>();
 
-		final Collection<String> types;
-		// Create the translator and populate lists.
-
-		if (translator == null)
-			return;
-
-		types = translator.getGameTypeManager().getKeywords();
-
-		for (String type : types) {
+		for (String type : keywords) {
 			this.typesToSelected.put(type, Boolean.TRUE);
 		}
 	}
@@ -103,8 +94,8 @@ public class TypeDialogBuilder {
 	 * 
 	 * @param closeAction
 	 */
-	public TypeDialogBuilder(Translator translator, Runnable closeAction) {
-		this(translator);
+	public TypeDialogBuilder(Collection<String> keywords, Runnable closeAction) {
+		this(keywords);
 		this.closeAction = closeAction;
 	}
 

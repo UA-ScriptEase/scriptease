@@ -389,7 +389,7 @@ public class GenericFileFormat {
 		final GameTypeManager typeManager;
 		final Collection<String> scriptSlots;
 
-		typeManager = ErfFile.getTranslator().getGameTypeManager();
+		typeManager = ErfFile.getTranslator().getLibrary().getGameTypeManager();
 		scriptSlots = typeManager.getSlots(this.getScriptEaseType());
 
 		// remove all generated script references
@@ -1179,9 +1179,9 @@ public class GenericFileFormat {
 			final Collection<Slot> slots;
 			final Collection<String> slotNames = new ArrayList<String>();
 
-			
 			// TODO THIS WILL NEED REFACTORING!!!!!!!
-			slots = ErfFile.getTranslator().getLibrary().getEventSlotManager().getEventSlots();
+			slots = ErfFile.getTranslator().getLibrary().getEventSlotManager()
+					.getEventSlots();
 
 			for (Slot slot : slots) {
 				slotNames.add(slot.getKeyword());

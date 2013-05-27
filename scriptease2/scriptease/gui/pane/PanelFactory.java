@@ -261,7 +261,8 @@ public final class PanelFactory {
 				new SEModelObserver() {
 
 					public void modelChanged(SEModelEvent event) {
-						final SEModelEvent.Type eventType = event.getEventType();
+						final SEModelEvent.Type eventType = event
+								.getEventType();
 
 						if (eventType == SEModelEvent.Type.ACTIVATED) {
 							tree.fillTree();
@@ -269,8 +270,8 @@ public final class PanelFactory {
 							final SEModel model = event.getPatternModel();
 
 							if (model instanceof StoryModel) {
-								tree.filterByTypes(model.getTranslator()
-										.getGameTypeManager().getKeywords());
+								tree.filterByTypes(((StoryModel) model)
+										.getTypeKeywords());
 							}
 						} else if (eventType == SEModelEvent.Type.REMOVED
 								&& SEModelManager.getInstance()

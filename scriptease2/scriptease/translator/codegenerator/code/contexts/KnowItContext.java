@@ -78,8 +78,9 @@ public class KnowItContext extends StoryComponentContext {
 			final TypeConverter converter;
 			final ScriptIt scriptIt;
 
-			converter = TranslatorManager.getInstance()
-					.getActiveGameTypeManager().getTypeConverter();
+			// TODO We aren't checking optional libraries that may be loaded...
+			converter = TranslatorManager.getInstance().getActiveTranslator()
+					.getLibrary().getTypeConverter();
 			scriptIt = converter.convert(knowIt);
 
 			if (scriptIt != null) {
