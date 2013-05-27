@@ -12,6 +12,7 @@ import scriptease.gui.ui.TypeWidgetUI;
 import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.util.StringOp;
 
 /**
  * TypeWidget represents the JToggleButton drawn to show the Type of a slot. It
@@ -82,12 +83,13 @@ public class TypeWidget extends JToggleButton {
 			// Need to check these due to order of operations.
 			if (active != null && active.defaultLibraryIsLoaded()) {
 				final GameTypeManager gameTypeManager;
+				final String widgetName;
 
 				gameTypeManager = active.getGameTypeManager();
+				widgetName = gameTypeManager.getWidgetName(type);
 
-				if (gameTypeManager != null
-						&& gameTypeManager.hasWidgetName(type)) {
-					this.setText(gameTypeManager.getWidgetName(type));
+				if (gameTypeManager != null && StringOp.exists(widgetName)) {
+					this.setText(widgetName);
 				} else {
 					if (gameTypeManager != null
 							&& gameTypeManager.hasEnum(type))
