@@ -228,6 +228,7 @@ public class ScriptWidgetFactory {
 
 			widget.setTransferHandler(BindingTransferHandlerExportOnly
 					.getInstance());
+			
 			// Set an empty border to prevent line crowding.
 			widget.setBorder(BorderFactory.createEmptyBorder(
 					TOTAL_ROW_BORDER_SIZE, TOTAL_ROW_BORDER_SIZE,

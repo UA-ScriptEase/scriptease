@@ -35,6 +35,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
@@ -507,7 +508,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				return false;
 			}
 
-			if (!(child instanceof KnowIt) && !(child instanceof ScriptIt))
+			if (!(child instanceof KnowIt) && !(child instanceof ScriptIt) &&!(child instanceof AskIt))
 				return false;
 
 			if (child instanceof CauseIt)
