@@ -306,4 +306,16 @@ public class StringOp {
 	public static String join(String[] items, String separator) {
 		return StringOp.join(Arrays.asList(items), separator);
 	}
+
+	/**
+	 * Returns whether a string does not equal null and is not empty. Cuts down
+	 * on some code we have everywhere and reduces the chance of programmer
+	 * error.
+	 * 
+	 * @param string
+	 * @return
+	 */
+	public static boolean exists(String string) {
+		return string != null && !string.isEmpty();
+	}
 }

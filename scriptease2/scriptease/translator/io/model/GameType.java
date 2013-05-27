@@ -342,8 +342,4 @@ public class GameType {
 	public boolean hasEnum() {
 		return this.enums != null && !this.enums.isEmpty();
 	}
-
-	public boolean hasWidgetName() {
-		return this.widgetName != null && !this.widgetName.isEmpty();
-	}
 }

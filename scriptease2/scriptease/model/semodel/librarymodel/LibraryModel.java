@@ -737,7 +737,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 	/**
 	 * Returns all of the {@link GameType}s stored by the
-	 * {@link GameTypeManager}.
+	 * {@link GameTypeManager} of this Library.
 	 * 
 	 * @return
 	 */
@@ -756,13 +756,22 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 	/**
 	 * Returns the format for the type as a collection of
-	 * {@link AbstractFragment}s.
+	 * {@link AbstractFragment}s. Searches for the type in this Library's type
+	 * manager, and then in the default library's.
 	 * 
 	 * @param keyword
 	 * @return
 	 */
 	public Collection<AbstractFragment> getTypeFormat(String keyword) {
-		return this.typeManager.getTypeFormat(keyword);
+		final LibraryModel defaultLibrary = this.getTranslator().getLibrary();
+		final Collection<AbstractFragment> format;
+
+		format = this.typeManager.getTypeFormat(keyword);
+
+		if (format.isEmpty() && this != defaultLibrary)
+			format.addAll(defaultLibrary.getTypeFormat(keyword));
+
+		return format;
 	}
 
 	/**
@@ -775,7 +784,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		final LibraryModel defaultLibrary = this.getTranslator().getLibrary();
 		final Collection<String> keywords = new ArrayList<String>();
 
-		if (defaultLibrary != this) {
+		if (this != defaultLibrary) {
 			keywords.addAll(defaultLibrary.getTypeKeywords());
 		}
 

@@ -10,6 +10,7 @@ import scriptease.controller.io.FileIO;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
+import scriptease.util.StringOp;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -109,9 +110,11 @@ public class GameTypeConverter implements Converter {
 			writer.endNode();
 		}
 
-		if (type.hasWidgetName()) {
+		final String widgetName = type.getWidgetName();
+
+		if (StringOp.exists(widgetName)) {
 			writer.startNode(TAG_WIDGETNAME);
-			context.convertAnother(type.getWidgetName());
+			context.convertAnother(widgetName);
 			writer.endNode();
 		}
 	}

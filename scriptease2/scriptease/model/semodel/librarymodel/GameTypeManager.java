@@ -69,10 +69,6 @@ public class GameTypeManager {
 		return new ArrayList<String>(this.gameTypes.keySet());
 	}
 
-	public void clear() {
-		this.gameTypes.clear();
-	}
-
 	public String getReg(String keyword) {
 		final GameType type = this.gameTypes.get(keyword);
 		if (type != null) {
@@ -173,14 +169,6 @@ public class GameTypeManager {
 			return false;
 	}
 
-	public boolean hasWidgetName(String keyword) {
-		final GameType type = this.gameTypes.get(keyword);
-		if (type != null) {
-			return type.hasWidgetName();
-		} else
-			return false;
-	}
-
 	/**
 	 * Gets the widget name that is to be used for displaying the type widget.
 	 * 
@@ -189,7 +177,9 @@ public class GameTypeManager {
 	 */
 	public String getWidgetName(String keyword) {
 		final GameType type = this.gameTypes.get(keyword);
-
-		return type != null ? type.getWidgetName() : null;
+		if (type != null)
+			return type.getWidgetName();
+		else
+			return null;
 	}
 }
