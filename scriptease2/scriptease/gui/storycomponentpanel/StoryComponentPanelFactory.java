@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.Box;
@@ -33,6 +34,8 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
 /**
@@ -404,14 +407,25 @@ public class StoryComponentPanelFactory {
 						mainPanel.add(ScriptWidgetFactory.buildLabel(
 								" describes ", Color.black));
 
+						if (knowIt.getLibrary() == null)
+							System.out.println(knowIt);
+
+						final Translator active;
+						final Collection<LibraryModel> libraries;
 						final DescribeIt describeIt;
 
-						describeIt = TranslatorManager.getInstance()
-								.getActiveDescribeItManager()
-								.getDescribeIt(knowIt);
+						active = TranslatorManager.getInstance()
+								.getActiveTranslator();
+						libraries = new ArrayList<LibraryModel>();
+
+						libraries.add(active.getLibrary());
+						libraries.addAll(active.getOptionalLibraries());
+
+						describeIt = active.getDescribeIt(knowIt);
 
 						if (describeIt != null) {
-							mainPanel.add(new DescribeItPanel(knowIt));
+							mainPanel.add(new DescribeItPanel(knowIt,
+									describeIt));
 						}
 					}
 				};

@@ -23,8 +23,8 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
-import scriptease.model.semodel.librarymodel.DescribeItManager;
 import scriptease.model.semodel.librarymodel.GameTypeManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -93,13 +93,13 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	@Override
 	public KnowIt clone() {
 		final KnowIt clone;
-		final DescribeItManager describeItManager;
+		final LibraryModel library;
 		final DescribeIt describeIt;
 
 		clone = (KnowIt) super.clone();
-		describeItManager = TranslatorManager.getInstance()
-				.getActiveDescribeItManager();
-		describeIt = describeItManager.getDescribeIt(this);
+		library = this.getLibrary();
+		
+		describeIt = library.getDescribeIt(this);
 
 		// Add the types before setting the binding, or it may be rejected
 		clone.types = new ArrayList<String>(this.types);
@@ -107,7 +107,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		clone.setBinding(this.knowItBinding.clone());
 
 		if (describeIt != null) {
-			describeItManager.addDescribeIt(describeIt, clone);
+			library.addDescribeIt(describeIt, clone);
 		}
 
 		return clone;

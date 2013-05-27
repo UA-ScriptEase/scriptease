@@ -8,7 +8,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.semodel.librarymodel.DescribeItManager;
 import scriptease.model.semodel.librarymodel.EventSlotManager;
 import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -44,10 +43,8 @@ public class LibraryModelConverter implements Converter {
 		final LibraryModel library = (LibraryModel) source;
 		final GameTypeManager typeManager = library.getGameTypeManager();
 
-		final DescribeItManager describeItManager;
 		final EventSlotManager eventSlotManager;
 
-		describeItManager = library.getDescribeItManager();
 		eventSlotManager = library.getEventSlotManager();
 
 		// name
@@ -80,7 +77,7 @@ public class LibraryModelConverter implements Converter {
 
 		// descriptions
 		writer.startNode(TAG_DESCRIBE_ITS);
-		context.convertAnother(describeItManager.getDescribeIts());
+		context.convertAnother(library.getDescribeIts());
 		writer.endNode();
 
 		writer.startNode(TAG_CONTROL_ITS);
@@ -130,7 +127,7 @@ public class LibraryModelConverter implements Converter {
 				.getAttribute(TAG_SLOT_DEFAULT_FORMAT_KEYWORD));
 		if (reader.hasMoreChildren()) {
 			eventSlotManager.addEventSlots(((Collection<Slot>) context
-					.convertAnother(library, ArrayList.class)));
+					.convertAnother(library, ArrayList.class)), library);
 		}
 		reader.moveUp();
 
@@ -161,10 +158,6 @@ public class LibraryModelConverter implements Converter {
 		reader.moveUp();
 
 		// descriptions
-		final DescribeItManager describeItManager;
-
-		describeItManager = library.getDescribeItManager();
-
 		reader.moveDown();
 		if (reader.hasMoreChildren()) {
 			if (!reader.getNodeName().equalsIgnoreCase(TAG_DESCRIBE_ITS))
@@ -185,11 +178,10 @@ public class LibraryModelConverter implements Converter {
 					 */
 					final KnowIt knowIt;
 
-					knowIt = describeItManager
-							.createKnowItForDescribeIt(describeIt);
+					knowIt = library.createKnowItForDescribeIt(describeIt);
 
 					library.add(knowIt);
-					describeItManager.addDescribeIt(describeIt, knowIt);
+					library.addDescribeIt(describeIt, knowIt);
 				}
 			}
 		}

@@ -20,10 +20,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
-import scriptease.model.semodel.librarymodel.DescribeItManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 
 /**
  * Represents and performs the Delete command, as well as encapsulates its
@@ -127,22 +124,19 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 				final StoryComponent selectedComponent;
 
 				final LibraryModel libraryModel;
-				final DescribeItManager describeItManager;
 
 				selectedComponent = ((StoryComponentPanel) value)
 						.getStoryComponent();
 
 				libraryModel = selectedComponent.getLibrary();
-				describeItManager = libraryModel.getDescribeItManager();
 
 				if (selectedComponent instanceof KnowIt) {
 					final DescribeIt describeIt;
 
-					describeIt = describeItManager
-							.getDescribeIt(selectedComponent);
+					describeIt = libraryModel.getDescribeIt(selectedComponent);
 
 					if (describeIt != null)
-						describeItManager.removeDescribeIt(describeIt);
+						libraryModel.removeDescribeIt(describeIt);
 				}
 
 				libraryModel.remove(selectedComponent);

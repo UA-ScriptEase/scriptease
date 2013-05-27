@@ -125,9 +125,9 @@ public class StoryModelConverter implements Converter {
 			}
 		}
 
+		final String modulePath = FileIO.readValue(reader, TAG_GAME_MODULE);
 		// Try to open the Pattern Model
-		module = translator.loadModule(new File(FileIO.readValue(reader,
-				TAG_GAME_MODULE)));
+		module = translator.loadModule(new File(modulePath));
 
 		if (module == null) {
 			if (!SEModelManager.getInstance().usingTranslator(translator))

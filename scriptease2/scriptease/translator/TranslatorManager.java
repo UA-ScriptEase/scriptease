@@ -18,7 +18,6 @@ import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
-import scriptease.model.semodel.librarymodel.DescribeItManager;
 import scriptease.model.semodel.librarymodel.EventSlotManager;
 import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -240,19 +239,6 @@ public class TranslatorManager {
 		if (this.activeTranslator == null)
 			return null;
 		return this.activeTranslator.getLibrary();
-	}
-
-	/**
-	 * Shortcut method to get the active DescribeItManager of the current active
-	 * translator and library.
-	 * 
-	 * @return
-	 */
-	public DescribeItManager getActiveDescribeItManager() {
-		final LibraryModel library = this.getActiveDefaultLibrary();
-		if (library == null)
-			return null;
-		return library.getDescribeItManager();
 	}
 
 	/**

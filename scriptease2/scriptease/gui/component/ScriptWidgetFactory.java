@@ -46,7 +46,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModelManager;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.GUIOp;

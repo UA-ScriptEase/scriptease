@@ -24,8 +24,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.semodel.librarymodel.GameTypeManager;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameType.TypeValueWidgets;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;

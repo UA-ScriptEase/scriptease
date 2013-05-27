@@ -24,8 +24,6 @@ import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.semodel.librarymodel.DescribeItManager;
-import scriptease.translator.TranslatorManager;
 
 /**
  * This view is used to allow the user to select various pathways from
@@ -43,28 +41,13 @@ public class DescribeItPanel extends JPanel {
 	private boolean isCollapsed;
 
 	/**
-	 * Creates a new DescribeItPanel using the given KnowIt. If the KnowIt does
-	 * not have a valid DescribeIt attached to it, this will throw a null
-	 * pointer exception.
+	 * Creates a new DescribeItPanel using the given KnowIt and DescribeIt.
 	 * 
 	 * @param knowIt
 	 */
-	public DescribeItPanel(final KnowIt knowIt) {
-		final DescribeItManager describeItManager;
-		final DescribeIt describeIt;
-
+	public DescribeItPanel(final KnowIt knowIt, final DescribeIt describeIt) {
 		this.isCollapsed = true;
 		this.scriptItPanel = new JPanel();
-
-		describeItManager = TranslatorManager.getInstance()
-				.getActiveDescribeItManager();
-		describeIt = describeItManager.getDescribeIt(knowIt);
-
-		if (describeIt == null) {
-			throw new NullPointerException("No DescribeIt found for " + knowIt
-					+ " when attempting to create DescribeItPanel!");
-		}
-
 		this.expansionButton = ScriptWidgetFactory
 				.buildExpansionButton(this.isCollapsed);
 		this.describeItGraph = SEGraphFactory.buildDescribeItGraph(describeIt

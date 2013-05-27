@@ -23,6 +23,8 @@ import scriptease.controller.FileManager;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
+import scriptease.model.StoryComponent;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.semodel.librarymodel.EventSlotManager;
 import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -773,13 +775,13 @@ public class Translator {
 
 		// If the module could not be found, ask the user for its location
 		if (!loader.loadedSuccessfully()) {
-			final File newLocation = this.requestNewLocation();
 
 			WindowFactory.getInstance().showProblemDialog(
 					"Problem loading Game Module",
 					"I couldn't find a Game File at \"" + location + "\"."
 							+ loader.getErrorMessage()
 							+ "\n\nPlease tell me a new location to use.");
+			final File newLocation = this.requestNewLocation();
 
 			return this.loadModule(newLocation);
 		}
@@ -817,6 +819,38 @@ public class Translator {
 	public LibraryModel getLibrary() {
 		this.initializeDefaultLibrary();
 		return this.defaultLibrary;
+	}
+
+	/**
+	 * Returns all libraries, including the default and optional libraries.
+	 * 
+	 * @return
+	 */
+	public Collection<LibraryModel> getAllLibraries() {
+		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
+
+		libraries.add(this.getLibrary());
+		libraries.addAll(this.getOptionalLibraries());
+
+		return libraries;
+	}
+
+	/**
+	 * Goes through all libraries to find the describeIt associated with the
+	 * passed in StoryComponent.
+	 * 
+	 * @param knowIt
+	 * @return
+	 */
+	public DescribeIt getDescribeIt(StoryComponent component) {
+		for (LibraryModel library : this.getAllLibraries()) {
+			final DescribeIt describeIt = library.getDescribeIt(component);
+
+			if (describeIt != null)
+				return describeIt;
+		}
+
+		return null;
 	}
 
 	@Override

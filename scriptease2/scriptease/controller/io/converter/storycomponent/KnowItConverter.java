@@ -13,7 +13,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.semodel.librarymodel.DescribeItManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -97,15 +96,13 @@ public class KnowItConverter extends StoryComponentConverter {
 						final LibraryModel library = block.getLibrary();
 
 						if (library != null) {
-							final DescribeItManager describeItMan;
 							final DescribeIt describeIt;
 
-							describeItMan = library.getDescribeItManager();
-							describeIt = describeItMan
+							describeIt = library
 									.findDescribeItWithScriptIt(bindingScriptIt);
 
 							if (describeIt != null) {
-								describeItMan.addDescribeIt(describeIt, knowIt);
+								library.addDescribeIt(describeIt, knowIt);
 								break;
 							}
 						}
