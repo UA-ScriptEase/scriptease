@@ -44,4 +44,9 @@ public final class LibraryEvent {
 	public StoryComponent getSource() {
 		return this.source;
 	}
+
+	@Override
+	public String toString() {
+		return "LibraryEvent[" + source + ", " + eventType + "]";
+	}
 }
