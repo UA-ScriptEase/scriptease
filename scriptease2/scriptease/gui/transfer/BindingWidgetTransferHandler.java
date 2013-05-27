@@ -25,9 +25,11 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
 
 /**
  * The Transfer Handler for all BindingWidgets. Performs all of the
@@ -44,8 +46,6 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 
 	public static DataFlavor KnowItBindingFlavor;
 
-	public static DataFlavor OtherStoryComponentBindingFlavor;
-
 	public static BindingWidgetTransferHandler getInstance() {
 		return instance;
 	}
@@ -56,17 +56,6 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				KnowItBindingFlavor = new DataFlavor(
 						DataFlavor.javaJVMLocalObjectMimeType + ";class="
 								+ BindingWidget.class.getCanonicalName());
-
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-
-		if (BindingWidgetTransferHandler.OtherStoryComponentBindingFlavor == null) {
-			try {
-				OtherStoryComponentBindingFlavor = new DataFlavor(
-						DataFlavor.javaJVMLocalObjectMimeType + ";class="
-								+ StoryComponentPanel.class.getCanonicalName());
 
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -137,7 +126,6 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 	 * contained in <code>support</code> is the destination component. Returns
 	 * whether or not this is a valid drop location for the drag.
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean canImport(TransferHandler.TransferSupport support) {
 		boolean canImport = false;
@@ -165,9 +153,32 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			}
 		}
 
-		// Special case - to handle where effects and descriptions can be
-		// dragged over binding widgets in order to get re-directed to their
-		// parent block.
+		// Special case - to handle where effects, descriptions, and controls
+		// can be dragged over binding widgets in order to get re-directed to 
+		// their parent block.
+		canImport |= this.canImportComponentsToParent(support);
+
+		if (canImport) {
+			// TODO Set mouse pointer to normal
+		} else {
+			// TODO Set mouse pointer to invalid operation.
+		}
+		
+		return canImport;
+	}
+
+	/**
+	 * Checks whether the data being transfered can be redirected to a parent
+	 * StoryComponentContainer - such as effects, descriptions, and controls.
+	 * 
+	 * @param support
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	protected boolean canImportComponentsToParent(
+			TransferHandler.TransferSupport support) {
+		final Component destinationComponent = support.getComponent();
+
 		if (destinationComponent instanceof BindingWidget
 				&& (support
 						.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour))) {
@@ -182,22 +193,18 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 
 				for (StoryComponent component : components)
 					if ((component instanceof ScriptIt && !(component instanceof CauseIt))
-							|| (component instanceof KnowIt))
-						canImport = true;
+							|| (component instanceof KnowIt)
+							|| component instanceof AskIt)
+						return true;
 
 			} catch (UnsupportedFlavorException e) {
-				canImport = false;
+				return false;
 			} catch (IOException e) {
-				canImport = false;
+				return false;
 			}
-		}
 
-		if (canImport) {
-			// TODO Set mouse pointer to normal
-		} else {
-			// TODO Set mouse pointer to invalid operation.
 		}
-		return canImport;
+		return false;
 	}
 
 	private static boolean lastDragShiftDown = false;
@@ -229,8 +236,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		// the slot - so lets handle it.
 		if (support
 				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
-			handleOtherComponents(support);
-			return true;
+			return importComponentsToParent(support);
 		}
 
 		// Get the destination component for the transfer.
@@ -275,36 +281,47 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 	 * @param support
 	 */
 	@SuppressWarnings("unchecked")
-	private void handleOtherComponents(TransferSupport support) {
+	protected boolean importComponentsToParent(TransferSupport support) {
 		final Collection<StoryComponent> components;
+		final StoryComponent component;
 		final ComplexStoryComponent parent;
-
+		
 		Component panel;
 		panel = support.getComponent();
 
+		// Get the first instance of a StoryComponentPanel if there is one.
 		while (!(panel instanceof StoryComponentPanel) && panel != null) {
 			panel = panel.getParent();
 		}
 
-		// We want the StoryComponentContainer panel so...once more.
-		panel = panel.getParent();
-
+		if (panel == null)
+			return false;
+		
+		component = ((StoryComponentPanel) panel).getStoryComponent();
+		
+		// Check if the component already is a container. If not,
+		// We want the StoryComponentContainer panel so... once more.
+		if (!(component instanceof StoryComponentContainer))
+			panel = panel.getParent();
+		
 		parent = (ComplexStoryComponent) ((StoryComponentPanel) panel)
 				.getStoryComponent();
-
+		
+		// Now we actually add the transfer data
 		try {
 			components = (Collection<StoryComponent>) support
 					.getTransferable()
 					.getTransferData(
 							StoryComponentPanelTransferHandler.storyCompFlavour);
 
-			// Now we actually add the transfer data
 			for (StoryComponent newChild : components) {
 				parent.addStoryChild(newChild.clone());
 			}
 		} catch (UnsupportedFlavorException e) {
 		} catch (IOException e) {
 		}
+		
+		return true;
 	}
 
 	private void repopulateParentOf(JComponent destinationComponent) {
