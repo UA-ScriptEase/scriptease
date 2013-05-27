@@ -1,8 +1,8 @@
 package scriptease.controller;
 
-import scriptease.model.LibraryModel;
-import scriptease.model.SEModel;
-import scriptease.model.StoryModel;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Default implementation of ModelVisitor that does nothing. Ever. <br>

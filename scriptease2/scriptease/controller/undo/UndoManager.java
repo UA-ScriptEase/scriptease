@@ -11,9 +11,9 @@ import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.UndoManagerObserver;
 import scriptease.gui.StatusManager;
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
-import scriptease.model.StoryModel;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
 
 /**
  * Maintains multiple modification histories and manages requests for undoing or

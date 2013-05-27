@@ -18,9 +18,9 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.librarymodel.DescribeItManager;
+import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.DescribeItManager;
-import scriptease.translator.apimanagers.GameTypeManager;
 
 /**
  * Accepts StoryComponents if one of their properties contains the text given in

@@ -2,13 +2,13 @@ package scriptease.gui.filters;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
-import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 
 public class TranslatorFilter extends StoryComponentFilter {

@@ -7,10 +7,10 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.gui.action.ActiveModelSensitiveAction;
-import scriptease.model.LibraryModel;
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
-import scriptease.model.StoryModel;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Adds a library to an open {@link StoryModel}.

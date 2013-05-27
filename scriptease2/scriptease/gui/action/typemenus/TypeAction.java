@@ -9,11 +9,11 @@ import javax.swing.JDialog;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.dialog.TypeDialogBuilder;
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.GameTypeManager;
 
 /**
  * The Action for showing the Select Type selection dialog. This action is added

@@ -16,12 +16,12 @@ import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
-import scriptease.model.LibraryModel;
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
-import scriptease.translator.apimanagers.DescribeItManager;
-import scriptease.translator.apimanagers.EventSlotManager;
-import scriptease.translator.apimanagers.GameTypeManager;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.DescribeItManager;
+import scriptease.model.semodel.librarymodel.EventSlotManager;
+import scriptease.model.semodel.librarymodel.GameTypeManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Singleton class that manages the available translators for different games.

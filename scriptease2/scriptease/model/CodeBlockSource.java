@@ -109,7 +109,7 @@ public class CodeBlockSource extends CodeBlock {
 	 * @param returnTypes
 	 *            The possible return types of this CodeBlock. All of these
 	 *            Strings must exist in a
-	 *            {@link scriptease.translator.apimanagers.GameTypeManager
+	 *            {@link scriptease.model.semodel.librarymodel.GameTypeManager
 	 *            GameTypeManager}
 	 * @param parameters
 	 *            The parameter list of this code block.

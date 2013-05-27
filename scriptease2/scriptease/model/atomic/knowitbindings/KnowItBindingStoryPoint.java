@@ -5,11 +5,11 @@ import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.BindingVisitor;
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
-import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
 
 /**
  * This class represents a <b>Story Point</b> binding for a <code>KnowIt</code>.

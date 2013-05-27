@@ -24,8 +24,8 @@ import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.librarymodel.DescribeItManager;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.DescribeItManager;
 
 /**
  * This view is used to allow the user to select various pathways from

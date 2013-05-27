@@ -1,7 +1,7 @@
 package scriptease.controller.observer.library;
 
-import scriptease.model.LibraryModel;
 import scriptease.model.StoryComponent;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Encapsulates the possible changes in a {@link LibraryModel}. An instance of

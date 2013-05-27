@@ -23,7 +23,7 @@ import scriptease.gui.action.graphs.DisconnectModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.InsertModeAction;
 import scriptease.gui.action.graphs.SelectModeAction;
-import scriptease.model.SEModelManager;
+import scriptease.model.semodel.SEModelManager;
 import scriptease.util.GUIOp;
 
 /**

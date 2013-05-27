@@ -10,9 +10,9 @@ import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
-import scriptease.model.LibraryModel;
-import scriptease.model.SEModelManager;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Inserts a new ScriptIt into the library. The new ScriptIt contains one empty

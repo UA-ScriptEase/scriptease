@@ -16,8 +16,8 @@ import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
 
 /**
  * Represents and performs the Paste command, as well as encapsulates its

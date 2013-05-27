@@ -18,9 +18,9 @@ import java.util.Map;
 import java.util.UUID;
 
 import scriptease.gui.WindowFactory;
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
-import scriptease.model.StoryModel;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;

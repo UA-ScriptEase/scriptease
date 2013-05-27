@@ -2,7 +2,7 @@ package scriptease.controller.observer;
 
 import java.io.File;
 
-import scriptease.model.StoryModel;
+import scriptease.model.semodel.StoryModel;
 
 /**
  * A class can implement the FileManagerObserver interface if it needs to be

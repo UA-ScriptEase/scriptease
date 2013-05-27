@@ -13,12 +13,12 @@ import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
-import scriptease.model.LibraryModel;
-import scriptease.model.SEModelManager;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.GameTypeManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.GameTypeManager;
 import scriptease.translator.io.model.GameType;
 
 /**

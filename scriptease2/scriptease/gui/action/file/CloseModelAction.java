@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import scriptease.controller.FileManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.model.SEModel;
+import scriptease.model.semodel.SEModel;
 
 /**
  * Represents and performs the Close Tab command, as well as encapsulates its

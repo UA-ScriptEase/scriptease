@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.semodel.librarymodel.EventSlotManager;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.EventSlotManager;
 
 /**
  * Represents a game slot in Scriptease Each slot contains a unique keyword, a

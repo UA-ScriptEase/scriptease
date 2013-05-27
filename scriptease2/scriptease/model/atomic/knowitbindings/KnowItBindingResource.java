@@ -3,10 +3,10 @@ package scriptease.model.atomic.knowitbindings;
 import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
-import scriptease.model.StoryModel;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;;
 

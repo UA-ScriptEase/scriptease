@@ -11,7 +11,7 @@ import javax.swing.Action;
 
 import scriptease.controller.FileManager;
 import scriptease.controller.observer.FileManagerObserver;
-import scriptease.model.StoryModel;
+import scriptease.model.semodel.StoryModel;
 
 /**
  * Represents and performs the Open Recent File command, as well as encapsulates

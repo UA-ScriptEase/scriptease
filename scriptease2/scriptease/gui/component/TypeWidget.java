@@ -9,9 +9,9 @@ import scriptease.ScriptEase;
 import scriptease.controller.MouseForwardingAdapter;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.gui.ui.TypeWidgetUI;
+import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.apimanagers.GameTypeManager;
 
 /**
  * TypeWidget represents the JToggleButton drawn to show the Type of a slot. It

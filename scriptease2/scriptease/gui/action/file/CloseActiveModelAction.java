@@ -9,8 +9,8 @@ import javax.swing.KeyStroke;
 import scriptease.controller.FileManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.model.SEModel;
-import scriptease.model.SEModelManager;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
 
 /**
  * Represents and performs the Close Model command, as well as encapsulates its
