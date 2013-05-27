@@ -183,6 +183,20 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				&& (support
 						.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour))) {
 
+			// If the binding widget isn't even in a StoryComponentContainer, 
+			// we shouldn't be dragging stuff there anyway.
+			Component panel = support.getComponent();
+			while (!(panel instanceof StoryComponentPanel) && panel != null) {
+				panel = panel.getParent();
+			}
+			if (panel == null)
+				return false;
+			
+			final StoryComponent com = ((StoryComponentPanel) panel).getStoryComponent();
+
+			if (!(com instanceof StoryComponentContainer))
+				return false;
+			
 			try {
 				final Collection<StoryComponent> components;
 
@@ -191,6 +205,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 						.getTransferData(
 								StoryComponentPanelTransferHandler.storyCompFlavour);
 
+				// Check if its one of the acceptable components.
 				for (StoryComponent component : components)
 					if ((component instanceof ScriptIt && !(component instanceof CauseIt))
 							|| (component instanceof KnowIt)
@@ -202,7 +217,6 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			} catch (IOException e) {
 				return false;
 			}
-
 		}
 		return false;
 	}
