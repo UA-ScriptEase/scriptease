@@ -39,6 +39,7 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryPoint;
 import scriptease.util.GUIOp;
 
 /**
@@ -178,54 +179,57 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			if (supportComponent instanceof StoryComponentPanel) {
 				final StoryComponentPanel acceptingPanel;
 				final StoryComponent acceptingStoryComponent;
-				final Collection<StoryComponent> potentialChildren;
 
 				acceptingPanel = (StoryComponentPanel) supportComponent;
 				acceptingStoryComponent = acceptingPanel.getStoryComponent();
 
-				potentialChildren = this.extractStoryComponents(support);
+				// Only import to complex story components which are editable
+				if (acceptingPanel.isEditable()
+						&& acceptingStoryComponent instanceof ComplexStoryComponent) {
 
-				if (potentialChildren != null) {
+					final Collection<StoryComponent> potentialChildren;
 
-					// The regular case - where the item being imported is a
-					// valid child type of the accepting StoryComponent
-					if (this.canAcceptChildren(acceptingStoryComponent,
-							potentialChildren)
-							&& acceptingPanel.isEditable()
-							&& acceptingStoryComponent instanceof ComplexStoryComponent) {
+					potentialChildren = this.extractStoryComponents(support);
 
-						if (this.hoveredPanel != null
-								&& this.hoveredPanel.getSelectionManager() != null)
-							this.hoveredPanel.getSelectionManager()
-									.updatePanelBackgrounds();
-						acceptingPanel.setBackground(Color.LIGHT_GRAY);
+					if (potentialChildren != null) {
 
-						this.hoveredPanel = acceptingPanel;
+						// The regular case - where the item being imported is a
+						// valid child type of the accepting StoryComponent
+						if (this.canAcceptChildren(acceptingStoryComponent,
+								potentialChildren)) {
+							if (this.hoveredPanel != null
+									&& this.hoveredPanel.getSelectionManager() != null)
+								this.hoveredPanel.getSelectionManager()
+										.updatePanelBackgrounds();
+							acceptingPanel.setBackground(Color.LIGHT_GRAY);
 
-						return true;
-					}
-					// The case where effects and descriptions are being
-					// dragged over other components in a block.
-					// It seems more natural for them to go to the parent
-					// block instead of denying the User this option.
-					else if (isEffectOrDescription(acceptingStoryComponent,
-							potentialChildren)) {
-						if (this.hoveredPanel != null
-								&& this.hoveredPanel.getSelectionManager() != null)
-							this.hoveredPanel.getSelectionManager()
-									.updatePanelBackgrounds();
+							this.hoveredPanel = acceptingPanel;
 
-						StoryComponentPanel parentPanel = acceptingPanel
-								.getParentStoryComponentPanel();
+							return true;
+						}
+						// The case where effects and descriptions are being
+						// dragged over other components in a block.
+						// It seems more natural for them to go to the parent
+						// block instead of denying the User this option.
+						else if (isEffectOrDescription(acceptingStoryComponent,
+								potentialChildren)) {
+							if (this.hoveredPanel != null
+									&& this.hoveredPanel.getSelectionManager() != null)
+								this.hoveredPanel.getSelectionManager()
+										.updatePanelBackgrounds();
 
-						parentPanel.setBackground(Color.LIGHT_GRAY);
-						for (StoryComponentPanel childPanel : parentPanel
-								.getChildrenPanels())
-							childPanel.setBackground(Color.LIGHT_GRAY);
+							StoryComponentPanel parentPanel = acceptingPanel
+									.getParentStoryComponentPanel();
 
-						this.hoveredPanel = parentPanel;
+							parentPanel.setBackground(Color.LIGHT_GRAY);
+							for (StoryComponentPanel childPanel : parentPanel
+									.getChildrenPanels())
+								childPanel.setBackground(Color.LIGHT_GRAY);
 
-						return true;
+							this.hoveredPanel = parentPanel;
+
+							return true;
+						}
 					}
 				}
 
@@ -337,10 +341,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					// Help the user out if they drag it over other components
 					// by adding it to the block instead.
 					else {
-						if (support.isDrop())
-							insertionIndex = this.getInsertionIndex(
-									panel.getParentStoryComponentPanel(),
-									support);
 						addTransferData(newChild, destination, insertionIndex);
 					}
 
@@ -504,6 +504,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
 		for (StoryComponent child : potentialChildren) {
+			if (potentialParent instanceof CauseIt
+					|| potentialParent instanceof StoryPoint) {
+				return false;
+			}
 
 			if (!(child instanceof KnowIt) && !(child instanceof ScriptIt))
 				return false;
