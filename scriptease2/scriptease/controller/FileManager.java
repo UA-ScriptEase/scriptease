@@ -302,7 +302,7 @@ public final class FileManager {
 		final WindowFactory windowManager = WindowFactory.getInstance();
 		final FileIO writer = FileIO.getInstance();
 
-		if (!(storedModel instanceof StoryModel))
+		if (storedModel != null && !(storedModel instanceof StoryModel))
 			// This would be freaky. Shouldn't happen, but let's check in case.
 			throw new IllegalArgumentException("Location passed in for "
 					+ model + " is being used by a library model at "

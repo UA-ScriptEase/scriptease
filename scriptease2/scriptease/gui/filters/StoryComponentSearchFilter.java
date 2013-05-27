@@ -12,13 +12,12 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.semodel.librarymodel.DescribeItManager;
 import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.translator.TranslatorManager;
 
@@ -242,12 +241,9 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 				}
 			});
 
-			final DescribeItManager describeItManager;
 			final DescribeIt describeIt;
 
-			describeItManager = TranslatorManager.getInstance()
-					.getActiveDescribeItManager();
-			describeIt = describeItManager.getDescribeIt(knowIt);
+			describeIt = knowIt.getLibrary().getDescribeIt(knowIt);
 
 			if (describeIt != null) {
 				for (ScriptIt scriptIt : describeIt.getScriptIts()) {

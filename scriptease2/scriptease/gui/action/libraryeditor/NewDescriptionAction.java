@@ -12,7 +12,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.semodel.SEModelManager;
-import scriptease.model.semodel.librarymodel.DescribeItManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
@@ -44,22 +43,19 @@ public class NewDescriptionAction extends ActiveTranslatorSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final LibraryModel libraryModel;
+		final LibraryModel library;
 		final DescribeItNode describeItNode;
 		final DescribeIt describeIt;
+		final KnowIt knowIt;
 
-		libraryModel = (LibraryModel) SEModelManager.getInstance()
-				.getActiveModel();
+		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 		describeItNode = new DescribeItNode("Placeholder Node");
 		describeIt = new DescribeIt("New DescribeIt", describeItNode);
+		knowIt = library.createKnowItForDescribeIt(describeIt);
 
-		final DescribeItManager describeItManager = libraryModel
-				.getDescribeItManager();
-		final KnowIt knowIt = describeItManager
-				.createKnowItForDescribeIt(describeIt);
-		describeItManager.addDescribeIt(describeIt, knowIt);
+		library.add(knowIt);
+		library.addDescribeIt(describeIt, knowIt);
 
-		libraryModel.add(knowIt);
 		LibraryPanel.getInstance().navigateToComponent(knowIt);
 	}
 }

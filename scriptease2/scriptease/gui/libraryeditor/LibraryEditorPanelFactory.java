@@ -52,7 +52,6 @@ import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModelManager;
-import scriptease.model.semodel.librarymodel.DescribeItManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.TranslatorManager;
 import scriptease.util.StringOp;
@@ -214,8 +213,6 @@ public class LibraryEditorPanelFactory {
 				final JLabel nameLabel;
 				final JLabel typesLabel;
 
-				final DescribeItManager describeItManager;
-
 				final DescribeIt describeIt;
 
 				knowItPanel = new JPanel();
@@ -224,10 +221,7 @@ public class LibraryEditorPanelFactory {
 				typeAction = new TypeAction();
 				typesButton = new JButton(typeAction);
 
-				describeItManager = TranslatorManager.getInstance()
-						.getActiveDescribeItManager();
-
-				describeIt = describeItManager.getDescribeIt(knowIt);
+				describeIt = knowIt.getLibrary().getDescribeIt(knowIt);
 
 				nameField = new JTextField(describeIt.getName());
 
