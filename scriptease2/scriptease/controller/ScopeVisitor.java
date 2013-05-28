@@ -121,14 +121,17 @@ public class ScopeVisitor extends StoryAdapter {
 
 	@Override
 	public void processScriptIt(ScriptIt scriptIt) {
-		KnowIt subject;
-
 		this.defaultProcess(scriptIt);
+	}
 
-		if (scriptIt != this.targetComponent && scriptIt instanceof CauseIt) {
+	@Override
+	public void processCauseIt(CauseIt causeIt) {
+		super.processCauseIt(causeIt);
+		
+		if (causeIt != this.targetComponent) {
 
-			for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
-				subject = codeBlock.getSubject();
+			for (CodeBlock codeBlock : causeIt.getCodeBlocks()) {
+				final KnowIt subject = codeBlock.getSubject();
 
 				// if the originalComponent was not the subject of the
 				// startIt
@@ -137,7 +140,7 @@ public class ScopeVisitor extends StoryAdapter {
 					// things to scope within an Effect's parameter list.
 					this.scope.addAll(codeBlock.getParameters());
 
-					this.scope.addAll(scriptIt.getImplicits());
+					this.scope.addAll(causeIt.getImplicits());
 					this.scope.add(subject);
 				}
 			}

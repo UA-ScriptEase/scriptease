@@ -78,7 +78,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 
 				final Component child = e.getComponent();
 				final Component parent = this.getValidParent(child);
-
+				
 				if (parent == null)
 					return;
 

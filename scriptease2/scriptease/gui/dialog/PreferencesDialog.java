@@ -25,7 +25,6 @@ import javax.swing.event.ChangeListener;
 
 import scriptease.ScriptEase;
 import scriptease.gui.WindowFactory;
-import scriptease.gui.internationalization.Il8nResources;
 
 /*
  * TODO This belongs in a museum... Or in WindowManager.
@@ -37,10 +36,9 @@ import scriptease.gui.internationalization.Il8nResources;
  * Builds the SE2 preferences dialog and displays it.
  * 
  * @author graves
+ * @author jyuen
  */
 public class PreferencesDialog {
-	private static final String PROGRAM_RESTART_REQUIRED_TEXT = "Changes to Preferences may not take effect until ScriptEase is restarted.";
-	private static final String PROGRAM_RESTART_REQUIRED_TITLE = "Program restart required";
 
 	private JDialog dialog;
 
@@ -79,28 +77,34 @@ public class PreferencesDialog {
 	}
 
 	public PreferencesDialog(Frame owner) {
+		final String PROGRAM_RESTART_REQUIRED_TEXT = "Changes to Preferences may not take effect until ScriptEase is restarted.";
+		final String PROGRAM_RESTART_REQUIRED_TITLE = "Program restart required";
+
+		final String PREFERENCES_TEXT = "Preferences";
+		final String GENERAL_TEXT = "General";
+		final String APPEARANCE_TEXT = "Appearance";
+		final String OKAY_TEXT = "Okay";
+		final String CANCEL_TEXT = "Cancel";
+
 		final Box buttonBox;
 		final JButton okButton;
 		final JButton cancelButton;
 		final JTabbedPane preferencesPane;
-		final JPanel generalPanel;
-		final JPanel appearancePanel;
 
 		// Load the current preferences settings before starting.
 		this.loadCurrentPreferences();
 
-		// Create the modal dialog for the preferences window.
-		this.dialog = new JDialog(owner,
-				Il8nResources.getString("Preferences"), true);
-
+		// Create the main dialog box.
+		this.dialog = new JDialog(owner, PREFERENCES_TEXT, true);
 		this.dialog.getContentPane().setLayout(
 				new BoxLayout(this.dialog.getContentPane(), BoxLayout.Y_AXIS));
 
 		// Build the row of buttons.
 		buttonBox = new Box(BoxLayout.X_AXIS);
 
-		okButton = new JButton(Il8nResources.getString("Okay"));
+		okButton = new JButton(OKAY_TEXT);
 		okButton.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Set the preferences.
@@ -119,11 +123,10 @@ public class PreferencesDialog {
 				// Write the preferences to file.
 				instance.saveUserPrefs();
 
-				// Notify the user that changes take effect after restarting the
-				// program.
+				// Notify user that effects only work after restart.
 				WindowFactory.getInstance().showInformationDialog(
-						PreferencesDialog.PROGRAM_RESTART_REQUIRED_TITLE,
-						PreferencesDialog.PROGRAM_RESTART_REQUIRED_TEXT);
+						PROGRAM_RESTART_REQUIRED_TITLE,
+						PROGRAM_RESTART_REQUIRED_TEXT);
 
 				// Close the dialog.
 				PreferencesDialog.this.dialog.setVisible(false);
@@ -132,8 +135,9 @@ public class PreferencesDialog {
 		});
 		buttonBox.add(okButton);
 
-		cancelButton = new JButton(Il8nResources.getString("Cancel"));
+		cancelButton = new JButton(CANCEL_TEXT);
 		cancelButton.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Close the dialog.
@@ -145,77 +149,117 @@ public class PreferencesDialog {
 
 		// Create the tabbed pane for the preferences panes.
 		preferencesPane = new JTabbedPane(SwingConstants.TOP);
+		preferencesPane.addTab(GENERAL_TEXT, createGeneralPanel());
+		preferencesPane.addTab(APPEARANCE_TEXT, createAppearancePanel());
 
-		// Create the panel for the general preferences.
+		this.dialog.add(preferencesPane);
+		this.dialog.add(buttonBox);
+	}
+
+	/**
+	 * Create the panel for the general preferences.
+	 * 
+	 * @return
+	 */
+	private JPanel createGeneralPanel() {
+		final String UNDO_STACK_SIZE_TEXT = "Undo stack size:";
+		final String OUTPUT_DIR_TEXT = "Output directory:";
+		final String DEBUG_TEXT = "Run in debug mode:";
+
+		final JPanel generalPanel;
+
+		final JPanel undoStackSizePanel;
+		final SpinnerModel undoStackSizeSpinnerModel;
+
+		final JPanel outputDirectoryPanel;
+		final JTextField outputDirectoryTextField;
+		
+		final JPanel debugModePanel;
+		final JCheckBox debugModeCheckBox;
+
 		generalPanel = new JPanel();
 		generalPanel.setLayout(new BoxLayout(generalPanel, BoxLayout.Y_AXIS));
 
 		// Create the Undo stack size spinner.
-		final JPanel undoStackSizePanel = new JPanel(new FlowLayout(
-				FlowLayout.LEFT));
-		final SpinnerModel undoStackSizeSpinnerModel = new SpinnerNumberModel(
-				this.maxUndoSteps, new Integer(0), new Integer(10000),
-				new Integer(1));
+		undoStackSizePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		undoStackSizeSpinnerModel = new SpinnerNumberModel(this.maxUndoSteps,
+				new Integer(0), new Integer(10000), new Integer(1));
 		undoStackSizeSpinnerModel.addChangeListener(new ChangeListener() {
+
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				PreferencesDialog.this.maxUndoSteps = (Integer) undoStackSizeSpinnerModel
 						.getValue();
 			}
 		});
-		JSpinner undoStackSizeSpinner = new JSpinner(undoStackSizeSpinnerModel);
-		undoStackSizePanel.add(new JLabel(Il8nResources
-				.getString("Undo_Stack_Size") + ":"));
-		undoStackSizePanel.add(undoStackSizeSpinner);
-		generalPanel.add(undoStackSizePanel);
+
+		undoStackSizePanel.add(new JLabel(UNDO_STACK_SIZE_TEXT));
+		undoStackSizePanel.add(new JSpinner(undoStackSizeSpinnerModel));
 
 		// Create the output directory Textfield.
-		final JPanel outputDirectoryPanel = new JPanel(new FlowLayout(
-				FlowLayout.LEFT));
-		final JTextField outputDirectoryTextField = new JTextField(
-				this.outputDirectory);
+		outputDirectoryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		outputDirectoryTextField = new JTextField(this.outputDirectory);
 		outputDirectoryTextField.addCaretListener(new CaretListener() {
+			
 			@Override
 			public void caretUpdate(CaretEvent e) {
 				PreferencesDialog.this.outputDirectory = outputDirectoryTextField
 						.getText();
 			}
 		});
-		outputDirectoryPanel.add(new JLabel(Il8nResources
-				.getString("Output_directory") + ":"));
+		outputDirectoryPanel.add(new JLabel(OUTPUT_DIR_TEXT));
 		outputDirectoryPanel.add(outputDirectoryTextField);
-		generalPanel.add(outputDirectoryPanel);
 
 		// Create the debug mode checkbox.
-		final JPanel debugModePanel = new JPanel(
-				new FlowLayout(FlowLayout.LEFT));
-		final JCheckBox debugModeCheckBox = new JCheckBox();
+		debugModePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		debugModeCheckBox = new JCheckBox();
 		debugModeCheckBox.setSelected(this.debugMode);
 		debugModeCheckBox.addChangeListener(new ChangeListener() {
+			
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				PreferencesDialog.this.debugMode = debugModeCheckBox
 						.isSelected();
 			}
 		});
-		debugModePanel.add(new JLabel(Il8nResources
-				.getString("Run_in_debug_mode") + ":"));
+		debugModePanel.add(new JLabel(DEBUG_TEXT));
 		debugModePanel.add(debugModeCheckBox);
-		generalPanel.add(debugModePanel);
 
-		// Create the panel for the appearance preferences.
+		generalPanel.add(undoStackSizePanel);
+		generalPanel.add(outputDirectoryPanel);
+		generalPanel.add(debugModePanel);
+		
+		return generalPanel;
+	}
+
+	/**
+	 * Create the panel for the appearance preferences.
+	 * 
+	 * @return
+	 */
+	private JPanel createAppearancePanel() {
+		final String USE_JAVA_UI_TEXT = "Use Java UI:";
+		final String FONT_SIZE_TEXT = "Font Size:";
+
+		final JPanel appearancePanel;
+
+		final JPanel useJavaUIPanel;
+		final JCheckBox useJavaUICheckBox;
+
+		final JPanel fontSizePanel;
+		final SpinnerModel fontSizeSpinnerModel;
+
 		appearancePanel = new JPanel();
 		appearancePanel.setLayout(new BoxLayout(appearancePanel,
 				BoxLayout.Y_AXIS));
 
-		// Create the useJavaUI checkbox.
-		final JPanel useJavaUIPanel = new JPanel(
-				new FlowLayout(FlowLayout.LEFT));
-		useJavaUIPanel.add(new JLabel(Il8nResources.getString("Use_Java_UI")
-				+ ":"));
-		final JCheckBox useJavaUICheckBox = new JCheckBox();
+		// Create the Use Java UI check box.
+		useJavaUIPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		useJavaUIPanel.add(new JLabel(USE_JAVA_UI_TEXT));
+		useJavaUICheckBox = new JCheckBox();
 		useJavaUICheckBox.setSelected(this.useJavaUI);
 		useJavaUICheckBox.addChangeListener(new ChangeListener() {
+
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				PreferencesDialog.this.useJavaUI = useJavaUICheckBox
@@ -223,38 +267,26 @@ public class PreferencesDialog {
 			}
 		});
 		useJavaUIPanel.add(useJavaUICheckBox);
-		appearancePanel.add(useJavaUIPanel);
 
 		// Create the fontSize spinner.
-		final JPanel fontSizePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		fontSizePanel
-				.add(new JLabel(Il8nResources.getString("Font_Size") + ":"));
-		final SpinnerModel fontSizeSpinnerModel = new SpinnerNumberModel(
-				this.fontSize, new Integer(2), new Integer(20), new Integer(1));
+		fontSizePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		fontSizePanel.add(new JLabel(FONT_SIZE_TEXT));
+		fontSizeSpinnerModel = new SpinnerNumberModel(this.fontSize,
+				new Integer(2), new Integer(20), new Integer(1));
 		fontSizeSpinnerModel.addChangeListener(new ChangeListener() {
+
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				PreferencesDialog.this.fontSize = (Integer) fontSizeSpinnerModel
 						.getValue();
 			}
 		});
-		JSpinner fontSizeSpinner = new JSpinner(fontSizeSpinnerModel);
-		fontSizePanel.add(fontSizeSpinner);
+		fontSizePanel.add(new JSpinner(fontSizeSpinnerModel));
+
+		appearancePanel.add(useJavaUIPanel);
 		appearancePanel.add(fontSizePanel);
 
-		// Add the general panel to the tabbed pane.
-		preferencesPane
-				.addTab(Il8nResources.getString("General"), generalPanel);
-
-		// Add the appearance panel to the tabbed pane.
-		preferencesPane.addTab(Il8nResources.getString("Appearance"),
-				appearancePanel);
-
-		// Add the tabbed pane to the preferences dialog window.
-		this.dialog.add(preferencesPane);
-
-		// Add the Ok and Cancel buttons to the preferences dialog window.
-		this.dialog.add(buttonBox);
+		return appearancePanel;
 	}
 
 	public void display() {

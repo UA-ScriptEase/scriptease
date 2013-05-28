@@ -7,6 +7,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.InputEvent;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -18,10 +19,17 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.SlotPanel;
+import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.SEModelManager;
+import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
+import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
 
 /**
  * The Transfer Handler for all BindingWidgets. Performs all of the
@@ -29,6 +37,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
  * 
  * @author graves
  * @author kschenk
+ * @author jyuen
  */
 @SuppressWarnings("serial")
 public class BindingWidgetTransferHandler extends TransferHandler {
@@ -47,6 +56,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				KnowItBindingFlavor = new DataFlavor(
 						DataFlavor.javaJVMLocalObjectMimeType + ";class="
 								+ BindingWidget.class.getCanonicalName());
+
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -143,12 +153,72 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			}
 		}
 
+		// Special case - to handle where effects, descriptions, and controls
+		// can be dragged over binding widgets in order to get re-directed to 
+		// their parent block.
+		canImport |= this.canImportComponentsToParent(support);
+
 		if (canImport) {
 			// TODO Set mouse pointer to normal
 		} else {
 			// TODO Set mouse pointer to invalid operation.
 		}
+		
 		return canImport;
+	}
+
+	/**
+	 * Checks whether the data being transfered can be redirected to a parent
+	 * StoryComponentContainer - such as effects, descriptions, and controls.
+	 * 
+	 * @param support
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	protected boolean canImportComponentsToParent(
+			TransferHandler.TransferSupport support) {
+		final Component destinationComponent = support.getComponent();
+
+		if (destinationComponent instanceof BindingWidget
+				&& (support
+						.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour))) {
+
+			// If the binding widget isn't even in a StoryComponentContainer, 
+			// we shouldn't be dragging stuff there anyway.
+			Component panel = support.getComponent();
+			while (!(panel instanceof StoryComponentPanel) && panel != null) {
+				panel = panel.getParent();
+			}
+			if (panel == null)
+				return false;
+			
+			final StoryComponent com = ((StoryComponentPanel) panel).getStoryComponent();
+
+			if (!(com instanceof StoryComponentContainer))
+				return false;
+			
+			try {
+				final Collection<StoryComponent> components;
+
+				components = (Collection<StoryComponent>) support
+						.getTransferable()
+						.getTransferData(
+								StoryComponentPanelTransferHandler.storyCompFlavour);
+
+				// Check if its one of the acceptable components.
+				for (StoryComponent component : components)
+					if ((component instanceof ScriptIt && !(component instanceof CauseIt))
+							|| (component instanceof KnowIt)
+							|| component instanceof AskIt)
+						return true;
+
+			} catch (UnsupportedFlavorException e) {
+				return false;
+			} catch (IOException e) {
+				return false;
+			}
+		}
+		return false;
 	}
 
 	private static boolean lastDragShiftDown = false;
@@ -173,6 +243,14 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		// Make sure this import is legal.
 		if (!canImport(support)) {
 			return false;
+		}
+
+		// Some other component is being dragged over the binding widget
+		// but of course, it isn't a binding widget and shouldn't fit
+		// the slot - so lets handle it.
+		if (support
+				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
+			return importComponentsToParent(support);
 		}
 
 		// Get the destination component for the transfer.
@@ -207,6 +285,57 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * We handle other components that are being dragged over the binding slots
+	 * by putting them where they actually belong (and where the user intended
+	 * them to go) - in this case the StoryComponentContainer.
+	 * 
+	 * @param support
+	 */
+	@SuppressWarnings("unchecked")
+	protected boolean importComponentsToParent(TransferSupport support) {
+		final Collection<StoryComponent> components;
+		final StoryComponent component;
+		final ComplexStoryComponent parent;
+		
+		Component panel;
+		panel = support.getComponent();
+
+		// Get the first instance of a StoryComponentPanel if there is one.
+		while (!(panel instanceof StoryComponentPanel) && panel != null) {
+			panel = panel.getParent();
+		}
+
+		if (panel == null)
+			return false;
+		
+		component = ((StoryComponentPanel) panel).getStoryComponent();
+		
+		// Check if the component already is a container. If not,
+		// We want the StoryComponentContainer panel so... once more.
+		if (!(component instanceof StoryComponentContainer))
+			panel = panel.getParent();
+		
+		parent = (ComplexStoryComponent) ((StoryComponentPanel) panel)
+				.getStoryComponent();
+		
+		// Now we actually add the transfer data
+		try {
+			components = (Collection<StoryComponent>) support
+					.getTransferable()
+					.getTransferData(
+							StoryComponentPanelTransferHandler.storyCompFlavour);
+
+			for (StoryComponent newChild : components) {
+				parent.addStoryChild(newChild.clone());
+			}
+		} catch (UnsupportedFlavorException e) {
+		} catch (IOException e) {
+		}
+		
+		return true;
 	}
 
 	private void repopulateParentOf(JComponent destinationComponent) {

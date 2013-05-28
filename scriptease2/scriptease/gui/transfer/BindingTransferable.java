@@ -30,7 +30,7 @@ public class BindingTransferable implements Transferable {
 
 	@Override
 	public DataFlavor[] getTransferDataFlavors() {
-		return new DataFlavor[] { BindingWidgetTransferHandler.KnowItBindingFlavor };
+		return new DataFlavor[] { BindingWidgetTransferHandler.KnowItBindingFlavor};
 	}
 
 	@Override

@@ -43,7 +43,7 @@ public class MetricsExporter {
 	private javax.swing.filechooser.FileFilter createMetricsFilter() {
 		final javax.swing.filechooser.FileFilter filter;
 
-		filter = new FileNameExtensionFilter(".csv", ".csv");
+		filter = new FileNameExtensionFilter("csv", "csv");
 
 		return filter;
 	}

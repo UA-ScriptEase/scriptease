@@ -35,8 +35,10 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 
 	public ScriptIt(String name) {
 		super(name);
-		
 		this.codeBlocks = new ArrayList<CodeBlock>();
+		
+		// Only classes that extend ScriptIts should be able to have children.
+		this.registerChildType(new ArrayList<Class<? extends StoryComponent>>(), 0);
 	}
 
 	public Collection<CodeBlock> getCodeBlocks() {

@@ -57,7 +57,7 @@ public abstract class StoryAdapter implements StoryVisitor {
 	};
 	
 	public void processCauseIt(CauseIt causeIt) {
-		this.defaultProcessComplex(causeIt);
+		this.processScriptIt(causeIt);
 	}
 
 	@Override

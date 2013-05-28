@@ -146,13 +146,13 @@ public final class WindowFactory {
 	 * the user.
 	 * 
 	 * @param panel
-	 * 		The panel contents to be displayed on the frame.
+	 *            The panel contents to be displayed on the frame.
 	 * 
 	 * @param title
-	 * 		The title of the window.
+	 *            The title of the window.
 	 * 
 	 * @param resizable
-	 * 		Whether the window should be resizable.		
+	 *            Whether the window should be resizable.
 	 */
 	public void buildAndShowCustomFrame(JPanel panel, String title,
 			boolean resizable) {
@@ -681,7 +681,6 @@ public final class WindowFactory {
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		return dialog;
 	}
-	
 
 	/**
 	 * Create a dialog with the provided panel.
@@ -693,12 +692,12 @@ public final class WindowFactory {
 	 */
 	public JDialog buildDialog(String title, JPanel panel, boolean resizable) {
 		final JDialog dialog = this.buildDialog(title);
-		
+
 		dialog.setContentPane(panel);
 		dialog.pack();
 		dialog.setResizable(resizable);
 		dialog.setLocationRelativeTo(null);
-		
+
 		return dialog;
 	}
 

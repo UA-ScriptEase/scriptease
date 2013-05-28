@@ -228,6 +228,7 @@ public class ScriptWidgetFactory {
 
 			widget.setTransferHandler(BindingTransferHandlerExportOnly
 					.getInstance());
+			
 			// Set an empty border to prevent line crowding.
 			widget.setBorder(BorderFactory.createEmptyBorder(
 					TOTAL_ROW_BORDER_SIZE, TOTAL_ROW_BORDER_SIZE,
@@ -388,7 +389,8 @@ public class ScriptWidgetFactory {
 
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
-
+		final JTextField textField;
+		
 		final String scriptValue;
 
 		final StoryComponentObserver observer;
@@ -404,10 +406,11 @@ public class ScriptWidgetFactory {
 		model = new SpinnerNumberModel(initVal, MIN, MAX, STEP_SIZE);
 		spinner = new JSpinner(model);
 		scriptValue = knowIt.getBinding().getScriptValue();
-
-		final JTextField textField = ((JSpinner.DefaultEditor) spinner
+		
+		textField = ((JSpinner.DefaultEditor) spinner
 				.getEditor()).getTextField();
-
+		textField.setBackground(ScriptEaseUI.COLOUR_SIMPLE_TEXT);
+		
 		// For some annoying reason, JSpinners don't automatically resize when
 		// you set their max and min values...
 		int length = textField.getText().length();
@@ -495,7 +498,7 @@ public class ScriptWidgetFactory {
 		};
 
 		spinner.addChangeListener(changeListener);
-
+		
 		knowIt.addStoryComponentObserver(observer);
 
 		widgetsToStoryComponents.put(spinner, knowIt);
@@ -521,7 +524,8 @@ public class ScriptWidgetFactory {
 		Collections.sort(list);
 
 		combo = new JComboBox(list.toArray());
-		
+		combo.setBackground(ScriptEaseUI.COLOUR_SIMPLE_TEXT);
+
 		scriptValue = knowIt.getBinding().getScriptValue();
 
 		if (scriptValue != null && !scriptValue.isEmpty())

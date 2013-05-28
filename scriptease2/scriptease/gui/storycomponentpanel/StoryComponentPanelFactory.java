@@ -366,8 +366,10 @@ public class StoryComponentPanelFactory {
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
 				// Add an expansion button
 
-				if (complex instanceof CauseIt || complex instanceof ControlIt) {
-					addExpansionButton(complex, panel);
+				if (complex instanceof ScriptIt) {
+					if (complex instanceof CauseIt || complex instanceof ControlIt) {
+						addExpansionButton(complex, panel);
+					}
 				} else
 					addExpansionButton(complex, panel);
 

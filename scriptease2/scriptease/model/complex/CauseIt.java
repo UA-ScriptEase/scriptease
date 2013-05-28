@@ -45,10 +45,9 @@ public class CauseIt extends ScriptIt {
 	public CauseIt(String name) {
 		super(name);
 		final int NUMBER_OF_BLOCKS = 3;
+		final List<Class<? extends StoryComponent>> validTypes = new ArrayList<Class<? extends StoryComponent>>();
 
 		this.registerChildType(StoryComponentContainer.class, NUMBER_OF_BLOCKS);
-
-		final List<Class<? extends StoryComponent>> validTypes = new ArrayList<Class<? extends StoryComponent>>();
 
 		validTypes.add(ScriptIt.class);
 		validTypes.add(KnowIt.class);
@@ -60,7 +59,7 @@ public class CauseIt extends ScriptIt {
 		this.activeBlock = new StoryComponentContainer(validTypes);
 		this.inactiveBlock = new StoryComponentContainer(validTypes);
 		this.alwaysBlock = new StoryComponentContainer(validTypes);
-		
+
 		this.activeBlock.setDisplayText(ACTIVE_BLOCK_TEXT);
 		this.inactiveBlock.setDisplayText(INACTIVE_BLOCK_TEXT);
 		this.alwaysBlock.setDisplayText(ALWAYS_BLOCK_TEXT);
@@ -153,26 +152,26 @@ public class CauseIt extends ScriptIt {
 	@Override
 	public CauseIt clone() {
 		final CauseIt component = (CauseIt) super.clone();
-		
+
 		component
-		.setActiveBlock((StoryComponentContainer) component.childComponents
-				.get(0));
+				.setActiveBlock((StoryComponentContainer) component.childComponents
+						.get(0));
 		component
-		.setInactiveBlock((StoryComponentContainer) component.childComponents
-				.get(1));
-		
+				.setInactiveBlock((StoryComponentContainer) component.childComponents
+						.get(1));
+
 		component
-		.setAlwaysBlock((StoryComponentContainer) component.childComponents
-				.get(2));
-		
+				.setAlwaysBlock((StoryComponentContainer) component.childComponents
+						.get(2));
+
 		return component;
 	}
-	
+
 	@Override
 	public void process(StoryVisitor processController) {
 		processController.processCauseIt(this);
 	}
-	
+
 	/**
 	 * Returns whether the two causes are equivalent. That is, whether they have
 	 * the same display text and the same bindings. If one of these ScriptIts is
@@ -193,7 +192,7 @@ public class CauseIt extends ScriptIt {
 	@Override
 	public boolean addStoryChildBefore(StoryComponent newChild,
 			StoryComponent sibling) {
-		
+
 		boolean success = super.addStoryChildBefore(newChild, sibling);
 
 		if (success) {
@@ -207,7 +206,7 @@ public class CauseIt extends ScriptIt {
 		}
 		return success;
 	}
-	
+
 	@Override
 	public void revalidateKnowItBindings() {
 		super.revalidateKnowItBindings();
