@@ -205,12 +205,12 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 							this.hoveredPanel.getSelectionManager()
 									.updatePanelBackgrounds();
-						acceptingPanel.setBackground(Color.LIGHT_GRAY);
 
 						if (acceptingPanel.getStoryComponent() instanceof StoryComponentContainer)
-							for (StoryComponentPanel childPanel : acceptingPanel
-									.getChildrenPanels())
-								childPanel.setBackground(Color.LIGHT_GRAY);
+							setPanelAndChildrenBackground(Color.LIGHT_GRAY,
+									acceptingPanel);
+						else
+							acceptingPanel.setBackground(Color.LIGHT_GRAY);
 
 						this.hoveredPanel = acceptingPanel;
 
@@ -224,21 +224,19 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				// block instead of denying the User this option.
 				if (canImportToParent(acceptingStoryComponent,
 						potentialChildren)) {
+					final StoryComponentPanel parentPanel;
+
 					if (this.hoveredPanel != null
 							&& this.hoveredPanel.getSelectionManager() != null)
 						this.hoveredPanel.getSelectionManager()
 								.updatePanelBackgrounds();
 
-					StoryComponentPanel parentPanel = acceptingPanel
-							.getParentStoryComponentPanel();
+					parentPanel = acceptingPanel.getParentStoryComponentPanel();
 
-					parentPanel.setBackground(Color.LIGHT_GRAY);
+					setPanelAndChildrenBackground(Color.LIGHT_GRAY, parentPanel);
 
-					for (StoryComponentPanel childPanel : parentPanel
-							.getChildrenPanels())
-						childPanel.setBackground(Color.LIGHT_GRAY);
-
-					this.hoveredPanel = parentPanel;
+					acceptingPanel.setBackground(Color.GRAY);
+					this.hoveredPanel = acceptingPanel;
 
 					return true;
 				}
@@ -654,6 +652,14 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		return closestPanel;
 	}
 
+	private void setPanelAndChildrenBackground(Color color,
+			StoryComponentPanel parentPanel) {
+		parentPanel.setBackground(color);
+		for (StoryComponentPanel childPanel : parentPanel.getChildrenPanels()) {
+			setPanelAndChildrenBackground(color, childPanel);
+		}
+	}
+	
 	/**
 	 * Returns true if the given support contains a Binding
 	 * 
