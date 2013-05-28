@@ -43,7 +43,11 @@ public class BindingTransferHandlerExportOnly extends BindingWidgetTransferHandl
 	 */
 	@Override
 	public boolean canImport(TransferHandler.TransferSupport support) {
-		return false;
+		// In normal circumstances this method would just return false,
+		// but because we want it to be acceptable for effects, descriptions,
+		// and controls that wish to get redirected to the parent
+		// StoryComponentContainer, we will make an exception.
+		return this.canImportComponentsToParent(support);
 	}
 
 	/**
@@ -54,6 +58,11 @@ public class BindingTransferHandlerExportOnly extends BindingWidgetTransferHandl
 	 */
 	@Override
 	public boolean importData(TransferSupport support) {
+		if (support
+				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
+			return this.importComponentsToParent(support);
+		}
+		
 		return false;
 	}
 }

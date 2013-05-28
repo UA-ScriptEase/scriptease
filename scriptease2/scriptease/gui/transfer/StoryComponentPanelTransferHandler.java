@@ -12,6 +12,7 @@ import java.awt.event.InputEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -32,11 +33,15 @@ import scriptease.model.SEModel;
 import scriptease.model.SEModelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.StoryModel;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryPoint;
 import scriptease.util.GUIOp;
 
 /**
@@ -54,6 +59,7 @@ import scriptease.util.GUIOp;
  * @author remiller
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  * @see TransferHandler
  */
 @SuppressWarnings("serial")
@@ -107,11 +113,13 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		if (comp instanceof StoryComponentPanel) {
 			final StoryComponentPanel panel;
-			// Get the parent selected StoryComponents, since the children will
-			// be grabbed implicitly from the model
+			final StoryComponentPanelManager selectionManager;
+
 			panel = (StoryComponentPanel) comp;
-			final StoryComponentPanelManager selectionManager = panel
-					.getSelectionManager();
+			selectionManager = panel.getSelectionManager();
+
+			// Get the parent selected StoryComponents, since the children
+			// will be grabbed implicitly from the model
 			if (selectionManager != null) {
 				for (StoryComponentPanel aPanel : selectionManager
 						.getSelectedParents())
@@ -170,28 +178,31 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (isBinding(support)) {
 			// Handles the case where the user drags a Binding (delete)
 			return true;
-		} else {
-			if (supportComponent instanceof StoryComponentPanel) {
-				final StoryComponentPanel acceptingPanel;
-				final StoryComponent acceptingStoryComponent;
+		}
 
-				acceptingPanel = (StoryComponentPanel) supportComponent;
-				acceptingStoryComponent = acceptingPanel.getStoryComponent();
+		if (supportComponent instanceof StoryComponentPanel) {
 
-				// Only import to complex story components which are editable
-				if (acceptingPanel.isEditable()
-						&& acceptingStoryComponent instanceof ComplexStoryComponent) {
+			final StoryComponentPanel acceptingPanel;
+			final StoryComponent acceptingStoryComponent;
+			final Collection<StoryComponent> potentialChildren;
 
-					final Collection<StoryComponent> potentialChildren;
+			acceptingPanel = (StoryComponentPanel) supportComponent;
+			acceptingStoryComponent = acceptingPanel.getStoryComponent();
+			potentialChildren = this.extractStoryComponents(support);
 
-					potentialChildren = this.extractStoryComponents(support);
+			// Only import to complex story components which are editable
+			if (acceptingPanel.isEditable() && potentialChildren != null) {
 
-					if (potentialChildren != null
-							&& this.canAcceptChildren(acceptingStoryComponent,
-									potentialChildren)) {
+				// The regular case - where the item being imported is a
+				// valid child type of the accepting StoryComponent
+				if (acceptingStoryComponent instanceof ComplexStoryComponent) {
+
+					if (this.canAcceptChildren(acceptingStoryComponent,
+							potentialChildren)) {
 
 						if (this.hoveredPanel != null
 								&& this.hoveredPanel.getSelectionManager() != null)
+
 							this.hoveredPanel.getSelectionManager()
 									.updatePanelBackgrounds();
 						acceptingPanel.setBackground(Color.LIGHT_GRAY);
@@ -202,28 +213,48 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					}
 				}
 
-			} else if (supportComponent instanceof EffectHolderPanel) {
-				final EffectHolderPanel effectHolder;
-				final StoryComponent component;
+				// The case where effects and descriptions are being
+				// dragged over other components in a block.
+				// It seems more natural for them to go to the parent
+				// block instead of denying the User this option.
+				if (isEffectOrDescription(acceptingStoryComponent,
+						potentialChildren)) {
+					if (this.hoveredPanel != null
+							&& this.hoveredPanel.getSelectionManager() != null)
+						this.hoveredPanel.getSelectionManager()
+								.updatePanelBackgrounds();
 
-				effectHolder = (EffectHolderPanel) supportComponent;
-				component = this.extractStoryComponents(support).iterator()
-						.next();
+					StoryComponentPanel parentPanel = acceptingPanel
+							.getParentStoryComponentPanel();
 
-				if (component instanceof ScriptIt) {
-					final ScriptIt scriptIt;
+					parentPanel.setBackground(Color.LIGHT_GRAY);
 
-					scriptIt = (ScriptIt) component;
+					this.hoveredPanel = parentPanel;
 
-					if (scriptIt instanceof CauseIt)
-						return false;
-
-					for (String type : scriptIt.getTypes()) {
-						if (!effectHolder.getAllowableTypes().contains(type))
-							return false;
-					}
 					return true;
 				}
+			}
+
+		} else if (supportComponent instanceof EffectHolderPanel) {
+			final EffectHolderPanel effectHolder;
+			final StoryComponent component;
+
+			effectHolder = (EffectHolderPanel) supportComponent;
+			component = this.extractStoryComponents(support).iterator().next();
+
+			if (component instanceof ScriptIt) {
+				final ScriptIt scriptIt;
+
+				scriptIt = (ScriptIt) component;
+
+				if (scriptIt instanceof CauseIt)
+					return false;
+
+				for (String type : scriptIt.getTypes()) {
+					if (!effectHolder.getAllowableTypes().contains(type))
+						return false;
+				}
+				return true;
 			}
 		}
 
@@ -239,17 +270,12 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 	@Override
 	public boolean importData(TransferSupport support) {
-		// sanity check
-		if (!this.canImport(support))
-			return false;
-
 		final Component supportComponent = support.getComponent();
 
 		if (supportComponent instanceof StoryComponentPanel) {
 
 			// variables
 			int insertionIndex;
-			boolean success = false;
 
 			final Collection<StoryComponent> transferData;
 			final StoryComponentPanel panel;
@@ -278,31 +304,50 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			// handle invalid child indexes
 			if (insertionIndex == -1) {
 				// Insert to the end of the parent's child list in the case of
-				// an
-				// illegal index.
+				// an illegal index.
 				insertionIndex = ((ComplexStoryComponent) panel
 						.getStoryComponent()).getChildCount();
 			}
 
 			// Now we actually add the transfer data
 			for (StoryComponent newChild : transferData) {
-				final StoryComponent clone;
-				clone = newChild.clone();
 
-				StoryComponent sibling = parent.getChildAt(insertionIndex);
-				if (sibling != null) {
-					// add in the middle
-					success = parent.addStoryChildBefore(clone, sibling);
+				// We want to transfer all the story component's children
+				// instead if the newChild is a StoryComponentContainer.
+				if (newChild instanceof StoryComponentContainer) {
+					final List<StoryComponent> children;
+					final StoryComponentContainer component;
+
+					component = (StoryComponentContainer) newChild;
+					children = component.getChildren();
+
+					// We don't want these child components to be added
+					// backwards so we reverse them.
+					Collections.reverse(children);
+
+					for (StoryComponent child : children)
+						addTransferData(child, parent, insertionIndex);
+
+					// Handle the case where Effects, Descriptions, or Controls are being
+					// dragged over other components in the intentional Block.
+				} else if ((newChild instanceof ScriptIt && !(newChild instanceof CauseIt))
+						|| newChild instanceof KnowIt
+						|| newChild instanceof AskIt
+						|| newChild instanceof ControlIt) {
+					ComplexStoryComponent destination = (ComplexStoryComponent) parent
+							.getOwner();
+
+					// The user drags it properly anyway - proceed.
+					if ((parent instanceof StoryComponentContainer))
+						addTransferData(newChild, parent, insertionIndex);
+					// Help the user out if they drag it over other components
+					// by adding it to the end of the block instead.
+					else
+						destination.addStoryChild(newChild.clone());
+
 				} else {
-					success = parent.addStoryChild(clone);
+					addTransferData(newChild, parent, insertionIndex);
 				}
-
-				clone.revalidateKnowItBindings();
-
-				if (!success)
-					throw new IllegalStateException("Was unable to add "
-							+ newChild + " to " + parent
-							+ ". This should have been prevented by canImport.");
 			}
 
 			// End the recording of the paste
@@ -327,6 +372,28 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		return false;
 	}
 
+	private void addTransferData(StoryComponent child,
+			ComplexStoryComponent parent, int insertionIndex) {
+
+		final StoryComponent clone = child.clone();
+		final boolean success;
+
+		StoryComponent sibling = parent.getChildAt(insertionIndex);
+		if (sibling != null) {
+			// add in the middle
+			success = parent.addStoryChildBefore(clone, sibling);
+		} else {
+			success = parent.addStoryChild(clone);
+		}
+
+		clone.revalidateKnowItBindings();
+
+		if (!success)
+			throw new IllegalStateException("Was unable to add " + child
+					+ " to " + parent
+					+ ". This should have been prevented by canImport.");
+	}
+
 	@Override
 	public void exportToClipboard(JComponent comp, Clipboard clip, int action)
 			throws IllegalStateException {
@@ -334,6 +401,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (!UndoManager.getInstance().hasOpenUndoableAction()
 				&& action == TransferHandler.MOVE)
 			UndoManager.getInstance().startUndoableAction("Cut");
+
 		super.exportToClipboard(comp, clip, action);
 	}
 
@@ -354,8 +422,23 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			if (action == TransferHandler.MOVE) {
 				Collection<StoryComponent> components = this
 						.extractStoryComponents(data);
+
 				for (StoryComponent component : components) {
-					removedComponents.add(component);
+
+					// If the component being extracted has a story component
+					// container, we don't want to remove it - only
+					// its components.
+					if (component instanceof StoryComponentContainer) {
+						final Collection<StoryComponent> children;
+						children = ((StoryComponentContainer) component)
+								.getChildren();
+
+						for (StoryComponent child : children)
+							removedComponents.add(child);
+
+					} else {
+						removedComponents.add(component);
+					}
 				}
 
 				for (StoryComponent child : removedComponents) {
@@ -407,8 +490,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			if (acceptable) {
 				acceptable &= potentialParent instanceof ComplexStoryComponent
 						&& ((ComplexStoryComponent) potentialParent)
-								.canAcceptChild(child)
-						&& !(child instanceof StoryComponentContainer);
+								.canAcceptChild(child);
 			}
 
 			if (!acceptable)
@@ -416,6 +498,38 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		}
 
 		return acceptable;
+	}
+
+	private boolean isEffectOrDescription(StoryComponent potentialParent,
+			Collection<StoryComponent> potentialChildren) {
+		final SEModel model = SEModelManager.getInstance().getActiveModel();
+
+		for (StoryComponent child : potentialChildren) {
+			if (potentialParent instanceof CauseIt
+					|| potentialParent instanceof StoryPoint) {
+				return false;
+			}
+
+			if (!(child instanceof KnowIt) && !(child instanceof ScriptIt)
+					&& !(child instanceof AskIt))
+				return false;
+
+			if (child instanceof CauseIt)
+				return false;
+
+			if (child instanceof ScriptIt) {
+				for (CodeBlock codeBlock : ((ScriptIt) child).getCodeBlocks()) {
+					final LibraryModel library = codeBlock.getLibrary();
+
+					if (!(model instanceof LibraryModel && model == library)
+							&& !(model instanceof StoryModel && ((StoryModel) model)
+									.getLibraries().contains(library)))
+						return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -464,8 +578,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		final Collection<StoryComponentPanel> children = parentPanel
 				.getChildrenPanels();
-		// for each child, check if it is closer than the current closest
 
+		// for each child, check if it is closer than the current closest
 		for (StoryComponentPanel child : children) {
 			double yChildLocation = child.getLocation().getY();
 			if (yChildLocation < yLocation) {
@@ -492,7 +606,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					.getBinding();
 
 		} catch (UnsupportedFlavorException e) {
-			// No chocolate for you!
 			return false;
 		} catch (IOException e) {
 			return false;

@@ -48,6 +48,7 @@ import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
 import scriptease.util.FileOp;
 
+
 /**
  * This class represents a NWN ERF file. An ERF file is the file into which
  * everything is packed (its an archive-style file like .zip or .tar). <br>

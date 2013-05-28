@@ -7,7 +7,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
-import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 
@@ -78,7 +77,7 @@ public final class CutAction extends ActiveModelSensitiveAction implements
 	 * 
 	 * @param component
 	 */
-	private void cutComponent(JComponent component) {
+	private void cutComponent(StoryComponentPanel component) {
 		component.getTransferHandler().exportToClipboard(component,
 				Toolkit.getDefaultToolkit().getSystemClipboard(),
 				TransferHandler.MOVE);

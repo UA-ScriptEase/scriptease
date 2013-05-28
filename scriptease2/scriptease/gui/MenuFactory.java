@@ -41,6 +41,7 @@ import scriptease.gui.action.libraryeditor.NewDescriptionAction;
 import scriptease.gui.action.libraryeditor.NewEffectAction;
 import scriptease.gui.action.metrics.MetricsAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
+import scriptease.gui.action.translator.TranslatorPreferencesAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
@@ -189,13 +190,14 @@ public class MenuFactory {
 
 		menu.add(ExitScriptEaseAction.getInstance());
 
-		FileManager.getInstance().addRecentFileObserver(menu, new RecentFileObserver() {
+		FileManager.getInstance().addRecentFileObserver(menu,
+				new RecentFileObserver() {
 
-			@Override
-			public void updateRecentFiles() {
-				rebuildRecentFiles(menu);
-			}
-		});
+					@Override
+					public void updateRecentFiles() {
+						rebuildRecentFiles(menu);
+					}
+				});
 
 		return menu;
 	}
@@ -213,13 +215,14 @@ public class MenuFactory {
 			// check for the first recent file entry.
 			if (menuItems[i] instanceof JMenuItem
 					&& ((AbstractButton) menuItems[i]).getAction() instanceof OpenRecentFileAction) {
-				
-				// remove the remainder of the components following the first recent file entry.
+
+				// remove the remainder of the components following the first
+				// recent file entry.
 				while (i < menuItems.length) {
 					menu.remove(menuItems[i]);
 					i++;
 				}
-				
+
 				break;
 			}
 		}
@@ -244,7 +247,16 @@ public class MenuFactory {
 	 */
 	private static JMenu buildEditMenu() {
 		// Create the Edit menu to return.
-		final JMenu editMenu = new JMenu(Il8nResources.getString("Edit"));
+		final JMenu editMenu;
+		final JMenuItem preferencesItem;
+		final JMenuItem translatorPreferencesItem;
+
+		editMenu = new JMenu(Il8nResources.getString("Edit"));
+		preferencesItem = new JMenuItem(Il8nResources.getString("Preferences")
+				+ "...");
+		translatorPreferencesItem = new JMenuItem(TranslatorPreferencesAction.getInstance());
+		
+		// Set up the edit menu item
 		editMenu.setMnemonic(KeyEvent.VK_E);
 
 		// Add the Undo and Redo actions.
@@ -263,17 +275,18 @@ public class MenuFactory {
 		editMenu.addSeparator();
 
 		// Create and add the preferences item.
-		final JMenuItem preferencesItem = new JMenuItem(
-				Il8nResources.getString("Preferences") + "...");
 		preferencesItem.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				WindowFactory.getInstance().showPreferencesDialog();
 			}
 		});
 		preferencesItem.setMnemonic(KeyEvent.VK_R);
+		
 		editMenu.add(preferencesItem);
-
+		editMenu.add(translatorPreferencesItem);
+		
 		// Return the Edit menu.
 		return editMenu;
 	}
