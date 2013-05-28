@@ -2,7 +2,8 @@ package scriptease.model.semodel;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
@@ -29,7 +30,7 @@ import scriptease.translator.Translator;
  * @author kschenk
  */
 public final class SEModelManager {
-	private final List<SEModel> models;
+	private final Set<SEModel> models;
 	private final ObserverManager<SEModelObserver> observerManager;
 	private SEModel activeModel;
 
@@ -48,7 +49,7 @@ public final class SEModelManager {
 	 * Builds a new SEModelManager that has no active model
 	 */
 	private SEModelManager() {
-		this.models = new ArrayList<SEModel>();
+		this.models = new HashSet<SEModel>();
 		this.observerManager = new ObserverManager<SEModelObserver>();
 		this.activeModel = null;
 	}
@@ -102,7 +103,7 @@ public final class SEModelManager {
 	 * @param model
 	 *            The model to add.
 	 */
-	public void add(final SEModel model) {
+	public void addAndActivate(final SEModel model) {
 		if (this.models.add(model))
 			this.notifyChange(model, SEModelEvent.Type.ADDED);
 

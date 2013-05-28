@@ -340,6 +340,7 @@ public class LibraryEditorPanelFactory {
 		};
 
 		// Add the tree listener
+		// mfchurch TODO we shouldn't do this multiple times
 		libraryPane.assignListSelectionListener(storyVisitor);
 
 		return editorPanel;

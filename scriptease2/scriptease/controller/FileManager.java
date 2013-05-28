@@ -549,7 +549,7 @@ public final class FileManager {
 			// the menu items update themselves correctly - remiller
 			this.updateRecentFiles(location);
 
-			SEModelManager.getInstance().add(story);
+			SEModelManager.getInstance().addAndActivate(story);
 		}
 		this.notifyObservers(story, location);
 	}

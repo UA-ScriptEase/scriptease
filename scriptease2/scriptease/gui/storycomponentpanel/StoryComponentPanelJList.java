@@ -232,6 +232,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		final int panelIndex = getIndexOfStoryComponent(component);
 		if (panelIndex != -1) {
 			((DefaultListModel) this.getModel()).removeElementAt(panelIndex);
+			this.panelMap.remove(component);
 		}
 	}
 

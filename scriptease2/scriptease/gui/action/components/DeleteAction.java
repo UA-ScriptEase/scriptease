@@ -115,6 +115,11 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 			 * 
 			 * Ticket: 48089063
 			 */
+			final boolean alreadyUndoing = UndoManager.getInstance()
+					.hasOpenUndoableAction();
+			if (!alreadyUndoing) {
+				UndoManager.getInstance().startUndoableAction("Delete");
+			}
 
 			// Delete elements from StoryComponentPanelJList
 			final StoryComponentPanelJList list;
@@ -140,6 +145,10 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 				}
 
 				libraryModel.remove(selectedComponent);
+
+				if (!alreadyUndoing) {
+					UndoManager.getInstance().endUndoableAction();
+				}
 			}
 		} else if (focusOwner instanceof SEGraph) {
 			// Raw types here, but the way Graphs are set up, these should work

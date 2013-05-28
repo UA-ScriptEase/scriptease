@@ -312,7 +312,10 @@ public class LibraryPanel extends JTabbedPane {
 				@Override
 				public void valueChanged(ListSelectionEvent e) {
 					final Object selected = list.getSelectedValue();
-					if (selected instanceof StoryComponentPanel) {
+					if (selected == null) {
+						// TODO mfchurch need to handle unselection of any
+						// component (deletion)
+					} else if (selected instanceof StoryComponentPanel) {
 						final StoryComponentPanel componentPanel = (StoryComponentPanel) selected;
 						final StoryComponent component = componentPanel
 								.getStoryComponent();
