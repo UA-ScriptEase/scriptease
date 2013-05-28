@@ -192,11 +192,16 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			if (panel == null)
 				return false;
 			
-			final StoryComponent com = ((StoryComponentPanel) panel).getStoryComponent();
+			StoryComponent storyComponent = ((StoryComponentPanel) panel).getStoryComponent();
 
-			if (!(com instanceof StoryComponentContainer))
-				return false;
+			if (!(storyComponent instanceof StoryComponentContainer)) {
+				panel = panel.getParent();
+				storyComponent = ((StoryComponentPanel) panel).getStoryComponent();
+				if (!(storyComponent instanceof StoryComponentContainer))
+					return false;
+			}
 			
+			// Finally, check whether we have a valid component.
 			try {
 				final Collection<StoryComponent> components;
 
