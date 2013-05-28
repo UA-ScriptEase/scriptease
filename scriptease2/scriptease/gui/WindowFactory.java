@@ -752,7 +752,7 @@ public final class WindowFactory {
 				} else if (selectedItem instanceof LibraryModel) {
 					TranslatorManager.getInstance().setActiveTranslator(
 							translator);
-					SEModelManager.getInstance().add(
+					SEModelManager.getInstance().addAndActivate(
 							(LibraryModel) selectedItem);
 					dialog.dispose();
 				}

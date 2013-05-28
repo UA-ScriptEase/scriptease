@@ -154,7 +154,7 @@ public aspect Undo {
 
 	public pointcut settingCodeBlockSubject():
 		within (CodeBlock+) && execution(* setSubject(String));
-	
+
 	public pointcut settingCodeBlockSlot():
 		within (CodeBlock+) && execution(* setSlot(String));
 
@@ -193,6 +193,12 @@ public aspect Undo {
 	 */
 	public pointcut settingLibraryModelRoot():
 		within(LibraryModel+) && execution(* setRoot(StoryComponent+));
+
+	public pointcut deletingStoryComponent():
+		within(LibraryModel+) && execution(* remove(StoryComponent+));
+
+	public pointcut addingStoryComponent():
+		within(LibraryModel+) && execution(* add(StoryComponent+));
 
 	/**
 	 * Defines the Set Fan In operation in StoryPoints.
@@ -570,6 +576,47 @@ public aspect Undo {
 		this.addModification(mod);
 	}
 
+	before(final LibraryModel model, final StoryComponent toRemove): deletingStoryComponent() && args(toRemove) && this(model) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				model.remove(toRemove);
+			}
+
+			@Override
+			public void undo() {
+				model.add(toRemove);
+			}
+
+			@Override
+			public String toString() {
+				return "deleting " + toRemove + " from " + model;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final LibraryModel model, final StoryComponent toAdd): addingStoryComponent() && args(toAdd) && this(model) {
+		Modification mod = new Modification() {
+			@Override
+			public void redo() {
+				model.add(toAdd);
+			}
+
+			@Override
+			public void undo() {
+				model.remove(toAdd);
+			}
+
+			@Override
+			public String toString() {
+				return "adding " + toAdd + " to " + model;
+			}
+		};
+		this.addModification(mod);
+	}
+
 	before(final StoryPoint storyPoint, final Integer fanIn): settingFanIn() && args(fanIn) && this(storyPoint) {
 		Modification mod = new FieldModification<Integer>(fanIn,
 				storyPoint.getFanIn()) {
@@ -588,7 +635,6 @@ public aspect Undo {
 
 	before(final CodeBlock codeBlock, final String type): addingCodeBlockType() && args(type) && this(codeBlock) {
 		Modification mod = new Modification() {
-
 			@Override
 			public void redo() {
 				codeBlock.addType(type);
@@ -609,7 +655,6 @@ public aspect Undo {
 
 	before(final CodeBlock codeBlock, final String type): removingCodeBlockType() && args(type) && this(codeBlock) {
 		Modification mod = new Modification() {
-
 			@Override
 			public void redo() {
 				codeBlock.removeType(type);
@@ -659,7 +704,7 @@ public aspect Undo {
 
 		this.addModification(mod);
 	}
-	
+
 	before(final CodeBlock codeBlock, final String slot): settingCodeBlockSlot() && args(slot) && this(codeBlock) {
 		Modification mod = new FieldModification<String>(slot,
 				codeBlock.getSlot()) {

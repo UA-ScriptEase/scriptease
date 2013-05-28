@@ -144,7 +144,7 @@ public class DialogBuilder {
 				model.getEventSlotManager().setDefaultFormatKeyword(
 						translator.getSlotManager().getDefaultFormatKeyword());
 
-				SEModelManager.getInstance().add(model);
+				SEModelManager.getInstance().addAndActivate(model);
 				translator.addOptionalLibrary(model);
 			}
 		};
@@ -282,7 +282,7 @@ public class DialogBuilder {
 					model = new StoryModel(module, title, author,
 							selectedTranslator, new ArrayList<LibraryModel>());
 
-					SEModelManager.getInstance().add(model);
+					SEModelManager.getInstance().addAndActivate(model);
 				}
 			}
 		};
