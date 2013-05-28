@@ -78,6 +78,7 @@ import scriptease.util.StringOp;
  * @author remiller
  * @author lari
  * @author kschenk
+ * @author jyuen
  */
 public final class WindowFactory {
 	static {
@@ -146,6 +147,30 @@ public final class WindowFactory {
 		if (!this.mainFrame.isVisible())
 			this.mainFrame.setVisible(true);
 
+	}
+
+	/**
+	 * Builds and shows a custom Frame where the panel content is provided by
+	 * the user.
+	 * 
+	 * @param panel
+	 *            The panel contents to be displayed on the frame.
+	 * 
+	 * @param title
+	 *            The title of the window.
+	 * 
+	 * @param resizable
+	 *            Whether the window should be resizable.
+	 */
+	public void buildAndShowCustomFrame(JPanel panel, String title,
+			boolean resizable) {
+		JFrame frame = new JFrame(title);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.getContentPane().add(panel);
+		frame.pack();
+		frame.setVisible(true);
+		frame.setResizable(resizable);
+		frame.setLocationRelativeTo(null);
 	}
 
 	/**
@@ -797,6 +822,28 @@ public final class WindowFactory {
 		dialog.pack();
 		dialog.setResizable(false);
 		dialog.setLocationRelativeTo(dialog.getParent());
+
+		return dialog;
+	}
+
+	/**
+	 * Create a dialog with the provided panel.
+	 * 
+	 * @param title
+	 * 
+	 * @param panel
+	 * 
+	 * @param resizable
+	 * 
+	 * @return
+	 */
+	public JDialog buildDialog(String title, JPanel panel, boolean resizable) {
+		final JDialog dialog = this.buildDialog(title);
+
+		dialog.setContentPane(panel);
+		dialog.pack();
+		dialog.setResizable(resizable);
+		dialog.setLocationRelativeTo(null);
 
 		return dialog;
 	}

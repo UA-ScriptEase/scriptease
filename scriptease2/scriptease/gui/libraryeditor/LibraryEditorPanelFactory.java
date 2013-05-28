@@ -50,6 +50,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -140,7 +141,7 @@ public class LibraryEditorPanelFactory {
 				codeBlockEditingPanel.setLayout(new BoxLayout(
 						codeBlockEditingPanel, BoxLayout.PAGE_AXIS));
 
-				if (!scriptIt.isCause()) {
+				if (!(scriptIt instanceof CauseIt)) {
 					final JPanel scriptItControlPanel;
 					final JButton addCodeBlockButton;
 
@@ -250,7 +251,7 @@ public class LibraryEditorPanelFactory {
 						knowIt.getTypes(), true);
 
 				WidgetDecorator.decorateJTextFieldForFocusEvents(nameField,
-						commitText, false);
+						commitText, false, Color.white);
 
 				nameField.setHorizontalAlignment(JTextField.LEADING);
 
@@ -485,7 +486,7 @@ public class LibraryEditorPanelFactory {
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField, commitText,
-				false);
+				false, Color.white);
 
 		nameField.setHorizontalAlignment(JTextField.LEADING);
 
@@ -551,7 +552,7 @@ public class LibraryEditorPanelFactory {
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(labelField,
-				commitText, false);
+				commitText, false, Color.white);
 
 		labelField.setToolTipText(labelToolTip);
 
@@ -747,7 +748,7 @@ public class LibraryEditorPanelFactory {
 			typeAction = new TypeAction();
 			includesField = new IncludesField(codeBlock);
 
-			if (scriptIt.isCause()) {
+			if (scriptIt instanceof CauseIt) {
 				subjectBox = new SubjectComboBox(codeBlock);
 				slotBox = new SlotComboBox(codeBlock);
 			} else {
@@ -856,18 +857,86 @@ public class LibraryEditorPanelFactory {
 			deleteCodeBlockButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (!UndoManager.getInstance().hasOpenUndoableAction())
-						UndoManager.getInstance().startUndoableAction(
-								"Removing CodeBlock from "
-										+ scriptIt.getDisplayText());
-					scriptIt.removeCodeBlock(codeBlock);
-					UndoManager.getInstance().endUndoableAction();
+
+					// TODO Matt, this code wasn't merged properly... Not sure how much of it is necessary.
+					
+					//					if (!UndoManager.getInstance().hasOpenUndoableAction())
+//						UndoManager.getInstance().startUndoableAction(
+//								"Removing CodeBlock from "
+//										+ scriptIt.getDisplayText());
+//					scriptIt.removeCodeBlock(codeBlock);
+//					UndoManager.getInstance().endUndoableAction();
+//				}
+//			});
+//
+//			if (scriptIt.getCodeBlocks().size() < 2) {
+//				deleteCodeBlockButton.setEnabled(false);
+//				deleteCodeBlockButton.setVisible(false);
+					String selectedSlot = (String) slotBox.getSelectedItem();
+
+					if (selectedSlot != null)
+						codeBlock.setSlot((String) slotBox.getSelectedItem());
+					else
+						codeBlock.setSlot("");
+
+					if (scriptIt instanceof CauseIt) {
+						CauseIt causeIt = (CauseIt) scriptIt;
+						causeIt.updateStoryChildren();
+					}
+					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+							StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
 				}
 			});
 
-			if (scriptIt.getCodeBlocks().size() < 2) {
-				deleteCodeBlockButton.setEnabled(false);
+			if (scriptIt instanceof CauseIt) {
 				deleteCodeBlockButton.setVisible(false);
+				subjectLabel.setVisible(false);
+				subjectBox.setVisible(false);
+
+				slotLabel.setVisible(false);
+				slotBox.setVisible(false);
+				implicitsLabel.setVisible(false);
+				implicitsLabelLabel.setVisible(false);
+			} else {
+				deleteCodeBlockButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (!UndoManager.getInstance().hasOpenUndoableAction())
+							UndoManager.getInstance().startUndoableAction(
+									"Adding CodeBlock to "
+											+ scriptIt.getDisplayText());
+						scriptIt.removeCodeBlock(codeBlock);
+						UndoManager.getInstance().endUndoableAction();
+					}
+				});
+
+				if (!scriptIt.getMainCodeBlock().equals(codeBlock)) {
+					subjectBox.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							final String subjectName;
+							subjectName = (String) subjectBox.getSelectedItem();
+
+							codeBlock.setSubject(subjectName);
+
+							scriptIt.notifyObservers(new StoryComponentEvent(
+									scriptIt,
+									StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
+						}
+					});
+				} else {
+					subjectLabel.setVisible(false);
+					subjectBox.setVisible(false);
+
+					slotLabel.setVisible(false);
+					slotBox.setVisible(false);
+					implicitsLabel.setVisible(false);
+					implicitsLabelLabel.setVisible(false);
+				}
+
+				if (scriptIt.getCodeBlocks().size() < 2) {
+					deleteCodeBlockButton.setEnabled(false);
+				}
 			}
 
 			for (KnowIt parameter : parameters) {

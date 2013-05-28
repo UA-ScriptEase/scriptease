@@ -5,10 +5,10 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 
 /**
  * Category Filter filters elements based on if they match the acceptable
@@ -68,17 +68,15 @@ public class CategoryFilter extends StoryComponentFilter {
 		}
 
 		@Override
-		public void processStoryItemSequence(StoryItemSequence sequence) {
-			if (CategoryFilter.this.category.equals(Category.CONTROLS))
-				this.acceptable = true;
-		}
-
-		@Override
 		public void processScriptIt(ScriptIt scriptIt) {
-			if (CategoryFilter.this.category.equals(Category.CAUSES))
-				this.acceptable = scriptIt.isCause();
-			else if (CategoryFilter.this.category.equals(Category.EFFECTS))
-				this.acceptable = !scriptIt.isCause();
+			this.acceptable = CategoryFilter.this.category
+					.equals(Category.EFFECTS);
+		}
+		
+		@Override
+		public void processCauseIt(CauseIt causeIt) {
+			this.acceptable = CategoryFilter.this.category
+					.equals(Category.CAUSES);
 		}
 
 		@Override

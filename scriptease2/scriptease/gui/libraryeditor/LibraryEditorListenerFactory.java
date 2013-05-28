@@ -4,6 +4,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -21,6 +22,7 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -266,7 +268,97 @@ public class LibraryEditorListenerFactory {
 	}
 
 	/**
-	 * Builds an observer for when a parameters' types are set.
+	 * <<<<<<< HEAD ======= Creates an observer for the parameter's name.
+	 * 
+	 * @param scriptIt
+	 * @param codeBlock
+	 * @param parameterPanel
+	 * @return
+	 */
+	protected StoryComponentObserver buildParameterNameObserver(
+			final CodeBlock codeBlock, final JComboBox subjectBox) {
+		final StoryComponentObserver parameterPanelObserver;
+
+		parameterPanelObserver = new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				final StoryComponentChangeEnum type;
+				final StoryComponent component;
+				final StoryVisitor storyVisitor;
+
+				type = event.getType();
+				component = event.getSource();
+
+				storyVisitor = new StoryAdapter() {
+					@Override
+					public void processScriptIt(ScriptIt scriptIt) {
+						switch (type) {
+						case CHANGE_PARAMETER_NAME_SET:
+							final List<String> parameterNames;
+							final List<String> subjectBoxContents;
+							KnowIt previousSubject;
+
+							parameterNames = new ArrayList<String>();
+							subjectBoxContents = new ArrayList<String>();
+							previousSubject = null;
+
+							if (codeBlock.hasSubject())
+								previousSubject = codeBlock.getSubject();
+
+							for (KnowIt parameter : scriptIt.getParameters()) {
+								final Collection<String> subjectSlots = codeBlock
+										.getLibrary().getTypeSlots(
+												parameter.getDefaultType());
+
+								if (!subjectSlots.isEmpty())
+									parameterNames.add(parameter
+											.getDisplayText());
+							}
+
+							parameterNames.add(null);
+							for (int index = 0; index < subjectBox
+									.getItemCount(); index++) {
+								subjectBoxContents.add((String) subjectBox
+										.getItemAt(index));
+							}
+
+							for (String boxContent : subjectBoxContents) {
+								if (!parameterNames.contains(boxContent))
+									subjectBox.removeItem(boxContent);
+							}
+
+							for (String parameterName : parameterNames) {
+								if (!subjectBoxContents.contains(parameterName))
+									subjectBox.addItem(parameterName);
+							}
+
+							if (codeBlock.getParameters().contains(
+									previousSubject)) {
+								final String subjectName;
+								subjectName = previousSubject.getDisplayText();
+								subjectBox.setSelectedItem(subjectName);
+							} else if (!(scriptIt instanceof CauseIt)) {
+								subjectBox.setSelectedItem(null);
+							}
+
+							subjectBox.revalidate();
+							break;
+						default:
+							break;
+						}
+					}
+				};
+				component.process(storyVisitor);
+			}
+		};
+		this.codeBlockComponentObservers.add(parameterPanelObserver);
+
+		return parameterPanelObserver;
+	}
+
+	/**
+	 * >>>>>>> 905e83f78a0d79975b1c5edc17a7762ee4a58b7f Builds an observer for
+	 * when a parameters' types are set.
 	 * 
 	 * @param scriptIt
 	 * @param deleteCodeBlockButton

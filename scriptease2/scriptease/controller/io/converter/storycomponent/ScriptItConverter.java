@@ -3,20 +3,9 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.BindingAdapter;
-import scriptease.controller.StoryAdapter;
-import scriptease.controller.io.FileIO;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
-import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
-import scriptease.model.complex.AskIt;
-import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -29,6 +18,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author remiller
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  * 
  * @see ComplexStoryComponentConverter
  */
@@ -72,18 +62,6 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 			reader.moveUp();
 		}
 
-		/*
-		 * A wild hack appears!
-		 */
-		if (scriptIt.isCause()
-				&& FileIO.getInstance().getMode() == FileIO.IoMode.STORY) {
-			// Go down through and rebind references to what they should really
-			// be bound to: implicits
-			this.rebindKnowItBindingReferences(scriptIt);
-		}
-
-		// Search for KnowItBindingReferences.
-
 		return scriptIt;
 	}
 
@@ -96,78 +74,6 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 	 * 
 	 * @param scriptIt
 	 */
-
-	/*
-	 * TODO Abstract this somehow. We only call this method on causes while in
-	 * story mode. However, we also go over the entire model in the NWN
-	 * translator to find journal effects. We should just make one pass through
-	 * the entire module and run a bunch of runnables at appropriate times.
-	 * 
-	 * Ticket: 40870537
-	 */
-	private void rebindKnowItBindingReferences(final ScriptIt scriptIt) {
-		final StoryAdapter adapter;
-
-		adapter = new StoryAdapter() {
-			@Override
-			protected void defaultProcessComplex(ComplexStoryComponent complex) {
-				for (StoryComponent child : complex.getChildren()) {
-					child.process(this);
-				}
-			}
-
-			@Override
-			public void processStoryComponentContainer(
-					StoryComponentContainer storyComponentContainer) {
-				this.defaultProcessComplex(storyComponentContainer);
-			}
-
-			@Override
-			public void processScriptIt(ScriptIt s) {
-				s.processSubjects(this);
-				s.processParameters(this);
-				this.defaultProcessComplex(s);
-			}
-
-			@Override
-			public void processKnowIt(final KnowIt knowIt) {
-				KnowItBinding binding = knowIt.getBinding();
-				final StoryAdapter outerAnonInnerClass = this;
-				binding.process(new BindingAdapter() {
-					@Override
-					public void processReference(
-							KnowItBindingReference reference) {
-
-						for (KnowIt implicit : scriptIt.getImplicits()) {
-							if (implicit.equals(reference.getValue())) {
-								knowIt.setBinding(new KnowItBindingReference(
-										implicit));
-							}
-						}
-					}
-
-					@Override
-					public void processFunction(KnowItBindingFunction function) {
-						ScriptIt referenced = function.getValue();
-						referenced.process(outerAnonInnerClass);
-					}
-				});
-			}
-
-			@Override
-			public void processAskIt(AskIt askIt) {
-				askIt.getCondition().process(this);
-				this.defaultProcessComplex(askIt);
-			}
-
-			@Override
-			public void processStoryItemSequence(StoryItemSequence sequence) {
-				this.defaultProcessComplex(sequence);
-			}
-		};
-
-		scriptIt.process(adapter);
-	}
 
 	@SuppressWarnings("rawtypes")
 	@Override

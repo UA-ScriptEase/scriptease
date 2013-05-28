@@ -1,6 +1,9 @@
 package scriptease.model.complex;
 
+import java.util.Collection;
+
 import scriptease.controller.StoryVisitor;
+import scriptease.model.StoryComponent;
 
 /**
  * This class is a structural asset that simply allows for the model to group
@@ -20,6 +23,7 @@ import scriptease.controller.StoryVisitor;
  * 
  * @author remiller
  * @author mfchurch
+ * @author jyuen
  * 
  */
 public class StoryComponentContainer extends ComplexStoryComponent {
@@ -29,6 +33,17 @@ public class StoryComponentContainer extends ComplexStoryComponent {
 
 	public StoryComponentContainer(String displayName) {
 		this.setDisplayText(displayName);
+	}
+	
+	public StoryComponentContainer(
+			Collection<Class<? extends StoryComponent>> validTypes) {
+
+		this("");
+		
+		for (Class<? extends StoryComponent> validType : validTypes) {
+			registerChildType(validType,
+					ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		}
 	}
 
 	@Override
@@ -43,6 +58,8 @@ public class StoryComponentContainer extends ComplexStoryComponent {
 
 	@Override
 	public void revalidateKnowItBindings() {
-		// Do nothing. In the future, we may need to revalidate its children.
+		for (StoryComponent child : this.getChildren()) {
+			child.revalidateKnowItBindings();
+		}
 	}
 }

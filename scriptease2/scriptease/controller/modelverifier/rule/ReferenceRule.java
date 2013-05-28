@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.BindingAdapter;
-import scriptease.controller.StoryAdapter;
 import scriptease.controller.ScopeVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.modelverifier.problem.ModelProblem;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.model.StoryComponent;
@@ -17,7 +17,6 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 
 /**
  * Checks the if all KnowIts in the model are in proper scope
@@ -50,12 +49,6 @@ public class ReferenceRule extends StoryAdapter implements
 		questionIt.getCondition().process(this);
 		// Check the children
 		processComplexStoryComponent(questionIt);
-	}
-
-	@Override
-	public void processStoryItemSequence(StoryItemSequence sequence) {
-		// Check the children
-		processComplexStoryComponent(sequence);
 	}
 
 	@Override

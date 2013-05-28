@@ -52,12 +52,12 @@ public final class AskIt extends ComplexStoryComponent {
 	/**
 	 * The group of children that are in the If part of the AskIt.
 	 */
-	private StoryItemSequence ifBlock;
+	private StoryComponentContainer ifBlock;
 
 	/**
 	 * The group of children that are in the Else part of the AskIt
 	 */
-	private StoryItemSequence elseBlock;
+	private StoryComponentContainer elseBlock;
 
 	/************* CONSTRUCTORS ********************/
 	/**
@@ -81,7 +81,7 @@ public final class AskIt extends ComplexStoryComponent {
 
 		// AskIts can have two children of type StoryItemSequence. These
 		// function as containers for the If/Else blocks
-		this.registerChildType(StoryItemSequence.class, 2);
+		this.registerChildType(StoryComponentContainer.class, 2);
 
 		// Define the valid types for the two sub-groups
 		ifElseValidTypes.add(AskIt.class);
@@ -92,9 +92,9 @@ public final class AskIt extends ComplexStoryComponent {
 		ifElseValidTypes.add(ControlIt.class);
 
 		// now we can Initialize the StoryItemSequences
-		this.ifBlock = new StoryItemSequence(ifElseValidTypes);
+		this.ifBlock = new StoryComponentContainer(ifElseValidTypes);
 		this.ifBlock.setDisplayText("Yes:");
-		this.elseBlock = new StoryItemSequence(ifElseValidTypes);
+		this.elseBlock = new StoryComponentContainer(ifElseValidTypes);
 		this.elseBlock.setDisplayText("No:");
 
 		this.addStoryChild(this.ifBlock);
@@ -116,8 +116,8 @@ public final class AskIt extends ComplexStoryComponent {
 		// super.clone() clones the if/else blocks for us already because
 		// they're children. We just need to reassign the variables to point to
 		// the right ones.
-		clone.setIfBlock((StoryItemSequence) clone.childComponents.get(0));
-		clone.setElseBlock((StoryItemSequence) clone.childComponents.get(1));
+		clone.setIfBlock((StoryComponentContainer) clone.childComponents.get(0));
+		clone.setElseBlock((StoryComponentContainer) clone.childComponents.get(1));
 
 		return clone;
 	}
@@ -152,7 +152,7 @@ public final class AskIt extends ComplexStoryComponent {
 	 * 
 	 * @return the container for children that are in the If part of the AskIt.
 	 */
-	public StoryItemSequence getIfBlock() {
+	public StoryComponentContainer getIfBlock() {
 		return this.ifBlock;
 	}
 
@@ -162,16 +162,16 @@ public final class AskIt extends ComplexStoryComponent {
 	 * @return the container for children that are in the Else part of the
 	 *         AskIt.
 	 */
-	public StoryItemSequence getElseBlock() {
+	public StoryComponentContainer getElseBlock() {
 		return this.elseBlock;
 	}
 
-	public void setIfBlock(StoryItemSequence ifBlock) {
+	public void setIfBlock(StoryComponentContainer ifBlock) {
 		this.ifBlock = ifBlock;
 		ifBlock.setOwner(this);
 	}
 
-	public void setElseBlock(StoryItemSequence elseBlock) {
+	public void setElseBlock(StoryComponentContainer elseBlock) {
 		this.elseBlock = elseBlock;
 		elseBlock.setOwner(this);
 	}
@@ -182,9 +182,9 @@ public final class AskIt extends ComplexStoryComponent {
 		boolean success = super.addStoryChildBefore(newChild, sibling);
 		if (success) {
 			if (this.getChildren().iterator().next() == newChild)
-				this.setIfBlock((StoryItemSequence) newChild);
+				this.setIfBlock((StoryComponentContainer) newChild);
 			else
-				this.setElseBlock((StoryItemSequence) newChild);
+				this.setElseBlock((StoryComponentContainer) newChild);
 		}
 		return success;
 	}

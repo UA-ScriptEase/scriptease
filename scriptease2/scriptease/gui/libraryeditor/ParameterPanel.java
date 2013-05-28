@@ -34,6 +34,7 @@ import scriptease.gui.WidgetDecorator;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -272,7 +273,7 @@ class ParameterPanel extends JPanel {
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField, commitText,
-				false);
+				false, Color.white);
 
 		return nameField;
 	}
@@ -287,7 +288,7 @@ class ParameterPanel extends JPanel {
 	 * @return
 	 */
 	private boolean isSubjectInCause(ScriptIt scriptIt, CodeBlock codeBlock) {
-		return scriptIt.isCause()
+		return scriptIt instanceof CauseIt
 				&& (scriptIt.getMainCodeBlock().equals(codeBlock))
 				&& (this.knowIt.equals(codeBlock.getSubject()));
 	}

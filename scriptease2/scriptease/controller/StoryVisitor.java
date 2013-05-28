@@ -6,10 +6,10 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 
 /**
@@ -39,11 +39,11 @@ public interface StoryVisitor {
 	public void processStoryComponentContainer(
 			StoryComponentContainer storyComponentContainer);
 
-	public void processStoryItemSequence(StoryItemSequence sequence);
-
 	public void processAskIt(AskIt askIt);
 	
 	public void processControlIt(ControlIt controlIt);
+	
+	public void processCauseIt(CauseIt causeIt);
 
 	/** ATOMIC TYPES **/
 	public void processKnowIt(KnowIt knowIt);

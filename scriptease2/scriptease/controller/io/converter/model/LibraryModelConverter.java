@@ -45,7 +45,7 @@ public class LibraryModelConverter implements Converter {
 		eventSlotManager = library.getEventSlotManager();
 
 		// name
-		writer.addAttribute(TAG_NAME, library.getName());
+		writer.addAttribute(TAG_NAME, library.getTitle());
 
 		// author
 		writer.addAttribute(TAG_AUTHOR, library.getAuthor());
