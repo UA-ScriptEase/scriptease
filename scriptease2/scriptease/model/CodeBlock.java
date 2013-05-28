@@ -12,8 +12,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.semodel.librarymodel.EventSlotManager;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -219,20 +217,16 @@ public abstract class CodeBlock extends StoryComponent implements
 			// I guess it's time to load the implicits list. Go git'em boy!
 			this.implicits = new CopyOnWriteArraySet<KnowIt>();
 
-			final EventSlotManager slotManager;
-
-			slotManager = TranslatorManager.getInstance()
-					.getActiveEventSlotManager();
 			// only fetch implicits for code blocks that actually have them,
-			// which
-			// is determined by slot.
-			if (slotManager != null && this.hasSlot()) {
+			// which is determined by slot.
+			if (this.hasSlot()) {
 				final Collection<KnowIt> clonedImplicits;
 
 				clonedImplicits = new ArrayList<KnowIt>();
 
 				// clone these because they're CodeBlock instance-specific
-				for (KnowIt implicit : slotManager.getImplicits(this.getSlot())) {
+				for (KnowIt implicit : this.getLibrary().getSlotImplicits(
+						this.getSlot())) {
 					final KnowIt clone = implicit.clone();
 					clone.setOwner(this);
 					clonedImplicits.add(clone);

@@ -8,7 +8,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.semodel.librarymodel.EventSlotManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
@@ -40,9 +39,6 @@ public class LibraryModelConverter implements Converter {
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final LibraryModel library = (LibraryModel) source;
-		final EventSlotManager eventSlotManager;
-
-		eventSlotManager = library.getEventSlotManager();
 
 		// name
 		writer.addAttribute(TAG_NAME, library.getTitle());
@@ -58,8 +54,8 @@ public class LibraryModelConverter implements Converter {
 		// slots
 		writer.startNode(TAG_SLOTS);
 		writer.addAttribute(TAG_SLOT_DEFAULT_FORMAT_KEYWORD,
-				eventSlotManager.getDefaultFormatKeyword());
-		context.convertAnother(eventSlotManager.getEventSlots());
+				library.getSlotDefaultFormat());
+		context.convertAnother(library.getSlots());
 		writer.endNode();
 
 		// causes
@@ -93,8 +89,6 @@ public class LibraryModelConverter implements Converter {
 			UnmarshallingContext context) {
 		final LibraryModel library = new LibraryModel();
 
-		final EventSlotManager eventSlotManager = library.getEventSlotManager();
-
 		System.out.println("Unmarshalling Library Model");
 
 		// name
@@ -118,11 +112,11 @@ public class LibraryModelConverter implements Converter {
 
 		// slots
 		reader.moveDown();
-		eventSlotManager.setDefaultFormatKeyword(reader
+		library.setSlotDefaultFormat(reader
 				.getAttribute(TAG_SLOT_DEFAULT_FORMAT_KEYWORD));
 		if (reader.hasMoreChildren()) {
-			eventSlotManager.addEventSlots(((Collection<Slot>) context
-					.convertAnother(library, ArrayList.class)), library);
+			library.addSlots(((Collection<Slot>) context.convertAnother(
+					library, ArrayList.class)));
 		}
 		reader.moveUp();
 

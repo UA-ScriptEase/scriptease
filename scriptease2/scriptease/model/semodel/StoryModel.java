@@ -17,6 +17,7 @@ import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
+import scriptease.translator.io.model.Slot;
 import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.util.StringOp;
 
@@ -303,6 +304,34 @@ public final class StoryModel extends SEModel {
 		}
 
 		return widgetName;
+	}
+
+	@Override
+	public String getSlotDefaultFormat() {
+		String defaultFormat = "";
+
+		for (LibraryModel library : this.getLibraries()) {
+			defaultFormat = library.getSlotDefaultFormat();
+
+			if (StringOp.exists(defaultFormat))
+				break;
+		}
+
+		return defaultFormat;
+	}
+
+	@Override
+	public Slot getSlot(String name) {
+		Slot slot = null;
+
+		for (LibraryModel library : this.getLibraries()) {
+			slot = library.getSlot(name);
+
+			if (slot != null)
+				break;
+		}
+
+		return slot;
 	}
 
 	@Override

@@ -543,7 +543,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		final CodeBlockFinder finder = new CodeBlockFinder();
 		CodeBlockSource found;
 
-		found = finder.findByID(targetId, this);
+		found = finder.findByID(targetId);
 
 		return found;
 	}
@@ -562,18 +562,18 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		 * 
 		 * @return The source with the given id.
 		 */
-		public CodeBlockSource findByID(int targetId, LibraryModel library) {
+		public CodeBlockSource findByID(int targetId) {
 			this.targetId = targetId;
 
 			// let's start snooping about. Quick, someone play Pink Panther or
 			// Mission Impossible! - remiller
-			library.getRoot().process(this);
+			LibraryModel.this.getRoot().process(this);
 
 			// not in the library. Try the slots next?
 			if (this.found == null) {
 				final Collection<KnowIt> knowIts = new ArrayList<KnowIt>();
 
-				for (Slot slot : library.getEventSlotManager().getEventSlots()) {
+				for (Slot slot : LibraryModel.this.getSlots()) {
 					// gotta collect 'em together first.
 					knowIts.addAll(slot.getImplicits());
 					knowIts.addAll(slot.getParameters());
@@ -922,11 +922,80 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	/**
-	 * Returns the {@link EventSlotManager} for the model.
+	 * Sets the default format of the slot manager.
+	 * 
+	 * @param defaultKeyword
+	 */
+	public void setSlotDefaultFormat(String defaultKeyword) {
+		this.slotManager.setDefaultFormatKeyword(defaultKeyword);
+	}
+
+	@Override
+	public String getSlotDefaultFormat() {
+		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
+		String format = this.slotManager.getDefaultFormatKeyword();
+
+		if (!StringOp.exists(format) && defaultLibrary != null
+				&& this != defaultLibrary) {
+			format = defaultLibrary.getSlotDefaultFormat();
+		}
+
+		return format;
+	}
+
+	/**
+	 * Returns the parameters known for the slot.
+	 * 
+	 * @param slot
+	 * @return
+	 */
+	public Collection<KnowIt> getSlotParameters(String slot) {
+		return this.slotManager.getParameters(slot);
+	}
+
+	/**
+	 * Returns the implicits for a slot.
+	 * 
+	 * @param slot
+	 * @return
+	 */
+	public Collection<KnowIt> getSlotImplicits(String slot) {
+		return this.slotManager.getImplicits(slot);
+	}
+
+	/**
+	 * Returns the condition for a slot.
+	 * 
+	 * @param slot
+	 * @return
+	 */
+	public String getSlotCondition(String slot) {
+		return this.slotManager.getCondition(slot);
+	}
+
+	@Override
+	public Slot getSlot(String name) {
+		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
+		Slot slot = this.slotManager.getEventSlot(name);
+
+		if (slot == null && defaultLibrary != null && this != defaultLibrary) {
+			slot = defaultLibrary.getSlot(name);
+		}
+
+		return slot;
+	}
+
+	/**
+	 * Returns all of the slots known by the library model. Does not return any
+	 * of the default library model's slots.
 	 * 
 	 * @return
 	 */
-	public EventSlotManager getEventSlotManager() {
-		return this.slotManager;
+	public Collection<Slot> getSlots() {
+		return this.slotManager.getEventSlots();
+	}
+
+	public void addSlots(Collection<Slot> slots) {
+		this.slotManager.addEventSlots(slots, this);
 	}
 }

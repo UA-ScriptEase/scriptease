@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.semodel.librarymodel.EventSlotManager;
-import scriptease.translator.TranslatorManager;
+import scriptease.model.semodel.SEModelManager;
 
 /**
  * Represents a game slot in Scriptease Each slot contains a unique keyword, a
@@ -67,8 +66,8 @@ public class Slot {
 	 */
 	public String getFormatKeyword() {
 		if (this.formatKeyword == null || this.formatKeyword.isEmpty())
-			return TranslatorManager.getInstance().getActiveEventSlotManager()
-					.getDefaultFormatKeyword();
+			return SEModelManager.getInstance().getActiveModel()
+					.getSlotDefaultFormat();
 		return this.formatKeyword;
 	}
 

@@ -16,17 +16,15 @@ import scriptease.translator.io.model.Slot;
  * @author ?
  * @author kschenk
  */
-public class EventSlotManager {
-
-	public static final String DEFAULT_SLOT_TEXT = "";
+class EventSlotManager {
 	private final Map<String, Slot> slots;
 	private String defaultFormatKeyword;
 
 	/**
-	 * Creates a new {@link #EventSlotManager()}. These should have a one to one
+	 * Creates a new EventSlotManager. These should have a one to one
 	 * relationship with Libraries.
 	 */
-	public EventSlotManager() {
+	protected EventSlotManager() {
 		this.slots = new HashMap<String, Slot>();
 	}
 
@@ -35,7 +33,7 @@ public class EventSlotManager {
 	 * 
 	 * @param defaultFormatKeyword
 	 */
-	public void setDefaultFormatKeyword(String defaultFormatKeyword) {
+	protected void setDefaultFormatKeyword(String defaultFormatKeyword) {
 		this.defaultFormatKeyword = defaultFormatKeyword;
 	}
 
@@ -44,7 +42,7 @@ public class EventSlotManager {
 	 * 
 	 * @return
 	 */
-	public String getDefaultFormatKeyword() {
+	protected String getDefaultFormatKeyword() {
 		return this.defaultFormatKeyword;
 	}
 
@@ -56,7 +54,7 @@ public class EventSlotManager {
 	 *            the slot keyword to search for.
 	 * @return
 	 */
-	public Collection<KnowIt> getImplicits(String keyword) {
+	protected Collection<KnowIt> getImplicits(String keyword) {
 		final Collection<KnowIt> implicits = new ArrayList<KnowIt>();
 		final Slot slot = this.slots.get(keyword);
 
@@ -73,7 +71,7 @@ public class EventSlotManager {
 	 * @param keyword
 	 * @return
 	 */
-	public Collection<KnowIt> getParameters(String keyword) {
+	protected Collection<KnowIt> getParameters(String keyword) {
 		final Slot slot = this.slots.get(keyword);
 		if (slot != null) {
 			return slot.getParameters();
@@ -87,7 +85,7 @@ public class EventSlotManager {
 	 * @param keyword
 	 * @return
 	 */
-	public String getDisplayName(String keyword) {
+	protected String getDisplayName(String keyword) {
 		final Slot slot = this.slots.get(keyword);
 		if (slot != null) {
 			return slot.getDisplayName();
@@ -102,7 +100,7 @@ public class EventSlotManager {
 	 * @return
 	 * @see Slot#getCondition()
 	 */
-	public String getCondition(String keyword) {
+	protected String getCondition(String keyword) {
 		final Slot slot = this.slots.get(keyword);
 
 		if (slot != null) {
@@ -117,7 +115,7 @@ public class EventSlotManager {
 	 * @param slot
 	 * @return
 	 */
-	public Slot getEventSlot(String slot) {
+	protected Slot getEventSlot(String slot) {
 		return this.slots.get(slot);
 	}
 
@@ -126,16 +124,16 @@ public class EventSlotManager {
 	 * 
 	 * @return
 	 */
-	public Collection<Slot> getEventSlots() {
+	protected Collection<Slot> getEventSlots() {
 		return new ArrayList<Slot>(this.slots.values());
 	}
 
 	/**
-	 * Adds a collection of event slots to the {@link #EventSlotManager()}
+	 * Adds a collection of event slots.
 	 * 
 	 * @param slots
 	 */
-	public void addEventSlots(Collection<Slot> slots, LibraryModel library) {
+	protected void addEventSlots(Collection<Slot> slots, LibraryModel library) {
 		for (Slot slot : slots) {
 			this.slots.put(slot.getKeyword(), slot);
 

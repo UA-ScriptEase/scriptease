@@ -26,7 +26,6 @@ import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.describeits.DescribeIt;
-import scriptease.model.semodel.librarymodel.EventSlotManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameModule;
 import scriptease.util.FileOp;
@@ -460,16 +459,6 @@ public class Translator {
 	 */
 	public File getPathProperty(DescriptionKeys propertyKey) {
 		return this.getPathProperty(propertyKey.toString());
-	}
-
-	/**
-	 * Gets the object responsible for mapping Event Slot keywords to their
-	 * game-specific values.
-	 * 
-	 * @return the Slot Manager
-	 */
-	public EventSlotManager getSlotManager() {
-		return this.getLibrary().getEventSlotManager();
 	}
 
 	/**
