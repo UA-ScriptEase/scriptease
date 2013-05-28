@@ -73,11 +73,9 @@ public class BindingWidgetUI extends ComponentUI {
 
 				// Add a placeholder strut for each type widget.
 				for (int i = 0; i < types.size(); i++) {
-					comp.add(Box.createHorizontalStrut(this.typeRenderer
-							.getWidth()));
+					comp.add(Box.createHorizontalStrut(20));
 				}
 			}
-
 			comp.setLayout(layout);
 		}
 	}
