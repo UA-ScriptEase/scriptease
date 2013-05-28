@@ -104,12 +104,11 @@ class ModelTabPanel extends JTabbedPane {
 						if (event.getEventType() == SEModelEvent.Type.REMOVED) {
 							tabs.removeTabForModel(model);
 						} else if (event.getEventType() == SEModelEvent.Type.ADDED) {
-							// We need to delay this until the model is
-							// completely loaded because it switches tabs to the
-							// new tab, which fires the previously created
-							// change listener, which causes a
-							// ConcurrentModificationException, which kills the
-							// ScriptEase.
+							// We need to delay this until the model is loaded
+							// because it switches tabs to the new tab, which
+							// fires the previously created change listener,
+							// which causes a ConcurrentModificationException,
+							// which kills the ScriptEase.
 							SwingUtilities.invokeLater(new Runnable() {
 								@Override
 								public void run() {
@@ -196,8 +195,7 @@ class ModelTabPanel extends JTabbedPane {
 						@Override
 						public void run() {
 							// Need this code for the divider to be set at the
-							// right
-							// location for different screen resolutions.
+							// right location for different screen resolutions.
 							final double top = panel.getTopComponent()
 									.getSize().height;
 							final double bottom = panel.getSize().height;
