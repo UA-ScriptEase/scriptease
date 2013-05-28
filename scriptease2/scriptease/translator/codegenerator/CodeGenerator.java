@@ -98,8 +98,8 @@ public class CodeGenerator {
 		translator = context.getTranslator();
 
 		slotName = context.getLocationInfo().getSlot();
-		slot = translator.getLibrary().getEventSlotManager()
-				.getEventSlot(slotName);
+		slot = context.getModel().getSlot(slotName);
+
 		if (slot == null) {
 			throw new IllegalStateException("Unable to find slot " + slotName
 					+ ". Check that it exists in the Library.");

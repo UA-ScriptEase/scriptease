@@ -1178,9 +1178,8 @@ public class GenericFileFormat {
 			final Collection<Slot> slots;
 			final Collection<String> slotNames = new ArrayList<String>();
 
-			// TODO THIS WILL NEED REFACTORING!!!!!!!
-			slots = ErfFile.getTranslator().getLibrary().getEventSlotManager()
-					.getEventSlots();
+			// TODO This only gets the slots of the default library.
+			slots = ErfFile.getTranslator().getLibrary().getSlots();
 
 			for (Slot slot : slots) {
 				slotNames.add(slot.getKeyword());

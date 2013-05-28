@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
 import scriptease.model.atomic.KnowIt;
-import scriptease.translator.TranslatorManager;
+import scriptease.model.semodel.SEModelManager;
 import scriptease.translator.io.model.Slot;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -33,8 +33,8 @@ public class SlotConverter implements Converter {
 		final Slot slot = (Slot) source;
 
 		if (!slot.getFormatKeyword().equals(
-				TranslatorManager.getInstance().getActiveEventSlotManager()
-						.getDefaultFormatKeyword())) {
+				SEModelManager.getInstance().getActiveModel()
+						.getSlotDefaultFormat())) {
 			writer.addAttribute(TAG_FORMAT, slot.getFormatKeyword());
 		}
 

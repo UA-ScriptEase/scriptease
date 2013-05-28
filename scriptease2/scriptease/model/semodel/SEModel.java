@@ -7,6 +7,7 @@ import scriptease.controller.ModelVisitor;
 import scriptease.gui.component.TypeWidget;
 import scriptease.translator.Translator;
 import scriptease.translator.io.model.GameType.GUIType;
+import scriptease.translator.io.model.Slot;
 
 /**
  * Abstract tree model of related patterns, either for a Story or a Library. A
@@ -160,6 +161,21 @@ public abstract class SEModel {
 	 * @return the translator
 	 */
 	public abstract Translator getTranslator();
+
+	/**
+	 * Returns a string representing the default format keyword for slots in the
+	 * model.
+	 * 
+	 * return default format keyword
+	 */
+	public abstract String getSlotDefaultFormat();
+
+	/**
+	 * Returns a slot with the specified name.
+	 * 
+	 * @return
+	 */
+	public abstract Slot getSlot(String name);
 
 	/**
 	 * This is a double-dispatch hook for the

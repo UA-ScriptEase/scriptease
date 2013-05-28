@@ -16,8 +16,6 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.StoryModel;
-import scriptease.model.semodel.librarymodel.EventSlotManager;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
@@ -133,11 +131,13 @@ public class CodeBlockContext extends Context {
 	@Override
 	public Collection<KnowIt> getParametersWithSlot() {
 		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
-		final EventSlotManager manager;
+		final CodeBlock mainBlock;
 
-		manager = TranslatorManager.getInstance().getActiveEventSlotManager();
-		parameters.addAll(manager.getParameters(this.codeBlock.getCause()
-				.getMainCodeBlock().getSlot()));
+		mainBlock = this.codeBlock.getCause().getMainCodeBlock();
+
+		parameters.addAll(mainBlock.getLibrary().getSlotParameters(
+				mainBlock.getSlot()));
+
 		parameters.addAll(this.getParameterCollection());
 
 		return parameters;
@@ -228,13 +228,12 @@ public class CodeBlockContext extends Context {
 
 	@Override
 	public KnowIt getSlotParameter(String keyword) {
-		final ScriptIt cause = this.codeBlock.getCause();
-		final EventSlotManager manager;
+		final CodeBlock mainBlock;
 		final Collection<KnowIt> parameters;
 
-		manager = TranslatorManager.getInstance().getActiveEventSlotManager();
-
-		parameters = manager.getParameters(cause.getMainCodeBlock().getSlot());
+		mainBlock = this.codeBlock.getCause().getMainCodeBlock();
+		parameters = mainBlock.getLibrary().getSlotParameters(
+				mainBlock.getSlot());
 
 		for (KnowIt parameter : parameters) {
 			if (parameter.getDisplayText().equalsIgnoreCase(keyword))

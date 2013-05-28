@@ -9,7 +9,6 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -191,14 +190,14 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	 */
 	@Override
 	public Collection<KnowIt> getSlotParameters() {
-		final String currentSlot = this.getMainCodeBlock().getSlot();
+		final CodeBlock mainBlock = this.getMainCodeBlock();
+		final String currentSlot = mainBlock.getSlot();
 
 		if (currentSlot == null)
 			throw new NullPointerException("Encountered null slot in a Cause! "
 					+ "Call may be incorrect in Language Dictionary.");
 
-		return TranslatorManager.getInstance().getActiveEventSlotManager()
-				.getParameters(currentSlot);
+		return mainBlock.getLibrary().getSlotParameters(currentSlot);
 	}
 
 	/**
@@ -206,14 +205,14 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	 */
 	@Override
 	public String getSlotConditional() {
-		final String currentSlot = this.getMainCodeBlock().getSlot();
+		final CodeBlock mainBlock = this.getMainCodeBlock();
+		final String currentSlot = mainBlock.getSlot();
 
 		if (currentSlot == null)
 			throw new NullPointerException("Encountered null slot in a Cause! "
 					+ "Call may be incorrect in Language Dictionary.");
 
-		return TranslatorManager.getInstance().getActiveEventSlotManager()
-				.getCondition(currentSlot);
+		return mainBlock.getLibrary().getSlotCondition(currentSlot);
 	};
 
 	@Override

@@ -146,11 +146,6 @@ public class DialogBuilder {
 
 				model = new LibraryModel(title, author, translator);
 
-				// Set the default format to the same one we use in the default
-				// library.
-				model.getEventSlotManager().setDefaultFormatKeyword(
-						translator.getSlotManager().getDefaultFormatKeyword());
-
 				SEModelManager.getInstance().addAndActivate(model);
 				translator.addOptionalLibrary(model);
 			}
