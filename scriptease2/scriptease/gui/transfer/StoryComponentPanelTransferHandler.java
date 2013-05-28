@@ -217,7 +217,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				// dragged over other components in a block.
 				// It seems more natural for them to go to the parent
 				// block instead of denying the User this option.
-				if (isEffectOrDescription(acceptingStoryComponent,
+				if (canImportToParent(acceptingStoryComponent,
 						potentialChildren)) {
 					if (this.hoveredPanel != null
 							&& this.hoveredPanel.getSelectionManager() != null)
@@ -274,15 +274,14 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		if (supportComponent instanceof StoryComponentPanel) {
 
-			// variables
-			int insertionIndex;
-
 			final Collection<StoryComponent> transferData;
 			final StoryComponentPanel panel;
-			final ComplexStoryComponent parent;
+			final StoryComponent parent;
+
+			int insertionIndex;
 
 			panel = (StoryComponentPanel) supportComponent;
-			parent = (ComplexStoryComponent) panel.getStoryComponent();
+			parent = (StoryComponent) panel.getStoryComponent();
 
 			// get transfer data
 			transferData = this.extractStoryComponents(support);
@@ -326,27 +325,36 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					Collections.reverse(children);
 
 					for (StoryComponent child : children)
-						addTransferData(child, parent, insertionIndex);
+						addTransferData(child, (ComplexStoryComponent) parent,
+								insertionIndex);
 
-					// Handle the case where Effects, Descriptions, or Controls are being
+					// Handle the case where Effects, Descriptions, or Controls
+					// are being
 					// dragged over other components in the intentional Block.
 				} else if ((newChild instanceof ScriptIt && !(newChild instanceof CauseIt))
 						|| newChild instanceof KnowIt
 						|| newChild instanceof AskIt
 						|| newChild instanceof ControlIt) {
-					ComplexStoryComponent destination = (ComplexStoryComponent) parent
-							.getOwner();
 
 					// The user drags it properly anyway - proceed.
 					if ((parent instanceof StoryComponentContainer))
-						addTransferData(newChild, parent, insertionIndex);
+						addTransferData(newChild,
+								(ComplexStoryComponent) parent, insertionIndex);
 					// Help the user out if they drag it over other components
-					// by adding it to the end of the block instead.
-					else
-						destination.addStoryChild(newChild.clone());
+					// by adding it to the location of their mouse in the block.
+					else {
+						final ComplexStoryComponent destination = (ComplexStoryComponent) parent
+								.getOwner();
 
+						insertionIndex = this.getParentInsertionIndex(
+								panel.getParentStoryComponentPanel(), panel,
+								support);
+
+						addTransferData(newChild, destination, insertionIndex);
+					}
 				} else {
-					addTransferData(newChild, parent, insertionIndex);
+					addTransferData(newChild, (ComplexStoryComponent) parent,
+							insertionIndex);
 				}
 			}
 
@@ -500,7 +508,19 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		return acceptable;
 	}
 
-	private boolean isEffectOrDescription(StoryComponent potentialParent,
+	/**
+	 * Determines whether the component being imported can be placed into the
+	 * parent panel of the component its being imported into.
+	 * 
+	 * For Example, it wouldn't make sense for effect 1 being dragged over
+	 * effect 2 to be imported into effect 2, but it would make sense for it to
+	 * default into the parent block of effect 2 (the cause block) as a sibling.
+	 * 
+	 * @param potentialParent
+	 * @param potentialChildren
+	 * @return
+	 */
+	private boolean canImportToParent(StoryComponent potentialParent,
 			Collection<StoryComponent> potentialChildren) {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
@@ -550,8 +570,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (mouseLocation != null && parent instanceof ComplexStoryComponent) {
 			double yMouseLocation = mouseLocation.getY();
 			if (((ComplexStoryComponent) parent).getChildCount() > 0) {
-				StoryComponentPanel closest = this.findClosestChildPanel(
-						yMouseLocation, panel);
+				final StoryComponentPanel closest;
+				closest = this.findClosestChildPanel(yMouseLocation, panel);
 				if (closest != null) {
 					final StoryComponent child = closest.getStoryComponent();
 					return ((ComplexStoryComponent) parent)
@@ -559,6 +579,42 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				}
 			}
 		}
+		return 0;
+	}
+
+	/**
+	 * Determines where the transfer will be inserting to in the parent 
+	 * panel if the TransferSupport is for a child panel.
+	 *  
+	 * @param parentPanel
+	 * @param componentPanel
+	 * @param support
+	 * @return
+	 */
+	private int getParentInsertionIndex(StoryComponentPanel parentPanel,
+			StoryComponentPanel componentPanel, TransferSupport support) {
+		final StoryComponent parent = parentPanel.getStoryComponent();
+		final StoryComponent component = componentPanel.getStoryComponent();
+
+		double yLocation = support.getDropLocation().getDropPoint().getY();
+
+		if (((ComplexStoryComponent) parent).getChildCount() > 0) {
+			final Collection<StoryComponentPanel> children = parentPanel
+					.getChildrenPanels();
+			final StoryComponentPanel closest;
+
+			for (StoryComponentPanel child : children) {
+				if (component == child.getStoryComponent())
+					yLocation += child.getLocation().getY();
+			}
+
+			closest = this.findClosestChildPanel(yLocation, parentPanel);
+			if (closest != null) {
+				final StoryComponent child = closest.getStoryComponent();
+				return ((ComplexStoryComponent) parent).getChildIndex(child) + 1;
+			}
+		}
+
 		return 0;
 	}
 
@@ -584,8 +640,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			double yChildLocation = child.getLocation().getY();
 			if (yChildLocation < yLocation) {
 				closestPanel = child;
-			} else
-				break;
+			}
 		}
 		return closestPanel;
 	}
