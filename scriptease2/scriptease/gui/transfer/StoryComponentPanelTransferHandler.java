@@ -207,6 +207,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 									.updatePanelBackgrounds();
 						acceptingPanel.setBackground(Color.LIGHT_GRAY);
 
+						if (acceptingPanel.getStoryComponent() instanceof StoryComponentContainer)
+							for (StoryComponentPanel childPanel : acceptingPanel
+									.getChildrenPanels())
+								childPanel.setBackground(Color.LIGHT_GRAY);
+
 						this.hoveredPanel = acceptingPanel;
 
 						return true;
@@ -228,6 +233,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 							.getParentStoryComponentPanel();
 
 					parentPanel.setBackground(Color.LIGHT_GRAY);
+
+					for (StoryComponentPanel childPanel : parentPanel
+							.getChildrenPanels())
+						childPanel.setBackground(Color.LIGHT_GRAY);
 
 					this.hoveredPanel = parentPanel;
 
@@ -583,9 +592,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	}
 
 	/**
-	 * Determines where the transfer will be inserting to in the parent 
-	 * panel if the TransferSupport is for a child panel.
-	 *  
+	 * Determines where the transfer will be inserting to in the parent panel if
+	 * the TransferSupport is for a child panel.
+	 * 
 	 * @param parentPanel
 	 * @param componentPanel
 	 * @param support
