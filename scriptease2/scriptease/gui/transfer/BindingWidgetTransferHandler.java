@@ -323,7 +323,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		component = ((StoryComponentPanel) panel).getStoryComponent();
 
 		// Check if the component already is a container. If it is then
-		// the parent is just this container. Otherwise, we want to 
+		// the parent is just this container. Otherwise, we want to
 		// get the parent StoryComponentContainer.
 		if (component instanceof StoryComponentContainer) {
 			parent = (ComplexStoryComponent) ((StoryComponentPanel) panel)
@@ -331,10 +331,12 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			insertionIndex = this.getInsertionIndex(
 					(StoryComponentPanel) panel, support);
 		} else {
-			parent = (ComplexStoryComponent) ((StoryComponentPanel) panel
-					.getParent()).getStoryComponent();
+			final StoryComponentPanel parentPanel = (StoryComponentPanel) panel
+					.getParent();
+
+			parent = (ComplexStoryComponent) parentPanel.getStoryComponent();
 			insertionIndex = this.getParentInsertionIndex(
-					(StoryComponentPanel) panel.getParent(),
+					(StoryComponentPanel) parentPanel,
 					(StoryComponentPanel) panel, support);
 		}
 
@@ -398,26 +400,30 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			StoryComponentPanel componentPanel, TransferSupport support) {
 		final StoryComponent parent = parentPanel.getStoryComponent();
 		final StoryComponent component = componentPanel.getStoryComponent();
+		final Point mouseLocation = support.getDropLocation().getDropPoint();
 
-		double yLocation = support.getDropLocation().getDropPoint().getY();
+		if (mouseLocation != null) {
+			double yLocation = mouseLocation.getY();
 
-		if (((ComplexStoryComponent) parent).getChildCount() > 0) {
-			final Collection<StoryComponentPanel> children = parentPanel
-					.getChildrenPanels();
-			final StoryComponentPanel closest;
+			if (((ComplexStoryComponent) parent).getChildCount() > 0) {
+				final Collection<StoryComponentPanel> children = parentPanel
+						.getChildrenPanels();
+				final StoryComponentPanel closest;
 
-			for (StoryComponentPanel child : children) {
-				if (component == child.getStoryComponent())
-					yLocation += child.getLocation().getY();
-			}
+				for (StoryComponentPanel child : children) {
+					if (component == child.getStoryComponent())
+						yLocation += child.getLocation().getY();
+				}
 
-			closest = this.findClosestChildPanel(yLocation, parentPanel);
-			if (closest != null) {
-				final StoryComponent child = closest.getStoryComponent();
-				return ((ComplexStoryComponent) parent).getChildIndex(child) + 1;
+				closest = this.findClosestChildPanel(yLocation, parentPanel);
+				if (closest != null) {
+					final StoryComponent child = closest.getStoryComponent();
+					return ((ComplexStoryComponent) parent)
+							.getChildIndex(child) + 1;
+				}
 			}
 		}
-
+		
 		return 0;
 	}
 
