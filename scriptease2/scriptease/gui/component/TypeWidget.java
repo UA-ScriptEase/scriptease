@@ -11,8 +11,6 @@ import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.gui.ui.TypeWidgetUI;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameType;
 import scriptease.util.StringOp;
 
@@ -33,7 +31,6 @@ public class TypeWidget extends JToggleButton {
 		final int baseFontSize;
 		final int fontSize;
 		final String typeName;
-		final Translator activeTranslator;
 		final SEModel model;
 
 		this.setUI(TypeWidgetUI.getInstance());
@@ -61,11 +58,7 @@ public class TypeWidget extends JToggleButton {
 
 		this.type = type;
 
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-
-		if (model != null && activeTranslator != null
-				&& activeTranslator.defaultLibraryIsLoaded())
+		if (model != null)
 			typeName = model.getTypeDisplayText(this.type);
 		else
 			typeName = "";
@@ -82,15 +75,11 @@ public class TypeWidget extends JToggleButton {
 			this.setText("!");
 			this.setEnabled(false);
 		} else {
-			final Translator active;
 			final SEModel model;
 
-			active = TranslatorManager.getInstance().getActiveTranslator();
 			model = SEModelManager.getInstance().getActiveModel();
 
-			// Need to check these due to order of operations.
-			if (model != null && active != null
-					&& active.defaultLibraryIsLoaded()) {
+			if (model != null) {
 				final String widgetName = model.getTypeWidgetName(type);
 
 				if (StringOp.exists(widgetName)) {
