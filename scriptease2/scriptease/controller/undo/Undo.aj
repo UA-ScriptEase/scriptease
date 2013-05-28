@@ -689,7 +689,9 @@ public aspect Undo {
 		this.addModification(mod);
 	}
 
-	before(final CodeBlock codeBlock, final String subject): settingCodeBlockSubject() && args(subject) && this(codeBlock) {
+/*	
+ * TODO 
+ * before(final CodeBlock codeBlock, final String subject): settingCodeBlockSubject() && args(subject) && this(codeBlock) {
 		Modification mod = new FieldModification<String>(subject,
 				codeBlock.getSubjectName()) {
 			public void setOp(String newSubject) {
@@ -720,7 +722,7 @@ public aspect Undo {
 
 		this.addModification(mod);
 	}
-
+*/
 	before(final CodeBlock codeBlock, final KnowIt parameter): addingParameter() && args(parameter) && this(codeBlock) {
 		Modification mod = new Modification() {
 

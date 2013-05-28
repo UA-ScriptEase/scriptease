@@ -1,7 +1,10 @@
 package scriptease.gui.dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -12,12 +15,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.GroupLayout;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -27,8 +32,10 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.gui.ExceptionDialog;
 import scriptease.gui.StatusManager;
@@ -514,5 +521,193 @@ public class DialogBuilder {
 			this.finishButton.setEnabled(value);
 			this.pack();
 		}
+	}
+
+	public void showTranslatorPreferencesDialog() {
+		final String PROGRAM_RESTART_REQUIRED_TEXT = "Changes to Preferences may not take effect until ScriptEase is restarted.";
+		final String PROGRAM_RESTART_REQUIRED_TITLE = "Program restart required.";
+		final String TRANS_PREFERENCES_TEXT = "Translator Preferences";
+		final String BROWSE_TEXT = "Browse";
+
+		final int TEXT_WIDTH = 30;
+
+		final JDialog dialog;
+
+		final String compilerPath;
+		final String gameDirectoryPath;
+
+		final JPanel compilerPathPanel;
+		final JPanel gameDirectoryPanel;
+
+		final JTextField compilerPathTextField;
+		final JTextField gameDirectoryTextField;
+
+		final JButton compilerPathBrowseButton;
+		final JButton gameDirectoryBrowseButton;
+
+		final JCheckBox compilerCheckBox;
+		final boolean hasCompilerPath;
+
+		final String OKAY_TEXT = "Okay";
+		final String CANCEL_TEXT = "Cancel";
+
+		final Box buttonBox;
+		final JButton okButton;
+		final JButton cancelButton;
+
+		final Translator translator;
+
+		translator = TranslatorManager.getInstance().getActiveTranslator();
+
+		compilerPath = translator
+				.getProperty(Translator.DescriptionKeys.COMPILER_PATH);
+		gameDirectoryPath = translator
+				.getProperty(Translator.DescriptionKeys.GAME_DIRECTORY);
+
+		dialog = new JDialog(WindowFactory.getInstance().getCurrentFrame(),
+				"Translator Preferences");
+
+		compilerPathPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		gameDirectoryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+		compilerPathTextField = new JTextField(compilerPath);
+		gameDirectoryTextField = new JTextField(gameDirectoryPath);
+
+		compilerPathBrowseButton = new JButton(BROWSE_TEXT);
+		gameDirectoryBrowseButton = new JButton(BROWSE_TEXT);
+
+		compilerCheckBox = new JCheckBox();
+
+		// Set up the compiler path panel
+
+		// Set compiler path to deselected by default if there is no available
+		// compiler
+
+		hasCompilerPath = !TranslatorManager.getInstance()
+				.getActiveTranslator()
+				.getProperty(Translator.DescriptionKeys.COMPILER_PATH)
+				.equals("false");
+
+		compilerCheckBox.setSelected(hasCompilerPath);
+		compilerPathTextField.setEnabled(hasCompilerPath);
+		compilerPathBrowseButton.setEnabled(hasCompilerPath);
+
+		compilerPathTextField.setColumns(TEXT_WIDTH);
+
+		compilerCheckBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final boolean isSelected = compilerCheckBox.isSelected();
+				compilerPathTextField.setEnabled(isSelected);
+				compilerPathBrowseButton.setEnabled(isSelected);
+			}
+		});
+		compilerPathBrowseButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				final File filePath;
+
+				filePath = WindowFactory.getInstance()
+						.showFileChooser("Select", "",
+								new FileNameExtensionFilter("exe", "exe"));
+
+				if (filePath != null)
+					compilerPathTextField.setText(filePath.getAbsolutePath());
+			}
+		});
+		compilerPathPanel.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createLineBorder(Color.gray), "Compiler Path",
+				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
+						"SansSerif", Font.PLAIN, 12), Color.black));
+		compilerPathPanel.add(compilerCheckBox);
+		compilerPathPanel.add(compilerPathTextField);
+		compilerPathPanel.add(compilerPathBrowseButton);
+
+		// Set up the game directory path panel
+		gameDirectoryTextField.setColumns(TEXT_WIDTH);
+		gameDirectoryBrowseButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				final File filePath;
+
+				filePath = WindowFactory.getInstance().showDirectoryChooser(
+						"Select", "", null);
+
+				if (filePath != null)
+					gameDirectoryTextField.setText(filePath.getAbsolutePath());
+			}
+		});
+		gameDirectoryPanel.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createLineBorder(Color.gray), "Game Directory",
+				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
+						"SansSerif", Font.PLAIN, 12), Color.black));
+		gameDirectoryPanel.add(gameDirectoryTextField);
+		gameDirectoryPanel.add(gameDirectoryBrowseButton);
+
+		// Set up the buttons
+		buttonBox = new Box(BoxLayout.X_AXIS);
+
+		okButton = new JButton(OKAY_TEXT);
+		okButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Set the preferences.
+				final Translator translator;
+				final String compilerPath;
+
+				translator = TranslatorManager.getInstance()
+						.getActiveTranslator();
+
+				if (!compilerCheckBox.isSelected())
+					compilerPath = "false";
+				else
+					compilerPath = compilerPathTextField.getText();
+
+				translator.setPreference(
+						Translator.DescriptionKeys.COMPILER_PATH, compilerPath);
+				translator.setPreference(
+						Translator.DescriptionKeys.GAME_DIRECTORY,
+						gameDirectoryTextField.getText());
+
+				translator.saveTranslatorPreferences();
+
+				// Notify user that effects only work after restart.
+				WindowFactory.getInstance().showInformationDialog(
+						PROGRAM_RESTART_REQUIRED_TITLE,
+						PROGRAM_RESTART_REQUIRED_TEXT);
+
+				// Close the dialog.
+				dialog.dispose();
+			}
+		});
+		buttonBox.add(okButton);
+
+		cancelButton = new JButton(CANCEL_TEXT);
+		cancelButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dialog.dispose();
+			}
+		});
+		buttonBox.add(cancelButton);
+
+		// Create the main dialog box.
+		dialog.setTitle(TRANS_PREFERENCES_TEXT);
+		dialog.getContentPane().setLayout(
+				new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
+
+		dialog.add(gameDirectoryPanel);
+		dialog.add(compilerPathPanel);
+		dialog.add(buttonBox);
+
+		dialog.setResizable(false);
+		dialog.pack();
+		dialog.setLocationRelativeTo(null);
+		dialog.setVisible(true);
 	}
 }

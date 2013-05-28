@@ -7,6 +7,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 
@@ -120,14 +121,17 @@ public class ScopeVisitor extends StoryAdapter {
 
 	@Override
 	public void processScriptIt(ScriptIt scriptIt) {
-		KnowIt subject;
-
 		this.defaultProcess(scriptIt);
+	}
 
-		if (scriptIt != this.targetComponent && scriptIt.isCause()) {
+	@Override
+	public void processCauseIt(CauseIt causeIt) {
+		super.processCauseIt(causeIt);
+		
+		if (causeIt != this.targetComponent) {
 
-			for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
-				subject = codeBlock.getSubject();
+			for (CodeBlock codeBlock : causeIt.getCodeBlocks()) {
+				final KnowIt subject = codeBlock.getSubject();
 
 				// if the originalComponent was not the subject of the
 				// startIt
@@ -136,7 +140,7 @@ public class ScopeVisitor extends StoryAdapter {
 					// things to scope within an Effect's parameter list.
 					this.scope.addAll(codeBlock.getParameters());
 
-					this.scope.addAll(scriptIt.getImplicits());
+					this.scope.addAll(causeIt.getImplicits());
 					this.scope.add(subject);
 				}
 			}

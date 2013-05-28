@@ -26,11 +26,11 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.semodel.SEModel;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -157,17 +157,10 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
-				final boolean success;
-				if (scriptIt.isCause()) {
-					success = this.model.causesCategory.addStoryChild(scriptIt);
-					if (success)
-						scriptIt.addStoryComponentObserver(this.model);
-				} else {
-					success = this.model.effectsCategory
-							.addStoryChild(scriptIt);
-					if (success)
-						scriptIt.addStoryComponentObserver(this.model);
-				}
+				final boolean success = this.model.effectsCategory
+						.addStoryChild(scriptIt);
+				if (success)
+					scriptIt.addStoryComponentObserver(this.model);
 			}
 
 			@Override
@@ -184,6 +177,14 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 						.addStoryChild(controlIt);
 				if (success)
 					controlIt.addStoryComponentObserver(this.model);
+			}
+
+			@Override
+			public void processCauseIt(CauseIt causeIt) {
+				final boolean success = this.model.causesCategory
+						.addStoryChild(causeIt);
+				if (success)
+					causeIt.addStoryComponentObserver(this.model);
 			}
 
 			@Override
@@ -234,20 +235,14 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
 
 		this.effectsCategory.registerChildType(ScriptIt.class, max);
-
-		this.causesCategory.registerChildType(ScriptIt.class, max);
-
+		this.causesCategory.registerChildType(CauseIt.class, max);
 		this.descriptionsCategory.registerChildType(KnowIt.class, max);
-
 		this.controllersCategory.registerChildType(
 				StoryComponentContainer.class, max);
 		this.controllersCategory.registerChildType(ScriptIt.class, max);
 		this.controllersCategory.registerChildType(AskIt.class, max);
-		this.controllersCategory
-				.registerChildType(StoryItemSequence.class, max);
 		this.controllersCategory.registerChildType(KnowIt.class, max);
 		this.controllersCategory.registerChildType(ControlIt.class, max);
-
 		this.noteContainer.registerChildType(Note.class, 1);
 	}
 
@@ -289,18 +284,18 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	/**
-	 * Retrieves the automatics scriptIts from the causes
+	 * Retrieves the automatics causeIts
 	 * 
 	 * @return
 	 */
-	public Collection<ScriptIt> getAutomatics() {
-		final Collection<ScriptIt> automatics = new ArrayList<ScriptIt>();
+	public Collection<CauseIt> getAutomatics() {
+		final Collection<CauseIt> automatics = new ArrayList<CauseIt>();
 
 		for (StoryComponent cause : this.getCausesCategory().getChildren()) {
-			if (cause instanceof ScriptIt) {
+			if (cause instanceof CauseIt) {
 				for (String label : cause.getLabels()) {
 					if (label.equalsIgnoreCase(AUTOMATIC_LABEL)) {
-						automatics.add((ScriptIt) cause);
+						automatics.add((CauseIt) cause);
 					}
 				}
 			}
@@ -344,7 +339,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			this.registerCategoryChildTypes();
 			this.registerObservers();
 		} catch (ClassCastException e) {
-			System.err.println(this.getName() + " Library "
+			System.err.println(this.getTitle() + " Library "
 					+ " incorrectly formatted");
 		}
 	}
@@ -399,18 +394,19 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		component.process(new StoryAdapter() {
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
-				final boolean success;
-				if (scriptIt.isCause()) {
-					success = LibraryModel.this.causesCategory
-							.removeStoryChild(scriptIt);
-					if (success)
-						scriptIt.removeStoryComponentObserver(LibraryModel.this);
-				} else {
-					success = LibraryModel.this.effectsCategory
-							.removeStoryChild(scriptIt);
-					if (success)
-						scriptIt.removeStoryComponentObserver(LibraryModel.this);
-				}
+				final boolean success = LibraryModel.this.effectsCategory
+						.removeStoryChild(scriptIt);
+				if (success)
+					scriptIt.removeStoryComponentObserver(LibraryModel.this);
+
+			}
+
+			@Override
+			public void processCauseIt(CauseIt causeIt) {
+				final boolean success = LibraryModel.this.causesCategory
+						.removeStoryChild(causeIt);
+				if (success)
+					causeIt.removeStoryComponentObserver(LibraryModel.this);
 			}
 
 			@Override
@@ -527,7 +523,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 	@Override
 	public String toString() {
-		return this.getName();
+		return this.getTitle();
 	}
 
 	@Override

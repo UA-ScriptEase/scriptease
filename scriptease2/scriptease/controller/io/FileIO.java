@@ -3,6 +3,7 @@ package scriptease.controller.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import scriptease.controller.io.converter.model.LibraryModelConverter;
 import scriptease.controller.io.converter.model.SlotConverter;
 import scriptease.controller.io.converter.model.StoryModelConverter;
 import scriptease.controller.io.converter.storycomponent.AskItConverter;
+import scriptease.controller.io.converter.storycomponent.CauseItConverter;
 import scriptease.controller.io.converter.storycomponent.CodeBlockReferenceConverter;
 import scriptease.controller.io.converter.storycomponent.CodeBlockSourceConverter;
 import scriptease.controller.io.converter.storycomponent.ControlItConverter;
@@ -36,7 +38,6 @@ import scriptease.controller.io.converter.storycomponent.KnowItConverter;
 import scriptease.controller.io.converter.storycomponent.NoteConverter;
 import scriptease.controller.io.converter.storycomponent.ScriptItConverter;
 import scriptease.controller.io.converter.storycomponent.StoryComponentContainerConverter;
-import scriptease.controller.io.converter.storycomponent.StoryItemSequenceConverter;
 import scriptease.controller.io.converter.storycomponent.StoryPointConverter;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
@@ -50,11 +51,11 @@ import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.StoryModel;
@@ -87,6 +88,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
  * 
  * @author remiller
  * @author mfchurch
+ * @author jyuen
  */
 public class FileIO {
 	/**
@@ -115,6 +117,42 @@ public class FileIO {
 	}
 
 	private IoMode mode;
+
+	/**
+	 * Saves a CSV file to disk.
+	 * 
+	 * @param data
+	 *            The data to generate in the CSV file.
+	 * @param file
+	 *            The file path to save the CSV in.
+	 */
+	public void saveCSV(Collection<? extends Collection<String>> data, File file) {
+		final FileWriter out;
+		String output;
+
+		try {
+			out = new FileWriter(file);
+
+			for (Collection<String> row : data) {
+				output = "";
+
+				for (String value : row)
+					output += value + ",";
+
+				// Remove the last comma.
+				output = output.substring(0, output.length() - 1);
+
+				output += "\n";
+
+				out.append(output);
+			}
+
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Reads a Story from disk.
@@ -357,7 +395,7 @@ public class FileIO {
 		stream.alias("KnowIt", KnowIt.class);
 		stream.alias("StoryComponentContainer", StoryComponentContainer.class);
 		stream.alias("AskIt", AskIt.class);
-		stream.alias("StoryItemSequence", StoryItemSequence.class);
+		stream.alias("StoryItemSequence", StoryComponentContainer.class);
 		stream.alias("KnowItBinding", KnowItBinding.class);
 		stream.alias("Type", GameType.class);
 		stream.alias("Slot", Slot.class);
@@ -386,6 +424,7 @@ public class FileIO {
 		stream.alias("StoryPoint", StoryPoint.class);
 		stream.alias("Note", Note.class);
 		stream.alias("ControlIt", ControlIt.class);
+		stream.alias("CauseIt", CauseIt.class);
 
 		// the below are aliased for backwards compatibility
 
@@ -396,7 +435,6 @@ public class FileIO {
 		stream.registerConverter(new StoryComponentContainerConverter());
 		stream.registerConverter(new KnowItConverter());
 		stream.registerConverter(new AskItConverter());
-		stream.registerConverter(new StoryItemSequenceConverter());
 		stream.registerConverter(new KnowItBindingConverter());
 		stream.registerConverter(new GameTypeConverter());
 		stream.registerConverter(new SlotConverter());
@@ -415,6 +453,7 @@ public class FileIO {
 		stream.registerConverter(new CodeBlockSourceConverter());
 		stream.registerConverter(new CodeBlockReferenceConverter());
 		stream.registerConverter(new ScriptItConverter());
+		stream.registerConverter(new CauseItConverter());
 		stream.registerConverter(new StoryPointConverter());
 		stream.registerConverter(new NoteConverter());
 		stream.registerConverter(new DescribeItConverter());
@@ -601,15 +640,12 @@ public class FileIO {
 			}
 		}
 
-		private ScriptIt getCause(KnowIt reference) {
+		private CauseIt getCause(KnowIt reference) {
 			StoryComponent parent = reference;
-			ScriptIt scriptIt;
 
 			while (parent != null) {
-				if (parent instanceof ScriptIt) {
-					scriptIt = (ScriptIt) parent;
-					if (scriptIt.isCause())
-						return scriptIt;
+				if (parent instanceof CauseIt) {
+					return (CauseIt) parent;
 				}
 
 				parent = parent.getOwner();

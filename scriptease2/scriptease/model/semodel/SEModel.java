@@ -1,6 +1,5 @@
 package scriptease.model.semodel;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 
@@ -8,7 +7,6 @@ import scriptease.controller.ModelVisitor;
 import scriptease.gui.component.TypeWidget;
 import scriptease.translator.Translator;
 import scriptease.translator.io.model.GameType.GUIType;
-import scriptease.util.FileOp;
 
 /**
  * Abstract tree model of related patterns, either for a Story or a Library. A
@@ -19,7 +17,7 @@ import scriptease.util.FileOp;
  * @author kschenk
  */
 public abstract class SEModel {
-	private String name;
+	private String title;
 	private String author;
 
 	public SEModel() {
@@ -31,38 +29,29 @@ public abstract class SEModel {
 	}
 
 	public SEModel(String title, String author) {
-		this.name = title;
+		this.title = title;
 		this.author = author;
 	}
 
 	/**
-	 * Get's the PatternModel Name from the file with the extension removed
-	 * 
-	 * @return
+	 * @return The title of the StoryModel
 	 */
-	public final String getName() {
-		return FileOp.removeExtension(new File(this.name)).getName();
+	public final String getTitle() {
+		return this.title;
 	}
 
 	/**
-	 * @param name
+	 * @param title
 	 *            The StoryModel's new title. Cannot be null.
 	 * @throws IllegalArgumentException
-	 *             if <code>author</code> is null.
+	 *             if <code>title</code> is null.
 	 */
 	public final void setTitle(String title) {
-		if (this.name == null)
+		if (this.title == null)
 			throw new IllegalArgumentException(
 					"Cannot give a StoryModel a null name.");
 
-		this.name = title;
-	}
-
-	/**
-	 * @return The author of the StoryModel
-	 */
-	public final String getTitle() {
-		return this.name;
+		this.title = title;
 	}
 
 	/**
@@ -191,7 +180,6 @@ public abstract class SEModel {
 
 	@Override
 	public String toString() {
-		return this.getName();
+		return this.getTitle();
 	}
-
 }

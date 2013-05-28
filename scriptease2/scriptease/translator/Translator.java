@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -69,6 +70,7 @@ import scriptease.util.FileOp;
  * @author remiller
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  */
 public class Translator {
 	/**
@@ -347,11 +349,11 @@ public class Translator {
 
 		final LibraryModel defaultLibrary = this.getLibrary();
 
-		if (defaultLibrary.getName().equals(name))
+		if (defaultLibrary.getTitle().equals(name))
 			return defaultLibrary;
 
 		for (LibraryModel library : this.getOptionalLibraries()) {
-			if (library.getName().equals(name))
+			if (library.getTitle().equals(name))
 				return library;
 		}
 
@@ -470,6 +472,45 @@ public class Translator {
 		return this.getLibrary().getEventSlotManager();
 	}
 
+	/**
+	 * Sets a user-alterable preference to the given value. The value is not
+	 * tested to see if is a valid value for the given key. Passing a value of
+	 * <code>null</code> will delete that preference entirely (key and value).<br>
+	 * <br>
+	 * If the key is not a legitimate key, then a new entry will be created for
+	 * non-<code>null</code> values.
+	 * 
+	 * @param preferenceKey
+	 *            The unique string that denotes the preference.
+	 * @param preferenceValue
+	 *            The value to set the preference to. If this is
+	 *            <code>null</code>, then the preference will be removed
+	 *            entirely.
+	 */
+	public void setPreference(DescriptionKeys preferenceKey, String preferenceValue) {
+		if (preferenceValue == null)
+			this.properties.remove(preferenceKey.toString());
+		else
+			this.properties.setProperty(preferenceKey.toString(), preferenceValue);
+	}
+	
+	/**
+	 * Saves the translator preferences to disk (i.e. the translator.ini file)
+	 */
+	public void saveTranslatorPreferences() {
+		FileOutputStream out;
+
+		try {
+			out = new FileOutputStream(this.location);
+
+			this.properties.store(out, "Translator Preferences File");
+			out.close();
+		} catch (IOException e) {
+			System.err.println("Error saving translator preferences. Aborting.");
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Validates a translator by checking that the given translator has a value
 	 * for all the required paths, that each path exists, and, if possible, that

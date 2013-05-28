@@ -8,7 +8,6 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -183,31 +182,6 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	@Override
 	public Collection<KnowIt> getParameters() {
 		return this.getComponent().getParameters();
-	}
-
-	/**
-	 * Returns the active block of a Cause.
-	 * 
-	 * @see ScriptIt#getActiveBlock()
-	 */
-	@Override
-	public StoryItemSequence getActiveChild() {
-		return this.getComponent().getActiveBlock();
-	}
-
-	/**
-	 * Returns the inactive block of a Cause.
-	 * 
-	 * @see ScriptIt#getInactiveBlock()
-	 */
-	@Override
-	public StoryItemSequence getInactiveChild() {
-		return this.getComponent().getInactiveBlock();
-	}
-
-	@Override
-	public StoryItemSequence getAlwaysChild() {
-		return this.getComponent().getAlwaysBlock();
 	}
 
 	/**

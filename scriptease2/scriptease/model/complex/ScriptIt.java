@@ -2,7 +2,6 @@ package scriptease.model.complex;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -11,12 +10,10 @@ import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.translator.codegenerator.LocationInformation;
@@ -28,62 +25,21 @@ import scriptease.translator.codegenerator.LocationInformation;
  * 
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  * 
  */
 public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		StoryComponentObserver {
-	private static final String PREFIX = "<"
-			+ StoryComponentPanelFactory.CURRENT_STORY_POINT_TAG + "> ";
-
-	private static final String ACTIVE_BLOCK_TEXT = PREFIX + "Active:";
-	private static final String INACTIVE_BLOCK_TEXT = PREFIX + "Inactive:";
-	private static final String ALWAYS_BLOCK_TEXT = "Always:";
-
-	/*
-	 * TODO We should move out all of the cause specific stuff and call it a
-	 * "CauseIt". We are removing functionality when we create the ControlIt
-	 * subclass from ScriptIt, which violates the Liskov principle.
-	 * 
-	 * Ticket: 42583119
-	 */
-
-	// The group of children that are in the Story Point Active block
-	private StoryItemSequence activeBlock;
-
-	// The group of children that are in the Story Point Inactive block
-	private StoryItemSequence inactiveBlock;
-
-	// The group of children that are in the Always block .
-	private StoryItemSequence alwaysBlock;
 
 	protected Collection<CodeBlock> codeBlocks;
 
 	public ScriptIt(String name) {
 		super(name);
-		final int NUMBER_OF_BLOCKS = 3;
-
 		this.codeBlocks = new ArrayList<CodeBlock>();
 
-		final List<Class<? extends StoryComponent>> validTypes;
-
-		validTypes = new ArrayList<Class<? extends StoryComponent>>();
-
-		this.registerChildType(StoryItemSequence.class, NUMBER_OF_BLOCKS);
-
-		validTypes.add(ScriptIt.class);
-		validTypes.add(KnowIt.class);
-		validTypes.add(AskIt.class);
-		validTypes.add(StoryComponentContainer.class);
-		validTypes.add(Note.class);
-		validTypes.add(ControlIt.class);
-
-		this.activeBlock = new StoryItemSequence(validTypes);
-		this.activeBlock.setDisplayText(ACTIVE_BLOCK_TEXT);
-		this.inactiveBlock = new StoryItemSequence(validTypes);
-		this.inactiveBlock.setDisplayText(INACTIVE_BLOCK_TEXT);
-		this.alwaysBlock = new StoryItemSequence(validTypes);
-		this.alwaysBlock.setDisplayText(ALWAYS_BLOCK_TEXT);
-
+		// Only classes that extend ScriptIts should be able to have children.
+		this.registerChildType(
+				new ArrayList<Class<? extends StoryComponent>>(), 0);
 	}
 
 	public Collection<CodeBlock> getCodeBlocks() {
@@ -99,6 +55,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 	 */
 	public Collection<CodeBlock> getCodeBlocksForLocation(
 			LocationInformation locationInfo) {
+
 		Collection<CodeBlock> matching = new ArrayList<CodeBlock>(1);
 		for (CodeBlock codeBlock : this.codeBlocks) {
 			if (locationInfo.matchesLocation(codeBlock))
@@ -112,14 +69,14 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 	 * 
 	 * @return
 	 */
-	public ScriptIt getCause() {
-		if (this.isCause())
-			return this;
+	public CauseIt getCause() {
+		if (this instanceof CauseIt)
+			return (CauseIt) this;
 		else
 			for (CodeBlock block : this.codeBlocks) {
-				final ScriptIt cause = block.getCause();
+				final CauseIt cause = block.getCause();
 				if (cause != null)
-					return cause;
+					return (CauseIt) cause;
 			}
 		return null;
 	}
@@ -130,23 +87,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 			return this.codeBlocks.equals(((ScriptIt) other).codeBlocks);
 		}
 		return false;
-	}
-
-	/**
-	 * A cause is a ScriptIt where all CodeBlocks have a subject and a slot.
-	 * 
-	 * @return true if all CodeBlocks have both subjects and slots.
-	 * 
-	 */
-	public boolean isCause() {
-		if (this.codeBlocks.size() == 0)
-			return false;
-
-		for (CodeBlock codeBlock : this.codeBlocks) {
-			if (!codeBlock.hasSubject() || !codeBlock.hasSlot())
-				return false;
-		}
-		return true;
 	}
 
 	@Override
@@ -169,94 +109,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 			component.addCodeBlock(codeBlock.clone());
 		}
 
-		if (component.isCause()) {
-			component
-					.setActiveBlock((StoryItemSequence) component.childComponents
-							.get(0));
-			component
-					.setInactiveBlock((StoryItemSequence) component.childComponents
-							.get(1));
-
-			component
-					.setAlwaysBlock((StoryItemSequence) component.childComponents
-							.get(2));
-		}
-
 		return component;
-	}
-
-	/**
-	 * Gets the container for children that are in the Story Point Active block
-	 * of a cause.
-	 * 
-	 * @return
-	 */
-	public StoryItemSequence getActiveBlock() {
-		return this.activeBlock;
-	}
-
-	/**
-	 * Gets the container for children that are in the Story Point Inactive
-	 * block of a cause.
-	 * 
-	 * @return
-	 */
-	public StoryItemSequence getInactiveBlock() {
-		return this.inactiveBlock;
-	}
-
-	/**
-	 * Gets the container for children that are in the Always block of a cause.
-	 * 
-	 * @return
-	 */
-	public StoryItemSequence getAlwaysBlock() {
-		return this.alwaysBlock;
-	}
-
-	private void setActiveBlock(StoryItemSequence activeBlock) {
-		// Change text for backwards compatibility
-		activeBlock.setDisplayText(ACTIVE_BLOCK_TEXT);
-		this.activeBlock = activeBlock;
-
-		if (this.activeBlock != null)
-			activeBlock.setOwner(this);
-	}
-
-	private void setInactiveBlock(StoryItemSequence inactiveBlock) {
-		// Change text for backwards compatibility
-		inactiveBlock.setDisplayText(INACTIVE_BLOCK_TEXT);
-		this.inactiveBlock = inactiveBlock;
-
-		if (this.inactiveBlock != null)
-			inactiveBlock.setOwner(this);
-	}
-
-	private void setAlwaysBlock(StoryItemSequence alwaysBlock) {
-		alwaysBlock.setDisplayText(ALWAYS_BLOCK_TEXT);
-		this.alwaysBlock = alwaysBlock;
-
-		if (this.alwaysBlock != null) {
-			alwaysBlock.setOwner(this);
-		}
-	}
-
-	@Override
-	public boolean addStoryChildBefore(StoryComponent newChild,
-			StoryComponent sibling) {
-		boolean success = super.addStoryChildBefore(newChild, sibling);
-		// TODO See this? This "instanceof my subclass"? This is bad. This is
-		// everything that is wrong with this class.
-		if (success && !(this instanceof ControlIt)) {
-			final Iterator<StoryComponent> it = this.getChildren().iterator();
-			if (it.next() == newChild)
-				this.setActiveBlock((StoryItemSequence) newChild);
-			else if (it.next() == newChild)
-				this.setInactiveBlock((StoryItemSequence) newChild);
-			else
-				this.setAlwaysBlock((StoryItemSequence) newChild);
-		}
-		return success;
 	}
 
 	@Override
@@ -327,7 +180,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 			this.notifyObservers(new StoryComponentEvent(this,
 					StoryComponentChangeEnum.CHANGE_CODEBLOCK_REMOVED));
 		}
-		this.updateStoryChildren();
 	}
 
 	public void addCodeBlock(CodeBlock codeBlock) {
@@ -336,26 +188,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 			codeBlock.setOwner(this);
 			this.notifyObservers(new StoryComponentEvent(this,
 					StoryComponentChangeEnum.CHANGE_CODEBLOCK_ADDED));
-		}
-		this.updateStoryChildren();
-	}
-
-	/**
-	 * Updates the ScriptIt to display the Story Point Active and Inactive
-	 * blocks, depending on if it is a cause or not.
-	 */
-	private void updateStoryChildren() {
-		if (this.isCause()) {
-			if (!this.childComponents.contains(this.activeBlock))
-				this.addStoryChild(this.activeBlock);
-			if (!this.childComponents.contains(this.inactiveBlock))
-				this.addStoryChild(this.inactiveBlock);
-			if (!this.childComponents.contains(this.alwaysBlock))
-				this.addStoryChild(this.alwaysBlock);
-		} else {
-			this.removeStoryChild(this.activeBlock);
-			this.removeStoryChild(this.inactiveBlock);
-			this.removeStoryChild(this.alwaysBlock);
 		}
 	}
 
@@ -366,8 +198,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		for (CodeBlock codeBlock : codeBlocks) {
 			this.addCodeBlock(codeBlock);
 		}
-
-		this.updateStoryChildren();
 
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CODE_BLOCKS_SET));
@@ -421,24 +251,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		return bindings;
 	}
 
-	/**
-	 * Returns whether the two causes are equivalent. That is, whether they have
-	 * the same display text and the same bindings. If one of these ScriptIts is
-	 * not a cause, this returns false.
-	 * 
-	 * @param cause
-	 * @return
-	 */
-	public boolean isEquivalentToCause(ScriptIt cause) {
-		boolean equality = true;
-
-		equality &= cause.isCause() && this.isCause();
-		equality &= cause.getDisplayText().equals(this.getDisplayText());
-		equality &= cause.getBindings().equals(this.getBindings());
-
-		return equality;
-	}
-
 	@Override
 	public void revalidateKnowItBindings() {
 		for (KnowIt parameter : this.getParameters()) {
@@ -448,12 +260,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 
 			if (!binding.compatibleWith(parameter))
 				parameter.setBinding(new KnowItBindingNull());
-		}
-
-		if (this.isCause()) {
-			this.getAlwaysBlock().revalidateKnowItBindings();
-			this.getInactiveBlock().revalidateKnowItBindings();
-			this.getActiveBlock().revalidateKnowItBindings();
 		}
 	}
 
@@ -482,7 +288,6 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 				this.notifyObservers(new StoryComponentEvent(this,
 						StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
 			}
-			updateStoryChildren();
 		}
 	}
 }

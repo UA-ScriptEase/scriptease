@@ -36,7 +36,6 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -48,6 +47,7 @@ import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
 import scriptease.util.FileOp;
+
 
 /**
  * This class represents a NWN ERF file. An ERF file is the file into which
@@ -188,8 +188,7 @@ public final class ErfFile extends GameModule {
 		adapter = new StoryAdapter() {
 			@Override
 			public void processStoryPoint(StoryPoint storyPoint) {
-				for (StoryComponent child : storyPoint.getChildren())
-					child.process(this);
+				this.defaultProcessComplex(storyPoint);
 
 				for (StoryPoint successor : storyPoint.getSuccessors())
 					successor.process(this);
@@ -203,17 +202,13 @@ public final class ErfFile extends GameModule {
 			}
 
 			@Override
-			public void processStoryComponentContainer(
-					StoryComponentContainer storyComponentContainer) {
-				this.defaultProcessComplex(storyComponentContainer);
-			}
-
-			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
 				if (scriptIt.getDisplayText().equals(
 						GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT))
 					ErfFile.this.addJournalCategory(scriptIt);
 
+				// TODO: processSubjects might be redundant.
+				// Ticket 49524483
 				scriptIt.processSubjects(this);
 				scriptIt.processParameters(this);
 				this.defaultProcessComplex(scriptIt);
@@ -246,8 +241,8 @@ public final class ErfFile extends GameModule {
 			}
 
 			@Override
-			public void processStoryItemSequence(StoryItemSequence sequence) {
-				this.defaultProcessComplex(sequence);
+			public void processStoryComponentContainer(StoryComponentContainer container) {
+				this.defaultProcessComplex(container);
 			}
 		};
 

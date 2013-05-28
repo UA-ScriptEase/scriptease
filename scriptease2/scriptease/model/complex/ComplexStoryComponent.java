@@ -33,7 +33,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 	}
 
 	/**
-	 * Initialises the ComplexStoryComponent variables. This logic is separate
+	 * Initializes the ComplexStoryComponent variables. This logic is separate
 	 * from constructors to allow for Cloning to reset the variables the same
 	 * way they are built in the constructor.
 	 */
@@ -106,7 +106,6 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 			System.err.println("ComplexStoryComponent '"
 					+ this.getDisplayText() + "' has rejected '" + newChild
 					+ "' because it is not an acceptable child type.");
-			this.canAcceptChild(newChild);
 			return false;
 		}
 
@@ -232,6 +231,14 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 		this.allowableChildMap.put(newType, numAllowed);
 	}
 
+	public final void registerChildType(
+			Collection<Class<? extends StoryComponent>> newTypes,
+			Integer numAllowed) {
+
+		for (Class<? extends StoryComponent> type : newTypes)
+			this.allowableChildMap.put(type, numAllowed);
+	}
+
 	public final void clearAllowableChildren() {
 		this.allowableChildMap.clear();
 	}
@@ -319,9 +326,9 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 	 * @return Whether the receiver could accept <code>potentialChild</code>
 	 */
 	public boolean canAcceptChild(StoryComponent potentialChild) {
-		return this.isValidChild(potentialChild)
-				&& this.roomForMoreOf(potentialChild)
-				&& !this.isDescendantOf(potentialChild);
+		return this.isValidChild(potentialChild) &&
+				this.roomForMoreOf(potentialChild) &&
+				!this.isDescendantOf(potentialChild);
 	}
 
 	private boolean isDescendantOf(StoryComponent potentialChild) {
@@ -374,26 +381,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 
 	/*************** HELPERS *************************/
 	protected final boolean isValidChild(StoryComponent newChild) {
-		boolean isValid = true;
-		if (newChild == null)
-			return false;
-
-		/**
-		 * If the newChild is a StoryComponentContainer, make sure it's children
-		 * are all valid
-		 */
-		if (newChild instanceof StoryComponentContainer) {
-			for (StoryComponent child : ((StoryComponentContainer) newChild)
-					.getChildren()) {
-				if (isValidChild(child) == false)
-					isValidChild(child);
-				isValid &= isValidChild(child);
-			}
-		}
-
-		final Class<? extends StoryComponent> newChildClass = newChild
-				.getClass();
-		return isValid && this.isValidChild(newChildClass);
+		return newChild != null && this.isValidChild(newChild.getClass());
 	}
 
 	protected final boolean isValidChild(

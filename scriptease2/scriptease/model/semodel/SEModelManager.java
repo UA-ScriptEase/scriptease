@@ -12,6 +12,7 @@ import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.Translator;
 
 /**
@@ -88,6 +89,20 @@ public final class SEModelManager {
 	}
 
 	/**
+	 * Returns the root for the active story model. If the active model is not a
+	 * story model, this method throws a exception.
+	 * 
+	 * @return
+	 */
+	public StoryPoint getActiveRoot() {
+		if (this.activeModel instanceof StoryModel)
+			return ((StoryModel) this.activeModel).getRoot();
+
+		throw new IllegalStateException(
+				"Tried to get a root for active model: " + this.activeModel);
+	}
+
+	/**
 	 * Gets whether or not the model pool has an active model.
 	 * 
 	 * @return True if there is an active model.
@@ -144,7 +159,7 @@ public final class SEModelManager {
 
 		if (model != null && this.models.contains(model)) {
 			StatusManager.getInstance().setStatus(model + " activated");
-			WindowFactory.showProgressBar("Activating " + model.getName()
+			WindowFactory.showProgressBar("Activating " + model.getTitle()
 					+ "...", new Runnable() {
 
 				@Override

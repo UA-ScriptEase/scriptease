@@ -227,6 +227,7 @@ public class ScriptWidgetFactory {
 
 			widget.setTransferHandler(BindingTransferHandlerExportOnly
 					.getInstance());
+			
 			// Set an empty border to prevent line crowding.
 			widget.setBorder(BorderFactory.createEmptyBorder(
 					TOTAL_ROW_BORDER_SIZE, TOTAL_ROW_BORDER_SIZE,
@@ -387,7 +388,8 @@ public class ScriptWidgetFactory {
 
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
-
+		final JTextField textField;
+		
 		final String scriptValue;
 
 		final StoryComponentObserver observer;
@@ -403,10 +405,11 @@ public class ScriptWidgetFactory {
 		model = new SpinnerNumberModel(initVal, MIN, MAX, STEP_SIZE);
 		spinner = new JSpinner(model);
 		scriptValue = knowIt.getBinding().getScriptValue();
-
-		final JTextField textField = ((JSpinner.DefaultEditor) spinner
+		
+		textField = ((JSpinner.DefaultEditor) spinner
 				.getEditor()).getTextField();
-
+		textField.setBackground(ScriptEaseUI.COLOUR_SIMPLE_TEXT);
+		
 		// For some annoying reason, JSpinners don't automatically resize when
 		// you set their max and min values...
 		int length = textField.getText().length();
@@ -494,7 +497,7 @@ public class ScriptWidgetFactory {
 		};
 
 		spinner.addChangeListener(changeListener);
-
+		
 		knowIt.addStoryComponentObserver(observer);
 
 		widgetsToStoryComponents.put(spinner, knowIt);
@@ -519,6 +522,7 @@ public class ScriptWidgetFactory {
 		Collections.sort(list);
 
 		combo = new JComboBox(list.toArray());
+		combo.setBackground(ScriptEaseUI.COLOUR_SIMPLE_TEXT);
 
 		scriptValue = knowIt.getBinding().getScriptValue();
 
@@ -604,14 +608,18 @@ public class ScriptWidgetFactory {
 		final StoryComponentObserver observer;
 		final Runnable commitText;
 		final String displayText;
+		final Color color;
 
 		displayText = component.getDisplayText();
 
 		if (component instanceof Note) {
 			nameEditor = ComponentFactory.buildJTextFieldWithTextBackground(0,
 					"Note", displayText);
-		} else
+			color = ScriptEaseUI.COLOUR_NOTE_TEXT_BG;
+		} else {
 			nameEditor = new JTextField(displayText);
+			color = ScriptEaseUI.COLOUR_KNOWN_OBJECT_INNER;
+		}
 
 		observer = new StoryComponentObserver() {
 			@Override
@@ -650,7 +658,7 @@ public class ScriptWidgetFactory {
 			resizing = true;
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameEditor,
-				commitText, resizing);
+				commitText, resizing, color);
 
 		component.addStoryComponentObserver(observer);
 
@@ -719,7 +727,7 @@ public class ScriptWidgetFactory {
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(valueEditor,
-				commitText, true);
+				commitText, true, ScriptEaseUI.COLOUR_SIMPLE_TEXT);
 
 		knowIt.addStoryComponentObserver(observer);
 

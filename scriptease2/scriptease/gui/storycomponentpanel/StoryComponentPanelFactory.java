@@ -30,6 +30,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
@@ -368,11 +369,8 @@ public class StoryComponentPanelFactory {
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
 				// Add an expansion button
 
-				// TODO Once we have CauseIts as a subclass, we can change this
-				// to be better.
 				if (complex instanceof ScriptIt) {
-					if (((ScriptIt) complex).isCause()
-							|| complex instanceof ControlIt) {
+					if (complex instanceof CauseIt || complex instanceof ControlIt) {
 						addExpansionButton(complex, panel);
 					}
 				} else

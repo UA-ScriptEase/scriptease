@@ -108,7 +108,7 @@ public final class StoryModel extends SEModel {
 		} else
 			WindowFactory.getInstance().showWarningDialog(
 					"Library Already Exists",
-					"The Library, " + library.getName()
+					"The Library, " + library.getTitle()
 							+ ", has already been added to the model.");
 	}
 
@@ -307,7 +307,7 @@ public final class StoryModel extends SEModel {
 
 	@Override
 	public String toString() {
-		return "StoryModel [" + this.getName() + "]";
+		return "StoryModel [" + this.getTitle() + "]";
 	}
 
 	@Override

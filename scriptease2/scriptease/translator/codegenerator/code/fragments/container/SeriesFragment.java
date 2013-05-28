@@ -15,7 +15,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryItemSequence;
 import scriptease.translator.codegenerator.CodeGenerationConstants;
 import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -368,11 +367,6 @@ public class SeriesFragment extends AbstractContainerFragment {
 		@Override
 		public void processAskIt(AskIt askIt) {
 			this.processStoryComponent(askIt);
-		}
-
-		@Override
-		public void processStoryItemSequence(StoryItemSequence sequence) {
-			this.processStoryComponent(sequence);
 		}
 
 		@Override

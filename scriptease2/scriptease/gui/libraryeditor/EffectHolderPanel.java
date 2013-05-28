@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import scriptease.controller.observer.SetEffectObserver;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.util.GUIOp;
 
@@ -57,7 +58,7 @@ public class EffectHolderPanel extends JPanel {
 	 * @param component
 	 */
 	public boolean setEffect(ScriptIt effect) {
-		if (effect != null && ((ScriptIt) effect).isCause())
+		if (effect != null && (effect instanceof CauseIt))
 			return false;
 
 		/*

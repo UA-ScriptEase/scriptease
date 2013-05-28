@@ -9,10 +9,11 @@ import scriptease.controller.get.VariableGetter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryItemSequence;
+import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.EventSlotManager;
@@ -188,8 +189,8 @@ public class CodeBlockContext extends Context {
 	 * Get the ScriptIt's Story Point Active Child
 	 */
 	@Override
-	public StoryItemSequence getActiveChild() {
-		ScriptIt cause = this.codeBlock.getCause();
+	public StoryComponentContainer getActiveChild() {
+		CauseIt cause = this.codeBlock.getCause();
 		if (cause != null)
 			return cause.getActiveBlock();
 		else
@@ -202,8 +203,8 @@ public class CodeBlockContext extends Context {
 	 * Get the ScriptIt's Story Point Inactive Child
 	 */
 	@Override
-	public StoryItemSequence getInactiveChild() {
-		ScriptIt cause = this.codeBlock.getCause();
+	public StoryComponentContainer getInactiveChild() {
+		CauseIt cause = this.codeBlock.getCause();
 		if (cause != null)
 			return cause.getInactiveBlock();
 		else
@@ -214,8 +215,8 @@ public class CodeBlockContext extends Context {
 	}
 
 	@Override
-	public StoryItemSequence getAlwaysChild() {
-		ScriptIt cause = this.codeBlock.getCause();
+	public StoryComponentContainer getAlwaysChild() {
+		CauseIt cause = this.codeBlock.getCause();
 		if (cause != null)
 			return cause.getAlwaysBlock();
 		else
@@ -246,15 +247,15 @@ public class CodeBlockContext extends Context {
 	@Override
 	public Collection<ScriptIt> getIdenticalCauses() {
 		final Collection<ScriptIt> identicalCauses;
-		final ScriptIt scriptIt;
+		final CauseIt causeIt;
 
-		scriptIt = this.codeBlock.getCause();
+		causeIt = this.codeBlock.getCause();
 		identicalCauses = new ArrayList<ScriptIt>();
 
 		for (StoryPoint point : this.getStartStoryPoint().getDescendants()) {
 			for (StoryComponent child : point.getChildren()) {
 				if (child instanceof ScriptIt) {
-					if (scriptIt.isEquivalentToCause((ScriptIt) child)) {
+					if (causeIt.isEquivalentToCause((CauseIt) child)) {
 						identicalCauses.add((ScriptIt) child);
 					}
 				}

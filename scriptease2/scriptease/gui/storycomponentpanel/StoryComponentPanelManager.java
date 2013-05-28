@@ -16,15 +16,17 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.util.GUIOp;
 
 /**
  * 
  * @author mfchurch
- * 
+ * @author jyuen
  */
 public class StoryComponentPanelManager {
 	private Map<StoryComponentPanel, Boolean> selected;
@@ -118,10 +120,19 @@ public class StoryComponentPanelManager {
 	 * Deletes the selected removable StoryComponentPanels
 	 */
 	public void deleteSelected() {
-		List<StoryComponentPanel> toDelete = getSelectedParents();
+		final UndoManager undoManager = UndoManager.getInstance();
 
-		// Get the UndoManager.
-		UndoManager undoManager = UndoManager.getInstance();
+		List<StoryComponentPanel> toDelete = this.getSelectedParents();
+
+		// We don't want to remove the StoryComponentPanel if it belongs to
+		// a StoryComponentContainer - only remove the contents.
+		for (StoryComponentPanel parent : toDelete) {
+			if (parent.getStoryComponent() instanceof StoryComponentContainer) {
+				toDelete = this.getSelectedPanels();
+				toDelete.removeAll(this.getSelectedParents());
+				break;
+			}
+		}
 
 		// Start a new UndoableAction.
 		if (!undoManager.hasOpenUndoableAction()) {
@@ -370,7 +381,7 @@ public class StoryComponentPanelManager {
 
 				@Override
 				public void processScriptIt(ScriptIt scriptIt) {
-					if (scriptIt.isCause())
+					if (scriptIt instanceof CauseIt)
 						panel.setBorder(BorderFactory
 								.createLineBorder(Color.LIGHT_GRAY));
 					else

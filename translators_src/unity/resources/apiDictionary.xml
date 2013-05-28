@@ -1883,31 +1883,31 @@
     </Slot>
   </Slots>
   <Causes>
-    <ScriptIt>
+    <CauseIt>
       <Name>When &lt;subject&gt; wakes up initialize the story system</Name>
       <Visible>false</Visible>
       <Labels>
         <Label>automatic</Label>
       </Labels>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -1970,30 +1970,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>While &lt;subject&gt; exists, immediately</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2021,30 +2021,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt; is created</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2072,30 +2072,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>While &lt;subject&gt; exists, regularly</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2123,30 +2123,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>While &lt;subject&gt; exists, finally</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2174,30 +2174,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>OnAnimatorIKs on &lt;subject&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2225,30 +2225,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>OnAnimatorMoves on &lt;subject&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2276,30 +2276,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt;&apos;s application gains or loses focus</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2327,30 +2327,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt;&apos;s application pauses</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2378,30 +2378,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>Before &lt;subject&gt;&apos;s application quits</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2429,30 +2429,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>OnAudioFilterRead on &lt;subject&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2480,30 +2480,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt; is no longer visible on any camera</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2531,32 +2531,32 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt; becomes visible on a camera</Name>
       <Visible>true</Visible>
       <Labels>
         <Label></Label>
       </Labels>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2584,30 +2584,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt; collides with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2635,30 +2635,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt; stops colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2686,30 +2686,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>While &lt;subject&gt; is colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2737,30 +2737,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When a connection is made to &lt;subject&gt;&apos;s server</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2788,30 +2788,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt; collides with &lt;Rigid Object&gt; while moving</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2839,30 +2839,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt; is destroyed</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2890,30 +2890,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt; is disabled</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2941,32 +2941,32 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When a connection is terminated to &lt;subject&gt;&apos;s server</Name>
       <Visible>true</Visible>
       <Labels>
         <Label></Label>
       </Labels>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2994,32 +2994,32 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>OnDrawGizmos on &lt;subject&gt; ... This is apparently used with waypoints. Check it out.</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>Research</Label>
       </Labels>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3047,32 +3047,32 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>OnDrawGizmosSelected on &lt;subject&gt; See OnDrawGizmos</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>Research</Label>
       </Labels>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3100,30 +3100,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt; is enabled</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3151,30 +3151,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When a connection attempt to &lt;subject&gt;&apos;s server fails</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3202,30 +3202,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When there is a problem connecting to &lt;subject&gt;&apos;s MasterServer</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3253,30 +3253,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt;&apos;s GUI is updated</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3304,30 +3304,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When a joint attached to &lt;subject&gt; is broken</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3355,30 +3355,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When a new level is loaded for &lt;subject&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3406,30 +3406,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;Master Server Event&gt; occurs on &lt;subject&gt;&apos;s MasterServer</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3457,30 +3457,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;Mouse Button&gt; is pressed on &lt;subject&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3508,30 +3508,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;Mouse Button&gt; is dragged on &lt;subject&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3559,30 +3559,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When mouse enters &lt;subject&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3610,30 +3610,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When mouse exits &lt;subject&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3661,30 +3661,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>While mouse is over &lt;subject&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3712,30 +3712,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;Mouse Button&gt; is released over &lt;subject&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3763,30 +3763,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;Mouse Button&gt; is released over &lt;subject&gt; it entered</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3814,30 +3814,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>OnNetworkInstantiate on &lt;subject&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3865,30 +3865,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When a particle hits &lt;subject&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3916,30 +3916,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When a player connects to &lt;subject&gt;&apos;s server</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3967,30 +3967,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When a player is disconnected from &lt;subject&gt;&apos;s server</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4018,30 +4018,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When the camera &lt;subject&gt; finishes rendering the scene</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4069,30 +4069,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>Before the camera &lt;subject&gt; culls the scene</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4120,30 +4120,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>Before the camera &lt;subject&gt; starts rendering the scene</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4171,30 +4171,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When the camera &lt;subject&gt; finishes rendering &lt;image&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4222,30 +4222,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When a camera finishes rendering &lt;subject&gt;&apos;s scene</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4273,30 +4273,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>OnSerializeNetworkView on &lt;subject&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4324,30 +4324,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>OnServerInitialized on &lt;subject&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4375,30 +4375,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt; is entered by &lt;Triggering Object&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4426,30 +4426,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt; is exited by &lt;Triggering Object&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4477,30 +4477,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>While &lt;subject&gt; overlaps &lt;Triggering Object&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4528,30 +4528,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>OnWillRenderObject on &lt;subject&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4579,30 +4579,30 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
+    </CauseIt>
+    <CauseIt>
       <Name>After &lt;subject&gt; is created</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4630,7 +4630,7 @@
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </ScriptIt>
+    </CauseIt>
   </Causes>
   <Effects>
     <ScriptIt>
