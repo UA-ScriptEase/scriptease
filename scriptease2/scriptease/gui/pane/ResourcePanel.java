@@ -31,7 +31,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.GUIOp;
 
@@ -109,7 +108,7 @@ public class ResourcePanel extends JPanel {
 		if (!(model instanceof StoryModel))
 			return;
 
-		for (String type : ((StoryModel) model).getTypeKeywords()) {
+		for (String type : model.getTypeKeywords()) {
 			final Collection<Resource> gameObjects;
 
 			gameObjects = ((StoryModel) model).getModule().getResourcesOfType(
@@ -182,7 +181,6 @@ public class ResourcePanel extends JPanel {
 
 			Collections.sort(constantList, constantSorter);
 
-			final GameTypeManager typeManager;
 			final String typeName;
 			final ResourceContainer container;
 			final SEModel model;
@@ -190,9 +188,7 @@ public class ResourcePanel extends JPanel {
 			model = SEModelManager.getInstance().getActiveModel();
 
 			if (model != null) {
-				typeManager = model.getTranslator().getGameTypeManager();
-
-				typeName = typeManager.getDisplayText(type);
+				typeName = model.getTypeDisplayText(type);
 				container = new ResourceContainer(typeName, constantList);
 
 				this.add(container);

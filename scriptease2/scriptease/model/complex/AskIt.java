@@ -11,7 +11,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
+import scriptease.translator.io.model.GameType;
 
 /**
  * Represents the "if/else" programming construct.<br>
@@ -74,7 +74,7 @@ public final class AskIt extends ComplexStoryComponent {
 		types = new ArrayList<String>(1);
 
 		// Add an empty askIt
-		types.add(GameTypeManager.DEFAULT_BOOL_TYPE);
+		types.add(GameType.DEFAULT_BOOL_TYPE);
 
 		this.setCondition(new KnowIt("Question", types));
 		this.setDisplayText("<Question>");

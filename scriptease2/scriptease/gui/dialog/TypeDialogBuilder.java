@@ -40,8 +40,8 @@ import scriptease.gui.WindowFactory;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.TypeWidget;
 import scriptease.gui.ui.ScriptEaseUI;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
-import scriptease.translator.TranslatorManager;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
 import scriptease.util.GUIOp;
 
 /**
@@ -223,15 +223,13 @@ public class TypeDialogBuilder {
 		final JPanel typesPanel;
 
 		final List<CheckBoxPanel> checkBoxPanels;
-		final GameTypeManager typeManager;
+		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
 		typesPanel = new JPanel();
 
 		checkBoxPanels = new ArrayList<CheckBoxPanel>();
-		typeManager = TranslatorManager.getInstance()
-				.getActiveGameTypeManager();
 
-		if (typeManager == null)
+		if (model == null)
 			return new JScrollPane();
 
 		// create a menu item for each type
@@ -254,8 +252,8 @@ public class TypeDialogBuilder {
 			@Override
 			public int compare(CheckBoxPanel o1, CheckBoxPanel o2) {
 				return String.CASE_INSENSITIVE_ORDER.compare(
-						typeManager.getDisplayText(o1.getTypeKeyword()),
-						typeManager.getDisplayText(o2.getTypeKeyword()));
+						model.getTypeDisplayText(o1.getTypeKeyword()),
+						model.getTypeDisplayText(o2.getTypeKeyword()));
 			}
 		});
 
@@ -274,9 +272,9 @@ public class TypeDialogBuilder {
 
 			type = checkBoxPanel.getTypeKeyword();
 
-			if (typeManager.hasEnum(type)) {
+			if (!model.getTypeEnumeratedValues(type).isEmpty()) {
 				listCBPanels.add(checkBoxPanel);
-			} else if (typeManager.getSlots(type).size() > 0) {
+			} else if (model.getTypeSlots(type).size() > 0) {
 				gameObjectCBPanels.add(checkBoxPanel);
 			} else {
 				gameConstantCBPanels.add(checkBoxPanel);
@@ -487,8 +485,8 @@ public class TypeDialogBuilder {
 			final JLabel typeLabel;
 			final JPanel typePanel;
 
-			typeDisplayText = TranslatorManager.getInstance()
-					.getActiveGameTypeManager().getDisplayText(typeKeyword);
+			typeDisplayText = SEModelManager.getInstance().getActiveModel()
+					.getTypeDisplayText(typeKeyword);
 
 			this.typeKeyword = typeKeyword;
 			this.typeWidget = ScriptWidgetFactory.getTypeWidget(typeKeyword);

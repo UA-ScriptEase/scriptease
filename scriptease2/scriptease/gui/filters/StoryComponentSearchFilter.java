@@ -18,8 +18,8 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
-import scriptease.translator.TranslatorManager;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
 
 /**
  * Accepts StoryComponents if one of their properties contains the text given in
@@ -154,18 +154,18 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 		}
 
 		private void addTypeData(Collection<String> types) {
-			final GameTypeManager typeManager;
+			final SEModel model;
 
-			typeManager = TranslatorManager.getInstance()
-					.getActiveGameTypeManager();
+			model = SEModelManager.getInstance().getActiveModel();
 
-			for (String type : types) {
+			for (final String type : types) {
 				this.searchData.add(type);
-				this.searchData.add(typeManager.getDisplayText(type));
-				this.searchData.add(typeManager.getCodeSymbol(type));
-				this.searchData.add(typeManager.getWidgetName(type));
+				this.searchData.add(model.getTypeDisplayText(type));
+				this.searchData.add(model.getTypeCodeSymbol(type));
+				this.searchData.add(model.getTypeWidgetName(type));
 
-				final Map<String, String> enums = typeManager.getEnumMap(type);
+				final Map<String, String> enums = model
+						.getTypeEnumeratedValues(type);
 
 				this.searchData.addAll(enums.values());
 				this.searchData.addAll(enums.keySet());

@@ -53,10 +53,10 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.io.model.GameType;
 
 /**
  * LibraryPane represents the JPanel used for managing, filtering and choosing
@@ -394,24 +394,22 @@ public class LibraryPanel extends JTabbedPane {
 					final KnowIt k2 = (KnowIt) c2;
 					final String k1Type = k1.getDefaultType();
 					final String k2Type = k2.getDefaultType();
+					final LibraryModel k1Library = k1.getLibrary();
+					final LibraryModel k2Library = k2.getLibrary();
 
-					final GameTypeManager typeManager = TranslatorManager
-							.getInstance().getActiveGameTypeManager();
-
-					if (typeManager == null)
-						return compare;
-
-					String k1Widget = typeManager.getWidgetName(k1Type);
-					String k2Widget = typeManager.getWidgetName(k2Type);
+					String k1Widget = k1Library.getTypeWidgetName(k1Type);
+					String k2Widget = k2Library.getTypeWidgetName(k2Type);
 
 					if (k1Widget == null || k1Widget.isEmpty()) {
-						if (typeManager.hasEnum(k1Type) == true) {
-							k1Widget = GameTypeManager.DEFAULT_LIST_WIDGET;
+						if (!k1Library.getTypeEnumeratedValues(k1Type)
+								.isEmpty()) {
+							k1Widget = GameType.DEFAULT_LIST_WIDGET;
 						}
 					}
 					if (k2Widget == null || k2Widget.isEmpty()) {
-						if (typeManager.hasEnum(k2Type) == true) {
-							k2Widget = GameTypeManager.DEFAULT_LIST_WIDGET;
+						if (!k2Library.getTypeEnumeratedValues(k2Type)
+								.isEmpty()) {
+							k2Widget = GameType.DEFAULT_LIST_WIDGET;
 						}
 					}
 

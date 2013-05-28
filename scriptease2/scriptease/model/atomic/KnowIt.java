@@ -23,7 +23,6 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.Translator;
@@ -225,16 +224,14 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				// Find an appropriate Default binding for the type.
 				final SEModel activeModel = SEModelManager.getInstance()
 						.getActiveModel();
+
+				// / TODO Clean this up if possible.
 				if (activeModel != null) {
 					final Translator translator = activeModel.getTranslator();
 					if (translator != null
 							&& translator.defaultLibraryIsLoaded()) {
-						final GameTypeManager typeManager;
-
-						typeManager = translator.getGameTypeManager();
-
 						for (String type : KnowIt.this.types) {
-							if (typeManager.hasGUI(type)) {
+							if (activeModel.getTypeGUI(type) != null) {
 								final Resource resource;
 								final KnowItBindingResource bindingValue;
 

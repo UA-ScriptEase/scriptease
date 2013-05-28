@@ -51,9 +51,9 @@ import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
-import scriptease.translator.TranslatorManager;
 import scriptease.util.StringOp;
 
 /**
@@ -971,18 +971,18 @@ public class LibraryEditorPanelFactory {
 	 * @return
 	 */
 	private Collection<String> getCommonSlotsForTypes(KnowIt subject) {
+		final SEModel model = SEModelManager.getInstance().getActiveModel();
+
 		final Collection<String> slots;
 
-		slots = TranslatorManager.getInstance().getActiveTranslator()
-				.getGameTypeManager().getSlots(subject.getDefaultType());
+		slots = model.getTypeSlots(subject.getDefaultType());
 
 		for (String type : subject.getTypes()) {
 			final Collection<String> otherSlots;
 
 			otherSlots = new ArrayList<String>();
 
-			for (String slot : TranslatorManager.getInstance()
-					.getActiveTranslator().getGameTypeManager().getSlots(type)) {
+			for (String slot : model.getTypeSlots(type)) {
 				if (slots.contains(slot))
 					otherSlots.add(slot);
 			}

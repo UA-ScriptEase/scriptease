@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import scriptease.gui.WindowFactory;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.Slot;
 import scriptease.translator.io.tools.ScriptEaseFileAccess;
@@ -386,11 +386,10 @@ public class GenericFileFormat {
 	 * out, the naming and references are correct.
 	 */
 	private void removeGeneratedReferences() {
-		final GameTypeManager typeManager;
 		final Collection<String> scriptSlots;
 
-		typeManager = ErfFile.getTranslator().getLibrary().getGameTypeManager();
-		scriptSlots = typeManager.getSlots(this.getScriptEaseType());
+		scriptSlots = ErfFile.getTranslator().getLibrary()
+				.getTypeSlots(this.getScriptEaseType());
 
 		// remove all generated script references
 		for (String slotName : scriptSlots) {
@@ -602,7 +601,7 @@ public class GenericFileFormat {
 					.println("NWN GFF: Could not convert NWN type \""
 							+ typeString
 							+ "\" to ScriptEase type. Defaulting type to first available");
-			type = GameTypeManager.DEFAULT_VOID_TYPE;
+			type = GameType.DEFAULT_VOID_TYPE;
 		}
 		return type;
 	}

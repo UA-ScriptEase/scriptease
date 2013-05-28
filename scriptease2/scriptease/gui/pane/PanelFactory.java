@@ -269,10 +269,8 @@ public final class PanelFactory {
 
 							final SEModel model = event.getPatternModel();
 
-							if (model instanceof StoryModel) {
-								tree.filterByTypes(((StoryModel) model)
-										.getTypeKeywords());
-							}
+							if (model != null)
+								tree.filterByTypes(model.getTypeKeywords());
 						} else if (eventType == SEModelEvent.Type.REMOVED
 								&& SEModelManager.getInstance()
 										.getActiveModel() == null) {

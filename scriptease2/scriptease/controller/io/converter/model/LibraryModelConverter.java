@@ -110,9 +110,8 @@ public class LibraryModelConverter implements Converter {
 				System.err.println("Expected " + TAG_TYPES + ", but found "
 						+ reader.getNodeName());
 			else {
-				library.getGameTypeManager().addGameTypes(
-						((Collection<GameType>) context.convertAnother(library,
-								ArrayList.class)));
+				library.addGameTypes(((Collection<GameType>) context
+						.convertAnother(library, ArrayList.class)));
 			}
 		}
 		reader.moveUp();

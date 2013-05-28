@@ -9,9 +9,11 @@ import scriptease.ScriptEase;
 import scriptease.controller.MouseForwardingAdapter;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.gui.ui.TypeWidgetUI;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.io.model.GameType;
 import scriptease.util.StringOp;
 
 /**
@@ -32,6 +34,7 @@ public class TypeWidget extends JToggleButton {
 		final int fontSize;
 		final String typeName;
 		final Translator activeTranslator;
+		final SEModel model;
 
 		this.setUI(TypeWidgetUI.getInstance());
 		this.setEnabled(false);
@@ -48,6 +51,7 @@ public class TypeWidget extends JToggleButton {
 		// drawing settings
 		this.setForeground(Color.WHITE);
 
+		model = SEModelManager.getInstance().getActiveModel();
 		baseFontSize = Integer.parseInt(ScriptEase.getInstance().getPreference(
 				ScriptEase.FONT_SIZE_KEY));
 		fontSize = Math.round(LABEL_FONT_SIZE_SCALE_FACTOR * baseFontSize);
@@ -60,9 +64,11 @@ public class TypeWidget extends JToggleButton {
 		activeTranslator = TranslatorManager.getInstance()
 				.getActiveTranslator();
 
-		typeName = (activeTranslator != null && activeTranslator
-				.defaultLibraryIsLoaded()) ? activeTranslator
-				.getGameTypeManager().getDisplayText(this.type) : "";
+		if (model != null && activeTranslator != null
+				&& activeTranslator.defaultLibraryIsLoaded())
+			typeName = model.getTypeDisplayText(this.type);
+		else
+			typeName = "";
 
 		this.setTypeText(type);
 		this.setToolTipText(typeName);
@@ -77,23 +83,21 @@ public class TypeWidget extends JToggleButton {
 			this.setEnabled(false);
 		} else {
 			final Translator active;
+			final SEModel model;
 
 			active = TranslatorManager.getInstance().getActiveTranslator();
+			model = SEModelManager.getInstance().getActiveModel();
 
 			// Need to check these due to order of operations.
-			if (active != null && active.defaultLibraryIsLoaded()) {
-				final GameTypeManager gameTypeManager;
-				final String widgetName;
+			if (model != null && active != null
+					&& active.defaultLibraryIsLoaded()) {
+				final String widgetName = model.getTypeWidgetName(type);
 
-				gameTypeManager = active.getGameTypeManager();
-				widgetName = gameTypeManager.getWidgetName(type);
-
-				if (gameTypeManager != null && StringOp.exists(widgetName)) {
+				if (StringOp.exists(widgetName)) {
 					this.setText(widgetName);
 				} else {
-					if (gameTypeManager != null
-							&& gameTypeManager.hasEnum(type))
-						this.setText(GameTypeManager.DEFAULT_LIST_WIDGET);
+					if (!model.getTypeEnumeratedValues(type).isEmpty())
+						this.setText(GameType.DEFAULT_LIST_WIDGET);
 					else
 						this.setText(type.substring(0, 2).toUpperCase());
 				}
