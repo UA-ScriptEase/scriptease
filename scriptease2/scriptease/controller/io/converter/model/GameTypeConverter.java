@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import scriptease.controller.io.FileIO;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameType;
-import scriptease.translator.io.model.GameType.TypeValueWidgets;
+import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.util.StringOp;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -132,7 +132,7 @@ public class GameTypeConverter implements Converter {
 		String enums = "";
 		String reg = "";
 		String widgetName = "";
-		TypeValueWidgets gui = null;
+		GUIType gui = null;
 		GameType type = null;
 
 		// Read Name
@@ -186,15 +186,15 @@ public class GameTypeConverter implements Converter {
 			if (node.equals(TAG_GUI)) {
 				String guiStr = reader.getValue();
 
-				if (guiStr.equalsIgnoreCase(TypeValueWidgets.JCOMBOBOX
+				if (guiStr.equalsIgnoreCase(GUIType.JCOMBOBOX
 						.toString()))
-					gui = TypeValueWidgets.JCOMBOBOX;
-				else if (guiStr.equalsIgnoreCase(TypeValueWidgets.JSPINNER
+					gui = GUIType.JCOMBOBOX;
+				else if (guiStr.equalsIgnoreCase(GUIType.JSPINNER
 						.toString()))
-					gui = TypeValueWidgets.JSPINNER;
-				else if (guiStr.equalsIgnoreCase(TypeValueWidgets.JTEXTFIELD
+					gui = GUIType.JSPINNER;
+				else if (guiStr.equalsIgnoreCase(GUIType.JTEXTFIELD
 						.toString()))
-					gui = TypeValueWidgets.JTEXTFIELD;
+					gui = GUIType.JTEXTFIELD;
 			}
 
 			// Read widget name

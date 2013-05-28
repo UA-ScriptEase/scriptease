@@ -23,10 +23,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModelManager;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 
 /**
  * Factory for listeners for the Story Component Builder.
@@ -282,24 +279,15 @@ public class LibraryEditorListenerFactory {
 
 		codeBlockObserver = new StoryComponentObserver() {
 			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				final StoryComponentChangeEnum type;
+			public void componentChanged(final StoryComponentEvent event) {
 				final StoryComponent component;
 				final StoryVisitor storyVisitor;
 
-				final Translator activeTranslator;
-				final GameTypeManager gameTypeManager;
-
-				activeTranslator = TranslatorManager.getInstance()
-						.getActiveTranslator();
-				gameTypeManager = activeTranslator.getGameTypeManager();
-
-				type = event.getType();
 				component = event.getSource();
 				storyVisitor = new StoryAdapter() {
 					@Override
 					public void processScriptIt(ScriptIt ScriptIt) {
-						switch (type) {
+						switch (event.getType()) {
 						case CHANGE_PARAMETER_TYPES_SET:
 							final String initialDefaultType;
 							initialDefaultType = (String) defaultTypeBox
@@ -308,8 +296,10 @@ public class LibraryEditorListenerFactory {
 							defaultTypeBox.removeAllItems();
 
 							for (String type : knowIt.getTypes()) {
-								defaultTypeBox.addItem(gameTypeManager
-										.getDisplayText(type) + " - " + type);
+								defaultTypeBox.addItem(knowIt.getLibrary()
+										.getTypeDisplayText(type)
+										+ " - "
+										+ type);
 							}
 
 							defaultTypeBox.setSelectedItem(initialDefaultType);

@@ -20,6 +20,9 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * @author mfchurch
  */
 public class GameType {
+	public static final String DEFAULT_VOID_TYPE = "void";
+	public static final String DEFAULT_BOOL_TYPE = "question";
+	public static final String DEFAULT_LIST_WIDGET = "Li";
 
 	/**
 	 * Enumeration of the possible widgets that may be used to display/edit a
@@ -27,7 +30,7 @@ public class GameType {
 	 * 
 	 * @author remiller
 	 */
-	public enum TypeValueWidgets {
+	public enum GUIType {
 		JTEXTFIELD, JSPINNER, JCOMBOBOX;
 	}
 
@@ -36,7 +39,7 @@ public class GameType {
 	private String regEx;
 	private String widgetName;
 	private Collection<String> slots;
-	private TypeValueWidgets guiEditorName;
+	private GUIType guiEditorName;
 	private Map<String, String> enums;
 	private Collection<AbstractFragment> format;
 	private String codeSymbol;
@@ -61,7 +64,8 @@ public class GameType {
 	 *            An optional regular expression that all values for bindings of
 	 *            this type must match.
 	 * @param escapes
-	 * 			  An optional map of (key) characters which need to be escaped and their escape characters (values)
+	 *            An optional map of (key) characters which need to be escaped
+	 *            and their escape characters (values)
 	 * @param gui
 	 *            An optional GUI widget specification string to be used . Must
 	 *            be one of: <code>JComboBox</code><code>JSpinner</code>
@@ -69,11 +73,12 @@ public class GameType {
 	 */
 	public GameType(String name, String keyword, String codeSymbol,
 			Collection<AbstractFragment> fragments, Collection<String> slots,
-			String enums, String regEx, Map<String, String> escapes, TypeValueWidgets gui, String widgetName) {
+			String enums, String regEx, Map<String, String> escapes,
+			GUIType gui, String widgetName) {
 
 		// Sanity check. If we're not requiring a selection from a list of
 		// precisely nothing, that's Very Bad. - remiller
-		if (gui != null && gui.equals(TypeValueWidgets.JCOMBOBOX)
+		if (gui != null && gui.equals(GUIType.JCOMBOBOX)
 				&& (enums == null || enums.trim().equalsIgnoreCase("")))
 			throw new IllegalArgumentException(
 					"Empty enumeration for game type using Combo Box editor.");
@@ -86,7 +91,7 @@ public class GameType {
 		this.format = new ArrayList<AbstractFragment>(fragments);
 		this.enums = this.convertEnumStringToMap(enums);
 		this.codeSymbol = codeSymbol;
-		this.escapes = new HashMap<String,String>(escapes);
+		this.escapes = new HashMap<String, String>(escapes);
 		this.widgetName = widgetName;
 	}
 
@@ -243,7 +248,7 @@ public class GameType {
 	 * @return GUI widget used to edit a binding of this type. Can be
 	 *         <code>null</code>.
 	 */
-	public TypeValueWidgets getGui() {
+	public GUIType getGui() {
 		return this.guiEditorName;
 	}
 
@@ -256,16 +261,18 @@ public class GameType {
 	 *            Must be one of <code>null</code>, <code>"JSpinner"</code>,
 	 *            <code>"JComboBox"</code> or <code>"JTextField"</code>
 	 */
-	public void setGui(TypeValueWidgets newGuiId) {
+	public void setGui(GUIType newGuiId) {
 		this.guiEditorName = newGuiId;
 	}
-	
+
 	/**
-	 * returns a copy of the map of (key) characters which need to be escaped and their escape characters (values)
+	 * returns a copy of the map of (key) characters which need to be escaped
+	 * and their escape characters (values)
+	 * 
 	 * @return
 	 */
-	public Map<String,String> getEscapes() {
-		return new HashMap<String,String>(escapes);
+	public Map<String, String> getEscapes() {
+		return new HashMap<String, String>(escapes);
 	}
 
 	public void addSlot(String slot) {

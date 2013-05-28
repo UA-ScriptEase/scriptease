@@ -26,7 +26,6 @@ import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.semodel.librarymodel.EventSlotManager;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameModule;
 import scriptease.util.FileOp;
@@ -459,16 +458,6 @@ public class Translator {
 	 */
 	public File getPathProperty(DescriptionKeys propertyKey) {
 		return this.getPathProperty(propertyKey.toString());
-	}
-
-	/**
-	 * Gets the object responsible for mapping type keywords to their
-	 * game-specific values.
-	 * 
-	 * @return the Type Manager
-	 */
-	public GameTypeManager getGameTypeManager() {
-		return this.getLibrary().getGameTypeManager();
 	}
 
 	/**

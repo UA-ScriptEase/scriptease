@@ -38,8 +38,7 @@ public class KnowItBindingContext extends Context {
 	 */
 	@Override
 	public String getType() {
-		return this.getTranslator().getGameTypeManager()
-				.getCodeSymbol(this.binding.getFirstType());
+		return this.getModel().getTypeCodeSymbol(this.binding.getFirstType());
 	}
 
 	@Override

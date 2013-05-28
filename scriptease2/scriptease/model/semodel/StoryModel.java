@@ -2,6 +2,8 @@ package scriptease.model.semodel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import scriptease.controller.ModelVisitor;
 import scriptease.controller.observer.ObserverManager;
@@ -15,6 +17,8 @@ import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
+import scriptease.translator.io.model.GameType.GUIType;
+import scriptease.util.StringOp;
 
 /**
  * A StoryModel is the binding object that associates a GameModule with a
@@ -153,17 +157,12 @@ public final class StoryModel extends SEModel {
 		this.observerManager.addObserver(this, observer);
 	}
 
-	/**
-	 * Returns the type keywords for all of the libraries containd in this
-	 * story.
-	 * 
-	 * @return
-	 */
+	@Override
 	public Collection<String> getTypeKeywords() {
 		final Collection<String> keywords = new ArrayList<String>();
 
 		for (LibraryModel library : this.getLibraries()) {
-			keywords.addAll(library.getTypeKeywords());
+			keywords.addAll(library.getLibraryTypeKeywords());
 		}
 
 		return keywords;
@@ -189,6 +188,121 @@ public final class StoryModel extends SEModel {
 		}
 
 		return format;
+	}
+
+	@Override
+	public String getTypeRegex(String keyword) {
+		String typeRegex = "";
+
+		for (LibraryModel library : this.getLibraries()) {
+			typeRegex = library.getTypeRegex(keyword);
+
+			if (StringOp.exists(typeRegex))
+				break;
+		}
+
+		return typeRegex;
+	}
+
+	@Override
+	public Map<String, String> getTypeEnumeratedValues(String keyword) {
+		final Map<String, String> enums = new HashMap<String, String>();
+
+		for (LibraryModel library : this.getLibraries()) {
+			enums.putAll(library.getTypeEnumeratedValues(keyword));
+
+			if (!enums.isEmpty())
+				break;
+		}
+
+		return enums;
+	}
+
+	@Override
+	public String getTypeDisplayText(String keyword) {
+		String displayText = "";
+
+		for (LibraryModel library : this.getLibraries()) {
+			displayText = library.getTypeDisplayText(keyword);
+
+			if (StringOp.exists(displayText))
+				break;
+		}
+
+		return displayText;
+	}
+
+	@Override
+	public Collection<String> getTypeSlots(String keyword) {
+		final Collection<String> slots;
+
+		slots = new ArrayList<String>();
+
+		for (LibraryModel library : this.getLibraries()) {
+			slots.addAll(library.getTypeSlots(keyword));
+
+			if (!slots.isEmpty())
+				break;
+		}
+
+		return slots;
+	}
+
+	@Override
+	public String getTypeCodeSymbol(String keyword) {
+		String codeSymbol = "";
+
+		for (LibraryModel library : this.getLibraries()) {
+			codeSymbol = library.getTypeCodeSymbol(keyword);
+
+			if (StringOp.exists(codeSymbol))
+				break;
+		}
+
+		return codeSymbol;
+	}
+
+	@Override
+	public Map<String, String> getTypeEscapes(String keyword) {
+		final Map<String, String> escapes = new HashMap<String, String>();
+
+		for (LibraryModel library : this.getLibraries()) {
+			escapes.putAll(library.getTypeEscapes(keyword));
+
+			if (!escapes.isEmpty())
+				break;
+
+		}
+
+		return escapes;
+	}
+
+	@Override
+	public GUIType getTypeGUI(String keyword) {
+		GUIType gui = null;
+
+		for (LibraryModel library : this.getLibraries()) {
+			gui = library.getTypeGUI(keyword);
+
+			if (gui != null)
+				break;
+		}
+
+		return gui;
+	}
+
+	@Override
+	public String getTypeWidgetName(String keyword) {
+		String widgetName = "";
+
+		for (LibraryModel library : this.getLibraries()) {
+			widgetName = library.getTypeWidgetName(keyword);
+
+			if (StringOp.exists(widgetName))
+				break;
+		}
+
+		return widgetName;
 	}
 
 	@Override

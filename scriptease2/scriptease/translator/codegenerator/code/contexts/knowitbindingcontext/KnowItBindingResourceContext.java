@@ -70,8 +70,8 @@ public class KnowItBindingResourceContext extends KnowItBindingContext {
 				.getFirstType();
 
 		// Handles Escaped Characters
-		final Set<Entry<String, String>> entrySet = this.getTranslator()
-				.getGameTypeManager().getEscapes(type).entrySet();
+		final Set<Entry<String, String>> entrySet = this.getModel()
+				.getTypeEscapes(type).entrySet();
 
 		for (Entry<String, String> escape : entrySet) {
 			final String key = escape.getKey();
@@ -80,10 +80,10 @@ public class KnowItBindingResourceContext extends KnowItBindingContext {
 		}
 
 		// Handle Legal Values the type can take
-		final String regex = this.getTranslator().getGameTypeManager()
-				.getReg(type);
-		if (regex != null && !regex.isEmpty() && !scriptValue.isEmpty()) {
+		final String regex = this.getModel().getTypeRegex(type);
+		if (StringOp.exists(regex) && !scriptValue.isEmpty()) {
 			final Pattern regexPattern = Pattern.compile(regex);
+
 			scriptValue = StringOp.removeIllegalCharacters(scriptValue,
 					regexPattern, false);
 		}

@@ -12,7 +12,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.Note;
-import scriptease.translator.TranslatorManager;
+import scriptease.model.semodel.SEModelManager;
 import scriptease.util.StringOp;
 
 /**
@@ -252,9 +252,8 @@ public class StoryPoint extends ComplexStoryComponent {
 
 		String name = nameTag + this.getUniqueID();
 		// Handle Legal Values the type can take
-		final String regex = TranslatorManager.getInstance()
-				.getActiveTranslator().getGameTypeManager()
-				.getReg(StoryPoint.STORY_POINT_TYPE);
+		final String regex = SEModelManager.getInstance().getActiveModel()
+				.getTypeRegex(StoryPoint.STORY_POINT_TYPE);
 		final Pattern regexPattern = Pattern.compile(regex);
 		name = StringOp.removeIllegalCharacters(name, regexPattern, false);
 

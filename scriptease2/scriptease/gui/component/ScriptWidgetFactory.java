@@ -514,8 +514,7 @@ public class ScriptWidgetFactory {
 
 		final String scriptValue;
 
-		enumMap = knowIt.getLibrary().getGameTypeManager()
-				.getEnumMap(bindingType);
+		enumMap = knowIt.getLibrary().getTypeEnumeratedValues(bindingType);
 		list = new ArrayList<String>(enumMap.values());
 		Collections.sort(list);
 

@@ -108,9 +108,7 @@ public class CodeBlockSource extends CodeBlock {
 	 *            to determine the script hook to attach to.
 	 * @param returnTypes
 	 *            The possible return types of this CodeBlock. All of these
-	 *            Strings must exist in a
-	 *            {@link scriptease.model.semodel.librarymodel.GameTypeManager
-	 *            GameTypeManager}
+	 *            Strings must exist in the model's types.
 	 * @param parameters
 	 *            The parameter list of this code block.
 	 * @param includes

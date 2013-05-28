@@ -77,8 +77,7 @@ public class CodeBlockContext extends Context {
 		// Grab the first type of the first codeBlock - Assumes they will all
 		// have matching codeSymbols
 		for (String type : this.codeBlock.getTypes())
-			return TranslatorManager.getInstance().getActiveTranslator()
-					.getGameTypeManager().getCodeSymbol(type);
+			return this.getModel().getTypeCodeSymbol(type);
 
 		throw new NoSuchElementException("Error: No type found for CodeBlock "
 				+ this.codeBlock);

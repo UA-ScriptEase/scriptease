@@ -35,11 +35,11 @@ import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.translator.io.model.SimpleResource;
-import scriptease.translator.io.model.GameType.TypeValueWidgets;
 import scriptease.util.GUIOp;
 import scriptease.util.StringOp;
 
@@ -86,8 +86,7 @@ class ParameterPanel extends JPanel {
 		final JPanel nameFieldPanel;
 		final JPanel bindingPanel;
 
-		final Translator activeTranslator;
-		final GameTypeManager gameTypeManager;
+		final LibraryModel library;
 
 		typeAction = new TypeAction();
 		types = new ArrayList<String>();
@@ -107,9 +106,8 @@ class ParameterPanel extends JPanel {
 		nameFieldPanel = new JPanel();
 		bindingPanel = new JPanel();
 
-		activeTranslator = TranslatorManager.getInstance()
-				.getActiveTranslator();
-		gameTypeManager = activeTranslator.getGameTypeManager();
+		library = codeBlock.getLibrary();
+
 		// Set up layouts and such
 		this.setLayout(groupLayout);
 		this.setBorder(BorderFactory.createEtchedBorder());
@@ -131,10 +129,10 @@ class ParameterPanel extends JPanel {
 		typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
 
 		for (String type : types)
-			defaultTypeBox.addItem(gameTypeManager.getDisplayText(type) + " - "
+			defaultTypeBox.addItem(library.getTypeDisplayText(type) + " - "
 					+ type);
 
-		defaultTypeBox.setSelectedItem(gameTypeManager.getDisplayText(knowIt
+		defaultTypeBox.setSelectedItem(library.getTypeDisplayText(knowIt
 				.getDefaultType()));
 
 		updateBindingConstantComponent(bindingConstantComponent);
@@ -303,17 +301,22 @@ class ParameterPanel extends JPanel {
 	private void updateBindingConstantComponent(
 			JComponent bindingConstantComponent) {
 		final JTextField inactiveTextField;
-		final Translator translator;
-		final TypeValueWidgets defaultTypeGuiType;
-		final GameTypeManager gameTypeManager;
+		final String defaultType;
 
-		translator = TranslatorManager.getInstance().getActiveTranslator();
-		gameTypeManager = translator.getGameTypeManager();
-		defaultTypeGuiType = gameTypeManager.getGui(this.knowIt
-				.getDefaultType());
+		final SEModel activeModel;
+		final LibraryModel library;
+		final GUIType defaultTypeGuiType;
+
+		activeModel = SEModelManager.getInstance().getActiveModel();
+		if (!(activeModel instanceof LibraryModel))
+			return;
+		library = (LibraryModel) activeModel;
+
+		defaultType = this.knowIt.getDefaultType();
+		defaultTypeGuiType = library.getTypeGUI(defaultType);
 
 		inactiveTextField = new JTextField(" Cannot set binding for ["
-				+ this.knowIt.getDefaultType() + "]");
+				+ defaultType + "]");
 
 		inactiveTextField.setEnabled(false);
 
@@ -376,9 +379,8 @@ class ParameterPanel extends JPanel {
 				Comparable<?> min = null; // default to no min limit
 				Comparable<?> max = null; // default to no max limit
 				Number stepSize = 1; // default to int step size
-				String regex = TranslatorManager.getInstance()
-						.getActiveTranslator().getGameTypeManager()
-						.getReg(this.knowIt.getDefaultType());
+
+				final String regex = library.getTypeRegex(defaultType);
 
 				final Pattern regexPattern = Pattern.compile(regex);
 				if (regex != null && !regex.isEmpty()) {
@@ -431,7 +433,7 @@ class ParameterPanel extends JPanel {
 				final Map<String, String> map;
 				final JComboBox bindingBox;
 
-				map = gameTypeManager.getEnumMap(this.knowIt.getDefaultType());
+				map = library.getTypeEnumeratedValues(defaultType);
 				bindingBox = new JComboBox();
 
 				bindingBox.addItem(null);

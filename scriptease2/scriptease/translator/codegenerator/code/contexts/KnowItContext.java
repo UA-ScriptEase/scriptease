@@ -8,7 +8,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerationException;
@@ -104,12 +103,9 @@ public class KnowItContext extends StoryComponentContext {
 	 */
 	@Override
 	public String getType() {
-		final GameTypeManager typeManager;
 		final String defaultType = this.getComponent().getDefaultType();
 
-		typeManager = this.getTranslator().getGameTypeManager();
-
-		return typeManager.getCodeSymbol(defaultType);
+		return this.getModel().getTypeCodeSymbol(defaultType);
 	}
 
 	@Override

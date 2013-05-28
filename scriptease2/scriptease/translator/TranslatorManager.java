@@ -19,7 +19,6 @@ import scriptease.gui.WindowFactory;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.EventSlotManager;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
@@ -252,18 +251,6 @@ public class TranslatorManager {
 		if (library == null)
 			return null;
 		return library.getEventSlotManager();
-	}
-
-	/**
-	 * Shortcut method to get the active Game Type Manager of the current active
-	 * translator.
-	 * 
-	 * @return
-	 */
-	public GameTypeManager getActiveGameTypeManager() {
-		if (this.activeTranslator == null)
-			return null;
-		return this.activeTranslator.getGameTypeManager();
 	}
 
 	/**

@@ -2,7 +2,9 @@ package scriptease.model.semodel.librarymodel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.BindingVisitor;
@@ -34,6 +36,8 @@ import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
+import scriptease.translator.io.model.GameType.GUIType;
+import scriptease.util.StringOp;
 
 /**
  * A collection of abstract patterns that are somehow related, either because
@@ -746,6 +750,15 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	/**
+	 * Adds the game types to the library.
+	 * 
+	 * @param types
+	 */
+	public void addGameTypes(Collection<GameType> types) {
+		this.typeManager.addGameTypes(types);
+	}
+
+	/**
 	 * Returns the {@link TypeConverter}.
 	 * 
 	 * @return
@@ -766,42 +779,150 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	/**
-	 * Returns a collection of keywords associated with types for this library
-	 * model and the translator's default library model.
+	 * Returns the default library for this library's translator. Returns null
+	 * if there is no translator.
 	 * 
 	 * @return
 	 */
-	public Collection<String> getAllTypeKeywords() {
-		final LibraryModel defaultLibrary = this.getTranslator().getLibrary();
+	private LibraryModel getTranslatorDefaultLibrary() {
+		final Translator translator = this.getTranslator();
+
+		if (translator != null)
+			return translator.getLibrary();
+		else
+			return null;
+
+	}
+
+	@Override
+	public Collection<String> getTypeKeywords() {
+		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
 		final Collection<String> keywords = new ArrayList<String>();
 
-		if (this != defaultLibrary) {
-			keywords.addAll(defaultLibrary.getTypeKeywords());
+		if (defaultLibrary != null && this != defaultLibrary) {
+			keywords.addAll(defaultLibrary.getLibraryTypeKeywords());
 		}
 
-		keywords.addAll(this.getTypeKeywords());
+		keywords.addAll(this.getLibraryTypeKeywords());
 
 		return keywords;
 	}
 
 	/**
-	 * Returns a collection of keywords associated with types for only this
-	 * library.
+	 * Returns a collection of keywords associated with types stored by this
+	 * LibraryModel only.
 	 */
-	public Collection<String> getTypeKeywords() {
-		// Note that this is not abstracted into SEModel even though StoryModel
-		// has the same method because they are actually different methods with
-		// different purposes.
-		return this.typeManager.getKeywords();
+	public Collection<String> getLibraryTypeKeywords() {
+		return this.typeManager.getTypeKeywords();
 	}
 
-	/**
-	 * Returns the {@link GameTypeManager} for the model.
-	 * 
-	 * @return
-	 */
-	public GameTypeManager getGameTypeManager() {
-		return this.typeManager;
+	@Override
+	public String getTypeRegex(String keyword) {
+		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
+
+		String regex = this.typeManager.getTypeRegex(keyword);
+
+		if (!StringOp.exists(regex) && defaultLibrary != null
+				&& this != defaultLibrary) {
+			regex = defaultLibrary.getTypeRegex(keyword);
+		}
+
+		return regex;
+	}
+
+	@Override
+	public Map<String, String> getTypeEnumeratedValues(String keyword) {
+		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
+		final Map<String, String> enums = new HashMap<String, String>();
+
+		enums.putAll(this.typeManager.getTypeEnumeratedValues(keyword));
+
+		if (enums.isEmpty() && defaultLibrary != null && this != defaultLibrary) {
+			enums.putAll(defaultLibrary.getTypeEnumeratedValues(keyword));
+		}
+
+		return enums;
+	}
+
+	@Override
+	public String getTypeDisplayText(String keyword) {
+		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
+		String displayText = this.typeManager.getDisplayText(keyword);
+
+		if (!StringOp.exists(displayText) && defaultLibrary != null
+				&& this != defaultLibrary) {
+			displayText = defaultLibrary.getTypeDisplayText(keyword);
+		}
+
+		return displayText;
+	}
+
+	@Override
+	public Collection<String> getTypeSlots(String keyword) {
+		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
+
+		final Collection<String> slots = new ArrayList<String>();
+
+		slots.addAll(this.typeManager.getSlots(keyword));
+
+		if (slots.isEmpty() && defaultLibrary != null && this != defaultLibrary) {
+			slots.addAll(defaultLibrary.getTypeSlots(keyword));
+		}
+
+		return slots;
+	}
+
+	@Override
+	public String getTypeCodeSymbol(String keyword) {
+		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
+		String codeSymbol = this.typeManager.getCodeSymbol(keyword);
+
+		if (!StringOp.exists(codeSymbol) && defaultLibrary != null
+				&& this != defaultLibrary) {
+			codeSymbol = defaultLibrary.getTypeCodeSymbol(keyword);
+		}
+
+		return codeSymbol;
+	}
+
+	@Override
+	public Map<String, String> getTypeEscapes(String keyword) {
+		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
+		final Map<String, String> escapes = new HashMap<String, String>();
+
+		escapes.putAll(this.typeManager.getEscapes(keyword));
+
+		if (escapes.isEmpty() && defaultLibrary != null
+				&& this != defaultLibrary) {
+			escapes.putAll(defaultLibrary.getTypeEscapes(keyword));
+		}
+
+		return escapes;
+	}
+
+	@Override
+	public GUIType getTypeGUI(String keyword) {
+		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
+		GUIType gui = this.typeManager.getGui(keyword);
+
+		if (gui == null && defaultLibrary != null && this != defaultLibrary) {
+			gui = defaultLibrary.getTypeGUI(keyword);
+		}
+
+		return gui;
+	}
+
+	@Override
+	public String getTypeWidgetName(String keyword) {
+		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
+		String widgetName = this.typeManager.getWidgetName(keyword);
+
+		if (!StringOp.exists(widgetName) && defaultLibrary != null
+				&& this != defaultLibrary) {
+			widgetName = defaultLibrary.getTypeWidgetName(keyword);
+		}
+
+		return widgetName;
 	}
 
 	/**

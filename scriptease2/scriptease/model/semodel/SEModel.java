@@ -1,9 +1,13 @@
 package scriptease.model.semodel;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Map;
 
 import scriptease.controller.ModelVisitor;
+import scriptease.gui.component.TypeWidget;
 import scriptease.translator.Translator;
+import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.util.FileOp;
 
 /**
@@ -83,16 +87,90 @@ public abstract class SEModel {
 	}
 
 	/**
+	 * Returns all of the type keywords known by the model.
+	 * 
+	 * @return
+	 */
+	public abstract Collection<String> getTypeKeywords();
+
+	/**
+	 * Returns the regex of the type known by the model.
+	 * 
+	 * @param keyword
+	 * @return
+	 */
+	public abstract String getTypeRegex(String keyword);
+
+	/**
+	 * Returns the enumerated values of a type known by the model. <br>
+	 * <br>
+	 * An example of these would be if a translator gives special names to
+	 * booleans to make more sense to the user. So the enumerated map would look
+	 * like <code>{ (Active, true), (Inactive, false) }</code>
+	 * 
+	 * @param keyword
+	 * @return
+	 */
+	public abstract Map<String, String> getTypeEnumeratedValues(String keyword);
+
+	/**
+	 * Returns the display text of a type known by the model.
+	 * 
+	 * @param keyword
+	 * @return
+	 */
+	public abstract String getTypeDisplayText(String keyword);
+
+	/**
+	 * Returns the slots associated with a type known by the model.
+	 * 
+	 * @param keyword
+	 * @return
+	 */
+	public abstract Collection<String> getTypeSlots(String keyword);
+
+	/**
+	 * Returns the code symbol associated with a type known by the model.
+	 * 
+	 * @param keyword
+	 * @return
+	 */
+	public abstract String getTypeCodeSymbol(String keyword);
+
+	/**
+	 * Returns a map of characters to escape and the values to replace them with
+	 * from a type known by the model.
+	 * 
+	 * @param keyword
+	 * @return
+	 */
+	public abstract Map<String, String> getTypeEscapes(String keyword);
+
+	/**
+	 * Returns the GUI widget that is to edit a type known by the model.
+	 * 
+	 * @param keyword
+	 *            the type whose GUI is to be determined.
+	 * @return the GUI widget that will edit a component of this type, or
+	 *         <code>null</code> if there is no widget specified.
+	 */
+	public abstract GUIType getTypeGUI(String keyword);
+
+	/**
+	 * Returns the name of the widget that should be displayed in the
+	 * {@link TypeWidget} associated with a type known by the model.
+	 * 
+	 * @param keyword
+	 * @return
+	 */
+	public abstract String getTypeWidgetName(String keyword);
+
+	/**
 	 * Gets the translator to be used to translate this pattern model.
 	 * 
 	 * @return the translator
 	 */
 	public abstract Translator getTranslator();
-
-	@Override
-	public String toString() {
-		return this.getName();
-	}
 
 	/**
 	 * This is a double-dispatch hook for the
@@ -110,4 +188,10 @@ public abstract class SEModel {
 	 *            PatternModel.
 	 */
 	public abstract void process(ModelVisitor visitor);
+
+	@Override
+	public String toString() {
+		return this.getName();
+	}
+
 }

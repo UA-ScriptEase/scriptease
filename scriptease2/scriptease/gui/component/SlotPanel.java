@@ -23,8 +23,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
-import scriptease.model.semodel.librarymodel.GameTypeManager;
-import scriptease.translator.io.model.GameType.TypeValueWidgets;
+import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.GUIOp;
@@ -140,25 +139,22 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 			public void processConstant(KnowItBindingResource constant) {
 				final Resource constantValue = constant.getValue();
 				final String name = constantValue.getName();
-				
+
 				if (constantValue instanceof SimpleResource) {
 					final String bindingType;
-
-					final GameTypeManager typeManager;
-					final TypeValueWidgets widgetName;
+					final GUIType widgetName;
 
 					bindingType = binding.getFirstType();
-					typeManager = knowIt.getLibrary().getGameTypeManager();
-					widgetName = typeManager.getGui(bindingType);
+					widgetName = knowIt.getLibrary().getTypeGUI(bindingType);
 
 					if (widgetName == null)
 						bindingWidget.add(ScriptWidgetFactory.buildLabel(name,
 								Color.WHITE));
-					else if (widgetName.equals(TypeValueWidgets.JSPINNER)) {
+					else if (widgetName.equals(GUIType.JSPINNER)) {
 						bindingWidget.add(ScriptWidgetFactory
 								.buildSpinnerEditor(knowIt, bindingWidget,
 										constantValue, bindingType));
-					} else if (widgetName.equals(TypeValueWidgets.JCOMBOBOX)) {
+					} else if (widgetName.equals(GUIType.JCOMBOBOX)) {
 						bindingWidget.add(ScriptWidgetFactory.buildComboEditor(
 								knowIt, bindingWidget, bindingType));
 					} else {
