@@ -70,7 +70,7 @@ public class MetricsAction extends ActiveModelSensitiveAction {
 		final int WIDTH = 800;
 		final int HEIGHT = 600;
 
-		final String EXPORT = "Export as CSV";
+		final String EXPORT = "Export All as CSV";
 		final String CLOSE = "Close";
 
 		final JDialog dialog;
