@@ -3,7 +3,6 @@ package scriptease.gui.transfer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Point;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -179,64 +178,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (supportComponent instanceof StoryComponentPanel) {
 
 			final StoryComponentPanel acceptingPanel;
-			final StoryComponent acceptingStoryComponent;
-			final Collection<StoryComponent> potentialChildren;
-
 			acceptingPanel = (StoryComponentPanel) supportComponent;
-			acceptingStoryComponent = acceptingPanel.getStoryComponent();
-			potentialChildren = this.extractStoryComponents(support);
 
-			// Only import to complex story components which are editable
-			if (acceptingPanel.isEditable() && potentialChildren != null) {
-
-				// The regular case - where the item being imported is a
-				// valid child type of the accepting StoryComponent
-				if (acceptingStoryComponent instanceof ComplexStoryComponent) {
-
-					if (this.canAcceptChildren(acceptingStoryComponent,
-							potentialChildren)) {
-
-						if (this.hoveredPanel != null
-								&& this.hoveredPanel.getSelectionManager() != null)
-
-							this.hoveredPanel.getSelectionManager()
-									.updatePanelBackgrounds();
-
-						if (acceptingPanel.getStoryComponent() instanceof StoryComponentContainer)
-							setPanelAndChildrenBackground(Color.LIGHT_GRAY,
-									acceptingPanel);
-						else
-							acceptingPanel.setBackground(Color.LIGHT_GRAY);
-
-						this.hoveredPanel = acceptingPanel;
-
-						return true;
-					}
-				}
-
-				// The case where effects, descriptions, and controls are being
-				// dragged over other components in a block.
-				// It seems more natural for them to go to the parent
-				// block instead of denying the User this option.
-				if (StoryComponentToParentTransferHelper.getInstance()
-						.canImportToParent(support)) {
-					final StoryComponentPanel parentPanel;
-
-					if (this.hoveredPanel != null
-							&& this.hoveredPanel.getSelectionManager() != null)
-						this.hoveredPanel.getSelectionManager()
-								.updatePanelBackgrounds();
-
-					parentPanel = acceptingPanel.getParentStoryComponentPanel();
-
-					this.setPanelAndChildrenBackground(Color.LIGHT_GRAY,
-							parentPanel);
-
-					acceptingPanel.setBackground(Color.GRAY);
-					this.hoveredPanel = acceptingPanel;
-
-					return true;
-				}
+			if (acceptingPanel.isEditable()) {
+				return (this.canImportAsChild(support) || this
+						.canImportAsSibling(support));
 			}
 
 		} else if (supportComponent instanceof EffectHolderPanel) {
@@ -267,6 +213,85 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		return false;
 	}
 
+	/**
+	 * The regular case where the item being imported is a valid child type of
+	 * the accepting StoryComponent.
+	 * 
+	 * @param support
+	 * @return
+	 */
+	private boolean canImportAsChild(TransferSupport support) {
+		final StoryComponentPanel acceptingPanel;
+		final StoryComponent acceptingStoryComponent;
+		final Collection<StoryComponent> potentialChildren;
+
+		acceptingPanel = (StoryComponentPanel) support.getComponent();
+		acceptingStoryComponent = acceptingPanel.getStoryComponent();
+		potentialChildren = this.extractStoryComponents(support);
+
+		if (potentialChildren != null) {
+
+			if (acceptingStoryComponent instanceof ComplexStoryComponent) {
+
+				if (this.canAcceptChildren(acceptingStoryComponent,
+						potentialChildren)) {
+
+					if (this.hoveredPanel != null
+							&& this.hoveredPanel.getSelectionManager() != null)
+
+						this.hoveredPanel.getSelectionManager()
+								.updatePanelBackgrounds();
+
+					if (acceptingPanel.getStoryComponent() instanceof StoryComponentContainer)
+						setPanelAndChildrenBackground(Color.LIGHT_GRAY,
+								acceptingPanel);
+					else
+						acceptingPanel.setBackground(Color.LIGHT_GRAY);
+
+					this.hoveredPanel = acceptingPanel;
+
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * The case where effects, descriptions, and controls are being dragged over
+	 * other components in a block. It seems more natural for them to go to the
+	 * parent block instead of denying the User this option.
+	 * 
+	 * @param support
+	 * @return
+	 */
+	private boolean canImportAsSibling(TransferSupport support) {
+		final StoryComponentPanel acceptingPanel;
+
+		acceptingPanel = (StoryComponentPanel) support.getComponent();
+
+		if (StoryComponentTransferUtils.canImportToParent(support)) {
+			final StoryComponentPanel parentPanel;
+
+			if (this.hoveredPanel != null
+					&& this.hoveredPanel.getSelectionManager() != null)
+				this.hoveredPanel.getSelectionManager()
+						.updatePanelBackgrounds();
+
+			parentPanel = acceptingPanel.getParentStoryComponentPanel();
+
+			this.setPanelAndChildrenBackground(Color.LIGHT_GRAY, parentPanel);
+			this.setPanelAndChildrenBackground(Color.GRAY, acceptingPanel);
+
+			this.hoveredPanel = acceptingPanel;
+
+			return true;
+		}
+
+		return false;
+	}
+
 	@Override
 	public boolean importData(JComponent comp, Transferable t) {
 		return importData(new TransferSupport(comp, t));
@@ -278,7 +303,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		if (!this.canImport(support))
 			return false;
-		
+
 		if (supportComponent instanceof StoryComponentPanel) {
 
 			final Collection<StoryComponent> transferData;
@@ -297,7 +322,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			if (support.isDrop()) {
 				// drops have user input to decide where to place things
-				insertionIndex = this.getInsertionIndex(panel, support);
+				insertionIndex = StoryComponentTransferUtils.getInsertionIndex(
+						panel, support);
 			} else {
 				// pastes just always go to the end of the parent's child list
 				insertionIndex = ((ComplexStoryComponent) panel
@@ -332,19 +358,22 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					Collections.reverse(children);
 
 					for (StoryComponent child : children)
-						addTransferData(child, (ComplexStoryComponent) parent,
-								insertionIndex);
+						StoryComponentTransferUtils.addTransferData(child,
+								(ComplexStoryComponent) parent, insertionIndex);
 
-					// Handle the case where Effects, Descriptions, or Controls
-					// are being dragged over other components in the
-					// intentional Block.
-				} else if (StoryComponentToParentTransferHelper.getInstance()
-						.canImportToParent(support)) {
-					StoryComponentToParentTransferHelper.getInstance()
-							.importToParent(support);
-				} else {
-					addTransferData(newChild, (ComplexStoryComponent) parent,
-							insertionIndex);
+				}
+
+				// Handles the usual case.
+				else if (this.canImportAsChild(support)) {
+					StoryComponentTransferUtils.addTransferData(newChild,
+							(ComplexStoryComponent) parent, insertionIndex);
+				}
+
+				// Handle the case where Effects, Descriptions, or Controls
+				// are being dragged over other components in the
+				// intentional Block.
+				else if (this.canImportAsSibling(support)) {
+					StoryComponentTransferUtils.importToParent(support);
 				}
 			}
 
@@ -368,28 +397,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		}
 
 		return false;
-	}
-
-	private void addTransferData(StoryComponent child,
-			ComplexStoryComponent parent, int insertionIndex) {
-
-		final StoryComponent clone = child.clone();
-		final boolean success;
-
-		StoryComponent sibling = parent.getChildAt(insertionIndex);
-		if (sibling != null) {
-			// add in the middle
-			success = parent.addStoryChildBefore(clone, sibling);
-		} else {
-			success = parent.addStoryChild(clone);
-		}
-
-		clone.revalidateKnowItBindings();
-
-		if (!success)
-			throw new IllegalStateException("Was unable to add " + child
-					+ " to " + parent
-					+ ". This should have been prevented by canImport.");
 	}
 
 	@Override
@@ -496,63 +503,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		}
 
 		return acceptable;
-	}
-
-	/**
-	 * Determines where the transfer will be inserting into.
-	 * 
-	 * @param support
-	 *            The transfer context.
-	 * @param panel
-	 *            The StoryComponentPanel that will be receiving the transfer.
-	 * @return The child index in the parent that would receive the drop.
-	 */
-	private int getInsertionIndex(StoryComponentPanel panel,
-			TransferSupport support) {
-		final StoryComponent parent = panel.getStoryComponent();
-		final Point mouseLocation = support.getDropLocation().getDropPoint();
-
-		// if the mouse is within the panel's boundaries
-		if (mouseLocation != null && parent instanceof ComplexStoryComponent) {
-			double yMouseLocation = mouseLocation.getY();
-			if (((ComplexStoryComponent) parent).getChildCount() > 0) {
-				final StoryComponentPanel closest;
-				closest = this.findClosestChildPanel(yMouseLocation, panel);
-				if (closest != null) {
-					final StoryComponent child = closest.getStoryComponent();
-					return ((ComplexStoryComponent) parent)
-							.getChildIndex(child) + 1;
-				}
-			}
-		}
-		return 0;
-	}
-
-	/**
-	 * Get the closest child StoryComponentPanel to the given parentPanel based
-	 * on the given yLocation. May return null if it is unable to find a child
-	 * panel within MAX_Y pixels of given yLocation
-	 * 
-	 * @param yLocation
-	 * @param parentPanel
-	 * @return
-	 */
-	private StoryComponentPanel findClosestChildPanel(double yLocation,
-			StoryComponentPanel parentPanel) {
-		// tracking variables used to maintain which panel is closest
-		StoryComponentPanel closestPanel = null;
-
-		final Collection<StoryComponentPanel> children = parentPanel
-				.getChildrenPanels();
-
-		// for each child, check if it is closer than the current closest
-		for (StoryComponentPanel child : children) {
-			double yChildLocation = child.getLocation().getY();
-			if (yChildLocation < yLocation) {
-				closestPanel = child;
-			}
-		}
-		return closestPanel;
 	}
 
 	private void setPanelAndChildrenBackground(Color color,

@@ -148,8 +148,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		// Special case - to handle where effects, descriptions, and controls
 		// can be dragged over binding widgets in order to get re-directed to
 		// their parent block.
-		canImport |= StoryComponentToParentTransferHelper.getInstance()
-				.canImportToParent(support);
+		canImport |= StoryComponentTransferUtils.canImportToParent(support);
 
 		if (canImport) {
 			// TODO Set mouse pointer to normal
@@ -189,8 +188,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		// the slot - so lets handle it.
 		if (support
 				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
-			return StoryComponentToParentTransferHelper.getInstance()
-					.importToParent(support);
+			return StoryComponentTransferUtils.importToParent(support);
 		}
 
 		// Get the destination component for the transfer.
