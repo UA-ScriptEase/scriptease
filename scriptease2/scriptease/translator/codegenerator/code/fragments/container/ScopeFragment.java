@@ -50,12 +50,7 @@ public class ScopeFragment extends AbstractContainerFragment {
 	@Override
 	public String resolve(Context context) {
 		super.resolve(context);
-		final Object scope;
-
-		if (context instanceof KnowItBindingResourceContext)
-			System.out.println(context);
-
-		scope = this.getScope(context);
+		final Object scope= this.getScope(context);
 
 		if (scope != null) {
 			Context newContext = ContextFactory.getInstance().createContext(
