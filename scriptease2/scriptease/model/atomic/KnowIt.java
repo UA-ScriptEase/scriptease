@@ -93,20 +93,22 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	public KnowIt clone() {
 		final KnowIt clone;
 		final LibraryModel library;
-		final DescribeIt describeIt;
 
 		clone = (KnowIt) super.clone();
 		library = this.getLibrary();
-
-		describeIt = library.getDescribeIt(this);
 
 		// Add the types before setting the binding, or it may be rejected
 		clone.types = new ArrayList<String>(this.types);
 
 		clone.setBinding(this.knowItBinding.clone());
 
-		if (describeIt != null) {
-			library.addDescribeIt(describeIt, clone);
+		if (library != null) {
+			final DescribeIt describeIt;
+			describeIt = library.getDescribeIt(this);
+
+			if (describeIt != null) {
+				library.addDescribeIt(describeIt, clone);
+			}
 		}
 
 		return clone;

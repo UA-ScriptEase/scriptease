@@ -85,8 +85,7 @@ public final class PasteAction extends ActiveModelSensitiveAction implements
 			selectedComponent = (JComponent) graph.getNodesToComponentsMap()
 					.getValue(graph.getLastSelectedNode());
 
-			isLegal = 
-					selectedComponent.getTransferHandler().canImport(
+			isLegal = selectedComponent.getTransferHandler().canImport(
 					new TransferSupport(selectedComponent, Toolkit
 							.getDefaultToolkit().getSystemClipboard()
 							.getContents(this)));
@@ -130,8 +129,8 @@ public final class PasteAction extends ActiveModelSensitiveAction implements
 			// Pastes the component in clip board to selected parent.
 			this.pasteComponent((StoryComponentPanel) focusOwner);
 		}
-		// We not paste into StoryComponentPanelJList. Maybe in the future, but
-		// not now.
+		// We will not paste into StoryComponentPanelJList. Maybe in the future,
+		// but not now.
 		else if (focusOwner instanceof SEGraph) {
 			// Paste the graph node into another component.
 			final SEGraph graph;
