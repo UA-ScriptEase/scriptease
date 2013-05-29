@@ -405,9 +405,6 @@ public class StoryComponentPanelFactory {
 						mainPanel.add(ScriptWidgetFactory.buildLabel(
 								" describes ", Color.black));
 
-						if (knowIt.getLibrary() == null)
-							System.out.println(knowIt);
-
 						final Translator active;
 						final Collection<LibraryModel> libraries;
 						final DescribeIt describeIt;
