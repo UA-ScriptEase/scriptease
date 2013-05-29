@@ -2,13 +2,11 @@ package scriptease.gui.transfer;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.InputEvent;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -20,16 +18,9 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.SlotPanel;
-import scriptease.gui.storycomponentpanel.StoryComponentPanel;
-import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.complex.AskIt;
-import scriptease.model.complex.CauseIt;
-import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.semodel.SEModelManager;
 
 /**
@@ -157,7 +148,8 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		// Special case - to handle where effects, descriptions, and controls
 		// can be dragged over binding widgets in order to get re-directed to
 		// their parent block.
-		canImport |= this.canImportComponentsToParent(support);
+		canImport |= StoryComponentToParentTransferHelper.getInstance()
+				.canImportToParent(support);
 
 		if (canImport) {
 			// TODO Set mouse pointer to normal
@@ -166,67 +158,6 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		}
 
 		return canImport;
-	}
-
-	/**
-	 * Checks whether the data being transfered can be redirected to a parent
-	 * StoryComponentContainer - such as effects, descriptions, and controls.
-	 * 
-	 * @param support
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	protected boolean canImportComponentsToParent(
-			TransferHandler.TransferSupport support) {
-		final Component destinationComponent = support.getComponent();
-
-		if (destinationComponent instanceof BindingWidget
-				&& (support
-						.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour))) {
-
-			// If the binding widget isn't even in a StoryComponentContainer,
-			// we shouldn't be dragging stuff there anyway.
-			Component panel = support.getComponent();
-			while (!(panel instanceof StoryComponentPanel) && panel != null) {
-				panel = panel.getParent();
-			}
-			if (panel == null)
-				return false;
-
-			StoryComponent storyComponent = ((StoryComponentPanel) panel)
-					.getStoryComponent();
-
-			if (!(storyComponent instanceof StoryComponentContainer)) {
-				panel = panel.getParent();
-				storyComponent = ((StoryComponentPanel) panel)
-						.getStoryComponent();
-				if (!(storyComponent instanceof StoryComponentContainer))
-					return false;
-			}
-
-			// Finally, check whether we have a valid component.
-			try {
-				final Collection<StoryComponent> components;
-
-				components = (Collection<StoryComponent>) support
-						.getTransferable()
-						.getTransferData(
-								StoryComponentPanelTransferHandler.storyCompFlavour);
-
-				// Check if its one of the acceptable components.
-				for (StoryComponent component : components)
-					if ((component instanceof ScriptIt && !(component instanceof CauseIt))
-							|| (component instanceof KnowIt)
-							|| component instanceof AskIt)
-						return true;
-
-			} catch (UnsupportedFlavorException e) {
-				return false;
-			} catch (IOException e) {
-				return false;
-			}
-		}
-		return false;
 	}
 
 	private static boolean lastDragShiftDown = false;
@@ -258,7 +189,8 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		// the slot - so lets handle it.
 		if (support
 				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
-			return importComponentsToParent(support);
+			return StoryComponentToParentTransferHelper.getInstance()
+					.importToParent(support);
 		}
 
 		// Get the destination component for the transfer.
@@ -293,187 +225,6 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * We handle other components that are being dragged over the binding slots
-	 * by putting them where they actually belong (and where the user intended
-	 * them to go) - in this case the StoryComponentContainer.
-	 * 
-	 * @param support
-	 */
-	@SuppressWarnings("unchecked")
-	protected boolean importComponentsToParent(TransferSupport support) {
-		final Collection<StoryComponent> components;
-		final StoryComponent component;
-		final ComplexStoryComponent parent;
-		final int insertionIndex;
-
-		Component panel;
-		panel = support.getComponent();
-
-		// Get the first instance of a StoryComponentPanel if there is one.
-		while (!(panel instanceof StoryComponentPanel) && panel != null) {
-			panel = panel.getParent();
-		}
-
-		if (panel == null)
-			return false;
-
-		component = ((StoryComponentPanel) panel).getStoryComponent();
-
-		// Check if the component already is a container. If it is then
-		// the parent is just this container. Otherwise, we want to
-		// get the parent StoryComponentContainer.
-		if (component instanceof StoryComponentContainer) {
-			parent = (ComplexStoryComponent) ((StoryComponentPanel) panel)
-					.getStoryComponent();
-			insertionIndex = this.getInsertionIndex(
-					(StoryComponentPanel) panel, support);
-		} else {
-			final StoryComponentPanel parentPanel = (StoryComponentPanel) panel
-					.getParent();
-
-			parent = (ComplexStoryComponent) parentPanel.getStoryComponent();
-			insertionIndex = this.getParentInsertionIndex(
-					(StoryComponentPanel) parentPanel,
-					(StoryComponentPanel) panel, support);
-		}
-
-		// Now we actually add the transfer data
-		try {
-			components = (Collection<StoryComponent>) support
-					.getTransferable()
-					.getTransferData(
-							StoryComponentPanelTransferHandler.storyCompFlavour);
-
-			for (StoryComponent newChild : components) {
-				this.addTransferData(newChild, parent, insertionIndex);
-			}
-		} catch (UnsupportedFlavorException e) {
-		} catch (IOException e) {
-		}
-
-		return true;
-	}
-
-	/**
-	 * Determines where the transfer will be inserting into.
-	 * 
-	 * @param support
-	 *            The transfer context.
-	 * @param panel
-	 *            The StoryComponentPanel that will be receiving the transfer.
-	 * @return The child index in the parent that would receive the drop.
-	 */
-	private int getInsertionIndex(StoryComponentPanel panel,
-			TransferSupport support) {
-		final StoryComponent parent = panel.getStoryComponent();
-		final Point mouseLocation = support.getDropLocation().getDropPoint();
-
-		// if the mouse is within the panel's boundaries
-		if (mouseLocation != null && parent instanceof ComplexStoryComponent) {
-			double yMouseLocation = mouseLocation.getY();
-			if (((ComplexStoryComponent) parent).getChildCount() > 0) {
-				final StoryComponentPanel closest;
-				closest = this.findClosestChildPanel(yMouseLocation, panel);
-				if (closest != null) {
-					final StoryComponent child = closest.getStoryComponent();
-					return ((ComplexStoryComponent) parent)
-							.getChildIndex(child) + 1;
-				}
-			}
-		}
-		return 0;
-	}
-
-	/**
-	 * Determines where the transfer will be inserting to in the parent panel if
-	 * the TransferSupport is for a child panel.
-	 * 
-	 * @param parentPanel
-	 * @param componentPanel
-	 * @param support
-	 * @return
-	 */
-	private int getParentInsertionIndex(StoryComponentPanel parentPanel,
-			StoryComponentPanel componentPanel, TransferSupport support) {
-		final StoryComponent parent = parentPanel.getStoryComponent();
-		final StoryComponent component = componentPanel.getStoryComponent();
-		final Point mouseLocation = support.getDropLocation().getDropPoint();
-
-		if (mouseLocation != null) {
-			double yLocation = mouseLocation.getY();
-
-			if (((ComplexStoryComponent) parent).getChildCount() > 0) {
-				final Collection<StoryComponentPanel> children = parentPanel
-						.getChildrenPanels();
-				final StoryComponentPanel closest;
-
-				for (StoryComponentPanel child : children) {
-					if (component == child.getStoryComponent())
-						yLocation += child.getLocation().getY();
-				}
-
-				closest = this.findClosestChildPanel(yLocation, parentPanel);
-				if (closest != null) {
-					final StoryComponent child = closest.getStoryComponent();
-					return ((ComplexStoryComponent) parent)
-							.getChildIndex(child) + 1;
-				}
-			}
-		}
-		
-		return 0;
-	}
-
-	/**
-	 * Get the closest child StoryComponentPanel to the given parentPanel based
-	 * on the given yLocation. May return null if it is unable to find a child
-	 * panel within MAX_Y pixels of given yLocation
-	 * 
-	 * @param yLocation
-	 * @param parentPanel
-	 * @return
-	 */
-	private StoryComponentPanel findClosestChildPanel(double yLocation,
-			StoryComponentPanel parentPanel) {
-		// tracking variables used to maintain which panel is closest
-		StoryComponentPanel closestPanel = null;
-
-		final Collection<StoryComponentPanel> children = parentPanel
-				.getChildrenPanels();
-
-		// for each child, check if it is closer than the current closest
-		for (StoryComponentPanel child : children) {
-			double yChildLocation = child.getLocation().getY();
-			if (yChildLocation < yLocation) {
-				closestPanel = child;
-			}
-		}
-		return closestPanel;
-	}
-
-	private void addTransferData(StoryComponent child,
-			ComplexStoryComponent parent, int insertionIndex) {
-
-		final StoryComponent clone = child.clone();
-		final boolean success;
-
-		StoryComponent sibling = parent.getChildAt(insertionIndex);
-		if (sibling != null) {
-			// add in the middle
-			success = parent.addStoryChildBefore(clone, sibling);
-		} else {
-			success = parent.addStoryChild(clone);
-		}
-
-		clone.revalidateKnowItBindings();
-
-		if (!success)
-			throw new IllegalStateException("Was unable to add " + child
-					+ " to " + parent
-					+ ". This should have been prevented by canImport.");
 	}
 
 	private void repopulateParentOf(JComponent destinationComponent) {
