@@ -49,6 +49,11 @@ public class StoryComponentTransferUtils {
 	public static boolean canImportToParent(
 			TransferHandler.TransferSupport support) {
 
+		// We don't want to be dealing with anything other than drag and drop for now.
+		// TODO: In the future we should extend this functionality to paste, cut, etc.
+		if (!support.isDrop())
+			return false;
+		
 		if (support
 				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
 
@@ -66,8 +71,7 @@ public class StoryComponentTransferUtils {
 					.getStoryComponent();
 
 			// Make sure the panel we're dropping it in is a
-			// StoryComponentContainer panel
-			// Or else try the parent.
+			// StoryComponentContainer panel or else try the parent.
 			if (!(storyComponent instanceof StoryComponentContainer)) {
 
 				destinationPanel = destinationPanel.getParent();
@@ -171,9 +175,9 @@ public class StoryComponentTransferUtils {
 			insertionIndex = StoryComponentTransferUtils.getInsertionIndex(
 					(StoryComponentPanel) panel, support);
 		} else {
-			final StoryComponentPanel parentPanel = (StoryComponentPanel) panel
-					.getParent();
-
+			final StoryComponentPanel parentPanel;
+			parentPanel = (StoryComponentPanel) panel.getParent();
+			
 			parent = (ComplexStoryComponent) parentPanel.getStoryComponent();
 			insertionIndex = StoryComponentTransferUtils
 					.getParentInsertionIndex((StoryComponentPanel) parentPanel,
@@ -276,10 +280,10 @@ public class StoryComponentTransferUtils {
 		double yLocation = support.getDropLocation().getDropPoint().getY();
 
 		if (((ComplexStoryComponent) parent).getChildCount() > 0) {
-			final Collection<StoryComponentPanel> children = parentPanel
-					.getChildrenPanels();
+			final Collection<StoryComponentPanel> children;
 			final StoryComponentPanel closest;
 
+			children = parentPanel.getChildrenPanels();
 			for (StoryComponentPanel child : children) {
 				if (component == child.getStoryComponent())
 					yLocation += child.getLocation().getY();
