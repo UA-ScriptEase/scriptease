@@ -7,6 +7,11 @@ import java.io.IOException;
 
 import scriptease.gui.component.SlotPanel;
 
+/**
+ * Implementation of Transferable used in SlotPanelTransferHandler components being dragged
+ * and dropped into Slot Panels.
+ * @author jyuen
+ */
 public class SlotPanelTransferable implements Transferable {
 	private SlotPanel data;
 	
