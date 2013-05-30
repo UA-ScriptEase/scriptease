@@ -159,7 +159,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		return canImport;
 	}
 
-	private static boolean lastDragShiftDown = false;
+	protected static boolean lastDragShiftDown = false;
 
 	@Override
 	public void exportAsDrag(JComponent comp, InputEvent e, int action) {
@@ -225,7 +225,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		return false;
 	}
 
-	private void repopulateParentOf(JComponent destinationComponent) {
+	protected void repopulateParentOf(JComponent destinationComponent) {
 		final Container parent;
 		parent = destinationComponent.getParent();
 
@@ -243,7 +243,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 	 * @param destinationKnowIt
 	 * @param binding
 	 */
-	private void setGroupBindings(final KnowItBinding sourceBinding,
+	protected void setGroupBindings(final KnowItBinding sourceBinding,
 			final KnowIt destinationKnowIt, KnowItBinding binding) {
 		destinationKnowIt.getBinding().process(new BindingAdapter() {
 			@Override

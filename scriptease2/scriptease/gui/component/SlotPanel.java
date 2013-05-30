@@ -15,7 +15,7 @@ import scriptease.controller.MouseForwardingAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.gui.transfer.ProxyTransferHandler;
+import scriptease.gui.transfer.SlotPanelTransferHandler;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -185,7 +185,8 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 		}
 
 		if (enabled) {
-			this.setTransferHandler(new ProxyTransferHandler(this.bindingWidget));
+			//this.setTransferHandler(new ProxyTransferHandler(this.bindingWidget));
+			this.setTransferHandler(SlotPanelTransferHandler.getInstance());
 			this.removeMouseListener(MouseForwardingAdapter.getInstance());
 			this.removeMouseMotionListener(MouseForwardingAdapter.getInstance());
 		} else {
@@ -220,5 +221,9 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 			this.repaint();
 			this.revalidate();
 		}
+	}
+	
+	public BindingWidget getBindingWidget() {
+		return this.bindingWidget;
 	}
 }
