@@ -154,7 +154,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		}
 
 		// Special case - to handle where effects, descriptions, and controls
-		// can be dragged over binding widgets in order to get re-directed to 
+		// can be dragged over binding widgets in order to get re-directed to
 		// their parent block.
 		canImport |= this.canImportComponentsToParent(support);
 
@@ -163,7 +163,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		} else {
 			// TODO Set mouse pointer to invalid operation.
 		}
-		
+
 		return canImport;
 	}
 
@@ -183,7 +183,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				&& (support
 						.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour))) {
 
-			// If the binding widget isn't even in a StoryComponentContainer, 
+			// If the binding widget isn't even in a StoryComponentContainer,
 			// we shouldn't be dragging stuff there anyway.
 			Component panel = support.getComponent();
 			while (!(panel instanceof StoryComponentPanel) && panel != null) {
@@ -191,16 +191,18 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			}
 			if (panel == null)
 				return false;
-			
-			StoryComponent storyComponent = ((StoryComponentPanel) panel).getStoryComponent();
+
+			StoryComponent storyComponent = ((StoryComponentPanel) panel)
+					.getStoryComponent();
 
 			if (!(storyComponent instanceof StoryComponentContainer)) {
 				panel = panel.getParent();
-				storyComponent = ((StoryComponentPanel) panel).getStoryComponent();
+				storyComponent = ((StoryComponentPanel) panel)
+						.getStoryComponent();
 				if (!(storyComponent instanceof StoryComponentContainer))
 					return false;
 			}
-			
+
 			// Finally, check whether we have a valid component.
 			try {
 				final Collection<StoryComponent> components;
@@ -304,7 +306,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		final Collection<StoryComponent> components;
 		final StoryComponent component;
 		final ComplexStoryComponent parent;
-		
+
 		Component panel;
 		panel = support.getComponent();
 
@@ -315,17 +317,17 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 
 		if (panel == null)
 			return false;
-		
+
 		component = ((StoryComponentPanel) panel).getStoryComponent();
-		
+
 		// Check if the component already is a container. If not,
 		// We want the StoryComponentContainer panel so... once more.
 		if (!(component instanceof StoryComponentContainer))
 			panel = panel.getParent();
-		
+
 		parent = (ComplexStoryComponent) ((StoryComponentPanel) panel)
 				.getStoryComponent();
-		
+
 		// Now we actually add the transfer data
 		try {
 			components = (Collection<StoryComponent>) support
@@ -339,7 +341,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		} catch (UnsupportedFlavorException e) {
 		} catch (IOException e) {
 		}
-		
+
 		return true;
 	}
 
