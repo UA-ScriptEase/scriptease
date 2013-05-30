@@ -7,7 +7,6 @@ import scriptease.controller.AbstractFragmentVisitor;
 import scriptease.translator.codegenerator.CodeGenerationConstants;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingResourceContext;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 public class ScopeFragment extends AbstractContainerFragment {
@@ -50,12 +49,7 @@ public class ScopeFragment extends AbstractContainerFragment {
 	@Override
 	public String resolve(Context context) {
 		super.resolve(context);
-		final Object scope;
-
-		if (context instanceof KnowItBindingResourceContext)
-			System.out.println(context);
-
-		scope = this.getScope(context);
+		final Object scope= this.getScope(context);
 
 		if (scope != null) {
 			Context newContext = ContextFactory.getInstance().createContext(

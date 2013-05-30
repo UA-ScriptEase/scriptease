@@ -49,11 +49,13 @@ public class StoryComponentTransferUtils {
 	public static boolean canImportToParent(
 			TransferHandler.TransferSupport support) {
 
-		// We don't want to be dealing with anything other than drag and drop for now.
-		// TODO: In the future we should extend this functionality to paste, cut, etc.
+		// We don't want to be dealing with anything other than drag and drop
+		// for now.
+		// TODO: In the future we should extend this functionality to paste,
+		// cut, etc.
 		if (!support.isDrop())
 			return false;
-		
+
 		if (support
 				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
 
@@ -177,7 +179,7 @@ public class StoryComponentTransferUtils {
 		} else {
 			final StoryComponentPanel parentPanel;
 			parentPanel = (StoryComponentPanel) panel.getParent();
-			
+
 			parent = (ComplexStoryComponent) parentPanel.getStoryComponent();
 			insertionIndex = StoryComponentTransferUtils
 					.getParentInsertionIndex((StoryComponentPanel) parentPanel,
