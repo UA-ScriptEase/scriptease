@@ -244,10 +244,6 @@ public class StoryComponentPanelFactory {
 
 					if (owner instanceof StoryPoint) {
 						knowIt = owner;
-						// final StoryPoint storyPoint;
-						// storyPoint = (StoryPoint) owner;
-						// knowIt = new KnowIt(storyPoint.getDisplayText());
-						// knowIt.setBinding(storyPoint);
 					}
 				}
 				// Now check for a parameter/implicit tag
