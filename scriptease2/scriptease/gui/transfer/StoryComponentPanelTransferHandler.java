@@ -173,7 +173,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		this.scrollForMousePosition(supportComponent);
 
 		if (isBinding(support)) {
-			// Handles the case where the user drags a Binding (delete)
+			// Handles the case where the user drags a Binding
 			return false;
 		}
 

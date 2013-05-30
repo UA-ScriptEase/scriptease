@@ -59,7 +59,6 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 					"The given JComponent was not a Slot Panel.");
 		}
 
-		// Return the binding for the BindingWidget.
 		return new SlotPanelTransferable((SlotPanel) source);
 	}
 

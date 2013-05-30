@@ -185,7 +185,6 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 		}
 
 		if (enabled) {
-			//this.setTransferHandler(new ProxyTransferHandler(this.bindingWidget));
 			this.setTransferHandler(SlotPanelTransferHandler.getInstance());
 			this.removeMouseListener(MouseForwardingAdapter.getInstance());
 			this.removeMouseMotionListener(MouseForwardingAdapter.getInstance());
