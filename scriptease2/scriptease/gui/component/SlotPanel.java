@@ -221,7 +221,7 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 			this.revalidate();
 		}
 	}
-	
+
 	public BindingWidget getBindingWidget() {
 		return this.bindingWidget;
 	}

@@ -103,7 +103,7 @@ class ModelTabPanel extends JTabbedPane {
 
 						if (event.getEventType() == SEModelEvent.Type.REMOVED) {
 							tabs.removeTabForModel(model);
-						} else if (event.getEventType() == SEModelEvent.Type.ADDED) {
+						} else if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
 							// We need to delay this until the model is loaded
 							// because it switches tabs to the new tab, which
 							// fires the previously created change listener,
