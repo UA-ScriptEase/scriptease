@@ -268,7 +268,7 @@ public class LibraryEditorListenerFactory {
 	}
 
 	/**
-	 * <<<<<<< HEAD ======= Creates an observer for the parameter's name.
+	 * Creates an observer for the parameter's name.
 	 * 
 	 * @param scriptIt
 	 * @param codeBlock
@@ -357,8 +357,7 @@ public class LibraryEditorListenerFactory {
 	}
 
 	/**
-	 * >>>>>>> 905e83f78a0d79975b1c5edc17a7762ee4a58b7f Builds an observer for
-	 * when a parameters' types are set.
+	 * Builds an observer for when a parameters' types are set.
 	 * 
 	 * @param scriptIt
 	 * @param deleteCodeBlockButton
@@ -378,7 +377,7 @@ public class LibraryEditorListenerFactory {
 				component = event.getSource();
 				storyVisitor = new StoryAdapter() {
 					@Override
-					public void processScriptIt(ScriptIt ScriptIt) {
+					public void processScriptIt(ScriptIt scriptIt) {
 						switch (event.getType()) {
 						case CHANGE_PARAMETER_TYPES_SET:
 							final String initialDefaultType;
@@ -388,7 +387,7 @@ public class LibraryEditorListenerFactory {
 							defaultTypeBox.removeAllItems();
 
 							for (String type : knowIt.getTypes()) {
-								defaultTypeBox.addItem(knowIt.getLibrary()
+								defaultTypeBox.addItem(scriptIt.getLibrary()
 										.getTypeDisplayText(type)
 										+ " - "
 										+ type);
