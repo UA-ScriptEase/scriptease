@@ -140,7 +140,12 @@ public abstract class CodeBlock extends StoryComponent implements
 	}
 
 	public boolean addParameter(KnowIt parameter) {
-		return this.parameters.add(parameter);
+		final boolean added = this.parameters.add(parameter);
+
+		if (added)
+			parameter.setOwner(this);
+
+		return added;
 	}
 
 	public boolean removeParameter(KnowIt parameter) {
