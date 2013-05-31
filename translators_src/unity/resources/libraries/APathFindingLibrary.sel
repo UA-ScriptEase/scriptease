@@ -4,7 +4,7 @@
   <Causes/>
   <Effects>
     <ScriptIt>
-      <Name>&lt;Object&gt; walks to &lt;Other Object&gt;</Name>
+      <Name>&lt;Object&gt; walks a path to &lt;Other Object&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -13,7 +13,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Object&gt; walks to &lt;Other Object&gt;</Name>
+          <Name>&lt;Object&gt; walks a path to &lt;Other Object&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>2</Id>
@@ -55,7 +55,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set &lt;Object&gt;&apos;s walking speed to &lt;Speed&gt;</Name>
+      <Name>Set &lt;Object&gt;&apos;s path walking speed to &lt;Speed&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -64,7 +64,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;Object&gt;&apos;s walking speed to &lt;Speed&gt;</Name>
+          <Name>Set &lt;Object&gt;&apos;s path walking speed to &lt;Speed&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>3</Id>
@@ -349,7 +349,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set &lt;Object&gt;&apos;s turning speed to &lt;Speed&gt;</Name>
+      <Name>Set &lt;Object&gt;&apos;s path turning speed to &lt;Speed&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -358,7 +358,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;Object&gt;&apos;s turning speed to &lt;Speed&gt;</Name>
+          <Name>Set &lt;Object&gt;&apos;s path turning speed to &lt;Speed&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>10</Id>
@@ -539,7 +539,6 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
     <ScriptIt>
       <Name>&lt;Object&gt; stops walking to its target</Name>
       <Visible>true</Visible>
@@ -577,8 +576,65 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
+    <ScriptIt>
+      <Name>&lt;Object&gt;&apos;s path walking speed</Name>
+      <Visible>false</Visible>
+      <Labels>
+        <Label>A*</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Object&gt;&apos;s path walking speed</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>16</Id>
+          <Types>
+            <Type>float</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return SEPath.GetPath(</Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).speed;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
   </Effects>
   <DescribeIts>
+    <DescribeIt>
+      <Name>Walk Speed</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
     <DescribeIt>
       <Name>Target Reached</Name>
       <Types>
@@ -591,7 +647,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[2]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
         </Entry>
