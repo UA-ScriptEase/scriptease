@@ -48,6 +48,7 @@ class SEPath extends AIPath {
 	 * functionality. All this does is call the onReached function variable.
 	 */
 	function OnTargetReached () {
-		onReached();	
+		if(this.onReached != null)
+			this.onReached();	
 	}
 }

@@ -24,7 +24,7 @@ import scriptease.util.StringOp;
  */
 @SuppressWarnings("serial")
 public class TypeWidget extends JToggleButton {
-	private String type;
+	private final String type;
 	private static final float LABEL_FONT_SIZE_SCALE_FACTOR = 1.1f;
 
 	public TypeWidget(final String type) {
