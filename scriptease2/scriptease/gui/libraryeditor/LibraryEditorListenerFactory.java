@@ -378,7 +378,7 @@ public class LibraryEditorListenerFactory {
 				component = event.getSource();
 				storyVisitor = new StoryAdapter() {
 					@Override
-					public void processScriptIt(ScriptIt ScriptIt) {
+					public void processScriptIt(ScriptIt scriptIt) {
 						switch (event.getType()) {
 						case CHANGE_PARAMETER_TYPES_SET:
 							final String initialDefaultType;
@@ -388,7 +388,7 @@ public class LibraryEditorListenerFactory {
 							defaultTypeBox.removeAllItems();
 
 							for (String type : knowIt.getTypes()) {
-								defaultTypeBox.addItem(knowIt.getLibrary()
+								defaultTypeBox.addItem(scriptIt.getLibrary()
 										.getTypeDisplayText(type)
 										+ " - "
 										+ type);
