@@ -1897,24 +1897,24 @@
         <Label>automatic</Label>
       </Labels>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -1983,24 +1983,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2034,24 +2034,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2085,24 +2085,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2136,24 +2136,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2187,24 +2187,24 @@
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2238,24 +2238,24 @@
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2289,24 +2289,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2340,24 +2340,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2391,24 +2391,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2442,24 +2442,24 @@
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2493,24 +2493,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2546,24 +2546,24 @@
         <Label></Label>
       </Labels>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2597,24 +2597,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2648,24 +2648,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2699,24 +2699,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2750,24 +2750,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2801,24 +2801,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2852,24 +2852,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2903,24 +2903,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -2956,24 +2956,24 @@
         <Label></Label>
       </Labels>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3009,24 +3009,24 @@
         <Label>Research</Label>
       </Labels>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3062,24 +3062,24 @@
         <Label>Research</Label>
       </Labels>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3113,24 +3113,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3164,24 +3164,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3215,24 +3215,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3266,24 +3266,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3317,24 +3317,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3368,24 +3368,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3419,24 +3419,24 @@
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3470,24 +3470,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3521,24 +3521,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3572,24 +3572,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3623,24 +3623,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3674,24 +3674,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3725,24 +3725,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3776,24 +3776,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3827,24 +3827,24 @@
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3878,24 +3878,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3929,24 +3929,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -3980,24 +3980,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4031,24 +4031,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4082,24 +4082,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4133,24 +4133,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4184,24 +4184,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4235,24 +4235,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4286,24 +4286,24 @@
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4337,24 +4337,24 @@
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4388,24 +4388,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4439,24 +4439,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4490,24 +4490,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4541,24 +4541,24 @@
       <Visible>false</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
@@ -4592,24 +4592,24 @@
       <Visible>true</Visible>
       <Labels/>
       <Children>
-        <StoryItemSequence>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
-        <StoryItemSequence>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
           <Name>Always:</Name>
           <Visible>true</Visible>
           <Labels/>
           <Children/>
-        </StoryItemSequence>
+        </StoryComponentContainer>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
