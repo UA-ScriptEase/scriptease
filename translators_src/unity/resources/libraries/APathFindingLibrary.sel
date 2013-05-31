@@ -8,7 +8,7 @@
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
-        <Label>A</Label>
+        <Label>A*</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -59,7 +59,7 @@
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
-        <Label>A</Label>
+        <Label>A*</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -110,7 +110,7 @@
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
-        <Label>A</Label>
+        <Label>A*</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -149,7 +149,7 @@
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
-        <Label>A</Label>
+        <Label>A*</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -200,7 +200,7 @@
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
-        <Label>A</Label>
+        <Label>A*</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -251,7 +251,7 @@
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
-        <Label>A</Label>
+        <Label>A*</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -302,7 +302,7 @@
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
-        <Label>A</Label>
+        <Label>A*</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -353,7 +353,7 @@
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
-        <Label>A</Label>
+        <Label>A*</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -404,7 +404,7 @@
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
-        <Label>A</Label>
+        <Label>A*</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -455,7 +455,7 @@
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
-        <Label>A</Label>
+        <Label>A*</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -505,7 +505,7 @@
       <Name>if &lt;Object&gt; has reached its target</Name>
       <Visible>false</Visible>
       <Labels>
-        <Label>A</Label>
+        <Label>A*</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
@@ -534,6 +534,44 @@
                 <Fragment data="NAME"/>
               </Scope>
               <Literal>).TargetReached;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
+    <ScriptIt>
+      <Name>&lt;Object&gt; stops walking to its target</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>A*</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Object&gt; stops walking to its target</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>14</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEPath.GetPath(</Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).target = null;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
