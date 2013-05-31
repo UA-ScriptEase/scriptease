@@ -28,9 +28,7 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
-import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
@@ -484,12 +482,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		boolean acceptable = true;
 
 		for (StoryComponent child : potentialChildren) {
-			if (child instanceof KnowIt) {
-				final KnowIt knowIt = (KnowIt) child;
-				if (! (knowIt.getBinding() instanceof KnowItBindingNull))
-					return false;
-			}
-			
 			if (child instanceof ScriptIt) {
 				for (CodeBlock codeBlock : ((ScriptIt) child).getCodeBlocks()) {
 					final LibraryModel library = codeBlock.getLibrary();
