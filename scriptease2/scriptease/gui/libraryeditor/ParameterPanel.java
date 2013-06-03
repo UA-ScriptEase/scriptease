@@ -371,31 +371,17 @@ class ParameterPanel extends JPanel {
 				break;
 			case JSPINNER:
 				final JSpinner bindingSpinner;
-				boolean isFloat = false;
-
 				final SpinnerNumberModel model;
 				final NumberEditor numberEditor;
-				float initVal;
 
 				Comparable<?> min = null; // default to no min limit
 				Comparable<?> max = null; // default to no max limit
-				Number stepSize = 1; // default to int step size
+				Number stepSize = 0.1; // default to float step size
 
 				final String regex = library.getTypeRegex(defaultType);
-
-				final Pattern regexPattern = Pattern.compile(regex);
-				if (regex != null && !regex.isEmpty()) {
-					// if regex doesn't specify negative numbers, make min 0
-					if (!regex.startsWith("[-]"))
-						min = 0;
-					// if regex specifies \. it wants a floating point
-					if (regex.contains("\\.")) {
-						stepSize = 0.1;
-						isFloat = true;
-					}
-				}
-
-				if (bindingText.equals("<unbound!>"))
+				final Pattern regexPattern = Pattern.compile(regex);				
+				float initVal;
+				if (bindingText.equals("<unbound!>") || bindingText.isEmpty())
 					initVal = 0;
 				else {
 					initVal = Float.parseFloat(bindingText);
@@ -405,9 +391,7 @@ class ParameterPanel extends JPanel {
 				bindingSpinner = new JSpinner(model);
 				numberEditor = (NumberEditor) bindingSpinner.getEditor();
 
-				if (isFloat) {
-					numberEditor.getFormat().setMinimumFractionDigits(1);
-				}
+				numberEditor.getFormat().setMinimumFractionDigits(1);
 
 				bindingSpinner.addChangeListener(new ChangeListener() {
 					@Override
@@ -415,14 +399,13 @@ class ParameterPanel extends JPanel {
 						final Object bindingFieldValue;
 						bindingFieldValue = bindingSpinner.getValue();
 
-						String safeValue = StringOp.convertNumberToPattern(
+						final String safeValue = StringOp.convertNumberToPattern(
 								bindingFieldValue.toString(), regexPattern);
 
-						final SimpleResource newConstant;
-
-						newConstant = SimpleResource.buildSimpleResource(
-								ParameterPanel.this.knowIt.getTypes(),
-								safeValue);
+						final SimpleResource newConstant = SimpleResource
+								.buildSimpleResource(
+										ParameterPanel.this.knowIt.getTypes(),
+										safeValue);
 
 						ParameterPanel.this.knowIt.setBinding(newConstant);
 					}
