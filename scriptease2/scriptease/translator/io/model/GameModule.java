@@ -198,8 +198,9 @@ public abstract class GameModule {
 	 * the same file, this is where the code generating components are matched
 	 * up with each other. <br>
 	 * <br>
-	 * The default behaviour will usually work, so this method likely won't need
-	 * to be overwritten apart from strange circumstances.
+	 * The default behaviour aggregates scripts by slot and subject, which will
+	 * usually work. This method likely won't need to be overwritten apart from
+	 * strange circumstances.
 	 * 
 	 * @param root
 	 *            The root of the tree to aggregate from.
@@ -230,17 +231,20 @@ public abstract class GameModule {
 					final String slot;
 					final KnowIt subject;
 					final String key;
+					final List<CodeBlock> bucket;
+					final List<CodeBlock> existingBucket;
 
 					slot = codeBlock.getSlot();
 					subject = codeBlock.getSubject();
 					key = subject.getBinding().toString() + slot;
+					bucket = new ArrayList<CodeBlock>();
+					existingBucket = subjectToCodeBlocks.get(key);
 
-					List<CodeBlock> bucket = subjectToCodeBlocks.get(key);
-					if (bucket == null) {
-						bucket = new ArrayList<CodeBlock>();
-					}
+					if (existingBucket != null)
+						bucket.addAll(existingBucket);
 
 					bucket.add(codeBlock);
+
 					subjectToCodeBlocks.put(key, bucket);
 				}
 				this.defaultProcessComplex(scriptIt);

@@ -129,7 +129,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 	@Override
 	public String resolve(Context context) {
 		super.resolve(context);
-
+		
 		final StringBuilder code;
 		final Iterator<? extends Object> it;
 		Object next;
