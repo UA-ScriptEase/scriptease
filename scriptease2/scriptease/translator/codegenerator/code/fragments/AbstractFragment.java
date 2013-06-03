@@ -112,6 +112,8 @@ public abstract class AbstractFragment implements Cloneable {
 			Context context) {
 		StringBuilder code = new StringBuilder();
 
+		
+		
 		for (AbstractFragment token : format) {
 			code.append(token.resolve(context));
 		}

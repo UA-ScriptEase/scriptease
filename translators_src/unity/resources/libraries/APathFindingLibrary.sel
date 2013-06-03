@@ -1,7 +1,79 @@
 <LibraryModel name="A* Pathfinding Library" author="ScriptEase Team">
   <Types/>
-  <Slots defaultFormat="SECause"/>
-  <Causes/>
+  <Slots defaultFormat="SECause">
+  	<Slot format="UnityCause">
+      <Name>TargetReached</Name>
+      <Keyword>TargetReached</Keyword>
+      <Condition>Start</Condition>
+      <Parameters/>
+      <Implicits/>
+    </Slot>
+  </Slots>
+  <Causes>
+    <CauseIt>
+      <Name>When &lt;subject&gt; reaches its target</Name>
+      <Visible>true</Visible>
+      <Labels/>
+      <Children>
+        <StoryComponentContainer>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+        </StoryComponentContainer>
+      </Children>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>When &lt;subject&gt; reaches its target</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Subject>subject</Subject>
+          <Slot>TargetReached</Slot>
+          <Id>15</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>subject</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+          	  <Line>
+          	  	<Literal>SEPath.GetPath(</Literal>
+              	<Scope data="ARGUMENT" ref="subject">
+                	<Fragment data="NAME"/>
+              	</Scope>
+          	    <Literal>).setOnTargetReached(function(){</Literal>
+              </Line>
+              <Indent>
+              	<FormatRef data="NONE" ref="children"/>
+              </Indent>
+              <Line>
+              	<Literal>});</Literal>
+              </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </CauseIt>
+  </Causes>
   <Effects>
     <ScriptIt>
       <Name>&lt;Object&gt; walks a path to &lt;Other Object&gt;</Name>

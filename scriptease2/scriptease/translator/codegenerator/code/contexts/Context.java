@@ -164,10 +164,14 @@ public abstract class Context {
 
 		for (StoryComponent key : this.getComponents()) {
 			if (key instanceof ScriptIt) {
-				ScriptIt scriptIt = (ScriptIt) key;
-				Collection<CodeBlock> codeBlocksForSlot = scriptIt
+				final ScriptIt scriptIt = (ScriptIt) key;
+
+				final Collection<CodeBlock> codeBlocks;
+
+				codeBlocks = scriptIt
 						.getCodeBlocksForLocation(this.locationInfo);
-				if (!codeBlocksForSlot.isEmpty())
+
+				if (!codeBlocks.isEmpty())
 					scriptIts.add(scriptIt);
 			}
 		}
@@ -305,6 +309,12 @@ public abstract class Context {
 		return null;
 	}
 
+	/**
+	 * Returns unique causes based on the
+	 * {@link CauseIt#isEquivalentToCause(CauseIt)} method.
+	 * 
+	 * @return
+	 */
 	public Collection<CauseIt> getCauses() {
 		final Collection<CauseIt> causes = new ArrayList<CauseIt>();
 		for (ScriptIt scriptIt : this.getScriptIts()) {

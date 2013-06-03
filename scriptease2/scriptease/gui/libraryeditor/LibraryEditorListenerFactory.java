@@ -268,7 +268,6 @@ public class LibraryEditorListenerFactory {
 	}
 
 	/**
-	 * <<<<<<< HEAD ======= Creates an observer for the parameter's name.
 	 * 
 	 * @param scriptIt
 	 * @param codeBlock
@@ -357,8 +356,7 @@ public class LibraryEditorListenerFactory {
 	}
 
 	/**
-	 * >>>>>>> 905e83f78a0d79975b1c5edc17a7762ee4a58b7f Builds an observer for
-	 * when a parameters' types are set.
+	 * Builds an observer for when a parameters' types are set.
 	 * 
 	 * @param scriptIt
 	 * @param deleteCodeBlockButton

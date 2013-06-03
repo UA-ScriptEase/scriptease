@@ -950,7 +950,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @return
 	 */
 	public Collection<KnowIt> getSlotParameters(String slot) {
-		return this.slotManager.getParameters(slot);
+		return this.getSlot(slot).getParameters();
 	}
 
 	/**
@@ -960,7 +960,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @return
 	 */
 	public Collection<KnowIt> getSlotImplicits(String slot) {
-		return this.slotManager.getImplicits(slot);
+		return this.getSlot(slot).getImplicits();
 	}
 
 	/**
@@ -970,7 +970,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @return
 	 */
 	public String getSlotCondition(String slot) {
-		return this.slotManager.getCondition(slot);
+		return this.getSlot(slot).getCondition();
 	}
 
 	@Override

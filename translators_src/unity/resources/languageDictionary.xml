@@ -433,34 +433,54 @@
 
 		<!-- Format for ScriptIts -->
 		<Format id="scriptItConditional">
-			<Series data="identicalCauses">
 			<Line> 
-				<Literal>if(SEStory.IsEnabled("</Literal> 
-				<Fragment data="currentstorypoint" />
-				<Literal>")) {</Literal> 
+					<Literal>if(false) {}</Literal> 
 			</Line>
+			<Series data="identicalCauses">
+				<Line> 
+					<Literal>else if(SEStory.IsEnabled("</Literal> 
+					<Fragment data="currentstorypoint" />
+					<Literal>")) {</Literal> 
+				</Line>
 				<Indent>
 					<Scope data="activeChild">
 						<FormatRef ref="childrenWithoutImplicits" />
 					</Scope>
 				</Indent>
-			<Line> 
-				<Literal>} else {</Literal> 
+				<Line> 
+					<Literal>}</Literal> 
+				</Line>
+			</Series>
+			
+			<Line />
+			
+			<Line>
+				<Literal>if(false){}</Literal>
 			</Line>
+			<Series data="identicalCauses">
+				<Line> 
+					<Literal>else if(!SEStory.IsEnabled("</Literal> 
+					<Fragment data="currentstorypoint" />
+					<Literal>")) {</Literal> 
+				</Line>
 				<Indent>
 					<Scope data="inactiveChild">
 						<FormatRef ref="childrenWithoutImplicits" />
 					</Scope>
 				</Indent>
-			<Line> 
-				<Literal>}</Literal> 
-			</Line>
+				<Line> 
+					<Literal>}</Literal> 
+				</Line>
+			</Series>
+			
 			<Line />
-			<Line>
-				<Scope data="alwaysChild">
-					<FormatRef ref="childrenWithoutImplicits" />
-				</Scope>
-			</Line>
+			
+			<Series data="identicalCauses">
+				<Line>
+					<Scope data="alwaysChild">
+						<FormatRef ref="childrenWithoutImplicits" />
+					</Scope>
+				</Line>
 			</Series>
 		</Format>
 
@@ -555,7 +575,6 @@
 				</Line>
 			</Series>
 		</Format>
-
 
 		<!-- File formats -->
 		<!-- Default format for most files -->

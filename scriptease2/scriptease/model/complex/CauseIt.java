@@ -184,6 +184,21 @@ public class CauseIt extends ScriptIt {
 		boolean equality = true;
 
 		equality &= cause.getDisplayText().equals(this.getDisplayText());
+
+		final Collection<String> thisSlots = new ArrayList<String>();
+		final Collection<String> otherSlots = new ArrayList<String>();
+
+		for (CodeBlock codeBlock : this.getCodeBlocks()) {
+			thisSlots.add(codeBlock.getSlot());
+		}
+
+		for (CodeBlock codeBlock : cause.getCodeBlocks()) {
+			otherSlots.add(codeBlock.getSlot());
+		}
+		
+		equality &= thisSlots.equals(otherSlots);
+
+		// This automatically checks if they have the same number of bindings.
 		equality &= cause.getBindings().equals(this.getBindings());
 
 		return equality;
