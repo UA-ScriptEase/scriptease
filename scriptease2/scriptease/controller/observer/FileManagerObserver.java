@@ -2,7 +2,7 @@ package scriptease.controller.observer;
 
 import java.io.File;
 
-import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.SEModel;
 
 /**
  * A class can implement the FileManagerObserver interface if it needs to be
@@ -20,5 +20,5 @@ public interface FileManagerObserver {
 	 * @param location
 	 *            The disk location where the model is stored.
 	 */
-	public void fileReferenced(StoryModel model, File location);
+	public void fileReferenced(SEModel model, File location);
 }

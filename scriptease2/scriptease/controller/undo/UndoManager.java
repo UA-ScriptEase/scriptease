@@ -13,7 +13,6 @@ import scriptease.controller.observer.UndoManagerObserver;
 import scriptease.gui.StatusManager;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
-import scriptease.model.semodel.StoryModel;
 
 /**
  * Maintains multiple modification histories and manages requests for undoing or
@@ -108,7 +107,7 @@ public final class UndoManager {
 
 		fileObserver = new FileManagerObserver() {
 			@Override
-			public void fileReferenced(StoryModel model, File location) {
+			public void fileReferenced(SEModel model, File location) {
 				History history = UndoManager.this.findHistoryForModel(model);
 
 				history.markSaved();

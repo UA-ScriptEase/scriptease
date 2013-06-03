@@ -61,7 +61,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 		// Subject
 		if (block.hasSubject()) {
 			writer.startNode(TAG_SUBJECT);
-			writer.setValue(block.getSubject().getDisplayText());
+			writer.setValue(block.getSubjectName());
 			writer.endNode();
 		}
 
