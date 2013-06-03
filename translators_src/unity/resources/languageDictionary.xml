@@ -433,54 +433,39 @@
 
 		<!-- Format for ScriptIts -->
 		<Format id="scriptItConditional">
-			<Line> 
-					<Literal>if(false) {}</Literal> 
+			<Line>
+				<Literal>var enabledPoints:List.&lt;String&gt; = SEStory.GetAllActive();</Literal>
 			</Line>
+			<Line />
+			
 			<Series data="identicalCauses">
-				<Line> 
-					<Literal>else if(SEStory.IsEnabled("</Literal> 
-					<Fragment data="currentstorypoint" />
-					<Literal>")) {</Literal> 
-				</Line>
+			<Line> 
+				<Literal>if(enabledPoints.Contains("</Literal> 
+				<Fragment data="currentstorypoint" />
+				<Literal>")) {</Literal> 
+			</Line>
 				<Indent>
 					<Scope data="activeChild">
 						<FormatRef ref="childrenWithoutImplicits" />
 					</Scope>
 				</Indent>
-				<Line> 
-					<Literal>}</Literal> 
-				</Line>
-			</Series>
-			
-			<Line />
-			
-			<Line>
-				<Literal>if(false){}</Literal>
+			<Line> 
+				<Literal>} else {</Literal> 
 			</Line>
-			<Series data="identicalCauses">
-				<Line> 
-					<Literal>else if(!SEStory.IsEnabled("</Literal> 
-					<Fragment data="currentstorypoint" />
-					<Literal>")) {</Literal> 
-				</Line>
 				<Indent>
 					<Scope data="inactiveChild">
 						<FormatRef ref="childrenWithoutImplicits" />
 					</Scope>
 				</Indent>
-				<Line> 
-					<Literal>}</Literal> 
-				</Line>
-			</Series>
-			
+			<Line> 
+				<Literal>}</Literal> 
+			</Line>
 			<Line />
-			
-			<Series data="identicalCauses">
-				<Line>
-					<Scope data="alwaysChild">
-						<FormatRef ref="childrenWithoutImplicits" />
-					</Scope>
-				</Line>
+			<Line>
+				<Scope data="alwaysChild">
+					<FormatRef ref="childrenWithoutImplicits" />
+				</Scope>
+			</Line>
 			</Series>
 		</Format>
 
@@ -576,12 +561,18 @@
 			</Series>
 		</Format>
 
+
 		<!-- File formats -->
 		<!-- Default format for most files -->
 		<Format id="SECause">
 			<Line>
 				<Literal>#pragma strict</Literal>
 			</Line>
+			<Line />
+			<Line>
+				<Literal>import System.Collections.Generic;</Literal>
+			</Line>
+			<Line />
 			<Line>
 				<Literal>// Main</Literal>
 			</Line>
@@ -599,9 +590,14 @@
 		</Format>
 
 		<Format id="UnityCause">
-			<Line>
+				<Line>
 				<Literal>#pragma strict</Literal>
 			</Line>
+			<Line />
+			<Line>
+				<Literal>import System.Collections.Generic;</Literal>
+			</Line>
+			<Line />
 			<Line>
 				<Literal>// Function</Literal>
 			</Line>
