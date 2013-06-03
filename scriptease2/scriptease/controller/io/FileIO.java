@@ -395,7 +395,6 @@ public class FileIO {
 		stream.alias("KnowIt", KnowIt.class);
 		stream.alias("StoryComponentContainer", StoryComponentContainer.class);
 		stream.alias("AskIt", AskIt.class);
-		stream.alias("StoryItemSequence", StoryComponentContainer.class);
 		stream.alias("KnowItBinding", KnowItBinding.class);
 		stream.alias("Type", GameType.class);
 		stream.alias("Slot", Slot.class);
