@@ -122,6 +122,22 @@ static function HasFailed(uniqueName:String):boolean  {
 	}
 }
 
+static function GetAllActive():List.<String> {
+	var active:List.<String> = new List.<String>();
+	
+	if(root.IsEnabled())
+		active.Add(root.uniqueName);
+		
+	for(descendant in root.GetDescendants()) {
+		if(descendant.IsEnabled()) {
+			active.Add(descendant.uniqueName);	
+		}
+	}
+	
+	return active;
+}
+
+
 /**
  * Finds the Story Point that matches the unique name.
  */
@@ -223,6 +239,22 @@ private class StoryPoint {
 		} else if (this.state == State.DISABLED) {
 			this.state = State.PRESUCCEEDED;
 		}		
+	}
+	
+	/**
+	 * Returns all story points descendant from this one.
+	 */
+	function GetDescendants():List.<StoryPoint> {
+		var descendants:List.<StoryPoint> = new List.<StoryPoint>(); 
+		
+		for(child in this.children) {
+			descendants.Add(child);
+			for(descendant in child.GetDescendants()) {
+				descendants.Add(descendant);
+			}
+		}
+		
+		return descendants;
 	}
 	
 	/*
