@@ -11,7 +11,7 @@ import javax.swing.Action;
 
 import scriptease.controller.FileManager;
 import scriptease.controller.observer.FileManagerObserver;
-import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.SEModel;
 
 /**
  * Represents and performs the Open Recent File command, as well as encapsulates
@@ -112,7 +112,7 @@ public final class OpenRecentFileAction extends AbstractAction implements
 	}
 
 	@Override
-	public void fileReferenced(StoryModel model, File location) {
+	public void fileReferenced(SEModel model, File location) {
 		this.updateName();
 	}
 

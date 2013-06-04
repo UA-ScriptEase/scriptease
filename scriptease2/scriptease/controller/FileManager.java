@@ -293,6 +293,9 @@ public final class FileManager {
 		// remove the entry for the model, not the location.
 		this.openFiles.removeValue(library);
 		this.openFiles.put(location, library);
+		
+		// update the recent files menu items in the GUI.
+		this.notifyModelObservers(library, location);
 	}
 
 	/**
@@ -1040,7 +1043,7 @@ public final class FileManager {
 			observer.updateRecentFiles();
 	}
 
-	private void notifyModelObservers(StoryModel model, File location) {
+	private void notifyModelObservers(SEModel model, File location) {
 		for (FileManagerObserver observer : this.modelObserverManager
 				.getObservers())
 			observer.fileReferenced(model, location);

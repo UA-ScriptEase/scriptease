@@ -93,8 +93,9 @@
       <Name>Number</Name>
       <Keyword>float</Keyword>
       <CodeSymbol>float</CodeSymbol>
-      <GUI>JSPINNER</GUI>
-      <WidgetName>#</WidgetName>
+      <LegalValues>[-+]?[0-9]*\.?[0-9]+</LegalValues>
+	  <GUI>JSPINNER</GUI>
+	  <WidgetName>#</WidgetName>
     </Type>
     <Type>
       <Name>LockModify</Name>

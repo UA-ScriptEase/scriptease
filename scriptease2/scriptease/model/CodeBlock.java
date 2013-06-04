@@ -288,24 +288,23 @@ public abstract class CodeBlock extends StoryComponent implements
 		 * It's not a valid cause-codeblock while in that state, but this is as
 		 * close as we can get. - remiller
 		 */
-		if (this.hasSubject() && this.hasSlot())
-			return (CauseIt) this.getOwner();
-		else {
-			StoryComponent parent = this.getOwner();
-			while (parent != null) {
-				if (parent instanceof CauseIt)
+		StoryComponent owner = this.getOwner();
+		if (owner instanceof CauseIt) {
+			return (CauseIt) owner;
+		} else {
+			while (owner != null) {
+				if (owner instanceof CauseIt)
 					break;
-
-				parent = parent.getOwner();
+				owner = owner.getOwner();
 			}
 
-			if (parent == null) {
+			if (owner == null) {
 				throw new IllegalStateException(
 						"Failed to locate enclosing Cause for CodeBlock "
 								+ this.toString());
 			}
 
-			return (CauseIt) parent;
+			return (CauseIt) owner;
 		}
 	}
 
