@@ -845,6 +845,7 @@ public class LibraryEditorPanelFactory {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					final KnowIt knowIt = new KnowIt();
+					knowIt.setLibrary(codeBlock.getLibrary());
 					if (!UndoManager.getInstance().hasOpenUndoableAction()) {
 						UndoManager.getInstance().startUndoableAction(
 								"Add parameter " + knowIt + " to " + codeBlock);
@@ -854,25 +855,10 @@ public class LibraryEditorPanelFactory {
 				}
 			});
 
-			deleteCodeBlockButton.addActionListener(new ActionListener() {
+			slotBox.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-
-					// TODO Matt, this code wasn't merged properly... Not sure how much of it is necessary.
-					
-					//					if (!UndoManager.getInstance().hasOpenUndoableAction())
-//						UndoManager.getInstance().startUndoableAction(
-//								"Removing CodeBlock from "
-//										+ scriptIt.getDisplayText());
-//					scriptIt.removeCodeBlock(codeBlock);
-//					UndoManager.getInstance().endUndoableAction();
-//				}
-//			});
-//
-//			if (scriptIt.getCodeBlocks().size() < 2) {
-//				deleteCodeBlockButton.setEnabled(false);
-//				deleteCodeBlockButton.setVisible(false);
-					String selectedSlot = (String) slotBox.getSelectedItem();
+					final String selectedSlot = (String) slotBox.getSelectedItem();
 
 					if (selectedSlot != null)
 						codeBlock.setSlot((String) slotBox.getSelectedItem());
@@ -903,7 +889,7 @@ public class LibraryEditorPanelFactory {
 					public void actionPerformed(ActionEvent e) {
 						if (!UndoManager.getInstance().hasOpenUndoableAction())
 							UndoManager.getInstance().startUndoableAction(
-									"Adding CodeBlock to "
+									"Removing CodeBlock to "
 											+ scriptIt.getDisplayText());
 						scriptIt.removeCodeBlock(codeBlock);
 						UndoManager.getInstance().endUndoableAction();
