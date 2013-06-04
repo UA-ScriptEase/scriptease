@@ -277,9 +277,11 @@ public final class UnityProject extends GameModule {
 		final FileFilter resourceFolderFilter;
 		final FileFilter imageFilter;
 		final FileFilter guiSkinFilter;
+		final FileFilter prefabFilter;
 
 		final Collection<File> images = new ArrayList<File>();
 		final Collection<File> guiSkins = new ArrayList<File>();
+		final Collection<File> prefabs = new ArrayList<File>();
 		final Collection<File> resourceFolders;
 
 		imageExtensions = new ArrayList<String>() {
@@ -322,18 +324,30 @@ public final class UnityProject extends GameModule {
 			}
 		};
 
+		prefabFilter = new FileFilter() {
+			@Override
+			public boolean accept(File file) {
+				final String ext = FileOp.getExtension(file).toLowerCase();
+
+				return ext.equals("prefab");
+			}
+		};
+
 		resourceFolders = FileOp.findFiles(this.projectLocation,
 				resourceFolderFilter);
 
 		for (File resourceFolder : resourceFolders) {
 			images.addAll(FileOp.findFiles(resourceFolder, imageFilter));
 			guiSkins.addAll(FileOp.findFiles(resourceFolder, guiSkinFilter));
+			prefabs.addAll(FileOp.findFiles(resourceFolder, prefabFilter));
 		}
 
 		resources.addAll(this.buildSimpleUnityResources(images,
 				UnityType.SE_IMAGE));
 		resources.addAll(this.buildSimpleUnityResources(guiSkins,
 				UnityType.SE_GUISKIN));
+		resources.addAll(this.buildSimpleUnityResources(prefabs,
+				UnityType.SE_PREFAB));
 
 		return resources;
 	}
