@@ -407,11 +407,11 @@
       KeyCode.F14&lt;F14&gt;|KeyCode.F15&lt;F15&gt;|KeyCode.Alpha0&lt;0&gt;|KeyCode.Alpha1&lt;1&gt;|
       KeyCode.Alpha2&lt;2&gt;|KeyCode.Alpha3&lt;3&gt;|KeyCode.Alpha4&lt;4&gt;|KeyCode.Alpha5&lt;5&gt;|
       KeyCode.Alpha6&lt;6&gt;|KeyCode.Alpha7&lt;7&gt;|KeyCode.Alpha8&lt;8&gt;|KeyCode.Alpha9&lt;9&gt;|
-      KeyCode.Exclaim&lt;!&gt;|KeyCode.DoubleQuote&lt;"&gt;|KeyCode.Hash&lt;#&gt;|KeyCode.Dollar&lt;$&gt;|
-      KeyCode.Ampersand&lt;&&gt;|KeyCode.Quote&lt;'&gt;|KeyCode.LeftParen&lt;(&gt;|KeyCode.RightParen&lt;)&gt;|
+      KeyCode.Exclaim&lt;!&gt;|KeyCode.DoubleQuote&lt;&quot;&gt;|KeyCode.Hash&lt;#&gt;|KeyCode.Dollar&lt;$&gt;|
+      KeyCode.Ampersand&lt;&amp;&gt;|KeyCode.Quote&lt;&apos;&gt;|KeyCode.LeftParen&lt;(&gt;|KeyCode.RightParen&lt;)&gt;|
       KeyCode.Asterisk&lt;*&gt;|KeyCode.Plus&lt;+&gt;|KeyCode.Comma&lt;,&gt;|KeyCode.Minus&lt;-&gt;|
       KeyCode.Period&lt;.&gt;|KeyCode.Slash&lt;/&gt;|KeyCode.Colon&lt;:&gt;|KeyCode.Semicolon&lt;;&gt;|
-      KeyCode.Less&lt;&lt;&gt;|KeyCode.Equals&lt;=&gt;|KeyCode.Greater&lt;>&gt;|KeyCode.Question&lt;?&gt;|
+      KeyCode.Less&lt;Less Than&gt;|KeyCode.Equals&lt;=&gt;|KeyCode.Greater&lt;Greater Than&gt;|KeyCode.Question&lt;?&gt;|
       KeyCode.At&lt;@&gt;|KeyCode.LeftBracket&lt;[&gt;|KeyCode.Backslash&lt;\&gt;|KeyCode.RightBracket&lt;]&gt;|
       KeyCode.Caret&lt;^&gt;|KeyCode.Underscore&lt;_&gt;|KeyCode.BackQuote&lt;`&gt;|KeyCode.A&lt;a&gt;|
       KeyCode.B&lt;b&gt;|KeyCode.C&lt;c&gt;|KeyCode.D&lt;d&gt;|KeyCode.E&lt;e&gt;|KeyCode.F&lt;f&gt;|
