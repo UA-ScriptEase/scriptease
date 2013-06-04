@@ -12,13 +12,14 @@ import scriptease.gui.WindowFactory;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.dialogue.Dialogue;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameModule;
+import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.Slot;
-import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.util.StringOp;
 
 /**
@@ -34,6 +35,8 @@ public final class StoryModel extends SEModel {
 	private final Translator translator;
 	private final Collection<LibraryModel> optionalLibraries;
 	private final ObserverManager<StoryModelObserver> observerManager;
+	private final Collection<Dialogue> dialogues;
+
 	private StoryPoint startPoint;
 
 	/**
@@ -56,8 +59,6 @@ public final class StoryModel extends SEModel {
 	public StoryModel(GameModule module, String title, String author,
 			Translator translator, Collection<LibraryModel> optionalLibraries) {
 		super(title, author);
-
-		// TODO Where this gets called, need to add libraries ^
 
 		this.startPoint = new StoryPoint("Start");
 		this.module = module;
@@ -85,9 +86,16 @@ public final class StoryModel extends SEModel {
 				}
 			}
 		}
+
+		// TODO load dialogues instead.
+		this.dialogues = new ArrayList<Dialogue>();
 	}
 
-	public void setStartPoint(StoryPoint startPoint) {
+	public Collection<Dialogue> getDialogues() {
+		return this.dialogues;
+	}
+
+	public void setRoot(StoryPoint startPoint) {
 		if (startPoint == null)
 			throw new IllegalArgumentException(
 					"Cannot give StoryModel a null tree root.");
