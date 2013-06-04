@@ -108,17 +108,11 @@ public final class DuplicateAction extends ActiveModelSensitiveAction implements
 			list = (StoryComponentPanelJList) focusOwner;
 
 			for (Object selectedObject : list.getSelectedValues()) {
-				final StoryComponentPanel selectedPanel;
-				final StoryComponent selectedComponent;
-
-				final LibraryModel libraryModel;
-
-				libraryModel = TranslatorManager.getInstance()
-						.getActiveDefaultLibrary();
-
-				selectedPanel = (StoryComponentPanel) selectedObject;
-				selectedComponent = selectedPanel.getStoryComponent();
-
+				final StoryComponentPanel selectedPanel = (StoryComponentPanel) selectedObject;
+				final StoryComponent selectedComponent = selectedPanel
+						.getStoryComponent();
+				final LibraryModel libraryModel = selectedComponent
+						.getLibrary();
 				selectedComponent.process(new StoryAdapter() {
 
 					// Clone ScriptIts, then replace the referenced codeBlocks
