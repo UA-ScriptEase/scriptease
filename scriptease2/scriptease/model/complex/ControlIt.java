@@ -30,7 +30,7 @@ public class ControlIt extends ScriptIt {
 	 * 
 	 */
 	public enum ControlItFormat {
-		NONE, DELAY, REPEAT, QUESTION, FOLDER
+		NONE, DELAY, REPEAT, QUESTION, GUIGROUP
 	}
 
 	private ControlItFormat format;
