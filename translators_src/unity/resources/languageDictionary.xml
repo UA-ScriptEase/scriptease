@@ -454,7 +454,7 @@
 		</Format>
 		
 		<!-- Format for the gui group controller -->
-		<Format id="GUIGroup">
+		<Format id="guigroup">
 			<Line>
 				<FormatRef ref="functionHeader" />
 				<Literal>;</Literal>

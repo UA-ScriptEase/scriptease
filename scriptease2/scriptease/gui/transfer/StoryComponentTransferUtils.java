@@ -73,15 +73,18 @@ public class StoryComponentTransferUtils {
 					.getStoryComponent();
 
 			// Make sure the panel we're dropping it in is a
-			// StoryComponentContainer panel or else try the parent.
-			if (!(storyComponent instanceof StoryComponentContainer)) {
+			// panel that can hold children (StoryComponentContainer or
+			// ControlIts) or else try the parent.
+			if (!(storyComponent instanceof StoryComponentContainer)
+					&& !(storyComponent instanceof ControlIt)) {
 
 				destinationPanel = destinationPanel.getParent();
 
 				if (destinationPanel instanceof StoryComponentPanel) {
 					storyComponent = ((StoryComponentPanel) destinationPanel)
 							.getStoryComponent();
-					if (!(storyComponent instanceof StoryComponentContainer))
+					if (!(storyComponent instanceof StoryComponentContainer)
+							&& !(storyComponent instanceof ControlIt))
 						return false;
 				} else
 					return false;

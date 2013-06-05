@@ -31,6 +31,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.semodel.SEModel;
@@ -242,7 +243,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 						this.hoveredPanel.getSelectionManager()
 								.updatePanelBackgrounds();
 
-					if (acceptingPanel.getStoryComponent() instanceof StoryComponentContainer)
+					if (acceptingPanel.getStoryComponent() instanceof StoryComponentContainer
+							|| acceptingPanel.getStoryComponent() instanceof ControlIt)
 						setPanelAndChildrenBackground(Color.LIGHT_GRAY,
 								acceptingPanel);
 					else
