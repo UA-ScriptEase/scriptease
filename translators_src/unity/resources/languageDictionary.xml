@@ -362,7 +362,7 @@
 			</Series>
 			<Line />
 		</Format>
-		<!-- Format for control it children -->
+		<!-- Format for delay it children -->
 		<Format id="delayItChildren">
 			<Scope data="Cause">
 				<FormatRef ref="implicitsDeclaration" />
@@ -380,6 +380,50 @@
 			</Line>
 			<FormatRef ref="childrenWithoutImplicits" />
 		</Format>
+
+		<!-- Format for GUI Group children -->
+		<Format id="GUIGroupChildren">
+			<Scope data="Cause">
+				<FormatRef ref="implicitsDeclaration" />
+				<FormatRef ref="implicitsDefinition" />
+			</Scope>
+            <Scope data="argument" ref="x">
+              <FormatRef ref="variableDefinition"/>
+            </Scope>
+            <Scope data="argument" ref="y">
+              <FormatRef ref="variableDefinition"/>
+            </Scope>
+            <Scope data="argument" ref="Width">
+              <FormatRef ref="variableDefinition"/>
+            </Scope>
+            <Scope data="argument" ref="Height">
+              <FormatRef ref="variableDefinition"/>
+            </Scope>
+            <Line>
+            	<Literal>GUI.BeginGroup(Rect(</Literal>
+            	<Scope data="argument" ref="x">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>, </Literal>
+            	<Scope data="argument" ref="y">
+            		<Fragment data="name" />
+            	</Scope>	
+            	<Literal>, </Literal>
+            	<Scope data="argument" ref="Width">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>, </Literal>
+            	<Scope data="argument" ref="Height">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>));</Literal>
+            </Line>
+            <FormatRef ref="childrenWithoutImplicits"/>
+            <Line>
+			  <Literal>GUI.EndGroup();</Literal>            
+            </Line>
+		</Format>
+		
 		<!-- Format for control it children -->
 		<Format id="controlItChildren">
 			<Scope data="Cause">
@@ -388,6 +432,7 @@
 			</Scope>
 			<FormatRef ref="childrenWithoutImplicits" />
 		</Format>
+
 		<!-- Finds the format for the ControlIt and uses it -->
 		<Format id="controlItCall">
 			<Fragment data="controlItFormat" />
@@ -402,6 +447,14 @@
 
 		<!-- Format for the delay controller -->
 		<Format id="delay">
+			<Line>
+				<FormatRef ref="functionHeader" />
+				<Literal>;</Literal>
+			</Line>
+		</Format>
+		
+		<!-- Format for the gui group controller -->
+		<Format id="GUIGroup">
 			<Line>
 				<FormatRef ref="functionHeader" />
 				<Literal>;</Literal>
