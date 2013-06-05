@@ -11380,6 +11380,82 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ControlIt>
+    <ControlIt control="FOLDER">
+      <Name>Create a GUI Group at position &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall</Name>
+      <Visible>true</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Create a GUI Group at position &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>5</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>y</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Width</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Height</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>          
+          <Code>
+            <Line>
+              <Literal>GUI.BeginGroup(Rect(</Literal>
+              <Scope data="ARGUMENT" ref="x">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="y">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Width">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Height">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>));</Literal>
+            </Line>
+            <FormatRef data="NONE" ref="controlItChildren"/>
+            <Line>
+			  <Literal>Gui.EndGroup();</Literal>            
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ControlIt>
   </ControlIts>
   <TypeConverters/>
 </LibraryModel>
