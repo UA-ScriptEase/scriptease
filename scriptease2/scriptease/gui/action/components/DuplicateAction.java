@@ -21,7 +21,6 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
-import scriptease.translator.TranslatorManager;
 
 /**
  * Represents and performs the Duplicate command, as well as encapsulates its

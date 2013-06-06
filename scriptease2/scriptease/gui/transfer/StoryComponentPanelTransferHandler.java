@@ -122,7 +122,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			}
 
 		} else if (comp instanceof JList) {
-			for (Object panelObject : ((JList) comp).getSelectedValues()) {
+			final JList list = (JList) comp;
+			for (Object panelObject : list.getSelectedValues()) {
 				if (panelObject instanceof StoryComponentPanel) {
 					final StoryComponentPanel panel;
 					panel = (StoryComponentPanel) panelObject;
