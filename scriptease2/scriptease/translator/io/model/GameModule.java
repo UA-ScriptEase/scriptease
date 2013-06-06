@@ -17,6 +17,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.codegenerator.ScriptInfo;
 
 /**
@@ -191,6 +192,32 @@ public abstract class GameModule {
 	 */
 	public abstract void configureTester(ProcessBuilder builder)
 			throws FileNotFoundException, UnsupportedOperationException;
+
+	/**
+	 * Return a collection of {@link DialogueLine}s that can be edited by
+	 * ScriptEase. By default, this returns an empty collection, so it must be
+	 * overriden if support for dialogue lines exists.<br>
+	 * <br>
+	 * Dialogue Lines should also be returned in the
+	 * {@link #getResourcesOfType(String)} for a specific type. These methods
+	 * are used together by ScriptEase to determine which resources are Dialogue
+	 * Lines.
+	 * 
+	 * @return The collection of dialogue lines in the story.
+	 */
+	public Collection<? extends DialogueLine> getDialogueLines() {
+		return new ArrayList<DialogueLine>();
+	}
+
+	/**
+	 * This method creates a new dialogue line. It must be implemented for
+	 * dialogue support.
+	 * 
+	 * @return The created dialogue line.
+	 */
+	public DialogueLine createDialogueLine() {
+		return null;
+	};
 
 	/**
 	 * Breaks a story tree into groups of components whose output is related.

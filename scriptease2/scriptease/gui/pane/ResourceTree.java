@@ -364,7 +364,7 @@ public class ResourceTree extends JPanel {
 		button.addActionListener(new ActionListener() {
 			private boolean collapsed = true;
 
-			private void setChildrenInvisible(List<Resource> children) {
+			private void setChildrenInvisible(List<? extends Resource> children) {
 				for (Resource child : children) {
 					final JPanel panel = ResourceTree.this.panelMap.get(child);
 					if (panel != null) {

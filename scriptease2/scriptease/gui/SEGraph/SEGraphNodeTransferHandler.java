@@ -32,8 +32,11 @@ class SEGraphNodeTransferHandler<E> extends TransferHandler {
 
 		if (nodeFlavour == null)
 			try {
-				String seGraphNodeFlavour = DataFlavor.javaJVMLocalObjectMimeType
+				final String seGraphNodeFlavour;
+
+				seGraphNodeFlavour = DataFlavor.javaJVMLocalObjectMimeType
 						+ ";class=" + startNode.getClass().getCanonicalName();
+
 				this.nodeFlavour = new DataFlavor(seGraphNodeFlavour);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();

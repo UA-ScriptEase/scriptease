@@ -8,6 +8,7 @@ import java.util.Collection;
  * @author remiller
  */
 public interface TypedComponent {
+	// TODO This doesn't belong here.
 	public static final String TAG_TYPE = "Type";
 	public static final String TAG_TYPES = "Types";
 
