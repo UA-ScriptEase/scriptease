@@ -2,6 +2,7 @@ package io;
 
 import io.constants.UnityField;
 import io.constants.UnityType;
+import io.unityresource.UnityDialogueLine;
 import io.unityresource.UnityResource;
 
 import java.io.BufferedReader;
@@ -21,6 +22,7 @@ import scriptease.gui.WindowFactory;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
@@ -427,4 +429,21 @@ public final class UnityProject extends GameModule {
 		// Seriously Java? mkdir()? What kind of method name is that!?
 		this.scripteaseGeneratedDirectory.mkdir();
 	}
+
+	@Override
+	public DialogueLine createDialogueLine() {
+		// TODO Should have a constructor for this that does this automagically
+		return new UnityDialogueLine("Child", true, null, null,
+				new ArrayList<DialogueLine>());
+	}
+
+	@Override
+	public Collection<UnityDialogueLine> getDialogueLines() {
+		// TODO TODO
+		final Collection<UnityDialogueLine> lines;
+		lines = new ArrayList<UnityDialogueLine>();
+		lines.add(new UnityDialogueLine("Start", true, null, null,
+				new ArrayList<DialogueLine>()));
+		return lines;
+	};
 }

@@ -14,6 +14,7 @@ import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.util.GUIOp;
 
@@ -103,11 +104,11 @@ public class SEGraphFactory {
 	 * @return
 	 */
 	public static SEGraph<DialogueLine> buildDialogueLineGraph(
-			DialogueLine dialogueLine) {
+			StoryModel story, DialogueLine dialogueLine) {
 		final SEGraph<DialogueLine> graph;
 		final DialogueLineGraphModel model;
 
-		model = new DialogueLineGraphModel(dialogueLine);
+		model = new DialogueLineGraphModel(story, dialogueLine);
 		graph = new SEGraph<DialogueLine>(model);
 
 		graph.setNodeRenderer(new DialogueLineRenderer(graph));

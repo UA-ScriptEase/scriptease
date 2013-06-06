@@ -61,7 +61,7 @@ public abstract class Resource implements TypedComponent {
 	 * 
 	 * @return
 	 */
-	public List<Resource> getChildren() {
+	public List<? extends Resource> getChildren() {
 		return new ArrayList<Resource>(0);
 	}
 

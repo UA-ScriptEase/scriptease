@@ -1,19 +1,24 @@
 package scriptease.model.semodel.dialogue;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 import scriptease.translator.io.model.Resource;
 
-public class DialogueLine {
-	private final Collection<DialogueLine> children;
+public abstract class DialogueLine extends Resource {
+	private final List<DialogueLine> children;
 
 	private String dialogue;
 	private boolean enabled;
 	private Resource image;
 	private Resource audio;
 
+	public DialogueLine() {
+		this("", true, null, null, new ArrayList<DialogueLine>());
+	}
+
 	public DialogueLine(String dialogue, boolean enabled, Resource image,
-			Resource audio, Collection<DialogueLine> children) {
+			Resource audio, List<DialogueLine> children) {
 		this.dialogue = dialogue;
 		this.enabled = enabled;
 		this.image = image;
@@ -29,8 +34,9 @@ public class DialogueLine {
 		return this.children.add(dialogueLine);
 	}
 
-	public Collection<DialogueLine> getChildren() {
-		return children;
+	@Override
+	public List<DialogueLine> getChildren() {
+		return this.children;
 	}
 
 	public void setDialogue(String dialogue) {
