@@ -20,8 +20,6 @@ import scriptease.model.semodel.dialogue.DialogueLine;
 public class DialogueEditorPanel extends JPanel {
 	private final StoryModel model;
 
-	private DialogueLine dialogueLine;
-
 	public DialogueEditorPanel(StoryModel model) {
 		this.model = model;
 
@@ -30,8 +28,6 @@ public class DialogueEditorPanel extends JPanel {
 	}
 
 	public void setDialogueLine(DialogueLine dialogueLine, JButton backToStory) {
-		this.dialogueLine = dialogueLine;
-
 		this.removeAll();
 
 		final SEGraph<DialogueLine> graph;

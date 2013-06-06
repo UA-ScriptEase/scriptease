@@ -1,6 +1,7 @@
 package scriptease.model.semodel.dialogue;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import scriptease.translator.io.model.Resource;
@@ -86,4 +87,8 @@ public abstract class DialogueLine extends Resource {
 	public Resource getImage() {
 		return this.image;
 	}
+	
+	public abstract Collection<String> getAudioTypes();
+	
+	public abstract Collection<String> getImageTypes();
 }

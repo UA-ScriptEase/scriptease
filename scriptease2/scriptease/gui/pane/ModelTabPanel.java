@@ -387,7 +387,18 @@ class ModelTabPanel extends JTabbedPane {
 		storyPanel.setTopComponent(storyGraphPanel);
 		storyPanel.setBottomComponent(storyComponentTree);
 
-		this.setBlankDivider(storyPanel);
+		// Set the divider to a blank one
+		for (Component component : storyPanel.getComponents()) {
+			if (component instanceof BasicSplitPaneDivider) {
+				final BasicSplitPaneDivider divider;
+
+				divider = (BasicSplitPaneDivider) component;
+				divider.setBackground(Color.WHITE);
+				divider.setBorder(null);
+
+				break;
+			}
+		}
 
 		topLevelPane.setBorder(null);
 		topLevelPane.setOpaque(true);
@@ -400,8 +411,6 @@ class ModelTabPanel extends JTabbedPane {
 				layout.show(topLevelPane, STORY_EDITOR);
 			}
 		});
-		// dialogueEditor.add(backToStoryButton, BorderLayout.EAST);
-		// this.setBlankDivider(topLevelPane);
 
 		ResourcePanel.getInstance().addObserver(topLevelPane,
 				new ResourceTreeObserver() {
@@ -425,20 +434,6 @@ class ModelTabPanel extends JTabbedPane {
 				});
 
 		return topLevelPane;
-	}
-
-	private void setBlankDivider(JSplitPane splitPane) {
-		for (Component component : splitPane.getComponents()) {
-			if (component instanceof BasicSplitPaneDivider) {
-				final BasicSplitPaneDivider divider;
-
-				divider = (BasicSplitPaneDivider) component;
-				divider.setBackground(Color.WHITE);
-				divider.setBorder(null);
-
-				break;
-			}
-		}
 	}
 
 	/**
