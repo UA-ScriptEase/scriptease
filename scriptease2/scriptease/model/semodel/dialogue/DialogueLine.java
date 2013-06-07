@@ -6,25 +6,27 @@ import java.util.List;
 
 import scriptease.translator.io.model.Resource;
 
-public abstract class DialogueLine extends Resource {
+public final class DialogueLine extends Resource {
 	private final List<DialogueLine> children;
+	private final String type;
 
 	private String dialogue;
 	private boolean enabled;
 	private Resource image;
 	private Resource audio;
 
-	public DialogueLine() {
-		this("", true, null, null, new ArrayList<DialogueLine>());
+	public DialogueLine(String type) {
+		this("", true, null, null, new ArrayList<DialogueLine>(), type);
 	}
 
 	public DialogueLine(String dialogue, boolean enabled, Resource image,
-			Resource audio, List<DialogueLine> children) {
+			Resource audio, List<DialogueLine> children, String type) {
 		this.dialogue = dialogue;
 		this.enabled = enabled;
 		this.image = image;
 		this.audio = audio;
 		this.children = children;
+		this.type = type;
 	}
 
 	public boolean removeChild(DialogueLine dialogueLine) {
@@ -87,8 +89,47 @@ public abstract class DialogueLine extends Resource {
 	public Resource getImage() {
 		return this.image;
 	}
-	
-	public abstract Collection<String> getAudioTypes();
-	
-	public abstract Collection<String> getImageTypes();
+
+	// TODO TODO TODO!!!!!!!
+	// One or more of these methods may need to be changed.
+
+	@SuppressWarnings("serial")
+	@Override
+	public Collection<String> getTypes() {
+		return new ArrayList<String>() {
+			{
+				this.add(DialogueLine.this.type);
+			}
+		};
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return this.getDialogue();
+	}
+
+	@Override
+	public String getTag() {
+		// TODO Auto-generated method stub
+		return this.getName();
+	}
+
+	@Override
+	public String getTemplateID() {
+		// TODO Auto-generated method stub
+		return this.getName();
+	}
+
+	@Override
+	public String getCodeText() {
+		// TODO Auto-generated method stub
+		return this.getName();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		return this == obj;
+	}
 }

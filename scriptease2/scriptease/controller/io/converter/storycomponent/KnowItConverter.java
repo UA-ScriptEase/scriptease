@@ -139,6 +139,6 @@ public class KnowItConverter extends StoryComponentConverter {
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		return new KnowIt("", null);
+		return new KnowIt();
 	}
 }

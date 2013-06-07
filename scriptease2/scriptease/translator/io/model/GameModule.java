@@ -15,6 +15,7 @@ import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.dialogue.DialogueLine;
@@ -194,32 +195,6 @@ public abstract class GameModule {
 			throws FileNotFoundException, UnsupportedOperationException;
 
 	/**
-	 * Return a collection of {@link DialogueLine}s that can be edited by
-	 * ScriptEase. By default, this returns an empty collection, so it must be
-	 * overriden if support for dialogue lines exists.<br>
-	 * <br>
-	 * Dialogue Lines should also be returned in the
-	 * {@link #getResourcesOfType(String)} for a specific type. These methods
-	 * are used together by ScriptEase to determine which resources are Dialogue
-	 * Lines.
-	 * 
-	 * @return The collection of dialogue lines in the story.
-	 */
-	public Collection<? extends DialogueLine> getDialogueLines() {
-		return new ArrayList<DialogueLine>();
-	}
-
-	/**
-	 * This method creates a new dialogue line. It must be implemented for
-	 * dialogue support.
-	 * 
-	 * @return The created dialogue line.
-	 */
-	public DialogueLine createDialogueLine() {
-		return null;
-	};
-
-	/**
 	 * Breaks a story tree into groups of components whose output is related.
 	 * That is, if there are multiple pieces of code that need to be written to
 	 * the same file, this is where the code generating components are matched
@@ -293,4 +268,56 @@ public abstract class GameModule {
 
 		return scriptBuckets;
 	}
+
+	/**
+	 * This returns the keyword for the image type. It is used in
+	 * {@link DialogueLine}s right now but may have other functionality in the
+	 * future. If your game does not have an image type, you can return null or
+	 * an empty string and ScriptEase II will handle it for you.
+	 * 
+	 * @return
+	 */
+	public abstract String getImageType();
+
+	/**
+	 * This returns the keyword for the audio type. It is used in
+	 * {@link DialogueLine}s right now, but may have other functionality in the
+	 * future. If your game does not have an audio type, you can return null or
+	 * an empty string and ScriptEase II will handle it for you.
+	 * 
+	 * @return
+	 */
+	public abstract String getAudioType();
+
+	/**
+	 * This returns the keyword for the dialogue line type. It is used in
+	 * {@link DialogueLine}s right now, but may have other functionality in the
+	 * future. If your game does not have an audio type, you can return null or
+	 * an empty string and ScriptEase II will handle it for you.
+	 * 
+	 * @return
+	 */
+	public abstract String getDialogueLineType();
+
+	/**
+	 * This returns the keyword for the dialogue type, a container of
+	 * {@link DialogueLine}s. It is used with {@link DialogueLine}s right now,
+	 * but may have other functionality in the future. If your game does not
+	 * have an audio type, you can return null or an empty string and ScriptEase
+	 * II will handle it for you.
+	 * 
+	 * @return
+	 */
+	public abstract String getDialogueType();
+
+	/**
+	 * This returns the keyword for the question type. It is used in
+	 * {@link AskIt}s right now, but may have other functionality in the future.
+	 * If your game does not have an audio type, you can return null or an empty
+	 * string and ScriptEase II will handle it for you.
+	 * 
+	 * @return
+	 */
+	public abstract String getQuestionType();
+
 }

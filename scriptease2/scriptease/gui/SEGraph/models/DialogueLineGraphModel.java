@@ -23,7 +23,7 @@ public class DialogueLineGraphModel extends SEGraphModel<DialogueLine> {
 
 	@Override
 	public DialogueLine createNewNode() {
-		return this.story.getModule().createDialogueLine();
+		return new DialogueLine(this.story.getModule().getDialogueLineType());
 	}
 
 	@Override

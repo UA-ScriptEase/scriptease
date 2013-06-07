@@ -419,16 +419,15 @@ class ModelTabPanel extends JTabbedPane {
 						 * if (!(resource instanceof DialogueLine)) { // TODO
 						 * Readd return; }
 						 */
-						for (DialogueLine line : model.getModule()
-								.getDialogueLines()) {
-							// TODO Reactiveate this : if (line == resource) {
+						for (DialogueLine line : model.getDialogueRoots()) {
+							// TODO Reactiveate this : if (line == resource)
+							// {
 							// TODO Clean this up
 							dialogueEditor.setDialogueLine(line, backToStory);
 
 							layout.show(topLevelPane, DIALOGUE_EDITOR);
 
 							break; // TODO remove break
-							// }
 						}
 					}
 				});

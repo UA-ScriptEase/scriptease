@@ -34,7 +34,7 @@ public class DialogueEditorPanel extends JPanel {
 		final JToolBar graphToolBar;
 		final JScrollPane graphScrollPane;
 
-		graph = SEGraphFactory.buildDialogueLineGraph(model, dialogueLine);
+		graph = SEGraphFactory.buildDialogueLineGraph(this.model, dialogueLine);
 		graphToolBar = ComponentFactory.buildGraphEditorToolBar();
 		graphScrollPane = new JScrollPane(graph);
 
@@ -47,5 +47,8 @@ public class DialogueEditorPanel extends JPanel {
 
 		this.add(graphToolBar, BorderLayout.WEST);
 		this.add(graphScrollPane);
+
+		this.repaint();
+		this.revalidate();
 	}
 }

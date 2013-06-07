@@ -373,6 +373,18 @@
       <LegalValues>[^\&quot;]*</LegalValues>
       <WidgetName>i</WidgetName>
     </Type>
+	<Type>
+      <Name>Audio</Name>
+      <Keyword>Audio</Keyword>
+      <CodeSymbol>AudioSource</CodeSymbol>
+      <Format>
+        <Literal>Resources.Load(&quot;</Literal>
+        <Fragment data="value"/>
+        <Literal>&quot;, AudioSource)</Literal>
+      </Format>
+      <LegalValues>[^\&quot;]*</LegalValues>
+      <WidgetName>a</WidgetName>
+    </Type>
     <Type>
       <Name>ScriptMapper</Name>
       <Keyword>ScriptMapper</Keyword>

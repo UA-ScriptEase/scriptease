@@ -66,6 +66,22 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 	public KnowIt(String name) {
 		this(name, new ArrayList<String>());
+
+	}
+
+	/**
+	 * The constructor for a KnowIt with only one type.
+	 * 
+	 * @param name
+	 * @param type
+	 */
+	@SuppressWarnings("serial")
+	public KnowIt(String name, final String type) {
+		this(name, new ArrayList<String>() {
+			{
+				this.add(type);
+			}
+		});
 	}
 
 	/**
@@ -104,10 +120,23 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 		if (library != null) {
 			final DescribeIt describeIt;
+
 			describeIt = library.getDescribeIt(this);
 
-			if (describeIt != null) {
+			if (describeIt != null)
 				library.addDescribeIt(describeIt, clone);
+		} else {
+			// If we found no library, we go through the active libraries to
+			// find a describe it for this KnowIt.
+			for (LibraryModel foundLibrary : TranslatorManager.getInstance()
+					.getActiveTranslator().getAllLibraries()) {
+				final DescribeIt describeIt;
+				describeIt = foundLibrary.getDescribeIt(this);
+
+				if (describeIt != null) {
+					foundLibrary.addDescribeIt(describeIt, clone);
+					break;
+				}
 			}
 		}
 
@@ -387,6 +416,11 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			}
 		}
 		return acceptableTypes;
+	}
+	@Override
+	public LibraryModel getLibrary() {
+		// TODO Auto-generated method stub
+		return super.getLibrary();
 	}
 
 	/**

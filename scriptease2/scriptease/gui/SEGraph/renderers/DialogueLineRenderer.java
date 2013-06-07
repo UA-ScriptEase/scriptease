@@ -6,17 +6,21 @@ import java.awt.Font;
 import javax.swing.GroupLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
-import scriptease.model.semodel.librarymodel.LibraryModel;
-import scriptease.translator.TranslatorManager;
+import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
+import scriptease.util.StringOp;
 
 /**
  * Draws an editor inside the node to edit {@link DialogueLine}s
@@ -25,22 +29,42 @@ import scriptease.translator.io.model.Resource;
  * 
  */
 public class DialogueLineRenderer extends SEGraphNodeRenderer<DialogueLine> {
+	final SEGraph<DialogueLine> graph;
+
+	// TODO Everything needs to listen to changes and update the dialogue line
+	// appropriately.
 
 	public DialogueLineRenderer(SEGraph<DialogueLine> graph) {
 		super(graph);
+		this.graph = graph;
 	}
 
 	@Override
 	protected void configureInternalComponents(JComponent component,
 			DialogueLine node) {
+		if (node == this.graph.getStartNode()) {
+			// TODO
+			component.add(new JTextField(node.getDialogue()));
+		} else {
+			this.renderChildNode(component, node);
+		}
+	}
+
+	private void renderChildNode(JComponent component, DialogueLine node) {
+		final SEModel model = SEModelManager.getInstance().getActiveModel();
+
+		if (!(model instanceof StoryModel))
+			throw new IllegalArgumentException(
+					"Why are we editing dialogue when a story model is "
+							+ "not active!? The active model is " + model);
+
 		final JTextArea dialogueArea;
 		final JScrollPane dialogueScrollPane;
+		final StoryModel story;
+		final GameModule module;
 
-		final KnowIt audioKnowIt;
-		final KnowIt imageKnowIt;
 		final JComponent audioPanel;
 		final JComponent imagePanel;
-		final LibraryModel library;
 
 		final JCheckBox enabledBox;
 
@@ -48,23 +72,23 @@ public class DialogueLineRenderer extends SEGraphNodeRenderer<DialogueLine> {
 
 		dialogueArea = new JTextArea(node.getDialogue());
 		dialogueScrollPane = new JScrollPane(dialogueArea);
+		story = (StoryModel) model;
+		module = story.getModule();
 
-		audioKnowIt = new KnowIt("Audio", node.getAudioTypes());
-		imageKnowIt = new KnowIt("Image", node.getImageTypes());
+		imagePanel = this.createSlotForType(module.getImageType(), node);
+		audioPanel = this.createSlotForType(module.getAudioType(), node);
 
-		audioPanel = ScriptWidgetFactory.buildSlotPanel(audioKnowIt, false);
-		imagePanel = ScriptWidgetFactory.buildSlotPanel(imageKnowIt, false);
-
-		library = TranslatorManager.getInstance().getActiveDefaultLibrary();
-		
 		enabledBox = new JCheckBox("Enabled", node.isEnabled());
 
 		layout = new GroupLayout(component);
 
-		//audioKnowIt.setLibrary(library);
-		//imageKnowIt.setLibrary(library);
-		
 		component.setLayout(layout);
+
+		enabledBox.setOpaque(false);
+		dialogueArea.setLineWrap(true);
+		dialogueArea.setWrapStyleWord(true);
+		dialogueArea.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		dialogueScrollPane.setPreferredSize(new Dimension(200, 75));
 
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
@@ -85,23 +109,24 @@ public class DialogueLineRenderer extends SEGraphNodeRenderer<DialogueLine> {
 						layout.createParallelGroup().addComponent(enabledBox)
 								.addComponent(audioPanel)
 								.addComponent(imagePanel)));
+	}
 
-		final Resource audio;
-		final Resource image;
+	private JComponent createSlotForType(String type, DialogueLine node) {
+		final JComponent audioPanel;
 
-		audio = node.getAudio();
-		image = node.getImage();
+		if (StringOp.exists(type)) {
+			final KnowIt audioKnowIt;
+			final Resource audio;
 
-		if (audio != null)
-			audioKnowIt.setBinding(audio);
+			audioKnowIt = new KnowIt(StringOp.toProperCase(type), type);
+			audioPanel = ScriptWidgetFactory.buildSlotPanel(audioKnowIt, false);
+			audio = node.getAudio();
 
-		if (image != null)
-			imageKnowIt.setBinding(image);
+			if (audio != null)
+				audioKnowIt.setBinding(audio);
+		} else
+			audioPanel = new JPanel();
 
-		enabledBox.setOpaque(false);
-		dialogueArea.setLineWrap(true);
-		dialogueArea.setWrapStyleWord(true);
-		dialogueArea.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		dialogueScrollPane.setPreferredSize(new Dimension(200, 75));
+		return audioPanel;
 	}
 }
