@@ -106,6 +106,9 @@ public class DescribeItPanel extends JPanel {
 					resolvedScriptIt = describeIt
 							.getScriptItForPath(describeItGraph
 									.getSelectedNodes());
+					
+					if(resolvedScriptIt == null)
+						System.out.println("It's null.");
 
 					bindingIf: if (resolvedScriptIt != null) {
 						final KnowItBinding previousBinding;

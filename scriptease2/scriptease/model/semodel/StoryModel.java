@@ -12,7 +12,7 @@ import scriptease.gui.WindowFactory;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
-import scriptease.model.semodel.dialogue.Dialogue;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -35,7 +35,7 @@ public final class StoryModel extends SEModel {
 	private final Translator translator;
 	private final Collection<LibraryModel> optionalLibraries;
 	private final ObserverManager<StoryModelObserver> observerManager;
-	private final Collection<Dialogue> dialogues;
+	private final Collection<DialogueLine> dialogueRoots;
 
 	private StoryPoint startPoint;
 
@@ -88,13 +88,31 @@ public final class StoryModel extends SEModel {
 		}
 
 		// TODO load dialogues instead.
-		this.dialogues = new ArrayList<Dialogue>();
+		this.dialogueRoots = new ArrayList<DialogueLine>();
+		this.dialogueRoots.add(new DialogueLine(this.getModule()
+				.getDialogueType()));
 	}
 
-	public Collection<Dialogue> getDialogues() {
-		return this.dialogues;
+	public Collection<DialogueLine> getDialogueRoots() {
+		return this.dialogueRoots;
 	}
 
+	/**
+	 * Adds a new {@link Dialogue} to the list contained in this model.
+	 * 
+	 * @param dialogue
+	 * @return
+	 */
+	public boolean addDialogueRoot(DialogueLine dialogue) {
+		return this.dialogueRoots.add(dialogue);
+	}
+
+	/**
+	 * Sets the root of the model to the passed in {@link StoryPoint}. This is a
+	 * simple setter method that does not fire off any observers.
+	 * 
+	 * @param startPoint
+	 */
 	public void setRoot(StoryPoint startPoint) {
 		if (startPoint == null)
 			throw new IllegalArgumentException(

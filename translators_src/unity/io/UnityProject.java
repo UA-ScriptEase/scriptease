@@ -2,7 +2,6 @@ package io;
 
 import io.constants.UnityField;
 import io.constants.UnityType;
-import io.unityresource.UnityDialogueLine;
 import io.unityresource.UnityResource;
 
 import java.io.BufferedReader;
@@ -22,7 +21,6 @@ import scriptease.gui.WindowFactory;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
-import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
@@ -431,19 +429,28 @@ public final class UnityProject extends GameModule {
 	}
 
 	@Override
-	public DialogueLine createDialogueLine() {
-		// TODO Should have a constructor for this that does this automagically
-		return new UnityDialogueLine("Child", true, null, null,
-				new ArrayList<DialogueLine>());
+	public String getImageType() {
+		return UnityType.SE_IMAGE.getName();
 	}
 
 	@Override
-	public Collection<UnityDialogueLine> getDialogueLines() {
-		// TODO TODO
-		final Collection<UnityDialogueLine> lines;
-		lines = new ArrayList<UnityDialogueLine>();
-		lines.add(new UnityDialogueLine("Start", true, null, null,
-				new ArrayList<DialogueLine>()));
-		return lines;
+	public String getAudioType() {
+		return UnityType.SE_AUDIO.getName();
+	}
+
+	@Override
+	public String getDialogueLineType() {
+		return UnityType.SE_DIALOGUELINE.getName();
+	}
+
+	@Override
+	public String getDialogueType() {
+		return UnityType.SE_DIALOGUE.getName();
+	}
+
+	public String getQuestionType() {
+		// TODO
+		return null;
 	};
+
 }

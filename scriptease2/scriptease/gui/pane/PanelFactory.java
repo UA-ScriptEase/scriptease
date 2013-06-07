@@ -78,9 +78,9 @@ public final class PanelFactory {
 
 		libraryPanel.add(this.buildNotePane());
 
+		librarySplitPane.setBottomComponent(resourcePanel);
 		librarySplitPane.setTopComponent(libraryPanel);
 
-		librarySplitPane.setBottomComponent(resourcePanel);
 		librarySplitPane.setResizeWeight(0.5);
 
 		storyLibraryPaneObserver = new SEModelObserver() {

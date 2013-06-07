@@ -333,9 +333,15 @@ public enum UnityType {
 
 	SE_ANIMATIONELEMENT("AnimationElement"),
 
+	SE_AUDIO("Audio"),
+
 	SE_IMAGE("Image"),
 
-	SE_GUISKIN("GUISkin");
+	SE_GUISKIN("GUISkin"),
+
+	SE_DIALOGUE("Dialogue"),
+
+	SE_DIALOGUELINE("DialogueLine");
 
 	public static final int SCRIPTEASE_TYPE = 0;
 
