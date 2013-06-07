@@ -18,6 +18,7 @@ import scriptease.util.GUIOp;
  * @author jyuen
  */
 public interface ScriptEaseUI {
+
 	/**
 	 * The colour (green) used to display known object bindings.
 	 */
@@ -49,7 +50,7 @@ public interface ScriptEaseUI {
 	 * The coulour (light brown) used to display text in simple bindings.
 	 */
 	public static final Color COLOUR_SIMPLE_TEXT = new Color(237, 186, 128);
-	
+
 	/**
 	 * The colour (Light Grey) used for bound type widgets
 	 */
@@ -158,6 +159,22 @@ public interface ScriptEaseUI {
 	 * The color used for the background of the text field for Notes.
 	 */
 	public static final Color COLOUR_NOTE_TEXT_BG = new Color(255, 252, 161);
+
+	public static final Color COLOUR_ADD_BUTTON = COLOUR_KNOWN_OBJECT;
+
+	public static final Color COLOUR_ADD_BUTTON_PRESSED = GUIOp.scaleColour(
+			COLOUR_ADD_BUTTON, 1.2);
+
+	public static final Color COLOUR_ADD_BUTTON_PRESSED_FILL = GUIOp
+			.scaleWhite(COLOUR_ADD_BUTTON, 3.4);
+
+	public static final Color COLOUR_REMOVE_BUTTON = COLOUR_UNBOUND;
+
+	public static final Color COLOUR_REMOVE_BUTTON_PRESSED = GUIOp.scaleColour(
+			COLOUR_REMOVE_BUTTON, 1.2);
+
+	public static final Color COLOUR_REMOVE_BUTTON_PRESSED_FILL = GUIOp
+			.scaleWhite(COLOUR_REMOVE_BUTTON, 3.4);
 
 	/**
 	 * The standard increment that should usually be used for vertical

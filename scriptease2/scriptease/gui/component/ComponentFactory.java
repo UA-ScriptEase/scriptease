@@ -1,7 +1,11 @@
 package scriptease.gui.component;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
@@ -9,6 +13,7 @@ import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -23,6 +28,7 @@ import scriptease.gui.action.graphs.DisconnectModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.action.graphs.InsertModeAction;
 import scriptease.gui.action.graphs.SelectModeAction;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.util.GUIOp;
 
@@ -118,8 +124,8 @@ public final class ComponentFactory {
 			graphEditorToolBar.add(toolBarButton);
 		}
 
-		SEModelManager.getInstance().addSEModelObserver(
-				graphEditorToolBar, new SEModelObserver() {
+		SEModelManager.getInstance().addSEModelObserver(graphEditorToolBar,
+				new SEModelObserver() {
 					@Override
 					public void modelChanged(SEModelEvent event) {
 						if (event.getEventType() == SEModelEvent.Type.ACTIVATED)
@@ -130,6 +136,112 @@ public final class ComponentFactory {
 		selectButtonRunnable.run();
 
 		return graphEditorToolBar;
+	}
+
+	private static enum ButtonType {
+		ADD, REMOVE;
+	}
+
+	public static JButton buildRemoveButton() {
+		return buildButton(ButtonType.REMOVE);
+	}
+
+	public static JButton buildAddButton() {
+		return buildButton(ButtonType.ADD);
+	}
+
+	@SuppressWarnings("serial")
+	private static JButton buildButton(final ButtonType type) {
+
+		return new JButton() {
+			private static final int SIZEXY = 24;
+
+			{
+				final Dimension size = new Dimension(SIZEXY, SIZEXY);
+
+				this.setPreferredSize(size);
+				this.setMaximumSize(size);
+				this.setMinimumSize(size);
+				this.setSize(size);
+
+				this.setOpaque(false);
+				this.setFocusable(false);
+				this.setContentAreaFilled(false);
+			}
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				final Color armedFillColour;
+				final Color armedLineColour;
+				final Color unarmedLineColour;
+
+				if (type == ButtonType.ADD) {
+					armedFillColour = ScriptEaseUI.COLOUR_ADD_BUTTON_PRESSED_FILL;
+					armedLineColour = ScriptEaseUI.COLOUR_ADD_BUTTON_PRESSED;
+					unarmedLineColour = ScriptEaseUI.COLOUR_ADD_BUTTON;
+				} else if (type == ButtonType.REMOVE) {
+					armedFillColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON_PRESSED_FILL;
+					armedLineColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON_PRESSED;
+					unarmedLineColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON;
+				} else {
+					armedFillColour = Color.LIGHT_GRAY;
+					armedLineColour = Color.GRAY;
+					unarmedLineColour = Color.BLACK;
+				}
+
+				final Graphics2D g2d = (Graphics2D) g;
+
+				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+						RenderingHints.VALUE_ANTIALIAS_ON);
+
+				g2d.setStroke(new BasicStroke(1.4f));
+
+				final int circleX = 3;
+				final int circleY = 3;
+				final int diameter = 18;
+
+				// The offset between lines and the circle
+				final int lineOffset = 4;
+
+				final int radius = diameter / 2;
+
+				final int horizX1 = circleX + lineOffset;
+				final int horizX2 = circleX + diameter - lineOffset;
+				final int horizY = circleY + radius;
+
+				final int vertiY1 = circleY + lineOffset;
+				final int vertiY2 = circleY + diameter - lineOffset;
+				final int vertiX = circleX + radius;
+
+				final Color lineColour;
+
+				if (this.getModel().isArmed()) {
+					// If it's clicked, do this
+
+					g2d.setColor(armedFillColour);
+
+					g2d.fillOval(circleX, circleY, diameter, diameter);
+
+					lineColour = armedLineColour;
+				} else {
+					lineColour = unarmedLineColour;
+				}
+
+				g2d.setColor(lineColour);
+
+				// Draw the circle
+				g2d.drawOval(circleX, circleY, diameter, diameter);
+				if (type == ButtonType.ADD)
+					// Draw the vertical line only for add.
+					g2d.drawLine(vertiX, vertiY1, vertiX, vertiY2);
+				// Draw the horizontal line
+				g2d.drawLine(horizX1, horizY, horizX2, horizY);
+
+				super.paintComponent(g);
+				g2d.dispose();
+
+			}
+		};
 	}
 
 	/**
