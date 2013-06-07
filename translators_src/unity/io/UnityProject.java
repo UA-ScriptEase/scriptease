@@ -36,6 +36,7 @@ import scriptease.util.FileOp;
  * 
  * @author remiller
  * @author kschenk
+ * @author jyuen
  */
 public final class UnityProject extends GameModule {
 	/**
@@ -62,6 +63,7 @@ public final class UnityProject extends GameModule {
 
 	private final Collection<File> includeFiles;
 	private final Collection<UnityFile> scenes;
+	private final Collection<UnityFile> prefabs;
 	private final Collection<Resource> resources;
 	private final Collection<UnityScript> scripts;
 
@@ -71,6 +73,7 @@ public final class UnityProject extends GameModule {
 	public UnityProject() {
 		this.includeFiles = new ArrayList<File>();
 		this.scenes = new ArrayList<UnityFile>();
+		this.prefabs = new ArrayList<UnityFile>();
 		this.resources = new ArrayList<Resource>();
 		this.scripts = new ArrayList<UnityScript>();
 		this.guidsToMetaFiles = new HashMap<String, File>();
@@ -144,6 +147,12 @@ public final class UnityProject extends GameModule {
 					this.scripts.add(new UnityScript(scriptInfo, scene));
 				}
 			}
+			for (UnityFile prefab : this.prefabs) {
+				if (prefab.getObjectByTemplateID(scriptInfo.getSubject()
+						.getTemplateID()) != null) {
+					this.scripts.add(new UnityScript(scriptInfo, prefab));
+				}
+			}
 
 		}
 	}
@@ -173,6 +182,8 @@ public final class UnityProject extends GameModule {
 		resources = new ArrayList<Resource>();
 		if (typeName.equals(UnityType.SCENE.getName()))
 			resources.addAll(this.scenes);
+		else if (typeName.equals(UnityType.PREFAB.getName()))
+			resources.addAll(this.prefabs);
 		else {
 			for (Resource resource : this.resources) {
 				if (resource.getTypes().contains(typeName))
@@ -206,6 +217,14 @@ public final class UnityProject extends GameModule {
 				return pathname.getName().endsWith(SCENE_FILE_EXTENSION);
 			}
 		};
+		final FileFilter prefabFileFilter = new FileFilter() {
+			private final String PREFAB_FILE_EXTENSION = ".prefab";
+
+			@Override
+			public boolean accept(File pathname) {
+				return pathname.getName().endsWith(PREFAB_FILE_EXTENSION);
+			}
+		};
 		final FileFilter metaFileFilter = new FileFilter() {
 			private static final String META_EXTENSION = ".meta";
 
@@ -216,10 +235,12 @@ public final class UnityProject extends GameModule {
 		};
 
 		final Collection<File> sceneFiles;
+		final Collection<File> prefabFiles;
 		final Collection<File> metaFiles;
 
 		// sniff out .unity files and read them all into memory
 		sceneFiles = FileOp.findFiles(this.projectLocation, sceneFileFilter);
+		prefabFiles = FileOp.findFiles(this.projectLocation, prefabFileFilter);
 		metaFiles = FileOp.findFiles(this.projectLocation, metaFileFilter);
 
 		for (File metaFile : metaFiles) {
@@ -252,6 +273,20 @@ public final class UnityProject extends GameModule {
 
 			if (scene != null)
 				this.scenes.add(scene);
+		}
+
+		for (File prefabFile : prefabFiles) {
+			final UnityFile prefab;
+
+			prefab = UnityFile.buildUnityFile(prefabFile,
+					this.guidsToMetaFiles, new ArrayList<String>() {
+						{
+							this.add(UnityType.PREFAB.getName());
+						}
+					});
+			
+			if (prefab != null)
+				this.prefabs.add(prefab);
 		}
 
 		if (this.scenes.size() <= 0)
@@ -394,6 +429,11 @@ public final class UnityProject extends GameModule {
 		// Write out the scene files.
 		for (UnityFile scene : this.scenes) {
 			scene.write();
+		}
+		
+		// Write out the prefab files.
+		for (UnityFile prefab : this.prefabs) {
+			prefab.write();
 		}
 
 		// Write the script files to the ScriptEase folder.

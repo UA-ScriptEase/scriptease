@@ -45,7 +45,7 @@ public class UnityScript {
 	private final String fileName;
 	private final String guid;
 
-	private final UnityFile scene;
+	private final UnityFile unityFile;
 	private final UnityResource attachedObject;
 	private final UnityResource monoBehaviourObject;
 	private final List<PropertyValue> mComponentList;
@@ -58,17 +58,17 @@ public class UnityScript {
 
 	/**
 	 * Creates a new Unity Script file from the script info and attaches it to
-	 * the passed in scene.
+	 * the passed in Unity file.
 	 * 
 	 * @param scriptInfo
-	 * @param scene
+	 * @param unityFile
 	 */
-	public UnityScript(final ScriptInfo scriptInfo, final UnityFile scene) {
+	public UnityScript(final ScriptInfo scriptInfo, final UnityFile unityFile) {
 		final Resource subject;
 
 		subject = scriptInfo.getSubject();
 
-		this.scene = scene;
+		this.unityFile = unityFile;
 		this.code = scriptInfo.getCode();
 		this.fileName = UnityProject.SCRIPTEASE_FILE_PREFIX
 				+ Integer.toString(scriptCounter++, NAME_RADIX) + "_"
@@ -77,10 +77,10 @@ public class UnityScript {
 		this.guid = UnityProject.getActiveProject().generateGUIDForFile(
 				new File(this.fileName + SCRIPT_META_EXTENSION));
 
-		this.attachedObject = this.scene.getObjectByTemplateID(subject
+		this.attachedObject = this.unityFile.getObjectByTemplateID(subject
 				.getTemplateID());
 
-		this.idNumber = this.scene.getNextEmptyID();
+		this.idNumber = this.unityFile.getNextEmptyID();
 
 		this.monoBehaviourObject = UnityResourceFactory.getInstance()
 				.buildMonoBehaviourObject(this.attachedObject.getUniqueID(),
@@ -107,7 +107,7 @@ public class UnityScript {
 	 * move this type of code to the Scene file itself later...
 	 */
 	private void addToScene() {
-		this.scene.addResource(this.monoBehaviourObject);
+		this.unityFile.addResource(this.monoBehaviourObject);
 		final String fileID = UnityField.FILEID.getName();
 		final int fileIDNum = UnityType.MONOBEHAVIOUR.getID();
 
@@ -127,7 +127,7 @@ public class UnityScript {
 	 * nothing can be done with it.
 	 */
 	public void removeFromScene() {
-		this.scene.removeResource(this.monoBehaviourObject);
+		this.unityFile.removeResource(this.monoBehaviourObject);
 
 		PropertyValue toBeRemoved = null;
 
