@@ -417,11 +417,6 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		}
 		return acceptableTypes;
 	}
-	@Override
-	public LibraryModel getLibrary() {
-		// TODO Auto-generated method stub
-		return super.getLibrary();
-	}
 
 	/**
 	 * Sets the types of the KnowIt and notifies all observers of a
