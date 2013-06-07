@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -26,6 +27,7 @@ import javax.swing.JPanel;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.ResourceTreeObserver;
 import scriptease.gui.component.BindingWidget;
+import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -348,6 +350,7 @@ public class ResourceTree extends JPanel {
 		}
 
 		objectPanel.add(gameObjectBindingWidget);
+		objectPanel.add(ComponentFactory.buildRemoveButton());
 
 		// Need to do this because BoxLayout respects maximum size.
 		objectPanel.setMaximumSize(objectPanel.getPreferredSize());
@@ -465,10 +468,15 @@ public class ResourceTree extends JPanel {
 			this.removeAll();
 
 			final JLabel categoryLabel;
+			final JPanel categoryPanel;
 
 			categoryLabel = new JLabel(typeName);
+			categoryPanel = new JPanel();
 
 			categoryLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+			categoryLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+			categoryLabel.setForeground(Color.DARK_GRAY);
 
 			categoryLabel.addMouseListener(new MouseAdapter() {
 				@Override
@@ -478,12 +486,31 @@ public class ResourceTree extends JPanel {
 				}
 			});
 
+			categoryPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+			categoryPanel.setLayout(new BoxLayout(categoryPanel,
+					BoxLayout.LINE_AXIS));
+			categoryPanel.setOpaque(false);
+
+			categoryPanel.add(categoryLabel);
+
+			categoryPanel.add(new JPanel() {
+				{
+					this.setOpaque(false);
+					this.setMaximumSize(new Dimension(25, 25));
+				}
+			});
+
+			// TODO Check if dialogue button
+			categoryPanel.add(ComponentFactory.buildAddButton());
+
+			categoryPanel.add(Box.createHorizontalGlue());
+
 			if (this.collapsed) {
 				categoryLabel.setIcon(ScriptEaseUI.EXPAND_ICON);
-				this.add(categoryLabel);
+				this.add(categoryPanel);
 			} else {
 				categoryLabel.setIcon(ScriptEaseUI.COLLAPSE_ICON);
-				this.add(categoryLabel);
+				this.add(categoryPanel);
 
 				for (final Resource resource : resources) {
 					this.addGameConstant(resource);
