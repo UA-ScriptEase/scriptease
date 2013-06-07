@@ -104,10 +104,23 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 		if (library != null) {
 			final DescribeIt describeIt;
+
 			describeIt = library.getDescribeIt(this);
 
-			if (describeIt != null) {
+			if (describeIt != null)
 				library.addDescribeIt(describeIt, clone);
+		} else {
+			// If we found no library, we go through the active libraries to
+			// find a describe it for this KnowIt.
+			for (LibraryModel foundLibrary : TranslatorManager.getInstance()
+					.getActiveTranslator().getAllLibraries()) {
+				final DescribeIt describeIt;
+				describeIt = foundLibrary.getDescribeIt(this);
+
+				if (describeIt != null) {
+					foundLibrary.addDescribeIt(describeIt, clone);
+					break;
+				}
 			}
 		}
 

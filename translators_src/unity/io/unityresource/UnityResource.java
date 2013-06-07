@@ -1,6 +1,6 @@
 package io.unityresource;
 
-import io.Scene;
+import io.UnityFile;
 import io.UnityProject;
 import io.constants.UnityField;
 import io.constants.UnityType;
@@ -113,7 +113,7 @@ public class UnityResource extends Resource {
 	 * Initializes the owner of the UnityResource. Must be called after loading
 	 * the entire scene in order to detect all children.
 	 */
-	public void initializeOwner(Scene scene) {
+	public void initializeOwner(UnityFile unityFile) {
 		final int uniqueID;
 
 		if (this.getType() == UnityType.GAMEOBJECT) {
@@ -131,7 +131,7 @@ public class UnityResource extends Resource {
 			transformIDNumber = transformIDValue.getMap()
 					.get(UnityField.FILEID.getName()).getString();
 
-			attachedTransform = scene.getObjectByUnityID(Integer
+			attachedTransform = unityFile.getObjectByUnityID(Integer
 					.parseInt(transformIDNumber));
 
 			fatherMap = attachedTransform
@@ -144,7 +144,7 @@ public class UnityResource extends Resource {
 				final UnityResource fatherTransform;
 				final PropertyValue mGameObjectMapValue;
 
-				fatherTransform = scene.getObjectByUnityID(fatherID);
+				fatherTransform = unityFile.getObjectByUnityID(fatherID);
 
 				mGameObjectMapValue = fatherTransform
 						.getFirstOccuranceOfField(UnityField.M_GAMEOBJECT
@@ -168,9 +168,9 @@ public class UnityResource extends Resource {
 		}
 
 		if (uniqueID != -1)
-			this.owner = scene.getObjectByUnityID(uniqueID);
+			this.owner = unityFile.getObjectByUnityID(uniqueID);
 		else
-			this.owner = scene;
+			this.owner = unityFile;
 	}
 
 	/**
@@ -179,10 +179,10 @@ public class UnityResource extends Resource {
 	 * 
 	 * @param scene
 	 */
-	public void initializeChildren(Scene scene, Map<String, File> guidsToMetas) {
+	public void initializeChildren(UnityFile unityFile, Map<String, File> guidsToMetas) {
 		this.children = new ArrayList<Resource>();
 
-		for (UnityResource resource : scene.getResources()) {
+		for (UnityResource resource : unityFile.getResources()) {
 			final UnityType type = resource.getType();
 			final Resource owner = resource.getOwner();
 			if (owner == this)
@@ -355,7 +355,7 @@ public class UnityResource extends Resource {
 		String name = this.name;
 		Resource owner = this.owner;
 
-		while (!(owner instanceof Scene)) {
+		while (!(owner instanceof UnityFile)) {
 			if (owner.getTypes().contains(UnityType.GAMEOBJECT.getName())) {
 				name = owner.getName() + "/" + name;
 			}
@@ -393,7 +393,7 @@ public class UnityResource extends Resource {
 		if (this.getType().equals(UnityType.GAMEOBJECT)) {
 			Resource scene = this.getOwner();
 
-			while (!(scene instanceof Scene)) {
+			while (!(scene instanceof UnityFile)) {
 				scene = scene.getOwner();
 			}
 
