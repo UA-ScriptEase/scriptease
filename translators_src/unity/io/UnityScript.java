@@ -45,7 +45,7 @@ public class UnityScript {
 	private final String fileName;
 	private final String guid;
 
-	private final Scene scene;
+	private final UnityFile scene;
 	private final UnityResource attachedObject;
 	private final UnityResource monoBehaviourObject;
 	private final List<PropertyValue> mComponentList;
@@ -63,7 +63,7 @@ public class UnityScript {
 	 * @param scriptInfo
 	 * @param scene
 	 */
-	public UnityScript(final ScriptInfo scriptInfo, final Scene scene) {
+	public UnityScript(final ScriptInfo scriptInfo, final UnityFile scene) {
 		final Resource subject;
 
 		subject = scriptInfo.getSubject();

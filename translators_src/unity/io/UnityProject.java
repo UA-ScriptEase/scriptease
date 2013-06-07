@@ -61,7 +61,7 @@ public final class UnityProject extends GameModule {
 	private File scripteaseGeneratedDirectory;
 
 	private final Collection<File> includeFiles;
-	private final Collection<Scene> scenes;
+	private final Collection<UnityFile> scenes;
 	private final Collection<Resource> resources;
 	private final Collection<UnityScript> scripts;
 
@@ -70,7 +70,7 @@ public final class UnityProject extends GameModule {
 	 */
 	public UnityProject() {
 		this.includeFiles = new ArrayList<File>();
-		this.scenes = new ArrayList<Scene>();
+		this.scenes = new ArrayList<UnityFile>();
 		this.resources = new ArrayList<Resource>();
 		this.scripts = new ArrayList<UnityScript>();
 		this.guidsToMetaFiles = new HashMap<String, File>();
@@ -121,7 +121,7 @@ public final class UnityProject extends GameModule {
 	public Collection<Resource> getAutomaticHandlers() {
 		final Collection<Resource> automaticHandlers = new ArrayList<Resource>();
 
-		for (Scene scene : this.scenes) {
+		for (UnityFile scene : this.scenes) {
 			automaticHandlers.add(scene.getScriptEaseObject());
 		}
 
@@ -138,25 +138,26 @@ public final class UnityProject extends GameModule {
 	@Override
 	public void addScripts(Collection<ScriptInfo> scriptList) {
 		for (ScriptInfo scriptInfo : scriptList) {
-			for (Scene scene : this.scenes) {
+			for (UnityFile scene : this.scenes) {
 				if (scene.getObjectByTemplateID(scriptInfo.getSubject()
 						.getTemplateID()) != null) {
 					this.scripts.add(new UnityScript(scriptInfo, scene));
 				}
 			}
+
 		}
 	}
 
 	@Override
 	public void close() throws IOException {
-		for (Scene scene : this.scenes) {
+		for (UnityFile scene : this.scenes) {
 			scene.close();
 		}
 	}
 
 	@Override
 	public Resource getInstanceForObjectIdentifier(String id) {
-		for (Scene scene : this.scenes) {
+		for (UnityFile scene : this.scenes) {
 			for (UnityResource object : scene.getResources())
 				if (object.getTemplateID().equals(id)) {
 					return object;
@@ -194,6 +195,7 @@ public final class UnityProject extends GameModule {
 				"The unity translator can't externally test.");
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	public void load(boolean readOnly) throws IOException {
 		final FileFilter sceneFileFilter = new FileFilter() {
@@ -239,9 +241,14 @@ public final class UnityProject extends GameModule {
 		}
 
 		for (File sceneFile : sceneFiles) {
-			final Scene scene;
+			final UnityFile scene;
 
-			scene = Scene.buildScene(sceneFile, this.guidsToMetaFiles);
+			scene = UnityFile.buildUnityFile(sceneFile, this.guidsToMetaFiles,
+					new ArrayList<String>() {
+						{
+							this.add(UnityType.SCENE.getName());
+						}
+					});
 
 			if (scene != null)
 				this.scenes.add(scene);
@@ -385,7 +392,7 @@ public final class UnityProject extends GameModule {
 		}
 
 		// Write out the scene files.
-		for (Scene scene : this.scenes) {
+		for (UnityFile scene : this.scenes) {
 			scene.write();
 		}
 

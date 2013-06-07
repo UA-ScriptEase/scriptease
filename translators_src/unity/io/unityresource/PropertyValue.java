@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 
 /**
  * A wrapper class for values that can be added to a Unity Object's properties.
- * Using propert values makes our other code a lot cleaner since we don't have
+ * Using property values makes our other code a lot cleaner since we don't have
  * to use multiple instanceof checks every time we parse a collection of them.
  * 
  * We also don't just have maps of objects, which means we won't unknowingly
