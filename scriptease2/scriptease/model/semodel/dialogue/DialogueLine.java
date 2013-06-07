@@ -4,29 +4,36 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
 
 public final class DialogueLine extends Resource {
+	private static final String DEFAULT_DIALOGUE = "New Dialogue Line";
+
 	private final List<DialogueLine> children;
-	private final String type;
+	private final GameModule module;
 
 	private String dialogue;
 	private boolean enabled;
 	private Resource image;
 	private Resource audio;
 
-	public DialogueLine(String type) {
-		this("", true, null, null, new ArrayList<DialogueLine>(), type);
+	public DialogueLine(GameModule module) {
+		this(DEFAULT_DIALOGUE, module);
+	}
+
+	public DialogueLine(String dialogue, GameModule module) {
+		this(dialogue, true, null, null, new ArrayList<DialogueLine>(), module);
 	}
 
 	public DialogueLine(String dialogue, boolean enabled, Resource image,
-			Resource audio, List<DialogueLine> children, String type) {
+			Resource audio, List<DialogueLine> children, GameModule module) {
 		this.dialogue = dialogue;
 		this.enabled = enabled;
 		this.image = image;
 		this.audio = audio;
 		this.children = children;
-		this.type = type;
+		this.module = module;
 	}
 
 	public boolean removeChild(DialogueLine dialogueLine) {
@@ -53,8 +60,7 @@ public final class DialogueLine extends Resource {
 	public boolean setImage(Resource image) {
 		final boolean setImage;
 
-		setImage = image.getTypes() // TODO Get the thing below
-				.contains("Get the translator's image type.");
+		setImage = image.getTypes().contains(this.module.getImageType());
 
 		if (setImage)
 			this.image = image;
@@ -65,8 +71,7 @@ public final class DialogueLine extends Resource {
 	public boolean setAudio(Resource audio) {
 		final boolean setAudio;
 
-		setAudio = audio.getTypes() // TODO Get the thing below
-				.contains("Get the translator's audio type.");
+		setAudio = audio.getTypes().contains(this.module.getAudioType());
 
 		if (setAudio)
 			this.audio = audio;
@@ -96,9 +101,11 @@ public final class DialogueLine extends Resource {
 	@SuppressWarnings("serial")
 	@Override
 	public Collection<String> getTypes() {
+		// TODO This will have to return different types depending on if it has
+		// any parents...
 		return new ArrayList<String>() {
 			{
-				this.add(DialogueLine.this.type);
+				this.add(DialogueLine.this.module.getDialogueLineType());
 			}
 		};
 	}

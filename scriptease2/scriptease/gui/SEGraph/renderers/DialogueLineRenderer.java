@@ -1,7 +1,10 @@
 package scriptease.gui.SEGraph.renderers;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
 import javax.swing.JCheckBox;
@@ -10,10 +13,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
+import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -31,9 +42,6 @@ import scriptease.util.StringOp;
 public class DialogueLineRenderer extends SEGraphNodeRenderer<DialogueLine> {
 	final SEGraph<DialogueLine> graph;
 
-	// TODO Everything needs to listen to changes and update the dialogue line
-	// appropriately.
-
 	public DialogueLineRenderer(SEGraph<DialogueLine> graph) {
 		super(graph);
 		this.graph = graph;
@@ -41,16 +49,32 @@ public class DialogueLineRenderer extends SEGraphNodeRenderer<DialogueLine> {
 
 	@Override
 	protected void configureInternalComponents(JComponent component,
-			DialogueLine node) {
+			final DialogueLine node) {
 		if (node == this.graph.getStartNode()) {
-			// TODO
-			component.add(new JTextField(node.getDialogue()));
+			final JTextField dialogueField;
+			final Runnable commitText;
+
+			dialogueField = new JTextField(node.getDialogue());
+			commitText = new Runnable() {
+				@Override
+				public void run() {
+					node.setDialogue(dialogueField.getText());
+
+					graph.revalidate();
+					graph.repaint();
+				}
+			};
+
+			WidgetDecorator.decorateJTextFieldForFocusEvents(dialogueField,
+					commitText, true, Color.WHITE);
+
+			component.add(dialogueField);
 		} else {
 			this.renderChildNode(component, node);
 		}
 	}
 
-	private void renderChildNode(JComponent component, DialogueLine node) {
+	private void renderChildNode(JComponent component, final DialogueLine node) {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
 		if (!(model instanceof StoryModel))
@@ -75,8 +99,33 @@ public class DialogueLineRenderer extends SEGraphNodeRenderer<DialogueLine> {
 		story = (StoryModel) model;
 		module = story.getModule();
 
-		imagePanel = this.createSlotForType(module.getImageType(), node);
-		audioPanel = this.createSlotForType(module.getAudioType(), node);
+		audioPanel = this.createSlot(module.getAudioType(), node.getAudio(),
+				new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
+							node.setAudio(getResourceFromKnowIt((KnowIt) event
+									.getSource()));
+						}
+					}
+				});
+		
+		if(node.getDialogue().equals("DebugHere"))
+			System.out.println(node);
+
+		imagePanel = this.createSlot(module.getImageType(), node.getImage(),
+				new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
+							final Resource image;
+
+							image = getResourceFromKnowIt((KnowIt) event
+									.getSource());
+							node.setImage(image);
+						}
+					}
+				});
 
 		enabledBox = new JCheckBox("Enabled", node.isEnabled());
 
@@ -92,6 +141,31 @@ public class DialogueLineRenderer extends SEGraphNodeRenderer<DialogueLine> {
 
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
+
+		dialogueArea.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				node.setDialogue(dialogueArea.getText());
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				this.insertUpdate(e);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				this.insertUpdate(e);
+			}
+		});
+
+		enabledBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				node.setEnabled(enabledBox.isSelected());
+			}
+		});
 
 		layout.setHorizontalGroup(layout
 				.createParallelGroup()
@@ -111,22 +185,35 @@ public class DialogueLineRenderer extends SEGraphNodeRenderer<DialogueLine> {
 								.addComponent(imagePanel)));
 	}
 
-	private JComponent createSlotForType(String type, DialogueLine node) {
-		final JComponent audioPanel;
+	private Resource getResourceFromKnowIt(KnowIt knowIt) {
+		final KnowItBinding binding = knowIt.getBinding();
+		final Resource resource;
+
+		if (binding instanceof KnowItBindingResource) {
+			resource = ((KnowItBindingResource) binding).getValue();
+		} else
+			resource = null;
+
+		return resource;
+	}
+
+	private JComponent createSlot(String type, Resource resource,
+			StoryComponentObserver observer) {
+		final JComponent slotPanel;
 
 		if (StringOp.exists(type)) {
-			final KnowIt audioKnowIt;
-			final Resource audio;
+			final KnowIt knowIt;
 
-			audioKnowIt = new KnowIt(StringOp.toProperCase(type), type);
-			audioPanel = ScriptWidgetFactory.buildSlotPanel(audioKnowIt, false);
-			audio = node.getAudio();
+			knowIt = new KnowIt(StringOp.toProperCase(type), type);
+			slotPanel = ScriptWidgetFactory.buildSlotPanel(knowIt, false);
 
-			if (audio != null)
-				audioKnowIt.setBinding(audio);
+			if (resource != null)
+				knowIt.setBinding(resource);
+
+			knowIt.addStoryComponentObserver(observer);
 		} else
-			audioPanel = new JPanel();
+			slotPanel = new JPanel();
 
-		return audioPanel;
+		return slotPanel;
 	}
 }
