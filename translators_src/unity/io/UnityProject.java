@@ -31,8 +31,10 @@ import scriptease.util.FileOp;
  * Represents a Unity Project file. Implements the GameModule interface to
  * behave as the facade of the project.
  * 
- * Unity Projects, in terms of ScriptEase, are composed of Scene files. A Scene
+ * Unity Projects, in terms of ScriptEase, are mainly composed of Scene files. A Scene
  * file is similar to a level. Each Scene file contains various objects in it.
+ * There are also Prefabs that are used primarily in game run time instantiation. We must
+ * consider them as scripts can be attached to Prefabs.
  * 
  * @author remiller
  * @author kschenk
@@ -162,15 +164,22 @@ public final class UnityProject extends GameModule {
 		for (UnityFile scene : this.scenes) {
 			scene.close();
 		}
+		for (UnityFile prefab : this.prefabs) {
+			prefab.close();
+		}
 	}
 
 	@Override
 	public Resource getInstanceForObjectIdentifier(String id) {
 		for (UnityFile scene : this.scenes) {
 			for (UnityResource object : scene.getResources())
-				if (object.getTemplateID().equals(id)) {
+				if (object.getTemplateID().equals(id))
 					return object;
-				}
+		}
+		for (UnityFile prefab : this.prefabs) {
+			for (UnityResource object : prefab.getResources())
+				if (object.getTemplateID().equals(id))
+					return object;
 		}
 		return null;
 	}
@@ -319,11 +328,9 @@ public final class UnityProject extends GameModule {
 		final FileFilter resourceFolderFilter;
 		final FileFilter imageFilter;
 		final FileFilter guiSkinFilter;
-		final FileFilter prefabFilter;
 
 		final Collection<File> images = new ArrayList<File>();
 		final Collection<File> guiSkins = new ArrayList<File>();
-		final Collection<File> prefabs = new ArrayList<File>();
 		final Collection<File> resourceFolders;
 
 		imageExtensions = new ArrayList<String>() {
@@ -366,30 +373,18 @@ public final class UnityProject extends GameModule {
 			}
 		};
 
-		prefabFilter = new FileFilter() {
-			@Override
-			public boolean accept(File file) {
-				final String ext = FileOp.getExtension(file).toLowerCase();
-
-				return ext.equals("prefab");
-			}
-		};
-
 		resourceFolders = FileOp.findFiles(this.projectLocation,
 				resourceFolderFilter);
 
 		for (File resourceFolder : resourceFolders) {
 			images.addAll(FileOp.findFiles(resourceFolder, imageFilter));
 			guiSkins.addAll(FileOp.findFiles(resourceFolder, guiSkinFilter));
-			prefabs.addAll(FileOp.findFiles(resourceFolder, prefabFilter));
 		}
 
 		resources.addAll(this.buildSimpleUnityResources(images,
 				UnityType.SE_IMAGE));
 		resources.addAll(this.buildSimpleUnityResources(guiSkins,
 				UnityType.SE_GUISKIN));
-		resources.addAll(this.buildSimpleUnityResources(prefabs,
-				UnityType.SE_PREFAB));
 
 		return resources;
 	}
