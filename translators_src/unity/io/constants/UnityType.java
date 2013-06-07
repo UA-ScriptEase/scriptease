@@ -335,9 +335,7 @@ public enum UnityType {
 
 	SE_IMAGE("Image"),
 
-	SE_GUISKIN("GUISkin"),
-	
-	SE_PREFAB("Prefab");
+	SE_GUISKIN("GUISkin");
 
 	public static final int SCRIPTEASE_TYPE = 0;
 
