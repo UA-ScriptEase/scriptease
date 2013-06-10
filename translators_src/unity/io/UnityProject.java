@@ -298,11 +298,6 @@ public final class UnityProject extends GameModule {
 				this.prefabs.add(prefab);
 		}
 
-		this.resources.addAll(this.buildSimpleUnityResources(sceneFiles,
-				UnityType.SCENE));
-		this.resources.addAll(this.buildSimpleUnityResources(prefabFiles,
-				UnityType.PREFAB));
-
 		if (this.scenes.size() <= 0)
 			WindowFactory
 					.getInstance()
