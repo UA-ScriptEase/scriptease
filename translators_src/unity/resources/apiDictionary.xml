@@ -582,13 +582,10 @@
     <Type>
       <Name>Prefab</Name>
       <Keyword>Prefab</Keyword>
-      <CodeSymbol>GameObject</CodeSymbol>
-      <Format>
-        <Literal>Resources.Load(&quot;</Literal>
-        <Fragment data="value"/>
-        <Literal>&quot;, GameObject)</Literal>
-      </Format>
-      <LegalValues>[^\&quot;]*</LegalValues>
+      <CodeSymbol>Prefab</CodeSymbol>
+      <Slots>
+        <Slot>MouseClicked</Slot>
+      </Slots>
       <WidgetName>Pr</WidgetName>
     </Type>
     <Type>
@@ -667,6 +664,9 @@
       <Name>Scene</Name>
       <Keyword>Scene</Keyword>
       <CodeSymbol>Scene</CodeSymbol>
+      <Slots>
+        <Slot>MouseClicked</Slot>
+      </Slots>
       <Format>
         <Literal>&quot;</Literal>
         <Fragment data="value"/>
