@@ -170,9 +170,6 @@ public class UnityFile extends Resource {
 		this.unityResources.addAll(UnityResourceFactory.getInstance()
 				.buildResources(eventIterable.iterator()));
 		
-		
-		
-		// Get all GUIDs from scriptease generated files and save them.
 		for (Entry<String, File> entry : guidsToMetaFiles.entrySet()) {
 			final String metaName = entry.getValue().getName();
 			final String guid = entry.getKey();

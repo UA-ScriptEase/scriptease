@@ -247,7 +247,7 @@ public final class UnityProject extends GameModule {
 		final Collection<File> prefabFiles;
 		final Collection<File> metaFiles;
 
-		// sniff out .unity files and read them all into memory
+		// sniff out .unity and .prefab files and read them all into memory
 		sceneFiles = FileOp.findFiles(this.projectLocation, sceneFileFilter);
 		prefabFiles = FileOp.findFiles(this.projectLocation, prefabFileFilter);
 		metaFiles = FileOp.findFiles(this.projectLocation, metaFileFilter);
