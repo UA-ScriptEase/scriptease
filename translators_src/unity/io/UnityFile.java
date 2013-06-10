@@ -169,7 +169,7 @@ public class UnityFile extends Resource {
 		// Build all of the resources
 		this.unityResources.addAll(UnityResourceFactory.getInstance()
 				.buildResources(eventIterable.iterator()));
-
+		
 		// Get all GUIDs from scriptease generated files and save them.
 		for (Entry<String, File> entry : guidsToMetaFiles.entrySet()) {
 			final String metaName = entry.getValue().getName();
@@ -241,7 +241,7 @@ public class UnityFile extends Resource {
 			resource.initializeChildren(this, guidsToMetaFiles);
 		}
 
-		// Initialize the scene's visible children resources.
+		// Initialize the unity file's visible children resources.
 		for (UnityResource resource : this.unityResources) {
 			if (resource.getOwner() == this
 					&& resource.getType() == UnityType.GAMEOBJECT

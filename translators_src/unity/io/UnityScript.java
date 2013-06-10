@@ -98,15 +98,15 @@ public class UnityScript {
 					+ this.attachedObject);
 		}
 
-		this.addToScene();
+		this.addToUnityFile();
 	}
 
 	/**
-	 * Attaches the Script to the scene. This is private and should only be
+	 * Attaches the Script to the unity file. This is private and should only be
 	 * called in the constructor. I've moved the code into a method since we may
 	 * move this type of code to the Scene file itself later...
 	 */
-	private void addToScene() {
+	private void addToUnityFile() {
 		this.unityFile.addResource(this.monoBehaviourObject);
 		final String fileID = UnityField.FILEID.getName();
 		final int fileIDNum = UnityType.MONOBEHAVIOUR.getID();

@@ -31,10 +31,10 @@ import scriptease.util.FileOp;
  * Represents a Unity Project file. Implements the GameModule interface to
  * behave as the facade of the project.
  * 
- * Unity Projects, in terms of ScriptEase, are mainly composed of Scene files. A Scene
- * file is similar to a level. Each Scene file contains various objects in it.
- * There are also Prefabs that are used primarily in game run time instantiation. We must
- * consider them as scripts can be attached to Prefabs.
+ * Unity Projects, in terms of ScriptEase, are mainly composed of Scene files. A
+ * Scene file is similar to a level. Each Scene file contains various objects in
+ * it. There are also Prefabs that are used primarily in game run time
+ * instantiation. We must consider them as scripts can be attached to Prefabs.
  * 
  * @author remiller
  * @author kschenk
@@ -293,10 +293,15 @@ public final class UnityProject extends GameModule {
 							this.add(UnityType.PREFAB.getName());
 						}
 					});
-			
+
 			if (prefab != null)
 				this.prefabs.add(prefab);
 		}
+
+		this.resources.addAll(this.buildSimpleUnityResources(sceneFiles,
+				UnityType.SCENE));
+		this.resources.addAll(this.buildSimpleUnityResources(prefabFiles,
+				UnityType.PREFAB));
 
 		if (this.scenes.size() <= 0)
 			WindowFactory
@@ -425,7 +430,7 @@ public final class UnityProject extends GameModule {
 		for (UnityFile scene : this.scenes) {
 			scene.write();
 		}
-		
+
 		// Write out the prefab files.
 		for (UnityFile prefab : this.prefabs) {
 			prefab.write();
