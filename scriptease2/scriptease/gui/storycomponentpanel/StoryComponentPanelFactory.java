@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.Box;
@@ -35,7 +34,6 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
-import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 

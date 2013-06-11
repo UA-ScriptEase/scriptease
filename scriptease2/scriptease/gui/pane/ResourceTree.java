@@ -38,7 +38,6 @@ import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.GUIOp;
-import scriptease.util.StringOp;
 
 /**
  * Draws a ResourceTree for the passed in StoryModel. This panel is a tree of
