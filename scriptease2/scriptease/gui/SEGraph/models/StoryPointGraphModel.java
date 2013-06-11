@@ -41,26 +41,27 @@ public class StoryPointGraphModel extends SEGraphModel<StoryPoint> {
 
 	@Override
 	public boolean addChild(StoryPoint child, StoryPoint existingNode) {
-		if (existingNode.addSuccessor(child)) {
+		final boolean added = existingNode.addSuccessor(child);
+
+		if (added) {
 			child.setFanIn(child.getFanIn());
-			return true;
 		}
-		return false;
+
+		return added;
 	}
 
 	@Override
 	public boolean removeChild(StoryPoint child, StoryPoint existingNode) {
-		if (existingNode.removeSuccessor(child)) {
-			final int initialFanIn;
+		final boolean removed = existingNode.removeSuccessor(child);
 
-			initialFanIn = child.getFanIn();
+		if (removed) {
+			final int initialFanIn = child.getFanIn();
 
 			if (initialFanIn > 1)
 				child.setFanIn(initialFanIn - 1);
-
-			return true;
 		}
-		return false;
+
+		return removed;
 	}
 
 	@Override

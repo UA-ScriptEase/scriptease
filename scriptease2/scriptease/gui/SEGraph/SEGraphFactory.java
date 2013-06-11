@@ -4,14 +4,18 @@ import java.awt.Color;
 
 import scriptease.gui.SEGraph.SEGraph.SelectionMode;
 import scriptease.gui.SEGraph.models.DescribeItNodeGraphModel;
+import scriptease.gui.SEGraph.models.DialogueLineGraphModel;
 import scriptease.gui.SEGraph.models.StoryPointGraphModel;
 import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
+import scriptease.gui.SEGraph.renderers.DialogueLineRenderer;
 import scriptease.gui.SEGraph.renderers.EditableDescribeItNodeRenderer;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.util.GUIOp;
 
 /**
@@ -86,6 +90,28 @@ public class SEGraphFactory {
 		graph = new SEGraph<StoryPoint>(storyGraphModel);
 
 		graph.setNodeRenderer(new StoryPointNodeRenderer(graph));
+		graph.setBackground(Color.WHITE);
+
+		GraphToolBarModeAction.useGraphCursorForJComponent(graph);
+
+		return graph;
+	}
+
+	/**
+	 * Builds a DialogueLine graph based on the passed in DialogueLine.
+	 * 
+	 * @param dialogueLine
+	 * @return
+	 */
+	public static SEGraph<DialogueLine> buildDialogueLineGraph(
+			StoryModel story, DialogueLine dialogueLine) {
+		final SEGraph<DialogueLine> graph;
+		final DialogueLineGraphModel model;
+
+		model = new DialogueLineGraphModel(story, dialogueLine);
+		graph = new SEGraph<DialogueLine>(model);
+
+		graph.setNodeRenderer(new DialogueLineRenderer(graph));
 		graph.setBackground(Color.WHITE);
 
 		GraphToolBarModeAction.useGraphCursorForJComponent(graph);

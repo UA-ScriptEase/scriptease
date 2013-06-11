@@ -66,6 +66,22 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 	public KnowIt(String name) {
 		this(name, new ArrayList<String>());
+
+	}
+
+	/**
+	 * The constructor for a KnowIt with only one type.
+	 * 
+	 * @param name
+	 * @param type
+	 */
+	@SuppressWarnings("serial")
+	public KnowIt(String name, final String type) {
+		this(name, new ArrayList<String>() {
+			{
+				this.add(type);
+			}
+		});
 	}
 
 	/**

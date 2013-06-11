@@ -252,6 +252,18 @@
       <LegalValues>[^\&quot;]*</LegalValues>
       <WidgetName>SP</WidgetName>
     </Type>
+	<Type>
+      <Name>Dialogue</Name>
+      <Keyword>Dialogue</Keyword>
+      <CodeSymbol>String</CodeSymbol>
+      <WidgetName>D</WidgetName>
+    </Type>
+    <Type>
+      <Name>Dialogue Line</Name>
+      <Keyword>DialogueLine</Keyword>
+      <CodeSymbol>String</CodeSymbol>
+      <WidgetName>Dl</WidgetName>
+    </Type>
     <Type>
       <Name>AudioListener</Name>
       <Keyword>AudioListener</Keyword>
@@ -382,6 +394,18 @@
       </Format>
       <LegalValues>[^\&quot;]*</LegalValues>
       <WidgetName>i</WidgetName>
+    </Type>
+	<Type>
+      <Name>Audio</Name>
+      <Keyword>Audio</Keyword>
+      <CodeSymbol>AudioSource</CodeSymbol>
+      <Format>
+        <Literal>Resources.Load(&quot;</Literal>
+        <Fragment data="value"/>
+        <Literal>&quot;, AudioSource)</Literal>
+      </Format>
+      <LegalValues>[^\&quot;]*</LegalValues>
+      <WidgetName>a</WidgetName>
     </Type>
     <Type>
       <Name>ScriptMapper</Name>
