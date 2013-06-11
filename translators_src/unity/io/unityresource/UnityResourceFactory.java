@@ -1,6 +1,5 @@
 package io.unityresource;
 
-import io.Scene;
 import io.UnityProject;
 import io.constants.UnityField;
 import io.constants.UnityType;

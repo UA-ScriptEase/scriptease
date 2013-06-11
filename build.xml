@@ -144,7 +144,7 @@ Some important targets to read up on are:
 	<available file="${SLOCCountDirectory}/sloccount" property="SLOCCount.present" />
 
 	<!-- This should be updated if we ever change AspectJ versions -->
-	<property name="aspectj.home" value="${user.home}/work" />
+	<property name="aspectj.home" value="C:\Users\Jessica\Desktop\development\aspectj1.6" />
 
 	<available file="${aspectj.home}" property="AspectJ.present" />
 
@@ -246,6 +246,7 @@ Some important targets to read up on are:
 
 		<!-- load the versioning data if it's not already in memory -->
 		<property file="${buildNumberLocation}" />
+		<echo>Build number location is : ${buildNumberLocation}</echo>
 		<property name="jarVersion" value="${majorVersion}.${build.number}" />
 
 		<echo>Jar version is ${jarVersion}, (${gitHash})</echo>
@@ -327,7 +328,7 @@ Some important targets to read up on are:
 		<!-- read in the last used build number and increase it -->
 		<exec executable="sh" outputproperty="build.number" failonerror="true">
 			<arg value="-c" />
-			<arg value="cat ${buildNumberLocation} | grep &quot;build.number&quot; | awk -F= '{print $2 + 1}'" />
+			<arg value="cat ${buildNumberLocation} | grep &quot;&quot; | awk -F= '{print $2 + 1}'" />
 		</exec>
 		<!-- Save the new one to file. -->
 		<exec executable="sh" failonerror="true">

@@ -155,9 +155,8 @@ class ModelTabPanel extends JTabbedPane {
 					final JScrollPane scrollPane;
 					final String savedTitle;
 
-					panel = LibraryEditorPanelFactory
-							.getInstance()
-							.buildLibraryEditorPanel(LibraryPanel.getInstance());
+					panel = LibraryEditorPanelFactory.getInstance()
+							.buildLibraryEditorPanel();
 					scrollPane = new JScrollPane(panel);
 
 					ModelTabPanel.this.modelToComponent.put(model, scrollPane);
