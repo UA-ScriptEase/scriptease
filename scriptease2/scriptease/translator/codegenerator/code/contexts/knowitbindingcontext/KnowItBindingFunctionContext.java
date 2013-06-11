@@ -1,5 +1,7 @@
 package scriptease.translator.codegenerator.code.contexts.knowitbindingcontext;
 
+import java.util.List;
+
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.semodel.StoryModel;
@@ -44,18 +46,22 @@ public class KnowItBindingFunctionContext extends KnowItBindingContext {
 		final Context scriptItContext = ContextFactory.getInstance()
 				.createContext(this,
 						((KnowItBindingFunction) this.binding).getValue());
-		final LanguageDictionary languageDictionary = this.getTranslator()
-				.getLanguageDictionary();
+		final LanguageDictionary languageDictionary;
+		final List<AbstractFragment> format;
+		final String value;
+
+		languageDictionary = this.getTranslator().getLanguageDictionary();
 		/*
 		 * TODO 'functionHeader' should not be hardcoded here. Figure out why it
 		 * is, and get it out of here.
 		 * 
 		 * Ticket: 32213279
 		 */
-		return AbstractFragment
-				.resolveFormat(
-						languageDictionary
-								.getFormat(CodeGenerationConstants.FunctionConstants.FUNCTION_AS_VALUE
-										.name()), scriptItContext);
+		format = languageDictionary
+				.getFormat(CodeGenerationConstants.FunctionConstants.FUNCTION_AS_VALUE
+						.name());
+		value = AbstractFragment.resolveFormat(format, scriptItContext);
+
+		return value;
 	}
 }

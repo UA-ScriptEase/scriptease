@@ -1,0 +1,142 @@
+package scriptease.model.semodel.dialogue;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import scriptease.translator.io.model.GameModule;
+import scriptease.translator.io.model.Resource;
+
+public final class DialogueLine extends Resource {
+	private static final String DEFAULT_DIALOGUE = "New Dialogue Line";
+
+	private final List<DialogueLine> children;
+	private final GameModule module;
+
+	private String dialogue;
+	private boolean enabled;
+	private Resource image;
+	private Resource audio;
+
+	public DialogueLine(GameModule module) {
+		this(DEFAULT_DIALOGUE, module);
+	}
+
+	public DialogueLine(String dialogue, GameModule module) {
+		this(dialogue, true, null, null, new ArrayList<DialogueLine>(), module);
+	}
+
+	public DialogueLine(String dialogue, boolean enabled, Resource image,
+			Resource audio, List<DialogueLine> children, GameModule module) {
+		this.dialogue = dialogue;
+		this.enabled = enabled;
+		this.image = image;
+		this.audio = audio;
+		this.children = children;
+		this.module = module;
+	}
+
+	public boolean removeChild(DialogueLine dialogueLine) {
+		return this.children.remove(dialogueLine);
+	}
+
+	public boolean addChild(DialogueLine dialogueLine) {
+		return this.children.add(dialogueLine);
+	}
+
+	@Override
+	public List<DialogueLine> getChildren() {
+		return this.children;
+	}
+
+	public void setDialogue(String dialogue) {
+		this.dialogue = dialogue;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public boolean setImage(Resource image) {
+		final boolean setImage;
+
+		setImage = image.getTypes().contains(this.module.getImageType());
+
+		if (setImage)
+			this.image = image;
+
+		return setImage;
+	}
+
+	public boolean setAudio(Resource audio) {
+		final boolean setAudio;
+
+		setAudio = audio.getTypes().contains(this.module.getAudioType());
+
+		if (setAudio)
+			this.audio = audio;
+
+		return setAudio;
+	}
+
+	public boolean isEnabled() {
+		return this.enabled;
+	}
+
+	public String getDialogue() {
+		return this.dialogue;
+	}
+
+	public Resource getAudio() {
+		return this.audio;
+	}
+
+	public Resource getImage() {
+		return this.image;
+	}
+
+	// TODO TODO TODO!!!!!!!
+	// One or more of these methods may need to be changed.
+
+	@SuppressWarnings("serial")
+	@Override
+	public Collection<String> getTypes() {
+		// TODO This will have to return different types depending on if it has
+		// any parents...
+		return new ArrayList<String>() {
+			{
+				this.add(DialogueLine.this.module.getDialogueLineType());
+			}
+		};
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return this.getDialogue();
+	}
+
+	@Override
+	public String getTag() {
+		// TODO Auto-generated method stub
+		return this.getName();
+	}
+
+	@Override
+	public String getTemplateID() {
+		// TODO Auto-generated method stub
+		return this.getName();
+	}
+
+	@Override
+	public String getCodeText() {
+		// TODO Auto-generated method stub
+		return this.getName();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		return this == obj;
+	}
+}

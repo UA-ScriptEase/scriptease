@@ -240,7 +240,8 @@ public final class ErfFile extends GameModule {
 			}
 
 			@Override
-			public void processStoryComponentContainer(StoryComponentContainer container) {
+			public void processStoryComponentContainer(
+					StoryComponentContainer container) {
 				this.defaultProcessComplex(container);
 			}
 		};
@@ -1045,5 +1046,35 @@ public final class ErfFile extends GameModule {
 	public String toString() {
 		return "Erf [" + this.getName() + ", nResource: "
 				+ this.resources.size() + " ]";
+	}
+
+	@Override
+	public String getImageType() {
+		// We don't have images in NWN.
+		return null;
+	}
+
+	@Override
+	public String getAudioType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getDialogueLineType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getDialogueType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getQuestionType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

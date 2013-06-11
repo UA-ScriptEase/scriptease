@@ -68,15 +68,10 @@ public final class AskIt extends ComplexStoryComponent {
 		super("<No Name>");
 
 		final List<Class<? extends StoryComponent>> ifElseValidTypes;
-		final List<String> types;
 
 		ifElseValidTypes = new ArrayList<Class<? extends StoryComponent>>();
-		types = new ArrayList<String>(1);
 
-		// Add an empty askIt
-		types.add(GameType.DEFAULT_BOOL_TYPE);
-
-		this.setCondition(new KnowIt("Question", types));
+		this.setCondition(new KnowIt("Question", GameType.DEFAULT_BOOL_TYPE));
 		this.setDisplayText("<Question>");
 
 		// AskIts can have two children of type StoryComponentContainer. These
@@ -117,7 +112,8 @@ public final class AskIt extends ComplexStoryComponent {
 		// they're children. We just need to reassign the variables to point to
 		// the right ones.
 		clone.setIfBlock((StoryComponentContainer) clone.childComponents.get(0));
-		clone.setElseBlock((StoryComponentContainer) clone.childComponents.get(1));
+		clone.setElseBlock((StoryComponentContainer) clone.childComponents
+				.get(1));
 
 		return clone;
 	}

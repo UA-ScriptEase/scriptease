@@ -2,12 +2,15 @@ package scriptease.gui.pane;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -35,6 +38,7 @@ import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
+import scriptease.controller.observer.ResourceTreeObserver;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.UndoManagerObserver;
@@ -55,7 +59,9 @@ import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.io.model.Resource;
 import scriptease.util.BiHashMap;
 
 /**
@@ -88,7 +94,7 @@ class ModelTabPanel extends JTabbedPane {
 				final SEModel model = ModelTabPanel.this.modelToComponent
 						.getKey(tab);
 
-				if (tab != null) {
+				if (tab != null && model != null) {
 					SEModelManager.getInstance().activate(model);
 				}
 			}
@@ -167,7 +173,7 @@ class ModelTabPanel extends JTabbedPane {
 				public void processStoryModel(final StoryModel storyModel) {
 					// Creates a story editor panel with a story graph
 					final StoryPoint root;
-					final JSplitPane panel;
+					final JComponent panel;
 					final String savedTitle;
 					String modelTitle;
 
@@ -184,24 +190,6 @@ class ModelTabPanel extends JTabbedPane {
 							+ ")";
 
 					ModelTabPanel.this.buildTab(savedTitle, storyModel, panel);
-					/*
-					 * Setting the divider needs to occur here because the
-					 * JSplitPane needs to actually be drawn before this works.
-					 * According to Sun, this is WAD. I would tend to disagree,
-					 * but at least this is nicer than subclassing JSplitPane.
-					 */
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							// Need this code for the divider to be set at the
-							// right location for different screen resolutions.
-							final double top = panel.getTopComponent()
-									.getSize().height;
-							final double bottom = panel.getSize().height;
-							final double ratio = top / bottom;
-							panel.setDividerLocation(ratio);
-						}
-					});
 				}
 			});
 		} else {
@@ -268,9 +256,16 @@ class ModelTabPanel extends JTabbedPane {
 	 * @param start
 	 * @return
 	 */
-	private JSplitPane buildStoryPanel(StoryModel model, final StoryPoint start) {
+	private JComponent buildStoryPanel(final StoryModel model,
+			final StoryPoint start) {
+		final String STORY_EDITOR = "Story Editor";
+		final String DIALOGUE_EDITOR = "Dialogue Editor";
+		final CardLayout layout;
+		final JPanel topLevelPane;
 		final JSplitPane storyPanel;
 		final JToolBar graphToolBar;
+		final DialogueEditorPanel dialogueEditor;
+		final JButton backToStory;
 
 		final SEGraph<StoryPoint> storyGraph;
 		final StoryComponentPanelTree storyComponentTree;
@@ -279,10 +274,17 @@ class ModelTabPanel extends JTabbedPane {
 
 		final JScrollPane storyGraphScrollPane;
 
+		layout = new CardLayout();
+		topLevelPane = new JPanel(layout);
+
 		storyPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		graphToolBar = ComponentFactory.buildGraphEditorToolBar();
 
 		storyGraph = SEGraphFactory.buildStoryGraph(start);
+
+		dialogueEditor = new DialogueEditorPanel(model);
+		backToStory = new JButton(
+				"<html><center>Back<br>to<br>Story</center></html>");
 
 		storyComponentTree = new StoryComponentPanelTree(start);
 		graphRedrawer = new StoryComponentObserver() {
@@ -328,7 +330,7 @@ class ModelTabPanel extends JTabbedPane {
 		}
 
 		// Put the new pane to the map
-		ModelTabPanel.this.modelToComponent.put(model, storyPanel);
+		ModelTabPanel.this.modelToComponent.put(model, topLevelPane);
 
 		// Set up the Story Graph
 		storyGraph.addSEGraphObserver(new SEGraphAdapter<StoryPoint>() {
@@ -384,7 +386,7 @@ class ModelTabPanel extends JTabbedPane {
 		storyPanel.setTopComponent(storyGraphPanel);
 		storyPanel.setBottomComponent(storyComponentTree);
 
-		// Set up the divider
+		// Set the divider to a blank one
 		for (Component component : storyPanel.getComponents()) {
 			if (component instanceof BasicSplitPaneDivider) {
 				final BasicSplitPaneDivider divider;
@@ -397,7 +399,40 @@ class ModelTabPanel extends JTabbedPane {
 			}
 		}
 
-		return storyPanel;
+		topLevelPane.setBorder(null);
+		topLevelPane.setOpaque(true);
+		topLevelPane.add(storyPanel, STORY_EDITOR);
+		topLevelPane.add(dialogueEditor, DIALOGUE_EDITOR);
+
+		backToStory.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				layout.show(topLevelPane, STORY_EDITOR);
+			}
+		});
+
+		ResourcePanel.getInstance().addObserver(topLevelPane,
+				new ResourceTreeObserver() {
+					public void resourceSelected(Resource resource) {
+						/*
+						 * if (!(resource instanceof DialogueLine)) { // TODO
+						 * Readd return; }
+						 */
+						for (DialogueLine line : model.getDialogueRoots()) {
+							// TODO Reactiveate this : if (line == resource)
+							// {
+							// TODO Clean this up
+							dialogueEditor.setDialogueLine(line, backToStory);
+
+							// TODO Renable this after merge
+						//	layout.show(topLevelPane, DIALOGUE_EDITOR);
+
+							break; // TODO remove break
+						}
+					}
+				});
+
+		return topLevelPane;
 	}
 
 	/**

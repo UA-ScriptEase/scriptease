@@ -15,8 +15,10 @@ import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.codegenerator.ScriptInfo;
 
 /**
@@ -266,4 +268,56 @@ public abstract class GameModule {
 
 		return scriptBuckets;
 	}
+
+	/**
+	 * This returns the keyword for the image type. It is used in
+	 * {@link DialogueLine}s right now but may have other functionality in the
+	 * future. If your game does not have an image type, you can return null or
+	 * an empty string and ScriptEase II will handle it for you.
+	 * 
+	 * @return
+	 */
+	public abstract String getImageType();
+
+	/**
+	 * This returns the keyword for the audio type. It is used in
+	 * {@link DialogueLine}s right now, but may have other functionality in the
+	 * future. If your game does not have an audio type, you can return null or
+	 * an empty string and ScriptEase II will handle it for you.
+	 * 
+	 * @return
+	 */
+	public abstract String getAudioType();
+
+	/**
+	 * This returns the keyword for the dialogue line type. It is used in
+	 * {@link DialogueLine}s right now, but may have other functionality in the
+	 * future. If your game does not have an audio type, you can return null or
+	 * an empty string and ScriptEase II will handle it for you.
+	 * 
+	 * @return
+	 */
+	public abstract String getDialogueLineType();
+
+	/**
+	 * This returns the keyword for the dialogue type, a container of
+	 * {@link DialogueLine}s. It is used with {@link DialogueLine}s right now,
+	 * but may have other functionality in the future. If your game does not
+	 * have an audio type, you can return null or an empty string and ScriptEase
+	 * II will handle it for you.
+	 * 
+	 * @return
+	 */
+	public abstract String getDialogueType();
+
+	/**
+	 * This returns the keyword for the question type. It is used in
+	 * {@link AskIt}s right now, but may have other functionality in the future.
+	 * If your game does not have an audio type, you can return null or an empty
+	 * string and ScriptEase II will handle it for you.
+	 * 
+	 * @return
+	 */
+	public abstract String getQuestionType();
+
 }

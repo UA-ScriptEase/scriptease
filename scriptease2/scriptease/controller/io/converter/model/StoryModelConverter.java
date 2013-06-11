@@ -140,7 +140,6 @@ public class StoryModelConverter implements Converter {
 
 		currentModule = module;
 
-		// TODO Import libraries here.
 		model = new StoryModel(module, title, author, translator,
 				optionalLibraries);
 
@@ -151,7 +150,7 @@ public class StoryModelConverter implements Converter {
 		if (newRoot == null)
 			throw new IllegalStateException("Model root could not be loaded.");
 
-		model.setStartPoint(newRoot);
+		model.setRoot(newRoot);
 		System.out.println(model + " loaded");
 
 		reader.moveUp();

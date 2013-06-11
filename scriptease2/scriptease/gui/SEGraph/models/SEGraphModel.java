@@ -10,7 +10,10 @@ import java.util.Set;
 
 /**
  * Model class for SEGraph. This stores and handles all of the nodes in the
- * Graph. A model must be created for an SEGraph.
+ * Graph. A model must be created for an SEGraph. <br>
+ * <br>
+ * Note that all classes used as nodes for a graph must implement the
+ * .equals(Object) method, or else the graph will not draw correctly.
  * 
  * @author kschenk
  * 

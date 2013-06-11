@@ -366,7 +366,8 @@ public class StoryComponentPanelFactory {
 				// Add an expansion button
 
 				if (complex instanceof ScriptIt) {
-					if (complex instanceof CauseIt || complex instanceof ControlIt) {
+					if (complex instanceof CauseIt
+							|| complex instanceof ControlIt) {
 						addExpansionButton(complex, panel);
 					}
 				} else
@@ -402,15 +403,10 @@ public class StoryComponentPanelFactory {
 								" describes ", Color.black));
 
 						final Translator active;
-						final Collection<LibraryModel> libraries;
 						final DescribeIt describeIt;
 
 						active = TranslatorManager.getInstance()
 								.getActiveTranslator();
-						libraries = new ArrayList<LibraryModel>();
-
-						libraries.add(active.getLibrary());
-						libraries.addAll(active.getOptionalLibraries());
 
 						describeIt = active.getDescribeIt(knowIt);
 

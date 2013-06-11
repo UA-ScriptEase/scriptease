@@ -490,4 +490,30 @@ public final class UnityProject extends GameModule {
 		// Seriously Java? mkdir()? What kind of method name is that!?
 		this.scripteaseGeneratedDirectory.mkdir();
 	}
+
+	@Override
+	public String getImageType() {
+		return UnityType.SE_IMAGE.getName();
+	}
+
+	@Override
+	public String getAudioType() {
+		return UnityType.SE_AUDIO.getName();
+	}
+
+	@Override
+	public String getDialogueLineType() {
+		return UnityType.SE_DIALOGUELINE.getName();
+	}
+
+	@Override
+	public String getDialogueType() {
+		return UnityType.SE_DIALOGUE.getName();
+	}
+
+	public String getQuestionType() {
+		// TODO This doesnt get checked in SEII yet. When it does, add here.
+		return null;
+	};
+
 }
