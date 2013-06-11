@@ -23,7 +23,8 @@ public class DialogueLineGraphModel extends SEGraphModel<DialogueLine> {
 
 	@Override
 	public DialogueLine createNewNode() {
-		return new DialogueLine(this.story.getModule());
+		// The owner is temporarily null until the graph sets it.
+		return new DialogueLine(this.story.getModule(), null);
 	}
 
 	@Override

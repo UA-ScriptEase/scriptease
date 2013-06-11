@@ -36,6 +36,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.GUIOp;
 import scriptease.util.StringOp;
@@ -112,21 +113,25 @@ public class ResourceTree extends JPanel {
 		this.panelMap.clear();
 
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
-
 		if (!(model instanceof StoryModel))
 			return;
+
+		final StoryModel story = (StoryModel) model;
 
 		for (String type : model.getTypeKeywords()) {
 			final Collection<Resource> gameObjects;
 
-			gameObjects = ((StoryModel) model).getModule().getResourcesOfType(
-					type);
+			gameObjects = story.getModule().getResourcesOfType(type);
 
 			for (Resource constant : gameObjects) {
 				if (constant.getOwner() == null)
 					this.panelMap.put(constant,
 							createGameConstantPanel(constant, 0));
 			}
+		}
+
+		for (DialogueLine line : story.getDialogueRoots()) {
+			this.panelMap.put(line, createGameConstantPanel(line, 0));
 		}
 	}
 
@@ -229,11 +234,11 @@ public class ResourceTree extends JPanel {
 		}
 
 		// TODO Reenable this after merge
-	/*	if (StringOp.exists(dialogueType)
+		if (StringOp.exists(dialogueType)
 				&& constantMap.get(dialogueType) == null) {
 			constantMap.put(dialogueType, new ArrayList<Resource>());
 		}
-*/
+
 		for (String type : constantMap.keySet()) {
 			final List<Resource> constantList;
 			final String typeName;
@@ -373,8 +378,10 @@ public class ResourceTree extends JPanel {
 		}
 
 		objectPanel.add(gameObjectBindingWidget);
-		// TODO Only on Dialogue types.
-	//	objectPanel.add(ComponentFactory.buildRemoveButton());
+
+		if (resource.getTypes().contains(this.getDialogueType())
+				&& resource instanceof DialogueLine)
+			objectPanel.add(this.removeDialogueButton((DialogueLine) resource));
 
 		// Need to do this because BoxLayout respects maximum size.
 		objectPanel.setMaximumSize(objectPanel.getPreferredSize());
@@ -458,12 +465,33 @@ public class ResourceTree extends JPanel {
 				final StoryModel story;
 
 				story = SEModelManager.getInstance().getActiveStoryModel();
-				// Need an "Add Resource" method in GameModule.class TODO
 
+				story.addDialogueRoot();
+				ResourceTree.this.fillTree();
+				ResourceTree.this.redrawTree();
 			}
 		});
 
 		return addDialogue;
+	}
+
+	private JButton removeDialogueButton(final DialogueLine line) {
+		final JButton removeDialogue = ComponentFactory.buildRemoveButton();
+
+		removeDialogue.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final StoryModel story;
+
+				story = SEModelManager.getInstance().getActiveStoryModel();
+
+				story.removeDialogueRoot(line);
+				ResourceTree.this.fillTree();
+				ResourceTree.this.redrawTree();
+			}
+		});
+
+		return removeDialogue;
 	}
 
 	/**
@@ -543,11 +571,9 @@ public class ResourceTree extends JPanel {
 
 			final String dialogueType = ResourceTree.this.getDialogueType();
 
-			// TODO
-		/*	if (StringOp.exists(dialogueType) && typeName.equals(dialogueType)) {
+			if (StringOp.exists(dialogueType) && typeName.equals(dialogueType)) {
 				categoryPanel.add(ResourceTree.this.addDialogueButton());
-			}*/
-			// TODO Add aciton listener
+			}
 
 			categoryPanel.add(Box.createHorizontalGlue());
 

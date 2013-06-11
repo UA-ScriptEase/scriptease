@@ -89,7 +89,7 @@ public final class StoryModel extends SEModel {
 
 		// TODO load dialogues instead.
 		this.dialogueRoots = new ArrayList<DialogueLine>();
-		this.dialogueRoots.add(new DialogueLine(this.getModule()));
+		this.addDialogueRoot();
 	}
 
 	public Collection<DialogueLine> getDialogueRoots() {
@@ -102,8 +102,13 @@ public final class StoryModel extends SEModel {
 	 * @param dialogue
 	 * @return
 	 */
-	public boolean addDialogueRoot(DialogueLine dialogue) {
-		return this.dialogueRoots.add(dialogue);
+	public boolean addDialogueRoot() {
+		return this.dialogueRoots.add(DialogueLine
+				.createDialogueRoot(this.module));
+	}
+
+	public boolean removeDialogueRoot(DialogueLine line) {
+		return this.dialogueRoots.remove(line);
 	}
 
 	/**
