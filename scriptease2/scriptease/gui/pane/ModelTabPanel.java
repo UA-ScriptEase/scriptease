@@ -414,21 +414,30 @@ class ModelTabPanel extends JTabbedPane {
 		ResourcePanel.getInstance().addObserver(topLevelPane,
 				new ResourceTreeObserver() {
 					public void resourceSelected(Resource resource) {
-						/*
-						 * if (!(resource instanceof DialogueLine)) { // TODO
-						 * Readd return; }
-						 */
+						final String dialogueType;
+
+						dialogueType = model.getModule().getDialogueType();
+
+						// TODO Reactive this when we can add dialogue resources
+						// if(!resource.getTypes().contains(dialogueType))
+						// return;
+
+						// TODO This is wrong...
 						for (DialogueLine line : model.getDialogueRoots()) {
 							// TODO Reactiveate this : if (line == resource)
 							// {
 							// TODO Clean this up
 							dialogueEditor.setDialogueLine(line, backToStory);
 
-							// TODO Renable this after merge
-						//	layout.show(topLevelPane, DIALOGUE_EDITOR);
+							layout.show(topLevelPane, DIALOGUE_EDITOR);
 
-							break; // TODO remove break
+							break;
 						}
+					}
+
+					@Override
+					public void resourceEditButtonPressed(Resource resource) {
+						// TODO Auto-generated method stub
 					}
 				});
 

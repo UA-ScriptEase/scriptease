@@ -179,7 +179,8 @@ public class UnityResource extends Resource {
 	 * 
 	 * @param scene
 	 */
-	public void initializeChildren(UnityFile unityFile, Map<String, File> guidsToMetas) {
+	public void initializeChildren(UnityFile unityFile,
+			Map<String, File> guidsToMetas) {
 		this.children = new ArrayList<Resource>();
 
 		for (UnityResource resource : unityFile.getResources()) {
@@ -225,47 +226,51 @@ public class UnityResource extends Resource {
 			fileID = animationMap.get(UnityField.FILEID.getName()).getString();
 			guid = animationMap.get(UnityField.GUID.getName()).getString();
 			metaFile = guidsToMetas.get(guid);
-			try {
-				reader = new BufferedReader(new FileReader(metaFile));
-				String line;
 
-				while ((line = reader.readLine()) != null) {
-					if (line.contains(fileID)) {
-						String name = line.split(": ")[1];
+			if (metaFile != null)
+				try {
+					reader = new BufferedReader(new FileReader(metaFile));
+					String line;
 
-						final Resource animationElement;
+					while ((line = reader.readLine()) != null) {
+						if (line.contains(fileID)) {
+							String name = line.split(": ")[1];
 
-						if (name.contains(nameStart)) {
-							/*
-							 * TODO Change this into a regex. There may be other
-							 * wacky fringe cases.
-							 * 
-							 * Ticket: 48086177
-							 */
+							final Resource animationElement;
 
-							// Get the string after the @. It's now anim_222-222
-							name = name.split(nameStart)[1];
+							if (name.contains(nameStart)) {
+								/*
+								 * TODO Change this into a regex. There may be
+								 * other wacky fringe cases.
+								 * 
+								 * Ticket: 48086177
+								 */
 
-							// The string looks like this: d@anim_222-222
-							if (name.contains(nameEnd)) {
-								// Get the string before the _. It's now just
-								// anims
-								name = name.split(nameEnd)[0];
+								// Get the string after the @. It's now
+								// anim_222-222
+								name = name.split(nameStart)[1];
+
+								// The string looks like this: d@anim_222-222
+								if (name.contains(nameEnd)) {
+									// Get the string before the _. It's now
+									// just
+									// anims
+									name = name.split(nameEnd)[0];
+								}
 							}
+
+							animationElement = SimpleResource
+									.buildSimpleResource(animType, name);
+
+							animationChildren.add(animationElement);
 						}
-
-						animationElement = SimpleResource.buildSimpleResource(
-								animType, name);
-
-						animationChildren.add(animationElement);
 					}
+					reader.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-				reader.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 
 		return animationChildren;

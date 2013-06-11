@@ -10,6 +10,7 @@ import scriptease.translator.io.model.Resource;
 public final class DialogueLine extends Resource {
 	private static final String DEFAULT_DIALOGUE = "New Dialogue Line";
 
+	private final List<DialogueLine> parents;
 	private final List<DialogueLine> children;
 	private final GameModule module;
 
@@ -18,22 +19,25 @@ public final class DialogueLine extends Resource {
 	private Resource image;
 	private Resource audio;
 
-	public DialogueLine(GameModule module) {
-		this(DEFAULT_DIALOGUE, module);
+	public static DialogueLine createDialogueRoot(GameModule module) {
+		return new DialogueLine(module, null);
 	}
 
-	public DialogueLine(String dialogue, GameModule module) {
-		this(dialogue, true, null, null, new ArrayList<DialogueLine>(), module);
+	public DialogueLine(GameModule module, List<DialogueLine> parents) {
+		this(DEFAULT_DIALOGUE, true, null, null, new ArrayList<DialogueLine>(),
+				module, parents);
 	}
 
 	public DialogueLine(String dialogue, boolean enabled, Resource image,
-			Resource audio, List<DialogueLine> children, GameModule module) {
+			Resource audio, List<DialogueLine> children, GameModule module,
+			List<DialogueLine> parents) {
 		this.dialogue = dialogue;
 		this.enabled = enabled;
 		this.image = image;
 		this.audio = audio;
 		this.children = children;
 		this.module = module;
+		this.parents = parents;
 	}
 
 	public boolean removeChild(DialogueLine dialogueLine) {
@@ -42,6 +46,10 @@ public final class DialogueLine extends Resource {
 
 	public boolean addChild(DialogueLine dialogueLine) {
 		return this.children.add(dialogueLine);
+	}
+
+	public boolean isRoot() {
+		return this.parents == null || this.parents.isEmpty();
 	}
 
 	@Override
@@ -98,16 +106,28 @@ public final class DialogueLine extends Resource {
 	// TODO TODO TODO!!!!!!!
 	// One or more of these methods may need to be changed.
 
-	@SuppressWarnings("serial")
 	@Override
 	public Collection<String> getTypes() {
-		// TODO This will have to return different types depending on if it has
-		// any parents...
-		return new ArrayList<String>() {
-			{
-				this.add(DialogueLine.this.module.getDialogueLineType());
-			}
-		};
+		final Collection<String> type = new ArrayList<String>();
+
+		if (this.isRoot())
+			type.add(this.module.getDialogueType());
+		else
+			type.add(this.module.getDialogueLineType());
+
+		return type;
+	}
+
+	@Override
+	public Resource getOwner() {
+		// TODO Auto-generated method stub
+		return super.getOwner();
+	}
+
+	@Override
+	public String getOwnerName() {
+		// TODO Return the speaker name
+		return super.getOwnerName();
 	}
 
 	@Override

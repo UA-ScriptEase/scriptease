@@ -174,16 +174,16 @@ public final class UnityProject extends GameModule {
 		for (UnityFile scene : this.scenes) {
 			if (scene.getTemplateID().equals(id))
 				return scene;
-			
+
 			for (UnityResource object : scene.getResources())
 				if (object.getTemplateID().equals(id))
 					return object;
 		}
-		
+
 		for (UnityFile prefab : this.prefabs) {
 			if (prefab.getTemplateID().equals(id))
 				return prefab;
-			
+
 			for (UnityResource object : prefab.getResources())
 				if (object.getTemplateID().equals(id))
 					return object;
@@ -280,26 +280,26 @@ public final class UnityProject extends GameModule {
 		for (File sceneFile : sceneFiles) {
 			final UnityFile scene;
 
+			final Collection<String> type = new ArrayList<String>();
+
+			type.add(UnityType.SCENE.getName());
+
 			scene = UnityFile.buildUnityFile(sceneFile, this.guidsToMetaFiles,
-					new ArrayList<String>() {
-						{
-							this.add(UnityType.SCENE.getName());
-						}
-					});
+					type);
 
 			if (scene != null)
 				this.scenes.add(scene);
 		}
 
 		for (File prefabFile : prefabFiles) {
-			final UnityFile prefab;
+			UnityFile prefab;
+
+			final Collection<String> type = new ArrayList<String>();
+
+			type.add(UnityType.PREFAB.getName());
 
 			prefab = UnityFile.buildUnityFile(prefabFile,
-					this.guidsToMetaFiles, new ArrayList<String>() {
-						{
-							this.add(UnityType.PREFAB.getName());
-						}
-					});
+					this.guidsToMetaFiles, type);
 
 			if (prefab != null)
 				this.prefabs.add(prefab);

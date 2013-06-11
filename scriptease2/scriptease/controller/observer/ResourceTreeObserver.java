@@ -16,4 +16,11 @@ public interface ResourceTreeObserver {
 	 * @param resource
 	 */
 	public void resourceSelected(Resource resource);
+
+	/**
+	 * Called when a resource's edit button is pressed
+	 * 
+	 * @param resource
+	 */
+	public void resourceEditButtonPressed(Resource resource);
 }
