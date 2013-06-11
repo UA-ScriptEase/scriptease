@@ -36,7 +36,6 @@ public class DescribeIt implements TypedComponent {
 			Map<Collection<DescribeItNode>, ScriptIt> paths,
 			Collection<String> types) {
 		// assure the startNode is valid
-
 		this.name = name;
 
 		if (startNode != null)
@@ -48,7 +47,6 @@ public class DescribeIt implements TypedComponent {
 		if (types == null)
 			throw new NullPointerException(
 					"Cannot initialize DescribeIt with null types.");
-
 		this.types = types;
 
 		// calculate paths if not given any
@@ -164,18 +162,13 @@ public class DescribeIt implements TypedComponent {
 		this.name = name;
 	}
 
-	/**
-	 * Returns the possible types that the DescribeIt can resolve to, based on
-	 * it's available scriptIts
-	 */
 	@Override
 	public Collection<String> getTypes() {
-		return this.types;
+		return new ArrayList<String>(this.types);
 	}
 
 	public void setTypes(Collection<String> types) {
-		this.types.removeAll(this.types);
-		this.types.addAll(types);
+		this.types = new ArrayList<String>(types);
 	}
 
 	/**

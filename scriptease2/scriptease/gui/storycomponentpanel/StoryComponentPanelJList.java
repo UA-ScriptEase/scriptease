@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -14,8 +16,11 @@ import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.ListModel;
 
+import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.SEFocusObserver;
+import scriptease.controller.observer.StoryComponentPanelJListObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.filters.Filter;
 import scriptease.gui.filters.Filterable;
@@ -40,6 +45,7 @@ import scriptease.util.GUIOp;
  */
 @SuppressWarnings("serial")
 public class StoryComponentPanelJList extends JList implements Filterable {
+	private ObserverManager<StoryComponentPanelJListObserver> observerManager;
 	private Filter filterRule;
 
 	// Store a weak map of panels to story components so that we do not have to
@@ -54,18 +60,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	static {
 		noResultsPanel.setOpaque(false);
 		noResultsPanel.add(new JLabel("No Results Found"));
-	}
-
-	/**
-	 * Creates a JList that is able to render Story Component Panels as items.
-	 * The JList also has a transfer handler attached that gives the ability to
-	 * drag and drop the Panels. <br>
-	 * <br>
-	 * Panels should be added using {@link #addStoryComponents(Collection)}
-	 * 
-	 */
-	public StoryComponentPanelJList() {
-		this(null, true);
 	}
 
 	/**
@@ -99,10 +93,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	public StoryComponentPanelJList(StoryComponentFilter filter,
 			boolean hideInvisible) {
 		super();
-
-		final DefaultListModel listModel = new DefaultListModel();
-
-		this.setModel(listModel);
+		this.setModel(new DefaultListModel());
 
 		this.panelMap = new WeakHashMap<StoryComponent, StoryComponentPanel>();
 		this.filterRule = new VisibilityFilter(hideInvisible);
@@ -119,6 +110,25 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 			@Override
 			public void focusLost(FocusEvent e) {
+			}
+		});
+
+		this.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				final JList componentList;
+				final StoryComponentPanel componentPanel;
+				final StoryComponent component;
+				final Object selected;
+
+				componentList = (JList) e.getSource();
+				selected = componentList.getSelectedValue();
+
+				if (selected instanceof StoryComponentPanel) {
+					componentPanel = (StoryComponentPanel) selected;
+					component = componentPanel.getStoryComponent();
+					notifyObservers(component);
+				}
 			}
 		});
 
@@ -145,8 +155,17 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		this.setDragEnabled(true);
 		this.setTransferHandler(StoryComponentPanelTransferHandler
 				.getInstance());
+
+		this.observerManager = new ObserverManager<StoryComponentPanelJListObserver>();
 	}
 
+	@Override
+	public void setSelectedIndex(int index) {
+		super.setSelectedIndex(index);
+		final StoryComponent component = this.getStoryComponentForIndex(index);
+		this.notifyObservers(component);
+	}
+	
 	/**
 	 * Generates panels for the passed in list of Story Components and adds them
 	 * to the list. <br>
@@ -228,6 +247,23 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		return returnIndex;
 	}
 
+	public StoryComponent getStoryComponentForIndex(int index) {
+		StoryComponentPanel panel = getStoryComponentPanelForIndex(index);
+		if (panel != null) {
+			return panel.getStoryComponent();
+		} else {
+			return null;
+		}
+	}
+
+	public StoryComponentPanel getStoryComponentPanelForIndex(int index) {
+		final ListModel model = this.getModel();
+		if (index >= 0 && index < model.getSize()) {
+			return (StoryComponentPanel) model.getElementAt(index);
+		}
+		return null;
+	}
+
 	public void removeStoryComponent(StoryComponent component) {
 		final int panelIndex = getIndexOfStoryComponent(component);
 		if (panelIndex != -1) {
@@ -255,6 +291,18 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 			panelMap.put(component, panel);
 
+		}
+	}
+
+	public void addObserver(StoryComponentPanelJListObserver observer) {
+		this.observerManager.addObserver(this, observer);
+	}
+
+	private void notifyObservers(StoryComponent component) {
+		final Collection<StoryComponentPanelJListObserver> observers = this.observerManager
+				.getObservers();
+		for (StoryComponentPanelJListObserver observer : observers) {
+			observer.componentSelected(component);
 		}
 	}
 
@@ -325,5 +373,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				return new JLabel("Error: Not a story component: "
 						+ value.toString());
 		}
+
 	}
 }

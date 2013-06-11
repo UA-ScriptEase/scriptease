@@ -24,13 +24,11 @@ import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import scriptease.controller.ModelAdapter;
-import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
+import scriptease.controller.observer.StoryComponentPanelJListObserver;
 import scriptease.controller.observer.StoryModelObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.library.LibraryEvent;
@@ -44,7 +42,6 @@ import scriptease.gui.filters.TranslatorFilter;
 import scriptease.gui.filters.TypeFilter;
 import scriptease.gui.filters.VisibilityFilter;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
@@ -307,26 +304,35 @@ public class LibraryPanel extends JTabbedPane {
 		return tabPanel;
 	}
 
-	public void assignListSelectionListener(final StoryVisitor storyVisitor) {
-		for (final StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			final ListSelectionListener listSelectionListener = new ListSelectionListener() {
-				@Override
-				public void valueChanged(ListSelectionEvent e) {
-					final Object selected = list.getSelectedValue();
-					if (selected == null) {
-						// TODO mfchurch need to handle unselection of any
-						// component (deletion)
-					} else if (selected instanceof StoryComponentPanel) {
-						final StoryComponentPanel componentPanel = (StoryComponentPanel) selected;
-						final StoryComponent component = componentPanel
-								.getStoryComponent();
-						component.process(storyVisitor);
-					}
-				}
-			};
-			list.addListSelectionListener(listSelectionListener);
+	public void addStoryComponentPanelJListObserver(
+			StoryComponentPanelJListObserver observer) {
+		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			list.addObserver(observer);
 		}
 	}
+
+	// public void assignListListener(final StoryVisitor storyVisitor) {
+	// for (final StoryComponentPanelJList list :
+	// this.storyComponentPanelJLists) {
+	// final MouseAdapter listener = new MouseAdapter() {
+	// @Override
+	// public void mouseClicked(MouseEvent e) {
+	// final Object selected = e.getSource();
+	// if (selected == null) {
+	// // TODO mfchurch need to handle unselection of any
+	// // component (deletion)
+	// } else if (selected instanceof StoryComponentPanel) {
+	// final StoryComponentPanel componentPanel = (StoryComponentPanel)
+	// selected;
+	// final StoryComponent component = componentPanel
+	// .getStoryComponent();
+	// component.process(storyVisitor);
+	// }
+	// }
+	// };
+	// list.addMouseListener(listener);
+	// }
+	// }
 
 	/**
 	 * Finds and updates the StoryComponentPanel of the changed StoryComponent
