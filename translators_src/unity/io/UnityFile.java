@@ -30,6 +30,7 @@ import scriptease.translator.io.model.Resource;
  * 
  * @author remiller
  * @author kschenk
+ * @author jyuen
  */
 public class UnityFile extends Resource {
 	// The first line in any valid YAML file.
