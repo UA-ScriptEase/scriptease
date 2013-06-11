@@ -7,6 +7,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
 
@@ -65,12 +66,26 @@ public class KnowItBindingResource extends KnowItBinding {
 		if (typeMatches(knowIt.getAcceptableTypes())) {
 			if (knowIt.getOwner() != null
 					&& !(this.getValue() instanceof SimpleResource)) {
-				
 				final SEModel model;
+
 				model = SEModelManager.getInstance().getActiveModel();
-				if (model instanceof StoryModel || model == null)
+				if (model instanceof StoryModel) {
+					
+					final StoryModel storyModel = (StoryModel) model;
+					final GameModule module = storyModel.getModule();
+					final Resource resource = this.getValue();
+					final String templateID = resource.getTemplateID();
+					
+					final Resource res = module.getInstanceForObjectIdentifier(templateID);
+					
+					if (res != null)
+						return true;
+					else
+						return false;
+					
+				} else if (model == null) {
 					return true;
-				
+				}
 			} else
 				return true;
 		}
