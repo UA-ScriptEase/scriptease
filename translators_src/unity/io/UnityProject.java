@@ -449,7 +449,7 @@ public final class UnityProject extends GameModule {
 	}
 
 	public String getQuestionType() {
-		// TODO
+		// TODO This doesnt get checked in SEII yet. When it does, add here.
 		return null;
 	};
 

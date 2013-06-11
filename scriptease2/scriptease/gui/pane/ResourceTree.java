@@ -20,6 +20,7 @@ import java.util.TreeMap;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,6 +38,7 @@ import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.GUIOp;
+import scriptease.util.StringOp;
 
 /**
  * Draws a ResourceTree for the passed in StoryModel. This panel is a tree of
@@ -171,6 +173,19 @@ public class ResourceTree extends JPanel {
 		}
 	}
 
+	private String getDialogueType() {
+		final SEModel model = SEModelManager.getInstance().getActiveModel();
+
+		final String dialogueType;
+
+		if (model == null || !(model instanceof StoryModel))
+			dialogueType = null;
+		else
+			dialogueType = ((StoryModel) model).getModule().getDialogueType();
+
+		return dialogueType;
+	}
+
 	/**
 	 * Redraws the tree. If you have not set some filter types with
 	 * {@link #filterByTypes(Collection)}, the tree may get redrawn as empty.
@@ -180,9 +195,19 @@ public class ResourceTree extends JPanel {
 	private void redrawTree() {
 		this.removeAll();
 
+		final SEModel model = SEModelManager.getInstance().getActiveModel();
+
+		if (model == null || !(model instanceof StoryModel)) {
+			this.repaint();
+			this.revalidate();
+			return;
+		}
+
+		final String dialogueType;
 		final Map<String, List<Resource>> constantMap;
 
 		constantMap = new TreeMap<String, List<Resource>>();
+		dialogueType = this.getDialogueType();
 
 		// Find constants that match the filters.
 		for (Resource constant : this.panelMap.keySet()) {
@@ -191,36 +216,34 @@ public class ResourceTree extends JPanel {
 							.getOwnerName().isEmpty())
 					&& this.matchesFilters(constant)) {
 				for (String type : constant.getTypes()) {
+
 					List<Resource> constantList = constantMap.get(type);
 					if (constantList == null) {
 						constantList = new ArrayList<Resource>();
 					}
-					constantList.add(constant);
 
+					constantList.add(constant);
 					constantMap.put(type, constantList);
 				}
 			}
 		}
 
+		// TODO Reenable this after merge
+	/*	if (StringOp.exists(dialogueType)
+				&& constantMap.get(dialogueType) == null) {
+			constantMap.put(dialogueType, new ArrayList<Resource>());
+		}
+*/
 		for (String type : constantMap.keySet()) {
 			final List<Resource> constantList;
+			final String typeName;
 
 			constantList = constantMap.get(type);
+			typeName = model.getTypeDisplayText(type);
 
 			Collections.sort(constantList, constantSorter);
 
-			final String typeName;
-			final ResourceContainer container;
-			final SEModel model;
-
-			model = SEModelManager.getInstance().getActiveModel();
-
-			if (model != null) {
-				typeName = model.getTypeDisplayText(type);
-				container = new ResourceContainer(typeName, constantList);
-
-				this.add(container);
-			}
+			this.add(new ResourceContainer(typeName, constantList));
 		}
 
 		this.repaint();
@@ -350,7 +373,8 @@ public class ResourceTree extends JPanel {
 		}
 
 		objectPanel.add(gameObjectBindingWidget);
-		objectPanel.add(ComponentFactory.buildRemoveButton());
+		// TODO Only on Dialogue types.
+	//	objectPanel.add(ComponentFactory.buildRemoveButton());
 
 		// Need to do this because BoxLayout respects maximum size.
 		objectPanel.setMaximumSize(objectPanel.getPreferredSize());
@@ -423,6 +447,23 @@ public class ResourceTree extends JPanel {
 		if (constant.isLink()) {
 			// TODO Select all same nodes.
 		}
+	}
+
+	private JButton addDialogueButton() {
+		final JButton addDialogue = ComponentFactory.buildAddButton();
+
+		addDialogue.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final StoryModel story;
+
+				story = SEModelManager.getInstance().getActiveStoryModel();
+				// Need an "Add Resource" method in GameModule.class TODO
+
+			}
+		});
+
+		return addDialogue;
 	}
 
 	/**
@@ -500,8 +541,13 @@ public class ResourceTree extends JPanel {
 				}
 			});
 
-			// TODO Check if dialogue button
-			categoryPanel.add(ComponentFactory.buildAddButton());
+			final String dialogueType = ResourceTree.this.getDialogueType();
+
+			// TODO
+		/*	if (StringOp.exists(dialogueType) && typeName.equals(dialogueType)) {
+				categoryPanel.add(ResourceTree.this.addDialogueButton());
+			}*/
+			// TODO Add aciton listener
 
 			categoryPanel.add(Box.createHorizontalGlue());
 

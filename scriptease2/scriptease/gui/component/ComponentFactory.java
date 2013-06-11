@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -173,23 +174,28 @@ public final class ComponentFactory {
 			protected void paintComponent(Graphics g) {
 				final Color armedFillColour;
 				final Color armedLineColour;
+				final Color hoverFillColour;
 				final Color unarmedLineColour;
 
 				if (type == ButtonType.ADD) {
 					armedFillColour = ScriptEaseUI.COLOUR_ADD_BUTTON_PRESSED_FILL;
 					armedLineColour = ScriptEaseUI.COLOUR_ADD_BUTTON_PRESSED;
+					hoverFillColour = ScriptEaseUI.COLOUR_ADD_BUTTON_HOVER_FILL;
 					unarmedLineColour = ScriptEaseUI.COLOUR_ADD_BUTTON;
 				} else if (type == ButtonType.REMOVE) {
 					armedFillColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON_PRESSED_FILL;
 					armedLineColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON_PRESSED;
+					hoverFillColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON_HOVER_FILL;
 					unarmedLineColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON;
 				} else {
 					armedFillColour = Color.LIGHT_GRAY;
-					armedLineColour = Color.GRAY;
+					armedLineColour = Color.DARK_GRAY;
+					hoverFillColour = Color.GRAY;
 					unarmedLineColour = Color.BLACK;
 				}
 
 				final Graphics2D g2d = (Graphics2D) g;
+				final ButtonModel model = this.getModel();
 
 				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 						RenderingHints.VALUE_ANTIALIAS_ON);
@@ -215,7 +221,7 @@ public final class ComponentFactory {
 
 				final Color lineColour;
 
-				if (this.getModel().isArmed()) {
+				if (model.isArmed()) {
 					// If it's clicked, do this
 
 					g2d.setColor(armedFillColour);
@@ -223,6 +229,10 @@ public final class ComponentFactory {
 					g2d.fillOval(circleX, circleY, diameter, diameter);
 
 					lineColour = armedLineColour;
+				} else if (model.isRollover()) {
+					g2d.setColor(hoverFillColour);
+					g2d.fillOval(circleX, circleY, diameter, diameter);
+					lineColour = unarmedLineColour;
 				} else {
 					lineColour = unarmedLineColour;
 				}

@@ -103,6 +103,22 @@ public final class SEModelManager {
 	}
 
 	/**
+	 * Returns the active story model, or null if the active model is not a
+	 * story model.
+	 * 
+	 * @return
+	 */
+	public StoryModel getActiveStoryModel() {
+		final StoryModel story;
+		if (this.activeModel instanceof StoryModel)
+			story = (StoryModel) activeModel;
+		else
+			story = null;
+
+		return story;
+	}
+
+	/**
 	 * Gets whether or not the model pool has an active model.
 	 * 
 	 * @return True if there is an active model.

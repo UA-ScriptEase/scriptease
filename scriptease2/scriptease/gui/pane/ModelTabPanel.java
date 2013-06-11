@@ -425,7 +425,8 @@ class ModelTabPanel extends JTabbedPane {
 							// TODO Clean this up
 							dialogueEditor.setDialogueLine(line, backToStory);
 
-							layout.show(topLevelPane, DIALOGUE_EDITOR);
+							// TODO Renable this after merge
+						//	layout.show(topLevelPane, DIALOGUE_EDITOR);
 
 							break; // TODO remove break
 						}

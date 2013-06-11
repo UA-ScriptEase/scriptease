@@ -165,6 +165,9 @@ public interface ScriptEaseUI {
 	public static final Color COLOUR_ADD_BUTTON_PRESSED = GUIOp.scaleColour(
 			COLOUR_ADD_BUTTON, 1.2);
 
+	public static final Color COLOUR_ADD_BUTTON_HOVER_FILL = GUIOp.scaleWhite(
+			COLOUR_ADD_BUTTON, 4.0);
+
 	public static final Color COLOUR_ADD_BUTTON_PRESSED_FILL = GUIOp
 			.scaleWhite(COLOUR_ADD_BUTTON, 3.4);
 
@@ -173,8 +176,11 @@ public interface ScriptEaseUI {
 	public static final Color COLOUR_REMOVE_BUTTON_PRESSED = GUIOp.scaleColour(
 			COLOUR_REMOVE_BUTTON, 1.2);
 
+	public static final Color COLOUR_REMOVE_BUTTON_HOVER_FILL = GUIOp
+			.scaleWhite(COLOUR_REMOVE_BUTTON, 3.7);
+
 	public static final Color COLOUR_REMOVE_BUTTON_PRESSED_FILL = GUIOp
-			.scaleWhite(COLOUR_REMOVE_BUTTON, 3.4);
+			.scaleWhite(COLOUR_REMOVE_BUTTON, 3.2);
 
 	/**
 	 * The standard increment that should usually be used for vertical
