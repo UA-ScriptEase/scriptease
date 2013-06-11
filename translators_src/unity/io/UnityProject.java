@@ -31,11 +31,14 @@ import scriptease.util.FileOp;
  * Represents a Unity Project file. Implements the GameModule interface to
  * behave as the facade of the project.
  * 
- * Unity Projects, in terms of ScriptEase, are composed of Scene files. A Scene
- * file is similar to a level. Each Scene file contains various objects in it.
+ * Unity Projects, in terms of ScriptEase, are mainly composed of Scene files. A
+ * Scene file is similar to a level. Each Scene file contains various objects in
+ * it. There are also Prefabs that are used primarily in game run time
+ * instantiation. We must consider them as scripts can be attached to Prefabs.
  * 
  * @author remiller
  * @author kschenk
+ * @author jyuen
  */
 public final class UnityProject extends GameModule {
 	/**
@@ -61,7 +64,8 @@ public final class UnityProject extends GameModule {
 	private File scripteaseGeneratedDirectory;
 
 	private final Collection<File> includeFiles;
-	private final Collection<Scene> scenes;
+	private final Collection<UnityFile> scenes;
+	private final Collection<UnityFile> prefabs;
 	private final Collection<Resource> resources;
 	private final Collection<UnityScript> scripts;
 
@@ -70,7 +74,8 @@ public final class UnityProject extends GameModule {
 	 */
 	public UnityProject() {
 		this.includeFiles = new ArrayList<File>();
-		this.scenes = new ArrayList<Scene>();
+		this.scenes = new ArrayList<UnityFile>();
+		this.prefabs = new ArrayList<UnityFile>();
 		this.resources = new ArrayList<Resource>();
 		this.scripts = new ArrayList<UnityScript>();
 		this.guidsToMetaFiles = new HashMap<String, File>();
@@ -121,7 +126,7 @@ public final class UnityProject extends GameModule {
 	public Collection<Resource> getAutomaticHandlers() {
 		final Collection<Resource> automaticHandlers = new ArrayList<Resource>();
 
-		for (Scene scene : this.scenes) {
+		for (UnityFile scene : this.scenes) {
 			automaticHandlers.add(scene.getScriptEaseObject());
 		}
 
@@ -138,29 +143,50 @@ public final class UnityProject extends GameModule {
 	@Override
 	public void addScripts(Collection<ScriptInfo> scriptList) {
 		for (ScriptInfo scriptInfo : scriptList) {
-			for (Scene scene : this.scenes) {
+			for (UnityFile scene : this.scenes) {
 				if (scene.getObjectByTemplateID(scriptInfo.getSubject()
 						.getTemplateID()) != null) {
 					this.scripts.add(new UnityScript(scriptInfo, scene));
 				}
 			}
+			for (UnityFile prefab : this.prefabs) {
+				if (prefab.getObjectByTemplateID(scriptInfo.getSubject()
+						.getTemplateID()) != null) {
+					this.scripts.add(new UnityScript(scriptInfo, prefab));
+				}
+			}
+
 		}
 	}
 
 	@Override
 	public void close() throws IOException {
-		for (Scene scene : this.scenes) {
+		for (UnityFile scene : this.scenes) {
 			scene.close();
+		}
+		for (UnityFile prefab : this.prefabs) {
+			prefab.close();
 		}
 	}
 
 	@Override
 	public Resource getInstanceForObjectIdentifier(String id) {
-		for (Scene scene : this.scenes) {
+		for (UnityFile scene : this.scenes) {
+			if (scene.getTemplateID().equals(id))
+				return scene;
+			
 			for (UnityResource object : scene.getResources())
-				if (object.getTemplateID().equals(id)) {
+				if (object.getTemplateID().equals(id))
 					return object;
-				}
+		}
+		
+		for (UnityFile prefab : this.prefabs) {
+			if (prefab.getTemplateID().equals(id))
+				return prefab;
+			
+			for (UnityResource object : prefab.getResources())
+				if (object.getTemplateID().equals(id))
+					return object;
 		}
 		return null;
 	}
@@ -172,6 +198,8 @@ public final class UnityProject extends GameModule {
 		resources = new ArrayList<Resource>();
 		if (typeName.equals(UnityType.SCENE.getName()))
 			resources.addAll(this.scenes);
+		else if (typeName.equals(UnityType.PREFAB.getName()))
+			resources.addAll(this.prefabs);
 		else {
 			for (Resource resource : this.resources) {
 				if (resource.getTypes().contains(typeName))
@@ -194,6 +222,7 @@ public final class UnityProject extends GameModule {
 				"The unity translator can't externally test.");
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	public void load(boolean readOnly) throws IOException {
 		final FileFilter sceneFileFilter = new FileFilter() {
@@ -202,6 +231,14 @@ public final class UnityProject extends GameModule {
 			@Override
 			public boolean accept(File pathname) {
 				return pathname.getName().endsWith(SCENE_FILE_EXTENSION);
+			}
+		};
+		final FileFilter prefabFileFilter = new FileFilter() {
+			private final String PREFAB_FILE_EXTENSION = ".prefab";
+
+			@Override
+			public boolean accept(File pathname) {
+				return pathname.getName().endsWith(PREFAB_FILE_EXTENSION);
 			}
 		};
 		final FileFilter metaFileFilter = new FileFilter() {
@@ -214,10 +251,12 @@ public final class UnityProject extends GameModule {
 		};
 
 		final Collection<File> sceneFiles;
+		final Collection<File> prefabFiles;
 		final Collection<File> metaFiles;
 
-		// sniff out .unity files and read them all into memory
+		// sniff out .unity and .prefab files and read them all into memory
 		sceneFiles = FileOp.findFiles(this.projectLocation, sceneFileFilter);
+		prefabFiles = FileOp.findFiles(this.projectLocation, prefabFileFilter);
 		metaFiles = FileOp.findFiles(this.projectLocation, metaFileFilter);
 
 		for (File metaFile : metaFiles) {
@@ -239,12 +278,31 @@ public final class UnityProject extends GameModule {
 		}
 
 		for (File sceneFile : sceneFiles) {
-			final Scene scene;
+			final UnityFile scene;
 
-			scene = Scene.buildScene(sceneFile, this.guidsToMetaFiles);
+			scene = UnityFile.buildUnityFile(sceneFile, this.guidsToMetaFiles,
+					new ArrayList<String>() {
+						{
+							this.add(UnityType.SCENE.getName());
+						}
+					});
 
 			if (scene != null)
 				this.scenes.add(scene);
+		}
+
+		for (File prefabFile : prefabFiles) {
+			final UnityFile prefab;
+
+			prefab = UnityFile.buildUnityFile(prefabFile,
+					this.guidsToMetaFiles, new ArrayList<String>() {
+						{
+							this.add(UnityType.PREFAB.getName());
+						}
+					});
+
+			if (prefab != null)
+				this.prefabs.add(prefab);
 		}
 
 		if (this.scenes.size() <= 0)
@@ -371,8 +429,13 @@ public final class UnityProject extends GameModule {
 		}
 
 		// Write out the scene files.
-		for (Scene scene : this.scenes) {
+		for (UnityFile scene : this.scenes) {
 			scene.write();
+		}
+
+		// Write out the prefab files.
+		for (UnityFile prefab : this.prefabs) {
+			prefab.write();
 		}
 
 		// Write the script files to the ScriptEase folder.

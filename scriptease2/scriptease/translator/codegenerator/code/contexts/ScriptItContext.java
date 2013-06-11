@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -191,13 +192,15 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	@Override
 	public Collection<KnowIt> getSlotParameters() {
 		final CodeBlock mainBlock = this.getMainCodeBlock();
+		final CauseIt cause = mainBlock.getCause();
 		final String currentSlot = mainBlock.getSlot();
 
-		if (currentSlot == null)
+		if (cause == null || currentSlot == null)
 			throw new NullPointerException("Encountered null slot in a Cause! "
 					+ "Call may be incorrect in Language Dictionary.");
 
-		return mainBlock.getLibrary().getSlotParameters(currentSlot);
+		return cause.getMainCodeBlock().getLibrary()
+				.getSlotParameters(currentSlot);
 	}
 
 	/**
@@ -206,13 +209,15 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	@Override
 	public String getSlotConditional() {
 		final CodeBlock mainBlock = this.getMainCodeBlock();
+		final CauseIt cause = mainBlock.getCause();
 		final String currentSlot = mainBlock.getSlot();
 
 		if (currentSlot == null)
 			throw new NullPointerException("Encountered null slot in a Cause! "
 					+ "Call may be incorrect in Language Dictionary.");
 
-		return mainBlock.getLibrary().getSlotCondition(currentSlot);
+		return cause.getMainCodeBlock().getLibrary()
+				.getSlotCondition(currentSlot);
 	};
 
 	@Override

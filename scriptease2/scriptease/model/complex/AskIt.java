@@ -22,7 +22,7 @@ import scriptease.translator.io.model.GameType;
  * methods on an AskIt will give results based on the two containers for those
  * groups, not their contents. For example,
  * {@link ComplexStoryComponent#getChildren()} always returns a list of size 2
- * that whose contents are the two <code>StoryItemSequence</code>s that contain
+ * that whose contents are the two <code>StoryComponentContainer</code>s that contain
  * the sub-groups. To add children to either group, get the container for that
  * group first, via either {@link AskIt#getIfBlock()} or
  * {@link AskIt#getElseBlock()}. <br>
@@ -79,7 +79,7 @@ public final class AskIt extends ComplexStoryComponent {
 		this.setCondition(new KnowIt("Question", types));
 		this.setDisplayText("<Question>");
 
-		// AskIts can have two children of type StoryItemSequence. These
+		// AskIts can have two children of type StoryComponentContainer. These
 		// function as containers for the If/Else blocks
 		this.registerChildType(StoryComponentContainer.class, 2);
 
@@ -91,7 +91,7 @@ public final class AskIt extends ComplexStoryComponent {
 		ifElseValidTypes.add(Note.class);
 		ifElseValidTypes.add(ControlIt.class);
 
-		// now we can Initialize the StoryItemSequences
+		// now we can Initialize the StoryComponentContainer
 		this.ifBlock = new StoryComponentContainer(ifElseValidTypes);
 		this.ifBlock.setDisplayText("Yes:");
 		this.elseBlock = new StoryComponentContainer(ifElseValidTypes);

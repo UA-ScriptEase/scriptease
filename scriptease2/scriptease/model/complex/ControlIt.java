@@ -30,7 +30,7 @@ public class ControlIt extends ScriptIt {
 	 * 
 	 */
 	public enum ControlItFormat {
-		NONE, DELAY, REPEAT, QUESTION
+		NONE, DELAY, REPEAT, QUESTION, GUIGROUP
 	}
 
 	private ControlItFormat format;
@@ -55,6 +55,7 @@ public class ControlIt extends ScriptIt {
 		this.registerChildType(StoryComponentContainer.class, max);
 		this.registerChildType(Note.class, max);
 		this.registerChildType(ControlIt.class, max);
+		this.registerChildType(AskIt.class, max);
 	}
 
 	/**

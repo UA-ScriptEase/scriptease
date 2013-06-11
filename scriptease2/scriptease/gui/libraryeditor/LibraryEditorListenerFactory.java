@@ -227,6 +227,7 @@ public class LibraryEditorListenerFactory {
 	}
 
 	/**
+	 * Creates an observer for the parameter's name.
 	 * 
 	 * @param scriptIt
 	 * @param codeBlock
