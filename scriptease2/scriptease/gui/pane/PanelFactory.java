@@ -50,8 +50,8 @@ public final class PanelFactory {
 	private PanelFactory() {
 	}
 
-	public ModelTabPanel buildModelTabPanel() {
-		return new ModelTabPanel();
+	public SEModelTabbedPane buildModelTabPanel() {
+		return new SEModelTabbedPane();
 	}
 
 	/**
@@ -65,12 +65,20 @@ public final class PanelFactory {
 		final JSplitPane librarySplitPane;
 		final JPanel libraryPanel;
 		final JPanel resourcePanel;
+		final Runnable resizeSplitPane;
 
 		final SEModelObserver storyLibraryPaneObserver;
 
 		librarySplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		resourcePanel = ResourcePanel.getInstance();
 		libraryPanel = new JPanel();
+		// We need to invoke a runnable for this later because Swing.
+		resizeSplitPane = new Runnable() {
+			@Override
+			public void run() {
+				librarySplitPane.setDividerLocation(0.5);
+			}
+		};
 
 		libraryPanel
 				.setLayout(new BoxLayout(libraryPanel, BoxLayout.PAGE_AXIS));
@@ -86,24 +94,17 @@ public final class PanelFactory {
 		storyLibraryPaneObserver = new SEModelObserver() {
 			public void modelChanged(SEModelEvent event) {
 				if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
-					event.getPatternModel().process(new ModelAdapter() {
-						@Override
-						public void processStoryModel(StoryModel storyModel) {
-							// Need to invokeLater because Swing makes us.
-							SwingUtilities.invokeLater(new Runnable() {
-								@Override
-								public void run() {
-									librarySplitPane.setDividerLocation(0.5);
-								}
-							});
-						}
-					});
+					if (event.getPatternModel() instanceof StoryModel) {
+						SwingUtilities.invokeLater(resizeSplitPane);
+					}
 				}
 			}
 		};
 
 		SEModelManager.getInstance().addSEModelObserver(librarySplitPane,
 				storyLibraryPaneObserver);
+
+		SwingUtilities.invokeLater(resizeSplitPane);
 
 		return librarySplitPane;
 	}

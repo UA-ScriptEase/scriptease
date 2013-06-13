@@ -77,21 +77,22 @@ import scriptease.util.BiHashMap;
  * 
  */
 @SuppressWarnings("serial")
-class ModelTabPanel extends JTabbedPane {
+class SEModelTabbedPane extends JTabbedPane {
 	// A mapping of models to components represented by the models
 	private final BiHashMap<SEModel, Component> modelToComponent;
 
 	/**
 	 * Creates a new ModelTabPanel and initializes its change listener.
 	 */
-	protected ModelTabPanel() {
+	protected SEModelTabbedPane() {
 		this.modelToComponent = new BiHashMap<SEModel, Component>();
 
 		// Register a change listener for the tabs
 		this.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent evt) {
-				final Component tab = ModelTabPanel.this.getSelectedComponent();
-				final SEModel model = ModelTabPanel.this.modelToComponent
+				final Component tab = SEModelTabbedPane.this
+						.getSelectedComponent();
+				final SEModel model = SEModelTabbedPane.this.modelToComponent
 						.getKey(tab);
 
 				if (tab != null && model != null) {
@@ -104,7 +105,7 @@ class ModelTabPanel extends JTabbedPane {
 				new SEModelObserver() {
 					@Override
 					public void modelChanged(SEModelEvent event) {
-						final ModelTabPanel tabs = ModelTabPanel.this;
+						final SEModelTabbedPane tabs = SEModelTabbedPane.this;
 						final SEModel model = event.getPatternModel();
 
 						if (event.getEventType() == SEModelEvent.Type.REMOVED) {
@@ -133,7 +134,8 @@ class ModelTabPanel extends JTabbedPane {
 	 */
 	private void removeTabForModel(SEModel model) {
 		if (FileManager.getInstance().hasUnsavedChanges(model)) {
-			ModelTabPanel.this.remove(this.modelToComponent.getValue(model));
+			SEModelTabbedPane.this
+					.remove(this.modelToComponent.getValue(model));
 			this.modelToComponent.removeKey(model);
 		}
 	}
@@ -144,7 +146,7 @@ class ModelTabPanel extends JTabbedPane {
 	 * @param model
 	 */
 	private void createTabForModel(SEModel model) {
-		final boolean tabExistsForModel = ModelTabPanel.this.modelToComponent
+		final boolean tabExistsForModel = SEModelTabbedPane.this.modelToComponent
 				.containsKey(model);
 		if (!tabExistsForModel) {
 			model.process(new ModelAdapter() {
@@ -159,14 +161,16 @@ class ModelTabPanel extends JTabbedPane {
 							.buildLibraryEditorPanel();
 					scrollPane = new JScrollPane(panel);
 
-					ModelTabPanel.this.modelToComponent.put(model, scrollPane);
+					SEModelTabbedPane.this.modelToComponent.put(model,
+							scrollPane);
 
 					savedTitle = model.getTitle() + "[Editor]";
 
 					scrollPane.getVerticalScrollBar().setUnitIncrement(
 							ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
-					ModelTabPanel.this.buildTab(savedTitle, model, scrollPane);
+					SEModelTabbedPane.this.buildTab(savedTitle, model,
+							scrollPane);
 				}
 
 				@Override
@@ -178,8 +182,8 @@ class ModelTabPanel extends JTabbedPane {
 					String modelTitle;
 
 					root = storyModel.getRoot();
-					panel = ModelTabPanel.this
-							.buildStoryPanel(storyModel, root);
+					panel = SEModelTabbedPane.this.buildStoryPanel(storyModel,
+							root);
 
 					modelTitle = storyModel.getTitle();
 					if (modelTitle == null || modelTitle.equals(""))
@@ -189,7 +193,8 @@ class ModelTabPanel extends JTabbedPane {
 							+ storyModel.getModule().getLocation().getName()
 							+ ")";
 
-					ModelTabPanel.this.buildTab(savedTitle, storyModel, panel);
+					SEModelTabbedPane.this.buildTab(savedTitle, storyModel,
+							panel);
 				}
 			});
 		} else {
@@ -230,7 +235,7 @@ class ModelTabPanel extends JTabbedPane {
 				new UndoManagerObserver() {
 					@Override
 					public void stackChanged() {
-						final ModelTabPanel tabPanel = ModelTabPanel.this;
+						final SEModelTabbedPane tabPanel = SEModelTabbedPane.this;
 						final int index = tabPanel
 								.indexOfComponent(tabContents);
 
@@ -330,7 +335,7 @@ class ModelTabPanel extends JTabbedPane {
 		}
 
 		// Put the new pane to the map
-		ModelTabPanel.this.modelToComponent.put(model, topLevelPane);
+		SEModelTabbedPane.this.modelToComponent.put(model, topLevelPane);
 
 		// Set up the Story Graph
 		storyGraph.addSEGraphObserver(new SEGraphAdapter<StoryPoint>() {

@@ -78,10 +78,13 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	@Override
 	public Collection<KnowIt> getImplicits() {
 		final Collection<KnowIt> used = new ArrayList<KnowIt>();
-
+		
+		// TODO Not all components are gotten' by zis
+		final Collection<StoryComponent> components = this.getComponents();
+		
 		// Only return implicits that are used in this Context
 		for (KnowIt implicit : this.getMainCodeBlock().getImplicits()) {
-			if (getComponents().contains(implicit))
+			if (components.contains(implicit))
 				used.add(implicit);
 		}
 		return used;

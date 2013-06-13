@@ -152,6 +152,7 @@ public class CodeBlockContext extends Context {
 
 		// Only return implicits that are used in this Context
 		for (KnowIt implicit : this.codeBlock.getImplicits()) {
+			// TODO Get components does not return all implciits.
 			if (getComponents().contains(implicit))
 				used.add(implicit);
 		}

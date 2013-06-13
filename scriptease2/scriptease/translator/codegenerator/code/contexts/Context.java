@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import scriptease.controller.ComplexStoryComponentDescendantCollector;
+import scriptease.controller.StoryComponentUtils;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -138,16 +138,11 @@ public abstract class Context {
 	 */
 	protected final Collection<StoryComponent> getComponents() {
 		final Collection<StoryComponent> components = new ArrayList<StoryComponent>();
-		final Collection<StoryPoint> storyPoints;
-
-		// Get all the StoryPoints from the model
-		storyPoints = this.getStartStoryPoint().getDescendants();
 
 		// for each story point
-		for (StoryPoint storyPoint : storyPoints) {
+		for (StoryPoint point : this.getStartStoryPoint().getDescendants()) {
 			// Get all the components from each StoryPoint
-			ComplexStoryComponentDescendantCollector getter = new ComplexStoryComponentDescendantCollector();
-			components.addAll(getter.collectDescendants(storyPoint));
+			components.addAll(StoryComponentUtils.getAllDescendants(point));
 		}
 
 		return components;
