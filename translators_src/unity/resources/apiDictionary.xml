@@ -124,6 +124,12 @@
       <CodeSymbol>MonoScript</CodeSymbol>
     </Type>
     <Type>
+      <Name>Dialogue</Name>
+      <Keyword>Dialogue</Keyword>
+      <CodeSymbol>String</CodeSymbol>
+      <WidgetName>D</WidgetName>
+    </Type>
+    <Type>
       <Name>GUIDSerializer</Name>
       <Keyword>GUIDSerializer</Keyword>
       <CodeSymbol>GUIDSerializer</CodeSymbol>
@@ -236,6 +242,12 @@
       <WidgetName>g</WidgetName>
     </Type>
     <Type>
+      <Name>Dialogue Line</Name>
+      <Keyword>DialogueLine</Keyword>
+      <CodeSymbol>String</CodeSymbol>
+      <WidgetName>Dl</WidgetName>
+    </Type>
+    <Type>
       <Name>LightmapSettings</Name>
       <Keyword>LightmapSettings</Keyword>
       <CodeSymbol>LightmapSettings</CodeSymbol>
@@ -251,18 +263,6 @@
       </Format>
       <LegalValues>[^\&quot;]*</LegalValues>
       <WidgetName>SP</WidgetName>
-    </Type>
-	<Type>
-      <Name>Dialogue</Name>
-      <Keyword>Dialogue</Keyword>
-      <CodeSymbol>String</CodeSymbol>
-      <WidgetName>D</WidgetName>
-    </Type>
-    <Type>
-      <Name>Dialogue Line</Name>
-      <Keyword>DialogueLine</Keyword>
-      <CodeSymbol>String</CodeSymbol>
-      <WidgetName>Dl</WidgetName>
     </Type>
     <Type>
       <Name>AudioListener</Name>
@@ -394,18 +394,6 @@
       </Format>
       <LegalValues>[^\&quot;]*</LegalValues>
       <WidgetName>i</WidgetName>
-    </Type>
-	<Type>
-      <Name>Audio</Name>
-      <Keyword>Audio</Keyword>
-      <CodeSymbol>AudioSource</CodeSymbol>
-      <Format>
-        <Literal>Resources.Load(&quot;</Literal>
-        <Fragment data="value"/>
-        <Literal>&quot;, AudioSource)</Literal>
-      </Format>
-      <LegalValues>[^\&quot;]*</LegalValues>
-      <WidgetName>a</WidgetName>
     </Type>
     <Type>
       <Name>ScriptMapper</Name>
@@ -595,6 +583,18 @@
       <Name>Skybox</Name>
       <Keyword>Skybox</Keyword>
       <CodeSymbol>Skybox</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>Audio</Name>
+      <Keyword>Audio</Keyword>
+      <CodeSymbol>AudioSource</CodeSymbol>
+      <Format>
+        <Literal>Resources.Load(&quot;</Literal>
+        <Fragment data="value"/>
+        <Literal>&quot;, AudioSource)</Literal>
+      </Format>
+      <LegalValues>[^\&quot;]*</LegalValues>
+      <WidgetName>a</WidgetName>
     </Type>
     <Type>
       <Name>NavMeshAgent</Name>
@@ -2694,8 +2694,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;subject&gt; collides with &lt;Colliding Object&gt;
-				with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
+      <Name>When &lt;subject&gt; collides with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -2720,8 +2719,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt; collides with &lt;Colliding Object&gt;
-				with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
+          <Name>When &lt;subject&gt; collides with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -2798,8 +2796,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>While &lt;subject&gt; is colliding with &lt;Colliding
-				Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
+      <Name>While &lt;subject&gt; is colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -2824,8 +2821,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>While &lt;subject&gt; is colliding with &lt;Colliding
-				Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
+          <Name>While &lt;subject&gt; is colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -2904,8 +2900,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;subject&gt; collides with &lt;Rigid Object&gt; while
-				moving</Name>
+      <Name>When &lt;subject&gt; collides with &lt;Rigid Object&gt; while moving</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -2930,8 +2925,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt; collides with &lt;Rigid Object&gt; while
-				moving</Name>
+          <Name>When &lt;subject&gt; collides with &lt;Rigid Object&gt; while moving</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -3059,8 +3053,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When a connection is terminated to &lt;subject&gt;&apos;s
-				server</Name>
+      <Name>When a connection is terminated to &lt;subject&gt;&apos;s server</Name>
       <Visible>true</Visible>
       <Labels>
         <Label></Label>
@@ -3087,8 +3080,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When a connection is terminated to &lt;subject&gt;&apos;s
-				server</Name>
+          <Name>When a connection is terminated to &lt;subject&gt;&apos;s server</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -3114,11 +3106,10 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>OnDrawGizmos on &lt;subject&gt; ... This is apparently used
-				with waypoints. Check it out.</Name>
-      <Visible>true</Visible>
+      <Name>OnDrawGizmos on &lt;subject&gt;</Name>
+      <Visible>false</Visible>
       <Labels>
-        <Label>Research</Label>
+        <Label></Label>
       </Labels>
       <Children>
         <StoryComponentContainer>
@@ -3142,8 +3133,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>OnDrawGizmos on &lt;subject&gt; ... This is apparently used
-				with waypoints. Check it out.</Name>
+          <Name>OnDrawGizmos on &lt;subject&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -3169,10 +3159,10 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>OnDrawGizmosSelected on &lt;subject&gt; See OnDrawGizmos</Name>
-      <Visible>true</Visible>
+      <Name>OnDrawGizmosSelected on &lt;subject&gt;</Name>
+      <Visible>false</Visible>
       <Labels>
-        <Label>Research</Label>
+        <Label></Label>
       </Labels>
       <Children>
         <StoryComponentContainer>
@@ -3196,7 +3186,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>OnDrawGizmosSelected on &lt;subject&gt; See OnDrawGizmos</Name>
+          <Name>OnDrawGizmosSelected on &lt;subject&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -3273,8 +3263,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When a connection attempt to &lt;subject&gt;&apos;s server
-				fails</Name>
+      <Name>When a connection attempt to &lt;subject&gt;&apos;s server fails</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -3299,8 +3288,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When a connection attempt to &lt;subject&gt;&apos;s server
-				fails</Name>
+          <Name>When a connection attempt to &lt;subject&gt;&apos;s server fails</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -3326,8 +3314,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When there is a problem connecting to &lt;subject&gt;&apos;s
-				MasterServer</Name>
+      <Name>When there is a problem connecting to &lt;subject&gt;&apos;s MasterServer</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -3352,8 +3339,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When there is a problem connecting to &lt;subject&gt;&apos;s
-				MasterServer</Name>
+          <Name>When there is a problem connecting to &lt;subject&gt;&apos;s MasterServer</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -3532,8 +3518,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;Master Server Event&gt; occurs on
-				&lt;subject&gt;&apos;s MasterServer</Name>
+      <Name>When &lt;Master Server Event&gt; occurs on &lt;subject&gt;&apos;s MasterServer</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children>
@@ -3558,8 +3543,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;Master Server Event&gt; occurs on
-				&lt;subject&gt;&apos;s MasterServer</Name>
+          <Name>When &lt;Master Server Event&gt; occurs on &lt;subject&gt;&apos;s MasterServer</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -3893,8 +3877,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;Mouse Button&gt; is released over &lt;subject&gt; it
-				entered</Name>
+      <Name>When &lt;Mouse Button&gt; is released over &lt;subject&gt; it entered</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -3919,8 +3902,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;Mouse Button&gt; is released over &lt;subject&gt; it
-				entered</Name>
+          <Name>When &lt;Mouse Button&gt; is released over &lt;subject&gt; it entered</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -4099,8 +4081,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When a player is disconnected from &lt;subject&gt;&apos;s
-				server</Name>
+      <Name>When a player is disconnected from &lt;subject&gt;&apos;s server</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -4125,8 +4106,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When a player is disconnected from &lt;subject&gt;&apos;s
-				server</Name>
+          <Name>When a player is disconnected from &lt;subject&gt;&apos;s server</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -4309,8 +4289,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When the camera &lt;subject&gt; finishes rendering
-				&lt;image&gt;</Name>
+      <Name>When the camera &lt;subject&gt; finishes rendering &lt;image&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -4335,8 +4314,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When the camera &lt;subject&gt; finishes rendering
-				&lt;image&gt;</Name>
+          <Name>When the camera &lt;subject&gt; finishes rendering &lt;image&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -4727,7 +4705,9 @@
     <CauseIt>
       <Name>After &lt;subject&gt; is created</Name>
       <Visible>true</Visible>
-      <Labels/>
+      <Labels>
+        <Label></Label>
+      </Labels>
       <Children>
         <StoryComponentContainer>
           <Name>&lt;#currentStoryPoint&gt; Active:</Name>
@@ -4905,8 +4885,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>a clone of &lt;Game Object&gt; created at the subject&apos;s
-				current location</Name>
+      <Name>a clone of &lt;Game Object&gt; created at the subject&apos;s current location</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -4914,8 +4893,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>a clone of &lt;Game Object&gt; created at the subject&apos;s
-				current location</Name>
+          <Name>a clone of &lt;Game Object&gt; created at the subject&apos;s current location</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>5</Id>
@@ -5146,9 +5124,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if button labelled &lt;Text&gt; on the screen at &lt;x&gt;,
-				&lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is
-				clicked</Name>
+      <Name>if button labelled &lt;Text&gt; on the screen at &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is clicked</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -5156,9 +5132,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if button labelled &lt;Text&gt; on the screen at &lt;x&gt;,
-				&lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is
-				clicked</Name>
+          <Name>if button labelled &lt;Text&gt; on the screen at &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is clicked</Name>
           <Visible>false</Visible>
           <Labels/>
           <Id>113</Id>
@@ -5458,8 +5432,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Draw a label with text &lt;Text&gt; at position &lt;x&gt;,
-				&lt;y&gt; that is &lt;width&gt; wide and &lt;length&gt; long</Name>
+      <Name>Draw a label with text &lt;Text&gt; at &lt;x&gt;, &lt;y&gt; that is &lt;width&gt; wide and &lt;length&gt; long</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -5467,8 +5440,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Draw a label with text &lt;Text&gt; at position &lt;x&gt;,
-				&lt;y&gt; that is &lt;width&gt; wide and &lt;length&gt; long</Name>
+          <Name>Draw a label with text &lt;Text&gt; at &lt;x&gt;, &lt;y&gt; that is &lt;width&gt; wide and &lt;length&gt; long</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>121</Id>
@@ -5546,8 +5518,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Draw a box at position &lt;x&gt;, &lt;y&gt; that is
-				&lt;width&gt; wide and &lt;length&gt; long</Name>
+      <Name>Draw a box at &lt;x&gt;, &lt;y&gt; that is &lt;width&gt; wide and &lt;length&gt; long</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -5555,8 +5526,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Draw a box at position &lt;x&gt;, &lt;y&gt; that is
-				&lt;width&gt; wide and &lt;length&gt; long</Name>
+          <Name>Draw a box at &lt;x&gt;, &lt;y&gt; that is &lt;width&gt; wide and &lt;length&gt; long</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>122</Id>
@@ -6062,8 +6032,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set &lt;Object&gt;&apos;s position to &lt;x&gt;, &lt;y&gt;,
-				&lt;z&gt;</Name>
+      <Name>Set &lt;Object&gt;&apos;s position to &lt;x&gt;, &lt;y&gt;, &lt;z&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -6071,8 +6040,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;Object&gt;&apos;s position to &lt;x&gt;, &lt;y&gt;,
-				&lt;z&gt;</Name>
+          <Name>Set &lt;Object&gt;&apos;s position to &lt;x&gt;, &lt;y&gt;, &lt;z&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>133</Id>
@@ -6137,8 +6105,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set &lt;Object&gt;&apos;s Euler Angles to &lt;x&gt;, &lt;y&gt;,
-				&lt;z&gt;</Name>
+      <Name>Set &lt;Object&gt;&apos;s Euler Angles to &lt;x&gt;, &lt;y&gt;, &lt;z&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -6146,8 +6113,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;Object&gt;&apos;s Euler Angles to &lt;x&gt;, &lt;y&gt;,
-				&lt;z&gt;</Name>
+          <Name>Set &lt;Object&gt;&apos;s Euler Angles to &lt;x&gt;, &lt;y&gt;, &lt;z&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>134</Id>
@@ -6310,8 +6276,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set &lt;Object&gt;&apos;s &lt;Animation&gt; wrap mode to
-				&lt;Wrap Mode&gt;</Name>
+      <Name>Set &lt;Object&gt;&apos;s &lt;Animation&gt; wrap mode to &lt;Wrap Mode&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -6319,8 +6284,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set &lt;Object&gt;&apos;s &lt;Animation&gt; wrap mode to
-				&lt;Wrap Mode&gt;</Name>
+          <Name>Set &lt;Object&gt;&apos;s &lt;Animation&gt; wrap mode to &lt;Wrap Mode&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>137</Id>
@@ -7326,8 +7290,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Fade in &lt;Object&gt;&apos;s &lt;Animation&gt; over
-				&lt;Number&gt; seconds</Name>
+      <Name>Fade in &lt;Object&gt;&apos;s &lt;Animation&gt; over &lt;Number&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -7335,8 +7298,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Fade in &lt;Object&gt;&apos;s &lt;Animation&gt; over
-				&lt;Number&gt; seconds</Name>
+          <Name>Fade in &lt;Object&gt;&apos;s &lt;Animation&gt; over &lt;Number&gt; seconds</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>160</Id>
@@ -7389,8 +7351,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Allow&gt; &lt;Object&gt;&apos;s default animation to play
-				automatically</Name>
+      <Name>&lt;Allow&gt; &lt;Object&gt;&apos;s default animation to play automatically</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -7398,8 +7359,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Allow&gt; &lt;Object&gt;&apos;s default animation to play
-				automatically</Name>
+          <Name>&lt;Allow&gt; &lt;Object&gt;&apos;s default animation to play automatically</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>161</Id>
@@ -8365,15 +8325,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>the smallest angle between &lt;Position One&gt; and
-				&lt;Position Two&gt;</Name>
+      <Name>the smallest angle between &lt;Position One&gt; and &lt;Position Two&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>the smallest angle between &lt;Position One&gt; and
-				&lt;Position Two&gt;</Name>
+          <Name>the smallest angle between &lt;Position One&gt; and &lt;Position Two&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>177</Id>
@@ -8625,8 +8583,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if button labelled &lt;Text&gt; on the screen at automatic
-				position is clicked</Name>
+      <Name>if button labelled &lt;Text&gt; on the screen at automatic position is clicked</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -8634,8 +8591,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if button labelled &lt;Text&gt; on the screen at automatic
-				position is clicked</Name>
+          <Name>if button labelled &lt;Text&gt; on the screen at automatic position is clicked</Name>
           <Visible>false</Visible>
           <Labels/>
           <Id>183</Id>
@@ -8665,9 +8621,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if button with image &lt;Image&gt; on the screen at &lt;x&gt;,
-				&lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is
-				clicked</Name>
+      <Name>if button with image &lt;Image&gt; on the screen at &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is clicked</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -8675,9 +8629,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if button with image &lt;Image&gt; on the screen at &lt;x&gt;,
-				&lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is
-				clicked</Name>
+          <Name>if button with image &lt;Image&gt; on the screen at &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is clicked</Name>
           <Visible>false</Visible>
           <Labels/>
           <Id>184</Id>
@@ -8755,8 +8707,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if button with image &lt;Image&gt; on the screen at automatic
-				position is clicked</Name>
+      <Name>if button with image &lt;Image&gt; on the screen at automatic position is clicked</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -8764,8 +8715,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if button with image &lt;Image&gt; on the screen at automatic
-				position is clicked</Name>
+          <Name>if button with image &lt;Image&gt; on the screen at automatic position is clicked</Name>
           <Visible>false</Visible>
           <Labels/>
           <Id>185</Id>
@@ -8795,9 +8745,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if button labelled &lt;Text&gt; on the screen at &lt;x&gt;,
-				&lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; with
-				initial value &lt;Enabled&gt;d is toggled</Name>
+      <Name>if button labelled &lt;Text&gt; on the screen at &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; with initial value &lt;Enabled&gt;d is toggled</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -8805,9 +8753,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if button labelled &lt;Text&gt; on the screen at &lt;x&gt;,
-				&lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; with
-				initial value &lt;Enabled&gt;d is toggled</Name>
+          <Name>if button labelled &lt;Text&gt; on the screen at &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; with initial value &lt;Enabled&gt;d is toggled</Name>
           <Visible>false</Visible>
           <Labels/>
           <Id>186</Id>
@@ -8901,8 +8847,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if button labelled &lt;Text&gt; on the screen at automatic
-				position with initial value &lt;Enabled&gt;d is toggled</Name>
+      <Name>if button labelled &lt;Text&gt; on the screen at automatic position with initial value &lt;Enabled&gt;d is toggled</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -8910,8 +8855,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if button labelled &lt;Text&gt; on the screen at automatic
-				position with initial value &lt;Enabled&gt;d is toggled</Name>
+          <Name>if button labelled &lt;Text&gt; on the screen at automatic position with initial value &lt;Enabled&gt;d is toggled</Name>
           <Visible>false</Visible>
           <Labels/>
           <Id>187</Id>
@@ -8957,9 +8901,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if button with image &lt;Image&gt; on the screen at &lt;x&gt;,
-				&lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; with
-				initial value &lt;Enabled&gt;d is toggled</Name>
+      <Name>if button with image &lt;Image&gt; on the screen at &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; with initial value &lt;Enabled&gt;d is toggled</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -8967,9 +8909,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if button with image &lt;Image&gt; on the screen at &lt;x&gt;,
-				&lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; with
-				initial value &lt;Enabled&gt;d is toggled</Name>
+          <Name>if button with image &lt;Image&gt; on the screen at &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; with initial value &lt;Enabled&gt;d is toggled</Name>
           <Visible>false</Visible>
           <Labels/>
           <Id>188</Id>
@@ -9063,8 +9003,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if button with image &lt;Image&gt; on the screen at automatic
-				position with initial value &lt;Enabled&gt;d is toggled</Name>
+      <Name>if button with image &lt;Image&gt; on the screen at automatic position with initial value &lt;Enabled&gt;d is toggled</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -9072,8 +9011,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if button with image &lt;Image&gt; on the screen at automatic
-				position with initial value &lt;Enabled&gt;d is toggled</Name>
+          <Name>if button with image &lt;Image&gt; on the screen at automatic position with initial value &lt;Enabled&gt;d is toggled</Name>
           <Visible>false</Visible>
           <Labels/>
           <Id>189</Id>
@@ -9119,9 +9057,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if button labelled &lt;Text&gt; on the screen at &lt;x&gt;,
-				&lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is held
-				down</Name>
+      <Name>if button labelled &lt;Text&gt; on the screen at &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is held down</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -9129,9 +9065,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if button labelled &lt;Text&gt; on the screen at &lt;x&gt;,
-				&lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is held
-				down</Name>
+          <Name>if button labelled &lt;Text&gt; on the screen at &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is held down</Name>
           <Visible>false</Visible>
           <Labels/>
           <Id>190</Id>
@@ -9209,8 +9143,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if button labelled &lt;Text&gt; on the screen at automatic
-				position is held down</Name>
+      <Name>if button labelled &lt;Text&gt; on the screen at automatic position is held down</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -9218,8 +9151,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if button labelled &lt;Text&gt; on the screen at automatic
-				position is held down</Name>
+          <Name>if button labelled &lt;Text&gt; on the screen at automatic position is held down</Name>
           <Visible>false</Visible>
           <Labels/>
           <Id>191</Id>
@@ -9249,9 +9181,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if button with image &lt;Image&gt; on the screen at &lt;x&gt;,
-				&lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is held
-				down</Name>
+      <Name>if button with image &lt;Image&gt; on the screen at &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is held down</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -9259,9 +9189,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if button with image &lt;Image&gt; on the screen at &lt;x&gt;,
-				&lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is held
-				down</Name>
+          <Name>if button with image &lt;Image&gt; on the screen at &lt;x&gt;, &lt;y&gt; with width &lt;width&gt; and height &lt;height&gt; is held down</Name>
           <Visible>false</Visible>
           <Labels/>
           <Id>192</Id>
@@ -9339,8 +9267,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if button with image &lt;Image&gt; on the screen at automatic
-				position is held down</Name>
+      <Name>if button with image &lt;Image&gt; on the screen at automatic position is held down</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -9348,8 +9275,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if button with image &lt;Image&gt; on the screen at automatic
-				position is held down</Name>
+          <Name>if button with image &lt;Image&gt; on the screen at automatic position is held down</Name>
           <Visible>false</Visible>
           <Labels/>
           <Id>193</Id>
@@ -9455,8 +9381,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Translate &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt;
-				upwards, and &lt;z&gt; forwards</Name>
+      <Name>Move &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards without accounting for frame rate</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -9464,8 +9389,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Translate &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt;
-				upwards, and &lt;z&gt; forwards</Name>
+          <Name>Move &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards without accounting for frame rate</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>196</Id>
@@ -9501,7 +9425,6 @@
               <Labels/>
               <Types>
                 <Type>GameObject</Type>
-                <Type>Prefab</Type>
               </Types>
             </KnowIt>
           </Parameters>
@@ -9529,8 +9452,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Rotate &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards,
-				and &lt;z&gt; forwards</Name>
+      <Name>Rotate &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards without accounting for frame rate</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -9538,8 +9460,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Rotate &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards,
-				and &lt;z&gt; forwards</Name>
+          <Name>Rotate &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards without accounting for frame rate</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>198</Id>
@@ -10323,8 +10244,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Draw a box at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide
-				and &lt;Height&gt; tall with the text &lt;Text&gt;</Name>
+      <Name>Draw a box at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall with the text &lt;Text&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -10332,8 +10252,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Draw a box at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide
-				and &lt;Height&gt; tall with the text &lt;Text&gt;</Name>
+          <Name>Draw a box at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall with the text &lt;Text&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>224</Id>
@@ -10400,42 +10319,6 @@
               </Scope>
               <Literal>), </Literal>
               <Scope data="ARGUMENT" ref="Text">
-                <Fragment data="NAME"/>
-              </Scope>
-              <Literal>);</Literal>
-            </Line>
-          </Code>
-        </CodeBlockSource>
-      </CodeBlocks>
-    </ScriptIt>
-    <ScriptIt>
-      <Name>Load Scene &lt;Level&gt;</Name>
-      <Visible>true</Visible>
-      <Labels>
-        <Label>NOW</Label>
-      </Labels>
-      <Children/>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>Load Scene &lt;Level&gt;</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Id>226</Id>
-          <Types/>
-          <Parameters>
-            <KnowIt>
-              <Name>Level</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>String</Type>
-              </Types>
-            </KnowIt>
-          </Parameters>
-          <Code>
-            <Line>
-              <Literal>Application.LoadLevel(</Literal>
-              <Scope data="ARGUMENT" ref="Level">
                 <Fragment data="NAME"/>
               </Scope>
               <Literal>);</Literal>
@@ -10718,8 +10601,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set GUI background colour to RGB values &lt;Red&gt;,
-				&lt;Green&gt;, &lt;Blue&gt;</Name>
+      <Name>Set GUI background colour to RGB values &lt;Red&gt;,&lt;Green&gt;, &lt;Blue&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -10727,8 +10609,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set GUI background colour to RGB values &lt;Red&gt;,
-				&lt;Green&gt;, &lt;Blue&gt;</Name>
+          <Name>Set GUI background colour to RGB values &lt;Red&gt;,&lt;Green&gt;, &lt;Blue&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>231</Id>
@@ -10780,8 +10661,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set GUI text colour to RGB values &lt;Red&gt;, &lt;Green&gt;,
-				&lt;Blue&gt;</Name>
+      <Name>Set GUI text colour to RGB values &lt;Red&gt;, &lt;Green&gt;, &lt;Blue&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -10789,8 +10669,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set GUI text colour to RGB values &lt;Red&gt;, &lt;Green&gt;,
-				&lt;Blue&gt;</Name>
+          <Name>Set GUI text colour to RGB values &lt;Red&gt;, &lt;Green&gt;, &lt;Blue&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>232</Id>
@@ -10911,56 +10790,216 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[61]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[51]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[104]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[42]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[107]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[70]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[47]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[4]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[88]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[41]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[118]"/>
+    <ScriptIt>
+      <Name>Move &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Move &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>235</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>y</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>z</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>var deltaTime : float = Time.deltaTime;</Literal>
+            </Line>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform.Translate(</Literal>
+              <Scope data="ARGUMENT" ref="x">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal> * deltaTime, </Literal>
+              <Scope data="ARGUMENT" ref="y">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal> * deltaTime, </Literal>
+              <Scope data="ARGUMENT" ref="z">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal> * deltaTime);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Rotate &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Rotate &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>236</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>y</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>z</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>var deltaTime : float = Time.deltaTime;</Literal>
+            </Line>
+            <Line>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform.Rotate(</Literal>
+              <Scope data="ARGUMENT" ref="x">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal> * deltaTime,</Literal>
+              <Scope data="ARGUMENT" ref="y">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal> * deltaTime,</Literal>
+              <Scope data="ARGUMENT" ref="z">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal> * deltaTime);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
     <ScriptIt reference="/LibraryModel/Effects/ScriptIt[103]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[50]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[23]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[21]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[106]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[49]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[72]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[97]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[86]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[36]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[40]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[46]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[48]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[71]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[91]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[8]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[94]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[104]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[92]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[95]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[45]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[44]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[20]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[93]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[7]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[69]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[102]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[24]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[57]"/>
     <ScriptIt reference="/LibraryModel/Effects/ScriptIt[22]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[104]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[8]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[102]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[86]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[47]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[41]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[20]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[61]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[23]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[107]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[94]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[92]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[36]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[49]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[69]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[48]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[50]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[72]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[46]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[40]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[106]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[97]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[93]"/>
     <ScriptIt reference="/LibraryModel/Effects/ScriptIt[101]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[7]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[95]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[104]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[70]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[42]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[24]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[21]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[91]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[4]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[45]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[51]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[88]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[44]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[57]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[71]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[117]"/>
   </Effects>
   <DescribeIts>
     <DescribeIt>
-      <Name>Positions Equal</Name>
+      <Name>Is Active</Name>
       <Types>
         <Type>question</Type>
       </Types>
@@ -10973,43 +11012,7 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[72]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Screen Width</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[2]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>y</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[3]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[103]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -11025,99 +11028,9 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[2]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[41]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Mouse Button Clicked</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[5]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[8]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Audio</Name>
-      <Types>
-        <Type>AudioClip</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[6]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[95]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>x</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[44]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>clone</Name>
-      <Types>
-        <Type>GameObject</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[8]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[4]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Product</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[9]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[23]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[92]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -11133,16 +11046,16 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[10]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[3]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Has Failed</Name>
+      <Name>clone</Name>
       <Types>
-        <Type>question</Type>
+        <Type>GameObject</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -11151,16 +11064,16 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[11]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[4]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[4]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Mouse Button Pressed</Name>
+      <Name>Clamped Number</Name>
       <Types>
-        <Type>question</Type>
+        <Type>float</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -11169,9 +11082,81 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[12]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[5]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[7]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[93]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Random Number</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[6]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[48]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Distance</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[70]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Quotient</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[8]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[24]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>y</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[9]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[103]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -11187,32 +11172,14 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[13]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[10]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[69]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[47]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Is Playing</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[14]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[51]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Delta Time</Name>
+      <Name>Number</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -11223,9 +11190,63 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[11]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[91]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[41]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Angle</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[12]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[71]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Audio</Name>
+      <Types>
+        <Type>AudioClip</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[13]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[95]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Sum</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[14]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[21]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -11241,9 +11262,27 @@
       <PathMap>
         <Entry>
           <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[97]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>z</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[16]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[42]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[46]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -11284,9 +11323,9 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Text</Name>
+      <Name>Positions Equal</Name>
       <Types>
-        <Type>String</Type>
+        <Type>question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -11297,187 +11336,7 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[19]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[49]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Combined Text</Name>
-      <Types>
-        <Type>String</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[20]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[50]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>GUI Changed</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[21]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[118]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Is Active</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[22]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>z Position</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[23]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[104]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Quotient</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[24]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[24]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Game Object</Name>
-      <Types>
-        <Type>GameObject</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[25]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[97]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Clamped Number</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[26]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[93]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Key Pressed</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[27]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[94]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Screen Vertical Center</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[107]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Screen Height</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[20]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[72]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -11493,16 +11352,16 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[30]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[20]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[102]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Clone</Name>
+      <Name>Text</Name>
       <Types>
-        <Type>GameObject</Type>
+        <Type>String</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -11511,63 +11370,9 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[31]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[21]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[101]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>z</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[32]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[46]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>z</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[33]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[104]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Sum</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[34]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[21]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[40]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -11583,16 +11388,16 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[35]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[22]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[22]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Objects Equal</Name>
+      <Name>Screen Width</Name>
       <Types>
-        <Type>question</Type>
+        <Type>float</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -11601,9 +11406,9 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[36]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[23]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[36]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -11619,16 +11424,16 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[37]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[24]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[106]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Input Axis</Name>
+      <Name>Mouse Button Pressed</Name>
       <Types>
-        <Type>float</Type>
+        <Type>question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -11637,16 +11442,16 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[38]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[25]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[88]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[7]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Number</Name>
+      <Name>Game Object</Name>
       <Types>
-        <Type>float</Type>
+        <Type>GameObject</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -11655,14 +11460,14 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[39]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[26]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[92]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[42]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Random Number</Name>
+      <Name>x</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -11673,9 +11478,9 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[40]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[27]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[48]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[44]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -11705,13 +11510,13 @@
                     <Name>on screen at</Name>
                     <Successors>
                       <DescribeItNode>
-                        <Name>automatic position</Name>
+                        <Name>specific position</Name>
                         <Successors>
                           <DescribeItNode>
                             <Name>is</Name>
                             <Successors>
                               <DescribeItNode>
-                                <Name>toggled</Name>
+                                <Name>clicked</Name>
                                 <Successors/>
                               </DescribeItNode>
                               <DescribeItNode>
@@ -11719,7 +11524,7 @@
                                 <Successors/>
                               </DescribeItNode>
                               <DescribeItNode>
-                                <Name>clicked</Name>
+                                <Name>toggled</Name>
                                 <Successors/>
                               </DescribeItNode>
                             </Successors>
@@ -11727,9 +11532,9 @@
                         </Successors>
                       </DescribeItNode>
                       <DescribeItNode>
-                        <Name>specific position</Name>
+                        <Name>automatic position</Name>
                         <Successors>
-                          <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+                          <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
                         </Successors>
                       </DescribeItNode>
                     </Successors>
@@ -11752,7 +11557,7 @@
                   </Types>
                 </KnowIt>
                 <Successors>
-                  <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+                  <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
                 </Successors>
               </DescribeItNode>
             </Successors>
@@ -11762,152 +11567,278 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[86]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[81]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[83]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[82]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[80]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[79]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[76]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[85]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[78]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[10]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[81]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[86]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[76]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[82]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[79]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[83]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[85]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[77]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[10]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[80]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Text</Name>
+      <Name>z</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[104]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Key Pressed</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[30]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[94]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Mouse Button Clicked</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[31]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[8]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Screen Height</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[32]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[20]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Product</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[33]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[23]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Objects Equal</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[34]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[36]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Position</Name>
+      <Types>
+        <Type>Vector3</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[35]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[69]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Combined Text</Name>
       <Types>
         <Type>String</Type>
       </Types>
@@ -11918,9 +11849,117 @@
       <PathMap>
         <Entry>
           <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[36]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[50]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>GUI Changed</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[37]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[117]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Input Axis</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[38]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[88]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>z Position</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[39]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[104]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Delta Time</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[40]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[91]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Clone</Name>
+      <Types>
+        <Type>GameObject</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[101]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Screen Vertical Center</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[42]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[40]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[107]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -11943,9 +11982,9 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Position</Name>
+      <Name>Text</Name>
       <Types>
-        <Type>Vector3</Type>
+        <Type>String</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -11956,14 +11995,14 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[44]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[47]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[49]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Angle</Name>
+      <Name>Has Failed</Name>
       <Types>
-        <Type>float</Type>
+        <Type>question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -11974,14 +12013,14 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[45]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[71]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Distance</Name>
+      <Name>Is Playing</Name>
       <Types>
-        <Type>float</Type>
+        <Type>question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -11992,7 +12031,7 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[46]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[70]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[51]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
