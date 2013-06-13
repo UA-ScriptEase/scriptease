@@ -209,9 +209,9 @@ public class ResourceTree extends JPanel {
 		}
 
 		final String dialogueType;
-		final Map<String, List<Resource>> constantMap;
+		final Map<String, List<Resource>> typesToResources;
 
-		constantMap = new TreeMap<String, List<Resource>>();
+		typesToResources = new TreeMap<String, List<Resource>>();
 		dialogueType = this.getDialogueType();
 
 		// Find constants that match the filters.
@@ -222,28 +222,30 @@ public class ResourceTree extends JPanel {
 					&& this.matchesFilters(constant)) {
 				for (String type : constant.getTypes()) {
 
-					List<Resource> constantList = constantMap.get(type);
+					List<Resource> constantList = typesToResources.get(type);
 					if (constantList == null) {
 						constantList = new ArrayList<Resource>();
 					}
 
 					constantList.add(constant);
-					constantMap.put(type, constantList);
+					typesToResources.put(type, constantList);
 				}
 			}
 		}
 
-		// TODO Reenable this after merge
+		// Add the dialogue type even if there are no dialogues.
 		if (StringOp.exists(dialogueType)
-				&& constantMap.get(dialogueType) == null) {
-			constantMap.put(dialogueType, new ArrayList<Resource>());
+				&& typesToResources.get(dialogueType) == null
+				// Check to make sure we aren't hiding dialogue types.
+				&& this.filterTypes.contains(dialogueType)) {
+			typesToResources.put(dialogueType, new ArrayList<Resource>());
 		}
 
-		for (String type : constantMap.keySet()) {
+		for (String type : typesToResources.keySet()) {
 			final List<Resource> constantList;
 			final String typeName;
 
-			constantList = constantMap.get(type);
+			constantList = typesToResources.get(type);
 			typeName = model.getTypeDisplayText(type);
 
 			Collections.sort(constantList, constantSorter);

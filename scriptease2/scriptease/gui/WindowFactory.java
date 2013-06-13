@@ -1098,7 +1098,9 @@ public final class WindowFactory {
 		resizeLibrarySplit = new Runnable() {
 			@Override
 			public void run() {
-				librarySplit.setDividerLocation(0.5);
+				// We need to use the setDividerLocation(int) method instead of
+				// setDividerLocation(double). THANKS, JAVA!
+				librarySplit.setDividerLocation(librarySplit.getHeight()/2);
 			}
 		};
 
@@ -1115,10 +1117,6 @@ public final class WindowFactory {
 
 				if (activated
 						|| (eventType == SEModelEvent.Type.REMOVED && activeModel == null)) {
-
-					if (activated && activeModel instanceof StoryModel) {
-						SwingUtilities.invokeLater(resizeLibrarySplit);
-					}
 
 					final JMenuBar bar;
 
@@ -1139,6 +1137,10 @@ public final class WindowFactory {
 					// We need to revalidate the menu bar.
 					// http://bugs.sun.com/view_bug.do?bug_id=4949810
 					bar.revalidate();
+
+					if (activated && activeModel instanceof StoryModel) {
+						SwingUtilities.invokeLater(resizeLibrarySplit);
+					}
 				}
 			}
 		};
@@ -1170,9 +1172,10 @@ public final class WindowFactory {
 								GroupLayout.PREFERRED_SIZE));
 
 		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
-		SwingUtilities.invokeLater(resizeLibrarySplit);
 
 		frame.getContentPane().add(content);
+
+		SwingUtilities.invokeLater(resizeLibrarySplit);
 
 		return frame;
 	}
