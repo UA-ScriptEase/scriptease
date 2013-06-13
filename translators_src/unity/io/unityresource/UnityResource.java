@@ -434,8 +434,7 @@ public class UnityResource extends Resource {
 			final UnityResource other = (UnityResource) obj;
 
 			return this.topLevelPropertyMap.equals(other.topLevelPropertyMap)
-					&& this.tag.equals(other.tag)
-					&& this.uniqueID == other.uniqueID;
+					&& this.getTemplateID().equals(other.getTemplateID());
 		}
 		return false;
 	}
@@ -443,6 +442,6 @@ public class UnityResource extends Resource {
 	@Override
 	public String toString() {
 		return "UnityResource [" + this.getName() + ", " + this.getType()
-				+ ", " + this.getUniqueID() + "]";
+				+ ", " + this.getUniqueID() + this.getTemplateID() + "]";
 	}
 }
