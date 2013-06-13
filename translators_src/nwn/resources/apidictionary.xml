@@ -2944,38 +2944,6 @@
             </ScriptIt>
           </Binding>
         </KnowIt>
-        <KnowIt>
-          <Name>Lock DC</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>float</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt>
-              <Name>Lock DC</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Children/>
-              <CodeBlocks>
-                <CodeBlockSource>
-                  <Name>Lock DC</Name>
-                  <Visible>true</Visible>
-                  <Labels/>
-                  <Id>59</Id>
-                  <Types>
-                    <Type>float</Type>
-                  </Types>
-                  <Code>
-                    <Line>
-                      <Literal>return IntToFloat(GetLockLockDC());</Literal>
-                    </Line>
-                  </Code>
-                </CodeBlockSource>
-              </CodeBlocks>
-            </ScriptIt>
-          </Binding>
-        </KnowIt>
       </Implicits>
     </Slot>
     <Slot>
@@ -5140,7 +5108,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;subject&gt; is locked with &lt;lock DC&gt; by &lt;locker&gt;</Name>
+      <Name>When &lt;subject&gt; is locked by &lt;locker&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -5165,7 +5133,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt; is locked with &lt;lock DC&gt; by &lt;locker&gt;</Name>
+          <Name>When &lt;subject&gt; is locked by &lt;locker&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>

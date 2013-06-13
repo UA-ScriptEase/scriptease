@@ -31,6 +31,8 @@ public class TypeWidget extends JToggleButton {
 		final int baseFontSize;
 		final int fontSize;
 		final String typeName;
+		final String widgetText;
+
 		final SEModel model;
 
 		this.setUI(TypeWidgetUI.getInstance());
@@ -58,40 +60,29 @@ public class TypeWidget extends JToggleButton {
 
 		this.type = type;
 
-		if (model != null)
-			typeName = model.getTypeDisplayText(this.type);
-		else
-			typeName = "";
+		if (model != null && StringOp.exists(type)) {
+			final String widgetName = model.getTypeWidgetName(type);
 
-		this.setTypeText(type);
+			typeName = model.getTypeDisplayText(this.type);
+
+			if (StringOp.exists(widgetName)) {
+				widgetText = widgetName;
+			} else {
+				if (!model.getTypeEnumeratedValues(type).isEmpty())
+					widgetText = GameType.DEFAULT_LIST_WIDGET;
+				else
+					widgetText = type.substring(0, 2).toUpperCase();
+			}
+		} else {
+			widgetText = "!";
+			typeName = "Type " + type + " not found.";
+		}
+
+		this.setEnabled(false);
+		this.setText(widgetText);
 		this.setToolTipText(typeName);
 
 		this.setSize(this.getPreferredSize());
-	}
-
-	private void setTypeText(String type) {
-		if (type.equals("")) {
-			// Unknown type. Translator is probably not loaded.
-			this.setText("!");
-			this.setEnabled(false);
-		} else {
-			final SEModel model;
-
-			model = SEModelManager.getInstance().getActiveModel();
-
-			if (model != null) {
-				final String widgetName = model.getTypeWidgetName(type);
-
-				if (StringOp.exists(widgetName)) {
-					this.setText(widgetName);
-				} else {
-					if (!model.getTypeEnumeratedValues(type).isEmpty())
-						this.setText(GameType.DEFAULT_LIST_WIDGET);
-					else
-						this.setText(type.substring(0, 2).toUpperCase());
-				}
-			}
-		}
 	}
 
 	/**
