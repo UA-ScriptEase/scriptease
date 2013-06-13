@@ -55,7 +55,7 @@ public final class UnityProject extends GameModule {
 
 	// Note: this used to be static, but we can't make it static since we want
 	// to be able to work on multiple projects at the same time.
-	private final Map<String, File> guidsToMetaFiles;
+	private Map<String, File> guidsToMetaFiles;
 
 	private File projectLocation;
 	// The nice thing about Unity is that it uses multiple files instead of one,
@@ -63,11 +63,11 @@ public final class UnityProject extends GameModule {
 	// directory where all of our ScriptEase generated stuff is stored.
 	private File scripteaseGeneratedDirectory;
 
-	private final Collection<File> includeFiles;
-	private final Collection<UnityFile> scenes;
-	private final Collection<UnityFile> prefabs;
-	private final Collection<Resource> resources;
-	private final Collection<UnityScript> scripts;
+	private Collection<File> includeFiles;
+	private Collection<UnityFile> scenes;
+	private Collection<UnityFile> prefabs;
+	private Collection<Resource> resources;
+	private Collection<UnityScript> scripts;
 
 	/**
 	 * Creates a new UnityProjects with no scenes or scripts added.
