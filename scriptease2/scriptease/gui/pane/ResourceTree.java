@@ -171,10 +171,23 @@ public class ResourceTree extends JPanel {
 	 * 
 	 * @param resource
 	 */
-	private void notifiyObservers(Resource resource) {
+	private void notifyResourceSelected(Resource resource) {
 		for (ResourceTreeObserver observer : this.observerManager
 				.getObservers()) {
 			observer.resourceSelected(resource);
+		}
+	}
+
+	/**
+	 * Notifies all {@link ResourceTreeObserver}s of the edit button getting
+	 * clicked.
+	 * 
+	 * @param resource
+	 */
+	private void notifyEditButtonClicked(Resource resource) {
+		for (ResourceTreeObserver observer : this.observerManager
+				.getObservers()) {
+			observer.resourceEditButtonPressed(resource);
 		}
 	}
 
@@ -484,8 +497,7 @@ public class ResourceTree extends JPanel {
 		editDialogue.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-
+				ResourceTree.this.notifyEditButtonClicked(line);
 			}
 		});
 
@@ -629,7 +641,7 @@ public class ResourceTree extends JPanel {
 					setResourcePanelBackground(selectedResource,
 							ScriptEaseUI.SELECTED_COLOUR);
 
-					ResourceTree.this.notifiyObservers(selectedResource);
+					ResourceTree.this.notifyResourceSelected(selectedResource);
 				}
 			});
 
