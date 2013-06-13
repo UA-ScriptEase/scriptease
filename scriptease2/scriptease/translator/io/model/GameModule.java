@@ -236,8 +236,8 @@ public abstract class GameModule {
 					final List<CodeBlock> bucket;
 					final List<CodeBlock> existingBucket;
 
-					slot = codeBlock.getSlot();
 					subject = codeBlock.getSubject();
+					slot = codeBlock.getSlot();
 					key = subject.getBinding().toString() + slot;
 					bucket = new ArrayList<CodeBlock>();
 					existingBucket = subjectToCodeBlocks.get(key);
