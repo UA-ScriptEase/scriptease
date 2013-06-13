@@ -9,9 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
 
-import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.StatusObserver;
@@ -65,20 +63,10 @@ public final class PanelFactory {
 		final JSplitPane librarySplitPane;
 		final JPanel libraryPanel;
 		final JPanel resourcePanel;
-		final Runnable resizeSplitPane;
-
-		final SEModelObserver storyLibraryPaneObserver;
 
 		librarySplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		resourcePanel = ResourcePanel.getInstance();
 		libraryPanel = new JPanel();
-		// We need to invoke a runnable for this later because Swing.
-		resizeSplitPane = new Runnable() {
-			@Override
-			public void run() {
-				librarySplitPane.setDividerLocation(0.5);
-			}
-		};
 
 		libraryPanel
 				.setLayout(new BoxLayout(libraryPanel, BoxLayout.PAGE_AXIS));
@@ -90,21 +78,6 @@ public final class PanelFactory {
 		librarySplitPane.setTopComponent(libraryPanel);
 
 		librarySplitPane.setResizeWeight(0.5);
-
-		storyLibraryPaneObserver = new SEModelObserver() {
-			public void modelChanged(SEModelEvent event) {
-				if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
-					if (event.getPatternModel() instanceof StoryModel) {
-						SwingUtilities.invokeLater(resizeSplitPane);
-					}
-				}
-			}
-		};
-
-		SEModelManager.getInstance().addSEModelObserver(librarySplitPane,
-				storyLibraryPaneObserver);
-
-		SwingUtilities.invokeLater(resizeSplitPane);
 
 		return librarySplitPane;
 	}

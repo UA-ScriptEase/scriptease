@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.StoryAdapter;
-import scriptease.controller.get.VariableGetter;
+import scriptease.controller.StoryComponentUtils;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -60,13 +60,13 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	 */
 	@Override
 	public Collection<KnowIt> getVariables() {
-		final VariableGetter variableGetter = new VariableGetter();
+		final Collection<KnowIt> variables = new ArrayList<KnowIt>();
 
 		for (StoryComponent child : this.getChildren()) {
-			child.process(variableGetter);
+			variables.addAll(StoryComponentUtils.getVariables(child));
 		}
 
-		return variableGetter.getObjects();
+		return variables;
 	}
 
 	@Override
