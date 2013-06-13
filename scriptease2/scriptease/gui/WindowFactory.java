@@ -58,6 +58,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -1064,9 +1065,12 @@ public final class WindowFactory {
 		final JPanel middlePane;
 
 		final JSplitPane middleSplit;
+		final JSplitPane librarySplit;
 
 		final JComponent statusBar;
 		final GroupLayout contentLayout;
+
+		final Runnable resizeLibrarySplit;
 
 		final SEModelObserver modelObserver;
 
@@ -1084,22 +1088,38 @@ public final class WindowFactory {
 		middlePane = new JPanel();
 
 		middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		librarySplit = PanelFactory.getInstance().buildLibrarySplitPane();
 
 		statusBar = PanelFactory.getInstance().buildStatusPanel();
 
 		contentLayout = new GroupLayout(content);
+
+		// We need to invoke a runnable for this later because Swing.
+		resizeLibrarySplit = new Runnable() {
+			@Override
+			public void run() {
+				librarySplit.setDividerLocation(0.5);
+			}
+		};
 
 		modelObserver = new SEModelObserver() {
 			@Override
 			public void modelChanged(SEModelEvent event) {
 				final SEModelEvent.Type eventType;
 				final SEModel activeModel;
+				final boolean activated;
 
 				eventType = event.getEventType();
 				activeModel = SEModelManager.getInstance().getActiveModel();
+				activated = eventType == SEModelEvent.Type.ACTIVATED;
 
-				if (eventType == SEModelEvent.Type.ACTIVATED
+				if (activated
 						|| (eventType == SEModelEvent.Type.REMOVED && activeModel == null)) {
+
+					if (activated && activeModel instanceof StoryModel) {
+						SwingUtilities.invokeLater(resizeLibrarySplit);
+					}
+
 					final JMenuBar bar;
 
 					bar = MenuFactory.createMainMenuBar(activeModel);
@@ -1132,8 +1152,7 @@ public final class WindowFactory {
 		content.setLayout(contentLayout);
 
 		// Compressed Layout
-		middleSplit.setTopComponent(PanelFactory.getInstance()
-				.buildLibrarySplitPane());
+		middleSplit.setTopComponent(librarySplit);
 		middleSplit.setBottomComponent(middlePane);
 
 		content.add(middleSplit);
@@ -1151,6 +1170,7 @@ public final class WindowFactory {
 								GroupLayout.PREFERRED_SIZE));
 
 		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
+		SwingUtilities.invokeLater(resizeLibrarySplit);
 
 		frame.getContentPane().add(content);
 

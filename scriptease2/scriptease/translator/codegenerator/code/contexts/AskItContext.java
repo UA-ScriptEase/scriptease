@@ -2,7 +2,7 @@ package scriptease.translator.codegenerator.code.contexts;
 
 import java.util.Collection;
 
-import scriptease.controller.get.VariableGetter;
+import scriptease.controller.StoryComponentUtils;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -59,11 +59,7 @@ public class AskItContext extends StoryComponentContext {
 	 */
 	@Override
 	public Collection<KnowIt> getVariables() {
-		final VariableGetter knowItGetter = new VariableGetter();
-
-		this.getComponent().process(knowItGetter);
-
-		return knowItGetter.getObjects();
+		return StoryComponentUtils.getVariables(this.getComponent());
 	}
 
 	@Override

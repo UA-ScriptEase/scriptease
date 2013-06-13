@@ -5,12 +5,11 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
-import scriptease.controller.get.VariableGetter;
+import scriptease.controller.StoryComponentUtils;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
-import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -99,13 +98,13 @@ public class CodeBlockContext extends Context {
 
 	@Override
 	public Collection<KnowIt> getVariables() {
-		VariableGetter knowItGetter = new VariableGetter();
-		Collection<StoryComponent> children = ((ComplexStoryComponent) this.codeBlock
-				.getOwner()).getChildren();
-		for (StoryComponent child : children) {
-			child.process(knowItGetter);
+		final Collection<KnowIt> variables = new ArrayList<KnowIt>();
+
+		for (StoryComponent child : this.codeBlock.getOwner().getChildren()) {
+			variables.addAll(StoryComponentUtils.getVariables(child));
 		}
-		return knowItGetter.getObjects();
+
+		return variables;
 	}
 
 	private Collection<KnowIt> getParameterCollection() {

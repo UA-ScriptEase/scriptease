@@ -222,7 +222,6 @@ public final class UnityProject extends GameModule {
 				"The unity translator can't externally test.");
 	}
 
-	@SuppressWarnings("serial")
 	@Override
 	public void load(boolean readOnly) throws IOException {
 		final FileFilter sceneFileFilter = new FileFilter() {
