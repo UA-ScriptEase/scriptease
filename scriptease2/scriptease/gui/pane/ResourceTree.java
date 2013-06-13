@@ -382,9 +382,10 @@ public class ResourceTree extends JPanel {
 		objectPanel.add(gameObjectBindingWidget);
 
 		if (resource.getTypes().contains(this.getDialogueType())
-				&& resource instanceof DialogueLine)
+				&& resource instanceof DialogueLine) {
+			objectPanel.add(this.editDialogueButton((DialogueLine) resource));
 			objectPanel.add(this.removeDialogueButton((DialogueLine) resource));
-
+		}
 		// Need to do this because BoxLayout respects maximum size.
 		objectPanel.setMaximumSize(objectPanel.getPreferredSize());
 
@@ -477,6 +478,20 @@ public class ResourceTree extends JPanel {
 		return addDialogue;
 	}
 
+	private JButton editDialogueButton(final DialogueLine line) {
+		final JButton editDialogue = ComponentFactory.buildEditButton();
+
+		editDialogue.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		return editDialogue;
+	}
+
 	private JButton removeDialogueButton(final DialogueLine line) {
 		final JButton removeDialogue = ComponentFactory.buildRemoveButton();
 
@@ -563,13 +578,7 @@ public class ResourceTree extends JPanel {
 			categoryPanel.setOpaque(false);
 
 			categoryPanel.add(categoryLabel);
-
-			categoryPanel.add(new JPanel() {
-				{
-					this.setOpaque(false);
-					this.setMaximumSize(new Dimension(25, 25));
-				}
-			});
+			categoryPanel.add(ComponentFactory.buildSpacer(15, 15));
 
 			final String dialogueType = ResourceTree.this.getDialogueType();
 

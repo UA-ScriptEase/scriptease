@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -15,7 +16,9 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
@@ -44,6 +47,24 @@ import scriptease.util.GUIOp;
  * 
  */
 public final class ComponentFactory {
+
+	/**
+	 * Creates a spacer, which is really just a transparent JPanel with a
+	 * specified width and height. But space is like totally rad, man!
+	 * 
+	 * @param width
+	 * @param height
+	 * @return
+	 */
+	public static JComponent buildSpacer(int width, int height) {
+		final JPanel spacer = new JPanel();
+
+		spacer.setOpaque(false);
+		spacer.setMaximumSize(new Dimension(width, height));
+
+		return spacer;
+	}
+
 	/**
 	 * Builds a ToolBar to edit graphs with. Includes buttons for selecting
 	 * nodes, adding and deleting nodes, and adding and deleting paths. The
@@ -140,7 +161,7 @@ public final class ComponentFactory {
 	}
 
 	private static enum ButtonType {
-		ADD, REMOVE;
+		ADD, REMOVE, EDIT;
 	}
 
 	public static JButton buildRemoveButton() {
@@ -149,6 +170,10 @@ public final class ComponentFactory {
 
 	public static JButton buildAddButton() {
 		return buildButton(ButtonType.ADD);
+	}
+
+	public static JButton buildEditButton() {
+		return buildButton(ButtonType.EDIT);
 	}
 
 	@SuppressWarnings("serial")
@@ -187,6 +212,11 @@ public final class ComponentFactory {
 					armedLineColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON_PRESSED;
 					hoverFillColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON_HOVER_FILL;
 					unarmedLineColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON;
+				} else if (type == ButtonType.EDIT) {
+					armedFillColour = ScriptEaseUI.COLOUR_EDIT_BUTTON_PRESSED_FILL;
+					armedLineColour = ScriptEaseUI.COLOUR_EDIT_BUTTON_PRESSED;
+					hoverFillColour = ScriptEaseUI.COLOUR_EDIT_BUTTON_HOVER_FILL;
+					unarmedLineColour = ScriptEaseUI.COLOUR_EDIT_BUTTON;
 				} else {
 					armedFillColour = Color.LIGHT_GRAY;
 					armedLineColour = Color.DARK_GRAY;
@@ -204,20 +234,21 @@ public final class ComponentFactory {
 
 				final int circleX = 3;
 				final int circleY = 3;
-				final int diameter = 18;
+				final int diameter = SIZEXY * 3 / 4;
+				final int radius = diameter / 2;
+				final int centerX = circleX + radius;
+				final int centerY = circleY + radius;
 
 				// The offset between lines and the circle
 				final int lineOffset = 4;
 
-				final int radius = diameter / 2;
+				final int horizLineX1 = circleX + lineOffset;
+				final int horizLineX2 = circleX + diameter - lineOffset;
+				final int horizLineY = centerY;
 
-				final int horizX1 = circleX + lineOffset;
-				final int horizX2 = circleX + diameter - lineOffset;
-				final int horizY = circleY + radius;
-
-				final int vertiY1 = circleY + lineOffset;
-				final int vertiY2 = circleY + diameter - lineOffset;
-				final int vertiX = circleX + radius;
+				final int vertiLineY1 = circleY + lineOffset;
+				final int vertiLineY2 = circleY + diameter - lineOffset;
+				final int vertiLineX = centerX;
 
 				final Color lineColour;
 
@@ -241,11 +272,42 @@ public final class ComponentFactory {
 
 				// Draw the circle
 				g2d.drawOval(circleX, circleY, diameter, diameter);
-				if (type == ButtonType.ADD)
-					// Draw the vertical line only for add.
-					g2d.drawLine(vertiX, vertiY1, vertiX, vertiY2);
-				// Draw the horizontal line
-				g2d.drawLine(horizX1, horizY, horizX2, horizY);
+
+				switch (type) {
+				case EDIT:
+					// Draw a rotated wrench
+
+					final int arcWidth = 4;
+					final int arcX = centerX - arcWidth / 2;
+					final int arcDegrees = 90;
+
+					final int lineY1 = centerY - 3;
+					final int lineY2 = diameter - 1;
+
+					final double rotationAmount = Math.toRadians(-45);
+
+					final AffineTransform rotation = new AffineTransform();
+
+					rotation.setToRotation(rotationAmount, centerX, centerY);
+
+					g2d.transform(rotation);
+
+					g2d.drawArc(arcX, 0, arcWidth, lineY1, 225, arcDegrees);
+					g2d.drawLine(centerX, lineY1, centerX, lineY2);
+					g2d.drawArc(arcX, lineY2, arcWidth, lineY1, 45, arcDegrees);
+
+					break;
+				case ADD:
+					// Draw a vertical line, which when combined with the line
+					// in Remove creates a plus sign
+					g2d.drawLine(vertiLineX, vertiLineY1, vertiLineX,
+							vertiLineY2);
+				case REMOVE:
+					// Draw a horizontal line (minus sign)
+					g2d.drawLine(horizLineX1, horizLineY, horizLineX2,
+							horizLineY);
+
+				}
 
 				super.paintComponent(g);
 				g2d.dispose();

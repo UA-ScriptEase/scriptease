@@ -182,6 +182,17 @@ public interface ScriptEaseUI {
 	public static final Color COLOUR_REMOVE_BUTTON_PRESSED_FILL = GUIOp
 			.scaleWhite(COLOUR_REMOVE_BUTTON, 3.2);
 
+	public static final Color COLOUR_EDIT_BUTTON = COLOUR_GAME_OBJECT;
+
+	public static final Color COLOUR_EDIT_BUTTON_PRESSED = GUIOp.scaleColour(
+			COLOUR_EDIT_BUTTON, 1.2);
+
+	public static final Color COLOUR_EDIT_BUTTON_HOVER_FILL = GUIOp.scaleWhite(
+			COLOUR_EDIT_BUTTON, 1.5);
+
+	public static final Color COLOUR_EDIT_BUTTON_PRESSED_FILL = GUIOp
+			.scaleWhite(COLOUR_EDIT_BUTTON, 1.4);
+
 	/**
 	 * The standard increment that should usually be used for vertical
 	 * scrollbars.
