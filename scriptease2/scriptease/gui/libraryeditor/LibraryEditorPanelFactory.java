@@ -256,12 +256,9 @@ public class LibraryEditorPanelFactory {
 				if (!UndoManager.getInstance().hasOpenUndoableAction()) {
 					final Collection<String> labels = new ArrayList<String>();
 					final String labelFieldText = labelField.getText();
-					if (!labelFieldText.isEmpty()) {
-						final String[] labelArray = labelFieldText
-								.split(SEPARATOR);
-						for (String label : labelArray) {
-							labels.add(label.trim());
-						}
+					final String[] labelArray = labelFieldText.split(SEPARATOR);
+					for (String label : labelArray) {
+						labels.add(label.trim());
 					}
 
 					final Collection<String> oldLabels = component.getLabels();
