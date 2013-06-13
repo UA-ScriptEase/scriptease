@@ -77,7 +77,7 @@ public final class PanelFactory {
 		librarySplitPane.setBottomComponent(resourcePanel);
 		librarySplitPane.setTopComponent(libraryPanel);
 
-		librarySplitPane.setResizeWeight(0.5);
+		librarySplitPane.setResizeWeight(0.5d);
 
 		return librarySplitPane;
 	}
