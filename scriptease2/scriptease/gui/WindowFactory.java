@@ -1070,7 +1070,7 @@ public final class WindowFactory {
 		final JComponent statusBar;
 		final GroupLayout contentLayout;
 
-		final Runnable resizeLibrarySplit;
+		final Runnable yetAnotherSwingHack;
 
 		final SEModelObserver modelObserver;
 
@@ -1095,12 +1095,16 @@ public final class WindowFactory {
 		contentLayout = new GroupLayout(content);
 
 		// We need to invoke a runnable for this later because Swing.
-		resizeLibrarySplit = new Runnable() {
+		yetAnotherSwingHack = new Runnable() {
 			@Override
 			public void run() {
-				// We need to use the setDividerLocation(int) method instead of
-				// setDividerLocation(double). THANKS, JAVA!
-				librarySplit.setDividerLocation(librarySplit.getHeight()/2);
+				// I hope this fixes it, because JSplitPainInTheAss refuses to
+				// resize when we change the size of the bottom component.
+				// Sometimes. Sometimes it works, though. It may depend on the
+				// moon cycle.
+				final double thisShouldntBeNecessary = 0.5d;
+				librarySplit.setResizeWeight(thisShouldntBeNecessary);
+				librarySplit.setDividerLocation(thisShouldntBeNecessary);
 			}
 		};
 
@@ -1139,7 +1143,7 @@ public final class WindowFactory {
 					bar.revalidate();
 
 					if (activated && activeModel instanceof StoryModel) {
-						SwingUtilities.invokeLater(resizeLibrarySplit);
+						SwingUtilities.invokeLater(yetAnotherSwingHack);
 					}
 				}
 			}
@@ -1175,7 +1179,7 @@ public final class WindowFactory {
 
 		frame.getContentPane().add(content);
 
-		SwingUtilities.invokeLater(resizeLibrarySplit);
+		SwingUtilities.invokeLater(yetAnotherSwingHack);
 
 		return frame;
 	}
