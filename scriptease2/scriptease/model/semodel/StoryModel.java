@@ -87,9 +87,8 @@ public final class StoryModel extends SEModel {
 			}
 		}
 
-		// TODO load dialogues instead.
+		// TODO load dialogues here.
 		this.dialogueRoots = new ArrayList<DialogueLine>();
-		this.addDialogueRoot();
 	}
 
 	public Collection<DialogueLine> getDialogueRoots() {
