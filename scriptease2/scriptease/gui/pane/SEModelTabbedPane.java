@@ -419,15 +419,16 @@ class SEModelTabbedPane extends JTabbedPane {
 		ResourcePanel.getInstance().addObserver(topLevelPane,
 				new ResourceTreeObserver() {
 					public void resourceSelected(Resource resource) {
-						if (resource instanceof DialogueLine) {
-							dialogueEditor.setDialogueLine(
-									(DialogueLine) resource, backToStory);
-						}
+						// Do nothing.
 					}
 
 					@Override
 					public void resourceEditButtonPressed(Resource resource) {
-						// TODO Auto-generated method stub
+						if (resource instanceof DialogueLine) {
+							dialogueEditor.setDialogueLine(
+									(DialogueLine) resource, backToStory);
+							layout.show(topLevelPane, DIALOGUE_EDITOR);
+						}
 					}
 				});
 
