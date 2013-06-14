@@ -155,20 +155,7 @@ public final class UnityProject extends GameModule {
 				final Resource subject = scriptInfo.getSubject();
 
 				if (subject.getTemplateID().equals(prefab.getTemplateID())) {
-
-					final UnityFile prefabObject = (UnityFile) subject;
-					final List<UnityResource> children = prefabObject
-							.getResources();
-
-					for (UnityResource child : children) {
-
-						if (child.getTypes().contains(
-								UnityType.GAMEOBJECT.getName())) {
-							this.scripts
-									.add(new UnityScript(scriptInfo, prefab));
-							break;
-						}
-					}
+					this.scripts.add(new UnityScript(scriptInfo, prefab));
 				}
 			}
 		}

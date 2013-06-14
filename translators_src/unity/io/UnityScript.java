@@ -25,6 +25,7 @@ import scriptease.util.StringOp;
  * these UnityScripts.
  * 
  * @author kschenk
+ * @author jyuen
  * 
  */
 public class UnityScript {
@@ -76,7 +77,6 @@ public class UnityScript {
 
 		this.guid = UnityProject.getActiveProject().generateGUIDForFile(
 				new File(this.fileName + SCRIPT_META_EXTENSION));
-
 		
 		if (this.unityFile.getTypes().contains(UnityType.PREFAB.getName())) {
 			
