@@ -814,6 +814,7 @@
       </Implicits>
     </Slot>
     <Slot>
+    	<!--  This isn't used -->
       <Name>OnAreaTransitionClick</Name>
       <Keyword>OnAreaTransitionClick</Keyword>
       <Parameters/>
@@ -874,30 +875,9 @@
                     <Type>door</Type>
                     <Type>trigger</Type>
                   </Types>
-                  <Parameters>
-                    <KnowIt>
-                      <Name>object</Name>
-                      <Visible>true</Visible>
-                      <Labels/>
-                      <Types>
-                        <Type>door</Type>
-                        <Type>trigger</Type>
-                      </Types>
-                      <Binding flavour="runTime">
-                        <Types>
-                          <Type>door</Type>
-                          <Type>trigger</Type>
-                        </Types>
-                      </Binding>
-                    </KnowIt>
-                  </Parameters>
                   <Code>
                     <Line>
-                      <Literal>return GetTransitionTarget(</Literal>
-                      <Scope data="argument" ref="object">
-                        <Fragment data="name"/>
-                      </Scope>
-                      <Literal>);</Literal>
+                      <Literal>return GetTransitionTarget(OBJECT_SELF);</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -1270,28 +1250,9 @@
                   <Types>
                     <Type>creature</Type>
                   </Types>
-                  <Parameters>
-                    <KnowIt>
-                      <Name>item</Name>
-                      <Visible>true</Visible>
-                      <Labels/>
-                      <Types>
-                        <Type>item</Type>
-                      </Types>
-                      <Binding flavour="runTime">
-                        <Types>
-                          <Type>item</Type>
-                        </Types>
-                      </Binding>
-                    </KnowIt>
-                  </Parameters>
                   <Code>
                     <Line>
-                      <Literal>return GetItemPossessor(</Literal>
-                      <Scope data="argument" ref="item">
-                        <Fragment data="name"/>
-                      </Scope>
-                      <Literal>);</Literal>
+                      <Literal>return GetItemPossessor(GetPCItemLastUnequipped());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -1661,93 +1622,6 @@
                   <Code>
                     <Line>
                       <Literal>return IntToFloat(GetTotalDamageDealt());</Literal>
-                    </Line>
-                  </Code>
-                </CodeBlockSource>
-              </CodeBlocks>
-            </ScriptIt>
-          </Binding>
-        </KnowIt>
-        <KnowIt>
-          <Name>Current Hit Points</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>float</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt>
-              <Name>Current Hit Points</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Children/>
-              <CodeBlocks>
-                <CodeBlockSource>
-                  <Name>Current Hit Points</Name>
-                  <Visible>true</Visible>
-                  <Labels/>
-                  <Id>26</Id>
-                  <Types>
-                    <Type>float</Type>
-                  </Types>
-                  <Code>
-                    <Line>
-                      <Literal>return IntToFloat(GetCurrentHitPoints(OBJECT_SELF));</Literal>
-                    </Line>
-                  </Code>
-                </CodeBlockSource>
-              </CodeBlocks>
-            </ScriptIt>
-          </Binding>
-        </KnowIt>
-        <KnowIt>
-          <Name>Maximum Hit Points</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>float</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt>
-              <Name>Max Hit Points for Object &lt;object&gt;</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Children/>
-              <CodeBlocks>
-                <CodeBlockSource>
-                  <Name>Max Hit Points for Object &lt;object&gt;</Name>
-                  <Visible>true</Visible>
-                  <Labels/>
-                  <Id>27</Id>
-                  <Types>
-                    <Type>float</Type>
-                  </Types>
-                  <Parameters>
-                    <KnowIt>
-                      <Name>Object</Name>
-                      <Visible>true</Visible>
-                      <Labels/>
-                      <Types>
-                        <Type>creature</Type>
-                        <Type>placeable</Type>
-                        <Type>door</Type>
-                      </Types>
-                      <Binding flavour="runTime">
-                        <Types>
-                          <Type>creature</Type>
-                          <Type>placeable</Type>
-                          <Type>door</Type>
-                        </Types>
-                      </Binding>
-                    </KnowIt>
-                  </Parameters>
-                  <Code>
-                    <Line>
-                      <Literal>return IntToFloat(GetMaxHitPoints(</Literal>
-                      <Scope data="argument" ref="Object">
-                        <Fragment data="name"/>
-                      </Scope>
-                      <Literal>));</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -3406,28 +3280,9 @@
                   <Types>
                     <Type>item</Type>
                   </Types>
-                  <Parameters>
-                    <KnowIt>
-                      <Name>Attacker</Name>
-                      <Visible>true</Visible>
-                      <Labels/>
-                      <Types>
-                        <Type>creature</Type>
-                      </Types>
-                      <Binding flavour="runTime">
-                        <Types>
-                          <Type>creature</Type>
-                        </Types>
-                      </Binding>
-                    </KnowIt>
-                  </Parameters>
                   <Code>
                     <Line>
-                      <Literal>return GetLastWeaponUsed(</Literal>
-                      <Scope data="argument" ref="Attacker">
-                        <Fragment data="name"/>
-                      </Scope>
-                      <Literal>);</Literal>
+                      <Literal>return GetLastWeaponUsed(GetLastAttacker());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -3457,28 +3312,9 @@
                   <Types>
                     <Type>combat_mode</Type>
                   </Types>
-                  <Parameters>
-                    <KnowIt>
-                      <Name>Attacker</Name>
-                      <Visible>true</Visible>
-                      <Labels/>
-                      <Types>
-                        <Type>creature</Type>
-                      </Types>
-                      <Binding flavour="runTime">
-                        <Types>
-                          <Type>creature</Type>
-                        </Types>
-                      </Binding>
-                    </KnowIt>
-                  </Parameters>
                   <Code>
                     <Line>
-                      <Literal>return GetLastAttackMode(</Literal>
-                      <Scope data="argument" ref="Attacker">
-                        <Fragment data="name"/>
-                      </Scope>
-                      <Literal>);</Literal>
+                      <Literal>return GetLastAttackMode(GetLastAttacker());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -3508,28 +3344,9 @@
                   <Types>
                     <Type>attack_type</Type>
                   </Types>
-                  <Parameters>
-                    <KnowIt>
-                      <Name>Attacker</Name>
-                      <Visible>true</Visible>
-                      <Labels/>
-                      <Types>
-                        <Type>creature</Type>
-                      </Types>
-                      <Binding flavour="runTime">
-                        <Types>
-                          <Type>creature</Type>
-                        </Types>
-                      </Binding>
-                    </KnowIt>
-                  </Parameters>
                   <Code>
                     <Line>
-                      <Literal>return GetLastAttackType(</Literal>
-                      <Scope data="argument" ref="Attacker">
-                        <Fragment data="name"/>
-                      </Scope>
-                      <Literal>);</Literal>
+                      <Literal>return GetLastAttackType(GetLastAttacker());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -3750,32 +3567,9 @@
                   <Types>
                     <Type>creature</Type>
                   </Types>
-                  <Parameters>
-                    <KnowIt>
-                      <Name>Attackee</Name>
-                      <Visible>true</Visible>
-                      <Labels/>
-                      <Types>
-                        <Type>creature</Type>
-                        <Type>door</Type>
-                        <Type>placeable</Type>
-                      </Types>
-                      <Binding flavour="runTime">
-                        <Types>
-                          <Type>creature</Type>
-                          <Type>door</Type>
-                          <Type>placeable</Type>
-                        </Types>
-                      </Binding>
-                    </KnowIt>
-                  </Parameters>
                   <Code>
                     <Line>
-                      <Literal>return GetLastAttacker(</Literal>
-                      <Scope data="argument" ref="Attackee">
-                        <Fragment data="name"/>
-                      </Scope>
-                      <Literal>);</Literal>
+                      <Literal>return GetLastAttacker();</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -3840,28 +3634,9 @@
                   <Types>
                     <Type>item</Type>
                   </Types>
-                  <Parameters>
-                    <KnowIt>
-                      <Name>Attacker</Name>
-                      <Visible>true</Visible>
-                      <Labels/>
-                      <Types>
-                        <Type>creature</Type>
-                      </Types>
-                      <Binding flavour="runTime">
-                        <Types>
-                          <Type>creature</Type>
-                        </Types>
-                      </Binding>
-                    </KnowIt>
-                  </Parameters>
                   <Code>
                     <Line>
-                      <Literal>return GetLastWeaponUsed(</Literal>
-                      <Scope data="argument" ref="Attacker">
-                        <Fragment data="name"/>
-                      </Scope>
-                      <Literal>);</Literal>
+                      <Literal>return GetLastWeaponUsed(GetLastAttacker());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -3891,28 +3666,9 @@
                   <Types>
                     <Type>combat_mode</Type>
                   </Types>
-                  <Parameters>
-                    <KnowIt>
-                      <Name>Attacker</Name>
-                      <Visible>true</Visible>
-                      <Labels/>
-                      <Types>
-                        <Type>creature</Type>
-                      </Types>
-                      <Binding flavour="runTime">
-                        <Types>
-                          <Type>creature</Type>
-                        </Types>
-                      </Binding>
-                    </KnowIt>
-                  </Parameters>
                   <Code>
                     <Line>
-                      <Literal>return GetLastAttackMode(</Literal>
-                      <Scope data="argument" ref="Attacker">
-                        <Fragment data="name"/>
-                      </Scope>
-                      <Literal>);</Literal>
+                      <Literal>return GetLastAttackMode(GetLastAttacker());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -3942,28 +3698,9 @@
                   <Types>
                     <Type>attack_type</Type>
                   </Types>
-                  <Parameters>
-                    <KnowIt>
-                      <Name>Attacker</Name>
-                      <Visible>true</Visible>
-                      <Labels/>
-                      <Types>
-                        <Type>creature</Type>
-                      </Types>
-                      <Binding flavour="runTime">
-                        <Types>
-                          <Type>creature</Type>
-                        </Types>
-                      </Binding>
-                    </KnowIt>
-                  </Parameters>
                   <Code>
                     <Line>
-                      <Literal>return GetLastAttackType(</Literal>
-                      <Scope data="argument" ref="Attacker">
-                        <Fragment data="name"/>
-                      </Scope>
-                      <Literal>);</Literal>
+                      <Literal>return GetLastAttackType(GetLastAttacker());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
