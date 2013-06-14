@@ -27,7 +27,6 @@ import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -320,16 +319,9 @@ public class StoryComponentPanelFactory {
 			final boolean editable) {
 
 		knowIt.getBinding().process(new BindingAdapter() {
-			// functions, descriptions and runTimes all get a draggable bubble
-			// with no slot
+			// functions and descriptions get a draggable bubble with no slot
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				panel.add(ScriptWidgetFactory.buildBindingWidget(knowIt,
-						editable));
-			}
-
-			@Override
-			public void processRunTime(KnowItBindingRunTime runTime) {
 				panel.add(ScriptWidgetFactory.buildBindingWidget(knowIt,
 						editable));
 			}

@@ -216,7 +216,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 			knowIt.getBinding().process(new BindingAdapter() {
 
 				@Override
-				public void processConstant(KnowItBindingResource constant) {
+				public void processResource(KnowItBindingResource constant) {
 					searchData.add(constant.getName());
 					searchData.add(constant.getTag());
 					searchData.add(constant.getScriptValue());

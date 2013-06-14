@@ -704,7 +704,7 @@ public class ScriptWidgetFactory {
 				if (SEModelManager.getInstance().hasActiveModel()) {
 					binding.process(new BindingAdapter() {
 						@Override
-						public void processConstant(
+						public void processResource(
 								KnowItBindingResource constant) {
 							if (!UndoManager.getInstance()
 									.hasOpenUndoableAction()) {

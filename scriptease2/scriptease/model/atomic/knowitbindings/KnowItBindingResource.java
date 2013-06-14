@@ -70,19 +70,20 @@ public class KnowItBindingResource extends KnowItBinding {
 
 				model = SEModelManager.getInstance().getActiveModel();
 				if (model instanceof StoryModel) {
-					
+
 					final StoryModel storyModel = (StoryModel) model;
 					final GameModule module = storyModel.getModule();
 					final Resource resource = this.getValue();
 					final String templateID = resource.getTemplateID();
-					
-					final Resource res = module.getInstanceForObjectIdentifier(templateID);
-					
+
+					final Resource res = module
+							.getInstanceForObjectIdentifier(templateID);
+
 					if (res != null)
 						return true;
 					else
 						return false;
-					
+
 				} else if (model == null) {
 					return true;
 				}
@@ -128,6 +129,6 @@ public class KnowItBindingResource extends KnowItBinding {
 
 	@Override
 	public void process(BindingVisitor processController) {
-		processController.processConstant(this);
+		processController.processResource(this);
 	}
 }

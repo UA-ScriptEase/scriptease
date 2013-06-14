@@ -137,7 +137,7 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 			}
 
 			@Override
-			public void processConstant(KnowItBindingResource constant) {
+			public void processResource(KnowItBindingResource constant) {
 				final Resource constantValue = constant.getValue();
 				final String name = constantValue.getName();
 
@@ -207,7 +207,7 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 		if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
 			this.bindingWidget.getBinding().process(new BindingAdapter() {
 				@Override
-				public void processConstant(KnowItBindingResource constant) {
+				public void processResource(KnowItBindingResource constant) {
 					/*
 					 * We need this listener because the slot panel does not
 					 * otherwise get updated if we do a group binding. This

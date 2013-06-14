@@ -1,11 +1,10 @@
 package scriptease.controller;
 
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
-import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 
 /**
@@ -25,14 +24,12 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
  * 
  * @see StoryAdapter
  */
-public interface BindingVisitor { 
-	public void processConstant(KnowItBindingResource constant);
+public interface BindingVisitor {
+	public void processResource(KnowItBindingResource constant);
 
 	public void processFunction(KnowItBindingFunction function);
 
 	public void processReference(KnowItBindingReference reference);
-
-	public void processRunTime(KnowItBindingRunTime runTime);
 
 	public void processNull(KnowItBindingNull nullBinding);
 
