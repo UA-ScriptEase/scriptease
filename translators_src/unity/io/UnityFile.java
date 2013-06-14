@@ -242,8 +242,10 @@ public class UnityFile extends Resource {
 
 		// Initialize the unity file's visible children resources.
 		for (UnityResource resource : this.unityResources) {
-//			if (types.contains(UnityType.PREFAB.getName()))
-//				break;
+			// Prefabs don't need to show their game objects, it will only
+			// cause confusion.
+			if (types.contains(UnityType.PREFAB.getName()))
+				break;
 			
 			if (resource.getOwner() == this
 					&& resource.getType() == UnityType.GAMEOBJECT
@@ -424,7 +426,7 @@ public class UnityFile extends Resource {
 	public File getLocation() {
 		return this.location;
 	}
-
+	
 	@Override
 	public Collection<String> getTypes() {
 		return this.types;
