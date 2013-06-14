@@ -19,7 +19,6 @@ import scriptease.translator.codegenerator.CodeGenerationConstants;
 import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
-import scriptease.translator.codegenerator.code.contexts.FileContext;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**

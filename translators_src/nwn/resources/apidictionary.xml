@@ -926,45 +926,6 @@
             </ScriptIt>
           </Binding>
         </KnowIt>
-        <KnowIt>
-          <Name>The Subject</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>creature</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt>
-              <Name>Get Object Self</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Children/>
-              <CodeBlocks>
-                <CodeBlockSource>
-                  <Name>Get Object Self</Name>
-                  <Visible>true</Visible>
-                  <Labels/>
-                  <Id>8</Id>
-                  <Types>
-                    <Type>creature</Type>
-                    <Type>placeable</Type>
-                    <Type>door</Type>
-                    <Type>trigger</Type>
-                    <Type>store</Type>
-                    <Type>item</Type>
-                    <Type>module</Type>
-                    <Type>area</Type>
-                  </Types>
-                  <Code>
-                    <Line>
-                      <Literal>return OBJECT_SELF;</Literal>
-                    </Line>
-                  </Code>
-                </CodeBlockSource>
-              </CodeBlocks>
-            </ScriptIt>
-          </Binding>
-        </KnowIt>
       </Implicits>
     </Slot>
     <Slot>
@@ -1305,24 +1266,7 @@
       <Name>OnHeartbeat</Name>
       <Keyword>OnHeartbeat</Keyword>
       <Parameters/>
-      <Implicits>
-        <KnowIt>
-          <Name>the Subject</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>module</Type>
-            <Type>area</Type>
-            <Type>creature</Type>
-            <Type>encounter</Type>
-            <Type>placeable</Type>
-            <Type>trigger</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt reference="/LibraryModel/Slots/Slot[5]/Implicits/KnowIt[2]/Binding/ScriptIt"/>
-          </Binding>
-        </KnowIt>
-      </Implicits>
+      <Implicits/>
     </Slot>
     <Slot>
       <Name>OnTrapTriggered</Name>
@@ -1359,19 +1303,6 @@
                 </CodeBlockSource>
               </CodeBlocks>
             </ScriptIt>
-          </Binding>
-        </KnowIt>
-        <KnowIt>
-          <Name>the Subject</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>trigger</Type>
-            <Type>placeable</Type>
-            <Type>door</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt reference="/LibraryModel/Slots/Slot[5]/Implicits/KnowIt[2]/Binding/ScriptIt"/>
           </Binding>
         </KnowIt>
       </Implicits>
@@ -1674,24 +1605,7 @@
       <Name>OnHeartbeat</Name>
       <Keyword>Mod_OnHeartbeat</Keyword>
       <Parameters/>
-      <Implicits>
-        <KnowIt>
-          <Name>the Subject</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>module</Type>
-            <Type>area</Type>
-            <Type>creature</Type>
-            <Type>encounter</Type>
-            <Type>placeable</Type>
-            <Type>trigger</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt reference="/LibraryModel/Slots/Slot[5]/Implicits/KnowIt[2]/Binding/ScriptIt"/>
-          </Binding>
-        </KnowIt>
-      </Implicits>
+      <Implicits/>
     </Slot>
     <Slot>
       <Name>OnExit</Name>
@@ -2215,17 +2129,6 @@
                 </CodeBlockSource>
               </CodeBlocks>
             </ScriptIt>
-          </Binding>
-        </KnowIt>
-        <KnowIt>
-          <Name>the Subject</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>creature</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt reference="/LibraryModel/Slots/Slot[5]/Implicits/KnowIt[2]/Binding/ScriptIt"/>
           </Binding>
         </KnowIt>
       </Implicits>
@@ -2977,57 +2880,6 @@
             </ScriptIt>
           </Binding>
         </KnowIt>
-        <KnowIt>
-          <Name>Damage Amount of Type</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>float</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt>
-              <Name>Damage Amount of Type &lt;Damage Type&gt;</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Children/>
-              <CodeBlocks>
-                <CodeBlockSource>
-                  <Name>Damage Amount of Type &lt;Damage Type&gt;</Name>
-                  <Visible>true</Visible>
-                  <Labels/>
-                  <Id>64</Id>
-                  <Types>
-                    <Type>float</Type>
-                  </Types>
-                  <Parameters>
-                    <KnowIt>
-                      <Name>Damage Type</Name>
-                      <Visible>true</Visible>
-                      <Labels/>
-                      <Types>
-                        <Type>damage_type</Type>
-                      </Types>
-                      <Binding flavour="runTime">
-                        <Types>
-                          <Type>damage_type</Type>
-                        </Types>
-                      </Binding>
-                    </KnowIt>
-                  </Parameters>
-                  <Code>
-                    <Line>
-                      <Literal>return GetDamageDealtByType(</Literal>
-                      <Scope data="argument" ref="Damage Type">
-                        <Fragment data="name"/>
-                      </Scope>
-                      <Literal>);</Literal>
-                    </Line>
-                  </Code>
-                </CodeBlockSource>
-              </CodeBlocks>
-            </ScriptIt>
-          </Binding>
-        </KnowIt>
       </Implicits>
     </Slot>
     <Slot>
@@ -3415,28 +3267,9 @@
                   <Types>
                     <Type>creature</Type>
                   </Types>
-                  <Parameters>
-                    <KnowIt>
-                      <Name>Victim</Name>
-                      <Visible>true</Visible>
-                      <Labels/>
-                      <Types>
-                        <Type>creature</Type>
-                      </Types>
-                      <Binding flavour="runTime">
-                        <Types>
-                          <Type>creature</Type>
-                        </Types>
-                      </Binding>
-                    </KnowIt>
-                  </Parameters>
                   <Code>
                     <Line>
-                      <Literal>return GetLastHostileActor(</Literal>
-                      <Scope data="argument" ref="Victim">
-                        <Fragment data="name"/>
-                      </Scope>
-                      <Literal>);</Literal>
+                      <Literal>return GetLastHostileActor(GetLastPlayerDied());</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -3450,24 +3283,7 @@
       <Name>OnHeartbeat</Name>
       <Keyword>ScriptHeartbeat</Keyword>
       <Parameters/>
-      <Implicits>
-        <KnowIt>
-          <Name>the Subject</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>module</Type>
-            <Type>area</Type>
-            <Type>creature</Type>
-            <Type>encounter</Type>
-            <Type>placeable</Type>
-            <Type>trigger</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt reference="/LibraryModel/Slots/Slot[5]/Implicits/KnowIt[2]/Binding/ScriptIt"/>
-          </Binding>
-        </KnowIt>
-      </Implicits>
+      <Implicits/>
     </Slot>
     <Slot>
       <Name>OnPlayerChat</Name>

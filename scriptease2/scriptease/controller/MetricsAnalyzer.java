@@ -456,7 +456,8 @@ public class MetricsAnalyzer {
 							implicits.add(knowIt);
 						};
 
-						public void processConstant(
+						@Override
+						public void processResource(
 								KnowItBindingResource resource) {
 							if (resource.isIdentifiableGameConstant())
 								gameObjects.add(knowIt);

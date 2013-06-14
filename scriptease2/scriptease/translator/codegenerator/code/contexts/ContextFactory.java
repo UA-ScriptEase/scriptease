@@ -10,7 +10,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
-import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
@@ -24,7 +23,6 @@ import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.Kn
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingNullContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingReferenceContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingResourceContext;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingRunTimeContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingStoryPointContext;
 
 /**
@@ -109,7 +107,7 @@ public class ContextFactory {
 			}
 
 			@Override
-			public void processConstant(KnowItBindingResource constant) {
+			public void processResource(KnowItBindingResource constant) {
 				ContextFactory.this.activeContext = new KnowItBindingResourceContext(
 						pastContext, constant);
 			}
@@ -124,12 +122,6 @@ public class ContextFactory {
 			public void processReference(KnowItBindingReference reference) {
 				ContextFactory.this.activeContext = new KnowItBindingReferenceContext(
 						pastContext, reference);
-			}
-
-			@Override
-			public void processRunTime(KnowItBindingRunTime runTime) {
-				ContextFactory.this.activeContext = new KnowItBindingRunTimeContext(
-						pastContext, runTime);
 			}
 
 			@Override

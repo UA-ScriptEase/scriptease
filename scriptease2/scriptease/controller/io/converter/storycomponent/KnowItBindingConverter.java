@@ -1,8 +1,6 @@
 package scriptease.controller.io.converter.storycomponent;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
 import scriptease.controller.io.FileIO;
@@ -14,7 +12,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
-import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
@@ -43,7 +40,6 @@ public class KnowItBindingConverter implements Converter {
 	private static final String ATTRIBUTE_VALUE_RESOURCE_FLAVOUR = "resource";
 	private static final String ATTRIBUTE_VALUE_FUNCTION_FLAVOUR = "function";
 	private static final String ATTRIBUTE_VALUE_REFERENCE_FLAVOUR = "reference";
-	private static final String ATTRIBUTE_VALUE_RUNTIME_FLAVOUR = "runTime";
 	private static final String ATTRIBUTE_VALUE_NULL_FLAVOUR = "null";
 	private static final String ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR = "storyPoint";
 
@@ -78,7 +74,8 @@ public class KnowItBindingConverter implements Converter {
 
 		// redirect to the appropriate writing method.
 		binding.process(new BindingVisitor() {
-			public void processConstant(KnowItBindingResource constant) {
+			@Override
+			public void processResource(KnowItBindingResource constant) {
 				if (constant.getFirstType().equals(StoryPoint.STORY_POINT_TYPE)) {
 					// deal with it B-->:)
 					KnowItBindingConverter.this.marshallConstantBinding(
@@ -111,12 +108,6 @@ public class KnowItBindingConverter implements Converter {
 			}
 
 			@Override
-			public void processRunTime(KnowItBindingRunTime runTime) {
-				KnowItBindingConverter.this.marshallRunTimeBinding(runTime,
-						writer);
-			}
-
-			@Override
 			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
 				KnowItBindingConverter.this.marshallStoryPointBinding(
 						storyPoint, writer, context);
@@ -140,20 +131,6 @@ public class KnowItBindingConverter implements Converter {
 
 		writer.startNode(TAG_VALUE);
 		writer.setValue(constant.getCodeText());
-		writer.endNode();
-	}
-
-	private void marshallRunTimeBinding(KnowItBindingRunTime binding,
-			HierarchicalStreamWriter writer) {
-		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
-				ATTRIBUTE_VALUE_RUNTIME_FLAVOUR);
-
-		writer.startNode(TypedComponent.TAG_TYPES);
-		for (String type : binding.getTypes()) {
-			writer.startNode(TypedComponent.TAG_TYPE);
-			writer.setValue(type);
-			writer.endNode();
-		}
 		writer.endNode();
 	}
 
@@ -236,8 +213,6 @@ public class KnowItBindingConverter implements Converter {
 
 			if (flavour.equalsIgnoreCase(ATTRIBUTE_VALUE_CONSTANT_FLAVOUR))
 				binding = this.unmarshallConstantBinding(reader);
-			else if (flavour.equalsIgnoreCase(ATTRIBUTE_VALUE_RUNTIME_FLAVOUR))
-				binding = this.unmarshallRunTimeBinding(reader);
 			else if (flavour.equalsIgnoreCase(ATTRIBUTE_VALUE_RESOURCE_FLAVOUR))
 				binding = this.unmarshallResourceBinding(reader);
 			else if (flavour.equalsIgnoreCase(ATTRIBUTE_VALUE_FUNCTION_FLAVOUR))
@@ -272,20 +247,6 @@ public class KnowItBindingConverter implements Converter {
 		constant = SimpleResource.buildSimpleResource(type, value);
 
 		return new KnowItBindingResource(constant);
-	}
-
-	private KnowItBindingRunTime unmarshallRunTimeBinding(
-			HierarchicalStreamReader reader) {
-		reader.moveDown();
-		Collection<String> types = new ArrayList<String>();
-		if (reader.getNodeName().equalsIgnoreCase(TypedComponent.TAG_TYPES)) {
-			// read all of the types
-			while (reader.hasMoreChildren()) {
-				types.add(FileIO.readValue(reader, TypedComponent.TAG_TYPE));
-			}
-		}
-		reader.moveUp();
-		return new KnowItBindingRunTime(types);
 	}
 
 	/**

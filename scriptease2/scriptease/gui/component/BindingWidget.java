@@ -23,7 +23,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
-import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.translator.io.model.SimpleResource;
 
@@ -102,7 +101,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 	private void updateToolTip(KnowItBinding binding) {
 		binding.process(new BindingAdapter() {
 			@Override
-			public void processConstant(KnowItBindingResource constant) {
+			public void processResource(KnowItBindingResource constant) {
 				if (constant.isIdentifiableGameConstant()) {
 					String blueprint = constant.getValue().getTemplateID();
 					if (blueprint != null && !blueprint.isEmpty())
@@ -180,7 +179,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 	private void updateBackgroundColour(KnowItBinding binding) {
 		binding.process(new BindingVisitor() {
 			@Override
-			public void processConstant(KnowItBindingResource constant) {
+			public void processResource(KnowItBindingResource constant) {
 				if (constant.getValue() instanceof SimpleResource)
 					updateBackground(ScriptEaseUI.COLOUR_SIMPLE);
 				else
@@ -197,11 +196,6 @@ public class BindingWidget extends JPanel implements Cloneable {
 
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
-				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
-			}
-
-			@Override
-			public void processRunTime(KnowItBindingRunTime runTime) {
 				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
 			}
 

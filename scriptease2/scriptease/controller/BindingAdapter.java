@@ -1,11 +1,10 @@
 package scriptease.controller;
 
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
-import scriptease.model.atomic.knowitbindings.KnowItBindingRunTime;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 
 /**
@@ -27,7 +26,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
  */
 public abstract class BindingAdapter implements BindingVisitor {
 	@Override
-	public void processConstant(KnowItBindingResource constant) {
+	public void processResource(KnowItBindingResource constant) {
 		this.defaultProcess(constant);
 	}
 
@@ -39,11 +38,6 @@ public abstract class BindingAdapter implements BindingVisitor {
 	@Override
 	public void processReference(KnowItBindingReference reference) {
 		this.defaultProcess(reference);
-	}
-
-	@Override
-	public void processRunTime(KnowItBindingRunTime runTime) {
-		this.defaultProcess(runTime);
 	}
 
 	@Override
