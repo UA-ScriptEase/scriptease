@@ -11663,6 +11663,446 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
+    <ScriptIt>
+      <Name>a vertical slider at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall with a lower value of &lt;Lower Value&gt; and a upper value of &lt;Upper Value&gt; that starts at value &lt;Value&gt;</Name>
+      <Visible>false</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>a vertical slider at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall with a lower value of &lt;Lower Value&gt; and a upper value of &lt;Upper Value&gt; that starts at value &lt;Value&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>249</Id>
+          <Types>
+            <Type>float</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>y</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Width</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Height</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Lower Value</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Upper Value</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Value</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return GUI.VerticalSlider(Rect(</Literal>
+              <Scope data="ARGUMENT" ref="x">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="y">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Width">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Height">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>), </Literal>
+              <Scope data="ARGUMENT" ref="Value">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Upper Value">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Lower Value">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>a horizontal scrollbar at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall with a left value of &lt;Lower Value&gt; and a right value of &lt;Upper Value&gt; that starts at value &lt;Value&gt; and has a visibility of size &lt;Size&gt;</Name>
+      <Visible>false</Visible>
+      <Labels>
+        <Label></Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>a horizontal scrollbar at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall with a left value of &lt;Lower Value&gt; and a right value of &lt;Upper Value&gt; that starts at value &lt;Value&gt; and has a visibility of size &lt;Size&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>250</Id>
+          <Types>
+            <Type>float</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>y</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Width</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Height</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Lower Value</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Upper Value</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Value</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Size</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return GUI.HorizontalScrollbar(Rect(</Literal>
+              <Scope data="ARGUMENT" ref="x">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="y">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Width">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Height">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>), </Literal>
+              <Scope data="ARGUMENT" ref="Value">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Size">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Lower Value">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Upper Value">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>a vertical scrollbar at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall with a lower value of &lt;Lower Value&gt; and a upper value of &lt;Upper Value&gt; that starts at value &lt;Value&gt; and has a visibility of size &lt;Size&gt;</Name>
+      <Visible>false</Visible>
+      <Labels>
+        <Label></Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>a vertical scrollbar at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall with a lower value of &lt;Lower Value&gt; and a upper value of &lt;Upper Value&gt; that starts at value &lt;Value&gt; and has a visibility of size &lt;Size&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>251</Id>
+          <Types>
+            <Type>float</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>y</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Width</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Height</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Lower Value</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Upper Value</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Value</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Size</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return GUI.HorizontalScrollbar(Rect(</Literal>
+              <Scope data="ARGUMENT" ref="x">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="y">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Width">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Height">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>), </Literal>
+              <Scope data="ARGUMENT" ref="Value">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Size">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Upper Value">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Lower Value">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
   </Effects>
   <DescribeIts>
     <DescribeIt>
@@ -12026,6 +12466,24 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
+      <Name>Vertical Slider Value</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[21]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[180]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
       <Name>Has Succeeded</Name>
       <Types>
         <Type>question</Type>
@@ -12037,7 +12495,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[21]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[22]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
         </Entry>
@@ -12055,7 +12513,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[22]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[23]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[94]"/>
         </Entry>
@@ -12073,7 +12531,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[23]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[24]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[104]"/>
         </Entry>
@@ -12091,7 +12549,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[24]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[25]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[106]"/>
         </Entry>
@@ -12109,7 +12567,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[25]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[26]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[88]"/>
         </Entry>
@@ -12127,7 +12585,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[26]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[27]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[69]"/>
         </Entry>
@@ -12145,7 +12603,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[27]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[95]"/>
         </Entry>
@@ -12201,7 +12659,7 @@
                       <DescribeItNode>
                         <Name>automatic position</Name>
                         <Successors>
-                          <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+                          <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
                         </Successors>
                       </DescribeItNode>
                     </Successors>
@@ -12224,7 +12682,7 @@
                   </Types>
                 </KnowIt>
                 <Successors>
-                  <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+                  <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
                 </Successors>
               </DescribeItNode>
             </Successors>
@@ -12234,145 +12692,145 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[86]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[80]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[81]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[78]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[77]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[82]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[79]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[86]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[83]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[85]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[76]"/>
         </Entry>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[28]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[10]"/>
         </Entry>
@@ -12390,7 +12848,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[30]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[21]"/>
         </Entry>
@@ -12408,7 +12866,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[30]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[31]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[71]"/>
         </Entry>
@@ -12426,7 +12884,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[31]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[32]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[41]"/>
         </Entry>
@@ -12444,7 +12902,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[32]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[33]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[173]"/>
         </Entry>
@@ -12462,7 +12920,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[33]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[34]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[72]"/>
         </Entry>
@@ -12480,7 +12938,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[34]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[35]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[104]"/>
         </Entry>
@@ -12498,7 +12956,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[35]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[36]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[7]"/>
         </Entry>
@@ -12516,9 +12974,27 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[36]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[37]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[103]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Vertical Scrollbar Value</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[38]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[182]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -12534,7 +13010,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[37]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[39]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[36]"/>
         </Entry>
@@ -12552,7 +13028,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[38]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[40]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[49]"/>
         </Entry>
@@ -12570,7 +13046,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[39]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[101]"/>
         </Entry>
@@ -12588,7 +13064,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[40]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[42]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[174]"/>
         </Entry>
@@ -12606,7 +13082,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[43]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[51]"/>
         </Entry>
@@ -12624,7 +13100,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[42]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[44]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[124]"/>
         </Entry>
@@ -12642,7 +13118,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[43]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[45]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[91]"/>
         </Entry>
@@ -12660,7 +13136,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[44]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[46]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[8]"/>
         </Entry>
@@ -12678,7 +13154,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[45]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[47]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[177]"/>
         </Entry>
@@ -12696,7 +13172,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[46]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[48]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[42]"/>
         </Entry>
@@ -12714,7 +13190,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[47]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[49]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[93]"/>
         </Entry>
@@ -12732,7 +13208,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[48]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[50]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[57]"/>
         </Entry>
@@ -12750,7 +13226,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[49]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[51]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[46]"/>
         </Entry>
@@ -12768,7 +13244,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[50]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[52]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
         </Entry>
@@ -12786,7 +13262,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[51]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[53]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[175]"/>
         </Entry>
@@ -12804,9 +13280,27 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[52]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[54]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[61]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Horizontal Scrollbar Value</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[55]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[181]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -12822,7 +13316,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[53]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[56]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[44]"/>
         </Entry>
