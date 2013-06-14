@@ -7,6 +7,16 @@ import java.util.List;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
 
+/**
+ * 
+ * Represents a dialogue line resource. This is translator independent. The
+ * translator handles these in its {@link GameModule} implementation.
+ * 
+ * TODO Comment this class furtehr
+ * 
+ * @author kschenk
+ * 
+ */
 public final class DialogueLine extends Resource {
 	private static final String DEFAULT_DIALOGUE = "New Dialogue Line";
 
@@ -19,8 +29,8 @@ public final class DialogueLine extends Resource {
 	private Resource image;
 	private Resource audio;
 
-	public static DialogueLine createDialogueRoot(GameModule module) {
-		return new DialogueLine(module, null);
+	public DialogueLine(GameModule module) {
+		this(module, new ArrayList<DialogueLine>());
 	}
 
 	public DialogueLine(GameModule module, List<DialogueLine> parents) {
@@ -41,15 +51,21 @@ public final class DialogueLine extends Resource {
 	}
 
 	public boolean removeChild(DialogueLine dialogueLine) {
+		dialogueLine.parents.remove(this);
 		return this.children.remove(dialogueLine);
 	}
 
 	public boolean addChild(DialogueLine dialogueLine) {
+		dialogueLine.parents.add(this);
 		return this.children.add(dialogueLine);
 	}
 
 	public boolean isRoot() {
 		return this.parents == null || this.parents.isEmpty();
+	}
+
+	public Collection<DialogueLine> getParents() {
+		return this.parents;
 	}
 
 	@Override
@@ -115,6 +131,7 @@ public final class DialogueLine extends Resource {
 		else
 			type.add(this.module.getDialogueLineType());
 
+		System.out.println(type);
 		return type;
 	}
 

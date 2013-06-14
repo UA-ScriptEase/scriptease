@@ -50,6 +50,21 @@ import scriptease.util.StringOp;
  */
 @SuppressWarnings("serial")
 class ResourceTree extends JPanel {
+
+	/*
+	 * TODO
+	 * 
+	 * We're doing this wrong. The tree should only have resource containers.
+	 * Then, the resource container should hold the objects.
+	 * 
+	 * Then we only need to update the resource containers. Makes things better!
+	 * 
+	 * TODO Each resource container AND resource panel needs to store its
+	 * open/closed state.
+	 * 
+	 * TODO We don't need to redraw the resource panels. Ever.
+	 */
+
 	private Resource selectedResource = null;
 
 	private String filterText;

@@ -2,6 +2,7 @@ package scriptease.gui.pane;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -12,10 +13,17 @@ import javax.swing.border.EtchedBorder;
 
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
+import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
 
+/**
+ * This panel contains a Dialogue Line Graph.
+ * 
+ * @author kschenk
+ * 
+ */
 @SuppressWarnings("serial")
 public class DialogueEditorPanel extends JPanel {
 	private final StoryModel model;
@@ -44,6 +52,15 @@ public class DialogueEditorPanel extends JPanel {
 
 		if (backToStory != null)
 			this.add(backToStory, BorderLayout.EAST);
+
+		graph.addSEGraphObserver(new SEGraphAdapter<DialogueLine>() {
+			@Override
+			public void nodeAdded(DialogueLine newNode,
+					Collection<DialogueLine> children,
+					Collection<DialogueLine> parents) {
+				ResourcePanel.getInstance().repaintTree();
+			}
+		});
 
 		this.add(graphToolBar, BorderLayout.WEST);
 		this.add(graphScrollPane);

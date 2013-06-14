@@ -102,8 +102,7 @@ public final class StoryModel extends SEModel {
 	 * @return
 	 */
 	public boolean addDialogueRoot() {
-		return this.dialogueRoots.add(DialogueLine
-				.createDialogueRoot(this.module));
+		return this.dialogueRoots.add(new DialogueLine(this.module));
 	}
 
 	public boolean removeDialogueRoot(DialogueLine line) {
