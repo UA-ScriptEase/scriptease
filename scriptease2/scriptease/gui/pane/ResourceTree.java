@@ -49,7 +49,7 @@ import scriptease.util.StringOp;
  * 
  */
 @SuppressWarnings("serial")
-public class ResourceTree extends JPanel {
+class ResourceTree extends JPanel {
 	private Resource selectedResource = null;
 
 	private String filterText;
@@ -89,7 +89,7 @@ public class ResourceTree extends JPanel {
 	 *            then nothing is drawn. Use {@link #redrawTree(StoryModel)} to
 	 *            draw the tree later with a StoryModel.
 	 */
-	public ResourceTree() {
+	protected ResourceTree() {
 		super();
 		this.panelMap = new HashMap<Resource, JPanel>();
 		this.filterTypes = new ArrayList<String>();
@@ -109,7 +109,7 @@ public class ResourceTree extends JPanel {
 	 * 
 	 * @param model
 	 */
-	public void fillTree() {
+	protected void fillTree() {
 		this.panelMap.clear();
 
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
@@ -136,11 +136,19 @@ public class ResourceTree extends JPanel {
 	}
 
 	/**
+	 * Refills the tree and then redraws it.
+	 */
+	protected void repaintTree() {
+		this.fillTree();
+		this.redrawTree();
+	}
+
+	/**
 	 * Filters the tree by text and redraws it.
 	 * 
 	 * @param filterText
 	 */
-	public void filterByText(String filterText) {
+	protected void filterByText(String filterText) {
 		this.filterText = filterText;
 		this.redrawTree();
 	}
@@ -150,7 +158,7 @@ public class ResourceTree extends JPanel {
 	 * 
 	 * @param filterTypes
 	 */
-	public void filterByTypes(Collection<String> filterTypes) {
+	protected void filterByTypes(Collection<String> filterTypes) {
 		this.filterTypes.clear();
 		this.filterTypes.addAll(filterTypes);
 		this.redrawTree();
@@ -162,7 +170,7 @@ public class ResourceTree extends JPanel {
 	 * @param object
 	 * @param observer
 	 */
-	public void addObserver(Object object, ResourceTreeObserver observer) {
+	protected void addObserver(Object object, ResourceTreeObserver observer) {
 		this.observerManager.addObserver(object, observer);
 	}
 
@@ -483,8 +491,7 @@ public class ResourceTree extends JPanel {
 				story = SEModelManager.getInstance().getActiveStoryModel();
 
 				story.addDialogueRoot();
-				ResourceTree.this.fillTree();
-				ResourceTree.this.redrawTree();
+				ResourceTree.this.repaintTree();
 			}
 		});
 
@@ -515,8 +522,7 @@ public class ResourceTree extends JPanel {
 				story = SEModelManager.getInstance().getActiveStoryModel();
 
 				story.removeDialogueRoot(line);
-				ResourceTree.this.fillTree();
-				ResourceTree.this.redrawTree();
+				ResourceTree.this.repaintTree();
 			}
 		});
 

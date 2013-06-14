@@ -8,6 +8,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 
@@ -92,6 +93,12 @@ public class StoryComponentUtils {
 						child.process(this);
 				}
 
+				@Override
+				public void processCauseIt(CauseIt causeIt) {
+					causeIt.processImplicits(this);
+					this.processScriptIt(causeIt);
+				}
+				
 				@Override
 				public void processScriptIt(ScriptIt scriptIt) {
 					scriptIt.processParameters(this);
