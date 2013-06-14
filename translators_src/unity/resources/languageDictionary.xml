@@ -424,6 +424,49 @@
             </Line>
 		</Format>
 		
+		<!-- Format for Scroll View children -->
+		<Format id="ScrollViewChildren">
+			<Scope data="Cause">
+				<FormatRef ref="implicitsDeclaration" />
+				<FormatRef ref="implicitsDefinition" />
+			</Scope>
+            <Scope data="argument" ref="x">
+              <FormatRef ref="variableDefinition"/>
+            </Scope>
+            <Scope data="argument" ref="y">
+              <FormatRef ref="variableDefinition"/>
+            </Scope>
+            <Scope data="argument" ref="Width">
+              <FormatRef ref="variableDefinition"/>
+            </Scope>
+            <Scope data="argument" ref="Height">
+              <FormatRef ref="variableDefinition"/>
+            </Scope>
+            <Line>
+            	<Literal>GUI.BeginScrollView(Rect(</Literal>
+            	<Scope data="argument" ref="x">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>, </Literal>
+            	<Scope data="argument" ref="y">
+            		<Fragment data="name" />
+            	</Scope>	
+            	<Literal>, </Literal>
+            	<Scope data="argument" ref="Width">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>, </Literal>
+            	<Scope data="argument" ref="Height">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>));</Literal>
+            </Line>
+            <FormatRef ref="childrenWithoutImplicits"/>
+            <Line>
+			  <Literal>GUI.EndScrollView();</Literal>            
+            </Line>
+		</Format>
+		
 		<!-- Format for control it children -->
 		<Format id="controlItChildren">
 			<Scope data="Cause">
