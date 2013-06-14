@@ -19,6 +19,7 @@ import scriptease.translator.codegenerator.CodeGenerationConstants;
 import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
+import scriptease.translator.codegenerator.code.contexts.FileContext;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -129,7 +130,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 	@Override
 	public String resolve(Context context) {
 		super.resolve(context);
-		
+
 		final StringBuilder code;
 		final Iterator<? extends Object> it;
 		Object next;
@@ -175,9 +176,17 @@ public class SeriesFragment extends AbstractContainerFragment {
 			data = context.getIncludeFiles();
 		} else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.CODEBLOCKS
-						.name()))
+						.name())) {
+
+			if (context instanceof FileContext) {
+				if (context.getLocationInfo().toString().contains("introplan")) {
+					System.out.println("This does not get all codeblocks");
+				}
+				if (context.getLocationInfo().toString().contains("femalekid"))
+					System.out.println("This gets all codeblocks");
+			}
 			data = context.getCodeBlocks();
-		else if (dataLabel
+		} else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.CAUSES
 						.name()))
 			data = context.getCauses();

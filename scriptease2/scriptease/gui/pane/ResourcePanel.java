@@ -182,4 +182,11 @@ public class ResourcePanel extends JPanel {
 	public void addObserver(Object object, ResourceTreeObserver observer) {
 		this.resources.addObserver(object, observer);
 	}
+
+	/**
+	 * Repaints the tree.
+	 */
+	public void repaintTree() {
+		this.resources.repaintTree();
+	}
 }
