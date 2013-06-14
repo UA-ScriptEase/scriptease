@@ -453,8 +453,8 @@
 			</Line>
 		</Format>
 		
-		<!-- Format for the gui group controller -->
-		<Format id="guigroup">
+		<!-- Format for the folder controller -->
+		<Format id="folder">
 			<Line>
 				<FormatRef ref="functionHeader" />
 				<Literal>;</Literal>

@@ -13465,7 +13465,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ControlIt>
-    <ControlIt control="GUIGROUP">
+    <ControlIt control="FOLDER">
       <Name>Create a GUI Group at position &lt;x&gt;, &lt;y&gt; that is
 				&lt;Width&gt; wide and &lt;Height&gt; tall</Name>
       <Visible>true</Visible>
