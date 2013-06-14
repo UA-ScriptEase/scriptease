@@ -13521,6 +13521,62 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ControlIt>
+    <ControlIt control="FOLDER">
+      <Name>Create a Scroll View at position &lt;x&gt;, &lt;y&gt; that is
+				&lt;Width&gt; wide and &lt;Height&gt; tall</Name>
+      <Visible>true</Visible>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Create a Scroll View at position &lt;x&gt;, &lt;y&gt; that is
+				&lt;Width&gt; wide and &lt;Height&gt; tall</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>225</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>y</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Width</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Height</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <FormatRef data="NONE" ref="ScrollViewChildren"/>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ControlIt>
   </ControlIts>
   <TypeConverters/>
 </LibraryModel>
