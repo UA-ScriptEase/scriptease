@@ -199,7 +199,7 @@
 		<xsd:attribute name="control" use="required">
 			<xsd:simpleType>
 				<xsd:restriction base="xsd:string">
-					<xsd:pattern value="DELAY|QUESTION|REPEAT|GUIGROUP" />
+					<xsd:pattern value="DELAY|QUESTION|REPEAT|FOLDER" />
 				</xsd:restriction>
 			</xsd:simpleType>
 		</xsd:attribute>
