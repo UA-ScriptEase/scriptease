@@ -155,7 +155,6 @@ public final class UnityProject extends GameModule {
 					this.scripts.add(new UnityScript(scriptInfo, prefab));
 				}
 			}
-
 		}
 	}
 

@@ -1,6 +1,5 @@
 package scriptease.model.atomic.knowitbindings;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
@@ -15,12 +14,6 @@ import scriptease.controller.BindingVisitor;
  */
 public class KnowItBindingRunTime extends KnowItBinding {
 	private Collection<String> types;
-
-	public KnowItBindingRunTime(String type) {
-		ArrayList<String> types = new ArrayList<String>();
-		types.add(type);
-		this.types = types;
-	}
 
 	public KnowItBindingRunTime(Collection<String> types) {
 		this.types = types;

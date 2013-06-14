@@ -177,14 +177,6 @@ public class SeriesFragment extends AbstractContainerFragment {
 		} else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.CODEBLOCKS
 						.name())) {
-
-			if (context instanceof FileContext) {
-				if (context.getLocationInfo().toString().contains("introplan")) {
-					System.out.println("This does not get all codeblocks");
-				}
-				if (context.getLocationInfo().toString().contains("femalekid"))
-					System.out.println("This gets all codeblocks");
-			}
 			data = context.getCodeBlocks();
 		} else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.CAUSES
