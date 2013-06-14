@@ -143,19 +143,34 @@ public final class UnityProject extends GameModule {
 	@Override
 	public void addScripts(Collection<ScriptInfo> scriptList) {
 		for (ScriptInfo scriptInfo : scriptList) {
+
 			for (UnityFile scene : this.scenes) {
 				if (scene.getObjectByTemplateID(scriptInfo.getSubject()
 						.getTemplateID()) != null) {
 					this.scripts.add(new UnityScript(scriptInfo, scene));
 				}
 			}
+
 			for (UnityFile prefab : this.prefabs) {
-				if (prefab.getObjectByTemplateID(scriptInfo.getSubject()
-						.getTemplateID()) != null) {
-					this.scripts.add(new UnityScript(scriptInfo, prefab));
+				final Resource subject = scriptInfo.getSubject();
+
+				if (subject.getTemplateID().equals(prefab.getTemplateID())) {
+
+					final UnityFile prefabObject = (UnityFile) subject;
+					final List<UnityResource> children = prefabObject
+							.getResources();
+
+					for (UnityResource child : children) {
+
+						if (child.getTypes().contains(
+								UnityType.GAMEOBJECT.getName())) {
+							this.scripts
+									.add(new UnityScript(scriptInfo, prefab));
+							break;
+						}
+					}
 				}
 			}
-
 		}
 	}
 

@@ -385,7 +385,7 @@ public class UnityResource extends Resource {
 	}
 
 	/**
-	 * This combines the tag, uniqueID, and, if this is a Game Object, a scene
+	 * This combines the tag, uniqueID, and, if this is a Game Object, a Unity
 	 * file name to provide the strongest representation of the object as a
 	 * String. This shouldn't ever be called to generate code since we have
 	 * specific methods for that, such as {@link #getUniqueID()}.
@@ -396,13 +396,13 @@ public class UnityResource extends Resource {
 		final String templateID;
 
 		if (this.getType().equals(UnityType.GAMEOBJECT)) {
-			Resource scene = this.getOwner();
+			Resource unityFile = this.getOwner();
 
-			while (!(scene instanceof UnityFile)) {
-				scene = scene.getOwner();
+			while (!(unityFile instanceof UnityFile)) {
+				unityFile = unityFile.getOwner();
 			}
 
-			templateID = commonID + " " + scene.getName();
+			templateID = commonID + " " + unityFile.getName();
 		} else
 			templateID = commonID;
 
