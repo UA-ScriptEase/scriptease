@@ -242,8 +242,8 @@ public class UnityFile extends Resource {
 
 		// Initialize the unity file's visible children resources.
 		for (UnityResource resource : this.unityResources) {
-			if (types.contains(UnityType.PREFAB.getName()))
-				break;
+//			if (types.contains(UnityType.PREFAB.getName()))
+//				break;
 			
 			if (resource.getOwner() == this
 					&& resource.getType() == UnityType.GAMEOBJECT
