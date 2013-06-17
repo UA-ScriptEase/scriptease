@@ -70,6 +70,8 @@ public class StoryComponentPanel extends JPanel implements
 
 		// Layout
 		this.setLayout(this.layout);
+		
+		
 
 		this.addFocusListener(new FocusListener() {
 			@Override

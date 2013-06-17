@@ -39,6 +39,7 @@ import scriptease.controller.FileManager;
  * @author Unknown
  * @author remiller
  * @author graves
+ * @author jyuen
  */
 public class FileOp {
 
@@ -273,6 +274,28 @@ public class FileOp {
 		dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
 		srcChannel.close();
 		dstChannel.close();
+	}
+
+	/**
+	 * Retrieves the part of a file path after the first instance of excluded @param
+	 * folder.
+	 * 
+	 * @param source
+	 *            The file to copy from.
+	 * @param folder
+	 *            The folder that gets cut off.
+	 */
+	public static String getFileNameUpTo(File source, String folder) {
+		final String filepath = source.getAbsolutePath();
+
+		// Check if the filepath even contains the desired cutoff string
+		if (!filepath.contains(folder))
+			throw new IllegalArgumentException(
+					"The requested cut off folder does not exist in the file path");
+
+		int cutoffIndex = filepath.indexOf(folder) + folder.length() + 1;
+
+		return filepath.substring(cutoffIndex);
 	}
 
 	/**

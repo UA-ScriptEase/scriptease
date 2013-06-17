@@ -16,8 +16,10 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
@@ -386,6 +388,16 @@ public class StoryComponentPanelManager {
 								.createLineBorder(Color.LIGHT_GRAY));
 					else
 						this.defaultProcess(scriptIt);
+				}
+
+				public void processControlIt(ControlIt controlIt) {
+					panel.setBorder(BorderFactory
+							.createLineBorder(Color.LIGHT_GRAY));
+				}
+
+				public void processAskIt(AskIt askIt) {
+					panel.setBorder(BorderFactory
+							.createLineBorder(Color.LIGHT_GRAY));
 				}
 
 				@Override
