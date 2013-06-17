@@ -184,9 +184,11 @@ public class ResourcePanel extends JPanel {
 	}
 
 	/**
-	 * Repaints the tree.
+	 * Updates the panels in a category of the passed in type.
+	 * 
+	 * @param type
 	 */
-	public void repaintTree() {
-		this.resources.repaintTree();
+	public void updateCategory(String type) {
+
 	}
 }

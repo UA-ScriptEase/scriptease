@@ -99,10 +99,14 @@ public final class StoryModel extends SEModel {
 	 * Adds a new {@link Dialogue} to the list contained in this model.
 	 * 
 	 * @param dialogue
-	 * @return
+	 * @return The newly added root
 	 */
-	public boolean addDialogueRoot() {
-		return this.dialogueRoots.add(new DialogueLine(this.module));
+	public DialogueLine addDialogueRoot() {
+		final DialogueLine newRoot = new DialogueLine(this.module);
+
+		this.dialogueRoots.add(newRoot);
+
+		return newRoot;
 	}
 
 	public boolean removeDialogueRoot(DialogueLine line) {

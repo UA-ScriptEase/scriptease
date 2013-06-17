@@ -2,6 +2,7 @@ package scriptease.gui.pane;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -16,7 +17,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -51,27 +51,16 @@ import scriptease.util.StringOp;
 @SuppressWarnings("serial")
 class ResourceTree extends JPanel {
 
-	/*
-	 * TODO
-	 * 
-	 * We're doing this wrong. The tree should only have resource containers.
-	 * Then, the resource container should hold the objects.
-	 * 
-	 * Then we only need to update the resource containers. Makes things better!
-	 * 
-	 * TODO Each resource container AND resource panel needs to store its
-	 * open/closed state.
-	 * 
-	 * TODO We don't need to redraw the resource panels. Ever.
-	 */
+	// TODO The panels + containers should listen to search changes.
 
 	private Resource selectedResource = null;
 
 	private String filterText;
 
 	private final List<String> filterTypes;
-	private final Map<Resource, JPanel> panelMap;
 	private final ObserverManager<ResourceTreeObserver> observerManager;
+
+	private final Collection<ResourceContainer> containers;
 
 	private static final Comparator<Resource> constantSorter = new Comparator<Resource>() {
 		@Override
@@ -106,7 +95,7 @@ class ResourceTree extends JPanel {
 	 */
 	protected ResourceTree() {
 		super();
-		this.panelMap = new HashMap<Resource, JPanel>();
+		this.containers = new ArrayList<ResourceContainer>();
 		this.filterTypes = new ArrayList<String>();
 		this.filterText = "";
 		this.observerManager = new ObserverManager<ResourceTreeObserver>();
@@ -125,27 +114,47 @@ class ResourceTree extends JPanel {
 	 * @param model
 	 */
 	protected void fillTree() {
-		this.panelMap.clear();
+		this.containers.clear();
+		this.removeAll();
 
-		final SEModel model = SEModelManager.getInstance().getActiveModel();
-		if (!(model instanceof StoryModel))
+		final StoryModel story;
+
+		story = SEModelManager.getInstance().getActiveStoryModel();
+
+		if (story == null) {
+			this.repaint();
+			this.revalidate();
 			return;
-
-		final StoryModel story = (StoryModel) model;
-
-		for (String type : model.getTypeKeywords()) {
-			final Collection<Resource> gameObjects;
-
-			gameObjects = story.getModule().getResourcesOfType(type);
-
-			for (Resource constant : gameObjects) {
-				if (constant.getOwner() == null)
-					this.panelMap.put(constant, new ResourcePanel(constant, 0));
-			}
 		}
 
-		for (DialogueLine line : story.getDialogueRoots()) {
-			this.panelMap.put(line, new ResourcePanel(line, 0));
+		final List<String> types;
+
+		types = new ArrayList<String>(story.getTypeKeywords());
+
+		Collections.sort(types);
+
+		// Add the dialogue type even if there are no dialogues.
+		for (String type : types) {
+
+			final ResourceContainer containerPanel;
+
+			containerPanel = new ResourceContainer(
+					story.getTypeDisplayText(type));
+
+			this.add(containerPanel);
+			this.containers.add(containerPanel);
+		}
+
+		this.repaint();
+		this.revalidate();
+	}
+
+	protected void updateCategory(String type) {
+		for (ResourceContainer container : this.containers) {
+			if (container.type.equals(type)) {
+				// DO stuff TODO
+				break;
+			}
 		}
 	}
 
@@ -154,7 +163,6 @@ class ResourceTree extends JPanel {
 	 */
 	protected void repaintTree() {
 		this.fillTree();
-		this.redrawTree();
 	}
 
 	/**
@@ -164,7 +172,9 @@ class ResourceTree extends JPanel {
 	 */
 	protected void filterByText(String filterText) {
 		this.filterText = filterText;
-		this.redrawTree();
+
+		// TODO
+		this.fillTree();
 	}
 
 	/**
@@ -175,7 +185,9 @@ class ResourceTree extends JPanel {
 	protected void filterByTypes(Collection<String> filterTypes) {
 		this.filterTypes.clear();
 		this.filterTypes.addAll(filterTypes);
-		this.redrawTree();
+
+		// TODO
+		this.fillTree();
 	}
 
 	/**
@@ -224,72 +236,6 @@ class ResourceTree extends JPanel {
 			dialogueType = ((StoryModel) model).getModule().getDialogueType();
 
 		return dialogueType;
-	}
-
-	/**
-	 * Redraws the tree. If you have not set some filter types with
-	 * {@link #filterByTypes(Collection)}, the tree may get redrawn as empty.
-	 * Since that method calls this method, it is usually a better idea to just
-	 * use it instead.
-	 */
-	private void redrawTree() {
-		this.removeAll();
-
-		final SEModel model = SEModelManager.getInstance().getActiveModel();
-
-		if (model == null || !(model instanceof StoryModel)) {
-			this.repaint();
-			this.revalidate();
-			return;
-		}
-
-		final String dialogueType;
-		final Map<String, List<Resource>> typesToResources;
-
-		typesToResources = new TreeMap<String, List<Resource>>();
-		dialogueType = this.getDialogueType();
-
-		// Find constants that match the filters.
-		for (Resource constant : this.panelMap.keySet()) {
-			if (constant.getOwner() == null
-					&& (constant.getOwnerName() == null || constant
-							.getOwnerName().isEmpty())
-					&& this.matchesFilters(constant)) {
-				for (String type : constant.getTypes()) {
-
-					List<Resource> constantList = typesToResources.get(type);
-					if (constantList == null) {
-						constantList = new ArrayList<Resource>();
-					}
-
-					constantList.add(constant);
-					typesToResources.put(type, constantList);
-				}
-			}
-		}
-
-		// Add the dialogue type even if there are no dialogues.
-		if (StringOp.exists(dialogueType)
-				&& typesToResources.get(dialogueType) == null
-				// Check to make sure we aren't hiding dialogue types.
-				&& this.filterTypes.contains(dialogueType)) {
-			typesToResources.put(dialogueType, new ArrayList<Resource>());
-		}
-
-		for (String type : typesToResources.keySet()) {
-			final List<Resource> constantList;
-			final String typeName;
-
-			constantList = typesToResources.get(type);
-			typeName = model.getTypeDisplayText(type);
-
-			Collections.sort(constantList, constantSorter);
-
-			this.add(new ResourceContainer(typeName, constantList));
-		}
-
-		this.repaint();
-		this.revalidate();
 	}
 
 	/**
@@ -352,124 +298,96 @@ class ResourceTree extends JPanel {
 	 * that the user can then drag and drop into the appropriate slots.
 	 * 
 	 */
+	private JPanel createResourcePanel(final Resource resource, int indent) {
+		final JPanel panel = new JPanel();
 
-	// TODO Make this into a method. We don't need an entire class for it.
-	private class ResourcePanel extends JPanel {
-		private final Resource resource;
+		final int STRUT_SIZE = 10 * indent;
 
-		public ResourcePanel(Resource resource, int indent) {
-			this.resource = resource;
+		final String resourceName;
+		final String resourceOwnerName;
 
-			final int STRUT_SIZE = 10 * indent;
+		final BindingWidget gameObjectBindingWidget;
 
-			final String resourceName;
-			final String resourceOwnerName;
+		final JPanel childPanel;
+		final JPanel resourcePanel;
 
-			final BindingWidget gameObjectBindingWidget;
+		resourceName = resource.getName();
+		resourceOwnerName = resource.getOwnerName();
 
-			final JPanel childPanel;
-			final JPanel resourcePanel;
+		gameObjectBindingWidget = new BindingWidget(new KnowItBindingResource(
+				resource));
 
-			resourceName = resource.getName();
-			resourceOwnerName = resource.getOwnerName();
+		childPanel = new JPanel();
+		resourcePanel = new JPanel();
 
-			gameObjectBindingWidget = new BindingWidget(
-					new KnowItBindingResource(resource));
+		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		panel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
+		panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
-			childPanel = new JPanel();
-			resourcePanel = new JPanel();
+		resourcePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		resourcePanel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
+		resourcePanel.setOpaque(false);
+		resourcePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-			this.setAlignmentX(Component.LEFT_ALIGNMENT);
-			this.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
-			this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
-			this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		childPanel.setLayout(new BoxLayout(childPanel, BoxLayout.PAGE_AXIS));
 
-			resourcePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-			resourcePanel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
-			resourcePanel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
-			resourcePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-			childPanel
-					.setLayout(new BoxLayout(childPanel, BoxLayout.PAGE_AXIS));
-
-			if (resource.isLink()) {
-				gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
-						gameObjectBindingWidget.getBackground(), 1.24));
-			}
-
-			gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(
-					resourceName, Color.WHITE));
-
-			this.add(Box.createHorizontalStrut(STRUT_SIZE));
-
-			if (resource.getChildren().size() > 0) {
-				final ExpansionButton button;
-
-				button = ScriptWidgetFactory.buildExpansionButton(true);
-
-				button.addActionListener(new ActionListener() {
-					private boolean collapsed = true;
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						button.setCollapsed(this.collapsed ^= true);
-
-						childPanel.setVisible(!this.collapsed);
-
-						ResourceTree.this.redrawTree();
-					}
-				});
-
-				resourcePanel.add(button);
-			} else
-				resourcePanel.add(Box.createRigidArea(new Dimension(10, 0)));
-
-			if (resourceOwnerName != null && !resourceOwnerName.isEmpty()) {
-				final Color LINE_COLOR_1 = Color.red;
-				final Color LINE_COLOR_2 = Color.blue;
-
-				final JLabel prefixLabel;
-
-				prefixLabel = new JLabel();
-
-				prefixLabel.setOpaque(true);
-				prefixLabel.setBackground(Color.LIGHT_GRAY);
-				prefixLabel.setText(" " + resourceOwnerName.charAt(0) + " ");
-
-				if (indent % 2 == 0) {
-					prefixLabel.setForeground(LINE_COLOR_2);
-				} else {
-					prefixLabel.setForeground(LINE_COLOR_1);
-				}
-
-				this.add(prefixLabel);
-			}
-
-			resourcePanel.add(gameObjectBindingWidget);
-
-			if (resource.getTypes().contains(
-					ResourceTree.this.getDialogueType())
-					&& resource instanceof DialogueLine) {
-				resourcePanel.add(this.resourceEditButton());
-				resourcePanel.add(this.resourceRemoveButton());
-			}
-
-			this.add(resourcePanel);
-			this.add(childPanel);
-
-			for (Resource child : resource.getChildren()) {
-				final ResourcePanel childResourcePanel;
-
-				childResourcePanel = new ResourcePanel(child, indent + 1);
-				childPanel.add(childResourcePanel);
-
-			}
-
-			childPanel.setVisible(false);
+		if (resource.isLink()) {
+			gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
+					gameObjectBindingWidget.getBackground(), 1.24));
 		}
 
-		private JButton resourceEditButton() {
+		gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(
+				resourceName, Color.WHITE));
+
+		panel.add(Box.createHorizontalStrut(STRUT_SIZE));
+
+		if (resource.getChildren().size() > 0) {
+			final ExpansionButton button;
+
+			button = ScriptWidgetFactory.buildExpansionButton(true);
+
+			button.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final boolean isVisible = childPanel.isVisible();
+					button.setCollapsed(isVisible);
+					childPanel.setVisible(!isVisible);
+				}
+			});
+
+			resourcePanel.add(button);
+		} else
+			resourcePanel.add(Box.createRigidArea(new Dimension(10, 0)));
+
+		if (resourceOwnerName != null && !resourceOwnerName.isEmpty()) {
+			final Color LINE_COLOR_1 = Color.red;
+			final Color LINE_COLOR_2 = Color.blue;
+
+			final JLabel prefixLabel;
+
+			prefixLabel = new JLabel();
+
+			prefixLabel.setOpaque(true);
+			prefixLabel.setBackground(Color.LIGHT_GRAY);
+			prefixLabel.setText(" " + resourceOwnerName.charAt(0) + " ");
+
+			if (indent % 2 == 0) {
+				prefixLabel.setForeground(LINE_COLOR_2);
+			} else {
+				prefixLabel.setForeground(LINE_COLOR_1);
+			}
+
+			panel.add(prefixLabel);
+		}
+
+		resourcePanel.add(gameObjectBindingWidget);
+
+		if (resource.getTypes().contains(this.getDialogueType())
+				&& resource instanceof DialogueLine) {
+
 			final JButton editButton = ComponentFactory.buildEditButton();
+			final JButton removeButton = ComponentFactory.buildRemoveButton();
 
 			editButton.addActionListener(new ActionListener() {
 				@Override
@@ -477,12 +395,6 @@ class ResourceTree extends JPanel {
 					ResourceTree.this.notifyEditButtonClicked(resource);
 				}
 			});
-
-			return editButton;
-		}
-
-		private JButton resourceRemoveButton() {
-			final JButton removeButton = ComponentFactory.buildRemoveButton();
 
 			removeButton.addActionListener(new ActionListener() {
 				@Override
@@ -492,49 +404,69 @@ class ResourceTree extends JPanel {
 						return;
 
 					final StoryModel story;
+					final Container parent;
 
 					story = SEModelManager.getInstance().getActiveStoryModel();
+					parent = panel.getParent();
 
 					story.removeDialogueRoot((DialogueLine) resource);
-					ResourceTree.this.repaintTree();
+
+					if (parent != null) {
+						parent.remove(panel);
+
+						if (parent instanceof JComponent) {
+							((JComponent) parent).revalidate();
+						}
+					}
 				}
 			});
 
-			return removeButton;
+			resourcePanel.add(editButton);
+			resourcePanel.add(removeButton);
 		}
+
+		panel.add(resourcePanel);
+		panel.add(childPanel);
+
+		for (Resource child : resource.getChildren()) {
+			childPanel.add(this.createResourcePanel(child, indent + 1));
+		}
+
+		if (selectedResource == resource)
+			panel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
+
+		panel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				selectedResource = resource;
+				ResourceTree.this.notifyResourceSelected(selectedResource);
+			}
+		});
+
+		ResourceTree.this.addObserver(this, new ResourceTreeObserver() {
+
+			@Override
+			public void resourceSelected(Resource selected) {
+				if (resource != selected)
+					panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
+				else
+					panel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
+
+			}
+
+			@Override
+			public void resourceEditButtonPressed(Resource resource) {
+			}
+		});
+
+		childPanel.setVisible(false);
+
+		return panel;
 	}
 
-	/**
-	 * Sets the panel's background to the passed in color.
-	 * 
-	 * @param constant
-	 * @param color
-	 */
-	private void setResourcePanelBackground(Resource constant, Color color) {
-		final JPanel panel;
-
-		// TODO Need to do this differently. Based on listeners or something.
-		panel = this.panelMap.get(constant);
-
-		if (panel == null)
-			return;
-
-		panel.setBackground(color);
-
-		if (constant.isLink()) {
-			// TODO Select all same nodes.
-		}
-	}
-
-	/**
-	 * Container of Game Objects. Displays the game objects inside it, and can
-	 * be collapsed or expanded.
-	 * 
-	 * @author kschenk
-	 * 
-	 */
 	private class ResourceContainer extends JPanel {
-		private boolean collapsed;
+		private final String type;
+		private final JPanel container;
 
 		/**
 		 * Creates a new game object container with the passed in name and
@@ -545,145 +477,130 @@ class ResourceTree extends JPanel {
 		 * @param gameConstants
 		 *            The list of GameConstants in the container
 		 */
-		private ResourceContainer(String typeName,
-				final Collection<Resource> gameConstants) {
-			this.collapsed = false;
-
-			this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-			this.setBackground(Color.WHITE);
-
-			this.redrawContainer(typeName, gameConstants);
-		}
-
-		/**
-		 * Redraws the container. This also fires whenever the container is
-		 * collapsed or expanded.
-		 * 
-		 * @param typeName
-		 *            The name of the container
-		 * @param resources
-		 *            The list of GameConstants in the container
-		 */
-		private void redrawContainer(final String typeName,
-				final Collection<Resource> resources) {
-			this.removeAll();
+		public ResourceContainer(String type) {
+			this.type = type;
+			this.container = new JPanel();
 
 			final JLabel categoryLabel;
+			final ExpansionButton button;
+
 			final JPanel categoryPanel;
 
-			categoryLabel = new JLabel(typeName);
+			button = ScriptWidgetFactory.buildExpansionButton(false);
+
+			categoryLabel = new JLabel(type);
 			categoryPanel = new JPanel();
 
 			categoryLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
 			categoryLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
 			categoryLabel.setForeground(Color.DARK_GRAY);
+
+			button.setContentAreaFilled(false);
+			button.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final boolean isVisible = container.isVisible();
+					button.setCollapsed(isVisible);
+					container.setVisible(!isVisible);
+				}
+			});
 
 			categoryLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					ResourceContainer.this.collapsed ^= true;
-					redrawContainer(typeName, resources);
+					button.doClick();
 				}
 			});
+
+			this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+			this.setBackground(Color.WHITE);
+
+			this.container.setLayout(new BoxLayout(this.container,
+					BoxLayout.PAGE_AXIS));
 
 			categoryPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 			categoryPanel.setLayout(new BoxLayout(categoryPanel,
 					BoxLayout.LINE_AXIS));
 			categoryPanel.setOpaque(false);
 
+			categoryPanel.add(button);
 			categoryPanel.add(categoryLabel);
 			categoryPanel.add(ComponentFactory.buildSpacer(15, 15));
 
 			final String dialogueType = ResourceTree.this.getDialogueType();
 
-			if (StringOp.exists(dialogueType) && typeName.equals(dialogueType)) {
-				categoryPanel.add(this.resourceAddButton());
+			if (StringOp.exists(dialogueType) && type.equals(dialogueType)) {
+				final JButton addButton = ComponentFactory.buildAddButton();
+
+				addButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Make a listener fire instead. "Resource added"
+						// or something.
+						final StoryModel story;
+
+						story = SEModelManager.getInstance()
+								.getActiveStoryModel();
+
+						story.addDialogueRoot();
+
+						ResourceContainer.this.updateResourcePanels();
+					}
+				});
+
+				categoryPanel.add(addButton);
 			}
 
 			categoryPanel.add(Box.createHorizontalGlue());
 
-			if (this.collapsed) {
-				categoryLabel.setIcon(ScriptEaseUI.EXPAND_ICON);
-				this.add(categoryPanel);
-			} else {
-				categoryLabel.setIcon(ScriptEaseUI.COLLAPSE_ICON);
-				this.add(categoryPanel);
-
-				for (final Resource resource : resources) {
-					this.addGameConstant(resource);
-				}
-			}
+			this.add(categoryPanel);
 
 			this.add(Box.createHorizontalGlue());
 
-			this.revalidate();
+			this.add(this.container);
+
+			this.updateResourcePanels();
 		}
 
-		private JButton resourceAddButton() {
-			final JButton addResource = ComponentFactory.buildAddButton();
+		private void updateResourcePanels() {
+			this.container.removeAll();
 
-			addResource.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					// TODO Make a listener fire instead. "Resource added" or
-					// something.
-					final StoryModel story;
+			final StoryModel story;
 
-					story = SEModelManager.getInstance().getActiveStoryModel();
+			story = SEModelManager.getInstance().getActiveStoryModel();
 
-					story.addDialogueRoot();
-					ResourceTree.this.repaintTree();
-				}
-			});
-
-			return addResource;
-		}
-
-		private void addGameConstant(final Resource constant) {
-			final JComponent constantPanel;
-
-			constantPanel = panelMap.get(constant);
-
-			if (selectedResource == constant)
-				constantPanel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
-
-			if (constantPanel == null) {
-				System.err.println("Constant has null component: " + constant);
+			if (story == null) {
+				this.setVisible(false);
 				return;
 			}
 
-			constantPanel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					setResourcePanelBackground(selectedResource,
-							ScriptEaseUI.UNSELECTED_COLOUR);
+			final String dialogueType = story.getModule().getDialogueType();
 
-					selectedResource = constant;
+			final List<Resource> resources;
 
-					// TODO Need to do this differently. Maybe on notify
-					// resource selected..
+			if (StringOp.exists(dialogueType) && type.equals(dialogueType))
+				resources = new ArrayList<Resource>(story.getDialogueRoots());
+			else {
+				resources = new ArrayList<Resource>(story.getModule()
+						.getResourcesOfType(type));
 
-					setResourcePanelBackground(selectedResource,
-							ScriptEaseUI.SELECTED_COLOUR);
-
-					ResourceTree.this.notifyResourceSelected(selectedResource);
+				if (resources == null || resources.isEmpty()) {
+					this.setVisible(false);
+					return;
 				}
-			});
-
-			this.add(constantPanel);
-
-			final List<Resource> constantList;
-
-			constantList = new ArrayList<Resource>(constant.getChildren());
-
-			Collections.sort(constantList, constantSorter);
-
-			for (Resource child : constantList) {
-				if (matchesFilters(child)
-						&& ResourceTree.this.panelMap.containsKey(child))
-					this.addGameConstant(child);
 			}
+
+			Collections.sort(resources, constantSorter);
+
+			for (Resource resource : resources) {
+				final JPanel panel;
+
+				panel = ResourceTree.this.createResourcePanel(resource, 0);
+
+				this.container.add(panel);
+			}
+
+			this.revalidate();
 		}
 	}
 }

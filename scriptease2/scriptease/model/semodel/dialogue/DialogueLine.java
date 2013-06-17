@@ -130,8 +130,6 @@ public final class DialogueLine extends Resource {
 			type.add(this.module.getDialogueType());
 		else
 			type.add(this.module.getDialogueLineType());
-
-		System.out.println(type);
 		return type;
 	}
 
