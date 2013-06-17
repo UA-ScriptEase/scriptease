@@ -205,7 +205,7 @@
 		<!-- Adds the type of the variable in front of it -->
 		<Format id="variableWithType">
 			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
-			<Literal>:</Literal>
+			<Literal> : </Literal>
 			<Fragment data="type" default="void" />
 		</Format>
 		<!-- Declares a variable with type -->
@@ -220,7 +220,7 @@
 		<!-- Declares all variables in the series -->
 		<Format id="variablesDeclaration">
 			<Line>
-				<Literal>// Variables Declaration</Literal>
+				<Literal>// Variable Declarations</Literal>
 			</Line>
 			<Series data="variables">
 				<FormatRef ref="variableDeclaration" />
@@ -239,7 +239,7 @@
 		<!-- Defines all variables in the series -->
 		<Format id="variablesDefinition">
 			<Line>
-				<Literal>// Variables Definition</Literal>
+				<Literal>// Variable Definitions</Literal>
 			</Line>
 			<Series data="variables">
 				<FormatRef ref="variableDefinition" />
@@ -251,7 +251,7 @@
 		<!-- Declares all implicits -->
 		<Format id="implicitsDeclaration">
 			<Line>
-				<Literal>// Implicits Declaration</Literal>
+				<Literal>// Implicit Declarations</Literal>
 			</Line>
 			<Series data="implicits">
 				<FormatRef ref="variableDeclaration" />
@@ -260,7 +260,7 @@
 		<!-- Defines all implicits -->
 		<Format id="implicitsDefinition">
 			<Line>
-				<Literal>// Implicits Definition</Literal>
+				<Literal>// Implicit Definitions</Literal>
 			</Line>
 			<Series data="implicits">
 				<FormatRef ref="variableDefinition" />
@@ -530,13 +530,13 @@
 		<!-- Format for ScriptIts -->
 		<Format id="scriptItConditional">
 			<Line>
-				<Literal>var enabledPoints:List.&lt;String&gt; = SEStory.GetAllActive();</Literal>
+				<Literal>var enabledPoints : List.&lt;String&gt; = SEStory.GetAllActive();</Literal>
 			</Line>
 			<Line />
 			
 			<Series data="identicalCauses">
 			<Line> 
-				<Literal>if(enabledPoints.Contains("</Literal> 
+				<Literal>if (enabledPoints.Contains("</Literal> 
 				<Fragment data="currentstorypoint" />
 				<Literal>")) {</Literal> 
 			</Line>
@@ -568,7 +568,7 @@
 		<!-- Format for askits -->
 		<Format id="askItConditional">
 			<Line>
-				<Literal>if(</Literal>
+				<Literal>if (</Literal>
 				<Fragment data="condition" />
 				<Literal>){</Literal>
 			</Line>
@@ -608,7 +608,7 @@
 				</Line>
 				<Series data="causes" unique="true">
 					<Line>
-						<Literal>if(</Literal>
+						<Literal>if (</Literal>
 						<Fragment data="slotConditional" />
 						<Literal>) {</Literal>
 					</Line>
