@@ -352,13 +352,13 @@ class ResourceTree extends JPanel {
 	 * that the user can then drag and drop into the appropriate slots.
 	 * 
 	 */
+
+	// TODO Make this into a method. We don't need an entire class for it.
 	private class ResourcePanel extends JPanel {
 		private final Resource resource;
-		private final JPanel childPanel;
 
 		public ResourcePanel(Resource resource, int indent) {
 			this.resource = resource;
-			this.childPanel = new JPanel();
 
 			final int STRUT_SIZE = 10 * indent;
 
@@ -367,6 +367,7 @@ class ResourceTree extends JPanel {
 
 			final BindingWidget gameObjectBindingWidget;
 
+			final JPanel childPanel;
 			final JPanel resourcePanel;
 
 			resourceName = resource.getName();
@@ -375,20 +376,21 @@ class ResourceTree extends JPanel {
 			gameObjectBindingWidget = new BindingWidget(
 					new KnowItBindingResource(resource));
 
+			childPanel = new JPanel();
 			resourcePanel = new JPanel();
 
 			this.setAlignmentX(Component.LEFT_ALIGNMENT);
 			this.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
 			this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
+			this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
 			resourcePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 			resourcePanel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
 			resourcePanel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 			resourcePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-			this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-			this.childPanel.setLayout(new BoxLayout(this.childPanel,
-					BoxLayout.PAGE_AXIS));
+			childPanel
+					.setLayout(new BoxLayout(childPanel, BoxLayout.PAGE_AXIS));
 
 			if (resource.isLink()) {
 				gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
@@ -400,9 +402,26 @@ class ResourceTree extends JPanel {
 
 			this.add(Box.createHorizontalStrut(STRUT_SIZE));
 
-			if (resource.getChildren().size() > 0)
-				resourcePanel.add(this.createExpandChildButton(indent));
-			else
+			if (resource.getChildren().size() > 0) {
+				final ExpansionButton button;
+
+				button = ScriptWidgetFactory.buildExpansionButton(true);
+
+				button.addActionListener(new ActionListener() {
+					private boolean collapsed = true;
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						button.setCollapsed(this.collapsed ^= true);
+
+						childPanel.setVisible(!this.collapsed);
+
+						ResourceTree.this.redrawTree();
+					}
+				});
+
+				resourcePanel.add(button);
+			} else
 				resourcePanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 			if (resourceOwnerName != null && !resourceOwnerName.isEmpty()) {
@@ -436,38 +455,17 @@ class ResourceTree extends JPanel {
 			}
 
 			this.add(resourcePanel);
-			this.add(this.childPanel);
+			this.add(childPanel);
 
 			for (Resource child : resource.getChildren()) {
 				final ResourcePanel childResourcePanel;
 
 				childResourcePanel = new ResourcePanel(child, indent + 1);
-				this.childPanel.add(childResourcePanel);
+				childPanel.add(childResourcePanel);
 
 			}
 
-			this.childPanel.setVisible(false);
-		}
-
-		private ExpansionButton createExpandChildButton(final int indent) {
-			final ExpansionButton button;
-
-			button = ScriptWidgetFactory.buildExpansionButton(true);
-
-			button.addActionListener(new ActionListener() {
-				private boolean collapsed = true;
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					button.setCollapsed(this.collapsed ^= true);
-
-					ResourcePanel.this.childPanel.setVisible(!this.collapsed);
-
-					ResourceTree.this.redrawTree();
-				}
-			});
-
-			return button;
+			childPanel.setVisible(false);
 		}
 
 		private JButton resourceEditButton() {
