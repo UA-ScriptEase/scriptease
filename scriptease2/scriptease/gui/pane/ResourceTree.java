@@ -14,9 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -50,17 +48,16 @@ import scriptease.util.StringOp;
  */
 @SuppressWarnings("serial")
 class ResourceTree extends JPanel {
-
 	// TODO The panels + containers should listen to search changes.
 
 	private Resource selectedResource = null;
 
 	private String filterText;
 
-	private final List<String> filterTypes;
 	private final ObserverManager<ResourceTreeObserver> observerManager;
 
 	private final Collection<ResourceContainer> containers;
+	private final Collection<String> filterTypes;
 
 	private static final Comparator<Resource> constantSorter = new Comparator<Resource>() {
 		@Override
@@ -95,8 +92,8 @@ class ResourceTree extends JPanel {
 	 */
 	protected ResourceTree() {
 		super();
-		this.containers = new ArrayList<ResourceContainer>();
 		this.filterTypes = new ArrayList<String>();
+		this.containers = new ArrayList<ResourceContainer>();
 		this.filterText = "";
 		this.observerManager = new ObserverManager<ResourceTreeObserver>();
 
@@ -152,17 +149,10 @@ class ResourceTree extends JPanel {
 	protected void updateCategory(String type) {
 		for (ResourceContainer container : this.containers) {
 			if (container.type.equals(type)) {
-				// DO stuff TODO
+				container.updateResourcePanels();
 				break;
 			}
 		}
-	}
-
-	/**
-	 * Refills the tree and then redraws it.
-	 */
-	protected void repaintTree() {
-		this.fillTree();
 	}
 
 	/**
@@ -173,8 +163,9 @@ class ResourceTree extends JPanel {
 	protected void filterByText(String filterText) {
 		this.filterText = filterText;
 
-		// TODO
-		this.fillTree();
+		for (ResourceContainer container : this.containers) {
+			container.updateResourcePanels();
+		}
 	}
 
 	/**
@@ -185,9 +176,15 @@ class ResourceTree extends JPanel {
 	protected void filterByTypes(Collection<String> filterTypes) {
 		this.filterTypes.clear();
 		this.filterTypes.addAll(filterTypes);
-
-		// TODO
-		this.fillTree();
+		
+		// TODO Filter types arent working...
+		
+		// TODO Filtering is beyond slow.
+		
+		
+		for (ResourceContainer container : this.containers) {
+			container.updateResourcePanels();
+		}
 	}
 
 	/**
@@ -236,29 +233,6 @@ class ResourceTree extends JPanel {
 			dialogueType = ((StoryModel) model).getModule().getDialogueType();
 
 		return dialogueType;
-	}
-
-	/**
-	 * Checks whether a constant matches the current filters.
-	 * 
-	 * @param constant
-	 * @return
-	 */
-	private boolean matchesFilters(Resource constant) {
-		boolean match = false;
-
-		for (String type : constant.getTypes()) {
-			if (this.filterTypes.contains(type)) {
-				match = true;
-				break;
-			}
-		}
-
-		if (match == true) {
-			match = matchesSearchText(constant);
-		}
-
-		return match;
 	}
 
 	/**
@@ -569,7 +543,7 @@ class ResourceTree extends JPanel {
 
 			story = SEModelManager.getInstance().getActiveStoryModel();
 
-			if (story == null) {
+			if (story == null || !ResourceTree.this.filterTypes.contains(type)) {
 				this.setVisible(false);
 				return;
 			}
@@ -593,11 +567,14 @@ class ResourceTree extends JPanel {
 			Collections.sort(resources, constantSorter);
 
 			for (Resource resource : resources) {
-				final JPanel panel;
 
-				panel = ResourceTree.this.createResourcePanel(resource, 0);
+				if (ResourceTree.this.matchesSearchText(resource)) {
+					final JPanel panel;
 
-				this.container.add(panel);
+					panel = ResourceTree.this.createResourcePanel(resource, 0);
+
+					this.container.add(panel);
+				}
 			}
 
 			this.revalidate();
