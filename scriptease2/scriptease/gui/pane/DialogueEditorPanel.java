@@ -15,8 +15,10 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.component.ComponentFactory;
+import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
+import scriptease.util.StringOp;
 
 /**
  * This panel contains a Dialogue Line Graph.
@@ -58,7 +60,19 @@ public class DialogueEditorPanel extends JPanel {
 			public void nodeAdded(DialogueLine newNode,
 					Collection<DialogueLine> children,
 					Collection<DialogueLine> parents) {
-				ResourcePanel.getInstance().repaintTree();
+				final StoryModel story;
+
+				story = SEModelManager.getInstance().getActiveStoryModel();
+
+				if (story != null) {
+					final String dialogueType;
+
+					dialogueType = story.getModule().getDialogueType();
+
+					if (StringOp.exists(dialogueType))
+						ResourcePanel.getInstance()
+								.updateCategory(dialogueType);
+				}
 			}
 		});
 
