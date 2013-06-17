@@ -23,6 +23,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.events.Event;
 
 import scriptease.translator.io.model.Resource;
+import scriptease.util.FileOp;
 
 /**
  * Management class for handling the I/O and memory contents of a unity file
@@ -45,6 +46,7 @@ public class UnityFile extends Resource {
 
 	private final BufferedReader reader;
 	private final File location;
+	private final String filename;
 
 	private final Collection<String> types;
 	private final List<UnityResource> unityResources;
@@ -111,6 +113,7 @@ public class UnityFile extends Resource {
 		this.unityResources = new ArrayList<UnityResource>();
 		this.types = types;
 		this.location = location;
+		this.filename = FileOp.getFileNameUpTo(location, "Assets");
 	}
 
 	/**
@@ -434,7 +437,7 @@ public class UnityFile extends Resource {
 
 	@Override
 	public String getName() {
-		return this.location.getName();
+		return this.filename;
 	}
 
 	@Override
@@ -444,7 +447,7 @@ public class UnityFile extends Resource {
 
 	@Override
 	public String getTemplateID() {
-		return this.location.getPath();
+		return this.filename;
 	}
 
 	@Override
