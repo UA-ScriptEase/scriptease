@@ -353,8 +353,13 @@ class ResourceTree extends JPanel {
 	 * 
 	 */
 	private class ResourcePanel extends JPanel {
+		private final Resource resource;
+		private final JPanel childPanel;
 
 		public ResourcePanel(Resource resource, int indent) {
+			this.resource = resource;
+			this.childPanel = new JPanel();
+
 			final int STRUT_SIZE = 10 * indent;
 
 			final String resourceName;
@@ -362,16 +367,28 @@ class ResourceTree extends JPanel {
 
 			final BindingWidget gameObjectBindingWidget;
 
+			final JPanel resourcePanel;
+
 			resourceName = resource.getName();
 			resourceOwnerName = resource.getOwnerName();
 
 			gameObjectBindingWidget = new BindingWidget(
 					new KnowItBindingResource(resource));
 
+			resourcePanel = new JPanel();
+
 			this.setAlignmentX(Component.LEFT_ALIGNMENT);
 			this.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
 			this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
-			this.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+			resourcePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+			resourcePanel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
+			resourcePanel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
+			resourcePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+			this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+			this.childPanel.setLayout(new BoxLayout(this.childPanel,
+					BoxLayout.PAGE_AXIS));
 
 			if (resource.isLink()) {
 				gameObjectBindingWidget.setBackground(GUIOp.scaleColour(
@@ -384,9 +401,9 @@ class ResourceTree extends JPanel {
 			this.add(Box.createHorizontalStrut(STRUT_SIZE));
 
 			if (resource.getChildren().size() > 0)
-				this.add(this.createExpandChildButton(resource, indent));
+				resourcePanel.add(this.createExpandChildButton(indent));
 			else
-				this.add(Box.createRigidArea(new Dimension(10, 0)));
+				resourcePanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 			if (resourceOwnerName != null && !resourceOwnerName.isEmpty()) {
 				final Color LINE_COLOR_1 = Color.red;
@@ -409,21 +426,30 @@ class ResourceTree extends JPanel {
 				this.add(prefixLabel);
 			}
 
-			this.add(gameObjectBindingWidget);
+			resourcePanel.add(gameObjectBindingWidget);
 
 			if (resource.getTypes().contains(
 					ResourceTree.this.getDialogueType())
 					&& resource instanceof DialogueLine) {
-				this.add(this.resourceEditButton((DialogueLine) resource));
-				this.add(this.resourceRemoveButton((DialogueLine) resource));
+				resourcePanel.add(this.resourceEditButton());
+				resourcePanel.add(this.resourceRemoveButton());
 			}
-			// Need to do this because BoxLayout respects maximum size.
-			this.setMaximumSize(this.getPreferredSize());
 
+			this.add(resourcePanel);
+			this.add(this.childPanel);
+
+			for (Resource child : resource.getChildren()) {
+				final ResourcePanel childResourcePanel;
+
+				childResourcePanel = new ResourcePanel(child, indent + 1);
+				this.childPanel.add(childResourcePanel);
+
+			}
+
+			this.childPanel.setVisible(false);
 		}
 
-		private ExpansionButton createExpandChildButton(
-				final Resource resource, final int indent) {
+		private ExpansionButton createExpandChildButton(final int indent) {
 			final ExpansionButton button;
 
 			button = ScriptWidgetFactory.buildExpansionButton(true);
@@ -431,37 +457,11 @@ class ResourceTree extends JPanel {
 			button.addActionListener(new ActionListener() {
 				private boolean collapsed = true;
 
-				private void setChildrenInvisible(
-						List<? extends Resource> children) {
-					for (Resource child : children) {
-						final JPanel panel = ResourceTree.this.panelMap
-								.get(child);
-						if (panel != null) {
-							ResourceTree.this.panelMap.remove(child);
-							this.setChildrenInvisible(child.getChildren());
-						}
-					}
-				}
-
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					button.setCollapsed(this.collapsed ^= true);
 
-					if (this.collapsed) {
-						this.setChildrenInvisible(resource.getChildren());
-					} else {
-						for (Resource child : resource.getChildren()) {
-							final JPanel nodePanel;
-
-							nodePanel = ResourceTree.this.panelMap.get(child);
-
-							if (nodePanel == null)
-								ResourceTree.this.panelMap.put(child,
-										new ResourcePanel(child, indent + 1));
-							else
-								nodePanel.setVisible(true);
-						}
-					}
+					ResourcePanel.this.childPanel.setVisible(!this.collapsed);
 
 					ResourceTree.this.redrawTree();
 				}
@@ -470,7 +470,7 @@ class ResourceTree extends JPanel {
 			return button;
 		}
 
-		private JButton resourceEditButton(final Resource resource) {
+		private JButton resourceEditButton() {
 			final JButton editButton = ComponentFactory.buildEditButton();
 
 			editButton.addActionListener(new ActionListener() {
@@ -483,7 +483,7 @@ class ResourceTree extends JPanel {
 			return editButton;
 		}
 
-		private JButton resourceRemoveButton(final Resource resource) {
+		private JButton resourceRemoveButton() {
 			final JButton removeButton = ComponentFactory.buildRemoveButton();
 
 			removeButton.addActionListener(new ActionListener() {
