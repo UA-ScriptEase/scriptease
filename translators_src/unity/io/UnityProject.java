@@ -17,6 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import scriptease.gui.WindowFactory;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -257,7 +261,9 @@ public final class UnityProject extends GameModule {
 
 		// sniff out .unity and .prefab files and read them all into memory
 		sceneFiles = FileOp.findFiles(this.projectLocation, sceneFileFilter);
+
 		prefabFiles = FileOp.findFiles(this.projectLocation, prefabFileFilter);
+
 		metaFiles = FileOp.findFiles(this.projectLocation, metaFileFilter);
 
 		for (File metaFile : metaFiles) {
@@ -391,6 +397,7 @@ public final class UnityProject extends GameModule {
 
 		resources.addAll(this.buildSimpleUnityResources(images,
 				UnityType.SE_IMAGE));
+
 		resources.addAll(this.buildSimpleUnityResources(guiSkins,
 				UnityType.SE_GUISKIN));
 
@@ -413,7 +420,19 @@ public final class UnityProject extends GameModule {
 
 			String name = FileOp.removeExtension(file.getAbsolutePath());
 			// Since split takes a regex, we need to escape \ twice
-			name = name.split("\\\\" + RESOURCE_FOLDER_NAME + "\\\\")[1];
+			final String[] splitBackSlash = name.split("\\\\"
+					+ RESOURCE_FOLDER_NAME + "\\\\");
+			if (splitBackSlash.length == 2)
+				name = splitBackSlash[1];
+			else {
+				final String[] splitForwardSlash = name.split("/"
+						+ RESOURCE_FOLDER_NAME + "/");
+
+				if (splitForwardSlash.length == 2)
+					name = splitForwardSlash[1];
+				else
+					WindowFactory.getInstance().showExceptionDialog();
+			}
 
 			resource = SimpleResource.buildSimpleResource(type.getName(), name);
 
@@ -478,8 +497,8 @@ public final class UnityProject extends GameModule {
 			this.projectLocation = location.getParentFile();
 
 		final String locationPath = this.projectLocation.getAbsolutePath();
-		final String SCRIPTEASE_FOLDER = "\\ScriptEase Scripts";
-		final String ASSETS_FOLDER = "\\Assets";
+		final String SCRIPTEASE_FOLDER = "/ScriptEase Scripts";
+		final String ASSETS_FOLDER = "/Assets";
 		final String folderName;
 
 		if (locationPath.endsWith(ASSETS_FOLDER)) {
