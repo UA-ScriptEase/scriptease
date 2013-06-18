@@ -55,7 +55,7 @@ public final class UnityProject extends GameModule {
 
 	// Note: this used to be static, but we can't make it static since we want
 	// to be able to work on multiple projects at the same time.
-	private final Map<String, File> guidsToMetaFiles;
+	private Map<String, File> guidsToMetaFiles;
 
 	private File projectLocation;
 	// The nice thing about Unity is that it uses multiple files instead of one,
@@ -63,11 +63,11 @@ public final class UnityProject extends GameModule {
 	// directory where all of our ScriptEase generated stuff is stored.
 	private File scripteaseGeneratedDirectory;
 
-	private final Collection<File> includeFiles;
-	private final Collection<UnityFile> scenes;
-	private final Collection<UnityFile> prefabs;
-	private final Collection<Resource> resources;
-	private final Collection<UnityScript> scripts;
+	private Collection<File> includeFiles;
+	private Collection<UnityFile> scenes;
+	private Collection<UnityFile> prefabs;
+	private Collection<Resource> resources;
+	private Collection<UnityScript> scripts;
 
 	/**
 	 * Creates a new UnityProjects with no scenes or scripts added.
@@ -143,15 +143,18 @@ public final class UnityProject extends GameModule {
 	@Override
 	public void addScripts(Collection<ScriptInfo> scriptList) {
 		for (ScriptInfo scriptInfo : scriptList) {
+
 			for (UnityFile scene : this.scenes) {
 				if (scene.getObjectByTemplateID(scriptInfo.getSubject()
 						.getTemplateID()) != null) {
 					this.scripts.add(new UnityScript(scriptInfo, scene));
 				}
 			}
+
 			for (UnityFile prefab : this.prefabs) {
-				if (prefab.getObjectByTemplateID(scriptInfo.getSubject()
-						.getTemplateID()) != null) {
+				final Resource subject = scriptInfo.getSubject();
+
+				if (subject.getTemplateID().equals(prefab.getTemplateID())) {
 					this.scripts.add(new UnityScript(scriptInfo, prefab));
 				}
 			}

@@ -69,16 +69,26 @@ public final class StoryModel extends SEModel {
 		// Adds all of the automatic causes to the start point.
 		// Note that automatics can only be defined in a library model for now
 		for (LibraryModel library : this.getLibraries()) {
-			for (Resource resource : module.getAutomaticHandlers()) {
+
+			final Collection<Resource> resources = module
+					.getAutomaticHandlers();
+			
+			for (Resource resource : resources) {
 				for (ScriptIt automatic : library.getAutomatics()) {
 
 					final ScriptIt copy = automatic.clone();
+					final Collection<KnowIt> parameters = copy.getParameters();
 
-					for (KnowIt parameter : copy.getParameters()) {
-						if (!parameter.getTypes().containsAll(
-								resource.getTypes()))
+					for (KnowIt parameter : parameters) {
+						final Collection<String> parameterTypes = parameter
+								.getTypes();
+						final Collection<String> resourceTypes = resource
+								.getTypes();
+
+						if (!parameterTypes.containsAll(resourceTypes))
 							throw new IllegalArgumentException(
 									"Found invalid types for automatics");
+
 						parameter.setBinding(resource);
 
 						this.startPoint.addStoryChild(copy);

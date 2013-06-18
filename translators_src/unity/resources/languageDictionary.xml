@@ -205,7 +205,7 @@
 		<!-- Adds the type of the variable in front of it -->
 		<Format id="variableWithType">
 			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
-			<Literal>:</Literal>
+			<Literal> : </Literal>
 			<Fragment data="type" default="void" />
 		</Format>
 		<!-- Declares a variable with type -->
@@ -220,7 +220,7 @@
 		<!-- Declares all variables in the series -->
 		<Format id="variablesDeclaration">
 			<Line>
-				<Literal>// Variables Declaration</Literal>
+				<Literal>// Variable Declarations</Literal>
 			</Line>
 			<Series data="variables">
 				<FormatRef ref="variableDeclaration" />
@@ -239,7 +239,7 @@
 		<!-- Defines all variables in the series -->
 		<Format id="variablesDefinition">
 			<Line>
-				<Literal>// Variables Definition</Literal>
+				<Literal>// Variable Definitions</Literal>
 			</Line>
 			<Series data="variables">
 				<FormatRef ref="variableDefinition" />
@@ -251,7 +251,7 @@
 		<!-- Declares all implicits -->
 		<Format id="implicitsDeclaration">
 			<Line>
-				<Literal>// Implicits Declaration</Literal>
+				<Literal>// Implicit Declarations</Literal>
 			</Line>
 			<Series data="implicits">
 				<FormatRef ref="variableDeclaration" />
@@ -260,7 +260,7 @@
 		<!-- Defines all implicits -->
 		<Format id="implicitsDefinition">
 			<Line>
-				<Literal>// Implicits Definition</Literal>
+				<Literal>// Implicit Definitions</Literal>
 			</Line>
 			<Series data="implicits">
 				<FormatRef ref="variableDefinition" />
@@ -424,6 +424,49 @@
             </Line>
 		</Format>
 		
+		<!-- Format for Scroll View children -->
+		<Format id="ScrollViewChildren">
+			<Scope data="Cause">
+				<FormatRef ref="implicitsDeclaration" />
+				<FormatRef ref="implicitsDefinition" />
+			</Scope>
+            <Scope data="argument" ref="x">
+              <FormatRef ref="variableDefinition"/>
+            </Scope>
+            <Scope data="argument" ref="y">
+              <FormatRef ref="variableDefinition"/>
+            </Scope>
+            <Scope data="argument" ref="Width">
+              <FormatRef ref="variableDefinition"/>
+            </Scope>
+            <Scope data="argument" ref="Height">
+              <FormatRef ref="variableDefinition"/>
+            </Scope>
+            <Line>
+            	<Literal>GUI.BeginScrollView(Rect(</Literal>
+            	<Scope data="argument" ref="x">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>, </Literal>
+            	<Scope data="argument" ref="y">
+            		<Fragment data="name" />
+            	</Scope>	
+            	<Literal>, </Literal>
+            	<Scope data="argument" ref="Width">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>, </Literal>
+            	<Scope data="argument" ref="Height">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>));</Literal>
+            </Line>
+            <FormatRef ref="childrenWithoutImplicits"/>
+            <Line>
+			  <Literal>GUI.EndScrollView();</Literal>            
+            </Line>
+		</Format>
+		
 		<!-- Format for control it children -->
 		<Format id="controlItChildren">
 			<Scope data="Cause">
@@ -453,8 +496,8 @@
 			</Line>
 		</Format>
 		
-		<!-- Format for the gui group controller -->
-		<Format id="guigroup">
+		<!-- Format for the folder controller -->
+		<Format id="folder">
 			<Line>
 				<FormatRef ref="functionHeader" />
 				<Literal>;</Literal>
@@ -487,13 +530,13 @@
 		<!-- Format for ScriptIts -->
 		<Format id="scriptItConditional">
 			<Line>
-				<Literal>var enabledPoints:List.&lt;String&gt; = SEStory.GetAllActive();</Literal>
+				<Literal>var enabledPoints : List.&lt;String&gt; = SEStory.GetAllActive();</Literal>
 			</Line>
 			<Line />
 			
 			<Series data="identicalCauses">
 			<Line> 
-				<Literal>if(enabledPoints.Contains("</Literal> 
+				<Literal>if (enabledPoints.Contains("</Literal> 
 				<Fragment data="currentstorypoint" />
 				<Literal>")) {</Literal> 
 			</Line>
@@ -525,7 +568,7 @@
 		<!-- Format for askits -->
 		<Format id="askItConditional">
 			<Line>
-				<Literal>if(</Literal>
+				<Literal>if (</Literal>
 				<Fragment data="condition" />
 				<Literal>){</Literal>
 			</Line>
@@ -565,7 +608,7 @@
 				</Line>
 				<Series data="causes" unique="true">
 					<Line>
-						<Literal>if(</Literal>
+						<Literal>if (</Literal>
 						<Fragment data="slotConditional" />
 						<Literal>) {</Literal>
 					</Line>

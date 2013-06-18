@@ -342,7 +342,7 @@ public enum UnityType {
 	SE_DIALOGUE("Dialogue"),
 
 	SE_DIALOGUELINE("DialogueLine");
-
+	
 	public static final int SCRIPTEASE_TYPE = 0;
 
 	private final String name;
