@@ -491,6 +491,25 @@ public class GUIOp {
 	}
 
 	/**
+	 * Returns the index of the component in its parent. If the component or its
+	 * parent are not found, this will return -1.
+	 * 
+	 * @param component
+	 * @return
+	 */
+	public static int getComponentIndex(Component component) {
+		final Container parent = component.getParent();
+		if (component != null && parent != null) {
+			for (int i = 0; i < parent.getComponentCount(); i++) {
+				if (parent.getComponent(i) == component)
+					return i;
+			}
+		}
+
+		return -1;
+	}
+
+	/**
 	 * Creates a new JPanel that has a gradient as a background. The gradient
 	 * colour comes from the component's background colour.
 	 * 
