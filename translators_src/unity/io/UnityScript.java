@@ -25,6 +25,7 @@ import scriptease.util.StringOp;
  * these UnityScripts.
  * 
  * @author kschenk
+ * @author jyuen
  * 
  */
 public class UnityScript {
@@ -46,7 +47,7 @@ public class UnityScript {
 	private final String guid;
 
 	private final UnityFile unityFile;
-	private final UnityResource attachedObject;
+	private UnityResource attachedObject;
 	private final UnityResource monoBehaviourObject;
 	private final List<PropertyValue> mComponentList;
 
@@ -76,9 +77,22 @@ public class UnityScript {
 
 		this.guid = UnityProject.getActiveProject().generateGUIDForFile(
 				new File(this.fileName + SCRIPT_META_EXTENSION));
+		
+		if (this.unityFile.getTypes().contains(UnityType.PREFAB.getName())) {
+			
+			final List<UnityResource> children = this.unityFile.getResources();
 
-		this.attachedObject = this.unityFile.getObjectByTemplateID(subject
-				.getTemplateID());
+			for (UnityResource child : children) {
+
+				if (child.getTypes().contains(UnityType.GAMEOBJECT.getName())) {
+					this.attachedObject = (UnityResource) child;
+					break;
+				}
+			}
+		} else {
+			this.attachedObject = this.unityFile.getObjectByTemplateID(subject
+					.getTemplateID());
+		}
 
 		this.idNumber = this.unityFile.getNextEmptyID();
 
