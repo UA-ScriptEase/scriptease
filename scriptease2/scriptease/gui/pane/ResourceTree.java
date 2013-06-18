@@ -176,12 +176,11 @@ class ResourceTree extends JPanel {
 	protected void filterByTypes(Collection<String> filterTypes) {
 		this.filterTypes.clear();
 		this.filterTypes.addAll(filterTypes);
-		
+
 		// TODO Filter types arent working...
-		
+
 		// TODO Filtering is beyond slow.
-		
-		
+
 		for (ResourceContainer container : this.containers) {
 			container.updateResourcePanels();
 		}
@@ -547,6 +546,8 @@ class ResourceTree extends JPanel {
 				this.setVisible(false);
 				return;
 			}
+
+			this.setVisible(true);
 
 			final String dialogueType = story.getModule().getDialogueType();
 
