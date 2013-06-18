@@ -371,7 +371,7 @@ class ResourceTree extends JPanel {
 		}
 
 		private void updateResourcePanels() {
-			// TODO need to update when the resource is changed..?
+			// TODO need to update when the resource is changed..
 			
 			final StoryModel story;
 
