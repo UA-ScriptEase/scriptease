@@ -45,7 +45,7 @@ import scriptease.util.FileOp;
 public final class ScriptEase implements Runnable {
 	// property and configuration keys
 	public static final String LOOK_AND_FEEL_KEY = "UseJavaUI";
-	public static final String TITLE = "ScriptEase II Beta 6";
+	public static final String TITLE = "ScriptEase II Beta";
 	public static final String NO_VERSION_INFORMATION = "(No version information available)";
 
 	private final String version;

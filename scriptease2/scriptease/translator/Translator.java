@@ -20,6 +20,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.StatusManager;
@@ -86,7 +87,7 @@ public class Translator {
 	 */
 	public enum DescriptionKeys {
 		// Mandatory keys
-		NAME, API_DICTIONARY_PATH, LANGUAGE_DICTIONARY_PATH, GAME_MODULE_PATH,
+		NAME, API_DICTIONARY_PATH, LANGUAGE_DICTIONARY_PATH, GAME_MODULE_PATH, VERSION,
 		// Suggested keys
 		SUPPORTED_FILE_EXTENSIONS, INCLUDES_PATH, ICON_PATH, COMPILER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY, OPTIONAL_LIBRARIES_PATH;
 
@@ -476,13 +477,15 @@ public class Translator {
 	 *            <code>null</code>, then the preference will be removed
 	 *            entirely.
 	 */
-	public void setPreference(DescriptionKeys preferenceKey, String preferenceValue) {
+	public void setPreference(DescriptionKeys preferenceKey,
+			String preferenceValue) {
 		if (preferenceValue == null)
 			this.properties.remove(preferenceKey.toString());
 		else
-			this.properties.setProperty(preferenceKey.toString(), preferenceValue);
+			this.properties.setProperty(preferenceKey.toString(),
+					preferenceValue);
 	}
-	
+
 	/**
 	 * Saves the translator preferences to disk (i.e. the translator.ini file)
 	 */
@@ -495,67 +498,98 @@ public class Translator {
 			this.properties.store(out, "Translator Preferences File");
 			out.close();
 		} catch (IOException e) {
-			System.err.println("Error saving translator preferences. Aborting.");
+			System.err
+					.println("Error saving translator preferences. Aborting.");
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Validates a translator by checking that the given translator has a value
 	 * for all the required paths, that each path exists, and, if possible, that
 	 * each file is valid (as per XML validation, for example).
 	 * 
-	 * @return Whether the translator is valid or not.
+	 * @return A message if the translator is invalid or else return a empty
+	 *         string.
 	 */
-	public boolean isValid() {
+	public String isValid() {
+		final String NAME_NOT_FOUND = "The translator at " + this.getLocation()
+				+ " is missing its name definition in translator.ini.";
+		final String VERSION_NOT_FOUND = "The translator at "
+				+ this.getLocation()
+				+ " is missing its version definition in translator.ini.";
+		final String LIBRARY_NOT_FOUND = "The Library Path definition in translator.ini for translator "
+				+ this.getLocation()
+				+ " is missing or the dictionary file does not exist there.";
+		final String LANGUAGE_DICT_NOT_FOUND = "The Language Dictionary Path definition in translator.ini for translator "
+				+ this.getLocation()
+				+ " is missing or the dictionary file does not exist there.";
+		final String GAME_MODULE_NOT_FOUND = "The translator at "
+				+ this.getLocation()
+				+ " is missing its Game Module Path definition in translator.ini "
+				+ "or the Game Module implementation does not exist there.";
+		final String INCOMPATIBLE_VERSION = "The translator at "
+				+ this.getLocation()
+				+ " does not have a compatible ScriptEase version number.";
+		final String UNLOADABLE_GAME_MODULE = "The " + this.getName()
+				+ " translator's game module is unloadable.";
+		final String LIBRARY_VALIDATION_ERR = "The " + this.getName()
+				+ " translator's Library does not pass validation.";
+		final String LANGUAGE_DICT_VALIDATION_ERR = "The " + this.getName()
+				+ " translator's language dictionary does not pass validation.";
+
 		final File libraryPath;
 		final File languageDictPath;
 		final File gameModulePath;
 		final GameModule testGameModule;
-		final String translatorDirName = this.getLocation().getParentFile()
-				.getName();
-
-		if (!translatorDirName.equals(translatorDirName.toLowerCase())) {
-			System.err
-					.println("Translators must be in lower case directories.");
-			return false;
-		}
+		final String translatorDirName;
+		final String version;
 
 		libraryPath = this.getPathProperty(DescriptionKeys.API_DICTIONARY_PATH);
 		languageDictPath = this
 				.getPathProperty(DescriptionKeys.LANGUAGE_DICTIONARY_PATH);
 		gameModulePath = this.getPathProperty(DescriptionKeys.GAME_MODULE_PATH);
+		version = this.getProperty(DescriptionKeys.VERSION);
+		translatorDirName = this.getLocation().getParentFile().getName();
+
+		if (!translatorDirName.equals(translatorDirName.toLowerCase())) {
+			System.err
+					.println("Translators must be in lower case directories.");
+			return "Translators have to be in lower case directories.";
+		}
 
 		/*
 		 * The "translator.ini" file *must* contain a name and references to a
-		 * library, a languageDictionary, and a GameModule implementation. All
-		 * references must exist in the file system. Any other references are
-		 * optional and will not be checked. See javadoc and/or wiki for
-		 * details.
+		 * library, a languageDictionary, GameModule, and version
+		 * implementation. All references must exist in the file system. Any
+		 * other references are optional and will not be checked. See javadoc
+		 * and/or wiki for details.
 		 */
 		if (this.getName() == null) {
-			System.err.println("The translator at " + this.getLocation()
-					+ " is missing its name definition in translator.ini.");
-			return false;
+			System.err.println(NAME_NOT_FOUND);
+			return NAME_NOT_FOUND;
+
+		} else if (version == null) {
+			System.err.println(VERSION_NOT_FOUND);
+			return VERSION_NOT_FOUND;
+
+		} else if (!version.equals(ScriptEase.getInstance().getVersion())
+				&& !ScriptEase.getInstance().getVersion()
+						.equals(ScriptEase.NO_VERSION_INFORMATION)) {
+			System.err.println(INCOMPATIBLE_VERSION);
+			return INCOMPATIBLE_VERSION;
+
 		} else if (libraryPath == null || !libraryPath.exists()) {
-			System.err
-					.println("The Library Path definition in translator.ini for translator "
-							+ this.getLocation()
-							+ " is missing or the dictionary file does not exist there.");
-			return false;
+			System.err.println(LIBRARY_NOT_FOUND);
+			return LIBRARY_NOT_FOUND;
+
 		} else if (languageDictPath == null || !languageDictPath.exists()) {
-			System.err
-					.println("The Language Dictionary Path definition in translator.ini for translator "
-							+ this.getLocation()
-							+ " is missing or the dictionary file does not exist there.");
-			return false;
+			System.err.println(LANGUAGE_DICT_NOT_FOUND);
+			return LANGUAGE_DICT_NOT_FOUND;
+
 		} else if (gameModulePath == null || !gameModulePath.exists()) {
-			System.err
-					.println("The translator at "
-							+ this.getLocation()
-							+ " is missing its Game Module Path definition in translator.ini "
-							+ "or the Game Module implementation does not exist there.");
-			return false;
+			System.err.println(GAME_MODULE_NOT_FOUND);
+			return GAME_MODULE_NOT_FOUND;
 		}
 
 		// Now check that the referenced files are valid, including ensuring
@@ -563,9 +597,8 @@ public class Translator {
 		// GameModule
 		testGameModule = this.createGameModuleInstance();
 		if (testGameModule == null) {
-			System.err.println("The " + this.getName()
-					+ " translator's game module is unloadable.");
-			return false;
+			System.err.println(UNLOADABLE_GAME_MODULE);
+			return UNLOADABLE_GAME_MODULE;
 		}
 
 		// this is a bit of a hack, but is necessary to get FileOp to also
@@ -578,22 +611,19 @@ public class Translator {
 		try {
 			if (!FileOp.validateXML(libraryPath,
 					FileOp.getFileResource(Translator.LIBRARY_SCHEMA_LOCATION))) {
-				System.err.println("The " + this.getName()
-						+ " translator's Library does not pass validation.");
-				return false;
+				System.err.println(LIBRARY_VALIDATION_ERR);
+				return LIBRARY_VALIDATION_ERR;
+				
 			} else if (!FileOp.validateXML(languageDictPath, FileOp
 					.getFileResource(Translator.LANGUAGE_DICT_SCHEMA_LOCATION))) {
-				System.err
-						.println("The "
-								+ this.getName()
-								+ " translator's language dictionary does not pass validation.");
-				return false;
+				System.err.println(LANGUAGE_DICT_VALIDATION_ERR);
+				return LANGUAGE_DICT_VALIDATION_ERR;
 			}
 		} catch (FileNotFoundException e) {
-			return false;
+			return "Translator schema file was not found.";
 		}
 
-		return true;
+		return "";
 	}
 
 	/**
