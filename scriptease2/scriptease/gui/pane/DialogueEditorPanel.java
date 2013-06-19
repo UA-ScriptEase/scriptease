@@ -37,6 +37,13 @@ public class DialogueEditorPanel extends JPanel {
 		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 	}
 
+	/**
+	 * Sets the dialogue line to be edited. A button used to go back to the
+	 * story must be passed in.
+	 * 
+	 * @param dialogueLine
+	 * @param backToStory
+	 */
 	public void setDialogueLine(DialogueLine dialogueLine, JButton backToStory) {
 		this.removeAll();
 
@@ -70,8 +77,8 @@ public class DialogueEditorPanel extends JPanel {
 					dialogueType = story.getModule().getDialogueType();
 
 					if (StringOp.exists(dialogueType))
-						ResourcePanel.getInstance()
-								.updateCategory(dialogueType);
+						ResourcePanel.getInstance().refreshCategory(
+								dialogueType);
 				}
 			}
 		});

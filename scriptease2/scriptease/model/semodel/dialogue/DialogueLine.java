@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import scriptease.model.semodel.StoryModel;
+import scriptease.translator.io.model.EditableResource;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
 
@@ -12,69 +14,55 @@ import scriptease.translator.io.model.Resource;
  * Represents a dialogue line resource. This is translator independent. The
  * translator handles these in its {@link GameModule} implementation.
  * 
- * TODO Comment this class furtehr
+ * TODO Comment this class further
  * 
  * @author kschenk
  * 
  */
-public final class DialogueLine extends Resource {
+public final class DialogueLine extends EditableResource {
 	private static final String DEFAULT_DIALOGUE = "New Dialogue Line";
 
-	private final List<DialogueLine> parents;
-	private final List<DialogueLine> children;
-	private final GameModule module;
+	private final StoryModel story;
 
-	private String dialogue;
 	private boolean enabled;
 	private Resource image;
 	private Resource audio;
 
-	public DialogueLine(GameModule module) {
-		this(module, new ArrayList<DialogueLine>());
+	public DialogueLine(StoryModel story) {
+		this(story, new ArrayList<DialogueLine>());
 	}
 
-	public DialogueLine(GameModule module, List<DialogueLine> parents) {
+	public DialogueLine(StoryModel story, List<DialogueLine> parents) {
 		this(DEFAULT_DIALOGUE, true, null, null, new ArrayList<DialogueLine>(),
-				module, parents);
+				story, parents);
 	}
 
 	public DialogueLine(String dialogue, boolean enabled, Resource image,
-			Resource audio, List<DialogueLine> children, GameModule module,
+			Resource audio, List<DialogueLine> children, StoryModel story,
 			List<DialogueLine> parents) {
-		this.dialogue = dialogue;
 		this.enabled = enabled;
 		this.image = image;
 		this.audio = audio;
-		this.children = children;
-		this.module = module;
-		this.parents = parents;
-	}
+		this.story = story;
 
-	public boolean removeChild(DialogueLine dialogueLine) {
-		dialogueLine.parents.remove(this);
-		return this.children.remove(dialogueLine);
-	}
-
-	public boolean addChild(DialogueLine dialogueLine) {
-		dialogueLine.parents.add(this);
-		return this.children.add(dialogueLine);
-	}
-
-	public boolean isRoot() {
-		return this.parents == null || this.parents.isEmpty();
-	}
-
-	public Collection<DialogueLine> getParents() {
-		return this.parents;
+		this.setName(dialogue);
 	}
 
 	@Override
 	public List<DialogueLine> getChildren() {
-		return this.children;
-	}
+		// TODO There has to be a better way to do this..
+		final List<DialogueLine> children = new ArrayList<DialogueLine>();
 
-	public void setDialogue(String dialogue) {
-		this.dialogue = dialogue;
+		for (EditableResource resource : super.getChildren()) {
+			if (resource instanceof DialogueLine) {
+				children.add((DialogueLine) resource);
+			} else
+				throw new IllegalStateException(
+						"Encountered non-dialogue line " + resource
+								+ " in children of " + this);
+		}
+
+		return children;
 	}
 
 	public void setEnabled(boolean enabled) {
@@ -84,7 +72,8 @@ public final class DialogueLine extends Resource {
 	public boolean setImage(Resource image) {
 		final boolean setImage;
 
-		setImage = image.getTypes().contains(this.module.getImageType());
+		setImage = image.getTypes().contains(
+				this.story.getModule().getImageType());
 
 		if (setImage)
 			this.image = image;
@@ -95,7 +84,8 @@ public final class DialogueLine extends Resource {
 	public boolean setAudio(Resource audio) {
 		final boolean setAudio;
 
-		setAudio = audio.getTypes().contains(this.module.getAudioType());
+		setAudio = audio.getTypes().contains(
+				this.story.getModule().getAudioType());
 
 		if (setAudio)
 			this.audio = audio;
@@ -107,10 +97,6 @@ public final class DialogueLine extends Resource {
 		return this.enabled;
 	}
 
-	public String getDialogue() {
-		return this.dialogue;
-	}
-
 	public Resource getAudio() {
 		return this.audio;
 	}
@@ -119,23 +105,23 @@ public final class DialogueLine extends Resource {
 		return this.image;
 	}
 
-	// TODO TODO TODO!!!!!!!
-	// One or more of these methods may need to be changed.
-
 	@Override
 	public Collection<String> getTypes() {
 		final Collection<String> type = new ArrayList<String>();
 
-		if (this.isRoot())
-			type.add(this.module.getDialogueType());
+		if (this.story.getDialogueRoots().contains(this))
+			type.add(this.story.getModule().getDialogueType());
 		else
-			type.add(this.module.getDialogueLineType());
+			type.add(this.story.getModule().getDialogueLineType());
 		return type;
 	}
 
+	// TODO TODO TODO!!!!!!!
+	// One or more of these methods may need to be changed.
+
 	@Override
 	public Resource getOwner() {
-		// TODO Auto-generated method stub
+		// TODO Return the speaker?
 		return super.getOwner();
 	}
 
@@ -143,12 +129,6 @@ public final class DialogueLine extends Resource {
 	public String getOwnerName() {
 		// TODO Return the speaker name
 		return super.getOwnerName();
-	}
-
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return this.getDialogue();
 	}
 
 	@Override
