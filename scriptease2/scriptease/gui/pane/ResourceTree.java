@@ -145,23 +145,11 @@ class ResourceTree extends JPanel {
 			this.add(containerPanel);
 			this.containers.add(containerPanel);
 		}
+		
+		this.filterByTypes(story.getTypeKeywords());
 
 		this.repaint();
 		this.revalidate();
-	}
-
-	/**
-	 * Completely redraws all panels in the category.
-	 * 
-	 * @param type
-	 */
-	protected void refreshCategory(String type) {
-		for (ResourceContainer container : this.containers) {
-			if (container.type.equals(type)) {
-				container.refresh();
-				break;
-			}
-		}
 	}
 
 	/**
@@ -369,7 +357,15 @@ class ResourceTree extends JPanel {
 			categoryPanel.add(categoryLabel);
 			categoryPanel.add(ComponentFactory.buildSpacer(15, 15));
 
-			// TODO Get rid of dialogue type necessity
+			/*
+			 * TODO "Add buttons" are dependant on if the type is a dialouge
+			 * type. In the future, we may want to change this somehow. Since we
+			 * don't necessarily have any resources in the category, we don't
+			 * know if they will be EditableResources.
+			 * 
+			 * Likely, once we change types from strings to GameTypes, the
+			 * GameType itself almost needs to have an "addable" property.
+			 */
 			final String dialogueType = ResourceTree.this.getDialogueType();
 
 			if (StringOp.exists(dialogueType) && type.equals(dialogueType)) {
@@ -394,13 +390,6 @@ class ResourceTree extends JPanel {
 			this.add(Box.createHorizontalGlue());
 
 			this.add(this.container);
-
-			this.updateResourcePanels();
-		}
-
-		private void refresh() {
-			this.container.removeAll();
-			this.resourcesToPanels.clear();
 
 			this.updateResourcePanels();
 		}
