@@ -116,6 +116,7 @@ class ResourceTree extends JPanel {
 	 */
 	protected void fillTree() {
 		this.containers.clear();
+		this.filterTypes.clear();
 		this.removeAll();
 
 		final StoryModel story;
@@ -127,26 +128,25 @@ class ResourceTree extends JPanel {
 			this.revalidate();
 			return;
 		}
+		this.filterTypes.addAll(story.getTypeKeywords());
 
 		final List<String> types;
 
-		types = new ArrayList<String>(story.getTypeKeywords());
+		types = new ArrayList<String>(this.filterTypes);
 
 		Collections.sort(types);
 
 		// Add the dialogue type even if there are no dialogues.
 		for (String type : types) {
-
 			final ResourceContainer containerPanel;
+			final String displayText;
 
-			containerPanel = new ResourceContainer(
-					story.getTypeDisplayText(type));
+			displayText = story.getTypeDisplayText(type);
+			containerPanel = new ResourceContainer(type, displayText);
 
 			this.add(containerPanel);
 			this.containers.add(containerPanel);
 		}
-		
-		this.filterByTypes(story.getTypeKeywords());
 
 		this.repaint();
 		this.revalidate();
@@ -303,10 +303,10 @@ class ResourceTree extends JPanel {
 		 * 
 		 * @param typeName
 		 *            The name of the container
-		 * @param gameConstants
-		 *            The list of GameConstants in the container
+		 * @param displayText
+		 *            The text to display as the name.
 		 */
-		public ResourceContainer(final String type) {
+		public ResourceContainer(final String type, String displayText) {
 			this.type = type;
 			this.container = new JPanel();
 			this.resourcesToPanels = new HashMap<Resource, JPanel>();
@@ -318,7 +318,7 @@ class ResourceTree extends JPanel {
 
 			button = ScriptWidgetFactory.buildExpansionButton(false);
 
-			categoryLabel = new JLabel(type);
+			categoryLabel = new JLabel(displayText);
 			categoryPanel = new JPanel();
 
 			categoryLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -410,6 +410,7 @@ class ResourceTree extends JPanel {
 
 			final List<Resource> resources;
 
+			// TODO See above note on dialogue types.
 			if (StringOp.exists(dialogueType) && type.equals(dialogueType))
 				resources = new ArrayList<Resource>(story.getDialogueRoots());
 			else {
