@@ -37,6 +37,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import scriptease.ScriptEase;
 import scriptease.gui.ExceptionDialog;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
@@ -280,8 +281,11 @@ public class DialogBuilder {
 					return;
 				} else {
 					final StoryModel model;
-
-					model = new StoryModel(module, title, author,
+					final String compatibleVersion;
+					
+					compatibleVersion = ScriptEase.getInstance().getVersion();
+					
+					model = new StoryModel(module, title, author, compatibleVersion,
 							selectedTranslator, new ArrayList<LibraryModel>());
 
 					SEModelManager.getInstance().addAndActivate(model);
