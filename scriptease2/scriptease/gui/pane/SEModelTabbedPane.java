@@ -198,9 +198,6 @@ class SEModelTabbedPane extends JTabbedPane {
 							panel);
 				}
 			});
-		} else {
-			throw new IllegalStateException("Tab already exists for model "
-					+ model);
 		}
 	}
 
