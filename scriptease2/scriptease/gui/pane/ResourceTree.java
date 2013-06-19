@@ -52,8 +52,6 @@ import scriptease.util.StringOp;
  */
 @SuppressWarnings("serial")
 class ResourceTree extends JPanel {
-	// TODO The panels + containers should listen to search changes.
-
 	private Resource selectedResource = null;
 
 	private String filterText;
@@ -150,10 +148,15 @@ class ResourceTree extends JPanel {
 		this.revalidate();
 	}
 
-	protected void updateCategory(String type) {
+	/**
+	 * Completely redraws all panels in the category.
+	 * 
+	 * @param type
+	 */
+	protected void refreshCategory(String type) {
 		for (ResourceContainer container : this.containers) {
 			if (container.type.equals(type)) {
-				container.updateResourcePanels();
+				container.refresh();
 				break;
 			}
 		}
@@ -180,10 +183,6 @@ class ResourceTree extends JPanel {
 	protected void filterByTypes(Collection<String> filterTypes) {
 		this.filterTypes.clear();
 		this.filterTypes.addAll(filterTypes);
-
-		// TODO Filter types arent working...
-
-		// TODO Filtering is beyond slow.
 
 		for (ResourceContainer container : this.containers) {
 			container.updateResourcePanels();
@@ -370,9 +369,14 @@ class ResourceTree extends JPanel {
 			this.updateResourcePanels();
 		}
 
+		private void refresh() {
+			this.container.removeAll();
+			this.resourcesToPanels.clear();
+
+			this.updateResourcePanels();
+		}
+
 		private void updateResourcePanels() {
-			// TODO need to update when the resource is changed..
-			
 			final StoryModel story;
 
 			story = SEModelManager.getInstance().getActiveStoryModel();

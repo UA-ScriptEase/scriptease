@@ -72,7 +72,7 @@ public final class StoryModel extends SEModel {
 
 			final Collection<Resource> resources = module
 					.getAutomaticHandlers();
-			
+
 			for (Resource resource : resources) {
 				for (ScriptIt automatic : library.getAutomatics()) {
 
@@ -112,7 +112,7 @@ public final class StoryModel extends SEModel {
 	 * @return The newly added root
 	 */
 	public DialogueLine addDialogueRoot() {
-		final DialogueLine newRoot = new DialogueLine(this.module);
+		final DialogueLine newRoot = new DialogueLine(this);
 
 		this.dialogueRoots.add(newRoot);
 

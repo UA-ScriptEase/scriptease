@@ -70,8 +70,8 @@ public abstract class Resource implements TypedComponent {
 	 * resource. This method by default returns false and so must be overridden
 	 * to be useful.
 	 * 
-	 * TODO We should return the link instead of checking for one.
-	 * Ticket: 48086075
+	 * TODO We should return the link instead of checking for one. Ticket:
+	 * 48086075
 	 * 
 	 * @return <code>true</code> if the node is a link.
 	 */

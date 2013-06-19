@@ -184,11 +184,11 @@ public class ResourcePanel extends JPanel {
 	}
 
 	/**
-	 * Updates the panels in a category of the passed in type.
+	 * Completely redraws the panels in a category of the passed in type.
 	 * 
 	 * @param type
 	 */
-	public void updateCategory(String type) {
-
+	public void refreshCategory(String type) {
+		this.resources.refreshCategory(type);
 	}
 }

@@ -7,7 +7,7 @@ import scriptease.gui.SEGraph.models.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.models.DialogueLineGraphModel;
 import scriptease.gui.SEGraph.models.StoryPointGraphModel;
 import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
-import scriptease.gui.SEGraph.renderers.DialogueLineRenderer;
+import scriptease.gui.SEGraph.renderers.DialogueLineNodeRenderer;
 import scriptease.gui.SEGraph.renderers.EditableDescribeItNodeRenderer;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
@@ -111,7 +111,7 @@ public class SEGraphFactory {
 		model = new DialogueLineGraphModel(story, dialogueLine);
 		graph = new SEGraph<DialogueLine>(model);
 
-		graph.setNodeRenderer(new DialogueLineRenderer(graph));
+		graph.setNodeRenderer(new DialogueLineNodeRenderer(graph));
 		graph.setBackground(Color.WHITE);
 
 		GraphToolBarModeAction.useGraphCursorForJComponent(graph);
