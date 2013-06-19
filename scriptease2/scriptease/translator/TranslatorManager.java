@@ -33,10 +33,9 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * </ul>
  * 
  * @author graves
+ * @author jyuen
  */
 public class TranslatorManager {
-	private static final String NO_TRANSLATORS_PROBLEM = "ScriptEase could not locate any valid game translators in its \"translators\" directory. "
-			+ "\n\nYou will not be able to open Story files or perform any other game-specific operations.";
 
 	private Set<Translator> translatorPool;
 
@@ -127,16 +126,13 @@ public class TranslatorManager {
 
 				contents = translator.listFiles(iniFilter);
 
-				// We use only the first "translator.ini"
 				if (contents != null && contents.length > 0) {
-					this.addTranslator(contents[0]);
+					// We use only the first "translator.ini"
+					final File translatorInfo = contents[0];
+					this.addTranslator(translatorInfo);
 				}
 			}
 		}
-
-		if (this.translatorPool.isEmpty())
-			WindowFactory.getInstance().showInformationDialog("No Translators",
-					TranslatorManager.NO_TRANSLATORS_PROBLEM);
 	}
 
 	/**
@@ -171,7 +167,8 @@ public class TranslatorManager {
 			return false;
 		}
 
-		if (!newTranslator.isValid()) {
+		final String validationMessage = newTranslator.isValid();
+		if (!validationMessage.equals("")) {
 			System.err
 					.println("Translator failed validation ("
 							+ newTranslatorLocation.getAbsolutePath()
@@ -183,7 +180,11 @@ public class TranslatorManager {
 							"Invalid translator",
 							"There's a validation problem with the "
 									+ newTranslator.getName()
-									+ " translator, so I can't use it. \n\nCheck my log file for technical details.");
+									+ " translator, so I can't use it. \n\nProblem:\n"
+									+ validationMessage
+									+ "\n\n"
+									+ "You will not be able to open Story files or perform any "
+									+ "other game-specific operations related to this translator.");
 
 			newTranslator = null;
 		}

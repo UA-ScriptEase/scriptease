@@ -165,7 +165,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		final StoryComponent component = this.getStoryComponentForIndex(index);
 		this.notifyObservers(component);
 	}
-	
+
 	/**
 	 * Generates panels for the passed in list of Story Components and adds them
 	 * to the list. <br>
@@ -364,7 +364,8 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 					valuePanel.getExpansionButton().setCollapsed(true);
 				}
 
-				valuePanel.setToolTipText(valueComponent.getDisplayText());
+				valuePanel.setToolTipText(valueComponent.getLibrary() + " : "
+						+ valueComponent.getDisplayText());
 
 				return valuePanel;
 			} else if (value instanceof JPanel) {
