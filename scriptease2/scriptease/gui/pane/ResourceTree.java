@@ -28,6 +28,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import scriptease.controller.observer.ObserverManager;
+import scriptease.controller.observer.ResourceObserver;
+import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.ResourceTreeObserver;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ComponentFactory;
@@ -38,7 +40,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
-import scriptease.model.semodel.dialogue.DialogueLine;
+import scriptease.translator.io.model.EditableResource;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.GUIOp;
 import scriptease.util.StringOp;
@@ -212,6 +214,32 @@ class ResourceTree extends JPanel {
 	}
 
 	/**
+	 * Notifies all {@link ResourceTreeObserver}s of an add button getting
+	 * clicked.
+	 * 
+	 * @param resource
+	 */
+	private void notifyAddButtonClicked(String type) {
+		for (ResourceTreeObserver observer : this.observerManager
+				.getObservers()) {
+			observer.resourceAddButtonClicked(type);
+		}
+	}
+
+	/**
+	 * Notifies all {@link ResourceTreeObserver}s of a remove button getting
+	 * clicked.
+	 * 
+	 * @param resource
+	 */
+	private void notifyRemoveButtonClicked(Resource resource) {
+		for (ResourceTreeObserver observer : this.observerManager
+				.getObservers()) {
+			observer.resourceRemoveButtonClicked(resource);
+		}
+	}
+
+	/**
 	 * Notifies all {@link ResourceTreeObserver}s of the edit button getting
 	 * clicked.
 	 * 
@@ -220,7 +248,7 @@ class ResourceTree extends JPanel {
 	private void notifyEditButtonClicked(Resource resource) {
 		for (ResourceTreeObserver observer : this.observerManager
 				.getObservers()) {
-			observer.resourceEditButtonPressed(resource);
+			observer.resourceEditButtonClicked(resource);
 		}
 	}
 
@@ -269,6 +297,13 @@ class ResourceTree extends JPanel {
 		return nodeContainsText;
 	}
 
+	/**
+	 * Container for all resource panels in the tree. Represents a type in the
+	 * tree.
+	 * 
+	 * @author kschenk
+	 * 
+	 */
 	private class ResourceContainer extends JPanel {
 		private final Map<Resource, JPanel> resourcesToPanels;
 		private final String type;
@@ -283,7 +318,7 @@ class ResourceTree extends JPanel {
 		 * @param gameConstants
 		 *            The list of GameConstants in the container
 		 */
-		public ResourceContainer(String type) {
+		public ResourceContainer(final String type) {
 			this.type = type;
 			this.container = new JPanel();
 			this.resourcesToPanels = new HashMap<Resource, JPanel>();
@@ -334,6 +369,7 @@ class ResourceTree extends JPanel {
 			categoryPanel.add(categoryLabel);
 			categoryPanel.add(ComponentFactory.buildSpacer(15, 15));
 
+			// TODO Get rid of dialogue type necessity
 			final String dialogueType = ResourceTree.this.getDialogueType();
 
 			if (StringOp.exists(dialogueType) && type.equals(dialogueType)) {
@@ -342,14 +378,7 @@ class ResourceTree extends JPanel {
 				addButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO Make a listener fire instead. "Resource added"
-						// or something.
-						final StoryModel story;
-
-						story = SEModelManager.getInstance()
-								.getActiveStoryModel();
-
-						story.addDialogueRoot();
+						ResourceTree.this.notifyAddButtonClicked(type);
 
 						ResourceContainer.this.updateResourcePanels();
 					}
@@ -446,6 +475,68 @@ class ResourceTree extends JPanel {
 		}
 
 		/**
+		 * An observer that updates the category based on changes to an
+		 * {@link EditableResource}.
+		 * 
+		 * @param nameLabel
+		 * @return
+		 */
+		private ResourceObserver resourceObserver(final JLabel nameLabel) {
+			return new ResourceObserver() {
+				private JPanel refreshPanel(EditableResource resource) {
+					JPanel panel = null;
+					Resource toRemove = null;
+
+					if (resourcesToPanels.containsKey(resource)) {
+						toRemove = resource;
+						panel = resourcesToPanels.get(resource);
+					} else
+						for (Resource key : resourcesToPanels.keySet()) {
+							if (key.getDescendants().contains(resource)) {
+								panel = resourcesToPanels.get(key);
+								toRemove = key;
+								break;
+							}
+						}
+
+					if (panel != null) {
+						container.remove(panel);
+						resourcesToPanels.remove(toRemove);
+						updateResourcePanels();
+					}
+
+					return panel;
+				}
+
+				@Override
+				public void childAdded(EditableResource resource, Resource child) {
+					final JPanel panel = this.refreshPanel(resource);
+
+					if (panel != null && child instanceof EditableResource)
+						((EditableResource) child).addObserver(resource, this);
+
+				}
+
+				@Override
+				public void childRemoved(EditableResource resource,
+						Resource child) {
+					this.refreshPanel(resource);
+				}
+
+				@Override
+				public void nameChanged(EditableResource resource, String name) {
+					// If the root changed, we refresh the panel so it gets
+					// rearranged alphabetically.
+					if (resourcesToPanels.containsKey(resource)) {
+						refreshPanel(resource);
+					}
+
+					nameLabel.setText(name);
+				}
+			};
+		}
+
+		/**
 		 * JPanel for the passed in Resource. This panel contains a binding
 		 * widget that the user can then drag and drop into the appropriate
 		 * slots.
@@ -491,8 +582,16 @@ class ResourceTree extends JPanel {
 						gameObjectBindingWidget.getBackground(), 1.24));
 			}
 
-			gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(
-					resourceName, Color.WHITE));
+			final JLabel nameLabel;
+
+			nameLabel = ScriptWidgetFactory.buildLabel(resourceName,
+					Color.WHITE);
+
+			gameObjectBindingWidget.add(nameLabel);
+
+			if (resource instanceof EditableResource)
+				((EditableResource) resource).addObserver(this
+						.resourceObserver(nameLabel));
 
 			panel.add(Box.createHorizontalStrut(STRUT_SIZE));
 
@@ -537,9 +636,7 @@ class ResourceTree extends JPanel {
 
 			resourcePanel.add(gameObjectBindingWidget);
 
-			if (resource.getTypes().contains(
-					ResourceTree.this.getDialogueType())
-					&& resource instanceof DialogueLine) {
+			if (resource instanceof EditableResource) {
 
 				final JButton editButton = ComponentFactory.buildEditButton();
 				final JButton removeButton = ComponentFactory
@@ -555,18 +652,11 @@ class ResourceTree extends JPanel {
 				removeButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO This should fire listeners instead.
-						if (!(resource instanceof DialogueLine))
-							return;
+						ResourceTree.this.notifyRemoveButtonClicked(resource);
 
-						final StoryModel story;
 						final Container parent;
 
-						story = SEModelManager.getInstance()
-								.getActiveStoryModel();
 						parent = panel.getParent();
-
-						story.removeDialogueRoot((DialogueLine) resource);
 
 						if (parent != null) {
 							parent.remove(panel);
@@ -600,7 +690,7 @@ class ResourceTree extends JPanel {
 				}
 			});
 
-			ResourceTree.this.addObserver(this, new ResourceTreeObserver() {
+			ResourceTree.this.addObserver(this, new ResourceTreeAdapter() {
 
 				@Override
 				public void resourceSelected(Resource selected) {
@@ -609,10 +699,6 @@ class ResourceTree extends JPanel {
 					else
 						panel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
 
-				}
-
-				@Override
-				public void resourceEditButtonPressed(Resource resource) {
 				}
 			});
 

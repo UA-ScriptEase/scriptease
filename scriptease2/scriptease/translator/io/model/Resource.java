@@ -1,6 +1,7 @@
 package scriptease.translator.io.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import scriptease.model.TypedComponent;
@@ -63,6 +64,23 @@ public abstract class Resource implements TypedComponent {
 	 */
 	public List<? extends Resource> getChildren() {
 		return new ArrayList<Resource>(0);
+	}
+
+	/**
+	 * Returns all descendants of the editable resource including the resource
+	 * itself.
+	 * 
+	 * @return
+	 */
+	public Collection<Resource> getDescendants() {
+		final Collection<Resource> descendants = new ArrayList<Resource>();
+		descendants.add(this);
+
+		for (Resource child : this.getChildren()) {
+			descendants.addAll(child.getDescendants());
+		}
+
+		return descendants;
 	}
 
 	/**
