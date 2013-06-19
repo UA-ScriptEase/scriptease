@@ -12,9 +12,9 @@ import scriptease.translator.io.model.Resource;
  */
 public interface ResourceObserver {
 
-	public void nameChanged(Resource resource, String name);
+	public void nameChanged(EditableResource resource, String name);
 
-	public void childRemoved(Resource resource, Resource child);
+	public void childRemoved(EditableResource resource, Resource child);
 
-	public void childAdded(Resource resource, Resource child);
+	public void childAdded(EditableResource resource, Resource child);
 }

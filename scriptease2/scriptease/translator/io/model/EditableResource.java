@@ -17,13 +17,13 @@ import scriptease.controller.observer.ResourceObserver;
  */
 public abstract class EditableResource extends Resource {
 	private final ObserverManager<ResourceObserver> observerManager;
-	private final List<EditableResource> children;
+	private final List<Resource> children;
 
 	private String name;
 
 	public EditableResource() {
 		this.name = "";
-		this.children = new ArrayList<EditableResource>();
+		this.children = new ArrayList<Resource>();
 		this.observerManager = new ObserverManager<ResourceObserver>();
 	}
 
@@ -35,7 +35,7 @@ public abstract class EditableResource extends Resource {
 	 * @param dialogueLine
 	 * @return
 	 */
-	public boolean removeChild(EditableResource child) {
+	public boolean removeChild(Resource child) {
 		final boolean removed;
 
 		if (removed = this.children.remove(child)) {
@@ -53,7 +53,7 @@ public abstract class EditableResource extends Resource {
 	 * @param dialogueLine
 	 * @return
 	 */
-	public boolean addChild(EditableResource child) {
+	public boolean addChild(Resource child) {
 		final boolean added;
 
 		if (added = this.children.add(child)) {
@@ -63,12 +63,16 @@ public abstract class EditableResource extends Resource {
 		return added;
 	}
 
+	public void addObserver(Object weakReference, ResourceObserver observer) {
+		this.observerManager.addObserver(weakReference, observer);
+	}
+
 	public void addObserver(ResourceObserver observer) {
 		this.observerManager.addObserver(this, observer);
 	}
 
 	@Override
-	public List<? extends EditableResource> getChildren() {
+	public List<? extends Resource> getChildren() {
 		return this.children;
 	}
 

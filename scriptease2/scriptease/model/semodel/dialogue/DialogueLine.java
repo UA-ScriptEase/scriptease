@@ -53,7 +53,7 @@ public final class DialogueLine extends EditableResource {
 		// TODO There has to be a better way to do this..
 		final List<DialogueLine> children = new ArrayList<DialogueLine>();
 
-		for (EditableResource resource : super.getChildren()) {
+		for (Resource resource : super.getChildren()) {
 			if (resource instanceof DialogueLine) {
 				children.add((DialogueLine) resource);
 			} else
