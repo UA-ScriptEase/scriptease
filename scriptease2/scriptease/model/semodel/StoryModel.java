@@ -29,10 +29,12 @@ import scriptease.util.StringOp;
  * @author remiller
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  */
 public final class StoryModel extends SEModel {
 	private final GameModule module;
 	private final Translator translator;
+	private final String compatibleVersion;
 	private final Collection<LibraryModel> optionalLibraries;
 	private final ObserverManager<StoryModelObserver> observerManager;
 	private final Collection<DialogueLine> dialogueRoots;
@@ -57,12 +59,14 @@ public final class StoryModel extends SEModel {
 	 *            The Translator to use to interpret this story.
 	 */
 	public StoryModel(GameModule module, String title, String author,
-			Translator translator, Collection<LibraryModel> optionalLibraries) {
+			String compatibleVersion, Translator translator,
+			Collection<LibraryModel> optionalLibraries) {
 		super(title, author);
 
 		this.startPoint = new StoryPoint("Start");
 		this.module = module;
 		this.translator = translator;
+		this.compatibleVersion = compatibleVersion;
 		this.optionalLibraries = optionalLibraries;
 		this.observerManager = new ObserverManager<StoryModelObserver>();
 
@@ -72,7 +76,7 @@ public final class StoryModel extends SEModel {
 
 			final Collection<Resource> resources = module
 					.getAutomaticHandlers();
-			
+
 			for (Resource resource : resources) {
 				for (ScriptIt automatic : library.getAutomatics()) {
 
@@ -162,6 +166,15 @@ public final class StoryModel extends SEModel {
 	 */
 	public GameModule getModule() {
 		return this.module;
+	}
+
+	/**
+	 * Gets the compatible ScriptEase version for this Story.
+	 * 
+	 * @return the compatible ScriptEase version
+	 */
+	public String getCompatibleVersion() {
+		return this.compatibleVersion;
 	}
 
 	@Override
