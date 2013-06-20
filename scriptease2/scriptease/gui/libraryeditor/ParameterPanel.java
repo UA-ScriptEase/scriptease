@@ -412,33 +412,14 @@ class ParameterPanel extends JPanel {
 				else
 					bindingBox.setSelectedItem(map.get(bindingText));
 
+				ParameterPanel.this.setJComboBoxBinding(
+						bindingBox.getSelectedItem(), map);
+
 				bindingBox.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						final Object bindingBoxValue;
-
-						String defaultBindingName = "";
-
-						bindingBoxValue = bindingBox.getSelectedItem();
-
-						if (bindingBoxValue == null)
-							ParameterPanel.this.knowIt.clearBinding();
-						else {
-							for (Entry<String, String> entry : map.entrySet()) {
-								if (entry.getValue().equals(bindingBoxValue)) {
-									defaultBindingName = entry.getKey();
-									break;
-								}
-							}
-
-							final SimpleResource newConstant = SimpleResource
-									.buildSimpleResource(
-											ParameterPanel.this.knowIt
-													.getTypes(),
-											defaultBindingName);
-							ParameterPanel.this.knowIt.setBinding(newConstant);
-						}
-
+						ParameterPanel.this.setJComboBoxBinding(
+								bindingBox.getSelectedItem(), map);
 					}
 				});
 
@@ -456,15 +437,25 @@ class ParameterPanel extends JPanel {
 		bindingConstantComponent.revalidate();
 	}
 
+	/**
+	 * Set the JTextField binding constant component to @param bindingText
+	 * 
+	 * @param bindingText
+	 */
 	private void setJTextFieldBinding(String bindingText) {
 		final SimpleResource constant;
 
 		constant = SimpleResource.buildSimpleResource(
 				ParameterPanel.this.knowIt.getTypes(), bindingText);
 
-		ParameterPanel.this.knowIt.setBinding(constant);
+		this.knowIt.setBinding(constant);
 	}
 
+	/**
+	 * Set the JSpinner binding constant component to @param bindingValue
+	 * 
+	 * @param bindingValue
+	 */
 	private void setJSpinnerBinding(Float bindingValue) {
 		final SimpleResource constant;
 
@@ -472,10 +463,37 @@ class ParameterPanel extends JPanel {
 				ParameterPanel.this.knowIt.getTypes(),
 				Float.toString(bindingValue));
 
-		ParameterPanel.this.knowIt.setBinding(constant);
+		this.knowIt.setBinding(constant);
 	}
 
-	private void setJComboBoxBinding() {
+	/**
+	 * Set the JComboBox binding constant component to @param binding
+	 * 
+	 * @param binding
+	 * @param map
+	 *            All the possible JComboBox values
+	 */
+	private void setJComboBoxBinding(Object binding, Map<String, String> map) {
+		String defaultBindingName = "";
 
+		if (binding != null) {
+			for (Entry<String, String> entry : map.entrySet()) {
+				if (entry.getValue().equals(binding)) {
+					defaultBindingName = entry.getKey();
+					break;
+				}
+			}
+		} else {
+			// Use the first binding by default if none is provided
+			for (Entry<String, String> entry : map.entrySet()) {
+				defaultBindingName = entry.getKey();
+				break;
+			}
+		}
+
+		final SimpleResource newConstant = SimpleResource.buildSimpleResource(
+				ParameterPanel.this.knowIt.getTypes(), defaultBindingName);
+
+		ParameterPanel.this.knowIt.setBinding(newConstant);
 	}
 }
