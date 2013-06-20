@@ -458,7 +458,7 @@ public final class UnityProject extends GameModule {
 		this.includeFiles.clear();
 		UnityScript.resetScriptCounter();
 	}
-
+	
 	@Override
 	public File getLocation() {
 		return new File(this.projectLocation.getAbsolutePath());
