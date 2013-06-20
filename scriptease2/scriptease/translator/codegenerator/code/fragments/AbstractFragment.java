@@ -113,13 +113,6 @@ public abstract class AbstractFragment implements Cloneable {
 		StringBuilder code = new StringBuilder();
 
 		for (AbstractFragment token : format) {
-
-			if (token instanceof SeriesFragment)
-				System.out.println("FOR DEBUGGING");
-			
-			if (code.toString().contains("// Variable Definitions"))
-				System.out.println("MORE DEBUG STUFF");
-			
 			code.append(token.resolve(context));
 		}
 
