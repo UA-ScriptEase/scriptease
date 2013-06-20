@@ -13,8 +13,7 @@ import javax.swing.border.Border;
 
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.action.graphs.GraphToolBarModeAction;
-import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
+import scriptease.gui.SEGraph.SEGraphToolBar.Mode;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.util.GUIOp;
 
@@ -241,17 +240,17 @@ public class SEGraphNodeRenderer<E> {
 		 * want other colours. - remiller
 		 */
 		if (this.hoveredComponent == component) {
-			final ToolBarMode mode;
+			final Mode mode;
 
-			mode = GraphToolBarModeAction.getMode();
+			mode = this.graph.getToolBarMode();
 
 			if (!graph.isReadOnly()
-					&& (mode == ToolBarMode.INSERT || mode == ToolBarMode.CONNECT)) {
+					&& (mode == Mode.INSERT || mode == Mode.CONNECT)) {
 				toolColour = ScriptEaseUI.COLOUR_INSERT_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.1);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.1);
 			} else if (!graph.isReadOnly()
-					&& (mode == ToolBarMode.DELETE || mode == ToolBarMode.DISCONNECT)) {
+					&& (mode == Mode.DELETE || mode == Mode.DISCONNECT)) {
 				toolColour = ScriptEaseUI.COLOUR_DELETE_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.2);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);

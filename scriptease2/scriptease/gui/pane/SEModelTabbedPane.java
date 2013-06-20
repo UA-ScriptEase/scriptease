@@ -50,8 +50,6 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.action.file.CloseModelAction;
-import scriptease.gui.action.graphs.GraphToolBarModeAction;
-import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -281,9 +279,8 @@ class SEModelTabbedPane extends JTabbedPane {
 		topLevelPane = new JPanel(layout);
 
 		storyPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		graphToolBar = ComponentFactory.buildGraphEditorToolBar();
-
 		storyGraph = SEGraphFactory.buildStoryGraph(start);
+		graphToolBar = storyGraph.getToolBar();
 
 		backToStory = new JButton(
 				"<html><center>Back<br>to<br>Story</center></html>");
@@ -366,9 +363,6 @@ class SEModelTabbedPane extends JTabbedPane {
 		start.addStoryComponentObserver(graphRedrawer);
 
 		storyGraphPanel.setLayout(new BorderLayout());
-
-		// Reset the ToolBar to select and add the Story Graph to it.
-		GraphToolBarModeAction.setMode(GraphToolBarModeAction.getMode());
 
 		storyGraphScrollPane.setBorder(BorderFactory.createEmptyBorder());
 		storyGraphPanel.setBorder(BorderFactory
