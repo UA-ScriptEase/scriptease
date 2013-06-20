@@ -12,9 +12,11 @@ import scriptease.translator.io.model.Resource;
 /**
  * 
  * Represents a dialogue line resource. This is translator independent. The
- * translator handles these in its {@link GameModule} implementation.
+ * translator handles these in its {@link GameModule} implementation. The first
+ * line in a Dialogue Line tree will always be a Dialogue that represents the
+ * conversation as a whole. The rest of the lines alternate between true and
+ * false.
  * 
- * TODO Comment this class further
  * 
  * @author kschenk
  * 
@@ -28,18 +30,34 @@ public final class DialogueLine extends EditableResource {
 	private Resource image;
 	private Resource audio;
 
+	/**
+	 * Creates a new dialogue line for the story.
+	 * 
+	 * @param story
+	 */
 	public DialogueLine(StoryModel story) {
-		this(story, new ArrayList<DialogueLine>());
+		this(story, DEFAULT_DIALOGUE, true, null, null,
+				new ArrayList<DialogueLine>());
 	}
 
-	public DialogueLine(StoryModel story, List<DialogueLine> parents) {
-		this(DEFAULT_DIALOGUE, true, null, null, new ArrayList<DialogueLine>(),
-				story, parents);
-	}
-
-	public DialogueLine(String dialogue, boolean enabled, Resource image,
-			Resource audio, List<DialogueLine> children, StoryModel story,
-			List<DialogueLine> parents) {
+	/**
+	 * Creates a new dialouge line with the passed in parameters.
+	 * 
+	 * @param story
+	 *            The story to create the dialogue line for
+	 * @param dialogue
+	 *            The text to be displayed
+	 * @param enabled
+	 *            Whether the dialogue line is enabled or disabled by default
+	 * @param image
+	 *            The image attached to the line
+	 * @param audio
+	 *            Audio attached to the line
+	 * @param children
+	 *            Any dialouge line children attached.
+	 */
+	public DialogueLine(StoryModel story, String dialogue, boolean enabled,
+			Resource image, Resource audio, List<DialogueLine> children) {
 		this.enabled = enabled;
 		this.image = image;
 		this.audio = audio;
@@ -65,10 +83,21 @@ public final class DialogueLine extends EditableResource {
 		return children;
 	}
 
+	/**
+	 * Set the default enabled state of the dialogue line.
+	 * 
+	 * @param enabled
+	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
 
+	/**
+	 * Set the image that will be displayed in game by the dialogue line.
+	 * 
+	 * @param image
+	 * @return
+	 */
 	public boolean setImage(Resource image) {
 		final boolean setImage;
 
@@ -81,6 +110,12 @@ public final class DialogueLine extends EditableResource {
 		return setImage;
 	}
 
+	/**
+	 * Set the audio that will be played in game by the dialogue line.
+	 * 
+	 * @param audio
+	 * @return
+	 */
 	public boolean setAudio(Resource audio) {
 		final boolean setAudio;
 
@@ -93,14 +128,29 @@ public final class DialogueLine extends EditableResource {
 		return setAudio;
 	}
 
+	/**
+	 * Returns whether the dialogue line is enabled by default.
+	 * 
+	 * @return
+	 */
 	public boolean isEnabled() {
 		return this.enabled;
 	}
 
+	/**
+	 * Returns the audio that will be played in game by the dialogue line.
+	 * 
+	 * @return
+	 */
 	public Resource getAudio() {
 		return this.audio;
 	}
 
+	/**
+	 * Returns the image that will be displayed in game by the dialogue line.
+	 * 
+	 * @return
+	 */
 	public Resource getImage() {
 		return this.image;
 	}
@@ -121,37 +171,36 @@ public final class DialogueLine extends EditableResource {
 
 	@Override
 	public Resource getOwner() {
-		// TODO Return the speaker?
+		// TODO Return the speaker? Or don't use it?
 		return super.getOwner();
 	}
 
 	@Override
 	public String getOwnerName() {
-		// TODO Return the speaker name
+		// TODO Should return alternating Speaker 1 and Speaker 2.
 		return super.getOwnerName();
 	}
 
 	@Override
 	public String getTag() {
-		// TODO Auto-generated method stub
+		// TODO Will tags need to be different..?
 		return this.getName();
 	}
 
 	@Override
 	public String getTemplateID() {
-		// TODO Auto-generated method stub
+		// TODO Does this need to be uniquer?
 		return this.getName();
 	}
 
 	@Override
 	public String getCodeText() {
-		// TODO Auto-generated method stub
 		return this.getName();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
+		// TODO This is wrong. Do we need to override equals, though..?
 		return this == obj;
 	}
 }
