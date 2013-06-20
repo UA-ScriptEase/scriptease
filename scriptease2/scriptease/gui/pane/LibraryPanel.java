@@ -98,6 +98,7 @@ public class LibraryPanel extends JTabbedPane {
 		final StoryComponentPanelJList effectsList;
 		final StoryComponentPanelJList descriptionsList;
 		final StoryComponentPanelJList controlsList;
+		final StoryComponentPanelJList groupsList;
 
 		// Create the Tree with the root and the default filter
 		causesList = new StoryComponentPanelJList(new CategoryFilter(
@@ -108,6 +109,8 @@ public class LibraryPanel extends JTabbedPane {
 				Category.DESCRIPTIONS));
 		controlsList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.CONTROLS));
+		groupsList = new StoryComponentPanelJList(new CategoryFilter(
+				Category.GROUPS));
 
 		libraryObserver = new LibraryObserver() {
 			/**
@@ -182,11 +185,13 @@ public class LibraryPanel extends JTabbedPane {
 		this.storyComponentPanelJLists.add(effectsList);
 		this.storyComponentPanelJLists.add(descriptionsList);
 		this.storyComponentPanelJLists.add(controlsList);
+		this.storyComponentPanelJLists.add(groupsList);
 
 		this.add("Causes", this.createTab(causesList));
 		this.add("Effects", this.createTab(effectsList));
 		this.add("Descriptions", this.createTab(descriptionsList));
 		this.add("Controls", this.createTab(controlsList));
+		this.add("Groups", this.createTab(groupsList));
 
 		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 		TranslatorManager.getInstance().addTranslatorObserver(this,
@@ -310,29 +315,6 @@ public class LibraryPanel extends JTabbedPane {
 			list.addObserver(observer);
 		}
 	}
-
-	// public void assignListListener(final StoryVisitor storyVisitor) {
-	// for (final StoryComponentPanelJList list :
-	// this.storyComponentPanelJLists) {
-	// final MouseAdapter listener = new MouseAdapter() {
-	// @Override
-	// public void mouseClicked(MouseEvent e) {
-	// final Object selected = e.getSource();
-	// if (selected == null) {
-	// // TODO mfchurch need to handle unselection of any
-	// // component (deletion)
-	// } else if (selected instanceof StoryComponentPanel) {
-	// final StoryComponentPanel componentPanel = (StoryComponentPanel)
-	// selected;
-	// final StoryComponent component = componentPanel
-	// .getStoryComponent();
-	// component.process(storyVisitor);
-	// }
-	// }
-	// };
-	// list.addMouseListener(listener);
-	// }
-	// }
 
 	/**
 	 * Finds and updates the StoryComponentPanel of the changed StoryComponent
@@ -519,6 +501,9 @@ public class LibraryPanel extends JTabbedPane {
 					components = libraryModel.getDescriptionsCategory()
 							.getChildren();
 				} else if (index == 3) {
+					components = libraryModel.getControllersCategory()
+							.getChildren();
+				} else if (index == 4) {
 					components = libraryModel.getControllersCategory()
 							.getChildren();
 				} else {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.ScriptEase;
 import scriptease.controller.io.FileIO;
 import scriptease.gui.WindowFactory;
 import scriptease.model.complex.StoryPoint;
@@ -24,6 +25,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class StoryModelConverter implements Converter {
 	private static final String TAG_TITLE = "Title";
 	private static final String TAG_AUTHOR = "Author";
+	private static final String TAG_VERSION = "Version";
 	private static final String TAG_OPTIONAL_LIBRARIES = "OptionalLibraries";
 	private static final String TAG_OPTIONAL_LIBRARY = "OptionalLibrary";
 	private static final String TAG_STORY_START_POINT = "StartStoryPoint";
@@ -49,6 +51,10 @@ public class StoryModelConverter implements Converter {
 
 		writer.startNode(TAG_AUTHOR);
 		writer.setValue(model.getAuthor());
+		writer.endNode();
+
+		writer.startNode(TAG_VERSION);
+		writer.setValue(model.getCompatibleVersion());
 		writer.endNode();
 
 		writer.startNode(TAG_TRANSLATOR);
@@ -79,6 +85,7 @@ public class StoryModelConverter implements Converter {
 		final StoryModel model;
 		final String title;
 		final String author;
+		final String version;
 		final Translator translator;
 		final GameModule module;
 		final StoryPoint newRoot;
@@ -87,6 +94,31 @@ public class StoryModelConverter implements Converter {
 
 		title = FileIO.readValue(reader, TAG_TITLE);
 		author = FileIO.readValue(reader, TAG_AUTHOR);
+
+		version = FileIO.readValue(reader, TAG_VERSION);
+
+		// Make sure the .ses file and the current ScriptEase version is
+		// compatible
+		final String ScriptEaseVersion = ScriptEase.getInstance().getVersion();
+
+		if (!version.equals(ScriptEaseVersion)
+				&& !ScriptEaseVersion.equals(ScriptEase.NO_VERSION_INFORMATION)) {
+			WindowFactory
+					.getInstance()
+					.showProblemDialog(
+							"Incompatible ScriptEase version (2."
+									+ ScriptEaseVersion + ")",
+							"The story file being loaded is incompatible "
+									+ "with the current ScriptEase version. \n\n"
+									+ "Your story file was created in ScriptEase 2."
+									+ version
+									+ ".\nThe current ScriptEase version you are using is 2."
+									+ ScriptEaseVersion
+									+ ".\nYou will need to use an earlier compatible "
+									+ "ScriptEase version.");
+
+			return null;
+		}
 
 		translator = TranslatorManager.getInstance().getTranslator(
 				FileIO.readValue(reader, TAG_TRANSLATOR));
@@ -140,7 +172,7 @@ public class StoryModelConverter implements Converter {
 
 		currentModule = module;
 
-		model = new StoryModel(module, title, author, translator,
+		model = new StoryModel(module, title, author, version, translator,
 				optionalLibraries);
 
 		reader.moveDown();

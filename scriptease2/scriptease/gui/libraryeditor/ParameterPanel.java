@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
@@ -42,10 +41,9 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.GUIOp;
-import scriptease.util.StringOp;
 
 /**
- * ParameterPanelss are JPanels used to represent and edit parameters. <br>
+ * ParameterPanels are JPanels used to represent and edit parameters. <br>
  * <br>
  * Parameters have:
  * <ul>
@@ -58,7 +56,7 @@ import scriptease.util.StringOp;
  * CodeBlock.
  * 
  * @author kschenk
- * 
+ * @author jyuen
  */
 @SuppressWarnings("serial")
 class ParameterPanel extends JPanel {
@@ -340,22 +338,15 @@ class ParameterPanel extends JPanel {
 				else
 					bindingField.setText(bindingText);
 
+				this.setJTextFieldBinding(bindingField.getText());
+
 				bindingField.getDocument().addDocumentListener(
 						new DocumentListener() {
 							@Override
 							public void insertUpdate(DocumentEvent e) {
-								final String bindingFieldText;
-								bindingFieldText = bindingField.getText();
-
-								final SimpleResource newConstant;
-
-								newConstant = SimpleResource
-										.buildSimpleResource(
-												ParameterPanel.this.knowIt
-														.getTypes(),
-												bindingFieldText);
-								ParameterPanel.this.knowIt
-										.setBinding(newConstant);
+								ParameterPanel.this
+										.setJTextFieldBinding(bindingField
+												.getText());
 							}
 
 							@Override
@@ -378,14 +369,12 @@ class ParameterPanel extends JPanel {
 				Comparable<?> max = null; // default to no max limit
 				Number stepSize = 0.1; // default to float step size
 
-				final String regex = library.getTypeRegex(defaultType);
-				final Pattern regexPattern = Pattern.compile(regex);				
-				float initVal;
+				final float initVal;
+
 				if (bindingText.equals("<unbound!>") || bindingText.isEmpty())
 					initVal = 0;
-				else {
+				else
 					initVal = Float.parseFloat(bindingText);
-				}
 
 				model = new SpinnerNumberModel(initVal, min, max, stepSize);
 				bindingSpinner = new JSpinner(model);
@@ -393,21 +382,14 @@ class ParameterPanel extends JPanel {
 
 				numberEditor.getFormat().setMinimumFractionDigits(1);
 
+				this.setJSpinnerBinding((Float) bindingSpinner.getValue());
+
 				bindingSpinner.addChangeListener(new ChangeListener() {
 					@Override
 					public void stateChanged(ChangeEvent e) {
-						final Object bindingFieldValue;
-						bindingFieldValue = bindingSpinner.getValue();
-
-						final String safeValue = StringOp.convertNumberToPattern(
-								bindingFieldValue.toString(), regexPattern);
-
-						final SimpleResource newConstant = SimpleResource
-								.buildSimpleResource(
-										ParameterPanel.this.knowIt.getTypes(),
-										safeValue);
-
-						ParameterPanel.this.knowIt.setBinding(newConstant);
+						ParameterPanel.this
+								.setJSpinnerBinding((Float) bindingSpinner
+										.getValue());
 					}
 				});
 				bindingConstantComponent.add(bindingSpinner);
@@ -430,33 +412,14 @@ class ParameterPanel extends JPanel {
 				else
 					bindingBox.setSelectedItem(map.get(bindingText));
 
+				ParameterPanel.this.setJComboBoxBinding(
+						bindingBox.getSelectedItem(), map);
+
 				bindingBox.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						final Object bindingBoxValue;
-
-						String defaultBindingName = "";
-
-						bindingBoxValue = bindingBox.getSelectedItem();
-
-						if (bindingBoxValue == null)
-							ParameterPanel.this.knowIt.clearBinding();
-						else {
-							for (Entry<String, String> entry : map.entrySet()) {
-								if (entry.getValue().equals(bindingBoxValue)) {
-									defaultBindingName = entry.getKey();
-									break;
-								}
-							}
-
-							final SimpleResource newConstant = SimpleResource
-									.buildSimpleResource(
-											ParameterPanel.this.knowIt
-													.getTypes(),
-											defaultBindingName);
-							ParameterPanel.this.knowIt.setBinding(newConstant);
-						}
-
+						ParameterPanel.this.setJComboBoxBinding(
+								bindingBox.getSelectedItem(), map);
 					}
 				});
 
@@ -472,5 +435,65 @@ class ParameterPanel extends JPanel {
 		}
 		bindingConstantComponent.repaint();
 		bindingConstantComponent.revalidate();
+	}
+
+	/**
+	 * Set the JTextField binding constant component to @param bindingText
+	 * 
+	 * @param bindingText
+	 */
+	private void setJTextFieldBinding(String bindingText) {
+		final SimpleResource constant;
+
+		constant = SimpleResource.buildSimpleResource(
+				ParameterPanel.this.knowIt.getTypes(), bindingText);
+
+		this.knowIt.setBinding(constant);
+	}
+
+	/**
+	 * Set the JSpinner binding constant component to @param bindingValue
+	 * 
+	 * @param bindingValue
+	 */
+	private void setJSpinnerBinding(Float bindingValue) {
+		final SimpleResource constant;
+
+		constant = SimpleResource.buildSimpleResource(
+				ParameterPanel.this.knowIt.getTypes(),
+				Float.toString(bindingValue));
+
+		this.knowIt.setBinding(constant);
+	}
+
+	/**
+	 * Set the JComboBox binding constant component to @param binding
+	 * 
+	 * @param binding
+	 * @param map
+	 *            All the possible JComboBox values
+	 */
+	private void setJComboBoxBinding(Object binding, Map<String, String> map) {
+		String defaultBindingName = "";
+
+		if (binding != null) {
+			for (Entry<String, String> entry : map.entrySet()) {
+				if (entry.getValue().equals(binding)) {
+					defaultBindingName = entry.getKey();
+					break;
+				}
+			}
+		} else {
+			// Use the first binding by default if none is provided
+			for (Entry<String, String> entry : map.entrySet()) {
+				defaultBindingName = entry.getKey();
+				break;
+			}
+		}
+
+		final SimpleResource newConstant = SimpleResource.buildSimpleResource(
+				ParameterPanel.this.knowIt.getTypes(), defaultBindingName);
+
+		ParameterPanel.this.knowIt.setBinding(newConstant);
 	}
 }

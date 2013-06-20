@@ -97,6 +97,10 @@ public class CodeGenerator {
 		location = context.getLocationInfo();
 		translator = context.getTranslator();
 
+		// for debug - remove later
+		if (!location.getSlot().equals("Awake"))
+			System.out.println("DEBUGGING");
+		
 		slotName = location.getSlot();
 		slot = context.getModel().getSlot(slotName);
 

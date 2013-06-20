@@ -94,9 +94,10 @@ public final class WindowFactory {
 	// version, but it was generating a version of "2.-1", which is wrong. Fix
 	// that and change this back.
 	private static final String ABOUT_SCRIPTEASE_MESSAGE = "<html><b><font size=\"4\">ScriptEase II</font></b><br>"
-			+ "<font size=\"2\">Version: Beta<br>"
-			+ "Revision: "
-			+ ScriptEase.getInstance().getSpecificVersion()
+			+ "<font size=\"2\">Version: Beta "
+			+ ScriptEase.getInstance().getVersion()
+			+ "<br>Revision: "
+			+ ScriptEase.getInstance().getCommitHash()
 			+ "</font><br><br>"
 			+ "Game Scripting and Code Generation for any game!<br><br>"
 			+ "<b>Contributors:</b><br>"
@@ -142,7 +143,8 @@ public final class WindowFactory {
 	 */
 	public void buildAndShowMainFrame() {
 
-		this.mainFrame = this.buildScriptEaseFrame(ScriptEase.TITLE);
+		this.mainFrame = this.buildScriptEaseFrame(ScriptEase.TITLE + " "
+				+ ScriptEase.getInstance().getVersion());
 		this.mainFrame.setJMenuBar(MenuFactory.createMainMenuBar(null));
 
 		if (!this.mainFrame.isVisible())
@@ -1134,7 +1136,8 @@ public final class WindowFactory {
 						if (!modelTitle.isEmpty())
 							newTitle += modelTitle + " - ";
 					}
-					newTitle += ScriptEase.TITLE;
+					newTitle += ScriptEase.TITLE + " "
+							+ ScriptEase.getInstance().getVersion();
 
 					frame.setTitle(newTitle);
 
