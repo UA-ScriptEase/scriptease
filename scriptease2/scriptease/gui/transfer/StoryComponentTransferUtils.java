@@ -76,15 +76,18 @@ public class StoryComponentTransferUtils {
 			// panel that can hold children (StoryComponentContainer or
 			// ControlIts) or else try the parent.
 			if (!(storyComponent instanceof StoryComponentContainer)
-					&& !(storyComponent instanceof ControlIt)) {
+					&& !(storyComponent instanceof ControlIt)
+					&& !(storyComponent instanceof AskIt)) {
 
 				destinationPanel = destinationPanel.getParent();
 
 				if (destinationPanel instanceof StoryComponentPanel) {
 					storyComponent = ((StoryComponentPanel) destinationPanel)
 							.getStoryComponent();
+
 					if (!(storyComponent instanceof StoryComponentContainer)
-							&& !(storyComponent instanceof ControlIt))
+							&& !(storyComponent instanceof ControlIt)
+							&& !(storyComponent instanceof AskIt))
 						return false;
 				} else
 					return false;
