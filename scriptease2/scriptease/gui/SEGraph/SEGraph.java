@@ -27,13 +27,13 @@ import javax.swing.JScrollPane;
 import javax.swing.plaf.ComponentUI;
 
 import scriptease.controller.observer.SEFocusObserver;
+import scriptease.controller.observer.SEGraphToolBarObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
+import scriptease.gui.SEGraph.SEGraphToolBar.Mode;
 import scriptease.gui.SEGraph.models.SEGraphModel;
 import scriptease.gui.SEGraph.observers.SEGraphObserver;
 import scriptease.gui.SEGraph.renderers.SEGraphNodeRenderer;
-import scriptease.gui.action.graphs.GraphToolBarModeAction;
-import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.util.BiHashMap;
 import scriptease.util.GUIOp;
@@ -70,6 +70,7 @@ public class SEGraph<E> extends JComponent {
 	private final SEGraphModel<E> model;
 
 	private SEGraphNodeRenderer<E> renderer;
+
 	private final SEGraphNodeTransferHandler<E> transferHandler;
 
 	private final BiHashMap<E, JComponent> nodesToComponents;
@@ -81,6 +82,8 @@ public class SEGraph<E> extends JComponent {
 
 	private SelectionMode selectionMode;
 	private boolean isReadOnly;
+
+	private final SEGraphToolBar toolBar;
 
 	/**
 	 * Builds a new graph with the passed in model and single node selection
@@ -108,12 +111,12 @@ public class SEGraph<E> extends JComponent {
 	protected SEGraph(SEGraphModel<E> model, SelectionMode selectionMode,
 			boolean isReadOnly) {
 		this.selectionMode = selectionMode;
-		this.selectedNodes = new LinkedHashSet<E>();
-
 		this.model = model;
 		this.selectionMode = selectionMode;
 		this.isReadOnly = isReadOnly;
 
+		this.toolBar = new SEGraphToolBar();
+		this.selectedNodes = new LinkedHashSet<E>();
 		this.mousePosition = new Point();
 		this.nodesToComponents = new BiHashMap<E, JComponent>();
 		this.mouseAdapter = new NodeMouseAdapter();
@@ -152,6 +155,13 @@ public class SEGraph<E> extends JComponent {
 						}
 					}
 				});
+
+		this.toolBar.addObserver(new SEGraphToolBarObserver() {
+			@Override
+			public void modeChanged(Mode mode) {
+				SEGraph.this.setCursor(mode.getCursor());
+			}
+		});
 	}
 
 	/**
@@ -610,6 +620,27 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
+	 * Returns the {@link Mode} of the {@link SEGraphToolBar}.
+	 * 
+	 * @return
+	 */
+	public Mode getToolBarMode() {
+		return this.toolBar.getMode();
+	}
+
+	/**
+	 * Returns the {@link SEGraphToolBar} linked to the graph. If you are
+	 * getting the mode, you should use {@link #getToolBarMode()} since it will
+	 * return the default value of {@link Mode#SELECT} if the toolbar equals
+	 * null.
+	 * 
+	 * @return
+	 */
+	public SEGraphToolBar getToolBar() {
+		return this.toolBar;
+	}
+
+	/**
 	 * Returns a component for the passed in node. This method creates a
 	 * component for the node if none is found.
 	 * 
@@ -866,12 +897,12 @@ public class SEGraph<E> extends JComponent {
 
 			if (SEGraph.this.draggedFromNode != null
 					&& SEGraph.this.mousePosition != null) {
-				final ToolBarMode mode = GraphToolBarModeAction.getMode();
+				final Mode mode = SEGraph.this.getToolBarMode();
 
-				if (mode == ToolBarMode.INSERT || mode == ToolBarMode.CONNECT)
+				if (mode == Mode.INSERT || mode == Mode.CONNECT)
 					g2.setColor(GUIOp.scaleColour(
 							ScriptEaseUI.COLOUR_INSERT_NODE, 0.8));
-				else if (mode == ToolBarMode.DISCONNECT)
+				else if (mode == Mode.DISCONNECT)
 					g2.setColor(ScriptEaseUI.COLOUR_DELETE_NODE);
 
 				g2.setStroke(new BasicStroke(1.5f));
@@ -966,7 +997,6 @@ public class SEGraph<E> extends JComponent {
 	 */
 	private class NodeMouseAdapter extends MouseAdapter {
 		private E lastEnteredNode = null;
-		private ToolBarMode previousMode = ToolBarMode.SELECT;
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
@@ -992,47 +1022,40 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			switch (GraphToolBarModeAction.getMode()) {
-			case INSERT:
-			case CONNECT:
-			case DISCONNECT:
-				SEGraph.this.draggedFromNode = SEGraph.this.nodesToComponents
+			final Mode mode = SEGraph.this.getToolBarMode();
+
+			final E draggedFrom;
+
+			if (mode == Mode.INSERT || mode == Mode.CONNECT
+					|| mode == Mode.DISCONNECT) {
+				draggedFrom = SEGraph.this.nodesToComponents
 						.getKey((JComponent) e.getSource());
-				break;
-			default:
-				SEGraph.this.draggedFromNode = null;
-				break;
-			}
+			} else
+				draggedFrom = null;
+
+			SEGraph.this.draggedFromNode = draggedFrom;
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			if (SEGraph.this.isReadOnly) {
-				previousMode = GraphToolBarModeAction.getMode();
-				GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
-			}
-
-			final JComponent entered;
-
-			entered = (JComponent) e.getSource();
+			final JComponent entered = (JComponent) e.getSource();
+			final Mode mode = SEGraph.this.getToolBarMode();
 
 			this.lastEnteredNode = SEGraph.this.nodesToComponents
 					.getKey(entered);
 
 			if (this.lastEnteredNode == SEGraph.this.getStartNode())
-				if (GraphToolBarModeAction.getMode() == ToolBarMode.DELETE) {
+				if (mode == Mode.DELETE) {
 					// Make the cursor appear unavailable for start node
 					// deletion
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
 					entered.setCursor(null);
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			if (SEGraph.this.isReadOnly) {
-				GraphToolBarModeAction.setMode(previousMode);
-			}
+			else if (SEGraph.this.isReadOnly)
+				if (mode != Mode.SELECT) {
+					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
+				} else
+					entered.setCursor(null);
 		}
 
 		@Override
@@ -1044,9 +1067,9 @@ public class SEGraph<E> extends JComponent {
 			node = SEGraph.this.nodesToComponents.getKey((JComponent) e
 					.getSource());
 
-			ToolBarMode mode = GraphToolBarModeAction.getMode();
+			final Mode mode = SEGraph.this.getToolBarMode();
 
-			if (mode == ToolBarMode.SELECT || mode == ToolBarMode.DELETE) {
+			if (mode == Mode.SELECT || mode == Mode.DELETE) {
 				final Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
 
 				/*
@@ -1062,7 +1085,7 @@ public class SEGraph<E> extends JComponent {
 					return;
 			}
 
-			if (mode == ToolBarMode.SELECT) {
+			if (mode == Mode.SELECT) {
 				if (selectionMode == SelectionMode.SELECT_PATH_FROM_START
 						|| (selectionMode == SelectionMode.SELECT_PATH && e
 								.isShiftDown())) {
@@ -1084,7 +1107,7 @@ public class SEGraph<E> extends JComponent {
 					SEGraph.this.setSelectedNodes(nodes);
 				}
 				source.requestFocusInWindow();
-			} else if (mode == ToolBarMode.INSERT) {
+			} else if (mode == Mode.INSERT) {
 				if (this.lastEnteredNode != null)
 					if (this.lastEnteredNode == node) {
 						if (!UndoManager.getInstance().hasOpenUndoableAction())
@@ -1108,7 +1131,7 @@ public class SEGraph<E> extends JComponent {
 
 				SEGraph.this.getNodesToComponentsMap()
 						.getValue(this.lastEnteredNode).requestFocusInWindow();
-			} else if (mode == ToolBarMode.DELETE) {
+			} else if (mode == Mode.DELETE) {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
 					UndoManager.getInstance().startUndoableAction(
 							"Remove " + node);
@@ -1117,7 +1140,7 @@ public class SEGraph<E> extends JComponent {
 
 				UndoManager.getInstance().endUndoableAction();
 
-			} else if (mode == ToolBarMode.CONNECT) {
+			} else if (mode == Mode.CONNECT) {
 				if (this.lastEnteredNode != null
 						&& this.lastEnteredNode != node) {
 					if (!UndoManager.getInstance().hasOpenUndoableAction())
@@ -1129,7 +1152,7 @@ public class SEGraph<E> extends JComponent {
 
 					UndoManager.getInstance().endUndoableAction();
 				}
-			} else if (mode == ToolBarMode.DISCONNECT) {
+			} else if (mode == Mode.DISCONNECT) {
 				if (this.lastEnteredNode != null
 						&& this.lastEnteredNode != node) {
 					if (!UndoManager.getInstance().hasOpenUndoableAction())

@@ -13,7 +13,6 @@ import javax.swing.border.EtchedBorder;
 
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
-import scriptease.gui.component.ComponentFactory;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
 
@@ -77,7 +76,7 @@ public class DialogueEditorPanel extends JPanel {
 		final JScrollPane graphScrollPane;
 
 		graph = SEGraphFactory.buildDialogueLineGraph(this.model, dialogueLine);
-		graphToolBar = ComponentFactory.buildGraphEditorToolBar();
+		graphToolBar = graph.getToolBar();
 		graphScrollPane = new JScrollPane(graph);
 
 		graphToolBar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,

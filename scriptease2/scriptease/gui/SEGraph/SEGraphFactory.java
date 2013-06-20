@@ -10,7 +10,6 @@ import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
 import scriptease.gui.SEGraph.renderers.DialogueLineNodeRenderer;
 import scriptease.gui.SEGraph.renderers.EditableDescribeItNodeRenderer;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
-import scriptease.gui.action.graphs.GraphToolBarModeAction;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.StoryPoint;
@@ -70,8 +69,6 @@ public class SEGraphFactory {
 
 		graph.setNodeRenderer(new EditableDescribeItNodeRenderer(graph));
 
-		GraphToolBarModeAction.useGraphCursorForJComponent(graph);
-
 		return graph;
 	}
 
@@ -92,8 +89,6 @@ public class SEGraphFactory {
 		graph.setNodeRenderer(new StoryPointNodeRenderer(graph));
 		graph.setBackground(Color.WHITE);
 
-		GraphToolBarModeAction.useGraphCursorForJComponent(graph);
-
 		return graph;
 	}
 
@@ -113,8 +108,6 @@ public class SEGraphFactory {
 
 		graph.setNodeRenderer(new DialogueLineNodeRenderer(graph));
 		graph.setBackground(Color.WHITE);
-
-		GraphToolBarModeAction.useGraphCursorForJComponent(graph);
 
 		return graph;
 	}
