@@ -42,8 +42,18 @@ Use 'ant zip' to create a distributable zip package. Use flag -Ddebug.mode=true 
 		<echo>ScriptEase jar not found. Please build it first.</echo>
 		<fail />
 	</target>
-
-	<target name="compile" depends="clean, ensureSeJar" description="Compiles the translator's Java code.">
+	
+	<target name="writeVersion">
+		<!-- We write the current ScriptEase build version to the translator.ini file -->
+		<echo>Writing ScriptEase build version to translator.ini file"</echo>
+		
+		<property file="${buildNumberLocation}" />
+		<property name="version" value="${build.number}" />
+	
+		<replaceregexp file="translator.ini" match="VERSION=(.*)" replace="VERSION=${version}" byline="true"/>
+	</target>
+	
+	<target name="compile" depends="clean, ensureSeJar, writeVersion" description="Compiles the translator's Java code.">
 		<echo>Compiling with Java version NWN${java.version}</echo>
 
 		<copy todir="${build.dir}" verbose="false">

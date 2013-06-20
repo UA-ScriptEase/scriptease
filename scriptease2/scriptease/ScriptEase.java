@@ -45,7 +45,8 @@ import scriptease.util.FileOp;
 public final class ScriptEase implements Runnable {
 	// property and configuration keys
 	public static final String LOOK_AND_FEEL_KEY = "UseJavaUI";
-	public static final String TITLE = "ScriptEase II Beta 6";
+	public static final String TITLE = "ScriptEase II Beta";
+	public static final String NO_VERSION_INFORMATION = "(No version information available)";
 
 	private final String version;
 	private final String specificVersion;
@@ -59,13 +60,6 @@ public final class ScriptEase implements Runnable {
 	public enum ConfigurationKeys {
 		TranslatorsDirectory, BugServer;
 	}
-
-	// /**
-	// * This is an enumeration of all of the possible keys to use to get
-	// * information from the Preferences File(s). Each key is case sensitive.
-	// *
-	// * @author remiller
-	// */
 
 	public static final String RECENT_FILE_PREFIX = "recentFile";
 	public static final String DEBUG_KEY = "debug";
@@ -160,7 +154,7 @@ public final class ScriptEase implements Runnable {
 			this.specificVersion = mf.getMainAttributes().getValue(
 					new Name("Implementation-Hash"));
 		} else {
-			this.specificVersion = this.version = "(No version information available)";
+			this.specificVersion = this.version = ScriptEase.NO_VERSION_INFORMATION;
 		}
 
 		// now we set up ScriptEase as per the config files.
@@ -558,7 +552,7 @@ public final class ScriptEase implements Runnable {
 	 * 
 	 * @return The specific revision of ScriptEase.
 	 */
-	public String getSpecificVersion() {
+	public String getCommitHash() {
 		return this.specificVersion;
 	}
 }

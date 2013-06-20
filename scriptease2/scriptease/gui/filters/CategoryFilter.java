@@ -7,6 +7,7 @@ import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.ControlIt.ControlItFormat;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 
@@ -23,7 +24,7 @@ public class CategoryFilter extends StoryComponentFilter {
 	 * @author remiller
 	 */
 	public enum Category {
-		EFFECTS, DESCRIPTIONS, CAUSES, CONTROLS, NOTE;
+		EFFECTS, DESCRIPTIONS, CAUSES, CONTROLS, GROUPS, NOTE;
 	}
 
 	private Category category;
@@ -72,7 +73,7 @@ public class CategoryFilter extends StoryComponentFilter {
 			this.acceptable = CategoryFilter.this.category
 					.equals(Category.EFFECTS);
 		}
-		
+
 		@Override
 		public void processCauseIt(CauseIt causeIt) {
 			this.acceptable = CategoryFilter.this.category
@@ -81,8 +82,13 @@ public class CategoryFilter extends StoryComponentFilter {
 
 		@Override
 		public void processControlIt(ControlIt controlIt) {
-			this.acceptable = CategoryFilter.this.category
-					.equals(Category.CONTROLS);
+
+			if (controlIt.getFormat().equals(ControlItFormat.FOLDER))
+				this.acceptable = CategoryFilter.this.category
+						.equals(Category.GROUPS);
+			else
+				this.acceptable = CategoryFilter.this.category
+						.equals(Category.CONTROLS);
 		}
 
 		@Override

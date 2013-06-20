@@ -6,19 +6,14 @@
       <CodeSymbol>CapsuleCollider</CodeSymbol>
     </Type>
     <Type>
-      <Name>CGProgram</Name>
-      <Keyword>CGProgram</Keyword>
-      <CodeSymbol>CGProgram</CodeSymbol>
-    </Type>
-    <Type>
       <Name>MeshCollider</Name>
       <Keyword>MeshCollider</Keyword>
       <CodeSymbol>MeshCollider</CodeSymbol>
     </Type>
     <Type>
-      <Name>DelayedCallManager</Name>
-      <Keyword>DelayedCallManager</Keyword>
-      <CodeSymbol>DelayedCallManager</CodeSymbol>
+      <Name>CGProgram</Name>
+      <Keyword>CGProgram</Keyword>
+      <CodeSymbol>CGProgram</CodeSymbol>
     </Type>
     <Type>
       <Name>AudioImporter</Name>
@@ -26,9 +21,9 @@
       <CodeSymbol>AudioImporter</CodeSymbol>
     </Type>
     <Type>
-      <Name>NavMesh</Name>
-      <Keyword>NavMesh</Keyword>
-      <CodeSymbol>NavMesh</CodeSymbol>
+      <Name>DelayedCallManager</Name>
+      <Keyword>DelayedCallManager</Keyword>
+      <CodeSymbol>DelayedCallManager</CodeSymbol>
     </Type>
     <Type>
       <Name>InputAxisType</Name>
@@ -37,6 +32,11 @@
       <Enum>&quot;Mouse Y&quot;&lt;Mouse Y&gt;|&quot;Mouse X&quot;&lt;Mouse
 				X&gt;|&quot;Vertical&quot;&lt;Vertical&gt;|&quot;Horizontal&quot;&lt;Horizontal&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
+      <Name>NavMesh</Name>
+      <Keyword>NavMesh</Keyword>
+      <CodeSymbol>NavMesh</CodeSymbol>
     </Type>
     <Type>
       <Name>EditorSettings</Name>
@@ -55,9 +55,9 @@
       <WidgetName>M</WidgetName>
     </Type>
     <Type>
-      <Name>RenderManager</Name>
-      <Keyword>RenderManager</Keyword>
-      <CodeSymbol>RenderManager</CodeSymbol>
+      <Name>PVRImporter</Name>
+      <Keyword>PVRImporter</Keyword>
+      <CodeSymbol>PVRImporter</CodeSymbol>
     </Type>
     <Type>
       <Name>AudioClip</Name>
@@ -65,9 +65,9 @@
       <CodeSymbol>AudioClip</CodeSymbol>
     </Type>
     <Type>
-      <Name>PVRImporter</Name>
-      <Keyword>PVRImporter</Keyword>
-      <CodeSymbol>PVRImporter</CodeSymbol>
+      <Name>RenderManager</Name>
+      <Keyword>RenderManager</Keyword>
+      <CodeSymbol>RenderManager</CodeSymbol>
     </Type>
     <Type>
       <Name>SkinnedCloth</Name>
@@ -105,7 +105,7 @@
       <Name>AllowDisallow</Name>
       <Keyword>AllowDisallow</Keyword>
       <CodeSymbol>boolean</CodeSymbol>
-      <Enum>false&lt;Disallow&gt;|true&lt;Allow&gt;</Enum>
+      <Enum>true&lt;Allow&gt;|false&lt;Disallow&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -145,19 +145,26 @@
       <CodeSymbol>EllipsoidParticleEmitter</CodeSymbol>
     </Type>
     <Type>
-      <Name>NotificationManager</Name>
-      <Keyword>NotificationManager</Keyword>
-      <CodeSymbol>NotificationManager</CodeSymbol>
-    </Type>
-    <Type>
       <Name>MeshParticleEmitter</Name>
       <Keyword>MeshParticleEmitter</Keyword>
       <CodeSymbol>MeshParticleEmitter</CodeSymbol>
     </Type>
     <Type>
+      <Name>NotificationManager</Name>
+      <Keyword>NotificationManager</Keyword>
+      <CodeSymbol>NotificationManager</CodeSymbol>
+    </Type>
+    <Type>
       <Name>Camera</Name>
       <Keyword>Camera</Keyword>
       <CodeSymbol>Camera</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>YesNo</Name>
+      <Keyword>YesNo</Keyword>
+      <CodeSymbol>boolean</CodeSymbol>
+      <Enum>true&lt;Yes&gt;|false&lt;No&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
       <Name>Animation</Name>
@@ -170,14 +177,14 @@
       <CodeSymbol>TextMesh</CodeSymbol>
     </Type>
     <Type>
-      <Name>Projector</Name>
-      <Keyword>Projector</Keyword>
-      <CodeSymbol>Projector</CodeSymbol>
-    </Type>
-    <Type>
       <Name>Cubemap</Name>
       <Keyword>Cubemap</Keyword>
       <CodeSymbol>Cubemap</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>Projector</Name>
+      <Keyword>Projector</Keyword>
+      <CodeSymbol>Projector</CodeSymbol>
     </Type>
     <Type>
       <Name>MonoBehaviour</Name>
@@ -205,14 +212,14 @@
       <CodeSymbol>InspectorExpandedState</CodeSymbol>
     </Type>
     <Type>
-      <Name>NetworkView</Name>
-      <Keyword>NetworkView</Keyword>
-      <CodeSymbol>NetworkView</CodeSymbol>
-    </Type>
-    <Type>
       <Name>ModelImporter</Name>
       <Keyword>ModelImporter</Keyword>
       <CodeSymbol>ModelImporter</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>NetworkView</Name>
+      <Keyword>NetworkView</Keyword>
+      <CodeSymbol>NetworkView</CodeSymbol>
     </Type>
     <Type>
       <Name>AudioHighPassFilter</Name>
@@ -223,6 +230,11 @@
       <Name>MonoManager</Name>
       <Keyword>MonoManager</Keyword>
       <CodeSymbol>MonoManager</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>FBXImporter</Name>
+      <Keyword>FBXImporter</Keyword>
+      <CodeSymbol>FBXImporter</CodeSymbol>
     </Type>
     <Type>
       <Name>GUISkin</Name>
@@ -237,11 +249,6 @@
       <WidgetName>g</WidgetName>
     </Type>
     <Type>
-      <Name>FBXImporter</Name>
-      <Keyword>FBXImporter</Keyword>
-      <CodeSymbol>FBXImporter</CodeSymbol>
-    </Type>
-    <Type>
       <Name>Dialogue Line</Name>
       <Keyword>DialogueLine</Keyword>
       <CodeSymbol>String</CodeSymbol>
@@ -253,14 +260,14 @@
       <CodeSymbol>LightmapSettings</CodeSymbol>
     </Type>
     <Type>
-      <Name>LensFlare</Name>
-      <Keyword>LensFlare</Keyword>
-      <CodeSymbol>LensFlare</CodeSymbol>
-    </Type>
-    <Type>
       <Name>AudioListener</Name>
       <Keyword>AudioListener</Keyword>
       <CodeSymbol>AudioListener</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>LensFlare</Name>
+      <Keyword>LensFlare</Keyword>
+      <CodeSymbol>LensFlare</CodeSymbol>
     </Type>
     <Type>
       <Name>Story Point</Name>
@@ -405,16 +412,16 @@
       <Keyword>KeyCode</Keyword>
       <CodeSymbol>KeyCode</CodeSymbol>
       <Enum>
-				KeyCode.Caret&lt;^&gt;|KeyCode.Question&lt;?&gt;|
-				KeyCode.F5&lt;F5&gt;|KeyCode.Equals&lt;=&gt;|
+				KeyCode.Caret&lt;^&gt;|KeyCode.Question&lt;?&gt;|KeyCode.Equals&lt;=&gt;|
+				KeyCode.F5&lt;F5&gt;|
 				KeyCode.Less&lt;Less
 				Than&gt;|
 				KeyCode.RightShift&lt;Right Shift&gt;|KeyCode.DoubleQuote&lt;&quot;&gt;|
 				KeyCode.Alpha6&lt;6&gt;|
 				KeyCode.Alpha2&lt;2&gt;|
 				KeyCode.Escape&lt;Escape&gt;|
-				KeyCode.LeftCommand&lt;Left Command&gt;|
-				KeyCode.Period&lt;.&gt;|KeyCode.Plus&lt;+&gt;|KeyCode.Slash&lt;/&gt;|
+				KeyCode.Period&lt;.&gt;|
+				KeyCode.LeftCommand&lt;Left Command&gt;|KeyCode.Plus&lt;+&gt;|KeyCode.Slash&lt;/&gt;|
 				KeyCode.F10&lt;F10&gt;|KeyCode.Backspace&lt;Backspace&gt;|
 				KeyCode.Keypad1&lt;Numeric Keypad 1&gt;|
 				KeyCode.Numlock&lt;Numlock&gt;|
@@ -427,13 +434,13 @@
 				KeyCode.Exclaim&lt;!&gt;|
 				KeyCode.Clear&lt;Clear&gt;|
 				KeyCode.KeypadMultiply&lt;Numeric Keypad *&gt;|KeyCode.RightAlt&lt;Right
-				Alt&gt;|KeyCode.RightArrow&lt;Right
-				Arrow&gt;|KeyCode.LeftShift&lt;Left
-				Shift&gt;|KeyCode.UpArrow&lt;Up
+				Alt&gt;|KeyCode.LeftShift&lt;Left
+				Shift&gt;|KeyCode.RightArrow&lt;Right
+				Arrow&gt;|KeyCode.UpArrow&lt;Up
 				Arrow&gt;|KeyCode.RightControl&lt;Right
 				Control&gt;|
-				KeyCode.Asterisk&lt;*&gt;|KeyCode.Colon&lt;:&gt;|KeyCode.BackQuote&lt;`&gt;|KeyCode.F1&lt;F1&gt;|KeyCode.F3&lt;F3&gt;|KeyCode.LeftArrow&lt;Left
-				Arrow&gt;|KeyCode.F2&lt;F2&gt;|KeyCode.Home&lt;Home&gt;|KeyCode.F4&lt;F4&gt;|KeyCode.F6&lt;F6&gt;|KeyCode.F7&lt;F7&gt;|KeyCode.F8&lt;F8&gt;|KeyCode.F9&lt;F9&gt;|
+				KeyCode.Asterisk&lt;*&gt;|KeyCode.BackQuote&lt;`&gt;|KeyCode.Colon&lt;:&gt;|KeyCode.F1&lt;F1&gt;|KeyCode.LeftArrow&lt;Left
+				Arrow&gt;|KeyCode.F3&lt;F3&gt;|KeyCode.F2&lt;F2&gt;|KeyCode.Home&lt;Home&gt;|KeyCode.F4&lt;F4&gt;|KeyCode.F6&lt;F6&gt;|KeyCode.F7&lt;F7&gt;|KeyCode.F8&lt;F8&gt;|KeyCode.F9&lt;F9&gt;|
 				KeyCode.DownArrow&lt;Down Arrow&gt;|KeyCode.LeftBracket&lt;[&gt;|
 				KeyCode.Ampersand&lt;&amp;&gt;|KeyCode.A&lt;a&gt;|KeyCode.KeypadPeriod&lt;.&gt;|KeyCode.LeftAlt&lt;Left Alt&gt;|
 				KeyCode.LeftControl&lt;Left Control&gt;|KeyCode.Pause&lt;Pause&gt;|
@@ -444,15 +451,15 @@
 				KeyCode.KeypadEquals&lt;Numeric Keypad =&gt;|KeyCode.Greater&lt;Greater Than&gt;|
 				KeyCode.G&lt;g&gt;|KeyCode.Alpha3&lt;3&gt;|KeyCode.Z&lt;z&gt;|KeyCode.Alpha0&lt;0&gt;|KeyCode.Alpha1&lt;1&gt;|KeyCode.X&lt;x&gt;|KeyCode.Y&lt;y&gt;|KeyCode.Alpha7&lt;7&gt;|KeyCode.Alpha4&lt;4&gt;|KeyCode.W&lt;w&gt;|KeyCode.Alpha5&lt;5&gt;|
 				KeyCode.B&lt;b&gt;|KeyCode.T&lt;t&gt;|KeyCode.U&lt;u&gt;|KeyCode.R&lt;r&gt;|KeyCode.Alpha8&lt;8&gt;|KeyCode.Comma&lt;,&gt;|KeyCode.S&lt;s&gt;|KeyCode.Alpha9&lt;9&gt;|KeyCode.P&lt;p&gt;|KeyCode.O&lt;o&gt;|KeyCode.N&lt;n&gt;|KeyCode.M&lt;m&gt;|KeyCode.KeypadDivide&lt;/&gt;|KeyCode.K&lt;k&gt;|KeyCode.J&lt;j&gt;|KeyCode.Delete&lt;Delete&gt;|KeyCode.I&lt;i&gt;|KeyCode.H&lt;h&gt;|KeyCode.F&lt;f&gt;|
-				KeyCode.At&lt;@&gt;|KeyCode.E&lt;e&gt;|KeyCode.D&lt;d&gt;|KeyCode.C&lt;c&gt;|KeyCode.Semicolon&lt;;&gt;|KeyCode.F15&lt;F15&gt;|KeyCode.RightParen&lt;)&gt;|KeyCode.Hash&lt;#&gt;|KeyCode.Keypad0&lt;Numeric
+				KeyCode.At&lt;@&gt;|KeyCode.E&lt;e&gt;|KeyCode.D&lt;d&gt;|KeyCode.C&lt;c&gt;|KeyCode.F15&lt;F15&gt;|KeyCode.Semicolon&lt;;&gt;|KeyCode.RightParen&lt;)&gt;|KeyCode.Hash&lt;#&gt;|KeyCode.Keypad0&lt;Numeric
 				Keypad 0&gt;|KeyCode.KeyPad6&lt;Numeric Keypad
-				6&gt;|KeyCode.F12&lt;F12&gt;|KeyCode.ScrollLock&lt;ScrollLock&gt;|KeyCode.F11&lt;F11&gt;|KeyCode.Keypad5&lt;Numeric
-				Keypad 5&gt;|KeyCode.Keypad2&lt;Numeric Keypad
-				2&gt;|KeyCode.F13&lt;F13&gt;|KeyCode.Keypad3&lt;Numeric Keypad
-				3&gt;|KeyCode.LeftParen&lt;(&gt;|
+				6&gt;|KeyCode.F12&lt;F12&gt;|KeyCode.Keypad5&lt;Numeric
+				Keypad 5&gt;|KeyCode.F11&lt;F11&gt;|KeyCode.ScrollLock&lt;ScrollLock&gt;|KeyCode.Keypad2&lt;Numeric Keypad
+				2&gt;|KeyCode.Keypad3&lt;Numeric Keypad
+				3&gt;|KeyCode.F13&lt;F13&gt;|KeyCode.LeftParen&lt;(&gt;|KeyCode.RightCommand&lt;Right
+				Command&gt;|
 				KeyCode.KeypadPlus&lt;Numeric Keypad
-				+&gt;|KeyCode.RightCommand&lt;Right
-				Command&gt;|KeyCode.None&lt;None&gt;|KeyCode.End&lt;End&gt;|KeyCode.Return&lt;Return&gt;|
+				+&gt;|KeyCode.None&lt;None&gt;|KeyCode.End&lt;End&gt;|KeyCode.Return&lt;Return&gt;|
 				KeyCode.Insert&lt;Insert&gt;|KeyCode.KeypadMinus&lt;Numeric Keypad -&gt;|KeyCode.Keypad8&lt;Numeric Keypad 8&gt;|KeyCode.CapsLock&lt;Capslock&gt;|KeyCode.Quote&lt;&apos;&gt;|KeyCode.PageUp&lt;Page
 				Up&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
@@ -585,11 +592,6 @@
       <CodeSymbol>Skybox</CodeSymbol>
     </Type>
     <Type>
-      <Name>NavMeshAgent</Name>
-      <Keyword>NavMeshAgent</Keyword>
-      <CodeSymbol>NavMeshAgent</CodeSymbol>
-    </Type>
-    <Type>
       <Name>Audio</Name>
       <Keyword>Audio</Keyword>
       <CodeSymbol>AudioSource</CodeSymbol>
@@ -602,6 +604,11 @@
       <WidgetName>a</WidgetName>
     </Type>
     <Type>
+      <Name>NavMeshAgent</Name>
+      <Keyword>NavMeshAgent</Keyword>
+      <CodeSymbol>NavMeshAgent</CodeSymbol>
+    </Type>
+    <Type>
       <Name>LibraryAssetImporter</Name>
       <Keyword>LibraryAssetImporter</Keyword>
       <CodeSymbol>LibraryAssetImporter</CodeSymbol>
@@ -610,7 +617,7 @@
       <Name>ShowHide</Name>
       <Keyword>ShowHide</Keyword>
       <CodeSymbol>boolean</CodeSymbol>
-      <Enum>true&lt;Hide&gt;|false&lt;Show&gt;</Enum>
+      <Enum>false&lt;Show&gt;|true&lt;Hide&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
@@ -649,17 +656,17 @@
       <CodeSymbol>DDSImporter</CodeSymbol>
     </Type>
     <Type>
-      <Name>AssetBundle</Name>
-      <Keyword>AssetBundle</Keyword>
-      <CodeSymbol>AssetBundle</CodeSymbol>
-    </Type>
-    <Type>
       <Name>NumberOperator</Name>
       <Keyword>number_operator</Keyword>
       <CodeSymbol>int</CodeSymbol>
       <Enum>3&lt;Greater Than or Equal To&gt;|2&lt;Equal To&gt;|1&lt;Less
 				Than&gt;|0&lt;Greater Than&gt;|4&lt;Less Than or Equal To&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
+      <Name>AssetBundle</Name>
+      <Keyword>AssetBundle</Keyword>
+      <CodeSymbol>AssetBundle</CodeSymbol>
     </Type>
     <Type>
       <Name>HingeJoint</Name>
@@ -672,14 +679,14 @@
       <CodeSymbol>MonoAssemblyImporter</CodeSymbol>
     </Type>
     <Type>
-      <Name>Light</Name>
-      <Keyword>Light</Keyword>
-      <CodeSymbol>Light</CodeSymbol>
-    </Type>
-    <Type>
       <Name>TagManager</Name>
       <Keyword>TagManager</Keyword>
       <CodeSymbol>TagManager</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>Light</Name>
+      <Keyword>Light</Keyword>
+      <CodeSymbol>Light</CodeSymbol>
     </Type>
     <Type>
       <Name>Component</Name>
@@ -733,24 +740,24 @@
       <CodeSymbol>Flare</CodeSymbol>
     </Type>
     <Type>
-      <Name>AudioDistortionFilter</Name>
-      <Keyword>AudioDistortionFilter</Keyword>
-      <CodeSymbol>AudioDistortionFilter</CodeSymbol>
-    </Type>
-    <Type>
       <Name>AssetServerCache</Name>
       <Keyword>AssetServerCache</Keyword>
       <CodeSymbol>AssetServerCache</CodeSymbol>
     </Type>
     <Type>
-      <Name>AudioBehaviour</Name>
-      <Keyword>AudioBehaviour</Keyword>
-      <CodeSymbol>AudioBehaviour</CodeSymbol>
+      <Name>AudioDistortionFilter</Name>
+      <Keyword>AudioDistortionFilter</Keyword>
+      <CodeSymbol>AudioDistortionFilter</CodeSymbol>
     </Type>
     <Type>
       <Name>LightProbeCloud</Name>
       <Keyword>LightProbeCloud</Keyword>
       <CodeSymbol>LightProbeCloud</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>AudioBehaviour</Name>
+      <Keyword>AudioBehaviour</Keyword>
+      <CodeSymbol>AudioBehaviour</CodeSymbol>
     </Type>
     <Type>
       <Name>GUIText</Name>
@@ -761,11 +768,6 @@
       <Name>MovieImporter</Name>
       <Keyword>MovieImporter</Keyword>
       <CodeSymbol>MovieImporter</CodeSymbol>
-    </Type>
-    <Type>
-      <Name>RenderTexture</Name>
-      <Keyword>RenderTexture</Keyword>
-      <CodeSymbol>RenderTexture</CodeSymbol>
     </Type>
     <Type>
       <Name>Text</Name>
@@ -781,9 +783,19 @@
       <WidgetName>Tx</WidgetName>
     </Type>
     <Type>
+      <Name>RenderTexture</Name>
+      <Keyword>RenderTexture</Keyword>
+      <CodeSymbol>RenderTexture</CodeSymbol>
+    </Type>
+    <Type>
       <Name>AnimationManager</Name>
       <Keyword>AnimationManager</Keyword>
       <CodeSymbol>AnimationManager</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>QualitySettings</Name>
+      <Keyword>QualitySettings</Keyword>
+      <CodeSymbol>QualitySettings</CodeSymbol>
     </Type>
     <Type>
       <Name>Scale Mode</Name>
@@ -793,19 +805,14 @@
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
-      <Name>QualitySettings</Name>
-      <Keyword>QualitySettings</Keyword>
-      <CodeSymbol>QualitySettings</CodeSymbol>
+      <Name>AssetDatabase</Name>
+      <Keyword>AssetDatabase</Keyword>
+      <CodeSymbol>AssetDatabase</CodeSymbol>
     </Type>
     <Type>
       <Name>AudioSource</Name>
       <Keyword>AudioSource</Keyword>
       <CodeSymbol>AudioSource</CodeSymbol>
-    </Type>
-    <Type>
-      <Name>AssetDatabase</Name>
-      <Keyword>AssetDatabase</Keyword>
-      <CodeSymbol>AssetDatabase</CodeSymbol>
     </Type>
     <Type>
       <Name>Joint</Name>
@@ -852,26 +859,26 @@
       <CodeSymbol>ControllerColliderHit</CodeSymbol>
     </Type>
     <Type>
-      <Name>TerrainCollider</Name>
-      <Keyword>TerrainCollider</Keyword>
-      <CodeSymbol>TerrainCollider</CodeSymbol>
-    </Type>
-    <Type>
       <Name>ConfigurableJoint</Name>
       <Keyword>ConfigurableJoint</Keyword>
       <CodeSymbol>ConfigurableJoint</CodeSymbol>
     </Type>
     <Type>
-      <Name>LockUnlock</Name>
-      <Keyword>LockUnlock</Keyword>
-      <CodeSymbol>boolean</CodeSymbol>
-      <Enum>true&lt;Lock&gt;|false&lt;Unlock&gt;</Enum>
-      <GUI>JCOMBOBOX</GUI>
+      <Name>TerrainCollider</Name>
+      <Keyword>TerrainCollider</Keyword>
+      <CodeSymbol>TerrainCollider</CodeSymbol>
     </Type>
     <Type>
       <Name>ProceduralMaterial</Name>
       <Keyword>ProceduralMaterial</Keyword>
       <CodeSymbol>ProceduralMaterial</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>LockUnlock</Name>
+      <Keyword>LockUnlock</Keyword>
+      <CodeSymbol>boolean</CodeSymbol>
+      <Enum>false&lt;Unlock&gt;|true&lt;Lock&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
       <Name>NetworkManager</Name>
@@ -889,14 +896,9 @@
       <CodeSymbol>LevelGameManager</CodeSymbol>
     </Type>
     <Type>
-      <Name>Transform</Name>
-      <Keyword>Transform</Keyword>
-      <CodeSymbol>Transform</CodeSymbol>
-    </Type>
-    <Type>
-      <Name>GameManager</Name>
-      <Keyword>GameManager</Keyword>
-      <CodeSymbol>GameManager</CodeSymbol>
+      <Name>SubstanceArchive</Name>
+      <Keyword>SubstanceArchive</Keyword>
+      <CodeSymbol>SubstanceArchive</CodeSymbol>
     </Type>
     <Type>
       <Name>Mesh</Name>
@@ -904,19 +906,24 @@
       <CodeSymbol>Mesh</CodeSymbol>
     </Type>
     <Type>
-      <Name>SubstanceArchive</Name>
-      <Keyword>SubstanceArchive</Keyword>
-      <CodeSymbol>SubstanceArchive</CodeSymbol>
+      <Name>GameManager</Name>
+      <Keyword>GameManager</Keyword>
+      <CodeSymbol>GameManager</CodeSymbol>
     </Type>
     <Type>
-      <Name>PhysicMaterial</Name>
-      <Keyword>PhysicMaterial</Keyword>
-      <CodeSymbol>PhysicMaterial</CodeSymbol>
+      <Name>Transform</Name>
+      <Keyword>Transform</Keyword>
+      <CodeSymbol>Transform</CodeSymbol>
     </Type>
     <Type>
       <Name>AnnotationManager</Name>
       <Keyword>AnnotationManager</Keyword>
       <CodeSymbol>AnnotationManager</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>PhysicMaterial</Name>
+      <Keyword>PhysicMaterial</Keyword>
+      <CodeSymbol>PhysicMaterial</CodeSymbol>
     </Type>
     <Type>
       <Name>Mouse Button</Name>
@@ -925,26 +932,6 @@
       <Enum>2&lt;Middle Mouse Button&gt;|1&lt;Right Mouse
 				Button&gt;|0&lt;Left Mouse Button&gt;|-1&lt;None&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
-    </Type>
-    <Type>
-      <Name>CharacterController</Name>
-      <Keyword>CharacterController</Keyword>
-      <CodeSymbol>CharacterController</CodeSymbol>
-    </Type>
-    <Type>
-      <Name>TextureImporter</Name>
-      <Keyword>TextureImporter</Keyword>
-      <CodeSymbol>TextureImporter</CodeSymbol>
-    </Type>
-    <Type>
-      <Name>DefaultImporter</Name>
-      <Keyword>DefaultImporter</Keyword>
-      <CodeSymbol>DefaultImporter</CodeSymbol>
-    </Type>
-    <Type>
-      <Name>MonoImporter</Name>
-      <Keyword>MonoImporter</Keyword>
-      <CodeSymbol>MonoImporter</CodeSymbol>
     </Type>
     <Type>
       <Name>Animation Element</Name>
@@ -957,6 +944,26 @@
       </Format>
       <LegalValues>[^\&quot;]*</LegalValues>
       <WidgetName>A</WidgetName>
+    </Type>
+    <Type>
+      <Name>MonoImporter</Name>
+      <Keyword>MonoImporter</Keyword>
+      <CodeSymbol>MonoImporter</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>DefaultImporter</Name>
+      <Keyword>DefaultImporter</Keyword>
+      <CodeSymbol>DefaultImporter</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>TextureImporter</Name>
+      <Keyword>TextureImporter</Keyword>
+      <CodeSymbol>TextureImporter</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>CharacterController</Name>
+      <Keyword>CharacterController</Keyword>
+      <CodeSymbol>CharacterController</CodeSymbol>
     </Type>
     <Type>
       <Name>Question</Name>
@@ -975,9 +982,9 @@
       <CodeSymbol>ParticleSystem</CodeSymbol>
     </Type>
     <Type>
-      <Name>SphereCollider</Name>
-      <Keyword>SphereCollider</Keyword>
-      <CodeSymbol>SphereCollider</CodeSymbol>
+      <Name>AudioFilter</Name>
+      <Keyword>AudioFilter</Keyword>
+      <CodeSymbol>AudioFilter</CodeSymbol>
     </Type>
     <Type>
       <Name>ParticleRenderer</Name>
@@ -985,21 +992,21 @@
       <CodeSymbol>ParticleRenderer</CodeSymbol>
     </Type>
     <Type>
-      <Name>AudioFilter</Name>
-      <Keyword>AudioFilter</Keyword>
-      <CodeSymbol>AudioFilter</CodeSymbol>
-    </Type>
-    <Type>
-      <Name>ShaderImporter</Name>
-      <Keyword>ShaderImporter</Keyword>
-      <CodeSymbol>ShaderImporter</CodeSymbol>
+      <Name>SphereCollider</Name>
+      <Keyword>SphereCollider</Keyword>
+      <CodeSymbol>SphereCollider</CodeSymbol>
     </Type>
     <Type>
       <Name>EnableDisable</Name>
       <Keyword>EnableDisable</Keyword>
       <CodeSymbol>boolean</CodeSymbol>
-      <Enum>true&lt;Enable&gt;|false&lt;Disable&gt;</Enum>
+      <Enum>false&lt;Disable&gt;|true&lt;Enable&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
+      <Name>ShaderImporter</Name>
+      <Keyword>ShaderImporter</Keyword>
+      <CodeSymbol>ShaderImporter</CodeSymbol>
     </Type>
     <Type>
       <Name>HierarchyState</Name>
@@ -1012,14 +1019,14 @@
       <CodeSymbol>MeshRenderer</CodeSymbol>
     </Type>
     <Type>
-      <Name>GUILayer</Name>
-      <Keyword>GUILayer</Keyword>
-      <CodeSymbol>GUILayer</CodeSymbol>
-    </Type>
-    <Type>
       <Name>ParticleAnimator</Name>
       <Keyword>ParticleAnimator</Keyword>
       <CodeSymbol>ParticleAnimator</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>GUILayer</Name>
+      <Keyword>GUILayer</Keyword>
+      <CodeSymbol>GUILayer</CodeSymbol>
     </Type>
     <Type>
       <Name>NavMeshLayers</Name>
@@ -1047,14 +1054,14 @@
       <CodeSymbol>ParticleSystemRenderer</CodeSymbol>
     </Type>
     <Type>
-      <Name>AudioManager</Name>
-      <Keyword>AudioManager</Keyword>
-      <CodeSymbol>AudioManager</CodeSymbol>
-    </Type>
-    <Type>
       <Name>LightProbeGroup</Name>
       <Keyword>LightProbeGroup</Keyword>
       <CodeSymbol>LightProbeGroup</CodeSymbol>
+    </Type>
+    <Type>
+      <Name>AudioManager</Name>
+      <Keyword>AudioManager</Keyword>
+      <CodeSymbol>AudioManager</CodeSymbol>
     </Type>
     <Type>
       <Name>FlareLayer</Name>
@@ -1367,62 +1374,9 @@
       </Implicits>
     </Slot>
     <Slot format="UnityCause">
-      <Name>OnTriggerStay</Name>
-      <Keyword>OnTriggerStay</Keyword>
-      <Condition>OnTriggerStay</Condition>
-      <Parameters>
-        <KnowIt>
-          <Name>other</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>Collider</Type>
-          </Types>
-        </KnowIt>
-      </Parameters>
-      <Implicits>
-        <KnowIt>
-          <Name>Triggering Object</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>GameObject</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt>
-              <Name>Triggering Object</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Children/>
-              <CodeBlocks>
-                <CodeBlockSource>
-                  <Name>Triggering Object</Name>
-                  <Visible>true</Visible>
-                  <Labels/>
-                  <Id>112</Id>
-                  <Types>
-                    <Type>GameObject</Type>
-                  </Types>
-                  <Code>
-                    <Line>
-                      <Literal>return </Literal>
-                      <Scope data="slotparameter" ref="other">
-                        <Fragment data="name"/>
-                      </Scope>
-                      <Literal>.gameObject;</Literal>
-                    </Line>
-                  </Code>
-                </CodeBlockSource>
-              </CodeBlocks>
-            </ScriptIt>
-          </Binding>
-        </KnowIt>
-      </Implicits>
-    </Slot>
-    <Slot format="UnityCause">
-      <Name>FixedUpdate</Name>
-      <Keyword>FixedUpdate</Keyword>
-      <Condition>FixedUpdate</Condition>
+      <Name>OnParticleCollision</Name>
+      <Keyword>OnParticleCollision</Keyword>
+      <Condition>OnParticleCollision</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -1488,11 +1442,64 @@
       </Implicits>
     </Slot>
     <Slot format="UnityCause">
-      <Name>OnParticleCollision</Name>
-      <Keyword>OnParticleCollision</Keyword>
-      <Condition>OnParticleCollision</Condition>
+      <Name>FixedUpdate</Name>
+      <Keyword>FixedUpdate</Keyword>
+      <Condition>FixedUpdate</Condition>
       <Parameters/>
       <Implicits/>
+    </Slot>
+    <Slot format="UnityCause">
+      <Name>OnTriggerStay</Name>
+      <Keyword>OnTriggerStay</Keyword>
+      <Condition>OnTriggerStay</Condition>
+      <Parameters>
+        <KnowIt>
+          <Name>other</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>Collider</Type>
+          </Types>
+        </KnowIt>
+      </Parameters>
+      <Implicits>
+        <KnowIt>
+          <Name>Triggering Object</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>GameObject</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Triggering Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Triggering Object</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Id>112</Id>
+                  <Types>
+                    <Type>GameObject</Type>
+                  </Types>
+                  <Code>
+                    <Line>
+                      <Literal>return </Literal>
+                      <Scope data="slotparameter" ref="other">
+                        <Fragment data="name"/>
+                      </Scope>
+                      <Literal>.gameObject;</Literal>
+                    </Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+      </Implicits>
     </Slot>
     <Slot format="UnityCause">
       <Name>OnCollisionEnter</Name>
@@ -1546,6 +1553,13 @@
           </Binding>
         </KnowIt>
       </Implicits>
+    </Slot>
+    <Slot format="UnityCause">
+      <Name>OnPreCull</Name>
+      <Keyword>OnPreCull</Keyword>
+      <Condition>OnPreCull</Condition>
+      <Parameters/>
+      <Implicits/>
     </Slot>
     <Slot format="UnityCause">
       <Name>OnMouseUp</Name>
@@ -1609,13 +1623,6 @@
       </Implicits>
     </Slot>
     <Slot format="UnityCause">
-      <Name>OnPreCull</Name>
-      <Keyword>OnPreCull</Keyword>
-      <Condition>OnPreCull</Condition>
-      <Parameters/>
-      <Implicits/>
-    </Slot>
-    <Slot format="UnityCause">
       <Name>Start</Name>
       <Keyword>Start</Keyword>
       <Condition>Start</Condition>
@@ -1630,16 +1637,16 @@
       <Implicits/>
     </Slot>
     <Slot format="UnityCause">
-      <Name>OnDestroy</Name>
-      <Keyword>OnDestroy</Keyword>
-      <Condition>OnDestroy</Condition>
+      <Name>Update</Name>
+      <Keyword>Update</Keyword>
+      <Condition>Update</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
     <Slot format="UnityCause">
-      <Name>Update</Name>
-      <Keyword>Update</Keyword>
-      <Condition>Update</Condition>
+      <Name>OnDestroy</Name>
+      <Keyword>OnDestroy</Keyword>
+      <Condition>OnDestroy</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -1918,9 +1925,9 @@
       <Implicits/>
     </Slot>
     <Slot format="UnityCause">
-      <Name>Reset</Name>
-      <Keyword>Reset</Keyword>
-      <Condition>Reset</Condition>
+      <Name>OnApplicationFocus</Name>
+      <Keyword>OnApplicationFocus</Keyword>
+      <Condition>OnApplicationFocus</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -1978,9 +1985,9 @@
       </Implicits>
     </Slot>
     <Slot format="UnityCause">
-      <Name>OnApplicationFocus</Name>
-      <Keyword>OnApplicationFocus</Keyword>
-      <Condition>OnApplicationFocus</Condition>
+      <Name>Reset</Name>
+      <Keyword>Reset</Keyword>
+      <Condition>Reset</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -4759,7 +4766,7 @@
   </Causes>
   <Effects>
     <ScriptIt>
-      <Name>Shoot out a &lt;Game Object&gt; at speed &lt;Speed&gt;</Name>
+      <Name>Shoot &lt;Game Object&gt; at speed &lt;Right Speed&gt; rightwards, &lt;Up Speed&gt; upwards, and &lt;Forward Speed&gt; forwards</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -4767,7 +4774,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Shoot out a &lt;Game Object&gt; at speed &lt;Speed&gt;</Name>
+          <Name>Shoot &lt;Game Object&gt; at speed &lt;Right Speed&gt; rightwards, &lt;Up Speed&gt; upwards, and &lt;Forward Speed&gt; forwards</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>1</Id>
@@ -4784,12 +4791,40 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Speed</Name>
+              <Name>Right Speed</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Up Speed</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Forward Speed</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -4797,12 +4832,19 @@
               <Scope data="argument" ref="Game Object">
                 <Fragment data="name"/>
               </Scope>
-              <Literal>.rigidbody.velocity = transform.TransformDirection
-								(Vector3.forward * </Literal>
-              <Scope data="argument" ref="Speed">
+              <Literal>.rigidbody.velocity = transform.TransformDirection (Vector3(</Literal>
+              <Scope data="argument" ref="Right Speed">
                 <Fragment data="name"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Up Speed">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Forward Speed">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -4845,8 +4887,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Change the &lt;Game Object&gt;&apos;s light colour to a random
-				colour</Name>
+      <Name>Change the &lt;Game Object&gt;&apos;s light colour to a random colour</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -4854,8 +4895,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Change the &lt;Game Object&gt;&apos;s light colour to a random
-				colour</Name>
+          <Name>Change the &lt;Game Object&gt;&apos;s light colour to a random colour</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>6</Id>
@@ -4877,16 +4917,14 @@
               <Scope data="argument" ref="Game Object">
                 <Fragment data="name"/>
               </Scope>
-              <Literal>.light.color =
-								Color(Random.Range(0.0,1.0),Random.Range(0.0,1.0),
-								Random.Range(0.0,1.0));</Literal>
+              <Literal>.light.color = Color(Random.Range(0.0,1.0),Random.Range(0.0,1.0), Random.Range(0.0,1.0));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>a clone of &lt;Game Object&gt; created at the subject&apos;s current location</Name>
+      <Name>a clone of &lt;Object&gt; created at the subject&apos;s current location</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -4894,7 +4932,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>a clone of &lt;Game Object&gt; created at the subject&apos;s current location</Name>
+          <Name>a clone of &lt;Object&gt; created at the subject&apos;s current location</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>5</Id>
@@ -4903,18 +4941,19 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Game Object</Name>
+              <Name>Object</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
                 <Type>GameObject</Type>
+                <Type>Prefab</Type>
               </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
               <Literal>return Instantiate(</Literal>
-              <Scope data="argument" ref="Game Object">
+              <Scope data="argument" ref="Object">
                 <Fragment data="name"/>
               </Scope>
               <Literal>, transform.position, transform.rotation);</Literal>
@@ -4962,8 +5001,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Change the &lt;Game Object&gt;&apos;s material colour to a
-				random colour</Name>
+      <Name>Change the &lt;Game Object&gt;&apos;s material colour to a random colour</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -4971,8 +5009,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Change the &lt;Game Object&gt;&apos;s material colour to a
-				random colour</Name>
+          <Name>Change the &lt;Game Object&gt;&apos;s material colour to a random colour</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>61</Id>
@@ -4994,9 +5031,7 @@
               <Scope data="argument" ref="Game Object">
                 <Fragment data="name"/>
               </Scope>
-              <Literal>.renderer.material.color =
-								Color(Random.Range(0.0,1.0),Random.Range(0.0,1.0),
-								Random.Range(0.0,1.0));</Literal>
+              <Literal>.renderer.material.color = Color(Random.Range(0.0,1.0),Random.Range(0.0,1.0), Random.Range(0.0,1.0));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -5110,6 +5145,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -5148,6 +5187,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>x</Name>
@@ -5156,6 +5199,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -5164,6 +5211,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>width</Name>
@@ -5172,6 +5223,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>height</Name>
@@ -5180,6 +5235,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -5456,6 +5515,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>x</Name>
@@ -5464,6 +5527,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -5472,6 +5539,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>width</Name>
@@ -5480,6 +5551,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>length</Name>
@@ -5488,6 +5563,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -5542,6 +5621,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -5550,6 +5633,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>width</Name>
@@ -5558,6 +5645,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>length</Name>
@@ -5566,6 +5657,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -5660,6 +5755,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Number Two</Name>
@@ -5668,6 +5767,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -5708,6 +5811,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Number Two</Name>
@@ -5716,6 +5823,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -5756,6 +5867,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Number Two</Name>
@@ -5764,6 +5879,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -5804,6 +5923,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Number Two</Name>
@@ -5812,6 +5935,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6064,6 +6191,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -6072,6 +6203,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>z</Name>
@@ -6080,6 +6215,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6137,6 +6276,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -6145,6 +6288,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>z</Name>
@@ -6153,6 +6300,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6395,9 +6546,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Draw &lt;Image&gt; at position &lt;x&gt;, &lt;y&gt; that
-				&lt;Scale&gt;s to be &lt;width&gt; wide and &lt;length&gt; long
-			</Name>
+      <Name>Draw &lt;Image&gt; at position &lt;x&gt;, &lt;y&gt; that &lt;Scale&gt;s to be &lt;width&gt; wide and &lt;length&gt; long 			</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -6405,9 +6554,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Draw &lt;Image&gt; at position &lt;x&gt;, &lt;y&gt; that
-				&lt;Scale&gt;s to be &lt;width&gt; wide and &lt;length&gt; long
-			</Name>
+          <Name>Draw &lt;Image&gt; at position &lt;x&gt;, &lt;y&gt; that &lt;Scale&gt;s to be &lt;width&gt; wide and &lt;length&gt; long 			</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>139</Id>
@@ -6430,6 +6577,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -6438,6 +6589,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>width</Name>
@@ -6446,6 +6601,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>length</Name>
@@ -6454,6 +6613,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Scale</Name>
@@ -6462,6 +6625,10 @@
               <Types>
                 <Type>ScaleMode</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>ScaleMode</Type>
+                <Value>ScaleMode.ScaleToFit</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6568,6 +6735,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Key</Name>
@@ -6576,6 +6747,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6618,6 +6793,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Key</Name>
@@ -6626,6 +6805,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6676,6 +6859,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6716,6 +6903,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6752,6 +6943,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6788,6 +6983,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6826,6 +7025,10 @@
               <Types>
                 <Type>Method</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>Method</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -7009,6 +7212,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Second Number</Name>
@@ -7017,6 +7224,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -7057,6 +7268,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -7093,6 +7308,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Text 2</Name>
@@ -7101,6 +7320,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -7330,6 +7553,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -7526,8 +7753,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Blend &lt;Object&gt;&apos;s &lt;Animation&gt; towards a weight
-				of &lt;Weight&gt; over the next &lt;Seconds&gt; seconds</Name>
+      <Name>Blend &lt;Object&gt;&apos;s &lt;Animation&gt; towards a weight of &lt;Weight&gt; over the next &lt;Seconds&gt; seconds</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -7535,8 +7761,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Blend &lt;Object&gt;&apos;s &lt;Animation&gt; towards a weight
-				of &lt;Weight&gt; over the next &lt;Seconds&gt; seconds</Name>
+          <Name>Blend &lt;Object&gt;&apos;s &lt;Animation&gt; towards a weight of &lt;Weight&gt; over the next &lt;Seconds&gt; seconds</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>165</Id>
@@ -7567,6 +7792,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Seconds</Name>
@@ -7575,6 +7804,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -7624,6 +7857,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Operator</Name>
@@ -7644,6 +7881,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -7747,9 +7988,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Add force that moves &lt;Object&gt; &lt;x&gt; rightwards,
-				&lt;y&gt; upwards, and &lt;z&gt; forwards on the global coordinate
-				system</Name>
+      <Name>Add force that moves &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards on the global coordinate system</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -7757,9 +7996,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Add force that moves &lt;Object&gt; &lt;x&gt; rightwards,
-				&lt;y&gt; upwards, and &lt;z&gt; forwards on the global coordinate
-				system</Name>
+          <Name>Add force that moves &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards on the global coordinate system</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>168</Id>
@@ -7782,6 +8019,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -7790,6 +8031,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>z</Name>
@@ -7798,6 +8043,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -7824,9 +8073,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Add torque that spins &lt;Object&gt; &lt;x&gt; rightwards,
-				&lt;y&gt; upwards, and &lt;z&gt; forwards on the global coordinate
-				system</Name>
+      <Name>Add torque that spins &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards on the global coordinate system</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -7834,9 +8081,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Add torque that spins &lt;Object&gt; &lt;x&gt; rightwards,
-				&lt;y&gt; upwards, and &lt;z&gt; forwards on the global coordinate
-				system</Name>
+          <Name>Add torque that spins &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards on the global coordinate system</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>169</Id>
@@ -7859,6 +8104,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -7867,6 +8116,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>z</Name>
@@ -7875,6 +8128,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -7950,9 +8207,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Add force that moves &lt;Object&gt; &lt;x&gt; rightwards,
-				&lt;y&gt; upwards, and &lt;z&gt; forwards on its local coordinate
-				system</Name>
+      <Name>Add force that moves &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards on its local coordinate system</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -7960,9 +8215,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Add force that moves &lt;Object&gt; &lt;x&gt; rightwards,
-				&lt;y&gt; upwards, and &lt;z&gt; forwards on its local coordinate
-				system</Name>
+          <Name>Add force that moves &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards on its local coordinate system</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>171</Id>
@@ -7985,6 +8238,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -7993,6 +8250,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>z</Name>
@@ -8001,6 +8262,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -8027,9 +8292,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Add torque that spins &lt;Object&gt; &lt;x&gt; rightwards,
-				&lt;y&gt; upwards, and &lt;z&gt; forwards on its local coordinate
-				system</Name>
+      <Name>Add torque that spins &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards on its local coordinate system</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -8037,9 +8300,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Add torque that spins &lt;Object&gt; &lt;x&gt; rightwards,
-				&lt;y&gt; upwards, and &lt;z&gt; forwards on its local coordinate
-				system</Name>
+          <Name>Add torque that spins &lt;Object&gt; &lt;x&gt; rightwards, &lt;y&gt; upwards, and &lt;z&gt; forwards on its local coordinate system</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>172</Id>
@@ -8062,6 +8323,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -8070,6 +8335,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>z</Name>
@@ -8078,6 +8347,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -8135,6 +8408,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -8153,8 +8430,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Add force to &lt;Object&gt; to &lt;Position&gt; from
-				&lt;Source&gt;</Name>
+      <Name>Add force to &lt;Object&gt; to &lt;Position&gt; from &lt;Source&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -8162,8 +8438,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Add force to &lt;Object&gt; to &lt;Position&gt; from
-				&lt;Source&gt;</Name>
+          <Name>Add force to &lt;Object&gt; to &lt;Position&gt; from &lt;Source&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>174</Id>
@@ -8239,6 +8514,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -8247,6 +8526,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>z</Name>
@@ -8255,6 +8538,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -8424,9 +8711,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Add a force to &lt;Object&gt; that explodes from
-				&lt;Position&gt; with strength &lt;Strength&gt; and radius
-				&lt;Radius&gt;</Name>
+      <Name>Add a force to &lt;Object&gt; that explodes from &lt;Position&gt; with strength &lt;Strength&gt; and radius &lt;Radius&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -8434,9 +8719,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Add a force to &lt;Object&gt; that explodes from
-				&lt;Position&gt; with strength &lt;Strength&gt; and radius
-				&lt;Radius&gt;</Name>
+          <Name>Add a force to &lt;Object&gt; that explodes from &lt;Position&gt; with strength &lt;Strength&gt; and radius &lt;Radius&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>180</Id>
@@ -8465,6 +8748,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Radius</Name>
@@ -8473,6 +8760,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -8607,6 +8898,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -8653,6 +8948,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -8661,6 +8960,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>width</Name>
@@ -8669,6 +8972,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>height</Name>
@@ -8677,6 +8984,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -8769,6 +9080,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>x</Name>
@@ -8777,6 +9092,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -8785,6 +9104,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>width</Name>
@@ -8793,6 +9116,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>height</Name>
@@ -8801,6 +9128,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Enabled</Name>
@@ -8883,6 +9214,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -8933,6 +9268,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -8941,6 +9280,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>width</Name>
@@ -8949,6 +9292,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>height</Name>
@@ -8957,6 +9304,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Enabled</Name>
@@ -9081,6 +9432,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>x</Name>
@@ -9089,6 +9444,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -9097,6 +9456,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>width</Name>
@@ -9105,6 +9468,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>height</Name>
@@ -9113,6 +9480,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -9167,6 +9538,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -9213,6 +9588,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -9221,6 +9600,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>width</Name>
@@ -9229,6 +9612,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>height</Name>
@@ -9237,6 +9624,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -9403,6 +9794,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -9411,6 +9806,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>z</Name>
@@ -9419,6 +9818,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Object</Name>
@@ -9474,6 +9877,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -9482,6 +9889,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>z</Name>
@@ -9490,6 +9901,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Object</Name>
@@ -9567,6 +9982,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -9605,6 +10024,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>min</Name>
@@ -9613,6 +10036,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>max</Name>
@@ -9621,6 +10048,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -9788,6 +10219,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -9908,7 +10343,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>a clone of &lt;Object&gt; created at this &lt;Game Object&gt;&apos;s current location</Name>
+      <Name>a clone of &lt;Object&gt; created at &lt;Game Object&gt;&apos;s current location</Name>
       <Visible>false</Visible>
       <Labels>
         <Label></Label>
@@ -9916,7 +10351,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>a clone of &lt;Object&gt; created at this &lt;Game Object&gt;&apos;s current location</Name>
+          <Name>a clone of &lt;Object&gt; created at &lt;Game Object&gt;&apos;s current location</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>213</Id>
@@ -10194,6 +10629,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -10230,6 +10669,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -10238,6 +10681,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Width</Name>
@@ -10246,6 +10693,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Height</Name>
@@ -10254,6 +10705,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Text</Name>
@@ -10262,6 +10717,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -10322,6 +10781,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Max</Name>
@@ -10330,6 +10793,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -10498,8 +10965,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set GUI foreground colour to RGB values &lt;Red&gt;,
-				&lt;Green&gt;, &lt;Blue&gt; </Name>
+      <Name>Set GUI foreground colour to RGB values &lt;Red&gt;, &lt;Green&gt;, &lt;Blue&gt; </Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -10507,8 +10973,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set GUI foreground colour to RGB values &lt;Red&gt;,
-				&lt;Green&gt;, &lt;Blue&gt; </Name>
+          <Name>Set GUI foreground colour to RGB values &lt;Red&gt;, &lt;Green&gt;, &lt;Blue&gt; </Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>230</Id>
@@ -10521,6 +10986,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Green</Name>
@@ -10529,6 +10998,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Blue</Name>
@@ -10537,6 +11010,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -10560,7 +11037,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Set GUI background colour to RGB values &lt;Red&gt;,&lt;Green&gt;, &lt;Blue&gt;</Name>
+      <Name>Set GUI background colour to RGB values &lt;Red&gt;, &lt;Green&gt;, &lt;Blue&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -10568,7 +11045,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Set GUI background colour to RGB values &lt;Red&gt;,&lt;Green&gt;, &lt;Blue&gt;</Name>
+          <Name>Set GUI background colour to RGB values &lt;Red&gt;, &lt;Green&gt;, &lt;Blue&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>231</Id>
@@ -10581,6 +11058,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Green</Name>
@@ -10589,6 +11070,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Blue</Name>
@@ -10597,6 +11082,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -10735,6 +11224,10 @@
               <Types>
                 <Type>AllowDisallow</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>AllowDisallow</Type>
+                <Value>false</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -10779,6 +11272,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -10787,6 +11284,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>z</Name>
@@ -10795,6 +11296,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -10939,6 +11444,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -10947,6 +11456,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -11028,6 +11541,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -11077,6 +11594,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -11119,6 +11640,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -11127,6 +11652,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Width</Name>
@@ -11135,6 +11664,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Height</Name>
@@ -11143,6 +11676,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Text</Name>
@@ -11151,6 +11688,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -11205,6 +11746,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -11213,6 +11758,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Width</Name>
@@ -11221,6 +11770,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Height</Name>
@@ -11229,6 +11782,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Length</Name>
@@ -11237,6 +11794,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Text</Name>
@@ -11245,6 +11806,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -11303,6 +11868,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -11311,6 +11880,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Width</Name>
@@ -11319,6 +11892,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Height</Name>
@@ -11327,6 +11904,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Text</Name>
@@ -11335,6 +11916,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Limit</Name>
@@ -11343,6 +11928,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -11399,6 +11988,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -11457,6 +12050,10 @@
               <Types>
                 <Type>String</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -11493,6 +12090,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -11501,6 +12102,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Width</Name>
@@ -11509,6 +12114,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Height</Name>
@@ -11517,6 +12126,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Lower Value</Name>
@@ -11525,6 +12138,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Upper Value</Name>
@@ -11533,6 +12150,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Value</Name>
@@ -11541,6 +12162,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -11823,6 +12448,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -12042,6 +12671,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -12050,6 +12683,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Width</Name>
@@ -12058,6 +12695,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Height</Name>
@@ -12066,6 +12707,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -12150,6 +12795,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -12158,6 +12807,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>z</Name>
@@ -12166,6 +12819,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Seconds</Name>
@@ -12174,6 +12831,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Object</Name>
@@ -12225,83 +12886,458 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[131]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[46]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[49]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[36]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[132]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[69]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[20]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[85]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[100]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[92]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[95]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[124]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[44]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[4]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[94]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[57]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[50]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[103]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[23]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[130]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[41]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[71]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[121]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[133]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[8]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[70]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[88]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[93]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[45]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[47]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[101]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[125]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[126]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[21]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[102]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[40]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[128]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[123]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[22]"/>
+    <ScriptIt>
+      <Name>Remember &lt;Question&gt; as &lt;Key&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Remember &lt;Question&gt; as &lt;Key&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>254</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Question</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>YesNo</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>YesNo</Type>
+                <Value>false</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Key</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>String</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEVariable.PutBoolean(</Literal>
+              <Scope data="ARGUMENT" ref="Key">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Question">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>remembered &lt;Key&gt;</Name>
+      <Visible>false</Visible>
+      <Labels>
+        <Label></Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>remembered &lt;Key&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>255</Id>
+          <Types>
+            <Type>question</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Key</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>String</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>String</Type>
+                <Value></Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>return SEVariable.GetBoolean(</Literal>
+              <Scope data="ARGUMENT" ref="Key">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
     <ScriptIt reference="/LibraryModel/Effects/ScriptIt[42]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[51]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[24]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[8]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[40]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[94]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[22]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[23]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[138]"/>
     <ScriptIt reference="/LibraryModel/Effects/ScriptIt[105]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[7]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[48]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[116]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[72]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[103]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[106]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[61]"/>
     <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[61]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[51]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[47]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[71]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[86]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[44]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[49]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[93]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[121]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[20]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[103]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[72]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[128]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[124]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[103]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[100]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[101]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[116]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[92]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[69]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[88]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[7]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[102]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[106]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[132]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[41]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[46]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[95]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[45]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[21]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[50]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[48]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[70]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[4]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[133]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[130]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[36]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[126]"/>
     <ScriptIt reference="/LibraryModel/Effects/ScriptIt[91]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[123]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[57]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[24]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[131]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[125]"/>
+    <ScriptIt>
+      <Name>a clone of &lt;Object&gt; created at &lt;Position&gt; </Name>
+      <Visible>false</Visible>
+      <Labels>
+        <Label></Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>a clone of &lt;Object&gt; created at &lt;Position&gt; </Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>256</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>Prefab</Type>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Position</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>Vector3</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>Instantiate(</Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Position">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, Quaternion.identity);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Shoot out a &lt;Object&gt; spawned at &lt;Position&gt; at speed &lt;Right Speed&gt; rightwards, &lt;Up speed&gt; upwards, and &lt;Forward Speed&gt; forwards</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Shoot out a &lt;Object&gt; spawned at &lt;Position&gt; at speed &lt;Right Speed&gt; rightwards, &lt;Up speed&gt; upwards, and &lt;Forward Speed&gt; forwards</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>257</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+                <Type>Prefab</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Position</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>Vector3</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Right Speed</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Up Speed</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Forward Speed</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>var clone :Rigidbody;</Literal>
+            </Line>
+            <Line>
+              <Literal>clone = Instantiate(</Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="" ref="Position">
+                <Fragment data=""/>
+              </Scope>
+              <Literal>, Quaternion.identity);</Literal>
+            </Line>
+            <Line>
+              <Literal>clone.rigidbody.velocity = transform.TransformDirection(Vector3(</Literal>
+              <Scope data="ARGUMENT" ref="Right Speed">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Up Speed">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Forward Speed">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>));</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Shoot out a &lt;Object&gt; spawned at &lt;Position&gt; towards target &lt;Target Object&gt; at speed &lt;Speed&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Shoot out a &lt;Object&gt; spawned at &lt;Position&gt; towards target &lt;Target Object&gt; at speed &lt;Speed&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>258</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+                <Type>Prefab</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Position</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>Vector3</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Target Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Speed</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>var clone : Rigidbody;</Literal>
+            </Line>
+            <Line>
+              <Literal>clone = Instantiate(</Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, </Literal>
+              <Scope data="ARGUMENT" ref="Position">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>, Quaternion.identity);</Literal>
+            </Line>
+            <Line>
+              <Literal>var targetVector = </Literal>
+              <Scope data="ARGUMENT" ref="Target Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform.position;</Literal>
+            </Line>
+            <Line>
+              <Literal>var sourceVector = </Literal>
+              <Literal>clone.transform.position;</Literal>
+            </Line>
+            <Line>
+              <Literal>var newVector = Vector3((</Literal>
+              <Scope data="ARGUMENT" ref="Target Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform.position.x - clone.transform.position.x), (</Literal>
+              <Scope data="ARGUMENT" ref="Target Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform.position.y - clone.transform.position.y), </Literal>
+              <Scope data="ARGUMENT" ref="Target Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform.position.z - clone.transform.position.z));</Literal>
+            </Line>
+            <Line>
+              <Literal>var emitterYPos = clone.transform.position.y;</Literal>
+            </Line>
+            <Line>
+              <Literal>var Ay = Physics.gravity.y;</Literal>
+            </Line>
+            <Line>
+              <Literal>var t = Mathf.Abs( (2 * emitterYPos) / Ay) );</Literal>
+            </Line>
+            <Line>
+              <Literal>var targetXPos = </Literal>
+              <Scope data="ARGUMENT" ref="Target Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform.position.x - clone.transform.position.x;</Literal>
+            </Line>
+            <Line>
+              <Literal>var targetZPos = </Literal>
+              <Scope data="ARGUMENT" ref="Target Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform.position.z - clone.transform.position.z;</Literal>
+            </Line>
+            <Line>
+              <Literal>var Ax = 0;</Literal>
+            </Line>
+            <Line>
+              <Literal>var Vix = targetXPos * (Mathf.Abs(Ay / (2 * emitterYPos)));</Literal>
+            </Line>
+            <Line>
+              <Literal>var Viz = targetZPos * (Mathf.Abs(Ay / (2 * emitterYPos)));</Literal>
+            </Line>
+            <Line>
+              <Literal>if (Mathf.Abs(Vix) &lt;= Mathf.Abs(Viz))</Literal>
+            </Line>
+            <Line>
+              <Literal>clone.rigidbody.velocity = transform.TransformDirection(Vector3(0, 0, Mathf.Abs(Viz * 1.5)));</Literal>
+            </Line>
+            <Line>
+              <Literal>else</Literal>
+            </Line>
+            <Line>
+              <Literal>clone.rigidbody.velocity = transform.TransformDirection(Vector3(0, 0, Mathf.Abs(Vix * 1.5)));</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
   </Effects>
   <DescribeIts>
     <DescribeIt>
-      <Name>Number</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[92]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>GUI Changed</Name>
+      <Name>Positions Equal</Name>
       <Types>
         <Type>question</Type>
       </Types>
@@ -12312,14 +13348,14 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[2]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[116]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[72]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Horizontal Scrollbar Value</Name>
+      <Name>Screen Vertical Center</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -12330,16 +13366,34 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[3]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[2]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[132]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[106]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Position</Name>
+      <Name>Question</Name>
       <Types>
-        <Type>Vector3</Type>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[3]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[138]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Game Object</Name>
+      <Types>
+        <Type>GameObject</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -12350,12 +13404,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[4]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[69]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[42]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Number Comparison</Name>
+      <Name>Is Active</Name>
       <Types>
         <Type>question</Type>
       </Types>
@@ -12368,12 +13422,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[5]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[61]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Delta Time</Name>
+      <Name>Angle</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -12386,241 +13440,32 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[6]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[91]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[71]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Button Pressed</Name>
+      <Name>Subject</Name>
       <Types>
-        <Type>question</Type>
+        <Type>GameObject</Type>
       </Types>
       <DescribeItNode>
-        <Name>if button</Name>
-        <Successors>
-          <DescribeItNode>
-            <Name>labelled </Name>
-            <Successors>
-              <DescribeItNode>
-                <Name>New Node 40</Name>
-                <KnowIt>
-                  <Name>Text</Name>
-                  <Visible>true</Visible>
-                  <Labels/>
-                  <Types>
-                    <Type>String</Type>
-                  </Types>
-                </KnowIt>
-                <Successors>
-                  <DescribeItNode>
-                    <Name>on screen at</Name>
-                    <Successors>
-                      <DescribeItNode>
-                        <Name>specific position</Name>
-                        <Successors>
-                          <DescribeItNode>
-                            <Name>is</Name>
-                            <Successors>
-                              <DescribeItNode>
-                                <Name>clicked</Name>
-                                <Successors/>
-                              </DescribeItNode>
-                              <DescribeItNode>
-                                <Name>held down</Name>
-                                <Successors/>
-                              </DescribeItNode>
-                              <DescribeItNode>
-                                <Name>toggled</Name>
-                                <Successors/>
-                              </DescribeItNode>
-                            </Successors>
-                          </DescribeItNode>
-                        </Successors>
-                      </DescribeItNode>
-                      <DescribeItNode>
-                        <Name>automatic position</Name>
-                        <Successors>
-                          <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-                        </Successors>
-                      </DescribeItNode>
-                    </Successors>
-                  </DescribeItNode>
-                </Successors>
-              </DescribeItNode>
-            </Successors>
-          </DescribeItNode>
-          <DescribeItNode>
-            <Name>with image </Name>
-            <Successors>
-              <DescribeItNode>
-                <Name>Image</Name>
-                <KnowIt>
-                  <Name>Image</Name>
-                  <Visible>true</Visible>
-                  <Labels/>
-                  <Types>
-                    <Type>Image</Type>
-                  </Types>
-                </KnowIt>
-                <Successors>
-                  <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-                </Successors>
-              </DescribeItNode>
-            </Successors>
-          </DescribeItNode>
-        </Successors>
+        <Name>Placeholder Node</Name>
+        <Successors/>
       </DescribeItNode>
       <PathMap>
         <Entry>
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[85]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[83]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[76]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[78]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[10]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[86]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[80]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[86]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[82]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[79]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[81]"/>
-        </Entry>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode[2]"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[77]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[121]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>z Position</Name>
+      <Name>Combined Text</Name>
       <Types>
-        <Type>float</Type>
+        <Type>String</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -12631,14 +13476,14 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[8]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[103]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[50]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Number</Name>
+      <Name>clone</Name>
       <Types>
-        <Type>float</Type>
+        <Type>GameObject</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -12649,14 +13494,14 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[9]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[41]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[4]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>y</Name>
+      <Name>Password Field</Name>
       <Types>
-        <Type>float</Type>
+        <Type>String</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -12667,7 +13512,7 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[10]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[45]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[125]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -12685,14 +13530,14 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[11]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[102]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[45]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Password Field</Name>
+      <Name>Product</Name>
       <Types>
-        <Type>String</Type>
+        <Type>float</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -12703,12 +13548,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[12]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[125]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[23]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Sum</Name>
+      <Name>Delta Time</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -12721,12 +13566,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[13]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[21]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[91]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Key Pressed</Name>
+      <Name>Mouse Button Clicked</Name>
       <Types>
         <Type>question</Type>
       </Types>
@@ -12739,32 +13584,241 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[14]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[94]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[8]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Multi-line Text Field</Name>
+      <Name>Button Pressed</Name>
       <Types>
-        <Type>String</Type>
+        <Type>question</Type>
       </Types>
       <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
+        <Name>if button</Name>
+        <Successors>
+          <DescribeItNode>
+            <Name>with image </Name>
+            <Successors>
+              <DescribeItNode>
+                <Name>Image</Name>
+                <KnowIt>
+                  <Name>Image</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Types>
+                    <Type>Image</Type>
+                  </Types>
+                </KnowIt>
+                <Successors>
+                  <DescribeItNode>
+                    <Name>on screen at</Name>
+                    <Successors>
+                      <DescribeItNode>
+                        <Name>specific position</Name>
+                        <Successors>
+                          <DescribeItNode>
+                            <Name>is</Name>
+                            <Successors>
+                              <DescribeItNode>
+                                <Name>held down</Name>
+                                <Successors/>
+                              </DescribeItNode>
+                              <DescribeItNode>
+                                <Name>clicked</Name>
+                                <Successors/>
+                              </DescribeItNode>
+                              <DescribeItNode>
+                                <Name>toggled</Name>
+                                <Successors/>
+                              </DescribeItNode>
+                            </Successors>
+                          </DescribeItNode>
+                        </Successors>
+                      </DescribeItNode>
+                      <DescribeItNode>
+                        <Name>automatic position</Name>
+                        <Successors>
+                          <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+                        </Successors>
+                      </DescribeItNode>
+                    </Successors>
+                  </DescribeItNode>
+                </Successors>
+              </DescribeItNode>
+            </Successors>
+          </DescribeItNode>
+          <DescribeItNode>
+            <Name>labelled </Name>
+            <Successors>
+              <DescribeItNode>
+                <Name>New Node 40</Name>
+                <KnowIt>
+                  <Name>Text</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Types>
+                    <Type>String</Type>
+                  </Types>
+                </KnowIt>
+                <Successors>
+                  <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+                </Successors>
+              </DescribeItNode>
+            </Successors>
+          </DescribeItNode>
+        </Successors>
       </DescribeItNode>
       <PathMap>
         <Entry>
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[126]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[86]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[86]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[81]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[80]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[10]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[76]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[78]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[79]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[3]"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[82]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[85]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode[2]"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[77]"/>
+        </Entry>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode[2]"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode[2]/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[15]/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode/Successors/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[83]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Name</Name>
+      <Name>Object Has Tag</Name>
       <Types>
-        <Type>String</Type>
+        <Type>question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -12775,43 +13829,7 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[16]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[57]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Position</Name>
-      <Types>
-        <Type>Vector3</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[17]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[47]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Game Object</Name>
-      <Types>
-        <Type>GameObject</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[18]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[42]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[123]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -12827,99 +13845,9 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[19]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[17]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[130]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Vertical Slider Value</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[20]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[131]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Focused GUI Control</Name>
-      <Types>
-        <Type>String</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[21]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[128]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>clone</Name>
-      <Types>
-        <Type>GameObject</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[22]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[4]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Angle</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[23]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[71]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Text Field</Name>
-      <Types>
-        <Type>String</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[24]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[124]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -12935,14 +13863,14 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[25]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[18]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[49]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[40]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Random Number</Name>
+      <Name>Screen Height</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -12953,9 +13881,63 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[26]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[19]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[48]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[20]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Difference</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[20]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[22]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Clamped Number</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[21]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[93]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Input Axis</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[22]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[88]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -12971,9 +13953,81 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[27]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[23]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Vertical Slider Value</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[24]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[131]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Mouse Button Pressed</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[25]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[7]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Screen Width</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[26]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Position</Name>
+      <Types>
+        <Type>Vector3</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[27]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[69]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -12996,7 +14050,7 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Distance</Name>
+      <Name>z</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -13009,14 +14063,14 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[29]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[70]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[103]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>z</Name>
+      <Name>Text Field</Name>
       <Types>
-        <Type>float</Type>
+        <Type>String</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -13027,14 +14081,14 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[30]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[46]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[124]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>x</Name>
+      <Name>Focused GUI Control</Name>
       <Types>
-        <Type>float</Type>
+        <Type>String</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -13045,151 +14099,7 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[31]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[44]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Mouse Button Clicked</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[32]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[8]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Vertical Scrollbar Value</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[33]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[133]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Input Axis</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[34]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[88]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Object Has Tag</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[35]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[123]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Has Failed</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[36]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Positions Equal</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[37]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[72]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Difference</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[38]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[22]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Screen Vertical Center</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[39]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[106]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[128]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -13205,9 +14115,63 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[40]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[32]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[95]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Number</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[33]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[41]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Number Comparison</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[34]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[61]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Clone</Name>
+      <Types>
+        <Type>GameObject</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[35]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[100]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -13223,14 +14187,104 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[36]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[51]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Text</Name>
+      <Name>Position</Name>
+      <Types>
+        <Type>Vector3</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[37]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[47]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>y</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[38]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[102]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Horizontal Scrollbar Value</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[39]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[132]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>x</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[40]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[101]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Key Pressed</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[41]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[94]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Name</Name>
       <Types>
         <Type>String</Type>
       </Types>
@@ -13243,12 +14297,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[42]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[40]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[57]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Clamped Number</Name>
+      <Name>Distance</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -13261,12 +14315,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[43]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[93]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[70]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Screen Horizontal Center</Name>
+      <Name>Number</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -13279,7 +14333,7 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[44]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[105]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[92]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -13297,14 +14351,14 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[45]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[103]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[46]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Objects Equal</Name>
+      <Name>Random Number</Name>
       <Types>
-        <Type>question</Type>
+        <Type>float</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -13315,14 +14369,14 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[46]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[36]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[48]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Clone</Name>
+      <Name>Text</Name>
       <Types>
-        <Type>GameObject</Type>
+        <Type>String</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -13333,12 +14387,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[47]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[100]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[49]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Screen Height</Name>
+      <Name>z Position</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -13351,12 +14405,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[48]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[20]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[103]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Product</Name>
+      <Name>Sum</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -13369,14 +14423,14 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[49]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[23]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[21]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Mouse Button Pressed</Name>
+      <Name>Screen Horizontal Center</Name>
       <Types>
-        <Type>question</Type>
+        <Type>float</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -13387,25 +14441,7 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[50]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[7]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Is Active</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[51]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[105]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -13421,16 +14457,34 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[52]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[51]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[101]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[44]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Subject</Name>
+      <Name>GUI Changed</Name>
       <Types>
-        <Type>GameObject</Type>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[52]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[116]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Has Failed</Name>
+      <Types>
+        <Type>question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -13441,12 +14495,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[53]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[121]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Screen Width</Name>
+      <Name>Vertical Scrollbar Value</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -13459,14 +14513,14 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[54]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[133]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Combined Text</Name>
+      <Name>Objects Equal</Name>
       <Types>
-        <Type>String</Type>
+        <Type>question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -13477,7 +14531,25 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[55]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[50]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[36]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Multi-line Text Field</Name>
+      <Types>
+        <Type>String</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[56]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[126]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -13505,6 +14577,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -13535,6 +14611,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -13544,15 +14624,13 @@
       </CodeBlocks>
     </ControlIt>
     <ControlIt control="FOLDER">
-      <Name>Create a GUI Group at position &lt;x&gt;, &lt;y&gt; that is
-				&lt;Width&gt; wide and &lt;Height&gt; tall</Name>
+      <Name>Create a GUI Group at position &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Create a GUI Group at position &lt;x&gt;, &lt;y&gt; that is
-				&lt;Width&gt; wide and &lt;Height&gt; tall</Name>
+          <Name>Create a GUI Group at position &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>225</Id>
@@ -13567,6 +14645,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -13575,6 +14657,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Width</Name>
@@ -13583,6 +14669,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Height</Name>
@@ -13591,6 +14681,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -13600,15 +14694,13 @@
       </CodeBlocks>
     </ControlIt>
     <ControlIt control="FOLDER">
-      <Name>Create a Scroll View at position &lt;x&gt;, &lt;y&gt; that is
-				&lt;Width&gt; wide and &lt;Height&gt; tall</Name>
+      <Name>Create a Scroll View at position &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Create a Scroll View at position &lt;x&gt;, &lt;y&gt; that is
-				&lt;Width&gt; wide and &lt;Height&gt; tall</Name>
+          <Name>Create a Scroll View at position &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>225</Id>
@@ -13623,6 +14715,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>y</Name>
@@ -13631,6 +14727,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Width</Name>
@@ -13639,6 +14739,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Height</Name>
@@ -13647,6 +14751,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>

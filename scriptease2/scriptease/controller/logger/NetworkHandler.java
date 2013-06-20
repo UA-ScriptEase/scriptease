@@ -144,7 +144,7 @@ public class NetworkHandler extends Handler {
 		report = "=== ScriptEase2\n\n";
 		report += ("=== Version: ");
 		report += ScriptEase.getInstance().getVersion();
-		report += " (" + ScriptEase.getInstance().getSpecificVersion() + ")\n";
+		report += " (" + ScriptEase.getInstance().getCommitHash() + ")\n";
 		report += ("\n=== Comment:\n\n");
 		report += comment + "\n";
 		if (this.buffered != null) {
