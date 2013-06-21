@@ -20,7 +20,6 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.util.GUIOp;
@@ -381,23 +380,18 @@ public class StoryComponentPanelManager {
 					panel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
 				}
 
-				@Override
-				public void processScriptIt(ScriptIt scriptIt) {
-					if (scriptIt instanceof CauseIt)
-						panel.setBorder(BorderFactory
-								.createLineBorder(Color.LIGHT_GRAY));
-					else
-						this.defaultProcess(scriptIt);
+				public void processCauseIt(CauseIt causeIt) {
+					panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 				}
 
 				public void processControlIt(ControlIt controlIt) {
 					panel.setBorder(BorderFactory
-							.createLineBorder(Color.LIGHT_GRAY));
+							.createLineBorder(Color.GRAY));
 				}
 
 				public void processAskIt(AskIt askIt) {
 					panel.setBorder(BorderFactory
-							.createLineBorder(Color.LIGHT_GRAY));
+							.createLineBorder(Color.GRAY));
 				}
 
 				@Override

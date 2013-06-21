@@ -432,27 +432,42 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 						.extractStoryComponents(data);
 
 				for (StoryComponent component : components) {
-
-					// If the component being extracted has a story component
-					// container, we don't want to remove it - only
-					// its components.
-					if (component instanceof StoryComponentContainer) {
-						final Collection<StoryComponent> children;
-						children = ((StoryComponentContainer) component)
-								.getChildren();
-
-						for (StoryComponent child : children)
-							removedComponents.add(child);
-
-					} else {
-						removedComponents.add(component);
-					}
+					removedComponents.add(component);
 				}
 
 				for (StoryComponent child : removedComponents) {
 					if (child.getOwner() != null) {
-						((ComplexStoryComponent) child.getOwner())
-								.removeStoryChild(child);
+						final ComplexStoryComponent owner;
+						final StoryComponent sibling;
+
+						owner = (ComplexStoryComponent) child.getOwner();
+						sibling = owner.getChildAfter(child);
+
+						owner.removeStoryChild(child);
+
+						/*
+						 * This is a hack to get CUT actions working for
+						 * StoryComponentContainers. The way Transfer Handling
+						 * in java is set up right now causes exportDone to be
+						 * called before the contents are even exported to the
+						 * clipboard ... The problem is that we need to remove
+						 * the components in the StoryComponentContainer instead
+						 * of the StoryComponentContainer itself. But after we
+						 * remove them the clipboard is left with a empty
+						 * container, with all the data we want to paste gone!
+						 * So here we just remove the StoryComponentContainer
+						 * and add back a new empty one in its place. -jyuen
+						 */
+						if (child instanceof StoryComponentContainer) {
+							final ComplexStoryComponent clone;
+
+							clone = (ComplexStoryComponent) child.clone();
+
+							clone.removeStoryChildren(clone.getChildren());
+
+							owner.addStoryChildBefore(clone, sibling);
+						}
+
 					}
 				}
 			}
