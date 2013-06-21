@@ -57,6 +57,7 @@ import scriptease.util.GUIOp;
  * @author kschenk
  * @author jyuen
  * @see TransferHandler
+ * @see StoryComponentTransferUtils
  */
 @SuppressWarnings("serial")
 public class StoryComponentPanelTransferHandler extends TransferHandler {
