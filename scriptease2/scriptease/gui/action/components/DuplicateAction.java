@@ -2,9 +2,12 @@ package scriptease.gui.action.components;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.util.Collection;
 
 import javax.swing.Action;
+import javax.swing.KeyStroke;
 
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.SEFocusObserver;
@@ -50,6 +53,10 @@ public final class DuplicateAction extends ActiveModelSensitiveAction implements
 	private DuplicateAction() {
 		super(DuplicateAction.DUPLICATE_TEXT);
 
+		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
+		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+				KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK));
+		
 		SEFocusManager.getInstance().addSEFocusObserver(this);
 	}
 

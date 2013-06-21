@@ -20,6 +20,7 @@ import scriptease.gui.WindowFactory;
  * @author ds3
  * @author mfchurch - refactored to remove logging as it is now handled by
  *         Logging.aj
+ * @author jyuen
  */
 public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 
