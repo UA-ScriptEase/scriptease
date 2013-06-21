@@ -74,7 +74,7 @@ public class KnowItConverter extends StoryComponentConverter {
 		else {
 			// read all of the types
 			while (reader.hasMoreChildren()) {
-				typeKeys.add(XMLNode.TYPE.read(reader));
+				typeKeys.add(XMLNode.TYPE.readString(reader));
 			}
 		}
 		reader.moveUp();

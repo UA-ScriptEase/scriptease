@@ -46,11 +46,11 @@ public class DialogueLineConverter implements Converter {
 		else
 			audioName = null;
 		
-		XMLNode.NAME.write(writer, line.getName());
-		XMLNode.CHILDREN.write(writer, context, line.getChildren());
-		XMLNode.ENABLED.write(writer, line.isEnabled());
-		XMLNode.IMAGE.write(writer, imageName);
-		XMLNode.AUDIO.write(writer, audioName);
+		XMLNode.NAME.writeString(writer, line.getName());
+		XMLNode.CHILDREN.writeObject(writer, context, line.getChildren());
+		XMLNode.ENABLED.writeBoolean(writer, line.isEnabled());
+		XMLNode.IMAGE.writeString(writer, imageName);
+		XMLNode.AUDIO.writeString(writer, audioName);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -70,7 +70,7 @@ public class DialogueLineConverter implements Converter {
 
 		line = new DialogueLine(StoryModelConverter.currentStory);
 
-		name = XMLNode.NAME.read(reader);
+		name = XMLNode.NAME.readString(reader);
 
 		// TODO this.
 		reader.moveDown();
@@ -85,10 +85,10 @@ public class DialogueLineConverter implements Converter {
 			}
 		reader.moveUp();
 
-		enabled = Boolean.parseBoolean(XMLNode.ENABLED.read(reader));
+		enabled = Boolean.parseBoolean(XMLNode.ENABLED.readString(reader));
 
-		imageTemplateID = XMLNode.IMAGE.read(reader);
-		audioTemplateID = XMLNode.AUDIO.read(reader);
+		imageTemplateID = XMLNode.IMAGE.readString(reader);
+		audioTemplateID = XMLNode.AUDIO.readString(reader);
 
 		currentModule = StoryModelConverter.currentStory.getModule();
 

@@ -22,6 +22,13 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+/**
+ * Converts story models to and from XML.
+ * 
+ * @author previous devs
+ * @author kschenk
+ * 
+ */
 public class StoryModelConverter implements Converter {
 	public static StoryModel currentStory = null;
 
@@ -44,14 +51,15 @@ public class StoryModelConverter implements Converter {
 			libraryNames.add(library.getTitle());
 		}
 
-		XMLNode.TITLE.write(writer, model.getTitle());
-		XMLNode.AUTHOR.write(writer, model.getAuthor());
-		XMLNode.VERSION.write(writer, model.getCompatibleVersion());
-		XMLNode.TRANSLATOR.write(writer, model.getTranslator().getName());
+		XMLNode.TITLE.writeString(writer, model.getTitle());
+		XMLNode.AUTHOR.writeString(writer, model.getAuthor());
+		XMLNode.VERSION.writeString(writer, model.getCompatibleVersion());
+		XMLNode.TRANSLATOR.writeString(writer, model.getTranslator().getName());
 		XMLNode.OPTIONAL_LIBRARIES.writeChildren(writer, libraryNames);
-		XMLNode.GAME_MODULE.write(writer, modulePath);
-		XMLNode.START_STORY_POINT.write(writer, context, model.getRoot());
-		XMLNode.DIALOGUES.write(writer, context, model.getDialogueRoots());
+		XMLNode.GAME_MODULE.writeString(writer, modulePath);
+		XMLNode.START_STORY_POINT.writeObject(writer, context, model.getRoot());
+		XMLNode.DIALOGUES
+				.writeObject(writer, context, model.getDialogueRoots());
 	}
 
 	@Override
@@ -75,12 +83,12 @@ public class StoryModelConverter implements Converter {
 		final GameModule module;
 		final StoryPoint newRoot;
 
-		title = XMLNode.TITLE.read(reader);
-		author = XMLNode.AUTHOR.read(reader);
-		version = XMLNode.VERSION.read(reader);
-		translatorName = XMLNode.TRANSLATOR.read(reader);
-		libraryNames = XMLNode.OPTIONAL_LIBRARIES.readChildren(reader);
-		modulePath = XMLNode.GAME_MODULE.read(reader);
+		title = XMLNode.TITLE.readString(reader);
+		author = XMLNode.AUTHOR.readString(reader);
+		version = XMLNode.VERSION.readString(reader);
+		translatorName = XMLNode.TRANSLATOR.readString(reader);
+		libraryNames = XMLNode.OPTIONAL_LIBRARIES.readStringCollection(reader);
+		modulePath = XMLNode.GAME_MODULE.readString(reader);
 
 		optionalLibraries = new ArrayList<LibraryModel>();
 
@@ -152,7 +160,7 @@ public class StoryModelConverter implements Converter {
 
 		// Story points rely on the current story being set, so we need to load
 		// them later.
-		newRoot = XMLNode.START_STORY_POINT.read(reader, context, model,
+		newRoot = XMLNode.START_STORY_POINT.readObject(reader, context, model,
 				StoryPoint.class);
 
 		if (newRoot == null)
@@ -160,7 +168,7 @@ public class StoryModelConverter implements Converter {
 
 		model.setRoot(newRoot);
 
-		lines = XMLNode.DIALOGUES.readChildren(reader, context, model,
+		lines = XMLNode.DIALOGUES.readObjectCollection(reader, context, model,
 				DialogueLine.class);
 
 		model.addDialogueRoots(lines);

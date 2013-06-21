@@ -161,7 +161,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 			}
 			// Types
 			else if (nodeName.equals(TAG_TYPES)) {
-				types.addAll(XMLNode.TYPES.read(reader, XMLNode.TYPE));
+				types.addAll(XMLNode.TYPES.readStringCollection(reader, XMLNode.TYPE));
 			}
 			// Parameters
 			else if (nodeName.equals(TAG_PARAMETERS)) {
@@ -173,7 +173,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 			 * and must be in the translator only.
 			 */
 			else if (nodeName.equals(TAG_INCLUDES)) {
-				includes.addAll(XMLNode.INCLUDES.read(reader, XMLNode.INCLUDE));
+				includes.addAll(XMLNode.INCLUDES.readStringCollection(reader, XMLNode.INCLUDE));
 			}
 			/*
 			 * Code. Cannot appear in Stories; code is game-specific and must be

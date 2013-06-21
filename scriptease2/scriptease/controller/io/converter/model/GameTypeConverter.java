@@ -44,21 +44,21 @@ public class GameTypeConverter implements Converter {
 		final Collection<String> slots = type.getSlots();
 		final String widgetName = type.getWidgetName();
 
-		XMLNode.NAME.write(writer, type.getDisplayName());
-		XMLNode.KEYWORD.write(writer, type.getKeyword());
-		XMLNode.CODESYMBOL.write(writer, type.getCodeSymbol());
+		XMLNode.NAME.writeString(writer, type.getDisplayName());
+		XMLNode.KEYWORD.writeString(writer, type.getKeyword());
+		XMLNode.CODESYMBOL.writeString(writer, type.getCodeSymbol());
 
 		if (format != null && !format.isEmpty())
-			XMLNode.FORMAT.write(writer, context, type.getFormat());
+			XMLNode.FORMAT.writeObject(writer, context, type.getFormat());
 
 		if (StringOp.exists(regex))
-			XMLNode.LEGAL_VALUES.write(writer, regex);
+			XMLNode.LEGAL_VALUES.writeString(writer, regex);
 
 		if (StringOp.exists(enumString))
-			XMLNode.ENUM.write(writer, enumString);
+			XMLNode.ENUM.writeString(writer, enumString);
 
 		if (type.hasGUI())
-			XMLNode.GUI.write(writer, context, type.getGui());
+			XMLNode.GUI.writeObject(writer, context, type.getGui());
 
 		// TODO
 		if (escapes != null && !escapes.isEmpty()) {
@@ -78,7 +78,7 @@ public class GameTypeConverter implements Converter {
 			XMLNode.SLOTS.writeChildren(writer, slots);
 
 		if (StringOp.exists(widgetName))
-			XMLNode.WIDGETNAME.write(writer, widgetName);
+			XMLNode.WIDGETNAME.writeString(writer, widgetName);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -97,9 +97,9 @@ public class GameTypeConverter implements Converter {
 		GUIType gui = null;
 		GameType type = null;
 
-		name = XMLNode.NAME.read(reader);
-		keyword = XMLNode.KEYWORD.read(reader);
-		codeSymbol = XMLNode.CODESYMBOL.read(reader);
+		name = XMLNode.NAME.readString(reader);
+		keyword = XMLNode.KEYWORD.readString(reader);
+		codeSymbol = XMLNode.CODESYMBOL.readString(reader);
 
 		// Read Optional
 		while (reader.hasMoreChildren()) {
@@ -123,7 +123,7 @@ public class GameTypeConverter implements Converter {
 
 			// Read Slots
 			if (node.equals(TAG_SLOTS)) {
-				slots.addAll(XMLNode.SLOTS.read(reader, XMLNode.SLOT));
+				slots.addAll(XMLNode.SLOTS.readStringCollection(reader, XMLNode.SLOT));
 			}
 
 			// Read Escapes
