@@ -329,7 +329,6 @@ public final class UnityProject extends GameModule {
 
 	@SuppressWarnings("serial")
 	private Collection<Resource> loadResources() {
-
 		final Collection<Resource> resources = new ArrayList<Resource>();
 
 		final Collection<String> imageExtensions;
@@ -458,7 +457,7 @@ public final class UnityProject extends GameModule {
 		this.includeFiles.clear();
 		UnityScript.resetScriptCounter();
 	}
-	
+
 	@Override
 	public File getLocation() {
 		return new File(this.projectLocation.getAbsolutePath());

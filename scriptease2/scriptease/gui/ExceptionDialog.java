@@ -75,17 +75,7 @@ public class ExceptionDialog extends JDialog {
 	}
 
 	/**
-	 * builds the distinct ExceptionDialog GUI.<br>
-	 * <br>
-	 * ASCII sketch:<br>
-	 * <br>
-	 * 
-	 * _____________________________________X<br>
-	 * | (Error Icon) (Error Dialog Text.) <br>
-	 * | |Details| <br>
-	 * | (separator or trace message) | |Report|-|Ignore| ------------| Exit
-	 * ScriptEase| <br>
-	 * 
+	 * builds the distinct ExceptionDialog GUI.
 	 */
 	private void buildGUI() {
 		final JPanel content = new JPanel();
