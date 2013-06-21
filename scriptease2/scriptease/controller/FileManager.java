@@ -293,7 +293,7 @@ public final class FileManager {
 		// remove the entry for the model, not the location.
 		this.openFiles.removeValue(library);
 		this.openFiles.put(location, library);
-		
+
 		// update the recent files menu items in the GUI.
 		this.notifyModelObservers(library, location);
 	}
@@ -525,7 +525,7 @@ public final class FileManager {
 	 *            <code>null</code> will have no effect.
 	 */
 	public void openStoryModel(final File location) {
-		final StoryModel story;
+		StoryModel story;
 
 		if (location == null || !location.exists()) {
 			WindowFactory.getInstance().showProblemDialog(
@@ -542,31 +542,36 @@ public final class FileManager {
 			return;
 		}
 
-		// if we've already got the model open, then we don't need to
-		// load it again.
-		if (this.openFiles.containsKey(location)) {
-			final SEModel model = this.openFiles.getValue(location);
-			if (model instanceof StoryModel) {
-				story = (StoryModel) model;
-				this.updateRecentFiles(location, true);
-			} else {
-				throw new IllegalArgumentException("Attempted to open " + model
-						+ " as a StoryModel when it is not.");
-			}
-		} else {
-			story = FileIO.getInstance().readStory(location);
+		// Users can't have more than one copy of the story model open
+		final Collection<File> openedLocations = this.openFiles.getKeys();
+		for (File openedLocation : openedLocations) {
+			final String path = openedLocation.getAbsolutePath();
 
-			if (story == null)
+			if (path.equals(location.getAbsolutePath())) {
+				final SEModel model = this.openFiles.getValue(openedLocation);
+
+				if (!(model instanceof StoryModel))
+					throw new IllegalArgumentException("Attempted to open "
+							+ model + " as a StoryModel when it is not.");
+
+				// Notify the users that they already have this story model open
+				WindowFactory
+						.getInstance()
+						.showInformationDialog("Story Model already open",
+								"The story model you are trying to open is already open.");
+
 				return;
-
-			this.openFiles.put(location, story);
-
-			// this needs to happen before we add it to the model pool so that
-			// the menu items update themselves correctly - remiller
-			this.updateRecentFiles(location, true);
-
-			SEModelManager.getInstance().addAndActivate(story);
+			}
 		}
+
+		story = FileIO.getInstance().readStory(location);
+
+		if (story == null)
+			return;
+
+		this.openFiles.put(location, story);
+		this.updateRecentFiles(location, true);
+		SEModelManager.getInstance().addAndActivate(story);
 
 		this.notifyModelObservers(story, location);
 	}

@@ -16,15 +16,30 @@ import scriptease.gui.WindowFactory;
  * The dialog will take control from there.
  * </ol>
  * 
- * refactored by mfchurch to remove logging as it is now handled by Logging.aj
- * 
  * @author remiller
  * @author ds3
- * @author mfchurch
+ * @author mfchurch - refactored to remove logging as it is now handled by
+ *         Logging.aj
  */
 public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 
-	public ScriptEaseExceptionHandler() {
+	// Singleton
+	private static ScriptEaseExceptionHandler instance = null;
+
+	/**
+	 * Gets the sole instance of this Exception Handler
+	 * 
+	 * @return
+	 */
+	public static ScriptEaseExceptionHandler getInstance() {
+		if (instance == null) {
+			instance = new ScriptEaseExceptionHandler();
+		}
+
+		return ScriptEaseExceptionHandler.instance;
+	}
+
+	protected ScriptEaseExceptionHandler() {
 	}
 
 	@Override

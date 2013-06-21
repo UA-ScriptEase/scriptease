@@ -381,17 +381,18 @@ public class StoryComponentPanelManager {
 				}
 
 				public void processCauseIt(CauseIt causeIt) {
-					panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+					panel.setBorder(BorderFactory
+							.createLineBorder(Color.LIGHT_GRAY));
 				}
 
 				public void processControlIt(ControlIt controlIt) {
 					panel.setBorder(BorderFactory
-							.createLineBorder(Color.GRAY));
+							.createLineBorder(Color.LIGHT_GRAY));
 				}
 
 				public void processAskIt(AskIt askIt) {
 					panel.setBorder(BorderFactory
-							.createLineBorder(Color.GRAY));
+							.createLineBorder(Color.LIGHT_GRAY));
 				}
 
 				@Override

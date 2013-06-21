@@ -135,8 +135,8 @@ public final class ScriptEase implements Runnable {
 	private ScriptEase() {
 		final Manifest mf;
 
-		ScriptEaseExceptionHandler handler = new ScriptEaseExceptionHandler();
-		Thread.setDefaultUncaughtExceptionHandler(handler);
+		Thread.setDefaultUncaughtExceptionHandler(ScriptEaseExceptionHandler
+				.getInstance());
 
 		// TODO: actually use the user's locale
 		Il8nResources.init(Locale.getDefault());
