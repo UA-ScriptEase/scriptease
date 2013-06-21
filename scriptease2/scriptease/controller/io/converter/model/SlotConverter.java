@@ -87,8 +87,8 @@ public class SlotConverter implements Converter {
 		// Read Format
 		formatKeyword = reader.getAttribute(TAG_FORMAT);
 
-		name = XMLNode.NAME.read(reader);
-		keyword = XMLNode.KEYWORD.read(reader);
+		name = XMLNode.NAME.readString(reader);
+		keyword = XMLNode.KEYWORD.readString(reader);
 
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();

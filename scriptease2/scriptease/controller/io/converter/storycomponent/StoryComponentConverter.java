@@ -69,8 +69,8 @@ public abstract class StoryComponentConverter implements Converter {
 
 		comp = this.buildComponent(reader, context);
 
-		displayText = XMLNode.NAME.read(reader);
-		visibility = XMLNode.VISIBLE.read(reader);
+		displayText = XMLNode.NAME.readString(reader);
+		visibility = XMLNode.VISIBLE.readString(reader);
 
 		// Labels
 		reader.moveDown();
@@ -79,7 +79,7 @@ public abstract class StoryComponentConverter implements Converter {
 					"Failed to read labels for StoryComponent with displayText ["
 							+ displayText + "]");
 
-		labels.addAll(XMLNode.LABELS.read(reader, XMLNode.LABEL));
+		labels.addAll(XMLNode.LABELS.readStringCollection(reader, XMLNode.LABEL));
 
 		reader.moveUp();
 

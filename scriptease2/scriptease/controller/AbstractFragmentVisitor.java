@@ -3,7 +3,6 @@ package scriptease.controller;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
-import scriptease.translator.codegenerator.code.fragments.MapRefFragment;
 import scriptease.translator.codegenerator.code.fragments.SimpleDataFragment;
 import scriptease.translator.codegenerator.code.fragments.container.FormatDefinitionFragment;
 import scriptease.translator.codegenerator.code.fragments.container.IndentFragment;
@@ -34,8 +33,6 @@ public interface AbstractFragmentVisitor {
 
 	public void processFormatDefinitionFragment(
 			FormatDefinitionFragment fragment);
-
-	public void processMapRefFragment(MapRefFragment fragment);
 
 	public void processIndentFragment(IndentFragment fragment);
 

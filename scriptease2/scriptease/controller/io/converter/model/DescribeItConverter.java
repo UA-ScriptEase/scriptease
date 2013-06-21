@@ -105,7 +105,7 @@ public class DescribeItConverter implements Converter {
 			if (nodeName.equals(TAG_NAME)) {
 				name = reader.getValue();
 			} else if (nodeName.equals(TAG_TYPES)) {
-				types.addAll(XMLNode.TYPES.read(reader, XMLNode.TYPE));
+				types.addAll(XMLNode.TYPES.readStringCollection(reader, XMLNode.TYPE));
 			}
 			// head node - can't think of a better way to handle this
 			else if (nodeName.equals(DescribeItNodeConverter.TAG_NODE_NAME)) {

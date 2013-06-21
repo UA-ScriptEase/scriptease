@@ -9,7 +9,6 @@
 		<xsd:sequence>
 			<xsd:element name="IndentString" type="xsd:string" />
 			<xsd:element name="ReservedWords" type="ReservedWords_Type" />
-			<xsd:element name="Maps" type="xsd:string" />
 			<xsd:element name="Formats" type="Formats_Type" />
 		</xsd:sequence>
 		<xsd:attribute name="name" type="xsd:string" />

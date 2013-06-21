@@ -9,6 +9,13 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+/**
+ * Enumeration of all of the nodes we can write to XML. Also contains various
+ * methods to read and write these nodes.
+ * 
+ * @author kschenk
+ * 
+ */
 public enum XMLNode {
 	AUDIO("Audio"),
 
@@ -31,6 +38,8 @@ public enum XMLNode {
 	ESCAPES("Escapes", ESCAPE),
 
 	FORMAT("Format"),
+
+	FORMATS("Formats", FORMAT),
 
 	GAME_MODULE("GameModule"),
 
@@ -57,6 +66,10 @@ public enum XMLNode {
 	OPTIONAL_LIBRARY("OptionalLibrary"),
 
 	OPTIONAL_LIBRARIES("OptionalLibraries", OPTIONAL_LIBRARY),
+
+	RESERVED_WORD("Word"),
+
+	RESERVED_WORDS("ReservedWords", RESERVED_WORD),
 
 	SLOT("Slot"),
 
@@ -101,7 +114,7 @@ public enum XMLNode {
 	 * @param nodeName
 	 * @param data
 	 */
-	public void write(HierarchicalStreamWriter writer, String data) {
+	public void writeString(HierarchicalStreamWriter writer, String data) {
 		writer.startNode(this.name);
 		if (data != null)
 			writer.setValue(data);
@@ -114,8 +127,8 @@ public enum XMLNode {
 	 * @param writer
 	 * @param bool
 	 */
-	public void write(HierarchicalStreamWriter writer, boolean bool) {
-		this.write(writer, Boolean.toString(bool));
+	public void writeBoolean(HierarchicalStreamWriter writer, boolean bool) {
+		this.writeString(writer, Boolean.toString(bool));
 	}
 
 	/**
@@ -126,7 +139,7 @@ public enum XMLNode {
 	 * @param context
 	 * @param object
 	 */
-	public void write(HierarchicalStreamWriter writer,
+	public void writeObject(HierarchicalStreamWriter writer,
 			MarshallingContext context, Object object) {
 		writer.startNode(this.name);
 		context.convertAnother(object);
@@ -157,7 +170,7 @@ public enum XMLNode {
 		this.checkChild();
 
 		for (String string : data) {
-			this.child.write(writer, string);
+			this.child.writeString(writer, string);
 		}
 
 		writer.endNode();
@@ -171,7 +184,7 @@ public enum XMLNode {
 	 *            the reader to read from.
 	 * @return the value read in from the reader.
 	 */
-	public String read(HierarchicalStreamReader reader) {
+	public String readString(HierarchicalStreamReader reader) {
 		final String value;
 
 		reader.moveDown();
@@ -188,10 +201,11 @@ public enum XMLNode {
 	 * 
 	 * @param reader
 	 * @param child
+	 * @deprecated Use the other method instead
 	 * @return
 	 */
-	public Collection<String> read(HierarchicalStreamReader reader,
-			XMLNode child) {
+	public Collection<String> readStringCollection(
+			HierarchicalStreamReader reader, XMLNode child) {
 		// TODO Need to check this.name somehow.
 		// Should be reader.movedown, then check if it's the name,
 		// then do what we have,
@@ -200,7 +214,7 @@ public enum XMLNode {
 		Collection<String> data = new ArrayList<String>();
 
 		while (reader.hasMoreChildren()) {
-			data.add(child.read(reader));
+			data.add(child.readString(reader));
 		}
 
 		return data;
@@ -213,20 +227,20 @@ public enum XMLNode {
 	 * 
 	 * @param reader
 	 * @param context
-	 * @param parent
+	 * @param current
 	 * @param c
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <E> E read(HierarchicalStreamReader reader,
-			UnmarshallingContext context, Object parent, Class<E> c) {
+	public <E> E readObject(HierarchicalStreamReader reader,
+			UnmarshallingContext context, Object current, Class<E> c) {
 		final E e;
 
 		reader.moveDown();
 
 		this.checkNodeName(reader);
 
-		e = (E) context.convertAnother(parent, c);
+		e = (E) context.convertAnother(current, c);
 		reader.moveUp();
 
 		return e;
@@ -238,7 +252,8 @@ public enum XMLNode {
 	 * @param reader
 	 *            the reader to read from.
 	 */
-	public Collection<String> readChildren(HierarchicalStreamReader reader) {
+	public Collection<String> readStringCollection(
+			HierarchicalStreamReader reader) {
 		final Collection<String> values = new ArrayList<String>();
 
 		reader.moveDown();
@@ -270,8 +285,9 @@ public enum XMLNode {
 	 * @param c
 	 * @return
 	 */
-	public <E> Collection<E> readChildren(HierarchicalStreamReader reader,
-			UnmarshallingContext context, Object parent, Class<E> c) {
+	public <E> Collection<E> readObjectCollection(
+			HierarchicalStreamReader reader, UnmarshallingContext context,
+			Object parent, Class<E> c) {
 		final Collection<E> collection = new ArrayList<E>();
 
 		reader.moveDown();
@@ -280,7 +296,7 @@ public enum XMLNode {
 		this.checkNodeName(reader);
 
 		while (reader.hasMoreChildren()) {
-			collection.add(this.child.read(reader, context, parent, c));
+			collection.add(this.child.readObject(reader, context, parent, c));
 		}
 		reader.moveUp();
 

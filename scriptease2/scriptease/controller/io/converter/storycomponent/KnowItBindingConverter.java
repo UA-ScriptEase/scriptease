@@ -241,8 +241,8 @@ public class KnowItBindingConverter implements Converter {
 		final String value;
 		final String type;
 
-		type = XMLNode.TYPE.read(reader);
-		value = XMLNode.VALUE.read(reader);
+		type = XMLNode.TYPE.readString(reader);
+		value = XMLNode.VALUE.readString(reader);
 
 		constant = SimpleResource.buildSimpleResource(type, value);
 
