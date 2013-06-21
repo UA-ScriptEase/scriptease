@@ -3,7 +3,7 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.Arrays;
 
 import scriptease.controller.BindingVisitor;
-import scriptease.controller.io.FileIO;
+import scriptease.controller.io.XMLNode;
 import scriptease.controller.io.converter.model.StoryModelConverter;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
@@ -241,8 +241,8 @@ public class KnowItBindingConverter implements Converter {
 		final String value;
 		final String type;
 
-		type = FileIO.readValue(reader, TypedComponent.TAG_TYPE);
-		value = FileIO.readValue(reader, TAG_VALUE);
+		type = XMLNode.TYPE.read(reader);
+		value = XMLNode.VALUE.read(reader);
 
 		constant = SimpleResource.buildSimpleResource(type, value);
 
@@ -264,7 +264,8 @@ public class KnowItBindingConverter implements Converter {
 		id = reader.getValue();
 
 		// Ew. Gross. - remiller
-		final GameModule currentModule = StoryModelConverter.currentModule;
+		final GameModule currentModule = StoryModelConverter.currentStory
+				.getModule();
 
 		if (currentModule == null) {
 			throw new IllegalStateException(

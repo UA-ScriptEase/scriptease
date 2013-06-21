@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import scriptease.controller.io.FileIO;
+import scriptease.controller.io.XMLNode;
 import scriptease.controller.io.converter.storycomponent.ScriptItConverter;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
@@ -105,9 +105,7 @@ public class DescribeItConverter implements Converter {
 			if (nodeName.equals(TAG_NAME)) {
 				name = reader.getValue();
 			} else if (nodeName.equals(TAG_TYPES)) {
-				while (reader.hasMoreChildren()) {
-					types.add(FileIO.readValue(reader, TAG_TYPE));
-				}
+				types.addAll(XMLNode.TYPES.read(reader, XMLNode.TYPE));
 			}
 			// head node - can't think of a better way to handle this
 			else if (nodeName.equals(DescribeItNodeConverter.TAG_NODE_NAME)) {

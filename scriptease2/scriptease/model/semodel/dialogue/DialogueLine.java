@@ -156,10 +156,15 @@ public final class DialogueLine extends EditableResource {
 	}
 
 	@Override
+	public boolean isRoot() {
+		return this.story.getDialogueRoots().contains(this);
+	}
+
+	@Override
 	public Collection<String> getTypes() {
 		final Collection<String> type = new ArrayList<String>();
 
-		if (this.story.getDialogueRoots().contains(this))
+		if (this.isRoot())
 			type.add(this.story.getModule().getDialogueType());
 		else
 			type.add(this.story.getModule().getDialogueLineType());
@@ -189,7 +194,7 @@ public final class DialogueLine extends EditableResource {
 
 	@Override
 	public String getTemplateID() {
-		// TODO Does this need to be uniquer?
+		// TODO Does this need to be uniquer? Yes it does!
 		return this.getName();
 	}
 

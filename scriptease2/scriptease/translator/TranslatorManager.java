@@ -318,16 +318,17 @@ public class TranslatorManager {
 		if (this.activeTranslator == translator)
 			return;
 		this.activeTranslator = translator;
+
+		final String message = translator + " actived";
+
+		StatusManager.getInstance().setStatus(message);
+		System.out.println(message);
+
 		if (translator != null) {
-			final String message = translator.getName() + " translator loaded.";
-
-			StatusManager.getInstance().setStatus(message);
-			System.out.println(message);
-
 			// We have this here so we don't run into issues later if the
 			translator.getLibrary();
 			translator.getOptionalLibraries();
-		}
-		this.notifyObservers();
+		} else
+			this.notifyObservers();
 	}
 }
