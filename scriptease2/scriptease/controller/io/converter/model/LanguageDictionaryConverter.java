@@ -44,7 +44,7 @@ public class LanguageDictionaryConverter implements Converter {
 		final Collection<String> reservedWords;
 		final Collection<FormatDefinitionFragment> fragments;
 
-		LanguageDictionary languageDictionary = null;
+		final LanguageDictionary languageDictionary;
 
 		System.out.println("Unmarshaling LanguageDictionary");
 
@@ -54,7 +54,7 @@ public class LanguageDictionaryConverter implements Converter {
 		reservedWords = XMLNode.RESERVED_WORDS.readStringCollection(reader);
 
 		fragments = XMLNode.FORMATS.readObjectCollection(reader, context,
-				languageDictionary, FormatDefinitionFragment.class);
+				FormatDefinitionFragment.class);
 
 		languageDictionary = new LanguageDictionary(name, indentString,
 				reservedWords, fragments);
