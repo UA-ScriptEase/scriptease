@@ -160,7 +160,7 @@ public class StoryModelConverter implements Converter {
 
 		// Story points rely on the current story being set, so we need to load
 		// them later.
-		newRoot = XMLNode.START_STORY_POINT.readObject(reader, context, model,
+		newRoot = XMLNode.START_STORY_POINT.readObject(reader, context,
 				StoryPoint.class);
 
 		if (newRoot == null)
@@ -168,7 +168,7 @@ public class StoryModelConverter implements Converter {
 
 		model.setRoot(newRoot);
 
-		lines = XMLNode.DIALOGUES.readObjectCollection(reader, context, model,
+		lines = XMLNode.DIALOGUES.readObjectCollection(reader, context,
 				DialogueLine.class);
 
 		model.addDialogueRoots(lines);

@@ -233,14 +233,14 @@ public enum XMLNode {
 	 */
 	@SuppressWarnings("unchecked")
 	public <E> E readObject(HierarchicalStreamReader reader,
-			UnmarshallingContext context, Object current, Class<E> c) {
+			UnmarshallingContext context, Class<E> c) {
 		final E e;
 
 		reader.moveDown();
 
 		this.checkNodeName(reader);
 
-		e = (E) context.convertAnother(current, c);
+		e = (E) context.convertAnother(null, c);
 		reader.moveUp();
 
 		return e;
@@ -287,7 +287,7 @@ public enum XMLNode {
 	 */
 	public <E> Collection<E> readObjectCollection(
 			HierarchicalStreamReader reader, UnmarshallingContext context,
-			Object parent, Class<E> c) {
+			Class<E> c) {
 		final Collection<E> collection = new ArrayList<E>();
 
 		reader.moveDown();
@@ -296,7 +296,7 @@ public enum XMLNode {
 		this.checkNodeName(reader);
 
 		while (reader.hasMoreChildren()) {
-			collection.add(this.child.readObject(reader, context, parent, c));
+			collection.add(this.child.readObject(reader, context, c));
 		}
 		reader.moveUp();
 
