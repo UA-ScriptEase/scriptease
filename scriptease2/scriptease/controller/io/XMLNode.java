@@ -23,11 +23,17 @@ public enum XMLNode {
 
 	CHILDREN("Children"),
 
+	CAUSES("Causes"),
+
 	CODESYMBOL("CodeSymbol"),
+	
+	CONTROLITS("ControlIts"),
 
 	DIALOGUE_LINE("DialogueLine"),
 
 	DIALOGUES("Dialogues", DIALOGUE_LINE),
+	
+	EFFECTS("Effects"),
 
 	ENABLED("Enabled"),
 
@@ -36,6 +42,8 @@ public enum XMLNode {
 	ESCAPE("Escape"),
 
 	ESCAPES("Escapes", ESCAPE),
+	
+	DESCRIBEITS("DescribeIts"),
 
 	FORMAT("Format"),
 
@@ -83,7 +91,9 @@ public enum XMLNode {
 
 	TYPE("Type"),
 
-	TYPES("Types"),
+	TYPES("Types", TYPE),
+	
+	TYPECONVERTERS("TypeConverters"),
 
 	VERSION("Version"),
 
@@ -142,6 +152,15 @@ public enum XMLNode {
 	public void writeObject(HierarchicalStreamWriter writer,
 			MarshallingContext context, Object object) {
 		writer.startNode(this.name);
+		context.convertAnother(object);
+		writer.endNode();
+	}
+
+	public void writeObject(HierarchicalStreamWriter writer,
+			MarshallingContext context, Object object, XMLAttribute attribute,
+			String attributeData) {
+		writer.startNode(this.name);
+		attribute.write(writer, attributeData);
 		context.convertAnother(object);
 		writer.endNode();
 	}

@@ -11,6 +11,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  */
 public enum XMLAttribute {
+	AUTHOR("author"),
+
+	DEFAULT_FORMAT("defaultFormat"),
+	
 	NAME("name")
 
 	;
