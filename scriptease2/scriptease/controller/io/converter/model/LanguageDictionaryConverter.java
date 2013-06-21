@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import scriptease.controller.io.FileIO;
+import scriptease.controller.io.XMLNode;
 import scriptease.translator.LanguageDictionary;
 import scriptease.translator.codegenerator.code.fragments.container.FormatDefinitionFragment;
 import scriptease.translator.io.model.GameMap;
@@ -84,7 +84,7 @@ public class LanguageDictionaryConverter implements Converter {
 		name = reader.getAttribute(TAG_NAME);
 
 		// indentation
-		indentString = FileIO.readValue(reader, TAG_INDENTED_STRING);
+		indentString = XMLNode.INDENT_STRING.read(reader);
 
 		// reserved words
 		reservedWords = new ArrayList<String>();

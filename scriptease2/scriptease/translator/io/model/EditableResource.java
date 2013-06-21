@@ -1,6 +1,7 @@
 package scriptease.translator.io.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.observer.ObserverManager;
@@ -45,6 +46,10 @@ public abstract class EditableResource extends Resource {
 		return removed;
 	}
 
+	public boolean addChildren(Collection<? extends Resource> children) {
+		return this.children.addAll(children);
+	}
+
 	/**
 	 * Adds a child to the dialogue line. Calls
 	 * {@link #notifyChildAdded(Resource)} by default. If this method is
@@ -75,6 +80,14 @@ public abstract class EditableResource extends Resource {
 	public List<? extends Resource> getChildren() {
 		return this.children;
 	}
+
+	/**
+	 * Returns whether this editable resource is a root resource. That is, it
+	 * does not have any parents.
+	 * 
+	 * @return
+	 */
+	public abstract boolean isRoot();
 
 	/**
 	 * Sets the name of a resource. Calls {@link #notifyNameChange()} by

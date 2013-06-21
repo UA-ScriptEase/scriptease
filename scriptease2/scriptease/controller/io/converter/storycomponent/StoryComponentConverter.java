@@ -3,7 +3,7 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.io.FileIO;
+import scriptease.controller.io.XMLNode;
 import scriptease.model.StoryComponent;
 
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -69,11 +69,8 @@ public abstract class StoryComponentConverter implements Converter {
 
 		comp = this.buildComponent(reader, context);
 
-		// name
-		displayText = FileIO.readValue(reader, TAG_NAME);
-
-		// visibility
-		visibility = FileIO.readValue(reader, TAG_VISIBLE);
+		displayText = XMLNode.NAME.read(reader);
+		visibility = XMLNode.VISIBLE.read(reader);
 
 		// Labels
 		reader.moveDown();
@@ -81,10 +78,9 @@ public abstract class StoryComponentConverter implements Converter {
 			throw new ConversionException(
 					"Failed to read labels for StoryComponent with displayText ["
 							+ displayText + "]");
-		while (reader.hasMoreChildren()) {
-			// read all of the labels
-			labels.add(FileIO.readValue(reader, TAG_LABEL));
-		}
+
+		labels.addAll(XMLNode.LABELS.read(reader, XMLNode.LABEL));
+
 		reader.moveUp();
 
 		// Actually init the StoryComponent.

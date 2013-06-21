@@ -5,17 +5,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.ScriptEase;
-import scriptease.controller.io.FileIO;
+import scriptease.controller.io.XMLNode;
 import scriptease.gui.WindowFactory;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameModule;
 
-import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -23,16 +23,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class StoryModelConverter implements Converter {
-	private static final String TAG_TITLE = "Title";
-	private static final String TAG_AUTHOR = "Author";
-	private static final String TAG_VERSION = "Version";
-	private static final String TAG_OPTIONAL_LIBRARIES = "OptionalLibraries";
-	private static final String TAG_OPTIONAL_LIBRARY = "OptionalLibrary";
-	private static final String TAG_STORY_START_POINT = "StartStoryPoint";
-	private static final String TAG_TRANSLATOR = "Translator";
-	private static final String TAG_GAME_MODULE = "GameModule";
-
-	public static GameModule currentModule = null;
+	public static StoryModel currentStory = null;
 
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -44,96 +35,82 @@ public class StoryModelConverter implements Converter {
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final StoryModel model = (StoryModel) source;
+		final Collection<String> libraryNames = new ArrayList<String>();
+		final String modulePath;
 
-		writer.startNode(TAG_TITLE);
-		writer.setValue(model.getTitle());
-		writer.endNode();
+		modulePath = model.getModule().getLocation().getAbsolutePath();
 
-		writer.startNode(TAG_AUTHOR);
-		writer.setValue(model.getAuthor());
-		writer.endNode();
-
-		writer.startNode(TAG_VERSION);
-		writer.setValue(model.getCompatibleVersion());
-		writer.endNode();
-
-		writer.startNode(TAG_TRANSLATOR);
-		writer.setValue(model.getTranslator().getName());
-		writer.endNode();
-
-		writer.startNode(TAG_OPTIONAL_LIBRARIES);
 		for (LibraryModel library : model.getOptionalLibraries()) {
-			writer.startNode(TAG_OPTIONAL_LIBRARY);
-			writer.setValue(library.getTitle());
-			writer.endNode();
+			libraryNames.add(library.getTitle());
 		}
-		writer.endNode();
 
-		writer.startNode(TAG_GAME_MODULE);
-		writer.setValue(model.getModule().getLocation().getAbsolutePath());
-		writer.endNode();
-
-		// write out the story's pattern instances
-		writer.startNode(TAG_STORY_START_POINT);
-		context.convertAnother(model.getRoot());
-		writer.endNode();
+		XMLNode.TITLE.write(writer, model.getTitle());
+		XMLNode.AUTHOR.write(writer, model.getAuthor());
+		XMLNode.VERSION.write(writer, model.getCompatibleVersion());
+		XMLNode.TRANSLATOR.write(writer, model.getTranslator().getName());
+		XMLNode.OPTIONAL_LIBRARIES.writeChildren(writer, libraryNames);
+		XMLNode.GAME_MODULE.write(writer, modulePath);
+		XMLNode.START_STORY_POINT.write(writer, context, model.getRoot());
+		XMLNode.DIALOGUES.write(writer, context, model.getDialogueRoots());
 	}
 
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
+		final String SE_VERSION = ScriptEase.getInstance().getVersion();
+
 		final StoryModel model;
+
 		final String title;
 		final String author;
 		final String version;
+		final String translatorName;
+		final Collection<String> libraryNames;
+		final String modulePath;
+
+		final Collection<LibraryModel> optionalLibraries;
+		final Collection<DialogueLine> lines;
+
 		final Translator translator;
 		final GameModule module;
 		final StoryPoint newRoot;
-		final Collection<String> libraryNames;
-		final Collection<LibraryModel> optionalLibraries;
 
-		title = FileIO.readValue(reader, TAG_TITLE);
-		author = FileIO.readValue(reader, TAG_AUTHOR);
+		title = XMLNode.TITLE.read(reader);
+		author = XMLNode.AUTHOR.read(reader);
+		version = XMLNode.VERSION.read(reader);
+		translatorName = XMLNode.TRANSLATOR.read(reader);
+		libraryNames = XMLNode.OPTIONAL_LIBRARIES.readChildren(reader);
+		modulePath = XMLNode.GAME_MODULE.read(reader);
 
-		version = FileIO.readValue(reader, TAG_VERSION);
+		optionalLibraries = new ArrayList<LibraryModel>();
 
-		// Make sure the .ses file and the current ScriptEase version is
+		translator = TranslatorManager.getInstance().getTranslator(
+				translatorName);
+
+		// Make sure the .ses file and the current ScriptEase version are
 		// compatible
-		final String ScriptEaseVersion = ScriptEase.getInstance().getVersion();
-
-		if (!version.equals(ScriptEaseVersion)
-				&& !ScriptEaseVersion.equals(ScriptEase.NO_VERSION_INFORMATION)) {
+		if (!version.equals(SE_VERSION)
+				&& !SE_VERSION.equals(ScriptEase.NO_VERSION_INFORMATION)) {
 			WindowFactory
 					.getInstance()
 					.showProblemDialog(
-							"Incompatible ScriptEase version (2."
-									+ ScriptEaseVersion + ")",
+							"Incompatible ScriptEase version (2." + SE_VERSION
+									+ ")",
 							"The story file being loaded is incompatible "
 									+ "with the current ScriptEase version. \n\n"
 									+ "Your story file was created in ScriptEase 2."
 									+ version
 									+ ".\nThe current ScriptEase version you are using is 2."
-									+ ScriptEaseVersion
+									+ SE_VERSION
 									+ ".\nYou will need to use an earlier compatible "
 									+ "ScriptEase version.");
 
 			return null;
-		}
-
-		translator = TranslatorManager.getInstance().getTranslator(
-				FileIO.readValue(reader, TAG_TRANSLATOR));
-
-		if (translator == null)
+		} else if (translator == null)
 			throw new IllegalStateException("Translator could not be found.");
 
 		// Load the Translator
 		TranslatorManager.getInstance().setActiveTranslator(translator);
-		System.out.println(translator + " loaded");
-
-		libraryNames = FileIO.readValues(reader, TAG_OPTIONAL_LIBRARIES,
-				TAG_OPTIONAL_LIBRARY);
-
-		optionalLibraries = new ArrayList<LibraryModel>();
 
 		for (String libraryName : libraryNames) {
 			final LibraryModel library = translator.findLibrary(libraryName);
@@ -157,37 +134,40 @@ public class StoryModelConverter implements Converter {
 			}
 		}
 
-		final String modulePath = FileIO.readValue(reader, TAG_GAME_MODULE);
 		// Try to open the Pattern Model
 		module = translator.loadModule(new File(modulePath));
 
 		if (module == null) {
 			if (!SEModelManager.getInstance().usingTranslator(translator))
 				translator.unloadTranslator();
+
 			TranslatorManager.getInstance().setActiveTranslator(null);
-
-			throw new XStreamException("Game module could not be loaded.");
+			throw new IllegalStateException("Game module could not be loaded.");
 		}
-		System.out.println(module + " loaded");
-
-		currentModule = module;
 
 		model = new StoryModel(module, title, author, version, translator,
 				optionalLibraries);
 
-		reader.moveDown();
+		currentStory = model;
 
-		newRoot = (StoryPoint) context.convertAnother(model, StoryPoint.class);
+		// Story points rely on the current story being set, so we need to load
+		// them later.
+		newRoot = XMLNode.START_STORY_POINT.read(reader, context, model,
+				StoryPoint.class);
 
 		if (newRoot == null)
 			throw new IllegalStateException("Model root could not be loaded.");
 
 		model.setRoot(newRoot);
-		System.out.println(model + " loaded");
 
-		reader.moveUp();
+		lines = XMLNode.DIALOGUES.readChildren(reader, context, model,
+				DialogueLine.class);
+
+		model.addDialogueRoots(lines);
+
 		// reset these to free the memory.
-		currentModule = null;
+		currentStory = null;
+
 		return model;
 	}
 }

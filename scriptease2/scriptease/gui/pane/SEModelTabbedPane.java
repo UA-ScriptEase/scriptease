@@ -436,7 +436,7 @@ class SEModelTabbedPane extends JTabbedPane {
 
 						if (StringOp.exists(dialogueType)
 								&& type.equals(dialogueType))
-							story.addDialogueRoot();
+							story.createAndAddDialogueRoot();
 
 					}
 

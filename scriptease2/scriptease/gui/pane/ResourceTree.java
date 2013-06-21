@@ -240,6 +240,7 @@ class ResourceTree extends JPanel {
 		}
 	}
 
+	// TODO This will need to be removed. See other TODO items.
 	private String getDialogueType() {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
@@ -363,8 +364,9 @@ class ResourceTree extends JPanel {
 			 * don't necessarily have any resources in the category, we don't
 			 * know if they will be EditableResources.
 			 * 
-			 * Likely, once we change types from strings to GameTypes, the
-			 * GameType itself almost needs to have an "addable" property.
+			 * Likely, once we change types from strings to GameTypes (ticket
+			 * #52135385), the GameType itself almost needs to have an "addable"
+			 * property, meaning we can add new resources of that type.
 			 */
 			final String dialogueType = ResourceTree.this.getDialogueType();
 
@@ -626,7 +628,8 @@ class ResourceTree extends JPanel {
 
 			resourcePanel.add(gameObjectBindingWidget);
 
-			if (resource instanceof EditableResource) {
+			if (resource instanceof EditableResource
+					&& ((EditableResource) resource).isRoot()) {
 
 				final JButton editButton = ComponentFactory.buildEditButton();
 				final JButton removeButton = ComponentFactory
