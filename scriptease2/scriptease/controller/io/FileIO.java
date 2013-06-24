@@ -245,6 +245,10 @@ public class FileIO {
 	public void writeStoryPackage(StoryModel model, File packageLocation,
 			File storyLocation) {
 
+		final String PROBLEM_TITLE = "Problems saving package";
+		final String PROBLEM_MESSAGE = "A problem occured saving the package. Try again.";
+		final String MISSING_FILES = "One or more files could not be compressed. Try again.";
+
 		final ZipOutputStream out;
 		final File moduleLocation;
 
@@ -260,6 +264,9 @@ public class FileIO {
 
 		// Make sure that the module file is readable
 		if (!moduleLocation.canRead()) {
+			WindowFactory.getInstance().showProblemDialog(PROBLEM_TITLE,
+					PROBLEM_MESSAGE);
+
 			System.err.println("Cannot read "
 					+ moduleLocation.getAbsolutePath()
 					+ " (maybe because of permissions)");
@@ -267,30 +274,39 @@ public class FileIO {
 
 		// Make sure that the story file is readable
 		if (!storyLocation.canRead()) {
+			WindowFactory.getInstance().showProblemDialog(PROBLEM_TITLE,
+					PROBLEM_MESSAGE);
+
 			System.err.println("Cannot read " + storyLocation.getAbsolutePath()
 					+ " (maybe because of permissions)");
 		}
 
-		// Try to add the story file to our zip location
-		this.writeFileToZip(out, "", storyLocation);
+		try {
+			// Try to add the story file to our zip location
+			this.writeFileToZip(out, "", storyLocation);
 
-		// Try to add the module to our zip location
-		if (moduleLocation.isDirectory())
-			this.writeDirectoryToZip(out, moduleLocation.getName() + "/",
-					moduleLocation);
-		else
-			this.writeFileToZip(out, "", moduleLocation);
+			// Try to add the module to our zip location
+			if (moduleLocation.isDirectory())
+				this.writeDirectoryToZip(out, moduleLocation.getName() + "/",
+						moduleLocation);
+			else
+				this.writeFileToZip(out, "", moduleLocation);
+
+		} catch (IOException e) {
+			WindowFactory.getInstance().showProblemDialog(PROBLEM_TITLE,
+					MISSING_FILES);
+		}
 
 		try {
 			out.close();
 		} catch (IOException e) {
-			System.err
-					.println("Failed to close ZipOutputStream writer for this model "
-							+ model);
+			System.err.println("Failed to close ZipOutputStream writer for "
+					+ model);
 		}
 	}
 
-	private void writeFileToZip(ZipOutputStream out, String path, File location) {
+	private void writeFileToZip(ZipOutputStream out, String path, File location)
+			throws IOException {
 		try {
 			final FileInputStream fis = new FileInputStream(location);
 			final byte[] buf = new byte[1024];
@@ -306,11 +322,13 @@ public class FileIO {
 		} catch (IOException e) {
 			System.err.println("Problems adding the file at " + location
 					+ " to the .zip directory");
+			
+			throw new IOException(e.getMessage());
 		}
 	}
 
 	private void writeDirectoryToZip(ZipOutputStream out, String path,
-			File directory) {
+			File directory) throws IOException {
 		final File[] files = directory.listFiles();
 
 		for (File source : files) {
