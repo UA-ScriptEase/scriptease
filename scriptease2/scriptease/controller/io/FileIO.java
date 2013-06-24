@@ -2,12 +2,15 @@ package scriptease.controller.io;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.io.converter.IdentityArrayListConverter;
@@ -119,42 +122,6 @@ public class FileIO {
 	private IoMode mode;
 
 	/**
-	 * Saves a CSV file to disk.
-	 * 
-	 * @param data
-	 *            The data to generate in the CSV file.
-	 * @param file
-	 *            The file path to save the CSV in.
-	 */
-	public void saveCSV(Collection<? extends Collection<String>> data, File file) {
-		final FileWriter out;
-		String output;
-
-		try {
-			out = new FileWriter(file);
-
-			for (Collection<String> row : data) {
-				output = "";
-
-				for (String value : row)
-					output += value + ",";
-
-				// Remove the last comma.
-				output = output.substring(0, output.length() - 1);
-
-				output += "\n";
-
-				out.append(output);
-			}
-
-			out.flush();
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * Reads a Story from disk.
 	 * 
 	 * @param location
@@ -261,6 +228,98 @@ public class FileIO {
 				FileIO.this.writeData(library, location, IoMode.LIBRARY);
 			}
 		});
+	}
+
+	/**
+	 * Writes the given StoryModel and related module to the given location as a
+	 * .zip file;
+	 * 
+	 * @param model
+	 *            The model to save to disk.
+	 * @param packageLocation
+	 *            the location to save to.
+	 * @param storyLocation
+	 *            the location of the story file.
+	 * @throws IOException
+	 */
+	public void writeStoryPackage(StoryModel model, File packageLocation,
+			File storyLocation) {
+
+		final ZipOutputStream out;
+		final File moduleLocation;
+
+		try {
+			out = new ZipOutputStream(new FileOutputStream(packageLocation));
+		} catch (FileNotFoundException e) {
+			throw new IllegalArgumentException(
+					"The .zip location provided for story model " + model
+							+ " is invalid");
+		}
+
+		moduleLocation = model.getModule().getLocation();
+
+		// Make sure that the module file is readable
+		if (!moduleLocation.canRead()) {
+			System.err.println("Cannot read "
+					+ moduleLocation.getAbsolutePath()
+					+ " (maybe because of permissions)");
+		}
+
+		// Make sure that the story file is readable
+		if (!storyLocation.canRead()) {
+			System.err.println("Cannot read " + storyLocation.getAbsolutePath()
+					+ " (maybe because of permissions)");
+		}
+
+		// Try to add the story file to our zip location
+		this.writeFileToZip(out, "", storyLocation);
+
+		// Try to add the module to our zip location
+		if (moduleLocation.isDirectory())
+			this.writeDirectoryToZip(out, moduleLocation.getName() + "/",
+					moduleLocation);
+		else
+			this.writeFileToZip(out, "", moduleLocation);
+
+		try {
+			out.close();
+		} catch (IOException e) {
+			System.err
+					.println("Failed to close ZipOutputStream writer for this model "
+							+ model);
+		}
+	}
+
+	private void writeFileToZip(ZipOutputStream out, String path, File location) {
+		try {
+			final FileInputStream fis = new FileInputStream(location);
+			final byte[] buf = new byte[1024];
+
+			out.putNextEntry(new ZipEntry(path + location.getName()));
+
+			int len;
+			while ((len = fis.read(buf)) > 0)
+				out.write(buf, 0, len);
+
+			fis.close();
+			out.closeEntry();
+		} catch (IOException e) {
+			System.err.println("Problems adding the file at " + location
+					+ " to the .zip directory");
+		}
+	}
+
+	private void writeDirectoryToZip(ZipOutputStream out, String path,
+			File directory) {
+		final File[] files = directory.listFiles();
+
+		for (File source : files) {
+			if (source.isDirectory()) {
+				writeDirectoryToZip(out, path + source.getName() + "/", source);
+			} else {
+				writeFileToZip(out, path, source);
+			}
+		}
 	}
 
 	private void writeData(Object dataModel, File location, IoMode mode) {
@@ -537,6 +596,42 @@ public class FileIO {
 		reader.moveUp();
 
 		return values;
+	}
+
+	/**
+	 * Saves a CSV file to disk.
+	 * 
+	 * @param data
+	 *            The data to generate in the CSV file.
+	 * @param file
+	 *            The file path to save the CSV in.
+	 */
+	public void saveCSV(Collection<? extends Collection<String>> data, File file) {
+		final FileWriter out;
+		String output;
+
+		try {
+			out = new FileWriter(file);
+
+			for (Collection<String> row : data) {
+				output = "";
+
+				for (String value : row)
+					output += value + ",";
+
+				// Remove the last comma.
+				output = output.substring(0, output.length() - 1);
+
+				output += "\n";
+
+				out.append(output);
+			}
+
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

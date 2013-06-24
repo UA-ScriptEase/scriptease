@@ -74,8 +74,8 @@ public final class PasteAction extends ActiveModelSensitiveAction implements
 									.getDefaultToolkit().getSystemClipboard()
 									.getContents(this)));
 		}
-		// We not paste into StoryComponentPanelJList. Maybe in the future, but
-		// not now.
+		// We won't paste into StoryComponentPanelJList. Maybe in the future,
+		// but not now.
 		else if (focusOwner instanceof SEGraph) {
 			final SEGraph graph;
 			final JComponent selectedComponent;
