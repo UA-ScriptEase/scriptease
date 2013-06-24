@@ -207,9 +207,11 @@ public class FileIO {
 	 *            The model to save to disk.
 	 * @param location
 	 *            the location to save to.
+	 * @param backup
+	 *            Whether to create a backup copy of the story model.
 	 */
-	public void writeStoryModel(SEModel model, File location) {
-		this.writeData(model, location, IoMode.STORY);
+	public void writeStoryModel(SEModel model, File location, boolean backup) {
+		this.writeData(model, location, IoMode.STORY, backup);
 	}
 
 	/**
@@ -219,13 +221,15 @@ public class FileIO {
 	 *            The dictionary to write.
 	 * @param location
 	 *            The file path to write to.
+	 * @param backup
+	 *            Whether to create a backup copy of the story model.
 	 */
 	public void writeLibraryModel(final LibraryModel library,
 			final File location) {
 		WindowFactory.showProgressBar("Saving Library...", new Runnable() {
 			@Override
 			public void run() {
-				FileIO.this.writeData(library, location, IoMode.LIBRARY);
+				FileIO.this.writeData(library, location, IoMode.LIBRARY, true);
 			}
 		});
 	}
@@ -252,6 +256,8 @@ public class FileIO {
 		final ZipOutputStream out;
 		final File moduleLocation;
 
+		moduleLocation = model.getModule().getLocation();
+
 		try {
 			out = new ZipOutputStream(new FileOutputStream(packageLocation));
 		} catch (FileNotFoundException e) {
@@ -259,8 +265,6 @@ public class FileIO {
 					"The .zip location provided for story model " + model
 							+ " is invalid");
 		}
-
-		moduleLocation = model.getModule().getLocation();
 
 		// Make sure that the module file is readable
 		if (!moduleLocation.canRead()) {
@@ -283,14 +287,15 @@ public class FileIO {
 
 		try {
 			// Try to add the story file to our zip location
-			this.writeFileToZip(out, "", storyLocation);
+			this.writeFileToZip(out, "", storyLocation, model.getTitle()
+					+ ".ses");
 
 			// Try to add the module to our zip location
 			if (moduleLocation.isDirectory())
 				this.writeDirectoryToZip(out, moduleLocation.getName() + "/",
 						moduleLocation);
 			else
-				this.writeFileToZip(out, "", moduleLocation);
+				this.writeFileToZip(out, "", moduleLocation, "");
 
 		} catch (IOException e) {
 			WindowFactory.getInstance().showProblemDialog(PROBLEM_TITLE,
@@ -305,13 +310,16 @@ public class FileIO {
 		}
 	}
 
-	private void writeFileToZip(ZipOutputStream out, String path, File location)
-			throws IOException {
+	private void writeFileToZip(ZipOutputStream out, String path,
+			File location, String name) throws IOException {
 		try {
 			final FileInputStream fis = new FileInputStream(location);
 			final byte[] buf = new byte[1024];
 
-			out.putNextEntry(new ZipEntry(path + location.getName()));
+			if (name == "")
+				out.putNextEntry(new ZipEntry(path + location.getName()));
+			else
+				out.putNextEntry(new ZipEntry(path + name));
 
 			int len;
 			while ((len = fis.read(buf)) > 0)
@@ -322,7 +330,7 @@ public class FileIO {
 		} catch (IOException e) {
 			System.err.println("Problems adding the file at " + location
 					+ " to the .zip directory");
-			
+
 			throw new IOException(e.getMessage());
 		}
 	}
@@ -335,33 +343,36 @@ public class FileIO {
 			if (source.isDirectory()) {
 				writeDirectoryToZip(out, path + source.getName() + "/", source);
 			} else {
-				writeFileToZip(out, path, source);
+				writeFileToZip(out, path, source, "");
 			}
 		}
 	}
 
-	private void writeData(Object dataModel, File location, IoMode mode) {
+	private void writeData(Object dataModel, File location, IoMode mode,
+			boolean createBackup) {
 		final IoMode prevMode = this.mode;
 		this.mode = mode;
 
-		final File backupLocation;
 		FileOutputStream fileOut = null;
 		final XStream stream = this.buildXStream();
 
-		backupLocation = FileOp.replaceExtension(location,
-				FileOp.getExtension(location) + "_backup");
+		if (createBackup) {
+			final File backupLocation;
 
-		// Create/empty the file we're saving to,
-		try {
-			if ((backupLocation.exists() && !backupLocation.delete())
-					|| !location.renameTo(backupLocation))
-				System.err.println("Failed to create a backup file for "
-						+ backupLocation + "!");
+			backupLocation = FileOp.replaceExtension(location,
+					FileOp.getExtension(location) + "_backup");
+			// Create/empty the file we're saving to,
+			try {
+				if ((backupLocation.exists() && !backupLocation.delete())
+						|| !location.renameTo(backupLocation))
+					System.err.println("Failed to create a backup file for "
+							+ backupLocation + "!");
 
-			location.createNewFile();
-		} catch (IOException e) {
-			Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
-					Thread.currentThread(), e);
+				location.createNewFile();
+			} catch (IOException e) {
+				Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
+						Thread.currentThread(), e);
+			}
 		}
 
 		// save the ScriptEase patterns.
@@ -378,7 +389,7 @@ public class FileIO {
 							+ location.getAbsolutePath());
 
 			if (retry)
-				this.writeData(dataModel, location, mode);
+				this.writeData(dataModel, location, mode, true);
 		} finally {
 			try {
 				if (fileOut != null)
