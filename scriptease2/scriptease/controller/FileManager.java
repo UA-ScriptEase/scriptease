@@ -215,7 +215,8 @@ public final class FileManager {
 
 			@Override
 			public void processStoryModel(StoryModel storyModel) {
-				FileManager.this.writeStoryModelFile(storyModel, location);
+				FileManager.this.writeStoryModelFile(storyModel, location,
+						true, true);
 			}
 		});
 	}
@@ -283,7 +284,8 @@ public final class FileManager {
 					return;
 
 				// save the model
-				FileManager.this.writeStoryModelFile(storyModel, location);
+				FileManager.this.writeStoryModelFile(storyModel, location,
+						true, true);
 			}
 		});
 	}
@@ -299,8 +301,6 @@ public final class FileManager {
 	 * @see #save(SEModel)
 	 */
 	public void saveAsPackage(final SEModel model) {
-		final File storyLocation = this.openFiles.getKey(model);
-
 		model.process(new ModelAdapter() {
 			@Override
 			public void processStoryModel(StoryModel storyModel) {
@@ -317,8 +317,12 @@ public final class FileManager {
 				System.out.println("Saving story package with story " + model
 						+ " to " + location);
 
-				// Save the story file first.
-				FileManager.this.save(model);
+				// Save the story file first to a temporary location.
+				final File tempStoryLocation = FileManager.this.createTempFile(
+						"tmpStoryFile", ".ses", location.getParentFile(), 100);
+
+				FileManager.this.writeStoryModelFile(storyModel,
+						tempStoryLocation, false, false);
 
 				if (!FileOp.getExtension(location).equalsIgnoreCase(
 						FileManager.FILE_EXTENSION_PACKAGE)) {
@@ -331,7 +335,9 @@ public final class FileManager {
 					return;
 
 				FileManager.this.writeStoryPackage(storyModel, location,
-						storyLocation);
+						tempStoryLocation);
+
+				FileManager.this.deleteTempFile(tempStoryLocation);
 			}
 		});
 	}
@@ -362,8 +368,15 @@ public final class FileManager {
 	 *            The model to be saved.
 	 * @param location
 	 *            The location to save the model.
+	 * @param backup
+	 *            Whether to create a backup story model
+	 * @param updateRecentFiles
+	 *            Whether the recent files list should be updated
 	 */
-	private void writeStoryModelFile(final StoryModel model, final File location) {
+	private void writeStoryModelFile(final StoryModel model,
+			final File location, final boolean backup,
+			final boolean updateRecentFiles) {
+
 		final SEModel storedModel = this.openFiles.getValue(location);
 		final WindowFactory windowManager = WindowFactory.getInstance();
 		final FileIO writer = FileIO.getInstance();
@@ -409,8 +422,7 @@ public final class FileManager {
 			@Override
 			public void run() {
 				// Write the Story's patterns to XML
-				writer.writeStoryModel(model, location);
-
+				writer.writeStoryModel(model, location, backup);
 			}
 		});
 
@@ -426,11 +438,13 @@ public final class FileManager {
 			}
 		});
 
-		// update the recent files list in the preferences file.
-		this.updateRecentFiles(location, true);
+		if (updateRecentFiles) {
+			// update the recent files list in the preferences file.
+			this.updateRecentFiles(location, true);
 
-		// update the recent files menu items in the GUI.
-		this.notifyModelObservers(model, location);
+			// update the recent files menu items in the GUI.
+			this.notifyModelObservers(model, location);
+		}
 	}
 
 	/**
