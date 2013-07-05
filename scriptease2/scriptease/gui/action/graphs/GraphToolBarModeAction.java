@@ -29,7 +29,7 @@ import scriptease.util.FileOp;
 public abstract class GraphToolBarModeAction extends ActiveModelSensitiveAction {
 
 	public static enum ToolBarMode {
-		INSERT, SELECT, DELETE, CONNECT, DISCONNECT
+		INSERT, SELECT, DELETE, CONNECT, DISCONNECT, GROUP, UNGROUP
 	}
 
 	private static final String CURSOR_DIRECTORY = "scriptease/resources/icons/buttonicons/";
@@ -142,6 +142,10 @@ public abstract class GraphToolBarModeAction extends ActiveModelSensitiveAction 
 			cursor = ScriptEaseUI.CURSOR_PATH_DRAW;
 		else if (mode == ToolBarMode.DISCONNECT)
 			cursor = ScriptEaseUI.CURSOR_PATH_ERASE;
+		else if (mode == ToolBarMode.GROUP)
+			cursor = ScriptEaseUI.CURSOR_NODE_GROUP;
+		else if (mode == ToolBarMode.UNGROUP)
+			cursor = ScriptEaseUI.CURSOR_NODE_UNGROUP;
 		else
 			// Setting a cursor to null sets it to its parent, which is the
 			// default cursor in this case.

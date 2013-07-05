@@ -235,6 +235,18 @@ public interface ScriptEaseUI {
 			.createCursor("path_erase");
 
 	/**
+	 * Cursor used for grouping a set of nodes.
+	 */
+	public static final Cursor CURSOR_NODE_GROUP = GUIOp
+			.createCursor("node_add");
+
+	/**
+	 * Cursor used for ungrouping a set of nodes.
+	 */
+	public static final Cursor CURSOR_NODE_UNGROUP = GUIOp
+			.createCursor("unavailable");
+
+	/**
 	 * Cursor to represent unavailable actions. A circle with a line through it,
 	 * like in No Smoking or No Pie signs.
 	 */

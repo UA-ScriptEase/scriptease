@@ -30,8 +30,10 @@ import scriptease.gui.action.graphs.ConnectModeAction;
 import scriptease.gui.action.graphs.DeleteModeAction;
 import scriptease.gui.action.graphs.DisconnectModeAction;
 import scriptease.gui.action.graphs.GraphToolBarModeAction;
+import scriptease.gui.action.graphs.GroupModeAction;
 import scriptease.gui.action.graphs.InsertModeAction;
 import scriptease.gui.action.graphs.SelectModeAction;
+import scriptease.gui.action.graphs.UngroupModeAction;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.util.GUIOp;
@@ -83,6 +85,8 @@ public final class ComponentFactory {
 		final JToggleButton deleteNodeButton;
 		final JToggleButton connectNodeButton;
 		final JToggleButton disconnectNodeButton;
+		final JToggleButton groupNodesButton;
+		final JToggleButton ungroupNodesButton;
 
 		final Runnable selectButtonRunnable;
 
@@ -96,6 +100,8 @@ public final class ComponentFactory {
 		connectNodeButton = new JToggleButton(ConnectModeAction.getInstance());
 		disconnectNodeButton = new JToggleButton(
 				DisconnectModeAction.getInstance());
+		groupNodesButton = new JToggleButton(GroupModeAction.getInstance());
+		ungroupNodesButton = new JToggleButton(UngroupModeAction.getInstance());
 
 		selectButtonRunnable = new Runnable() {
 			@Override
@@ -123,6 +129,14 @@ public final class ComponentFactory {
 					graphEditorButtonGroup.setSelected(
 							disconnectNodeButton.getModel(), true);
 					break;
+				case GROUP:
+					graphEditorButtonGroup.setSelected(
+							groupNodesButton.getModel(), true);
+					break;
+				case UNGROUP:
+					graphEditorButtonGroup.setSelected(
+							ungroupNodesButton.getModel(), true);
+					break;
 				}
 			}
 		};
@@ -138,7 +152,9 @@ public final class ComponentFactory {
 		buttonList.add(deleteNodeButton);
 		buttonList.add(connectNodeButton);
 		buttonList.add(disconnectNodeButton);
-
+		buttonList.add(groupNodesButton);
+		buttonList.add(ungroupNodesButton);
+		
 		for (JToggleButton toolBarButton : buttonList) {
 			toolBarButton.setHideActionText(true);
 			toolBarButton.setFocusable(false);
