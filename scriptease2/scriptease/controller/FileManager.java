@@ -811,6 +811,8 @@ public final class FileManager {
 	 *            The model whose files should be closed.
 	 */
 	public boolean close(SEModel model) {
+		final File modelLocation;
+
 		if (model == null)
 			return false;
 
@@ -832,8 +834,10 @@ public final class FileManager {
 		});
 
 		SEModelManager.getInstance().remove(model);
-		this.openFiles.removeValue(model);
 
+		modelLocation = this.openFiles.getKey(model);
+		this.openFiles.removeKey(modelLocation);
+		
 		return true;
 	}
 
