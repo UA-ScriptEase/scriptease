@@ -7,7 +7,7 @@ import java.util.Collection;
  * the methods every time.
  * 
  * @author kschenk
- * 
+ * @author jyuen
  */
 public abstract class SEGraphAdapter<E> implements SEGraphObserver<E> {
 
@@ -34,5 +34,13 @@ public abstract class SEGraphAdapter<E> implements SEGraphObserver<E> {
 
 	@Override
 	public void nodesSelected(Collection<E> nodes) {
+	}
+
+	@Override
+	public void nodesGrouped(Collection<E> nodes) {
+	}
+
+	@Override
+	public void nodesUngrouped(Collection<E> nodes) {
 	}
 }
