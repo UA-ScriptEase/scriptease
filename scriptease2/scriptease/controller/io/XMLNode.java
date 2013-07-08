@@ -2,6 +2,8 @@ package scriptease.controller.io;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -18,27 +20,27 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public enum XMLNode {
 	SCRIPTIT("ScriptIt"),
-	
+
 	AUDIO("Audio"),
 
 	AUTHOR("Author"),
 
 	CHILDREN("Children"),
-	
+
 	CAUSEIT("CauseIt"),
 
 	CAUSES("Causes", CAUSEIT),
 
 	CODESYMBOL("CodeSymbol"),
-	
+
 	CONTROLIT("ControlIt"),
-	
+
 	CONTROLITS("ControlIts", CONTROLIT),
 
 	DIALOGUE_LINE("DialogueLine"),
 
 	DIALOGUES("Dialogues", DIALOGUE_LINE),
-	
+
 	EFFECTS("Effects", SCRIPTIT),
 
 	ENABLED("Enabled"),
@@ -48,9 +50,9 @@ public enum XMLNode {
 	ESCAPE("Escape"),
 
 	ESCAPES("Escapes", ESCAPE),
-	
+
 	DESCRIBEIT("DescribeIt"),
-	
+
 	DESCRIBEITS("DescribeIts", DESCRIBEIT),
 
 	FORMAT("Format"),
@@ -100,8 +102,8 @@ public enum XMLNode {
 	TYPE("Type"),
 
 	TYPES("Types", TYPE),
-	
-	TYPECONVERTERS("TypeConverters"),
+
+	TYPECONVERTERS("TypeConverters", SCRIPTIT),
 
 	VERSION("Version"),
 
@@ -312,9 +314,8 @@ public enum XMLNode {
 	 * @param c
 	 * @return
 	 */
-	public <E> Collection<E> readObjectCollection(
-			HierarchicalStreamReader reader, UnmarshallingContext context,
-			Class<E> c) {
+	public <E> Collection<E> readCollection(HierarchicalStreamReader reader,
+			UnmarshallingContext context, Class<E> c) {
 		final Collection<E> collection = new ArrayList<E>();
 
 		reader.moveDown();
@@ -328,6 +329,40 @@ public enum XMLNode {
 		reader.moveUp();
 
 		return collection;
+	}
+
+	/**
+	 * Reads a collection that has attributes attached to it.
+	 * 
+	 * @param reader
+	 * @param context
+	 * @param c
+	 * @param attributes
+	 * @return
+	 */
+	public <E> XMLNodeData<Collection<E>> readAttributedCollection(
+			HierarchicalStreamReader reader, UnmarshallingContext context,
+			Class<E> c, XMLAttribute... attributes) {
+		final Collection<E> collection = new ArrayList<E>();
+		final Map<XMLAttribute, String> attributeMap;
+
+		attributeMap = new HashMap<XMLAttribute, String>();
+
+		reader.moveDown();
+
+		this.checkChild();
+		this.checkNodeName(reader);
+
+		for (XMLAttribute attribute : attributes) {
+			attributeMap.put(attribute, attribute.read(reader));
+		}
+
+		while (reader.hasMoreChildren()) {
+			collection.add(this.child.readObject(reader, context, c));
+		}
+		reader.moveUp();
+
+		return new XMLNodeData<Collection<E>>(attributeMap, collection);
 	}
 
 	/**
@@ -351,6 +386,36 @@ public enum XMLNode {
 		if (this.child == null) {
 			throw new NullPointerException("Null Child Node found for XMLNode "
 					+ this);
+		}
+	}
+
+	/**
+	 * Returns a bundle of data for the node. This is used for nodes that have
+	 * attributes, but contain child nodes.
+	 * 
+	 * @author kschenk
+	 * 
+	 * @param <Z>
+	 */
+	public class XMLNodeData<Z> {
+		private final Map<XMLAttribute, String> attributes;
+		private final Z data;
+
+		public XMLNodeData(Map<XMLAttribute, String> attributes, Z data) {
+			this.attributes = attributes;
+			this.data = data;
+		}
+
+		public Map<XMLAttribute, String> getAttributes() {
+			return attributes;
+		}
+
+		public String getAttribute(XMLAttribute attribute) {
+			return this.attributes.get(attribute);
+		}
+
+		public Z getData() {
+			return data;
 		}
 	}
 }
