@@ -147,6 +147,7 @@ class SEModelTabbedPane extends JTabbedPane {
 	private void createTabForModel(SEModel model) {
 		final boolean tabExistsForModel = SEModelTabbedPane.this.modelToComponent
 				.containsKey(model);
+		
 		if (!tabExistsForModel) {
 			model.process(new ModelAdapter() {
 				@Override

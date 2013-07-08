@@ -7,7 +7,7 @@ import java.util.Collection;
  * {@link SEGraphAdapter} to only override certain methods.
  * 
  * @author kschenk
- * 
+ * @author jyuen
  */
 public interface SEGraphObserver<E> {
 
@@ -68,4 +68,17 @@ public interface SEGraphObserver<E> {
 	 */
 	public void nodesSelected(Collection<E> nodes);
 
+	/**
+	 * Called when a set of nodes have been grouped together.
+	 * 
+	 * @param nodes
+	 */
+	public void nodesGrouped(Collection<E> nodes);
+
+	/**
+	 * Called when a set of nodes have been un-grouped.
+	 * 
+	 * @param nodes
+	 */
+	public void nodesUngrouped(Collection<E> nodes);
 }

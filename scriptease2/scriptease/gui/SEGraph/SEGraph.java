@@ -665,6 +665,28 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
+	 * Creates a group of nodes in the graph from @param startingNode to @param
+	 * endingNode.
+	 * 
+	 * @param startingNode
+	 *            The node at the start of the group
+	 * @param endingNode
+	 *            The ending node of the group
+	 */
+	private void createNodeGroupAt(E startingNode, E endingNode) {
+		final Collection<E> nodeGroup;
+
+		nodeGroup = this.model.getPathBetweenNodes(startingNode, endingNode);
+
+		for (SEGraphObserver<E> observer : this.observers) {
+			observer.nodesGrouped(nodeGroup);
+		}
+
+		this.repaint();
+		this.revalidate();
+	}
+
+	/**
 	 * The class that handles the actual laying out of GraphNodes. The logic is
 	 * fairly basic, and should probably be updated to handle more cases.
 	 * 
@@ -1164,6 +1186,29 @@ public class SEGraph<E> extends JComponent {
 
 					UndoManager.getInstance().endUndoableAction();
 				}
+			} else if (mode == Mode.GROUP) {
+				if (this.lastEnteredNode != null
+						&& this.lastEnteredNode != node) {
+//					if (!UndoManager.getInstance().hasOpenUndoableAction())
+//						UndoManager.getInstance().startUndoableAction(
+//								"Creating group from "
+//										+ node + " to "
+//										+ this.secondLastEnteredNode);
+//
+//					SEGraph.this.createNodeGroupAt(node, this.secondLastEnteredNode);
+//					
+//					System.out.println("DEBUG: start node: " + node);
+//					System.out.println("DEBUG: ending node: " + this.secondLastEnteredNode);
+//
+//					System.out.println("Debug: children node " + node.);
+//					UndoManager.getInstance().endUndoableAction();
+				}
+			} else if (mode == Mode.UNGROUP) {
+				if (!UndoManager.getInstance().hasOpenUndoableAction())
+					UndoManager.getInstance().startUndoableAction(
+							"Ungrouping at " + node);
+
+				UndoManager.getInstance().endUndoableAction();
 			}
 
 			SEFocusManager.getInstance().setFocus(SEGraph.this);

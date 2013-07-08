@@ -51,7 +51,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 	private DeleteAction() {
 		super(DeleteAction.DELETE_TEXT);
 
-		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
+		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_DELETE);
 		this.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 

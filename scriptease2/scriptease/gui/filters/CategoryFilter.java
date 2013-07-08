@@ -24,7 +24,7 @@ public class CategoryFilter extends StoryComponentFilter {
 	 * @author remiller
 	 */
 	public enum Category {
-		EFFECTS, DESCRIPTIONS, CAUSES, CONTROLS, GROUPS, NOTE;
+		EFFECTS, DESCRIPTIONS, CAUSES, CONTROLS, BLOCKS, NOTE;
 	}
 
 	private Category category;
@@ -83,9 +83,9 @@ public class CategoryFilter extends StoryComponentFilter {
 		@Override
 		public void processControlIt(ControlIt controlIt) {
 
-			if (controlIt.getFormat().equals(ControlItFormat.FOLDER))
+			if (controlIt.getFormat().equals(ControlItFormat.BLOCK))
 				this.acceptable = CategoryFilter.this.category
-						.equals(Category.GROUPS);
+						.equals(Category.BLOCKS);
 			else
 				this.acceptable = CategoryFilter.this.category
 						.equals(Category.CONTROLS);

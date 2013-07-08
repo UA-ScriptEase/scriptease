@@ -61,6 +61,7 @@ public final class FileManager {
 	private static final String SAVE_AS = Il8nResources
 			.getString("Save_Model_As");
 
+	private static final String SAVE_AS_PACKAGE = "Save As Package";
 	/**
 	 * The file extension for ScriptEase Library Files
 	 */
@@ -69,12 +70,20 @@ public final class FileManager {
 	 * The file extension for ScriptEase Story Files
 	 */
 	public static final String FILE_EXTENSION_STORY = "ses";
+	/**
+	 * The file extension for ScriptEase Story Packages
+	 */
+	public static final String FILE_EXTENSION_PACKAGE = "zip";
 
 	public static final FileNameExtensionFilter STORY_FILTER = new FileNameExtensionFilter(
 			"ScriptEase Story Files", FileManager.FILE_EXTENSION_STORY);
 
 	public static final FileNameExtensionFilter LIBRARY_FILTER = new FileNameExtensionFilter(
 			"ScriptEase Library Files", FileManager.FILE_EXTENSION_LIBRARY);
+
+	public static final FileNameExtensionFilter PACKAGE_FILTER = new FileNameExtensionFilter(
+			"." + FileManager.FILE_EXTENSION_PACKAGE,
+			FileManager.FILE_EXTENSION_PACKAGE);
 
 	/**
 	 * Set of all openFiles currently open. Strictly speaking, the model itself
@@ -206,7 +215,8 @@ public final class FileManager {
 
 			@Override
 			public void processStoryModel(StoryModel storyModel) {
-				FileManager.this.writeStoryModelFile(storyModel, location);
+				FileManager.this.writeStoryModelFile(storyModel, location,
+						true, true);
 			}
 		});
 	}
@@ -274,7 +284,60 @@ public final class FileManager {
 					return;
 
 				// save the model
-				FileManager.this.writeStoryModelFile(storyModel, location);
+				FileManager.this.writeStoryModelFile(storyModel, location,
+						true, true);
+			}
+		});
+	}
+
+	/**
+	 * Prompts the user to choose a file location, then saves the model package
+	 * to that location.<br>
+	 * If the file does not have the proper extension, the proper extension is
+	 * added.
+	 * 
+	 * @param model
+	 *            The model to be saved.
+	 * @see #save(SEModel)
+	 */
+	public void saveAsPackage(final SEModel model) {
+		model.process(new ModelAdapter() {
+			@Override
+			public void processStoryModel(StoryModel storyModel) {
+				final WindowFactory windowManager = WindowFactory.getInstance();
+
+				File location = windowManager.showFileChooser(
+						FileManager.SAVE_AS_PACKAGE, storyModel.getTitle(),
+						FileManager.PACKAGE_FILTER);
+
+				if (location == null) {
+					return;
+				}
+
+				System.out.println("Saving story package with story " + model
+						+ " to " + location);
+
+				// Save the story file first to a temporary location.
+				final File tempStoryLocation = FileManager.this.createTempFile(
+						"tmpStoryFile", ".ses", location.getParentFile(), 100);
+
+				FileManager.this.writeStoryModelFile(storyModel,
+						tempStoryLocation, false, false);
+
+				if (!FileOp.getExtension(location).equalsIgnoreCase(
+						FileManager.FILE_EXTENSION_PACKAGE)) {
+					location = FileOp.addExtension(location,
+							FileManager.FILE_EXTENSION_PACKAGE);
+				}
+
+				if (location.exists()
+						&& !windowManager.showConfirmOverwrite(location))
+					return;
+
+				FileManager.this.writeStoryPackage(storyModel, location,
+						tempStoryLocation);
+
+				FileManager.this.deleteTempFile(tempStoryLocation);
 			}
 		});
 	}
@@ -293,7 +356,7 @@ public final class FileManager {
 		// remove the entry for the model, not the location.
 		this.openFiles.removeValue(library);
 		this.openFiles.put(location, library);
-		
+
 		// update the recent files menu items in the GUI.
 		this.notifyModelObservers(library, location);
 	}
@@ -305,8 +368,15 @@ public final class FileManager {
 	 *            The model to be saved.
 	 * @param location
 	 *            The location to save the model.
+	 * @param backup
+	 *            Whether to create a backup story model
+	 * @param updateRecentFiles
+	 *            Whether the recent files list should be updated
 	 */
-	private void writeStoryModelFile(final StoryModel model, final File location) {
+	private void writeStoryModelFile(final StoryModel model,
+			final File location, final boolean backup,
+			final boolean updateRecentFiles) {
+
 		final SEModel storedModel = this.openFiles.getValue(location);
 		final WindowFactory windowManager = WindowFactory.getInstance();
 		final FileIO writer = FileIO.getInstance();
@@ -352,8 +422,7 @@ public final class FileManager {
 			@Override
 			public void run() {
 				// Write the Story's patterns to XML
-				writer.writeStoryModel(model, location);
-
+				writer.writeStoryModel(model, location, backup);
 			}
 		});
 
@@ -369,11 +438,36 @@ public final class FileManager {
 			}
 		});
 
-		// update the recent files list in the preferences file.
-		this.updateRecentFiles(location, true);
+		if (updateRecentFiles) {
+			// update the recent files list in the preferences file.
+			this.updateRecentFiles(location, true);
 
-		// update the recent files menu items in the GUI.
-		this.notifyModelObservers(model, location);
+			// update the recent files menu items in the GUI.
+			this.notifyModelObservers(model, location);
+		}
+	}
+
+	/**
+	 * Saves the given model, module, and related game files to a package.
+	 * 
+	 * @param model
+	 *            The model to be saved.
+	 * @param location
+	 *            The location to save the model.
+	 */
+	private void writeStoryPackage(final StoryModel model,
+			final File packageLocation, final File storyLocation) {
+
+		final FileIO writer = FileIO.getInstance();
+
+		WindowFactory.showProgressBar("Saving Story Package ...",
+				new Runnable() {
+					@Override
+					public void run() {
+						writer.writeStoryPackage(model, packageLocation,
+								storyLocation);
+					}
+				});
 	}
 
 	private void writeCode(StoryModel model, boolean compile) {
@@ -525,7 +619,7 @@ public final class FileManager {
 	 *            <code>null</code> will have no effect.
 	 */
 	public void openStoryModel(final File location) {
-		final StoryModel story;
+		StoryModel story;
 
 		if (location == null || !location.exists()) {
 			WindowFactory.getInstance().showProblemDialog(
@@ -542,31 +636,36 @@ public final class FileManager {
 			return;
 		}
 
-		// if we've already got the model open, then we don't need to
-		// load it again.
-		if (this.openFiles.containsKey(location)) {
-			final SEModel model = this.openFiles.getValue(location);
-			if (model instanceof StoryModel) {
-				story = (StoryModel) model;
-				this.updateRecentFiles(location, true);
-			} else {
-				throw new IllegalArgumentException("Attempted to open " + model
-						+ " as a StoryModel when it is not.");
-			}
-		} else {
-			story = FileIO.getInstance().readStory(location);
+		// Users can't have more than one copy of the story model open
+		final Collection<File> openedLocations = this.openFiles.getKeys();
+		for (File openedLocation : openedLocations) {
+			final String path = openedLocation.getAbsolutePath();
 
-			if (story == null)
+			if (path.equals(location.getAbsolutePath())) {
+				final SEModel model = this.openFiles.getValue(openedLocation);
+
+				if (!(model instanceof StoryModel))
+					throw new IllegalArgumentException("Attempted to open "
+							+ model + " as a StoryModel when it is not.");
+
+				// Notify the users that they already have this story model open
+				WindowFactory
+						.getInstance()
+						.showInformationDialog("Story Model already open",
+								"The story model you are trying to open is already open.");
+
 				return;
-
-			this.openFiles.put(location, story);
-
-			// this needs to happen before we add it to the model pool so that
-			// the menu items update themselves correctly - remiller
-			this.updateRecentFiles(location, true);
-
-			SEModelManager.getInstance().addAndActivate(story);
+			}
 		}
+
+		story = FileIO.getInstance().readStory(location);
+
+		if (story == null)
+			return;
+
+		this.openFiles.put(location, story);
+		this.updateRecentFiles(location, true);
+		SEModelManager.getInstance().addAndActivate(story);
 
 		this.notifyModelObservers(story, location);
 	}
@@ -712,6 +811,8 @@ public final class FileManager {
 	 *            The model whose files should be closed.
 	 */
 	public boolean close(SEModel model) {
+		final File modelLocation;
+
 		if (model == null)
 			return false;
 
@@ -733,8 +834,10 @@ public final class FileManager {
 		});
 
 		SEModelManager.getInstance().remove(model);
-		this.openFiles.removeValue(model);
 
+		modelLocation = this.openFiles.getKey(model);
+		this.openFiles.removeKey(modelLocation);
+		
 		return true;
 	}
 

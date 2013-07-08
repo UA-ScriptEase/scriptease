@@ -57,7 +57,7 @@ public abstract class StoryComponentConverter implements Converter {
 	 * Unmarshalls A StoryComponent from XML. The exact StoryComponent that is
 	 * unmarshalled is determined by the implementation of
 	 * {@link #buildComponent(HierarchicalStreamReader, UnmarshallingContext)},
-	 * which is called before any generic StroyComponent properties are read in.
+	 * which is called before any generic StoryComponent properties are read in.
 	 */
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
