@@ -3,11 +3,9 @@ package scriptease.controller.io.converter.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import scriptease.controller.io.XMLNode;
-import scriptease.controller.io.converter.storycomponent.ScriptItConverter;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.ScriptIt;
@@ -26,130 +24,79 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  */
 public class DescribeItConverter implements Converter {
-	public static final String TAG_DESCRIBEIT = "DescribeIt";
-
-	private static final String TAG_NAME = "Name";
-	private static final String TAG_TYPE = "Type";
-	private static final String TAG_TYPES = "Types";
-	private static final String TAG_PATH_MAP = "PathMap";
-	private static final String TAG_ENTRY = "Entry";
-	private static final String TAG_PATH = "Path";
 
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
 			final MarshallingContext context) {
 		final DescribeIt describeIt = (DescribeIt) source;
 
-		// name
-		writer.startNode(TAG_NAME);
-		writer.setValue(describeIt.getName());
-		writer.endNode();
+		XMLNode.NAME.writeString(writer, describeIt.getName());
+		XMLNode.TYPES.writeChildren(writer, describeIt.getTypes());
+		XMLNode.DESCRIBEITNODE.writeObject(writer, context,
+				describeIt.getStartNode());
 
-		// types
-		writer.startNode(TAG_TYPES);
-		for (String type : describeIt.getTypes()) {
-			writer.startNode(TAG_TYPE);
-			writer.setValue(type);
-			writer.endNode();
-		}
-		writer.endNode();
+		// Write out the paths. These are special for DescribeIts, since we
+		// don't have a separate object for them.
 
-		// head node
-		final DescribeItNode headNode = describeIt.getStartNode();
-		writer.startNode(DescribeItNodeConverter.TAG_NODE_NAME);
-		context.convertAnother(headNode);
-		writer.endNode();
+		// TODO There should be a way to read and write maps using methods in
+		// XMLNode.
 
-		// paths
-		writer.startNode(TAG_PATH_MAP);
-
-		final Collection<Collection<DescribeItNode>> paths = describeIt
-				.getPaths();
-		for (Collection<DescribeItNode> path : paths) {
-			// path with the consisting nodes and the resulting doIt
-			writer.startNode(TAG_ENTRY);
+		writer.startNode(XMLNode.PATHMAP.getName());
+		for (Collection<DescribeItNode> path : describeIt.getPaths()) {
+			// path with the consisting nodes and the resulting ScriptIt
+			writer.startNode(XMLNode.ENTRY.getName());
 			// nodes
-			writer.startNode(TAG_PATH);
-			context.convertAnother(new ArrayList<DescribeItNode>(path));
-			writer.endNode();
+			XMLNode.PATH.writeObject(writer, context, path);
+			XMLNode.SCRIPTIT.writeObject(writer, context,
+					describeIt.getScriptItForPath(path));
 
-			// optional doIt value
-			final ScriptIt value = describeIt.getScriptItForPath(path);
-			if (value != null) {
-				writer.startNode(ScriptItConverter.TAG_SCRIPTIT);
-				context.convertAnother(value);
-				writer.endNode();
-			}
 			writer.endNode();
 		}
 		writer.endNode();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final Collection<String> types;
+		final Map<Collection<DescribeItNode>, ScriptIt> paths;
+
+		final String name;
+		final DescribeItNode headNode;
 
 		types = new ArrayList<String>();
+		paths = new HashMap<Collection<DescribeItNode>, ScriptIt>();
 
-		String name = "";
-		DescribeIt describeIt = null;
-		DescribeItNode headNode = null;
-		Map<Collection<DescribeItNode>, ScriptIt> paths = null;
+		name = XMLNode.NAME.readString(reader);
+		types.addAll(XMLNode.TYPES.readStringCollection(reader));
+		headNode = XMLNode.DESCRIBEITNODE.readObject(reader, context,
+				DescribeItNode.class);
 
-		while (reader.hasMoreChildren()) {
-			reader.moveDown();
-			final String nodeName = reader.getNodeName();
+		// TODO See other above todo.
+		reader.moveDown();
+		if (reader.getNodeName().equals(XMLNode.PATHMAP.getName())) {
+			// read all of the paths
+			while (reader.hasMoreChildren()) {
+				reader.moveDown();
+				// read the path
+				if (reader.getNodeName().equals(XMLNode.ENTRY.getName())) {
+					final Collection<DescribeItNode> nodes;
+					final ScriptIt scriptIt;
 
-			if (nodeName.equals(TAG_NAME)) {
-				name = reader.getValue();
-			} else if (nodeName.equals(TAG_TYPES)) {
-				types.addAll(XMLNode.TYPES.readStringCollection(reader, XMLNode.TYPE));
-			}
-			// head node - can't think of a better way to handle this
-			else if (nodeName.equals(DescribeItNodeConverter.TAG_NODE_NAME)) {
-				headNode = (DescribeItNode) context.convertAnother(describeIt,
-						DescribeItNode.class);
-			}
-			// paths
-			else if (nodeName.equals(TAG_PATH_MAP)) {
-				paths = new HashMap<Collection<DescribeItNode>, ScriptIt>();
-				// read all of the paths
-				while (reader.hasMoreChildren()) {
-					reader.moveDown();
-					// read the path
-					if (reader.getNodeName().equals(TAG_ENTRY)) {
-						List<DescribeItNode> nodes = null;
-						ScriptIt doIt = null;
-						while (reader.hasMoreChildren()) {
-							reader.moveDown();
-							// read the nodes
-							if (reader.getNodeName().equals(TAG_PATH)) {
-								nodes = new ArrayList<DescribeItNode>();
-								nodes.addAll((Collection<DescribeItNode>) context
-										.convertAnother(describeIt,
-												ArrayList.class));
-							}
-							// read the doIt
-							else if (reader.getNodeName().equals(
-									ScriptItConverter.TAG_SCRIPTIT)) {
-								doIt = (ScriptIt) context.convertAnother(
-										describeIt, ScriptIt.class);
-							}
-							reader.moveUp();
-						}
-						if (nodes != null && !nodes.isEmpty())
-							paths.put(nodes, doIt);
-					}
-					reader.moveUp();
+					nodes = XMLNode.PATH.readCollection(reader, context,
+							DescribeItNode.class);
+					scriptIt = XMLNode.SCRIPTIT.readObject(reader, context,
+							ScriptIt.class);
+
+					if (nodes != null && !nodes.isEmpty())
+						paths.put(nodes, scriptIt);
 				}
+				reader.moveUp();
 			}
-			reader.moveUp();
 		}
+		reader.moveUp();
 
-		describeIt = new DescribeIt(name, headNode, paths, types);
-		return describeIt;
+		return new DescribeIt(name, headNode, paths, types);
 	}
 
 	@SuppressWarnings("rawtypes")
