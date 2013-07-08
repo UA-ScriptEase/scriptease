@@ -5,13 +5,13 @@ import java.util.Collection;
 
 import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
-import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
 
@@ -81,45 +81,37 @@ public class LibraryModelConverter implements Converter {
 					library, ArrayList.class)));
 		}
 		reader.moveUp();
-		
+
 		final Collection<CauseIt> causes;
 		final Collection<ScriptIt> effects;
-		
-		causes = XMLNode.CAUSES.readObjectCollection(reader, context, CauseIt.class);
-		effects = XMLNode.EFFECTS.readObjectCollection(reader, context, ScriptIt.class);
-		
+		final Collection<DescribeIt> descriptions;
+		final Collection<ControlIt> controls;
+		final Collection<TypeConverter> typeConvertors; 
+
+		causes = XMLNode.CAUSES.readObjectCollection(reader, context,
+				CauseIt.class);
+		effects = XMLNode.EFFECTS.readObjectCollection(reader, context,
+				ScriptIt.class);
+		descriptions = XMLNode.DESCRIBEITS.readObjectCollection(reader,
+				context, DescribeIt.class);
+
 		library.addAll(causes);
 		library.addAll(effects);
-		
-		// descriptions
-		reader.moveDown();
-		if (reader.hasMoreChildren()) {
-			if (!reader.getNodeName().equalsIgnoreCase(TAG_DESCRIBE_ITS))
-				System.err.println("Expected " + TAG_DESCRIBE_ITS
-						+ ", but found " + reader.getNodeName());
-			else {
-				final Collection<DescribeIt> describeIts;
 
-				describeIts = (Collection<DescribeIt>) context.convertAnother(
-						library, ArrayList.class);
+		/*
+		 * We can't add this as usual since our LibraryModel is still getting
+		 * created right here. The add(DescribeIt) method would thus cause a
+		 * null pointer exception to be thrown. Besides, we'd be doing things
+		 * twice. -kschenk
+		 */
+		for (DescribeIt describeIt : descriptions) {
+			final KnowIt knowIt;
 
-				for (DescribeIt describeIt : describeIts) {
-					/*
-					 * We can't add this as usual since our LibraryModel is
-					 * still getting created right here. The add(DescribeIt)
-					 * method would thus cause a null pointer exception to be
-					 * thrown. Besides, we'd be doing things twice. -kschenk
-					 */
-					final KnowIt knowIt;
+			knowIt = library.createKnowItForDescribeIt(describeIt);
 
-					knowIt = library.createKnowItForDescribeIt(describeIt);
-
-					library.add(knowIt);
-					library.addDescribeIt(describeIt, knowIt);
-				}
-			}
+			library.add(knowIt);
+			library.addDescribeIt(describeIt, knowIt);
 		}
-		reader.moveUp();
 
 		// controls
 		reader.moveDown();

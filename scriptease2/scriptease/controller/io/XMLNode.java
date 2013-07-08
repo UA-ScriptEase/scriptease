@@ -47,7 +47,9 @@ public enum XMLNode {
 
 	ESCAPES("Escapes", ESCAPE),
 	
-	DESCRIBEITS("DescribeIts"),
+	DESCRIBEIT("DescribeIt"),
+	
+	DESCRIBEITS("DescribeIts", DESCRIBEIT),
 
 	FORMAT("Format"),
 
