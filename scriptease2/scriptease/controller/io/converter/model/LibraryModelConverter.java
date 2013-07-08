@@ -8,6 +8,7 @@ import scriptease.controller.io.XMLNode;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -80,33 +81,16 @@ public class LibraryModelConverter implements Converter {
 					library, ArrayList.class)));
 		}
 		reader.moveUp();
-
-		// causes
-		reader.moveDown();
-		if (reader.hasMoreChildren()) {
-			if (!reader.getNodeName().equalsIgnoreCase(TAG_CAUSES))
-				System.err.println("Expected " + TAG_CAUSES + ", but found "
-						+ reader.getNodeName());
-			else {
-				library.addAll((Collection<? extends StoryComponent>) context
-						.convertAnother(library, ArrayList.class));
-			}
-		}
-		reader.moveUp();
-
-		// effects
-		reader.moveDown();
-		if (reader.hasMoreChildren()) {
-			if (!reader.getNodeName().equalsIgnoreCase(TAG_EFFECTS))
-				System.err.println("Expected " + TAG_EFFECTS + ", but found "
-						+ reader.getNodeName());
-			else {
-				library.addAll((Collection<? extends StoryComponent>) context
-						.convertAnother(library, ArrayList.class));
-			}
-		}
-		reader.moveUp();
-
+		
+		final Collection<CauseIt> causes;
+		final Collection<ScriptIt> effects;
+		
+		causes = XMLNode.CAUSES.readObjectCollection(reader, context, CauseIt.class);
+		effects = XMLNode.EFFECTS.readObjectCollection(reader, context, ScriptIt.class);
+		
+		library.addAll(causes);
+		library.addAll(effects);
+		
 		// descriptions
 		reader.moveDown();
 		if (reader.hasMoreChildren()) {

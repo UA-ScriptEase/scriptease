@@ -17,13 +17,17 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  */
 public enum XMLNode {
+	SCRIPTIT("ScriptIt"),
+	
 	AUDIO("Audio"),
 
 	AUTHOR("Author"),
 
 	CHILDREN("Children"),
+	
+	CAUSEIT("CauseIt"),
 
-	CAUSES("Causes"),
+	CAUSES("Causes", CAUSEIT),
 
 	CODESYMBOL("CodeSymbol"),
 	
@@ -33,7 +37,7 @@ public enum XMLNode {
 
 	DIALOGUES("Dialogues", DIALOGUE_LINE),
 	
-	EFFECTS("Effects"),
+	EFFECTS("Effects", SCRIPTIT),
 
 	ENABLED("Enabled"),
 
