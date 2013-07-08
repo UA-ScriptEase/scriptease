@@ -17,23 +17,29 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  */
 public enum XMLNode {
+	SCRIPTIT("ScriptIt"),
+	
 	AUDIO("Audio"),
 
 	AUTHOR("Author"),
 
 	CHILDREN("Children"),
+	
+	CAUSEIT("CauseIt"),
 
-	CAUSES("Causes"),
+	CAUSES("Causes", CAUSEIT),
 
 	CODESYMBOL("CodeSymbol"),
 	
-	CONTROLITS("ControlIts"),
+	CONTROLIT("ControlIt"),
+	
+	CONTROLITS("ControlIts", CONTROLIT),
 
 	DIALOGUE_LINE("DialogueLine"),
 
 	DIALOGUES("Dialogues", DIALOGUE_LINE),
 	
-	EFFECTS("Effects"),
+	EFFECTS("Effects", SCRIPTIT),
 
 	ENABLED("Enabled"),
 
@@ -43,7 +49,9 @@ public enum XMLNode {
 
 	ESCAPES("Escapes", ESCAPE),
 	
-	DESCRIBEITS("DescribeIts"),
+	DESCRIBEIT("DescribeIt"),
+	
+	DESCRIBEITS("DescribeIts", DESCRIBEIT),
 
 	FORMAT("Format"),
 

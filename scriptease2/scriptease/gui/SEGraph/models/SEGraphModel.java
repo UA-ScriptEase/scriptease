@@ -1,6 +1,7 @@
 package scriptease.gui.SEGraph.models;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
@@ -249,6 +250,37 @@ public abstract class SEGraphModel<E> {
 		}
 
 		return descendants;
+	}
+
+	public final Set<E> getGroupableEndNodesFor(E node) {
+		final Set<E> descendants = new HashSet<E>();
+		this.getGroupableDescendants(node, new HashMap<E, Integer>(),
+				descendants);
+		return descendants;
+	}
+
+	public final void getGroupableDescendants(E node, Map<E, Integer> map,
+			Set<E> descendants) {
+
+		for (E child : this.getChildren(node)) {
+			if (map.containsKey(child))
+				map.put(child, map.get(child) + 1);
+			else
+				map.put(child, 1);
+		}
+
+		for (Entry<E, Integer> child : map.entrySet()) {
+			final int numParents = this.getParents(child.getKey()).size();
+			final int accesses = child.getValue();
+
+			if (map.keySet().size() == 1)
+				descendants.add(child.getKey());
+
+			if (numParents == accesses) {
+				this.getGroupableDescendants(child.getKey(), map, descendants);
+				map.remove(child);
+			}
+		}
 	}
 
 	/**

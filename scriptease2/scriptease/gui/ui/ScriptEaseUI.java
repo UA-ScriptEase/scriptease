@@ -212,41 +212,6 @@ public interface ScriptEaseUI {
 			.get("Tree.collapsedIcon");
 
 	/**
-	 * Cursor used for adding nodes to a graph.
-	 */
-	public static final Cursor CURSOR_NODE_ADD = GUIOp.createCursor("node_add");
-
-	/**
-	 * Cursor used for deleting nodes from the graph.
-	 */
-	public static final Cursor CURSOR_NODE_DELETE = GUIOp
-			.createCursor("node_delete");
-
-	/**
-	 * Cursor used for drawing paths between nodes.
-	 */
-	public static final Cursor CURSOR_PATH_DRAW = GUIOp
-			.createCursor("path_draw");
-
-	/**
-	 * Cursor used for erasing paths between nodes.
-	 */
-	public static final Cursor CURSOR_PATH_ERASE = GUIOp
-			.createCursor("path_erase");
-
-	/**
-	 * Cursor used for grouping a set of nodes.
-	 */
-	public static final Cursor CURSOR_NODE_GROUP = GUIOp
-			.createCursor("node_add");
-
-	/**
-	 * Cursor used for ungrouping a set of nodes.
-	 */
-	public static final Cursor CURSOR_NODE_UNGROUP = GUIOp
-			.createCursor("unavailable");
-
-	/**
 	 * Cursor to represent unavailable actions. A circle with a line through it,
 	 * like in No Smoking or No Pie signs.
 	 */
