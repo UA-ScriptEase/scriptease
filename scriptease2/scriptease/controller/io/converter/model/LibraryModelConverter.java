@@ -86,7 +86,7 @@ public class LibraryModelConverter implements Converter {
 		final Collection<ScriptIt> effects;
 		final Collection<DescribeIt> descriptions;
 		final Collection<ControlIt> controls;
-		final Collection<TypeConverter> typeConvertors; 
+		final Collection<TypeConverter> typeConvertors;
 
 		causes = XMLNode.CAUSES.readObjectCollection(reader, context,
 				CauseIt.class);
@@ -94,6 +94,8 @@ public class LibraryModelConverter implements Converter {
 				ScriptIt.class);
 		descriptions = XMLNode.DESCRIBEITS.readObjectCollection(reader,
 				context, DescribeIt.class);
+		controls = XMLNode.CONTROLITS.readObjectCollection(reader, context,
+				ControlIt.class);
 
 		library.addAll(causes);
 		library.addAll(effects);
@@ -113,19 +115,8 @@ public class LibraryModelConverter implements Converter {
 			library.addDescribeIt(describeIt, knowIt);
 		}
 
-		// controls
-		reader.moveDown();
-		if (reader.hasMoreChildren()) {
-			if (!reader.getNodeName().equalsIgnoreCase(TAG_CONTROL_ITS))
-				System.err.println("Expected " + TAG_CONTROL_ITS
-						+ ", but found " + reader.getNodeName());
-			else {
-				library.addAll(((Collection<ControlIt>) context.convertAnother(
-						library, ArrayList.class)));
-			}
-		}
-		reader.moveUp();
-
+		library.addAll(controls);
+		
 		// typeconverters
 		reader.moveDown();
 		if (reader.hasMoreChildren()) {
