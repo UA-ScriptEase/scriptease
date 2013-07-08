@@ -39,7 +39,7 @@ public class DescribeItConverter implements Converter {
 		// don't have a separate object for them.
 
 		// TODO There should be a way to read and write maps using methods in
-		// XMLNode.
+		// XMLNode. 
 
 		writer.startNode(XMLNode.PATHMAP.getName());
 		for (Collection<DescribeItNode> path : describeIt.getPaths()) {

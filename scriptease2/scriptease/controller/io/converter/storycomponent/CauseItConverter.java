@@ -30,30 +30,32 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @see ScriptItConverter
  */
 public class CauseItConverter extends ScriptItConverter {
-
+	// TODO See LibraryModelConverter class for an example of how to refactor
+	// this class. However, since we're moving to YAML eventually, we don't need
+	// to waste anymore time on refactoring these.
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		super.marshal(source, writer, context);
 	}
-	
+
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final CauseIt causeIt;
 
 		causeIt = (CauseIt) super.unmarshal(reader, context);
-		
+
 		// Search for KnowItBindingReferences.
 		if (FileIO.getInstance().getMode() == FileIO.IoMode.STORY) {
 			// Go down through and rebind references to what they should really
 			// be bound to: implicits
 			this.rebindKnowItBindingReferences(causeIt);
 		}
-		
+
 		return causeIt;
 	}
-	
+
 	/*
 	 * TODO Abstract this somehow. We only call this method on causes while in
 	 * story mode. However, we also go over the entire model in the NWN
@@ -120,7 +122,6 @@ public class CauseItConverter extends ScriptItConverter {
 
 		scriptIt.process(adapter);
 	}
-	
 
 	@SuppressWarnings("rawtypes")
 	@Override

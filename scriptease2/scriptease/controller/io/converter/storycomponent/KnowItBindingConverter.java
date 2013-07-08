@@ -33,6 +33,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author mfchurch
  */
 public class KnowItBindingConverter implements Converter {
+
+	// TODO See LibraryModelConverter class for an example of how to refactor
+	// this class. However, since we're moving to YAML eventually, we don't need
+	// to waste anymore time on refactoring these.
 	private static final String TAG_VALUE = "Value";
 
 	private static final String ATTRIBUTE_BINDING_FLAVOUR = "flavour";
