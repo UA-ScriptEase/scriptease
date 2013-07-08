@@ -20,6 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -573,6 +574,16 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
+	 * Returns the ancestors of the node.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public Collection<E> getAncestors(E node) {
+		return this.model.getAncestors(node);
+	}
+
+	/**
 	 * Returns true if the graph is read only.
 	 * 
 	 * @return
@@ -673,7 +684,6 @@ public class SEGraph<E> extends JComponent {
 	 * @param endingNode
 	 *            The ending node of the group
 	 */
-	@SuppressWarnings("unused")
 	private void createNodeGroupAt(E startingNode, E endingNode) {
 		final Collection<E> nodeGroup;
 
@@ -685,6 +695,24 @@ public class SEGraph<E> extends JComponent {
 
 		this.repaint();
 		this.revalidate();
+	}
+
+	/**
+	 * Returns the possible end nodes for @param node. If we were to consider
+	 * levels of descendants, where there is only one node at that descendant
+	 * level is where a possible end node can be formed.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	private E getPossibleGroupEndNodesFor(E node) {
+		final Set<E> endNodes = this.model.getGroupableEndNodesFor(node);
+
+		System.out.println("DEBUG: Size: " + endNodes.size());
+		for (E n : endNodes)
+			System.out.println("DEBUG: Node: " + n);
+
+		return null;
 	}
 
 	/**
@@ -1008,6 +1036,8 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	private E draggedFromNode = null;
+	private E startNode = null;
+	private E endNode = null;
 
 	/**
 	 * Mouse adapter that gets added to every node. This is where the model gets
@@ -1047,16 +1077,59 @@ public class SEGraph<E> extends JComponent {
 		public void mousePressed(MouseEvent e) {
 			final Mode mode = SEGraph.this.getToolBarMode();
 
-			final E draggedFrom;
-
 			if (mode == Mode.INSERT || mode == Mode.CONNECT
 					|| mode == Mode.DISCONNECT) {
+				final E draggedFrom;
+
 				draggedFrom = SEGraph.this.nodesToComponents
 						.getKey((JComponent) e.getSource());
-			} else
-				draggedFrom = null;
 
-			SEGraph.this.draggedFromNode = draggedFrom;
+				SEGraph.this.draggedFromNode = draggedFrom;
+
+			} else if (mode == Mode.GROUP || mode == Mode.UNGROUP) {
+				final E startedFrom;
+				final E endedFrom;
+
+				if (SEGraph.this.startNode == null) {
+					startedFrom = SEGraph.this.nodesToComponents
+							.getKey((JComponent) e.getSource());
+					SEGraph.this.startNode = startedFrom;
+					SEGraph.this.getPossibleGroupEndNodesFor(startedFrom);
+
+				} else {
+					endedFrom = SEGraph.this.nodesToComponents
+							.getKey((JComponent) e.getSource());
+					SEGraph.this.endNode = endedFrom;
+
+					// Make sure the end node isn't a ancestor of the start node
+					// if (SEGraph.this.getAncestors(SEGraph.this.startNode)
+					// .contains(SEGraph.this.endNode)) {
+					// SEGraph.this.startNode = null;
+					// return;
+					// }
+
+					if (SEGraph.this.startNode != null
+							&& SEGraph.this.endNode != null) {
+						if (!UndoManager.getInstance().hasOpenUndoableAction())
+							UndoManager.getInstance().startUndoableAction(
+									"Creating group from "
+											+ SEGraph.this.startNode + " to "
+											+ SEGraph.this.endNode);
+
+						System.out.println("DEBUG: starting node: "
+								+ SEGraph.this.startNode);
+						System.out.println("DEBUG: ending node: "
+								+ SEGraph.this.endNode);
+
+						SEGraph.this.createNodeGroupAt(SEGraph.this.startNode,
+								SEGraph.this.endNode);
+
+						UndoManager.getInstance().endUndoableAction();
+
+						SEGraph.this.startNode = null;
+					}
+				}
+			}
 		}
 
 		@Override
@@ -1187,29 +1260,6 @@ public class SEGraph<E> extends JComponent {
 
 					UndoManager.getInstance().endUndoableAction();
 				}
-			} else if (mode == Mode.GROUP) {
-				if (this.lastEnteredNode != null
-						&& this.lastEnteredNode != node) {
-//					if (!UndoManager.getInstance().hasOpenUndoableAction())
-//						UndoManager.getInstance().startUndoableAction(
-//								"Creating group from "
-//										+ node + " to "
-//										+ this.secondLastEnteredNode);
-//
-//					SEGraph.this.createNodeGroupAt(node, this.secondLastEnteredNode);
-//					
-//					System.out.println("DEBUG: start node: " + node);
-//					System.out.println("DEBUG: ending node: " + this.secondLastEnteredNode);
-//
-//					System.out.println("Debug: children node " + node.);
-//					UndoManager.getInstance().endUndoableAction();
-				}
-			} else if (mode == Mode.UNGROUP) {
-				if (!UndoManager.getInstance().hasOpenUndoableAction())
-					UndoManager.getInstance().startUndoableAction(
-							"Ungrouping at " + node);
-
-				UndoManager.getInstance().endUndoableAction();
 			}
 
 			SEFocusManager.getInstance().setFocus(SEGraph.this);
