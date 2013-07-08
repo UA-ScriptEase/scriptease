@@ -257,16 +257,21 @@ public class LibraryPanel extends JTabbedPane {
 			}
 		});
 
-		TranslatorManager.getInstance().addTranslatorObserver(searchField,
-				new TranslatorObserver() {
-					@Override
-					public void translatorLoaded(Translator newTranslator) {
-						searchField.setEnabled(TranslatorManager.getInstance()
-								.getActiveTranslator() != null);
-					}
-				});
 		searchField.setEnabled(TranslatorManager.getInstance()
 				.getActiveTranslator() != null);
+
+		SEModelManager.getInstance().addSEModelObserver(searchField,
+				new SEModelObserver() {
+					@Override
+					public void modelChanged(SEModelEvent event) {
+						if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
+							final SEModel model = event.getPatternModel();
+
+							searchField.setEnabled(model != null
+									&& model.getTranslator() != null);
+						}
+					}
+				});
 
 		typeFilter.setAction(new Runnable() {
 			@Override

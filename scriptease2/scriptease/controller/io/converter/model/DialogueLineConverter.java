@@ -37,15 +37,15 @@ public class DialogueLineConverter implements Converter {
 		final String imageName;
 		final String audioName;
 
-		if(image != null)
+		if (image != null)
 			imageName = image.getName();
 		else
 			imageName = null;
-		if(audio != null) 
+		if (audio != null)
 			audioName = audio.getName();
 		else
 			audioName = null;
-		
+
 		XMLNode.NAME.writeString(writer, line.getName());
 		XMLNode.CHILDREN.writeObject(writer, context, line.getChildren());
 		XMLNode.ENABLED.writeBoolean(writer, line.isEnabled());
@@ -72,7 +72,8 @@ public class DialogueLineConverter implements Converter {
 
 		name = XMLNode.NAME.readString(reader);
 
-		// TODO this.
+		// TODO This isn't the way we should be loading stuff from XML. We need
+		// to use XMLNode methods
 		reader.moveDown();
 		if (reader.hasMoreChildren())
 			if (!reader.getNodeName().equalsIgnoreCase(TAG_CHILDREN)) {
