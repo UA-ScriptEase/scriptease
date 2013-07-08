@@ -16,7 +16,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.ResourceTreeObserver;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
@@ -24,10 +23,8 @@ import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.ui.ScriptEaseUI;
-import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
-import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Displays a tree of game objects and contains various methods of filtering
@@ -42,11 +39,16 @@ public class ResourcePanel extends JPanel {
 
 	private final ResourceTree resources;
 
+	/**
+	 * Gets the sole instance of the resource panel.
+	 * 
+	 * @return
+	 */
 	public static ResourcePanel getInstance() {
 		return ResourcePanel.instance;
 	}
 
-	public ResourcePanel() {
+	private ResourcePanel() {
 		this.resources = new ResourceTree();
 
 		final JPanel filterPane;
@@ -133,38 +135,19 @@ public class ResourcePanel extends JPanel {
 				new SEModelObserver() {
 
 					public void modelChanged(SEModelEvent event) {
-						final SEModelEvent.Type eventType = event
-								.getEventType();
+						final ResourcePanel panel = ResourcePanel.this;
+						final SEModelEvent.Type eventType;
+
+						eventType = event.getEventType();
 
 						if (eventType == SEModelEvent.Type.ACTIVATED) {
-							ResourcePanel.this.resources.fillTree();
-
-							final SEModel model = event.getPatternModel();
-
-							if (model != null) {
-								ResourcePanel.this.resources
-										.filterByTypes(model.getTypeKeywords());
-
-								model.process(new ModelAdapter() {
-									@Override
-									public void processLibraryModel(
-											LibraryModel libraryModel) {
-										ResourcePanel.this.setVisible(false);
-									}
-
-									@Override
-									public void processStoryModel(
-											StoryModel storyModel) {
-										ResourcePanel.this.setVisible(true);
-									}
-								});
-
-							}
+							panel.resources.fillTree();
+							panel.setVisible(event.getPatternModel() instanceof StoryModel);
 						} else if (eventType == SEModelEvent.Type.REMOVED
 								&& SEModelManager.getInstance()
 										.getActiveModel() == null) {
-							ResourcePanel.this.resources.fillTree();
-							ResourcePanel.this.setVisible(false);
+							panel.resources.fillTree();
+							panel.setVisible(false);
 						}
 					}
 				});
@@ -181,14 +164,5 @@ public class ResourcePanel extends JPanel {
 	 */
 	public void addObserver(Object object, ResourceTreeObserver observer) {
 		this.resources.addObserver(object, observer);
-	}
-
-	/**
-	 * Updates the panels in a category of the passed in type.
-	 * 
-	 * @param type
-	 */
-	public void updateCategory(String type) {
-
 	}
 }

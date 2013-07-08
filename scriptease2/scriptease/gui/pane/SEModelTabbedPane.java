@@ -50,8 +50,6 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.action.file.CloseModelAction;
-import scriptease.gui.action.graphs.GraphToolBarModeAction;
-import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -63,6 +61,7 @@ import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.BiHashMap;
+import scriptease.util.StringOp;
 
 /**
  * The model tab panel creates a new tab for each new model created. Using an
@@ -281,13 +280,13 @@ class SEModelTabbedPane extends JTabbedPane {
 		topLevelPane = new JPanel(layout);
 
 		storyPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		graphToolBar = ComponentFactory.buildGraphEditorToolBar();
-
 		storyGraph = SEGraphFactory.buildStoryGraph(start);
+		graphToolBar = storyGraph.getToolBar();
 
-		dialogueEditor = new DialogueEditorPanel(model);
 		backToStory = new JButton(
 				"<html><center>Back<br>to<br>Story</center></html>");
+
+		dialogueEditor = new DialogueEditorPanel(model, backToStory);
 
 		storyComponentTree = new StoryComponentPanelTree(start);
 		graphRedrawer = new StoryComponentObserver() {
@@ -366,9 +365,6 @@ class SEModelTabbedPane extends JTabbedPane {
 
 		storyGraphPanel.setLayout(new BorderLayout());
 
-		// Reset the ToolBar to select and add the Story Graph to it.
-		GraphToolBarModeAction.setMode(GraphToolBarModeAction.getMode());
-
 		storyGraphScrollPane.setBorder(BorderFactory.createEmptyBorder());
 		storyGraphPanel.setBorder(BorderFactory
 				.createEtchedBorder(EtchedBorder.LOWERED));
@@ -411,6 +407,7 @@ class SEModelTabbedPane extends JTabbedPane {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				layout.show(topLevelPane, STORY_EDITOR);
+				dialogueEditor.setDialogueLine(null);
 			}
 		});
 
@@ -421,11 +418,44 @@ class SEModelTabbedPane extends JTabbedPane {
 					}
 
 					@Override
-					public void resourceEditButtonPressed(Resource resource) {
+					public void resourceEditButtonClicked(Resource resource) {
 						if (resource instanceof DialogueLine) {
-							dialogueEditor.setDialogueLine(
-									(DialogueLine) resource, backToStory);
+							dialogueEditor
+									.setDialogueLine((DialogueLine) resource);
 							layout.show(topLevelPane, DIALOGUE_EDITOR);
+						}
+					}
+
+					@Override
+					public void resourceAddButtonClicked(String type) {
+						final StoryModel story;
+						final String dialogueType;
+
+						story = SEModelManager.getInstance()
+								.getActiveStoryModel();
+						dialogueType = story.getModule().getDialogueType();
+
+						if (StringOp.exists(dialogueType)
+								&& type.equals(dialogueType))
+							story.createAndAddDialogueRoot();
+
+					}
+
+					@Override
+					public void resourceRemoveButtonClicked(Resource resource) {
+						if (!(resource instanceof DialogueLine))
+							return;
+
+						final StoryModel story;
+
+						story = SEModelManager.getInstance()
+								.getActiveStoryModel();
+
+						story.removeDialogueRoot((DialogueLine) resource);
+
+						if (dialogueEditor.getDialogueLine() == resource) {
+							layout.show(topLevelPane, STORY_EDITOR);
+							dialogueEditor.setDialogueLine(null);
 						}
 					}
 				});

@@ -96,7 +96,6 @@ public class CodeGenerator {
 
 		location = context.getLocationInfo();
 		translator = context.getTranslator();
-		
 		slotName = location.getSlot();
 		slot = context.getModel().getSlot(slotName);
 

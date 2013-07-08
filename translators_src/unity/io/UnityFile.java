@@ -103,7 +103,6 @@ public class UnityFile extends Resource {
 	 */
 	protected UnityFile(File location, Collection<String> types)
 			throws IOException {
-		
 		if (!location.exists())
 			throw new FileNotFoundException("Unity file "
 					+ location.getAbsolutePath() + " went missing!");
@@ -172,7 +171,7 @@ public class UnityFile extends Resource {
 		// Build all of the resources
 		this.unityResources.addAll(UnityResourceFactory.getInstance()
 				.buildResources(eventIterable.iterator()));
-		
+
 		for (Entry<String, File> entry : guidsToMetaFiles.entrySet()) {
 			final String metaName = entry.getValue().getName();
 			final String guid = entry.getKey();
@@ -249,7 +248,7 @@ public class UnityFile extends Resource {
 			// cause confusion.
 			if (types.contains(UnityType.PREFAB.getName()))
 				break;
-			
+
 			if (resource.getOwner() == this
 					&& resource.getType() == UnityType.GAMEOBJECT
 					&& resource != this.scriptEaseObject) {
@@ -429,7 +428,7 @@ public class UnityFile extends Resource {
 	public File getLocation() {
 		return this.location;
 	}
-	
+
 	@Override
 	public Collection<String> getTypes() {
 		return this.types;

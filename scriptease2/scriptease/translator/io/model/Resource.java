@@ -1,6 +1,7 @@
 package scriptease.translator.io.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import scriptease.model.TypedComponent;
@@ -66,12 +67,29 @@ public abstract class Resource implements TypedComponent {
 	}
 
 	/**
+	 * Returns all descendants of the editable resource including the resource
+	 * itself.
+	 * 
+	 * @return
+	 */
+	public Collection<Resource> getDescendants() {
+		final Collection<Resource> descendants = new ArrayList<Resource>();
+		descendants.add(this);
+
+		for (Resource child : this.getChildren()) {
+			descendants.addAll(child.getDescendants());
+		}
+
+		return descendants;
+	}
+
+	/**
 	 * Determines if this resource is a reference placeholder for another
 	 * resource. This method by default returns false and so must be overridden
 	 * to be useful.
 	 * 
-	 * TODO We should return the link instead of checking for one.
-	 * Ticket: 48086075
+	 * TODO We should return the link instead of checking for one. Ticket:
+	 * 48086075
 	 * 
 	 * @return <code>true</code> if the node is a link.
 	 */

@@ -1,7 +1,6 @@
 package io;
 
-import java.util.Arrays;
-import java.util.Collection;
+import scriptease.translator.io.model.Resource;
 
 /**
  * Neverwinter Nights implementation of {@link Resource}.
@@ -10,12 +9,7 @@ import java.util.Collection;
  */
 public final class NWNObject extends NWNGameConstant {
 	public NWNObject(String resRef, String type, String name, String tag) {
-		this(resRef, Arrays.asList(type), name, tag);
-	}
-
-	public NWNObject(String resRef, Collection<String> types, String name,
-			String tag) {
-		super(resRef, types, name, tag);
+		super(resRef, type, name, tag);
 	}
 
 	@Override

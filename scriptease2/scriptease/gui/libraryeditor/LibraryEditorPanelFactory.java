@@ -16,7 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import javax.swing.border.TitledBorder;
 
 import scriptease.ScriptEase;
@@ -29,9 +28,6 @@ import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
-import scriptease.gui.action.graphs.GraphToolBarModeAction;
-import scriptease.gui.action.graphs.GraphToolBarModeAction.ToolBarMode;
-import scriptease.gui.component.ComponentFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -94,7 +90,6 @@ public class LibraryEditorPanelFactory {
 			final KnowIt knowIt) {
 		final JPanel bindingPanel;
 		final JPanel describeItGraphPanel;
-		final JToolBar graphToolBar;
 
 		final EffectHolderPanel effectHolder;
 		final SetEffectObserver effectObserver;
@@ -102,7 +97,6 @@ public class LibraryEditorPanelFactory {
 
 		bindingPanel = new JPanel();
 		describeItGraphPanel = new JPanel();
-		graphToolBar = ComponentFactory.buildGraphEditorToolBar();
 
 		effectHolder = new EffectHolderPanel(describeIt.getTypes());
 
@@ -154,19 +148,9 @@ public class LibraryEditorPanelFactory {
 
 		effectHolder.addSetEffectObserver(effectObserver);
 
-		/*
-		 * TODO We may need a listener that updates the graph on model changes.
-		 * Not implementing this unless it's necessary, because the only case
-		 * where this should happen is if we have two library editors open. In
-		 * that case, we need to refactor a lot of code here anyways, incl this
-		 */
-
-		// Reset the ToolBar to select and add the Graph to it.
-		GraphToolBarModeAction.setMode(ToolBarMode.SELECT);
-
 		// Set up the JPanel containing the graph
 		describeItGraphPanel.setLayout(new BorderLayout());
-		describeItGraphPanel.add(graphToolBar, BorderLayout.WEST);
+		describeItGraphPanel.add(graph.getToolBar(), BorderLayout.WEST);
 		describeItGraphPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
 
 		bindingPanel

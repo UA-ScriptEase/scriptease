@@ -613,7 +613,7 @@ public class Translator {
 					FileOp.getFileResource(Translator.LIBRARY_SCHEMA_LOCATION))) {
 				System.err.println(LIBRARY_VALIDATION_ERR);
 				return LIBRARY_VALIDATION_ERR;
-				
+
 			} else if (!FileOp.validateXML(languageDictPath, FileOp
 					.getFileResource(Translator.LANGUAGE_DICT_SCHEMA_LOCATION))) {
 				System.err.println(LANGUAGE_DICT_VALIDATION_ERR);
@@ -824,7 +824,6 @@ public class Translator {
 
 		// If the module could not be found, ask the user for its location
 		if (!loader.loadedSuccessfully()) {
-
 			WindowFactory.getInstance().showProblemDialog(
 					"Problem loading Game Module",
 					"I couldn't find a Game File at \"" + location + "\"."
@@ -834,6 +833,8 @@ public class Translator {
 
 			return this.loadModule(newLocation);
 		}
+
+		System.out.println(module + " loaded");
 
 		return module;
 	}

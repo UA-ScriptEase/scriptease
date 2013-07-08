@@ -39,10 +39,10 @@ import scriptease.util.StringOp;
  * @author kschenk
  * 
  */
-public class DialogueLineRenderer extends SEGraphNodeRenderer<DialogueLine> {
+public class DialogueLineNodeRenderer extends SEGraphNodeRenderer<DialogueLine> {
 	final SEGraph<DialogueLine> graph;
 
-	public DialogueLineRenderer(SEGraph<DialogueLine> graph) {
+	public DialogueLineNodeRenderer(SEGraph<DialogueLine> graph) {
 		super(graph);
 		this.graph = graph;
 	}
@@ -54,11 +54,11 @@ public class DialogueLineRenderer extends SEGraphNodeRenderer<DialogueLine> {
 			final JTextField dialogueField;
 			final Runnable commitText;
 
-			dialogueField = new JTextField(node.getDialogue());
+			dialogueField = new JTextField(node.getName());
 			commitText = new Runnable() {
 				@Override
 				public void run() {
-					node.setDialogue(dialogueField.getText());
+					node.setName(dialogueField.getText());
 
 					graph.revalidate();
 					graph.repaint();
@@ -94,7 +94,7 @@ public class DialogueLineRenderer extends SEGraphNodeRenderer<DialogueLine> {
 
 		final GroupLayout layout;
 
-		dialogueArea = new JTextArea(node.getDialogue());
+		dialogueArea = new JTextArea(node.getName());
 		dialogueScrollPane = new JScrollPane(dialogueArea);
 		story = (StoryModel) model;
 		module = story.getModule();
@@ -109,9 +109,6 @@ public class DialogueLineRenderer extends SEGraphNodeRenderer<DialogueLine> {
 						}
 					}
 				});
-		
-		if(node.getDialogue().equals("DebugHere"))
-			System.out.println(node);
 
 		imagePanel = this.createSlot(module.getImageType(), node.getImage(),
 				new StoryComponentObserver() {
@@ -146,7 +143,7 @@ public class DialogueLineRenderer extends SEGraphNodeRenderer<DialogueLine> {
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				node.setDialogue(dialogueArea.getText());
+				node.setName(dialogueArea.getText());
 			}
 
 			@Override

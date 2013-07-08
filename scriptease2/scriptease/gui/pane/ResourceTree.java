@@ -28,6 +28,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import scriptease.controller.observer.ObserverManager;
+import scriptease.controller.observer.ResourceObserver;
+import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.ResourceTreeObserver;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ComponentFactory;
@@ -38,7 +40,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
-import scriptease.model.semodel.dialogue.DialogueLine;
+import scriptease.translator.io.model.EditableResource;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.GUIOp;
 import scriptease.util.StringOp;
@@ -52,8 +54,6 @@ import scriptease.util.StringOp;
  */
 @SuppressWarnings("serial")
 class ResourceTree extends JPanel {
-	// TODO The panels + containers should listen to search changes.
-
 	private Resource selectedResource = null;
 
 	private String filterText;
@@ -116,6 +116,7 @@ class ResourceTree extends JPanel {
 	 */
 	protected void fillTree() {
 		this.containers.clear();
+		this.filterTypes.clear();
 		this.removeAll();
 
 		final StoryModel story;
@@ -127,20 +128,21 @@ class ResourceTree extends JPanel {
 			this.revalidate();
 			return;
 		}
+		this.filterTypes.addAll(story.getTypeKeywords());
 
 		final List<String> types;
 
-		types = new ArrayList<String>(story.getTypeKeywords());
+		types = new ArrayList<String>(this.filterTypes);
 
 		Collections.sort(types);
 
 		// Add the dialogue type even if there are no dialogues.
 		for (String type : types) {
-
 			final ResourceContainer containerPanel;
+			final String displayText;
 
-			containerPanel = new ResourceContainer(
-					story.getTypeDisplayText(type));
+			displayText = story.getTypeDisplayText(type);
+			containerPanel = new ResourceContainer(type, displayText);
 
 			this.add(containerPanel);
 			this.containers.add(containerPanel);
@@ -148,15 +150,6 @@ class ResourceTree extends JPanel {
 
 		this.repaint();
 		this.revalidate();
-	}
-
-	protected void updateCategory(String type) {
-		for (ResourceContainer container : this.containers) {
-			if (container.type.equals(type)) {
-				container.updateResourcePanels();
-				break;
-			}
-		}
 	}
 
 	/**
@@ -180,10 +173,6 @@ class ResourceTree extends JPanel {
 	protected void filterByTypes(Collection<String> filterTypes) {
 		this.filterTypes.clear();
 		this.filterTypes.addAll(filterTypes);
-
-		// TODO Filter types arent working...
-
-		// TODO Filtering is beyond slow.
 
 		for (ResourceContainer container : this.containers) {
 			container.updateResourcePanels();
@@ -213,6 +202,32 @@ class ResourceTree extends JPanel {
 	}
 
 	/**
+	 * Notifies all {@link ResourceTreeObserver}s of an add button getting
+	 * clicked.
+	 * 
+	 * @param resource
+	 */
+	private void notifyAddButtonClicked(String type) {
+		for (ResourceTreeObserver observer : this.observerManager
+				.getObservers()) {
+			observer.resourceAddButtonClicked(type);
+		}
+	}
+
+	/**
+	 * Notifies all {@link ResourceTreeObserver}s of a remove button getting
+	 * clicked.
+	 * 
+	 * @param resource
+	 */
+	private void notifyRemoveButtonClicked(Resource resource) {
+		for (ResourceTreeObserver observer : this.observerManager
+				.getObservers()) {
+			observer.resourceRemoveButtonClicked(resource);
+		}
+	}
+
+	/**
 	 * Notifies all {@link ResourceTreeObserver}s of the edit button getting
 	 * clicked.
 	 * 
@@ -221,10 +236,11 @@ class ResourceTree extends JPanel {
 	private void notifyEditButtonClicked(Resource resource) {
 		for (ResourceTreeObserver observer : this.observerManager
 				.getObservers()) {
-			observer.resourceEditButtonPressed(resource);
+			observer.resourceEditButtonClicked(resource);
 		}
 	}
 
+	// TODO This will need to be removed. See other TODO items.
 	private String getDialogueType() {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
@@ -270,6 +286,13 @@ class ResourceTree extends JPanel {
 		return nodeContainsText;
 	}
 
+	/**
+	 * Container for all resource panels in the tree. Represents a type in the
+	 * tree.
+	 * 
+	 * @author kschenk
+	 * 
+	 */
 	private class ResourceContainer extends JPanel {
 		private final Map<Resource, JPanel> resourcesToPanels;
 		private final String type;
@@ -281,10 +304,10 @@ class ResourceTree extends JPanel {
 		 * 
 		 * @param typeName
 		 *            The name of the container
-		 * @param gameConstants
-		 *            The list of GameConstants in the container
+		 * @param displayText
+		 *            The text to display as the name.
 		 */
-		public ResourceContainer(String type) {
+		public ResourceContainer(final String type, String displayText) {
 			this.type = type;
 			this.container = new JPanel();
 			this.resourcesToPanels = new HashMap<Resource, JPanel>();
@@ -296,7 +319,7 @@ class ResourceTree extends JPanel {
 
 			button = ScriptWidgetFactory.buildExpansionButton(false);
 
-			categoryLabel = new JLabel(type);
+			categoryLabel = new JLabel(displayText);
 			categoryPanel = new JPanel();
 
 			categoryLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -335,6 +358,16 @@ class ResourceTree extends JPanel {
 			categoryPanel.add(categoryLabel);
 			categoryPanel.add(ComponentFactory.buildSpacer(15, 15));
 
+			/*
+			 * TODO "Add buttons" are dependant on if the type is a dialouge
+			 * type. In the future, we may want to change this somehow. Since we
+			 * don't necessarily have any resources in the category, we don't
+			 * know if they will be EditableResources.
+			 * 
+			 * Likely, once we change types from strings to GameTypes (ticket
+			 * #52135385), the GameType itself almost needs to have an "addable"
+			 * property, meaning we can add new resources of that type.
+			 */
 			final String dialogueType = ResourceTree.this.getDialogueType();
 
 			if (StringOp.exists(dialogueType) && type.equals(dialogueType)) {
@@ -343,14 +376,7 @@ class ResourceTree extends JPanel {
 				addButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO Make a listener fire instead. "Resource added"
-						// or something.
-						final StoryModel story;
-
-						story = SEModelManager.getInstance()
-								.getActiveStoryModel();
-
-						story.addDialogueRoot();
+						ResourceTree.this.notifyAddButtonClicked(type);
 
 						ResourceContainer.this.updateResourcePanels();
 					}
@@ -371,8 +397,6 @@ class ResourceTree extends JPanel {
 		}
 
 		private void updateResourcePanels() {
-			// TODO need to update when the resource is changed..
-			
 			final StoryModel story;
 
 			story = SEModelManager.getInstance().getActiveStoryModel();
@@ -388,6 +412,7 @@ class ResourceTree extends JPanel {
 
 			final List<Resource> resources;
 
+			// TODO See above note on dialogue types.
 			if (StringOp.exists(dialogueType) && type.equals(dialogueType))
 				resources = new ArrayList<Resource>(story.getDialogueRoots());
 			else {
@@ -442,6 +467,68 @@ class ResourceTree extends JPanel {
 		}
 
 		/**
+		 * An observer that updates the category based on changes to an
+		 * {@link EditableResource}.
+		 * 
+		 * @param nameLabel
+		 * @return
+		 */
+		private ResourceObserver resourceObserver(final JLabel nameLabel) {
+			return new ResourceObserver() {
+				private JPanel refreshPanel(EditableResource resource) {
+					JPanel panel = null;
+					Resource toRemove = null;
+
+					if (resourcesToPanels.containsKey(resource)) {
+						toRemove = resource;
+						panel = resourcesToPanels.get(resource);
+					} else
+						for (Resource key : resourcesToPanels.keySet()) {
+							if (key.getDescendants().contains(resource)) {
+								panel = resourcesToPanels.get(key);
+								toRemove = key;
+								break;
+							}
+						}
+
+					if (panel != null) {
+						container.remove(panel);
+						resourcesToPanels.remove(toRemove);
+						updateResourcePanels();
+					}
+
+					return panel;
+				}
+
+				@Override
+				public void childAdded(EditableResource resource, Resource child) {
+					final JPanel panel = this.refreshPanel(resource);
+
+					if (panel != null && child instanceof EditableResource)
+						((EditableResource) child).addObserver(resource, this);
+
+				}
+
+				@Override
+				public void childRemoved(EditableResource resource,
+						Resource child) {
+					this.refreshPanel(resource);
+				}
+
+				@Override
+				public void nameChanged(EditableResource resource, String name) {
+					// If the root changed, we refresh the panel so it gets
+					// rearranged alphabetically.
+					if (resourcesToPanels.containsKey(resource)) {
+						refreshPanel(resource);
+					}
+
+					nameLabel.setText(name);
+				}
+			};
+		}
+
+		/**
 		 * JPanel for the passed in Resource. This panel contains a binding
 		 * widget that the user can then drag and drop into the appropriate
 		 * slots.
@@ -487,8 +574,16 @@ class ResourceTree extends JPanel {
 						gameObjectBindingWidget.getBackground(), 1.24));
 			}
 
-			gameObjectBindingWidget.add(ScriptWidgetFactory.buildLabel(
-					resourceName, Color.WHITE));
+			final JLabel nameLabel;
+
+			nameLabel = ScriptWidgetFactory.buildLabel(resourceName,
+					Color.WHITE);
+
+			gameObjectBindingWidget.add(nameLabel);
+
+			if (resource instanceof EditableResource)
+				((EditableResource) resource).addObserver(this
+						.resourceObserver(nameLabel));
 
 			panel.add(Box.createHorizontalStrut(STRUT_SIZE));
 
@@ -533,9 +628,8 @@ class ResourceTree extends JPanel {
 
 			resourcePanel.add(gameObjectBindingWidget);
 
-			if (resource.getTypes().contains(
-					ResourceTree.this.getDialogueType())
-					&& resource instanceof DialogueLine) {
+			if (resource instanceof EditableResource
+					&& ((EditableResource) resource).isRoot()) {
 
 				final JButton editButton = ComponentFactory.buildEditButton();
 				final JButton removeButton = ComponentFactory
@@ -551,18 +645,11 @@ class ResourceTree extends JPanel {
 				removeButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO This should fire listeners instead.
-						if (!(resource instanceof DialogueLine))
-							return;
+						ResourceTree.this.notifyRemoveButtonClicked(resource);
 
-						final StoryModel story;
 						final Container parent;
 
-						story = SEModelManager.getInstance()
-								.getActiveStoryModel();
 						parent = panel.getParent();
-
-						story.removeDialogueRoot((DialogueLine) resource);
 
 						if (parent != null) {
 							parent.remove(panel);
@@ -596,7 +683,7 @@ class ResourceTree extends JPanel {
 				}
 			});
 
-			ResourceTree.this.addObserver(this, new ResourceTreeObserver() {
+			ResourceTree.this.addObserver(this, new ResourceTreeAdapter() {
 
 				@Override
 				public void resourceSelected(Resource selected) {
@@ -605,10 +692,6 @@ class ResourceTree extends JPanel {
 					else
 						panel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
 
-				}
-
-				@Override
-				public void resourceEditButtonPressed(Resource resource) {
 				}
 			});
 

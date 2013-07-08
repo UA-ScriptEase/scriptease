@@ -4,87 +4,105 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import scriptease.model.semodel.StoryModel;
+import scriptease.translator.io.model.EditableResource;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
 
 /**
  * 
  * Represents a dialogue line resource. This is translator independent. The
- * translator handles these in its {@link GameModule} implementation.
+ * translator handles these in its {@link GameModule} implementation. The first
+ * line in a Dialogue Line tree will always be a Dialogue that represents the
+ * conversation as a whole. The rest of the lines alternate between true and
+ * false.
  * 
- * TODO Comment this class furtehr
  * 
  * @author kschenk
  * 
  */
-public final class DialogueLine extends Resource {
+public final class DialogueLine extends EditableResource {
 	private static final String DEFAULT_DIALOGUE = "New Dialogue Line";
 
-	private final List<DialogueLine> parents;
-	private final List<DialogueLine> children;
-	private final GameModule module;
+	private final StoryModel story;
 
-	private String dialogue;
 	private boolean enabled;
 	private Resource image;
 	private Resource audio;
 
-	public DialogueLine(GameModule module) {
-		this(module, new ArrayList<DialogueLine>());
+	/**
+	 * Creates a new dialogue line for the story.
+	 * 
+	 * @param story
+	 */
+	public DialogueLine(StoryModel story) {
+		this(story, DEFAULT_DIALOGUE, true, null, null,
+				new ArrayList<DialogueLine>());
 	}
 
-	public DialogueLine(GameModule module, List<DialogueLine> parents) {
-		this(DEFAULT_DIALOGUE, true, null, null, new ArrayList<DialogueLine>(),
-				module, parents);
-	}
-
-	public DialogueLine(String dialogue, boolean enabled, Resource image,
-			Resource audio, List<DialogueLine> children, GameModule module,
-			List<DialogueLine> parents) {
-		this.dialogue = dialogue;
+	/**
+	 * Creates a new dialouge line with the passed in parameters.
+	 * 
+	 * @param story
+	 *            The story to create the dialogue line for
+	 * @param dialogue
+	 *            The text to be displayed
+	 * @param enabled
+	 *            Whether the dialogue line is enabled or disabled by default
+	 * @param image
+	 *            The image attached to the line
+	 * @param audio
+	 *            Audio attached to the line
+	 * @param children
+	 *            Any dialouge line children attached.
+	 */
+	public DialogueLine(StoryModel story, String dialogue, boolean enabled,
+			Resource image, Resource audio, List<DialogueLine> children) {
 		this.enabled = enabled;
 		this.image = image;
 		this.audio = audio;
-		this.children = children;
-		this.module = module;
-		this.parents = parents;
-	}
+		this.story = story;
 
-	public boolean removeChild(DialogueLine dialogueLine) {
-		dialogueLine.parents.remove(this);
-		return this.children.remove(dialogueLine);
-	}
-
-	public boolean addChild(DialogueLine dialogueLine) {
-		dialogueLine.parents.add(this);
-		return this.children.add(dialogueLine);
-	}
-
-	public boolean isRoot() {
-		return this.parents == null || this.parents.isEmpty();
-	}
-
-	public Collection<DialogueLine> getParents() {
-		return this.parents;
+		this.setName(dialogue);
 	}
 
 	@Override
 	public List<DialogueLine> getChildren() {
-		return this.children;
+		// TODO There has to be a better way to do this..
+		final List<DialogueLine> children = new ArrayList<DialogueLine>();
+
+		for (Resource resource : super.getChildren()) {
+			if (resource instanceof DialogueLine) {
+				children.add((DialogueLine) resource);
+			} else
+				throw new IllegalStateException(
+						"Encountered non-dialogue line " + resource
+								+ " in children of " + this);
+		}
+
+		return children;
 	}
 
-	public void setDialogue(String dialogue) {
-		this.dialogue = dialogue;
-	}
-
+	/**
+	 * Set the default enabled state of the dialogue line.
+	 * 
+	 * @param enabled
+	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
 
+	/**
+	 * Set the image that will be displayed in game by the dialogue line.
+	 * 
+	 * @param image
+	 * @return
+	 */
 	public boolean setImage(Resource image) {
 		final boolean setImage;
 
-		setImage = image.getTypes().contains(this.module.getImageType());
+		setImage = image.getTypes().contains(
+				this.story.getModule().getImageType());
 
 		if (setImage)
 			this.image = image;
@@ -92,10 +110,17 @@ public final class DialogueLine extends Resource {
 		return setImage;
 	}
 
+	/**
+	 * Set the audio that will be played in game by the dialogue line.
+	 * 
+	 * @param audio
+	 * @return
+	 */
 	public boolean setAudio(Resource audio) {
 		final boolean setAudio;
 
-		setAudio = audio.getTypes().contains(this.module.getAudioType());
+		setAudio = audio.getTypes().contains(
+				this.story.getModule().getAudioType());
 
 		if (setAudio)
 			this.audio = audio;
@@ -103,75 +128,84 @@ public final class DialogueLine extends Resource {
 		return setAudio;
 	}
 
+	/**
+	 * Returns whether the dialogue line is enabled by default.
+	 * 
+	 * @return
+	 */
 	public boolean isEnabled() {
 		return this.enabled;
 	}
 
-	public String getDialogue() {
-		return this.dialogue;
-	}
-
+	/**
+	 * Returns the audio that will be played in game by the dialogue line.
+	 * 
+	 * @return
+	 */
 	public Resource getAudio() {
 		return this.audio;
 	}
 
+	/**
+	 * Returns the image that will be displayed in game by the dialogue line.
+	 * 
+	 * @return
+	 */
 	public Resource getImage() {
 		return this.image;
 	}
 
-	// TODO TODO TODO!!!!!!!
-	// One or more of these methods may need to be changed.
+	@Override
+	public boolean isRoot() {
+		return this.story.getDialogueRoots().contains(this);
+	}
 
 	@Override
 	public Collection<String> getTypes() {
 		final Collection<String> type = new ArrayList<String>();
 
 		if (this.isRoot())
-			type.add(this.module.getDialogueType());
+			type.add(this.story.getModule().getDialogueType());
 		else
-			type.add(this.module.getDialogueLineType());
+			type.add(this.story.getModule().getDialogueLineType());
 		return type;
 	}
 
+	// TODO TODO TODO!!!!!!!
+	// One or more of these methods may need to be changed.
+
 	@Override
 	public Resource getOwner() {
-		// TODO Auto-generated method stub
+		// TODO Return the speaker? Or don't use it?
 		return super.getOwner();
 	}
 
 	@Override
 	public String getOwnerName() {
-		// TODO Return the speaker name
+		// TODO Should return alternating Speaker 1 and Speaker 2.
 		return super.getOwnerName();
 	}
 
 	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return this.getDialogue();
-	}
-
-	@Override
 	public String getTag() {
-		// TODO Auto-generated method stub
+		// TODO Will tags need to be different..?
 		return this.getName();
 	}
 
 	@Override
 	public String getTemplateID() {
-		// TODO Auto-generated method stub
+		// TODO Does this need to be uniquer? Yes it does!
 		return this.getName();
 	}
 
 	@Override
 	public String getCodeText() {
-		// TODO Auto-generated method stub
 		return this.getName();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
+		// TODO This is wrong. Do we need to override equals, though..?
 		return this == obj;
 	}
 }

@@ -3,6 +3,8 @@ package scriptease.controller.io.converter.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.controller.io.XMLAttribute;
+import scriptease.controller.io.XMLNode;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
@@ -24,15 +26,11 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author mfchurch
  */
 public class LibraryModelConverter implements Converter {
-	private static final String TAG_NAME = "name";
-	private static final String TAG_AUTHOR = "author";
 	private static final String TAG_CAUSES = "Causes";
 	private static final String TAG_DESCRIBE_ITS = "DescribeIts";
 	private static final String TAG_CONTROL_ITS = "ControlIts";
 	private static final String TAG_EFFECTS = "Effects";
-	private static final String TAG_TYPES = "Types";
 	private static final String TAG_TYPE_CONVERTERS = "TypeConverters";
-	private static final String TAG_SLOTS = "Slots";
 	private static final String TAG_SLOT_DEFAULT_FORMAT_KEYWORD = "defaultFormat";
 
 	@Override
@@ -40,47 +38,23 @@ public class LibraryModelConverter implements Converter {
 			MarshallingContext context) {
 		final LibraryModel library = (LibraryModel) source;
 
-		// name
-		writer.addAttribute(TAG_NAME, library.getTitle());
+		XMLAttribute.NAME.write(writer, library.getTitle());
+		XMLAttribute.AUTHOR.write(writer, library.getAuthor());
 
-		// author
-		writer.addAttribute(TAG_AUTHOR, library.getAuthor());
+		XMLNode.TYPES.writeObject(writer, context, library.getGameTypes());
+		XMLNode.SLOTS.writeObject(writer, context, library.getSlots(),
+				XMLAttribute.DEFAULT_FORMAT, library.getSlotDefaultFormat());
 
-		// types
-		writer.startNode(TAG_TYPES);
-		context.convertAnother(library.getGameTypes());
-		writer.endNode();
-
-		// slots
-		writer.startNode(TAG_SLOTS);
-		writer.addAttribute(TAG_SLOT_DEFAULT_FORMAT_KEYWORD,
-				library.getSlotDefaultFormat());
-		context.convertAnother(library.getSlots());
-		writer.endNode();
-
-		// causes
-		writer.startNode(TAG_CAUSES);
-		context.convertAnother(library.getCausesCategory().getChildren());
-		writer.endNode();
-
-		// effects
-		writer.startNode(TAG_EFFECTS);
-		context.convertAnother(library.getEffectsCategory().getChildren());
-		writer.endNode();
-
-		// descriptions
-		writer.startNode(TAG_DESCRIBE_ITS);
-		context.convertAnother(library.getDescribeIts());
-		writer.endNode();
-
-		writer.startNode(TAG_CONTROL_ITS);
-		context.convertAnother(library.getControllersCategory().getChildren());
-		writer.endNode();
-
-		// typeconverters
-		writer.startNode(TAG_TYPE_CONVERTERS);
-		context.convertAnother(library.getTypeConverter().getConverterDoIts());
-		writer.endNode();
+		XMLNode.CAUSES.writeObject(writer, context, library.getCausesCategory()
+				.getChildren());
+		XMLNode.EFFECTS.writeObject(writer, context, library
+				.getEffectsCategory().getChildren());
+		XMLNode.DESCRIBEITS.writeObject(writer, context,
+				library.getDescribeIts());
+		XMLNode.CONTROLITS.writeObject(writer, context, library
+				.getControllersCategory().getChildren());
+		XMLNode.TYPECONVERTERS.writeObject(writer, context, library
+				.getTypeConverter().getConverterDoIts());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -91,24 +65,11 @@ public class LibraryModelConverter implements Converter {
 
 		System.out.println("Unmarshalling Library Model");
 
-		// name
-		library.setTitle(reader.getAttribute(TAG_NAME));
+		library.setTitle(XMLAttribute.NAME.read(reader));
+		library.setAuthor(XMLAttribute.AUTHOR.read(reader));
 
-		// author
-		library.setAuthor(reader.getAttribute(TAG_AUTHOR));
-
-		// types
-		reader.moveDown();
-		if (reader.hasMoreChildren()) {
-			if (!reader.getNodeName().equalsIgnoreCase(TAG_TYPES))
-				System.err.println("Expected " + TAG_TYPES + ", but found "
-						+ reader.getNodeName());
-			else {
-				library.addGameTypes(((Collection<GameType>) context
-						.convertAnother(library, ArrayList.class)));
-			}
-		}
-		reader.moveUp();
+		library.addGameTypes(XMLNode.TYPES.readObjectCollection(reader,
+				context, GameType.class));
 
 		// slots
 		reader.moveDown();
