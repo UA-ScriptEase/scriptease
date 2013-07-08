@@ -673,6 +673,7 @@ public class SEGraph<E> extends JComponent {
 	 * @param endingNode
 	 *            The ending node of the group
 	 */
+	@SuppressWarnings("unused")
 	private void createNodeGroupAt(E startingNode, E endingNode) {
 		final Collection<E> nodeGroup;
 
