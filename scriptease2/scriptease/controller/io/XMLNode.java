@@ -31,7 +31,9 @@ public enum XMLNode {
 
 	CODESYMBOL("CodeSymbol"),
 	
-	CONTROLITS("ControlIts"),
+	CONTROLIT("ControlIt"),
+	
+	CONTROLITS("ControlIts", CONTROLIT),
 
 	DIALOGUE_LINE("DialogueLine"),
 
