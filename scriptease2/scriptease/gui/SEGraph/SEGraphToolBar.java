@@ -50,7 +50,7 @@ public class SEGraphToolBar extends JToolBar {
 	 * 
 	 */
 	public static enum Mode {
-		SELECT, INSERT, DELETE, CONNECT, DISCONNECT;
+		SELECT, INSERT, DELETE, CONNECT, DISCONNECT, GROUP, UNGROUP;
 
 		private static final String CURSOR_DIRECTORY = "scriptease/resources/icons/buttonicons/";
 		private static final String CURSOR_EXTENSION = ".png";

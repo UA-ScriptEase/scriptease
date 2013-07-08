@@ -2,11 +2,14 @@ package scriptease.controller.io;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.io.converter.IdentityArrayListConverter;
@@ -114,42 +117,6 @@ public class FileIO {
 	private IoMode mode;
 
 	/**
-	 * Saves a CSV file to disk.
-	 * 
-	 * @param data
-	 *            The data to generate in the CSV file.
-	 * @param file
-	 *            The file path to save the CSV in.
-	 */
-	public void saveCSV(Collection<? extends Collection<String>> data, File file) {
-		final FileWriter out;
-		String output;
-
-		try {
-			out = new FileWriter(file);
-
-			for (Collection<String> row : data) {
-				output = "";
-
-				for (String value : row)
-					output += value + ",";
-
-				// Remove the last comma.
-				output = output.substring(0, output.length() - 1);
-
-				output += "\n";
-
-				out.append(output);
-			}
-
-			out.flush();
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * Reads a Story from disk.
 	 * 
 	 * @param location
@@ -235,9 +202,11 @@ public class FileIO {
 	 *            The model to save to disk.
 	 * @param location
 	 *            the location to save to.
+	 * @param backup
+	 *            Whether to create a backup copy of the story model.
 	 */
-	public void writeStoryModel(SEModel model, File location) {
-		this.writeData(model, location, IoMode.STORY);
+	public void writeStoryModel(SEModel model, File location, boolean backup) {
+		this.writeData(model, location, IoMode.STORY, backup);
 	}
 
 	/**
@@ -247,38 +216,157 @@ public class FileIO {
 	 *            The dictionary to write.
 	 * @param location
 	 *            The file path to write to.
+	 * @param backup
+	 *            Whether to create a backup copy of the story model.
 	 */
 	public void writeLibraryModel(final LibraryModel library,
 			final File location) {
 		WindowFactory.showProgressBar("Saving Library...", new Runnable() {
 			@Override
 			public void run() {
-				FileIO.this.writeData(library, location, IoMode.LIBRARY);
+				FileIO.this.writeData(library, location, IoMode.LIBRARY, true);
 			}
 		});
 	}
 
-	private void writeData(Object dataModel, File location, IoMode mode) {
+	/**
+	 * Writes the given StoryModel and related module to the given location as a
+	 * .zip file;
+	 * 
+	 * @param model
+	 *            The model to save to disk.
+	 * @param packageLocation
+	 *            the location to save to.
+	 * @param storyLocation
+	 *            the location of the story file.
+	 * @throws IOException
+	 */
+	public void writeStoryPackage(StoryModel model, File packageLocation,
+			File storyLocation) {
+
+		final String PROBLEM_TITLE = "Problems saving package";
+		final String PROBLEM_MESSAGE = "A problem occured saving the package. Try again.";
+		final String MISSING_FILES = "One or more files could not be compressed. Try again.";
+
+		final ZipOutputStream out;
+		final File moduleLocation;
+
+		moduleLocation = model.getModule().getLocation();
+
+		try {
+			out = new ZipOutputStream(new FileOutputStream(packageLocation));
+		} catch (FileNotFoundException e) {
+			throw new IllegalArgumentException(
+					"The .zip location provided for story model " + model
+							+ " is invalid");
+		}
+
+		// Make sure that the module file is readable
+		if (!moduleLocation.canRead()) {
+			WindowFactory.getInstance().showProblemDialog(PROBLEM_TITLE,
+					PROBLEM_MESSAGE);
+
+			System.err.println("Cannot read "
+					+ moduleLocation.getAbsolutePath()
+					+ " (maybe because of permissions)");
+		}
+
+		// Make sure that the story file is readable
+		if (!storyLocation.canRead()) {
+			WindowFactory.getInstance().showProblemDialog(PROBLEM_TITLE,
+					PROBLEM_MESSAGE);
+
+			System.err.println("Cannot read " + storyLocation.getAbsolutePath()
+					+ " (maybe because of permissions)");
+		}
+
+		try {
+			// Try to add the story file to our zip location
+			this.writeFileToZip(out, "", storyLocation, model.getTitle()
+					+ ".ses");
+
+			// Try to add the module to our zip location
+			if (moduleLocation.isDirectory())
+				this.writeDirectoryToZip(out, moduleLocation.getName() + "/",
+						moduleLocation);
+			else
+				this.writeFileToZip(out, "", moduleLocation, "");
+
+		} catch (IOException e) {
+			WindowFactory.getInstance().showProblemDialog(PROBLEM_TITLE,
+					MISSING_FILES);
+		}
+
+		try {
+			out.close();
+		} catch (IOException e) {
+			System.err.println("Failed to close ZipOutputStream writer for "
+					+ model);
+		}
+	}
+
+	private void writeFileToZip(ZipOutputStream out, String path,
+			File location, String name) throws IOException {
+		try {
+			final FileInputStream fis = new FileInputStream(location);
+			final byte[] buf = new byte[1024];
+
+			if (name == "")
+				out.putNextEntry(new ZipEntry(path + location.getName()));
+			else
+				out.putNextEntry(new ZipEntry(path + name));
+
+			int len;
+			while ((len = fis.read(buf)) > 0)
+				out.write(buf, 0, len);
+
+			fis.close();
+			out.closeEntry();
+		} catch (IOException e) {
+			System.err.println("Problems adding the file at " + location
+					+ " to the .zip directory");
+
+			throw new IOException(e.getMessage());
+		}
+	}
+
+	private void writeDirectoryToZip(ZipOutputStream out, String path,
+			File directory) throws IOException {
+		final File[] files = directory.listFiles();
+
+		for (File source : files) {
+			if (source.isDirectory()) {
+				writeDirectoryToZip(out, path + source.getName() + "/", source);
+			} else {
+				writeFileToZip(out, path, source, "");
+			}
+		}
+	}
+
+	private void writeData(Object dataModel, File location, IoMode mode,
+			boolean createBackup) {
 		final IoMode prevMode = this.mode;
 		this.mode = mode;
 
-		final File backupLocation;
 		FileOutputStream fileOut = null;
 
-		backupLocation = FileOp.replaceExtension(location,
-				FileOp.getExtension(location) + "_backup");
+		if (createBackup) {
+			final File backupLocation;
 
-		// Create/empty the file we're saving to,
-		try {
-			if ((backupLocation.exists() && !backupLocation.delete())
-					|| !location.renameTo(backupLocation))
-				System.err.println("Failed to create a backup file for "
-						+ backupLocation + "!");
+			backupLocation = FileOp.replaceExtension(location,
+					FileOp.getExtension(location) + "_backup");
+			// Create/empty the file we're saving to,
+			try {
+				if ((backupLocation.exists() && !backupLocation.delete())
+						|| !location.renameTo(backupLocation))
+					System.err.println("Failed to create a backup file for "
+							+ backupLocation + "!");
 
-			location.createNewFile();
-		} catch (IOException e) {
-			Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
-					Thread.currentThread(), e);
+				location.createNewFile();
+			} catch (IOException e) {
+				Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
+						Thread.currentThread(), e);
+			}
 		}
 
 		// save the ScriptEase patterns.
@@ -295,7 +383,7 @@ public class FileIO {
 							+ location.getAbsolutePath());
 
 			if (retry)
-				this.writeData(dataModel, location, mode);
+				this.writeData(dataModel, location, mode, true);
 		} finally {
 			try {
 				if (fileOut != null)
@@ -454,6 +542,42 @@ public class FileIO {
 				.getMapper()));
 
 		return stream;
+	}
+
+	/**
+	 * Saves a CSV file to disk.
+	 * 
+	 * @param data
+	 *            The data to generate in the CSV file.
+	 * @param file
+	 *            The file path to save the CSV in.
+	 */
+	public void saveCSV(Collection<? extends Collection<String>> data, File file) {
+		final FileWriter out;
+		String output;
+
+		try {
+			out = new FileWriter(file);
+
+			for (Collection<String> row : data) {
+				output = "";
+
+				for (String value : row)
+					output += value + ",";
+
+				// Remove the last comma.
+				output = output.substring(0, output.length() - 1);
+
+				output += "\n";
+
+				out.append(output);
+			}
+
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
