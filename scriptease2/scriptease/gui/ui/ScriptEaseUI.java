@@ -212,7 +212,6 @@ public interface ScriptEaseUI {
 			.get("Tree.collapsedIcon");
 
 	/**
-<<<<<<< HEAD
 	 * Cursor used for adding nodes to a graph.
 	 */
 	public static final Cursor CURSOR_NODE_ADD = GUIOp.createCursor("node_add");
@@ -248,8 +247,6 @@ public interface ScriptEaseUI {
 			.createCursor("unavailable");
 
 	/**
-=======
->>>>>>> UnityTranslator
 	 * Cursor to represent unavailable actions. A circle with a line through it,
 	 * like in No Smoking or No Pie signs.
 	 */
