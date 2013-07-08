@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-import scriptease.controller.io.converter.storycomponent.KnowItConverter;
+import scriptease.controller.io.XMLNode;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 
@@ -21,30 +21,21 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  */
 public class DescribeItNodeConverter implements Converter {
-	public static final String TAG_NODE_NAME = "DescribeItNode";
-	public static final String TAG_NAME = "Name";
-	public static final String TAG_SUCCESSORS = "Successors";
-
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 
 		final DescribeItNode node = (DescribeItNode) source;
-
-		writer.startNode(TAG_NAME);
-		writer.setValue(node.getName());
-		writer.endNode();
-
 		final KnowIt value = node.getKnowIt();
+
+		XMLNode.NAME.writeString(writer, node.getName());
+
+		// Not all KnowIts have a value attached.
 		if (value != null) {
-			writer.startNode(KnowItConverter.TAG_KNOWIT);
-			context.convertAnother(value);
-			writer.endNode();
+			XMLNode.KNOWIT.writeObject(writer, context, value);
 		}
 
-		writer.startNode(TAG_SUCCESSORS);
-		context.convertAnother(node.getSuccessors());
-		writer.endNode();
+		XMLNode.SUCCESSORS.writeObject(writer, context, node.getSuccessors());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -54,22 +45,24 @@ public class DescribeItNodeConverter implements Converter {
 		final DescribeItNode node;
 		final Collection<DescribeItNode> successors;
 
-		String name = "";
+		final String name;
 		KnowIt knowIt = null;
 
 		node = new DescribeItNode("", null);
 		successors = new HashSet<DescribeItNode>();
-		
+
+		name = XMLNode.NAME.readString(reader);
+
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 
 			final String nodeName = reader.getNodeName();
 
-			if (nodeName.equals(TAG_NAME))
-				name = reader.getValue();
-			else if (nodeName.equals(KnowItConverter.TAG_KNOWIT)) {
+			// TODO Can't refactor this with current XMLNode methods because
+			// it's optional, and we can't go backwards when reading.
+			if (nodeName.equals(XMLNode.KNOWIT.getName())) {
 				knowIt = (KnowIt) context.convertAnother(node, KnowIt.class);
-			} else if (nodeName.equals(TAG_SUCCESSORS)) {
+			} else if (nodeName.equals(XMLNode.SUCCESSORS.getName())) {
 				successors.addAll((Collection<DescribeItNode>) context
 						.convertAnother(node, ArrayList.class));
 			}

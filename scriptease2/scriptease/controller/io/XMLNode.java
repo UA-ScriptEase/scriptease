@@ -47,9 +47,13 @@ public enum XMLNode {
 
 	ENUM("Enum"),
 
+	ENTRY("Entry"),
+
 	ESCAPE("Escape"),
 
 	ESCAPES("Escapes", ESCAPE),
+
+	DESCRIBEITNODE("DescribeItNode"),
 
 	DESCRIBEIT("DescribeIt"),
 
@@ -73,6 +77,8 @@ public enum XMLNode {
 
 	KEYWORD("Keyword"),
 
+	KNOWIT("KnowIt"),
+
 	LABEL("Label"),
 
 	LABELS("Labels", LABEL),
@@ -85,6 +91,10 @@ public enum XMLNode {
 
 	OPTIONAL_LIBRARIES("OptionalLibraries", OPTIONAL_LIBRARY),
 
+	PATH("Path", DESCRIBEITNODE),
+
+	PATHMAP("PathMap"),
+
 	RESERVED_WORD("Word"),
 
 	RESERVED_WORDS("ReservedWords", RESERVED_WORD),
@@ -94,6 +104,8 @@ public enum XMLNode {
 	SLOTS("Slots", SLOT),
 
 	START_STORY_POINT("StartStoryPoint"),
+
+	SUCCESSORS("Successors"),
 
 	TITLE("Title"),
 
@@ -123,6 +135,8 @@ public enum XMLNode {
 	}
 
 	private XMLNode(String name, XMLNode child) {
+		// TODO If we need multiple child types, make the parameter
+		// "XMLNode... children" and handle appropriately.
 		this.name = name;
 		this.child = child;
 	}
@@ -235,11 +249,7 @@ public enum XMLNode {
 	 */
 	public Collection<String> readStringCollection(
 			HierarchicalStreamReader reader, XMLNode child) {
-		// TODO Need to check this.name somehow.
-		// Should be reader.movedown, then check if it's the name,
-		// then do what we have,
-		// then move back up.
-		// Need to get rid of while loops first.
+		// TODO Need to get rid of while loops before deleting this method.
 		Collection<String> data = new ArrayList<String>();
 
 		while (reader.hasMoreChildren()) {
@@ -363,6 +373,15 @@ public enum XMLNode {
 		reader.moveUp();
 
 		return new XMLNodeData<Collection<E>>(attributeMap, collection);
+	}
+
+	/**
+	 * Returns the XML name of the node.
+	 * 
+	 * @return
+	 */
+	public String getName() {
+		return this.name;
 	}
 
 	/**
