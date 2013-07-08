@@ -47,7 +47,7 @@ public class StoryComponentPanelManager {
 		this.addSimplePanel(panel, selected);
 		for (StoryComponentPanel aPanel : panel
 				.getDescendantStoryComponentPanels()) {
-			this.addComplexPanel(aPanel, selected);
+			this.addSimplePanel(aPanel, selected);
 		}
 	}
 
@@ -72,12 +72,7 @@ public class StoryComponentPanelManager {
 		if (aPanel.getStoryComponent() != null) {
 			aPanel.getStoryComponent()
 					.removeStoryComponentObserverFromChildren(aPanel);
-			Collection<StoryComponentPanel> descendantPanels = aPanel
-					.getDescendantStoryComponentPanels();
 			this.selected.remove(aPanel);
-			for (StoryComponentPanel child : descendantPanels) {
-				cleanUpPanel(child);
-			}
 		}
 	}
 
