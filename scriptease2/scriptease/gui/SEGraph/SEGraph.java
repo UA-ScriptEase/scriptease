@@ -1021,6 +1021,9 @@ public class SEGraph<E> extends JComponent {
 				SEGraph.this.draggedFromNode = SEGraph.this.nodesToComponents
 						.getKey((JComponent) e.getSource());
 				break;
+			case GROUP:
+				
+			
 			default:
 				SEGraph.this.draggedFromNode = null;
 				break;
@@ -1166,18 +1169,19 @@ public class SEGraph<E> extends JComponent {
 			} else if (mode == ToolBarMode.GROUP) {
 				if (this.lastEnteredNode != null
 						&& this.lastEnteredNode != node) {
-					if (!UndoManager.getInstance().hasOpenUndoableAction())
-						UndoManager.getInstance().startUndoableAction(
-								"Creating group from "
-										+ node + " to "
-										+ this.secondLastEnteredNode);
-
-					SEGraph.this.createNodeGroupAt(node, this.secondLastEnteredNode);
-					
-					System.out.println("DEBUG: start node: " + node);
-					System.out.println("DEBUG: ending node: " + this.secondLastEnteredNode);
-
-					UndoManager.getInstance().endUndoableAction();
+//					if (!UndoManager.getInstance().hasOpenUndoableAction())
+//						UndoManager.getInstance().startUndoableAction(
+//								"Creating group from "
+//										+ node + " to "
+//										+ this.secondLastEnteredNode);
+//
+//					SEGraph.this.createNodeGroupAt(node, this.secondLastEnteredNode);
+//					
+//					System.out.println("DEBUG: start node: " + node);
+//					System.out.println("DEBUG: ending node: " + this.secondLastEnteredNode);
+//
+//					System.out.println("Debug: children node " + node.);
+//					UndoManager.getInstance().endUndoableAction();
 				}
 			} else if (mode == ToolBarMode.UNGROUP) {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
