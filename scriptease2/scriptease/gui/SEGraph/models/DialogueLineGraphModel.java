@@ -6,6 +6,7 @@ import java.util.Set;
 
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
+import scriptease.translator.io.model.EditableResource;
 
 /**
  * The model for a graph that displays {@link DialogueLine}s.
@@ -24,7 +25,7 @@ public class DialogueLineGraphModel extends SEGraphModel<DialogueLine> {
 	@Override
 	public DialogueLine createNewNode() {
 		// The owner is temporarily null until the graph sets it.
-		return new DialogueLine(this.story.getModule());
+		return new DialogueLine(this.story);
 	}
 
 	@Override
@@ -49,14 +50,14 @@ public class DialogueLineGraphModel extends SEGraphModel<DialogueLine> {
 		final Set<DialogueLine> parents = new HashSet<DialogueLine>();
 
 		for (DialogueLine line : this.getNodes()) {
-			for (DialogueLine child : line.getChildren()) {
+			for (EditableResource child : line.getChildren()) {
 				if (child == target) {
 					parents.add(line);
 				}
 			}
 		}
 
-		return target.getParents();
+		return parents;
 	}
 
 	@Override

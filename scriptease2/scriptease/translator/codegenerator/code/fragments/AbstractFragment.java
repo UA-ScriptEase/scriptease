@@ -110,7 +110,7 @@ public abstract class AbstractFragment implements Cloneable {
 	 */
 	public static String resolveFormat(Collection<AbstractFragment> format,
 			Context context) {
-		StringBuilder code = new StringBuilder();
+		final StringBuilder code = new StringBuilder();
 
 		for (AbstractFragment token : format) {
 			code.append(token.resolve(context));

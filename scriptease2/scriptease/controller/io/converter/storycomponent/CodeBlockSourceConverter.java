@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
+import scriptease.controller.io.XMLNode;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
@@ -55,7 +56,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 		if (FileIO.getInstance().getMode() != FileIO.IoMode.LIBRARY)
 			throw new XStreamException(
 					"CodeBlockSources can only live in the Translator! Aaaaaaaaugh!");
-		
+
 		super.marshal(source, writer, context);
 
 		// Subject
@@ -160,9 +161,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 			}
 			// Types
 			else if (nodeName.equals(TAG_TYPES)) {
-				while (reader.hasMoreChildren()) {
-					types.add(FileIO.readValue(reader, TAG_TYPE));
-				}
+				types.addAll(XMLNode.TYPES.readStringCollection(reader, XMLNode.TYPE));
 			}
 			// Parameters
 			else if (nodeName.equals(TAG_PARAMETERS)) {
@@ -174,9 +173,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 			 * and must be in the translator only.
 			 */
 			else if (nodeName.equals(TAG_INCLUDES)) {
-				while (reader.hasMoreChildren()) {
-					includes.add(FileIO.readValue(reader, TAG_INCLUDE));
-				}
+				includes.addAll(XMLNode.INCLUDES.readStringCollection(reader, XMLNode.INCLUDE));
 			}
 			/*
 			 * Code. Cannot appear in Stories; code is game-specific and must be

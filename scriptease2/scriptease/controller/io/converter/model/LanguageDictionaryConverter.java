@@ -1,14 +1,11 @@
 package scriptease.controller.io.converter.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-import scriptease.controller.io.FileIO;
+import scriptease.controller.io.XMLAttribute;
+import scriptease.controller.io.XMLNode;
 import scriptease.translator.LanguageDictionary;
 import scriptease.translator.codegenerator.code.fragments.container.FormatDefinitionFragment;
-import scriptease.translator.io.model.GameMap;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -22,106 +19,46 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author remiller
  */
 public class LanguageDictionaryConverter implements Converter {
-	private static final String TAG_NAME = "name";
-	private static final String TAG_FORMATS = "Formats";
-	private static final String TAG_INDENTED_STRING = "IndentString";
-	private static final String TAG_RESERVED_WORDS = "ReservedWords";
-	private static final String TAG_RESERVED_WORD = "Word";
-	private static final String TAG_MAPS = "Maps";
-
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final LanguageDictionary languageDictionary = (LanguageDictionary) source;
 
-		// name
-		writer.addAttribute(TAG_NAME, languageDictionary.getName());
+		XMLAttribute.NAME.write(writer, languageDictionary.getName());
 
-		// indentation
-		writer.startNode(TAG_INDENTED_STRING);
-		writer.setValue(languageDictionary.getIndent());
-		writer.endNode();
+		XMLNode.INDENT_STRING.writeString(writer,
+				languageDictionary.getIndent());
 
-		// reserved words
-		writer.startNode(TAG_RESERVED_WORDS);
-		for (String word : languageDictionary.getReservedWords()) {
-			writer.startNode(TAG_RESERVED_WORD);
-			writer.setValue(word);
-			writer.endNode();
+		XMLNode.RESERVED_WORDS.writeChildren(writer,
+				languageDictionary.getReservedWords());
 
-		}
-		writer.endNode();
-
-		// maps
-		writer.startNode(TAG_MAPS);
-		Map<String, GameMap> maps = languageDictionary.getMaps();
-		for (String id : maps.keySet()) {
-			GameMap map = maps.get(id);
-			context.convertAnother(map);
-		}
-		writer.endNode();
-
-		// formats
-		writer.startNode(TAG_FORMATS);
-		context.convertAnother(languageDictionary.getFormats());
-		writer.endNode();
+		XMLNode.FORMATS.writeObject(writer, context,
+				languageDictionary.getFormats());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final String name;
 		final String indentString;
 		final Collection<String> reservedWords;
-		final Map<String, GameMap> maps;
-		final Map<String, FormatDefinitionFragment> formatMap;
-		LanguageDictionary languageDictionary = null;
+		final Collection<FormatDefinitionFragment> fragments;
 
-		System.err.println("Unmarshaling LanguageDictionary");
+		final LanguageDictionary languageDictionary;
 
-		// name
-		name = reader.getAttribute(TAG_NAME);
+		System.out.println("Unmarshaling LanguageDictionary");
 
-		// indentation
-		indentString = FileIO.readValue(reader, TAG_INDENTED_STRING);
+		name = XMLAttribute.NAME.read(reader);
 
-		// reserved words
-		reservedWords = new ArrayList<String>();
-		reader.moveDown();
-		while (reader.hasMoreChildren()) {
-			reader.moveDown();
-			reservedWords.add(reader.getValue());
-			reader.moveUp();
-		}
-		reader.moveUp();
+		indentString = XMLNode.INDENT_STRING.readString(reader);
+		reservedWords = XMLNode.RESERVED_WORDS.readStringCollection(reader);
 
-		// maps
-		maps = new HashMap<String, GameMap>();
-		reader.moveDown();
-		while (reader.hasMoreChildren()) {
-			GameMap gameMap = (GameMap) context.convertAnother(
-					languageDictionary, GameMap.class);
-			maps.put(gameMap.getID(), gameMap);
-		}
-		reader.moveUp();
-
-		// formats
-		Collection<FormatDefinitionFragment> fragments = new ArrayList<FormatDefinitionFragment>();
-		formatMap = new HashMap<String, FormatDefinitionFragment>();
-
-		reader.moveDown();
-		if (reader.hasMoreChildren())
-			fragments.addAll(((Collection<FormatDefinitionFragment>) context
-					.convertAnother(languageDictionary, ArrayList.class)));
-		reader.moveUp();
-
-		for (FormatDefinitionFragment fragment : fragments) {
-			formatMap.put(fragment.getDirectiveText().toUpperCase(), fragment);
-		}
+		fragments = XMLNode.FORMATS.readObjectCollection(reader, context,
+				FormatDefinitionFragment.class);
 
 		languageDictionary = new LanguageDictionary(name, indentString,
-				reservedWords, formatMap, maps);
+				reservedWords, fragments);
+
 		return languageDictionary;
 	}
 

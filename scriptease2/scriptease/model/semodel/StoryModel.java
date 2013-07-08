@@ -115,12 +115,26 @@ public final class StoryModel extends SEModel {
 	 * @param dialogue
 	 * @return The newly added root
 	 */
-	public DialogueLine addDialogueRoot() {
-		final DialogueLine newRoot = new DialogueLine(this.module);
+	public DialogueLine createAndAddDialogueRoot() {
+		final DialogueLine newRoot = new DialogueLine(this);
 
 		this.dialogueRoots.add(newRoot);
 
 		return newRoot;
+	}
+
+	/**
+	 * Adds a specific dialogue line
+	 * 
+	 * @param line
+	 * @return
+	 */
+	public boolean addDialogueRoot(DialogueLine line) {
+		return this.dialogueRoots.add(line);
+	}
+
+	public boolean addDialogueRoots(Collection<DialogueLine> lines) {
+		return this.dialogueRoots.addAll(lines);
 	}
 
 	public boolean removeDialogueRoot(DialogueLine line) {
@@ -138,6 +152,7 @@ public final class StoryModel extends SEModel {
 			throw new IllegalArgumentException(
 					"Cannot give StoryModel a null tree root.");
 		this.startPoint = startPoint;
+		System.out.println(startPoint + " loaded in " + this);
 	}
 
 	public StoryPoint getRoot() {

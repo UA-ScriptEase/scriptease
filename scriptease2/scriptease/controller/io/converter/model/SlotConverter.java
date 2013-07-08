@@ -3,7 +3,7 @@ package scriptease.controller.io.converter.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.io.FileIO;
+import scriptease.controller.io.XMLNode;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.translator.io.model.Slot;
@@ -87,11 +87,8 @@ public class SlotConverter implements Converter {
 		// Read Format
 		formatKeyword = reader.getAttribute(TAG_FORMAT);
 
-		// Read Name
-		name = FileIO.readValue(reader, TAG_NAME);
-
-		// Read Keyword
-		keyword = FileIO.readValue(reader, TAG_KEYWORD);
+		name = XMLNode.NAME.readString(reader);
+		keyword = XMLNode.KEYWORD.readString(reader);
 
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();

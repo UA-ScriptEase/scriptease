@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
+import scriptease.controller.io.XMLNode;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
@@ -73,7 +74,7 @@ public class KnowItConverter extends StoryComponentConverter {
 		else {
 			// read all of the types
 			while (reader.hasMoreChildren()) {
-				typeKeys.add(FileIO.readValue(reader, TypedComponent.TAG_TYPE));
+				typeKeys.add(XMLNode.TYPE.readString(reader));
 			}
 		}
 		reader.moveUp();

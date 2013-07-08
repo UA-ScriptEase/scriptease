@@ -36,8 +36,6 @@
 		<Word caseSensitive="false">true</Word>
 		<Word caseSensitive="false">false</Word>
 	</ReservedWords>
-	<Maps>
-	</Maps>
 	<Formats>
 		<!-- Variables -->
 		<!-- Adds the type of the variable in front of it -->

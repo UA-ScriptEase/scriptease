@@ -3,7 +3,6 @@ package scriptease.controller;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
-import scriptease.translator.codegenerator.code.fragments.MapRefFragment;
 import scriptease.translator.codegenerator.code.fragments.SimpleDataFragment;
 import scriptease.translator.codegenerator.code.fragments.container.FormatDefinitionFragment;
 import scriptease.translator.codegenerator.code.fragments.container.IndentFragment;
@@ -50,11 +49,6 @@ public abstract class AbstractFragmentAdapter implements
 
 	@Override
 	public void processLineFragment(LineFragment fragment) {
-		this.defaultProcess(fragment);
-	}
-
-	@Override
-	public void processMapRefFragment(MapRefFragment fragment) {
 		this.defaultProcess(fragment);
 	}
 

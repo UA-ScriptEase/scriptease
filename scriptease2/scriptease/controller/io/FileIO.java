@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -19,13 +18,12 @@ import scriptease.controller.io.converter.fragment.FormatReferenceFragmentConver
 import scriptease.controller.io.converter.fragment.IndentedFragmentConverter;
 import scriptease.controller.io.converter.fragment.LineFragmentConverter;
 import scriptease.controller.io.converter.fragment.LiteralFragmentConverter;
-import scriptease.controller.io.converter.fragment.MapRefFragmentConverter;
 import scriptease.controller.io.converter.fragment.ScopeFragmentConverter;
 import scriptease.controller.io.converter.fragment.SeriesFragmentConverter;
 import scriptease.controller.io.converter.fragment.SimpleDataFragmentConverter;
 import scriptease.controller.io.converter.model.DescribeItConverter;
 import scriptease.controller.io.converter.model.DescribeItNodeConverter;
-import scriptease.controller.io.converter.model.GameMapConverter;
+import scriptease.controller.io.converter.model.DialogueLineConverter;
 import scriptease.controller.io.converter.model.GameTypeConverter;
 import scriptease.controller.io.converter.model.LanguageDictionaryConverter;
 import scriptease.controller.io.converter.model.LibraryModelConverter;
@@ -62,27 +60,24 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.LanguageDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
-import scriptease.translator.codegenerator.code.fragments.MapRefFragment;
 import scriptease.translator.codegenerator.code.fragments.SimpleDataFragment;
 import scriptease.translator.codegenerator.code.fragments.container.FormatDefinitionFragment;
 import scriptease.translator.codegenerator.code.fragments.container.IndentFragment;
 import scriptease.translator.codegenerator.code.fragments.container.LineFragment;
 import scriptease.translator.codegenerator.code.fragments.container.ScopeFragment;
 import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
-import scriptease.translator.io.model.GameMap;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
 import scriptease.util.FileOp;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
 /**
  * Reads and writes Stories, Libraries and Dictionaries from or to various
@@ -354,7 +349,6 @@ public class FileIO {
 		this.mode = mode;
 
 		FileOutputStream fileOut = null;
-		final XStream stream = this.buildXStream();
 
 		if (createBackup) {
 			final File backupLocation;
@@ -378,7 +372,7 @@ public class FileIO {
 		// save the ScriptEase patterns.
 		try {
 			fileOut = new FileOutputStream(location);
-			stream.toXML(dataModel, fileOut);
+			this.buildXStream().toXML(dataModel, fileOut);
 		} catch (IOException e) {
 			System.err.println("Patterns save problem: Could not access "
 					+ location.getAbsolutePath());
@@ -409,7 +403,6 @@ public class FileIO {
 
 		InputStream fileIn = null;
 		Object dataModel = null;
-		final XStream stream = this.buildXStream();
 		boolean retry;
 
 		try {
@@ -418,7 +411,7 @@ public class FileIO {
 			System.out.println("Input Stream: " + fileIn
 					+ " created for file: " + location);
 
-			dataModel = stream.fromXML(fileIn);
+			dataModel = this.buildXStream().fromXML(fileIn);
 		} catch (IOException e) {
 			System.err.println("Failed to read file "
 					+ location.getAbsolutePath());
@@ -488,16 +481,15 @@ public class FileIO {
 		stream.alias("Slot", Slot.class);
 		stream.alias("Binding", KnowItBinding.class);
 		stream.alias("Value", String.class);
+		stream.alias("DialogueLine", DialogueLine.class);
 
 		// Language Dictionary Fragments
 		stream.alias("LibraryModel", LibraryModel.class);
 		stream.alias("LanguageDictionary", LanguageDictionary.class);
-		stream.alias("Map", GameMap.class);
 		stream.alias("Format", FormatDefinitionFragment.class);
 		stream.alias("Indent", IndentFragment.class);
 		stream.alias("Line", LineFragment.class);
 		stream.alias("Literal", LiteralFragment.class);
-		stream.alias("MapRef", MapRefFragment.class);
 		stream.alias("FormatRef", FormatReferenceFragment.class);
 		stream.alias("Scope", ScopeFragment.class);
 		stream.alias("Series", SeriesFragment.class);
@@ -519,6 +511,7 @@ public class FileIO {
 
 		// now register all of the leaf-level converters
 		stream.registerConverter(new StoryModelConverter());
+		stream.registerConverter(new DialogueLineConverter());
 		stream.registerConverter(new StoryComponentContainerConverter());
 		stream.registerConverter(new KnowItConverter());
 		stream.registerConverter(new AskItConverter());
@@ -529,14 +522,12 @@ public class FileIO {
 		stream.registerConverter(new IndentedFragmentConverter());
 		stream.registerConverter(new LineFragmentConverter());
 		stream.registerConverter(new LiteralFragmentConverter());
-		stream.registerConverter(new MapRefFragmentConverter());
 		stream.registerConverter(new FormatReferenceFragmentConverter());
 		stream.registerConverter(new ScopeFragmentConverter());
 		stream.registerConverter(new SeriesFragmentConverter());
 		stream.registerConverter(new SimpleDataFragmentConverter());
 		stream.registerConverter(new LibraryModelConverter());
 		stream.registerConverter(new LanguageDictionaryConverter());
-		stream.registerConverter(new GameMapConverter());
 		stream.registerConverter(new CodeBlockSourceConverter());
 		stream.registerConverter(new CodeBlockReferenceConverter());
 		stream.registerConverter(new ScriptItConverter());
@@ -551,80 +542,6 @@ public class FileIO {
 				.getMapper()));
 
 		return stream;
-	}
-
-	/**
-	 * Reads a simple text value from the reader, provided that the XML element
-	 * that we're reading from actually has the correct tag (ignoring case).
-	 * 
-	 * @param reader
-	 *            the reader to read from.
-	 * @param expectedTag
-	 *            The tag that we expect to see.
-	 * @return the value read in from the reader.
-	 */
-	public static String readValue(HierarchicalStreamReader reader,
-			String expectedTag) {
-		final String value;
-		final String tag;
-
-		reader.moveDown();
-		tag = reader.getNodeName();
-
-		if (!tag.equalsIgnoreCase(expectedTag))
-			throw new ConversionException(
-					"XML element was not as expected. Expected " + expectedTag
-							+ ", but received " + tag);
-
-		value = reader.getValue();
-		reader.moveUp();
-
-		return value;
-	}
-
-	/**
-	 * Reads a simple collection of text values from the reader, provided that
-	 * the XML elements that we're reading from actually have the correct tags
-	 * (ignoring case).
-	 * 
-	 * @param reader
-	 *            the reader to read from.
-	 * @param collectionTag
-	 *            The tag that we expect to see for the collection.
-	 * @param itemTag
-	 *            The tag that we expect to see for each item in the collection.
-	 * @return the values read in from the reader.
-	 */
-	public static Collection<String> readValues(
-			HierarchicalStreamReader reader, String collectionTag,
-			String itemTag) {
-		final Collection<String> values = new ArrayList<String>();
-		final String tag;
-
-		reader.moveDown();
-		tag = reader.getNodeName();
-
-		if (!tag.equalsIgnoreCase(collectionTag))
-			throw new ConversionException(
-					"XML element was not as expected. Expected "
-							+ collectionTag + ", but received " + tag);
-
-		while (reader.hasMoreChildren()) {
-			reader.moveDown();
-
-			if (reader.getNodeName().equalsIgnoreCase(itemTag))
-				values.add(reader.getValue());
-			else
-				throw new ConversionException(
-						"XML element was not as expected. Expected " + itemTag
-								+ ", but received " + tag);
-
-			reader.moveUp();
-		}
-
-		reader.moveUp();
-
-		return values;
 	}
 
 	/**

@@ -16,16 +16,11 @@ public abstract class NWNGameConstant extends Resource {
 	private final String name;
 	private final String tag;
 
-	public NWNGameConstant(String resRef, Collection<String> types,
-			String name, String tag) {
+	public NWNGameConstant(String resRef, String type, String name, String tag) {
 		this.resRef = resRef;
-		this.types = types;
+		this.types = Arrays.asList(type);
 		this.name = name;
 		this.tag = tag;
-	}
-
-	public NWNGameConstant(String resRef, String type, String name, String tag) {
-		this(resRef, Arrays.asList(type), name, tag);
 	}
 
 	/**
