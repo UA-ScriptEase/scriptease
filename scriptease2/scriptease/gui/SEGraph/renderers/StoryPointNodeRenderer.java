@@ -1,8 +1,6 @@
 package scriptease.gui.SEGraph.renderers;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.swing.Box;
@@ -78,52 +76,30 @@ public class StoryPointNodeRenderer extends SEGraphNodeRenderer<StoryPoint> {
 			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
 
 			final BindingWidget editableWidget;
-			
-			editableWidget = ScriptWidgetFactory.buildBindingWidget(node,
-					true);
-			
+
+			editableWidget = ScriptWidgetFactory.buildBindingWidget(node, true);
+
 			if (this.graph.getStartNode() != node) {
 				// If not start node, add a fan in spinner.
 				final JSpinner fanInSpinner;
 				final int SPACE_BETWEEN_COMPONENTS = 5;
 
-				fanInSpinner = ScriptWidgetFactory.buildFanInSpinner(node,
-						getMaxFanIn(node));
+				fanInSpinner = ScriptWidgetFactory.buildFanInSpinner(node, node
+						.getParents().size());
 
 				fanInSpinner.setMaximumSize(fanInSpinner.getPreferredSize());
 
 				component.add(fanInSpinner);
 				component.add(Box
 						.createHorizontalStrut(SPACE_BETWEEN_COMPONENTS));
-			} 
+			}
 
 			component.add(editableWidget);
-			
+
 			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
 			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
 
 			component.revalidate();
 		}
-	}
-
-	/**
-	 * Returns the max fan in for the Story Point.
-	 * 
-	 * @param node
-	 * @return
-	 */
-	private Integer getMaxFanIn(StoryPoint node) {
-		final Set<StoryPoint> parents;
-
-		parents = new HashSet<StoryPoint>();
-
-		for (StoryPoint descendant : this.getStartNode().getDescendants()) {
-			for (StoryPoint successor : descendant.getSuccessors())
-				if (successor == node) {
-					parents.add(descendant);
-				}
-		}
-
-		return parents.size();
 	}
 }

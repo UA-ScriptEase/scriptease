@@ -3,7 +3,6 @@ package scriptease.gui.storycomponentpanel;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,23 +42,11 @@ public class StoryComponentPanelManager {
 	 * @param panel
 	 * @param selected
 	 */
-	public void addComplexPanel(StoryComponentPanel panel, boolean selected) {
-		this.addSimplePanel(panel, selected);
-		for (StoryComponentPanel aPanel : panel
-				.getDescendantStoryComponentPanels()) {
-			this.addSimplePanel(aPanel, selected);
+	public void addPanel(StoryComponentPanel panel, boolean selected) {
+		for (StoryComponentPanel aPanel : panel.getDescendants()) {
+			this.selected.put(aPanel, selected);
+			this.displayPanelSelection(panel, selected);
 		}
-	}
-
-	/**
-	 * Sets the given panel to the selected value, then displays it's selection
-	 * 
-	 * @param panel
-	 * @param selected
-	 */
-	private void addSimplePanel(StoryComponentPanel panel, boolean selected) {
-		this.selected.put(panel, selected);
-		this.displayPanelSelection(panel, selected);
 	}
 
 	/**
@@ -93,8 +80,7 @@ public class StoryComponentPanelManager {
 		if (selectable) {
 
 			if (!(panel.getStoryComponent() instanceof StoryPoint))
-				for (StoryComponentPanel subPanel : panel
-						.getDescendantStoryComponentPanels()) {
+				for (StoryComponentPanel subPanel : panel.getDescendants()) {
 					this.selected.put(subPanel, isSelected);
 				}
 

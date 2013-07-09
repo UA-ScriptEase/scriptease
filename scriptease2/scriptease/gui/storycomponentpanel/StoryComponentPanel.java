@@ -70,8 +70,6 @@ public class StoryComponentPanel extends JPanel implements
 
 		// Layout
 		this.setLayout(this.layout);
-		
-		
 
 		this.addFocusListener(new FocusListener() {
 			@Override
@@ -219,7 +217,6 @@ public class StoryComponentPanel extends JPanel implements
 	 * Get the immediate children of the StoryComponentPanel
 	 * 
 	 * @return
-	 * @see #getDescendantStoryComponentPanels()
 	 */
 	public List<StoryComponentPanel> getChildrenPanels() {
 		return this.layout.getChildrenPanels();
@@ -231,19 +228,20 @@ public class StoryComponentPanel extends JPanel implements
 	 * 
 	 * @return {@link #getChildrenPanels()}
 	 */
-	public List<StoryComponentPanel> getDescendantStoryComponentPanels() {
+	public List<StoryComponentPanel> getDescendants() {
 		// Create a new List to contain the descendants of this
 		// StoryComponentPanel.
-		List<StoryComponentPanel> descendants = new ArrayList<StoryComponentPanel>();
-
+		final List<StoryComponentPanel> descendants = new ArrayList<StoryComponentPanel>();
 		// Add the children of this StoryComponentPanel.
-		List<StoryComponentPanel> childrenPanels = this.getChildrenPanels();
-		descendants.addAll(childrenPanels);
+		final List<StoryComponentPanel> childrenPanels;
+
+		childrenPanels = this.getChildrenPanels();
 
 		// Recursively call this method of the child StoryComponentPanels to add
 		// their descendants.
+		descendants.add(this);
 		for (StoryComponentPanel child : childrenPanels) {
-			descendants.addAll(child.getDescendantStoryComponentPanels());
+			descendants.addAll(child.getDescendants());
 		}
 
 		// Return the list of descendants.
@@ -316,9 +314,7 @@ public class StoryComponentPanel extends JPanel implements
 	 */
 	public void updateComplexSettings() {
 		if (this.component != null) {
-			updateSettings(this);
-			for (StoryComponentPanel panel : this
-					.getDescendantStoryComponentPanels()) {
+			for (StoryComponentPanel panel : this.getDescendants()) {
 				updateSettings(panel);
 			}
 		}
@@ -428,10 +424,8 @@ public class StoryComponentPanel extends JPanel implements
 
 							hoverColor = GUIOp.scaleWhite(previousColor, 0.9);
 
-							panel.setBackground(hoverColor);
-
 							for (StoryComponentPanel descendant : panel
-									.getDescendantStoryComponentPanels()) {
+									.getDescendants()) {
 								descendant.setBackground(hoverColor);
 							}
 
