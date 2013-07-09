@@ -706,7 +706,7 @@ public class SEGraph<E> extends JComponent {
 	 * @return
 	 */
 	private E getPossibleGroupEndNodesFor(E node) {
-		final Set<E> endNodes = this.model.getGroupableEndNodesFor(node);
+		final Set<E> endNodes = this.model.getGroupableDescendants(node);
 
 		System.out.println("DEBUG: Size: " + endNodes.size());
 		for (E n : endNodes)
@@ -1100,13 +1100,6 @@ public class SEGraph<E> extends JComponent {
 					endedFrom = SEGraph.this.nodesToComponents
 							.getKey((JComponent) e.getSource());
 					SEGraph.this.endNode = endedFrom;
-
-					// Make sure the end node isn't a ancestor of the start node
-					// if (SEGraph.this.getAncestors(SEGraph.this.startNode)
-					// .contains(SEGraph.this.endNode)) {
-					// SEGraph.this.startNode = null;
-					// return;
-					// }
 
 					if (SEGraph.this.startNode != null
 							&& SEGraph.this.endNode != null) {

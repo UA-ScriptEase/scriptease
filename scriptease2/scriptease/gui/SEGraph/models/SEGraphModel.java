@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -252,35 +254,36 @@ public abstract class SEGraphModel<E> {
 		return descendants;
 	}
 
-	public final Set<E> getGroupableEndNodesFor(E node) {
-		final Set<E> descendants = new HashSet<E>();
-		this.getGroupableDescendants(node, new HashMap<E, Integer>(),
-				descendants);
-		return descendants;
-	}
+	public final Set<E> getGroupableDescendants(E node) {
+		final Set<E> descendants = new HashSet<E>();	
+			
+		final Map<E, Integer> visited = new HashMap<E, Integer>();
+		final Queue<E> queue = new LinkedList<E>();
 
-	public final void getGroupableDescendants(E node, Map<E, Integer> map,
-			Set<E> descendants) {
+		visited.put(node, 0);
+		for (E child : this.getDescendants(node))
+			visited.put(child, 0);
 
-		for (E child : this.getChildren(node)) {
-			if (map.containsKey(child))
-				map.put(child, map.get(child) + 1);
-			else
-				map.put(child, 1);
-		}
+		queue.add(node);
+		while (!queue.isEmpty()) {
+			final E currNode = queue.remove();
+			if (this.getParents(currNode).size() == visited.get(currNode)) {
 
-		for (Entry<E, Integer> child : map.entrySet()) {
-			final int numParents = this.getParents(child.getKey()).size();
-			final int accesses = child.getValue();
+				for (E childNode : this.getChildren(currNode)) {
+					visited.put(childNode, visited.get(childNode) + 1);
 
-			if (map.keySet().size() == 1)
-				descendants.add(child.getKey());
-
-			if (numParents == accesses) {
-				this.getGroupableDescendants(child.getKey(), map, descendants);
-				map.remove(child);
+					if (!queue.contains(childNode))
+						queue.add(childNode);
+				}
+			} else {
+				queue.add(currNode);
 			}
+
+			if (queue.size() == 1)
+				descendants.add(queue.peek());
 		}
+		
+		return descendants;
 	}
 
 	/**
