@@ -129,8 +129,8 @@ public class SEGraph<E> extends JComponent {
 		this.selectedNodes.add(model.getStartNode());
 
 		this.setUI(this.new SEGraphUI());
-		this.setOpaque(true);
-		this.setBackground(Color.white);
+		// Setting opacity to false speeds up rendering.
+		this.setOpaque(false);
 
 		SEFocusManager.getInstance().addSEFocusObserver(this,
 				new SEFocusObserver() {
@@ -1189,19 +1189,21 @@ public class SEGraph<E> extends JComponent {
 			} else if (mode == Mode.GROUP) {
 				if (this.lastEnteredNode != null
 						&& this.lastEnteredNode != node) {
-//					if (!UndoManager.getInstance().hasOpenUndoableAction())
-//						UndoManager.getInstance().startUndoableAction(
-//								"Creating group from "
-//										+ node + " to "
-//										+ this.secondLastEnteredNode);
-//
-//					SEGraph.this.createNodeGroupAt(node, this.secondLastEnteredNode);
-//					
-//					System.out.println("DEBUG: start node: " + node);
-//					System.out.println("DEBUG: ending node: " + this.secondLastEnteredNode);
-//
-//					System.out.println("Debug: children node " + node.);
-//					UndoManager.getInstance().endUndoableAction();
+					// if (!UndoManager.getInstance().hasOpenUndoableAction())
+					// UndoManager.getInstance().startUndoableAction(
+					// "Creating group from "
+					// + node + " to "
+					// + this.secondLastEnteredNode);
+					//
+					// SEGraph.this.createNodeGroupAt(node,
+					// this.secondLastEnteredNode);
+					//
+					// System.out.println("DEBUG: start node: " + node);
+					// System.out.println("DEBUG: ending node: " +
+					// this.secondLastEnteredNode);
+					//
+					// System.out.println("Debug: children node " + node.);
+					// UndoManager.getInstance().endUndoableAction();
 				}
 			} else if (mode == Mode.UNGROUP) {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())

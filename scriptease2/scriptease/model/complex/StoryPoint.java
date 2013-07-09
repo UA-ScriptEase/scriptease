@@ -44,6 +44,7 @@ public class StoryPoint extends ComplexStoryComponent {
 	 */
 	private final int uniqueID;
 	private final Set<StoryPoint> successors;
+	private final Set<StoryPoint> parents;
 
 	/**
 	 * Creates a new Story Point with the given name and a default fan-in value.
@@ -56,6 +57,7 @@ public class StoryPoint extends ComplexStoryComponent {
 		super();
 		this.fanIn = DEFAULT_FAN_IN;
 		this.successors = new HashSet<StoryPoint>();
+		this.parents = new HashSet<StoryPoint>();
 		this.uniqueID = storyPointCounter;
 
 		StoryPoint.storyPointCounter++;
@@ -139,6 +141,15 @@ public class StoryPoint extends ComplexStoryComponent {
 	}
 
 	/**
+	 * Gets the immediate parents of the StoryPoint.
+	 * 
+	 * @return
+	 */
+	public Collection<StoryPoint> getParents() {
+		return this.parents;
+	}
+
+	/**
 	 * Adds a successor to the StoryPoint.
 	 * 
 	 * @param successor
@@ -146,6 +157,8 @@ public class StoryPoint extends ComplexStoryComponent {
 	public boolean addSuccessor(StoryPoint successor) {
 		if (successor != this && !successor.getSuccessors().contains(this)) {
 			if (this.successors.add(successor)) {
+				successor.parents.add(this);
+
 				this.notifyObservers(new StoryComponentEvent(successor,
 						StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED));
 				return true;
@@ -174,6 +187,8 @@ public class StoryPoint extends ComplexStoryComponent {
 	 */
 	public boolean removeSuccessor(StoryPoint successor) {
 		if (this.successors.remove(successor)) {
+			successor.parents.remove(this);
+
 			this.notifyObservers(new StoryComponentEvent(successor,
 					StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED));
 			return true;
