@@ -517,6 +517,11 @@ public class GUIOp {
 	 *            The factor by which the bottom colour should be scaled to
 	 *            white.
 	 * @return
+	 * @deprecated Gradients are ugly. We don't use this method anywhere, but
+	 *             it's code is an example of custom graphics, and if we ever
+	 *             need a gradient, this is how to do it. Painting many of these
+	 *             continuously (e.g. in the graph) is very slow, so use this at
+	 *             your own risk.
 	 */
 	@SuppressWarnings("serial")
 	public static JPanel buildGradientPanel(final double factor) {

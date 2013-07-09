@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import scriptease.gui.SEFocusManager;
@@ -48,9 +49,7 @@ public class SEGraphNodeRenderer<E> {
 	 * @return
 	 */
 	public final JComponent createComponentForNode(E node) {
-		final JComponent component;
-
-		component = GUIOp.buildGradientPanel(1.3);
+		final JComponent component = new JPanel();
 
 		this.reconfigureAppearance(component, node);
 		this.configureInternalComponents(component, node);
