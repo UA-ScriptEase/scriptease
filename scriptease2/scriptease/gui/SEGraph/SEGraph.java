@@ -205,6 +205,8 @@ public class SEGraph<E> extends JComponent {
 		newNode = this.model.createNewNode();
 
 		if (this.model.addChild(newNode, parent)) {
+			this.model.recalculateDepthMap();
+
 			final Collection<E> parents;
 			final Collection<E> children;
 
@@ -717,11 +719,17 @@ public class SEGraph<E> extends JComponent {
 			final Insets insets;
 			final Map<E, Integer> nodeMap;
 			final int numberOfLevels;
+			final Collection<Integer> levels;
 
 			insets = parent.getInsets();
-			nodeMap = SEGraph.this.model.getDepthMap(SEGraph.this
-					.getStartNode());
-			numberOfLevels = Collections.max(nodeMap.values());
+			// TODO Getting the depth map here makes the graph slow.
+			nodeMap = SEGraph.this.model.getDepthMap();
+			levels = nodeMap.values();
+
+			if (levels.isEmpty())
+				numberOfLevels = 0;
+			else
+				numberOfLevels = Collections.max(levels);
 
 			int xSize = insets.left + insets.right;
 			int ySize = insets.top + insets.bottom;
@@ -759,8 +767,7 @@ public class SEGraph<E> extends JComponent {
 			final int numberOfLevels;
 			final double graphHeight;
 
-			nodeMap = SEGraph.this.model.getDepthMap(SEGraph.this
-					.getStartNode());
+			nodeMap = SEGraph.this.model.getDepthMap();
 			numberOfLevels = Collections.max(nodeMap.values());
 			graphHeight = SEGraph.this.getPreferredSize().getHeight();
 
@@ -906,10 +913,12 @@ public class SEGraph<E> extends JComponent {
 	/**
 	 * UI used to draw lines between each node.
 	 * 
+	 * @author previous devs
 	 * @author kschenk
 	 * 
 	 */
 	public class SEGraphUI extends ComponentUI {
+
 		@Override
 		public void paint(Graphics g, JComponent c) {
 			g.setColor(SEGraph.this.getBackground());
@@ -940,16 +949,10 @@ public class SEGraph<E> extends JComponent {
 				GUIOp.paintArrow(g2, points);
 
 			}
-			connectNodes(g);
-		}
 
-		private void connectNodes(Graphics g) {
 			// Get the nodes level map
-			Map<E, Integer> nodeMap = SEGraph.this.model
-					.getDepthMap(SEGraph.this.getStartNode());
-
-			// Clone the graphics context.
-			final Graphics2D g2 = (Graphics2D) g.create();
+			// TODO This is slow
+			final Map<E, Integer> nodeMap = SEGraph.this.model.getDepthMap();
 
 			// Get the number of levels in the graph.
 			int numberOfLevels = Collections.max(nodeMap.values());
