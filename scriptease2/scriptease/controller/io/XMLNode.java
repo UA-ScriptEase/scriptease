@@ -2,6 +2,8 @@ package scriptease.controller.io;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -18,39 +20,43 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public enum XMLNode {
 	SCRIPTIT("ScriptIt"),
-	
+
 	AUDIO("Audio"),
 
 	AUTHOR("Author"),
 
 	CHILDREN("Children"),
-	
+
 	CAUSEIT("CauseIt"),
 
 	CAUSES("Causes", CAUSEIT),
 
 	CODESYMBOL("CodeSymbol"),
-	
+
 	CONTROLIT("ControlIt"),
-	
+
 	CONTROLITS("ControlIts", CONTROLIT),
 
 	DIALOGUE_LINE("DialogueLine"),
 
 	DIALOGUES("Dialogues", DIALOGUE_LINE),
-	
+
 	EFFECTS("Effects", SCRIPTIT),
 
 	ENABLED("Enabled"),
 
 	ENUM("Enum"),
 
+	ENTRY("Entry"),
+
 	ESCAPE("Escape"),
 
 	ESCAPES("Escapes", ESCAPE),
-	
+
+	DESCRIBEITNODE("DescribeItNode"),
+
 	DESCRIBEIT("DescribeIt"),
-	
+
 	DESCRIBEITS("DescribeIts", DESCRIBEIT),
 
 	FORMAT("Format"),
@@ -71,6 +77,8 @@ public enum XMLNode {
 
 	KEYWORD("Keyword"),
 
+	KNOWIT("KnowIt"),
+
 	LABEL("Label"),
 
 	LABELS("Labels", LABEL),
@@ -83,6 +91,10 @@ public enum XMLNode {
 
 	OPTIONAL_LIBRARIES("OptionalLibraries", OPTIONAL_LIBRARY),
 
+	PATH("Path", DESCRIBEITNODE),
+
+	PATHMAP("PathMap"),
+
 	RESERVED_WORD("Word"),
 
 	RESERVED_WORDS("ReservedWords", RESERVED_WORD),
@@ -93,6 +105,8 @@ public enum XMLNode {
 
 	START_STORY_POINT("StartStoryPoint"),
 
+	SUCCESSORS("Successors"),
+
 	TITLE("Title"),
 
 	TRANSLATOR("Translator"),
@@ -100,8 +114,8 @@ public enum XMLNode {
 	TYPE("Type"),
 
 	TYPES("Types", TYPE),
-	
-	TYPECONVERTERS("TypeConverters"),
+
+	TYPECONVERTERS("TypeConverters", SCRIPTIT),
 
 	VERSION("Version"),
 
@@ -121,6 +135,8 @@ public enum XMLNode {
 	}
 
 	private XMLNode(String name, XMLNode child) {
+		// TODO If we need multiple child types, make the parameter
+		// "XMLNode... children" and handle appropriately.
 		this.name = name;
 		this.child = child;
 	}
@@ -164,6 +180,18 @@ public enum XMLNode {
 		writer.endNode();
 	}
 
+	/**
+	 * Writes a node that also has an attribute attached to it.
+	 * 
+	 * TODO Suggested refactor: change parameter attributeData from "String" to
+	 * "String..."
+	 * 
+	 * @param writer
+	 * @param context
+	 * @param object
+	 * @param attribute
+	 * @param attributeData
+	 */
 	public void writeObject(HierarchicalStreamWriter writer,
 			MarshallingContext context, Object object, XMLAttribute attribute,
 			String attributeData) {
@@ -233,11 +261,7 @@ public enum XMLNode {
 	 */
 	public Collection<String> readStringCollection(
 			HierarchicalStreamReader reader, XMLNode child) {
-		// TODO Need to check this.name somehow.
-		// Should be reader.movedown, then check if it's the name,
-		// then do what we have,
-		// then move back up.
-		// Need to get rid of while loops first.
+		// TODO Need to get rid of while loops before deleting this method.
 		Collection<String> data = new ArrayList<String>();
 
 		while (reader.hasMoreChildren()) {
@@ -312,9 +336,8 @@ public enum XMLNode {
 	 * @param c
 	 * @return
 	 */
-	public <E> Collection<E> readObjectCollection(
-			HierarchicalStreamReader reader, UnmarshallingContext context,
-			Class<E> c) {
+	public <E> Collection<E> readCollection(HierarchicalStreamReader reader,
+			UnmarshallingContext context, Class<E> c) {
 		final Collection<E> collection = new ArrayList<E>();
 
 		reader.moveDown();
@@ -328,6 +351,49 @@ public enum XMLNode {
 		reader.moveUp();
 
 		return collection;
+	}
+
+	/**
+	 * Reads a collection that has attributes attached to it.
+	 * 
+	 * @param reader
+	 * @param context
+	 * @param c
+	 * @param attributes
+	 * @return
+	 */
+	public <E> XMLNodeData<Collection<E>> readAttributedCollection(
+			HierarchicalStreamReader reader, UnmarshallingContext context,
+			Class<E> c, XMLAttribute... attributes) {
+		final Collection<E> collection = new ArrayList<E>();
+		final Map<XMLAttribute, String> attributeMap;
+
+		attributeMap = new HashMap<XMLAttribute, String>();
+
+		reader.moveDown();
+
+		this.checkChild();
+		this.checkNodeName(reader);
+
+		for (XMLAttribute attribute : attributes) {
+			attributeMap.put(attribute, attribute.read(reader));
+		}
+
+		while (reader.hasMoreChildren()) {
+			collection.add(this.child.readObject(reader, context, c));
+		}
+		reader.moveUp();
+
+		return new XMLNodeData<Collection<E>>(attributeMap, collection);
+	}
+
+	/**
+	 * Returns the XML name of the node.
+	 * 
+	 * @return
+	 */
+	public String getName() {
+		return this.name;
 	}
 
 	/**
@@ -351,6 +417,36 @@ public enum XMLNode {
 		if (this.child == null) {
 			throw new NullPointerException("Null Child Node found for XMLNode "
 					+ this);
+		}
+	}
+
+	/**
+	 * Returns a bundle of data for the node. This is used for nodes that have
+	 * attributes, but contain child nodes.
+	 * 
+	 * @author kschenk
+	 * 
+	 * @param <Z>
+	 */
+	public class XMLNodeData<Z> {
+		private final Map<XMLAttribute, String> attributes;
+		private final Z data;
+
+		public XMLNodeData(Map<XMLAttribute, String> attributes, Z data) {
+			this.attributes = attributes;
+			this.data = data;
+		}
+
+		public Map<XMLAttribute, String> getAttributes() {
+			return attributes;
+		}
+
+		public String getAttribute(XMLAttribute attribute) {
+			return this.attributes.get(attribute);
+		}
+
+		public Z getData() {
+			return data;
 		}
 	}
 }

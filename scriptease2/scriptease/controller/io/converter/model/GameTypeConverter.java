@@ -24,6 +24,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author mfchurch
  */
 public class GameTypeConverter implements Converter {
+	// TODO See LibraryModelConverter class for an example of how to refactor
+	// this class. However, since we're moving to YAML eventually, we don't need
+	// to waste anymore time on refactoring these.
+
 	private static final String TAG_ENUM = "Enum";
 	private static final String TAG_LEGAL_VALUES = "LegalValues";
 	private static final String TAG_SLOTS = "Slots";
@@ -123,7 +127,8 @@ public class GameTypeConverter implements Converter {
 
 			// Read Slots
 			if (node.equals(TAG_SLOTS)) {
-				slots.addAll(XMLNode.SLOTS.readStringCollection(reader, XMLNode.SLOT));
+				slots.addAll(XMLNode.SLOTS.readStringCollection(reader,
+						XMLNode.SLOT));
 			}
 
 			// Read Escapes

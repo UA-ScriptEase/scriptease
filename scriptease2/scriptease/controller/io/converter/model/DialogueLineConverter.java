@@ -2,9 +2,11 @@ package scriptease.controller.io.converter.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import scriptease.controller.io.XMLNode;
 import scriptease.model.semodel.dialogue.DialogueLine;
+import scriptease.model.semodel.dialogue.DialogueLine.Speaker;
 import scriptease.translator.io.model.EditableResource;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
@@ -37,15 +39,15 @@ public class DialogueLineConverter implements Converter {
 		final String imageName;
 		final String audioName;
 
-		if(image != null)
+		if (image != null)
 			imageName = image.getName();
 		else
 			imageName = null;
-		if(audio != null) 
+		if (audio != null)
 			audioName = audio.getName();
 		else
 			audioName = null;
-		
+
 		XMLNode.NAME.writeString(writer, line.getName());
 		XMLNode.CHILDREN.writeObject(writer, context, line.getChildren());
 		XMLNode.ENABLED.writeBoolean(writer, line.isEnabled());
@@ -59,7 +61,7 @@ public class DialogueLineConverter implements Converter {
 			UnmarshallingContext context) {
 		final DialogueLine line;
 		final String name;
-		final Collection<DialogueLine> children;
+		final List<Resource> children;
 		final boolean enabled;
 		final String imageTemplateID;
 		final String audioTemplateID;
@@ -68,20 +70,20 @@ public class DialogueLineConverter implements Converter {
 		final Resource image;
 		final Resource audio;
 
-		line = new DialogueLine(StoryModelConverter.currentStory);
+		children = new ArrayList<Resource>();
 
 		name = XMLNode.NAME.readString(reader);
 
-		// TODO this.
+		// TODO This isn't the way we should be loading stuff from XML. We need
+		// to use XMLNode methods
 		reader.moveDown();
 		if (reader.hasMoreChildren())
 			if (!reader.getNodeName().equalsIgnoreCase(TAG_CHILDREN)) {
 				throw new ConversionException("Expected child list but found "
 						+ reader.getNodeName());
 			} else {
-				children = (Collection<DialogueLine>) context.convertAnother(
-						line, ArrayList.class);
-				line.addChildren(children);
+				children.addAll((Collection<DialogueLine>) context
+						.convertAnother(null, ArrayList.class));
 			}
 		reader.moveUp();
 
@@ -95,12 +97,8 @@ public class DialogueLineConverter implements Converter {
 		image = currentModule.getInstanceForObjectIdentifier(imageTemplateID);
 		audio = currentModule.getInstanceForObjectIdentifier(audioTemplateID);
 
-		line.setName(name);
-		if (audio != null)
-			line.setAudio(audio);
-		if (image != null)
-			line.setImage(image);
-		line.setEnabled(enabled);
+		line = new DialogueLine(StoryModelConverter.currentStory,
+				Speaker.FIRST, name, enabled, image, audio, children);
 
 		return line;
 	}

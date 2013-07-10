@@ -25,6 +25,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author remiller
  */
 public class CodeBlockSourceConverter extends StoryComponentConverter {
+
+	// TODO See LibraryModelConverter class for an example of how to refactor
+	// this class. However, since we're moving to YAML eventually, we don't need
+	// to waste anymore time on refactoring these.
 	public static final String TAG_CODE_BLOCK_SOURCE = "CodeBlockSource";
 
 	private static final String TAG_SUBJECT = "Subject";
@@ -161,7 +165,8 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 			}
 			// Types
 			else if (nodeName.equals(TAG_TYPES)) {
-				types.addAll(XMLNode.TYPES.readStringCollection(reader, XMLNode.TYPE));
+				types.addAll(XMLNode.TYPES.readStringCollection(reader,
+						XMLNode.TYPE));
 			}
 			// Parameters
 			else if (nodeName.equals(TAG_PARAMETERS)) {
@@ -173,7 +178,8 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 			 * and must be in the translator only.
 			 */
 			else if (nodeName.equals(TAG_INCLUDES)) {
-				includes.addAll(XMLNode.INCLUDES.readStringCollection(reader, XMLNode.INCLUDE));
+				includes.addAll(XMLNode.INCLUDES.readStringCollection(reader,
+						XMLNode.INCLUDE));
 			}
 			/*
 			 * Code. Cannot appear in Stories; code is game-specific and must be

@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,7 @@ import sun.awt.util.IdentityArrayList;
  * 
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  * 
  * @param <E>
  * 
@@ -130,8 +132,8 @@ public class SEGraph<E> extends JComponent {
 		this.selectedNodes.add(model.getStartNode());
 
 		this.setUI(this.new SEGraphUI());
-		this.setOpaque(true);
-		this.setBackground(Color.white);
+		// Setting opacity to false speeds up rendering.
+		this.setOpaque(false);
 
 		SEFocusManager.getInstance().addSEFocusObserver(this,
 				new SEFocusObserver() {
@@ -206,6 +208,8 @@ public class SEGraph<E> extends JComponent {
 		newNode = this.model.createNewNode();
 
 		if (this.model.addChild(newNode, parent)) {
+			this.model.recalculateDepthMap();
+
 			final Collection<E> parents;
 			final Collection<E> children;
 
@@ -705,14 +709,18 @@ public class SEGraph<E> extends JComponent {
 	 * @param node
 	 * @return
 	 */
-	private E getPossibleGroupEndNodesFor(E node) {
-		final Set<E> endNodes = this.model.getGroupableDescendants(node);
+	private Set<E> getPossibleGroupEndNodesFor(E node) {
+		final Set<E> endNodes = this.model.getGroupableEndNodes(node);
 
 		System.out.println("DEBUG: Size: " + endNodes.size());
 		for (E n : endNodes)
 			System.out.println("DEBUG: Node: " + n);
 
-		return null;
+		return endNodes;
+	}
+
+	private void highlightGroupableEndNodes(E startNode, Set<E> endNodes) {
+
 	}
 
 	/**
@@ -746,11 +754,17 @@ public class SEGraph<E> extends JComponent {
 			final Insets insets;
 			final Map<E, Integer> nodeMap;
 			final int numberOfLevels;
+			final Collection<Integer> levels;
 
 			insets = parent.getInsets();
-			nodeMap = SEGraph.this.model.getDepthMap(SEGraph.this
-					.getStartNode());
-			numberOfLevels = Collections.max(nodeMap.values());
+			// TODO Getting the depth map here makes the graph slow.
+			nodeMap = SEGraph.this.model.getDepthMap();
+			levels = nodeMap.values();
+
+			if (levels.isEmpty())
+				numberOfLevels = 0;
+			else
+				numberOfLevels = Collections.max(levels);
 
 			int xSize = insets.left + insets.right;
 			int ySize = insets.top + insets.bottom;
@@ -788,8 +802,7 @@ public class SEGraph<E> extends JComponent {
 			final int numberOfLevels;
 			final double graphHeight;
 
-			nodeMap = SEGraph.this.model.getDepthMap(SEGraph.this
-					.getStartNode());
+			nodeMap = SEGraph.this.model.getDepthMap();
 			numberOfLevels = Collections.max(nodeMap.values());
 			graphHeight = SEGraph.this.getPreferredSize().getHeight();
 
@@ -935,10 +948,12 @@ public class SEGraph<E> extends JComponent {
 	/**
 	 * UI used to draw lines between each node.
 	 * 
+	 * @author previous devs
 	 * @author kschenk
 	 * 
 	 */
 	public class SEGraphUI extends ComponentUI {
+
 		@Override
 		public void paint(Graphics g, JComponent c) {
 			g.setColor(SEGraph.this.getBackground());
@@ -969,16 +984,10 @@ public class SEGraph<E> extends JComponent {
 				GUIOp.paintArrow(g2, points);
 
 			}
-			connectNodes(g);
-		}
 
-		private void connectNodes(Graphics g) {
 			// Get the nodes level map
-			Map<E, Integer> nodeMap = SEGraph.this.model
-					.getDepthMap(SEGraph.this.getStartNode());
-
-			// Clone the graphics context.
-			final Graphics2D g2 = (Graphics2D) g.create();
+			// TODO This is slow
+			final Map<E, Integer> nodeMap = SEGraph.this.model.getDepthMap();
 
 			// Get the number of levels in the graph.
 			int numberOfLevels = Collections.max(nodeMap.values());
@@ -1038,6 +1047,7 @@ public class SEGraph<E> extends JComponent {
 	private E draggedFromNode = null;
 	private E startNode = null;
 	private E endNode = null;
+	private Set<E> ungroupableNodes = new HashSet<E>();
 
 	/**
 	 * Mouse adapter that gets added to every node. This is where the model gets
@@ -1046,6 +1056,7 @@ public class SEGraph<E> extends JComponent {
 	 * For graphical changes, see {@link SEGraphNodeRenderer}.
 	 * 
 	 * @author kschenk
+	 * @author jyuen
 	 * 
 	 */
 	private class NodeMouseAdapter extends MouseAdapter {
@@ -1087,40 +1098,88 @@ public class SEGraph<E> extends JComponent {
 				SEGraph.this.draggedFromNode = draggedFrom;
 
 			} else if (mode == Mode.GROUP || mode == Mode.UNGROUP) {
-				final E startedFrom;
-				final E endedFrom;
 
 				if (SEGraph.this.startNode == null) {
-					startedFrom = SEGraph.this.nodesToComponents
+					// Deal with the first node that is being selected -
+					// which is the node that determines the start of the group
+
+					final Set<E> allNodes;
+					final Set<E> possibleEndNodes;
+
+					SEGraph.this.startNode = SEGraph.this.nodesToComponents
 							.getKey((JComponent) e.getSource());
-					SEGraph.this.startNode = startedFrom;
-					SEGraph.this.getPossibleGroupEndNodesFor(startedFrom);
 
-				} else {
-					endedFrom = SEGraph.this.nodesToComponents
-							.getKey((JComponent) e.getSource());
-					SEGraph.this.endNode = endedFrom;
+					possibleEndNodes = SEGraph.this.model
+							.getGroupableEndNodes(SEGraph.this.startNode);
 
-					if (SEGraph.this.startNode != null
-							&& SEGraph.this.endNode != null) {
-						if (!UndoManager.getInstance().hasOpenUndoableAction())
-							UndoManager.getInstance().startUndoableAction(
-									"Creating group from "
-											+ SEGraph.this.startNode + " to "
-											+ SEGraph.this.endNode);
+					allNodes = SEGraph.this.model
+							.getDescendants(getStartNode());
+					allNodes.add(getStartNode());
 
-						System.out.println("DEBUG: starting node: "
-								+ SEGraph.this.startNode);
-						System.out.println("DEBUG: ending node: "
-								+ SEGraph.this.endNode);
+					// Call the graph renderer to visually identify which
+					// nodes are group-able and which are non-group-able
+					for (E currNode : allNodes) {
+						final JComponent component;
 
-						SEGraph.this.createNodeGroupAt(SEGraph.this.startNode,
-								SEGraph.this.endNode);
+						component = SEGraph.this.nodesToComponents
+								.getValue(currNode);
 
-						UndoManager.getInstance().endUndoableAction();
+						if (possibleEndNodes.contains(currNode)) {
+							SEGraph.this.renderer.setComponentAppearance(
+									component, currNode,
+									ScriptEaseUI.COLOUR_GROUPABLE__END_NODE);
+						} else {
+							SEGraph.this.ungroupableNodes.add(currNode);
 
-						SEGraph.this.startNode = null;
+							SEGraph.this.renderer.setComponentAppearance(
+									component, currNode,
+									ScriptEaseUI.COLOUR_UNGROUPABLE_END_NODE);
+						}
 					}
+
+					SEGraph.this.setCursor(ScriptEaseUI.CURSOR_GROUP_END);
+				} else {
+					// Deal with the next node that is being selected -
+					// which is the node that determines the end of the group
+
+					SEGraph.this.endNode = SEGraph.this.nodesToComponents
+							.getKey((JComponent) e.getSource());
+
+					// Make sure the node selected isn't a non-group-able one
+					if (!SEGraph.this.ungroupableNodes.contains(endNode)) {
+
+						if (SEGraph.this.startNode != null
+								&& SEGraph.this.endNode != null) {
+
+							if (!UndoManager.getInstance()
+									.hasOpenUndoableAction())
+								UndoManager
+										.getInstance()
+										.startUndoableAction(
+												"Creating group from "
+														+ SEGraph.this.startNode
+														+ " to "
+														+ SEGraph.this.endNode);
+
+							System.out.println("DEBUG: starting node: "
+									+ SEGraph.this.startNode);
+							System.out.println("DEBUG: ending node: "
+									+ SEGraph.this.endNode);
+
+							SEGraph.this.createNodeGroupAt(
+									SEGraph.this.startNode,
+									SEGraph.this.endNode);
+
+							UndoManager.getInstance().endUndoableAction();
+
+						}
+					}
+
+					SEGraph.this.renderer.resetAppearances();
+					SEGraph.this.ungroupableNodes = new HashSet<E>();
+					SEGraph.this.setCursor(ScriptEaseUI.CURSOR_GROUP_START);
+					SEGraph.this.startNode = null;
+					SEGraph.this.endNode = null;
 				}
 			}
 		}
@@ -1140,7 +1199,11 @@ public class SEGraph<E> extends JComponent {
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
 					entered.setCursor(null);
-			else if (SEGraph.this.isReadOnly)
+			else if (SEGraph.this.ungroupableNodes
+					.contains(this.lastEnteredNode)) {
+				if (mode == Mode.GROUP)
+					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
+			} else if (SEGraph.this.isReadOnly)
 				if (mode != Mode.SELECT) {
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else

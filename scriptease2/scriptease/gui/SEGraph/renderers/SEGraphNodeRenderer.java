@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import scriptease.gui.SEFocusManager;
@@ -48,9 +49,7 @@ public class SEGraphNodeRenderer<E> {
 	 * @return
 	 */
 	public final JComponent createComponentForNode(E node) {
-		final JComponent component;
-
-		component = GUIOp.buildGradientPanel(1.3);
+		final JComponent component = new JPanel();
 
 		this.reconfigureAppearance(component, node);
 		this.configureInternalComponents(component, node);
@@ -102,7 +101,8 @@ public class SEGraphNodeRenderer<E> {
 
 				SEGraphNodeRenderer.this.pressedComponent = null;
 
-				resetAppearances();
+				if (SEGraphNodeRenderer.this.graph.getToolBarMode() != Mode.GROUP)
+					resetAppearances();
 
 				/*
 				 * We redraw the actual clicked on components by calling
@@ -181,9 +181,9 @@ public class SEGraphNodeRenderer<E> {
 	 * @param backgroundColour
 	 *            The background colour to set for the component.
 	 */
-	private void setComponentAppearance(JComponent component, E node,
+	public void setComponentAppearance(JComponent component, E node,
 			Color backgroundColour) {
-		final int INNER_BORDER_THICKNESS = 3;
+		final int INNER_BORDER_THICKNESS = 1;
 
 		final Border EMPTY_BORDER = BorderFactory.createEmptyBorder(
 				INNER_BORDER_THICKNESS, INNER_BORDER_THICKNESS,
@@ -234,11 +234,6 @@ public class SEGraphNodeRenderer<E> {
 		final Color backgroundColour;
 
 		// first, determine the tool colour and highlight.
-		/*
-		 * These are using the game object colours because they're convenient
-		 * and close enough. Feel free to add colours to ScriptEaseUI if you
-		 * want other colours. - remiller
-		 */
 		if (this.hoveredComponent == component) {
 			final Mode mode;
 
@@ -254,6 +249,21 @@ public class SEGraphNodeRenderer<E> {
 				toolColour = ScriptEaseUI.COLOUR_DELETE_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.2);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);
+			} else if (!graph.isReadOnly() && (mode == Mode.GROUP)) {
+				toolColour = component.getBackground();
+				if (component.getBackground().equals(
+						ScriptEaseUI.COLOUR_UNGROUPABLE_END_NODE)) {
+					toolHighlight = component.getBackground();
+					toolPress = component.getBackground();
+				} else {
+					toolHighlight = GUIOp.scaleWhite(toolColour, 1.4);
+					toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);
+				}
+				
+				System.out.println("DES "  +  toolColour);
+				System.out.println("DES " + toolHighlight);
+				System.out.println("DES " + toolPress);
+				
 			} else {
 				toolColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.25);
