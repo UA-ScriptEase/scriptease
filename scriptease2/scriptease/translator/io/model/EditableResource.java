@@ -23,8 +23,13 @@ public abstract class EditableResource extends Resource {
 	private String name;
 
 	public EditableResource() {
-		this.name = "";
-		this.children = new ArrayList<Resource>();
+		this("", new ArrayList<Resource>());
+	}
+
+	public EditableResource(String name, List<Resource> children) {
+		this.name = name;
+		this.children = children;
+
 		this.observerManager = new ObserverManager<ResourceObserver>();
 	}
 
@@ -46,7 +51,7 @@ public abstract class EditableResource extends Resource {
 		return removed;
 	}
 
-	public boolean addChildren(Collection<? extends Resource> children) {
+	public boolean addChildren(Collection<Resource> children) {
 		return this.children.addAll(children);
 	}
 

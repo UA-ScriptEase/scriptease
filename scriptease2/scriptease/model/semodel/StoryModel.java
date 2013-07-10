@@ -13,6 +13,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.dialogue.DialogueLine;
+import scriptease.model.semodel.dialogue.DialogueLine.Speaker;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -116,7 +117,7 @@ public final class StoryModel extends SEModel {
 	 * @return The newly added root
 	 */
 	public DialogueLine createAndAddDialogueRoot() {
-		final DialogueLine newRoot = new DialogueLine(this);
+		final DialogueLine newRoot = new DialogueLine(this, Speaker.FIRST);
 
 		this.dialogueRoots.add(newRoot);
 
