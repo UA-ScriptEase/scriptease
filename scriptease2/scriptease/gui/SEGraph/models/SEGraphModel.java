@@ -255,8 +255,8 @@ public abstract class SEGraphModel<E> {
 	}
 
 	public final Set<E> getGroupableDescendants(E node) {
-		final Set<E> descendants = new HashSet<E>();	
-			
+		final HashSet<E> descendants = new HashSet<E>();
+
 		final Map<E, Integer> visited = new HashMap<E, Integer>();
 		final Queue<E> queue = new LinkedList<E>();
 
@@ -279,10 +279,11 @@ public abstract class SEGraphModel<E> {
 				queue.add(currNode);
 			}
 
-			if (queue.size() == 1)
+			if (queue.size() == 1) {
 				descendants.add(queue.peek());
+			}
 		}
-		
+
 		return descendants;
 	}
 
