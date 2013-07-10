@@ -52,6 +52,7 @@ public class SEGraphToolBar extends JToolBar {
 	 * The current mode of the toolbar.
 	 * 
 	 * @author kschenk
+	 * @author jyuen
 	 * 
 	 */
 	public static enum Mode {

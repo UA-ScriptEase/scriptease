@@ -136,7 +136,7 @@ public class StoryComponentPanelFactory {
 							panel);
 				}
 
-				selectionManager.addComplexPanel(childPanel, select);
+				selectionManager.addPanel(childPanel, select);
 			}
 		} else {
 			throw new IllegalStateException(parent

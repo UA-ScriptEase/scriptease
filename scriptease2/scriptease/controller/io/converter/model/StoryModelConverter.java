@@ -168,7 +168,7 @@ public class StoryModelConverter implements Converter {
 
 		model.setRoot(newRoot);
 
-		lines = XMLNode.DIALOGUES.readObjectCollection(reader, context,
+		lines = XMLNode.DIALOGUES.readCollection(reader, context,
 				DialogueLine.class);
 
 		model.addDialogueRoots(lines);

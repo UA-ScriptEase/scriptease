@@ -23,6 +23,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @see ComplexStoryComponentConverter
  */
 public class ScriptItConverter extends ComplexStoryComponentConverter {
+
+	// TODO See LibraryModelConverter class for an example of how to refactor
+	// this class. However, since we're moving to YAML eventually, we don't need
+	// to waste anymore time on refactoring these.
 	public static final String TAG_SCRIPTIT = "ScriptIt";
 	private static final String TAG_CODEBLOCKS = "CodeBlocks";
 

@@ -149,7 +149,15 @@ class ResourceTree extends JPanel {
 		}
 
 		this.repaint();
-		this.revalidate();
+
+		final Container parent = this.getParent();
+
+		// This is necessary to redraw the parent of the tree if the tree is
+		// filled. We use this especially for the JSplitPane.
+		if (parent != null)
+			parent.validate();
+		else
+			this.revalidate();
 	}
 
 	/**

@@ -147,7 +147,7 @@ class SEModelTabbedPane extends JTabbedPane {
 	private void createTabForModel(SEModel model) {
 		final boolean tabExistsForModel = SEModelTabbedPane.this.modelToComponent
 				.containsKey(model);
-		
+
 		if (!tabExistsForModel) {
 			model.process(new ModelAdapter() {
 				@Override
@@ -366,6 +366,11 @@ class SEModelTabbedPane extends JTabbedPane {
 		storyGraphPanel.setLayout(new BorderLayout());
 
 		storyGraphScrollPane.setBorder(BorderFactory.createEmptyBorder());
+		storyGraphScrollPane.getVerticalScrollBar().setUnitIncrement(
+				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+		storyGraphScrollPane.getHorizontalScrollBar().setUnitIncrement(
+				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+
 		storyGraphPanel.setBorder(BorderFactory
 				.createEtchedBorder(EtchedBorder.LOWERED));
 

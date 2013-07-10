@@ -20,6 +20,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author kschenk
  */
 public class StoryPointConverter extends ComplexStoryComponentConverter {
+	// TODO See LibraryModelConverter class for an example of how to refactor
+	// this class. However, since we're moving to YAML eventually, we don't need
+	// to waste anymore time on refactoring these.
 	public static final String TAG_STORYPOINT = "StoryPoint";
 	public static final String TAG_FAN_IN = "FanIn";
 	public static final String TAG_SUCCESSORS = "Successors";

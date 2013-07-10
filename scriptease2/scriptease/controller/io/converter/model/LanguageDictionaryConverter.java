@@ -53,7 +53,7 @@ public class LanguageDictionaryConverter implements Converter {
 		indentString = XMLNode.INDENT_STRING.readString(reader);
 		reservedWords = XMLNode.RESERVED_WORDS.readStringCollection(reader);
 
-		fragments = XMLNode.FORMATS.readObjectCollection(reader, context,
+		fragments = XMLNode.FORMATS.readCollection(reader, context,
 				FormatDefinitionFragment.class);
 
 		languageDictionary = new LanguageDictionary(name, indentString,

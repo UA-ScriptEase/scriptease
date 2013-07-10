@@ -141,11 +141,13 @@ public class ResourcePanel extends JPanel {
 						eventType = event.getEventType();
 
 						if (eventType == SEModelEvent.Type.ACTIVATED) {
+							// If a model is activated
 							panel.resources.fillTree();
 							panel.setVisible(event.getPatternModel() instanceof StoryModel);
 						} else if (eventType == SEModelEvent.Type.REMOVED
 								&& SEModelManager.getInstance()
 										.getActiveModel() == null) {
+							// If the last model is removed.
 							panel.resources.fillTree();
 							panel.setVisible(false);
 						}

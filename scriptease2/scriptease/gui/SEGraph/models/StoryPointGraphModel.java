@@ -1,8 +1,6 @@
 package scriptease.gui.SEGraph.models;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryPoint;
@@ -71,16 +69,6 @@ public class StoryPointGraphModel extends SEGraphModel<StoryPoint> {
 
 	@Override
 	public Collection<StoryPoint> getParents(StoryPoint node) {
-		final Set<StoryPoint> parents;
-
-		parents = new HashSet<StoryPoint>();
-
-		for (StoryPoint storyPoint : this.getNodes()) {
-			for (StoryPoint successor : storyPoint.getSuccessors())
-				if (successor == node) {
-					parents.add(storyPoint);
-				}
-		}
-		return parents;
+		return node.getParents();
 	}
 }
