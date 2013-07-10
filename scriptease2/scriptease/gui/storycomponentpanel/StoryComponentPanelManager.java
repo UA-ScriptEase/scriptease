@@ -45,7 +45,7 @@ public class StoryComponentPanelManager {
 	public void addPanel(StoryComponentPanel panel, boolean selected) {
 		for (StoryComponentPanel aPanel : panel.getDescendants()) {
 			this.selected.put(aPanel, selected);
-			this.displayPanelSelection(panel, selected);
+			this.displayPanelSelection(aPanel, selected);
 		}
 	}
 

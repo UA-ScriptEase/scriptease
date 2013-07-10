@@ -180,6 +180,18 @@ public enum XMLNode {
 		writer.endNode();
 	}
 
+	/**
+	 * Writes a node that also has an attribute attached to it.
+	 * 
+	 * TODO Suggested refactor: change parameter attributeData from "String" to
+	 * "String..."
+	 * 
+	 * @param writer
+	 * @param context
+	 * @param object
+	 * @param attribute
+	 * @param attributeData
+	 */
 	public void writeObject(HierarchicalStreamWriter writer,
 			MarshallingContext context, Object object, XMLAttribute attribute,
 			String attributeData) {
