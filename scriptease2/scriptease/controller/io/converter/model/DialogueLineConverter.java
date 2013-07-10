@@ -2,9 +2,11 @@ package scriptease.controller.io.converter.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import scriptease.controller.io.XMLNode;
 import scriptease.model.semodel.dialogue.DialogueLine;
+import scriptease.model.semodel.dialogue.DialogueLine.Speaker;
 import scriptease.translator.io.model.EditableResource;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
@@ -59,7 +61,7 @@ public class DialogueLineConverter implements Converter {
 			UnmarshallingContext context) {
 		final DialogueLine line;
 		final String name;
-		final Collection<DialogueLine> children;
+		final List<Resource> children;
 		final boolean enabled;
 		final String imageTemplateID;
 		final String audioTemplateID;
@@ -68,7 +70,7 @@ public class DialogueLineConverter implements Converter {
 		final Resource image;
 		final Resource audio;
 
-		line = new DialogueLine(StoryModelConverter.currentStory);
+		children = new ArrayList<Resource>();
 
 		name = XMLNode.NAME.readString(reader);
 
@@ -80,9 +82,8 @@ public class DialogueLineConverter implements Converter {
 				throw new ConversionException("Expected child list but found "
 						+ reader.getNodeName());
 			} else {
-				children = (Collection<DialogueLine>) context.convertAnother(
-						line, ArrayList.class);
-				line.addChildren(children);
+				children.addAll((Collection<DialogueLine>) context
+						.convertAnother(null, ArrayList.class));
 			}
 		reader.moveUp();
 
@@ -96,12 +97,8 @@ public class DialogueLineConverter implements Converter {
 		image = currentModule.getInstanceForObjectIdentifier(imageTemplateID);
 		audio = currentModule.getInstanceForObjectIdentifier(audioTemplateID);
 
-		line.setName(name);
-		if (audio != null)
-			line.setAudio(audio);
-		if (image != null)
-			line.setImage(image);
-		line.setEnabled(enabled);
+		line = new DialogueLine(StoryModelConverter.currentStory,
+				Speaker.FIRST, name, enabled, image, audio, children);
 
 		return line;
 	}
