@@ -94,7 +94,7 @@ public final class DialogueLine extends EditableResource {
 		if (child instanceof DialogueLine) {
 			final DialogueLine childLine = (DialogueLine) child;
 
-			if (childLine.speaker == null) {
+		
 				if (this.speaker == Speaker.FIRST)
 					childLine.speaker = Speaker.SECOND;
 				else if (this.speaker == Speaker.SECOND)
@@ -102,7 +102,7 @@ public final class DialogueLine extends EditableResource {
 				else
 					throw new IllegalStateException(
 							"Tried to add a dialogue line to a line with no speaker.");
-			}
+			
 		}
 	}
 

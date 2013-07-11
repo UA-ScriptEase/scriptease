@@ -73,12 +73,16 @@ public abstract class EditableResource extends Resource {
 		return added;
 	}
 
+	public Collection<ResourceObserver> getObservers() {
+		return this.observerManager.getObservers();
+	}
+
 	public void addObserver(Object weakReference, ResourceObserver observer) {
 		this.observerManager.addObserver(weakReference, observer);
 	}
 
-	public void addObserver(ResourceObserver observer) {
-		this.observerManager.addObserver(this, observer);
+	public void removeObserver(ResourceObserver observer) {
+		this.observerManager.removeObserver(observer);
 	}
 
 	@Override
