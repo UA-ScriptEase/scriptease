@@ -195,7 +195,7 @@ public final class FileManager {
 	 */
 	public void save(SEModel model) {
 		FileManager.this.saveWithoutCode(model);
-		
+
 		model.process(new ModelAdapter() {
 
 			@Override
@@ -486,13 +486,27 @@ public final class FileManager {
 				});
 	}
 
-	private void writeCode(StoryModel model, boolean compile) {
-		// generate the code
+	/**
+	 * Generates the code
+	 * 
+	 * @param model
+	 *            The model to generate the code for
+	 * @param compile
+	 *            Whether we want to compile the code
+	 */
+	private void writeCode(final StoryModel model, boolean compile) {
 		final GameModule module = model.getModule();
 		final Translator translator = model.getTranslator();
 		final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
 		final Collection<ScriptInfo> scriptInfos = CodeGenerator.getInstance()
 				.generateCode(model, problems);
+
+		WindowFactory.showProgressBar("Writing Code...", new Runnable() {
+			@Override
+			public void run() {
+				FileManager.this.writeCode(model, true);
+			}
+		});
 
 		module.addScripts(scriptInfos);
 		module.addIncludeFiles(translator.getIncludes());
@@ -530,8 +544,7 @@ public final class FileManager {
 							+ "Story Save Successful!");
 		} catch (IOException e) {
 			// Nothing better to do at the moment except let ScriptEase
-			// explode.
-			// Eventually, this should undo the save. IE have a backup
+			// explode. Eventually, this should undo the save. IE have a backup
 			// file that we would ordinarily replace, but since we've failed
 			// we just delete the file we're currently writing and leave the
 			// original intact. - remiller
