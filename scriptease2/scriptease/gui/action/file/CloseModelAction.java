@@ -35,7 +35,8 @@ public class CloseModelAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (FileManager.getInstance().hasUnsavedChanges(model))
+		if (FileManager.getInstance().hasUnsavedChanges(model)) {
 			FileManager.getInstance().close(this.model);
+		}
 	}
 }
