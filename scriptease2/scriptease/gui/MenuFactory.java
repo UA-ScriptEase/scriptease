@@ -34,6 +34,7 @@ import scriptease.gui.action.file.OpenStoryModelAction;
 import scriptease.gui.action.file.SaveModelAction;
 import scriptease.gui.action.file.SaveModelExplicitlyAction;
 import scriptease.gui.action.file.SaveModelPackageAction;
+import scriptease.gui.action.file.SaveModelWithoutCodeAction;
 import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.library.AddLibraryToStoryModelAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
@@ -179,6 +180,7 @@ public class MenuFactory {
 		menu.add(SaveModelAction.getInstance());
 		menu.add(SaveModelExplicitlyAction.getInstance());
 		menu.add(SaveModelPackageAction.getInstance());
+		menu.add(SaveModelWithoutCodeAction.getInstance());
 		menu.addSeparator();
 
 		// add the recent files list

@@ -187,36 +187,20 @@ public final class FileManager {
 	 * Saves the given model. Checks the map of open files to see if the model
 	 * has already been saved somewhere. If so, it saves the given model there.
 	 * If not, it calls <code>saveAs</code> to prompt the user for a new
-	 * location.
+	 * location. We also generate the code.
 	 * 
 	 * @param model
 	 *            The model to be saved.
 	 * @see #saveAs(StoryModel)
 	 */
 	public void save(SEModel model) {
-		final File location = this.openFiles.getKey(model);
-		final String saveMessage;
-
-		saveMessage = "Saving story " + model.getTitle() + " to " + location;
-
-		System.out.println(saveMessage);
-		StatusManager.getInstance().setStatus(saveMessage + " ...");
-
-		if (location == null) {
-			FileManager.this.saveAs(model);
-			return;
-		}
-
+		FileManager.this.saveWithoutCode(model);
+		
 		model.process(new ModelAdapter() {
-			@Override
-			public void processLibraryModel(final LibraryModel library) {
-				FileManager.this.writeLibraryModelFile(library, location);
-			}
 
 			@Override
 			public void processStoryModel(StoryModel storyModel) {
-				FileManager.this.writeStoryModelFile(storyModel, location,
-						true, true);
+				FileManager.this.writeCode(storyModel, true);
 			}
 		});
 	}
@@ -342,6 +326,45 @@ public final class FileManager {
 		});
 	}
 
+	/**
+	 * Saves the given model without writing any code. Checks the map of open
+	 * files to see if the model has already been saved somewhere. If so, it
+	 * saves the given model there. If not, it calls <code>saveAs</code> to
+	 * prompt the user for a new location.
+	 * 
+	 * @param model
+	 *            The model to be saved.
+	 * @see #save(SEModel)
+	 * @see #saveAs(StoryModel)
+	 */
+	public void saveWithoutCode(SEModel model) {
+		final File location = this.openFiles.getKey(model);
+		final String saveMessage;
+
+		saveMessage = "Saving story " + model.getTitle() + " to " + location;
+
+		System.out.println(saveMessage);
+		StatusManager.getInstance().setStatus(saveMessage + " ...");
+
+		if (location == null) {
+			FileManager.this.saveAs(model);
+			return;
+		}
+
+		model.process(new ModelAdapter() {
+			@Override
+			public void processLibraryModel(final LibraryModel library) {
+				FileManager.this.writeLibraryModelFile(library, location);
+			}
+
+			@Override
+			public void processStoryModel(StoryModel storyModel) {
+				FileManager.this.writeStoryModelFile(storyModel, location,
+						true, true);
+			}
+		});
+	}
+
 	private void writeLibraryModelFile(final LibraryModel library,
 			final File location) {
 		WindowFactory.showProgressBar("Saving Library...", new Runnable() {
@@ -430,13 +453,6 @@ public final class FileManager {
 		// remove the entry corresponding to the model, not the location.
 		this.openFiles.removeValue(model);
 		this.openFiles.put(location, model);
-
-		WindowFactory.showProgressBar("Writing Code...", new Runnable() {
-			@Override
-			public void run() {
-				FileManager.this.writeCode(model, true);
-			}
-		});
 
 		if (updateRecentFiles) {
 			// update the recent files list in the preferences file.
@@ -837,7 +853,7 @@ public final class FileManager {
 
 		modelLocation = this.openFiles.getKey(model);
 		this.openFiles.removeKey(modelLocation);
-		
+
 		return true;
 	}
 
@@ -857,7 +873,7 @@ public final class FileManager {
 			if (!this.hasUnsavedChanges(model))
 				return false;
 		}
-		
+
 		return true;
 	}
 
