@@ -200,13 +200,14 @@ public final class FileManager {
 
 			@Override
 			public void processStoryModel(final StoryModel storyModel) {
-				
-				WindowFactory.showProgressBar("Writing Code...", new Runnable() {
-					@Override
-					public void run() {
-						FileManager.this.writeCode(storyModel, true);
-					}
-				});
+
+				WindowFactory.showProgressBar("Writing Code...",
+						new Runnable() {
+							@Override
+							public void run() {
+								FileManager.this.writeCode(storyModel, true);
+							}
+						});
 			}
 		});
 	}
@@ -293,7 +294,7 @@ public final class FileManager {
 	public void saveAsPackage(final SEModel model) {
 		model.process(new ModelAdapter() {
 			@Override
-			public void processStoryModel(StoryModel storyModel) {
+			public void processStoryModel(final StoryModel storyModel) {
 				final WindowFactory windowManager = WindowFactory.getInstance();
 
 				File location = windowManager.showFileChooser(
@@ -313,6 +314,14 @@ public final class FileManager {
 
 				FileManager.this.writeStoryModelFile(storyModel,
 						tempStoryLocation, false, false);
+
+				WindowFactory.showProgressBar("Writing Code...",
+						new Runnable() {
+							@Override
+							public void run() {
+								FileManager.this.writeCode(storyModel, true);
+							}
+						});
 
 				if (!FileOp.getExtension(location).equalsIgnoreCase(
 						FileManager.FILE_EXTENSION_PACKAGE)) {
