@@ -12,6 +12,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -21,6 +22,7 @@ import scriptease.model.complex.StoryComponentContainer;
  * KnowItBindingNull);
  * 
  * @author mfchurch
+ * @author jyuen
  * 
  */
 public class ParameterBoundRule extends StoryAdapter implements
@@ -51,7 +53,7 @@ public class ParameterBoundRule extends StoryAdapter implements
 	 */
 	@Override
 	public void processKnowIt(final KnowIt knowIt) {
-		KnowItBinding binding = knowIt.getBinding();
+		final KnowItBinding binding = knowIt.getBinding();
 		binding.process(new BindingAdapter() {
 
 			@Override
@@ -69,6 +71,14 @@ public class ParameterBoundRule extends StoryAdapter implements
 				reference.getValue().process(ParameterBoundRule.this);
 			}
 		});
+	}
+	
+	@Override
+	public void processAskIt(final AskIt askIt) {
+		final KnowIt condition;
+		
+		condition = askIt.getCondition();
+		condition.process(this);
 	}
 
 	/**

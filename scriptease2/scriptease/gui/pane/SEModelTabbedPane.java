@@ -136,7 +136,7 @@ class SEModelTabbedPane extends JTabbedPane {
 			SEModelTabbedPane.this
 					.remove(this.modelToComponent.getValue(model));
 			this.modelToComponent.removeKey(model);
-		}
+		} 
 	}
 
 	/**

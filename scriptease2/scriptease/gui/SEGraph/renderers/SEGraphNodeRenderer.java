@@ -259,11 +259,6 @@ public class SEGraphNodeRenderer<E> {
 					toolHighlight = GUIOp.scaleWhite(toolColour, 1.4);
 					toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);
 				}
-				
-				System.out.println("DES "  +  toolColour);
-				System.out.println("DES " + toolHighlight);
-				System.out.println("DES " + toolPress);
-				
 			} else {
 				toolColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.25);

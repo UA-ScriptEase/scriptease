@@ -857,13 +857,7 @@ public final class FileManager {
 			if (!this.hasUnsavedChanges(model))
 				return false;
 		}
-
-		// actually perform... The Closing. Cue dramatic music!
-		for (SEModel model : SEModelManager.getInstance().getModels()) {
-			if (!this.close(model))
-				return false;
-		}
-
+		
 		return true;
 	}
 
