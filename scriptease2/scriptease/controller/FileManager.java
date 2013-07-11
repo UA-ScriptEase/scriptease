@@ -199,8 +199,14 @@ public final class FileManager {
 		model.process(new ModelAdapter() {
 
 			@Override
-			public void processStoryModel(StoryModel storyModel) {
-				FileManager.this.writeCode(storyModel, true);
+			public void processStoryModel(final StoryModel storyModel) {
+				
+				WindowFactory.showProgressBar("Writing Code...", new Runnable() {
+					@Override
+					public void run() {
+						FileManager.this.writeCode(storyModel, true);
+					}
+				});
 			}
 		});
 	}
@@ -500,13 +506,6 @@ public final class FileManager {
 		final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
 		final Collection<ScriptInfo> scriptInfos = CodeGenerator.getInstance()
 				.generateCode(model, problems);
-
-		WindowFactory.showProgressBar("Writing Code...", new Runnable() {
-			@Override
-			public void run() {
-				FileManager.this.writeCode(model, true);
-			}
-		});
 
 		module.addScripts(scriptInfos);
 		module.addIncludeFiles(translator.getIncludes());
