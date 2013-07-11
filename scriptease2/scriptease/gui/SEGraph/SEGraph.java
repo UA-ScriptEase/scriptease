@@ -722,7 +722,6 @@ public class SEGraph<E> extends JComponent {
 			final Collection<Integer> levels;
 
 			insets = parent.getInsets();
-			// TODO Getting the depth map here makes the graph slow.
 			nodeMap = SEGraph.this.model.getDepthMap();
 			levels = nodeMap.values();
 
