@@ -689,6 +689,8 @@ public class SEGraph<E> extends JComponent {
 	 *            The ending node of the group
 	 */
 	private void createNodeGroupAt(E startingNode, E endingNode) {
+		// TODO This doesn't actually create the node group yet
+
 		final Collection<E> nodeGroup;
 
 		nodeGroup = this.model.getPathBetweenNodes(startingNode, endingNode);
@@ -702,26 +704,43 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
-	 * Returns the possible end nodes for @param node. If we were to consider
-	 * levels of descendants, where there is only one node at that descendant
-	 * level is where a possible end node can be formed.
+	 * Shows the possible end nodes for @param node visually. All nodes that can
+	 * node be end nodes are grayed out and not available for selection.
 	 * 
 	 * @param node
 	 * @return
 	 */
-	private Set<E> getPossibleGroupEndNodesFor(E node) {
-		final Set<E> endNodes = this.model.getGroupableEndNodes(node);
+	private void showEndNodesFor(E node) {
+		final Set<E> allNodes;
+		final Set<E> possibleEndNodes;
 
-		System.out.println("DEBUG: Size: " + endNodes.size());
-		for (E n : endNodes)
-			System.out.println("DEBUG: Node: " + n);
+		possibleEndNodes = SEGraph.this.model.getGroupableEndNodes(node);
 
-		return endNodes;
+		allNodes = SEGraph.this.model.getDescendants(getStartNode());
+		allNodes.add(getStartNode());
+
+		// Call the graph renderer to visually identify which
+		// nodes are group-able and which are non-group-able
+		for (E currNode : allNodes) {
+			final JComponent component;
+
+			component = SEGraph.this.nodesToComponents.getValue(currNode);
+
+			if (possibleEndNodes.contains(currNode)) {
+				SEGraph.this.renderer.setComponentAppearance(component,
+						currNode, ScriptEaseUI.COLOUR_GROUPABLE__END_NODE);
+			} else {
+				SEGraph.this.ungroupableNodes.add(currNode);
+
+				SEGraph.this.renderer.setComponentAppearance(component,
+						currNode, ScriptEaseUI.COLOUR_UNGROUPABLE_END_NODE);
+			}
+		}
+
+		SEGraph.this.setCursor(ScriptEaseUI.CURSOR_GROUP_END);
 	}
-
-	private void highlightGroupableEndNodes(E startNode, Set<E> endNodes) {
-
-	}
+	
+	
 
 	/**
 	 * The class that handles the actual laying out of GraphNodes. The logic is
@@ -1103,41 +1122,10 @@ public class SEGraph<E> extends JComponent {
 					// Deal with the first node that is being selected -
 					// which is the node that determines the start of the group
 
-					final Set<E> allNodes;
-					final Set<E> possibleEndNodes;
-
 					SEGraph.this.startNode = SEGraph.this.nodesToComponents
 							.getKey((JComponent) e.getSource());
 
-					possibleEndNodes = SEGraph.this.model
-							.getGroupableEndNodes(SEGraph.this.startNode);
-
-					allNodes = SEGraph.this.model
-							.getDescendants(getStartNode());
-					allNodes.add(getStartNode());
-
-					// Call the graph renderer to visually identify which
-					// nodes are group-able and which are non-group-able
-					for (E currNode : allNodes) {
-						final JComponent component;
-
-						component = SEGraph.this.nodesToComponents
-								.getValue(currNode);
-
-						if (possibleEndNodes.contains(currNode)) {
-							SEGraph.this.renderer.setComponentAppearance(
-									component, currNode,
-									ScriptEaseUI.COLOUR_GROUPABLE__END_NODE);
-						} else {
-							SEGraph.this.ungroupableNodes.add(currNode);
-
-							SEGraph.this.renderer.setComponentAppearance(
-									component, currNode,
-									ScriptEaseUI.COLOUR_UNGROUPABLE_END_NODE);
-						}
-					}
-
-					SEGraph.this.setCursor(ScriptEaseUI.CURSOR_GROUP_END);
+					SEGraph.this.showEndNodesFor(startNode);
 				} else {
 					// Deal with the next node that is being selected -
 					// which is the node that determines the end of the group
