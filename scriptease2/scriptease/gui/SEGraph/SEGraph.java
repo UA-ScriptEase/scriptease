@@ -748,7 +748,7 @@ public class SEGraph<E> extends JComponent {
 	 * @author kschenk
 	 */
 	private class SEGraphLayoutManager implements LayoutManager {
-		private static final int HORIZONTAL_GAP = 50;
+		private static final int HORIZONTAL_GAP = 60;
 		private static final int VERTICAL_GAP = 15;
 
 		@Override
@@ -808,7 +808,7 @@ public class SEGraph<E> extends JComponent {
 			numberOfLevels = Collections.max(nodeMap.values());
 			graphHeight = SEGraph.this.getPreferredSize().getHeight();
 
-			int xLocation = HORIZONTAL_GAP;
+			int xLocation = 10;
 			// For each level in the graph,
 			for (int currentLevel = 0; currentLevel <= numberOfLevels; currentLevel++) {
 				final List<E> currentNodes;
@@ -825,28 +825,19 @@ public class SEGraph<E> extends JComponent {
 				// Number of y pixels each node is allocated
 				pixelsPerNode = graphHeight / numberOfNodes;
 
+				int position = 0;
 				// For each node at that level,
-				for (int currentNode = 0; currentNode < numberOfNodes; currentNode++) {
-					final E node;
+				for (E node : currentNodes) {
 					final JComponent component;
 					final Dimension componentSize;
-					final int nodeWidth;
 					final int yNodeLocation;
 
-					node = currentNodes.get(currentNode);
 					component = SEGraph.this.createComponentForNode(node);
 					// JComponent preferred width
 					componentSize = component.getPreferredSize();
-					nodeWidth = componentSize.width;
-
-					// TODO Change variable name (obvs) and determine what
-					// happens
-					final double heightddd = pixelsPerNode;
-					// componentSize.height + 20;
 
 					// The y Location for the node.
-					yNodeLocation = (int) (heightddd * (currentNode + 1) - 0.5
-							* heightddd - 0.5 * componentSize.height);
+					yNodeLocation = (int) (pixelsPerNode * (position + 0.5) - componentSize.height / 2);
 
 					if (component.getMouseListeners().length <= 1) {
 						component.addMouseListener(SEGraph.this.mouseAdapter);
@@ -860,12 +851,13 @@ public class SEGraph<E> extends JComponent {
 
 					// Set the size and location of the component
 					component.setLocation(xLocation, yNodeLocation);
-					component.setSize(new Dimension(nodeWidth,
-							componentSize.height));
+					component.setSize(componentSize);
+
+					position++;
 				}
 
 				// Update the x location for the next level.
-				xLocation = xLocation + maxWidth + HORIZONTAL_GAP;
+				xLocation += maxWidth + HORIZONTAL_GAP;
 
 				previousNodes.clear();
 				previousNodes.addAll(currentNodes);
@@ -1048,7 +1040,6 @@ public class SEGraph<E> extends JComponent {
 					childrenOffset = (children.size() - 1) * SPACER_FACTOR;
 
 					parentSelected = selected.contains(parent);
-		
 
 					// For each child,
 					int previousLevelOffset = -1;
@@ -1072,7 +1063,7 @@ public class SEGraph<E> extends JComponent {
 
 						childComponent = SEGraph.this
 								.createComponentForNode(child);
-						
+
 						arrowStart = GUIOp.getMidRight(parentComponent);
 						arrowEnd = GUIOp.getMidLeft(childComponent);
 
@@ -1267,8 +1258,9 @@ public class SEGraph<E> extends JComponent {
 		public void mouseExited(MouseEvent e) {
 			final JComponent exited = (JComponent) e.getSource();
 			final Mode mode = SEGraph.this.getToolBarMode();
-			
-			final E lastExitedNode = SEGraph.this.nodesToComponents.getKey(exited);
+
+			final E lastExitedNode = SEGraph.this.nodesToComponents
+					.getKey(exited);
 
 			if (mode == Mode.GROUP
 					&& SEGraph.this.ungroupableNodes.contains(lastExitedNode))
