@@ -739,8 +739,6 @@ public class SEGraph<E> extends JComponent {
 
 		SEGraph.this.setCursor(ScriptEaseUI.CURSOR_GROUP_END);
 	}
-	
-	
 
 	/**
 	 * The class that handles the actual laying out of GraphNodes. The logic is
@@ -1196,6 +1194,18 @@ public class SEGraph<E> extends JComponent {
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
 					entered.setCursor(null);
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			final JComponent exited = (JComponent) e.getSource();
+			final Mode mode = SEGraph.this.getToolBarMode();
+			
+			final E lastExitedNode = SEGraph.this.nodesToComponents.getKey(exited);
+
+			if (mode == Mode.GROUP
+					&& SEGraph.this.ungroupableNodes.contains(lastExitedNode))
+				exited.setCursor(ScriptEaseUI.CURSOR_GROUP_START);
 		}
 
 		@Override

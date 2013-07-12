@@ -251,14 +251,8 @@ public class SEGraphNodeRenderer<E> {
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);
 			} else if (!graph.isReadOnly() && (mode == Mode.GROUP)) {
 				toolColour = component.getBackground();
-				if (component.getBackground().equals(
-						ScriptEaseUI.COLOUR_UNGROUPABLE_END_NODE)) {
-					toolHighlight = component.getBackground();
-					toolPress = component.getBackground();
-				} else {
-					toolHighlight = GUIOp.scaleWhite(toolColour, 1.4);
-					toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);
-				}
+				toolHighlight = component.getBackground();
+				toolPress = component.getBackground();
 			} else {
 				toolColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.25);
