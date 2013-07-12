@@ -91,18 +91,18 @@ public final class DialogueLine extends EditableResource {
 	}
 
 	private void setupSpeakers(Resource child) {
-		if (child instanceof DialogueLine) {
+		if (child instanceof DialogueLine
+				&& ((DialogueLine) child).getSpeaker() == null) {
 			final DialogueLine childLine = (DialogueLine) child;
 
-		
-				if (this.speaker == Speaker.FIRST)
-					childLine.speaker = Speaker.SECOND;
-				else if (this.speaker == Speaker.SECOND)
-					childLine.speaker = Speaker.FIRST;
-				else
-					throw new IllegalStateException(
-							"Tried to add a dialogue line to a line with no speaker.");
-			
+			if (this.speaker == Speaker.FIRST)
+				childLine.speaker = Speaker.SECOND;
+			else if (this.speaker == Speaker.SECOND)
+				childLine.speaker = Speaker.FIRST;
+			else
+				throw new IllegalStateException(
+						"Tried to add a dialogue line to a line with no speaker.");
+
 		}
 	}
 
@@ -175,6 +175,10 @@ public final class DialogueLine extends EditableResource {
 	 */
 	public boolean isEnabled() {
 		return this.enabled;
+	}
+
+	public Speaker getSpeaker() {
+		return this.speaker;
 	}
 
 	/**

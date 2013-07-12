@@ -3,6 +3,7 @@ package scriptease.gui.SEGraph.renderers;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -98,7 +99,16 @@ public class DialogueLineNodeRenderer extends SEGraphNodeRenderer<DialogueLine> 
 
 		final GroupLayout layout;
 
-		dialogueArea = new JTextArea(node.getName());
+		dialogueArea = new JTextArea(node.getName()) {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+
+				g.setColor(Color.LIGHT_GRAY);
+				g.drawString(node.getSpeaker().name(), this.getWidth() / 2,
+						this.getHeight() / 2);
+			}
+		};
 		dialogueScrollPane = new JScrollPane(dialogueArea);
 		story = (StoryModel) model;
 		module = story.getModule();
