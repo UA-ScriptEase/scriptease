@@ -7,15 +7,12 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.QuadCurve2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -949,7 +946,6 @@ public class SEGraph<E> extends JComponent {
 			if (SEGraph.this.draggedFromNode != null
 					&& SEGraph.this.mousePosition != null) {
 				final Mode mode = SEGraph.this.getToolBarMode();
-				final List<Point> points = new ArrayList<Point>();
 
 				final Point start;
 				final Point end;
@@ -969,10 +965,7 @@ public class SEGraph<E> extends JComponent {
 				g2.setColor(lineColor);
 				g2.setStroke(lineStroke);
 
-				points.add(start);
-				points.add(end);
-
-				GUIOp.paintArrow(g2, points, 0);
+				GUIOp.paintArrow(g2, start, end, 0);
 			}
 
 			// For each level in the graph
@@ -1014,7 +1007,6 @@ public class SEGraph<E> extends JComponent {
 							// We are painting a blank graph. Return.
 							return;
 
-						final List<Point> points = new ArrayList<Point>();
 						final JComponent childComponent;
 						final Color lineColor;
 
@@ -1041,7 +1033,7 @@ public class SEGraph<E> extends JComponent {
 						if (parentSelected && childSelected) {
 							lineColor = ScriptEaseUI.COLOUR_SELECTED_NODE;
 						} else if (parentSelected) {
-							lineColor = ScriptEaseUI.COLOUR_CHILD_NODE;
+							lineColor = ScriptEaseUI.COLOUR_CHILD_NODE.darker();
 						} else if (childSelected) {
 							lineColor = ScriptEaseUI.COLOUR_PARENT_NODE
 									.darker();
@@ -1070,14 +1062,11 @@ public class SEGraph<E> extends JComponent {
 						}
 						previousLevelOffset = levelOffset;
 
-						points.add(arrowStart);
-						points.add(arrowEnd);
-
 						g2.setStroke(lineStroke);
 						g2.setColor(lineColor);
 
 						// Draw an arrow pointing towards the child.
-						GUIOp.paintArrow(g2, points, curveFactor);
+						GUIOp.paintArrow(g2, arrowStart, arrowEnd, curveFactor);
 					}
 				}
 			}

@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.CellRendererPane;
@@ -161,7 +160,7 @@ public class GUIOp {
 		fader.execute();
 	}
 
-	public static void paintArrow(Graphics g, List<Point> points,
+	public static void paintArrow(Graphics g, Point start, Point end,
 			int curveFactor) {
 		// Create a new graphics context
 		final Graphics2D g2 = (Graphics2D) g.create();
@@ -169,69 +168,60 @@ public class GUIOp {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 
-		for (Point start : points) {
-			final int index = points.indexOf(start);
+		final float arrowWidth = 8.0f;
+		final float theta = 0.423f;
 
-			final double x1 = start.getX();
-			final double y1 = start.getY();
+		final double x1 = start.getX();
+		final double y1 = start.getY();
 
-			if (index < (points.size() - 1)) {
-				final Point end = points.get(index + 1);
+		final double x2 = end.getX();
+		final double y2 = end.getY();
 
-				final double x2 = end.getX();
-				final double y2 = end.getY();
+		int[] xPoints = new int[3];
+		int[] yPoints = new int[3];
+		float[] vecLine = new float[2];
+		float[] vecLeft = new float[2];
+		float fLength;
+		float th;
+		float ta;
+		float baseX, baseY;
 
-				float arrowWidth = 4.0f;
-				float theta = 0.423f;
-				int[] xPoints = new int[3];
-				int[] yPoints = new int[3];
-				float[] vecLine = new float[2];
-				float[] vecLeft = new float[2];
-				float fLength;
-				float th;
-				float ta;
-				float baseX, baseY;
+		xPoints[0] = (int) x2;
+		yPoints[0] = (int) y2;
 
-				xPoints[0] = (int) x2;
-				yPoints[0] = (int) y2;
+		// build the line vector
+		vecLine[0] = (float) (xPoints[0] - x1);
+		vecLine[1] = (float) (yPoints[0] - y1);
 
-				// build the line vector
-				vecLine[0] = (float) (xPoints[0] - x1);
-				vecLine[1] = (float) (yPoints[0] - y1);
+		// build the arrow base vector - normal to the line
+		vecLeft[0] = -vecLine[1];
+		vecLeft[1] = vecLine[0];
 
-				// build the arrow base vector - normal to the line
-				vecLeft[0] = -vecLine[1];
-				vecLeft[1] = vecLine[0];
+		// setup length parameters
+		fLength = (float) Math.sqrt(vecLine[0] * vecLine[0] + vecLine[1]
+				* vecLine[1]);
+		th = arrowWidth / (1.5f * fLength);
+		ta = arrowWidth / (1.5f * ((float) Math.tan(theta) / 1.5f) * fLength);
 
-				// setup length parameters
-				fLength = (float) Math.sqrt(vecLine[0] * vecLine[0]
-						+ vecLine[1] * vecLine[1]);
-				th = arrowWidth / (1.5f * fLength);
-				ta = arrowWidth
-						/ (1.5f * ((float) Math.tan(theta) / 1.5f) * fLength);
+		// find the base of the arrow
+		baseX = (xPoints[0] - ta * vecLine[0]);
+		baseY = (yPoints[0] - ta * vecLine[1]);
 
-				// find the base of the arrow
-				baseX = (xPoints[0] - ta * vecLine[0]);
-				baseY = (yPoints[0] - ta * vecLine[1]);
+		// build the points on the sides of the arrow
+		xPoints[1] = (int) (baseX + th * vecLeft[0]);
+		yPoints[1] = (int) (baseY + th * vecLeft[1]);
+		xPoints[2] = (int) (baseX - th * vecLeft[0]);
+		yPoints[2] = (int) (baseY - th * vecLeft[1]);
 
-				// build the points on the sides of the arrow
-				xPoints[1] = (int) (baseX + th * vecLeft[0]);
-				yPoints[1] = (int) (baseY + th * vecLeft[1]);
-				xPoints[2] = (int) (baseX - th * vecLeft[0]);
-				yPoints[2] = (int) (baseY - th * vecLeft[1]);
+		if (curveFactor > 0)
+			g2.draw(new QuadCurve2D.Float(start.x, start.y,
+					(end.x + start.x) / 2, start.y + curveFactor * 50, end.x
+							- arrowWidth, end.y));
+		else
+			g2.drawLine((int) x1, (int) y1, (int) baseX, (int) baseY);
 
-				if (curveFactor > 0)
-					g2.draw(new QuadCurve2D.Float(start.x, start.y,
-							(end.x + start.x) / 2, start.y + curveFactor * 50,
-							end.x - arrowWidth, end.y));
-				else
-					g2.drawLine((int) x1, (int) y1, (int) baseX, (int) baseY);
+		g2.fillPolygon(xPoints, yPoints, 3);
 
-				// Last point in list. Draw the arrowhead.
-				if (index == (points.size() - 2))
-					g2.fillPolygon(xPoints, yPoints, 3);
-			}
-		}
 		g2.dispose();
 	}
 
