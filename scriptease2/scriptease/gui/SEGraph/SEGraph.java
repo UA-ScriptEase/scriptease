@@ -1039,7 +1039,6 @@ public class SEGraph<E> extends JComponent {
 					final int childrenOffset;
 
 					final boolean parentSelected;
-					final Point arrowStart;
 
 					children = SEGraph.this.model.getChildren(parent);
 					parentComponent = SEGraph.this
@@ -1049,7 +1048,7 @@ public class SEGraph<E> extends JComponent {
 					childrenOffset = (children.size() - 1) * SPACER_FACTOR;
 
 					parentSelected = selected.contains(parent);
-					arrowStart = GUIOp.getMidRight(parentComponent);
+		
 
 					// For each child,
 					int previousLevelOffset = -1;
@@ -1062,6 +1061,7 @@ public class SEGraph<E> extends JComponent {
 						final JComponent childComponent;
 						final Color lineColor;
 
+						final Point arrowStart;
 						final Point arrowEnd;
 
 						final int childY;
@@ -1072,7 +1072,8 @@ public class SEGraph<E> extends JComponent {
 
 						childComponent = SEGraph.this
 								.createComponentForNode(child);
-
+						
+						arrowStart = GUIOp.getMidRight(parentComponent);
 						arrowEnd = GUIOp.getMidLeft(childComponent);
 
 						childY = childComponent.getY();
