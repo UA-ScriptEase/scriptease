@@ -4,15 +4,16 @@
   <Causes/>
   <Effects>
     <ScriptIt>
-      <Name>Play nod animation for &lt;Character&gt;</Name>
+      <Name>Play nod head animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
+        <Label>ANI</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Play nod animation for &lt;Character&gt;</Name>
+          <Name>Play nod head animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>0</Id>
@@ -29,14 +30,367 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>var seAnimationController : SEAnimationController = SEAnimationController.GetAnimationController(</Literal>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
               <Scope data="ARGUMENT" ref="Character">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>).doNod = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Play run animation for &lt;Character&gt; at speed &lt;Speed&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play run animation for &lt;Character&gt; at speed &lt;Speed&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>1</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Speed</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).CharSpeed = </Literal>
+              <Scope data="ARGUMENT" ref="Speed">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>;</Literal>
             </Line>
             <Line>
-              <Literal>seAnimationController.doNod = true;</Literal>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).doRun = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Play sit animation for &lt;Character&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play sit animation for &lt;Character&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>2</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).doSit = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Play wave animation for &lt;Character&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play wave animation for &lt;Character&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>3</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).doWave = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Play kick animation for &lt;Character&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play kick animation for &lt;Character&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>4</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).doKick = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Play startle animation for &lt;Character&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play startle animation for &lt;Character&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>5</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).doStartle = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Play pick up animation for &lt;Character&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play pick up animation for &lt;Character&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>6</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).doPickUp = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Play shake head animation for &lt;Character&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play shake head animation for &lt;Character&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>7</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).doShake = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Play check animation for &lt;Character&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play check animation for &lt;Character&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>8</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).doCheck = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Play talk animation for &lt;Character&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play talk animation for &lt;Character&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>10</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).doTalk = true;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
