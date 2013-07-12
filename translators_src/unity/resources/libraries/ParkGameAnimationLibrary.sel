@@ -1,0 +1,49 @@
+<LibraryModel name="ParkGameAnimationLibrary" author="ScriptEase Team">
+  <Types/>
+  <Slots defaultFormat="SECause"/>
+  <Causes/>
+  <Effects>
+    <ScriptIt>
+      <Name>Play nod animation for &lt;Character&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play nod animation for &lt;Character&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>0</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>var seAnimationController : SEAnimationController = SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+            <Line>
+              <Literal>seAnimationController.doNod = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+  </Effects>
+  <DescribeIts/>
+  <ControlIts/>
+  <TypeConverters/>
+</LibraryModel>
