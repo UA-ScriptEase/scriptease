@@ -1,11 +1,14 @@
 package scriptease.gui.SEGraph.models;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -277,6 +280,66 @@ public abstract class SEGraphModel<E> {
 		}
 
 		return descendants;
+	}
+
+	/**
+	 * Finds the possible end nodes for groups. This is implemented using a
+	 * small alteration of the Breadth first search, where we don't advance pass
+	 * a node until it has been accessed the same amount of times as the number
+	 * of parents it has.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public final Set<E> getGroupableEndNodes(E node) {
+		final HashSet<E> endNodes = new HashSet<E>();
+
+		final Map<E, Integer> visited = new HashMap<E, Integer>();
+		final Queue<E> queue = new LinkedList<E>();
+
+		final Collection<E> descendants = this.getDescendants(node);
+
+		visited.put(node, this.getParents(node).size());
+		for (E child : descendants) {
+			visited.put(child, 0);
+
+			final Collection<E> parents = this.getParents(child);
+			for (E parent : parents) {
+				if (!descendants.contains(parent) && !parent.equals(node)) {
+					visited.put(child, -1);
+					break;
+				}
+			}
+		}
+		
+		queue.add(node);
+		while (!queue.isEmpty()) {
+			final E currNode = queue.remove();
+			
+			if (currNode.toString().contains("O"))
+				System.out.println("ESRFSSF");
+			
+			if (visited.get(currNode) == -1)
+				break;
+			
+			if (this.getParents(currNode).size() == visited.get(currNode)) {
+
+				for (E childNode : this.getChildren(currNode)) {
+					visited.put(childNode, visited.get(childNode) + 1);
+
+					if (!queue.contains(childNode))
+						queue.add(childNode);
+				}
+			} else {
+				queue.add(currNode);
+			}
+
+			if (queue.size() == 1) {
+				endNodes.add(queue.peek());
+			}
+		}
+
+		return endNodes;
 	}
 
 	/**

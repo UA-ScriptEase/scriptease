@@ -13,19 +13,21 @@ import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 
 /**
- * Represents and performs the Save Model Package (Save As Package)<br>
+ * Represents and performs the Save Model Without Writing Code Action (Save
+ * without Writing Code)<br>
  * <br>
- * Save Model Package will save the .ses file, the module, and anything else
- * required by the game as a .zip file.
+ * Save Model Without Writing Code will save the .ses file, without generating
+ * any code. This will speed up the saving process.
  * 
  * @author jyuen
+ * 
  */
 @SuppressWarnings("serial")
-public class SaveModelPackageAction extends ActiveModelSensitiveAction {
+public class SaveModelWithoutCodeAction extends ActiveModelSensitiveAction {
 
-	private static final String SAVE_AS_PACKAGE = "Save As Package";
+	private static final String SAVE_WITHOUT_CODE = "Save without Writing Code";
 
-	private static final Action instance = new SaveModelPackageAction();
+	private static final Action instance = new SaveModelWithoutCodeAction();
 
 	/**
 	 * Gets the sole instance of this particular type of Action
@@ -35,15 +37,15 @@ public class SaveModelPackageAction extends ActiveModelSensitiveAction {
 	}
 
 	/**
-	 * Defines an <code>SaveModelPackageAction</code> object with a mnemonic.
+	 * Defines an <code>SaveModelWithoutCodeAction</code> object with a mnemonic.
 	 */
-	private SaveModelPackageAction() {
-		super(SaveModelPackageAction.SAVE_AS_PACKAGE);
+	private SaveModelWithoutCodeAction() {
+		super(SaveModelWithoutCodeAction.SAVE_WITHOUT_CODE);
 
-		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
+		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_W);
 		this.putValue(
 				Action.ACCELERATOR_KEY,
-				KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK
+				KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK
 						+ ActionEvent.SHIFT_MASK));
 	}
 
@@ -62,6 +64,6 @@ public class SaveModelPackageAction extends ActiveModelSensitiveAction {
 
 		WindowFactory.getInstance().getCurrentFrame().requestFocusInWindow();
 
-		FileManager.getInstance().saveAsPackage(activeModel);
+		FileManager.getInstance().saveWithoutCode(activeModel);
 	}
 }

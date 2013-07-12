@@ -30,6 +30,9 @@ import scriptease.util.GUIOp;
  * only set the mode; the graph itself contains the specific actions that should
  * happen.
  * 
+ * @author kschenk
+ * @author jyuen
+ * 
  */
 @SuppressWarnings("serial")
 public class SEGraphToolBar extends JToolBar {
@@ -40,6 +43,8 @@ public class SEGraphToolBar extends JToolBar {
 	private final JToggleButton deleteButton;
 	private final JToggleButton connectButton;
 	private final JToggleButton disconnectButton;
+	private final JToggleButton groupButton;
+	private final JToggleButton ungroupButton;
 
 	private Mode mode;
 
@@ -47,6 +52,7 @@ public class SEGraphToolBar extends JToolBar {
 	 * The current mode of the toolbar.
 	 * 
 	 * @author kschenk
+	 * @author jyuen
 	 * 
 	 */
 	public static enum Mode {
@@ -116,6 +122,8 @@ public class SEGraphToolBar extends JToolBar {
 		this.deleteButton = this.buildToggleButton(Mode.DELETE);
 		this.connectButton = this.buildToggleButton(Mode.CONNECT);
 		this.disconnectButton = this.buildToggleButton(Mode.DISCONNECT);
+		this.groupButton = this.buildToggleButton(Mode.GROUP);
+		this.ungroupButton = this.buildToggleButton(Mode.UNGROUP);
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setRollover(true);
@@ -127,6 +135,8 @@ public class SEGraphToolBar extends JToolBar {
 		buttonGroup.add(this.deleteButton);
 		buttonGroup.add(this.connectButton);
 		buttonGroup.add(this.disconnectButton);
+		buttonGroup.add(this.groupButton);
+		buttonGroup.add(this.ungroupButton);
 
 		// Sorry about the bizarre loop, but that's the way these work :(
 		for (final Enumeration<AbstractButton> buttons = buttonGroup
@@ -173,6 +183,10 @@ public class SEGraphToolBar extends JToolBar {
 			buttonModel = this.connectButton.getModel();
 		} else if (mode == Mode.DISCONNECT) {
 			buttonModel = this.disconnectButton.getModel();
+		} else if (mode == Mode.GROUP) {
+			buttonModel = this.groupButton.getModel();
+		} else if (mode == Mode.UNGROUP) {
+			buttonModel = this.ungroupButton.getModel();
 		} else {
 			// Handle any strange behaviour by setting this to Select by
 			// default.
