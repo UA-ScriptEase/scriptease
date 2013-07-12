@@ -90,9 +90,6 @@ public final class WindowFactory {
 	private static final String CODE_GENERATION_PROBLEM = "Code Generation Problem";
 	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase II";
 
-	// TODO we used to use "ScriptEase.getInstance().getVersion()" to get the
-	// version, but it was generating a version of "2.-1", which is wrong. Fix
-	// that and change this back.
 	private static final String ABOUT_SCRIPTEASE_MESSAGE = "<html><b><font size=\"4\">ScriptEase II</font></b><br>"
 			+ "<font size=\"2\">Version: Beta "
 			+ ScriptEase.getInstance().getVersion()
@@ -142,14 +139,12 @@ public final class WindowFactory {
 	 * Shows the main ScriptEase frame.
 	 */
 	public void buildAndShowMainFrame() {
-
 		this.mainFrame = this.buildScriptEaseFrame(ScriptEase.TITLE + " "
 				+ ScriptEase.getInstance().getVersion());
 		this.mainFrame.setJMenuBar(MenuFactory.createMainMenuBar(null));
 
 		if (!this.mainFrame.isVisible())
 			this.mainFrame.setVisible(true);
-
 	}
 
 	/**
@@ -167,7 +162,10 @@ public final class WindowFactory {
 	 */
 	public void buildAndShowCustomFrame(JPanel panel, String title,
 			boolean resizable) {
-		JFrame frame = new JFrame(title);
+		JFrame frame;
+
+		frame = new JFrame(title);
+
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().add(panel);
 		frame.pack();
@@ -351,7 +349,7 @@ public final class WindowFactory {
 			final String description = problem.getDescription();
 
 			JPanel problemPanel = new JPanel();
-			// if avaliable, show the panel being changed, otherwise use the
+			// if available, show the panel being changed, otherwise use the
 			// display text
 			StoryComponentPanel componentPanel = StoryComponentPanelFactory
 					.getInstance().buildStoryComponentPanel(component);
@@ -607,7 +605,7 @@ public final class WindowFactory {
 
 	/**
 	 * Shows a directory chooser that is child of the main ScriptEase frame. The
-	 * chooser is customised to use the given operation name as the button's
+	 * chooser is customized to use the given operation name as the button's
 	 * text and frame title. For that reason, the operation name should be
 	 * short, like "Save Story".
 	 * 
@@ -641,8 +639,8 @@ public final class WindowFactory {
 	}
 
 	/**
-	 * Shows a customised file chooser that is a child of the main ScriptEase
-	 * frame. The chooser is customised to use the given operation name as the
+	 * Shows a customized file chooser that is a child of the main ScriptEase
+	 * frame. The chooser is customized to use the given operation name as the
 	 * button's text and frame title. For that reason, the operation name should
 	 * be short, like "Save Story".
 	 * 
@@ -1141,7 +1139,7 @@ public final class WindowFactory {
 
 					frame.setTitle(newTitle);
 
-					// We need to revalidate the menu bar.
+					// We need to re-validate the menu bar.
 					// http://bugs.sun.com/view_bug.do?bug_id=4949810
 					bar.revalidate();
 
