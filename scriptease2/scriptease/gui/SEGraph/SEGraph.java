@@ -662,7 +662,7 @@ public class SEGraph<E> extends JComponent {
 	 * @param node
 	 * @return
 	 */
-	private JComponent createComponentForNode(E node) {
+	private JComponent getComponentForNode(E node) {
 		final JComponent component;
 		final JComponent storedComponent;
 
@@ -753,14 +753,14 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public Dimension minimumLayoutSize(Container parent) {
+			final SEGraph<E> graph = SEGraph.this;
+
 			final Insets insets;
-			final Map<E, Integer> nodeMap;
 			final int numberOfLevels;
 			final Collection<Integer> levels;
 
 			insets = parent.getInsets();
-			nodeMap = SEGraph.this.model.getDepthMap();
-			levels = nodeMap.values();
+			levels = graph.model.getDepthMap().values();
 
 			if (levels.isEmpty())
 				numberOfLevels = 0;
@@ -771,23 +771,23 @@ public class SEGraph<E> extends JComponent {
 			int ySize = insets.top + insets.bottom;
 
 			for (int currentLevel = 0; currentLevel <= numberOfLevels; currentLevel++) {
-				final List<E> currentNodes = new ArrayList<E>();
-				// extract nodes for the level
-				for (Entry<E, Integer> entry : nodeMap.entrySet()) {
-					if (entry.getValue() == currentLevel)
-						currentNodes.add(entry.getKey());
-				}
+				final Collection<E> currentNodes;
+
+				currentNodes = graph.model.getNodesForLevel(currentLevel);
 
 				// Get the width of the widest JComponent in the level.
-				xSize += this.getMaxWidth(currentNodes) + HORIZONTAL_GAP;
 
-				int yNodeSize = VERTICAL_GAP;
+				int yNodeSize = 0;
+				int maxWidth = 0;
 				for (E node : currentNodes) {
-					JComponent component = SEGraph.this
-							.createComponentForNode(node);
-					yNodeSize += VERTICAL_GAP
-							+ component.getPreferredSize().height;
+					final Dimension size;
+					size = graph.getComponentForNode(node).getPreferredSize();
+
+					yNodeSize += VERTICAL_GAP + size.height;
+					maxWidth = Math.max(maxWidth, size.width);
 				}
+
+				xSize += maxWidth + HORIZONTAL_GAP;
 				ySize = Math.max(ySize, yNodeSize);
 			}
 			return new Dimension(xSize, ySize);
@@ -795,8 +795,9 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void layoutContainer(Container parent) {
+			final SEGraph<E> graph = SEGraph.this;
 			// Remove the current contents of the panel.
-			SEGraph.this.removeAll();
+			graph.removeAll();
 
 			final List<E> previousNodes = new ArrayList<E>();
 
@@ -804,27 +805,27 @@ public class SEGraph<E> extends JComponent {
 			final int numberOfLevels;
 			final double graphHeight;
 
-			nodeMap = SEGraph.this.model.getDepthMap();
+			nodeMap = graph.model.getDepthMap();
 			numberOfLevels = Collections.max(nodeMap.values());
-			graphHeight = SEGraph.this.getPreferredSize().getHeight();
+			graphHeight = graph.getPreferredSize().getHeight();
 
 			int xLocation = 10;
-			// For each level in the graph,
-			for (int currentLevel = 0; currentLevel <= numberOfLevels; currentLevel++) {
-				final List<E> currentNodes;
 
-				final int maxWidth;
+			// Going through each level is faster than going through each node.
+			for (int currentLevel = 0; currentLevel <= numberOfLevels; currentLevel++) {
+				final Collection<E> currentNodes;
+
 				final int numberOfNodes;
 				final double pixelsPerNode;
 
 				currentNodes = this.sortChildrenByParent(previousNodes,
-						this.getNodesForLevel(nodeMap, currentLevel));
+						graph.model.getNodesForLevel(currentLevel));
 				// Width of the widest JComponent in the level.
-				maxWidth = this.getMaxWidth(currentNodes);
 				numberOfNodes = currentNodes.size();
 				// Number of y pixels each node is allocated
 				pixelsPerNode = graphHeight / numberOfNodes;
 
+				int maxWidth = 0;
 				int position = 0;
 				// For each node at that level,
 				for (E node : currentNodes) {
@@ -832,7 +833,7 @@ public class SEGraph<E> extends JComponent {
 					final Dimension componentSize;
 					final int yNodeLocation;
 
-					component = SEGraph.this.createComponentForNode(node);
+					component = graph.getComponentForNode(node);
 					// JComponent preferred width
 					componentSize = component.getPreferredSize();
 
@@ -840,18 +841,19 @@ public class SEGraph<E> extends JComponent {
 					yNodeLocation = (int) (pixelsPerNode * (position + 0.5) - componentSize.height / 2);
 
 					if (component.getMouseListeners().length <= 1) {
-						component.addMouseListener(SEGraph.this.mouseAdapter);
-						component
-								.addMouseMotionListener(SEGraph.this.mouseAdapter);
+						component.addMouseListener(graph.mouseAdapter);
+						component.addMouseMotionListener(graph.mouseAdapter);
 					}
 
 					// Add the component to the panel, so it will draw
-					SEGraph.this.add(component);
-					SEGraph.this.nodesToComponents.put(node, component);
+					graph.add(component);
+					graph.nodesToComponents.put(node, component);
 
 					// Set the size and location of the component
 					component.setLocation(xLocation, yNodeLocation);
 					component.setSize(componentSize);
+
+					maxWidth = Math.max(maxWidth, componentSize.width);
 
 					position++;
 				}
@@ -867,76 +869,39 @@ public class SEGraph<E> extends JComponent {
 		/**
 		 * Sorts the given children in a fashion that has overlapping lines
 		 * 
-		 * @param parentNodes
-		 * @param childNodes
+		 * @param parents
+		 * @param children
 		 * @return
 		 */
-		private List<E> sortChildrenByParent(List<E> parentNodes,
-				List<E> childNodes) {
-			if (parentNodes == null || parentNodes.isEmpty()
-					|| childNodes == null || childNodes.isEmpty())
-				return childNodes;
+		private Collection<E> sortChildrenByParent(Collection<E> parents,
+				Collection<E> children) {
+			if (parents == null || parents.isEmpty() || children == null
+					|| children.isEmpty())
+				return children;
 
-			final List<E> sortedChildren = new IdentityArrayList<E>(
-					childNodes.size());
+			final List<E> sortedChildren;
+
+			sortedChildren = new IdentityArrayList<E>(children.size());
+
 			int newIndex = 0;
-			for (E parentNode : parentNodes) {
+			for (E parent : parents) {
 				int parentIndex = newIndex;
-				Collection<E> children = SEGraph.this.model
-						.getChildren(parentNode);
-				for (E childNode : childNodes) {
-					if (children.contains(childNode)) {
+				for (E child : children) {
+					if (SEGraph.this.model.getChildren(parent).contains(child)) {
 						// if the child has already been organized, move it to
 						// the first element of the current parent
-						if (sortedChildren.contains(childNode)) {
-							sortedChildren.remove(childNode);
-							sortedChildren.add(parentIndex - 1, childNode);
+						if (sortedChildren.contains(child)) {
+							sortedChildren.remove(child);
+							sortedChildren.add(parentIndex - 1, child);
 						} else {
 							// insert the childNode near the parent's index
-							sortedChildren.add(newIndex, childNode);
+							sortedChildren.add(newIndex, child);
 							newIndex++;
 						}
 					}
 				}
 			}
 			return sortedChildren;
-		}
-
-		private List<E> getNodesForLevel(Map<E, Integer> nodeMap, int level) {
-			List<E> currentNodes = new ArrayList<E>();
-			// extract nodes for the level
-			for (Entry<E, Integer> entry : nodeMap.entrySet()) {
-				if (entry.getValue() == level)
-					currentNodes.add(entry.getKey());
-			}
-			return currentNodes;
-		}
-
-		/**
-		 * Returns the width of the widest JComponent in the collection of
-		 * nodes.
-		 * 
-		 * @param nodes
-		 * @return
-		 */
-		private int getMaxWidth(Collection<E> nodes) {
-			int maxWidth = 0;
-
-			for (E node : nodes) {
-				// Get the component for the node.
-				final JComponent component = SEGraph.this
-						.createComponentForNode(node);
-
-				// Get the size of the JComponent.
-				final Dimension componentSize = component.getPreferredSize();
-
-				// Check for a new maximum.
-				if (componentSize.getWidth() > maxWidth) {
-					maxWidth = (int) componentSize.getWidth();
-				}
-			}
-			// Return the maximum width.
-			return maxWidth;
 		}
 
 		@Override
@@ -968,6 +933,8 @@ public class SEGraph<E> extends JComponent {
 			final float ARROW_WIDTH = 3.0f;
 			final int SPACER_FACTOR = 5;
 
+			final SEGraph<E> graph = SEGraph.this;
+
 			final Collection<E> selected;
 			final Map<E, Integer> nodeMap;
 			final int numberOfLevels;
@@ -975,29 +942,28 @@ public class SEGraph<E> extends JComponent {
 			final Graphics2D g2;
 			final BasicStroke lineStroke;
 
-			selected = SEGraph.this.getSelectedNodes();
-			nodeMap = SEGraph.this.model.getDepthMap();
+			selected = graph.getSelectedNodes();
+			nodeMap = graph.model.getDepthMap();
 			numberOfLevels = Collections.max(nodeMap.values());
 
 			g2 = (Graphics2D) g.create();
 			lineStroke = new BasicStroke(ARROW_WIDTH);
 
 			// Paint the graph's background.
-			g.setColor(SEGraph.this.getBackground());
-			g.fillRect(0, 0, SEGraph.this.getWidth(), SEGraph.this.getHeight());
+			g.setColor(graph.getBackground());
+			g.fillRect(0, 0, graph.getWidth(), graph.getHeight());
 
 			// Dragging behaviour for arrows, if we're currently dragging
-			if (SEGraph.this.draggedFromNode != null
-					&& SEGraph.this.mousePosition != null) {
-				final Mode mode = SEGraph.this.getToolBarMode();
+			if (graph.draggedFromNode != null && graph.mousePosition != null) {
+				final Mode mode = graph.getToolBarMode();
 
 				final Point start;
 				final Point end;
 				final Color lineColor;
 
-				start = GUIOp.getMidRight(SEGraph.this
-						.createComponentForNode(SEGraph.this.draggedFromNode));
-				end = SEGraph.this.mousePosition;
+				start = GUIOp.getMidRight(graph
+						.getComponentForNode(graph.draggedFromNode));
+				end = graph.mousePosition;
 
 				if (mode == Mode.INSERT || mode == Mode.CONNECT)
 					lineColor = ScriptEaseUI.COLOUR_INSERT_NODE;
@@ -1014,15 +980,8 @@ public class SEGraph<E> extends JComponent {
 
 			// For each level in the graph
 			for (int currentLevel = 0; currentLevel <= numberOfLevels; currentLevel++) {
-				final List<E> currentNodes = new ArrayList<E>();
-				// extract nodes for the level
-				for (Entry<E, Integer> entry : nodeMap.entrySet()) {
-					if (entry.getValue() == currentLevel)
-						currentNodes.add(entry.getKey());
-				}
-
 				// for each node in the level
-				for (E parent : currentNodes) {
+				for (E parent : graph.model.getNodesForLevel(currentLevel)) {
 					// Get the children of the node.
 					final Collection<E> children;
 					final JComponent parentComponent;
@@ -1032,9 +991,8 @@ public class SEGraph<E> extends JComponent {
 
 					final boolean parentSelected;
 
-					children = SEGraph.this.model.getChildren(parent);
-					parentComponent = SEGraph.this
-							.createComponentForNode(parent);
+					children = graph.getChildren(parent);
+					parentComponent = graph.getComponentForNode(parent);
 
 					parentY = parentComponent.getY();
 					childrenOffset = (children.size() - 1) * SPACER_FACTOR;
@@ -1061,8 +1019,7 @@ public class SEGraph<E> extends JComponent {
 
 						final boolean childSelected;
 
-						childComponent = SEGraph.this
-								.createComponentForNode(child);
+						childComponent = graph.getComponentForNode(child);
 
 						arrowStart = GUIOp.getMidRight(parentComponent);
 						arrowEnd = GUIOp.getMidLeft(childComponent);
@@ -1116,6 +1073,7 @@ public class SEGraph<E> extends JComponent {
 			}
 			// clean up
 			g.dispose();
+			g2.dispose();
 		}
 	}
 

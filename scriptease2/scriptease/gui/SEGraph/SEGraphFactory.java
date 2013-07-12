@@ -50,8 +50,6 @@ public class SEGraphFactory {
 		graph.setNodeRenderer(new DescribeItNodeRenderer(graph));
 		graph.setBorder(BorderFactory.createLineBorder(Color.black));
 		graph.setBackground(Color.WHITE);
-		/*graph.setBackground(GUIOp.scaleWhite(ScriptEaseUI.COLOUR_KNOWN_OBJECT,
-				3.5));*/
 
 		return graph;
 	}
