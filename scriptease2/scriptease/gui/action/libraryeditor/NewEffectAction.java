@@ -41,6 +41,12 @@ public class NewEffectAction extends ActiveTranslatorSensitiveAction {
 	}
 
 	@Override
+	protected boolean isLegal() {
+		return super.isLegal()
+				&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel;
+	}
+	
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		final LibraryModel libraryModel;
 
