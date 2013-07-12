@@ -305,6 +305,10 @@ public final class FileManager {
 					return;
 				}
 
+				if (location.exists()
+						&& !windowManager.showConfirmOverwrite(location))
+					return;
+
 				System.out.println("Saving story package with story " + model
 						+ " to " + location);
 
@@ -329,9 +333,6 @@ public final class FileManager {
 							FileManager.FILE_EXTENSION_PACKAGE);
 				}
 
-				if (location.exists()
-						&& !windowManager.showConfirmOverwrite(location))
-					return;
 
 				FileManager.this.writeStoryPackage(storyModel, location,
 						tempStoryLocation);
