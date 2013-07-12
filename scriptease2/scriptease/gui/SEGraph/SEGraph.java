@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.JComponent;
@@ -1097,8 +1096,9 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
+			final SEGraph<E> graph = SEGraph.this;
 
-			Container parent = SEGraph.this.getParent();
+			Container parent = graph.getParent();
 			while (parent != null) {
 				if (parent instanceof JScrollPane) {
 					GUIOp.scrollJScrollPaneToMousePosition((JScrollPane) parent);
@@ -1107,105 +1107,94 @@ public class SEGraph<E> extends JComponent {
 				parent = parent.getParent();
 			}
 
-			final Point mousePosition;
-
-			mousePosition = SEGraph.this.getMousePosition();
+			final Point mousePosition = graph.getMousePosition();
 
 			if (mousePosition != null)
-				SEGraph.this.mousePosition.setLocation(mousePosition);
+				graph.mousePosition.setLocation(mousePosition);
 
-			SEGraph.this.repaint();
+			graph.repaint();
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			final Mode mode = SEGraph.this.getToolBarMode();
+			final SEGraph<E> graph = SEGraph.this;
+			final Mode mode = graph.getToolBarMode();
+
+			final E source;
+
+			source = graph.nodesToComponents.getKey((JComponent) e.getSource());
 
 			if (mode == Mode.INSERT || mode == Mode.CONNECT
 					|| mode == Mode.DISCONNECT) {
-				final E draggedFrom;
-
-				draggedFrom = SEGraph.this.nodesToComponents
-						.getKey((JComponent) e.getSource());
-
-				SEGraph.this.draggedFromNode = draggedFrom;
-
+				graph.draggedFromNode = source;
 			} else if (mode == Mode.GROUP || mode == Mode.UNGROUP) {
 
-				if (SEGraph.this.startNode == null) {
+				if (graph.startNode == null) {
 					// Deal with the first node that is being selected -
 					// which is the node that determines the start of the group
 
-					SEGraph.this.startNode = SEGraph.this.nodesToComponents
-							.getKey((JComponent) e.getSource());
+					graph.startNode = source;
 
-					SEGraph.this.showEndNodesFor(startNode);
+					graph.showEndNodesFor(graph.startNode);
 				} else {
 					// Deal with the next node that is being selected -
 					// which is the node that determines the end of the group
 
-					SEGraph.this.endNode = SEGraph.this.nodesToComponents
-							.getKey((JComponent) e.getSource());
+					graph.endNode = source;
 
 					// Make sure the node selected isn't a non-group-able one
-					if (!SEGraph.this.ungroupableNodes.contains(endNode)) {
+					if (!graph.ungroupableNodes.contains(endNode)) {
 
-						if (SEGraph.this.startNode != null
-								&& SEGraph.this.endNode != null) {
+						if (graph.startNode != null && graph.endNode != null) {
 
 							if (!UndoManager.getInstance()
 									.hasOpenUndoableAction())
-								UndoManager
-										.getInstance()
-										.startUndoableAction(
-												"Creating group from "
-														+ SEGraph.this.startNode
-														+ " to "
-														+ SEGraph.this.endNode);
+								UndoManager.getInstance().startUndoableAction(
+										"Creating group from "
+												+ graph.startNode + " to "
+												+ graph.endNode);
 
 							System.out.println("DEBUG: starting node: "
-									+ SEGraph.this.startNode);
+									+ graph.startNode);
 							System.out.println("DEBUG: ending node: "
-									+ SEGraph.this.endNode);
+									+ graph.endNode);
 
-							SEGraph.this.createNodeGroupAt(
-									SEGraph.this.startNode,
-									SEGraph.this.endNode);
+							graph.createNodeGroupAt(graph.startNode,
+									graph.endNode);
 
 							UndoManager.getInstance().endUndoableAction();
 
 						}
 					}
 
-					SEGraph.this.renderer.resetAppearances();
-					SEGraph.this.ungroupableNodes = new HashSet<E>();
-					SEGraph.this.setCursor(ScriptEaseUI.CURSOR_GROUP_START);
-					SEGraph.this.startNode = null;
-					SEGraph.this.endNode = null;
+					graph.renderer.resetAppearances();
+					graph.ungroupableNodes = new HashSet<E>();
+					graph.setCursor(ScriptEaseUI.CURSOR_GROUP_START);
+					graph.startNode = null;
+					graph.endNode = null;
 				}
 			}
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
+			final SEGraph<E> graph = SEGraph.this;
 			final JComponent entered = (JComponent) e.getSource();
-			final Mode mode = SEGraph.this.getToolBarMode();
+			final Mode mode = graph.getToolBarMode();
 
-			this.lastEnteredNode = SEGraph.this.nodesToComponents
-					.getKey(entered);
+			this.lastEnteredNode = graph.nodesToComponents.getKey(entered);
 
-			if (this.lastEnteredNode == SEGraph.this.getStartNode())
+			if (this.lastEnteredNode == graph.getStartNode())
 				if (mode == Mode.DELETE) {
 					// Make the cursor appear unavailable for start node
 					// deletion
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
 					entered.setCursor(null);
-			else if (SEGraph.this.ungroupableNodes
-					.contains(this.lastEnteredNode)) {
+			else if (graph.ungroupableNodes.contains(this.lastEnteredNode)) {
 				if (mode == Mode.GROUP)
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
-			} else if (SEGraph.this.isReadOnly)
+			} else if (graph.isReadOnly)
 				if (mode != Mode.SELECT) {
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
@@ -1227,14 +1216,15 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			final SEGraph<E> graph = SEGraph.this;
+
 			final JComponent source;
 			final E node;
 
 			source = (JComponent) e.getSource();
-			node = SEGraph.this.nodesToComponents.getKey((JComponent) e
-					.getSource());
+			node = graph.nodesToComponents.getKey((JComponent) e.getSource());
 
-			final Mode mode = SEGraph.this.getToolBarMode();
+			final Mode mode = graph.getToolBarMode();
 
 			if (mode == Mode.SELECT || mode == Mode.DELETE) {
 				final Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
@@ -1256,22 +1246,20 @@ public class SEGraph<E> extends JComponent {
 				if (selectionMode == SelectionMode.SELECT_PATH_FROM_START
 						|| (selectionMode == SelectionMode.SELECT_PATH && e
 								.isShiftDown())) {
-					SEGraph.this.selectNodesUntil(node);
+					graph.selectNodesUntil(node);
 
-					for (E selectedNode : SEGraph.this.getSelectedNodes()) {
-						SEGraph.this.renderer.reconfigureAppearance(
-								SEGraph.this.nodesToComponents
-										.getValue(selectedNode), selectedNode);
+					for (E selectedNode : graph.getSelectedNodes()) {
+						graph.renderer.reconfigureAppearance(
+								graph.nodesToComponents.getValue(selectedNode),
+								selectedNode);
 					}
 				} else {
 					// Default behaviour is to select individual nodes
-					final Collection<E> nodes;
-
-					nodes = new ArrayList<E>();
+					final Collection<E> nodes = new ArrayList<E>();
 
 					nodes.add(node);
 
-					SEGraph.this.setSelectedNodes(nodes);
+					graph.setSelectedNodes(nodes);
 				}
 				source.requestFocusInWindow();
 			} else if (mode == Mode.INSERT) {
@@ -1280,7 +1268,7 @@ public class SEGraph<E> extends JComponent {
 						if (!UndoManager.getInstance().hasOpenUndoableAction())
 							UndoManager.getInstance().startUndoableAction(
 									"Add new node to " + node);
-						SEGraph.this.addNewNodeTo(node);
+						graph.addNewNodeTo(node);
 
 						UndoManager.getInstance().endUndoableAction();
 					} else {
@@ -1290,20 +1278,19 @@ public class SEGraph<E> extends JComponent {
 											+ this.lastEnteredNode + " and "
 											+ node);
 
-						SEGraph.this.addNewNodeBetween(this.lastEnteredNode,
-								node);
+						graph.addNewNodeBetween(this.lastEnteredNode, node);
 
 						UndoManager.getInstance().endUndoableAction();
 					}
 
-				SEGraph.this.getNodesToComponentsMap()
-						.getValue(this.lastEnteredNode).requestFocusInWindow();
+				graph.getNodesToComponentsMap().getValue(this.lastEnteredNode)
+						.requestFocusInWindow();
 			} else if (mode == Mode.DELETE) {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
 					UndoManager.getInstance().startUndoableAction(
 							"Remove " + node);
 
-				SEGraph.this.removeNode(node);
+				graph.removeNode(node);
 
 				UndoManager.getInstance().endUndoableAction();
 
@@ -1315,7 +1302,7 @@ public class SEGraph<E> extends JComponent {
 								"Connect " + this.lastEnteredNode + " to "
 										+ node);
 
-					SEGraph.this.connectNodes(this.lastEnteredNode, node);
+					graph.connectNodes(this.lastEnteredNode, node);
 
 					UndoManager.getInstance().endUndoableAction();
 				}
@@ -1327,19 +1314,19 @@ public class SEGraph<E> extends JComponent {
 								"Disconnect " + this.lastEnteredNode + " from "
 										+ node);
 
-					SEGraph.this.disconnectNodes(this.lastEnteredNode, node);
+					graph.disconnectNodes(this.lastEnteredNode, node);
 
 					UndoManager.getInstance().endUndoableAction();
 				}
 			}
 
-			SEFocusManager.getInstance().setFocus(SEGraph.this);
+			SEFocusManager.getInstance().setFocus(graph);
 
-			SEGraph.this.renderer.reconfigureAppearance(
-					SEGraph.this.nodesToComponents.getValue(node), node);
-			SEGraph.this.draggedFromNode = null;
+			graph.renderer.reconfigureAppearance(
+					graph.nodesToComponents.getValue(node), node);
+			graph.draggedFromNode = null;
 
-			SEGraph.this.repaint();
+			graph.repaint();
 		}
 	}
 }
