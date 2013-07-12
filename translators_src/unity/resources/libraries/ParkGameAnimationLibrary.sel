@@ -1,5 +1,13 @@
 <LibraryModel name="ParkGameAnimationLibrary" author="ScriptEase Team">
-  <Types/>
+  <Types>
+    <Type>
+      <Name>Emotion</Name>
+      <Keyword>Emotion</Keyword>
+      <CodeSymbol>int</CodeSymbol>
+      <Enum>3&lt;Angry&gt;|2&lt;Sad&gt;|1&lt;Happy&gt;|4&lt;Afraid&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
+    </Type>
+  </Types>
   <Slots defaultFormat="SECause"/>
   <Causes/>
   <Effects>
@@ -391,6 +399,222 @@
                 <Fragment data="NAME"/>
               </Scope>
               <Literal>).doTalk = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Set &lt;Character&gt;&apos;s emotion to &lt;Emotion&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Set &lt;Character&gt;&apos;s emotion to &lt;Emotion&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>11</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Emotion</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>Emotion</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>Emotion</Type>
+                <Value>1</Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>var seAnimationController : SEAnimationController = SEAnimationController.GetAnimationController( </Literal>
+              <Literal>);</Literal>
+            </Line>
+            <Line>
+              <Literal>switch (</Literal>
+              <Scope data="ARGUMENT" ref="Emotion">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>) {</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>case 1:</Literal>
+              </Line>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.happyWeight = 1;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.sadWeight = 0.5;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.angryWeight = 0.5;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.afraidWeight = 0.5;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>break;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Line>
+                <Literal>case 2:</Literal>
+              </Line>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.happyWeight = 0.5;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.sadWeight = 1;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.angryWeight = 0.5;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.afraidWeight = 0.5;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>break;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Line>
+                <Literal>case 3:</Literal>
+              </Line>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.happyWeight = 0.5;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.sadWeight = 0.5;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.angryWeight = 1;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.afraidWeight = 0.5;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>break;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Line>
+                <Literal>case 4:</Literal>
+              </Line>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.happyWeight = 0.5;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.sadWeight = 0.5;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.angryWeight = 0.5;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.afraidWeight = 1;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>break;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Line>
+              <Literal>}</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
